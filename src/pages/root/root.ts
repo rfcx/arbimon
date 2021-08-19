@@ -1,6 +1,6 @@
 import { Vue } from 'vue-class-component'
 
-import { ROUTES_PATH } from '@/router'
+import { ROUTES_NAME } from '@/router'
 
 interface NavMenus {
   label: string
@@ -13,11 +13,11 @@ export default class RootPage extends Vue {
     return [
       {
         label: 'Overview',
-        routerPath: ROUTES_PATH.overview
+        routerPath: ROUTES_NAME.overview
       },
       {
         label: 'Species Richness',
-        routerPath: ROUTES_PATH.species_richness
+        routerPath: ROUTES_NAME.species_richness
       }
     ]
   }

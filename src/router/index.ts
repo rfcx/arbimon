@@ -4,7 +4,8 @@ import * as Pages from '@/pages'
 
 export const ROUTES_NAME = Object.freeze({
   root: 'root',
-  overview: 'overview'
+  overview: 'overview',
+  species_richness: 'species_richness'
 })
 
 const routes: RouteRecordRaw[] = [
@@ -22,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         path: '/overview',
         name: ROUTES_NAME.overview,
         component: Pages.OverviewPage
+      },
+      {
+        path: '/species_richness',
+        name: ROUTES_NAME.species_richness,
+        component: Pages.SpeciesRichnessPage
       }
     ]
   }
