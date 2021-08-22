@@ -5,10 +5,9 @@
   "scripts": {
     "serve": "vite",
     "preview": "vite preview",
-    "build": "vue-tsc --noEmit && vite build"
+    "build": "vue-tsc --project tsconfig.build.json --noEmit --skipLibCheck && vite build"
   },
   "dependencies": {
-    "element-plus": "^1.0.2-beta.71",
     "node-sass": "^6.0.1",
     "sass-loader": "^12.1.0",
     "vue": "^3.0.5",
@@ -24,6 +23,8 @@
     "@vue/compiler-sfc": "^3.0.5",
     "@vue/eslint-config-standard": "^6.1.0",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "@windicss/plugin-animations": "^1.0.9",
+    "@windicss/plugin-icons": "^1.0.2",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-config-standard-with-typescript": "^20.0.0",
@@ -39,6 +40,8 @@
     "typescript": "^4.3.2",
     "vite": "^2.4.4",
     "vite-plugin-style-import": "^1.1.1",
-    "vue-tsc": "^0.2.2"
+    "vite-plugin-windicss": "^1.2.7",
+    "vue-tsc": "^0.2.2",
+    "windicss": "^3.1.7"
   }
 }
