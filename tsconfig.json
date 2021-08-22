@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "types": ["vite/client"],
+    "types": [
+      "vite/client"
+    ],
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -16,8 +18,22 @@
         "src/*"
       ]
     },
-    "lib": ["esnext", "dom"]
+    "lib": [
+      "esnext",
+      "dom"
+    ]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
-  "exclude": ["node_modules", "dist", "lib", ".*/**"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "*.config.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib",
+    ".*/**"
+  ]
 }

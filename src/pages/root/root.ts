@@ -1,32 +1,10 @@
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 
-import { ROUTES_NAME } from '@/router'
+import NavigationBarComponent from './navbar/navbar.vue'
 
-interface NavMenus {
-  label: string
-  routerPath: string
-  role?: string[]
-}
-
-export default class RootPage extends Vue {
-  public get navMenus (): NavMenus[] {
-    return [
-      {
-        label: 'Overview',
-        routerPath: ROUTES_NAME.overview
-      },
-      {
-        label: 'Species Richness',
-        routerPath: ROUTES_NAME.species_richness
-      }
-    ]
+@Options({
+  components: {
+    'nav-bar': NavigationBarComponent
   }
-
-  public async login (): Promise<void> {
-    await Promise.resolve()
-  }
-
-  public async logout (): Promise<void> {
-    await Promise.resolve()
-  }
-}
+})
+export default class RootPage extends Vue { }

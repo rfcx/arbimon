@@ -1,9 +1,5 @@
 <div id="root-page">
-  <el-menu mode="horizontal" :router="true">
-    <el-menu-item v-for="(item, idx) in navMenus" :key="'nav-menus-' + idx" :index="item.routerPath">
-      {{ item.label }}
-    </el-menu-item>
-  </el-menu>
+  <nav-bar />
   <div>
     <router-view />
   </div>
