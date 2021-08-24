@@ -1,4 +1,11 @@
 import { createApp } from 'vue'
-import App from './App.vue'
 
-createApp(App).mount('#app')
+import App from './App.vue'
+import router from './router'
+
+import 'virtual:windi.css'
+import './styles/global.scss'
+
+createApp(App)
+  .use(router)
+  .mount('#app')
