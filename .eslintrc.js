@@ -31,6 +31,7 @@ module.exports = {
     ],
     'import/newline-after-import': ['error'],
     'unused-imports/no-unused-imports-ts': 'error',
-    'simple-import-sort/exports': ['error']
+    'simple-import-sort/exports': ['error'],
+    'no-void': ['error', { allowAsStatement: true }]
   }
 }
