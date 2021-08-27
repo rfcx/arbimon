@@ -124,6 +124,9 @@ async function init (options: Auth0PluginOptions): Promise<Plugin> {
       // handle the redirect and retrieve tokens
       const redirectLoginResult = await client.handleRedirectCallback()
 
+      // const token: string = await client.getTokenSilently()
+      // console.log('Token', token)
+
       // Notify subscribers that the redirect callback has happened, passing the appState
       // (useful for retrieving any pre-authentication state)
       options.onRedirectCallback(redirectLoginResult.appState)
@@ -139,7 +142,7 @@ async function init (options: Auth0PluginOptions): Promise<Plugin> {
 
   return {
     install: (app: App) => {
-      app.provide('Auth', authPlugin)
+      app.provide('auth', authPlugin)
     }
   }
 }
