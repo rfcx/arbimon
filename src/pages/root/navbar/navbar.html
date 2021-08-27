@@ -14,8 +14,11 @@
         </div>
       </div>
       <div class="flex items-center mx-4">
-        <button class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white">
+        <button v-if="!isAuthenticate" class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white" @click="login">
           Sign In
+        </button>
+        <button v-if="isAuthenticate" class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white" @click="logout">
+          Sign Out
         </button>
       </div>
     </div>
