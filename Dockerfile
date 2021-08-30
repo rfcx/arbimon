@@ -2,9 +2,9 @@ FROM nginx
 
 ENV NODE_ENV=production
 
-RUN mkdir -p /app
+RUN mkdir -p /app/biodiversity-analytics
 
-WORKDIR /app
+WORKDIR /app/biodiversity-analytics
 
 COPY package*.json ./
 
@@ -14,4 +14,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 8080
+COPY --from=0 /app/biodiversity-analytics/dist /usr/share/nginx/html
+
+EXPOSE 7373
