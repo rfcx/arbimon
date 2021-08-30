@@ -1,19 +1,19 @@
-FROM nginx
+FROM node:lts-alpine
 
 ENV NODE_ENV=production
 
-RUN mkdir -p /app/biodiversity-analytics
+RUN mkdir -p /app
+WORKDIR /app
 
-WORKDIR /app/biodiversity-analytics
-
-COPY package*.json ./
-
-RUN npm install
+COPY package*.json .
+RUN npm ci --production=false
 
 COPY . .
-
 RUN npm run build
 
-COPY --from=0 /app/biodiversity-analytics/dist /usr/share/nginx/html
+
+FROM nginx
+COPY --from=0 /app/dist /usr/share/nginx/html
 
 EXPOSE 7373
+CMD ["nginx", "-g", "daemon off;"]
