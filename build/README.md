@@ -15,10 +15,12 @@ Requires Docker.
     docker build . -t biodiversity-analytics -f build\Dockerfile
     ```
 
-2.  Run the app 
+2.  Run the app
     ```
     docker run --rm -it -p 7373:7373 biodiversity-analytics/testing
     ```
+
+*If your port 7373 is in use, then you can change the port to other e.g. `-p 8080:7373` to open http://localhost:8080/*
 
 
 ## Kubernetes configuration
