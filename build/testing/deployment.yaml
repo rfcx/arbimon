@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: biodiversity-analytics
-  namespace: staging
+  namespace: testing
 spec:
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: biodiversity-analytics
-          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-analytics/staging:latest
+          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-analytics/testing:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7373
@@ -27,4 +27,4 @@ spec:
               cpu: "2"
           envFrom:
           - configMapRef:
-              name: staging-biodiversity-analytics-configs
+              name: testing-biodiversity-analytics-configs
