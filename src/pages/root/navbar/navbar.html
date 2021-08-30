@@ -17,9 +17,13 @@
         <button v-if="!isAuthenticate" class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white" @click="login">
           Sign In
         </button>
-        <button v-if="isAuthenticate" class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white" @click="logout">
-          Sign Out
-        </button>
+        <div v-if="isAuthenticate">
+          <!-- <img class="h-8 w-8 rounded-full" :src="auth.user.picture">
+          <div class="text-white">Hello</div> -->
+          <button class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white" @click="logout">
+            Sign Out
+          </button>
+        </div>
       </div>
     </div>
   </nav>

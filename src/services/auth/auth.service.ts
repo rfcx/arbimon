@@ -5,8 +5,6 @@ import createAuth0Client, { Auth0Client, GetIdTokenClaimsOptions, GetTokenSilent
 
 import authConfig from './config.json'
 
-export type RedirectCallback = (appState: AppState) => void
-
 export type UserComponent = User & {
   roles: string[]
 }
