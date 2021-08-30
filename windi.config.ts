@@ -11,7 +11,9 @@ export default defineConfig({
     extend: {
       textColor: {
         primary: '#fff',
-        secondary: '#999'
+        secondary: '#999',
+        warning: '#FFCD00',
+        danger: '#D46767'
       },
       colors: {
         'brand-primary': {
@@ -19,32 +21,38 @@ export default defineConfig({
           DEFAULT: '#31984F',
           dark: '#25713b'
         },
-        'blue-grey': {
+        'box-grey': {
+          DEFAULT: '#45485D',
+          dark: '#2f3140'
+        },
+        'steel-grey': {
           DEFAULT: '#232436',
           light: '#E5E5E7',
-          dark: '#0C0D16'
+          dark: '#0f0f17'
         },
-        'dark-grey': {
+        'mirage-grey': {
           DEFAULT: '#141525',
           light: '#E3E3E5',
           dark: '#06060D'
         },
         danger: {
           DEFAULT: '#D46767',
-          light: '',
-          dark: ''
+          light: '#e5a4a4',
+          dark: '#7f3e3e'
         },
         warning: {
           DEFAULT: '#FFCD00',
-          light: '',
-          dark: ''
+          light: '#ffe166',
+          dark: '#997b00'
         }
       }
     }
   },
   shortcuts: {
-    btn: 'py-2 px-4 text-primary font-semibold rounded-lg shadow-md cursor-pointer',
-    'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark'
+    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark',
+    'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
+    'btn-warning': 'bg-warning hover:bg-warning-dark',
+    'btn-danger': 'bg-danger hover:bg-danger-dark'
   },
   plugins: [
     pluginAspectRatio,
