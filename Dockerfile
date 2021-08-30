@@ -11,7 +11,6 @@ RUN npm ci --production=false
 COPY . .
 RUN npm run build
 
-
 FROM nginx
 COPY --from=0 /app/dist /usr/share/nginx/html
 
