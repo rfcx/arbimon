@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { User } from '@auth0/auth0-spa-js'
+import { LogoutOptions, User } from '@auth0/auth0-spa-js'
 
 import { ROUTES_NAME } from '@/router'
 
@@ -20,7 +20,7 @@ interface Authenticate {
   getTokenWithPopup: () => {}
   handleRedirectCallback: () => {}
   loginWithRedirect: () => {}
-  logout: () => {}
+  logout: (options?: LogoutOptions) => {}
 }
 
 @Options({})
@@ -29,6 +29,10 @@ export default class NavigationBarComponent extends Vue {
 
   public get user (): User {
     return this.auth.user
+  }
+
+  public get userImage (): string {
+    return this.user?.picture ?? ''
   }
 
   public get isAuthenticate (): boolean {
@@ -53,6 +57,6 @@ export default class NavigationBarComponent extends Vue {
   }
 
   public async logout (): Promise<void> {
-    await this.auth.logout()
+    await this.auth.logout({ returnTo: window.location.origin })
   }
 }
