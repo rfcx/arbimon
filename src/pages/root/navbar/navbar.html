@@ -1,20 +1,20 @@
 <div class="navbar-component">
-  <nav class="bg-brand-gray">
+  <nav class="bg-blue-grey">
     <div class="relative flex items-center justify-between h-13">
       <div class="flex-shrink-0 flex items-center mx-4">
         <img class="h-9" src="https://avatars0.githubusercontent.com/u/2858735?s=200&v=4"
           alt="Rainforest connection logo">
-        <div class="font-semibold text-white">Biodiversity Analytics</div>
+        <div class="font-semibold text-primary">Biodiversity Analytics</div>
       </div>
       <div class="flex-1 flex items-center space-x-4">
         <div class="box-content" v-for="(item, idx) in navMenus" :key="'nav-menus-' + idx">
-          <a class="align-middle text-white" :href="item.routerPath">
+          <a class="align-middle text-primary" :href="item.routerPath">
             {{ item.label }}
           </a>
         </div>
       </div>
       <div class="flex items-center mx-4">
-        <button class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white">
+        <button class="btn btn-primary">
           Sign In
         </button>
       </div>
