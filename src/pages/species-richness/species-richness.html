@@ -1,3 +1,22 @@
 <div id="species-richness-page">
-  <div class="text-white">Species richness page</div>
+  <div class="header-container">
+    <div class="text-white text-4xl capitalize">
+      Species Richness
+    </div>
+    <div class="text-white">
+      Number of species found in the area
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+  <div class="grid grid-rows-1 grid-flow-col gap-2 overflow-x-auto">
+    <div v-for="(stream, idx) in streams" :key="'stream-card' + idx"
+      class="w-48 h-6rem flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 rounded-xl p-4 text-white">
+      <div class="uppercase">{{ stream.name }}</div>
+      <div>{{ stream.datetime }}</div>
+    </div>
+    <div v-if="showAddButton" @click="addStream" class="streams-add-card w-48 h-6rem bg-clip-padding bg-brand-gray-400 border-2 border-dashed rounded-xl p-4 text-white">
+      <div class="uppercase">+ Add</div>
+    </div>
+  </div>
+  </div>
 </div>
