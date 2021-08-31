@@ -8,17 +8,21 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-  <div class="grid grid-rows-1 grid-flow-col gap-2 overflow-x-auto">
+  <div class="grid grid-rows-1 grid-flow-col grid-cols-5 gap-3 mt-4 overflow-x-auto">
     <div v-for="(stream, idx) in streams" :key="'stream-card' + idx"
-      class="w-48 h-6rem flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 rounded-xl p-4 text-white">
-      <div class="uppercase">
-        <i class="icon-pin" /> {{ stream.name }}
+      class="min-w-48 h-28 flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 rounded-xl px-4 text-white text-sm">
+      <div @click="removeFilterConfig(idx)" class="flex flex-row justify-end" :class="{ invisible: isDefaultFilter }">
+        <i class="icon-close cursor-pointer" />
       </div>
-      <div>
-        <i class="icon-time" /> {{ stream.datetime }}
+      <div class="flex flex-row items-center mb-2">
+        <i class="icon-pin mr-2" /> {{ stream.name }}
+      </div>
+      <div class="flex flex-row items-center">
+        <i class="icon-time mr-2" /> {{ stream.datetime }}
       </div>
     </div>
-    <div v-if="showAddButton" @click="addStream" class="streams-add-card w-48 h-6rem bg-clip-padding bg-brand-gray-400 border-2 border-dashed rounded-xl p-4 text-white">
+    <div v-if="showAddButton" @click="addFilterConfig"
+      class="streams-add-card w-48 h-28 flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 border-dashed rounded-xl p-4 text-white text-sm">
       <div class="uppercase">+ Add</div>
     </div>
   </div>
