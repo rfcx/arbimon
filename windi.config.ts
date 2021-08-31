@@ -1,4 +1,5 @@
 import { defineConfig } from 'windicss/helpers'
+import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
@@ -17,8 +18,8 @@ export default defineConfig({
       },
       colors: {
         'brand-primary': {
-          light: '#E6F3EA',
           DEFAULT: '#31984F',
+          light: '#E6F3EA',
           dark: '#25713b'
         },
         'box-grey': {
@@ -49,12 +50,21 @@ export default defineConfig({
     }
   },
   shortcuts: {
+    // button
     btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark',
     'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark'
   },
   plugins: [
+    plugin(({ addComponents }) => {
+      const navbarItems = {
+        '.navbar-item.router-link-active': {
+          'box-shadow': 'inset 0 -3px 0 #31984f'
+        }
+      }
+      addComponents(navbarItems)
+    }),
     pluginAspectRatio,
     pluginForms,
     pluginIcons,
