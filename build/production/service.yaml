@@ -12,4 +12,4 @@ spec:
   ports:
     - name: node
       port: 80
-      targetPort: 7373
+      targetPort: 8080
