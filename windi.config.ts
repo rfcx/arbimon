@@ -7,6 +7,12 @@ import pluginIcons from '@windicss/plugin-icons'
 
 export default defineConfig({
   darkMode: false,
+  plugins: [
+    pluginAspectRatio,
+    pluginForms,
+    pluginIcons,
+    pluginLineClamp
+  ],
   theme: {
     extend: {
       colors: {
@@ -52,11 +58,5 @@ export default defineConfig({
         }
       }
     }
-  },
-  plugins: [
-    pluginAspectRatio,
-    pluginForms,
-    pluginIcons,
-    pluginLineClamp
-  ]
+  }
 })
