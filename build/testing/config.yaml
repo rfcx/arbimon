@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: testing-biodiversity-analytics-configs
+  name: testing-biodiversity-analytics-config
   namespace: testing
 data:
   VITE_APP_CORE_API_HOST: https://staging-api.rfcx.org

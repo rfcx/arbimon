@@ -27,4 +27,4 @@ spec:
               cpu: "2"
           envFrom:
           - configMapRef:
-              name: staging-biodiversity-analytics-configs
+              name: staging-biodiversity-analytics-config
