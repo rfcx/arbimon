@@ -1,33 +1,31 @@
+import dayjs from 'dayjs'
 import { Vue } from 'vue-class-component'
 
-import { Stream } from '@/models'
+import { SpeciesRichnessFilter, Stream } from '@/models'
 
-const defaultFilter: Stream = {
-  value: 'all',
-  name: 'All sites',
-  datetime: 'All time'
-}
+const defaultAllStreams: Stream = { id: 'all', name: 'All sites' }
+const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [defaultAllStreams])
 
 export default class SpeciesRichnessPage extends Vue {
-  public streams: Stream[] = [defaultFilter]
+  public filters: SpeciesRichnessFilter[] = [defaultFilter]
 
   public addFilterConfig (): void {
-    this.streams.push(new Stream())
+    this.filters.push(defaultFilter)
   }
 
+  //  TODO: HAve to improve this logic to check what is `all` meaning
   public get isDefaultFilter (): boolean {
-    return this.streams.length === 1 && this.streams[0].value === 'all'
+    return this.filters.length === 1 && this.filters[0].streams[0].id === 'all'
   }
 
   public removeFilterConfig (idx: number): void {
-    console.log(idx)
-    this.streams.splice(idx, 1)
-    if (this.streams.length === 0) {
-      this.streams.push(defaultFilter)
+    this.filters.splice(idx, 1)
+    if (this.filters.length === 0) {
+      this.filters.push(defaultFilter)
     }
   }
 
   public get showAddButton (): boolean {
-    return this.streams.length < 5
+    return this.filters.length < 5
   }
 }
