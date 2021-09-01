@@ -27,4 +27,4 @@ spec:
               cpu: "2"
           envFrom:
           - configMapRef:
-              name: production-biodiversity-analytics-configs
+              name: biodiversity-analytics-configs
