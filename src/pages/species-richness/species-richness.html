@@ -8,23 +8,25 @@
     </div>
   </div>
   <div class="overflow-x-auto">
-  <div class="grid grid-rows-1 grid-flow-col grid-cols-5 gap-3 mt-4 overflow-x-auto">
-    <div v-for="(stream, idx) in streams" :key="'stream-card' + idx"
-      class="min-w-48 h-28 flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 rounded-xl px-4 text-white text-sm">
-      <div @click="removeFilterConfig(idx)" class="flex flex-row justify-end" :class="{ invisible: isDefaultFilter }">
-        <i class="icon-close cursor-pointer" />
+    <div class="flex flex-row mt-6">
+      <div v-for="(stream, idx) in streams" :key="'stream-card' + idx"
+        class="flex flex-col justify-center mr-4 max-w-48 w-48 h-24 bg-clip-padding bg-brand-gray-400 border-2 rounded-xl px-4 text-white text-sm">
+        <div class="flex flex-row">
+          <div class="flex flex-row flex-1">
+            <i class="icon-pin mr-2" /> {{ stream.name }}
+          </div>
+          <div @click="removeFilterConfig(idx)" class="flex flex-col self-end" :class="{ invisible: isDefaultFilter }">
+            <i class="icon-close cursor-pointer" />
+          </div>
+        </div>
+        <div class="flex flex-row items-center">
+          <i class="icon-time mr-2" /> {{ stream.datetime }}
+        </div>
       </div>
-      <div class="flex flex-row items-center mb-2">
-        <i class="icon-pin mr-2" /> {{ stream.name }}
-      </div>
-      <div class="flex flex-row items-center">
-        <i class="icon-time mr-2" /> {{ stream.datetime }}
+      <div v-if="showAddButton" @click="addFilterConfig"
+        class="streams-add-card w-48 max-w-48 h-24 flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 border-dashed rounded-xl p-4 text-white text-sm">
+        <div class="uppercase">+ Add</div>
       </div>
     </div>
-    <div v-if="showAddButton" @click="addFilterConfig"
-      class="streams-add-card w-48 h-28 flex flex-col justify-center bg-clip-padding bg-brand-gray-400 border-2 border-dashed rounded-xl p-4 text-white text-sm">
-      <div class="uppercase">+ Add</div>
-    </div>
-  </div>
   </div>
 </div>
