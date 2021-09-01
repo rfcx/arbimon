@@ -4,6 +4,9 @@ Biodiversity analytics website build with Vue 3 + Typescript + Vite + Windi CSS
 
 ## Getting started
 
+Requirements:
+- node 14+, npm 7+
+
 1. Install dependencies:
 
     `npm install`
