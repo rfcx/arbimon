@@ -1,5 +1,5 @@
 # build stage
-FROM node:lts-alpine as builder
+FROM node:14-alpine as builder
 
 ENV NODE_ENV=production
 
