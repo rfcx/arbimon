@@ -9,18 +9,18 @@
   </div>
   <div class="overflow-x-auto">
     <div class="flex flex-row flex-wrap">
-      <div v-for="(stream, idx) in streams" :key="'stream-card' + idx"
+      <div v-for="(filters, idx) in filters" :key="'stream-card' + idx"
         class="flex flex-col justify-center w-48 max-w-48 h-24 mr-4 mt-6 bg-clip-padding bg-brand-gray-400 border-2 rounded-xl px-4 text-white text-sm">
         <div class="flex flex-row">
           <div class="flex flex-row flex-1">
-            <i class="icon-pin mr-2" /> <div class="truncate max-w-24">{{ stream.name }}</div>
+            <i class="icon-pin mr-2" /> <div class="truncate max-w-24">{{ filters.displayTitle }}</div>
           </div>
           <div @click="removeFilterConfig(idx)" class="flex flex-col self-end" :class="{ 'invisible': isDefaultFilter }">
             <i class="icon-close cursor-pointer" />
           </div>
         </div>
         <div class="flex flex-row items-center mt-2">
-          <i class="icon-time mr-2" /> {{ stream.datetime }}
+          <i class="icon-time mr-2" /> {{ filters.displayDate }}
         </div>
       </div>
       <div v-if="showAddButton" @click="addFilterConfig"
