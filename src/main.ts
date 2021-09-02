@@ -1,24 +1,18 @@
 import { createApp } from 'vue'
 
-import { Auth0 } from '@/services/auth/auth.service'
 import App from './App.vue'
+import { Auth0Plugin } from './auth/auth'
 import router from './router'
 
 import 'virtual:windi.css'
 import './styles/global.scss'
 
-async function init (): Promise<void> {
-  const AuthPlugin = await Auth0.init({
+createApp(App)
+  .use(Auth0Plugin, {
     redirectUri: window.location.origin,
-    onRedirectCallback: async (appState) => {
+    onRedirectCallback: async (appState: { targetUrl: string } | undefined) => {
       await router.push(appState?.targetUrl ? appState.targetUrl : window.location.pathname)
     }
   })
-
-  createApp(App)
-    .use(AuthPlugin)
-    .use(router)
-    .mount('#app')
-}
-
-void init()
+  .use(router)
+  .mount('#app')
