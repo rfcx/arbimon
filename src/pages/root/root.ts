@@ -1,10 +1,4 @@
 import { Options, Vue } from 'vue-class-component'
 
-import NavigationBarComponent from './navbar/navbar.vue'
-
-@Options({
-  components: {
-    'nav-bar': NavigationBarComponent
-  }
-})
+@Options({})
 export default class RootPage extends Vue { }
