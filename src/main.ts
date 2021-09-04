@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { Auth0Plugin } from './auth/auth'
 import router from './router'
+import stores from './stores'
 
 import 'virtual:windi.css'
 import './styles/global.scss'
@@ -14,5 +15,6 @@ createApp(App)
       await router.push(appState?.targetUrl ? appState.targetUrl : window.location.pathname)
     }
   })
+  .use(stores)
   .use(router)
   .mount('#app')
