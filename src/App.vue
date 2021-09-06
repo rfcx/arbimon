@@ -28,12 +28,12 @@
               </div>
             </router-link>
           </div>
-          <div class="text-white">
+          <!-- <div class="text-white">
             hello{{ auth }}
-          </div>
+          </div> -->
           <div class="flex items-center mx-4">
             <button
-              v-if="!user"
+              v-if="!auth.isAuthenticated"
               class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white"
               @click="login"
             >
@@ -48,8 +48,11 @@
                 aria-expanded="true"
                 aria-haspopup="true"
                 class="h-8 w-8 rounded-full"
-                :src="userImage"
+                :src="auth.user.picture"
               >
+              <div class="text-white">
+                Name: {{ user }}
+              </div>
               <!-- <div class="dropdown-content">
                 <a
                   href="#"
@@ -78,9 +81,17 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
+// import VueAuth from './auth/vueAuth'
+import {
+  GetIdTokenClaimsOptions,
+  GetTokenSilentlyOptions,
+  GetTokenWithPopupOptions,
+  IdToken,
+  LogoutOptions
+} from '@auth0/auth0-spa-js'
+
 import { ROUTES_NAME } from '@/router'
 import { Auth0User } from './models'
-// import VueAuth from './auth/vueAuth'
 
 interface NavMenus {
   label: string
@@ -92,11 +103,17 @@ interface Auth0Option {
   isAuthenticated: boolean
   loading: boolean
   user: Auth0User
+  getIdTokenClaims: (o: GetIdTokenClaimsOptions) => Promise<IdToken>
+  getTokenSilently: (o: GetTokenSilentlyOptions) => Promise<void>
+  getTokenWithPopup: (o: GetTokenWithPopupOptions) => Promise<string>
+  handleRedirectCallback: (o: GetTokenWithPopupOptions) => Promise<string>
+  loginWithRedirect: (o: GetTokenWithPopupOptions) => Promise<string>
+  logout: (o: LogoutOptions) => Promise<void> | void
 }
 
 @Options({})
 export default class RootPage extends Vue {
-  @Inject({ from: 'auth' })
+  @Inject()
   auth!: Auth0Option
 
   public get navMenus (): NavMenus[] {
@@ -113,12 +130,21 @@ export default class RootPage extends Vue {
   }
 
   public get user (): Auth0User {
-    return this.auth.user
+    console.log(JSON.stringify(this.auth))
+    return JSON.parse(JSON.stringify(this.auth.user))
   }
 
   public get userImage (): string {
     return this.user.picture ?? ''
   }
+
+  // public async login (): Promise<void> {
+  //   await this.auth.loginWithRedirect()
+  // }
+
+  // public async logout (): Promise<void> {
+  //   await this.auth.logout({ returnTo: window.location.origin })
+  // }
 
   // public get auth (): VueAuth {
   //   return this.$auth
@@ -138,14 +164,6 @@ export default class RootPage extends Vue {
 
   // public get isAuthenticated (): boolean {
   //   return this.auth?.isAuth0Authenticated ?? false
-  // }
-
-  // public async login (): Promise<void> {
-  //   await this.auth.loginWithRedirect()
-  // }
-
-  // public async logout (): Promise<void> {
-  //   await this.auth.logout({ returnTo: window.location.origin })
   // }
 }
 </script>
