@@ -5,6 +5,7 @@ import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
 
 import pluginIcons from '@windicss/plugin-icons'
+import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 
 export default defineConfig({
   darkMode: false,
@@ -68,6 +69,7 @@ export default defineConfig({
     pluginAspectRatio,
     pluginForms,
     pluginIcons,
-    pluginLineClamp
+    pluginLineClamp,
+    pluginInteractionVariants
   ]
 })

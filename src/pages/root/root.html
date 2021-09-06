@@ -32,22 +32,33 @@
           <div
             v-else
             class="flex flex-row"
-          >
-            <img
-              id="avatar-img"
-              aria-expanded="true"
-              aria-haspopup="true"
-              class="h-8 w-8 rounded-full"
-              :src="user.picture"
+            aria-expanded="true"
+            aria-haspopup="true"
             >
-            <ul class="absolute top-13 right-2 z-50 min-w-40 border-t-box-grey border-t-2 bg-steel-grey rounded-b-md text-primary">
-              <li
-                class="p-4 rounded-b-md hover:(bg-box-grey cursor-pointer)"
-                @click="logout"
+            <div
+              id="avatar-button"
+              type="button"
+              class="hover:cursor-pointer focus:cursor-pointer group">
+              <img
+                class="h-8 w-8 rounded-full"
+                :src="user.picture"
               >
-                Sign out
-              </li>
-            </ul>
+              <ul
+                class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-grey border-t-2 bg-steel-grey rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="avatar-button"
+                tabindex="-1">
+                <li
+                  class="p-4 rounded-b-md hover:(bg-box-grey cursor-pointer)"
+                  @click="logout"
+                >
+                  Sign out
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
           </div>
         </div>
       </div>
