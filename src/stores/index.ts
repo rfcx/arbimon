@@ -11,18 +11,22 @@ export {
 }
 
 export class RootState {
+  auth?: Models.Auth0Option
   user?: Models.Auth0User
 }
 
 const rootActions: ActionTree<RootState, RootState> = {
+  [ACTIONS.root.updateAuth]: ({ commit }, auth?: Models.Auth0Option) => commit(ACTIONS.root.updateAuth, auth),
   [ACTIONS.root.updateUser]: ({ commit }, user?: Models.Auth0User) => commit(ACTIONS.root.updateUser, user)
 }
 
 const rootMutations: MutationTree<RootState> = {
+  [ACTIONS.root.updateAuth]: (state, auth?: Models.Auth0Option) => { state.auth = auth },
   [ACTIONS.root.updateUser]: (state, user?: Models.Auth0User) => { state.user = user }
 }
 
 const rootGetters: GetterTree<RootState, RootState> = {
+  [ITEMS.root.auth]: state => state.auth,
   [ITEMS.root.user]: state => state.user
 }
 

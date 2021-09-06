@@ -54,6 +54,7 @@ async function getIdTokenClaims (o: GetIdTokenClaimsOptions): Promise<IdToken> {
   return await client.getIdTokenClaims(o)
 }
 
+/** get access token */
 async function getTokenSilently (o: GetTokenSilentlyOptions): Promise<void> {
   return await client.getTokenSilently(o)
 }

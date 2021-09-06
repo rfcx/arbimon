@@ -1,0 +1,25 @@
+import {
+  GetIdTokenClaimsOptions,
+  GetTokenSilentlyOptions,
+  GetTokenWithPopupOptions,
+  IdToken,
+  LogoutOptions,
+  User
+} from '@auth0/auth0-spa-js'
+import { ComputedRef } from '@vue/reactivity'
+
+export interface Auth0User extends User {
+  roles?: string[]
+}
+
+export interface Auth0Option {
+  isAuthenticated: ComputedRef<boolean> | boolean
+  loading: ComputedRef<boolean> | boolean
+  user: ComputedRef<Auth0User>
+  getIdTokenClaims: (o?: GetIdTokenClaimsOptions) => Promise<IdToken>
+  getTokenSilently: (o?: GetTokenSilentlyOptions) => Promise<void>
+  getTokenWithPopup: (o?: GetTokenWithPopupOptions) => Promise<string>
+  handleRedirectCallback: (o?: GetTokenWithPopupOptions) => Promise<string>
+  loginWithRedirect: (o?: GetTokenWithPopupOptions) => Promise<string>
+  logout: (o?: LogoutOptions) => Promise<void> | void
+}

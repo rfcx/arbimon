@@ -1,15 +1,49 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { Auth0Client } from '@auth0/auth0-spa-js'
-
+import { Auth0Option, Auth0User } from '@/models'
+import { ROUTES_NAME } from '@/router'
 import { VXServices } from '@/services'
+
+interface NavMenus {
+  label: string
+  routerPath: string
+  role?: string[]
+}
 
 @Options({})
 export default class RootPage extends Vue {
-  @VXServices.User.user.VX()
-  protected user!: Auth0Client | undefined
+  @VXServices.Auth.auth.VX()
+  protected auth!: Auth0Option | undefined
 
-  async mounted (): Promise<void> {
-    // await VXServices.User.user.set(new Auth0User())
+  @VXServices.Auth.user.VX()
+  protected user!: Auth0User | undefined
+
+  public get navMenus (): NavMenus[] {
+    return [
+      {
+        label: 'Overview',
+        routerPath: ROUTES_NAME.overview
+      },
+      {
+        label: 'Species Richness',
+        routerPath: ROUTES_NAME.species_richness
+      }
+    ]
+  }
+
+  public get isAuthenticated (): boolean {
+    return this.auth?.isAuthenticated as boolean
+  }
+
+  public get userImage (): string {
+    return this.user?.picture ?? ''
+  }
+
+  public async login (): Promise<void> {
+    await this.auth?.loginWithRedirect()
+  }
+
+  public async logout (): Promise<void> {
+    await this.auth?.logout({ returnTo: window.location.origin })
   }
 }
