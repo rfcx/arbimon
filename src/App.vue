@@ -1,7 +1,10 @@
 <template>
   <div id="main">
-    <div v-if="isLoading">
-      loading
+    <div
+      v-if="auth.loading.value"
+      class="text-white"
+    >
+      loading...
     </div>
     <div>
       <router-view />
@@ -11,8 +14,6 @@
 <script lang='ts'>
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
-
-import { ComputedRef } from '@vue/reactivity'
 
 import { Auth0Option, Auth0User } from './models'
 import { VXServices } from './services'
@@ -25,11 +26,6 @@ export default class RootPage extends Vue {
   public async mounted (): Promise<void> {
     await VXServices.Auth.auth.set(this.auth)
     await VXServices.Auth.user.set(this.user)
-  }
-
-  public get isLoading (): boolean {
-    const loading = this.auth.loading as ComputedRef
-    return loading.value ?? true
   }
 
   public get user (): Auth0User {
