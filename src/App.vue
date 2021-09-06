@@ -48,11 +48,8 @@
                 aria-expanded="true"
                 aria-haspopup="true"
                 class="h-8 w-8 rounded-full"
-                :src="auth.user.picture"
+                :src="user.picture"
               >
-              <div class="text-white">
-                Name: {{ user }}
-              </div>
               <!-- <div class="dropdown-content">
                 <a
                   href="#"
@@ -81,7 +78,6 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-// import VueAuth from './auth/vueAuth'
 import {
   GetIdTokenClaimsOptions,
   GetTokenSilentlyOptions,
@@ -89,6 +85,7 @@ import {
   IdToken,
   LogoutOptions
 } from '@auth0/auth0-spa-js'
+import { ComputedRef } from '@vue/reactivity'
 
 import { ROUTES_NAME } from '@/router'
 import { Auth0User } from './models'
@@ -100,15 +97,15 @@ interface NavMenus {
 }
 
 interface Auth0Option {
-  isAuthenticated: boolean
-  loading: boolean
-  user: Auth0User
-  getIdTokenClaims: (o: GetIdTokenClaimsOptions) => Promise<IdToken>
-  getTokenSilently: (o: GetTokenSilentlyOptions) => Promise<void>
-  getTokenWithPopup: (o: GetTokenWithPopupOptions) => Promise<string>
-  handleRedirectCallback: (o: GetTokenWithPopupOptions) => Promise<string>
-  loginWithRedirect: (o: GetTokenWithPopupOptions) => Promise<string>
-  logout: (o: LogoutOptions) => Promise<void> | void
+  isAuthenticated: ComputedRef<boolean>
+  loading: ComputedRef<boolean>
+  user: ComputedRef<Auth0User>
+  getIdTokenClaims: (o?: GetIdTokenClaimsOptions) => Promise<IdToken>
+  getTokenSilently: (o?: GetTokenSilentlyOptions) => Promise<void>
+  getTokenWithPopup: (o?: GetTokenWithPopupOptions) => Promise<string>
+  handleRedirectCallback: (o?: GetTokenWithPopupOptions) => Promise<string>
+  loginWithRedirect: (o?: GetTokenWithPopupOptions) => Promise<string>
+  logout: (o?: LogoutOptions) => Promise<void> | void
 }
 
 @Options({})
@@ -129,41 +126,24 @@ export default class RootPage extends Vue {
     ]
   }
 
+  public get isLoading (): boolean {
+    return this.auth.loading.value ?? true
+  }
+
   public get user (): Auth0User {
-    console.log(JSON.stringify(this.auth))
-    return JSON.parse(JSON.stringify(this.auth.user))
+    return this.auth.user.value
   }
 
   public get userImage (): string {
     return this.user.picture ?? ''
   }
 
-  // public async login (): Promise<void> {
-  //   await this.auth.loginWithRedirect()
-  // }
+  public async login (): Promise<void> {
+    await this.auth.loginWithRedirect()
+  }
 
-  // public async logout (): Promise<void> {
-  //   await this.auth.logout({ returnTo: window.location.origin })
-  // }
-
-  // public get auth (): VueAuth {
-  //   return this.$auth
-  // }
-
-  // public get isLoading (): boolean {
-  //   return this.auth?.isLoaded ?? true
-  // }
-
-  // public get user (): Auth0User | undefined {
-  //   return this.auth?.user
-  // }
-
-  // public get userImage (): string {
-  //   return this.user?.picture ?? ''
-  // }
-
-  // public get isAuthenticated (): boolean {
-  //   return this.auth?.isAuth0Authenticated ?? false
-  // }
+  public async logout (): Promise<void> {
+    await this.auth.logout({ returnTo: window.location.origin })
+  }
 }
 </script>
