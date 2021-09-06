@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import * as Pages from '@/pages'
-import authGuard from '../auth/authGuard'
+// import authGuard from '../auth/authGuard'
+import { Auth0 } from '../auth2'
 
 export const ROUTES_NAME = Object.freeze({
   root: 'root',
@@ -13,7 +14,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: Pages.RootPage,
-    beforeEnter: authGuard,
+    beforeEnter: Auth0.routeGuard,
     children: [
       {
         path: '/',

@@ -28,9 +28,12 @@
               </div>
             </router-link>
           </div>
+          <div class="text-white">
+            hello{{ auth }}
+          </div>
           <div class="flex items-center mx-4">
             <button
-              v-if="!isAuthenticated"
+              v-if="!user"
               class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white"
               @click="login"
             >
@@ -45,7 +48,7 @@
                 aria-expanded="true"
                 aria-haspopup="true"
                 class="h-8 w-8 rounded-full"
-                :src="auth.user.picture"
+                :src="userImage"
               >
               <!-- <div class="dropdown-content">
                 <a
@@ -54,8 +57,8 @@
                 >
                   Sign out
                 </a>
-              </div> -->
-              <!-- <button
+              </div>
+              <button
                 class="w-24 h-10 rounded-md bg-brand-green font-semibold text-white"
                 @click="logout"
               >
@@ -66,17 +69,18 @@
         </div>
       </nav>
     </div>
-    <div v-if="!isLoading">
+    <div>
       <router-view />
     </div>
   </div>
 </template>
 <script lang='ts'>
 import { Options, Vue } from 'vue-class-component'
-import { Watch } from 'vue-property-decorator'
+import { Inject } from 'vue-property-decorator'
 
 import { ROUTES_NAME } from '@/router'
-import VueAuth, { UserComponent } from './auth/vueAuth'
+import { Auth0User } from './models'
+// import VueAuth from './auth/vueAuth'
 
 interface NavMenus {
   label: string
@@ -84,9 +88,16 @@ interface NavMenus {
   role?: string[]
 }
 
+interface Auth0Option {
+  isAuthenticated: boolean
+  loading: boolean
+  user: Auth0User
+}
+
 @Options({})
 export default class RootPage extends Vue {
-  public auth: VueAuth | undefined = undefined
+  @Inject({ from: 'auth' })
+  auth!: Auth0Option
 
   public get navMenus (): NavMenus[] {
     return [
@@ -101,34 +112,40 @@ export default class RootPage extends Vue {
     ]
   }
 
-  @Watch('$auth', { immediate: true, deep: true })
-  onAuthChange (currentVal: VueAuth, oldValue: VueAuth): void {
-    console.log(currentVal, oldValue)
-    this.auth = currentVal
-  }
-
-  public get isLoading (): boolean {
-    return this.auth?.isLoading ?? true
-  }
-
-  public get user (): UserComponent | undefined {
-    return this.auth?.user
+  public get user (): Auth0User {
+    return this.auth.user
   }
 
   public get userImage (): string {
-    return this.user?.picture ?? ''
+    return this.user.picture ?? ''
   }
 
-  public get isAuthenticated (): boolean {
-    return this.auth?.isAuth0Authenticated ?? false
-  }
+  // public get auth (): VueAuth {
+  //   return this.$auth
+  // }
 
-  public async login (): Promise<void> {
-    await this.auth?.loginWithRedirect()
-  }
+  // public get isLoading (): boolean {
+  //   return this.auth?.isLoaded ?? true
+  // }
 
-  public async logout (): Promise<void> {
-    await this.auth?.logout({ returnTo: window.location.origin })
-  }
+  // public get user (): Auth0User | undefined {
+  //   return this.auth?.user
+  // }
+
+  // public get userImage (): string {
+  //   return this.user?.picture ?? ''
+  // }
+
+  // public get isAuthenticated (): boolean {
+  //   return this.auth?.isAuth0Authenticated ?? false
+  // }
+
+  // public async login (): Promise<void> {
+  //   await this.auth.loginWithRedirect()
+  // }
+
+  // public async logout (): Promise<void> {
+  //   await this.auth.logout({ returnTo: window.location.origin })
+  // }
 }
 </script>
