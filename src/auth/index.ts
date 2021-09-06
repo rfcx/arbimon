@@ -117,7 +117,8 @@ async function init (options: Auth0PluginOptions): Promise<Plugin> {
     domain: domain,
     client_id: clientId,
     audience: audience,
-    redirect_uri: options.redirectUri
+    redirect_uri: options.redirectUri,
+    theme: 'dark'
   })
 
   try {
