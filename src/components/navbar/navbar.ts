@@ -10,15 +10,10 @@ interface NavMenus {
 }
 
 export default class NavigationBarComponent extends Vue {
-  private readonly route = useRoute()
-  private readonly projectId = this.route.params.projectId
-
-  mounted (): void {
-    console.log('navbar selected project', this.projectId)
-  }
+  private readonly projectId: string = useRoute().params.projectId as string ?? ''
 
   public get navMenus (): NavMenus[] {
-    if (this.projectId === undefined) return [] // hide menu
+    if (this.projectId === '') return []
     return [
       {
         label: 'Overview',
@@ -31,8 +26,9 @@ export default class NavigationBarComponent extends Vue {
     ]
   }
 
-  public get arbimonLink (): String {
-    return 'https://arbimon.rfcx.org' // TODO: add project id
+  public get arbimonLink (): string {
+    if (this.projectId === '') return ''
+    else { return `https://arbimon.rfcx.org/project/${this.projectId}` }
   }
 
   public async login (): Promise<void> {

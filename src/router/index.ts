@@ -11,18 +11,8 @@ export const ROUTES_NAME = Object.freeze({
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/:pathMatch(.*)*',
-    component: Pages.ErrorPage
-  },
-  // { path: '/project/:id', component: Pages.RootPage },
-  {
     path: '/project/:projectId',
     component: Pages.RootPage,
-    // beforeEnter: (to, from, next) => {
-    //   console.log('to: ', to)
-    //   console.log('from: ', from)
-    //   console.log('new: ', next)
-    // },
     children: [
       {
         path: '/project/:projectId/',
@@ -41,6 +31,10 @@ const routes: RouteRecordRaw[] = [
         component: Pages.SpeciesRichnessPage
       }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: Pages.ErrorPage
   }
 ]
 
