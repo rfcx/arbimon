@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { IdToken } from '@auth0/auth0-spa-js'
-
 import { RequestMethod } from '@/endpoints'
 import { Auth } from './vuex.service'
 
@@ -15,10 +13,10 @@ export const getAccessToken = async (): Promise<string | undefined> => {
   return token
 }
 
-export const getIdToken = async (): Promise<IdToken | undefined> => {
+export const getIdToken = async (): Promise<string | undefined> => {
   const auth = Auth.auth.get()
   const token = await auth?.getIdTokenClaims()
-  return token
+  return token?.__raw
 }
 
 interface RequestParams {
@@ -33,8 +31,7 @@ interface AuthHeader { Authorization: string }
 
 class ApiClient {
   authToken = async (): Promise<AuthHeader> => {
-    const auth = Auth.auth.get()
-    const token = await auth?.getTokenSilently()
+    const token = await getAccessToken()
     return {
       Authorization: 'Bearer ' + (token ?? '')
     }
@@ -47,7 +44,7 @@ class ApiClient {
           ...(config ?? {}),
           headers: {
             ...(headers ?? {}),
-            ...this.authToken()
+            ...await this.authToken()
           }
         }
 
