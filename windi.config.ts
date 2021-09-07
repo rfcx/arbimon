@@ -1,4 +1,5 @@
 import { defineConfig } from 'windicss/helpers'
+import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
@@ -8,6 +9,14 @@ import pluginIcons from '@windicss/plugin-icons'
 export default defineConfig({
   darkMode: false,
   plugins: [
+    plugin(({ addComponents }) => {
+      const navbarItems = {
+        '.navbar-item.router-link-active': {
+          'box-shadow': 'inset 0 -3px 0 #31984f'
+        }
+      }
+      addComponents(navbarItems)
+    }),
     pluginAspectRatio,
     pluginForms,
     pluginIcons,
@@ -15,48 +24,50 @@ export default defineConfig({
   ],
   theme: {
     extend: {
+      textColor: {
+        primary: '#fff',
+        secondary: '#999',
+        warning: '#FFCD00',
+        danger: '#D46767'
+      },
       colors: {
-        // Generator: http://mcg.mbitson.com
-        'brand-green': {
+        'brand-primary': {
           DEFAULT: '#31984F',
-          50: '#E6F3EA',
-          100: '#C1E0CA',
-          200: '#98CCA7',
-          300: '#6FB784',
-          400: '#50A769',
-          500: '#31984F',
-          600: '#2C9048',
-          700: '#25853F',
-          800: '#1F7B36',
-          900: '#136A26'
+          light: '#E6F3EA',
+          dark: '#25713b'
         },
-        'brand-gray': {
+        'box-grey': {
+          DEFAULT: '#45485D',
+          dark: '#2f3140'
+        },
+        'steel-grey': {
           DEFAULT: '#232436',
-          50: '#E5E5E7',
-          100: '#BDBDC3',
-          200: '#91929B',
-          300: '#656672',
-          400: '#444554',
-          500: '#232436',
-          600: '#1F2030',
-          700: '#1A1B29',
-          800: '#151622',
-          900: '#0C0D16'
+          light: '#E5E5E7',
+          dark: '#0f0f17'
         },
-        'brand-dark-gray': {
+        'mirage-grey': {
           DEFAULT: '#141525',
-          50: '#E3E3E5',
-          100: '#B9B9BE',
-          200: '#8A8A92',
-          300: '#5B5B66',
-          400: '#373846',
-          500: '#141525',
-          600: '#121221',
-          700: '#0E0F1B',
-          800: '#0B0C16',
-          900: '#06060D'
+          light: '#E3E3E5',
+          dark: '#06060D'
+        },
+        danger: {
+          DEFAULT: '#D46767',
+          light: '#e5a4a4',
+          dark: '#7f3e3e'
+        },
+        warning: {
+          DEFAULT: '#FFCD00',
+          light: '#ffe166',
+          dark: '#997b00'
         }
       }
     }
+  },
+  shortcuts: {
+    // button
+    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark',
+    'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
+    'btn-warning': 'bg-warning hover:bg-warning-dark',
+    'btn-danger': 'bg-danger hover:bg-danger-dark'
   }
 })
