@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 
 import { StreamModels } from '@/models'
-import { StreamServiecs } from '@/services'
+import { StreamServices } from '@/services'
 
 export default class SpeciesRichnessPage extends Vue {
   public streams: StreamModels.Stream[] = []
@@ -12,6 +12,6 @@ export default class SpeciesRichnessPage extends Vue {
 
   // Example: to be update
   async getStreams (): Promise<void> {
-    this.streams = await StreamServiecs.getStreams()
+    this.streams = await StreamServices.getStreams()
   }
 }
