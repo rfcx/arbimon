@@ -12,7 +12,7 @@ import createAuth0Client, {
 } from '@auth0/auth0-spa-js'
 
 import { Auth0User } from '@/models'
-import config from './config.json'
+import config from './config'
 
 let client: Auth0Client
 
