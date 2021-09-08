@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import * as NavBars from '@/components/page-navbar'
 import * as Pages from '@/pages'
 import { Auth0 } from '../auth'
 
@@ -25,18 +24,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/overview',
         name: ROUTES_NAME.overview,
-        components: {
-          default: Pages.OverviewPage,
-          navbar: NavBars.Default
-        }
+        component: Pages.OverviewPage
       },
       {
         path: '/species_richness',
         name: ROUTES_NAME.species_richness,
-        components: {
-          default: Pages.SpeciesRichnessPage,
-          navbar: NavBars.Default
-        }
+        component: Pages.SpeciesRichnessPage
       }
     ]
   }
