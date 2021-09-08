@@ -1,16 +1,14 @@
 import { Options, Vue } from 'vue-class-component'
 
+import NavBarComponent from '@/components/navbar/navbar.vue'
 import { Auth0Option, Auth0User } from '@/models'
-import { ROUTES_NAME } from '@/router'
 import { VXServices } from '@/services'
 
-interface NavMenus {
-  label: string
-  routerPath: string
-  role?: string[]
-}
-
-@Options({})
+@Options({
+  components: {
+    'nav-bar': NavBarComponent
+  }
+})
 export default class RootPage extends Vue {
   @VXServices.Auth.auth.VX()
   protected auth!: Auth0Option | undefined

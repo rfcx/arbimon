@@ -71,4 +71,4 @@
     </nav>
   </div>
 </template>
-<script src="./navbar-default.ts" lang="ts" />
+<script src="./navbar.ts" lang="ts" />
