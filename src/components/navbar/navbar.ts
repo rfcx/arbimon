@@ -1,13 +1,20 @@
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { useRoute } from 'vue-router'
 
 import { ROUTES_NAME } from '@/router'
+import ProjectSelectorComponent from '../project-selector/project-selector.vue'
 
 interface NavMenus {
   label: string
   routerPath: string
   role?: string[]
 }
+
+@Options({
+  components: {
+    'project-selector': ProjectSelectorComponent
+  }
+})
 
 export default class NavigationBarComponent extends Vue {
   private readonly projectId: string = useRoute().params.projectId as string ?? ''
