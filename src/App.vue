@@ -1,12 +1,13 @@
 <template>
   <div id="main">
     <div
-      v-if="auth.loading"
+      v-if="loading"
       class="text-white"
     >
+      {{ loading }}
       loading...
     </div>
-    <div>
+    <div v-else>
       <router-view />
     </div>
   </div>
@@ -26,6 +27,10 @@ export default class RootPage extends Vue {
   public async mounted (): Promise<void> {
     await VXServices.Auth.auth.set(this.auth)
     await VXServices.Auth.user.set(this.user)
+  }
+
+  public get loading (): boolean {
+    return this.auth.loading.value
   }
 
   public get user (): Auth0User {
