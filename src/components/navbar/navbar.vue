@@ -28,7 +28,7 @@
         </div>
         <div class="flex items-center mx-4">
           <button
-            v-if="!isAuthenticated"
+            v-if="!auth?.isAuthenticated"
             class="btn btn-primary"
             @click="login"
           >

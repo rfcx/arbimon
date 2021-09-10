@@ -8,10 +8,10 @@ import { VXServices } from '@/services'
 @Options({})
 export default class NavBarDefaultComponent extends Vue {
   @VXServices.Auth.auth.VX()
-  protected auth!: Auth0Option | undefined
+  public auth!: Auth0Option | undefined
 
   @VXServices.Auth.user.VX()
-  protected user!: Auth0User | undefined
+  public user!: Auth0User | undefined
 
   public get navMenus (): NavMenus[] {
     return [
@@ -24,10 +24,6 @@ export default class NavBarDefaultComponent extends Vue {
         routerPath: ROUTES_NAME.species_richness
       }
     ]
-  }
-
-  public get isAuthenticated (): boolean {
-    return this.auth?.isAuthenticated as boolean
   }
 
   public get userImage (): string {

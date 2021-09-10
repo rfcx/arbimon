@@ -13,8 +13,8 @@ export interface Auth0User extends User {
 }
 
 export interface Auth0Option {
-  isAuthenticated: ComputedRef<boolean> | boolean
-  loading: ComputedRef<boolean> | boolean
+  isAuthenticated: ComputedRef<boolean>
+  loading: ComputedRef<boolean>
   user: ComputedRef<Auth0User>
   getIdTokenClaims: (o?: GetIdTokenClaimsOptions) => Promise<IdToken>
   getTokenSilently: (o?: GetTokenSilentlyOptions) => Promise<string>
