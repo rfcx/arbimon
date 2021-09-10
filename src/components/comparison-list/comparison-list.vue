@@ -39,4 +39,4 @@
     </div>
   </div>
 </template>
-<script src="./comparison-box.ts" lang="ts" />
+<script src="./comparison-list.ts" lang="ts" />
