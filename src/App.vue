@@ -1,15 +1,6 @@
 <template>
-  <div id="main">
-    <div
-      v-if="loading"
-      class="text-white"
-    >
-      {{ loading }}
-      loading...
-    </div>
-    <div v-else>
-      <router-view />
-    </div>
+  <div>
+    <router-view />
   </div>
 </template>
 <script lang='ts'>
