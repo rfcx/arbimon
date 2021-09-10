@@ -1,11 +1,11 @@
 import { Options, Vue } from 'vue-class-component'
 
-import ComparisonBoxComponent from '@/components/comparison-box/comparison-box.vue'
+import ComparisonBoxComponent from '@/components/comparison-list/comparison-list.vue'
 import { SpeciesRichnessFilter } from '@/models'
 
 @Options({
   components: {
-    'comparison-box': ComparisonBoxComponent
+    'comparison-list': ComparisonBoxComponent
   }
 })
 export default class SpeciesRichnessPage extends Vue {
