@@ -16,8 +16,8 @@ async function init (): Promise<void> {
     }
   })
 
-  const app = createApp(App)
-  app.use(Auth0Plugin)
+  createApp(App)
+    .use(Auth0Plugin)
     .use(stores)
     .use(router)
     .mount('#app')
