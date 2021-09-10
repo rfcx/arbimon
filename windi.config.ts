@@ -8,6 +8,20 @@ import pluginIcons from '@windicss/plugin-icons'
 
 export default defineConfig({
   darkMode: false,
+  plugins: [
+    plugin(({ addComponents }) => {
+      const navbarItems = {
+        '.navbar-item.router-link-active': {
+          'box-shadow': 'inset 0 -3px 0 #31984f'
+        }
+      }
+      addComponents(navbarItems)
+    }),
+    pluginAspectRatio,
+    pluginForms,
+    pluginIcons,
+    pluginLineClamp
+  ],
   theme: {
     extend: {
       textColor: {
@@ -55,19 +69,5 @@ export default defineConfig({
     'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark'
-  },
-  plugins: [
-    plugin(({ addComponents }) => {
-      const navbarItems = {
-        '.navbar-item.router-link-active': {
-          'box-shadow': 'inset 0 -3px 0 #31984f'
-        }
-      }
-      addComponents(navbarItems)
-    }),
-    pluginAspectRatio,
-    pluginForms,
-    pluginIcons,
-    pluginLineClamp
-  ]
+  }
 })
