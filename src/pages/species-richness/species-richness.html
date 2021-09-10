@@ -1,3 +1,11 @@
 <div id="species-richness-page">
-  <div class="text-secondary">Species richness page</div>
+  <div class="header-container">
+    <div class="text-white text-4xl capitalize">
+      Species Richness
+    </div>
+    <div class="text-white">
+      Number of species found in the area
+    </div>
+  </div>
+  <comparison-list @select="onFilterChange" />
 </div>
