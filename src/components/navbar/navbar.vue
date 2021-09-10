@@ -47,7 +47,7 @@
             >
               <img
                 class="h-8 w-8 rounded-full"
-                :src="user.picture"
+                :src="userImage"
               >
               <ul
                 class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-grey border-t-2 bg-steel-grey rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"

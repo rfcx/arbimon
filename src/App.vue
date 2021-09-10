@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <div
-      v-if="auth.loading.value"
+      v-if="auth.loading"
       class="text-white"
     >
       loading...
