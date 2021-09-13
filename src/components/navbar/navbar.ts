@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { useRoute } from 'vue-router'
 
 import { Auth0Option, Auth0User } from '@/models'
-import { NavMenus } from '@/models/Navbar'
+import { NavMenu } from '@/models/Navbar'
 import { ROUTES_NAME } from '@/router'
 import { VXServices } from '@/services'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
@@ -22,16 +22,16 @@ export default class NavigationBarComponent extends Vue {
   @VXServices.Auth.user.VX()
   public user!: Auth0User | undefined
 
-  public get navMenus (): NavMenus[] {
+  public get navMenus (): NavMenu[] {
     if (this.projectId === '') return []
     return [
       {
         label: 'Overview',
-        routerPath: ROUTES_NAME.overview
+        destination: ROUTES_NAME.overview
       },
       {
         label: 'Species Richness',
-        routerPath: ROUTES_NAME.species_richness
+        destination: ROUTES_NAME.species_richness
       }
     ]
   }

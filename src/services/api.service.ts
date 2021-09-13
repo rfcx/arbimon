@@ -53,7 +53,6 @@ class ApiClient {
           case 'POST': return await m.post(url, data, reqConfig)
           case 'PATCH': return await m.patch(url, data, reqConfig)
           case 'PUT': return await m.put(url, data, reqConfig)
-          case 'GET': return await m.get(url, { ...reqConfig, data })
           default: return await m.get(url, { ...reqConfig, data })
         }
       })(ApiConfig)

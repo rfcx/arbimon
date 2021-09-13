@@ -27,7 +27,7 @@ interface Auth0PluginState {
 const state = reactive<Auth0PluginState>({
   loading: true,
   isAuthenticated: false,
-  user: {},
+  user: undefined,
   popupOpen: false,
   error: null
 })
