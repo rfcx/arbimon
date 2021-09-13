@@ -2,9 +2,9 @@ import dayjs from 'dayjs'
 import { Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
-import { SpeciesRichnessFilter, Stream } from '@/models'
+import { SpeciesRichnessFilter, StreamModels } from '@/models'
 
-const defaultAllStreams: Stream = { id: 'all', name: 'All sites' }
+const defaultAllStreams: StreamModels.Stream = { id: 'all', name: 'All sites' }
 const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [defaultAllStreams])
 
 export default class ComparisonBoxComponent extends Vue {
