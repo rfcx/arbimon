@@ -8,9 +8,7 @@ import { VXServices } from '@/services'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
 
 @Options({
-  components: {
-    'project-selector': ProjectSelectorComponent
-  }
+  components: { ProjectSelectorComponent }
 })
 
 export default class NavigationBarComponent extends Vue {
