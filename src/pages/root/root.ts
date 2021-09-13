@@ -5,9 +5,7 @@ import { Auth0Option, Auth0User } from '@/models'
 import { VXServices } from '@/services'
 
 @Options({
-  components: {
-    'nav-bar': NavBarComponent
-  }
+  components: { NavBarComponent }
 })
 export default class RootPage extends Vue {
   @VXServices.Auth.auth.VX()

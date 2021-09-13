@@ -9,7 +9,7 @@ import {
 import { ComputedRef } from '@vue/reactivity'
 
 export interface Auth0User extends User {
-  roles?: string[]
+  roles: string[]
 }
 
 export interface Auth0Option {
