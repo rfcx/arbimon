@@ -8,13 +8,16 @@
     "build": "vue-tsc --project tsconfig.build.json --noEmit --skipLibCheck && vite build"
   },
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.17.0",
+    "axios": "^0.21.3",
     "dayjs": "^1.10.6",
     "node-sass": "^6.0.1",
     "sass-loader": "^12.1.0",
     "vue": "^3.0.5",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-property-decorator": "^10.0.0-rc.3",
-    "vue-router": "^4.0.11"
+    "vue-router": "^4.0.11",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "^16.6.2",
@@ -26,6 +29,7 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-icons": "^1.0.2",
+    "@windicss/plugin-interaction-variants": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-config-standard-with-typescript": "^20.0.0",
