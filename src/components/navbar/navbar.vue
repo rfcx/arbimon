@@ -18,7 +18,7 @@
           <router-link
             v-for="(item, idx) in navMenus"
             :key="'nav-menus-' + idx"
-            :to="item.routerPath"
+            :to="item.destination"
             class="box-content navbar-item text-primary align-middle flex items-center justify-center h-13 px-2"
           >
             <span class="text-primary">

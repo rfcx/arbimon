@@ -1,5 +1,7 @@
-export interface NavMenus {
+import { RouteLocationRaw } from 'vue-router'
+
+export interface NavMenu {
   label: string
-  routerPath: string
+  destination: RouteLocationRaw
   role?: string[]
 }
