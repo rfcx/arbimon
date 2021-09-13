@@ -1,14 +1,11 @@
 import { Options, Vue } from 'vue-class-component'
 import { useRoute } from 'vue-router'
 
+import { Auth0Option, Auth0User } from '@/models'
+import { NavMenus } from '@/models/Navbar'
 import { ROUTES_NAME } from '@/router'
+import { VXServices } from '@/services'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
-
-interface NavMenus {
-  label: string
-  routerPath: string
-  role?: string[]
-}
 
 @Options({
   components: {
@@ -18,6 +15,12 @@ interface NavMenus {
 
 export default class NavigationBarComponent extends Vue {
   private readonly projectId: string = useRoute().params.projectId as string ?? ''
+
+  @VXServices.Auth.auth.VX()
+  public auth!: Auth0Option | undefined
+
+  @VXServices.Auth.user.VX()
+  public user!: Auth0User | undefined
 
   public get navMenus (): NavMenus[] {
     if (this.projectId === '') return []
@@ -38,11 +41,15 @@ export default class NavigationBarComponent extends Vue {
     else { return `https://arbimon.rfcx.org/project/${this.projectId}` }
   }
 
+  public get userImage (): string {
+    return this.user?.picture ?? ''
+  }
+
   public async login (): Promise<void> {
-    await Promise.resolve()
+    await this.auth?.loginWithRedirect()
   }
 
   public async logout (): Promise<void> {
-    await Promise.resolve()
+    await this.auth?.logout({ returnTo: window.location.origin })
   }
 }
