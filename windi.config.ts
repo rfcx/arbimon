@@ -12,8 +12,11 @@ export default defineConfig({
   plugins: [
     plugin(({ addComponents }) => {
       const navbarItems = {
-        '.navbar-item.router-link-active': {
+        '#nav-menu-desktop .navbar-menu-item.router-link-active': {
           'box-shadow': 'inset 0 -3px 0 #31984f'
+        },
+        '#nav-menu-mobile .navbar-menu-item.router-link-active': {
+          'box-shadow': 'inset 5px 0 0 #31984f'
         }
       }
       addComponents(navbarItems)
@@ -70,6 +73,10 @@ export default defineConfig({
     btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none)',
     'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
-    'btn-danger': 'bg-danger hover:bg-danger-dark'
+    'btn-danger': 'bg-danger hover:bg-danger-dark',
+    // nav;
+    'navbar-container': 'box-content text-primary flex items-center justify-center h-13',
+    'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
+    'navbar-menu-item': 'px-2'
   }
 })
