@@ -41,8 +41,6 @@ export default class NavigationBarComponent extends Vue {
   // Menu
 
   public toggleMobileMenu (): void {
-    console.log('toggleMobileMenu b', this.shouldShowMobileMenu)
     this.shouldShowMobileMenu = !this.shouldShowMobileMenu
-    console.log('toggleMobileMenu a', this.shouldShowMobileMenu)
   }
 }
