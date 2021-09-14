@@ -1,10 +1,15 @@
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
+
+import { OnClickOutside } from '@vueuse/components'
 
 import { ProjectModels } from '@/models'
 import { ROUTES_NAME } from '@/router'
 import { VXServices } from '@/services'
 
+@Options({
+  components: { OnClickOutside }
+})
 export default class ProjectSelectorComponent extends Vue {
   @VXServices.Project.list.VX()
   projects!: ProjectModels.Project[]
@@ -24,6 +29,7 @@ export default class ProjectSelectorComponent extends Vue {
 
   async confirmedSelectedProject (): Promise<void> {
     await VXServices.Project.selectedProject.set(this.currentSelectedProject)
+    this.closeProjectSelector()
     void this.$router.push({
       name: ROUTES_NAME.overview,
       params: {
@@ -33,5 +39,7 @@ export default class ProjectSelectorComponent extends Vue {
   }
 
   @Emit('closeProjectSelector')
-  public closeProjectSelector (): void {}
+  public closeProjectSelector (): boolean {
+    return false
+  }
 }

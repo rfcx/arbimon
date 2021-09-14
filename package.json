@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.17.0",
+    "@vueuse/components": "^6.3.3",
+    "@vueuse/core": "^6.3.3",
     "axios": "^0.21.3",
     "dayjs": "^1.10.6",
     "node-sass": "^6.0.1",
