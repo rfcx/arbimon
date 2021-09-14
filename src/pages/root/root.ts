@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 
 import NavBarComponent from '@/components/navbar/navbar.vue'
-import { Auth0Option, Auth0User } from '@/models'
-import { VXServices } from '@/services'
+import { Auth0Option, Auth0User, ProjectModels } from '@/models'
+import { ProjectServices, VXServices } from '@/services'
 
 @Options({
   components: { NavBarComponent }

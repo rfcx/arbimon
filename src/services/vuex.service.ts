@@ -1,9 +1,11 @@
-import { Auth0Option, Auth0User } from '@/models'
+import { Auth0Option, Auth0User, ProjectModels } from '@/models'
 import store, { ACTIONS, ITEMS, VX } from '@/stores'
 
 const set = async (action: string, data: any): Promise<void> => await store.dispatch(action, data)
 
 const get = <T>(key: string, defaultValue: T): T => store.getters[key] ?? defaultValue
+
+// ===================== Auth =====================
 
 export const Auth = (() => ({
   auth: (() => {
@@ -32,6 +34,40 @@ export const Auth = (() => ({
       },
       async set (user: UserType) {
         return await set(ACTIONS.root.updateUser, user)
+      }
+    }
+  })()
+}))()
+
+// ===================== Project =====================
+
+export const Project = (() => ({
+  list: (() => {
+    type ProjectType = ProjectModels.Project[]
+    return {
+      VX () {
+        return VX(ITEMS.root.projects)
+      },
+      get (): ProjectType {
+        return get<ProjectType>(ITEMS.root.projects, [])
+      },
+      async set (projects: ProjectType) {
+        return await set(ACTIONS.root.updateProjects, projects)
+      }
+    }
+  })(),
+
+  selectedProject: (() => {
+    type ProjectType = ProjectModels.Project | undefined
+    return {
+      VX () {
+        return VX(ITEMS.root.selectedProject)
+      },
+      get (): ProjectType {
+        return get<ProjectType>(ITEMS.root.selectedProject, undefined)
+      },
+      async set (project: ProjectType) {
+        return await set(ACTIONS.root.updateSelectedProject, project)
       }
     }
   })()

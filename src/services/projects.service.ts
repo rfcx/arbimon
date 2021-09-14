@@ -1,12 +1,12 @@
 import { ProjectModels } from '@/models'
 
 // ! Update api after got an confirmation
-export async function getStreams (): Promise<ProjectModels.Project[]> {
+export async function getProjects (): Promise<ProjectModels.Project[]> {
   const projects: ProjectModels.Project[] = []
 
   for (let idx = 1; idx <= 10; idx++) {
     projects.push({
-      id: `project-${idx}`,
+      id: `project-id-${idx}`,
       name: `project-${idx}`
     })
   }
