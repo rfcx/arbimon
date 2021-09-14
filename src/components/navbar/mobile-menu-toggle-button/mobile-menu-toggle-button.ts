@@ -1,11 +1,9 @@
 import { Vue } from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Prop } from 'vue-property-decorator'
 
 export default class MobileMenuToggleButton extends Vue {
-  public isToggled: boolean = false
+  @Prop(Boolean) readonly isToggled: boolean | undefined
 
-  @Emit()
-  public toggleMobileMenu (): void {
-    this.isToggled = !this.isToggled
-  }
+  @Emit('toggleMobileMenu')
+  public toggleMobileMenu (): void {}
 }
