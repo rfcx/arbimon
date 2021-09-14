@@ -29,6 +29,13 @@ export default defineConfig({
   ],
   theme: {
     extend: {
+      screens: {
+        sm: '700px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px'
+      },
       textColor: {
         primary: '#fff',
         secondary: '#999',
