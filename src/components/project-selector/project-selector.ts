@@ -1,6 +1,7 @@
 import { Vue } from 'vue-class-component'
 
 import { ProjectModels } from '@/models'
+import { ROUTES_NAME } from '@/router'
 import { VXServices } from '@/services'
 
 export default class ProjectSelectorComponent extends Vue {
@@ -10,7 +11,7 @@ export default class ProjectSelectorComponent extends Vue {
   @VXServices.Project.selectedProject.VX()
   selectedProject!: ProjectModels.Project | undefined
 
-  currentSelectedProject: ProjectModels.Project | undefined = VXServices.Project.selectedProject.get()
+  public currentSelectedProject: ProjectModels.Project | undefined = VXServices.Project.selectedProject.get()
 
   isSelectedProject (project: ProjectModels.Project): boolean {
     return project.id === this.currentSelectedProject?.id
@@ -22,5 +23,11 @@ export default class ProjectSelectorComponent extends Vue {
 
   async confirmedSelectedProject (): Promise<void> {
     await VXServices.Project.selectedProject.set(this.currentSelectedProject)
+    void this.$router.push({
+      name: ROUTES_NAME.overview,
+      params: {
+        projectId: this.currentSelectedProject?.id ?? ''
+      }
+    })
   }
 }

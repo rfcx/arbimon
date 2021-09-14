@@ -1,8 +1,10 @@
 import { Options, Vue } from 'vue-class-component'
 import { useRoute } from 'vue-router'
 
+import { ProjectModels } from '@/models'
 import { NavMenu } from '@/models/Navbar'
 import { ROUTES_NAME } from '@/router'
+import { VXServices } from '@/services'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
@@ -16,11 +18,17 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 })
 
 export default class NavigationBarComponent extends Vue {
-  private readonly projectId: string = useRoute().params.projectId as string ?? ''
+  @VXServices.Project.selectedProject.VX()
+  selectedProject!: ProjectModels.Project | undefined
+
   public hasToggledMobileMenu: boolean = false
 
+  public get unselectedProject (): boolean {
+    return !this.selectedProject || this.selectedProjectId === ''
+  }
+
   public get navMenus (): NavMenu[] {
-    if (this.projectId === '') return []
+    if (this.unselectedProject) return []
     return [
       {
         label: 'Overview',
@@ -33,9 +41,17 @@ export default class NavigationBarComponent extends Vue {
     ]
   }
 
+  public get selectedProjectName (): string {
+    return this.selectedProject?.name ?? 'Selected Project'
+  }
+
+  public get selectedProjectId (): string {
+    return this.selectedProject?.id ?? useRoute().params.projectId as string ?? ''
+  }
+
   public get arbimonLink (): string {
-    if (this.projectId === '') return ''
-    else { return `https://arbimon.rfcx.org/project/${this.projectId}` }
+    if (this.unselectedProject) return ''
+    else { return `https://arbimon.rfcx.org/project/${this.selectedProjectId}` }
   }
 
   // Menu
