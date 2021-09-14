@@ -22,6 +22,7 @@ export default class NavigationBarComponent extends Vue {
   selectedProject!: ProjectModels.Project | undefined
 
   public hasToggledMobileMenu: boolean = false
+  public hasOpenedProjectSelector: boolean = false
 
   public get unselectedProject (): boolean {
     return !this.selectedProject || this.selectedProjectId === ''
@@ -42,7 +43,7 @@ export default class NavigationBarComponent extends Vue {
   }
 
   public get selectedProjectName (): string {
-    return this.selectedProject?.name ?? 'Selected Project'
+    return this.selectedProject?.name ?? 'Select Project'
   }
 
   public get selectedProjectId (): string {
@@ -58,5 +59,9 @@ export default class NavigationBarComponent extends Vue {
 
   public toggleMobileMenu (): void {
     this.hasToggledMobileMenu = !this.hasToggledMobileMenu
+  }
+
+  public toggleProjectSelector (isOpened: boolean): void {
+    this.hasOpenedProjectSelector = isOpened
   }
 }
