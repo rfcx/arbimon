@@ -15,7 +15,10 @@
         </div>
       </router-link>
       <div class="flex-1 flex items-center">
-        <div class="navbar-item text-sm h-9 px-4 hover:bg-box-grey rounded-md cursor-pointer">
+        <div 
+          class="navbar-item text-sm h-9 px-4 hover:bg-box-grey rounded-md cursor-pointer"
+          @click="toggleProjectSelector(true)"
+        >
           <span>Selected Project</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -83,6 +86,5 @@
       </a>
     </div>
   </nav>
-  <!-- TODO: add project selector-->
-  <!-- <project-selector></project-selector> -->
+  <project-selector v-if="hasOpenedProjectSelector" @closeProjectSelector="toggleProjectSelector(false)" />
 </div>
