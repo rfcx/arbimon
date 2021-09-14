@@ -10,7 +10,17 @@ export default class ProjectSelectorComponent extends Vue {
   @VXServices.Project.selectedProject.VX()
   selectedProject!: ProjectModels.Project | undefined
 
+  currentSelectedProject: ProjectModels.Project | undefined = VXServices.Project.selectedProject.get()
+
   isSelectedProject (project: ProjectModels.Project): boolean {
-    return project.id === this.selectedProject?.id
+    return project.id === this.currentSelectedProject?.id
+  }
+
+  setSelectedProject (project: ProjectModels.Project): void {
+    this.currentSelectedProject = project
+  }
+
+  async confirmedSelectedProject (): Promise<void> {
+    await VXServices.Project.selectedProject.set(this.currentSelectedProject)
   }
 }

@@ -12,7 +12,10 @@
             Select Project
           </div>
           <div class="divide-y divide-gray-500">
-            <div v-for="(project, idx) in projects" :key="'project-list-' + idx" class="flex justify-between text-white cursor-pointer hover:bg-steel-grey py-2">
+            <div v-for="(project, idx) in projects"
+              :key="'project-list-' + idx"
+              @click="setSelectedProject(project)"
+              class="flex justify-between text-white cursor-pointer hover:bg-steel-grey py-2">
               <div>
                 {{ project.name }}
               </div>
@@ -23,8 +26,11 @@
           </div>
           <div class="flex justify-end mt-2">
             <div>
-              <button class="btn btn-grey border mr-2">Cancel</button>
-              <button class="btn btn-primary">Select</button>
+              <button class="btn border mr-2">Cancel</button>
+              <button @click="confirmedSelectedProject()"
+                class="btn btn-primary">
+                Select
+              </button>
             </div>
           </div>
           <!-- TODO: implement search box -->
