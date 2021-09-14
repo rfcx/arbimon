@@ -37,7 +37,6 @@ export default class RootPage extends Vue {
   async setProjects (): Promise<void> {
     try {
       const projects = await ProjectServices.getProjects()
-      console.log(projects)
       await VXServices.Project.list.set(projects)
       this.projects = projects
     } catch (e) {
