@@ -54,8 +54,8 @@ export default defineConfig({
         },
         'steel-grey': {
           DEFAULT: '#232436',
-          light: '#E5E5E7',
-          dark: '#0f0f17'
+          light: '#4a4c72',
+          dark: '#1b1c2a'
         },
         'mirage-grey': {
           DEFAULT: '#141525',
