@@ -7,6 +7,7 @@
 import { Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
+import { ROUTES_NAME } from '@/router'
 import { Auth0Option, Auth0User, ProjectModels } from './models'
 import { ProjectServices, VXServices } from './services'
 
@@ -47,7 +48,14 @@ export default class RootPage extends Vue {
   // Set the first project as default project
   async setSelectedProject (): Promise<void> {
     if (this.projects.length > 0) {
-      await VXServices.Project.selectedProject.set(this.projects[0])
+      const defaultProject = this.projects[0]
+      await VXServices.Project.selectedProject.set(defaultProject)
+      void this.$router.push({
+        name: ROUTES_NAME.overview,
+        params: {
+          projectId: defaultProject.id ?? ''
+        }
+      })
     }
   }
 }
