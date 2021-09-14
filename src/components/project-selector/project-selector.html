@@ -8,11 +8,13 @@
 
       <div class="inline-block align-bottom bg-box-grey rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div class="bg-box-grey px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="text-white text-xl pb-2 border-b">
+          <div class="text-white text-xl pb-2 border-b-2">
             Select Project
           </div>
-          <div class="divide-y">
-            hi
+          <div class="divide-y divide-gray-500">
+            <div v-for="(project, idx) in projects" :key="'project-list-' + idx" class="text-white py-2">
+              {{ project.name }}
+            </div>
           </div>
           <!-- TODO: implement search box -->
           <!-- TODO: implement project list view -->
