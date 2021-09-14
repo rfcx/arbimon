@@ -4,7 +4,7 @@
       <div class="fixed inset-0 bg-steel-grey bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
       <!-- This element is to trick the browser into centering the modal contents. -->
-      <!-- <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span> -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
 
       <div class="inline-block align-bottom bg-box-grey rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div class="bg-box-grey px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -12,8 +12,19 @@
             Select Project
           </div>
           <div class="divide-y divide-gray-500">
-            <div v-for="(project, idx) in projects" :key="'project-list-' + idx" class="text-white py-2">
-              {{ project.name }}
+            <div v-for="(project, idx) in projects" :key="'project-list-' + idx" class="flex justify-between text-white cursor-pointer hover:bg-steel-grey py-2">
+              <div>
+                {{ project.name }}
+              </div>
+              <div v-if="isSelectedProject(project)">
+                <i class="icon-check" />
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end mt-2">
+            <div>
+              <button class="btn btn-grey border mr-2">Cancel</button>
+              <button class="btn btn-primary">Select</button>
             </div>
           </div>
           <!-- TODO: implement search box -->

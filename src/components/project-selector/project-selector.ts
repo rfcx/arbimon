@@ -9,4 +9,8 @@ export default class ProjectSelectorComponent extends Vue {
 
   @VXServices.Project.selectedProject.VX()
   selectedProject!: ProjectModels.Project | undefined
+
+  isSelectedProject (project: ProjectModels.Project): boolean {
+    return project.id === this.selectedProject?.id
+  }
 }

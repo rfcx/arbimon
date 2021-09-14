@@ -7,49 +7,49 @@
 import { Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { Auth0Option, Auth0User } from './models'
+import { Auth0Option, Auth0User, ProjectModels } from './models'
 import { ProjectServices, VXServices } from './services'
 
 export default class RootPage extends Vue {
   @Inject()
   readonly auth!: Auth0Option
 
-    private projects: ProjectModels.Project[] = []
+  private projects: ProjectModels.Project[] = []
 
-    public async created (): Promise<void> {
-      await VXServices.Auth.auth.set(this.auth)
-      await VXServices.Auth.user.set(this.user)
-    }
+  public async created (): Promise<void> {
+    await VXServices.Auth.auth.set(this.auth)
+    await VXServices.Auth.user.set(this.user)
+  }
 
-    public get loading (): boolean {
-      return this.auth.loading.value
-    }
+  public get loading (): boolean {
+    return this.auth.loading.value
+  }
 
-    public get user (): Auth0User {
-      return this.auth.user.value
-    }
+  public get user (): Auth0User {
+    return this.auth.user.value
+  }
 
-    async mounted (): Promise<void> {
-      await this.setProjects()
-      await this.setSelectedProject()
-    }
+  async mounted (): Promise<void> {
+    await this.setProjects()
+    await this.setSelectedProject()
+  }
 
-    async setProjects (): Promise<void> {
-      try {
-        const projects = await ProjectServices.getProjects()
-        console.log(projects)
-        await VXServices.Project.list.set(projects)
-        this.projects = projects
-      } catch (e) {
-        console.error(e)
-      }
+  async setProjects (): Promise<void> {
+    try {
+      const projects = await ProjectServices.getProjects()
+      console.log(projects)
+      await VXServices.Project.list.set(projects)
+      this.projects = projects
+    } catch (e) {
+      console.error(e)
     }
+  }
 
-    // Set the first project as default project
-    async setSelectedProject (): Promise<void> {
-      if (this.projects.length > 0) {
-        await VXServices.Project.selectedProject.set(this.projects[0])
-      }
+  // Set the first project as default project
+  async setSelectedProject (): Promise<void> {
+    if (this.projects.length > 0) {
+      await VXServices.Project.selectedProject.set(this.projects[0])
     }
+  }
 }
 </script>
