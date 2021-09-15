@@ -12,3 +12,8 @@ export const getStreams: Endpoint = {
   method: 'GET',
   url: `${CORE}/streams`
 }
+
+export const getProjects: Endpoint = {
+  method: 'GET',
+  url: `${CORE}/projects`
+}

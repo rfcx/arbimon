@@ -1,15 +1,29 @@
+import * as Endpoints from '@/endpoints'
 import { ProjectModels } from '@/models'
+import ApiClient from './api.service'
 
-// ! Update api after got an confirmation
-export async function getProjects (): Promise<ProjectModels.Project[]> {
-  const projects: ProjectModels.Project[] = []
+interface ProjectRequest {
+  limit?: number
+  offset?: number
+  keyword?: string
+}
 
-  for (let idx = 1; idx <= 10; idx++) {
-    projects.push({
-      id: `project-id-${idx}`,
-      name: `project-${idx}`
-    })
+function mapProjectList (data: ProjectModels.RawProjectListItem): ProjectModels.ProjectListItem {
+  return {
+    id: data.id,
+    name: data.name,
+    isPublic: data.is_public,
+    externalId: data.external_id
   }
+}
 
-  return projects
+export async function getProjects (options?: ProjectRequest): Promise<ProjectModels.ProjectListItem[]> {
+  try {
+    const resp = await ApiClient.request<ProjectModels.RawProjectListItem[]>({
+      ...Endpoints.getProjects
+    })
+    return Array.isArray(resp) ? resp.map(d => mapProjectList(d)) : []
+  } catch (error) {
+    return await Promise.reject(error)
+  }
 }
