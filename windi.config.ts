@@ -12,11 +12,15 @@ export default defineConfig({
   plugins: [
     plugin(({ addComponents }) => {
       const navbarItems = {
-        '#nav-menu-desktop .navbar-menu-item.router-link-active': {
-          'box-shadow': 'inset 0 -3px 0 #31984f'
+        '@media (min-width: 700px)': {
+          '.navbar-menu-item.router-link-active': {
+            'box-shadow': 'inset 0 -3px 0 #31984f'
+          }
         },
-        '#nav-menu-mobile .navbar-menu-item.router-link-active': {
-          'box-shadow': 'inset 5px 0 0 #31984f'
+        '@media (max-width: 700px)': {
+          '.navbar-menu-item.router-link-active': {
+            'box-shadow': 'inset 5px 0 0 #31984f'
+          }
         }
       }
       addComponents(navbarItems)
