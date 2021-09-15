@@ -47,15 +47,31 @@ export default class RootPage extends Vue {
 
   // Set the first project as default project
   async setSelectedProject (): Promise<void> {
-    if (this.projects.length > 0) {
-      const defaultProject = this.projects[0]
-      await VXServices.Project.selectedProject.set(defaultProject)
+    const projectId = this.$route.params.projectId
+    if (!projectId && this.projects.length > 0) {
+      const selectedProject = this.projects[0]
+      await VXServices.Project.selectedProject.set(selectedProject)
       void this.$router.push({
         name: ROUTES_NAME.overview,
         params: {
-          projectId: defaultProject.id ?? ''
+          projectId: selectedProject.id ?? ''
         }
       })
+    } else {
+      const selectedProject = this.projects.find(p => p.id === projectId)
+      if (!selectedProject) {
+        void this.$router.push({
+          name: ROUTES_NAME.error
+        })
+      } else {
+        await VXServices.Project.selectedProject.set(selectedProject)
+        void this.$router.push({
+          name: ROUTES_NAME.overview,
+          params: {
+            projectId: selectedProject.id ?? ''
+          }
+        })
+      }
     }
   }
 }

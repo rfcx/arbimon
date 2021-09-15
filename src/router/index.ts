@@ -36,6 +36,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/:pathMatch(.*)*',
+    name: ROUTES_NAME.error,
     component: Pages.ErrorPage
   }
 ]
