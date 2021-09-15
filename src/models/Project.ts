@@ -8,8 +8,8 @@ export interface RawProjectListItem {
 }
 
 export interface ProjectListItem {
-  id: string
-  name: string
-  isPublic: boolean
-  externalId: number
+  id?: string
+  name?: string
+  isPublic?: boolean
+  externalId?: number
 }
