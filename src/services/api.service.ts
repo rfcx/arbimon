@@ -31,7 +31,7 @@ interface AuthHeader { Authorization: string }
 
 class ApiClient {
   async authToken (): Promise<AuthHeader> {
-    const token = await getAccessToken()
+    const token = await getIdToken()
     return {
       Authorization: 'Bearer ' + (token ?? '')
     }
