@@ -19,7 +19,7 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 
 export default class NavigationBarComponent extends Vue {
   @VXServices.Project.selectedProject.VX()
-  selectedProject!: ProjectModels.Project | undefined
+  selectedProject!: ProjectModels.ProjectListItem | undefined
 
   public hasToggledMobileMenu: boolean = false
   public hasOpenedProjectSelector: boolean = false

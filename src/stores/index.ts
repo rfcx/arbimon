@@ -13,22 +13,22 @@ export {
 export class RootState {
   auth?: Models.Auth0Option
   user?: Models.Auth0User
-  projects?: Models.ProjectModels.Project[]
-  selectedProject?: Models.ProjectModels.Project
+  projects?: Models.ProjectModels.ProjectListItem[]
+  selectedProject?: Models.ProjectModels.ProjectListItem
 }
 
 const rootActions: ActionTree<RootState, RootState> = {
   [ACTIONS.root.updateAuth]: ({ commit }, auth?: Models.Auth0Option) => commit(ACTIONS.root.updateAuth, auth),
   [ACTIONS.root.updateUser]: ({ commit }, user?: Models.Auth0User) => commit(ACTIONS.root.updateUser, user),
-  [ACTIONS.root.updateProjects]: ({ commit }, projects?: Models.ProjectModels.Project[]) => commit(ACTIONS.root.updateProjects, projects),
-  [ACTIONS.root.updateSelectedProject]: ({ commit }, project?: Models.ProjectModels.Project) => commit(ACTIONS.root.updateSelectedProject, project)
+  [ACTIONS.root.updateProjects]: ({ commit }, projects?: Models.ProjectModels.ProjectListItem[]) => commit(ACTIONS.root.updateProjects, projects),
+  [ACTIONS.root.updateSelectedProject]: ({ commit }, project?: Models.ProjectModels.ProjectListItem) => commit(ACTIONS.root.updateSelectedProject, project)
 }
 
 const rootMutations: MutationTree<RootState> = {
   [ACTIONS.root.updateAuth]: (state, auth?: Models.Auth0Option) => { state.auth = auth },
   [ACTIONS.root.updateUser]: (state, user?: Models.Auth0User) => { state.user = user },
-  [ACTIONS.root.updateProjects]: (state, projects?: Models.ProjectModels.Project[]) => { state.projects = projects },
-  [ACTIONS.root.updateSelectedProject]: (state, project?: Models.ProjectModels.Project) => { state.selectedProject = project }
+  [ACTIONS.root.updateProjects]: (state, projects?: Models.ProjectModels.ProjectListItem[]) => { state.projects = projects },
+  [ACTIONS.root.updateSelectedProject]: (state, project?: Models.ProjectModels.ProjectListItem) => { state.selectedProject = project }
 }
 
 const rootGetters: GetterTree<RootState, RootState> = {

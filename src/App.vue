@@ -15,7 +15,7 @@ export default class RootPage extends Vue {
   @Inject()
   readonly auth!: Auth0Option
 
-  private projects: ProjectModels.Project[] = []
+  private projects: ProjectModels.ProjectListItem[] = []
 
   public async created (): Promise<void> {
     await VXServices.Auth.auth.set(this.auth)

@@ -12,18 +12,18 @@ import { VXServices } from '@/services'
 })
 export default class ProjectSelectorComponent extends Vue {
   @VXServices.Project.list.VX()
-  projects!: ProjectModels.Project[]
+  projects!: ProjectModels.ProjectListItem[]
 
   @VXServices.Project.selectedProject.VX()
-  selectedProject!: ProjectModels.Project | undefined
+  selectedProject!: ProjectModels.ProjectListItem | undefined
 
-  public currentSelectedProject: ProjectModels.Project | undefined = VXServices.Project.selectedProject.get()
+  public currentSelectedProject: ProjectModels.ProjectListItem | undefined = VXServices.Project.selectedProject.get()
 
-  isSelectedProject (project: ProjectModels.Project): boolean {
+  isSelectedProject (project: ProjectModels.ProjectListItem): boolean {
     return project.id === this.currentSelectedProject?.id
   }
 
-  setSelectedProject (project: ProjectModels.Project): void {
+  setSelectedProject (project: ProjectModels.ProjectListItem): void {
     this.currentSelectedProject = project
   }
 

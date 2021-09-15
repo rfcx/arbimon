@@ -43,7 +43,7 @@ export const Auth = (() => ({
 
 export const Project = (() => ({
   list: (() => {
-    type ProjectType = ProjectModels.Project[]
+    type ProjectType = ProjectModels.ProjectListItem[]
     return {
       VX () {
         return VX(ITEMS.root.projects)
@@ -58,7 +58,7 @@ export const Project = (() => ({
   })(),
 
   selectedProject: (() => {
-    type ProjectType = ProjectModels.Project | undefined
+    type ProjectType = ProjectModels.ProjectListItem | undefined
     return {
       VX () {
         return VX(ITEMS.root.selectedProject)
