@@ -56,31 +56,22 @@ export default class RootPage extends Vue {
     }
 
     const projectId = this.$route.params.projectId
-    if (projectId) {
-      const selectedProject = this.projects.find(p => p.id === projectId)
-      if (!selectedProject) {
-        void this.$router.push({
-          name: ROUTES_NAME.error
-        })
-      } else {
-        await VXServices.Project.selectedProject.set(selectedProject)
-        void this.$router.push({
-          name: ROUTES_NAME.overview,
-          params: {
-            projectId: selectedProject.id
-          }
-        })
-      }
-    } else if (this.projects.length > 0) {
-      const defaultProject = this.projects[0]
-      await VXServices.Project.selectedProject.set(defaultProject)
+    const selectedProject = this.projects.find(p => p.id === projectId)
+    if (!selectedProject) {
       void this.$router.push({
-        name: ROUTES_NAME.overview,
-        params: {
-          projectId: defaultProject.id
-        }
+        name: ROUTES_NAME.error
       })
+
+      return
     }
+
+    await VXServices.Project.selectedProject.set(selectedProject)
+    void this.$router.push({
+      name: ROUTES_NAME.overview,
+      params: {
+        projectId: selectedProject.id
+      }
+    })
   }
 }
 </script>
