@@ -1,12 +1,14 @@
 import { Options, Vue } from 'vue-class-component'
 
 import ComparisonBoxComponent from '@/components/comparison-list/comparison-list.vue'
+import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import { SpeciesRichnessFilter, StreamModels } from '@/models'
 import { StreamServices } from '@/services'
 
 @Options({
   components: {
-    'comparison-list': ComparisonBoxComponent
+    'comparison-list': ComparisonBoxComponent,
+    HorizontalBarChartComponent
   }
 })
 export default class SpeciesRichnessPage extends Vue {
