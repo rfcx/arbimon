@@ -1,2 +1,15 @@
-<template src="./horizontal-bar-chart.html" />
+<template>
+  <div class="้horizontal-bar-chart-component">
+    <div
+      v-if="!hasData"
+      class="no-chart-data"
+    >
+      No chart data
+    </div>
+    <div
+      v-else
+      id="multi-bar-chart"
+    />
+  </div>
+</template>
 <script src="./horizontal-bar-chart.ts" lang="ts" />
