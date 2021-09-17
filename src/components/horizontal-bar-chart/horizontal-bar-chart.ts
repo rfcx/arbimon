@@ -3,7 +3,7 @@ import { Vue } from 'vue-class-component'
 
 export default class HorizontalBarChartComponent extends Vue {
   margin = { top: 20, right: 20, bottom: 20, left: 80 }
-  FULL_WIDTH = screen.width
+  FULL_WIDTH = screen.width - this.margin.left
   CHART_WIDTH = this.FULL_WIDTH - this.margin.left - this.margin.right
   FULL_HEIGHT = 300
   CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
@@ -45,7 +45,6 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('svg')
       .attr('width', this.FULL_WIDTH)
       .attr('height', this.FULL_HEIGHT)
-      .attr('fill', 'white')
       .append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`)
 
@@ -56,8 +55,6 @@ export default class HorizontalBarChartComponent extends Vue {
     svg.append('g')
       .attr('transform', `translate(0,${this.CHART_HEIGHT})`)
       .call(d3.axisBottom(xAxis))
-      .selectAll('text')
-      .style('color', 'white')
 
     const yAxis = d3.scaleBand()
       .range([0, this.CHART_HEIGHT])
@@ -65,17 +62,27 @@ export default class HorizontalBarChartComponent extends Vue {
 
     svg.append('g')
       .call(d3.axisLeft(yAxis))
-      .selectAll('text')
+
+    // scale color line
+    svg.selectAll('.domain')
+      .style('stroke', 'white')
+
+    svg.selectAll('text')
       .style('color', 'white')
 
-    // svg.selectAll('myRect')
-    //   .data(data)
-    //   .enter()
-    //   .append('rect')
-    //   .attr('x', xAxis(0))
-    //   .attr('y', (d) => d.species)
-    //   .attr('width', (d) => d.population)
-    //   .attr('height', yAxis.bandwidth())
-    //   .attr('fill', '#69b3a2')
+    svg.selectAll('line')
+      .style('color', 'white')
+
+    // data render
+    svg.selectAll('myRect')
+      .data(data)
+      .enter()
+      .append('rect')
+      .style('margin-top', '10px')
+      .attr('x', xAxis(0))
+      .attr('y', (d) => yAxis(d.species))
+      .attr('width', (d) => xAxis(d.population))
+      .attr('height', yAxis.bandwidth())
+      .attr('fill', '#69b3a2')
   }
 }
