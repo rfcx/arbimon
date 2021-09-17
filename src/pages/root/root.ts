@@ -13,6 +13,4 @@ export default class RootPage extends Vue {
 
   @VXServices.Auth.user.VX()
   protected user!: Auth0User | undefined
-
-  // Logic handle
 }
