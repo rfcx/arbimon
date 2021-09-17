@@ -12,10 +12,8 @@ export default defineConfig({
   plugins: [
     plugin(({ addComponents }) => {
       const navbarItems = {
-        '@media (min-width: 700px)': {
-          '.navbar-menu-item.router-link-active': {
-            'box-shadow': 'inset 0 -3px 0 #31984f'
-          }
+        '.navbar-menu-item.router-link-active': {
+          'box-shadow': 'inset 0 -3px 0 #31984f'
         },
         '@media (max-width: 699px)': {
           '.navbar-menu-item.router-link-active': {

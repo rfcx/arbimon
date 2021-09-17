@@ -6,7 +6,7 @@
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      @click="toggleMobileMenu()"
+      @click="$emit('toggleMobileMenu')"
     >
       <path
         v-if="!isToggled"

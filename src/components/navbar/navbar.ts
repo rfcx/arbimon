@@ -52,6 +52,7 @@ export default class NavigationBarComponent extends Vue {
 
   public get arbimonLink (): string {
     if (this.unselectedProject) return ''
+    // TODO 17: change this to support staging / production
     else { return `https://arbimon.rfcx.org/project/${this.selectedProjectId}` }
   }
 
