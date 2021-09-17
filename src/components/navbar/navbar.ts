@@ -36,7 +36,7 @@ export default class NavigationBarComponent extends Vue {
 
   public get arbimonLink (): string {
     if (this.projectId === '') return ''
-    // TODO: change this to support staging / production
+    // TODO 17: change this to support staging / production
     else { return `https://arbimon.rfcx.org/project/${this.projectId}` }
   }
 
@@ -47,7 +47,6 @@ export default class NavigationBarComponent extends Vue {
   }
 
   public toggleProjectSelector (isOpened: boolean): void {
-    console.log('toggleProjectSelector', isOpened)
     this.hasOpenedProjectSelector = isOpened
   }
 }
