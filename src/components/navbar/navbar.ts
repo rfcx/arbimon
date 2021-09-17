@@ -11,9 +11,9 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 
 @Options({
   components: {
-    'menu-toggle-button': MobileMenuToggleButton,
-    'project-selector': ProjectSelectorComponent,
-    'auth-navbar-item': AuthNavbarItemComponent
+    MobileMenuToggleButton,
+    ProjectSelectorComponent,
+    AuthNavbarItemComponent
   }
 })
 
