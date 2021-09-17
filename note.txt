@@ -1,0 +1,45 @@
+request
+{
+  startDatetime:
+  endDatetime:
+  streams: []
+  limit:
+  offset: 
+}
+
+color in the comparison box
+
+----------------------------------
+
+Bar chart & Map chart
+[
+  {
+    taxonomicType: "",
+    number: "",
+    latitude: "",
+    longitude: ""
+  },
+  ...
+]
+
+----------------------------------
+
+Line chart hour: summary
+[
+  {
+
+  }
+]
+
+x = time
+y = number of detections
+
+----------------------------------
+
+pinia
+
+----------------------------------
+
+filter comparison not allow apply if not field in all required fields
+
+make sure that we have done the project selecter
