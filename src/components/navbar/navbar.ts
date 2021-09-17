@@ -1,19 +1,27 @@
 import { Options, Vue } from 'vue-class-component'
+import { useRoute } from 'vue-router'
 
-import { Auth0Option, Auth0User } from '@/models'
 import { NavMenu } from '@/models/Navbar'
 import { ROUTES_NAME } from '@/router'
-import { VXServices } from '@/services'
+import ProjectSelectorComponent from '../project-selector/project-selector.vue'
+import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
+import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
 
-@Options({})
-export default class NavBarDefaultComponent extends Vue {
-  @VXServices.Auth.auth.VX()
-  public auth!: Auth0Option | undefined
+@Options({
+  components: {
+    'menu-toggle-button': MobileMenuToggleButton,
+    'project-selector': ProjectSelectorComponent,
+    'auth-navbar-item': AuthNavbarItemComponent
+  }
+})
 
-  @VXServices.Auth.user.VX()
-  public user!: Auth0User | undefined
+export default class NavigationBarComponent extends Vue {
+  private readonly projectId: string = useRoute().params.projectId as string ?? ''
+  public hasToggledMobileMenu: boolean = false
+  public hasOpenedProjectSelector: boolean = false
 
   public get navMenus (): NavMenu[] {
+    if (this.projectId === '') return []
     return [
       {
         label: 'Overview',
@@ -26,15 +34,19 @@ export default class NavBarDefaultComponent extends Vue {
     ]
   }
 
-  public get userImage (): string {
-    return this.user?.picture ?? ''
+  public get arbimonLink (): string {
+    if (this.projectId === '') return ''
+    // TODO 17: change this to support staging / production
+    else { return `https://arbimon.rfcx.org/project/${this.projectId}` }
   }
 
-  public async login (): Promise<void> {
-    await this.auth?.loginWithRedirect()
+  // Menu
+
+  public toggleMobileMenu (): void {
+    this.hasToggledMobileMenu = !this.hasToggledMobileMenu
   }
 
-  public async logout (): Promise<void> {
-    await this.auth?.logout({ returnTo: window.location.origin })
+  public toggleProjectSelector (isOpened: boolean): void {
+    this.hasOpenedProjectSelector = isOpened
   }
 }
