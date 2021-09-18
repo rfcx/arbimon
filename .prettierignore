@@ -5,7 +5,6 @@
 !*.yaml
 
 # just to be safe
-.*/**/*.*
 node_modules
 dist
 lib
