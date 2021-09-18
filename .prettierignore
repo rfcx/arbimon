@@ -1,13 +1,12 @@
 # ignore everything
-# ...except css/scss
+# ...except json/yaml
 *.*
-!*.css
-!*.scss
+!*.json
+!*.yaml
 
 # just to be safe
 .*/**/*.*
 node_modules
-build
 dist
 lib
 coverage
