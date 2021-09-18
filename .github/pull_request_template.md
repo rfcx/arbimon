@@ -1,16 +1,16 @@
 ## ✅ DoD
 
-- [x] Resolves [CE-XXX](https://jira.rfcx.org/browse/CE-XXX)
+- [x] Resolves #TODO
 - [ ] Documentation updated / na
 - [ ] CHANGELOG updated / na
 
 ## 📝 Summary
 
-- Write a list of changes _(use italic to highlight additional/unplanned work)_
+- Write a list of changes
 
-## 📸 Screenshots
+## 💉 Testing
 
-Put screenshots here!
+- How did you test this change?
 
 ## 🛑 Problems
 
@@ -18,5 +18,8 @@ Put screenshots here!
 
 ## 💡 More ideas
 
-Write any more ideas you have
+- Write any more ideas you have
 
+## 📸 Screenshots
+
+- Put screenshots here!
