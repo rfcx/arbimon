@@ -37,7 +37,7 @@ class ApiClient {
     }
   }
 
-  async request <T = any>({ url, method, headers, data, config }: RequestParams): Promise<T> {
+  async request <T = any> ({ url, method, headers, data, config }: RequestParams): Promise<T> {
     try {
       const response = await (async (m) => {
         const reqConfig = {

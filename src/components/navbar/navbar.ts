@@ -21,8 +21,8 @@ export default class NavigationBarComponent extends Vue {
   @VXServices.Project.selectedProject.VX()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 
-  public hasToggledMobileMenu: boolean = false
-  public hasOpenedProjectSelector: boolean = false
+  public hasToggledMobileMenu = false
+  public hasOpenedProjectSelector = false
 
   public get unselectedProject (): boolean {
     return !this.selectedProject || this.selectedProjectId === ''
