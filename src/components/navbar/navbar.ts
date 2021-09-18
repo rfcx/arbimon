@@ -17,8 +17,8 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 
 export default class NavigationBarComponent extends Vue {
   private readonly projectId: string = useRoute().params.projectId as string ?? ''
-  public hasToggledMobileMenu: boolean = false
-  public hasOpenedProjectSelector: boolean = false
+  public hasToggledMobileMenu = false
+  public hasOpenedProjectSelector = false
 
   public get navMenus (): NavMenu[] {
     if (this.projectId === '') return []
