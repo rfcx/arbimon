@@ -5,7 +5,6 @@
 !*.scss
 
 # just to be safe
-.*/**/*.*
 node_modules
 build
 dist
