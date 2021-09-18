@@ -11,7 +11,7 @@ import { ROUTES_NAME } from '@/router'
 import { Auth0Option, Auth0User, ProjectModels } from './models'
 import { ProjectServices, VXServices } from './services'
 
-export default class RootPage extends Vue {
+export default class App extends Vue {
   @Inject()
   readonly auth!: Auth0Option
 
