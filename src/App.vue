@@ -55,7 +55,7 @@ export default class App extends Vue {
       return
     }
 
-    const projectId = this.$route.params.projectId
+    const projectId = this.$route.params.projectId as string
     if (!projectId && this.projects.length > 0) {
       const defaultProject = this.projects[0]
       await VXServices.Project.selectedProject.set(defaultProject)
