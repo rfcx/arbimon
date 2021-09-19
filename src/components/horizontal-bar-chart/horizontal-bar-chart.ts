@@ -9,8 +9,8 @@ export default class HorizontalBarChartComponent extends Vue {
   public chartData!: ChartModels.BarChartItem[]
 
   public margin = { top: 20, right: 20, bottom: 20, left: 80 }
-  public FULL_WIDTH = 0
-  public CHART_WIDTH = 0
+  public FULL_WIDTH!: number
+  public CHART_WIDTH!: number
   public FULL_HEIGHT = 300
   public CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
 
