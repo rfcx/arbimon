@@ -41,31 +41,39 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`)
 
-    const xAxis = d3.scaleLinear()
+    const xScale = d3.scaleLinear()
       .domain([0, maximumPopulation])
       .range([0, this.CHART_WIDTH])
 
+    const xAxis = d3.axisBottom(xScale)
+      .tickSize(0)
+      .tickPadding(10)
+
     svg.append('g')
       .attr('transform', `translate(0,${this.CHART_HEIGHT})`)
-      .call(d3.axisBottom(xAxis))
+      .call(xAxis)
 
-    const yAxis = d3.scaleBand()
-      .domain(d3.map(this.chartData, (d) => d.label))
+    const yScale = d3.scaleBand()
+      .domain(d3.map(this.chartData, (d) => d.label.toUpperCase()))
       .range([0, this.CHART_HEIGHT])
       .paddingInner(0.2)
 
+    const yAxis = d3.axisLeft(yScale)
+      .tickSize(0)
+      .tickPadding(5)
+
     svg.append('g')
-      .call(d3.axisLeft(yAxis))
+      .call(yAxis)
 
     // scale color line
     svg.selectAll('.domain')
-      .style('stroke', 'white')
+      .style('stroke', 'none')
 
     svg.selectAll('text')
       .style('color', 'white')
 
     svg.selectAll('line')
-      .style('color', 'white')
+      .style('color', 'none')
 
     // data render
     svg.selectAll('myRect')
@@ -73,11 +81,11 @@ export default class HorizontalBarChartComponent extends Vue {
       .enter()
       .append('rect')
       .style('margin-top', '10px')
-      .attr('x', xAxis(0))
+      .attr('x', xScale(0))
       // @ts-expect-error
-      .attr('y', (d) => yAxis(d.label))
-      .attr('width', (d) => xAxis(d.population))
-      .attr('height', yAxis.bandwidth())
+      .attr('y', (d) => yScale(d.label.toUpperCase()))
+      .attr('width', (d) => xScale(d.population))
+      .attr('height', yScale.bandwidth())
       .attr('fill', '#31984F')
   }
 }
