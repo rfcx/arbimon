@@ -1,29 +1,38 @@
 import * as d3 from 'd3'
 import { Vue } from 'vue-class-component'
 
+interface ChartItem {
+  label: string
+  population: number
+}
+
 export default class HorizontalBarChartComponent extends Vue {
   margin = { top: 20, right: 20, bottom: 20, left: 80 }
-  FULL_WIDTH = screen.width - this.margin.left
-  CHART_WIDTH = this.FULL_WIDTH - this.margin.left - this.margin.right
+  FULL_WIDTH = 0
+  CHART_WIDTH = 0
   FULL_HEIGHT = 300
   CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
 
-  chartData = [
+  chartData: ChartItem[] = [
     {
-      species: 'birds',
+      label: 'birds',
       population: 1000
     },
     {
-      species: 'mammal',
+      label: 'mammal',
       population: 1500
     },
     {
-      species: 'reptile',
-      population: 500
+      label: 'reptile',
+      population: 800
     }
   ]
 
+  groupLabels = d3.map(this.chartData, (d) => d.label)
+
   mounted (): void {
+    this.FULL_WIDTH = document.getElementById('multi-bar-chart')?.clientWidth ?? 0 - this.margin.left
+    this.CHART_WIDTH = this.FULL_WIDTH - this.margin.left - this.margin.right
     this.generateChart()
   }
 
@@ -57,8 +66,9 @@ export default class HorizontalBarChartComponent extends Vue {
       .call(d3.axisBottom(xAxis))
 
     const yAxis = d3.scaleBand()
+      .domain(this.groupLabels)
       .range([0, this.CHART_HEIGHT])
-      .domain(data.map(d => d.species))
+      .paddingInner(0.2)
 
     svg.append('g')
       .call(d3.axisLeft(yAxis))
@@ -80,9 +90,9 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('rect')
       .style('margin-top', '10px')
       .attr('x', xAxis(0))
-      .attr('y', (d) => yAxis(d.species))
+      .attr('y', (d) => yAxis(d.label))
       .attr('width', (d) => xAxis(d.population))
       .attr('height', yAxis.bandwidth())
-      .attr('fill', '#69b3a2')
+      .attr('fill', '#31984F')
   }
 }
