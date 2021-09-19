@@ -90,6 +90,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('rect')
       .style('margin-top', '10px')
       .attr('x', xAxis(0))
+      // @ts-expect-error
       .attr('y', (d) => yAxis(d.label))
       .attr('width', (d) => xAxis(d.population))
       .attr('height', yAxis.bandwidth())
