@@ -7,6 +7,6 @@
       Number of species found in the area
     </div>
   </div>
-  <comparison-list @select="onFilterChange" />
-  <horizontal-bar-chart-component class="mt-5" />
+  <comparison-list-component @select="onFilterChange" />
+  <horizontal-bar-chart-component class="mt-5" :chartData="chartData" />
 </div>

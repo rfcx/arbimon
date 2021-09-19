@@ -1,46 +1,30 @@
 import * as d3 from 'd3'
 import { Vue } from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
 
-interface ChartItem {
-  label: string
-  population: number
-}
+import { ChartModels } from '@/models'
 
 export default class HorizontalBarChartComponent extends Vue {
-  margin = { top: 20, right: 20, bottom: 20, left: 80 }
-  FULL_WIDTH = 0
-  CHART_WIDTH = 0
-  FULL_HEIGHT = 300
-  CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
+  @Prop({ default: [] })
+  public chartData!: ChartModels.BarChartItem[]
 
-  chartData: ChartItem[] = [
-    {
-      label: 'birds',
-      population: 1000
-    },
-    {
-      label: 'mammal',
-      population: 1500
-    },
-    {
-      label: 'reptile',
-      population: 800
-    }
-  ]
+  public margin = { top: 20, right: 20, bottom: 20, left: 80 }
+  public FULL_WIDTH = 0
+  public CHART_WIDTH = 0
+  public FULL_HEIGHT = 300
+  public CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
 
-  groupLabels = d3.map(this.chartData, (d) => d.label)
-
-  mounted (): void {
+  public mounted (): void {
     this.FULL_WIDTH = document.getElementById('multi-bar-chart')?.clientWidth ?? 0 - this.margin.left
     this.CHART_WIDTH = this.FULL_WIDTH - this.margin.left - this.margin.right
     this.generateChart()
   }
 
-  get hasData (): boolean {
+  public get hasData (): boolean {
     return this.chartData.length > 0
   }
 
-  generateChart (): void {
+  public generateChart (): void {
     const data = this.chartData
 
     let maximumPopulation = 0
@@ -66,7 +50,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .call(d3.axisBottom(xAxis))
 
     const yAxis = d3.scaleBand()
-      .domain(this.groupLabels)
+      .domain(d3.map(this.chartData, (d) => d.label))
       .range([0, this.CHART_HEIGHT])
       .paddingInner(0.2)
 
