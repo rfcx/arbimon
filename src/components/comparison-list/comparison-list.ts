@@ -1,13 +1,20 @@
 import dayjs from 'dayjs'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
 import { SpeciesRichnessFilter, StreamModels } from '@/models'
+import ComparisonFilterComponent from '../comparison-filter/comparison-filter.vue'
 
 const defaultAllStreams: StreamModels.Stream = { id: 'all', name: 'All sites' }
 const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [defaultAllStreams])
 
+@Options({
+  components: {
+    ComparisonFilterComponent
+  }
+})
 export default class ComparisonBoxComponent extends Vue {
+  public isFilterOpen = false
   public filters: SpeciesRichnessFilter[] = [defaultFilter]
 
   public addFilterConfig (): void {
@@ -17,6 +24,10 @@ export default class ComparisonBoxComponent extends Vue {
   //  TODO: Have to improve this logic to check what is `all` meaning
   public get isDefaultFilter (): boolean {
     return this.filters.length === 1 && this.filters[0].streams[0].id === 'all'
+  }
+
+  showFilterPopup (open: boolean): void {
+    this.isFilterOpen = open
   }
 
   public removeFilterConfig (idx: number): void {
