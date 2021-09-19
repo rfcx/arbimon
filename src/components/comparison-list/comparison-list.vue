@@ -5,6 +5,7 @@
         v-for="(filters, idx) in filters"
         :key="'stream-card' + idx"
         class="flex flex-col justify-center w-48 max-w-48 h-24 mr-4 mt-6 bg-clip-padding mirage-grey border-2 hover:bg-steel-grey cursor-pointer rounded-xl px-4 text-white text-sm"
+        @click="showFilterPopup(true)"
       >
         <div class="flex flex-row">
           <div
@@ -37,6 +38,10 @@
         </div>
       </div>
     </div>
+    <comparison-filter-component
+      v-if="isFilterOpen"
+      @close="showFilterPopup"
+    />
   </div>
 </template>
 <script src="./comparison-list.ts" lang="ts" />
