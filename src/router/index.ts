@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: Auth0.routeGuard,
     children: [
       {
-        path: '/project/:projectId/',
+        path: '',
         redirect: {
           name: ROUTES_NAME.overview
         }

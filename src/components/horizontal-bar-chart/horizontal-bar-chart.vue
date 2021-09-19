@@ -2,7 +2,7 @@
   <div class="้horizontal-bar-chart-component">
     <div
       v-if="!hasData"
-      class="no-chart-data"
+      class="no-chart-data text-center text-white text-xl"
     >
       No chart data
     </div>
