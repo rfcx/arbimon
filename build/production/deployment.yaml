@@ -20,11 +20,11 @@ spec:
             - containerPort: 7777
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "1"
+              memory: '512Mi'
+              cpu: '1'
             limits:
-              memory: "2000Mi"
-              cpu: "2"
+              memory: '2000Mi'
+              cpu: '2'
           envFrom:
-          - configMapRef:
-              name: biodiversity-analytics-config
+            - configMapRef:
+                name: biodiversity-analytics-config
