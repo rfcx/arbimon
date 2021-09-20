@@ -1,34 +1,38 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import * as Pages from '@/pages'
+import stores from '@/stores'
 import { Auth0 } from '../auth'
+import { createSelectProjectGuard } from './select-project-guard'
 
 export const ROUTES_NAME = Object.freeze({
-  root: 'root',
+  index: 'index',
   overview: 'overview',
   species_richness: 'species_richness',
   error: 'error'
 })
 
+const selectProjectGuard = createSelectProjectGuard(stores)
+
 const routes: RouteRecordRaw[] = [
+  // {
+  //   path: '/',
+  //   name: ROUTES_NAME.index,
+  //   beforeEnter: [Auth0.routeGuard],
+  //   component: Pages.ErrorPage // TODO: Needs the navbar...
+  // },
   {
     path: '/project/:projectId',
     component: Pages.RootPage,
-    beforeEnter: Auth0.routeGuard,
+    beforeEnter: [Auth0.routeGuard, selectProjectGuard],
     children: [
       {
-        path: '/project/:projectId/',
-        redirect: {
-          name: ROUTES_NAME.overview
-        }
-      },
-      {
-        path: '/project/:projectId/overview',
+        path: '',
         name: ROUTES_NAME.overview,
         component: Pages.OverviewPage
       },
       {
-        path: '/project/:projectId/species_richness',
+        path: 'species-richness',
         name: ROUTES_NAME.species_richness,
         component: Pages.SpeciesRichnessPage
       }
