@@ -28,29 +28,23 @@
                   class="flex justify-between text-white cursor-pointer hover:bg-steel-grey-dark py-2"
                   @click="setSelectedProject(project)"
                 >
-                  <div>
-                    {{ project.name }}
-                  </div>
-                  <div v-if="isSelectedProject(project)">
-                    <i class="icon-check" />
-                  </div>
+                  {{ project.name }}
+                  <i v-if="isSelectedProject(project)" class="icon-check" />
                 </div>
               </div>
               <div class="flex justify-end mt-2">
-                <div>
-                  <button
-                    class="btn mr-2"
-                    @click="closeProjectSelector"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    class="btn btn-primary ${updating ? 'opacity-50 cursor-not-allowed' : '' }"
-                    @click="confirmedSelectedProject()"
-                  >
-                    Select
-                  </button>
-                </div>
+                <button
+                  class="btn mr-2"
+                  @click="closeProjectSelector"
+                >
+                  Cancel
+                </button>
+                <button
+                  class="btn btn-primary ${updating ? 'opacity-50 cursor-not-allowed' : '' }"
+                  @click="confirmedSelectedProject()"
+                >
+                  Select
+                </button>
               </div>
             </on-click-outside>
           </div>
