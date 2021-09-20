@@ -1,5 +1,4 @@
 import { Options, Vue } from 'vue-class-component'
-import { useRoute } from 'vue-router'
 
 import { ProjectModels } from '@/models'
 import { NavMenu } from '@/models/Navbar'
@@ -24,36 +23,30 @@ export default class NavigationBarComponent extends Vue {
   public hasToggledMobileMenu = false
   public hasOpenedProjectSelector = false
 
-  public get unselectedProject (): boolean {
-    return !this.selectedProject || this.selectedProjectId === ''
-  }
-
-  public get navMenus (): NavMenu[] {
-    if (this.unselectedProject) return []
-    return [
-      {
-        label: 'Overview',
-        destination: ROUTES_NAME.overview
-      },
-      {
-        label: 'Species Richness',
-        destination: ROUTES_NAME.species_richness
-      }
-    ]
-  }
-
   public get selectedProjectName (): string {
     return this.selectedProject?.name ?? 'Select Project'
   }
 
-  public get selectedProjectId (): string {
-    return this.selectedProject?.id ?? useRoute().params.projectId as string ?? ''
+  public get navMenus (): NavMenu[] {
+    const selectedProjectId = this.selectedProject?.id
+    return selectedProjectId
+      ? [
+          {
+            label: 'Overview',
+            destination: { name: ROUTES_NAME.overview, params: { projectId: selectedProjectId } }
+          },
+          {
+            label: 'Species Richness',
+            destination: { name: ROUTES_NAME.species_richness, params: { projectId: selectedProjectId } }
+          }
+        ]
+      : []
   }
 
   public get arbimonLink (): string {
-    if (this.unselectedProject) return ''
-    // TODO 17: change this to support staging / production
-    else { return `https://arbimon.rfcx.org/project/${this.selectedProjectId}` }
+    const selectedProjectId = this.selectedProject?.id
+    if (!selectedProjectId) return ''
+    else return `https://arbimon.rfcx.org/project/${selectedProjectId}` // TODO 17: change this to support staging / production
   }
 
   // Menu
