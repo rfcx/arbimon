@@ -1,14 +1,14 @@
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 
 import { Stream } from './Stream'
 
 export class SpeciesRichnessFilter {
-  startDate: Dayjs= dayjs()
-  endDate: Dayjs = dayjs()
+  startDate: Dayjs | null = null
+  endDate: Dayjs | null = null
   streams: Stream[] = []
   color: string = ''
 
-  constructor (startDate = dayjs(), endDate = dayjs(), streams: Stream[] = [], color = '') {
+  constructor (startDate: Dayjs | null, endDate: Dayjs | null, streams: Stream[] = [], color = '') {
     this.startDate = startDate
     this.endDate = endDate
     this.streams = streams
@@ -20,6 +20,8 @@ export class SpeciesRichnessFilter {
   }
 
   get displayDate (): string {
-    return `${this.startDate.format('MMM D')} - ${this.endDate.format('D, YYYY')}`
+    const start = this.startDate ? `${this.startDate.format('MMM D')} - ` : ''
+    const end = this.endDate ? this.endDate.format('D, YYYY') : ''
+    return `${start}${end}`
   }
 }
