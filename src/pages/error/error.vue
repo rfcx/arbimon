@@ -1,8 +1,8 @@
 <template>
-  <div id="generic-error-page">
+  <div id="error-page-not-found">
     <nav-bar />
     <div class="text-secondary">
-      Please select project
+      Page not found
     </div>
   </div>
 </template>
