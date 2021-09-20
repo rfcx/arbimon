@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
-import { SpeciesRichnessFilter, StreamModels } from '@/models'
+import { FilterBase, SpeciesRichnessFilter, StreamModels } from '@/models'
 import ComparisonFilterComponent from '../comparison-filter/comparison-filter.vue'
 
 const defaultAllStreams: StreamModels.Stream = { id: 'all', name: 'All sites' }
@@ -14,11 +14,15 @@ const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), day
   }
 })
 export default class ComparisonBoxComponent extends Vue {
+  public selectedFilterId = -1
+  public isAddSelected = false
   public isFilterOpen = false
   public filters: SpeciesRichnessFilter[] = [defaultFilter]
 
   // TODO: Update add logic
   public addFilterConfig (): void {
+    this.isAddSelected = true
+    this.showFilterPopup(true)
     // this.filters.push(defaultFilter)
   }
 
@@ -27,14 +31,25 @@ export default class ComparisonBoxComponent extends Vue {
     return this.filters.length === 1 && this.filters[0].streams[0].id === 'all'
   }
 
-  showFilterPopup (open: boolean): void {
+  showFilterPopup (open: boolean, idx?: number): void {
     this.isFilterOpen = open
+    this.selectedFilterId = idx ?? -1
   }
 
   public removeFilterConfig (idx: number): void {
     this.filters.splice(idx, 1)
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
+    }
+  }
+
+  public apply (filter: FilterBase): void {
+    const newFilter = new SpeciesRichnessFilter(filter.startDate, filter.endDate, filter.streams)
+    if (this.isAddSelected) {
+      this.filters.push(newFilter)
+      this.isAddSelected = false
+    } else {
+      this.filters.splice(this.selectedFilterId, 1, newFilter)
     }
   }
 
