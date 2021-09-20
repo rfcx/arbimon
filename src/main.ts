@@ -9,18 +9,15 @@ import 'virtual:windi.css'
 import './styles/global.scss'
 
 async function init (): Promise<void> {
-  const Auth0Plugin = await Auth0.init({
-    redirectUri: window.location.origin,
-    onRedirectCallback: (appState) => {
-      void router.replace(appState?.targetUrl ?? window.location.pathname)
-    }
-  })
+  const { Auth0Plugin, redirectAfterAuth } = await Auth0.init({ redirectUri: window.location.origin })
 
   createApp(App)
     .use(Auth0Plugin)
     .use(stores)
     .use(router)
     .mount('#app')
+
+  if (redirectAfterAuth) await router.replace(redirectAfterAuth)
 }
 
 void init()
