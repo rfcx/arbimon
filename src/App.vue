@@ -10,7 +10,7 @@ import { Inject } from 'vue-property-decorator'
 import { Auth0Option, Auth0User } from './models'
 import { VXServices } from './services'
 
-export default class RootPage extends Vue {
+export default class App extends Vue {
   @Inject()
   readonly auth!: Auth0Option
 
