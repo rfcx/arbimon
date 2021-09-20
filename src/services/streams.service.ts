@@ -1,4 +1,4 @@
-import * as Endpoints from '@/endpoints'
+import * as Endpoints from '@/api/endpoints'
 import { StreamModels } from '@/models'
 import ApiClient from './api.service'
 
