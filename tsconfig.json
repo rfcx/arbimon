@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
-    "types": [
-      "vite/client"
-    ],
+    "types": ["vite/client"],
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -14,14 +12,9 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
-    "lib": [
-      "esnext",
-      "dom"
-    ]
+    "lib": ["esnext", "dom"]
   },
   "include": [
     "src/**/*.ts",
@@ -31,10 +24,5 @@
     "*.config.ts",
     "*.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "lib",
-    ".*/**"
-  ]
+  "exclude": ["node_modules", "dist", "lib", ".*/**"]
 }
