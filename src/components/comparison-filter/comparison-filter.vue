@@ -44,21 +44,22 @@
                     >
                   </div>
                   <div
-                    v-for="(stream, idx) in streams"
+                    v-for="(item, idx) in streams"
                     :key="'stream-list-' + idx"
                     class="px-4 pb-4 align-middle"
                   >
                     <input
-                      :id="stream.id"
+                      :id="item.stream.id"
                       type="checkbox"
                       class="rounded"
-                      @click="updateSelectedStreams(stream)"
+                      :checked="item.check"
+                      @click="updateSelectedStreams(item)"
                     >
                     <label
                       class="text-white ml-2"
-                      :for="stream.id"
+                      :for="item.stream.id"
                     >
-                      {{ stream.name }}
+                      {{ item.stream.name }}
                     </label>
                   </div>
                 </div>

@@ -11,6 +11,11 @@ interface FilterMenuItem {
   name: string
 }
 
+interface StreamCheckbox {
+  stream: StreamModels.Stream
+  check: boolean
+}
+
 const dateFormat = 'YYYY-MM-DD'
 
 @Options({
@@ -38,19 +43,28 @@ export default class ComparisonFilterComponent extends Vue {
     ]
   }
 
-  public get streams (): StreamModels.Stream[] {
+  public get streams (): StreamCheckbox[] {
     return [
       {
-        id: 'abc',
-        name: 'ABC'
+        stream: {
+          id: 'abc',
+          name: 'ABC'
+        },
+        check: false
       },
       {
-        id: 'def',
-        name: 'DEF'
+        stream: {
+          id: 'def',
+          name: 'DEF'
+        },
+        check: false
       },
       {
-        id: 'ghi',
-        name: 'GHI'
+        stream: {
+          id: 'ghi',
+          name: 'GHI'
+        },
+        check: false
       }
     ]
   }
@@ -63,17 +77,18 @@ export default class ComparisonFilterComponent extends Vue {
     return id === this.currentActivateMenuId
   }
 
-  public updateSelectedStreams (item: StreamModels.Stream): void {
-    const streamIdx = this.selectedStreams.findIndex(s => s.id === item.id)
+  public updateSelectedStreams (item: StreamCheckbox): void {
+    const streamIdx = this.selectedStreams.findIndex(s => s.id === item.stream.id)
     if (streamIdx === -1) {
-      this.selectedStreams.push(item)
+      this.selectedStreams.push(item.stream)
+      item.check = true
     } else {
       this.selectedStreams.splice(streamIdx, 1)
+      item.check = false
     }
   }
 
   public get disabled (): boolean {
-    console.log(this.selectedStreams)
     return this.startDate == null || this.endDate == null || this.selectedStreams.length === 0
   }
 
