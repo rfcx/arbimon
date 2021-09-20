@@ -1,2 +1,9 @@
-<template src="./error.html" />
+<template>
+  <div id="generic-error-page">
+    <nav-bar />
+    <div class="text-secondary">
+      Please select project
+    </div>
+  </div>
+</template>
 <script src="./error.ts" lang="ts" />
