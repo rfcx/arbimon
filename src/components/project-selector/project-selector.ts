@@ -30,12 +30,9 @@ export default class ProjectSelectorComponent extends Vue {
   async confirmedSelectedProject (): Promise<void> {
     await VXServices.Project.selectedProject.set(this.currentSelectedProject)
     this.closeProjectSelector()
-    void this.$router.push({
-      name: ROUTES_NAME.overview,
-      params: {
-        projectId: this.currentSelectedProject?.id ?? ''
-      }
-    })
+
+    const newProjectId = this.currentSelectedProject?.id
+    if (newProjectId) void this.$router.push({ name: ROUTES_NAME.overview, params: { projectId: newProjectId } })
   }
 
   @Emit('closeProjectSelector')
