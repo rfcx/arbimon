@@ -19,7 +19,7 @@
           <div
             class="flex flex-col self-end"
             :class="{ 'invisible': isDefaultFilter }"
-            @click="removeFilterConfig(idx)"
+            @click.stop="removeFilterConfig(idx)"
           >
             <i class="icon-close cursor-pointer" />
           </div>
