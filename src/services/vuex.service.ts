@@ -50,9 +50,6 @@ export const Project = (() => ({
       },
       get (): ProjectType {
         return get<ProjectType>(ITEMS.root.projects, [])
-      },
-      async set (projects: ProjectType) {
-        return await set(ACTIONS.root.updateProjects, projects)
       }
     }
   })(),
