@@ -15,12 +15,11 @@ export const ROUTES_NAME = Object.freeze({
 const selectProjectGuard = createSelectProjectGuard(stores)
 
 const routes: RouteRecordRaw[] = [
-  // {
-  //   path: '/',
-  //   name: ROUTES_NAME.index,
-  //   beforeEnter: [Auth0.routeGuard],
-  //   component: Pages.ErrorPage // TODO: Needs the navbar...
-  // },
+  {
+    path: '/',
+    name: ROUTES_NAME.index,
+    component: Pages.IndexPage
+  },
   {
     path: '/project/:projectId',
     component: Pages.RootPage,
