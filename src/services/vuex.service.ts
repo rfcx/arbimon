@@ -1,9 +1,8 @@
 import { Auth0Option, Auth0User, ProjectModels } from '@/models'
-import store, { ACTIONS, ITEMS, VX } from '@/stores'
-
-const set = async (action: string, data: any): Promise<void> => await store.dispatch(action, data)
+import store, { ACTIONS, createVuexDecorator, ITEMS } from '@/stores'
 
 const get = <T>(key: string, defaultValue: T): T => store.getters[key] ?? defaultValue
+const set = async (action: string, data: any): Promise<void> => await store.dispatch(action, data)
 
 // ===================== Auth =====================
 
@@ -11,8 +10,8 @@ export const Auth = (() => ({
   auth: (() => {
     type Auth0Type = Auth0Option | undefined
     return {
-      VX () {
-        return VX(ITEMS.root.auth)
+      bind () {
+        return createVuexDecorator(ITEMS.root.auth)
       },
       get (): Auth0Type {
         return get<Auth0Type>(ITEMS.root.auth, undefined)
@@ -26,8 +25,8 @@ export const Auth = (() => ({
   user: (() => {
     type UserType = Auth0User | undefined
     return {
-      VX () {
-        return VX(ITEMS.root.user)
+      bind () {
+        return createVuexDecorator(ITEMS.root.user)
       },
       get (): UserType {
         return get<UserType>(ITEMS.root.user, undefined)
@@ -42,11 +41,11 @@ export const Auth = (() => ({
 // ===================== Project =====================
 
 export const Project = (() => ({
-  list: (() => {
+  projects: (() => {
     type ProjectType = ProjectModels.ProjectListItem[]
     return {
-      VX () {
-        return VX(ITEMS.root.projects)
+      bind () {
+        return createVuexDecorator(ITEMS.root.projects)
       },
       get (): ProjectType {
         return get<ProjectType>(ITEMS.root.projects, [])
@@ -57,8 +56,8 @@ export const Project = (() => ({
   selectedProject: (() => {
     type ProjectType = ProjectModels.ProjectListItem | undefined
     return {
-      VX () {
-        return VX(ITEMS.root.selectedProject)
+      bind () {
+        return createVuexDecorator(ITEMS.root.selectedProject)
       },
       get (): ProjectType {
         return get<ProjectType>(ITEMS.root.selectedProject, undefined)

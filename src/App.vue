@@ -8,15 +8,15 @@ import { Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
 import { Auth0Option, Auth0User } from './models'
-import { VXServices } from './services'
+import { VuexService } from './services'
 
 export default class App extends Vue {
   @Inject()
   readonly auth!: Auth0Option
 
   public async created (): Promise<void> {
-    await VXServices.Auth.auth.set(this.auth)
-    await VXServices.Auth.user.set(this.user)
+    await VuexService.Auth.auth.set(this.auth)
+    await VuexService.Auth.user.set(this.user)
   }
 
   public get loading (): boolean {

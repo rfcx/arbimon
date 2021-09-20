@@ -5,19 +5,19 @@ import { OnClickOutside } from '@vueuse/components'
 
 import { ProjectModels } from '@/models'
 import { ROUTES_NAME } from '@/router'
-import { VXServices } from '@/services'
+import { VuexService } from '@/services'
 
 @Options({
   components: { OnClickOutside }
 })
 export default class ProjectSelectorComponent extends Vue {
-  @VXServices.Project.list.VX()
+  @VuexService.Project.projects.bind()
   projects!: ProjectModels.ProjectListItem[]
 
-  @VXServices.Project.selectedProject.VX()
+  @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 
-  public currentSelectedProject: ProjectModels.ProjectListItem | undefined = { ...VXServices.Project.selectedProject.get() }
+  public currentSelectedProject: ProjectModels.ProjectListItem | undefined = { ...VuexService.Project.selectedProject.get() }
 
   isSelectedProject (project: ProjectModels.ProjectListItem): boolean {
     return project.id === this.currentSelectedProject?.id
@@ -28,7 +28,7 @@ export default class ProjectSelectorComponent extends Vue {
   }
 
   async confirmedSelectedProject (): Promise<void> {
-    await VXServices.Project.selectedProject.set(this.currentSelectedProject)
+    await VuexService.Project.selectedProject.set(this.currentSelectedProject)
     this.closeProjectSelector()
 
     const newProjectId = this.currentSelectedProject?.id
