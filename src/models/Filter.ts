@@ -2,6 +2,12 @@ import { Dayjs } from 'dayjs'
 
 import { Stream } from './Stream'
 
+export interface FilterBase {
+  streams: Stream[]
+  startDate: Dayjs | null
+  endDate: Dayjs | null
+}
+
 export class SpeciesRichnessFilter {
   startDate: Dayjs | null = null
   endDate: Dayjs | null = null

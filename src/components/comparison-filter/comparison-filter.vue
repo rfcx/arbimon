@@ -52,6 +52,7 @@
                       :id="stream.id"
                       type="checkbox"
                       class="rounded"
+                      @click="updateSelectedStreams(stream)"
                     >
                     <label
                       class="text-white ml-2"
@@ -63,21 +64,39 @@
                 </div>
                 <div
                   v-else
-                  class="p-4"
+                  class="p-4 flex"
                 >
-                  <input
-                    v-model="startDate"
-                    type="date"
-                    :max="endDate"
-                    class="rounded-lg mr-2"
-                  >
-                  <input
-                    v-model="endDate"
-                    type="date"
-                    :min="startDate"
-                    :max="today"
-                    class="rounded-lg mr-2"
-                  >
+                  <div>
+                    <label
+                      class="text-white uppercase block"
+                      for="start"
+                    >
+                      Start
+                    </label>
+                    <input
+                      id="start"
+                      v-model="startDate"
+                      type="date"
+                      :max="endDate"
+                      class="rounded-lg mr-2"
+                    >
+                  </div>
+                  <div>
+                    <label
+                      class="text-white uppercase block"
+                      for="end"
+                    >
+                      End
+                    </label>
+                    <input
+                      id="end"
+                      v-model="endDate"
+                      type="date"
+                      :min="startDate"
+                      :max="today"
+                      class="rounded-lg mr-2"
+                    >
+                  </div>
                 </div>
               </div>
               <div class="flex justify-end px-4 py-2 border-t-1">
