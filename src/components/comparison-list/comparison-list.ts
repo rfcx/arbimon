@@ -17,8 +17,9 @@ export default class ComparisonBoxComponent extends Vue {
   public isFilterOpen = false
   public filters: SpeciesRichnessFilter[] = [defaultFilter]
 
+  // TODO: Update add logic
   public addFilterConfig (): void {
-    this.filters.push(defaultFilter)
+    // this.filters.push(defaultFilter)
   }
 
   //  TODO: Have to improve this logic to check what is `all` meaning

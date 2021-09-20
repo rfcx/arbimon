@@ -66,17 +66,16 @@
                   class="p-4"
                 >
                   <input
-                    type="text"
-                    placeholder="START DATE"
-                    onfocus="(this.type='date')"
-                    onblur="(this.type='text')"
+                    v-model="startDate"
+                    type="date"
+                    :max="endDate"
                     class="rounded-lg mr-2"
                   >
                   <input
-                    type="text"
-                    placeholder="END DATE"
-                    onfocus="(this.type='date')"
-                    onblur="(this.type='text')"
+                    v-model="endDate"
+                    type="date"
+                    :min="startDate"
+                    :max="today"
                     class="rounded-lg mr-2"
                   >
                 </div>
@@ -90,6 +89,7 @@
                 </button>
                 <button
                   class="btn btn-primary uppercase"
+                  :class="{'opacity-50 cursor-not-allowewd': disabled}"
                   @click="apply()"
                 >
                   Apply
