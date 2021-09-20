@@ -12,7 +12,7 @@ async function init (): Promise<void> {
   const Auth0Plugin = await Auth0.init({
     redirectUri: window.location.origin,
     onRedirectCallback: (appState) => {
-      void router.push(appState?.targetUrl ?? window.location.pathname)
+      void router.replace(appState?.targetUrl ?? window.location.pathname)
     }
   })
 

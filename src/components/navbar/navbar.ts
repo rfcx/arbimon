@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { ProjectModels } from '@/models'
+import { Auth0User, ProjectModels } from '@/models'
 import { NavMenu } from '@/models/Navbar'
 import { ROUTES_NAME } from '@/router'
 import { VXServices } from '@/services'
@@ -17,6 +17,9 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 })
 
 export default class NavigationBarComponent extends Vue {
+  @VXServices.Auth.user.VX()
+  public user!: Auth0User | undefined
+
   @VXServices.Project.selectedProject.VX()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 

@@ -17,9 +17,10 @@
             </div>
           </router-link>
           <div 
+            v-if="user"
+            @click="toggleProjectSelector(true)"
             id="select-project-btn"
             class="navbar-item text-sm h-9 px-4 hover:bg-box-grey rounded-md cursor-pointer"
-            @click="toggleProjectSelector(true)"
           >
             <span>{{ selectedProjectName }}</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
