@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Auth0User, ProjectModels } from '@/models'
 import { NavMenu } from '@/models/Navbar'
 import { ROUTES_NAME } from '@/router'
-import { VXServices } from '@/services'
+import { VuexService } from '@/services'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
@@ -17,10 +17,10 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 })
 
 export default class NavigationBarComponent extends Vue {
-  @VXServices.Auth.user.VX()
+  @VuexService.Auth.user.bind()
   public user!: Auth0User | undefined
 
-  @VXServices.Project.selectedProject.VX()
+  @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 
   public hasToggledMobileMenu = false

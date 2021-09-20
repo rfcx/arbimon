@@ -66,9 +66,9 @@ export default new Vuex.Store({
   getters: rootGetters
 })
 
-export const VX = (type: string): VueDecorator => createDecorator((options, key) => {
+export const createVuexDecorator = (field: string): VueDecorator => createDecorator((options, key) => {
   options.computed = options?.computed ?? {}
   options.computed[key] = function () {
-    return this.$store.getters[type]
+    return this.$store.getters[field]
   }
 })
