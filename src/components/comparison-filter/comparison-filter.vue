@@ -43,24 +43,26 @@
                       class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary"
                     >
                   </div>
-                  <div
-                    v-for="(item, idx) in streams"
-                    :key="'stream-list-' + idx"
-                    class="px-4 pb-4 align-middle"
-                  >
-                    <input
-                      :id="item.stream.id"
-                      type="checkbox"
-                      class="rounded"
-                      :checked="item.check"
-                      @click="updateSelectedStreams(item)"
+                  <div class="max-h-md overflow-auto">
+                    <div
+                      v-for="(item, idx) in streams"
+                      :key="'stream-list-' + idx"
+                      class="px-4 pb-4 align-middle"
                     >
-                    <label
-                      class="text-white ml-2"
-                      :for="item.stream.id"
-                    >
-                      {{ item.stream.name }}
-                    </label>
+                      <input
+                        :id="item.stream.id"
+                        type="checkbox"
+                        class="rounded"
+                        :checked="item.check"
+                        @click="updateSelectedStreams(item)"
+                      >
+                      <label
+                        class="text-white ml-2"
+                        :for="item.stream.id"
+                      >
+                        {{ item.stream.name }}
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <div

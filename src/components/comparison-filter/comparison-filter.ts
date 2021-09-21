@@ -5,6 +5,7 @@ import { Emit } from 'vue-property-decorator'
 import { OnClickOutside } from '@vueuse/components'
 
 import { FilterBase, StreamModels } from '@/models'
+import { StreamServices } from '@/services'
 
 interface FilterMenuItem {
   id: string
@@ -44,29 +45,13 @@ export default class ComparisonFilterComponent extends Vue {
   }
 
   public get streams (): StreamCheckbox[] {
-    return [
-      {
-        stream: {
-          id: 'abc',
-          name: 'ABC'
-        },
-        check: false
-      },
-      {
-        stream: {
-          id: 'def',
-          name: 'DEF'
-        },
-        check: false
-      },
-      {
-        stream: {
-          id: 'ghi',
-          name: 'GHI'
-        },
+    const streams = StreamServices.getMockupStreams()
+    return streams.map(s => {
+      return {
+        stream: s,
         check: false
       }
-    ]
+    })
   }
 
   public setActivateMenuId (id: string): void {
