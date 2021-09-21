@@ -68,17 +68,19 @@ export default class ComparisonFilterComponent extends Vue {
     ]
   }
 
-  private get streamsFromServer (): StreamModels.Stream[] {
+  private get allSites (): StreamModels.Stream[] {
     return StreamServices.getMockupStreams()
   }
 
   private setDefaultStreamCheckboxItems (): void {
-    this.streamCheckboxItems = this.streamsFromServer.map(s => {
-      return {
-        stream: s,
-        check: false
-      }
-    })
+    this.streamCheckboxItems = this.allSites
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(s => {
+        return {
+          stream: s,
+          check: false
+        }
+      })
   }
 
   public setActivateMenuId (id: string): void {
