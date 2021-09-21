@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Prop } from 'vue-property-decorator'
 
 import { OnClickOutside } from '@vueuse/components'
 
-import { FilterBase, StreamModels } from '@/models'
+import { FilterBase, SpeciesRichnessFilter, StreamModels } from '@/models'
 import { StreamServices } from '@/services'
 
 interface FilterMenuItem {
@@ -25,11 +25,33 @@ const dateFormat = 'YYYY-MM-DD'
   }
 })
 export default class ComparisonFilterComponent extends Vue {
+  @Prop({ default: null })
+  defaultFilter!: SpeciesRichnessFilter | null
+
   public selectedStreams: StreamModels.Stream[] = []
   public startDate: string | null = dayjs().subtract(7, 'days').format(dateFormat)
   public endDate: string | null = dayjs().format(dateFormat)
   public readonly today = dayjs().format(dateFormat)
   public currentActivateMenuId = 'sites'
+
+  public mounted (): void {
+    if (this.defaultFilter) {
+      this.setDefaultSelectedStreams()
+      this.startDate = this.defaultFilter.startDate?.format(dateFormat) ?? dayjs().subtract(7, 'days').format(dateFormat)
+      this.endDate = this.defaultFilter.endDate?.format(dateFormat) ?? dayjs().format(dateFormat)
+    }
+  }
+
+  public setDefaultSelectedStreams (): void {
+    const streams = this.defaultFilter?.streams ?? []
+    for (const item of streams) {
+      const streamCheckbox = this.streams?.find(s => s.stream.id === item.id)
+      if (streamCheckbox) {
+        this.selectedStreams.push(streamCheckbox.stream)
+        streamCheckbox.check = true
+      }
+    }
+  }
 
   public get menus (): FilterMenuItem[] {
     return [
