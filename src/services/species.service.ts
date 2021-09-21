@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import rawSpecies from '@/api/raw-species-richness-data-01-07-apr-2021.json'
+import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
 import { SpeciesModels, StreamModels } from '@/models'
 
 interface SpeciesRichnessRequestParams {
@@ -11,14 +11,14 @@ interface SpeciesRichnessRequestParams {
 
 export function getMockupSpecies (options: SpeciesRichnessRequestParams): SpeciesModels.SpeciesRichnessBarChartItem[] {
   const { start, end, streams } = options
-  const filteredSpecies = rawSpecies.filter(r => r.date > start && r.date < end && _.includes(streams.map(s => s.id), r.stream_id))
-  const groupedSpecies = _.groupBy(filteredSpecies, 'species_id')
-  const data = _.mapValues(groupedSpecies, (value, key) => {
+  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (streams.length === 0 || _.includes(streams.map(s => s.id), r.stream_id)))
+  const groupedDetections = _.groupBy(filteredDetections, 'taxon')
+  const data = _.mapValues(groupedDetections, (value, key) => {
     return {
-      label: value[0].scientific_name,
-      population: value.map(v => v.num_of_recordings).reduce((prev, next) => Number(prev) + Number(next), 0)
+      label: key,
+      population: new Set(value.map(d => d.species_id)).size
     }
   })
 
-  return _.flatMapDeep(data)
+  return Object.values(data)
 }

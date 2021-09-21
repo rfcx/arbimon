@@ -18,8 +18,8 @@ export default class SpeciesRichnessPage extends Vue {
 
   onFilterChange (filters: SpeciesRichnessFilter[]): void {
     for (const filter of filters) {
-      const start = filter.startDate?.toISOString() ?? ''
-      const end = filter.endDate?.toISOString() ?? ''
+      const start = filter.startDate.toISOString()
+      const end = filter.endDate.add(1, 'days').toISOString()
       const data = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
       this.chartData = data
     }

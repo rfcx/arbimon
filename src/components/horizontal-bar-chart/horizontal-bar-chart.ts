@@ -64,7 +64,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .call(xAxis)
 
     const yScale = d3.scaleBand()
-      .domain(d3.map(this.chartData, (d) => d.label.toUpperCase()))
+      .domain(d3.map(this.chartData, (d) => d.label))
       .range([0, this.CHART_HEIGHT])
       .paddingInner(0.2)
 
@@ -82,6 +82,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
     svg.selectAll('text')
       .style('color', 'white')
+      .style('font-size', '14px')
 
     svg.selectAll('line')
       .style('color', 'none')
@@ -89,28 +90,14 @@ export default class HorizontalBarChartComponent extends Vue {
     // data render
     svg.selectAll('myRect')
       .data(data)
-      .join(
-        (enter) => {
-          return enter
-            .append('rect')
-            .style('margin-top', '10px')
-            .attr('x', xScale(0))
-            // @ts-expect-error horizontal y scale label error
-            .attr('y', (d) => yScale(d.label.toUpperCase()))
-            .attr('width', (d) => xScale(d.population))
-            .attr('height', yScale.bandwidth())
-            .attr('fill', '#31984F')
-        },
-        (update) => {
-          return update
-        },
-        (exit) => {
-          return exit
-            .transition()
-            .duration(1000)
-            .remove()
-        }
-      )
-      .transition()
+      .enter()
+      .append('rect')
+      .style('margin-top', '10px')
+      .attr('x', xScale(0))
+      // @ts-expect-error horizontal y scale label error
+      .attr('y', (d) => yScale(d.label))
+      .attr('width', (d) => xScale(d.population))
+      .attr('height', yScale.bandwidth())
+      .attr('fill', '#31984F')
   }
 }
