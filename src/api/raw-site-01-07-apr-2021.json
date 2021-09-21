@@ -1,0 +1,734 @@
+[
+  {
+    "site_id": "lHcTKkHkqmlU",
+    "name": "LU31",
+    "latitude": "18.38614",
+    "longitude": "-65.75641"
+  },
+  {
+    "site_id": "bMbOKdaiAGxi",
+    "name": "LU29",
+    "latitude": "18.41171",
+    "longitude": "-65.77073"
+  },
+  {
+    "site_id": "GSc0RKfazeFQ",
+    "name": "LU33",
+    "latitude": "18.38796",
+    "longitude": "-65.72138"
+  },
+  {
+    "site_id": "FlW6tIwbWaDV",
+    "name": "LU30",
+    "latitude": "18.39894",
+    "longitude": "-65.77243"
+  },
+  {
+    "site_id": "0Ya1BjVYCuHa",
+    "name": "LU32",
+    "latitude": "18.37755",
+    "longitude": "-65.73979"
+  },
+  {
+    "site_id": "8EQWSVm4ig8h",
+    "name": "PA02",
+    "latitude": "17.97988",
+    "longitude": "-65.91355"
+  },
+  {
+    "site_id": "gHJjyAchFDRQ",
+    "name": "PA05",
+    "latitude": "18.01923",
+    "longitude": "-65.95324"
+  },
+  {
+    "site_id": "J8b1dU19LaNx",
+    "name": "PA13",
+    "latitude": "17.99205",
+    "longitude": "-65.88351"
+  },
+  {
+    "site_id": "hi8M2OfKQRfV",
+    "name": "PA28",
+    "latitude": "18.17309",
+    "longitude": "-65.74309"
+  },
+  {
+    "site_id": "G9orYITUbnQZ",
+    "name": "PA31",
+    "latitude": "18.20186",
+    "longitude": "-65.75925"
+  },
+  {
+    "site_id": "18QZItvSQvri",
+    "name": "PA37",
+    "latitude": "18.26157",
+    "longitude": "-65.80002"
+  },
+  {
+    "site_id": "c4DGB9ZeLChu",
+    "name": "PA44",
+    "latitude": "18.21953",
+    "longitude": "-65.80384"
+  },
+  {
+    "site_id": "w2a38kYrc2hd",
+    "name": "PA42",
+    "latitude": "18.25353",
+    "longitude": "-65.79758"
+  },
+  {
+    "site_id": "DmowLD0xrcJR",
+    "name": "PA01",
+    "latitude": "17.97667",
+    "longitude": "-65.92436"
+  },
+  {
+    "site_id": "qrg68NHZS2v2",
+    "name": "PA06",
+    "latitude": "18.03898",
+    "longitude": "-65.9642"
+  },
+  {
+    "site_id": "LAc2nX7asX7i",
+    "name": "PA08",
+    "latitude": "18.0435",
+    "longitude": "-65.99614"
+  },
+  {
+    "site_id": "kq836TIeAubQ",
+    "name": "PA10",
+    "latitude": "18.00215",
+    "longitude": "-65.97283"
+  },
+  {
+    "site_id": "KSdx7m9JEx8E",
+    "name": "PA12",
+    "latitude": "17.99415",
+    "longitude": "-65.88968"
+  },
+  {
+    "site_id": "REqGhu9JX9wZ",
+    "name": "PA14",
+    "latitude": "18.011146",
+    "longitude": "-65.879109"
+  },
+  {
+    "site_id": "qIZSv9LxO8Ys",
+    "name": "PA25",
+    "latitude": "18.17451",
+    "longitude": "-65.82832"
+  },
+  {
+    "site_id": "WdiTBpSjok4Z",
+    "name": "PA27",
+    "latitude": "18.14659",
+    "longitude": "-65.77055"
+  },
+  {
+    "site_id": "MxA09UtAKrD9",
+    "name": "PA41",
+    "latitude": "18.26413",
+    "longitude": "-65.79012"
+  },
+  {
+    "site_id": "unSbG3agTHa1",
+    "name": "PA43",
+    "latitude": "18.24376",
+    "longitude": "-65.79721"
+  },
+  {
+    "site_id": "SentGrxBxPIs",
+    "name": "PA45",
+    "latitude": "18.16615",
+    "longitude": "-65.75566"
+  },
+  {
+    "site_id": "ANs1csGi9hCD",
+    "name": "SA45",
+    "latitude": "18.091034",
+    "longitude": "-66.03396"
+  },
+  {
+    "site_id": "7blZAS5faDLe",
+    "name": "SA47",
+    "latitude": "18.095186",
+    "longitude": "-66.040382"
+  },
+  {
+    "site_id": "pv7Tlqn8WKKg",
+    "name": "LU05",
+    "latitude": "18.44696",
+    "longitude": "-65.96688"
+  },
+  {
+    "site_id": "6ybRiQE8HGmd",
+    "name": "LU04",
+    "latitude": "18.44918",
+    "longitude": "-65.96793"
+  },
+  {
+    "site_id": "JfN8OMIfxn9P",
+    "name": "LU11",
+    "latitude": "18.44934",
+    "longitude": "-65.95267"
+  },
+  {
+    "site_id": "o9i600cxaNCz",
+    "name": "LU09",
+    "latitude": "18.4485",
+    "longitude": "-65.95814"
+  },
+  {
+    "site_id": "BpeZMsJr4UPO",
+    "name": "LU01",
+    "latitude": "18.45552",
+    "longitude": "-65.97502"
+  },
+  {
+    "site_id": "LEk2jiak1Sz6",
+    "name": "LU10",
+    "latitude": "18.45174",
+    "longitude": "-65.9625"
+  },
+  {
+    "site_id": "tsgTW7MWQkCq",
+    "name": "LU36",
+    "latitude": "18.35596",
+    "longitude": "-65.70162"
+  },
+  {
+    "site_id": "qbuYMvrkNdNx",
+    "name": "LU38",
+    "latitude": "18.36487",
+    "longitude": "-65.69479"
+  },
+  {
+    "site_id": "nrzxx2VIAxDD",
+    "name": "LU43",
+    "latitude": "18.36338",
+    "longitude": "-65.7705"
+  },
+  {
+    "site_id": "lz2YSHMvXQ8w",
+    "name": "LU41",
+    "latitude": "18.36677",
+    "longitude": "-65.68023"
+  },
+  {
+    "site_id": "EhPovJ3rUtNe",
+    "name": "PA19",
+    "latitude": "18.0271",
+    "longitude": "-65.83387"
+  },
+  {
+    "site_id": "wx4Tj7FCU3XB",
+    "name": "PA17",
+    "latitude": "18.015787",
+    "longitude": "-65.847769"
+  },
+  {
+    "site_id": "Ewmkka95eGBs",
+    "name": "PA15",
+    "latitude": "18.007138",
+    "longitude": "-65.869976"
+  },
+  {
+    "site_id": "7IMlnPiPJrpX",
+    "name": "SA01",
+    "latitude": "17.942394",
+    "longitude": "-66.197856"
+  },
+  {
+    "site_id": "oLVRaRqS70sa",
+    "name": "SA06",
+    "latitude": "17.942672",
+    "longitude": "-66.163477"
+  },
+  {
+    "site_id": "InfVfpnERbpF",
+    "name": "SA09",
+    "latitude": "17.962779",
+    "longitude": "-66.201552"
+  },
+  {
+    "site_id": "Dm2u4u9IWuhl",
+    "name": "SA17",
+    "latitude": "17.952709",
+    "longitude": "-66.262039"
+  },
+  {
+    "site_id": "rIb9rjS39ghg",
+    "name": "SA19",
+    "latitude": "17.945689",
+    "longitude": "-66.267091"
+  },
+  {
+    "site_id": "MDTcsPWpK8KT",
+    "name": "SA26",
+    "latitude": "17.978731",
+    "longitude": "-66.316685"
+  },
+  {
+    "site_id": "Q0B3AhaedTfI",
+    "name": "SA28",
+    "latitude": "17.952852",
+    "longitude": "-66.381986"
+  },
+  {
+    "site_id": "AUT819zr3G2Z",
+    "name": "SA35",
+    "latitude": "17.971529",
+    "longitude": "-65.98446"
+  },
+  {
+    "site_id": "oDvOlmOo4k4b",
+    "name": "SA24",
+    "latitude": "17.969554",
+    "longitude": "-66.293786"
+  },
+  {
+    "site_id": "jPpO2nRDmbDn",
+    "name": "SA21",
+    "latitude": "17.93366",
+    "longitude": "-66.252304"
+  },
+  {
+    "site_id": "hnLZmglerwtD",
+    "name": "SA05",
+    "latitude": "17.942034",
+    "longitude": "-66.172593"
+  },
+  {
+    "site_id": "hmuQKMtyDY0A",
+    "name": "SA10",
+    "latitude": "17.960516",
+    "longitude": "-66.198783"
+  },
+  {
+    "site_id": "C6l0Zfn7b3xy",
+    "name": "SA16",
+    "latitude": "17.954228",
+    "longitude": "-66.253188"
+  },
+  {
+    "site_id": "CyQzpf2WWCUK",
+    "name": "SA18",
+    "latitude": "17.948528",
+    "longitude": "-66.267929"
+  },
+  {
+    "site_id": "doG29pGGZAAJ",
+    "name": "SA20",
+    "latitude": "17.936859",
+    "longitude": "-66.256142"
+  },
+  {
+    "site_id": "CfrUvoZ1HtFv",
+    "name": "SA25",
+    "latitude": "17.970694",
+    "longitude": "-66.30944"
+  },
+  {
+    "site_id": "mCgqhKP6baGd",
+    "name": "SA23",
+    "latitude": "17.945042",
+    "longitude": "-66.289157"
+  },
+  {
+    "site_id": "Kqn2XiwyaWPx",
+    "name": "SA32",
+    "latitude": "17.982831",
+    "longitude": "-66.135299"
+  },
+  {
+    "site_id": "CH8KYPyrp7CS",
+    "name": "SA34",
+    "latitude": "17.956116",
+    "longitude": "-66.050028"
+  },
+  {
+    "site_id": "o7O9fsH9sZNT",
+    "name": "SA29",
+    "latitude": "17.961172",
+    "longitude": "-66.360484"
+  },
+  {
+    "site_id": "k0iNxyjkHMeb",
+    "name": "SA27",
+    "latitude": "17.978904",
+    "longitude": "-66.341863"
+  },
+  {
+    "site_id": "6Pap5uvQuqHr",
+    "name": "LU16",
+    "latitude": "18.45038",
+    "longitude": "-65.90299"
+  },
+  {
+    "site_id": "5JUJ8xmZSL2P",
+    "name": "LU13",
+    "latitude": "18.44488",
+    "longitude": "-65.9337"
+  },
+  {
+    "site_id": "m7fQlswVeNFD",
+    "name": "LU20",
+    "latitude": "18.42623",
+    "longitude": "-65.85996"
+  },
+  {
+    "site_id": "DmRhYGDoMPsi",
+    "name": "LU23",
+    "latitude": "18.40802",
+    "longitude": "-65.82722"
+  },
+  {
+    "site_id": "23nLkuaxJOPc",
+    "name": "LU03",
+    "latitude": "18.45149",
+    "longitude": "-65.96989"
+  },
+  {
+    "site_id": "ruhl3H4EcVEl",
+    "name": "LU14",
+    "latitude": "18.44395",
+    "longitude": "-65.92124"
+  },
+  {
+    "site_id": "p284US7HTAH3",
+    "name": "LU17",
+    "latitude": "18.44458",
+    "longitude": "-65.89431"
+  },
+  {
+    "site_id": "IUUY2TORGs1u",
+    "name": "LU21",
+    "latitude": "18.42228",
+    "longitude": "-65.8311"
+  },
+  {
+    "site_id": "LNXvylzVbChX",
+    "name": "LU24",
+    "latitude": "18.27712118",
+    "longitude": "-65.76375266"
+  },
+  {
+    "site_id": "rsQzBcy2IghE",
+    "name": "LU26",
+    "latitude": "18.40287",
+    "longitude": "-65.8055"
+  },
+  {
+    "site_id": "1cb7LD6Y0D9G",
+    "name": "LU_44",
+    "latitude": "18.2911972",
+    "longitude": "-65.7909668"
+  },
+  {
+    "site_id": "gImuI1DGEVnx",
+    "name": "PA16",
+    "latitude": "18.01568",
+    "longitude": "-65.85779"
+  },
+  {
+    "site_id": "BuyvsZ4mo8lB",
+    "name": "SA03",
+    "latitude": "17.939383",
+    "longitude": "-66.189265"
+  },
+  {
+    "site_id": "TV6nh0dAs8aw",
+    "name": "SA22",
+    "latitude": "17.952686",
+    "longitude": "-66.287968"
+  },
+  {
+    "site_id": "fTabNHq2rhv1",
+    "name": "SA40",
+    "latitude": "18.026967",
+    "longitude": "-66.032145"
+  },
+  {
+    "site_id": "fGUy2d7hN5fE",
+    "name": "SA04",
+    "latitude": "17.93813165",
+    "longitude": "-66.18125225"
+  },
+  {
+    "site_id": "WGdvE8bUxq1m",
+    "name": "SA15",
+    "latitude": "17.950722",
+    "longitude": "-66.239632"
+  },
+  {
+    "site_id": "Otgb0WUR5n3k",
+    "name": "SA30",
+    "latitude": "17.980512",
+    "longitude": "-66.541574"
+  },
+  {
+    "site_id": "JYQixvQxbnQP",
+    "name": "LU15",
+    "latitude": "18.44509",
+    "longitude": "-65.91252"
+  },
+  {
+    "site_id": "OGtB7tFZapT8",
+    "name": "LU39",
+    "latitude": "18.36519",
+    "longitude": "-65.68767"
+  },
+  {
+    "site_id": "JUd8e4B9Idxx",
+    "name": "SA41",
+    "latitude": "18.044938",
+    "longitude": "-66.037642"
+  },
+  {
+    "site_id": "h0bHg9b2q6M3",
+    "name": "LU12",
+    "latitude": "18.44659",
+    "longitude": "-65.9427"
+  },
+  {
+    "site_id": "JLPDNdYJXGPY",
+    "name": "LU22",
+    "latitude": "18.41629",
+    "longitude": "-65.8282"
+  },
+  {
+    "site_id": "2au2qcx3mq0r",
+    "name": "SA13",
+    "latitude": "17.962631",
+    "longitude": "-66.223035"
+  },
+  {
+    "site_id": "2pipm18yo0tv",
+    "name": "SAE10",
+    "latitude": "17.956569",
+    "longitude": "-66.22153"
+  },
+  {
+    "site_id": "jjc6n7g5xey9",
+    "name": "LU_06",
+    "latitude": "18.44322",
+    "longitude": "-65.96344"
+  },
+  {
+    "site_id": "6i6uffq0200h",
+    "name": "LU_07m",
+    "latitude": "18.44122",
+    "longitude": "-65.95703"
+  },
+  {
+    "site_id": "1eve5ykr4nzh",
+    "name": "SAE08",
+    "latitude": "17.948899",
+    "longitude": "-66.243804"
+  },
+  {
+    "site_id": "q8weogbs6fce",
+    "name": "LUe01",
+    "latitude": "18.44193",
+    "longitude": "-65.88676"
+  },
+  {
+    "site_id": "wma75qo8rxkj",
+    "name": "LU_18",
+    "latitude": "18.43588",
+    "longitude": "-65.88357"
+  },
+  {
+    "site_id": "wz791ojwodrr",
+    "name": "SA02",
+    "latitude": "17.93168",
+    "longitude": "-66.198616"
+  },
+  {
+    "site_id": "pqpu1wd8p9n9",
+    "name": "LUe02",
+    "latitude": "18.42593",
+    "longitude": "-65.88288"
+  },
+  {
+    "site_id": "amhrxq5z57m6",
+    "name": "SA07",
+    "latitude": "17.954041",
+    "longitude": "-66.173591"
+  },
+  {
+    "site_id": "lskk9oc4qu69",
+    "name": "LU_25m",
+    "latitude": "18.39151",
+    "longitude": "-65.80779"
+  },
+  {
+    "site_id": "aos2q1qflsbk",
+    "name": "LU_45",
+    "latitude": "18.28568",
+    "longitude": "-65.79027"
+  },
+  {
+    "site_id": "jmi7nefeln7g",
+    "name": "LU_46",
+    "latitude": "18.28285",
+    "longitude": "-65.78815"
+  },
+  {
+    "site_id": "jusxxxp5fcmv",
+    "name": "LU_47",
+    "latitude": "18.29211",
+    "longitude": "-65.79461"
+  },
+  {
+    "site_id": "6by0dtvj349u",
+    "name": "LU_48",
+    "latitude": "18.28937",
+    "longitude": "-65.79881"
+  },
+  {
+    "site_id": "vc9w81arwre4",
+    "name": "SA38",
+    "latitude": "17.974183",
+    "longitude": "-65.954096"
+  },
+  {
+    "site_id": "fm52rx3a4dpo",
+    "name": "SA39",
+    "latitude": "17.974115",
+    "longitude": "-65.945392"
+  },
+  {
+    "site_id": "lhx86i6f8kvw",
+    "name": "LU_02",
+    "latitude": "18.297",
+    "longitude": "-65.7942"
+  },
+  {
+    "site_id": "26bu9mc9lbct",
+    "name": "LU_50",
+    "latitude": "18.28159",
+    "longitude": "-65.77294"
+  },
+  {
+    "site_id": "dis4d2bk50tc",
+    "name": "LU_49",
+    "latitude": "18.2708",
+    "longitude": "-65.76138"
+  },
+  {
+    "site_id": "exq97w7t0dma",
+    "name": "SA33",
+    "latitude": "17.99064",
+    "longitude": "-66.088547"
+  },
+  {
+    "site_id": "jdue6y12bgf3",
+    "name": "LU_28",
+    "latitude": "18.39049",
+    "longitude": "-65.78104"
+  },
+  {
+    "site_id": "qm7ezp2c4qbl",
+    "name": "LU_27",
+    "latitude": "18.40076",
+    "longitude": "-65.79502"
+  },
+  {
+    "site_id": "ehweagdk7o92",
+    "name": "PA51",
+    "latitude": "18.14022",
+    "longitude": "-65.77477"
+  },
+  {
+    "site_id": "bhi93d0ujv14",
+    "name": "LU_34",
+    "latitude": "18.37176",
+    "longitude": "-65.70911"
+  },
+  {
+    "site_id": "wdm6z79f2gg9",
+    "name": "LUe07",
+    "latitude": "18.36789",
+    "longitude": "-65.70074"
+  },
+  {
+    "site_id": "v468ykd0izbn",
+    "name": "LU_37",
+    "latitude": "18.35469",
+    "longitude": "-65.69308"
+  },
+  {
+    "site_id": "pdxbam5ie8vz",
+    "name": "LUe06",
+    "latitude": "18.35989",
+    "longitude": "-65.6943"
+  },
+  {
+    "site_id": "rv09r0oxy4wo",
+    "name": "LU_40",
+    "latitude": "18.3593",
+    "longitude": "-65.68777"
+  },
+  {
+    "site_id": "3vhall5zw9hv",
+    "name": "SAE03",
+    "latitude": "17.958873",
+    "longitude": "-66.372696"
+  },
+  {
+    "site_id": "iq0spuqys6sx",
+    "name": "PAe05",
+    "latitude": "18.01637",
+    "longitude": "-65.94647"
+  },
+  {
+    "site_id": "0vjg41h30mcx",
+    "name": "PAe04",
+    "latitude": "18.00162",
+    "longitude": "-65.92452"
+  },
+  {
+    "site_id": "rfeqfep9nen9",
+    "name": "PA52",
+    "latitude": "18.02168",
+    "longitude": "-65.83616"
+  },
+  {
+    "site_id": "533pfrwvm513",
+    "name": "PA54",
+    "latitude": "18.0131",
+    "longitude": "-65.83528"
+  },
+  {
+    "site_id": "xqowq452cl9n",
+    "name": "PA11_NEW",
+    "latitude": "18.03758",
+    "longitude": "-65.88508"
+  },
+  {
+    "site_id": "znjbsljxoyia",
+    "name": "PA26_New",
+    "latitude": "18.16527",
+    "longitude": "-65.79721"
+  },
+  {
+    "site_id": "6mb6mdlt48gv",
+    "name": "PA48_NEW",
+    "latitude": "18.19507",
+    "longitude": "-65.80039"
+  },
+  {
+    "site_id": "voigj35gfozq",
+    "name": "PAe02",
+    "latitude": "18.26616",
+    "longitude": "-65.79991"
+  },
+  {
+    "site_id": "0dq24zlwzx0p",
+    "name": "PA53",
+    "latitude": "18.01703",
+    "longitude": "-65.83496"
+  }
+]
