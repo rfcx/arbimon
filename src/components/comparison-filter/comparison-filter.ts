@@ -29,6 +29,7 @@ export default class ComparisonFilterComponent extends Vue {
   defaultFilter!: SpeciesRichnessFilter | null
 
   public selectedStreams: StreamModels.Stream[] = []
+  public streamCheckboxItems: StreamCheckbox[] = []
   public startDate: string | null = dayjs().subtract(7, 'days').format(dateFormat)
   public endDate: string | null = dayjs().format(dateFormat)
   public readonly today = dayjs().format(dateFormat)
@@ -43,9 +44,10 @@ export default class ComparisonFilterComponent extends Vue {
   }
 
   public setDefaultSelectedStreams (): void {
-    const streams = this.defaultFilter?.streams ?? []
-    for (const item of streams) {
-      const streamCheckbox = this.streams?.find(s => s.stream.id === item.id)
+    this.setDefaultStreamCheckboxItems()
+    const selectedSites = this.defaultFilter?.streams ?? []
+    for (const item of selectedSites) {
+      const streamCheckbox = this.streamCheckboxItems?.find(s => s.stream.id === item.id)
       if (streamCheckbox) {
         this.selectedStreams.push(streamCheckbox.stream)
         streamCheckbox.check = true
@@ -66,9 +68,12 @@ export default class ComparisonFilterComponent extends Vue {
     ]
   }
 
-  public get streams (): StreamCheckbox[] {
-    const streams = StreamServices.getMockupStreams()
-    return streams.map(s => {
+  private get streamsFromServer (): StreamModels.Stream[] {
+    return StreamServices.getMockupStreams()
+  }
+
+  private setDefaultStreamCheckboxItems (): void {
+    this.streamCheckboxItems = this.streamsFromServer.map(s => {
       return {
         stream: s,
         check: false
@@ -82,6 +87,11 @@ export default class ComparisonFilterComponent extends Vue {
 
   public isCurrentActivate (id: string): boolean {
     return id === this.currentActivateMenuId
+  }
+
+  public selectAllSites (): void {
+    this.selectedStreams = []
+    this.setDefaultStreamCheckboxItems()
   }
 
   public updateSelectedStreams (item: StreamCheckbox): void {
@@ -99,11 +109,8 @@ export default class ComparisonFilterComponent extends Vue {
     return this.startDate == null || this.endDate == null || this.selectedStreams.length === 0
   }
 
-  public applySelected (): undefined {
-    if (this.disabled) {
-      return
-    }
-    this.apply()
+  public get isSelectedAllSites (): boolean {
+    return this.selectedStreams.length === 0
   }
 
   @Emit()

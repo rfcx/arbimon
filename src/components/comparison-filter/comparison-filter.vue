@@ -16,53 +16,65 @@
         <div class="inline-block bg-steel-grey rounded text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           <div class="bg-steel-grey">
             <on-click-outside @trigger="close">
-              <div class="text-lg text-white uppercase pt-4 pb-2 px-4 border-b-1">
+              <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
                 Build comparison
-              </div>
+              </h1>
               <div class="flex flex-row min-h-lg">
+                <!-- left menu bar -->
                 <div class="border-r-1 min-w-30">
                   <div
-                    v-for="(item, idx) in menus"
+                    v-for="(menu, idx) in menus"
                     :key="'menu-' + idx"
-                    class="text-white uppercase px-4 py-2 border-b-1"
-                    :class="{ 'border-l-4 border-l-brand-primary': isCurrentActivate(item.id) }"
-                    @click="setActivateMenuId(item.id)"
+                    class="text-white px-4 py-2 border-b-1"
+                    :class="{ 'border-l-4 border-l-brand-primary': isCurrentActivate(menu.id) }"
+                    @click="setActivateMenuId(menu.id)"
                   >
-                    {{ item.name }}
+                    {{ menu.name }}
                   </div>
                 </div>
+                <!-- right content -->
+                <!-- site -->
                 <div
                   v-if="currentActivateMenuId === menus[0].id"
                   class="w-full"
                 >
                   <div class="search-stream-container w-full p-4">
+                    <!-- TODO: 50 implement search logic -->
                     <input
                       id="search"
                       type="text"
-                      placeholder="SEARCH"
-                      class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary"
+                      placeholder="Search"
+                      class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary hidden"
                     >
                   </div>
                   <div class="max-h-md overflow-auto">
-                    <div
-                      v-for="(item, idx) in streams"
-                      :key="'stream-list-' + idx"
-                      class="px-4 pb-4 align-middle"
+                    <label
+                      class="px-4 pb-2 align-middle list-item"
                     >
                       <input
-                        :id="item.stream.id"
+                        type="radio"
+                        class="rounded"
+                        :checked="isSelectedAllSites"
+                        @click="selectAllSites()"
+                      >
+                      <span class="text-white ml-2">All sites in the project</span>
+                    </label>
+                    <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
+                      Filter results from some sites only
+                    </h2>
+                    <label
+                      v-for="(item, idx) in streamCheckboxItems"
+                      :key="'stream-list-' + idx"
+                      class="px-4 pb-2 align-middle list-item"
+                    >
+                      <input
                         type="checkbox"
                         class="rounded"
                         :checked="item.check"
                         @click="updateSelectedStreams(item)"
                       >
-                      <label
-                        class="text-white ml-2"
-                        :for="item.stream.id"
-                      >
-                        {{ item.stream.name }}
-                      </label>
-                    </div>
+                      <span class="text-white ml-2">{{ item.stream.name }}</span>
+                    </label>
                   </div>
                 </div>
                 <div
@@ -71,7 +83,7 @@
                 >
                   <div>
                     <label
-                      class="text-white uppercase block"
+                      class="text-white block"
                       for="start"
                     >
                       Start
@@ -86,7 +98,7 @@
                   </div>
                   <div>
                     <label
-                      class="text-white uppercase block"
+                      class="text-white block"
                       for="end"
                     >
                       End
@@ -104,15 +116,14 @@
               </div>
               <div class="flex justify-end px-4 py-2 border-t-1">
                 <button
-                  class="btn uppercase mr-2"
+                  class="btn mr-2"
                   @click="close"
                 >
-                  cancel
+                  Cancel
                 </button>
                 <button
-                  class="btn btn-primary uppercase"
-                  :class="{'opacity-50 cursor-not-allowed': disabled}"
-                  @click="applySelected()"
+                  class="btn btn-primary"
+                  @click="apply()"
                 >
                   Apply
                 </button>
