@@ -10,3 +10,4 @@
 * **setup:** Set up api service for calling an api
 
 * **features:** CE-1327 User can see the comparison box at the top of report ([CE-1327](https://jira.rfcx.org/browse/CE-1327))
+* **features:** See species by taxonomic group in graph (#12, #27, #42)
