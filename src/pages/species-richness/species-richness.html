@@ -1,15 +1,15 @@
 <div id="species-richness-page">
   <div class="header-container">
-    <div class="text-white text-4xl capitalize">
+    <h1 class="text-white text-4xl capitalize">
       Species Richness
-    </div>
-    <div class="text-white">
+    </h1>
+    <p class="text-white">
       Number of species found in the area
-    </div>
+    </p>
   </div>
   <comparison-list-component @select="onFilterChange" />
   <div class="mt-5">
-    <div class="uppercase text-white text-xl">Species in taxonomic group</div>
+    <h2 class="text-white text-xl">Species in taxonomic group</h2>
     <horizontal-bar-chart-component :chart-data="chartData"/>
   </div>
 </div>

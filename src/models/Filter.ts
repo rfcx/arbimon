@@ -22,7 +22,8 @@ export class SpeciesRichnessFilter {
   }
 
   get displayTitle (): string {
-    if (this.streams.length === 0) { return 'All Sites' }
+    const length = this.streams.length
+    if (length === 0) { return 'All sites' }
     return this.streams.map(s => s.name).join(', ')
   }
 

@@ -54,7 +54,9 @@ export default class ComparisonBoxComponent extends Vue {
   }
 
   public get showAddButton (): boolean {
-    return this.filters.length < 5
+    return false
+    // TODO: uncomment this when comparison is ready
+    // return this.filters.length < 5
   }
 
   @Emit()
