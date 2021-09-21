@@ -1,5 +1,8 @@
 <template>
-  <div class="horizontal-bar-chart-component">
+  <div
+    id="horizontal-bar-chart-component"
+    class="w-full"
+  >
     <div
       v-if="!hasData"
       class="no-chart-data text-center text-white text-xl"
