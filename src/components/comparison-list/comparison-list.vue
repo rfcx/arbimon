@@ -40,6 +40,7 @@
     </div>
     <comparison-filter-component
       v-if="isFilterOpen"
+      :default-filter="currentSelectedFilter"
       @apply="apply"
       @close="showFilterPopup"
     />
