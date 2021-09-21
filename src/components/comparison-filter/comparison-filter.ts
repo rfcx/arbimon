@@ -99,6 +99,13 @@ export default class ComparisonFilterComponent extends Vue {
     return this.startDate == null || this.endDate == null || this.selectedStreams.length === 0
   }
 
+  public applySelected (): undefined {
+    if (this.disabled) {
+      return
+    }
+    this.apply()
+  }
+
   @Emit()
   public apply (): FilterBase {
     this.close()

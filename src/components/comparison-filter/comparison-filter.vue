@@ -111,8 +111,8 @@
                 </button>
                 <button
                   class="btn btn-primary uppercase"
-                  :class="{'opacity-50 cursor-not-allowewd': disabled}"
-                  @click="apply()"
+                  :class="{'opacity-50 cursor-not-allowed': disabled}"
+                  @click="applySelected()"
                 >
                   Apply
                 </button>
