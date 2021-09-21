@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import { Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
 
@@ -15,13 +15,18 @@ export default class HorizontalBarChartComponent extends Vue {
   public CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
 
   public mounted (): void {
-    this.FULL_WIDTH = document.getElementById('multi-bar-chart')?.clientWidth ?? 0 - this.margin.left
+    this.FULL_WIDTH = 1000 - this.margin.left
     this.CHART_WIDTH = this.FULL_WIDTH - this.margin.left - this.margin.right
     this.generateChart()
   }
 
   public get hasData (): boolean {
     return this.chartData.length > 0
+  }
+
+  @Watch('chartData')
+  onChartDataChange (): void {
+    this.generateChart()
   }
 
   public generateChart (): void {
@@ -34,12 +39,20 @@ export default class HorizontalBarChartComponent extends Vue {
       }
     }
 
-    const svg = d3.select('#multi-bar-chart')
-      .append('svg')
-      .attr('width', this.FULL_WIDTH)
-      .attr('height', this.FULL_HEIGHT)
-      .append('g')
-      .attr('transform', `translate(${this.margin.left},${this.margin.top})`)
+    let svg = d3.select('#multi-bar-chart').select('svg > g')
+
+    console.log(svg.empty())
+
+    if (svg.empty()) {
+      svg = d3.select('#multi-bar-chart')
+        .append('svg')
+        .attr('width', this.FULL_WIDTH)
+        .attr('height', this.FULL_HEIGHT)
+        .append('g')
+        .attr('transform', `translate(${this.margin.left},${this.margin.top})`)
+    } else {
+      svg.selectAll('*').remove()
+    }
 
     const xScale = d3.scaleLinear()
       .domain([0, maximumPopulation])
@@ -51,6 +64,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
     svg.append('g')
       .attr('transform', `translate(0,${this.CHART_HEIGHT})`)
+      .transition()
       .call(xAxis)
 
     const yScale = d3.scaleBand()
@@ -63,6 +77,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .tickPadding(5)
 
     svg.append('g')
+      .transition()
       .call(yAxis)
 
     // scale color line
@@ -78,14 +93,28 @@ export default class HorizontalBarChartComponent extends Vue {
     // data render
     svg.selectAll('myRect')
       .data(data)
-      .enter()
-      .append('rect')
-      .style('margin-top', '10px')
-      .attr('x', xScale(0))
-      // @ts-expect-error
-      .attr('y', (d) => yScale(d.label.toUpperCase()))
-      .attr('width', (d) => xScale(d.population))
-      .attr('height', yScale.bandwidth())
-      .attr('fill', '#31984F')
+      .join(
+        (enter) => {
+          return enter
+            .append('rect')
+            .style('margin-top', '10px')
+            .attr('x', xScale(0))
+            // @ts-expect-error horizontal y scale label error
+            .attr('y', (d) => yScale(d.label.toUpperCase()))
+            .attr('width', (d) => xScale(d.population))
+            .attr('height', yScale.bandwidth())
+            .attr('fill', '#31984F')
+        },
+        (update) => {
+          return update
+        },
+        (exit) => {
+          return exit
+            .transition()
+            .duration(1000)
+            .remove()
+        }
+      )
+      .transition()
   }
 }
