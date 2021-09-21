@@ -13,12 +13,12 @@ export function getMockupSpecies (options: SpeciesRichnessRequestParams): Specie
   const { start, end, streams } = options
   const filteredSpecies = rawSpecies.filter(r => r.date > start && r.date < end && _.includes(streams.map(s => s.id), r.stream_id))
   const groupedSpecies = _.groupBy(filteredSpecies, 'species_id')
-  const chartData = _.mapValues(groupedSpecies, (value, key) => {
+  const data = _.mapValues(groupedSpecies, (value, key) => {
     return {
       label: value[0].scientific_name,
       population: value.map(v => v.num_of_recordings).reduce((prev, next) => Number(prev) + Number(next), 0)
     }
   })
 
-  return _.flatMapDeep(chartData)
+  return _.flatMapDeep(data)
 }
