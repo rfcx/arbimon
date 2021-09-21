@@ -2,7 +2,8 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
-import { SpeciesRichnessFilter, StreamModels } from '@/models'
+import { SpeciesModels, SpeciesRichnessFilter, StreamModels } from '@/models'
+import { SpeciesService } from '@/services'
 
 @Options({
   components: {
@@ -13,22 +14,14 @@ import { SpeciesRichnessFilter, StreamModels } from '@/models'
 export default class SpeciesRichnessPage extends Vue {
   public streams: StreamModels.Stream[] = []
 
-  public chartData = [
-    {
-      label: 'birds',
-      population: 1000
-    },
-    {
-      label: 'mammal',
-      population: 1500
-    },
-    {
-      label: 'reptile',
-      population: 800
-    }
-  ]
+  public chartData: SpeciesModels.SpeciesRichnessBarChartItem[] = []
 
   onFilterChange (filters: SpeciesRichnessFilter[]): void {
-    //
+    for (const filter of filters) {
+      const start = filter.startDate?.toISOString() ?? ''
+      const end = filter.endDate?.toISOString() ?? ''
+      const data = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
+      this.chartData = data
+    }
   }
 }
