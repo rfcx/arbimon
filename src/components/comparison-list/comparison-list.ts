@@ -51,6 +51,7 @@ export default class ComparisonBoxComponent extends Vue {
     } else {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
     }
+    this.select()
   }
 
   public get showAddButton (): boolean {
