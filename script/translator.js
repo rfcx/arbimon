@@ -3,8 +3,6 @@ const fs = require('fs')
 const rawSpeciesRichnessStringData = fs.readFileSync('raw-species-richness-data-01-07-apr-2021.json')
 const rawSpeciesRichnessData = JSON.parse(rawSpeciesRichnessStringData)
 
-console.log(rawSpeciesRichnessData)
-
 // Call fuction that needed
 transformToSites(rawSpeciesRichnessData, 'raw-site-01-07-apr-2021.json')
 
