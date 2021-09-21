@@ -4,17 +4,17 @@ import { Stream } from './Stream'
 
 export interface FilterBase {
   streams: Stream[]
-  startDate: Dayjs | null
-  endDate: Dayjs | null
+  startDate: Dayjs
+  endDate: Dayjs
 }
 
 export class SpeciesRichnessFilter {
-  startDate: Dayjs | null = null
-  endDate: Dayjs | null = null
+  startDate: Dayjs
+  endDate: Dayjs
   streams: Stream[] = []
   color: string = ''
 
-  constructor (startDate: Dayjs | null, endDate: Dayjs | null, streams: Stream[] = [], color = '') {
+  constructor (startDate: Dayjs, endDate: Dayjs, streams: Stream[] = [], color = '') {
     this.startDate = startDate
     this.endDate = endDate
     this.streams = streams
@@ -25,9 +25,8 @@ export class SpeciesRichnessFilter {
     return this.streams.map(s => s.name).join(', ')
   }
 
+  // TODO [12]: date format when start and end date are not in the same month/year
   get displayDate (): string {
-    const start = this.startDate ? `${this.startDate.format('MMM D')} - ` : ''
-    const end = this.endDate ? this.endDate.format('D, YYYY') : ''
-    return `${start}${end}`
+    return `${this.startDate.format('MMM D')} - ${this.endDate.format('D, YYYY')}`
   }
 }
