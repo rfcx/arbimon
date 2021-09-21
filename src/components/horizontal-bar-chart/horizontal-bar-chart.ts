@@ -55,6 +55,9 @@ export default class HorizontalBarChartComponent extends Vue {
       .range([0, this.CHART_WIDTH])
 
     const xAxis = d3.axisBottom(xScale)
+      .tickFormat((d, _) => {
+        return d.valueOf() % 1 !== 0 ? '' : d3.format('d')(d)
+      })
       .tickSize(0)
       .tickPadding(10)
 
