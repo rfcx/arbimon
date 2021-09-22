@@ -3,13 +3,13 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
 import { FilterBase, SpeciesRichnessFilter } from '@/models'
-import ComparisonFilterComponent from '../comparison-filter/comparison-filter.vue'
+import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
 const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [])
 
 @Options({
   components: {
-    ComparisonFilterComponent
+    ComparisonFilterModalComponent
   }
 })
 export default class ComparisonBoxComponent extends Vue {
