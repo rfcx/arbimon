@@ -9,7 +9,10 @@
     >
       No chart data
     </div>
-    <div id="multi-bar-chart" />
+    <div
+      v-show="hasData"
+      id="multi-bar-chart"
+    />
   </div>
 </template>
 <script src="./horizontal-bar-chart.ts" lang="ts" />
