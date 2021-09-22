@@ -32,7 +32,7 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   public generateChart (): void {
-    const data = this.chartData
+    const data = this.chartData.sort((a, b) => a.label.localeCompare(b.label))
 
     const maximumPopulation = Math.max(...data.map(datum => datum.population))
 
