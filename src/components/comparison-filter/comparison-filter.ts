@@ -46,13 +46,10 @@ export default class ComparisonFilterComponent extends Vue {
   public setDefaultSelectedStreams (): void {
     this.setDefaultStreamCheckboxItems()
     const selectedSites = this.defaultFilter?.streams ?? []
-    for (const item of selectedSites) {
-      const streamCheckbox = this.streamCheckboxItems?.find(s => s.stream.id === item.id)
-      if (streamCheckbox) {
-        this.selectedStreams.push(streamCheckbox.stream)
-        streamCheckbox.check = true
-      }
-    }
+    const selectedSiteIds = new Set(selectedSites.map(s => s.id))
+    this.selectedStreams = this.streamCheckboxItems
+      .filter(cb => selectedSiteIds.has(cb.stream.id))
+      .map(cb => { cb.check = true; return cb.stream })
   }
 
   public get menus (): FilterMenuItem[] {
