@@ -23,8 +23,8 @@
                 <!-- left menu bar -->
                 <div class="border-r-1 min-w-30">
                   <div
-                    v-for="(menu, idx) in menus"
-                    :key="'menu-' + idx"
+                    v-for="(menu) in menus"
+                    :key="'menu-' + menu.id"
                     class="text-white px-4 py-2 border-b-1"
                     :class="{ 'border-l-4 border-l-brand-primary': isCurrentActive(menu.id) }"
                     @click="setActiveMenuId(menu.id)"
