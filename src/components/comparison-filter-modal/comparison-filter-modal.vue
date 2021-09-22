@@ -63,8 +63,8 @@
                       Filter results from some sites only
                     </h2>
                     <label
-                      v-for="(item, idx) in streamCheckboxItems"
-                      :key="'stream-list-' + idx"
+                      v-for="(item) in streamCheckboxItems"
+                      :key="'stream-list-' + item.stream.id"
                       class="px-4 pb-2 align-middle list-item"
                     >
                       <input
