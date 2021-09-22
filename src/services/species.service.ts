@@ -1,4 +1,4 @@
-import { groupBy, includes, mapValues } from 'lodash'
+import { groupBy, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
 import { SpeciesModels, StreamModels } from '@/models'
@@ -11,7 +11,7 @@ interface SpeciesRichnessRequestParams {
 
 export function getMockupSpecies (options: SpeciesRichnessRequestParams): SpeciesModels.SpeciesRichnessBarChartItem[] {
   const { start, end, streams } = options
-  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (streams.length === 0 || includes(streams.map(s => s.id), r.stream_id)))
+  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (streams.length === 0 || streams.map(s => s.id).includes(r.stream_id)))
   const groupedDetections = groupBy(filteredDetections, 'taxon')
   const data = mapValues(groupedDetections, (value, key) => {
     return {
