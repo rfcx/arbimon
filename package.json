@@ -7,7 +7,8 @@
     "lint": "eslint . && prettier --check . && stylelint .",
     "lint-fix": "eslint . --fix && prettier --loglevel warn --write . && stylelint . --fix",
     "preview": "vite preview",
-    "serve": "vite"
+    "serve": "vite",
+    "test": "jest src"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.17.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/color-string": "^1.5.0",
+    "@types/jest": "^27.0.2",
     "@types/node": "^16.6.2",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
@@ -28,6 +30,7 @@
     "@vue/compiler-sfc": "^3.0.5",
     "@vue/eslint-config-standard": "^6.1.0",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^2.0.0-rc.14",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-icons": "^1.0.2",
     "@windicss/plugin-interaction-variants": "^1.0.0",
@@ -41,6 +44,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-unused-imports": "^1.1.4",
     "eslint-plugin-vue": "^7.16.0",
+    "jest": "^26.6.3",
     "node-sass": "^6.0.1",
     "prettier": "^2.4.1",
     "sass": "^1.38.0",
@@ -48,10 +52,12 @@
     "stylelint": "^13.13.1",
     "stylelint-config-recommended-scss": "^4.3.0",
     "stylelint-scss": "^3.21.0",
+    "ts-jest": "^26.5.6",
     "typescript": "^4.3.2",
     "vite": "^2.4.4",
     "vite-plugin-style-import": "^1.1.1",
     "vite-plugin-windicss": "^1.2.7",
+    "vue-jest": "^5.0.0-alpha.10",
     "vue-tsc": "^0.2.2",
     "windicss": "^3.1.7"
   }

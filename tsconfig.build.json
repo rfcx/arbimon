@@ -5,5 +5,12 @@
       "@/*": ["src/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "lib", ".*/**"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib",
+    ".*/**",
+    "**/*.test.ts",
+    "**/*.mock.ts"
+  ]
 }
