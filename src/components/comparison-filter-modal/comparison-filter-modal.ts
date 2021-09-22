@@ -113,8 +113,8 @@ export default class ComparisonFilterModalComponent extends Vue {
     this.close()
     return {
       streams: this.selectedStreams,
-      startDate: dayjs(this.startDate),
-      endDate: dayjs(this.endDate)
+      startDate: dayjs.utc(this.startDate),
+      endDate: dayjs.utc(this.endDate)
     }
   }
 
