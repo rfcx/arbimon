@@ -26,8 +26,8 @@
                     v-for="(menu, idx) in menus"
                     :key="'menu-' + idx"
                     class="text-white px-4 py-2 border-b-1"
-                    :class="{ 'border-l-4 border-l-brand-primary': isCurrentActivate(menu.id) }"
-                    @click="setActivateMenuId(menu.id)"
+                    :class="{ 'border-l-4 border-l-brand-primary': isCurrentActive(menu.id) }"
+                    @click="setActiveMenuId(menu.id)"
                   >
                     {{ menu.name }}
                   </div>
@@ -35,7 +35,7 @@
                 <!-- right content -->
                 <!-- site -->
                 <div
-                  v-if="currentActivateMenuId === menus[0].id"
+                  v-if="currentActiveMenuId === menus[0].id"
                   class="w-full"
                 >
                   <div class="search-stream-container w-full p-4">

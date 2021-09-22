@@ -33,7 +33,7 @@ export default class ComparisonFilterComponent extends Vue {
   public startDate: string | null = dayjs().subtract(7, 'days').format(dateFormat)
   public endDate: string | null = dayjs().format(dateFormat)
   public readonly today = dayjs().format(dateFormat)
-  public currentActivateMenuId = 'sites'
+  public currentActiveMenuId = 'sites'
 
   public mounted (): void {
     if (this.defaultFilter) {
@@ -80,12 +80,12 @@ export default class ComparisonFilterComponent extends Vue {
       })
   }
 
-  public setActivateMenuId (id: string): void {
-    this.currentActivateMenuId = id
+  public setActiveMenuId (id: string): void {
+    this.currentActiveMenuId = id
   }
 
-  public isCurrentActivate (id: string): boolean {
-    return id === this.currentActivateMenuId
+  public isCurrentActive (id: string): boolean {
+    return id === this.currentActiveMenuId
   }
 
   public selectAllSites (): void {
