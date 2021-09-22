@@ -32,12 +32,7 @@ export default class HorizontalBarChartComponent extends Vue {
   public generateChart (): void {
     const data = this.chartData
 
-    let maximumPopulation = 0
-    for (const species of data) {
-      if (species.population > maximumPopulation) {
-        maximumPopulation = species.population
-      }
-    }
+    const maximumPopulation = Math.max(...data.map(datum => datum.population))
 
     let svg: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
     svg.selectAll('*').remove()
