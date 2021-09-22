@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['standard'],
+  extends: ['standard-with-typescript'],
   plugins: ['simple-import-sort', 'unused-imports'],
   rules: {
     'import/newline-after-import': ['error'],
