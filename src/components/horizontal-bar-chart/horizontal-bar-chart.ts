@@ -104,6 +104,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .enter()
       .append('text')
       .text((d) => d.population)
+      .attr('fill', 'white')
       .attr('width', textSize.width)
       .attr('height', textSize.height)
       .attr('x', (d) => xScale(d.population) - textSize.width / 2)
