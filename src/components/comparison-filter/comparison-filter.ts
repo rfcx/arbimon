@@ -104,10 +104,6 @@ export default class ComparisonFilterComponent extends Vue {
     }
   }
 
-  public get disabled (): boolean {
-    return this.startDate == null || this.endDate == null || this.selectedStreams.length === 0
-  }
-
   public get isSelectedAllSites (): boolean {
     return this.selectedStreams.length === 0
   }
