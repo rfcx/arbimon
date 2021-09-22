@@ -40,6 +40,7 @@ export default class ComparisonBoxComponent extends Vue {
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
     }
+    this.select()
   }
 
   public apply (filter: FilterBase): void {
