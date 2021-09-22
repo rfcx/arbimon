@@ -12,7 +12,9 @@ export default class HorizontalBarChartComponent extends Vue {
   public FULL_WIDTH!: number
   public CHART_WIDTH!: number
   public FULL_HEIGHT = 300
-  public CHART_HEIGHT = this.FULL_HEIGHT - this.margin.top - this.margin.bottom
+  public get CHART_HEIGHT (): number {
+    return this.FULL_HEIGHT - this.margin.top - this.margin.bottom
+  }
 
   public mounted (): void {
     this.FULL_WIDTH = document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0 - this.margin.left
@@ -36,6 +38,8 @@ export default class HorizontalBarChartComponent extends Vue {
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
     chart.selectAll('*').remove()
+
+    this.FULL_HEIGHT = (data.length + 1) * 50
 
     const svg = chart
       .append('svg')
@@ -85,8 +89,9 @@ export default class HorizontalBarChartComponent extends Vue {
     svg.selectAll('line')
       .style('color', 'none')
 
-    // data render
-    svg.selectAll('myRect')
+    // bar label group
+    svg.append('g')
+      .selectAll('myRect')
       .data(data)
       .enter()
       .append('rect')
@@ -98,8 +103,10 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('height', yScale.bandwidth())
       .attr('fill', '#31984F')
 
+    // population label group
     const textSize = { width: 50, height: 10 }
-    svg.selectAll('myRect')
+    svg.append('g')
+      .selectAll('myRect')
       .data(data)
       .enter()
       .append('text')

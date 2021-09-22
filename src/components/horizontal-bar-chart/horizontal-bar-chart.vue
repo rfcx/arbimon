@@ -5,7 +5,7 @@
   >
     <div
       v-if="!hasData"
-      class="no-chart-data text-center text-white text-xl"
+      class="no-chart-data text-center text-white"
     >
       No chart data
     </div>
