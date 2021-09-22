@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs'
 
+import { formatDateRange } from '@/utils'
 import { Stream } from './Stream'
 
 export interface FilterBase {
@@ -27,8 +28,7 @@ export class SpeciesRichnessFilter {
     return this.streams.map(s => s.name).join(', ')
   }
 
-  // TODO [12]: date format when start and end date are not in the same month/year
   get displayDate (): string {
-    return `${this.startDate.format('MMM D')} - ${this.endDate.format('D, YYYY')}`
+    return formatDateRange(this.startDate, this.endDate)
   }
 }
