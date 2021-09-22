@@ -6,7 +6,6 @@ import ComparisonListComponent from '@/components/comparison-list/comparison-lis
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import { SpeciesModels, SpeciesRichnessFilter, StreamModels } from '@/models'
 import { SpeciesService } from '@/services'
-import { formatISOStringDate } from '@/utils'
 
 dayjs.extend(utc)
 
@@ -23,8 +22,8 @@ export default class SpeciesRichnessPage extends Vue {
 
   onFilterChange (filters: SpeciesRichnessFilter[]): void {
     for (const filter of filters) {
-      const start = formatISOStringDate(filter.startDate.startOf('day'))
-      const end = formatISOStringDate(filter.endDate.endOf('day').add(1, 'days'))
+      const start = filter.startDate.toISOString()
+      const end = filter.endDate.add(1, 'days').toISOString()
       const data = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
       this.chartData = data
     }
