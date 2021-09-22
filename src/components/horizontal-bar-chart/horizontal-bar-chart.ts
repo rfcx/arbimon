@@ -97,5 +97,16 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('width', (d) => xScale(d.population))
       .attr('height', yScale.bandwidth())
       .attr('fill', '#31984F')
+
+    const textSize = { width: 50, height: 10 }
+    svg.selectAll('myRect')
+      .data(data)
+      .enter()
+      .append('text')
+      .text((d) => d.population)
+      .attr('width', textSize.width)
+      .attr('height', textSize.height)
+      .attr('x', (d) => xScale(d.population) - textSize.width / 2)
+      .attr('y', (d) => yScale(d.label) + yScale.bandwidth() / 2 + textSize.height / 2)
   }
 }
