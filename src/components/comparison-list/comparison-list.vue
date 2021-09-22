@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <comparison-filter-component
+    <comparison-filter-modal-component
       v-if="isFilterOpen"
       :default-filter="currentSelectedFilter"
       @apply="apply"

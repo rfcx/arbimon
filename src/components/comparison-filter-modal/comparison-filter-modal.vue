@@ -1,5 +1,5 @@
 <template>
-  <div id="comparison-filter-component">
+  <div id="comparison-filter-modal-component">
     <div
       id="select-project-modal"
       class="fixed inset-0 z-10 bg-mirage-grey bg-opacity-75 transition-opacity overflow-y-auto h-full w-full"
@@ -135,4 +135,4 @@
     </div>
   </div>
 </template>
-<script src="./comparison-filter.ts" lang="ts" />
+<script src="./comparison-filter-modal.ts" lang="ts" />

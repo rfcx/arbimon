@@ -24,7 +24,7 @@ const dateFormat = 'YYYY-MM-DD'
     OnClickOutside
   }
 })
-export default class ComparisonFilterComponent extends Vue {
+export default class ComparisonFilterModalComponent extends Vue {
   @Prop({ default: null })
   defaultFilter!: SpeciesRichnessFilter | null
 
