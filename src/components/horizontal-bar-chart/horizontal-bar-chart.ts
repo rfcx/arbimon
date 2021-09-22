@@ -8,6 +8,7 @@ export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
   public chartData!: ChartModels.BarChartItem[]
 
+  private readonly BAR_HEIGHT = 40
   public margin = { top: 20, right: 20, bottom: 30, left: 80 }
   public FULL_WIDTH!: number
   public CHART_WIDTH!: number
@@ -32,14 +33,14 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   public generateChart (): void {
-    const data = this.chartData
+    const data = this.chartData.sort((a, b) => a.label.localeCompare(b.label))
 
     const maximumPopulation = Math.max(...data.map(datum => datum.population))
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
     chart.selectAll('*').remove()
 
-    this.FULL_HEIGHT = (data.length + 1) * 50
+    this.FULL_HEIGHT = (data.length + 1) * this.BAR_HEIGHT
 
     const svg = chart
       .append('svg')
