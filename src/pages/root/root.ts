@@ -1,16 +1,20 @@
 import { Options, Vue } from 'vue-class-component'
 
+import InvalidProjectComponent from '@/components/invalid-project/invalid-project.vue'
 import NavBarComponent from '@/components/navbar/navbar.vue'
-import { Auth0Option, Auth0User } from '@/models'
-import { VXServices } from '@/services'
+import { Auth0Option, Auth0User, ProjectModels } from '@/models'
+import { VuexService } from '@/services'
 
 @Options({
-  components: { NavBarComponent }
+  components: { NavBarComponent, InvalidProjectComponent }
 })
 export default class RootPage extends Vue {
-  @VXServices.Auth.auth.VX()
+  @VuexService.Auth.auth.bind()
   protected auth!: Auth0Option | undefined
 
-  @VXServices.Auth.user.VX()
+  @VuexService.Auth.user.bind()
   protected user!: Auth0User | undefined
+
+  @VuexService.Project.selectedProject.bind()
+  selectedProject!: ProjectModels.ProjectListItem | undefined
 }

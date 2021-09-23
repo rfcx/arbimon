@@ -12,11 +12,11 @@ export default defineConfig({
   plugins: [
     plugin(({ addComponents }) => {
       const navbarItems = {
-        '.navbar-menu-item.router-link-active': {
+        '.navbar-menu-item.router-link-exact-active': {
           'box-shadow': 'inset 0 -3px 0 #31984f'
         },
         '@media (max-width: 699px)': {
-          '.navbar-menu-item.router-link-active': {
+          '.navbar-menu-item.router-link-exact-active': {
             'box-shadow': 'inset 5px 0 0 #31984f'
           }
         }
@@ -56,8 +56,8 @@ export default defineConfig({
         },
         'steel-grey': {
           DEFAULT: '#232436',
-          light: '#E5E5E7',
-          dark: '#0f0f17'
+          light: '#4a4c72',
+          dark: '#202031'
         },
         'mirage-grey': {
           DEFAULT: '#141525',
