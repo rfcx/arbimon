@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
-import { SpeciesModels, SpeciesRichnessFilter, StreamModels } from '@/models'
+import { ChartModels, SpeciesRichnessFilter, StreamModels } from '@/models'
 import { SpeciesService } from '@/services'
 
 dayjs.extend(utc)
@@ -18,7 +18,7 @@ dayjs.extend(utc)
 export default class SpeciesRichnessPage extends Vue {
   public streams: StreamModels.Stream[] = []
 
-  public chartData: SpeciesModels.SpeciesRichnessBarChartItem[] = []
+  public chartData: ChartModels.BarChartItem[] = []
 
   onFilterChange (filters: SpeciesRichnessFilter[]): void {
     for (const filter of filters) {
