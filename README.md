@@ -2,6 +2,13 @@
 
 Biodiversity analytics website build with Vue 3, Typescript, Vite, Windi CSS, and Vuex
 
+## DoD
+
+- Update CHANGE_LOG.md
+- Video demo for product owner
+- Merge PRs & deploy to staging
+- Share link with PO by Tue
+
 ## Requirements
 
 - node 14+
