@@ -17,7 +17,7 @@ async function init (): Promise<void> {
     .use(router)
     .mount('#app')
 
-  if (redirectAfterAuth) await router.replace(redirectAfterAuth)
+  if (redirectAfterAuth) await router.replace({ path: redirectAfterAuth, query: undefined })
 }
 
 void init()
