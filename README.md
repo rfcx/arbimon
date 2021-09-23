@@ -4,10 +4,9 @@ Biodiversity analytics website build with Vue 3, Typescript, Vite, Windi CSS, an
 
 ## Sprint DoD
 
-- Update CHANGE_LOG.md
-- Video demo for product owner
+- Update [CHANGELOG.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/CHANGELOG.md)
 - Merge PRs & deploy to staging
-- Share link with PO by Tue
+- Send demo video & staging URL to PO by Tuesday
 
 ## Requirements
 
