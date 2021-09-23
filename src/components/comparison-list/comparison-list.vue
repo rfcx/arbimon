@@ -5,6 +5,7 @@
         v-for="(filters, idx) in filters"
         :key="'stream-card' + idx"
         class="flex flex-col justify-center w-48 max-w-48 h-24 mr-4 mt-6 bg-clip-padding mirage-grey border-2 hover:bg-steel-grey cursor-pointer rounded-xl px-4 text-white text-sm"
+        @click="showFilterPopup(true, idx)"
       >
         <div class="flex flex-row">
           <div
@@ -18,7 +19,7 @@
           <div
             class="flex flex-col self-end"
             :class="{ 'invisible': isDefaultFilter }"
-            @click="removeFilterConfig(idx)"
+            @click.stop="removeFilterConfig(idx)"
           >
             <i class="icon-close cursor-pointer" />
           </div>
@@ -37,6 +38,12 @@
         </div>
       </div>
     </div>
+    <comparison-filter-modal-component
+      v-if="isFilterOpen"
+      :default-filter="currentSelectedFilter"
+      @apply="apply"
+      @close="showFilterPopup"
+    />
   </div>
 </template>
 <script src="./comparison-list.ts" lang="ts" />
