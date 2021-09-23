@@ -26,3 +26,7 @@ Biodiversity analytics website build with Vue 3, Typescript, Vite, Windi CSS, an
 3. Build package:
 
     `npm run build`
+
+## Code standard / style guide
+
+See [STANDARD.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/STANDARD.md)
