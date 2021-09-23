@@ -29,7 +29,10 @@
                   @click="setSelectedProject(project)"
                 >
                   {{ project.name }}
-                  <i v-if="isSelectedProject(project)" class="icon-check" />
+                  <i
+                    v-if="isSelectedProject(project)"
+                    class="icon-check"
+                  />
                 </div>
               </div>
               <div class="flex justify-end mt-2">
