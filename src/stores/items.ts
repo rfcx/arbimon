@@ -1,4 +1,6 @@
 export const root = {
   auth: 'auth',
-  user: 'user'
+  user: 'user',
+  projects: 'projects',
+  selectedProject: 'selectedProject'
 }

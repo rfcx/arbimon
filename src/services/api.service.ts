@@ -30,14 +30,14 @@ interface RequestParams {
 interface AuthHeader { Authorization: string }
 
 class ApiClient {
-  authToken = async (): Promise<AuthHeader> => {
-    const token = await getAccessToken()
+  async authToken (): Promise<AuthHeader> {
+    const token = await getIdToken()
     return {
       Authorization: 'Bearer ' + (token ?? '')
     }
   }
 
-  request = async ({ url, method, headers, data, config }: RequestParams): Promise<any> => {
+  async request <T = any> ({ url, method, headers, data, config }: RequestParams): Promise<T> {
     try {
       const response = await (async (m) => {
         const reqConfig = {

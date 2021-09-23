@@ -1,4 +1,5 @@
 export { default as ErrorPage } from './error/error.vue'
+export { default as IndexPage } from './index/index.vue'
 export { default as OverviewPage } from './overview/overview.vue'
 export { default as RootPage } from './root/root.vue'
 export { default as SpeciesRichnessPage } from './species-richness/species-richness.vue'

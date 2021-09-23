@@ -2,6 +2,7 @@
   "name": "biodiversity-analytics",
   "version": "0.0.0",
   "description": "Analyze biodiversity data from RFCx platform",
+  "license": "UNLICENSED",
   "scripts": {
     "build": "vue-tsc --project tsconfig.build.json --noEmit && vite build",
     "lint": "eslint . && prettier --check . && stylelint .",
@@ -12,6 +13,8 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.17.0",
+    "@vueuse/components": "^6.3.3",
+    "@vueuse/core": "^6.3.3",
     "axios": "^0.21.3",
     "dayjs": "^1.10.6",
     "vue": "^3.0.5",

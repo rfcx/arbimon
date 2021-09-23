@@ -10,3 +10,4 @@
 * **setup:** Set up api service for calling an api
 
 * **features:** CE-1327 User can see the comparison box at the top of report ([CE-1327](https://jira.rfcx.org/browse/CE-1327))
+* **features:** CE-1357 User can change project directly in Analytics website ([CE-1357](https://jira.rfcx.org/browse/CE-1357))
