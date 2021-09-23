@@ -8,7 +8,7 @@ export async function getStreams (): Promise<StreamModels.Stream[]> {
   const { method, url } = Endpoints.getStreams
 
   try {
-    const resp = await ApiClient.request({
+    const resp = await ApiClient.request<StreamModels.Stream[]>({
       url,
       method
     })
