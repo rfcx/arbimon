@@ -4,24 +4,12 @@ import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
 
+const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
+const barHeight = 40
+
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
   public chartData!: ChartModels.BarChartItem[]
-
-  private readonly BAR_HEIGHT = 40
-  public margin = { top: 20, right: 20, bottom: 30, left: 80 }
-  public FULL_WIDTH!: number
-  public CHART_WIDTH!: number
-  public FULL_HEIGHT = 300
-  public get CHART_HEIGHT (): number {
-    return this.FULL_HEIGHT - this.margin.top - this.margin.bottom
-  }
-
-  public mounted (): void {
-    this.FULL_WIDTH = document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0 - this.margin.left
-    this.CHART_WIDTH = this.FULL_WIDTH - this.margin.left - this.margin.right
-    this.generateChart()
-  }
 
   public get hasData (): boolean {
     return this.chartData.length > 0
@@ -34,24 +22,26 @@ export default class HorizontalBarChartComponent extends Vue {
 
   public generateChart (): void {
     const data = this.chartData.sort((a, b) => a.label.localeCompare(b.label))
-
     const maximumPopulation = Math.max(...data.map(datum => datum.population))
+
+    const fullWidth = document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0 - MARGIN.left
+    const chartWidth = fullWidth - MARGIN.left - MARGIN.right
+    const fullHeight = (data.length + 1) * barHeight
+    const chartHeight = fullHeight - MARGIN.top - MARGIN.bottom
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
     chart.selectAll('*').remove()
 
-    this.FULL_HEIGHT = (data.length + 1) * this.BAR_HEIGHT
-
     const svg = chart
       .append('svg')
-      .attr('width', this.FULL_WIDTH)
-      .attr('height', this.FULL_HEIGHT)
+      .attr('width', fullWidth)
+      .attr('height', fullHeight)
       .append('g')
-      .attr('transform', `translate(${this.margin.left},${this.margin.top})`)
+      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`)
 
     const xScale = d3.scaleLinear()
       .domain([0, maximumPopulation])
-      .range([0, this.CHART_WIDTH])
+      .range([0, chartWidth])
       .nice()
 
     const xAxis = d3.axisBottom(xScale)
@@ -62,13 +52,13 @@ export default class HorizontalBarChartComponent extends Vue {
       .tickPadding(10)
 
     svg.append('g')
-      .attr('transform', `translate(0,${this.CHART_HEIGHT})`)
+      .attr('transform', `translate(0,${chartHeight})`)
       .transition()
       .call(xAxis)
 
     const yScale = d3.scaleBand()
-      .domain(d3.map(this.chartData, (d) => d.label))
-      .range([0, this.CHART_HEIGHT])
+      .domain(d3.map(data, (d) => d.label))
+      .range([0, chartHeight])
       .paddingInner(0.2)
 
     const yAxis = d3.axisLeft(yScale)
@@ -115,6 +105,6 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('width', textSize.width)
       .attr('height', textSize.height)
       .attr('x', (d) => xScale(d.population) - textSize.width / 2)
-      .attr('y', (d) => yScale(d.label) ?? 0 + yScale.bandwidth() / 2 + textSize.height / 2)
+      .attr('y', (d) => (yScale(d.label) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
   }
 }
