@@ -1,10 +1,4 @@
-import * as ChartModels from './Chart'
-import * as StreamModels from './Stream'
-
 export * from './Auth'
+export * as ChartModels from './Chart'
 export * from './Filter'
-
-export {
-  ChartModels,
-  StreamModels
-}
+export * as StreamModels from './Stream'
