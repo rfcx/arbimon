@@ -87,7 +87,7 @@ const routeGuard: NavigationGuardWithThis<undefined> = (to: RouteLocationNormali
       return next()
     }
 
-    await loginWithRedirect({ appState: { targetUrl: to.fullPath } })
+    await loginWithRedirect({ appState: { redirectPath: to.fullPath } })
   }
 
   if (!loading.value) {
@@ -107,11 +107,9 @@ interface Auth0PluginOptions {
   clientId?: string
   audience?: string
   redirectUri: string
-
-  onRedirectCallback: (appState: any) => void
 }
 
-async function init (options: Auth0PluginOptions): Promise<Plugin> {
+async function init (options: Auth0PluginOptions): Promise<{Auth0Plugin: Plugin, redirectAfterAuth: string}> {
   const { domain, clientId, audience } = config
 
   client = await createAuth0Client({
@@ -122,10 +120,11 @@ async function init (options: Auth0PluginOptions): Promise<Plugin> {
     theme: 'dark'
   })
 
+  let redirectAfterAuth = null
   try {
     if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
       const { appState } = await client.handleRedirectCallback()
-      options.onRedirectCallback(appState)
+      redirectAfterAuth = appState.redirectPath
     }
   } catch (e) {
     state.error = e
@@ -136,14 +135,17 @@ async function init (options: Auth0PluginOptions): Promise<Plugin> {
   }
 
   return {
-    install: (app: App) => {
-      app.provide('auth', authPlugin)
-    }
+    Auth0Plugin: {
+      install: (app: App) => {
+        app.provide('auth', authPlugin)
+      }
+    },
+    redirectAfterAuth
   }
 }
 
 interface Auth0Plugin {
-  init: (options: Auth0PluginOptions) => Promise<Plugin>
+  init: (options: Auth0PluginOptions) => Promise<{Auth0Plugin: Plugin, redirectAfterAuth: string}>
   routeGuard: NavigationGuardWithThis<undefined>
 }
 
