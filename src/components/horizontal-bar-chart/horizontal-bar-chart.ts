@@ -98,8 +98,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('rect')
       .style('margin-top', '10px')
       .attr('x', xScale(0))
-      // @ts-expect-error horizontal y scale label error
-      .attr('y', (d) => yScale(d.label))
+      .attr('y', (d) => yScale(d.label) ?? 0)
       .attr('width', (d) => xScale(d.population))
       .attr('height', yScale.bandwidth())
       .attr('fill', '#31984F')
@@ -116,6 +115,6 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('width', textSize.width)
       .attr('height', textSize.height)
       .attr('x', (d) => xScale(d.population) - textSize.width / 2)
-      .attr('y', (d) => yScale(d.label) + yScale.bandwidth() / 2 + textSize.height / 2)
+      .attr('y', (d) => yScale(d.label) ?? 0 + yScale.bandwidth() / 2 + textSize.height / 2)
   }
 }
