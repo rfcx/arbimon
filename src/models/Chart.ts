@@ -1,5 +1,5 @@
 
 export interface BarChartItem {
-  label: string
-  population: number
+  category: string
+  frequency: number
 }

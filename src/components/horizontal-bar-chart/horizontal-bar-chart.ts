@@ -21,8 +21,8 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   public generateChart (): void {
-    const data = this.chartData.sort((a, b) => a.label.localeCompare(b.label))
-    const maximumPopulation = Math.max(...data.map(datum => datum.population))
+    const data = this.chartData.sort((a, b) => a.category.localeCompare(b.category))
+    const maximumFrequency = Math.max(...data.map(datum => datum.frequency))
 
     const fullWidth = document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0 - MARGIN.left
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
@@ -40,7 +40,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`)
 
     const xScale = d3.scaleLinear()
-      .domain([0, maximumPopulation])
+      .domain([0, maximumFrequency])
       .range([0, chartWidth])
       .nice()
 
@@ -57,7 +57,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .call(xAxis)
 
     const yScale = d3.scaleBand()
-      .domain(d3.map(data, (d) => d.label))
+      .domain(d3.map(data, (d) => d.category))
       .range([0, chartHeight])
       .paddingInner(0.2)
 
@@ -88,23 +88,23 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('rect')
       .style('margin-top', '10px')
       .attr('x', xScale(0))
-      .attr('y', (d) => yScale(d.label) ?? 0)
-      .attr('width', (d) => xScale(d.population))
+      .attr('y', (d) => yScale(d.category) ?? 0)
+      .attr('width', (d) => xScale(d.frequency))
       .attr('height', yScale.bandwidth())
       .attr('fill', '#31984F')
 
-    // population label group
+    // frequency label group
     const textSize = { width: 50, height: 10 }
     svg.append('g')
       .selectAll('myRect')
       .data(data)
       .enter()
       .append('text')
-      .text((d) => d.population)
+      .text((d) => d.frequency)
       .attr('fill', 'white')
       .attr('width', textSize.width)
       .attr('height', textSize.height)
-      .attr('x', (d) => xScale(d.population) - textSize.width / 2)
-      .attr('y', (d) => (yScale(d.label) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
+      .attr('x', (d) => xScale(d.frequency) - textSize.width / 2)
+      .attr('y', (d) => (yScale(d.category) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
   }
 }
