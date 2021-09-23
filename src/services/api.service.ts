@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { RequestMethod } from '@/endpoints'
+import { RequestMethod } from '@/api/endpoints'
 import { Auth } from './vuex.service'
 
 const ApiConfig = axios.create({
