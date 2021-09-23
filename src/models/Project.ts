@@ -10,7 +10,7 @@ export interface RawProjectListItem {
 /* eslint-enable camelcase */
 
 export interface ProjectListItem {
-  id?: string
+  id?: string // TODO - The API needs to reject invalid data (it's ridiculous to have a project with no id)
   name?: string
   isPublic?: boolean
   externalId?: number
