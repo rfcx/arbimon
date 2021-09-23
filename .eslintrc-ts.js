@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['standard-with-typescript', '.eslintrc-js.js'],
+  extends: ['.eslintrc-js.js'],
   parserOptions: {
     ecmaFeatures: { jsx: true },
     ecmaVersion: 2021,

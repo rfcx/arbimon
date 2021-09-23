@@ -1,7 +1,8 @@
 # ignore everything
-# ...except json/yaml
+# ...except json/yml/yaml
 *.*
 !*.json
+!*.yml
 !*.yaml
 
 # just to be safe
