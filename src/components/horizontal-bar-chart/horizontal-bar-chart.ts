@@ -5,7 +5,7 @@ import { Prop, Watch } from 'vue-property-decorator'
 import { ChartModels } from '@/models'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
-const barHeight = 40
+const BAR_HEIGHT = 40
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
@@ -26,7 +26,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
     const fullWidth = document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0 - MARGIN.left
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
-    const fullHeight = (data.length + 1) * barHeight
+    const fullHeight = (data.length + 1) * BAR_HEIGHT
     const chartHeight = fullHeight - MARGIN.top - MARGIN.bottom
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
