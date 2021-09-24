@@ -29,10 +29,9 @@ const rootActions: ActionTree<RootState, RootState> = {
   [ACTIONS.root.updateUser]: async ({ commit }, user?: Models.Auth0User) => {
     commit(MUTATIONS.root.updateUser, user)
 
-    const projectsReal = user ? await ProjectServices.getProjects() : []
     // TODO 17 - Make this conditional on build mode (dev, staging, prod)
     // TODO 65 - Replace this with a mock service
-    const projects = [...projectsReal, { id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }]
+    const projects = user ? [...await ProjectServices.getProjects(), { id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }] : []
     commit(MUTATIONS.root.updateProjects, projects)
 
     const selectedProject = projects.length > 0 ? projects[0] : undefined
