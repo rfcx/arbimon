@@ -5,23 +5,31 @@
   >
     <navigation-bar-component />
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
-      <h1 class="text-white text-4xl capitalize">
-        Recent projects
-      </h1>
-      <ul class="list-disc ml-6 mt-4">
-        <li
-          v-for="project in $store.state.projects.slice(0, 10)"
-          :key="project.id"
-          class="mt-2"
-        >
-          <router-link
-
-            :to="{ name: 'overview', params: { projectId: project.id }}"
+      <div v-if="$store.state.projects.length > 0">
+        <h1 class="text-white text-4xl capitalize">
+          Recent projects
+        </h1>
+        <ul class="list-disc ml-6 mt-4">
+          <li
+            v-for="project in $store.state.projects.slice(0, 10)"
+            :key="project.id"
+            class="mt-2"
           >
-            {{ project.name }}
-          </router-link>
-        </li>
-      </ul>
+            <router-link
+
+              :to="{ name: 'overview', params: { projectId: project.id }}"
+            >
+              {{ project.name }}
+            </router-link>
+          </li>
+        </ul>
+      </div>
+      <div
+        v-else
+        class="text-secondary"
+      >
+        Please login to view your projects!
+      </div>
     </div>
   </div>
 </template>
