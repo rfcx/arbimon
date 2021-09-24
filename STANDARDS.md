@@ -1,12 +1,16 @@
 ## Biodiversity Project - Developer Style Guide
 
-1. Follow [Vue JS Style Guide](https://v3.vuejs.org/style-guide)
+*This is a living document. If you want to propose a new standard/convention, feel free to create PR!*
 
+### Overview
+
+1. Follow [Vue 3 Style Guide](https://v3.vuejs.org/style-guide)
+ 
 ### Member-Order Example
 
 Example class-component, based on [component/instance order](https://v3.vuejs.org/style-guide/#component-instance-options-order-recommended) from the Vue 3 Style Guide:
 
-```vue
+```ts
 @Options({
   // 3. Template deps
   components: { MyChildComponent }
@@ -42,6 +46,3 @@ export default class ExampleComponent extends Vue {
 }
 </script>
 ```
-
-
-// TODO: feel free to create PR to add more style guide
