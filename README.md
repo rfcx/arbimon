@@ -4,13 +4,12 @@ Biodiversity analytics website build with Vue 3, Typescript, Vite, Windi CSS, an
 
 ## Sprint DoD
 
-- Update [CHANGELOG.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/CHANGELOG.md)
-- Merge PRs & deploy to staging
-- Send demo video & staging URL to PO by Tuesday
+This following must be true to consider the Sprint "DONE":
 
-## Coding standards / style guide
-
-See [STANDARDS.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/STANDARDS.md)
+- Code follows [STANDARDS.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/STANDARDS.md)
+- Updated [CHANGELOG.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/CHANGELOG.md)
+- PRs merged & deployed to staging
+- Demo video & staging URL sent to PO by Tuesday
 
 ## Requirements
 
