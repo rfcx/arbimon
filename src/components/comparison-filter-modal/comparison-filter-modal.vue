@@ -93,7 +93,7 @@
                       v-model="startDate"
                       type="date"
                       :max="endDate || undefined"
-                      class="rounded-lg mr-2"
+                      class="bg-white text-black rounded-lg mr-2"
                     >
                   </div>
                   <div>
@@ -109,7 +109,7 @@
                       type="date"
                       :min="startDate || undefined"
                       :max="today"
-                      class="rounded-lg mr-2"
+                      class="bg-white text-black rounded-lg mr-2"
                     >
                   </div>
                 </div>
