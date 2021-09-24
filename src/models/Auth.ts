@@ -4,6 +4,7 @@ import {
   GetTokenWithPopupOptions,
   IdToken,
   LogoutOptions,
+  RedirectLoginOptions,
   User
 } from '@auth0/auth0-spa-js'
 import { ComputedRef } from '@vue/reactivity'
@@ -20,6 +21,6 @@ export interface Auth0Option {
   getTokenSilently: (o?: GetTokenSilentlyOptions) => Promise<string>
   getTokenWithPopup: (o?: GetTokenWithPopupOptions) => Promise<string>
   handleRedirectCallback: (o?: GetTokenWithPopupOptions) => Promise<string>
-  loginWithRedirect: (o?: GetTokenWithPopupOptions) => Promise<string>
+  loginWithRedirect: (o?: RedirectLoginOptions) => Promise<string>
   logout: (o?: LogoutOptions) => Promise<void> | void
 }
