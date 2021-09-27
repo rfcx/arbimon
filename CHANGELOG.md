@@ -13,3 +13,4 @@
 * **features:** CE-1357 User can change project directly in Analytics website ([CE-1357](https://jira.rfcx.org/browse/CE-1357))
 * **features:** See species by taxonomic group in graph (#12, #27, #42)
 * **features:** Improve bar chart to support group bar chart (#58)
+* **features:** Getting the comparison filter box ready for chart data (#59)
