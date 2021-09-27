@@ -4,12 +4,12 @@
       Species Richness
     </h1>
     <p class="text-white">
-      Number of species found in the area
+      Number of distinct species found in the filtered datasets
     </p>
   </div>
   <comparison-list-component @select="onFilterChange" />
   <div class="mt-5">
-    <h2 class="text-white text-xl">Species in taxonomic group</h2>
+    <h2 class="text-white text-xl">Number of species in each taxonomic group</h2>
     <horizontal-bar-chart-component :chart-data="chartData"/>
   </div>
 </div>
