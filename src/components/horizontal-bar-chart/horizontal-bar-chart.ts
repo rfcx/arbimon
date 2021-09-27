@@ -117,25 +117,33 @@ export default class HorizontalBarChartComponent extends Vue {
       {
         category: 'Birds',
         values: [
-          { location: 'sites group 1', value: 200 }
+          { location: 'sites group 1', value: 110 },
+          { location: 'sites group 1', value: 200 },
+          { location: 'sites group 1', value: 450 }
         ]
       },
       {
         category: 'Amphebians',
         values: [
-          { location: 'sites group 1', value: 150 }
+          { location: 'sites group 1', value: 150 },
+          { location: 'sites group 1', value: 120 },
+          { location: 'sites group 1', value: 200 }
         ]
       },
       {
         category: 'Mammals',
         values: [
-          { location: 'sites group 1', value: 100 }
+          { location: 'sites group 1', value: 100 },
+          { location: 'sites group 1', value: 140 },
+          { location: 'sites group 1', value: 200 }
         ]
       },
       {
         category: 'Other',
         values: [
-          { location: 'sites group 1', value: 100 }
+          { location: 'sites group 1', value: 100 },
+          { location: 'sites group 1', value: 500 },
+          { location: 'sites group 1', value: 200 }
         ]
       }
     ]
@@ -224,6 +232,15 @@ export default class HorizontalBarChartComponent extends Vue {
             .attr('width', width)
             .attr('height', barHeight)
             .style('fill', colors[idx])
+
+          const textSize = { width: 30, height: 10 }
+          category.append('text')
+            .text(d.values[idx].value)
+            // .attr('fill', 'white')
+            .attr('width', textSize.width)
+            .attr('height', textSize.height)
+            .attr('x', width - textSize.width)
+            .attr('y', y + (barHeight / 2) + 5)
         }
       })
   }
