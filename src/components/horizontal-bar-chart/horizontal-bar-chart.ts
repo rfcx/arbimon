@@ -45,12 +45,13 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`)
 
     // =================== Scale setting =================
-    // xScale configuration: d3 calculate the x number
+    // x axis scale configuration: d3 calculate the x number rely on maximum frequency (domain) and chart width (range)
     const xScale = d3.scaleLinear()
       .domain([0, maximumFrequency])
       .range([0, chartWidth])
       .nice()
 
+    // x axis tick configuration: set tick to display only integer, hide tick, and add it padding
     const xAxis = d3.axisBottom(xScale)
       .tickFormat((d, _) => {
         return d.valueOf() % 1 !== 0 ? '' : d3.format('d')(d)
@@ -58,51 +59,60 @@ export default class HorizontalBarChartComponent extends Vue {
       .tickSize(0)
       .tickPadding(5)
 
+    // adding x scale to the svg by setting
     svg.append('g')
       .attr('transform', `translate(0, ${chartHeight})`)
       .transition()
       .call(xAxis)
 
+    // y axis scale configuration: d3 calculate the y position rely on data label (domain) and chart height (range)
     const yScale = d3.scaleBand()
       .domain(d3.map(data, (d) => d.category))
       .range([0, chartHeight])
 
+    // y axis tick configuration: hide tick and add it padding
     const yAxis = d3.axisLeft(yScale)
       .tickSize(0)
       .tickPadding(5)
 
+    // adding y scale to the svg by setting
     svg.append('g')
       .transition()
       .call(yAxis)
 
-    // scale color line
+    // select all x and y matched `domain` class name and set scale stroke to be none (invisible)
     svg.selectAll('.domain')
       .style('stroke', 'none')
 
+    // select all x and y matched `text` tag name and set text color and font size
     svg.selectAll('text')
       .style('color', 'white')
       .style('font-size', '14px')
 
+    // select all x and y matched `line` tag name and set scale line color to be none (invisible)
     svg.selectAll('line')
       .style('color', 'none')
 
     // =================== Generate bar group =================
+    // select all match `category` class in `g` tag and binding data
     svg.selectAll('g.category')
       .data(data)
       .enter()
       .append('g')
       .classed('category', true)
       .attr('transform', (d, i) => {
-        // Center the group bar chart to label
+        // center the group bar chart to label
         const y = (yScale(d.category) ?? 0) + (barHeight * (-0.5 + (0.5 * (d.series.length - 1))))
         return `translate(0,${y})`
       })
+      // adding bar chart by looping item in `data`
       .each(function (d) {
         const category = d3.select(this)
         for (let idx = 0; idx < d.series.length; idx++) {
           const x = xScale(d.series[idx].frequency)
           const width = x - xScale(0)
           const y = (d.series.length / 2 - idx) * (barHeight + barMargin)
+          // adding bar chart into each bar chart in bargroup
           category.append('rect')
             .attr('x', xScale(0))
             .attr('y', y)
@@ -110,6 +120,7 @@ export default class HorizontalBarChartComponent extends Vue {
             .attr('height', barHeight)
             .style('fill', colors[idx])
 
+          // adding text label into each bar chart in bargroup
           const textSize = { width: 30, height: 10 }
           category.append('text')
             .text(d.series[idx].frequency)
