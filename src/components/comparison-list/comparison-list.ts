@@ -35,7 +35,11 @@ export default class ComparisonBoxComponent extends Vue {
     return this.filters.length === 1 && this.filters[0].streams.length === 0
   }
 
-  showFilterPopup (open: boolean, idx?: number): void {
+  public setFilterColor (idx: number): string {
+    return colors[idx]
+  }
+
+  public showFilterPopup (open: boolean, idx?: number): void {
     this.isFilterOpen = open
     if (open) {
       this.selectedFilterId = idx ?? -1
