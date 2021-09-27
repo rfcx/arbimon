@@ -19,6 +19,10 @@ export default class ComparisonBoxComponent extends Vue {
   public filters: SpeciesRichnessFilter[] = [defaultFilter]
   public currentSelectedFilter: SpeciesRichnessFilter | null = null
 
+  public mounted (): void {
+    this.select()
+  }
+
   public addFilterConfig (): void {
     this.isAddSelected = true
     this.showFilterPopup(true)
