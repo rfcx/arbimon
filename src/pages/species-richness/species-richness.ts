@@ -31,7 +31,8 @@ export default class SpeciesRichnessPage extends Vue {
         if (group !== undefined) {
           groupedItems[chartItem.category].series.push({
             category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-            frequency: chartItem.frequency
+            frequency: chartItem.frequency,
+            color: filter.color
           })
         } else {
           groupedItems[chartItem.category] = {
@@ -39,7 +40,8 @@ export default class SpeciesRichnessPage extends Vue {
             series: [
               {
                 category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-                frequency: chartItem.frequency
+                frequency: chartItem.frequency,
+                color: filter.color
               }
             ]
           }
