@@ -24,7 +24,6 @@ export default class HorizontalBarChartComponent extends Vue {
 
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
-    const colors = ['#31984F', '#FEED59', '#FF89D0', '#FFFFFF', '#75BDFF']
     const barHeight = 30
     const barMargin = 0
     const groupHeight = Array.isArray(data) && data.length > 0 ? data[0].series.length * barHeight : 0 /** bar chart group y axis height */
@@ -118,15 +117,17 @@ export default class HorizontalBarChartComponent extends Vue {
             .attr('y', y)
             .attr('width', width)
             .attr('height', barHeight)
-            .style('fill', colors[idx])
+            .style('fill', d.series[idx].color ?? '')
 
           // adding text label into each bar chart in bargroup
           const textSize = { width: 30, height: 10 }
+          const xPosition = width - textSize.width
           category.append('text')
             .text(d.series[idx].frequency)
             .attr('width', textSize.width)
             .attr('height', textSize.height)
-            .attr('x', width - textSize.width)
+            // In case the number is too less
+            .attr('x', xPosition < 0 ? Math.abs(xPosition) / 2 : xPosition)
             .attr('y', y + (barHeight / 2) + 5)
         }
       })
