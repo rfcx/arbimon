@@ -9,6 +9,12 @@
     >
       No chart data
     </div>
+    <button
+      v-show="hasData"
+      @click="exportGraph()"
+    >
+      Download
+    </button>
     <div
       v-show="hasData"
       id="multi-bar-chart"

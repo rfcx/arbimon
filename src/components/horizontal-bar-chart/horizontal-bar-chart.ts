@@ -3,6 +3,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
+import { svgToPngData } from '@/utils'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
 const BAR_HEIGHT = 40
@@ -106,5 +107,19 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('height', textSize.height)
       .attr('x', (d) => xScale(d.frequency) - textSize.width / 2)
       .attr('y', (d) => (yScale(d.category) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
+  }
+
+  async exportGraph (): Promise<void> {
+    // get svg data
+    const svg = document.getElementById('multi-bar-chart')?.getElementsByTagName('svg')[0]
+    const size = { width: svg?.getAttribute('width'), height: svg?.getAttribute('height') }
+    const data = await svgToPngData(svg, size.width, size.height)
+    // create a tag and click
+    const a = document.createElement('a')
+    a.download = 'x.png'
+    a.href = data
+    document.body.appendChild(a)
+    a.click()
+    a.parentNode?.removeChild(a)
   }
 }
