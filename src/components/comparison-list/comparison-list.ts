@@ -37,8 +37,10 @@ export default class ComparisonBoxComponent extends Vue {
 
   showFilterPopup (open: boolean, idx?: number): void {
     this.isFilterOpen = open
-    this.selectedFilterId = idx ?? -1
-    this.currentSelectedFilter = this.selectedFilterId !== -1 ? this.filters[this.selectedFilterId] : null
+    if (open) {
+      this.selectedFilterId = idx ?? -1
+      this.currentSelectedFilter = this.selectedFilterId !== -1 ? this.filters[this.selectedFilterId] : null
+    }
   }
 
   public removeFilterConfig (idx: number): void {
@@ -56,6 +58,7 @@ export default class ComparisonBoxComponent extends Vue {
       this.isAddSelected = false
     } else {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
+      this.selectedFilterId = -1
     }
     this.select()
   }
