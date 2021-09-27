@@ -117,51 +117,39 @@ export default class HorizontalBarChartComponent extends Vue {
       {
         category: 'Birds',
         values: [
-          { location: 'sites group 1', value: 200 },
-          { location: 'sites group 2', value: 100 },
-          { location: 'sites group 2', value: 100 },
-          { location: 'sites group 3', value: 50 }
+          { location: 'sites group 1', value: 200 }
         ]
       },
       {
         category: 'Amphebians',
         values: [
-          { location: 'sites group 1', value: 150 },
-          { location: 'sites group 2', value: 300 },
-          { location: 'sites group 2', value: 100 },
-          { location: 'sites group 3', value: 50 }
+          { location: 'sites group 1', value: 150 }
         ]
       },
       {
         category: 'Mammals',
         values: [
-          { location: 'sites group 1', value: 100 },
-          { location: 'sites group 2', value: 200 },
-          { location: 'sites group 2', value: 100 },
-          { location: 'sites group 3', value: 450 }
+          { location: 'sites group 1', value: 100 }
         ]
       },
       {
         category: 'Other',
         values: [
-          { location: 'sites group 1', value: 100 },
-          { location: 'sites group 2', value: 200 },
-          { location: 'sites group 2', value: 100 },
-          { location: 'sites group 3', value: 450 }
+          { location: 'sites group 1', value: 100 }
         ]
       }
     ]
 
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.values.map(v => v.value))))
 
-    const colors = ['brown', 'red', 'orange']
+    const colors = ['#FEED59', '#6CE49C', '#36D8CE', '#75BDFF', '#8000FF']
     const barHeight = 30
     const barMargin = 0
     const groupHeight = Array.isArray(data) && data.length > 0 ? data[0].values.length * barHeight : 0 /** bar chart group y axis height */
-    const groupMargin = 20
+    const groupMargin = 30
     const fullWidth = document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0 - MARGIN.left
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
-    const chartHeight = (data.length * groupHeight) + (data.length * barMargin)
+    const chartHeight = (data.length * groupHeight) + (data.length * barMargin) + groupMargin
     const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
@@ -194,7 +182,6 @@ export default class HorizontalBarChartComponent extends Vue {
     const yScale = d3.scaleBand()
       .domain(d3.map(data, (d) => d.category))
       .range([0, chartHeight])
-      .paddingInner(0.2)
 
     const yAxis = d3.axisLeft(yScale)
       .tickSize(0)
@@ -220,8 +207,10 @@ export default class HorizontalBarChartComponent extends Vue {
       .enter()
       .append('g')
       .classed('category', true)
-      .attr('transform', d => {
-        return `translate(0,${(yScale(d.category) ?? 0)})`
+      .attr('transform', (d, i) => {
+        // Center the group bar chart to label
+        const y = (yScale(d.category) ?? 0) + (barHeight * (-0.5 + (0.5 * (d.values.length - 1))))
+        return `translate(0,${y})`
       })
       .each(function (d) {
         const category = d3.select(this)
