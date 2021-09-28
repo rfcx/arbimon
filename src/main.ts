@@ -5,6 +5,7 @@ import { Auth0 } from './auth'
 import router from './router'
 import stores from './stores'
 
+import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
 import './styles/global.scss'
 
