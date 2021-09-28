@@ -9,16 +9,17 @@
     >
       No chart data
     </div>
-    <button
-      v-show="hasData"
-      @click="exportGraph()"
-    >
-      Download
-    </button>
-    <div
-      v-show="hasData"
-      id="multi-bar-chart"
-    />
+    <div v-show="hasData">
+      <!-- TODO: improve style of the whole chart section -->
+      <button
+        @click="exportChart()"
+      >
+        Download
+      </button>
+      <div
+        :id="chartId"
+      />
+    </div>
   </div>
 </template>
 <script src="./horizontal-bar-chart.ts" lang="ts" />

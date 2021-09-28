@@ -1,6 +1,16 @@
-export const svgToPngData = async (svg: SVGGElement, width: number, height: number): Promise<string> => {
+import { ChartSVGElement } from '@/models/Chart'
+
+export const getChartElement = (id: string): ChartSVGElement => {
+  const svg = document.getElementById(id)?.getElementsByTagName('svg')[0]
+  if (!svg) { throw new Error('Invalid graph id') }
+  const width = Number(svg.getAttribute('width') as string)
+  const height = Number(svg.getAttribute('height') as string)
+  return { svg, width, height }
+}
+
+export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
   const serializer = new XMLSerializer()
-  const source = serializer.serializeToString(svg)
+  const source = serializer.serializeToString(chartElement.svg)
 
   const mimetype = 'image/png'
   const quality = 0.92
@@ -21,8 +31,8 @@ export const svgToPngData = async (svg: SVGGElement, width: number, height: numb
     const image = new Image()
 
     image.onload = function () {
-      const finalWidth = width
-      const finalHeight = height
+      const finalWidth = chartElement.width
+      const finalHeight = chartElement.height
 
       // Define the canvas intrinsic size
       canvas.width = finalWidth
@@ -39,4 +49,14 @@ export const svgToPngData = async (svg: SVGGElement, width: number, height: numb
     // Load the SVG in Base64 to the image
     image.src = svgBase64
   })
+}
+
+export const downloadChart = (filename: string, data: string): void => {
+  const a = document.createElement('a')
+  a.download = `${filename}.png`
+  a.href = data
+  document.body.appendChild(a)
+  a.click()
+  // then remove after click
+  a.parentNode?.removeChild(a)
 }
