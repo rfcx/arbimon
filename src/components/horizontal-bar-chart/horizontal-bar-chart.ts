@@ -25,7 +25,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
     const barHeight = 30
-    const barMargin = 0
+    const barMargin = 4
     const groupHeight = Array.isArray(data) && data.length > 0 ? data[0].series.length * barHeight : 0 /** bar chart group y axis height */
     const groupMargin = 30
     const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0) - MARGIN.left
@@ -68,6 +68,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const yScale = d3.scaleBand()
       .domain(d3.map(data, (d) => d.category))
       .range([0, chartHeight])
+      .paddingInner(0.05)
 
     // y axis tick configuration: hide tick and add it padding
     const yAxis = d3.axisLeft(yScale)
@@ -101,17 +102,22 @@ export default class HorizontalBarChartComponent extends Vue {
       .classed('category', true)
       .attr('transform', (d, i) => {
         // center the group bar chart to label
-        const y = (yScale(d.category) ?? 0) + (barHeight * (-0.5 + (0.5 * (d.series.length - 1))))
+        // const y = (yScale(d.category) ?? 0)
+        const y = (yScale(d.category) ?? 0)
+        console.log(y)
+        // const y = (yScale(d.category) ?? 0) + Math.floor(groupMargin / data.length)
         return `translate(0,${y})`
       })
       // adding bar chart by looping item in `data`
       .each(function (d) {
         const category = d3.select(this)
-        for (let idx = 0; idx < d.series.length; idx++) {
+        const seriesLength = d.series.length
+        for (let idx = 0; idx < seriesLength; idx++) {
           const x = xScale(d.series[idx].frequency)
           const width = x - xScale(0)
-          const y = (d.series.length / 2 - idx) * (barHeight + barMargin)
-          // adding bar chart into each bar chart in bargroup
+          const y = ((seriesLength - 1) - idx) * (barHeight + barMargin)
+          // adding bar chart into each bar chart in bar group
+          console.log('yaxis', y)
           category.append('rect')
             .attr('x', xScale(0))
             .attr('y', y)
