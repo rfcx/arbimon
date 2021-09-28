@@ -83,6 +83,7 @@ export default defineConfig({
     'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark',
+    'btn-icon': 'p-2',
     // nav;
     'navbar-container': 'box-content text-primary flex items-center justify-center h-13',
     'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
