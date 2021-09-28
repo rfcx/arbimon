@@ -16,10 +16,11 @@ const TAXONOMIES: TaxonomyOption[] = [TAXONOMY_ALL, { name: 'Amphibians', symbol
 export default class MapBubbleComponent extends Vue {
   @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
 
-  map!: mapboxgl.Map
-  mapIsLoading = true
   taxons = TAXONOMIES
   taxon = this.taxons[0].name
+
+  map!: mapboxgl.Map
+  mapIsLoading = true
 
   get hasData (): boolean { return this.datasets.length > 0 && this.datasets.some(ds => ds.data.length > 0) }
 
@@ -91,7 +92,7 @@ export default class MapBubbleComponent extends Vue {
           source: id,
           paint: {
             'circle-radius': ['*', ['get', 'radius'], 4], // TODO 41 - Normalize circle size
-            'circle-color': '#B42222',
+            'circle-color': dataset.color || '#B42222',
             'circle-opacity': 0.3
           }
         })
