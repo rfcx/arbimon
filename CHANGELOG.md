@@ -13,3 +13,4 @@
 * **features:** CE-1357 User can change project directly in Analytics website ([CE-1357](https://jira.rfcx.org/browse/CE-1357))
 * **features:** See species by taxonomic group in graph (#12, #27, #42)
 * **features:** Export graph as image (#31)
+* **features:** Map of species count by site (#41)
