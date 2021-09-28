@@ -6,7 +6,7 @@
         :key="'stream-card' + idx"
         class="flex flex-col justify-center w-48 max-w-48 h-24 mr-4 mt-6 bg-clip-padding mirage-grey border-2 hover:bg-steel-grey cursor-pointer rounded-xl px-4 text-white text-sm"
         :style="{ backgroundColor: getFilterColor(idx) }"
-        @click="showFilterPopup(true, idx)"
+        @click="popupOpen(idx)"
       >
         <div class="flex flex-row">
           <div
@@ -43,7 +43,7 @@
       v-if="isFilterOpen"
       :default-filter="currentSelectedFilter"
       @apply="apply"
-      @close="showFilterPopup"
+      @close="popupClose"
     />
   </div>
 </template>

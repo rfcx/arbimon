@@ -26,7 +26,7 @@ export default class ComparisonBoxComponent extends Vue {
 
   public addFilterConfig (): void {
     this.isAddSelected = true
-    this.showFilterPopup(true)
+    this.popupOpen()
   }
 
   //  TODO: Have to improve this logic to check what is `all` meaning
@@ -38,12 +38,14 @@ export default class ComparisonBoxComponent extends Vue {
     return colors[idx]
   }
 
-  public showFilterPopup (open: boolean, idx?: number): void {
-    this.isFilterOpen = open
-    if (open) {
-      this.selectedFilterId = idx ?? -1
-      this.currentSelectedFilter = this.selectedFilterId !== -1 ? this.filters[this.selectedFilterId] : null
-    }
+  public popupOpen (idx?: number): void {
+    this.isFilterOpen = true
+    this.selectedFilterId = idx ?? -1
+    this.currentSelectedFilter = this.selectedFilterId !== -1 ? this.filters[this.selectedFilterId] : null
+  }
+
+  public popupClose (): void {
+    this.isFilterOpen = false
   }
 
   public removeFilterConfig (idx: number): void {
