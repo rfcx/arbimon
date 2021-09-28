@@ -17,11 +17,11 @@ export default class MapBubbleComponent extends Vue {
   @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
 
   map!: mapboxgl.Map
-  mapIsReady = false
+  mapIsLoading = true
   taxons = TAXONOMIES
   taxon = this.taxons[0].name
 
-  get noData (): boolean { return this.datasets.length === 0 }
+  get hasData (): boolean { return this.datasets.length > 0 && this.datasets.some(ds => ds.data.length > 0) }
 
   mounted (): void {
     this.map = new mapboxgl.Map({
@@ -31,17 +31,17 @@ export default class MapBubbleComponent extends Vue {
       zoom: 9
     })
       .on('load', () => {
-        this.mapIsReady = true
-        this.generateChart()
+        this.mapIsLoading = false
+        void this.$nextTick(() => this.generateChart())
       })
   }
 
   @Watch('datasets') onDataChange (): void {
-    this.generateChart()
+    void this.$nextTick(() => this.generateChart())
   }
 
   @Watch('taxon') onMapConfigChange (): void {
-    this.generateChart(false)
+    void this.$nextTick(() => this.generateChart(false))
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
@@ -51,11 +51,11 @@ export default class MapBubbleComponent extends Vue {
 
   getPopup (datum: ChartModels.MapSiteData): string {
     const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
-    return `<strong>${datum.siteId}</strong><p>${speciesCounts.join('<br />')}}</p>`
+    return `<strong>${datum.siteId}</strong><p>${speciesCounts.join('<br />')}</p>`
   }
 
   generateChart (rezoom = true): void {
-    if (!this.mapIsReady || this.noData) return
+    if (this.mapIsLoading || !this.hasData) return
     const map = this.map
     map.resize()
 
