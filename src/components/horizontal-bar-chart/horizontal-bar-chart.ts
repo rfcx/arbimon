@@ -15,6 +15,9 @@ export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: 'chart' })
   public chartId!: string
 
+  @Prop({ default: '' })
+  public chartTitle!: string
+
   public get hasData (): boolean {
     return this.chartData.length > 0
   }
