@@ -25,7 +25,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
-    const barHeight = data[0].series.length < 3 ? 20 : 60 / data[0].series.length
+    const barHeight = data[0].series.length < 3 ? 30 : 60 / data[0].series.length
     const barMargin = 2
     const groupHeight = Array.isArray(data) && dataLength > 0 ? data[0].series.length * barHeight : 0 /** bar chart group y axis height */
     const groupMargin = 20
