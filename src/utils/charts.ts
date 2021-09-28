@@ -1,6 +1,12 @@
 import { ChartSVGElement } from '@/models/Chart'
 
-export const getChartElement = (id: string): ChartSVGElement => {
+export const exportChart = async (elementId: string, filename: string): Promise<void> => {
+  const chartElement = getChartElement(elementId)
+  const data = await svgToPngData(chartElement)
+  downloadChart(filename, data)
+}
+
+const getChartElement = (id: string): ChartSVGElement => {
   const svg = document.getElementById(id)?.getElementsByTagName('svg')[0]
   if (!svg) { throw new Error('Invalid graph id') }
   const width = Number(svg.getAttribute('width') as string)
@@ -8,7 +14,7 @@ export const getChartElement = (id: string): ChartSVGElement => {
   return { svg, width, height }
 }
 
-export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
+const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
   const serializer = new XMLSerializer()
   const source = serializer.serializeToString(chartElement.svg)
 
@@ -51,7 +57,7 @@ export const svgToPngData = async (chartElement: ChartSVGElement): Promise<strin
   })
 }
 
-export const downloadChart = (filename: string, data: string): void => {
+const downloadChart = (filename: string, data: string): void => {
   const a = document.createElement('a')
   a.download = `${filename}.png`
   a.href = data
