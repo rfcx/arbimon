@@ -12,6 +12,6 @@ export interface BarChartItem {
 }
 
 export interface GroupedBarChartItem {
-  category: string
+  group: string
   series: BarChartItem[]
 }

@@ -45,7 +45,7 @@ export default class SpeciesRichnessPage extends Vue {
           groupedItems[cat].series.unshift(seriesItem)
         } else {
           groupedItems[cat] = {
-            category: cat,
+            group: cat,
             series: [seriesItem]
           }
         }
