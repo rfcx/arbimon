@@ -45,7 +45,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select(`#${this.chartId}`)
     chart.selectAll('*').remove()
 
-    const svg = d3.select(`#${this.chartId}`)
+    const svg = chart
       .append('svg')
       .attr('width', fullWidth)
       .attr('height', fullHeight)
