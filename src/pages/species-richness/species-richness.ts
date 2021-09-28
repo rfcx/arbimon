@@ -26,25 +26,35 @@ export default class SpeciesRichnessPage extends Vue {
       const start = filter.startDate.toISOString()
       const end = filter.endDate.add(1, 'days').toISOString()
       const chartItems = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
-      for (const chartItem of chartItems) {
-        const group = groupedItems[chartItem.category]
-        if (group !== undefined) {
-          groupedItems[chartItem.category].series.unshift({
+      if (chartItems.length > 0) {
+        for (const chartItem of chartItems) {
+          const group = groupedItems[chartItem.category]
+          if (group !== undefined) {
+            groupedItems[chartItem.category].series.unshift({
+              category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
+              frequency: chartItem.frequency,
+              color: filter.color
+            })
+          } else {
+            groupedItems[chartItem.category] = {
+              category: chartItem.category,
+              series: [
+                {
+                  category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
+                  frequency: chartItem.frequency,
+                  color: filter.color
+                }
+              ]
+            }
+          }
+        }
+      } else {
+        for (const key in groupedItems) {
+          groupedItems[key].series.unshift({
             category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-            frequency: chartItem.frequency,
+            frequency: 0,
             color: filter.color
           })
-        } else {
-          groupedItems[chartItem.category] = {
-            category: chartItem.category,
-            series: [
-              {
-                category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-                frequency: chartItem.frequency,
-                color: filter.color
-              }
-            ]
-          }
         }
       }
     }

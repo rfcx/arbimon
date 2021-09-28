@@ -110,8 +110,9 @@ export default class HorizontalBarChartComponent extends Vue {
         const category = d3.select(this)
         const seriesLength = d.series.length
         for (let idx = 0; idx < seriesLength; idx++) {
-          const x = xScale(d.series[idx].frequency)
-          const width = x - xScale(0)
+          const frequencyValue = d.series[idx].frequency
+          const x = xScale(frequencyValue)
+          const width = x === 0 ? 2 : x - xScale(0)
           const y = ((seriesLength - 1) - idx) * (barHeight + barMargin)
           // adding bar chart into each bar chart in bar group
           category.append('rect')
@@ -125,7 +126,8 @@ export default class HorizontalBarChartComponent extends Vue {
           const textSize = { width: 30, height: 10 }
           const xPosition = width - textSize.width
           category.append('text')
-            .text(d.series[idx].frequency)
+            .text(frequencyValue)
+            .attr('fill', frequencyValue === 0 ? 'white' : 'black')
             .attr('width', textSize.width)
             .attr('height', textSize.height)
             // In case the number is too less
