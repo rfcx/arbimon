@@ -3,12 +3,19 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
+import { exportChart } from '@/utils'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
   public chartData!: ChartModels.GroupedBarChartItem[]
+
+  @Prop({ default: 'chart' })
+  public chartId!: string
+
+  @Prop({ default: '' })
+  public chartTitle!: string
 
   public get hasData (): boolean {
     return this.chartData.length > 0
@@ -35,10 +42,10 @@ export default class HorizontalBarChartComponent extends Vue {
     const chartHeight = (dataLength * groupHeight) + (dataLength * barMargin) + (dataLength * groupMargin)
     const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
 
-    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
+    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select(`#${this.chartId}`)
     chart.selectAll('*').remove()
 
-    const svg = d3.select('#multi-bar-chart')
+    const svg = d3.select(`#${this.chartId}`)
       .append('svg')
       .attr('width', fullWidth)
       .attr('height', fullHeight)
@@ -136,5 +143,11 @@ export default class HorizontalBarChartComponent extends Vue {
             .attr('y', y + (barHeight / 2) + 5)
         }
       })
+  }
+
+  async downloadChart (): Promise<void> {
+    // TODO: 73 improve filename to include selected site / project
+    const filename = this.chartId
+    await exportChart(this.chartId, filename)
   }
 }
