@@ -22,12 +22,13 @@ export default class HorizontalBarChartComponent extends Vue {
   public generateGroupedChart (): void {
     const data = this.chartData
     const dataLength = data.length
+    const dataSeriesLength = Array.isArray(data) && dataLength > 0 ? data[0].series.length : 0
 
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
-    const barHeight = data[0].series.length < 3 ? 30 : 60 / data[0].series.length
+    const barHeight = dataSeriesLength < 3 ? 30 : 60 / (dataSeriesLength === 0 ? 1 : dataSeriesLength)
     const barMargin = 2
-    const groupHeight = Array.isArray(data) && dataLength > 0 ? data[0].series.length * barHeight : 0 /** bar chart group y axis height */
+    const groupHeight = Array.isArray(data) && dataLength > 0 ? dataSeriesLength * barHeight : 0 /** bar chart group y axis height */
     const groupMargin = 20
     const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0) - MARGIN.left
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
