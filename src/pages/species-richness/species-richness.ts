@@ -22,42 +22,36 @@ export default class SpeciesRichnessPage extends Vue {
 
   onFilterChange (filters: SpeciesRichnessFilter[]): void {
     const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
+    const chartItems: ChartModels.BarChartItem[][] = []
     for (const filter of filters) {
       const start = filter.startDate.toISOString()
       const end = filter.endDate.add(1, 'days').toISOString()
-      const chartItems = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
-      if (chartItems.length > 0) {
-        for (const chartItem of chartItems) {
-          const group = groupedItems[chartItem.category]
-          if (group !== undefined) {
-            groupedItems[chartItem.category].series.unshift({
-              category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-              frequency: chartItem.frequency,
-              color: filter.color
-            })
-          } else {
-            groupedItems[chartItem.category] = {
-              category: chartItem.category,
-              series: [
-                {
-                  category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-                  frequency: chartItem.frequency,
-                  color: filter.color
-                }
-              ]
-            }
+      const data = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
+      chartItems.push(data)
+    }
+
+    const categories = new Set(chartItems.flatMap(i => i.map(c => c.category)))
+    categories.forEach(cat => {
+      for (const [idx, item] of chartItems.entries()) {
+        const filter = filters[idx]
+        const siteName = filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites'
+        const matchedData = item.find(d => d.category === cat)
+        const seriesItem: ChartModels.BarChartItem = {
+          category: siteName,
+          frequency: matchedData?.frequency ?? 0,
+          color: filter.color
+        }
+        if (groupedItems[cat] !== undefined) {
+          groupedItems[cat].series.unshift(seriesItem)
+        } else {
+          groupedItems[cat] = {
+            category: cat,
+            series: [seriesItem]
           }
         }
-      } else {
-        for (const key in groupedItems) {
-          groupedItems[key].series.unshift({
-            category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
-            frequency: 0,
-            color: filter.color
-          })
-        }
       }
-    }
+    })
+
     this.chartData = Object.values(groupedItems)
   }
 }
