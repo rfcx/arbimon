@@ -29,7 +29,7 @@ export default class HorizontalBarChartComponent extends Vue {
   public generateGroupedChart (): void {
     const data = this.chartData
     const dataLength = data.length
-    const dataSeriesLength = Array.isArray(data) && dataLength > 0 ? data[0].series.length : 0
+    const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
 
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
