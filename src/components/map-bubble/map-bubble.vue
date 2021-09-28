@@ -34,7 +34,7 @@
       </div>
       <div
         id="map-bubble"
-        class="w-full h-96"
+        class="w-full h-96 text-black"
       />
     </div>
   </div>
@@ -50,5 +50,4 @@
   background-color: #fff;
 }
 </style>
-
 <script src="./map-bubble.ts" lang="ts" />
