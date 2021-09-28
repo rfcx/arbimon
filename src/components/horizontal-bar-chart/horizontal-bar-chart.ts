@@ -3,7 +3,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
-import { downloadChart, getChartElement, svgToPngData } from '@/utils'
+import { exportChart } from '@/utils'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
 const BAR_HEIGHT = 40
@@ -115,17 +115,9 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('y', (d) => (yScale(d.category) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
   }
 
-  async exportChart (): Promise<void> {
-    // Get svg tag with width and height
-    const chartElement = getChartElement(this.chartId)
-
-    // convert svg into png
-    // TODO: maybe add custom width & height here
-    const data = await svgToPngData(chartElement)
-
-    // download chart with specific file name (chart id) & png data
-    // TODO: add project name into filename
+  async downloadChart (): Promise<void> {
+    // TODO: 73 improve filename to include selected site / project
     const filename = this.chartId
-    downloadChart(filename, data)
+    await exportChart(this.chartId, filename)
   }
 }

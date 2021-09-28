@@ -7,7 +7,7 @@
       <h2 class="text-white text-xl">
         {{ chartTitle }}
       </h2>
-      <!-- TODO: improve style of the whole chart section -->
+      <!-- TODO: 74 improve style of the whole chart section -->
       <button
         v-if="hasData"
         class="btn btn-icon"
