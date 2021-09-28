@@ -4,13 +4,13 @@
     class="w-full"
   >
     <div
-      v-if="noData"
+      v-if="!hasData"
       class="no-chart-data text-center text-white"
     >
       No data
     </div>
     <div
-      v-show="!noData"
+      v-show="hasData"
     >
       <div class="taxon-picker mb-2">
         <template
