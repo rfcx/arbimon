@@ -58,6 +58,13 @@ export default class MapBubbleComponent extends Vue {
     return Math.sqrt(datum.distinctSpecies[this.taxon] ?? 0)
   }
 
+  getPopup (datum: ChartModels.MapSiteData): string {
+    return `
+      <strong>${datum.siteId}</strong>
+      <p>${Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`).join('<br />')}</p>
+    `
+  }
+
   generateChart (rezoom = true): void {
     if (!this.mapIsReady || this.noData) return
     const map = this.map
@@ -73,7 +80,11 @@ export default class MapBubbleComponent extends Vue {
             type: 'Point',
             coordinates: [datum.longitude, datum.latitude]
           },
-          properties: { title: datum.siteId, radius: this.getRadius(datum) }
+          properties: {
+            title: datum.siteId,
+            radius: this.getRadius(datum),
+            popup: this.getPopup(datum)
+          }
         })
         )
       }
@@ -94,6 +105,29 @@ export default class MapBubbleComponent extends Vue {
             'circle-color': '#B42222',
             'circle-opacity': 0.3
           }
+        })
+
+        const popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false
+        })
+
+        map.on('mouseenter', id, (e) => {
+          const coordinates = (e.features?.[0].geometry as GeoJSON.Point | undefined)?.coordinates.slice() as [number, number] | undefined
+          const description = e.features?.[0].properties?.popup as string | undefined
+          if (!coordinates || !description) return
+
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
+          }
+
+          map.getCanvas().style.cursor = 'pointer'
+          popup.setLngLat(coordinates).setHTML(description).addTo(map)
+        })
+
+        map.on('mouseleave', id, () => {
+          map.getCanvas().style.cursor = ''
+          popup.remove()
         })
       }
     })
