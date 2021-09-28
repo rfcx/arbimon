@@ -124,6 +124,7 @@ export default class MapBubbleComponent extends Vue {
     // TODO 41 - Merge this aggregation with the above loop
     if (rezoom) {
       const coordinates: Array<[number, number]> = this.datasets.flatMap(dataset => dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number]))
+      if (coordinates.length === 0) return
       const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
       map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
     }
