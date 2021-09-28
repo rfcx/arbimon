@@ -29,7 +29,7 @@ export default class SpeciesRichnessPage extends Vue {
       for (const chartItem of chartItems) {
         const group = groupedItems[chartItem.category]
         if (group !== undefined) {
-          groupedItems[chartItem.category].series.push({
+          groupedItems[chartItem.category].series.unshift({
             category: filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites',
             frequency: chartItem.frequency,
             color: filter.color
