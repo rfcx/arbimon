@@ -37,7 +37,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const barMargin = 2
     const groupHeight = dataSeriesLength * barHeight /** bar chart group y axis height */
     const groupMargin = 20
-    const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0) - MARGIN.left
+    const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
     const chartHeight = (dataLength * groupHeight) + (dataLength * barMargin) + (dataLength * groupMargin)
     const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
