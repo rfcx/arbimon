@@ -21,6 +21,7 @@ export default class SpeciesRichnessPage extends Vue {
   public streams: StreamModels.Stream[] = []
 
   public chartData: ChartModels.BarChartItem[] = []
+  mapDatasets: ChartModels.MapDataSet[] = []
 
   onFilterChange (filters: SpeciesRichnessFilter[]): void {
     for (const filter of filters) {
@@ -29,5 +30,11 @@ export default class SpeciesRichnessPage extends Vue {
       const data = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
       this.chartData = data
     }
+
+    // TODO 41 - Merge this with the above once Nutto's branch is merged
+    this.mapDatasets = filters.map(({ startDate, endDate, streams, color }) => ({
+      color,
+      data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), streams })
+    }))
   }
 }

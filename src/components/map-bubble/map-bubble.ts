@@ -11,8 +11,7 @@ export const MAPBOX_STYLE_WITH_PLACE_LABELS = 'mapbox://styles/rfcx/ck9g6dci83g3
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default class MapBubbleComponent extends Vue {
-  @Prop({ default: [] })
-  public chartData!: ChartModels.BarChartItem[]
+  @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
 
   public get noData (): boolean {
     return this.chartData.length === 0

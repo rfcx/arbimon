@@ -7,12 +7,12 @@
       v-if="noData"
       class="no-chart-data text-center text-white"
     >
-      No chart data
+      No data
     </div>
     <div
       v-show="!noData"
       id="map-bubble"
-      class="w-full aspect-16/9"
+      class="w-full h-96 bg-white"
     />
   </div>
 </template>
