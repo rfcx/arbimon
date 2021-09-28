@@ -6,6 +6,8 @@ import { ChartModels } from '@/models'
 import { exportChart } from '@/utils'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
+const GROUP_MARGIN = 20
+const BAR_MARGIN = 2
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
@@ -34,12 +36,10 @@ export default class HorizontalBarChartComponent extends Vue {
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
     const barHeight = dataSeriesLength < 3 ? 30 : 60 / (dataSeriesLength === 0 ? 1 : dataSeriesLength)
-    const barMargin = 2
     const groupHeight = dataSeriesLength * barHeight /** bar chart group y axis height */
-    const groupMargin = 20
     const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
-    const chartHeight = (dataLength * groupHeight) + (dataLength * barMargin) + (dataLength * groupMargin)
+    const chartHeight = (dataLength * groupHeight) + (dataLength * BAR_MARGIN) + (dataLength * GROUP_MARGIN)
     const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select(`#${this.chartId}`)
@@ -75,7 +75,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
     // y axis scale configuration: d3 calculate the y position rely on data label (domain) and chart height (range)
     const yScale = d3.scaleBand()
-      .domain(d3.map(data, (d) => d.category))
+      .domain(d3.map(data, (d) => d.group))
       .range([0, chartHeight])
 
     // y axis tick configuration: hide tick and add it padding
@@ -110,7 +110,7 @@ export default class HorizontalBarChartComponent extends Vue {
       .classed('category', true)
       .attr('transform', (d, i) => {
         // center the group bar chart to label
-        const y = (yScale(d.category) ?? 0) + 8
+        const y = (yScale(d.group) ?? 0) + 8
         return `translate(0,${y})`
       })
       // adding bar chart by looping item in `data`
@@ -121,7 +121,7 @@ export default class HorizontalBarChartComponent extends Vue {
           const frequencyValue = d.series[idx].frequency
           const x = xScale(frequencyValue)
           const width = x === 0 ? 2 : x - xScale(0)
-          const y = ((seriesLength - 1) - idx) * (barHeight + barMargin)
+          const y = ((seriesLength - 1) - idx) * (barHeight + BAR_MARGIN)
           // adding bar chart into each bar chart in bar group
           category.append('rect')
             .attr('x', xScale(0))
