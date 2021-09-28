@@ -19,7 +19,6 @@ export default class ComparisonBoxComponent extends Vue {
   public isFilterOpen = false
   public filters: SpeciesRichnessFilter[] = [defaultFilter]
   public currentSelectedFilter: SpeciesRichnessFilter | null = null
-  public colorPallete = colors
 
   public mounted (): void {
     this.select()
@@ -74,7 +73,7 @@ export default class ComparisonBoxComponent extends Vue {
   @Emit()
   public select (): SpeciesRichnessFilter[] {
     return this.filters.map((f, i) => {
-      f.color = this.colorPallete[i]
+      f.color = colors[i]
       return f
     })
   }
