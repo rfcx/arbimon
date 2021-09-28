@@ -34,7 +34,7 @@ export default class ComparisonBoxComponent extends Vue {
     return this.filters.length === 1 && this.filters[0].streams.length === 0
   }
 
-  public setFilterColor (idx: number): string {
+  public getFilterColor (idx: number): string {
     return colors[idx]
   }
 
