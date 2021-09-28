@@ -4,6 +4,7 @@ import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
 
+// TODO 41 - Extract this
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicmZjeCIsImEiOiJoMEptMnlJIn0.LPKrjG_3AeYB5cqsyLpcrg'
 // const MAPBOX_STYLE = 'mapbox://styles/rfcx/ckapdhmby26zo1io3nqd84dsd'
 // const MAPBOX_STYLE_WITH_PLACE_LABELS = 'mapbox://styles/rfcx/ck9g6dci83g3x1io8dl27r7aq'
@@ -11,8 +12,12 @@ const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicmZjeCIsImEiOiJoMEptMnlJIn0.LPKrjG_3AeYB
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 // TODO 41 - Extract this
-const TAXONOMY_ALL = 'All'
-const TAXONOMIES = ['Amphibians', 'Birds']
+interface Taxonomy {
+  symbol: string
+  name: string
+}
+const TAXONOMY_ALL: Taxonomy = { name: 'All', symbol: 'Σ' }
+const TAXONOMIES: Taxonomy[] = [{ name: 'Amphibians', symbol: '🐸' }, { name: 'Birds', symbol: '🐦' }]
 
 export default class MapBubbleComponent extends Vue {
   @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
@@ -20,15 +25,18 @@ export default class MapBubbleComponent extends Vue {
   map!: mapboxgl.Map
   mapIsReady = false
   taxons = [TAXONOMY_ALL, ...TAXONOMIES]
-  taxon = this.taxons[0]
+  taxon = this.taxons[0].name
 
   get noData (): boolean { return this.datasets.length === 0 }
 
   mounted (): void {
+    const defaultLon = -122.41818313563101
+    const defaultLat = 37.750884708892286
+
     this.map = new mapboxgl.Map({
       container: 'map-bubble',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-74.5, 40], // lng, lat // TODO 41 - Pick a nice default
+      center: [defaultLon, defaultLat],
       zoom: 9
     })
       .on('load', () => {
@@ -46,18 +54,16 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
-    if (this.taxon === TAXONOMY_ALL) return Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
+    if (this.taxon === TAXONOMY_ALL.name) return Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
     return Math.sqrt(datum.distinctSpecies[this.taxon] ?? 0)
   }
 
   generateChart (rezoom = true): void {
-    if (!this.mapIsReady) return
-    if (this.noData) {
-      // TODO 41 - Clear the map
-      return
-    }
+    if (!this.mapIsReady || this.noData) return
     const map = this.map
-    console.log(this.datasets)
+    map.resize()
+
+    // TODO 41 - Remove source/layer if dataset removed
     this.datasets.forEach((dataset, idx) => {
       const data: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
         type: 'FeatureCollection',
@@ -84,7 +90,7 @@ export default class MapBubbleComponent extends Vue {
           type: 'circle',
           source: id,
           paint: {
-            'circle-radius': ['*', ['get', 'radius'], 4],
+            'circle-radius': ['*', ['get', 'radius'], 4], // TODO 41 - Normalize circle size
             'circle-color': '#B42222',
             'circle-opacity': 0.3
           }
@@ -96,7 +102,7 @@ export default class MapBubbleComponent extends Vue {
     if (rezoom) {
       const coordinates: Array<[number, number]> = this.datasets.flatMap(dataset => dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number]))
       const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-      map.fitBounds(bounds, { padding: 20, maxZoom: 10 })
+      map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
     }
   }
 }

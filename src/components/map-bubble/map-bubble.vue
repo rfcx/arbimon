@@ -12,23 +12,43 @@
     <div
       v-show="!noData"
     >
-      <select
-        v-model="taxon"
-        class="bg-dark-50 text-white"
-      >
-        <option
-          v-for="taxon in taxons"
-          :key="taxon"
-          :value="taxon"
+      <div class="taxon-picker mb-2">
+        <template
+          v-for="a in taxons"
+          :key="a.name"
         >
-          {{ taxon }}
-        </option>
-      </select>
+          <input
+            :id="`taxons-${a.name}`"
+            v-model="taxon"
+            type="radio"
+            :value="a.name"
+            class="hidden"
+          >
+          <label
+            :for="`taxons-${a.name}`"
+            class="inline-block text-center text-lg w-7 h-7 mr-2"
+          >
+            {{ a.symbol }}
+          </label>
+        </template>
+      </div>
       <div
         id="map-bubble"
-        class="w-full h-96 bg-white"
+        class="w-full h-96"
       />
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.taxon-picker {
+  float: right;
+}
+
+.taxon-picker input[type='radio']:checked + label {
+  color: #000;
+  background-color: #fff;
+}
+</style>
+
 <script src="./map-bubble.ts" lang="ts" />
