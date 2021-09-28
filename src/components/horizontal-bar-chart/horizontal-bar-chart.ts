@@ -25,12 +25,12 @@ export default class HorizontalBarChartComponent extends Vue {
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
 
     const barHeight = 30
-    const barMargin = 4
+    const barMargin = 2
     const groupHeight = Array.isArray(data) && data.length > 0 ? data[0].series.length * barHeight : 0 /** bar chart group y axis height */
-    const groupMargin = 30
+    const groupMargin = 20
     const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0) - MARGIN.left
     const chartWidth = fullWidth - MARGIN.left - MARGIN.right
-    const chartHeight = (data.length * groupHeight) + (data.length * barMargin) + groupMargin
+    const chartHeight = (data.length * groupHeight) + (data.length * barMargin) + (data.length * groupMargin)
     const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
 
     const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
@@ -68,7 +68,6 @@ export default class HorizontalBarChartComponent extends Vue {
     const yScale = d3.scaleBand()
       .domain(d3.map(data, (d) => d.category))
       .range([0, chartHeight])
-      .paddingInner(0.05)
 
     // y axis tick configuration: hide tick and add it padding
     const yAxis = d3.axisLeft(yScale)
