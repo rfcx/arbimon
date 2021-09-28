@@ -87,7 +87,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
     // select all x and y matched `text` tag name and set text color and font size
     svg.selectAll('text')
-      .style('color', '#999999')
+      .style('color', 'white')
       .style('font-size', '14px')
 
     // select all x and y matched `line` tag name and set scale line color to be none (invisible)
@@ -128,7 +128,7 @@ export default class HorizontalBarChartComponent extends Vue {
           const xPosition = width + 4
           category.append('text')
             .text(frequencyValue)
-            .attr('fill', '#999999')
+            .attr('fill', 'white')
             .attr('width', textSize.width)
             .attr('height', textSize.height)
             // In case the number is too less
