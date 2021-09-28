@@ -92,7 +92,7 @@
                       id="start"
                       v-model="startDate"
                       type="date"
-                      :max="endDate || undefined"
+                      :max="today"
                       class="bg-white text-black rounded-lg mr-2"
                     >
                   </div>
@@ -107,7 +107,6 @@
                       id="end"
                       v-model="endDate"
                       type="date"
-                      :min="startDate || undefined"
                       :max="today"
                       class="bg-white text-black rounded-lg mr-2"
                     >
