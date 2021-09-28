@@ -3,6 +3,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
+import { exportChart } from '@/utils'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
 const BAR_HEIGHT = 40
@@ -10,6 +11,12 @@ const BAR_HEIGHT = 40
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
   public chartData!: ChartModels.BarChartItem[]
+
+  @Prop({ default: 'chart' })
+  public chartId!: string
+
+  @Prop({ default: '' })
+  public chartTitle!: string
 
   public get hasData (): boolean {
     return this.chartData.length > 0
@@ -29,7 +36,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const fullHeight = (data.length + 1) * BAR_HEIGHT
     const chartHeight = fullHeight - MARGIN.top - MARGIN.bottom
 
-    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
+    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select(`#${this.chartId}`)
     chart.selectAll('*').remove()
 
     const svg = chart
@@ -106,5 +113,11 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('height', textSize.height)
       .attr('x', (d) => xScale(d.frequency) - textSize.width / 2)
       .attr('y', (d) => (yScale(d.category) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
+  }
+
+  async downloadChart (): Promise<void> {
+    // TODO: 73 improve filename to include selected site / project
+    const filename = this.chartId
+    await exportChart(this.chartId, filename)
   }
 }
