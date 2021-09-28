@@ -3,7 +3,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
-import { svgToPngData } from '@/utils'
+import { downloadChart, getChartElement, svgToPngData } from '@/utils'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
 const BAR_HEIGHT = 40
@@ -11,6 +11,9 @@ const BAR_HEIGHT = 40
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
   public chartData!: ChartModels.BarChartItem[]
+
+  @Prop({ default: 'chart' })
+  public chartId!: string
 
   public get hasData (): boolean {
     return this.chartData.length > 0
@@ -30,7 +33,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const fullHeight = (data.length + 1) * BAR_HEIGHT
     const chartHeight = fullHeight - MARGIN.top - MARGIN.bottom
 
-    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select('#multi-bar-chart')
+    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select(`#${this.chartId}`)
     chart.selectAll('*').remove()
 
     const svg = chart
@@ -109,17 +112,17 @@ export default class HorizontalBarChartComponent extends Vue {
       .attr('y', (d) => (yScale(d.category) ?? 0) + yScale.bandwidth() / 2 + textSize.height / 2)
   }
 
-  async exportGraph (): Promise<void> {
-    // get svg data
-    const svg = document.getElementById('multi-bar-chart')?.getElementsByTagName('svg')[0]
-    const size = { width: svg?.getAttribute('width'), height: svg?.getAttribute('height') }
-    const data = await svgToPngData(svg, size.width, size.height)
-    // create a tag and click
-    const a = document.createElement('a')
-    a.download = 'x.png'
-    a.href = data
-    document.body.appendChild(a)
-    a.click()
-    a.parentNode?.removeChild(a)
+  async exportChart (): Promise<void> {
+    // Get svg tag with width and height
+    const chartElement = getChartElement(this.chartId)
+
+    // convert svg into png
+    // TODO: maybe add custom width & height here
+    const data = await svgToPngData(chartElement)
+
+    // download chart with specific file name (chart id) & png data
+    // TODO: add project name into filename
+    const filename = this.chartId
+    downloadChart(filename, data)
   }
 }
