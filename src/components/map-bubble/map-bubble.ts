@@ -1,42 +1,33 @@
-import mapboxgl, { GeoJSONSource } from 'mapbox-gl'
+import { GeoJSONSource } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, mapboxgl } from '@/services/mapbox.service'
 
-// TODO 41 - Extract this
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicmZjeCIsImEiOiJoMEptMnlJIn0.LPKrjG_3AeYB5cqsyLpcrg'
-// const MAPBOX_STYLE = 'mapbox://styles/rfcx/ckapdhmby26zo1io3nqd84dsd'
-// const MAPBOX_STYLE_WITH_PLACE_LABELS = 'mapbox://styles/rfcx/ck9g6dci83g3x1io8dl27r7aq'
-
-mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
-
-// TODO 41 - Extract this
-interface Taxonomy {
+interface TaxonomyOption {
   symbol: string
   name: string
 }
-const TAXONOMY_ALL: Taxonomy = { name: 'All', symbol: 'Σ' }
-const TAXONOMIES: Taxonomy[] = [{ name: 'Amphibians', symbol: '🐸' }, { name: 'Birds', symbol: '🐦' }]
+
+const TAXONOMY_ALL: TaxonomyOption = { name: 'All', symbol: 'Σ' }
+const TAXONOMIES: TaxonomyOption[] = [TAXONOMY_ALL, { name: 'Amphibians', symbol: '🐸' }, { name: 'Birds', symbol: '🐦' }]
 
 export default class MapBubbleComponent extends Vue {
   @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
 
   map!: mapboxgl.Map
   mapIsReady = false
-  taxons = [TAXONOMY_ALL, ...TAXONOMIES]
+  taxons = TAXONOMIES
   taxon = this.taxons[0].name
 
   get noData (): boolean { return this.datasets.length === 0 }
 
   mounted (): void {
-    const defaultLon = -122.41818313563101
-    const defaultLat = 37.750884708892286
-
     this.map = new mapboxgl.Map({
       container: 'map-bubble',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [defaultLon, defaultLat],
+      center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
       zoom: 9
     })
       .on('load', () => {
@@ -59,10 +50,8 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getPopup (datum: ChartModels.MapSiteData): string {
-    return `
-      <strong>${datum.siteId}</strong>
-      <p>${Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`).join('<br />')}</p>
-    `
+    const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
+    return `<strong>${datum.siteId}</strong><p>${speciesCounts.join('<br />')}}</p>`
   }
 
   generateChart (rezoom = true): void {
@@ -90,8 +79,8 @@ export default class MapBubbleComponent extends Vue {
       }
 
       const id = `species-richness-${idx}`
-
       const source = map.getSource(id) as GeoJSONSource | undefined
+
       if (source === undefined) map.addSource(id, { type: 'geojson', data })
       else source.setData(data)
 
