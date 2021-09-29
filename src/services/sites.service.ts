@@ -1,14 +1,14 @@
 import * as Endpoints from '@/api/endpoints'
-import rawStreams from '@/api/raw-site-01-07-apr-2021.json'
-import { StreamModels } from '@/models'
+import rawSites from '@/api/raw-site-01-07-apr-2021.json'
+import { SiteModels } from '@/models'
 import ApiClient from './api.service'
 
 // Api calling example
-export async function getStreams (): Promise<StreamModels.Stream[]> {
-  const { method, url } = Endpoints.getStreams
+export async function getSites (): Promise<SiteModels.Site[]> {
+  const { method, url } = Endpoints.getSites
 
   try {
-    const resp = await ApiClient.request<StreamModels.Stream[]>({
+    const resp = await ApiClient.request<SiteModels.Site[]>({
       url,
       method
     })
@@ -18,8 +18,8 @@ export async function getStreams (): Promise<StreamModels.Stream[]> {
   }
 }
 
-export function getMockupStreams (): StreamModels.Stream[] {
-  return rawStreams.map(s => {
+export function getMockupSites (): SiteModels.Site[] {
+  return rawSites.map(s => {
     const { name, latitude, longitude } = s
     return {
       id: s.site_id,

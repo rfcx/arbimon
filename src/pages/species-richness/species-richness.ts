@@ -5,7 +5,7 @@ import { Options, Vue } from 'vue-class-component'
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
-import { ChartModels, SpeciesRichnessFilter, StreamModels } from '@/models'
+import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SpeciesService } from '@/services'
 
 dayjs.extend(utc)
@@ -18,24 +18,24 @@ dayjs.extend(utc)
   }
 })
 export default class SpeciesRichnessPage extends Vue {
-  public streams: StreamModels.Stream[] = []
+  public sites: SiteModels.Site[] = []
 
   public chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
-    const chartItems = await Promise.all(filters.map(f => {
-      const start = f.startDate.toISOString()
-      const end = f.endDate.add(1, 'days').toISOString()
-      return SpeciesService.getMockupSpecies({ start, end, streams: f.streams })
+    const chartItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => {
+      const start = startDate.toISOString()
+      const end = endDate.add(1, 'days').toISOString()
+      return SpeciesService.getMockupSpecies({ start, end, sites })
     }))
 
     const categories = new Set(chartItems.flatMap(i => i.map(c => c.category)))
     categories.forEach(cat => {
       for (const [idx, item] of chartItems.entries()) {
         const filter = filters[idx]
-        const siteName = filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites'
+        const siteName = filter.sites.length > 0 ? filter.sites.map(s => s.name).join(',') : 'All sites'
         const matchedData = item.find(d => d.category === cat)
         const seriesItem: ChartModels.BarChartItem = {
           category: siteName,
@@ -56,9 +56,9 @@ export default class SpeciesRichnessPage extends Vue {
     this.chartData = Object.values(groupedItems)
 
     // TODO 41 - Merge this with the above once Nutto's branch is merged
-    this.mapDatasets = filters.map(({ startDate, endDate, streams, color }) => ({
+    this.mapDatasets = filters.map(({ startDate, endDate, sites, color }) => ({
       color,
-      data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), streams })
+      data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })
     }))
   }
 }
