@@ -1,2 +1,2 @@
 <template src="./navbar.html" />
-<script src="./navbar.ts" lang="ts" />
+<script src="./navbar.ts" lang="ts"></script>

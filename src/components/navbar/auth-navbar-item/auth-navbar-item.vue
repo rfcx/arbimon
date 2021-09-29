@@ -39,4 +39,4 @@
   </div>
 </template>
 
-<script src="./auth-navbar-item.ts" lang="ts" />
+<script src="./auth-navbar-item.ts" lang="ts"></script>

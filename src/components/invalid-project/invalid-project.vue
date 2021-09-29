@@ -4,4 +4,4 @@
   </div>
 </template>
 
-<script src="./invalid-project.ts" lang="ts" />
+<script src="./invalid-project.ts" lang="ts"></script>

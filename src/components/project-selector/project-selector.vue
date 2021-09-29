@@ -56,4 +56,4 @@
     </div>
   </div>
 </template>
-<script src="./project-selector.ts" lang="ts" />
+<script src="./project-selector.ts" lang="ts"></script>

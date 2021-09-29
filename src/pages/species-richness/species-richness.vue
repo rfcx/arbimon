@@ -21,4 +21,4 @@
     />
   </div>
 </template>
-<script src="./species-richness.ts" lang="ts" />
+<script src="./species-richness.ts" lang="ts"></script>
