@@ -8,7 +8,7 @@ interface Endpoint {
 const CORE = 'https://staging-api.rfcx.org'
 
 // Example: to be updated
-export const getStreams: Endpoint = {
+export const getSites: Endpoint = {
   method: 'GET',
   url: `${CORE}/streams`
 }

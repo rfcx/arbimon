@@ -1,10 +1,10 @@
 import { Dayjs } from 'dayjs'
 
 import { formatDateRange } from '@/utils'
-import { Stream } from './Stream'
+import { Site } from './Site'
 
 export interface FilterBase {
-  streams: Stream[]
+  sites: Site[]
   startDate: Dayjs
   endDate: Dayjs
 }
@@ -12,20 +12,20 @@ export interface FilterBase {
 export class SpeciesRichnessFilter {
   startDate: Dayjs
   endDate: Dayjs
-  streams: Stream[] = []
+  sites: Site[] = []
   color: string = ''
 
-  constructor (startDate: Dayjs, endDate: Dayjs, streams: Stream[] = [], color = '') {
+  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], color = '') {
     this.startDate = startDate
     this.endDate = endDate
-    this.streams = streams
+    this.sites = sites
     this.color = color
   }
 
   get displayTitle (): string {
-    const length = this.streams.length
+    const length = this.sites.length
     if (length === 0) { return 'All sites' }
-    return this.streams.map(s => s.name).join(', ')
+    return this.sites.map(s => s.name).join(', ')
   }
 
   get displayDate (): string {
