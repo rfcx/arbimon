@@ -4,6 +4,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
+import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SpeciesRichnessFilter, StreamModels } from '@/models'
 import { SpeciesService } from '@/services'
 
@@ -12,13 +13,15 @@ dayjs.extend(utc)
 @Options({
   components: {
     ComparisonListComponent,
-    HorizontalBarChartComponent
+    HorizontalBarChartComponent,
+    SpeciesRichnessMaps
   }
 })
 export default class SpeciesRichnessPage extends Vue {
   public streams: StreamModels.Stream[] = []
 
   public chartData: ChartModels.GroupedBarChartItem[] = []
+  mapDatasets: ChartModels.MapDataSet[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
@@ -51,5 +54,11 @@ export default class SpeciesRichnessPage extends Vue {
     })
 
     this.chartData = Object.values(groupedItems)
+
+    // TODO 41 - Merge this with the above once Nutto's branch is merged
+    this.mapDatasets = filters.map(({ startDate, endDate, streams, color }) => ({
+      color,
+      data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), streams })
+    }))
   }
 }
