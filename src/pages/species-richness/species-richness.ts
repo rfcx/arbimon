@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
-import { ChartModels, SpeciesRichnessFilter, StreamModels } from '@/models'
+import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SpeciesService } from '@/services'
 
 dayjs.extend(utc)
@@ -16,7 +16,7 @@ dayjs.extend(utc)
   }
 })
 export default class SpeciesRichnessPage extends Vue {
-  public streams: StreamModels.Stream[] = []
+  public sites: SiteModels.Site[] = []
 
   public chartData: ChartModels.GroupedBarChartItem[] = []
 
@@ -25,14 +25,14 @@ export default class SpeciesRichnessPage extends Vue {
     const chartItems = await Promise.all(filters.map(f => {
       const start = f.startDate.toISOString()
       const end = f.endDate.add(1, 'days').toISOString()
-      return SpeciesService.getMockupSpecies({ start, end, streams: f.streams })
+      return SpeciesService.getMockupSpecies({ start, end, sites: f.sites })
     }))
 
     const categories = new Set(chartItems.flatMap(i => i.map(c => c.category)))
     categories.forEach(cat => {
       for (const [idx, item] of chartItems.entries()) {
         const filter = filters[idx]
-        const siteName = filter.streams.length > 0 ? filter.streams.map(s => s.name).join(',') : 'All sites'
+        const siteName = filter.sites.length > 0 ? filter.sites.map(s => s.name).join(',') : 'All sites'
         const matchedData = item.find(d => d.category === cat)
         const seriesItem: ChartModels.BarChartItem = {
           category: siteName,

@@ -38,7 +38,7 @@
                   v-if="currentActiveMenuId === menus[0].id"
                   class="w-full"
                 >
-                  <div class="search-stream-container w-full p-4">
+                  <div class="search-site-container w-full p-4">
                     <!-- TODO: 50 implement search logic -->
                     <input
                       id="search"
@@ -63,17 +63,17 @@
                       Filter results from some sites only
                     </h2>
                     <label
-                      v-for="(item) in streamCheckboxItems"
-                      :key="'stream-list-' + item.stream.id"
+                      v-for="(item) in siteCheckboxItems"
+                      :key="'site-list-' + item.site.id"
                       class="px-4 pb-2 align-middle list-item"
                     >
                       <input
                         type="checkbox"
                         class="rounded"
                         :checked="item.check"
-                        @click="updateSelectedStreams(item)"
+                        @click="updateSelectedSites(item)"
                       >
-                      <span class="text-white ml-2">{{ item.stream.name }}</span>
+                      <span class="text-white ml-2">{{ item.site.name }}</span>
                     </label>
                   </div>
                 </div>
