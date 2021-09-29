@@ -7,6 +7,10 @@ import pluginLineClamp from 'windicss/plugin/line-clamp'
 import pluginIcons from '@windicss/plugin-icons'
 import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 
+const range = (size: number, startAt = 1): number[] => {
+  return Array.from(Array(size).keys()).map(i => i + startAt)
+}
+
 export default defineConfig({
   darkMode: false,
   plugins: [
@@ -77,6 +81,10 @@ export default defineConfig({
       }
     }
   },
+  safelist: [
+    range(12).map(i => `grid-cols-${i}`),
+    range(12).map(i => `md:grid-cols-${i}`)
+  ],
   shortcuts: {
     // button
     btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none)',
