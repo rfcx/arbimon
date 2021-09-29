@@ -38,7 +38,7 @@
                   v-if="currentActiveMenuId === menus[0].id"
                   class="w-full"
                 >
-                  <div class="search-site-container w-full p-4">
+                  <div class="w-full p-4">
                     <!-- TODO: 50 implement search logic -->
                     <input
                       id="search"
