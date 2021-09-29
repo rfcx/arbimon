@@ -72,12 +72,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   private setDefaultSiteCheckboxItems (): void {
     this.siteCheckboxItems = this.allSites
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map(s => {
-        return {
-          site: s,
-          check: false
-        }
-      })
+      .map(site => ({ site, check: false }))
   }
 
   public setActiveMenuId (id: string): void {
