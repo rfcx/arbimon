@@ -2,7 +2,7 @@ import { createDecorator, VueDecorator } from 'vue-class-component'
 import Vuex, { ActionTree, GetterTree, MutationTree } from 'vuex'
 
 import * as Models from '@/models'
-import { ProjectServices } from '@/services'
+import { ProjectService } from '@/services'
 import * as ACTIONS from './actions'
 import * as ITEMS from './items'
 
@@ -31,7 +31,7 @@ const rootActions: ActionTree<RootState, RootState> = {
 
     // TODO 17 - Make this conditional on build mode (dev, staging, prod)
     // TODO 65 - Replace this with a mock service
-    const projects = user ? [...await ProjectServices.getProjects(), { id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }] : []
+    const projects = user ? [...await ProjectService.getProjects(), { id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }] : []
     commit(MUTATIONS.root.updateProjects, projects)
 
     const selectedProject = projects.length > 0 ? projects[0] : undefined
