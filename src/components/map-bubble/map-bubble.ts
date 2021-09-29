@@ -1,18 +1,22 @@
 import { GeoJSONSource } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { ChartModels, TaxonomyModels } from '@/models'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, mapboxgl } from '@/services/mapbox.service'
+import { ChartModels, MapModels, TaxonomyModels } from '@/models'
+import { mapboxgl } from '@/services/mapbox.service'
 
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: ChartModels.MapDataSet
   @Prop() taxon!: string
+  @Prop() config!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
-  @Prop({ default: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE] }) startingLocation!: [number, number]
-  @Prop({ default: 9 }) startingZoom!: number
 
+  @Emit() mapMoved (): MapModels.MapConfig {
+    return { mapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
+  }
+
+  emitMapMoves = true
   map!: mapboxgl.Map
   mapIsLoading = true
 
@@ -23,12 +27,15 @@ export default class MapBubbleComponent extends Vue {
     this.map = new mapboxgl.Map({
       container: this.mapIdFull,
       style: this.mapStyle,
-      center: this.startingLocation,
-      zoom: this.startingZoom
+      center: this.config.center,
+      zoom: this.config.zoom
     })
       .on('load', () => {
         this.mapIsLoading = false
         this.generateChart()
+      })
+      .on('move', () => {
+        if (this.emitMapMoves) this.mapMoved()
       })
   }
 
@@ -36,8 +43,16 @@ export default class MapBubbleComponent extends Vue {
     this.generateChart()
   }
 
-  @Watch('taxon') onMapConfigChange (): void {
+  @Watch('taxon') onTaxonChange (): void {
     this.generateChart(false)
+  }
+
+  @Watch('config') onConfigChange (): void {
+    if (this.config.mapId === this.mapId) return // don't react to self
+    this.emitMapMoves = false // don't emit for sync'd moves
+    this.map.setCenter(this.config.center)
+    this.map.setZoom(this.config.zoom)
+    this.emitMapMoves = true
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
