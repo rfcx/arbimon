@@ -8,7 +8,7 @@ export interface ChartSVGElement {
 export interface BarChartItem {
   category: string
   frequency: number
-  color?: string
+  color: string
 }
 
 export interface GroupedBarChartItem {
