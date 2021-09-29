@@ -53,7 +53,7 @@ export default class SpeciesRichnessPage extends Vue {
       }
     })
 
-    this.chartData = Object.values(groupedItems)
+    this.chartData = Object.values(groupedItems).sort((a, b) => a.group.localeCompare(b.group))
 
     // TODO 41 - Merge this with the above once Nutto's branch is merged
     this.mapDatasets = filters.map(({ startDate, endDate, sites, color }) => ({
