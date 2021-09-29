@@ -5,7 +5,7 @@ import { Emit, Prop } from 'vue-property-decorator'
 import { OnClickOutside } from '@vueuse/components'
 
 import { FilterBase, SiteModels, SpeciesRichnessFilter } from '@/models'
-import { SiteServices } from '@/services'
+import { SiteService } from '@/services'
 
 interface FilterMenuItem {
   id: string
@@ -66,7 +66,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   private get allSites (): SiteModels.Site[] {
-    return SiteServices.getMockupSites()
+    return SiteService.getMockupSites()
   }
 
   private setDefaultSiteCheckboxItems (): void {
