@@ -1,0 +1,62 @@
+<template>
+  <div
+    class="w-full"
+  >
+    <div class="flex justify-between">
+      <h2 class="text-white text-xl">
+        Number of species detected at each site
+      </h2>
+      <div class="taxon-picker mb-2">
+        <template
+          v-for="a in taxons"
+          :key="a.name"
+        >
+          <input
+            :id="`taxons-${a.name}`"
+            v-model="taxon"
+            type="radio"
+            :value="a.name"
+            class="hidden"
+          >
+          <label
+            :for="`taxons-${a.name}`"
+            class="inline-block text-center text-lg w-7 h-7 mr-2"
+          >
+            {{ a.symbol }}
+          </label>
+        </template>
+      </div>
+    </div>
+    <div
+      v-if="!hasData"
+      class="text-center text-white"
+    >
+      No data
+    </div>
+    <div
+      v-show="hasData"
+      class="grid gap-1"
+      :class="{ [`grid-cols-${columnCount}`]: true }"
+    >
+      <map-bubble-component
+        v-for="(dataset, idx) in datasets"
+        :key="idx"
+        :map-id="idx"
+        :dataset="dataset"
+        :taxon="taxon"
+        class="w-full h-96 "
+      />
+    </div>
+  </div>
+</template>
+<script src="./species-richness-maps.ts" lang="ts" />
+<style lang="scss" scoped>
+.taxon-picker {
+  float: right;
+}
+
+.taxon-picker input[type='radio']:checked + label {
+  color: #000;
+  background-color: #fff;
+}
+</style>
