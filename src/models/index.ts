@@ -1,5 +1,7 @@
 export * from './Auth'
 export * as ChartModels from './Chart'
 export * from './Filter'
+export * as MapModels from './Map'
 export * as ProjectModels from './Project'
 export * as SiteModels from './Site'
+export * as TaxonomyModels from './Taxonomy'

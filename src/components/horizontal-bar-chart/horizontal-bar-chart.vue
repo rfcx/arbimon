@@ -31,9 +31,9 @@
     </div>
     <div
       v-if="!hasData"
-      class="no-chart-data text-center text-white"
+      class="text-center text-white"
     >
-      No chart data
+      No data
     </div>
     <div
       v-show="hasData"

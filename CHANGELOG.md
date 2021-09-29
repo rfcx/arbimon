@@ -15,3 +15,4 @@
 * **features:** Export graph as image (#31)
 * **features:** Improve bar chart to support group bar chart (#58)
 * **features:** Getting the comparison filter box ready for chart data (#59)
+* **features:** Map of species count by site (#41)
