@@ -1,5 +1,5 @@
 // TODO: Update after connect to /stream endpoint
-export interface Stream {
+export interface Site {
   id: string
   name: string
   latitude?: number

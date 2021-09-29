@@ -31,7 +31,7 @@ export default class ComparisonBoxComponent extends Vue {
 
   //  TODO: Have to improve this logic to check what is `all` meaning
   public get isDefaultFilter (): boolean {
-    return this.filters.length === 1 && this.filters[0].streams.length === 0
+    return this.filters.length === 1 && this.filters[0].sites.length === 0
   }
 
   public getFilterColor (idx: number): string {
@@ -57,7 +57,7 @@ export default class ComparisonBoxComponent extends Vue {
   }
 
   public apply (filter: FilterBase): void {
-    const newFilter = new SpeciesRichnessFilter(filter.startDate, filter.endDate, filter.streams)
+    const newFilter = new SpeciesRichnessFilter(filter.startDate, filter.endDate, filter.sites)
     if (this.isAddSelected) {
       this.filters.push(newFilter)
       this.isAddSelected = false
