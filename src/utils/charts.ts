@@ -48,7 +48,6 @@ const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
       context?.drawImage(image, 0, 0, finalWidth, finalHeight)
       // Fullfil and Return the Base64 image
       const pngDataURL = canvas.toDataURL(mimetype, quality)
-      console.log(pngDataURL)
       resolve(pngDataURL)
     }
 

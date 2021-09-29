@@ -77,6 +77,7 @@ export default defineConfig({
       }
     }
   },
+  safelist: Array.from({ length: 12 }, (v, i) => `grid-cols-${i}`).join(' '),
   shortcuts: {
     // button
     btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none)',

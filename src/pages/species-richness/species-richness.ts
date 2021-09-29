@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
-import MapBubbleComponent from '@/components/map-bubble/map-bubble.vue'
+import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SpeciesRichnessFilter, StreamModels } from '@/models'
 import { SpeciesService } from '@/services'
 
@@ -14,7 +14,7 @@ dayjs.extend(utc)
   components: {
     ComparisonListComponent,
     HorizontalBarChartComponent,
-    MapBubbleComponent
+    SpeciesRichnessMaps
   }
 })
 export default class SpeciesRichnessPage extends Vue {
