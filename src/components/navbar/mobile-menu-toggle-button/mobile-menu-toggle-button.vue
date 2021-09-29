@@ -25,4 +25,4 @@
     </svg>
   </div>
 </template>
-<script src="./mobile-menu-toggle-button.ts" lang="ts" />
+<script src="./mobile-menu-toggle-button.ts" lang="ts"></script>

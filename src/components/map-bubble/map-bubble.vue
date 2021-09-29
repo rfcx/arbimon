@@ -16,4 +16,4 @@
     </div>
   </div>
 </template>
-<script src="./map-bubble.ts" lang="ts" />
+<script src="./map-bubble.ts" lang="ts"></script>

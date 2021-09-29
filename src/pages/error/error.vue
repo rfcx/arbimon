@@ -6,4 +6,4 @@
     </div>
   </div>
 </template>
-<script src="./error.ts" lang="ts" />
+<script src="./error.ts" lang="ts"></script>
