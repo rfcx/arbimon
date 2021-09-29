@@ -35,11 +35,10 @@
     >
       No chart data
     </div>
-    <div v-show="hasData">
-      <div
-        :id="chartId"
-      />
-    </div>
+    <div
+      v-show="hasData"
+      :id="chartId"
+    />
   </div>
 </template>
 <script src="./horizontal-bar-chart.ts" lang="ts" />

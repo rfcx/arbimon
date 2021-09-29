@@ -10,7 +10,7 @@ interface SpeciesRichnessRequestParams {
   streams: StreamModels.Stream[]
 }
 
-export function getMockupSpecies (options: SpeciesRichnessRequestParams): ChartModels.BarChartItem[] {
+export function getMockupSpecies (options: SpeciesRichnessRequestParams): Array<Omit<ChartModels.BarChartItem, 'color'>> {
   const { start, end, streams } = options
   const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (streams.length === 0 || streams.map(s => s.id).includes(r.stream_id)))
   const groupedDetections = groupBy(filteredDetections, 'taxon')
