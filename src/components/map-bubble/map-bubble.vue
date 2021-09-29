@@ -39,7 +39,7 @@
     </div>
   </div>
 </template>
-
+<script src="./map-bubble.ts" lang="ts" />
 <style lang="scss" scoped>
 .taxon-picker {
   float: right;
@@ -50,4 +50,3 @@
   background-color: #fff;
 }
 </style>
-<script src="./map-bubble.ts" lang="ts" />

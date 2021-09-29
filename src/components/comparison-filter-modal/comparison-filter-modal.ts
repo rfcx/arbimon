@@ -36,10 +36,10 @@ export default class ComparisonFilterModalComponent extends Vue {
   public currentActiveMenuId = 'sites'
 
   public mounted (): void {
+    this.setDefaultSelectedStreams()
     if (this.defaultFilter) {
-      this.setDefaultSelectedStreams()
-      this.startDate = this.defaultFilter.startDate?.format(dateFormat) ?? dayjs().subtract(7, 'days').format(dateFormat)
-      this.endDate = this.defaultFilter.endDate?.format(dateFormat) ?? dayjs().format(dateFormat)
+      this.startDate = this.defaultFilter.startDate?.format(dateFormat)
+      this.endDate = this.defaultFilter.endDate?.format(dateFormat)
     }
   }
 
