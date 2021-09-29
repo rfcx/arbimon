@@ -2,7 +2,7 @@
   <div
     class="w-full"
   >
-    <div class="flex justify-between">
+    <div class="flex justify-between items-end mb-1.5">
       <h2 class="text-white text-xl">
         Number of species detected at each site
       </h2>
@@ -35,7 +35,7 @@
     </div>
     <div
       v-show="hasData"
-      class="grid gap-1"
+      class="grid gap-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
       <map-bubble-component

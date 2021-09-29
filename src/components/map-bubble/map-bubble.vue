@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="!hasData"
-      class="h-full flex justify-center items-center text-white text-lg"
+      class="h-full flex justify-center items-center text-secondary border-2 border-secondary"
     >
       No data
     </div>
