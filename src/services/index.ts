@@ -1,4 +1,5 @@
 export * as ProjectService from './projects.service'
-export * as SiteService from './sites.service'
+export * as SiteService from './sites.api.service'
+export * as MockUpSiteService from './sites.mock.service'
 export * as SpeciesService from './species.service'
 export * as VuexService from './vuex.service'
