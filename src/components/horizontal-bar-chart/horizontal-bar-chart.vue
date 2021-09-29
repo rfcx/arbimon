@@ -41,4 +41,4 @@
     />
   </div>
 </template>
-<script src="./horizontal-bar-chart.ts" lang="ts" />
+<script src="./horizontal-bar-chart.ts" lang="ts"></script>
