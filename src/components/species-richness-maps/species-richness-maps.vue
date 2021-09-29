@@ -44,7 +44,9 @@
         :map-id="idx"
         :dataset="dataset"
         :taxon="taxon"
+        :config="config"
         class="w-full h-96 "
+        @mapMoved="mapMoved"
       />
     </div>
   </div>
