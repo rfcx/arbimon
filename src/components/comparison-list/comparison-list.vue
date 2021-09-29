@@ -47,4 +47,4 @@
     />
   </div>
 </template>
-<script src="./comparison-list.ts" lang="ts" />
+<script src="./comparison-list.ts" lang="ts"></script>

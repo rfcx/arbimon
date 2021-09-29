@@ -33,4 +33,4 @@
     </div>
   </div>
 </template>
-<script src="./index.ts" lang="ts" />
+<script src="./index.ts" lang="ts"></script>

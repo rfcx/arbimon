@@ -134,4 +134,4 @@
     </div>
   </div>
 </template>
-<script src="./comparison-filter-modal.ts" lang="ts" />
+<script src="./comparison-filter-modal.ts" lang="ts"></script>
