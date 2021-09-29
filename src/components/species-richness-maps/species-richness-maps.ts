@@ -17,7 +17,7 @@ export default class SpeciesRichnessMaps extends Vue {
   taxon = this.taxons[0].name
 
   config: MapModels.MapConfig = {
-    mapId: '',
+    sourceMapId: '',
     center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
     zoom: 9
   }

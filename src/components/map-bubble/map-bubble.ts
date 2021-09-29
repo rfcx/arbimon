@@ -9,16 +9,16 @@ export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: ChartModels.MapDataSet
   @Prop() taxon!: string
-  @Prop() config!: MapModels.MapConfig
+  @Prop() mapConfig!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
 
   @Emit() mapMoved (): MapModels.MapConfig {
-    return { mapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
+    return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
   }
 
-  emitMapMoves = true
   map!: mapboxgl.Map
   mapIsLoading = true
+  emitMapMoves = true
 
   get mapIdFull (): string { return `map-bubble-${this.mapId}` }
   get hasData (): boolean { return this.dataset.data.length > 0 }
@@ -27,8 +27,8 @@ export default class MapBubbleComponent extends Vue {
     this.map = new mapboxgl.Map({
       container: this.mapIdFull,
       style: this.mapStyle,
-      center: this.config.center,
-      zoom: this.config.zoom
+      center: this.mapConfig.center,
+      zoom: this.mapConfig.zoom
     })
       .on('load', () => {
         this.mapIsLoading = false
@@ -47,11 +47,11 @@ export default class MapBubbleComponent extends Vue {
     this.generateChart(false)
   }
 
-  @Watch('config') onConfigChange (): void {
-    if (this.config.mapId === this.mapId) return // don't react to self
+  @Watch('mapConfig') onConfigChange (): void {
+    if (this.mapConfig.sourceMapId === this.mapId) return // don't react to self
     this.emitMapMoves = false // don't emit for sync'd moves
-    this.map.setCenter(this.config.center)
-    this.map.setZoom(this.config.zoom)
+    this.map.setCenter(this.mapConfig.center)
+    this.map.setZoom(this.mapConfig.zoom)
     this.emitMapMoves = true
   }
 

@@ -36,15 +36,15 @@
     <div
       v-show="hasData"
       class="grid gap-1"
-      :class="{ [`grid-cols-${columnCount}`]: true }"
+      :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
       <map-bubble-component
         v-for="(dataset, idx) in datasets"
         :key="idx"
-        :map-id="idx"
         :dataset="dataset"
         :taxon="taxon"
-        :config="config"
+        :map-id="idx"
+        :map-config="config"
         class="w-full h-96 "
         @mapMoved="mapMoved"
       />
