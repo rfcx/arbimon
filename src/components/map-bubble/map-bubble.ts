@@ -37,7 +37,7 @@ export default class MapBubbleComponent extends Vue {
       })
   }
 
-  @Watch('datasets') onDataChange (): void {
+  @Watch('datasets', { deep: true }) onDataChange (): void {
     void this.$nextTick(() => this.generateChart())
   }
 
