@@ -3,6 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
 import { FilterBase, SpeciesRichnessFilter } from '@/models'
+import { colors } from '@/utils'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
 const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [])
@@ -19,9 +20,13 @@ export default class ComparisonBoxComponent extends Vue {
   public filters: SpeciesRichnessFilter[] = [defaultFilter]
   public currentSelectedFilter: SpeciesRichnessFilter | null = null
 
+  public mounted (): void {
+    this.select()
+  }
+
   public addFilterConfig (): void {
     this.isAddSelected = true
-    this.showFilterPopup(true)
+    this.popupOpen()
   }
 
   //  TODO: Have to improve this logic to check what is `all` meaning
@@ -29,10 +34,18 @@ export default class ComparisonBoxComponent extends Vue {
     return this.filters.length === 1 && this.filters[0].streams.length === 0
   }
 
-  showFilterPopup (open: boolean, idx?: number): void {
-    this.isFilterOpen = open
+  public getFilterColor (idx: number): string {
+    return colors[idx]
+  }
+
+  public popupOpen (idx?: number): void {
+    this.isFilterOpen = true
     this.selectedFilterId = idx ?? -1
     this.currentSelectedFilter = this.selectedFilterId !== -1 ? this.filters[this.selectedFilterId] : null
+  }
+
+  public popupClose (): void {
+    this.isFilterOpen = false
   }
 
   public removeFilterConfig (idx: number): void {
@@ -50,18 +63,20 @@ export default class ComparisonBoxComponent extends Vue {
       this.isAddSelected = false
     } else {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
+      this.selectedFilterId = -1
     }
     this.select()
   }
 
   public get showAddButton (): boolean {
-    return false
-    // TODO: uncomment this when comparison is ready
-    // return this.filters.length < 5
+    return this.filters.length < 5
   }
 
   @Emit()
   public select (): SpeciesRichnessFilter[] {
-    return this.filters
+    return this.filters.map((f, i) => {
+      f.color = colors[i]
+      return f
+    })
   }
 }
