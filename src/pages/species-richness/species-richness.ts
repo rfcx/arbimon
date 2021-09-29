@@ -20,15 +20,13 @@ export default class SpeciesRichnessPage extends Vue {
 
   public chartData: ChartModels.GroupedBarChartItem[] = []
 
-  onFilterChange (filters: SpeciesRichnessFilter[]): void {
+  async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
-    const chartItems: ChartModels.BarChartItem[][] = []
-    for (const filter of filters) {
-      const start = filter.startDate.toISOString()
-      const end = filter.endDate.add(1, 'days').toISOString()
-      const data = SpeciesService.getMockupSpecies({ start, end, streams: filter.streams })
-      chartItems.push(data)
-    }
+    const chartItems = await Promise.all(filters.map(f => {
+      const start = f.startDate.toISOString()
+      const end = f.endDate.add(1, 'days').toISOString()
+      return SpeciesService.getMockupSpecies({ start, end, streams: f.streams })
+    }))
 
     const categories = new Set(chartItems.flatMap(i => i.map(c => c.category)))
     categories.forEach(cat => {
