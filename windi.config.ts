@@ -54,6 +54,7 @@ export default defineConfig({
           light: '#E6F3EA',
           dark: '#25713b'
         },
+        secondary: '#333',
         'box-grey': {
           DEFAULT: '#45485D',
           dark: '#2f3140'

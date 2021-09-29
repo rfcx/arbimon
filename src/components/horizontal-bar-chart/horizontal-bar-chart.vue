@@ -3,7 +3,7 @@
     id="horizontal-bar-chart-component"
     class="w-full"
   >
-    <div class="flex justify-between">
+    <div class="flex justify-between items-end mb-1.5">
       <h2 class="text-white text-xl">
         {{ chartTitle }}
       </h2>
@@ -31,7 +31,7 @@
     </div>
     <div
       v-if="!hasData"
-      class="text-center text-white"
+      class="text-center text-secondary min-h-32 flex justify-center items-center border-2 border-secondary"
     >
       No data
     </div>
