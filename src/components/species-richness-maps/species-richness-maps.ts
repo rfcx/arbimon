@@ -15,6 +15,8 @@ export default class SpeciesRichnessMaps extends Vue {
 
   taxons = TaxonomyModels.TAXONOMIES
   taxon = this.taxons[0].name
+  displayLabel = false
+  displaySatellite = false
 
   config: MapModels.MapConfig = {
     sourceMapId: '',
@@ -29,6 +31,10 @@ export default class SpeciesRichnessMaps extends Vue {
       case 2: case 4: return 2
       default: return 3
     }
+  }
+
+  get mapStyle (): string {
+    return this.displaySatellite ? 'mapbox://styles/mapbox/satellite-v9' : 'mapbox://styles/mapbox/streets-v11' 
   }
 
   mapMoved (config: MapModels.MapConfig): void {
