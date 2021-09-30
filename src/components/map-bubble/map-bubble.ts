@@ -11,7 +11,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() taxon!: string
   @Prop() mapConfig!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
-  @Prop({ default: true }) displayLabel!: boolean
+  @Prop({ default: true }) mapLabel!: boolean
 
   @Emit() mapMoved (): MapModels.MapConfig {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
@@ -29,7 +29,8 @@ export default class MapBubbleComponent extends Vue {
       container: this.mapIdFull,
       style: this.mapStyle,
       center: this.mapConfig.center,
-      zoom: this.mapConfig.zoom
+      zoom: this.mapConfig.zoom,
+      attributionControl: false
     })
       .on('load', () => {
         this.mapIsLoading = false
@@ -60,7 +61,12 @@ export default class MapBubbleComponent extends Vue {
     this.map.setStyle(this.mapStyle)
     this.map.on('style.load', () => {
       this.generateChart(false)
+      this.displayLocationLabel()
     })
+  }
+
+  @Watch('mapLabel') onDisplayLabelChange (): void {
+    this.displayLocationLabel()
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
@@ -71,6 +77,19 @@ export default class MapBubbleComponent extends Vue {
   getPopup (datum: ChartModels.MapSiteData): string {
     const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
     return `<strong>${datum.siteId}</strong><p>${speciesCounts.join('<br />')}</p>`
+  }
+
+  displayLocationLabel (): void {
+    const layerIds = this.map.getStyle().layers?.map(i => i.id) ?? []
+    const labelIds = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label', 'road-label']
+    const filteredIds = labelIds.filter(l => layerIds.includes(l))
+    for (const id of filteredIds) {
+      if (this.mapLabel) {
+        this.map.setLayoutProperty(id, 'visibility', 'visible')
+      } else {
+        this.map.setLayoutProperty(id, 'visibility', 'none')
+      }
+    }
   }
 
   generateChart (rezoom = true): void {
