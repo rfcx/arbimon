@@ -5,6 +5,18 @@
     <div class="flex justify-between items-end mb-1.5">
       <h2 class="text-white text-xl">
         Number of species detected at each site
+        <button
+          class="btn mx-2 px-2 py-0"
+          @click="displayLabel = !displayLabel"
+        >
+          🖊️
+        </button>
+        <button
+          class="btn px-2 py-0"
+          @click="displaySatellite = !displaySatellite"
+        >
+          🎨
+        </button>
       </h2>
       <div class="taxon-picker mb-2">
         <template
@@ -46,6 +58,7 @@
         :map-id="idx"
         :map-config="config"
         class="w-full h-96 "
+        :map-style="mapStyle"
         @mapMoved="mapMoved"
       />
     </div>

@@ -11,6 +11,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() taxon!: string
   @Prop() mapConfig!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
+  @Prop({ default: true }) displayLabel!: boolean
 
   @Emit() mapMoved (): MapModels.MapConfig {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
@@ -53,6 +54,11 @@ export default class MapBubbleComponent extends Vue {
     this.map.setCenter(this.mapConfig.center)
     this.map.setZoom(this.mapConfig.zoom)
     this.emitMapMoves = true
+  }
+
+  @Watch('mapStyle') onStyleChange (): void {
+    this.map.setStyle(this.mapStyle)
+    this.generateChart()
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
