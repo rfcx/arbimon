@@ -34,7 +34,7 @@ export default class SpeciesRichnessMaps extends Vue {
   }
 
   get mapStyle (): string {
-    return this.displaySatellite ? 'mapbox://styles/mapbox/satellite-v9' : 'mapbox://styles/mapbox/streets-v11'
+    return this.displaySatellite ? 'mapbox://styles/mapbox/satellite-streets-v11' : 'mapbox://styles/mapbox/streets-v11'
   }
 
   mapMoved (config: MapModels.MapConfig): void {
