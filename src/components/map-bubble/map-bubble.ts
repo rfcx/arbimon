@@ -58,7 +58,9 @@ export default class MapBubbleComponent extends Vue {
 
   @Watch('mapStyle') onStyleChange (): void {
     this.map.setStyle(this.mapStyle)
-    this.generateChart()
+    this.map.on('style.load', () => {
+      this.generateChart(false)
+    })
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
@@ -101,8 +103,11 @@ export default class MapBubbleComponent extends Vue {
     const id = 'species-richness'
     const source = map.getSource(id) as GeoJSONSource | undefined
 
-    if (source === undefined) map.addSource(id, { type: 'geojson', data })
-    else source.setData(data)
+    if (source === undefined) {
+      map.addSource(id, { type: 'geojson', data })
+    } else {
+      source.setData(data)
+    }
 
     if (map.getLayer(id) === undefined) {
       map.addLayer({
