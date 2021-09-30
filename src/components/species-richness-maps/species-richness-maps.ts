@@ -15,7 +15,7 @@ export default class SpeciesRichnessMaps extends Vue {
 
   taxons = TaxonomyModels.TAXONOMIES
   taxon = this.taxons[0].name
-  displayLabel = false
+  displayLabel = true
   displaySatellite = false
 
   config: MapModels.MapConfig = {

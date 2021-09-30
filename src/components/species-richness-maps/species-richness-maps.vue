@@ -59,6 +59,7 @@
         :map-config="config"
         class="w-full h-96 "
         :map-style="mapStyle"
+        :map-label="displayLabel"
         @mapMoved="mapMoved"
       />
     </div>
