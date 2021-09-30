@@ -57,8 +57,8 @@ export default class MapBubbleComponent extends Vue {
     this.emitMapMoves = true
   }
 
-  @Watch('mapStyle') onStyleChange (): void {
-    this.map.setStyle(this.mapStyle)
+  @Watch('mapStyle') onStyleChange (currentStyle: string): void {
+    this.map.setStyle(currentStyle)
     this.map.on('style.load', () => {
       this.generateChart(false)
       this.displayLocationLabel()
@@ -81,7 +81,7 @@ export default class MapBubbleComponent extends Vue {
 
   displayLocationLabel (): void {
     const layerIds = this.map.getStyle().layers?.map(i => i.id) ?? []
-    const labelIds = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label', 'road-label']
+    const labelIds = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'settlement-minor-label', 'settlement-major-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label', 'road-label']
     const filteredIds = labelIds.filter(l => layerIds.includes(l))
     for (const id of filteredIds) {
       if (this.mapLabel) {
