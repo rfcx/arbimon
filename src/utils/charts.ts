@@ -3,7 +3,7 @@ import { ChartSVGElement } from '@/models/Chart'
 export const exportChart = async (elementId: string, filename: string): Promise<void> => {
   const chartElement = getChartElement(elementId)
   const data = await svgToPngData(chartElement)
-  downloadChart(filename, data)
+  downloadPng(filename, data)
 }
 
 const getChartElement = (id: string): ChartSVGElement => {
@@ -56,7 +56,7 @@ const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
   })
 }
 
-const downloadChart = (filename: string, data: string): void => {
+export const downloadPng = (filename: string, data: string): void => {
   const a = document.createElement('a')
   a.download = `${filename}.png`
   a.href = data
