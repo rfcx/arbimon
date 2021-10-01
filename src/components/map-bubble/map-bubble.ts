@@ -30,7 +30,8 @@ export default class MapBubbleComponent extends Vue {
       style: this.mapStyle,
       center: this.mapConfig.center,
       zoom: this.mapConfig.zoom,
-      attributionControl: false
+      attributionControl: false,
+      preserveDrawingBuffer: true
     })
       .on('load', () => {
         this.mapIsLoading = false
