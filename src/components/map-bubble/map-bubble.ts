@@ -148,6 +148,6 @@ export default class MapBubbleComponent extends Vue {
 
   downloadPng (): void {
     const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng('test', img)
+    downloadPng(this.mapId, img)
   }
 }
