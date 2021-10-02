@@ -14,15 +14,15 @@ export default class App extends Vue {
   @Inject()
   readonly auth!: Auth0Option
 
-  public get loading (): boolean {
+  get loading (): boolean {
     return this.auth.loading.value
   }
 
-  public get user (): Auth0User {
+  get user (): Auth0User {
     return this.auth.user.value
   }
 
-  public async created (): Promise<void> {
+  async created (): Promise<void> {
     await VuexService.Auth.auth.set(this.auth)
     await VuexService.Auth.user.set(this.user)
   }

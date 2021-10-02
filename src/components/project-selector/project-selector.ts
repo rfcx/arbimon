@@ -12,7 +12,7 @@ import { VuexService } from '@/services'
 })
 export default class ProjectSelectorComponent extends Vue {
   @Emit('closeProjectSelector')
-  public emitCloseProjectSelector (): boolean {
+  emitCloseProjectSelector (): boolean {
     return false
   }
 
@@ -22,7 +22,7 @@ export default class ProjectSelectorComponent extends Vue {
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 
-  public currentSelectedProject: ProjectModels.ProjectListItem | undefined = { ...VuexService.Project.selectedProject.get() }
+  currentSelectedProject: ProjectModels.ProjectListItem | undefined = { ...VuexService.Project.selectedProject.get() }
 
   isSelectedProject (project: ProjectModels.ProjectListItem): boolean {
     return project.id === this.currentSelectedProject?.id
