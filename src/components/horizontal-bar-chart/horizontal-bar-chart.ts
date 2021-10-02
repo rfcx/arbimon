@@ -11,15 +11,15 @@ const BAR_MARGIN = 2
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
-  public chartData!: ChartModels.GroupedBarChartItem[]
+  chartData!: ChartModels.GroupedBarChartItem[]
 
   @Prop({ default: 'chart' })
-  public chartId!: string
+  chartId!: string
 
   @Prop({ default: '' })
-  public chartTitle!: string
+  chartTitle!: string
 
-  public get hasData (): boolean {
+  get hasData (): boolean {
     return this.chartData.length > 0
   }
 
@@ -28,7 +28,7 @@ export default class HorizontalBarChartComponent extends Vue {
     this.generateGroupedChart()
   }
 
-  public generateGroupedChart (): void {
+  generateGroupedChart (): void {
     const data = this.chartData
     const dataLength = data.length
     const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0

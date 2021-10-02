@@ -28,7 +28,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Prop({ default: null }) defaultFilter!: SpeciesRichnessFilter | null
 
   @Emit()
-  public emitApply (): FilterBase {
+  emitApply (): FilterBase {
     this.emitClose()
     return {
       sites: this.selectedSites,
@@ -38,18 +38,18 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   @Emit()
-  public emitClose (): boolean {
+  emitClose (): boolean {
     return false
   }
 
-  public selectedSites: SiteModels.Site[] = []
-  public siteCheckboxItems: SiteCheckbox[] = []
-  public startDate: string | null = dayjs().subtract(7, 'days').format(dateFormat)
-  public endDate: string | null = dayjs().format(dateFormat)
-  public readonly today = dayjs().format(dateFormat)
-  public currentActiveMenuId = 'sites'
+  selectedSites: SiteModels.Site[] = []
+  siteCheckboxItems: SiteCheckbox[] = []
+  startDate: string | null = dayjs().subtract(7, 'days').format(dateFormat)
+  endDate: string | null = dayjs().format(dateFormat)
+  readonly today = dayjs().format(dateFormat)
+  currentActiveMenuId = 'sites'
 
-  public get menus (): FilterMenuItem[] {
+  get menus (): FilterMenuItem[] {
     return [
       {
         id: 'sites',
@@ -62,15 +62,15 @@ export default class ComparisonFilterModalComponent extends Vue {
     ]
   }
 
-  private get allSites (): SiteModels.Site[] {
+  get allSites (): SiteModels.Site[] {
     return MockUpSiteService.getSites()
   }
 
-  public get isSelectedAllSites (): boolean {
+  get isSelectedAllSites (): boolean {
     return this.selectedSites.length === 0
   }
 
-  public mounted (): void {
+  mounted (): void {
     this.setDefaultSelectedSites()
     if (this.defaultFilter) {
       this.startDate = this.defaultFilter.startDate?.format(dateFormat)
@@ -78,7 +78,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
-  public setDefaultSelectedSites (): void {
+  setDefaultSelectedSites (): void {
     this.setDefaultSiteCheckboxItems()
     const selectedSites = this.defaultFilter?.sites ?? []
     const selectedSiteIds = new Set(selectedSites.map(s => s.id))
@@ -87,26 +87,26 @@ export default class ComparisonFilterModalComponent extends Vue {
       .map(cb => { cb.check = true; return cb.site })
   }
 
-  private setDefaultSiteCheckboxItems (): void {
+  setDefaultSiteCheckboxItems (): void {
     this.siteCheckboxItems = this.allSites
       .sort((a, b) => a.name.localeCompare(b.name))
       .map(site => ({ site, check: false }))
   }
 
-  public setActiveMenuId (id: string): void {
+  setActiveMenuId (id: string): void {
     this.currentActiveMenuId = id
   }
 
-  public isCurrentActive (id: string): boolean {
+  isCurrentActive (id: string): boolean {
     return id === this.currentActiveMenuId
   }
 
-  public selectAllSites (): void {
+  selectAllSites (): void {
     this.selectedSites = []
     this.setDefaultSiteCheckboxItems()
   }
 
-  public updateSelectedSites (item: SiteCheckbox): void {
+  updateSelectedSites (item: SiteCheckbox): void {
     const siteIdx = this.selectedSites.findIndex(s => s.id === item.site.id)
     if (siteIdx === -1) {
       this.selectedSites.push(item.site)
