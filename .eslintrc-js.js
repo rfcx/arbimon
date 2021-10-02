@@ -6,7 +6,6 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-void': ['error', { allowAsStatement: true }],
-    quotes: ['error', 'single', { allowTemplateLiterals: true }],
     'simple-import-sort/imports': [
       'error',
       {
