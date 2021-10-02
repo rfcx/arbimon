@@ -12,7 +12,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() mapConfig!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
 
-  @Emit() mapMoved (): MapModels.MapConfig {
+  @Emit() emitMapMoved (): MapModels.MapConfig {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
   }
 
@@ -35,7 +35,7 @@ export default class MapBubbleComponent extends Vue {
         this.generateChart()
       })
       .on('move', () => {
-        if (this.emitMapMoves) this.mapMoved()
+        if (this.emitMapMoves) this.emitMapMoved()
       })
   }
 

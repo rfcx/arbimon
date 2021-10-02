@@ -25,8 +25,22 @@ const dateFormat = 'YYYY-MM-DD'
   }
 })
 export default class ComparisonFilterModalComponent extends Vue {
-  @Prop({ default: null })
-  defaultFilter!: SpeciesRichnessFilter | null
+  @Prop({ default: null }) defaultFilter!: SpeciesRichnessFilter | null
+
+  @Emit()
+  public emitApply (): FilterBase {
+    this.emitClose()
+    return {
+      sites: this.selectedSites,
+      startDate: dayjs.utc(this.startDate),
+      endDate: dayjs.utc(this.endDate)
+    }
+  }
+
+  @Emit()
+  public emitClose (): boolean {
+    return false
+  }
 
   public selectedSites: SiteModels.Site[] = []
   public siteCheckboxItems: SiteCheckbox[] = []
@@ -34,23 +48,6 @@ export default class ComparisonFilterModalComponent extends Vue {
   public endDate: string | null = dayjs().format(dateFormat)
   public readonly today = dayjs().format(dateFormat)
   public currentActiveMenuId = 'sites'
-
-  public mounted (): void {
-    this.setDefaultSelectedSites()
-    if (this.defaultFilter) {
-      this.startDate = this.defaultFilter.startDate?.format(dateFormat)
-      this.endDate = this.defaultFilter.endDate?.format(dateFormat)
-    }
-  }
-
-  public setDefaultSelectedSites (): void {
-    this.setDefaultSiteCheckboxItems()
-    const selectedSites = this.defaultFilter?.sites ?? []
-    const selectedSiteIds = new Set(selectedSites.map(s => s.id))
-    this.selectedSites = this.siteCheckboxItems
-      .filter(cb => selectedSiteIds.has(cb.site.id))
-      .map(cb => { cb.check = true; return cb.site })
-  }
 
   public get menus (): FilterMenuItem[] {
     return [
@@ -67,6 +64,27 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   private get allSites (): SiteModels.Site[] {
     return MockUpSiteService.getSites()
+  }
+
+  public get isSelectedAllSites (): boolean {
+    return this.selectedSites.length === 0
+  }
+
+  public mounted (): void {
+    this.setDefaultSelectedSites()
+    if (this.defaultFilter) {
+      this.startDate = this.defaultFilter.startDate?.format(dateFormat)
+      this.endDate = this.defaultFilter.endDate?.format(dateFormat)
+    }
+  }
+
+  public setDefaultSelectedSites (): void {
+    this.setDefaultSiteCheckboxItems()
+    const selectedSites = this.defaultFilter?.sites ?? []
+    const selectedSiteIds = new Set(selectedSites.map(s => s.id))
+    this.selectedSites = this.siteCheckboxItems
+      .filter(cb => selectedSiteIds.has(cb.site.id))
+      .map(cb => { cb.check = true; return cb.site })
   }
 
   private setDefaultSiteCheckboxItems (): void {
@@ -97,24 +115,5 @@ export default class ComparisonFilterModalComponent extends Vue {
       this.selectedSites.splice(siteIdx, 1)
       item.check = false
     }
-  }
-
-  public get isSelectedAllSites (): boolean {
-    return this.selectedSites.length === 0
-  }
-
-  @Emit()
-  public apply (): FilterBase {
-    this.close()
-    return {
-      sites: this.selectedSites,
-      startDate: dayjs.utc(this.startDate),
-      endDate: dayjs.utc(this.endDate)
-    }
-  }
-
-  @Emit()
-  public close (): boolean {
-    return false
   }
 }
