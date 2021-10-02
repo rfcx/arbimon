@@ -24,7 +24,7 @@ export default class ExampleComponent extends Vue {
 
   // 5. Interface
   @Prop(Number) readonly count: number | undefined
-  @Emit() addToCount(n: number) { this.count += n }
+  @Emit() emitAddToCount(n: number) { this.count += n }
 
   // 6 & 7. Local reactive state
   oldTodos = setup(() => TodoService.get())
