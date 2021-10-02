@@ -122,7 +122,7 @@
                 </button>
                 <button
                   class="btn btn-primary"
-                  @click="apply()"
+                  @click="emitApply()"
                 >
                   Apply
                 </button>

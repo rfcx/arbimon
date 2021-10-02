@@ -14,50 +14,62 @@ const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), day
   }
 })
 export default class ComparisonBoxComponent extends Vue {
-  public selectedFilterId = -1
-  public isAddSelected = false
-  public isFilterOpen = false
-  public filters: SpeciesRichnessFilter[] = [defaultFilter]
-  public currentSelectedFilter: SpeciesRichnessFilter | null = null
-
-  public mounted (): void {
-    this.select()
+  @Emit()
+  emitSelect (): SpeciesRichnessFilter[] {
+    return this.filters.map((f, i) => {
+      f.color = colors[i]
+      return f
+    })
   }
 
-  public addFilterConfig (): void {
+  selectedFilterId = -1
+  isAddSelected = false
+  isFilterOpen = false
+  filters: SpeciesRichnessFilter[] = [defaultFilter]
+  currentSelectedFilter: SpeciesRichnessFilter | null = null
+
+  //  TODO: Have to improve this logic to check what is `all` meaning
+  get isDefaultFilter (): boolean {
+    return this.filters.length === 1 && this.filters[0].sites.length === 0
+  }
+
+  get showAddButton (): boolean {
+    return this.filters.length < 5
+  }
+
+  mounted (): void {
+    this.emitSelect()
+  }
+
+  addFilterConfig (): void {
     this.isAddSelected = true
     this.isFilterOpen = true
   }
 
-  //  TODO: Have to improve this logic to check what is `all` meaning
-  public get isDefaultFilter (): boolean {
-    return this.filters.length === 1 && this.filters[0].sites.length === 0
-  }
-
-  public getFilterColor (idx: number): string {
+  getFilterColor (idx: number): string {
     return colors[idx]
   }
 
-  public popupOpen (idx: number): void {
+  popupOpen (idx: number): void {
     this.isFilterOpen = true
     this.isAddSelected = false
     this.selectedFilterId = idx
     this.currentSelectedFilter = this.filters[this.selectedFilterId]
   }
 
-  public popupClose (): void {
+  popupClose (): void {
     this.isFilterOpen = false
   }
 
-  public removeFilterConfig (idx: number): void {
+  removeFilterConfig (idx: number): void {
     this.filters.splice(idx, 1)
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
     }
-    this.select()
+    this.emitSelect()
   }
 
-  public apply (filter: FilterBase): void {
+  apply (filter: FilterBase): void {
     const newFilter = new SpeciesRichnessFilter(filter.startDate, filter.endDate, filter.sites)
     if (this.isAddSelected) {
       this.filters.push(newFilter)
@@ -66,18 +78,6 @@ export default class ComparisonBoxComponent extends Vue {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
       this.selectedFilterId = -1
     }
-    this.select()
-  }
-
-  public get showAddButton (): boolean {
-    return this.filters.length < 5
-  }
-
-  @Emit()
-  public select (): SpeciesRichnessFilter[] {
-    return this.filters.map((f, i) => {
-      f.color = colors[i]
-      return f
-    })
+    this.emitSelect()
   }
 }

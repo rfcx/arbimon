@@ -15,13 +15,6 @@ export class SpeciesRichnessFilter {
   sites: Site[] = []
   color: string = ''
 
-  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], color = '') {
-    this.startDate = startDate
-    this.endDate = endDate
-    this.sites = sites
-    this.color = color
-  }
-
   get displayTitle (): string {
     const length = this.sites.length
     if (length === 0) { return 'All sites' }
@@ -30,5 +23,12 @@ export class SpeciesRichnessFilter {
 
   get displayDate (): string {
     return formatDateRange(this.startDate, this.endDate)
+  }
+
+  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], color = '') {
+    this.startDate = startDate
+    this.endDate = endDate
+    this.sites = sites
+    this.color = color
   }
 }
