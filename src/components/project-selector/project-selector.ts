@@ -11,13 +11,18 @@ import { VuexService } from '@/services'
   components: { OnClickOutside }
 })
 export default class ProjectSelectorComponent extends Vue {
+  @Emit('closeProjectSelector')
+  emitCloseProjectSelector (): boolean {
+    return false
+  }
+
   @VuexService.Project.projects.bind()
   projects!: ProjectModels.ProjectListItem[]
 
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 
-  public currentSelectedProject: ProjectModels.ProjectListItem | undefined = { ...VuexService.Project.selectedProject.get() }
+  currentSelectedProject: ProjectModels.ProjectListItem | undefined = { ...VuexService.Project.selectedProject.get() }
 
   isSelectedProject (project: ProjectModels.ProjectListItem): boolean {
     return project.id === this.currentSelectedProject?.id
@@ -29,14 +34,9 @@ export default class ProjectSelectorComponent extends Vue {
 
   async confirmedSelectedProject (): Promise<void> {
     await VuexService.Project.selectedProject.set(this.currentSelectedProject)
-    this.closeProjectSelector()
+    this.emitCloseProjectSelector()
 
     const newProjectId = this.currentSelectedProject?.id
     if (newProjectId !== undefined) void this.$router.push({ name: ROUTES_NAME.overview, params: { projectId: newProjectId } })
-  }
-
-  @Emit('closeProjectSelector')
-  public closeProjectSelector (): boolean {
-    return false
   }
 }

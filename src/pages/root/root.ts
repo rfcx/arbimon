@@ -10,10 +10,10 @@ import { VuexService } from '@/services'
 })
 export default class RootPage extends Vue {
   @VuexService.Auth.auth.bind()
-  protected auth!: Auth0Option | undefined
+  auth!: Auth0Option | undefined
 
   @VuexService.Auth.user.bind()
-  protected user!: Auth0User | undefined
+  user!: Auth0User | undefined
 
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
