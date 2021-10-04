@@ -5,20 +5,20 @@ import { VuexService } from '@/services'
 
 export default class AuthNavbarItemComponent extends Vue {
   @VuexService.Auth.auth.bind()
-  public auth!: Auth0Option | undefined
+  auth!: Auth0Option | undefined
 
   @VuexService.Auth.user.bind()
-  public user!: Auth0User | undefined
+  user!: Auth0User | undefined
 
-  public get userImage (): string {
+  get userImage (): string {
     return this.user?.picture ?? ''
   }
 
-  public async login (): Promise<void> {
+  async login (): Promise<void> {
     await this.auth?.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
 
-  public async logout (): Promise<void> {
+  async logout (): Promise<void> {
     await this.auth?.logout({ returnTo: window.location.origin })
   }
 }
