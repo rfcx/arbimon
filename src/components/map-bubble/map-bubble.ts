@@ -5,7 +5,9 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox.service'
 
-const LABEL_LAYER_IDS = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'settlement-minor-label', 'settlement-major-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label', 'road-label']
+const LABEL_LAYER_IDS = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'settlement-minor-label', 'settlement-major-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label',
+  'road-pedestrian-case', 'road-street-low', 'road-street-case', 'road-secondary-tertiary-case', 'road-primary-case', 'road-major-link-case', 'road-motorway-trunk-case', 'road-path', 'road-steps', 'road-major-link', 'road-pedestrian', 'road-street', 'road-secondary-tertiary', 'road-primary',
+  'road-oneway-arrow-blue', 'road-motorway-trunk', 'road-oneway-arrow-white']
 
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
@@ -36,7 +38,11 @@ export default class MapBubbleComponent extends Vue {
     })
       .on('load', () => {
         this.mapIsLoading = false
-        this.generateChart()
+        this.map.resize()
+        this.generateChartNextTick()
+      })
+      .on('style.load', () => {
+        this.generateChartNextTick(false)
       })
       .on('move', () => {
         if (this.emitMapMoves) this.emitMapMoved()
@@ -44,11 +50,11 @@ export default class MapBubbleComponent extends Vue {
   }
 
   @Watch('dataset', { deep: true }) onDataChange (): void {
-    this.generateChart()
+    this.generateChartNextTick()
   }
 
   @Watch('taxon') onTaxonChange (): void {
-    this.generateChart(false)
+    this.generateChartNextTick(false)
   }
 
   @Watch('mapConfig') onConfigChange (): void {
@@ -61,14 +67,10 @@ export default class MapBubbleComponent extends Vue {
 
   @Watch('mapStyle') onStyleChange (currentStyle: string): void {
     this.map.setStyle(currentStyle)
-    this.map.on('style.load', () => {
-      this.generateChart(false)
-      this.displayLocationLabel()
-    })
   }
 
   @Watch('mapShowLabels') onDisplayLabelChange (): void {
-    this.displayLocationLabel()
+    this.updateLabels()
   }
 
   getRadius (datum: ChartModels.MapSiteData): number {
@@ -81,27 +83,29 @@ export default class MapBubbleComponent extends Vue {
     return `<strong>${datum.siteId}</strong><p>${speciesCounts.join('<br />')}</p>`
   }
 
-  displayLocationLabel (): void {
-    const layerIds = this.map.getStyle().layers?.map(i => i.id) ?? []
-    const filteredIds = LABEL_LAYER_IDS.filter(l => layerIds.includes(l))
-    for (const id of filteredIds) {
-      if (this.mapShowLabels) {
-        this.map.setLayoutProperty(id, 'visibility', 'visible')
-      } else {
-        this.map.setLayoutProperty(id, 'visibility', 'none')
-      }
-    }
+  generateChartNextTick (rezoom = true): void {
+    void this.$nextTick(() => this.generateChart(rezoom))
   }
 
   generateChart (rezoom = true): void {
-    void this.$nextTick(() => this.generateChartDefferred(rezoom))
+    if (this.mapIsLoading || !this.hasData) return
+
+    this.updateSourcesAndLayer()
+    this.updateLabels()
+    if (rezoom) {
+      this.zoomMap()
+    }
   }
 
-  generateChartDefferred (rezoom = true): void {
-    if (this.mapIsLoading || !this.hasData) return
-    const map = this.map
-    map.resize()
+  zoomMap (): void {
+    // TODO 41 - Merge this aggregation with the above loop
+    const coordinates: Array<[number, number]> = this.dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number])
+    if (coordinates.length === 0) return
+    const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+    this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
+  }
 
+  updateSourcesAndLayer (): void {
     // TODO 41 - Remove source/layer if dataset removed
     const data: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
       type: 'FeatureCollection',
@@ -121,16 +125,16 @@ export default class MapBubbleComponent extends Vue {
     }
 
     const id = 'species-richness'
-    const source = map.getSource(id) as GeoJSONSource | undefined
+    const source = this.map.getSource(id) as GeoJSONSource | undefined
 
     if (source === undefined) {
-      map.addSource(id, { type: 'geojson', data })
+      this.map.addSource(id, { type: 'geojson', data })
     } else {
       source.setData(data)
     }
 
-    if (map.getLayer(id) === undefined) {
-      map.addLayer({
+    if (this.map.getLayer(id) === undefined) {
+      this.map.addLayer({
         id,
         type: 'circle',
         source: id,
@@ -146,7 +150,7 @@ export default class MapBubbleComponent extends Vue {
         closeOnClick: false
       })
 
-      map.on('mouseenter', id, (e) => {
+      this.map.on('mouseenter', id, (e) => {
         const coordinates = (e.features?.[0].geometry as GeoJSON.Point | undefined)?.coordinates.slice() as [number, number] | undefined
         const description = e.features?.[0].properties?.popup as string | undefined
         if (!coordinates || !description) return
@@ -155,22 +159,22 @@ export default class MapBubbleComponent extends Vue {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
         }
 
-        map.getCanvas().style.cursor = 'pointer'
-        popup.setLngLat(coordinates).setHTML(description).addTo(map)
+        this.map.getCanvas().style.cursor = 'pointer'
+        popup.setLngLat(coordinates).setHTML(description).addTo(this.map)
       })
 
-      map.on('mouseleave', id, () => {
-        map.getCanvas().style.cursor = ''
+      this.map.on('mouseleave', id, () => {
+        this.map.getCanvas().style.cursor = ''
         popup.remove()
       })
     }
+  }
 
-    // TODO 41 - Merge this aggregation with the above loop
-    if (rezoom) {
-      const coordinates: Array<[number, number]> = this.dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number])
-      if (coordinates.length === 0) return
-      const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-      map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
-    }
+  updateLabels (): void {
+    const targetVisibility = this.mapShowLabels ? 'visible' : 'none'
+    this.map.getStyle().layers
+      ?.map(layer => layer.id)
+      ?.filter(id => LABEL_LAYER_IDS.includes(id))
+      ?.forEach(id => this.map.setLayoutProperty(id, 'visibility', targetVisibility))
   }
 }

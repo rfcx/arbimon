@@ -33,12 +33,12 @@ export default class SpeciesRichnessMaps extends Vue {
     }
   }
 
-  setMapStyle (id: string) {
-    this.mapStyleId = id
-  }
-
   get mapStyle (): string {
     return `mapbox://styles/mapbox/${this.mapStyleId}`
+  }
+
+  setMapStyle (id: string): void {
+    this.mapStyleId = id
   }
 
   mapMoved (config: MapModels.MapConfig): void {
