@@ -26,21 +26,21 @@
           </label>
         </template>
         <button
-          class="py-2 px-4 rounded-l-lg bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none)"
+          class="btn rounded-r-none"
           :class="{ 'bg-brand-primary': mapStyleId === 'satellite-streets-v11' }"
           @click="setMapStyle('satellite-streets-v11')"
         >
           Satellite
         </button>
         <button
-          class="py-2 px-4 rounded-r-lg bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none) mr-2"
+          class="btn rounded-l-none"
           :class="{ 'bg-brand-primary': mapStyleId === 'streets-v11' }"
           @click="setMapStyle('streets-v11')"
         >
           Streets
         </button>
         <button
-          class="btn align-middle"
+          class="btn"
           @click="isShowLabels = !isShowLabels"
         >
           <input
