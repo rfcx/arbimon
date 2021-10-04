@@ -5,6 +5,8 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox.service'
 
+const LABEL_LAYER_IDS = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'settlement-minor-label', 'settlement-major-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label', 'road-label']
+
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: ChartModels.MapDataSet
@@ -81,8 +83,7 @@ export default class MapBubbleComponent extends Vue {
 
   displayLocationLabel (): void {
     const layerIds = this.map.getStyle().layers?.map(i => i.id) ?? []
-    const labelIds = ['country-label', 'state-label', 'settlement-label', 'settlement-subdivision-label', 'settlement-minor-label', 'settlement-major-label', 'airport-label', 'poi-label', 'water-point-label', 'water-line-label', 'natural-point-label', 'natural-line-label', 'waterway-label', 'road-label']
-    const filteredIds = labelIds.filter(l => layerIds.includes(l))
+    const filteredIds = LABEL_LAYER_IDS.filter(l => layerIds.includes(l))
     for (const id of filteredIds) {
       if (this.mapLabel) {
         this.map.setLayoutProperty(id, 'visibility', 'visible')
