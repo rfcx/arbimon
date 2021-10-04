@@ -15,7 +15,7 @@
         />
         <div class="inline-block bg-steel-grey rounded text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
           <div class="bg-steel-grey">
-            <on-click-outside @trigger="close">
+            <on-click-outside @trigger="emitClose">
               <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
                 Build comparison
               </h1>
@@ -116,13 +116,13 @@
               <div class="flex justify-end px-4 py-2 border-t-1">
                 <button
                   class="btn mr-2"
-                  @click="close"
+                  @click="emitClose"
                 >
                   Cancel
                 </button>
                 <button
                   class="btn btn-primary"
-                  @click="apply()"
+                  @click="emitApply()"
                 >
                   Apply
                 </button>

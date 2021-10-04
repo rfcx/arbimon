@@ -8,7 +8,7 @@
         Number of distinct species detected
       </p>
     </div>
-    <comparison-list-component @select="onFilterChange" />
+    <comparison-list-component @emitSelect="onFilterChange" />
     <horizontal-bar-chart-component
       chart-id="species-in-taxonomic-group"
       chart-title="Number of species in each taxonomic group"

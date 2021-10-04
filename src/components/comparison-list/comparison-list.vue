@@ -42,8 +42,8 @@
     <comparison-filter-modal-component
       v-if="isFilterOpen"
       :default-filter="currentSelectedFilter"
-      @apply="apply"
-      @close="popupClose"
+      @emitApply="apply"
+      @emitClose="popupClose"
     />
   </div>
 </template>

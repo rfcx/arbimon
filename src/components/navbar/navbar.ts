@@ -18,19 +18,19 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
 
 export default class NavigationBarComponent extends Vue {
   @VuexService.Auth.user.bind()
-  public user!: Auth0User | undefined
+  user!: Auth0User | undefined
 
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
 
-  public hasToggledMobileMenu = false
-  public hasOpenedProjectSelector = false
+  hasToggledMobileMenu = false
+  hasOpenedProjectSelector = false
 
-  public get selectedProjectName (): string {
+  get selectedProjectName (): string {
     return this.selectedProject?.name ?? 'Select Project'
   }
 
-  public get navMenus (): NavMenu[] {
+  get navMenus (): NavMenu[] {
     const selectedProjectId = this.selectedProject?.id
     return selectedProjectId
       ? [
@@ -46,7 +46,7 @@ export default class NavigationBarComponent extends Vue {
       : []
   }
 
-  public get arbimonLink (): string {
+  get arbimonLink (): string {
     const selectedProjectId = this.selectedProject?.id
     if (!selectedProjectId) return ''
     else return `https://arbimon.rfcx.org/project/${selectedProjectId}` // TODO 17: change this to support staging / production
@@ -54,11 +54,11 @@ export default class NavigationBarComponent extends Vue {
 
   // Menu
 
-  public toggleMobileMenu (): void {
+  toggleMobileMenu (): void {
     this.hasToggledMobileMenu = !this.hasToggledMobileMenu
   }
 
-  public toggleProjectSelector (isOpened: boolean): void {
+  toggleProjectSelector (isOpened: boolean): void {
     this.hasOpenedProjectSelector = isOpened
   }
 }
