@@ -4,7 +4,7 @@
   >
     <div class="flex justify-between items-end mb-1.5">
       <h2 class="text-white text-xl">
-        Number of species detected at each site
+        Distinct species by site
       </h2>
       <div class="taxon-picker mb-2">
         <template
