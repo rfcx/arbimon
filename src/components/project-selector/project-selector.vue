@@ -16,7 +16,7 @@
 
         <div class="inline-block align-bottom bg-steel-grey rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div class="bg-steel-grey px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <on-click-outside @trigger="closeProjectSelector">
+            <on-click-outside @trigger="emitCloseProjectSelector">
               <!-- TODO: implement search box -->
               <div class="text-white text-xl pb-2">
                 Select Project
@@ -38,7 +38,7 @@
               <div class="flex justify-end mt-2">
                 <button
                   class="btn mr-2"
-                  @click="closeProjectSelector"
+                  @click="emitCloseProjectSelector"
                 >
                   Cancel
                 </button>
