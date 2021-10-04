@@ -41,12 +41,12 @@
         </button>
         <button
           class="btn align-middle"
-          @click="displayLabel = !displayLabel"
+          @click="isShowLabels = !isShowLabels"
         >
           <input
             type="checkbox"
             class="mr-2 text-brand-primary focus:(ring-0 outline-none)"
-            :checked="displayLabel"
+            :checked="isShowLabels"
           >
           Labels
         </button>
@@ -72,7 +72,7 @@
         :map-config="config"
         class="w-full h-96 "
         :map-style="mapStyle"
-        :is-show-labels="displayLabel"
+        :is-show-labels="isShowLabels"
         @emitMapMoved="mapMoved"
       />
     </div>

@@ -74,7 +74,7 @@ export default class MapBubbleComponent extends Vue {
     this.map.setStyle(currentStyle)
   }
 
-  @Watch('isShowLabels') onDisplayLabelChange (): void {
+  @Watch('isShowLabels') onShowLabelsChange (): void {
     this.updateLabels()
   }
 
