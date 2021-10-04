@@ -15,7 +15,7 @@ export default class SpeciesRichnessMaps extends Vue {
 
   taxons = TaxonomyModels.TAXONOMIES
   taxon = this.taxons[0].name
-  displayLabel = true
+  isShowLabels = true
   mapStyleId = 'satellite-streets-v11'
 
   config: MapModels.MapConfig = {
