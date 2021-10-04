@@ -45,7 +45,7 @@
         >
           <input
             type="checkbox"
-            class="mr-2 text-brand-primary focus:(ring-0 outline-none)"
+            class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
             :checked="isShowLabels"
           >
           Labels
