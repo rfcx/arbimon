@@ -1,11 +1,17 @@
 import { GeoJSONSource } from 'mapbox-gl'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox.service'
 import { downloadPng } from '@/utils'
+import ExportButtonView from '@/views/export-button.vue'
 
+@Options({
+  components: {
+    ExportButtonView
+  }
+})
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: ChartModels.MapDataSet
@@ -146,8 +152,8 @@ export default class MapBubbleComponent extends Vue {
     }
   }
 
-  downloadPng (): void {
+  downloadMapPng (): void {
     const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng(this.mapId, img)
+    downloadPng(this.mapIdFull, img)
   }
 }
