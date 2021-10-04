@@ -18,9 +18,9 @@ dayjs.extend(utc)
   }
 })
 export default class SpeciesRichnessPage extends Vue {
-  public sites: SiteModels.Site[] = []
+  sites: SiteModels.Site[] = []
 
-  public chartData: ChartModels.GroupedBarChartItem[] = []
+  chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
