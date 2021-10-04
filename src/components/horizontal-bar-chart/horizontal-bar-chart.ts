@@ -2,8 +2,9 @@ import * as d3 from 'd3'
 import { Options, Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { ChartModels } from '@/models'
-import { exportChart } from '@/utils'
+import { ChartModels, ProjectModels } from '@/models'
+import { VuexService } from '@/services'
+import { exportChartWithElement } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
@@ -25,6 +26,9 @@ export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: '' })
   chartTitle!: string
 
+  @VuexService.Project.selectedProject.bind()
+  selectedProject!: ProjectModels.ProjectListItem | undefined
+
   get hasData (): boolean {
     return this.chartData.length > 0
   }
@@ -42,15 +46,16 @@ export default class HorizontalBarChartComponent extends Vue {
 
   renderChart (): void {
     const id = this.chartId
-    const width = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
-    const chart = this.generateChart(width, 'dark')
+    const screenWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
+    const chart = this.generateChart(screenWidth, 'render')
     this.clearChart(id)
-    if (chart) {
-      document.getElementById(id)?.appendChild(chart)
-    }
+    document.getElementById(id)?.appendChild(chart)
   }
 
-  generateChart (width: number, theme: ChartModels.ChartTheme): Element | null {
+  generateChart (width: number, theme: ChartModels.ChartTheme): Element {
+    const fontColor = theme === 'render' ? 'white' : 'black'
+    const margin = theme === 'render' ? MARGIN : { top: 40, right: 40, bottom: 50, left: 100 }
+
     const data = this.chartData
     const dataLength = data.length
     const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
@@ -58,9 +63,9 @@ export default class HorizontalBarChartComponent extends Vue {
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
     const barHeight = dataSeriesLength < 3 ? 30 : 60 / (dataSeriesLength === 0 ? 1 : dataSeriesLength)
     const groupHeight = dataSeriesLength * barHeight /** bar chart group y axis height */
-    const chartWidth = width - MARGIN.left - MARGIN.right
+    const chartWidth = width - margin.left - margin.right
     const chartHeight = (dataLength * groupHeight) + (dataLength * BAR_MARGIN) + (dataLength * GROUP_MARGIN)
-    const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
+    const fullHeight = chartHeight + margin.top + margin.bottom
 
     const svgContainer = document.createElement('div')
     const chart = d3.select(svgContainer)
@@ -69,9 +74,9 @@ export default class HorizontalBarChartComponent extends Vue {
       .append('svg')
       .attr('width', width)
       .attr('height', fullHeight)
-      .attr('class', theme)
+      // .attr('class', theme)
       .append('g')
-      .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`)
+      .attr('transform', `translate(${margin.left},${margin.top})`)
 
     // =================== Scale setting =================
     // x axis scale configuration: d3 calculate the x number rely on maximum frequency (domain) and chart width (range)
@@ -91,7 +96,6 @@ export default class HorizontalBarChartComponent extends Vue {
     // adding x scale to the svg by setting
     svg.append('g')
       .attr('transform', `translate(0, ${chartHeight})`)
-      .attr('class', 'x axis')
       .transition()
       .call(xAxis)
 
@@ -107,9 +111,21 @@ export default class HorizontalBarChartComponent extends Vue {
 
     // adding y scale to the svg by setting
     svg.append('g')
-      .attr('class', 'y axis')
       .transition()
       .call(yAxis)
+
+    // select all x and y matched `domain` class name and set scale stroke to be none (invisible)
+    svg.selectAll('.domain')
+      .style('stroke', 'none')
+
+    // select all x and y matched `text` tag name and set text color and font size
+    svg.selectAll('text')
+      .style('color', fontColor)
+      .style('font-size', '14px')
+
+    // select all x and y matched `line` tag name and set scale line color to be none (invisible)
+    svg.selectAll('line')
+      .style('color', 'none')
 
     // =================== Generate bar group =================
     // select all match `category` class in `g` tag and binding data
@@ -145,6 +161,9 @@ export default class HorizontalBarChartComponent extends Vue {
           const xPosition = width + 4
           category.append('text')
             .text(frequencyValue)
+            .attr('fill', fontColor)
+            .style('color', fontColor)
+            .style('font-size', '14px')
             .attr('width', textSize.width)
             .attr('height', textSize.height)
             // In case the number is too less
@@ -153,7 +172,7 @@ export default class HorizontalBarChartComponent extends Vue {
         }
       })
 
-    return chart.node()
+    return chart.node() as Element
   }
 
   clearChart (id: string): void {
@@ -161,8 +180,18 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   async downloadChart (): Promise<void> {
-    // TODO: 73 improve filename to include selected site / project
-    const filename = this.chartId
-    await exportChart(this.chartId, filename)
+    let filename = `${this.chartId}-${new Date().getTime()}`
+    if (this.selectedProject?.name) {
+      filename = this.selectedProject.name.replace(' ', '-') + '-' + filename
+    }
+
+    const chart = this.generateChart(640, 'light')
+    // TODO: 73 add legend if needed
+
+    // wait for chart to render x & y label
+    setTimeout(() => {
+      // then export
+      void exportChartWithElement(chart, filename)
+    }, 120)
   }
 }

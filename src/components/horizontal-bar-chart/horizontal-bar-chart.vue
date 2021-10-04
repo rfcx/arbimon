@@ -26,23 +26,3 @@
   </div>
 </template>
 <script src="./horizontal-bar-chart.ts" lang="ts"></script>
-
-<style lang="scss">
-  .axis {
-    font: 10px "Lato";
-  }
-
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: none;
-  }
-
-  .dark {
-    color: #ffffff;
-  }
-
-  .light {
-    color: #000000;
-  }
-</style>
