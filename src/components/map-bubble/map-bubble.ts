@@ -28,7 +28,7 @@ export default class MapBubbleComponent extends Vue {
 
   map!: mapboxgl.Map
   mapIsLoading = true
-  emitMapMoves = true
+  shouldEmitMapMoves = true
 
   get mapIdFull (): string { return `map-bubble-${this.mapId}` }
   get hasData (): boolean { return this.dataset.data.length > 0 }
@@ -51,7 +51,7 @@ export default class MapBubbleComponent extends Vue {
         this.generateChartNextTick(false)
       })
       .on('move', () => {
-        if (this.emitMapMoves) this.emitMapMoved()
+        if (this.shouldEmitMapMoves) this.emitMapMoved()
       })
   }
 
@@ -65,10 +65,10 @@ export default class MapBubbleComponent extends Vue {
 
   @Watch('mapConfig') onConfigChange (): void {
     if (this.mapConfig.sourceMapId === this.mapId) return // don't react to self
-    this.emitMapMoves = false // don't emit for sync'd moves
+    this.shouldEmitMapMoves = false // don't emit for sync'd moves
     this.map.setCenter(this.mapConfig.center)
     this.map.setZoom(this.mapConfig.zoom)
-    this.emitMapMoves = true
+    this.shouldEmitMapMoves = true
   }
 
   @Watch('mapStyle') onStyleChange (currentStyle: string): void {
