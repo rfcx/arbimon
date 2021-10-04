@@ -1,12 +1,19 @@
 import { GeoJSONSource } from 'mapbox-gl'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox.service'
+import { downloadPng } from '@/utils'
+import ExportButtonView from '@/views/export-button.vue'
 
 const LABEL_LAYER_IDS = ['tunnel-primary-secondary-tertiary-case', 'tunnel-major-link-case', 'tunnel-motorway-trunk-case', 'tunnel-path', 'tunnel-steps', 'tunnel-major-link', 'tunnel-pedestrian', 'tunnel-primary-secondary-tertiary', 'tunnel-oneway-arrow-blue', 'tunnel-motorway-trunk', 'tunnel-oneway-arrow-white', 'ferry', 'ferry-auto', 'road-pedestrian-case', 'road-street-low', 'road-street-case', 'road-secondary-tertiary-case', 'road-primary-case', 'road-major-link-case', 'road-motorway-trunk-case', 'road-path', 'road-steps', 'road-major-link', 'road-pedestrian', 'road-street', 'road-secondary-tertiary', 'road-primary', 'road-oneway-arrow-blue', 'road-motorway-trunk', 'road-oneway-arrow-white', 'bridge-pedestrian-case', 'bridge-primary-secondary-tertiary-case', 'bridge-major-link-case', 'bridge-motorway-trunk-case', 'bridge-path', 'bridge-steps', 'bridge-major-link', 'bridge-pedestrian', 'bridge-primary-secondary-tertiary', 'bridge-oneway-arrow-blue', 'bridge-motorway-trunk', 'bridge-major-link-2-case', 'bridge-motorway-trunk-2-case', 'bridge-major-link-2', 'bridge-motorway-trunk-2', 'bridge-oneway-arrow-white', 'aerialway', 'admin-1-boundary-bg', 'admin-0-boundary-bg', 'admin-1-boundary', 'admin-0-boundary', 'admin-0-boundary-disputed', 'road-label', 'road-number-shield', 'road-exit-shield', 'waterway-label', 'natural-line-label', 'natural-point-label', 'water-line-label', 'water-point-label', 'poi-label', 'transit-label', 'airport-label', 'settlement-subdivision-label', 'settlement-label', 'state-label', 'country-label']
 
+@Options({
+  components: {
+    ExportButtonView
+  }
+})
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: ChartModels.MapDataSet
@@ -32,7 +39,8 @@ export default class MapBubbleComponent extends Vue {
       style: this.mapStyle,
       center: this.mapConfig.center,
       zoom: this.mapConfig.zoom,
-      attributionControl: false
+      attributionControl: false,
+      preserveDrawingBuffer: true
     })
       .on('load', () => {
         this.mapIsLoading = false
@@ -175,5 +183,10 @@ export default class MapBubbleComponent extends Vue {
       ?.map(layer => layer.id)
       ?.filter(id => LABEL_LAYER_IDS.includes(id))
       ?.forEach(id => this.map.setLayoutProperty(id, 'visibility', targetVisibility))
+  }
+
+  downloadMapPng (): void {
+    const img = this.map.getCanvas().toDataURL('image/png')
+    downloadPng(this.mapIdFull, img)
   }
 }
