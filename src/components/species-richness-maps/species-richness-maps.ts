@@ -5,6 +5,11 @@ import MapBubbleComponent from '@/components/map-bubble/map-bubble.vue'
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/services/mapbox.service'
 
+interface MapOptions {
+  id: string
+  name: string
+}
+
 @Options({
   components: {
     MapBubbleComponent
@@ -31,6 +36,19 @@ export default class SpeciesRichnessMaps extends Vue {
       case 2: case 4: return 2
       default: return 3
     }
+  }
+
+  get mapOptions (): MapOptions[] {
+    return [
+      {
+        id: 'satellite-streets-v11',
+        name: 'Satellite'
+      },
+      {
+        id: 'streets-v11',
+        name: 'Streets'
+      }
+    ]
   }
 
   get mapStyle (): string {
