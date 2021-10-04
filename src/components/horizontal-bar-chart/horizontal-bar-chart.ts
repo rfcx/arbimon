@@ -185,13 +185,13 @@ export default class HorizontalBarChartComponent extends Vue {
       filename = this.selectedProject.name.replace(' ', '-') + '-' + filename
     }
 
-    const chart = this.generateChart(640, 'light')
+    const chart = this.generateChart(640, 'export')
     // TODO: 73 add legend if needed
 
     // wait for chart to render x & y label
     setTimeout(() => {
       // then export
       void exportChartWithElement(chart, filename)
-    }, 120)
+    }, 180)
   }
 }
