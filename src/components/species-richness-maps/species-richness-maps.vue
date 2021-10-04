@@ -46,7 +46,7 @@
         :map-id="idx"
         :map-config="config"
         class="w-full h-96 "
-        @mapMoved="mapMoved"
+        @emitMapMoved="mapMoved"
       />
     </div>
   </div>
