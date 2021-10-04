@@ -11,7 +11,7 @@ import { VuexService } from '@/services'
   components: { OnClickOutside }
 })
 export default class ProjectSelectorComponent extends Vue {
-  @Emit('closeProjectSelector')
+  @Emit()
   emitCloseProjectSelector (): boolean {
     return false
   }
