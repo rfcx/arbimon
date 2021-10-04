@@ -60,7 +60,7 @@ export default class MapBubbleComponent extends Vue {
   }
 
   @Watch('taxon') onTaxonChange (): void {
-    this.generateChartNextTick(false)
+    this.generateChartNextTick(true)
   }
 
   @Watch('mapConfig') onConfigChange (): void {
@@ -101,7 +101,6 @@ export default class MapBubbleComponent extends Vue {
     if (rezoom) {
       this.zoomMap()
     }
-    console.log('generate')
   }
 
   zoomMap (): void {
