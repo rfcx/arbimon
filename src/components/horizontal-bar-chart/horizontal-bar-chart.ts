@@ -23,32 +23,47 @@ export default class HorizontalBarChartComponent extends Vue {
     return this.chartData.length > 0
   }
 
-  @Watch('chartData', { deep: true })
-  onChartDataChange (): void {
-    this.generateGroupedChart()
+  mounted (): void {
+    d3.select(window).on('resize', (e) => {
+      this.renderChart()
+    })
   }
 
-  generateGroupedChart (): void {
+  @Watch('chartData', { deep: true })
+  onChartDataChange (): void {
+    this.renderChart()
+  }
+
+  renderChart (): void {
+    const id = this.chartId
+    const width = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
+    const chart = this.generateChart(width, 'dark')
+    this.clearChart(id)
+    if (chart) {
+      document.getElementById(id)?.appendChild(chart)
+    }
+  }
+
+  generateChart (width: number, theme: ChartModels.ChartTheme): Element | null {
     const data = this.chartData
     const dataLength = data.length
     const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
 
     const maximumFrequency = Math.max(...data.map(d => Math.max(...d.series.map(v => v.frequency))))
-
     const barHeight = dataSeriesLength < 3 ? 30 : 60 / (dataSeriesLength === 0 ? 1 : dataSeriesLength)
     const groupHeight = dataSeriesLength * barHeight /** bar chart group y axis height */
-    const fullWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
-    const chartWidth = fullWidth - MARGIN.left - MARGIN.right
+    const chartWidth = width - MARGIN.left - MARGIN.right
     const chartHeight = (dataLength * groupHeight) + (dataLength * BAR_MARGIN) + (dataLength * GROUP_MARGIN)
     const fullHeight = chartHeight + MARGIN.top + MARGIN.bottom
 
-    const chart: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> = d3.select(`#${this.chartId}`)
-    chart.selectAll('*').remove()
+    const svgContainer = document.createElement('div')
+    const chart = d3.select(svgContainer)
 
     const svg = chart
       .append('svg')
-      .attr('width', fullWidth)
+      .attr('width', width)
       .attr('height', fullHeight)
+      .attr('class', theme)
       .append('g')
       .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`)
 
@@ -70,6 +85,7 @@ export default class HorizontalBarChartComponent extends Vue {
     // adding x scale to the svg by setting
     svg.append('g')
       .attr('transform', `translate(0, ${chartHeight})`)
+      .attr('class', 'x axis')
       .transition()
       .call(xAxis)
 
@@ -85,21 +101,9 @@ export default class HorizontalBarChartComponent extends Vue {
 
     // adding y scale to the svg by setting
     svg.append('g')
+      .attr('class', 'y axis')
       .transition()
       .call(yAxis)
-
-    // select all x and y matched `domain` class name and set scale stroke to be none (invisible)
-    svg.selectAll('.domain')
-      .style('stroke', 'none')
-
-    // select all x and y matched `text` tag name and set text color and font size
-    svg.selectAll('text')
-      .style('color', 'white')
-      .style('font-size', '14px')
-
-    // select all x and y matched `line` tag name and set scale line color to be none (invisible)
-    svg.selectAll('line')
-      .style('color', 'none')
 
     // =================== Generate bar group =================
     // select all match `category` class in `g` tag and binding data
@@ -135,7 +139,6 @@ export default class HorizontalBarChartComponent extends Vue {
           const xPosition = width + 4
           category.append('text')
             .text(frequencyValue)
-            .attr('fill', 'white')
             .attr('width', textSize.width)
             .attr('height', textSize.height)
             // In case the number is too less
@@ -143,6 +146,12 @@ export default class HorizontalBarChartComponent extends Vue {
             .attr('y', y + (barHeight / 2) + 5)
         }
       })
+
+    return chart.node()
+  }
+
+  clearChart (id: string): void {
+    d3.select(`#${id}`).selectAll('*').remove()
   }
 
   async downloadChart (): Promise<void> {
