@@ -1,14 +1,20 @@
 import * as d3 from 'd3'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
 import { exportChart } from '@/utils'
+import ExportButtonView from '@/views/export-button.vue'
 
 const MARGIN = { top: 20, right: 20, bottom: 30, left: 80 }
 const GROUP_MARGIN = 20
 const BAR_MARGIN = 2
 
+@Options({
+  components: {
+    ExportButtonView
+  }
+})
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] })
   public chartData!: ChartModels.GroupedBarChartItem[]
