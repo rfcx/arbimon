@@ -73,7 +73,7 @@
         class="w-full h-96 "
         :map-style="mapStyle"
         :map-show-labels="displayLabel"
-        @mapMoved="mapMoved"
+        @emitMapMoved="mapMoved"
       />
     </div>
   </div>
