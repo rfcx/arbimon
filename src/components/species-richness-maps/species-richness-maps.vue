@@ -25,20 +25,23 @@
             {{ a.symbol }}
           </label>
         </template>
-        <button
-          class="btn rounded-r-none"
-          :class="{ 'bg-brand-primary': mapStyleId === 'satellite-streets-v11' }"
-          @click="setMapStyle('satellite-streets-v11')"
+        <template
+          v-for="(item, idx) in mapOptions"
+          :key="item.id"
         >
-          Satellite
-        </button>
-        <button
-          class="btn rounded-l-none"
-          :class="{ 'bg-brand-primary': mapStyleId === 'streets-v11' }"
-          @click="setMapStyle('streets-v11')"
-        >
-          Streets
-        </button>
+          <button
+            class="btn"
+            :class="{
+              'bg-brand-primary': mapStyleId === item.id,
+              'rounded-r-none': idx === 0,
+              'rounded-l-none': idx === mapOptions.length - 1,
+              'mr-2': idx === mapOptions.length - 1
+            }"
+            @click="setMapStyle(item.id)"
+          >
+            {{ item.name }}
+          </button>
+        </template>
         <button
           class="btn"
           @click="isShowLabels = !isShowLabels"
