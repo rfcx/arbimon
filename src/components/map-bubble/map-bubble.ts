@@ -13,7 +13,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() taxon!: string
   @Prop() mapConfig!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
-  @Prop({ default: true }) mapLabel!: boolean
+  @Prop({ default: true }) mapShowLabels!: boolean
 
   @Emit() emitMapMoved (): MapModels.MapConfig {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
@@ -67,7 +67,7 @@ export default class MapBubbleComponent extends Vue {
     })
   }
 
-  @Watch('mapLabel') onDisplayLabelChange (): void {
+  @Watch('mapShowLabels') onDisplayLabelChange (): void {
     this.displayLocationLabel()
   }
 
@@ -85,7 +85,7 @@ export default class MapBubbleComponent extends Vue {
     const layerIds = this.map.getStyle().layers?.map(i => i.id) ?? []
     const filteredIds = LABEL_LAYER_IDS.filter(l => layerIds.includes(l))
     for (const id of filteredIds) {
-      if (this.mapLabel) {
+      if (this.mapShowLabels) {
         this.map.setLayoutProperty(id, 'visibility', 'visible')
       } else {
         this.map.setLayoutProperty(id, 'visibility', 'none')
