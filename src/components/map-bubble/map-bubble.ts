@@ -1,10 +1,17 @@
 import { GeoJSONSource } from 'mapbox-gl'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox.service'
+import { downloadPng } from '@/utils'
+import ExportButtonView from '@/views/export-button.vue'
 
+@Options({
+  components: {
+    ExportButtonView
+  }
+})
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: ChartModels.MapDataSet
@@ -28,7 +35,9 @@ export default class MapBubbleComponent extends Vue {
       container: this.mapIdFull,
       style: this.mapStyle,
       center: this.mapConfig.center,
-      zoom: this.mapConfig.zoom
+      zoom: this.mapConfig.zoom,
+      attributionControl: false,
+      preserveDrawingBuffer: true
     })
       .on('load', () => {
         this.mapIsLoading = false
@@ -141,5 +150,10 @@ export default class MapBubbleComponent extends Vue {
       const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
       map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
     }
+  }
+
+  downloadMapPng (): void {
+    const img = this.map.getCanvas().toDataURL('image/png')
+    downloadPng(this.mapIdFull, img)
   }
 }
