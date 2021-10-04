@@ -44,15 +44,10 @@ export default class MapBubbleComponent extends Vue {
     })
       .on('load', () => {
         this.mapIsLoading = false
-        this.map.resize()
         this.generateChartNextTick()
       })
-      .on('style.load', () => {
-        this.generateChartNextTick(false)
-      })
-      .on('move', () => {
-        if (!this.isSynchronizingMapPosition) this.emitMapMoved()
-      })
+      .on('style.load', () => { this.generateChartNextTick(false) })
+      .on('move', () => { if (!this.isSynchronizingMapPosition) this.emitMapMoved() })
   }
 
   @Watch('dataset', { deep: true }) onDataChange (): void {
@@ -60,7 +55,7 @@ export default class MapBubbleComponent extends Vue {
   }
 
   @Watch('taxon') onTaxonChange (): void {
-    this.generateChartNextTick(true)
+    this.generateChartNextTick(false)
   }
 
   @Watch('mapConfig') onConfigChange (): void {
@@ -96,19 +91,10 @@ export default class MapBubbleComponent extends Vue {
   generateChart (rezoom = true): void {
     if (this.mapIsLoading || !this.hasData) return
 
+    this.map.resize()
     this.updateSourcesAndLayer()
     this.updateLabels()
-    if (rezoom) {
-      this.zoomMap()
-    }
-  }
-
-  zoomMap (): void {
-    // TODO 41 - Merge this aggregation with the above loop
-    const coordinates: Array<[number, number]> = this.dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number])
-    if (coordinates.length === 0) return
-    const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-    this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
+    if (rezoom) { void this.$nextTick(() => this.zoomMap()) }
   }
 
   updateSourcesAndLayer (): void {
@@ -182,6 +168,14 @@ export default class MapBubbleComponent extends Vue {
       ?.map(layer => layer.id)
       ?.filter(id => LABEL_LAYER_IDS.includes(id))
       ?.forEach(id => this.map.setLayoutProperty(id, 'visibility', targetVisibility))
+  }
+
+  zoomMap (): void {
+    // TODO 41 - Merge this aggregation with the above loop
+    const coordinates: Array<[number, number]> = this.dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number])
+    if (coordinates.length === 0) return
+    const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+    this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
   }
 
   downloadMapPng (): void {
