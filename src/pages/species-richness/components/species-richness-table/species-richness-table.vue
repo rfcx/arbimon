@@ -1,31 +1,31 @@
 <template>
   <div>
-    <h2 class="text-white text-xl">
+    <h2 class="text-white text-xl mb-1.5">
       Top species in each dataset
     </h2>
-    <div class="table border-2 border-white border-collapse">
+    <div class="table w-full">
       <div class="table-header-group">
         <div class="table-row">
-          <div class="table-cell border-1 border-white">
+          <div class="table-cell font-bold border-b">
             Species name
           </div>
-          <div class="table-cell border-1 border-white">
+          <div class="table-cell font-bold border-b">
             Class
           </div>
-          <div class="table-cell border-1 border-white">
+          <div class="table-cell font-bold border-b">
             DS1
           </div>
         </div>
       </div>
       <div class="table-row-group">
         <div class="table-row">
-          <div class="table-cell border-1 border-white">
+          <div class="table-cell">
             Pigion
           </div>
-          <div class="table-cell border-1 border-white">
+          <div class="table-cell">
             Birds
           </div>
-          <div class="table-cell border-1 border-white">
+          <div class="table-cell">
             3
           </div>
         </div>
