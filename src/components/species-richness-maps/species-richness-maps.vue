@@ -72,7 +72,7 @@
         :map-config="config"
         class="w-full h-96 "
         :map-style="mapStyle"
-        :map-show-labels="displayLabel"
+        :is-show-labels="displayLabel"
         @emitMapMoved="mapMoved"
       />
     </div>
