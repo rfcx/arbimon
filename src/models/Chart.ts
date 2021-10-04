@@ -1,3 +1,4 @@
+export type ChartTheme = 'light' | 'dark'
 
 export interface ChartSVGElement {
   svg: SVGSVGElement
