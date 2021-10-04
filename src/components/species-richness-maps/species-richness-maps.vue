@@ -40,10 +40,15 @@
           Streets
         </button>
         <button
-          class="btn"
+          class="btn align-middle"
           @click="displayLabel = !displayLabel"
         >
-          <span v-if="displayLabel">✔️</span> Show label
+          <input
+            type="checkbox"
+            class="mr-2 text-brand-primary focus:(ring-0 outline-none)"
+            :checked="displayLabel"
+          >
+          Labels
         </button>
       </div>
     </div>
