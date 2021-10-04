@@ -7,6 +7,7 @@ import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horiz
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SpeciesService } from '@/services'
+import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
 dayjs.extend(utc)
 
@@ -14,7 +15,8 @@ dayjs.extend(utc)
   components: {
     ComparisonListComponent,
     HorizontalBarChartComponent,
-    SpeciesRichnessMaps
+    SpeciesRichnessMaps,
+    SpeciesRichnessTable
   }
 })
 export default class SpeciesRichnessPage extends Vue {
