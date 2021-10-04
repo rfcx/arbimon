@@ -75,7 +75,8 @@ export default class SpeciesRichnessPage extends Vue {
 
   async getTableData (filters: SpeciesRichnessFilter[]): Promise<void> {
     const speciesItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getSpeciesTableData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
-    const speciesNames = new Set(speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, speciesClassname: c.speciesClassname }))))
+    // const speciesNames = new Set(speciesItems.flatMap(i => i.map(c => c.speciesName)))
+    const speciesNames = speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, speciesClassname: c.speciesClassname }))).filter((d, idx, arr) => arr.findIndex(obj => obj.speciesName === d.speciesName) === idx)
     const rawData: any = []
     speciesNames.forEach(({ speciesName, speciesClassname }) => {
       const tableData: any = {
@@ -85,10 +86,7 @@ export default class SpeciesRichnessPage extends Vue {
       for (const [idx, item] of speciesItems.entries()) {
         const datasetName = `DS ${idx}`
         const matchedData = item.find(d => d.speciesName === speciesName)
-        // const matchedSpeciesGroup = rawData.find(s => s.speciesName === speciesName)
-        // if (matchedSpeciesGroup && matchedData) {
-        //   tableData[datasetName] = matchedData?.frequency ?? 0
-        // }
+        tableData[datasetName] = matchedData?.frequency ?? 0
       }
       rawData.push(tableData)
     })
