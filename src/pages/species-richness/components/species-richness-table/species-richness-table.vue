@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="text-white text-xl mb-1.5">
-      Top species in each dataset
+      Species in each dataset
     </h2>
     <div class="table w-full">
       <div class="table-header-group">
