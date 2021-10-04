@@ -8,10 +8,15 @@
     </div>
     <div
       v-show="hasData"
+      class="relative"
     >
       <div
         :id="mapIdFull"
         class="w-full h-96 text-black"
+      />
+      <export-button-view
+        class="absolute top-2 right-2"
+        @click="downloadMapPng()"
       />
     </div>
   </div>
