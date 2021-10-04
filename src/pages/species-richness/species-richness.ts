@@ -5,7 +5,7 @@ import { Options, Vue } from 'vue-class-component'
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
-import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
+import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
@@ -24,6 +24,7 @@ export default class SpeciesRichnessPage extends Vue {
 
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
+  tableData: TaxonomyModels.SpeciesPopulation[][] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     await this.getBarChartDataset(filters)
@@ -73,6 +74,6 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   async getTableData (filters: SpeciesRichnessFilter[]): Promise<void> {
-
+    const speciesItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getSpeciesTableData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
   }
 }
