@@ -26,6 +26,12 @@ export default class SpeciesRichnessPage extends Vue {
   mapDatasets: ChartModels.MapDataSet[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
+    await this.getBarChartDataset(filters)
+    await this.getMapDataset(filters)
+    await this.getTableData(filters)
+  }
+
+  async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<void> {
     const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
     const chartItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => {
       const start = startDate.toISOString()
@@ -56,11 +62,17 @@ export default class SpeciesRichnessPage extends Vue {
     })
 
     this.chartData = Object.values(groupedItems).sort((a, b) => a.group.localeCompare(b.group))
+  }
 
+  async getMapDataset (filters: SpeciesRichnessFilter[]): Promise<void> {
     // TODO 41 - Merge this with the above once Nutto's branch is merged
     this.mapDatasets = filters.map(({ startDate, endDate, sites, color }) => ({
       color,
       data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })
     }))
+  }
+
+  async getTableData (filters: SpeciesRichnessFilter[]): Promise<void> {
+
   }
 }
