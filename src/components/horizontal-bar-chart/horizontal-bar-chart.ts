@@ -18,7 +18,7 @@ export default class HorizontalBarChartComponent extends Vue {
   chartData!: ChartModels.GroupedBarChartItem[]
 
   @Prop({ default: 'chart' })
-  chartId!: string
+  domId!: string
 
   @Prop({ default: '' })
   chartTitle!: string
@@ -31,7 +31,7 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   mounted (): void {
-    d3.select(window).on('resize', (e) => {
+    d3.select(`${this.domId}`).on('resize', (e) => {
       this.renderChart()
     })
   }
@@ -42,7 +42,7 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   renderChart (): void {
-    const id = this.chartId
+    const id = this.domId
     const screenWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
     const config = {
       width: screenWidth,
@@ -50,16 +50,16 @@ export default class HorizontalBarChartComponent extends Vue {
       fontColor: 'white'
     }
     const chart = generateChart(this.chartData, config)
+    if (!chart) return
     clearChart(id)
     document.getElementById(id)?.appendChild(chart)
   }
 
   async downloadChart (): Promise<void> {
     // TODO: 108 Update export filename (refactor and move this to util file)
-    let filename = `${this.chartId}-${new Date().getTime()}`
-    if (this.selectedProject?.name) {
-      filename = this.selectedProject.name.replace(' ', '-') + '-' + filename
-    }
+    const filenameSuffix = `${this.domId}-${new Date().getTime()}`
+    const projectName = this.selectedProject?.name
+    const filename = projectName ? projectName.replace(' ', '-') + '-' + filenameSuffix : filenameSuffix
 
     const config = {
       width: 1024,
@@ -67,6 +67,7 @@ export default class HorizontalBarChartComponent extends Vue {
       fontColor: 'black'
     }
     const chart = generateChart(this.chartData, config)
+    if (!chart) return
 
     // TODO: 109 add legend if needed
     // TODO: 107 function to compute shortname of dataset to add to legend
