@@ -25,7 +25,7 @@
           <div
             v-for="(column, cidx) in Object.values(row)"
             :key="'species-table-column-' + cidx"
-            class="table-cell"
+            class="table-cell py-1"
             :class="{ 'text-center': cidx !== 0 }"
           >
             <span class="capitalize">{{ column }}</span>

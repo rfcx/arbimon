@@ -91,6 +91,6 @@ export default class SpeciesRichnessPage extends Vue {
       }
       tableData.push(data)
     })
-    this.tableData = tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total)
+    this.tableData = tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total || (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
   }
 }
