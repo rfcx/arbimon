@@ -27,3 +27,9 @@ export interface MapSiteData {
   latitude: number
   distinctSpecies: { [taxonName: string]: number }
 }
+
+export interface TableData {
+  speciesName: string
+  speciesClassname: string
+  [datasetName: string]: string | number
+}
