@@ -1,8 +1,8 @@
 <template>
-  <button class="btn btn-icon">
+  <button class="btn btn-icon flex flex-row">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      class="h-4 w-4"
+      class="h-4 w-4 self-center"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -14,5 +14,6 @@
         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
       />
     </svg>
+    <slot name="label" />
   </button>
 </template>
