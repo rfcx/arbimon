@@ -18,5 +18,4 @@
 * **features:** Map of species count by site (#41)
 * **features:** Map to be export as png (#86)
 * **features:** Map style toggle (#88)
-
-* **improvements:** Bar chart support responsive (#61)
+* **features:** Bar chart support responsive (#61)
