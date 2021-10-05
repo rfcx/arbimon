@@ -5,7 +5,7 @@ import { Options, Vue } from 'vue-class-component'
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
-import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
+import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SpeciesService } from '@/services'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
@@ -24,7 +24,7 @@ export default class SpeciesRichnessPage extends Vue {
 
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
-  tableData: TaxonomyModels.SpeciesPopulation[][] = []
+  tableData: ChartModels.TableData[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     await this.getBarChartDataset(filters)
@@ -75,21 +75,20 @@ export default class SpeciesRichnessPage extends Vue {
 
   async getTableData (filters: SpeciesRichnessFilter[]): Promise<void> {
     const speciesItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getSpeciesTableData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
-    // const speciesNames = new Set(speciesItems.flatMap(i => i.map(c => c.speciesName)))
     const speciesNames = speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, speciesClassname: c.speciesClassname }))).filter((d, idx, arr) => arr.findIndex(obj => obj.speciesName === d.speciesName) === idx)
-    const rawData: any = []
+    const tableData: ChartModels.TableData[] = []
     speciesNames.forEach(({ speciesName, speciesClassname }) => {
-      const tableData: any = {
+      const data: ChartModels.TableData = {
         speciesName,
         speciesClassname
       }
       for (const [idx, item] of speciesItems.entries()) {
         const datasetName = `DS ${idx}`
         const matchedData = item.find(d => d.speciesName === speciesName)
-        tableData[datasetName] = matchedData?.frequency ?? 0
+        data[datasetName] = matchedData?.frequency ?? 0
       }
-      rawData.push(tableData)
+      tableData.push(data)
     })
-    console.log('check', rawData)
+    this.tableData = tableData.sort((a, b) => (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
   }
 }

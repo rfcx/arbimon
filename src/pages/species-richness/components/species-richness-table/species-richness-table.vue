@@ -7,34 +7,38 @@
       <div class="table-header-group">
         <div class="table-row">
           <div
-            v-for="(title,idx) in tableHeader"
+            v-for="(title, idx) in tableHeader"
             :key="'species-table-header-' + idx"
             class="table-cell font-bold border-b"
+            :class="{ 'text-center': idx !== 0 }"
           >
             {{ title }}
           </div>
         </div>
       </div>
       <div class="table-row-group">
-        <!-- <div class="table-row">
-          <div class="table-cell">
-            Pigion
+        <div
+          v-for="(row, ridx) in datasets"
+          :key="'species-table-row-' + ridx"
+          class="table-row"
+        >
+          <div
+            v-for="(column, cidx) in Object.values(row)"
+            :key="'species-table-column-' + cidx"
+            class="table-cell"
+            :class="{ 'text-center': cidx !== 0 }"
+          >
+            <span class="capitalize">{{ column }}</span>
           </div>
-          <div class="table-cell">
-            Birds
-          </div>
-          <div class="table-cell">
-            3
-          </div>
-        </div> -->
+        </div>
       </div>
     </div>
-    <div
-      v-if="hasNoData"
-      class="flex justify-center text-secondary mt-2"
-    >
-      No data
-    </div>
+  </div>
+  <div
+    v-if="!hasData"
+    class="flex justify-center text-secondary mt-2"
+  >
+    No data
   </div>
 </template>
 <script lang="ts" src="./species-richness-table.ts"></script>
