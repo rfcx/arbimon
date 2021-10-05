@@ -1,5 +1,3 @@
-export type ChartTheme = 'export' | 'render'
-
 export interface ChartSVGElement {
   svg: SVGSVGElement
   width: number

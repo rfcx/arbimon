@@ -17,9 +17,6 @@ export interface BarChartConfig {
 }
 
 export const generateChart = (data: ChartModels.GroupedBarChartItem[], config: BarChartConfig): Element | null => {
-  // const fontColor = theme === 'render' ? 'white' : 'black'
-  // const margin = theme === 'render' ? MARGIN : { top: 40, right: 40, bottom: 50, left: 100 }
-
   const dataLength = data.length
   const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
 
@@ -30,14 +27,12 @@ export const generateChart = (data: ChartModels.GroupedBarChartItem[], config: B
   const chartHeight = (dataLength * groupHeight) + (dataLength * BAR_MARGIN) + (dataLength * GROUP_MARGIN)
   const fullHeight = chartHeight + config.margins.top + config.margins.bottom
 
-  const svgContainer = document.createElement('div')
-  const chart = d3.select(svgContainer)
+  const chart = d3.create('div')
 
   const svg = chart
     .append('svg')
     .attr('width', config.width)
     .attr('height', fullHeight)
-    // .attr('class', theme)
     .append('g')
     .attr('transform', `translate(${config.margins.left},${config.margins.top})`)
 
