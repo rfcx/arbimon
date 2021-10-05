@@ -17,3 +17,4 @@
 * **features:** Getting the comparison filter box ready for chart data (#59)
 * **features:** Map of species count by site (#41)
 * **features:** Map to be export as png (#86)
+* **features:** Table - list species name in the table(#82)
