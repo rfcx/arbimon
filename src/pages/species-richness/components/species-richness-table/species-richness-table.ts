@@ -16,8 +16,6 @@ export default class SpeciesRichnessTable extends Vue {
       headers.push(...Object.keys(this.datasets[0]).filter(k => !['speciesName', 'speciesClassname'].includes(k)))
     }
 
-    console.log(headers)
-
     return headers
   }
 
