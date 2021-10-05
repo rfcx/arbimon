@@ -39,7 +39,6 @@ export default class SpeciesRichnessTable extends Vue {
     const filename = 'report.csv'
     const workbook = XLSX.utils.book_new()
     const worksheet = XLSX.utils.json_to_sheet(this.reportData)
-    // XLSX.utils.sheet_to_csv(worksheet)
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Species Report')
     XLSX.writeFile(workbook, filename, { bookType: 'csv' })
   }
