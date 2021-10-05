@@ -11,6 +11,9 @@
     :datasets="mapDatasets"
     class="mt-5"
   />
-  <line-chart-component class="mt-5" />
+  <line-chart-component
+    :dom-id="'TODO20'"
+    class="mt-5"
+  />
 </template>
 <script src="./species-richness.ts" lang="ts"></script>

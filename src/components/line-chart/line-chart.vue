@@ -18,9 +18,8 @@
     </div>
     <div
       v-show="hasData"
-    >
-      LINE CHART
-    </div>
+      :id="domId"
+    />
   </div>
 </template>
 <script src="./line-chart.ts" lang="ts"></script>
