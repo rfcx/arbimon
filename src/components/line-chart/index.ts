@@ -19,9 +19,6 @@ export interface LineChartSeries {
 export const generateChart = (xSeries: number[], datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   // Prepare data
   const maxY = datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)
-  // TODO 20: Loop all datasets
-  const dataset = datasets[0]
-  const data = dataset.data
 
   // Setup axes
   const xScale = d3.scaleLinear()
@@ -51,24 +48,28 @@ export const generateChart = (xSeries: number[], datasets: LineChartSeries[], co
   svg.append('g').call(yAxis)
 
   // Render lines
-  const line = d3.line<number>()
-    .defined(d => d in data)
-    .x(x => xScale(x))
-    .y(x => yScale(data[x] ?? NaN))
+  datasets.forEach((dataset) => {
+    const data = dataset.data
 
-  svg.append('path')
-    .datum(xSeries.filter(line.defined()))
-    .attr('d', line)
-    .attr('stroke', '#999')
-    .attr('stroke-width', 1)
-    .style('stroke-dasharray', ('3, 3'))
-    .style('opacity', 50)
+    const line = d3.line<number>()
+      .defined(d => d in data)
+      .x(x => xScale(x))
+      .y(x => yScale(data[x] ?? NaN))
 
-  svg.append('path')
-    .datum(xSeries)
-    .attr('d', line)
-    .attr('stroke', dataset.color)
-    .attr('stroke-width', 3)
+    svg.append('path')
+      .datum(xSeries.filter(line.defined()))
+      .attr('d', line)
+      .attr('stroke', '#999')
+      .attr('stroke-width', 1)
+      .style('stroke-dasharray', ('3, 3'))
+      .style('opacity', 50)
+
+    svg.append('path')
+      .datum(xSeries)
+      .attr('d', line)
+      .attr('stroke', dataset.color)
+      .attr('stroke-width', 3)
+  })
 
   return svg.node()
 }
