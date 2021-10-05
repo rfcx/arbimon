@@ -4,7 +4,10 @@
       <h2 class="text-white text-xl">
         Species in each dataset
       </h2>
-      <export-button-view v-if="hasData">
+      <export-button-view
+        v-if="hasReportData"
+        @click="exportCSVReport()"
+      >
         <template #label>
           <div class="ml-2">
             download csv
@@ -44,7 +47,7 @@
     </div>
   </div>
   <div
-    v-if="!hasData"
+    v-if="!hasTableData"
     class="flex justify-center text-secondary mt-2"
   >
     No data
