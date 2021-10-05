@@ -80,15 +80,17 @@ export default class SpeciesRichnessPage extends Vue {
     speciesNames.forEach(({ speciesName, speciesClassname }) => {
       const data: ChartModels.TableData = {
         speciesName,
-        speciesClassname
+        speciesClassname,
+        total: 0
       }
       for (const [idx, item] of speciesItems.entries()) {
         const datasetName = `DS ${idx}`
         const matchedData = item.find(d => d.speciesName === speciesName)
         data[datasetName] = matchedData?.frequency ?? 0
+        data.total = data.total + (matchedData?.frequency ?? 0)
       }
       tableData.push(data)
     })
-    this.tableData = tableData.sort((a, b) => (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
+    this.tableData = tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total)
   }
 }

@@ -12,7 +12,7 @@
             class="table-cell font-bold border-b"
             :class="{ 'text-center': idx !== 0 }"
           >
-            {{ title }}
+            <span class="capitalize">{{ title }}</span>
           </div>
         </div>
       </div>
