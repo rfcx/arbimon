@@ -1,7 +1,14 @@
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
+import ExportButtonView from '@/views/export-button.vue'
+
+@Options({
+  components: {
+    ExportButtonView
+  }
+})
 
 export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) tableData!: ChartModels.TableData[]

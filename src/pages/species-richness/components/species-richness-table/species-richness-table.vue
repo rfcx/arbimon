@@ -1,8 +1,17 @@
 <template>
   <div class="mt-5">
-    <h2 class="text-white text-xl mb-1.5">
-      Species in each dataset
-    </h2>
+    <div class="flex justify-between items-end mb-1.5">
+      <h2 class="text-white text-xl">
+        Species in each dataset
+      </h2>
+      <export-button-view v-if="hasData">
+        <template #label>
+          <div class="ml-2">
+            download csv
+          </div>
+        </template>
+      </export-button-view>
+    </div>
     <div class="table w-full">
       <div class="table-header-group">
         <div class="table-row">
