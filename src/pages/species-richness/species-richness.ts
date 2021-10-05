@@ -25,11 +25,13 @@ export default class SpeciesRichnessPage extends Vue {
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
   tableData: ChartModels.TableData[] = []
+  reportData: ReportData[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     await this.getBarChartDataset(filters)
     await this.getMapDataset(filters)
     await this.getTableData(filters)
+    await this.getReportData(filters)
   }
 
   async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<void> {
@@ -93,4 +95,35 @@ export default class SpeciesRichnessPage extends Vue {
     })
     this.tableData = tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total || (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
   }
+
+  async getReportData (filters: SpeciesRichnessFilter[]): Promise<void> {
+    const rawDetections = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getDetections({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
+    this.reportData = rawDetections.flat().map(d => {
+      const { speciesName, siteName, latitude, longitude, date, hour } = d
+      const newDate = dayjs.utc(date)
+      return {
+        species: speciesName,
+        site: siteName,
+        latitude,
+        longitude,
+        day: newDate.format('D'),
+        month: newDate.format('M'),
+        year: newDate.format('YYYY'),
+        date: newDate.format('M/DD/YYYY'),
+        hour
+      }
+    })
+  }
+}
+
+export interface ReportData {
+  species: string
+  site: string
+  latitude: number
+  longitude: number
+  day: string
+  month: string
+  year: string
+  date: string
+  hour: number
 }
