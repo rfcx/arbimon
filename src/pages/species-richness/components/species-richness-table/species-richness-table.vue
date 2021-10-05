@@ -18,7 +18,7 @@
       </div>
       <div class="table-row-group">
         <div
-          v-for="(row, ridx) in datasets"
+          v-for="(row, ridx) in tableData"
           :key="'species-table-row-' + ridx"
           class="table-row"
         >

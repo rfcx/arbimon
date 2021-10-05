@@ -4,7 +4,7 @@ import { Prop } from 'vue-property-decorator'
 import { ChartModels } from '@/models'
 
 export default class SpeciesRichnessTable extends Vue {
-  @Prop({ default: [] }) datasets!: ChartModels.TableData[]
+  @Prop({ default: [] }) tableData!: ChartModels.TableData[]
 
   get tableHeader (): string[] {
     const headers = [
@@ -13,13 +13,13 @@ export default class SpeciesRichnessTable extends Vue {
     ]
 
     if (this.hasData) {
-      headers.push(...Object.keys(this.datasets[0]).filter(k => !['speciesName', 'speciesClassname'].includes(k)))
+      headers.push(...Object.keys(this.tableData[0]).filter(k => !['speciesName', 'speciesClassname'].includes(k)))
     }
 
     return headers
   }
 
   get hasData (): boolean {
-    return this.datasets.length > 0
+    return this.tableData.length > 0
   }
 }
