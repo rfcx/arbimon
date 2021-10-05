@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <h2 class="text-white text-xl mb-1.5">
       Species in each dataset
     </h2>

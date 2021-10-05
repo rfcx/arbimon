@@ -19,10 +19,7 @@
       :datasets="mapDatasets"
       class="mt-5"
     />
-    <species-richness-table
-      :datasets="tableData"
-      class="mt-5"
-    />
+    <species-richness-table :datasets="tableData" />
   </div>
 </template>
 <script src="./species-richness.ts" lang="ts"></script>
