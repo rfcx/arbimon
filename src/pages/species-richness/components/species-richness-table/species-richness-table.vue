@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5">
     <h2 class="text-white text-xl mb-1.5">
-      Species in each dataset
+      Detected Species
     </h2>
     <table class="w-full">
       <thead>
