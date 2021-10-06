@@ -10,3 +10,9 @@ export interface Species {
   speciesId: number
   speciesName: string
 }
+
+export interface SpeciesPopulation {
+  speciesName: string
+  className: string
+  frequency: number
+}
