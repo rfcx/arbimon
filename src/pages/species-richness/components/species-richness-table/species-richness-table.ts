@@ -7,7 +7,6 @@ export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) tableData!: ChartModels.TableData[]
 
   get tableHeader (): string[] {
-    console.log(this.tableData)
     return [
       'Species',
       'Class',
