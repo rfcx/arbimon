@@ -80,12 +80,12 @@ export default class SpeciesRichnessPage extends Vue {
 
   async getTableData (filters: SpeciesRichnessFilter[]): Promise<ChartModels.TableData[]> {
     const speciesItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getSpeciesTableData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
-    const speciesNames = speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, speciesClassname: c.speciesClassname }))).filter((d, idx, arr) => arr.findIndex(obj => obj.speciesName === d.speciesName) === idx)
+    const speciesNames = speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, className: c.className }))).filter((d, idx, arr) => arr.findIndex(obj => obj.speciesName === d.speciesName) === idx)
     const tableData: ChartModels.TableData[] = []
-    speciesNames.forEach(({ speciesName, speciesClassname }) => {
+    speciesNames.forEach(({ speciesName, className }) => {
       const data: ChartModels.TableData = {
         speciesName,
-        speciesClassname,
+        className,
         total: 0
       }
       for (const [idx, item] of speciesItems.entries()) {
@@ -96,6 +96,6 @@ export default class SpeciesRichnessPage extends Vue {
       }
       tableData.push(data)
     })
-    return tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total || (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
+    return tableData.map(({ speciesName, className, total, ...datasets }) => ({ speciesName, className, ...datasets, total })).sort((a, b) => b.total - a.total || (a.className + a.speciesName).localeCompare(b.className + b.speciesName))
   }
 }
