@@ -30,7 +30,7 @@ export interface MapSiteData {
 
 export interface TableData {
   speciesName: string
-  speciesClassname: string
+  className: string
   total: number
   [datasetName: string]: string | number
 }

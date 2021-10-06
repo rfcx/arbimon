@@ -32,7 +32,6 @@ const rootActions: ActionTree<RootState, RootState> = {
     // TODO 17 - Make this conditional on build mode (dev, staging, prod)
     // TODO 65 - Replace this with a mock service
     const projects = user ? [...await ProjectService.getProjects(), { id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }] : []
-    // const projects = [{ id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }]
     commit(MUTATIONS.root.updateProjects, projects)
 
     const selectedProject = projects.length > 0 ? projects[0] : undefined

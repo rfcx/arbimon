@@ -21,7 +21,7 @@ export default class SpeciesRichnessTable extends Vue {
     ]
 
     if (this.hasTableData) {
-      headers.push(...Object.keys(this.tableData[0]).filter(k => !['speciesName', 'speciesClassname'].includes(k)))
+      headers.push(...Object.keys(this.tableData[0]).filter(k => !['speciesName', 'className'].includes(k)))
     }
 
     return headers
