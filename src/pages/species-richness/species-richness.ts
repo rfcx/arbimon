@@ -84,7 +84,7 @@ export default class SpeciesRichnessPage extends Vue {
         total: 0
       }
       for (const [idx, item] of speciesItems.entries()) {
-        const datasetName = `DS ${idx}`
+        const datasetName = `Dataset ${idx + 1}`
         const matchedData = item.find(d => d.speciesName === speciesName)
         data[datasetName] = matchedData?.frequency ?? 0
         data.total = data.total + (matchedData?.frequency ?? 0)

@@ -36,7 +36,7 @@
   </div>
   <div
     v-if="!hasData"
-    class="flex justify-center text-secondary mt-2"
+    class="flex justify-center items-center mt-2 h-8 text-secondary"
   >
     No data
   </div>
