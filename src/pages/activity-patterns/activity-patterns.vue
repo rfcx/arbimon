@@ -1,12 +1,12 @@
 <template>
-  <div id="activity-patterns">
+  <div>
     <select
       v-model="selectedSpecies"
       class="bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
     >
       <option
-        v-for="(item, idx) in species"
-        :key="'species-name-selector-' + idx"
+        v-for="item in species"
+        :key="'species-name-selector-' + item.speciesId"
         :value="item.speciesId"
       >
         {{ item.speciesName }}
