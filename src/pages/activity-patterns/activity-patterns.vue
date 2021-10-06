@@ -6,11 +6,11 @@
         class="bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
       >
         <option
-          v-for="(name, idx) in species"
+          v-for="(item, idx) in species"
           :key="'species-name-selector-' + idx"
-          :value="name"
+          :value="item.speciesId"
         >
-          {{ name }}
+          {{ item.speciesName }}
         </option>
       </select>
     </form>
