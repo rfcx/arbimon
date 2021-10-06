@@ -10,7 +10,7 @@
             v-for="(title, idx) in tableHeader"
             :key="'species-table-header-' + idx"
             class="table-cell font-bold border-b capitalize"
-            :class="{ 'text-left': idx === 0 }"
+            :class="{ 'text-left': idx < 2 }"
           >
             {{ title }}
           </th>
@@ -26,7 +26,7 @@
             v-for="(column, cidx) in Object.values(row)"
             :key="'species-table-column-' + cidx"
             class="table-cell py-1"
-            :class="{ 'text-center': cidx !== 0 }"
+            :class="{ 'text-center': cidx > 1 }"
           >
             {{ column }}
           </td>

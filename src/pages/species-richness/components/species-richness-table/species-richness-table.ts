@@ -13,16 +13,11 @@ export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) tableData!: ChartModels.TableData[]
 
   get tableHeader (): string[] {
-    const headers = [
-      'Species name',
-      'Class'
+    return [
+      'Species',
+      'Class',
+      ...(this.hasTableData ? Object.keys(this.tableData[0]).filter(k => !['speciesName', 'className'].includes(k)) : [])
     ]
-
-    if (this.hasTableData) {
-      headers.push(...Object.keys(this.tableData[0]).filter(k => !['speciesName', 'className'].includes(k)))
-    }
-
-    return headers
   }
 
   get hasTableData (): boolean {
