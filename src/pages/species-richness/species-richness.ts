@@ -27,9 +27,11 @@ export default class SpeciesRichnessPage extends Vue {
   tableData: ChartModels.TableData[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
-    await this.getBarChartDataset(filters)
-    await this.getMapDataset(filters)
-    await this.getTableData(filters)
+    await Promise.all([
+      this.getBarChartDataset(filters),
+      this.getMapDataset(filters),
+      this.getTableData(filters)
+    ])
   }
 
   async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<void> {
