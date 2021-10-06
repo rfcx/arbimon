@@ -7,6 +7,8 @@ import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horiz
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SpeciesService } from '@/services'
+import { FileUtils } from '@/utils'
+import ExportButtonView from '@/views/export-button.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
 dayjs.extend(utc)
@@ -16,7 +18,8 @@ dayjs.extend(utc)
     ComparisonListComponent,
     HorizontalBarChartComponent,
     SpeciesRichnessMaps,
-    SpeciesRichnessTable
+    SpeciesRichnessTable,
+    ExportButtonView
   }
 })
 export default class SpeciesRichnessPage extends Vue {
@@ -26,6 +29,10 @@ export default class SpeciesRichnessPage extends Vue {
   mapDatasets: ChartModels.MapDataSet[] = []
   tableData: ChartModels.TableData[] = []
   reportData: ReportData[] = []
+
+  get hasReportData (): boolean {
+    return this.reportData.length > 0
+  }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     const [chartData, mapDatasets, tableData, reportData] = await Promise.all([
@@ -120,6 +127,11 @@ export default class SpeciesRichnessPage extends Vue {
         }
       })
     })
+  }
+
+  async exportCSVReport (): Promise<void> {
+    const filename = 'report.csv'
+    await FileUtils.exportCSVFile(filename, this.reportData, 'Species Report')
   }
 }
 
