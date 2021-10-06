@@ -31,7 +31,7 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   mounted (): void {
-    d3.select(`${this.domId}`).on('resize', (e) => {
+    d3.select(window).on('resize', (e) => {
       this.renderChart()
     })
   }
