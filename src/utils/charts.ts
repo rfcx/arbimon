@@ -1,14 +1,17 @@
 import { ChartSVGElement } from '@/models/Chart'
 
-export const exportChart = async (elementId: string, filename: string): Promise<void> => {
-  const chartElement = getChartElement(elementId)
+export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
+  const chartElement = getChartElement(element)
+  await exportChart(chartElement, filename)
+}
+
+const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
   const data = await svgToPngData(chartElement)
   downloadPng(filename, data)
 }
 
-const getChartElement = (id: string): ChartSVGElement => {
-  const svg = document.getElementById(id)?.getElementsByTagName('svg')[0]
-  if (!svg) { throw new Error('Invalid graph id') }
+const getChartElement = (element: Element): ChartSVGElement => {
+  const svg = element.getElementsByTagName('svg')[0]
   const width = Number(svg.getAttribute('width') as string)
   const height = Number(svg.getAttribute('height') as string)
   return { svg, width, height }
