@@ -8,6 +8,6 @@ export const TAXONOMIES: TaxonomyOption[] = [TAXONOMY_ALL, { name: 'Amphibians',
 
 export interface SpeciesPopulation {
   speciesName: string
-  speciesClassname: string
+  className: string
   frequency: number
 }
