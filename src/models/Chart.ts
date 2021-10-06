@@ -1,4 +1,3 @@
-
 export interface ChartSVGElement {
   svg: SVGSVGElement
   width: number
