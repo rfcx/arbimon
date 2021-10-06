@@ -63,7 +63,7 @@ export function getSpeciesTableData (options: SpeciesRichnessRequestParams): Tax
   const data = mapValues(groupedDetections, (value, _) => {
     return {
       speciesName: value[0].scientific_name,
-      speciesClassname: value[0].taxon,
+      className: value[0].taxon,
       frequency: new Set(value.map(d => d.species_id)).size
     }
   })
