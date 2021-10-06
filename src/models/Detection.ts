@@ -8,7 +8,7 @@ export interface Detection {
   hour: number
   speciesId: number
   speciesName: string
-  taxonomicId: number
-  taxonomic: string
+  classId: number
+  className: string
   numberOfRecordings: number
 }
