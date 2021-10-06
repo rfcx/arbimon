@@ -1,7 +1,7 @@
 import { groupBy, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
-import { ChartModels, SiteModels, TaxonomyModels } from '@/models'
+import { ChartModels, DetectionModels, SiteModels, TaxonomyModels } from '@/models'
 import { MapSiteData } from '@/models/Chart'
 
 interface SpeciesRichnessRequestParams {
@@ -10,9 +10,28 @@ interface SpeciesRichnessRequestParams {
   sites: SiteModels.Site[]
 }
 
-export function getMockupSpecies (options: SpeciesRichnessRequestParams): Array<Omit<ChartModels.BarChartItem, 'color'>> {
+interface DetectionResponseParams {
+  'arbimon_site_id': number
+  'stream_id': string
+  'name': string
+  'lat': number
+  'lon': number
+  'date': string
+  'hour': number
+  'species_id': number
+  'scientific_name': string
+  'taxon_id': number
+  'taxon': string
+  'num_of_recordings': number
+}
+
+function filterAPIData (options: SpeciesRichnessRequestParams): DetectionResponseParams[] {
   const { start, end, sites } = options
-  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+  return rawDetections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+}
+
+export function getMockupSpecies (options: SpeciesRichnessRequestParams): Array<Omit<ChartModels.BarChartItem, 'color'>> {
+  const filteredDetections = filterAPIData(options)
   const groupedDetections = groupBy(filteredDetections, 'taxon')
   const data = mapValues(groupedDetections, (value, key) => {
     return {
@@ -25,9 +44,7 @@ export function getMockupSpecies (options: SpeciesRichnessRequestParams): Array<
 }
 
 export function getSpeciesMapData (options: SpeciesRichnessRequestParams): MapSiteData[] {
-  // TODO 41 - Extract common logic between this & getMockupSpecies
-  const { start, end, sites } = options
-  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+  const filteredDetections = filterAPIData(options)
   return Object.values(mapValues(
     groupBy(filteredDetections, 'name'), // TODO 41 - Extract field names
     (detections, siteId) => ({
@@ -39,9 +56,9 @@ export function getSpeciesMapData (options: SpeciesRichnessRequestParams): MapSi
   ))
 }
 
+// TODO - 32 This function can combination
 export function getSpeciesTableData (options: SpeciesRichnessRequestParams): TaxonomyModels.SpeciesPopulation[] {
-  const { start, end, sites } = options
-  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+  const filteredDetections = filterAPIData(options)
   const groupedDetections = groupBy(filteredDetections, 'species_id')
   const data = mapValues(groupedDetections, (value, _) => {
     return {
@@ -51,4 +68,26 @@ export function getSpeciesTableData (options: SpeciesRichnessRequestParams): Tax
     }
   })
   return Object.values(data)
+}
+
+export function getDetections (options: SpeciesRichnessRequestParams): DetectionModels.Detection[] {
+  const filteredDetections = filterAPIData(options)
+  return filteredDetections
+    .sort((a, b) => a.scientific_name.localeCompare(b.scientific_name) || a.name.localeCompare(b.name) || a.date.localeCompare(b.date) || a.hour - b.hour)
+    .map(d => {
+      return {
+        arbimonSiteId: d.arbimon_site_id,
+        siteId: d.stream_id,
+        siteName: d.name,
+        latitude: d.lat,
+        longitude: d.lon,
+        date: d.date,
+        hour: d.hour,
+        speciesId: d.species_id,
+        speciesName: d.scientific_name,
+        classId: d.taxon_id,
+        className: d.taxon,
+        numberOfRecordings: d.num_of_recordings
+      }
+    })
 }

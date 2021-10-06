@@ -7,6 +7,8 @@ import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horiz
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SpeciesService } from '@/services'
+import { FileUtils } from '@/utils'
+import ExportButtonView from '@/views/export-button.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
 dayjs.extend(utc)
@@ -16,7 +18,8 @@ dayjs.extend(utc)
     ComparisonListComponent,
     HorizontalBarChartComponent,
     SpeciesRichnessMaps,
-    SpeciesRichnessTable
+    SpeciesRichnessTable,
+    ExportButtonView
   }
 })
 export default class SpeciesRichnessPage extends Vue {
@@ -25,16 +28,23 @@ export default class SpeciesRichnessPage extends Vue {
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
   tableData: ChartModels.TableData[] = []
+  reportData: ReportData[] = []
+
+  get hasReportData (): boolean {
+    return this.reportData.length > 0
+  }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
-    const [chartData, mapDatasets, tableData] = await Promise.all([
+    const [chartData, mapDatasets, tableData, reportData] = await Promise.all([
       this.getBarChartDataset(filters),
       this.getMapDataset(filters),
-      this.getTableData(filters)
+      this.getTableData(filters),
+      this.getReportData(filters)
     ])
     this.chartData = chartData
     this.mapDatasets = mapDatasets
     this.tableData = tableData
+    this.reportData = reportData
   }
 
   async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.GroupedBarChartItem[] > {
@@ -98,4 +108,41 @@ export default class SpeciesRichnessPage extends Vue {
     })
     return tableData.map(({ speciesName, className, total, ...datasets }) => ({ speciesName, className, ...datasets, total })).sort((a, b) => b.total - a.total || (a.className + a.speciesName).localeCompare(b.className + b.speciesName))
   }
+
+  async getReportData (filters: SpeciesRichnessFilter[]): Promise<ReportData[]> {
+    const rawDetections = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getDetections({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
+    return rawDetections.flatMap(ds => {
+      return ds.map(({ speciesName, siteName, latitude, longitude, date, hour }) => {
+        const newDate = dayjs.utc(date)
+        return {
+          species: speciesName,
+          site: siteName,
+          latitude,
+          longitude,
+          day: newDate.format('D'),
+          month: newDate.format('M'),
+          year: newDate.format('YYYY'),
+          date: newDate.format('M/DD/YYYY'),
+          hour
+        }
+      })
+    })
+  }
+
+  async exportCSVReport (): Promise<void> {
+    const filename = 'report.csv'
+    await FileUtils.exportCSVFile(filename, this.reportData, 'Species Report')
+  }
+}
+
+export interface ReportData {
+  species: string
+  site: string
+  latitude: number
+  longitude: number
+  day: string
+  month: string
+  year: string
+  date: string
+  hour: number
 }
