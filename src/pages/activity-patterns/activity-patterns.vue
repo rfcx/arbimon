@@ -1,17 +1,20 @@
 <template>
   <div id="activity-patterns">
-    <select
-      v-model="selectedSpecies"
-      class="bg-steel-grey rounded p-2"
-    >
-      <option
-        v-for="(name, idx) in species"
-        :key="'species-name-selector-' + idx"
-        :value="name"
+    <form>
+      <select
+        v-model="selectedSpecies"
+        class="bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
       >
-        {{ name }}
-      </option>
-    </select>
+        <option
+          v-for="(name, idx) in species"
+          :key="'species-name-selector-' + idx"
+          :value="name"
+          class="focus:border-brand-primary"
+        >
+          {{ name }}
+        </option>
+      </select>
+    </form>
   </div>
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
