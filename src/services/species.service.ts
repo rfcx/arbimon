@@ -85,8 +85,8 @@ export function getDetections (options: SpeciesRichnessRequestParams): Detection
         hour: d.hour,
         speciesId: d.species_id,
         speciesName: d.scientific_name,
-        taxonomicId: d.taxon_id,
-        taxonomic: d.taxon,
+        classId: d.taxon_id,
+        className: d.taxon,
         numberOfRecordings: d.num_of_recordings
       }
     })
