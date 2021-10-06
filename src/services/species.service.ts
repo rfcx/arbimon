@@ -73,7 +73,7 @@ export function getSpeciesTableData (options: SpeciesRichnessRequestParams): Tax
 export function getDetections (options: SpeciesRichnessRequestParams): DetectionModels.Detection[] {
   const filteredDetections = filterAPIData(options)
   return filteredDetections
-    .sort((a, b) => a.date.localeCompare(b.date) || (a.name + a.scientific_name).localeCompare(b.name + b.scientific_name))
+    .sort((a, b) => a.scientific_name.localeCompare(b.scientific_name) || a.name.localeCompare(b.name) || a.date.localeCompare(b.date) || a.hour - b.hour)
     .map(d => {
       return {
         arbimonSiteId: d.arbimon_site_id,
