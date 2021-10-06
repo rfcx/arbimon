@@ -21,7 +21,7 @@
     </div>
     <div
       v-show="hasData"
-      :id="chartId"
+      :id="domId"
     />
   </div>
 </template>

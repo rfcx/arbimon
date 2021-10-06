@@ -10,7 +10,7 @@
     </div>
     <comparison-list-component @emitSelect="onFilterChange" />
     <horizontal-bar-chart-component
-      chart-id="species-in-taxonomic-group"
+      dom-id="species-in-taxonomic-group"
       chart-title="Number of species in each taxonomic group"
       :chart-data="chartData"
       class="mt-5"
