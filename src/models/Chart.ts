@@ -26,3 +26,10 @@ export interface MapSiteData {
   latitude: number
   distinctSpecies: { [taxonName: string]: number }
 }
+
+export interface TableData {
+  speciesName: string
+  className: string
+  total: number
+  [datasetName: string]: string | number
+}

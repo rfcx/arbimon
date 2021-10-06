@@ -19,3 +19,4 @@
 * **features:** Map to be export as png (#86)
 * **features:** Map style toggle (#88)
 * **features:** Bar chart support responsive (#61)
+* **features:** Table - list species name in the table(#82)

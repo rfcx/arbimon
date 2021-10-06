@@ -1,7 +1,7 @@
 import { groupBy, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
-import { ChartModels, SiteModels } from '@/models'
+import { ChartModels, SiteModels, TaxonomyModels } from '@/models'
 import { MapSiteData } from '@/models/Chart'
 
 interface SpeciesRichnessRequestParams {
@@ -37,4 +37,18 @@ export function getSpeciesMapData (options: SpeciesRichnessRequestParams): MapSi
       distinctSpecies: mapValues(groupBy(detections, 'taxon'), ds => new Set(ds.map(d => d.species_id)).size)
     })
   ))
+}
+
+export function getSpeciesTableData (options: SpeciesRichnessRequestParams): TaxonomyModels.SpeciesPopulation[] {
+  const { start, end, sites } = options
+  const filteredDetections = rawDetections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+  const groupedDetections = groupBy(filteredDetections, 'species_id')
+  const data = mapValues(groupedDetections, (value, _) => {
+    return {
+      speciesName: value[0].scientific_name,
+      className: value[0].taxon,
+      frequency: new Set(value.map(d => d.species_id)).size
+    }
+  })
+  return Object.values(data)
 }
