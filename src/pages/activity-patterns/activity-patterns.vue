@@ -9,7 +9,6 @@
           v-for="(name, idx) in species"
           :key="'species-name-selector-' + idx"
           :value="name"
-          class="focus:border-brand-primary"
         >
           {{ name }}
         </option>
