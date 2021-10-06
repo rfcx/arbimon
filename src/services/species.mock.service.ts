@@ -5,11 +5,9 @@ import { TaxonomyModels } from '@/models'
 
 export function getSpecies (): TaxonomyModels.Species[] {
   const groupedDetections = groupBy(rawDetections, 'species_id')
-  const data = mapValues(groupedDetections, (value, key) => {
-    return {
-      speciesId: Number(key),
-      speciesName: value[0].scientific_name
-    }
-  })
+  const data = mapValues(groupedDetections, (value, key) => ({
+    speciesId: Number(key),
+    speciesName: value[0].scientific_name
+  }))
   return Object.values(data)
 }
