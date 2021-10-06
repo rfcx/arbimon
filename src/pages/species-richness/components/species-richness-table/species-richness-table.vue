@@ -35,7 +35,7 @@
     </table>
   </div>
   <div
-    v-if="!hasData"
+    v-if="!hasTableData"
     class="flex justify-center items-center mt-2 h-8 text-secondary"
   >
     No data
