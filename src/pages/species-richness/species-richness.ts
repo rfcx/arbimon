@@ -28,14 +28,16 @@ export default class SpeciesRichnessPage extends Vue {
   reportData: ReportData[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
-    const [chartData, mapDatasets, tableData] = await Promise.all([
+    const [chartData, mapDatasets, tableData, reportData] = await Promise.all([
       this.getBarChartDataset(filters),
       this.getMapDataset(filters),
-      this.getTableData(filters)
+      this.getTableData(filters),
+      this.getReportData(filters)
     ])
     this.chartData = chartData
     this.mapDatasets = mapDatasets
     this.tableData = tableData
+    this.reportData = reportData
   }
 
   async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.GroupedBarChartItem[] > {
@@ -100,22 +102,23 @@ export default class SpeciesRichnessPage extends Vue {
     return tableData.map(({ speciesName, className, total, ...datasets }) => ({ speciesName, className, ...datasets, total })).sort((a, b) => b.total - a.total || (a.className + a.speciesName).localeCompare(b.className + b.speciesName))
   }
 
-  async getReportData (filters: SpeciesRichnessFilter[]): Promise<void> {
+  async getReportData (filters: SpeciesRichnessFilter[]): Promise<ReportData[]> {
     const rawDetections = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getDetections({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
-    this.reportData = rawDetections.flat().map(d => {
-      const { speciesName, siteName, latitude, longitude, date, hour } = d
-      const newDate = dayjs.utc(date)
-      return {
-        species: speciesName,
-        site: siteName,
-        latitude,
-        longitude,
-        day: newDate.format('D'),
-        month: newDate.format('M'),
-        year: newDate.format('YYYY'),
-        date: newDate.format('M/DD/YYYY'),
-        hour
-      }
+    return rawDetections.flatMap(ds => {
+      return ds.map(({ speciesName, siteName, latitude, longitude, date, hour }) => {
+        const newDate = dayjs.utc(date)
+        return {
+          species: speciesName,
+          site: siteName,
+          latitude,
+          longitude,
+          day: newDate.format('D'),
+          month: newDate.format('M'),
+          year: newDate.format('YYYY'),
+          date: newDate.format('M/DD/YYYY'),
+          hour
+        }
+      })
     })
   }
 }
