@@ -8,12 +8,9 @@ export default class ActivityPatterns extends Vue {
   selectedSpecies: number | null = null
 
   async mounted (): Promise<void> {
-    this.species = await this.getSpeciesname()
-  }
-
-  async getSpeciesname (): Promise<TaxonomyModels.Species[]> {
-    const species = await MockupSpeciesService.getSpecies().sort((a, b) => a.speciesName.localeCompare(b.speciesName))
-    this.selectedSpecies = species.length > 0 ? species[0].speciesId : null
-    return species
+    this.species = await MockupSpeciesService.getSpecies().sort((a, b) => a.speciesName.localeCompare(b.speciesName))
+    if (this.species.length > 0) {
+      this.selectedSpecies = this.species[0].speciesId
+    }
   }
 }
