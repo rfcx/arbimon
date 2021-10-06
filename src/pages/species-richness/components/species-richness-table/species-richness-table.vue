@@ -3,36 +3,36 @@
     <h2 class="text-white text-xl mb-1.5">
       Species in each dataset
     </h2>
-    <div class="table w-full">
-      <div class="table-header-group">
-        <div class="table-row">
-          <div
+    <table class="w-full">
+      <thead>
+        <tr>
+          <th
             v-for="(title, idx) in tableHeader"
             :key="'species-table-header-' + idx"
-            class="table-cell font-bold border-b"
-            :class="{ 'text-center': idx !== 0 }"
+            class="table-cell font-bold border-b capitalize"
+            :class="{ 'text-left': idx === 0 }"
           >
-            <span class="capitalize">{{ title }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="table-row-group">
-        <div
+            {{ title }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
           v-for="(row, ridx) in tableData"
           :key="'species-table-row-' + ridx"
           class="table-row"
         >
-          <div
+          <td
             v-for="(column, cidx) in Object.values(row)"
             :key="'species-table-column-' + cidx"
             class="table-cell py-1"
             :class="{ 'text-center': cidx !== 0 }"
           >
-            <span class="capitalize">{{ column }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+            {{ column }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     v-if="!hasData"
