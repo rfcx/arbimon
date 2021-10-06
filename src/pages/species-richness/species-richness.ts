@@ -27,14 +27,17 @@ export default class SpeciesRichnessPage extends Vue {
   tableData: ChartModels.TableData[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
-    await Promise.all([
+    const [chartData, mapDatasets, tableData] = await Promise.all([
       this.getBarChartDataset(filters),
       this.getMapDataset(filters),
       this.getTableData(filters)
     ])
+    this.chartData = chartData
+    this.mapDatasets = mapDatasets
+    this.tableData = tableData
   }
 
-  async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<void> {
+  async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.GroupedBarChartItem[] > {
     const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
     const chartItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => {
       const start = startDate.toISOString()
@@ -64,18 +67,18 @@ export default class SpeciesRichnessPage extends Vue {
       }
     })
 
-    this.chartData = Object.values(groupedItems).sort((a, b) => a.group.localeCompare(b.group))
+    return Object.values(groupedItems).sort((a, b) => a.group.localeCompare(b.group))
   }
 
-  async getMapDataset (filters: SpeciesRichnessFilter[]): Promise<void> {
+  async getMapDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.MapDataSet[]> {
     // TODO 41 - Merge this with the above once Nutto's branch is merged
-    this.mapDatasets = filters.map(({ startDate, endDate, sites, color }) => ({
+    return filters.map(({ startDate, endDate, sites, color }) => ({
       color,
       data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })
     }))
   }
 
-  async getTableData (filters: SpeciesRichnessFilter[]): Promise<void> {
+  async getTableData (filters: SpeciesRichnessFilter[]): Promise<ChartModels.TableData[]> {
     const speciesItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getSpeciesTableData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
     const speciesNames = speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, speciesClassname: c.speciesClassname }))).filter((d, idx, arr) => arr.findIndex(obj => obj.speciesName === d.speciesName) === idx)
     const tableData: ChartModels.TableData[] = []
@@ -93,6 +96,6 @@ export default class SpeciesRichnessPage extends Vue {
       }
       tableData.push(data)
     })
-    this.tableData = tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total || (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
+    return tableData.map(({ speciesName, speciesClassname, total, ...datasets }) => ({ speciesName, speciesClassname, ...datasets, total })).sort((a, b) => b.total - a.total || (a.speciesClassname + a.speciesName).localeCompare(b.speciesClassname + b.speciesName))
   }
 }
