@@ -43,7 +43,7 @@ export async function getAllSpecies (): Promise<TaxonomyModels.Species[]> {
   return Object.values(speciesBySpeciesId)
 }
 
-export async function getDetections (dataset: SpeciesRichnessDataset): Promise<DetectionModels.Detection[]> {
+export async function getAllDetections (dataset: SpeciesRichnessDataset): Promise<DetectionModels.Detection[]> {
   const filteredDetections = filterByDataset(rawDetections, dataset)
   return filteredDetections
     .sort((a, b) => a.scientific_name.localeCompare(b.scientific_name) || a.name.localeCompare(b.name) || a.date.localeCompare(b.date) || a.hour - b.hour)

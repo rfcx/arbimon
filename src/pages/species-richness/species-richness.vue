@@ -11,7 +11,6 @@
       </div>
       <div>
         <export-button-view
-          v-if="hasReportData"
           @click="exportCSVReport()"
         >
           <template #label>
