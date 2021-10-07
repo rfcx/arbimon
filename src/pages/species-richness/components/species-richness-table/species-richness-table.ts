@@ -19,19 +19,20 @@ export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) colors!: string[]
 
   get tableHeader (): Header[] {
+    const defaultColor = '#45485D'
     return [
       {
         title: 'Species',
-        color: ''
+        color: defaultColor
       },
       {
         title: 'Species',
-        color: ''
+        color: defaultColor
       },
       ...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })),
       {
         title: 'Total',
-        color: ''
+        color: defaultColor
       }
     ]
   }
