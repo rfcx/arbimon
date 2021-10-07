@@ -74,34 +74,27 @@ function filterByDataset (detections: ApiDetection[], dataset: SpeciesRichnessDa
 }
 
 function getSpeciesByTaxon (detections: ApiDetection[]): { [taxon: string]: number } {
-  // TODO 113 - Put this back on 2 lines
-  return mapValues(
-    groupBy(detections, 'taxon'),
-    (value) => new Set(value.map(d => d.species_id)).size
-  )
+  const detectionsByTaxon = groupBy(detections, 'taxon') // TODO ?? - Extract field names
+  return mapValues(detectionsByTaxon, (value) => new Set(value.map(d => d.species_id)).size)
 }
 
 function getSpeciesBySite (detections: ApiDetection[]): MapSiteData[] {
-  // TODO 113 - Put this back on 2 lines
-  return Object.values(mapValues(
-    groupBy(detections, 'name'), // TODO 41 - Extract field names
-    (detections, siteId) => ({
-      siteId,
-      longitude: detections[0].lon,
-      latitude: detections[0].lat,
-      distinctSpecies: mapValues(groupBy(detections, 'taxon'), ds => new Set(ds.map(d => d.species_id)).size)
-    })
-  ))
+  const detectionsBySite = groupBy(detections, 'name') // TODO ?? - Extract field names
+  const mapDataBySite = mapValues(detectionsBySite, (detections, siteId) => ({
+    siteId,
+    longitude: detections[0].lon,
+    latitude: detections[0].lat,
+    distinctSpecies: mapValues(groupBy(detections, 'taxon'), ds => new Set(ds.map(d => d.species_id)).size)
+  }))
+
+  return Object.values(mapDataBySite)
 }
 
 function getSpeciesPresence (detections: ApiDetection[]): { [speciesId: string]: TaxonomyModels.Species } {
-  // TODO 113 - Put this back on 2 lines
-  return mapValues(
-    groupBy(detections, 'species_id'),
-    (value, key) => ({
-      speciesId: Number(key),
-      speciesName: value[0].scientific_name,
-      className: value[0].taxon
-    })
-  )
+  const detectionsBySpecies = groupBy(detections, 'species_id')
+  return mapValues(detectionsBySpecies, (value, key) => ({
+    speciesId: Number(key),
+    speciesName: value[0].scientific_name,
+    className: value[0].taxon
+  }))
 }

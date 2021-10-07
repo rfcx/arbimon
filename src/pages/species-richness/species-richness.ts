@@ -35,7 +35,7 @@ export default class SpeciesRichnessPage extends Vue {
   tableData: ChartModels.TableData[] = []
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
-    // TODO 113 - Only update the changed dataset
+    // TODO 117 - Only update the changed dataset
     const datasets = await Promise.all(
       filters.map(async ({ startDate, endDate, sites, color }) => {
         const start = startDate.toISOString()
