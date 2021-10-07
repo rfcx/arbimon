@@ -74,13 +74,14 @@ export default class SpeciesRichnessPage extends Vue {
     const speciesPresences = datasets.map(ds => ds.data.speciesPresence)
     const allSpecies: { [speciesId: string]: TaxonomyModels.Species } = Object.assign({}, ...speciesPresences)
 
-    return Object.entries(allSpecies).map(([key, value]) =>
-      ({
+    return Object.entries(allSpecies)
+      .map(([key, value]) => ({
         className: value.className,
         speciesName: value.speciesName,
-        data: speciesPresences.map(sp => key in sp)
-      })
-    ).sort((a, b) => a.speciesName.localeCompare(b.speciesName))
+        data: speciesPresences.map(sp => key in sp),
+        total: speciesPresences.filter(sp => key in sp).length
+      }))
+      .sort((a, b) => b.total - a.total || a.speciesName.localeCompare(b.speciesName))
   }
 
   async getReportData (filters: SpeciesRichnessFilter[]): Promise<ReportData[]> {
