@@ -7,12 +7,13 @@
       <thead>
         <tr>
           <th
-            v-for="(title, idx) in tableHeader"
-            :key="'species-table-header-' + title"
+            v-for="(item, idx) in tableHeader"
+            :key="'species-table-header-' + item.title"
             class="font-bold border-b capitalize"
-            :class="{ 'text-left': idx < 2 }"
+            :class="{ 'text-left': idx < 2, 'text-mirage-grey': idx > 1 && idx < tableHeader.length - 1 }"
+            :style="{ backgroundColor: item.color }"
           >
-            {{ title }}
+            {{ item.title }}
           </th>
         </tr>
       </thead>
@@ -25,9 +26,10 @@
           <td>{{ row.speciesName }}</td>
           <td>{{ row.className }}</td>
           <td
-            v-for="dataset in datasetCount"
+            v-for="(dataset, idx ) in datasetCount"
             :key="'species-table-column-' + dataset"
-            class="py-1 text-center"
+            class="py-1 text-center text-mirage-grey"
+            :style="{ backgroundColor: colors[idx] }"
           >
             <!-- v-for is 1-based -->
             {{ row.data[dataset - 1] ? 1 : 0 }}

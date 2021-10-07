@@ -4,6 +4,11 @@ import { Prop } from 'vue-property-decorator'
 import { ChartModels } from '@/models'
 import ExportButtonView from '@/views/export-button.vue'
 
+interface Header {
+  title: string
+  color: string
+}
+
 @Options({
   components: {
     ExportButtonView
@@ -11,13 +16,23 @@ import ExportButtonView from '@/views/export-button.vue'
 })
 export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) tableData!: ChartModels.TableData[]
+  @Prop({ default: [] }) colors!: string[]
 
-  get tableHeader (): string[] {
+  get tableHeader (): Header[] {
     return [
-      'Species',
-      'Class',
-      ...Array.from({ length: this.datasetCount }, (v, i) => `Dataset ${i + 1}`),
-      'Total'
+      {
+        title: 'Species',
+        color: ''
+      },
+      {
+        title: 'Species',
+        color: ''
+      },
+      ...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })),
+      {
+        title: 'Total',
+        color: ''
+      }
     ]
   }
 
