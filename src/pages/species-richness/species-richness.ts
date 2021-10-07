@@ -30,9 +30,15 @@ export default class SpeciesRichnessPage extends Vue {
   sites: SiteModels.Site[] = []
 
   filters: SpeciesRichnessFilter[] = []
+  detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
   tableData: ChartModels.TableData[] = []
+
+  get haveData (): boolean {
+    return this.detectionCounts.length > 0 &&
+    this.detectionCounts.some(count => count > 0)
+  }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     // TODO 117 - Only update the changed dataset
@@ -46,6 +52,7 @@ export default class SpeciesRichnessPage extends Vue {
     )
 
     this.filters = filters
+    this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.tableData = this.getTableData(datasets)
