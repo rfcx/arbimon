@@ -83,11 +83,11 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   async exportCSVReport (): Promise<void> {
-    const csvs = this.filters.map(async ({ startDate, endDate, sites, color }) => {
+    const csvs = await Promise.all(this.filters.map(async ({ startDate, endDate, sites, color }) => {
       const start = startDate.toISOString()
       const end = endDate.add(1, 'days').toISOString()
       return await getReportRawData({ start, end, sites })
-    })
+    }))
 
     const filename = 'report.csv'
     // TODO 106 - Support multiple datasets
