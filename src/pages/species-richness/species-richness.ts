@@ -52,15 +52,15 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   getBarChartDataset (datasets: ColoredDataset[]): ChartModels.GroupedBarChartItem[] {
-    const allGroups = [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
-    return allGroups.map(group => ({
-      group,
-      series: datasets.map(ds => ({
-        category: '', // TODO - Maybe add the dataset name here
-        frequency: ds.data.speciesByTaxon[group] ?? 0,
-        color: ds.color
+    return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
+      .map(group => ({
+        group,
+        series: datasets.map(ds => ({
+          category: '', // TODO - Maybe add the dataset name here
+          frequency: ds.data.speciesByTaxon[group] ?? 0,
+          color: ds.color
+        }))
       }))
-    }))
       .sort((a, b) => a.group.localeCompare(b.group))
   }
 
