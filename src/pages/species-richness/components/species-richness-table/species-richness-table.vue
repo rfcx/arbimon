@@ -4,12 +4,12 @@
       Detected Species
     </h2>
     <table class="w-full">
-      <thead>
+      <thead class="h-10">
         <tr>
           <th
             v-for="(item, idx) in tableHeader"
             :key="'species-table-header-' + item.title"
-            class="font-bold border-b capitalize h-10"
+            class="font-bold border-b capitalize"
             :class="{ 'text-left': idx < 2, 'text-mirage-grey': idx > 1 && idx < tableHeader.length - 1 }"
             :style="{ backgroundColor: item.color }"
           >
