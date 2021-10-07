@@ -9,7 +9,7 @@
           <th
             v-for="(title, idx) in tableHeader"
             :key="'species-table-header-' + title"
-            class="table-cell font-bold border-b capitalize"
+            class="font-bold border-b capitalize"
             :class="{ 'text-left': idx < 2 }"
           >
             {{ title }}
@@ -20,14 +20,14 @@
         <tr
           v-for="row in tableData"
           :key="'species-table-row-' + row.speciesName"
-          class="table-row"
+          class="capitalize"
         >
           <td>{{ row.speciesName }}</td>
           <td>{{ row.className }}</td>
           <td
             v-for="dataset in datasetCount"
             :key="'species-table-column-' + dataset"
-            class="table-cell py-1 text-center"
+            class="py-1 text-center"
           >
             <!-- v-for is 1-based -->
             {{ row.data[dataset - 1] ? 1 : 0 }}
