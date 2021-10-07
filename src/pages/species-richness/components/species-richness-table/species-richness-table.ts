@@ -16,11 +16,16 @@ export default class SpeciesRichnessTable extends Vue {
     return [
       'Species',
       'Class',
-      ...(this.hasTableData ? Object.keys(this.tableData[0]).filter(k => !['speciesName', 'className'].includes(k)) : [])
+      ...Array.from({ length: this.datasetCount }, (v, i) => `Dataset ${i + 1}`),
+      'Total'
     ]
   }
 
   get hasTableData (): boolean {
     return this.tableData.length > 0
+  }
+
+  get datasetCount (): number {
+    return this.tableData.length > 0 ? this.tableData[0].data.length : 0
   }
 }
