@@ -7,7 +7,7 @@ import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horiz
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
-import { SpeciesRichnessData } from '@/services/species.mock.service'
+import { SpeciesRichnessData } from '@/services/species-service-mock'
 import { FileUtils } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
