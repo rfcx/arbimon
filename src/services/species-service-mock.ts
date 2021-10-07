@@ -1,20 +1,11 @@
 import { groupBy, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
-import { DetectionModels, SiteModels, TaxonomyModels } from '@/models'
+import { DetectionModels, TaxonomyModels } from '@/models'
 import { MapSiteData } from '@/models/Chart'
+import { SpeciesRichnessData, SpeciesRichnessDataset } from './species-service'
 
-export interface SpeciesRichnessDataset {
-  start: string
-  end: string
-  sites: SiteModels.Site[]
-}
-
-export interface SpeciesRichnessData extends SpeciesRichnessDataset {
-  speciesByTaxon: { [taxon: string]: number }
-  speciesBySite: MapSiteData[]
-  speciesPresence: { [speciesId: string]: TaxonomyModels.Species }
-}
+export * from './species-service'
 
 interface ApiDetection {
   'arbimon_site_id': number
@@ -31,7 +22,7 @@ interface ApiDetection {
   'num_of_recordings': number
 }
 
-const DELAY = 250 // TODO ?? - Consider longer delay to simulate a real API call
+const MOCK_FLIGHT_TIME = 250 // TODO ?? - Consider longer delay to simulate a real API call
 
 export async function getAllSpecies (): Promise<TaxonomyModels.Species[]> {
   const detectionsBySpeciesId = groupBy(rawDetections, 'species_id')
@@ -74,7 +65,7 @@ export async function getSpeciesRichnessData (dataset: SpeciesRichnessDataset): 
     speciesByTaxon: getSpeciesByTaxon(filteredDetections),
     speciesBySite: getSpeciesBySite(filteredDetections),
     speciesPresence: getSpeciesPresence(filteredDetections)
-  }), DELAY))
+  }), MOCK_FLIGHT_TIME))
 }
 
 function filterByDataset (detections: ApiDetection[], dataset: SpeciesRichnessDataset): ApiDetection[] {
