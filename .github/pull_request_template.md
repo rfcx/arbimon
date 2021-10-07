@@ -4,10 +4,11 @@
 
 ## 📝 Summary
 
-- PBIs:
-  - Resolves #XYZ
+### PBIs:
+- Resolves #XYZ
 
-- Describe your changes
+### Description:
+- List your changes
 
 ## 💡 More ideas
 
