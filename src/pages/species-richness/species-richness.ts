@@ -5,11 +5,14 @@ import { Options, Vue } from 'vue-class-component'
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
-import { ChartModels, SiteModels, SpeciesRichnessFilter } from '@/models'
+import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
+import { SpeciesRichnessData } from '@/services/species.mock.service'
 import { FileUtils } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
+
+interface ColoredDataset {color: string, data: SpeciesRichnessData}
 
 dayjs.extend(utc)
 
@@ -35,64 +38,49 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
-    const [chartData, mapDatasets, tableData, reportData] = await Promise.all([
-      this.getBarChartDataset(filters),
-      this.getMapDataset(filters),
-      this.getTableData(filters),
-      this.getReportData(filters)
-    ])
-    this.chartData = chartData
-    this.mapDatasets = mapDatasets
-    this.tableData = tableData
-    this.reportData = reportData
+    // TODO 113 - Only update the changed dataset
+    const datasets = await Promise.all(
+      filters.map(async ({ startDate, endDate, sites, color }) => {
+        const start = startDate.toISOString()
+        const end = endDate.add(1, 'days').toISOString()
+        const data = await SpeciesService.getSpeciesRichnessData({ start, end, sites })
+        return { color, data }
+      })
+    )
+    this.chartData = this.getBarChartDataset(datasets)
+    this.mapDatasets = this.getMapDataset(datasets)
+    this.tableData = this.getTableData(datasets)
+    this.reportData = [] // TODO 113 - Fix this
   }
 
-  async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.GroupedBarChartItem[] > {
-    const speciesByTaxons = await Promise.all(filters.map(({ startDate, endDate, sites, color }) => {
-      const start = startDate.toISOString()
-      const end = endDate.add(1, 'days').toISOString()
-      return { startDate, endDate, sites, color, data: SpeciesService.getMockupSpecies({ start, end, sites }) }
-    }))
-
-    const allGroups = [...new Set(speciesByTaxons.flatMap(ci => Object.keys(ci.data)))]
+  getBarChartDataset (datasets: ColoredDataset[]): ChartModels.GroupedBarChartItem[] {
+    const allGroups = [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
     return allGroups.map(group => ({
       group,
-      series: speciesByTaxons.map(ci => ({
+      series: datasets.map(ds => ({
         category: '', // TODO - Maybe add the dataset name here
-        frequency: ci.data[group] ?? 0,
-        color: ci.color
+        frequency: ds.data.speciesByTaxon[group] ?? 0,
+        color: ds.color
       }))
     }))
       .sort((a, b) => a.group.localeCompare(b.group))
   }
 
-  async getMapDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.MapDataSet[]> {
-    // TODO 41 - Merge this with the above once Nutto's branch is merged
-    return filters.map(({ startDate, endDate, sites, color }) => ({
-      color,
-      data: SpeciesService.getSpeciesMapData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })
-    }))
+  getMapDataset (datasets: ColoredDataset[]): ChartModels.MapDataSet[] {
+    return datasets.map(({ color, data }) => ({ color, data: data.speciesBySite }))
   }
 
-  async getTableData (filters: SpeciesRichnessFilter[]): Promise<ChartModels.TableData[]> {
-    const speciesItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => SpeciesService.getSpeciesTableData({ start: startDate.toISOString(), end: endDate.add(1, 'days').toISOString(), sites })))
-    const speciesNames = speciesItems.flatMap(i => i.map(c => ({ speciesName: c.speciesName, className: c.className }))).filter((d, idx, arr) => arr.findIndex(obj => obj.speciesName === d.speciesName) === idx)
-    const tableData: ChartModels.TableData[] = []
-    speciesNames.forEach(({ speciesName, className }) => {
-      const data: ChartModels.TableData = {
-        speciesName,
-        className,
-        total: 0
-      }
-      for (const [idx, item] of speciesItems.entries()) {
-        const datasetName = `Dataset ${idx + 1}`
-        const matchedData = item.find(d => d.speciesName === speciesName)
-        data[datasetName] = matchedData?.frequency ?? 0
-        data.total = data.total + (matchedData?.frequency ?? 0)
-      }
-      tableData.push(data)
-    })
-    return tableData.map(({ speciesName, className, total, ...datasets }) => ({ speciesName, className, ...datasets, total })).sort((a, b) => b.total - a.total || (a.className + a.speciesName).localeCompare(b.className + b.speciesName))
+  getTableData (datasets: ColoredDataset[]): ChartModels.TableData[] {
+    const speciesPresences = datasets.map(ds => ds.data.speciesPresence)
+    const allSpecies: { [speciesId: string]: TaxonomyModels.Species } = Object.assign({}, ...speciesPresences)
+
+    return Object.entries(allSpecies).map(([key, value]) =>
+      ({
+        className: value.className,
+        speciesName: value.speciesName,
+        data: speciesPresences.map(sp => key in sp)
+      })
+    ).sort((a, b) => a.speciesName.localeCompare(b.speciesName))
   }
 
   async getReportData (filters: SpeciesRichnessFilter[]): Promise<ReportData[]> {
