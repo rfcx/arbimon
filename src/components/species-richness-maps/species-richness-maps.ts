@@ -3,7 +3,7 @@ import { Prop } from 'vue-property-decorator'
 
 import MapBubbleComponent from '@/components/map-bubble/map-bubble.vue'
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/services/mapbox.service'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/services/mapbox-service'
 
 interface MapOptions {
   id: string
