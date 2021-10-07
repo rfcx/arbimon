@@ -33,7 +33,7 @@
             {{ row.data[dataset - 1] ? 1 : 0 }}
           </td>
           <td class="text-center">
-            {{ row.data.filter(p => p).length }}
+            {{ row.total }}
           </td>
         </tr>
       </tbody>
