@@ -35,7 +35,6 @@
     />
     <species-richness-table
       :table-data="tableData"
-      :report-data="reportData"
     />
   </div>
 </template>
