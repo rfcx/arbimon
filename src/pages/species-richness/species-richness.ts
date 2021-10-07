@@ -48,36 +48,22 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   async getBarChartDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.GroupedBarChartItem[] > {
-    const groupedItems: { [key: string]: ChartModels.GroupedBarChartItem } = {}
-    const chartItems = await Promise.all(filters.map(({ startDate, endDate, sites }) => {
+    const speciesByTaxons = await Promise.all(filters.map(({ startDate, endDate, sites, color }) => {
       const start = startDate.toISOString()
       const end = endDate.add(1, 'days').toISOString()
-      return SpeciesService.getMockupSpecies({ start, end, sites })
+      return { startDate, endDate, sites, color, data: SpeciesService.getMockupSpecies({ start, end, sites }) }
     }))
 
-    const categories = new Set(chartItems.flatMap(i => i.map(c => c.category)))
-    categories.forEach(cat => {
-      for (const [idx, item] of chartItems.entries()) {
-        const filter = filters[idx]
-        const siteName = filter.sites.length > 0 ? filter.sites.map(s => s.name).join(',') : 'All sites'
-        const matchedData = item.find(d => d.category === cat)
-        const seriesItem: ChartModels.BarChartItem = {
-          category: siteName,
-          frequency: matchedData?.frequency ?? 0,
-          color: filter.color
-        }
-        if (groupedItems[cat] !== undefined) {
-          groupedItems[cat].series.unshift(seriesItem)
-        } else {
-          groupedItems[cat] = {
-            group: cat,
-            series: [seriesItem]
-          }
-        }
-      }
-    })
-
-    return Object.values(groupedItems).sort((a, b) => a.group.localeCompare(b.group))
+    const allGroups = [...new Set(speciesByTaxons.flatMap(ci => Object.keys(ci.data)))]
+    return allGroups.map(group => ({
+      group,
+      series: speciesByTaxons.map(ci => ({
+        category: '', // TODO - Maybe add the dataset name here
+        frequency: ci.data[group] ?? 0,
+        color: ci.color
+      }))
+    }))
+      .sort((a, b) => a.group.localeCompare(b.group))
   }
 
   async getMapDataset (filters: SpeciesRichnessFilter[]): Promise<ChartModels.MapDataSet[]> {
