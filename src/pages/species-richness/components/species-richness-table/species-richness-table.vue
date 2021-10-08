@@ -36,13 +36,10 @@
             >
               <td
                 v-if="hasMoreThanOneDataset"
-                class="p-2 text-white"
+                class="p-2 text-center text-white"
               >
                 <!-- v-for is 1-based -->
-                <i
-                  class="m-auto"
-                  :class="[row.data[idx] ? 'icon-check' : 'icon-close' ]"
-                />
+                {{ row.data[idx] ? '✔️' : '❌' }}
               </td>
             </template>
             <td
