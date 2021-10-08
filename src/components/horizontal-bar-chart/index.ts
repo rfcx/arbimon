@@ -105,7 +105,7 @@ export const generateChart = (data: ChartModels.GroupedBarChartItem[], config: B
         const frequencyValue = d.series[idx].frequency
         const x = xScale(frequencyValue)
         const width = x === 0 ? 2 : x - xScale(0)
-        const y = ((seriesLength - 1) - idx) * (barHeight + BAR_MARGIN)
+        const y = idx * (barHeight + BAR_MARGIN)
         // adding bar chart into each bar chart in bar group
         category.append('rect')
           .attr('x', xScale(0))
