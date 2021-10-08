@@ -11,7 +11,8 @@
       </div>
       <div>
         <export-button-view
-          v-if="hasReportData"
+          :disabled="!haveData"
+          title="No data in selections"
           @click="exportCSVReport()"
         >
           <template #label>
