@@ -1,6 +1,6 @@
 import * as Endpoints from '@/api/endpoints'
 import { ProjectModels } from '@/models'
-import ApiClient from './api.service'
+import ApiClient from './api-service'
 
 interface ProjectRequest {
   limit?: number
