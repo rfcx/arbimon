@@ -88,7 +88,7 @@ export default defineConfig({
   ],
   shortcuts: {
     // button
-    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none)',
+    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none) disabled:(bg-box-grey cursor-not-allowed opacity-50)',
     'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark',
