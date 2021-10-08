@@ -6,7 +6,7 @@ import { FilterBase, SpeciesRichnessFilter } from '@/models'
 import { colors } from '@/utils'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
-const defaultFilter = new SpeciesRichnessFilter(dayjs('2021-04-01', 'YYYY-MM-DD'), dayjs(), [])
+const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [])
 
 @Options({
   components: {
