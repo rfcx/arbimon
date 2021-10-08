@@ -9,6 +9,8 @@ interface Header {
   color: string
 }
 
+const DEFAULT_COLOR = '#45485D'
+
 @Options({
   components: {
     ExportButtonView
@@ -19,20 +21,19 @@ export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) colors!: string[]
 
   get tableHeader (): Header[] {
-    const defaultColor = '#45485D'
     return [
       {
         title: 'Species',
-        color: defaultColor
+        color: DEFAULT_COLOR
       },
       {
         title: 'Class',
-        color: defaultColor
+        color: DEFAULT_COLOR
       },
       ...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })),
       {
         title: 'Total',
-        color: defaultColor
+        color: DEFAULT_COLOR
       }
     ]
   }
