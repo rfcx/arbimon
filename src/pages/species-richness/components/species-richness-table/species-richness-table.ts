@@ -19,7 +19,7 @@ export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) colors!: string[]
 
   get tableHeader (): Header[] {
-    const defaultColor = '#45485D'
+    const defaultColor = '#ffffff80'
     return [
       {
         title: 'Species',
