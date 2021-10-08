@@ -11,7 +11,7 @@
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'text-left': idx < 2, 'text-white': idx > 1 && idx < tableHeader.length - 1 }"
+              :class="{ 'text-left': idx < 2 }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
             >
               {{ item.title }}
@@ -36,10 +36,13 @@
             >
               <td
                 v-if="hasMoreThanOneDataset"
-                class="p-2 text-center text-white"
+                class="p-2 text-white"
               >
                 <!-- v-for is 1-based -->
-                {{ row.data[idx] ? 1 : 0 }}
+                <i
+                  class="m-auto"
+                  :class="[row.data[idx] ? 'icon-check' : 'icon-close' ]"
+                />
               </td>
             </template>
             <td
