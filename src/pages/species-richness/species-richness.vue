@@ -11,6 +11,8 @@
       </div>
       <div>
         <export-button-view
+          :disabled="!haveData"
+          title="No data in selections"
           @click="exportCSVReport()"
         >
           <template #label>

@@ -31,9 +31,15 @@ export default class SpeciesRichnessPage extends Vue {
 
   colors: string[] = []
   filters: SpeciesRichnessFilter[] = []
+  detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
   tableData: ChartModels.TableData[] = []
+
+  get haveData (): boolean {
+    return this.detectionCounts.length > 0 &&
+    this.detectionCounts.some(count => count > 0)
+  }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
     // TODO 117 - Only update the changed dataset
@@ -48,21 +54,22 @@ export default class SpeciesRichnessPage extends Vue {
 
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
+    this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.tableData = this.getTableData(datasets)
   }
 
   getBarChartDataset (datasets: ColoredDataset[]): ChartModels.GroupedBarChartItem[] {
-    const allGroups = [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
-    return allGroups.map(group => ({
-      group,
-      series: datasets.map(ds => ({
-        category: '', // TODO - Maybe add the dataset name here
-        frequency: ds.data.speciesByTaxon[group] ?? 0,
-        color: ds.color
+    return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
+      .map(group => ({
+        group,
+        series: datasets.map(ds => ({
+          category: '', // TODO - Maybe add the dataset name here
+          frequency: ds.data.speciesByTaxon[group] ?? 0,
+          color: ds.color
+        }))
       }))
-    }))
       .sort((a, b) => a.group.localeCompare(b.group))
   }
 

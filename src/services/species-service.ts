@@ -8,6 +8,7 @@ export interface SpeciesRichnessDataset {
 }
 
 export interface SpeciesRichnessData extends SpeciesRichnessDataset {
+  detectionCount: number
   speciesByTaxon: { [taxon: string]: number }
   speciesBySite: MapSiteData[]
   speciesPresence: { [speciesId: string]: TaxonomyModels.Species }
