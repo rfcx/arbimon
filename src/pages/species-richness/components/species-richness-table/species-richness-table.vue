@@ -36,7 +36,7 @@
             >
               <td
                 v-if="hasMoreThanOneDataset"
-                class="p-2 text-center text-white"
+                class="p-2 text-center text-white text-lg"
               >
                 <!-- v-for is 1-based -->
                 {{ row.data[idx] ? '✔️' : '❌' }}
