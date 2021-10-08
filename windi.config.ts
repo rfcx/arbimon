@@ -44,7 +44,7 @@ export default defineConfig({
       },
       textColor: {
         primary: '#fff',
-        secondary: '#999',
+        secondary: '#ffffff80',
         warning: '#FFCD00',
         danger: '#D46767'
       },
