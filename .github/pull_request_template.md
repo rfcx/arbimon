@@ -14,7 +14,7 @@
 
 - Write any more ideas you have
 
-## 🙋 Requests for help
+## 🙋 Requests for feedback
 
 - Is there anything you're unsure about?
 
