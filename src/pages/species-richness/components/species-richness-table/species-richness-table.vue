@@ -38,7 +38,10 @@
               <!-- v-for is 1-based -->
               {{ row.data[idx] ? 1 : 0 }}
             </td>
-            <td class="p-2 text-center">
+            <td
+              v-if="datasetCount > 1"
+              class="p-2 text-center"
+            >
               {{ row.total }}
             </td>
           </tr>
