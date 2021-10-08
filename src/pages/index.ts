@@ -1,3 +1,4 @@
+export { default as ActivityPatternsPage } from './activity-patterns/activity-patterns.vue'
 export { default as ErrorPage } from './error/error.vue'
 export { default as IndexPage } from './index/index.vue'
 export { default as OverviewPage } from './overview/overview.vue'

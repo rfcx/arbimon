@@ -5,3 +5,9 @@ export interface TaxonomyOption {
 
 export const TAXONOMY_ALL: TaxonomyOption = { name: 'All', symbol: 'Σ' }
 export const TAXONOMIES: TaxonomyOption[] = [TAXONOMY_ALL, { name: 'Amphibians', symbol: '🐸' }, { name: 'Birds', symbol: '🐦' }]
+
+export interface Species {
+  speciesId: number
+  speciesName: string
+  className: string
+}
