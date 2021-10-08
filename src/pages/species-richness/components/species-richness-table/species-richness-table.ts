@@ -26,7 +26,7 @@ export default class SpeciesRichnessTable extends Vue {
         color: defaultColor
       },
       {
-        title: 'Species',
+        title: 'Class',
         color: defaultColor
       },
       ...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })),
