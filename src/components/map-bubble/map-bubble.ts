@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
-import { mapboxgl } from '@/services/mapbox.service'
+import { mapboxgl } from '@/services/mapbox-service'
 import { downloadPng } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
 

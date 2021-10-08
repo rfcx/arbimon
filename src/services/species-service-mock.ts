@@ -62,6 +62,7 @@ export async function getSpeciesRichnessData (dataset: SpeciesRichnessDataset): 
 
   return await new Promise(resolve => setTimeout(() => resolve({
     ...dataset,
+    detectionCount: filteredDetections.length,
     speciesByTaxon: getSpeciesByTaxon(filteredDetections),
     speciesBySite: getSpeciesBySite(filteredDetections),
     speciesPresence: getSpeciesPresence(filteredDetections)

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
 import { RequestMethod } from '@/api/endpoints'
-import { Auth } from './vuex.service'
+import { Auth } from './vuex-service'
 
 const ApiConfig = axios.create({
   timeout: 30 * 1000 // 30 secs

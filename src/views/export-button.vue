@@ -1,5 +1,8 @@
 <template>
-  <button class="btn btn-icon flex flex-row">
+  <button
+    :disabled="disabled"
+    class="btn btn-icon flex flex-row"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-4 w-4 self-center"
@@ -17,3 +20,11 @@
     <slot name="label" />
   </button>
 </template>
+<script lang="ts">
+import { Vue } from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
+
+export default class MapBubbleComponent extends Vue {
+  @Prop({ default: false }) disabled!: boolean
+}
+</script>

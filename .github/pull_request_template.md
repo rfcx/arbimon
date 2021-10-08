@@ -1,29 +1,27 @@
-## ✅ DoD
+## 📸 Screenshots
 
-- [x] Resolves #TODO
-- [ ] Documentation updated / na
-- [ ] CHANGELOG updated / na
+- Add screenshots/videos here!
 
 ## 📝 Summary
 
-- Write a list of changes
+### PBIs:
+- Resolves #XYZ
 
-## 💉 Testing
-
-- How did you test this change?
-
-## 🛑 Problems
-
-- Write any discovered & unresolved problems
+### Description:
+- List your changes
 
 ## 💡 More ideas
 
 - Write any more ideas you have
 
-## 📸 Screenshots
+## 🙋 Requests for feedback
 
-- Put screenshots here!
+- Is there anything you're unsure about?
 
-## 🙋 Reviewer Guidance
+## ✅ DoD
 
-- Tag reviewers to highlight changes you want them to look at
+- [ ] Tested & no regression (MANUAL AUTO)
+- [ ] Respects SRP
+- [ ] `// TODO XYZ` all resolved
+- [ ] PBIs created for deferred work
+- [ ] Documented (CHANGELOG DOCS)
