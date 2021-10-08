@@ -30,16 +30,20 @@
             <td class="p-2">
               {{ row.className }}
             </td>
-            <td
+            <template
               v-for="(dataset, idx ) in datasetCount"
               :key="'species-table-column-' + dataset"
-              class="p-2 text-center text-white"
             >
-              <!-- v-for is 1-based -->
-              {{ row.data[idx] ? 1 : 0 }}
-            </td>
+              <td
+                v-if="hasMoreThanOneDataset"
+                class="p-2 text-center text-white"
+              >
+                <!-- v-for is 1-based -->
+                {{ row.data[idx] ? 1 : 0 }}
+              </td>
+            </template>
             <td
-              v-if="datasetCount > 1"
+              v-if="hasMoreThanOneDataset"
               class="p-2 text-center"
             >
               {{ row.total }}
