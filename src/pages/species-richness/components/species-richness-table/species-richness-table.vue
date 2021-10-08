@@ -36,7 +36,7 @@
               class="p-2 text-center text-white"
             >
               <!-- v-for is 1-based -->
-              {{ row.data[dataset - 1] ? 1 : 0 }}
+              {{ row.data[idx] ? 1 : 0 }}
             </td>
             <td class="p-2 text-center">
               {{ row.total }}
