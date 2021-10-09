@@ -1,4 +1,7 @@
 import path from 'path'
+import iconsResolver from 'unplugin-icons/resolver'
+import pluginIcons from 'unplugin-icons/vite'
+import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 
@@ -8,7 +11,11 @@ import pluginVue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [
     pluginVue(),
-    pluginWindiCSS()
+    pluginWindiCSS(),
+    pluginIcons({ compiler: 'vue3' }),
+    Components({
+      resolvers: iconsResolver()
+    })
   ],
   resolve: {
     alias: [
