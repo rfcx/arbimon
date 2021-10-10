@@ -1,11 +1,10 @@
+import pluginVue from '@vitejs/plugin-vue'
 import path from 'path'
 import pluginIconsResolver from 'unplugin-icons/resolver'
 import pluginIcons from 'unplugin-icons/vite'
 import pluginComponents from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
-
-import pluginVue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({

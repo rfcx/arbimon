@@ -1,15 +1,6 @@
+import createAuth0Client, { Auth0Client, GetIdTokenClaimsOptions, GetTokenSilentlyOptions, GetTokenWithPopupOptions, IdToken, LogoutOptions, RedirectLoginOptions } from '@auth0/auth0-spa-js'
 import { App, computed, Plugin, reactive, watchEffect } from 'vue'
 import { NavigationGuardNext, NavigationGuardWithThis, RouteLocationNormalized } from 'vue-router'
-
-import createAuth0Client, {
-  Auth0Client,
-  GetIdTokenClaimsOptions,
-  GetTokenSilentlyOptions,
-  GetTokenWithPopupOptions,
-  IdToken,
-  LogoutOptions,
-  RedirectLoginOptions
-} from '@auth0/auth0-spa-js'
 
 import { Auth0User } from '@/models'
 import config from './config'

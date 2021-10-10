@@ -1,10 +1,9 @@
+import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 import { defineConfig } from 'windicss/helpers'
 import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
-
-import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 
 const range = (size: number, startAt = 1): number[] => {
   return Array.from(Array(size).keys()).map(i => i + startAt)
