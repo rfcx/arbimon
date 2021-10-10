@@ -13,7 +13,7 @@
             class="flex flex-row flex-1"
             :title="filters.displayTitle"
           >
-            <i class="icon-pin mr-2" /> <div class="truncate max-w-24">
+            <icon-fa-map-marker class="mr-2" /> <div class="truncate max-w-24">
               {{ filters.displayTitle }}
             </div>
           </div>
@@ -22,11 +22,11 @@
             :class="{ 'invisible': isDefaultFilter }"
             @click.stop="removeFilterConfig(idx)"
           >
-            <i class="icon-close cursor-pointer" />
+            <icon-fa-close class="cursor-pointer" />
           </div>
         </div>
         <div class="flex flex-row items-center mt-2">
-          <i class="icon-time mr-2" /> {{ filters.displayDate }}
+          <icon-fas-clock class="mr-2" /> {{ filters.displayDate }}
         </div>
       </div>
       <div
