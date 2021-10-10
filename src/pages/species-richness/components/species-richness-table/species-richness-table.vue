@@ -39,12 +39,12 @@
                 class="p-2 text-white"
               >
                 <!-- v-for is 1-based -->
-                <i-fa-check
+                <icon-fa-check
                   v-if="row.data[idx]"
                   class="m-auto"
                   style="color: #1F57CC;"
                 />
-                <i-fa-close
+                <icon-fa-close
                   v-else
                   class="text-warning m-auto"
                 />

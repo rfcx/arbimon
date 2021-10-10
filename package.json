@@ -28,7 +28,7 @@
     "xlsx": "^0.17.2"
   },
   "devDependencies": {
-    "@iconify/json": "^1.1.412",
+    "@iconify-json/fa": "^1.0.1",
     "@types/color-string": "^1.5.0",
     "@types/d3": "^7.0.0",
     "@types/jest": "^27.0.2",
@@ -43,7 +43,6 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^2.0.0-rc.14",
     "@windicss/plugin-animations": "^1.0.9",
-    "@windicss/plugin-icons": "^1.0.2",
     "@windicss/plugin-interaction-variants": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-config-standard-with-typescript": "^20.0.0",
