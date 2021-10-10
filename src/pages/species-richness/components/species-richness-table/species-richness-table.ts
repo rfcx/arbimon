@@ -9,7 +9,7 @@ interface Header {
   color: string
 }
 
-const DEFAULT_COLOR = '#ffffff80'
+const HEADER_COLOR = '#ffffff80'
 
 @Options({
   components: {
@@ -21,16 +21,14 @@ export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) colors!: string[]
 
   get tableHeader (): Header[] {
-    const headers = [
-      { title: 'Species', color: DEFAULT_COLOR },
-      { title: 'Class', color: DEFAULT_COLOR }
+    return [
+      { title: 'Species', color: HEADER_COLOR },
+      { title: 'Class', color: HEADER_COLOR },
+      ...((this.hasMoreThanOneDataset)
+        ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })), { title: 'Total', color: HEADER_COLOR }]
+        : []
+      )
     ]
-
-    if (this.hasMoreThanOneDataset) {
-      headers.push(...[...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })), { title: 'Total', color: DEFAULT_COLOR }])
-    }
-
-    return headers
   }
 
   get hasTableData (): boolean {
