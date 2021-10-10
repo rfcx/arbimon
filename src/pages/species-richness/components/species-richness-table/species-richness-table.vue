@@ -41,11 +41,11 @@
                 <icon-fa-check
                   v-if="row.data[idx]"
                   class="m-auto"
-                  style="color: #1F57CC;"
+                  :style="{ color: colors[idx] }"
                 />
                 <icon-fa-close
                   v-else
-                  class="text-warning m-auto"
+                  class="text-secondary m-auto"
                 />
               </td>
             </template>
