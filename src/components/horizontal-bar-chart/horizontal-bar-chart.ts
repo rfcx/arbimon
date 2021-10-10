@@ -14,14 +14,9 @@ import { clearChart, generateChart } from '.'
   }
 })
 export default class HorizontalBarChartComponent extends Vue {
-  @Prop({ default: [] })
-  chartData!: ChartModels.GroupedBarChartItem[]
-
-  @Prop({ default: 'chart' })
-  domId!: string
-
-  @Prop({ default: '' })
-  chartTitle!: string
+  @Prop({ default: [] }) chartData!: ChartModels.GroupedBarChartItem[]
+  @Prop({ default: 'chart' }) domId!: string
+  @Prop({ default: '' }) chartTitle!: string
 
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
