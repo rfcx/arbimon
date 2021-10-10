@@ -1,3 +1,4 @@
 export * from './charts'
 export * from './color'
 export * from './dates'
+export * as FileUtils from './file'
