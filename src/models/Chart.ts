@@ -1,4 +1,3 @@
-
 export interface ChartSVGElement {
   svg: SVGSVGElement
   width: number
@@ -26,4 +25,11 @@ export interface MapSiteData {
   longitude: number
   latitude: number
   distinctSpecies: { [taxonName: string]: number }
+}
+
+export interface TableData {
+  speciesName: string
+  className: string
+  data: boolean[]
+  total: number
 }

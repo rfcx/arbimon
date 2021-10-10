@@ -1,5 +1,6 @@
 export * from './Auth'
 export * as ChartModels from './Chart'
+export * as DetectionModels from './Detection'
 export * from './Filter'
 export * as MapModels from './Map'
 export * as ProjectModels from './Project'
