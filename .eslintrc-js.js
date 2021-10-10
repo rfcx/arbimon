@@ -9,7 +9,12 @@ module.exports = {
     'simple-import-sort/imports': [
       'error',
       {
-        groups: [['^\\w'], ['^(@?\\w)'], ['^', '^\\.'], ['^\\u0000']]
+        groups: [
+          ['^(@(?!rfcx))?\\w'], // Dependencies
+          ['^@rfcx'], // Our other modules
+          ['^', '^\\.\\.', '^\\.'], // This module (unmatched, 2 dots, 1 dot)
+          ['^\\u0000'] // Side-effects
+        ]
       }
     ],
     'simple-import-sort/exports': ['error'],
