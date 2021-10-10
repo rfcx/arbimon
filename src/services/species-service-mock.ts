@@ -81,8 +81,8 @@ function getSpeciesByTaxon (detections: ApiDetection[]): { [taxon: string]: numb
 
 function getSpeciesBySite (detections: ApiDetection[]): MapSiteData[] {
   const detectionsBySite = groupBy(detections, 'name') // TODO ?? - Extract field names
-  const mapDataBySite = mapValues(detectionsBySite, (detections, siteId) => ({
-    siteId,
+  const mapDataBySite = mapValues(detectionsBySite, (detections, siteName) => ({
+    siteName,
     longitude: detections[0].lon,
     latitude: detections[0].lat,
     distinctSpecies: mapValues(groupBy(detections, 'taxon'), ds => new Set(ds.map(d => d.species_id)).size)

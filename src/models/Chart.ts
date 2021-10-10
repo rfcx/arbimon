@@ -21,7 +21,7 @@ export interface MapDataSet {
 }
 
 export interface MapSiteData {
-  siteId: string
+  siteName: string
   longitude: number
   latitude: number
   distinctSpecies: { [taxonName: string]: number }

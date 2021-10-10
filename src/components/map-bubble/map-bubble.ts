@@ -85,7 +85,7 @@ export default class MapBubbleComponent extends Vue {
 
   getPopup (datum: ChartModels.MapSiteData): string {
     const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
-    return `<strong>${datum.siteId}</strong><p>${speciesCounts.join('<br />')}</p>`
+    return `<strong>${datum.siteName}</strong><p>${speciesCounts.join('<br />')}</p>`
   }
 
   setupMapPopup (): void {
@@ -137,7 +137,7 @@ export default class MapBubbleComponent extends Vue {
           coordinates: [datum.longitude, datum.latitude]
         },
         properties: {
-          title: datum.siteId,
+          title: datum.siteName,
           radius: this.getRadius(datum),
           popup: this.getPopup(datum)
         }
