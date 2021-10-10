@@ -23,3 +23,4 @@
     </div>
   </div>
 </template>
+<script lang="ts" src="./species-richness-introduction.ts"></script>

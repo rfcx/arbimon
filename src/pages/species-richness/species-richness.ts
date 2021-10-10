@@ -9,11 +9,9 @@ import SpeciesRichnessMaps from '@/components/species-richness-maps/species-rich
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import { SpeciesRichnessData } from '@/services/species-service-mock'
-import { FileUtils } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
+import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
-import { getReportRawData } from './csv'
-import SpeciesRichnessIntroduction from './species-richness-introduction.vue'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData}
 
@@ -91,17 +89,5 @@ export default class SpeciesRichnessPage extends Vue {
         total: speciesPresences.filter(sp => key in sp).length
       }))
       .sort((a, b) => b.total - a.total || a.speciesName.localeCompare(b.speciesName))
-  }
-
-  async exportCSVReport (): Promise<void> {
-    const csvs = await Promise.all(this.filters.map(async ({ startDate, endDate, sites, color }) => {
-      const start = startDate.toISOString()
-      const end = endDate.add(1, 'days').toISOString()
-      return await getReportRawData({ start, end, sites })
-    }))
-
-    const filename = 'report.csv'
-    // TODO 106 - Support multiple datasets
-    await FileUtils.exportCSVFile(filename, csvs[0], 'Species Report')
   }
 }

@@ -1,5 +1,8 @@
 <template>
-  <species-richness-introduction />
+  <species-richness-introduction
+    :filters="filters"
+    :have-data="haveData"
+  />
   <comparison-list-component @emitSelect="onFilterChange" />
   <horizontal-bar-chart-component
     dom-id="species-in-taxonomic-group"
