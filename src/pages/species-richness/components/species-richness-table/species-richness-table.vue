@@ -38,7 +38,6 @@
                 v-if="hasMoreThanOneDataset"
                 class="p-2 text-white"
               >
-                <!-- v-for is 1-based -->
                 <icon-fa-check
                   v-if="row.data[idx]"
                   class="m-auto"
