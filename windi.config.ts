@@ -4,7 +4,6 @@ import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
 
-import pluginIcons from '@windicss/plugin-icons'
 import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 
 const range = (size: number, startAt = 1): number[] => {
@@ -29,7 +28,6 @@ export default defineConfig({
     }),
     pluginAspectRatio,
     pluginForms,
-    pluginIcons,
     pluginLineClamp,
     pluginInteractionVariants
   ],
