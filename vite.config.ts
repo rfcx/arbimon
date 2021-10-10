@@ -10,12 +10,15 @@ import pluginWindiCSS from 'vite-plugin-windicss'
 export default defineConfig({
   plugins: [
     pluginComponents({
-      resolvers: pluginIconsResolver({ prefix: 'icon' })
+      resolvers: pluginIconsResolver({
+        prefix: 'icon',
+        alias: {
+          fas: 'fa-solid',
+          far: 'fa-regular'
+        }
+      })
     }),
-    pluginIcons({
-      compiler: 'vue3',
-      autoInstall: true
-    }),
+    pluginIcons({ compiler: 'vue3' }),
     pluginVue(),
     pluginWindiCSS()
   ],
