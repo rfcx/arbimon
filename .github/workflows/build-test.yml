@@ -24,7 +24,7 @@ jobs:
           restore-keys: ${{ runner.os }}-node-
 
       - name: 'Setup: Install new deps'
-        run: npm ci
+        run: npm ci --include=dev
 
       - name: 'Build'
         run: npm run build
