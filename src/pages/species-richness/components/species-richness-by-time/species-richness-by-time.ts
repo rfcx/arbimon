@@ -21,10 +21,9 @@ export default class SpeciesRichnessByTime extends Vue {
   periods: Period[] = ['hour', 'day', 'month', 'year', 'quarter']
   period: Period = 'hour'
 
-  get config (): LineChartConfig {
+  get config (): Omit<LineChartConfig, 'width'> {
     return {
-      height: 500,
-      width: 1000,
+      height: 450,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
       xBounds: PERIOD_TO_X_BOUNDS[this.period]
     }
