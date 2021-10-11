@@ -6,11 +6,13 @@ import { ChartModels, ProjectModels } from '@/models'
 import { VuexService } from '@/services'
 import { exportChartWithElement } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
+import NoDataContainerView from '@/views/no-data-container.vue'
 import { clearChart, generateChart } from '.'
 
 @Options({
   components: {
-    ExportButtonView
+    ExportButtonView,
+    NoDataContainerView
   }
 })
 export default class HorizontalBarChartComponent extends Vue {

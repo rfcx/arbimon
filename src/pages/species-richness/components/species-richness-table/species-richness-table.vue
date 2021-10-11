@@ -1,10 +1,14 @@
 <template>
-  <div class="mt-5">
-    <h2 class="text-white text-xl mb-1.5">
+  <div>
+    <h2 class="text-white text-xl">
       Detected Species
     </h2>
+    <no-data-container-view
+      v-if="!hasTableData"
+      class="h-14 mt-2"
+    />
     <div
-      v-if="hasTableData"
+      v-else
       class="mt-2 max-h-100 overflow-y-auto"
     >
       <table class="w-full">
@@ -61,12 +65,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div
-      v-else
-      class="flex justify-center items-center mt-2 h-12 text-secondary border-2 border-secondary"
-    >
-      No data
     </div>
   </div>
 </template>
