@@ -28,6 +28,7 @@ export interface MapSiteData {
 }
 
 export interface TableData {
+  speciesId: number
   speciesName: string
   className: string
   data: boolean[]
