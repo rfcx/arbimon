@@ -22,5 +22,6 @@
 * **features:** Table - list species name in the table (#82)
 * **features:** Export species richness raw data as csv (#36)
 * **features:** Activity patterns species selector (#89)
+* **features:** Each species row in table should be clickable and link to ap page (#110)
 
 * **refactor:** Refactor species richness tabledisplay (#112)
