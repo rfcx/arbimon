@@ -2,7 +2,7 @@ import { createDecorator, VueDecorator } from 'vue-class-component'
 import Vuex, { ActionTree, GetterTree, MutationTree } from 'vuex'
 
 import * as Models from '@/models'
-import { ProjectService } from '@/services'
+import { ProjectService, SiteService } from '@/services'
 import * as ACTIONS from './actions'
 import * as ITEMS from './items'
 
@@ -13,7 +13,8 @@ const MUTATIONS = {
     updateAuth: 'updateAuth',
     updateUser: 'updateUser',
     updateProjects: 'updateProjects',
-    updateSelectedProject: 'updateSelectedProject'
+    updateSelectedProject: 'updateSelectedProject',
+    updateSites: 'updateSites'
   }
 }
 
@@ -22,6 +23,7 @@ export class RootState {
   user?: Models.Auth0User
   projects: Models.ProjectModels.ProjectListItem[] = []
   selectedProject?: Models.ProjectModels.ProjectListItem
+  sites: Models.SiteModels.Site[] = []
 }
 
 const rootActions: ActionTree<RootState, RootState> = {
@@ -36,6 +38,9 @@ const rootActions: ActionTree<RootState, RootState> = {
 
     const selectedProject = projects.length > 0 ? projects[0] : undefined
     commit(MUTATIONS.root.updateSelectedProject, selectedProject)
+
+    const sites = await SiteService.getSites()
+    commit(MUTATIONS.root.updateSites, sites)
   },
   [ACTIONS.root.updateSelectedProject]: ({ commit }, project?: Models.ProjectModels.ProjectListItem) => commit(MUTATIONS.root.updateSelectedProject, project)
 }
@@ -44,14 +49,17 @@ const rootMutations: MutationTree<RootState> = {
   [MUTATIONS.root.updateAuth]: (state, auth?: Models.Auth0Option) => { state.auth = auth },
   [MUTATIONS.root.updateUser]: (state, user?: Models.Auth0User) => { state.user = user },
   [MUTATIONS.root.updateProjects]: (state, projects: Models.ProjectModels.ProjectListItem[]) => { state.projects = projects },
-  [MUTATIONS.root.updateSelectedProject]: (state, project?: Models.ProjectModels.ProjectListItem) => { state.selectedProject = project }
+  [MUTATIONS.root.updateSelectedProject]: (state, project?: Models.ProjectModels.ProjectListItem) => { state.selectedProject = project },
+  [MUTATIONS.root.updateSites]: (state, sites: Models.SiteModels.Site[]) => { state.sites = sites }
 }
 
+// TODO ?? - Support binding to state directly
 const rootGetters: GetterTree<RootState, RootState> = {
   [ITEMS.root.auth]: state => state.auth,
   [ITEMS.root.user]: state => state.user,
   [ITEMS.root.projects]: state => state.projects,
-  [ITEMS.root.selectedProject]: state => state.selectedProject
+  [ITEMS.root.selectedProject]: state => state.selectedProject,
+  [ITEMS.root.sites]: state => state.sites
 }
 
 export default new Vuex.Store({
