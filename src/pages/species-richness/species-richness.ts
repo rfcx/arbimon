@@ -34,8 +34,7 @@ export default class SpeciesRichnessPage extends Vue {
   tableData: ChartModels.TableData[] = []
 
   get haveData (): boolean {
-    return this.detectionCounts.length > 0 &&
-    this.detectionCounts.some(count => count > 0)
+    return this.detectionCounts.length > 0 && this.detectionCounts.some(count => count > 0)
   }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
