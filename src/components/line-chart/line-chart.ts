@@ -1,10 +1,14 @@
 import * as d3 from 'd3'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
+import NoDataContainerView from '@/views/no-data-container.vue'
 import { clearChart } from '../horizontal-bar-chart'
 import { generateChart, LineChartConfig, LineChartSeries } from '.'
 
+@Options({
+  components: { NoDataContainerView }
+})
 export default class LineChart extends Vue {
   @Prop() domId!: string
   @Prop() config!: Omit<LineChartConfig, 'width'>

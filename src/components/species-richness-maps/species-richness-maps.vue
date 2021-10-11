@@ -57,7 +57,7 @@
     </div>
     <no-data-container-view
       v-if="!hasData"
-      class="h-96 mt-2"
+      class="h-32 mt-2"
     />
     <div
       v-show="hasData"
@@ -73,7 +73,7 @@
         :map-config="config"
         :map-style="mapStyle"
         :is-show-labels="isShowLabels"
-        class="w-full h-96"
+        class="w-full"
         @emitMapMoved="mapMoved"
       />
     </div>

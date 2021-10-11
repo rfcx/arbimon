@@ -3,13 +3,10 @@
     :id="`wrapper-${domId}`"
     class="w-full"
   >
-    <!-- TODO 20 - Standardized "No data" styles -->
-    <div
+    <no-data-container-view
       v-if="!hasData"
-      class="text-center text-white"
-    >
-      No data
-    </div>
+      class="h-32 mt-2"
+    />
     <div
       v-show="hasData"
       :id="domId"
