@@ -2,7 +2,7 @@ import { GeoJSONSource } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { ChartModels, MapModels, TaxonomyModels } from '@/models'
+import { MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox-service'
 import { downloadPng } from '@/utils'
 
