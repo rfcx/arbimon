@@ -3,7 +3,10 @@
     <h2 class="text-white text-xl mb-1.5">
       Detected Species
     </h2>
-    <div class="mt-2 max-h-100 overflow-y-auto">
+    <div
+      v-if="hasTableData"
+      class="mt-2 max-h-100 overflow-y-auto"
+    >
       <table class="w-full">
         <thead class="h-10">
           <tr class="sticky top-0">
@@ -59,12 +62,12 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div
-    v-if="!hasTableData"
-    class="flex justify-center items-center mt-2 h-8 text-secondary"
-  >
-    No data
+    <div
+      v-else
+      class="flex justify-center items-center mt-2 h-12 text-secondary border-2 border-secondary"
+    >
+      No data
+    </div>
   </div>
 </template>
 <script lang="ts" src="./species-richness-table.ts"></script>
