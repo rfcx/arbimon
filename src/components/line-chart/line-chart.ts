@@ -11,8 +11,7 @@ export default class LineChart extends Vue {
   @Prop() datasets!: LineChartSeries[]
 
   get hasData (): boolean {
-    return this.datasets.length > 0 &&
-    this.datasets.some(ds => Object.keys(ds.data).length > 0)
+    return this.datasets.length > 0 && this.datasets.some(ds => Object.keys(ds.data).length > 0)
   }
 
   mounted (): void {
