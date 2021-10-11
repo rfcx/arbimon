@@ -1,7 +1,6 @@
+import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
-
-import { OnClickOutside } from '@vueuse/components'
 
 import { FilterBase, SiteModels, SpeciesRichnessFilter } from '@/models'
 import { SiteService } from '@/services'

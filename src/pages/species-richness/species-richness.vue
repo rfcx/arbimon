@@ -21,6 +21,7 @@
   />
   <species-richness-table
     :table-data="tableData"
+    :colors="colors"
   />
 </template>
 <script src="./species-richness.ts" lang="ts"></script>
