@@ -7,3 +7,6 @@ export const datasetColors = [
   '#C28383',
   '#EBCF6D'
 ]
+
+// pastel options, work best for dark map background but won't work with street map
+// ['#85EBBA', '#85C1F5', '#B578DB', '#E5D3D2', '#D6E68C']
