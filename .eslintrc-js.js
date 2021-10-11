@@ -18,9 +18,8 @@ module.exports = {
     'unicorn/import-style': ['error',
       {
         styles: {
-          'mapbox-gl': {
-            named: true
-          }
+          'mapbox-gl': { named: true },
+          dayjs: { named: true }
         }
       }
     ],
