@@ -4,12 +4,12 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
-import LineChartComponent from '@/components/line-chart/line-chart.vue'
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import { SpeciesRichnessData } from '@/services/species-service-mock'
 import ExportButtonView from '@/views/export-button.vue'
+import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
@@ -22,7 +22,7 @@ dayjs.extend(utc)
     ComparisonListComponent,
     ExportButtonView,
     HorizontalBarChartComponent,
-    LineChartComponent,
+    SpeciesRichnessByTime,
     SpeciesRichnessIntroduction,
     SpeciesRichnessMaps,
     SpeciesRichnessTable

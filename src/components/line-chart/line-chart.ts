@@ -3,15 +3,9 @@ import { Prop, Watch } from 'vue-property-decorator'
 
 import { generateChart, LineChartConfig, LineChartSeries } from '.'
 
-const PERIOD_TO_FORCED_X: Record<string, number> = {
-  hour: 24,
-  day: 28,
-  month: 12,
-  quarter: 4
-}
-
 export default class LineChart extends Vue {
   @Prop() domId!: string
+  @Prop() config!: LineChartConfig
   @Prop() datasets: LineChartSeries[] = [ // TODO 20: Inject real datasets
     {
       color: '#499FE6',
@@ -52,16 +46,10 @@ export default class LineChart extends Vue {
     }
   ]
 
-  allPeriods = ['hour', 'day', 'month', 'year', 'quarter']
-  period = 'hour'
-
-  config: LineChartConfig = {
-    height: 500,
-    width: 1000,
-    margins: { top: 20, right: 30, bottom: 30, left: 40 }
+  get hasData (): boolean {
+    return this.datasets.length > 0 &&
+    this.datasets.some(ds => Object.keys(ds.data).length > 0)
   }
-
-  get hasData (): boolean { return this.datasets.length > 0 }
 
   mounted (): void {
     this.updateChart()
@@ -72,24 +60,7 @@ export default class LineChart extends Vue {
   }
 
   updateChart (): void {
-    const data = this.groupDataByPeriod()
-    const xSeries = this.getXSeries(data)
-
-    const chart = generateChart(xSeries, data, this.config)
-    if (!chart) return
-
-    document.getElementById(this.domId)?.appendChild(chart)
-  }
-
-  groupDataByPeriod (): LineChartSeries[] {
-    return this.datasets // TODO 20: Implement this once we inject ungrouped data
-  }
-
-  getXSeries (data: LineChartSeries[]): number[] {
-    // Force 0-24 hour, 0-12 months, etc
-    const xForced = Array.from({ length: PERIOD_TO_FORCED_X[this.period] ?? 0 }, (_, i) => i)
-    // Add real values (ex: 2020, 2021)
-    const xActual = data.flatMap(s => Object.keys(s.data).map(Number))
-    return Array.from(new Set([...xForced, ...xActual])).sort((a, b) => a - b)
+    const chart = generateChart(this.datasets, this.config)
+    if (chart) document.getElementById(this.domId)?.appendChild(chart)
   }
 }

@@ -1,5 +1,9 @@
 import * as d3 from 'd3'
 
+import LineChart from './line-chart.vue'
+
+export const LineChartComponent = LineChart
+
 export interface LineChartConfig {
   height: number
   width: number
@@ -9,6 +13,7 @@ export interface LineChartConfig {
     left: number
     right: number
   }
+  xBounds?: [number, number]
 }
 
 export interface LineChartSeries {
@@ -16,21 +21,23 @@ export interface LineChartSeries {
   data: { [x: number]: number }
 }
 
-export const generateChart = (xSeries: number[], datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
+export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   // Prepare data
-  const maxY = datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)
+  const yBounds = [0, datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)]
+  const xBounds = config.xBounds ?? getXBoundsFromDatasets(datasets)
+  const xValues = Array.from({ length: xBounds[1] - xBounds[0] + 1 }, (_, i) => i + xBounds[0])
 
   // Setup axes
   const xScale = d3.scaleLinear()
-    .domain([0, xSeries.length - 1])
+    .domain(xBounds)
     .range([config.margins.left, config.width - config.margins.right])
 
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(0, ${config.height - config.margins.bottom})`)
-    .call(d3.axisBottom(xScale).ticks(xSeries.length).tickSizeOuter(0))
+    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0))
 
   const yScale = d3.scaleLinear()
-    .domain([0, maxY]).nice()
+    .domain(yBounds).nice()
     .range([config.height - config.margins.bottom, config.margins.top])
 
   const yAxis = (g: any): unknown => g
@@ -57,7 +64,7 @@ export const generateChart = (xSeries: number[], datasets: LineChartSeries[], co
       .y(x => yScale(data[x] ?? NaN))
 
     svg.append('path')
-      .datum(xSeries.filter(line.defined()))
+      .datum(xValues.filter(line.defined()))
       .attr('d', line)
       .attr('stroke', '#999')
       .attr('stroke-width', 1)
@@ -65,11 +72,28 @@ export const generateChart = (xSeries: number[], datasets: LineChartSeries[], co
       .style('opacity', 50)
 
     svg.append('path')
-      .datum(xSeries)
+      .datum(xValues)
       .attr('d', line)
       .attr('stroke', dataset.color)
       .attr('stroke-width', 3)
   })
 
   return svg.node()
+}
+
+const getXBoundsFromDatasets = (datasets: LineChartSeries[]): [number, number] => {
+  let xMin = Number.MAX_VALUE
+  let xMax = Number.MIN_VALUE
+
+  datasets.forEach(series => {
+    const xActuals = Object.keys(series.data)
+    xActuals.forEach(xActual => {
+      const x = Number(xActual)
+      console.log(x)
+      if (x < xMin) xMin = x
+      if (x > xMax) xMax = x
+    })
+  })
+
+  return [xMin, xMax]
 }
