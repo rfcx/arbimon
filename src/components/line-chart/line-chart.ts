@@ -30,7 +30,6 @@ export default class LineChart extends Vue {
 
     const width = (document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 500)
     const config = { ...this.config, width }
-    console.log(config)
     const chart = generateChart(this.datasets, config)
     if (!chart) return
 
