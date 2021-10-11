@@ -1,7 +1,6 @@
+import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
-
-import { OnClickOutside } from '@vueuse/components'
 
 import { ProjectModels } from '@/models'
 import { ROUTES_NAME } from '@/router'
