@@ -1,6 +1,8 @@
 import JSZip from 'jszip'
 import XLSX from 'xlsx'
 
+import { FileModels } from '@/models'
+
 export async function generateBase64Sheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
   const workbook = XLSX.utils.book_new()
   const worksheet = XLSX.utils.json_to_sheet(jsonData)
@@ -8,13 +10,16 @@ export async function generateBase64Sheet (jsonData: any, bookType?: XLSX.BookTy
   return XLSX.write(workbook, { bookType, type: 'base64' })
 }
 
-export async function zipFiles (): Promise<void> {
+export async function zipFiles (files: FileModels.File[], folderName: string): Promise<void> {
   const zip = new JSZip()
-  zip.file('test/Hello.txt', 'Hello World\n')
+  zip.folder(folderName)
+  files.forEach(file => {
+    zip.file(file.filename, file.data)
+  })
   await zip.generateAsync({ type: 'blob' })
     .then(function (content) {
       const blobUrl = URL.createObjectURL(content)
-      downloadFile(blobUrl, 'abc', 'zip')
+      downloadFile(blobUrl, folderName, 'zip')
     })
 }
 

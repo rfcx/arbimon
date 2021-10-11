@@ -5,7 +5,7 @@ import { Options, Vue } from 'vue-class-component'
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
-import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
+import { ChartModels, FileModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import { SpeciesRichnessData } from '@/services/species-service-mock'
 import { FileUtils } from '@/utils'
@@ -97,8 +97,15 @@ export default class SpeciesRichnessPage extends Vue {
     }))
 
     // const filename = 'report.csv'
-    // TODO 106 - Support multiple datasets
-    await FileUtils.generateBase64Sheet(csvs[0], 'csv', 'Species Report')
-    await FileUtils.zipFiles()
+    // TODO: Update filename
+    const files: FileModels.File[] = []
+    for (const [idx, csv] of csvs.entries()) {
+      const base64 = await FileUtils.generateBase64Sheet(csv, 'csv', 'Species Report')
+      files.push({
+        filename: `report-${idx}.csv`,
+        data: base64
+      })
+    }
+    await FileUtils.zipFiles(files, 'reports')
   }
 }
