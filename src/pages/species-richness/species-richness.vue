@@ -22,6 +22,7 @@
   <species-richness-table
     :table-data="tableData"
     :colors="colors"
+    class="mt-5"
   />
 </template>
 <script src="./species-richness.ts" lang="ts"></script>
