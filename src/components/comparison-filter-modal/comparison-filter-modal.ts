@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
 
 import { FilterBase, SiteModels, SpeciesRichnessFilter } from '@/models'
-import { SiteService } from '@/services'
+import { VuexService } from '@/services'
 import { dayjs } from '@/services/dayjs-service'
 
 interface FilterMenuItem {
@@ -16,7 +16,7 @@ interface SiteCheckbox {
   check: boolean
 }
 
-const dateFormat = 'YYYY-MM-DD'
+const DATE_FORMAT = 'YYYY-MM-DD'
 
 @Options({
   components: {
@@ -26,8 +26,7 @@ const dateFormat = 'YYYY-MM-DD'
 export default class ComparisonFilterModalComponent extends Vue {
   @Prop({ default: null }) defaultFilter!: SpeciesRichnessFilter | null
 
-  @Emit()
-  emitApply (): FilterBase {
+  @Emit() emitApply (): FilterBase {
     this.emitClose()
     return {
       sites: this.selectedSites,
@@ -36,16 +35,16 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
-  @Emit()
-  emitClose (): boolean {
-    return false
-  }
+  @Emit() emitClose (): boolean { return false }
+
+  @VuexService.Project.sites.bind()
+  allSites!: SiteModels.Site[]
 
   selectedSites: SiteModels.Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
-  startDate: string | null = dayjs().subtract(7, 'days').format(dateFormat)
-  endDate: string | null = dayjs().format(dateFormat)
-  readonly today = dayjs().format(dateFormat)
+  startDate: string | null = dayjs().subtract(7, 'days').format(DATE_FORMAT)
+  endDate: string | null = dayjs().format(DATE_FORMAT)
+  readonly today = dayjs().format(DATE_FORMAT)
   currentActiveMenuId = 'sites'
 
   get menus (): FilterMenuItem[] {
@@ -61,19 +60,16 @@ export default class ComparisonFilterModalComponent extends Vue {
     ]
   }
 
-  get allSites (): SiteModels.Site[] {
-    return SiteService.getSites()
-  }
-
   get isSelectedAllSites (): boolean {
     return this.selectedSites.length === 0
   }
 
   mounted (): void {
+    // TODO ?? - What if the list of sites didn't arrive yet?
     this.setDefaultSelectedSites()
     if (this.defaultFilter) {
-      this.startDate = this.defaultFilter.startDate?.format(dateFormat)
-      this.endDate = this.defaultFilter.endDate?.format(dateFormat)
+      this.startDate = this.defaultFilter.startDate?.format(DATE_FORMAT)
+      this.endDate = this.defaultFilter.endDate?.format(DATE_FORMAT)
     }
   }
 
@@ -87,7 +83,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   setDefaultSiteCheckboxItems (): void {
-    this.siteCheckboxItems = this.allSites
+    this.siteCheckboxItems = [...this.allSites]
       .sort((a, b) => a.name.localeCompare(b.name))
       .map(site => ({ site, check: false }))
   }
