@@ -22,7 +22,7 @@ export async function zipFiles (files: FileModels.File[], folderName: string): P
     })
 }
 
-export const downloadFile = (data: string, filename: string, extension: string): void => {
+export function downloadFile (data: string, filename: string, extension: string): void {
   const a = document.createElement('a')
   a.download = `${filename}.${extension}`
   a.href = data
