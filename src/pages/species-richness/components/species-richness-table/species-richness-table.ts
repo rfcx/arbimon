@@ -3,6 +3,7 @@ import { Prop } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
 import ExportButtonView from '@/views/export-button.vue'
+import NoDataContainerView from '@/views/no-data-container.vue'
 
 interface Header {
   title: string
@@ -13,7 +14,8 @@ const HEADER_COLOR = '#ffffff80'
 
 @Options({
   components: {
-    ExportButtonView
+    ExportButtonView,
+    NoDataContainerView
   }
 })
 export default class SpeciesRichnessTable extends Vue {

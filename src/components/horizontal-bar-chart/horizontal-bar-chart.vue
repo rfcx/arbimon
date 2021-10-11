@@ -13,12 +13,10 @@
         @click="downloadChart()"
       />
     </div>
-    <div
+    <no-data-container-view
       v-if="!hasData"
-      class="text-center text-secondary min-h-32 flex justify-center items-center border-2 border-secondary"
-    >
-      No data
-    </div>
+      class="h-32"
+    />
     <div
       v-show="hasData"
       :id="domId"
