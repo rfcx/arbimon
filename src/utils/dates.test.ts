@@ -1,4 +1,3 @@
-
 import dayjs from 'dayjs'
 
 import { formatDateRange } from './dates'
