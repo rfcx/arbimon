@@ -1,8 +1,29 @@
+import JSZip from 'jszip'
 import XLSX from 'xlsx'
 
-export async function exportCSVFile (filename: string, jsonData: any, sheetName: string = 'Worksheet'): Promise<void> {
+export async function generateBase64Sheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
   const workbook = XLSX.utils.book_new()
   const worksheet = XLSX.utils.json_to_sheet(jsonData)
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-  XLSX.writeFile(workbook, filename, { bookType: 'csv' })
+  return XLSX.write(workbook, { bookType, type: 'base64' })
+}
+
+export async function zipFiles (): Promise<void> {
+  const zip = new JSZip()
+  zip.file('test/Hello.txt', 'Hello World\n')
+  await zip.generateAsync({ type: 'blob' })
+    .then(function (content) {
+      const blobUrl = URL.createObjectURL(content)
+      downloadFile(blobUrl, 'abc', 'zip')
+    })
+}
+
+export const downloadFile = (data: string, filename: string, extension: string): void => {
+  const a = document.createElement('a')
+  a.download = `${filename}.${extension}`
+  a.href = data
+  document.body.appendChild(a)
+  a.click()
+  // then remove after click
+  a.parentNode?.removeChild(a)
 }
