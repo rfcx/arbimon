@@ -1,9 +1,10 @@
+import dayjs from 'dayjs'
 import { groupBy, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
 import { DetectionModels, TaxonomyModels } from '@/models'
 import { MapSiteData } from '@/models/Chart'
-import { SpeciesRichnessData, SpeciesRichnessDataset } from './species-service'
+import { Period, SpeciesRichnessData, SpeciesRichnessDataset } from './species-service'
 
 export * from './species-service'
 
@@ -13,7 +14,7 @@ interface ApiDetection {
   'name': string
   'lat': number
   'lon': number
-  'date': string
+  'date': string // ex: "2021-04-01T00:00:00.000Z"
   'hour': number
   'species_id': number
   'scientific_name': string
@@ -65,6 +66,7 @@ export async function getSpeciesRichnessData (dataset: SpeciesRichnessDataset): 
     detectionCount: filteredDetections.length,
     speciesByTaxon: getSpeciesByTaxon(filteredDetections),
     speciesBySite: getSpeciesBySite(filteredDetections),
+    speciesByTime: getSpeciesByTime(filteredDetections),
     speciesPresence: getSpeciesPresence(filteredDetections)
   }), MOCK_FLIGHT_TIME))
 }
@@ -89,6 +91,32 @@ function getSpeciesBySite (detections: ApiDetection[]): MapSiteData[] {
   }))
 
   return Object.values(mapDataBySite)
+}
+
+function getSpeciesByTime (detections: ApiDetection[]): Record<Period, Record<number, number>> {
+  return {
+    hour: mapValues(groupByNumber(detections, d => d.hour), ds => ds.length),
+    day: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).date()), ds => ds.length),
+    month: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month() + 1), ds => ds.length),
+    year: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).year()), ds => ds.length),
+    quarter: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).quarter()), ds => ds.length)
+  }
+}
+
+// TODO 20 - Extract this to utils
+const groupByNumber = <T>(data: T[], keySelector: ((k: T) => number)): Record<number, T[]> => {
+  const result: Record<number, T[]> = {}
+
+  for (const datum of data) {
+    const key = keySelector(datum)
+    if (!(key in result)) {
+      result[key] = [datum]
+    } else {
+      result[key].push(datum)
+    }
+  }
+
+  return result
 }
 
 function getSpeciesPresence (detections: ApiDetection[]): { [speciesId: string]: TaxonomyModels.Species } {
