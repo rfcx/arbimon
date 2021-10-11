@@ -9,7 +9,7 @@
     >
       <table class="w-full">
         <thead class="h-10">
-          <tr class="sticky top-0">
+          <tr class="sticky top-0 z-10">
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
@@ -48,7 +48,7 @@
                 />
                 <icon-fa-close
                   v-else
-                  class="text-secondary m-auto"
+                  class="text-secondary m-auto opacity-65"
                 />
               </td>
             </template>
