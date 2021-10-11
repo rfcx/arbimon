@@ -1,5 +1,5 @@
 # build stage
-FROM node:14-alpine as builder
+FROM node:15-alpine as builder
 
 ENV NODE_ENV=production
 
@@ -7,7 +7,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY package*.json .
-RUN npm ci --production=false
+RUN npm ci --include=dev --production=false
 
 COPY . .
 RUN npm run build
