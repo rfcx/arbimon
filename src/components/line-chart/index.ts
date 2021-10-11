@@ -34,7 +34,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
 
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(0, ${config.height - config.margins.bottom})`)
-    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0))
+    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(d3.format('d')))
 
   const yScale = d3.scaleLinear()
     .domain(yBounds).nice()
