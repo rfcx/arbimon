@@ -1,7 +1,3 @@
-import dayjs from 'dayjs'
-import pluralGetSet from 'dayjs/plugin/pluralGetSet'
-import quarterOfYear from 'dayjs/plugin/quarterOfYear'
-import utc from 'dayjs/plugin/utc'
 import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
@@ -16,11 +12,6 @@ import SpeciesRichnessIntroduction from './components/species-richness-introduct
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData}
-
-// TODO 20 - Extract to `dayjs-initialized`
-dayjs.extend(utc)
-dayjs.extend(quarterOfYear)
-dayjs.extend(pluralGetSet)
 
 @Options({
   components: {
