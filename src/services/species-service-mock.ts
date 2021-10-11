@@ -1,9 +1,10 @@
-import dayjs from 'dayjs'
 import { groupBy, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
 import { DetectionModels, TaxonomyModels } from '@/models'
 import { MapSiteData } from '@/models/Chart'
+import { groupByNumber } from '@/utils/lodash-ext'
+import { dayjs } from './dayjs-service'
 import { Period, SpeciesRichnessData, SpeciesRichnessDataset } from './species-service'
 
 export * from './species-service'
@@ -101,22 +102,6 @@ function getSpeciesByTime (detections: ApiDetection[]): Record<Period, Record<nu
     year: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).year()), ds => ds.length),
     quarter: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).quarter()), ds => ds.length)
   }
-}
-
-// TODO 20 - Extract this to utils
-const groupByNumber = <T>(data: T[], keySelector: ((k: T) => number)): Record<number, T[]> => {
-  const result: Record<number, T[]> = {}
-
-  for (const datum of data) {
-    const key = keySelector(datum)
-    if (!(key in result)) {
-      result[key] = [datum]
-    } else {
-      result[key].push(datum)
-    }
-  }
-
-  return result
 }
 
 function getSpeciesPresence (detections: ApiDetection[]): { [speciesId: string]: TaxonomyModels.Species } {
