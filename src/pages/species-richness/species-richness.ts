@@ -1,4 +1,6 @@
 import dayjs from 'dayjs'
+import pluralGetSet from 'dayjs/plugin/pluralGetSet'
+import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 import utc from 'dayjs/plugin/utc'
 import { Options, Vue } from 'vue-class-component'
 
@@ -7,7 +9,7 @@ import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horiz
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
-import { SpeciesRichnessData } from '@/services/species-service-mock'
+import { Period, SpeciesRichnessData } from '@/services/species-service'
 import ExportButtonView from '@/views/export-button.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
@@ -15,7 +17,10 @@ import SpeciesRichnessTable from './components/species-richness-table/species-ri
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData}
 
+// TODO 20 - Extract to `dayjs-initialized`
 dayjs.extend(utc)
+dayjs.extend(quarterOfYear)
+dayjs.extend(pluralGetSet)
 
 @Options({
   components: {
@@ -35,6 +40,7 @@ export default class SpeciesRichnessPage extends Vue {
   detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
+  speciesByTimeDatasets: Array<{color: string, data: Record<Period, Record<number, number>>}> = []
   tableData: ChartModels.TableData[] = []
 
   get haveData (): boolean {
@@ -57,6 +63,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
+    this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
     this.tableData = this.getTableData(datasets)
   }
 

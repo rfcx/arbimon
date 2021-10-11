@@ -4,7 +4,7 @@
   >
     <div class="flex justify-between items-end mb-1.5">
       <h2 class="text-white text-xl">
-        Distinct species count by time
+        Distinct species by time
       </h2>
       <div class="mb-2">
         BUTTONS
@@ -13,7 +13,7 @@
     <line-chart-component
       :dom-id="domId"
       :config="config"
-      :datasets="datasets"
+      :datasets="datasetsForPeriod"
     />
   </div>
 </template>

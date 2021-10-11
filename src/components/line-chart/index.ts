@@ -18,7 +18,7 @@ export interface LineChartConfig {
 
 export interface LineChartSeries {
   color: string
-  data: { [x: number]: number }
+  data: Record<number, number>
 }
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
