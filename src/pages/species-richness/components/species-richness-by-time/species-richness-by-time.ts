@@ -18,7 +18,7 @@ export default class SpeciesRichnessByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: Array<{color: string, data: Record<Period, Record<number, number>>}>
 
-  allPeriods: Period[] = ['hour', 'day', 'month', 'year', 'quarter']
+  periods: Period[] = ['hour', 'day', 'month', 'year', 'quarter']
   period: Period = 'hour'
 
   get config (): LineChartConfig {
