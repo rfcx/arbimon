@@ -1,3 +1,5 @@
+// This is the one place we import & configure mapbox
+// eslint-disable-next-line unicorn/import-style
 import mapbox from 'mapbox-gl'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicmZjeCIsImEiOiJoMEptMnlJIn0.LPKrjG_3AeYB5cqsyLpcrg'
