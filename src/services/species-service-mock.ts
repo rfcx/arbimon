@@ -36,7 +36,7 @@ export const getAllDetections = async (dataset: DatasetDefinition): Promise<Dete
           speciesName: d.scientific_name,
           classId: d.taxon_id,
           className: d.taxon,
-          numberOfRecordings: d.num_of_recordings
+          detectionFrequency: d.detection_frequency
         }
       })
   )

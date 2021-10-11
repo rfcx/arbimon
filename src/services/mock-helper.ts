@@ -21,7 +21,7 @@ export interface ApiDetection {
   'scientific_name': string
   'taxon_id': number
   'taxon': string
-  'num_of_recordings': number
+  'detection_frequency': number
 }
 
 const MOCK_FLIGHT_TIME = 250 // TODO ?? - Consider longer delay to simulate a real API call
@@ -40,4 +40,8 @@ export const getRawDetections = (): ApiDetection[] => {
 export const filterByDataset = (detections: ApiDetection[], dataset: DatasetDefinition): ApiDetection[] => {
   const { start, end, sites } = dataset
   return detections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+}
+
+export const filterBySpecies = (detections: ApiDetection[], speciesId: number): ApiDetection[] => {
+  return detections.filter(r => r.species_id === speciesId)
 }
