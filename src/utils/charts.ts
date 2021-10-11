@@ -1,3 +1,4 @@
+import { SpeciesRichnessFilter } from '@/models'
 import { ChartSVGElement } from '@/models/Chart'
 import { downloadFile } from './file'
 
@@ -62,4 +63,23 @@ const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
 
 export const downloadPng = (filename: string, data: string): void => {
   downloadFile(data, filename, 'png')
+}
+
+const DATE_FORMAT = 'DD MMM YY'
+
+export function getFilterFriendlyName (filter: SpeciesRichnessFilter): string {
+  const { startDate, endDate, sites } = filter
+
+  let siteName = 'All sites'
+  const siteLength = sites.length
+  if (siteLength === 1) {
+    siteName = sites[0].name
+  } else if (siteLength > 1) {
+    siteName = `${sites[0].name} + ${siteLength - 1} other sites`
+  }
+
+  const start = startDate.format(DATE_FORMAT)
+  const end = endDate.format(DATE_FORMAT)
+  const date = startDate.isSame(endDate, 'date') ? `${start} - ${end}` : start
+  return `${siteName} (${date})`
 }
