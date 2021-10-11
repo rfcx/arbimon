@@ -22,3 +22,4 @@
 * **features:** Table - list species name in the table (#82)
 * **features:** Export species richness raw data as csv (#36)
 * **features:** Activity patterns species selector (#89)
+* **features:** Export csv support multiple datasets(#106)
