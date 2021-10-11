@@ -25,7 +25,12 @@
             class="capitalize"
           >
             <td class="p-2">
-              {{ row.speciesName }}
+              <div
+                class="hover:(cursor-pointer text-opacity-50)"
+                @click="goToActivityPatternsPage(row.speciesId)"
+              >
+                {{ row.speciesName }}
+              </div>
             </td>
             <td class="p-2">
               {{ row.className }}

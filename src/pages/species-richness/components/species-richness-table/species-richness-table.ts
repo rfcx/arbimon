@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
+import { ROUTES_NAME } from '@/router'
 import ExportButtonView from '@/views/export-button.vue'
 
 interface Header {
@@ -41,5 +42,14 @@ export default class SpeciesRichnessTable extends Vue {
 
   get datasetCount (): number {
     return this.tableData.length > 0 ? this.tableData[0].data.length : 0
+  }
+
+  goToActivityPatternsPage (speciesId: number): void {
+    void this.$router.push({
+      name: ROUTES_NAME.activity_patterns,
+      params: {
+        speciesId
+      }
+    })
   }
 }
