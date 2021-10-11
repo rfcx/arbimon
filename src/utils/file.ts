@@ -7,14 +7,13 @@ export async function generateBase64Sheet (jsonData: any, bookType?: XLSX.BookTy
   const workbook = XLSX.utils.book_new()
   const worksheet = XLSX.utils.json_to_sheet(jsonData)
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-  return XLSX.write(workbook, { bookType, type: 'base64' })
+  return XLSX.write(workbook, { bookType, type: 'string' })
 }
 
 export async function zipFiles (files: FileModels.File[], folderName: string): Promise<void> {
   const zip = new JSZip()
-  zip.folder(folderName)
   files.forEach(file => {
-    zip.file(file.filename, file.data)
+    zip.file(`${folderName}/${file.filename}`, file.data)
   })
   await zip.generateAsync({ type: 'blob' })
     .then(function (content) {

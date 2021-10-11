@@ -96,13 +96,12 @@ export default class SpeciesRichnessPage extends Vue {
       return await getReportRawData({ start, end, sites })
     }))
 
-    // const filename = 'report.csv'
-    // TODO: Update filename
+    // TODO - 106: Update filename and folder name
     const files: FileModels.File[] = []
     for (const [idx, csv] of csvs.entries()) {
       const base64 = await FileUtils.generateBase64Sheet(csv, 'csv', 'Species Report')
       files.push({
-        filename: `report-${idx}.csv`,
+        filename: `report-${idx + 1}.csv`,
         data: base64
       })
     }
