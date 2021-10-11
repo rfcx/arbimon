@@ -1,4 +1,5 @@
 import { ChartSVGElement } from '@/models/Chart'
+import { downloadFile } from './file'
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
@@ -60,11 +61,5 @@ const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
 }
 
 export const downloadPng = (filename: string, data: string): void => {
-  const a = document.createElement('a')
-  a.download = `${filename}.png`
-  a.href = data
-  document.body.appendChild(a)
-  a.click()
-  // then remove after click
-  a.parentNode?.removeChild(a)
+  downloadFile(data, filename, 'png')
 }
