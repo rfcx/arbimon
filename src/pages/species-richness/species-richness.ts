@@ -29,6 +29,7 @@ dayjs.extend(utc)
 export default class SpeciesRichnessPage extends Vue {
   sites: SiteModels.Site[] = []
 
+  colors: string[] = []
   filters: SpeciesRichnessFilter[] = []
   detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
@@ -52,6 +53,7 @@ export default class SpeciesRichnessPage extends Vue {
     )
 
     this.filters = filters
+    this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
