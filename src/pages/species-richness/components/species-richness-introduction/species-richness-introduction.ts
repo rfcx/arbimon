@@ -1,16 +1,10 @@
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { SpeciesRichnessFilter } from '@/models'
 import { FileUtils } from '@/utils'
-import ExportButtonView from '@/views/export-button.vue'
 import { getReportRawData } from '../../csv'
 
-@Options({
-  components: {
-    ExportButtonView
-  }
-})
 export default class SpeciesRichnessTable extends Vue {
   @Prop() filters!: SpeciesRichnessFilter[]
   @Prop() haveData!: boolean

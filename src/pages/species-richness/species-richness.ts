@@ -6,7 +6,6 @@ import SpeciesRichnessMaps from '@/components/species-richness-maps/species-rich
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import { Period, SpeciesRichnessData } from '@/services/species-service'
-import ExportButtonView from '@/views/export-button.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
@@ -16,7 +15,6 @@ interface ColoredDataset {color: string, data: SpeciesRichnessData}
 @Options({
   components: {
     ComparisonListComponent,
-    ExportButtonView,
     HorizontalBarChartComponent,
     SpeciesRichnessByTime,
     SpeciesRichnessIntroduction,
