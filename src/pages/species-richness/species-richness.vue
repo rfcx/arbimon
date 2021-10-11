@@ -14,7 +14,7 @@
     :datasets="mapDatasets"
     class="mt-5"
   />
-  <line-chart-component
+  <species-richness-by-time
     :dom-id="'TODO20'"
     class="mt-5"
   />
