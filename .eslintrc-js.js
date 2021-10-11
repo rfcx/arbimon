@@ -3,7 +3,7 @@ module.exports = {
   plugins: ['simple-import-sort', 'unicorn', 'unused-imports'],
   rules: {
     'import/newline-after-import': ['error'],
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': 'error',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 1 }],
     'no-void': ['error', { allowAsStatement: true }],
@@ -23,9 +23,8 @@ module.exports = {
     'unicorn/import-style': ['error',
       {
         styles: {
-          'mapbox-gl': {
-            named: true
-          }
+          'mapbox-gl': { named: true },
+          dayjs: { named: true }
         }
       }
     ],

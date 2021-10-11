@@ -1,27 +1,16 @@
 import * as d3 from 'd3'
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels, ProjectModels } from '@/models'
 import { VuexService } from '@/services'
 import { exportChartWithElement } from '@/utils'
-import ExportButtonView from '@/views/export-button.vue'
 import { clearChart, generateChart } from '.'
 
-@Options({
-  components: {
-    ExportButtonView
-  }
-})
 export default class HorizontalBarChartComponent extends Vue {
-  @Prop({ default: [] })
-  chartData!: ChartModels.GroupedBarChartItem[]
-
-  @Prop({ default: 'chart' })
-  domId!: string
-
-  @Prop({ default: '' })
-  chartTitle!: string
+  @Prop({ default: [] }) chartData!: ChartModels.GroupedBarChartItem[]
+  @Prop({ default: 'chart' }) domId!: string
+  @Prop({ default: '' }) chartTitle!: string
 
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined

@@ -1,8 +1,7 @@
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { ChartModels } from '@/models'
-import ExportButtonView from '@/views/export-button.vue'
 
 interface Header {
   title: string
@@ -11,11 +10,6 @@ interface Header {
 
 const HEADER_COLOR = '#ffffff80'
 
-@Options({
-  components: {
-    ExportButtonView
-  }
-})
 export default class SpeciesRichnessTable extends Vue {
   @Prop({ default: [] }) tableData!: ChartModels.TableData[]
   @Prop({ default: [] }) colors!: string[]

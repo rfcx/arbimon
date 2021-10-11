@@ -22,5 +22,6 @@
 * **features:** Table - list species name in the table (#82)
 * **features:** Export species richness raw data as csv (#36)
 * **features:** Activity patterns species selector (#89)
+* **features:** Detected species by time (#20)
 
-* **refactor:** Refactor species richness tabledisplay (#112)
+* **refactor:** Refactor species richness table display (#112)
