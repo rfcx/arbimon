@@ -1,11 +1,11 @@
 <template>
-  <div class="mt-5">
-    <h2 class="text-white text-xl mb-1.5">
+  <div>
+    <h2 class="text-white text-xl">
       Detected Species
     </h2>
     <no-data-container-view
       v-if="!hasTableData"
-      class="h-14"
+      class="h-14 mt-2"
     />
     <div
       v-else
