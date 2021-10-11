@@ -6,7 +6,7 @@ import { Period } from '@/services/species-service'
 
 const PERIOD_TO_X_BOUNDS: Partial<Record<Period, [number, number]>> = {
   hour: [0, 23],
-  day: [1, 28],
+  day: [1, 31],
   month: [1, 12],
   quarter: [1, 4]
 }
