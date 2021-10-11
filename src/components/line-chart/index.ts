@@ -89,7 +89,6 @@ const getXBoundsFromDatasets = (datasets: LineChartSeries[]): [number, number] =
     const xActuals = Object.keys(series.data)
     xActuals.forEach(xActual => {
       const x = Number(xActual)
-      console.log(x)
       if (x < xMin) xMin = x
       if (x > xMax) xMax = x
     })
