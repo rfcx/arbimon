@@ -32,7 +32,6 @@ export default class LineChart extends Vue {
     const chart = generateChart(this.datasets, config)
     if (!chart) return
 
-    // TODO 20 - I don't like that we need to select twice...
     clearChart(this.domId)
     parent.appendChild(chart)
   }
