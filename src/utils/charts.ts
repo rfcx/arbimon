@@ -18,7 +18,7 @@ const getChartElement = (element: Element): ChartSVGElement => {
   return { svg, width, height }
 }
 
-const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
+export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
   const serializer = new XMLSerializer()
   const source = serializer.serializeToString(chartElement.svg)
 
