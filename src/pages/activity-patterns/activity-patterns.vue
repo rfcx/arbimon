@@ -1,7 +1,7 @@
 <template>
   <div>
     <select
-      v-model="selectedSpecies"
+      v-model="selectedSpeciesId"
       class="bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
     >
       <option
