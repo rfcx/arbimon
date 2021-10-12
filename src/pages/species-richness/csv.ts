@@ -1,6 +1,5 @@
-import dayjs from 'dayjs'
-
 import { SpeciesService } from '@/services'
+import { dayjs } from '@/services/dayjs-service'
 import { SpeciesRichnessDataset } from '@/services/species-service-mock'
 
 export interface ReportData {

@@ -1,7 +1,7 @@
-import mapboxgl from 'mapbox-gl'
+import { LngLatLike } from 'mapbox-gl'
 
 export interface MapConfig {
   sourceMapId: string
-  center: mapboxgl.LngLatLike
+  center: LngLatLike
   zoom: number
 }

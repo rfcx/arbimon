@@ -3,7 +3,7 @@
     id="horizontal-bar-chart-component"
     class="w-full"
   >
-    <div class="flex justify-between items-end mb-1.5">
+    <div class="flex justify-between items-end">
       <h2 class="text-white text-xl">
         {{ chartTitle }}
       </h2>
@@ -13,15 +13,14 @@
         @click="downloadChart()"
       />
     </div>
-    <div
+    <no-data-container-view
       v-if="!hasData"
-      class="text-center text-secondary min-h-32 flex justify-center items-center border-2 border-secondary"
-    >
-      No data
-    </div>
+      class="h-32 mt-2"
+    />
     <div
       v-show="hasData"
       :id="domId"
+      class="mt-2"
     />
   </div>
 </template>

@@ -1,49 +1,71 @@
 <template>
-  <div class="mt-5">
-    <h2 class="text-white text-xl mb-1.5">
+  <div>
+    <h2 class="text-white text-xl">
       Detected Species
     </h2>
-    <table class="w-full">
-      <thead>
-        <tr>
-          <th
-            v-for="(title, idx) in tableHeader"
-            :key="'species-table-header-' + title"
-            class="table-cell font-bold border-b capitalize"
-            :class="{ 'text-left': idx < 2 }"
+    <no-data-container-view
+      v-if="!hasTableData"
+      class="h-32 mt-2"
+    />
+    <div
+      v-else
+      class="mt-2 max-h-100 overflow-y-auto"
+    >
+      <table class="w-full">
+        <thead class="h-10">
+          <tr class="sticky top-0 z-10">
+            <th
+              v-for="(item, idx) in tableHeader"
+              :key="'species-table-header-' + item.title"
+              class="font-bold capitalize p-2 bg-mirage-grey"
+              :class="{ 'text-left': idx < 2 }"
+              :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
+            >
+              {{ item.title }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="row in tableData"
+            :key="'species-table-row-' + row.speciesName"
+            class="capitalize"
           >
-            {{ title }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="row in tableData"
-          :key="'species-table-row-' + row.speciesName"
-          class="table-row"
-        >
-          <td>{{ row.speciesName }}</td>
-          <td>{{ row.className }}</td>
-          <td
-            v-for="dataset in datasetCount"
-            :key="'species-table-column-' + dataset"
-            class="table-cell py-1 text-center"
-          >
-            <!-- v-for is 1-based -->
-            {{ row.data[dataset - 1] ? 1 : 0 }}
-          </td>
-          <td class="text-center">
-            {{ row.total }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div
-    v-if="!hasTableData"
-    class="flex justify-center items-center mt-2 h-8 text-secondary"
-  >
-    No data
+            <td class="p-2">
+              {{ row.speciesName }}
+            </td>
+            <td class="p-2">
+              {{ row.className }}
+            </td>
+            <template
+              v-for="(dataset, idx) in datasetCount"
+              :key="'species-table-column-' + dataset"
+            >
+              <td
+                v-if="hasMoreThanOneDataset"
+                class="p-2 text-white"
+              >
+                <icon-fa-check
+                  v-if="row.data[idx]"
+                  class="m-auto"
+                  :style="{ color: colors[idx] }"
+                />
+                <icon-fa-close
+                  v-else
+                  class="text-secondary m-auto opacity-65"
+                />
+              </td>
+            </template>
+            <td
+              v-if="hasMoreThanOneDataset"
+              class="p-2 text-center"
+            >
+              {{ row.total }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 <script lang="ts" src="./species-richness-table.ts"></script>

@@ -3,7 +3,9 @@ import { groupBy, mapValues } from 'lodash'
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
 import { DetectionModels, TaxonomyModels } from '@/models'
 import { MapSiteData } from '@/models/Chart'
-import { SpeciesRichnessData, SpeciesRichnessDataset } from './species-service'
+import { groupByNumber } from '@/utils/lodash-ext'
+import { dayjs } from './dayjs-service'
+import { Period, SpeciesRichnessData, SpeciesRichnessDataset } from './species-service'
 
 export * from './species-service'
 
@@ -13,7 +15,7 @@ interface ApiDetection {
   'name': string
   'lat': number
   'lon': number
-  'date': string
+  'date': string // ex: "2021-04-01T00:00:00.000Z"
   'hour': number
   'species_id': number
   'scientific_name': string
@@ -65,6 +67,7 @@ export async function getSpeciesRichnessData (dataset: SpeciesRichnessDataset): 
     detectionCount: filteredDetections.length,
     speciesByTaxon: getSpeciesByTaxon(filteredDetections),
     speciesBySite: getSpeciesBySite(filteredDetections),
+    speciesByTime: getSpeciesByTime(filteredDetections),
     speciesPresence: getSpeciesPresence(filteredDetections)
   }), MOCK_FLIGHT_TIME))
 }
@@ -81,14 +84,24 @@ function getSpeciesByTaxon (detections: ApiDetection[]): { [taxon: string]: numb
 
 function getSpeciesBySite (detections: ApiDetection[]): MapSiteData[] {
   const detectionsBySite = groupBy(detections, 'name') // TODO ?? - Extract field names
-  const mapDataBySite = mapValues(detectionsBySite, (detections, siteId) => ({
-    siteId,
+  const mapDataBySite = mapValues(detectionsBySite, (detections, siteName) => ({
+    siteName,
     longitude: detections[0].lon,
     latitude: detections[0].lat,
     distinctSpecies: mapValues(groupBy(detections, 'taxon'), ds => new Set(ds.map(d => d.species_id)).size)
   }))
 
   return Object.values(mapDataBySite)
+}
+
+function getSpeciesByTime (detections: ApiDetection[]): Record<Period, Record<number, number>> {
+  return {
+    hour: mapValues(groupByNumber(detections, d => d.hour), ds => ds.length),
+    day: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).date()), ds => ds.length),
+    month: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month() + 1), ds => ds.length),
+    year: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).year()), ds => ds.length),
+    quarter: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).quarter()), ds => ds.length)
+  }
 }
 
 function getSpeciesPresence (detections: ApiDetection[]): { [speciesId: string]: TaxonomyModels.Species } {

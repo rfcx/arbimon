@@ -1,5 +1,3 @@
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
 import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
@@ -7,37 +5,36 @@ import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horiz
 import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
-import { SpeciesRichnessData } from '@/services/species-service-mock'
-import { FileUtils } from '@/utils'
-import ExportButtonView from '@/views/export-button.vue'
+import { Period, SpeciesRichnessData } from '@/services/species-service'
+import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
+import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
-import { getReportRawData } from './csv'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData}
-
-dayjs.extend(utc)
 
 @Options({
   components: {
     ComparisonListComponent,
     HorizontalBarChartComponent,
+    SpeciesRichnessByTime,
+    SpeciesRichnessIntroduction,
     SpeciesRichnessMaps,
-    SpeciesRichnessTable,
-    ExportButtonView
+    SpeciesRichnessTable
   }
 })
 export default class SpeciesRichnessPage extends Vue {
   sites: SiteModels.Site[] = []
 
+  colors: string[] = []
   filters: SpeciesRichnessFilter[] = []
   detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
   mapDatasets: ChartModels.MapDataSet[] = []
+  speciesByTimeDatasets: Array<{color: string, data: Record<Period, Record<number, number>>}> = []
   tableData: ChartModels.TableData[] = []
 
   get haveData (): boolean {
-    return this.detectionCounts.length > 0 &&
-    this.detectionCounts.some(count => count > 0)
+    return this.detectionCounts.length > 0 && this.detectionCounts.some(count => count > 0)
   }
 
   async onFilterChange (filters: SpeciesRichnessFilter[]): Promise<void> {
@@ -52,9 +49,11 @@ export default class SpeciesRichnessPage extends Vue {
     )
 
     this.filters = filters
+    this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
+    this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
     this.tableData = this.getTableData(datasets)
   }
 
@@ -87,17 +86,5 @@ export default class SpeciesRichnessPage extends Vue {
         total: speciesPresences.filter(sp => key in sp).length
       }))
       .sort((a, b) => b.total - a.total || a.speciesName.localeCompare(b.speciesName))
-  }
-
-  async exportCSVReport (): Promise<void> {
-    const csvs = await Promise.all(this.filters.map(async ({ startDate, endDate, sites, color }) => {
-      const start = startDate.toISOString()
-      const end = endDate.add(1, 'days').toISOString()
-      return await getReportRawData({ start, end, sites })
-    }))
-
-    const filename = 'report.csv'
-    // TODO 106 - Support multiple datasets
-    await FileUtils.exportCSVFile(filename, csvs[0], 'Species Report')
   }
 }
