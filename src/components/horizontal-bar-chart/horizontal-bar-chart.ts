@@ -1,4 +1,3 @@
-import * as d3 from 'd3'
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
@@ -17,9 +16,7 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   mounted (): void {
-    d3.select(window).on('resize', (e) => {
-      this.renderChart()
-    })
+    window.addEventListener('resize', this.renderChart)
   }
 
   @Watch('chartData', { deep: true })
@@ -29,14 +26,16 @@ export default class HorizontalBarChartComponent extends Vue {
 
   renderChart (): void {
     const id = this.domId
-    const screenWidth = (document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 0)
+
     const config = {
-      width: screenWidth,
+      width: document.getElementById(`wrapper-${id}`)?.clientWidth ?? 0,
       margins: { top: 20, right: 20, bottom: 30, left: 80 },
       fontColor: 'white'
     }
+
     const chart = generateChart(this.chartData, config)
     if (!chart) return
+
     clearChart(id)
     document.getElementById(id)?.appendChild(chart)
   }
