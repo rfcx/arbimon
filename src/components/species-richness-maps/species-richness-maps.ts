@@ -11,7 +11,7 @@ interface MapOptions {
   name: string
 }
 
-const DEFAULT_PREFIX = 'Species-By-Taxonomy'
+const DEFAULT_PREFIX = 'Species-By-Site'
 
 @Options({
   components: {
