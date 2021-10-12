@@ -3,7 +3,7 @@ import { SiteModels } from '@/models'
 import ApiClient from './api-service'
 
 // Api calling example
-export async function getSites (): Promise<SiteModels.Site[]> {
+export const getSites = async (): Promise<SiteModels.Site[]> => {
   const { method, url } = Endpoints.getSites
 
   try {

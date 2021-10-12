@@ -32,3 +32,9 @@ export class SpeciesRichnessFilter {
     this.color = color
   }
 }
+
+export interface DatasetDefinition {
+  start: string
+  end: string
+  sites: Site[]
+}

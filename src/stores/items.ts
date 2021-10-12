@@ -2,5 +2,6 @@ export const root = {
   auth: 'auth',
   user: 'user',
   projects: 'projects',
-  selectedProject: 'selectedProject'
+  selectedProject: 'selectedProject',
+  sites: 'sites'
 }
