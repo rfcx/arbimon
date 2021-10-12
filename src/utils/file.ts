@@ -12,13 +12,17 @@ export async function generateSheet (jsonData: any, bookType?: XLSX.BookType, sh
   return XLSX.write(workbook, { bookType, type: 'string' })
 }
 
+export async function getCsvString (jsonData: any): Promise<string> {
+  return await generateSheet(jsonData, 'csv')
+}
+
 export async function zipFiles (files: FileModels.File[], folderName: string): Promise<void> {
   const zip = new JSZip()
   files.forEach(file => {
     zip.file(`${folderName}/${file.filename}`, file.data)
   })
   const blob = await zip.generateAsync({ type: 'blob' })
-  downloadFile(URL.createObjectURL(blob), folderName, 'zip')
+  downloadZip(URL.createObjectURL(blob), folderName)
 }
 
 export function downloadFile (data: string, filename: string, extension: string): void {
@@ -29,6 +33,14 @@ export function downloadFile (data: string, filename: string, extension: string)
   a.click()
   // then remove after click
   a.parentNode?.removeChild(a)
+}
+
+export function downloadPng (data: string, filename: string): void {
+  downloadFile(data, filename, 'png')
+}
+
+export function downloadZip (data: string, filename: string): void {
+  downloadFile(data, filename, 'zip')
 }
 
 const DATE_FORMAT = 'YYMMDD'
