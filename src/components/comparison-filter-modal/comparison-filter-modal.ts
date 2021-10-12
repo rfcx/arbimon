@@ -76,9 +76,9 @@ export default class ComparisonFilterModalComponent extends Vue {
   setDefaultSelectedSites (): void {
     this.setDefaultSiteCheckboxItems()
     const selectedSites = this.defaultFilter?.sites ?? []
-    const selectedSiteIds = new Set(selectedSites.map(s => s.id))
+    const selectedSiteIds = new Set(selectedSites.map(s => s.siteId))
     this.selectedSites = this.siteCheckboxItems
-      .filter(cb => selectedSiteIds.has(cb.site.id))
+      .filter(cb => selectedSiteIds.has(cb.site.siteId))
       .map(cb => { cb.check = true; return cb.site })
   }
 
@@ -102,7 +102,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   updateSelectedSites (item: SiteCheckbox): void {
-    const siteIdx = this.selectedSites.findIndex(s => s.id === item.site.id)
+    const siteIdx = this.selectedSites.findIndex(s => s.siteId === item.site.siteId)
     if (siteIdx === -1) {
       this.selectedSites.push(item.site)
       item.check = true

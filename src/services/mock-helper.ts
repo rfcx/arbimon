@@ -39,7 +39,7 @@ export const getRawDetections = (): ApiDetection[] => {
 
 export const filterByDataset = (detections: ApiDetection[], dataset: DatasetDefinition): ApiDetection[] => {
   const { start, end, sites } = dataset
-  return detections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.id).includes(r.stream_id)))
+  return detections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)))
 }
 
 export const filterBySpecies = (detections: ApiDetection[], speciesId: number): ApiDetection[] => {
