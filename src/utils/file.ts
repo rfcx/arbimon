@@ -16,7 +16,7 @@ export async function zipFiles (files: FileModels.File[], folderName: string): P
     zip.file(`${folderName}/${file.filename}`, file.data)
   })
   const blob = await zip.generateAsync({ type: 'blob' })
-  downloadFile(URL.createObjectURL(blob), folderName, 'zip')
+  downloadZip(URL.createObjectURL(blob), folderName)
 }
 
 export function downloadFile (data: string, filename: string, extension: string): void {
@@ -27,4 +27,12 @@ export function downloadFile (data: string, filename: string, extension: string)
   a.click()
   // then remove after click
   a.parentNode?.removeChild(a)
+}
+
+export function downloadPng (data: string, filename: string): void {
+  downloadFile(data, filename, 'png')
+}
+
+export function downloadZip (data: string, filename: string): void {
+  downloadFile(data, filename, 'zip')
 }

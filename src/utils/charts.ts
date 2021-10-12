@@ -1,5 +1,5 @@
 import { ChartSVGElement } from '@/models/Chart'
-import { downloadFile } from './file'
+import { downloadPng } from './file'
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
@@ -8,7 +8,7 @@ export const exportChartWithElement = async (element: Element, filename: string)
 
 const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
   const data = await svgToPngData(chartElement)
-  downloadFile(data, filename, 'png')
+  downloadPng(data, filename)
 }
 
 const getChartElement = (element: Element): ChartSVGElement => {
