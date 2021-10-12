@@ -5,7 +5,7 @@
   />
   <comparison-list-component @emitSelect="onFilterChange" />
   <horizontal-bar-chart-component
-    dom-id="species-in-taxonomic-group"
+    dom-id="species-by-class"
     chart-title="Distinct species by taxonomic class"
     :chart-data="chartData"
     class="mt-5"
@@ -15,7 +15,7 @@
     class="mt-5"
   />
   <species-richness-by-time
-    :dom-id="'TODO20'"
+    dom-id="species-by-time"
     :datasets="speciesByTimeDatasets"
     class="mt-5"
   />

@@ -1,9 +1,12 @@
 import { Vue } from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
 
 import { Auth0Option, Auth0User } from '@/models'
 import { VuexService } from '@/services'
 
 export default class AuthNavbarItemComponent extends Vue {
+  @Prop() domId!: string
+
   @VuexService.Auth.auth.bind()
   auth!: Auth0Option | undefined
 
