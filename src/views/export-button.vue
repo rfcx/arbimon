@@ -24,7 +24,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-export default class MapBubbleComponent extends Vue {
+export default class ExportButtonView extends Vue {
   @Prop({ default: false }) disabled!: boolean
 }
 </script>
