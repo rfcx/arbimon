@@ -10,7 +10,7 @@ interface Header {
 
 const HEADER_COLOR = '#ffffff80'
 
-export default class SpeciesRichnessTable extends Vue {
+export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop({ default: [] }) tableData!: ChartModels.TableData[]
   @Prop({ default: [] }) colors!: string[]
 

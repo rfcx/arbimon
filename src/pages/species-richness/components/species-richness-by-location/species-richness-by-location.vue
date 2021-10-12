@@ -79,7 +79,7 @@
     </div>
   </div>
 </template>
-<script src="./species-richness-maps.ts" lang="ts"></script>
+<script src="./species-richness-by-location.ts" lang="ts"></script>
 <style lang="scss" scoped>
 .taxon-picker {
   float: right;

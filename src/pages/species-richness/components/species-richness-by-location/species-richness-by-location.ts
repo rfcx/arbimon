@@ -15,7 +15,7 @@ interface MapOptions {
     MapBubbleComponent
   }
 })
-export default class SpeciesRichnessMaps extends Vue {
+export default class SpeciesRichnessByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
 
   taxons = TaxonomyModels.TAXONOMIES

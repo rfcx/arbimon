@@ -5,7 +5,7 @@ import { SpeciesRichnessFilter } from '@/models'
 import { FileUtils } from '@/utils'
 import { getReportRawData } from '../../csv'
 
-export default class SpeciesRichnessTable extends Vue {
+export default class SpeciesRichnessIntroduction extends Vue {
   @Prop() filters!: SpeciesRichnessFilter[]
   @Prop() haveData!: boolean
 
