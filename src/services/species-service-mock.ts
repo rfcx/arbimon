@@ -1,4 +1,4 @@
-import { groupBy, mapValues } from 'lodash'
+import { groupBy, kebabCase, mapValues } from 'lodash'
 
 import { DatasetDefinition, DetectionModels, MapModels, TaxonomyModels } from '@/models'
 import { groupByNumber } from '@/utils/lodash-ext'
@@ -11,6 +11,7 @@ export * from './species-service'
 export const getAllSpecies = async (): Promise<TaxonomyModels.Species[]> => {
   const detectionsBySpeciesId = groupBy(getRawDetections(), 'species_id')
   const speciesBySpeciesId = mapValues(detectionsBySpeciesId, (value, key) => ({
+    speciesSlug: kebabCase(value[0].scientific_name),
     speciesId: Number(key),
     speciesName: value[0].scientific_name,
     className: value[0].taxon
@@ -86,6 +87,7 @@ const getSpeciesByTime = (detections: ApiDetection[]): Record<Period, Record<num
 const getSpeciesPresence = (detections: ApiDetection[]): { [speciesId: string]: TaxonomyModels.Species } => {
   const detectionsBySpecies = groupBy(detections, 'species_id')
   return mapValues(detectionsBySpecies, (value, key) => ({
+    speciesSlug: kebabCase(value[0].scientific_name),
     speciesId: Number(key),
     speciesName: value[0].scientific_name,
     className: value[0].taxon
