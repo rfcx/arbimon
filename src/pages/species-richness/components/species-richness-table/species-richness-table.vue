@@ -5,7 +5,7 @@
     </h2>
     <no-data-container-view
       v-if="!hasTableData"
-      class="h-14 mt-2"
+      class="h-32 mt-2"
     />
     <div
       v-else
