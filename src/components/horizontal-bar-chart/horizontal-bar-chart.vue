@@ -1,13 +1,12 @@
 <template>
   <div
-    id="horizontal-bar-chart-component"
+    :id="`wrapper-${domId}`"
     class="w-full"
   >
     <div class="flex justify-between items-end">
       <h2 class="text-white text-xl">
         {{ chartTitle }}
       </h2>
-      <!-- TODO: 74 improve style of the whole chart section -->
       <export-button-view
         v-if="hasData"
         @click="downloadChart()"
