@@ -2,7 +2,7 @@ import { GeoJSONSource } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { ChartModels, MapModels, TaxonomyModels } from '@/models'
+import { MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox-service'
 import { FileUtils } from '@/utils'
 
@@ -11,7 +11,7 @@ const LABEL_LAYER_IDS = ['tunnel-primary-secondary-tertiary-case', 'tunnel-major
 
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
-  @Prop() dataset!: ChartModels.MapDataSet
+  @Prop() dataset!: MapModels.MapDataSet
   @Prop() taxon!: string
   @Prop() mapConfig!: MapModels.MapConfig
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
@@ -26,12 +26,11 @@ export default class MapBubbleComponent extends Vue {
   mapIsLoading = true
   isSynchronizingMapPosition = false
 
-  get mapIdFull (): string { return `map-bubble-${this.mapId}` }
   get hasData (): boolean { return this.dataset.data.length > 0 }
 
   mounted (): void {
     const mapConfig = {
-      container: this.mapIdFull,
+      container: this.mapId,
       style: this.mapStyle,
       center: this.mapConfig.center,
       zoom: this.mapConfig.zoom,
@@ -73,12 +72,12 @@ export default class MapBubbleComponent extends Vue {
     this.updateLabels()
   }
 
-  getRadius (datum: ChartModels.MapSiteData): number {
-    if (this.taxon === TaxonomyModels.TAXONOMY_ALL.name) return Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
+  getRadius (datum: MapModels.MapSiteData): number {
+    if (this.taxon === TaxonomyModels.TAXONOMY_CLASS_ALL.name) return Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
     return Math.sqrt(datum.distinctSpecies[this.taxon] ?? 0)
   }
 
-  getPopup (datum: ChartModels.MapSiteData): string {
+  getPopup (datum: MapModels.MapSiteData): string {
     const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
     return `<strong>${datum.siteName}</strong><p>${speciesCounts.join('<br />')}</p>`
   }
