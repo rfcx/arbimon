@@ -1,9 +1,9 @@
 import { Vue } from 'vue-class-component'
+import { Watch } from 'vue-property-decorator'
 
 import { TaxonomyModels } from '@/models'
-import { SpeciesService } from '@/services'
-import { Watch } from 'vue-property-decorator'
 import { ROUTES_NAME } from '@/router'
+import { SpeciesService } from '@/services'
 
 export default class ActivityPatterns extends Vue {
   species: TaxonomyModels.Species[] = []
@@ -22,7 +22,7 @@ export default class ActivityPatterns extends Vue {
 
   @Watch('selectedSpeciesId')
   onSelectedSpeciesIdChange (): void {
-    this.$router.push({
+    void this.$router.push({
       name: ROUTES_NAME.activity_patterns,
       params: {
         speciesId: this.selectedSpeciesId
