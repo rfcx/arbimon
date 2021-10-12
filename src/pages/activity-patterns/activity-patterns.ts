@@ -7,23 +7,23 @@ import { SpeciesService } from '@/services'
 
 export default class ActivityPatterns extends Vue {
   species: TaxonomyModels.Species[] = []
-  selectedSpeciesId = NaN
+  selectedSpeciesSlug = ''
 
   async mounted (): Promise<void> {
-    this.selectedSpeciesId = Number(this.$route.params.speciesId)
+    this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
     this.species = (await SpeciesService.getAllSpecies())
       .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
   }
 
   @Watch('species')
   onSpeciesChange (species: TaxonomyModels.Species[]): void {
-    if (species.length > 0 && !this.selectedSpeciesId) {
-      this.selectedSpeciesId = species[0].speciesId
+    if (species.length > 0 && !this.selectedSpeciesSlug) {
+      this.selectedSpeciesSlug = species[0].speciesSlug
     }
   }
 
-  @Watch('selectedSpeciesId')
-  onSelectedSpeciesIdChange (speciesId: number): void {
-    void this.$router.push({ name: ROUTES_NAME.activity_patterns, params: { speciesId } })
+  @Watch('selectedSpeciesSlug')
+  onSelectedSpeciesSlugChange (speciesSlug: number): void {
+    void this.$router.push({ name: ROUTES_NAME.activity_patterns, params: { speciesSlug } })
   }
 }
