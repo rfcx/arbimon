@@ -24,5 +24,6 @@
 * **features:** Activity patterns species selector (#89)
 * **features:** Detected species by time (#20)
 * **features:** Export csv support multiple datasets(#106)
+* **features:** Export line chart as PNG (#85)
 
 * **refactor:** Refactor species richness table display (#112)
