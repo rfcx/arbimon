@@ -9,7 +9,7 @@
       class="relative"
     >
       <div
-        :id="mapIdFull"
+        :id="mapId"
         class="w-full h-96 text-black"
       />
       <export-button-view
