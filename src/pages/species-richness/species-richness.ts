@@ -7,11 +7,14 @@ import SpeciesRichnessMaps from '@/components/species-richness-maps/species-rich
 import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import { Period, SpeciesRichnessData } from '@/services/species-service'
+import { FilterUtils } from '@/utils'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData, startDate: Dayjs, endDate: Dayjs, sites: SiteModels.Site[]}
+
+const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
 
 @Options({
   components: {
@@ -30,6 +33,7 @@ export default class SpeciesRichnessPage extends Vue {
   filters: SpeciesRichnessFilter[] = []
   detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
+  chartExportName = ''
   mapDatasets: ChartModels.MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<Period, Record<number, number>>}> = []
   tableData: ChartModels.TableData[] = []
@@ -52,6 +56,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
+    this.chartExportName = FilterUtils.getFilterExportGroupName(filters, DEFAULT_CHART_PREFIX)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))

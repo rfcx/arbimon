@@ -8,6 +8,7 @@
     dom-id="species-in-taxonomic-group"
     chart-title="Distinct species by taxonomic class"
     :chart-data="chartData"
+    :chart-export-name="chartExportName"
     class="mt-5"
   />
   <species-richness-maps

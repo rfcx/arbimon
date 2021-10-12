@@ -20,10 +20,8 @@ export default class SpeciesRichnessTable extends Vue {
     }))
 
     const allDates = this.filters.flatMap(({ startDate, endDate }) => (Object.values({ startDate, endDate })))
-    const minDate = FilterUtils.getMinFilterDate(allDates)
-    const maxDate = FilterUtils.getMaxFilterDate(allDates)
-    const folderName = FilterUtils.getFilterExportGroupName(minDate, maxDate, DEFAULT_PREFIX)
-    const dateGroup = FilterUtils.getDateGroup(minDate, maxDate)
+    const dateGroup = FilterUtils.getDateGroup(allDates)
+    const folderName = FilterUtils.getFilterExportGroupName(this.filters, DEFAULT_PREFIX)
     const filenames = this.filters.map(({ startDate, endDate, sites }) => FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, dateGroup, sites))
 
     const files: FileModels.File[] = await Promise.all(csvData.map(async (csvDatum, idx) => ({
