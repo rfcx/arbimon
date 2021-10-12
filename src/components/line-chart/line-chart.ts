@@ -1,4 +1,3 @@
-import * as d3 from 'd3'
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
@@ -15,8 +14,7 @@ export default class LineChartComponent extends Vue {
   }
 
   mounted (): void {
-    this.updateChart()
-    d3.select(window).on('resize', (e) => this.updateChart())
+    window.addEventListener('resize', this.updateChart)
   }
 
   @Watch('datasets', { deep: true }) onDataChange (): void {
