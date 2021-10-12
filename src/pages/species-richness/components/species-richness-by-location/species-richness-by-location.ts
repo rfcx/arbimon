@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import MapBubbleComponent from '@/components/map-bubble/map-bubble.vue'
-import { ChartModels, MapModels, TaxonomyModels } from '@/models'
+import { MapModels, TaxonomyModels } from '@/models'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/services/mapbox-service'
 
 interface MapOptions {
@@ -16,9 +16,9 @@ interface MapOptions {
   }
 })
 export default class SpeciesRichnessByLocation extends Vue {
-  @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
+  @Prop({ default: [] }) public datasets!: MapModels.MapDataSet[]
 
-  taxons = TaxonomyModels.TAXONOMIES
+  taxons = TaxonomyModels.TAXONOMY_CLASSES
   taxon = this.taxons[0].name
   isShowLabels = true
   mapStyleId = 'satellite-streets-v11'
