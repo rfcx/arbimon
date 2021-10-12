@@ -72,6 +72,7 @@
         :map-id="idx"
         :map-config="config"
         :map-style="mapStyle"
+        :map-export-name="mapExportName(dataset)"
         :is-show-labels="isShowLabels"
         class="w-full"
         @emitMapMoved="mapMoved"

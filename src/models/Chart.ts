@@ -1,3 +1,7 @@
+import { Dayjs } from 'dayjs'
+
+import { Site } from './Site'
+
 export interface ChartSVGElement {
   svg: SVGSVGElement
   width: number
@@ -16,6 +20,9 @@ export interface GroupedBarChartItem {
 }
 
 export interface MapDataSet {
+  startDate: Dayjs
+  endDate: Dayjs
+  sites: Site[]
   color: string
   data: MapSiteData[]
 }
