@@ -1,6 +1,5 @@
 <template>
   <div
-    id="index-page"
     class="page-container"
   >
     <navigation-bar-component />

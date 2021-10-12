@@ -10,5 +10,5 @@ export interface Detection {
   speciesName: string
   classId: number
   className: string
-  numberOfRecordings: number
+  detectionFrequency: number
 }

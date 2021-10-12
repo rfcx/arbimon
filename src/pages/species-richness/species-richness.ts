@@ -2,13 +2,13 @@ import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
 import HorizontalBarChartComponent from '@/components/horizontal-bar-chart/horizontal-bar-chart.vue'
-import SpeciesRichnessMaps from '@/components/species-richness-maps/species-richness-maps.vue'
-import { ChartModels, SiteModels, SpeciesRichnessFilter, TaxonomyModels } from '@/models'
+import { ChartModels, MapModels, SiteModels, SpeciesRichnessFilter, TableModels, TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 import { Period, SpeciesRichnessData } from '@/services/species-service'
+import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
+import SpeciesRichnessDetectedSpecies from './components/species-richness-detected-species/species-richness-detected-species.vue'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
-import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData}
 
@@ -16,10 +16,10 @@ interface ColoredDataset {color: string, data: SpeciesRichnessData}
   components: {
     ComparisonListComponent,
     HorizontalBarChartComponent,
+    SpeciesRichnessByLocation,
     SpeciesRichnessByTime,
-    SpeciesRichnessIntroduction,
-    SpeciesRichnessMaps,
-    SpeciesRichnessTable
+    SpeciesRichnessDetectedSpecies,
+    SpeciesRichnessIntroduction
   }
 })
 export default class SpeciesRichnessPage extends Vue {
@@ -29,9 +29,9 @@ export default class SpeciesRichnessPage extends Vue {
   filters: SpeciesRichnessFilter[] = []
   detectionCounts: number[] = []
   chartData: ChartModels.GroupedBarChartItem[] = []
-  mapDatasets: ChartModels.MapDataSet[] = []
+  mapDatasets: MapModels.MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<Period, Record<number, number>>}> = []
-  tableData: ChartModels.TableData[] = []
+  tableData: TableModels.TableData[] = []
 
   get haveData (): boolean {
     return this.detectionCounts.length > 0 && this.detectionCounts.some(count => count > 0)
@@ -70,11 +70,11 @@ export default class SpeciesRichnessPage extends Vue {
       .sort((a, b) => a.group.localeCompare(b.group))
   }
 
-  getMapDataset (datasets: ColoredDataset[]): ChartModels.MapDataSet[] {
+  getMapDataset (datasets: ColoredDataset[]): MapModels.MapDataSet[] {
     return datasets.map(({ color, data }) => ({ color, data: data.speciesBySite }))
   }
 
-  getTableData (datasets: ColoredDataset[]): ChartModels.TableData[] {
+  getTableData (datasets: ColoredDataset[]): TableModels.TableData[] {
     const speciesPresences = datasets.map(ds => ds.data.speciesPresence)
     const allSpecies: { [speciesId: string]: TaxonomyModels.Species } = Object.assign({}, ...speciesPresences)
 

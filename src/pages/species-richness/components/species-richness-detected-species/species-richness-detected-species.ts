@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { ChartModels } from '@/models'
+import { TableModels } from '@/models'
 
 interface Header {
   title: string
@@ -10,8 +10,8 @@ interface Header {
 
 const HEADER_COLOR = '#ffffff80'
 
-export default class SpeciesRichnessTable extends Vue {
-  @Prop({ default: [] }) tableData!: ChartModels.TableData[]
+export default class SpeciesRichnessDetectedSpecies extends Vue {
+  @Prop({ default: [] }) tableData!: TableModels.TableData[]
   @Prop({ default: [] }) colors!: string[]
 
   get tableHeader (): Header[] {

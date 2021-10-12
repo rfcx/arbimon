@@ -8,7 +8,7 @@ interface ProjectRequest {
   keyword?: string
 }
 
-function mapProjectList (data: ProjectModels.RawProjectListItem): ProjectModels.ProjectListItem {
+const mapProjectList = (data: ProjectModels.RawProjectListItem): ProjectModels.ProjectListItem => {
   return {
     id: data.id,
     name: data.name,
@@ -17,7 +17,7 @@ function mapProjectList (data: ProjectModels.RawProjectListItem): ProjectModels.
   }
 }
 
-export async function getProjects (options?: ProjectRequest): Promise<ProjectModels.ProjectListItem[]> {
+export const getProjects = async (options?: ProjectRequest): Promise<ProjectModels.ProjectListItem[]> => {
   try {
     const resp = await ApiClient.request<ProjectModels.RawProjectListItem[]>({
       ...Endpoints.getProjects
