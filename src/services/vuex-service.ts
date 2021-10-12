@@ -1,4 +1,5 @@
-import { Auth0Option, Auth0User, ProjectModels } from '@/models'
+// TODO ?? - Delete this file
+import { Auth0Option, Auth0User, ProjectModels, SiteModels } from '@/models'
 import store, { ACTIONS, createVuexDecorator, ITEMS } from '@/stores'
 
 const get = <T>(key: string, defaultValue: T): T => store.getters[key] ?? defaultValue
@@ -64,6 +65,18 @@ export const Project = (() => ({
       },
       async set (project: ProjectType) {
         return await set(ACTIONS.root.updateSelectedProject, project)
+      }
+    }
+  })(),
+
+  sites: (() => {
+    type SiteType = SiteModels.Site[]
+    return {
+      bind () {
+        return createVuexDecorator(ITEMS.root.sites)
+      },
+      get (): SiteType {
+        return get<SiteType>(ITEMS.root.sites, [])
       }
     }
   })()

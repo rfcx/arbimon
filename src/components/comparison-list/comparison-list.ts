@@ -13,7 +13,7 @@ const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), day
     ComparisonFilterModalComponent
   }
 })
-export default class ComparisonBoxComponent extends Vue {
+export default class ComparisonListComponent extends Vue {
   @Emit()
   emitSelect (): SpeciesRichnessFilter[] {
     return this.filters.map((f, i) => {

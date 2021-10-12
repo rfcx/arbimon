@@ -13,7 +13,7 @@
     aria-haspopup="true"
   >
     <div
-      id="avatar-button"
+      :id="domId"
       type="button"
       class="hover:cursor-pointer focus:cursor-pointer group"
     >
@@ -22,10 +22,10 @@
         :src="userImage"
       >
       <ul
+        :aria-labelledby="domId"
+        aria-orientation="vertical"
         class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-grey border-t-1 bg-steel-grey rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
         role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="avatar-button"
         tabindex="-1"
       >
         <li

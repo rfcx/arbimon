@@ -1,6 +1,6 @@
+import { DatasetDefinition } from '@/models'
 import { SpeciesService } from '@/services'
 import { dayjs } from '@/services/dayjs-service'
-import { SpeciesRichnessDataset } from '@/services/species-service-mock'
 
 export interface ReportData {
   species: string
@@ -14,7 +14,7 @@ export interface ReportData {
   hour: number
 }
 
-export async function getReportRawData (dataset: SpeciesRichnessDataset): Promise<ReportData[]> {
+export async function getReportRawData (dataset: DatasetDefinition): Promise<ReportData[]> {
   return (await SpeciesService.getAllDetections(dataset))
     .map(({ speciesName, siteName, latitude, longitude, date, hour }) => {
       const newDate = dayjs.utc(date)

@@ -19,7 +19,6 @@
           <div 
             v-if="user"
             @click="toggleProjectSelector(true)"
-            id="select-project-btn"
             class="navbar-item text-sm h-9 px-4 hover:bg-box-grey rounded-md cursor-pointer"
           >
             <span>{{ selectedProjectName }}</span>
@@ -29,7 +28,7 @@
           </div>
         </div>
         <div class="flex items-center mx-4 sm:hidden">
-          <auth-navbar-item-component/>
+          <auth-navbar-item-component domId="navbar-auth-mobile" />
         </div>
       </div>
       <div class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-grey border-t-1)" :class="hasToggledMobileMenu ? 'visible' : 'hidden' ">
@@ -50,7 +49,7 @@
         </a>
       </div>
       <div class="flex items-center mx-4 <sm:hidden">
-        <auth-navbar-item-component/>
+        <auth-navbar-item-component domId="navbar-auth-desktop" />
       </div>
     </div>
   </nav>
