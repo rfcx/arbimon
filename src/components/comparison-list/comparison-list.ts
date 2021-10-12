@@ -1,8 +1,8 @@
-import dayjs from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
 import { FilterBase, SpeciesRichnessFilter } from '@/models'
+import { dayjs } from '@/services/dayjs-service'
 import { colors } from '@/utils'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
