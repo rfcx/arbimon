@@ -1,44 +1,28 @@
 <template>
-  <div id="species-richness-page">
-    <div class="flex flex-row justify-between items-center w-full">
-      <div class="header-container">
-        <h1 class="text-white text-4xl capitalize">
-          Species Richness
-        </h1>
-        <p class="text-white">
-          Number of distinct species detected
-        </p>
-      </div>
-      <div>
-        <export-button-view
-          :disabled="!haveData"
-          title="No data in selections"
-          @click="exportCSVReports()"
-        >
-          <template #label>
-            <div class="ml-2">
-              download csv
-            </div>
-          </template>
-        </export-button-view>
-      </div>
-    </div>
-    <comparison-list-component @emitSelect="onFilterChange" />
-    <horizontal-bar-chart-component
-      dom-id="species-in-taxonomic-group"
-      chart-title="Number of species in each taxonomic group"
-      :chart-data="chartData"
-      class="mt-5"
-    />
-    <species-richness-maps
-      :datasets="mapDatasets"
-      class="mt-5"
-    />
-    <species-richness-table
-      :table-data="tableData"
-      :colors="colors"
-      class="mt-5"
-    />
-  </div>
+  <species-richness-introduction
+    :filters="filters"
+    :have-data="haveData"
+  />
+  <comparison-list-component @emitSelect="onFilterChange" />
+  <horizontal-bar-chart-component
+    dom-id="species-in-taxonomic-group"
+    chart-title="Distinct species by taxonomic class"
+    :chart-data="chartData"
+    class="mt-5"
+  />
+  <species-richness-maps
+    :datasets="mapDatasets"
+    class="mt-5"
+  />
+  <species-richness-by-time
+    :dom-id="'TODO20'"
+    :datasets="speciesByTimeDatasets"
+    class="mt-5"
+  />
+  <species-richness-table
+    :table-data="tableData"
+    :colors="colors"
+    class="mt-5"
+  />
 </template>
 <script src="./species-richness.ts" lang="ts"></script>
