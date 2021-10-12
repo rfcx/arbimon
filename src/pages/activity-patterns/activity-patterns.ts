@@ -9,7 +9,8 @@ export default class ActivityPatternsPage extends Vue {
   species: TaxonomyModels.Species[] = []
   selectedSpeciesSlug = ''
 
-  async mounted (): Promise<void> {
+  async created (): Promise<void> {
+    this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
     this.species = (await SpeciesService.getAllSpecies())
       .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
   }
@@ -17,17 +18,12 @@ export default class ActivityPatternsPage extends Vue {
   @Watch('species')
   onSpeciesChange (species: TaxonomyModels.Species[]): void {
     if (species.length > 0 && !this.selectedSpeciesSlug) {
-      void this.$router.replace({ name: ROUTES_NAME.activity_patterns, params: { speciesSlug: species[0].speciesSlug } })
+      this.selectedSpeciesSlug = species[0].speciesSlug
     }
   }
 
   @Watch('selectedSpeciesSlug')
   onSelectedSpeciesSlugChange (speciesSlug: number): void {
-    void this.$router.push({ name: ROUTES_NAME.activity_patterns, params: { speciesSlug } })
-  }
-
-  @Watch('$route.params')
-  onRouteParamsChange (): void {
-    this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
+    void this.$router.replace({ name: ROUTES_NAME.activity_patterns, params: { speciesSlug } })
   }
 }
