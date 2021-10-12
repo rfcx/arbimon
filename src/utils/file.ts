@@ -3,24 +3,26 @@ import XLSX from 'xlsx'
 
 import { FileModels } from '@/models'
 
-export async function generateSheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
-  const workbook = XLSX.utils.book_new()
+export async function toSpreadsheet (jsonData: any, fileType: XLSX.BookType = 'csv', sheetName: string = 'Worksheet'): Promise<string> {
   const worksheet = XLSX.utils.json_to_sheet(jsonData)
+  const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-  return XLSX.write(workbook, { bookType, type: 'string' })
+  return XLSX.write(workbook, { bookType: fileType, type: 'string' })
 }
 
-export async function getCsvString (jsonData: any): Promise<string> {
-  return await generateSheet(jsonData, 'csv')
+export async function toCsv (jsonData: any): Promise<string> {
+  return await toSpreadsheet(jsonData, 'csv')
 }
 
-export async function zipFiles (files: FileModels.File[], folderName: string): Promise<void> {
+export async function zipFiles (files: FileModels.File[], folderName: string): Promise<string> {
   const zip = new JSZip()
+
   files.forEach(file => {
     zip.file(`${folderName}/${file.filename}`, file.data)
   })
+
   const blob = await zip.generateAsync({ type: 'blob' })
-  downloadZip(URL.createObjectURL(blob), folderName)
+  return URL.createObjectURL(blob)
 }
 
 export function downloadFile (data: string, filename: string, extension: string): void {
