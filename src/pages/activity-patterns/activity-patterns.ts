@@ -1,16 +1,29 @@
 import { Vue } from 'vue-class-component'
+import { Watch } from 'vue-property-decorator'
 
 import { TaxonomyModels } from '@/models'
+import { ROUTES_NAME } from '@/router'
 import { SpeciesService } from '@/services'
 
 export default class ActivityPatterns extends Vue {
   species: TaxonomyModels.Species[] = []
-  selectedSpecies: number | null = null
+  selectedSpeciesSlug = ''
 
   async mounted (): Promise<void> {
-    this.species = (await SpeciesService.getAllSpecies()).sort((a, b) => a.speciesName.localeCompare(b.speciesName))
-    if (this.species.length > 0) {
-      this.selectedSpecies = this.species[0].speciesId
+    this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
+    this.species = (await SpeciesService.getAllSpecies())
+      .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
+  }
+
+  @Watch('species')
+  onSpeciesChange (species: TaxonomyModels.Species[]): void {
+    if (species.length > 0 && !this.selectedSpeciesSlug) {
+      this.selectedSpeciesSlug = species[0].speciesSlug
     }
+  }
+
+  @Watch('selectedSpeciesSlug')
+  onSelectedSpeciesSlugChange (speciesSlug: number): void {
+    void this.$router.push({ name: ROUTES_NAME.activity_patterns, params: { speciesSlug } })
   }
 }
