@@ -32,12 +32,12 @@
             class="capitalize"
           >
             <td class="p-2">
-              <div
+              <router-link
                 class="hover:(cursor-pointer text-opacity-50)"
-                @click="goToActivityPatternsPage(row.speciesId)"
+                :to="{ name: 'activity_patterns', params: { speciesId: row.speciesId }}"
               >
                 {{ row.speciesName }}
-              </div>
+              </router-link>
             </td>
             <td class="p-2">
               {{ row.className }}
