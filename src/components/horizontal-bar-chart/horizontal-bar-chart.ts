@@ -2,8 +2,7 @@ import * as d3 from 'd3'
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { ChartModels, ProjectModels } from '@/models'
-import { VuexService } from '@/services'
+import { ChartModels } from '@/models'
 import { exportChartWithElement } from '@/utils'
 import { clearChart, generateChart } from '.'
 
@@ -11,9 +10,7 @@ export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] }) chartData!: ChartModels.GroupedBarChartItem[]
   @Prop({ default: 'chart' }) domId!: string
   @Prop({ default: '' }) chartTitle!: string
-
-  @VuexService.Project.selectedProject.bind()
-  selectedProject!: ProjectModels.ProjectListItem | undefined
+  @Prop({ default: '' }) chartExportName!: string
 
   get hasData (): boolean {
     return this.chartData.length > 0
@@ -45,11 +42,6 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   async downloadChart (): Promise<void> {
-    // TODO: 108 Update export filename (refactor and move this to util file)
-    const filenameSuffix = `${this.domId}-${new Date().getTime()}`
-    const projectName = this.selectedProject?.name
-    const filename = projectName ? projectName.replace(' ', '-') + '-' + filenameSuffix : filenameSuffix
-
     const config = {
       width: 1024,
       margins: { top: 40, right: 40, bottom: 50, left: 100 },
@@ -62,7 +54,7 @@ export default class HorizontalBarChartComponent extends Vue {
     // TODO: 107 function to compute shortname of dataset to add to legend
 
     setTimeout(() => {
-      void exportChartWithElement(chart, filename)
+      void exportChartWithElement(chart, this.chartExportName)
     }, 200)
   }
 }
