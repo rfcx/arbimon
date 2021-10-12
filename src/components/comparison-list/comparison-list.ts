@@ -3,7 +3,7 @@ import { Emit } from 'vue-property-decorator'
 
 import { FilterBase, SpeciesRichnessFilter } from '@/models'
 import { dayjs } from '@/services/dayjs-service'
-import { colors } from '@/utils'
+import { datasetColors } from '@/utils'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
 const defaultFilter = new SpeciesRichnessFilter(dayjs().subtract(7, 'days'), dayjs(), [])
@@ -17,7 +17,7 @@ export default class ComparisonListComponent extends Vue {
   @Emit()
   emitSelect (): SpeciesRichnessFilter[] {
     return this.filters.map((f, i) => {
-      f.color = colors[i]
+      f.color = datasetColors[i]
       return f
     })
   }
@@ -47,7 +47,7 @@ export default class ComparisonListComponent extends Vue {
   }
 
   getFilterColor (idx: number): string {
-    return colors[idx]
+    return datasetColors[idx]
   }
 
   popupOpen (idx: number): void {
