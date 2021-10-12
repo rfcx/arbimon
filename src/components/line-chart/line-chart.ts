@@ -5,7 +5,7 @@ import { Prop, Watch } from 'vue-property-decorator'
 import { clearChart } from '../horizontal-bar-chart'
 import { generateChart, LineChartConfig, LineChartSeries } from '.'
 
-export default class LineChart extends Vue {
+export default class LineChartComponent extends Vue {
   @Prop() domId!: string
   @Prop() config!: Omit<LineChartConfig, 'width'>
   @Prop() datasets!: LineChartSeries[]

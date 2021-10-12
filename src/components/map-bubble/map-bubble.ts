@@ -25,12 +25,11 @@ export default class MapBubbleComponent extends Vue {
   mapIsLoading = true
   isSynchronizingMapPosition = false
 
-  get mapIdFull (): string { return `map-bubble-${this.mapId}` }
   get hasData (): boolean { return this.dataset.data.length > 0 }
 
   mounted (): void {
     const mapConfig = {
-      container: this.mapIdFull,
+      container: this.mapId,
       style: this.mapStyle,
       center: this.mapConfig.center,
       zoom: this.mapConfig.zoom,
@@ -179,6 +178,6 @@ export default class MapBubbleComponent extends Vue {
 
   downloadMapPng (): void {
     const img = this.map.getCanvas().toDataURL('image/png')
-    FileUtils.downloadPng(img, this.mapIdFull)
+    FileUtils.downloadPng(img, this.mapId)
   }
 }

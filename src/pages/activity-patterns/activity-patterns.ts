@@ -5,7 +5,7 @@ import { TaxonomyModels } from '@/models'
 import { ROUTES_NAME } from '@/router'
 import { SpeciesService } from '@/services'
 
-export default class ActivityPatterns extends Vue {
+export default class ActivityPatternsPage extends Vue {
   species: TaxonomyModels.Species[] = []
   selectedSpeciesSlug = ''
 

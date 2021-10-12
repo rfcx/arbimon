@@ -9,8 +9,8 @@ import { clearChart, generateChart } from '.'
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] }) chartData!: ChartModels.GroupedBarChartItem[]
-  @Prop({ default: 'chart' }) domId!: string
-  @Prop({ default: '' }) chartTitle!: string
+  @Prop() domId!: string
+  @Prop() chartTitle!: string
 
   @VuexService.Project.selectedProject.bind()
   selectedProject!: ProjectModels.ProjectListItem | undefined
@@ -32,7 +32,7 @@ export default class HorizontalBarChartComponent extends Vue {
 
   renderChart (): void {
     const id = this.domId
-    const screenWidth = (document.getElementById('horizontal-bar-chart-component')?.clientWidth ?? 0)
+    const screenWidth = (document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 0)
     const config = {
       width: screenWidth,
       margins: { top: 20, right: 20, bottom: 30, left: 80 },
@@ -60,7 +60,6 @@ export default class HorizontalBarChartComponent extends Vue {
 
     // TODO: 109 add legend if needed
     // TODO: 107 function to compute shortname of dataset to add to legend
-
     setTimeout(() => {
       void exportChartWithElement(chart, filename)
     }, 200)
