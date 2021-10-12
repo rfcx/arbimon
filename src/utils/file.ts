@@ -4,7 +4,7 @@ import XLSX from 'xlsx'
 import { FileModels, SpeciesRichnessFilter } from '@/models'
 import { VuexService } from '@/services'
 
-export async function generateBase64Sheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
+export async function generateSheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
   const workbook = XLSX.utils.book_new()
   const worksheet = XLSX.utils.json_to_sheet(jsonData)
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
@@ -16,11 +16,8 @@ export async function zipFiles (files: FileModels.File[], folderName: string): P
   files.forEach(file => {
     zip.file(`${folderName}/${file.filename}`, file.data)
   })
-  await zip.generateAsync({ type: 'blob' })
-    .then(function (content) {
-      const blobUrl = URL.createObjectURL(content)
-      downloadFile(blobUrl, folderName, 'zip')
-    })
+  const blob = await zip.generateAsync({ type: 'blob' })
+  downloadFile(URL.createObjectURL(blob), folderName, 'zip')
 }
 
 export function downloadFile (data: string, filename: string, extension: string): void {

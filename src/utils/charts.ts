@@ -9,7 +9,7 @@ export const exportChartWithElement = async (element: Element, filename: string)
 
 const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
   const data = await svgToPngData(chartElement)
-  downloadPng(filename, data)
+  downloadFile(data, filename, 'png')
 }
 
 const getChartElement = (element: Element): ChartSVGElement => {
@@ -59,10 +59,6 @@ const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
     // Load the SVG in Base64 to the image
     image.src = svgBase64
   })
-}
-
-export const downloadPng = (filename: string, data: string): void => {
-  downloadFile(data, filename, 'png')
 }
 
 const DATE_FORMAT = 'DD MMM YY'
