@@ -32,8 +32,12 @@
             class="capitalize"
           >
             <td class="p-2">
-              <router-link :to="{ name: 'activity_patterns', params: { speciesId: row.speciesId }}">
-                {{ row.speciesName }}
+              <router-link
+                :to="{ name: 'activity_patterns', params: { speciesId: row.speciesId }}"
+                class="text-secondary hover:(underline text-white)"
+              >
+                <span class="text-white">{{ row.speciesName }}</span>
+                <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
               </router-link>
             </td>
             <td class="p-2">
