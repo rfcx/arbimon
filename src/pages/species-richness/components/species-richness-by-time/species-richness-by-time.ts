@@ -1,10 +1,13 @@
+import { isEmpty } from 'lodash'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { LineChartComponent, LineChartConfig, LineChartSeries } from '@/components/line-chart'
-import { Period } from '@/services/species-service'
+import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '@/components/line-chart'
+import { Period as TimeBucket } from '@/services/species-service'
+import { svgToPngData } from '@/utils'
+import { downloadPng } from '@/utils/file'
 
-const PERIOD_TO_X_BOUNDS: Partial<Record<Period, [number, number]>> = {
+const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
   hour: [0, 23],
   day: [1, 31],
   month: [1, 12],
@@ -16,20 +19,33 @@ const PERIOD_TO_X_BOUNDS: Partial<Record<Period, [number, number]>> = {
 })
 export default class SpeciesRichnessByTime extends Vue {
   @Prop() domId!: string
-  @Prop() datasets!: Array<{color: string, data: Record<Period, Record<number, number>>}>
+  @Prop() datasets!: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}>
 
-  periods: Period[] = ['hour', 'day', 'month', 'year', 'quarter']
-  period: Period = 'hour'
+  buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
+  selectedBucket: TimeBucket = 'hour'
+
+  get hasData (): boolean {
+    return this.datasetsForSelectedBucket.some(ds => !isEmpty(ds.data))
+  }
 
   get config (): Omit<LineChartConfig, 'width'> {
     return {
       height: 450,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
-      xBounds: PERIOD_TO_X_BOUNDS[this.period]
+      xBounds: BUCKETS_TO_X_BOUNDS[this.selectedBucket]
     }
   }
 
-  get datasetsForPeriod (): LineChartSeries[] {
-    return this.datasets.map(({ color, data }) => ({ color, data: data[this.period] ?? [] }))
+  get datasetsForSelectedBucket (): LineChartSeries[] {
+    return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket] ?? [] }))
+  }
+
+  async downloadChart (): Promise<void> {
+    const exportConfig = { ...this.config, width: 800, height: 450 }
+    const svg = await generateChart(this.datasetsForSelectedBucket, exportConfig)
+    if (!svg) return
+
+    const png = await svgToPngData({ svg, ...exportConfig })
+    downloadPng(png, `${this.domId}-${this.selectedBucket}`) // TODO 107 - Better filename
   }
 }
