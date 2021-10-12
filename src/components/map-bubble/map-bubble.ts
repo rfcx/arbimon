@@ -154,7 +154,7 @@ export default class MapBubbleComponent extends Vue {
         paint: {
           'circle-radius': ['*', ['get', 'radius'], 4], // TODO 41 - Normalize circle size
           'circle-color': this.dataset.color || '#B42222',
-          'circle-opacity': 0.3
+          'circle-opacity': 0.6
         }
       })
     }
