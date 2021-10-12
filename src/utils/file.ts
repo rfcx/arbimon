@@ -1,7 +1,8 @@
+import { Dayjs } from 'dayjs'
 import JSZip from 'jszip'
 import XLSX from 'xlsx'
 
-import { FileModels, SpeciesRichnessFilter } from '@/models'
+import { FileModels, SiteModels } from '@/models'
 import { VuexService } from '@/services'
 
 export async function generateSheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
@@ -32,9 +33,8 @@ export function downloadFile (data: string, filename: string, extension: string)
 
 const DATE_FORMAT = 'YYMMDD'
 
-export function getFilterExportName (prefix: string, filter: SpeciesRichnessFilter): string {
+export function getFilterExportName (startDate: Dayjs, endDate: Dayjs, sites: SiteModels.Site[], prefix: string): string {
   const project = VuexService.Project.selectedProject.get()
-  const { startDate, endDate, sites } = filter
 
   let siteName = 'All_Sites'
   const siteLength = sites.length
