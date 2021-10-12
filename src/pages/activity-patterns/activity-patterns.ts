@@ -26,4 +26,12 @@ export default class ActivityPatternsPage extends Vue {
   onSelectedSpeciesSlugChange (speciesSlug: number): void {
     void this.$router.push({ name: ROUTES_NAME.activity_patterns, params: { speciesSlug } })
   }
+
+  @Watch('$route')
+  onRouteParamsChange (): void {
+    console.log(this.$route.name === ROUTES_NAME.activity_patterns)
+    if (this.$route.name === ROUTES_NAME.activity_patterns) {
+      this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
+    }
+  }
 }
