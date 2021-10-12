@@ -33,7 +33,7 @@
           >
             <td class="p-2">
               <router-link
-                :to="{ name: 'activity_patterns', params: { speciesId: row.speciesId }}"
+                :to="{ name: 'activity_patterns', params: { speciesSlug: row.speciesSlug }}"
                 class="text-secondary hover:(underline text-white)"
               >
                 <span class="text-white">{{ row.speciesName }}</span>

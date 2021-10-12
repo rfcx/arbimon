@@ -1,4 +1,4 @@
-import { groupBy, mapValues } from 'lodash'
+import { groupBy, kebabCase, mapValues } from 'lodash'
 
 import rawDetections from '@/api/raw-species-richness-data-01-07-apr-2021.json'
 import { DetectionModels, TaxonomyModels } from '@/models'
@@ -29,6 +29,7 @@ const MOCK_FLIGHT_TIME = 250 // TODO ?? - Consider longer delay to simulate a re
 export async function getAllSpecies (): Promise<TaxonomyModels.Species[]> {
   const detectionsBySpeciesId = groupBy(rawDetections, 'species_id')
   const speciesBySpeciesId = mapValues(detectionsBySpeciesId, (value, key) => ({
+    speciesSlug: kebabCase(value[0].scientific_name),
     speciesId: Number(key),
     speciesName: value[0].scientific_name,
     className: value[0].taxon
@@ -107,6 +108,7 @@ function getSpeciesByTime (detections: ApiDetection[]): Record<Period, Record<nu
 function getSpeciesPresence (detections: ApiDetection[]): { [speciesId: string]: TaxonomyModels.Species } {
   const detectionsBySpecies = groupBy(detections, 'species_id')
   return mapValues(detectionsBySpecies, (value, key) => ({
+    speciesSlug: kebabCase(value[0].scientific_name),
     speciesId: Number(key),
     speciesName: value[0].scientific_name,
     className: value[0].taxon
