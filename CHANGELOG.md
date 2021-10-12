@@ -23,5 +23,6 @@
 * **features:** Export species richness raw data as csv (#36)
 * **features:** Activity patterns species selector (#89)
 * **features:** Detected species by time (#20)
+* **features:** Export csv support multiple datasets(#106)
 
 * **refactor:** Refactor species richness table display (#112)
