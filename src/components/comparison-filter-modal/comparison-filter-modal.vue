@@ -64,7 +64,7 @@
                     </h2>
                     <label
                       v-for="(item) in siteCheckboxItems"
-                      :key="'site-list-' + item.site.sideId"
+                      :key="'site-list-' + item.site.siteId"
                       class="px-4 pb-2 align-middle list-item"
                     >
                       <input
