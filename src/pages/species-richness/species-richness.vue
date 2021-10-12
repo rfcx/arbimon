@@ -36,6 +36,8 @@
     />
     <species-richness-table
       :table-data="tableData"
+      :colors="colors"
+      class="mt-5"
     />
   </div>
 </template>
