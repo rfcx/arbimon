@@ -83,9 +83,7 @@ export default class SpeciesRichnessPage extends Vue {
 
     return Object.entries(allSpecies)
       .map(([key, value]) => ({
-        className: value.className,
-        speciesId: value.speciesId,
-        speciesName: value.speciesName,
+        ...value,
         data: speciesPresences.map(sp => key in sp),
         total: speciesPresences.filter(sp => key in sp).length
       }))
