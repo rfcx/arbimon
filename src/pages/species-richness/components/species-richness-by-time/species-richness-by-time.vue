@@ -6,17 +6,23 @@
       <h2 class="text-white text-xl">
         Distinct species by time
       </h2>
-      <div class="mb-2">
+      <div
+        class="mb-2 flex"
+      >
+        <export-button-view
+          v-if="hasData"
+          @click="downloadChart()"
+        />
         <select
-          v-model="period"
-          class="bg-steel-grey border-box-grey pl-2 pt-0.5 pb-1 rounded focus:(border-box-grey ring-0 outline-none)"
+          v-model="selectedBucket"
+          class="bg-steel-grey border-box-grey ml-2 pl-2 pt-0.5 pb-1 rounded focus:(border-box-grey ring-0 outline-none)"
         >
           <option
-            v-for="period in periods"
-            :key="period"
-            :value="period"
+            v-for="bucket in buckets"
+            :key="bucket"
+            :value="bucket"
           >
-            {{ period }}
+            {{ bucket }}
           </option>
         </select>
       </div>
@@ -24,7 +30,7 @@
     <line-chart-component
       :dom-id="domId"
       :config="config"
-      :datasets="datasetsForPeriod"
+      :datasets="datasetsForSelectedBucket"
     />
   </div>
 </template>
