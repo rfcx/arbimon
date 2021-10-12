@@ -9,14 +9,10 @@ export default class ActivityPatterns extends Vue {
   species: TaxonomyModels.Species[] = []
   selectedSpeciesId: number | null = null
 
-  get speciesId (): number {
-    return Number(this.$route.params.speciesId ?? '-1')
-  }
-
   async mounted (): Promise<void> {
     this.species = (await SpeciesService.getAllSpecies()).sort((a, b) => a.speciesName.localeCompare(b.speciesName))
     if (this.species.length > 0) {
-      this.selectedSpeciesId = Number(this.speciesId ?? this.species[0].speciesId)
+      this.selectedSpeciesId = Number(this.$route.params.speciesId ?? this.species[0].speciesId)
     }
   }
 
