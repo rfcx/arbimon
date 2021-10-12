@@ -14,6 +14,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() dataset!: MapModels.MapDataSet
   @Prop() taxon!: string
   @Prop() mapConfig!: MapModels.MapConfig
+  @Prop() mapExportName!: string
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
 
@@ -178,6 +179,6 @@ export default class MapBubbleComponent extends Vue {
 
   downloadMapPng (): void {
     const img = this.map.getCanvas().toDataURL('image/png')
-    FileUtils.downloadPng(img, this.mapId)
+    FileUtils.downloadPng(img, this.mapExportName)
   }
 }

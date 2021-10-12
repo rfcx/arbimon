@@ -1,4 +1,7 @@
+import { Dayjs } from 'dayjs'
 import { LngLatLike } from 'mapbox-gl'
+
+import { Site } from './Site'
 
 export interface MapConfig {
   sourceMapId: string
@@ -7,6 +10,9 @@ export interface MapConfig {
 }
 
 export interface MapDataSet {
+  startDate: Dayjs
+  endDate: Dayjs
+  sites: Site[]
   color: string
   data: MapSiteData[]
 }
