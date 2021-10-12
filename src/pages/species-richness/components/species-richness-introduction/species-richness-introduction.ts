@@ -19,7 +19,7 @@ export default class SpeciesRichnessTable extends Vue {
     // TODO - 106: Update filename and folder name
     const files: FileModels.File[] = await Promise.all(csvs.map(async (csv, idx) => ({
       filename: `report-${idx + 1}.csv`,
-      data: await FileUtils.generateSheet(csv, 'csv', 'Species Report')
+      data: await FileUtils.getCsvString(csv)
     })))
     await FileUtils.zipFiles(files, 'reports')
   }
