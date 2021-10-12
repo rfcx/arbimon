@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
         component: Pages.SpeciesRichnessPage
       },
       {
-        path: 'activity-patterns/:speciesId',
+        path: 'activity-patterns/:speciesId?',
         name: ROUTES_NAME.activity_patterns,
         component: Pages.ActivityPatternsPage
       }
