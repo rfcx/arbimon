@@ -6,6 +6,11 @@ import { dayjs } from '@/services/dayjs-service'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'
 
+interface ExportGroupName {
+  name: string
+  exportTime: string
+}
+
 export function formatDate (date: Dayjs, dateFormat: string = EXPORT_DATE_FORMAT): string {
   return date.format(dateFormat)
 }
@@ -25,13 +30,11 @@ function getSiteName (sites: SiteModels.Site[]): string {
   }
 }
 
-export function getFilterExportGroupName (filters: SpeciesRichnessFilter[], prefix: string): string {
+export function getFilterExportGroupName (filters: SpeciesRichnessFilter[], prefix: string): ExportGroupName {
   const project = VuexService.Project.selectedProject.get()
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
 
-  const allDates = filters.flatMap(({ startDate, endDate }) => (Object.values({ startDate, endDate })))
-
-  return `${projectName}--${prefix.replaceAll(' ', '-')}--${getDateGroup(allDates)}`
+  return { name: `${projectName}--${prefix.replaceAll(' ', '-')}--${getExportDateTime()}`, exportTime: getExportDateTime() }
 }
 
 export function getFilterExportName (startDate: Dayjs, endDate: Dayjs, prefix: string, dateGroup?: string, sites?: SiteModels.Site[]): string {
@@ -39,7 +42,7 @@ export function getFilterExportName (startDate: Dayjs, endDate: Dayjs, prefix: s
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''
-  const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getDateGroup([startDate, endDate])}`
+  const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getExportDateTime()}`
 
   return `${projectName}--${prefix}${siteName}--${date}${dateGroup ? '--' + dateGroup : ''}`
 }
@@ -53,8 +56,6 @@ export function getFilterFriendlyName (filter: SpeciesRichnessFilter): string {
   return `${siteName} (${date})`
 }
 
-export function getDateGroup (dates: Dayjs[]): string {
-  const startDate = dayjs.min(dates)
-  const endDate = dayjs.max(dates)
-  return `${formatDate(startDate)}${formatDate(endDate)}`
+export function getExportDateTime (): string {
+  return dayjs().format('YYMMDDHHmmss')
 }

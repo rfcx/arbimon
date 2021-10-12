@@ -19,17 +19,15 @@ export default class SpeciesRichnessIntroduction extends Vue {
       return await getReportRawData({ start, end, sites })
     }))
 
-    const allDates = this.filters.flatMap(({ startDate, endDate }) => (Object.values({ startDate, endDate })))
-    const dateGroup = FilterUtils.getDateGroup(allDates)
-    const folderName = FilterUtils.getFilterExportGroupName(this.filters, DEFAULT_PREFIX)
-    const filenames = this.filters.map(({ startDate, endDate, sites }) => FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, dateGroup, sites))
+    const { name, exportTime } = FilterUtils.getFilterExportGroupName(this.filters, DEFAULT_PREFIX)
+    const filenames = this.filters.map(({ startDate, endDate, sites }) => FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, exportTime, sites))
 
     const files: FileModels.File[] = await Promise.all(csvData.map(async (csvDatum, idx) => ({
       filename: `${filenames[idx]}.csv`,
       data: await FileUtils.toCsv(csvDatum)
     })))
 
-    const zipUrl = await FileUtils.zipFiles(files, folderName)
-    downloadZip(zipUrl, folderName)
+    const zipUrl = await FileUtils.zipFiles(files, name)
+    downloadZip(zipUrl, name)
   }
 }
