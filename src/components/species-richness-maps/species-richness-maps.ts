@@ -4,11 +4,14 @@ import { Prop } from 'vue-property-decorator'
 import MapBubbleComponent from '@/components/map-bubble/map-bubble.vue'
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/services/mapbox-service'
+import { FilterUtils } from '@/utils'
 
 interface MapOptions {
   id: string
   name: string
 }
+
+const DEFAULT_PREFIX = 'Species-By-Taxonomy'
 
 @Options({
   components: {
@@ -29,7 +32,10 @@ export default class SpeciesRichnessMaps extends Vue {
     zoom: 9
   }
 
-  get hasData (): boolean { return this.datasets.length > 0 }
+  get hasData (): boolean {
+    return this.datasets.length > 0
+  }
+
   get columnCount (): number {
     switch (this.datasets.length) {
       case 1: return 1
@@ -61,5 +67,10 @@ export default class SpeciesRichnessMaps extends Vue {
 
   mapMoved (config: MapModels.MapConfig): void {
     this.config = config
+  }
+
+  mapExportName (dataset: ChartModels.MapDataSet): string {
+    const { startDate, endDate, sites } = dataset
+    return FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
   }
 }

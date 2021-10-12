@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 
 import ComparisonListComponent from '@/components/comparison-list/comparison-list.vue'
@@ -10,7 +11,7 @@ import SpeciesRichnessByTime from './components/species-richness-by-time/species
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import SpeciesRichnessTable from './components/species-richness-table/species-richness-table.vue'
 
-interface ColoredDataset {color: string, data: SpeciesRichnessData}
+interface ColoredDataset {color: string, data: SpeciesRichnessData, startDate: Dayjs, endDate: Dayjs, sites: SiteModels.Site[]}
 
 @Options({
   components: {
@@ -44,7 +45,7 @@ export default class SpeciesRichnessPage extends Vue {
         const start = startDate.toISOString()
         const end = endDate.add(1, 'days').toISOString()
         const data = await SpeciesService.getSpeciesRichnessData({ start, end, sites })
-        return { color, data }
+        return { startDate, endDate, sites, color, data }
       })
     )
 
@@ -71,7 +72,7 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   getMapDataset (datasets: ColoredDataset[]): ChartModels.MapDataSet[] {
-    return datasets.map(({ color, data }) => ({ color, data: data.speciesBySite }))
+    return datasets.map(({ color, data, ...filter }) => ({ color, data: data.speciesBySite, ...filter }))
   }
 
   getTableData (datasets: ColoredDataset[]): ChartModels.TableData[] {
