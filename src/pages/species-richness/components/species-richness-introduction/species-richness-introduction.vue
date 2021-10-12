@@ -12,7 +12,7 @@
       <export-button-view
         :disabled="!haveData"
         title="No data in selections"
-        @click="exportCSVReport()"
+        @click="exportCSVReports()"
       >
         <template #label>
           <div class="ml-2">
