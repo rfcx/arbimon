@@ -1,6 +1,9 @@
 <template>
   <div>
-    <no-data-container-view v-if="!hasData" />
+    <no-data-container-view
+      v-if="!hasData"
+      class="h-96"
+    />
     <div
       v-show="hasData"
       class="relative"
