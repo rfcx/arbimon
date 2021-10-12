@@ -7,8 +7,8 @@ export default class ActivityPatterns extends Vue {
   species: TaxonomyModels.Species[] = []
   selectedSpecies: number | null = null
 
-  get speciesId (): string | string[] | undefined {
-    return this.$route.params.speciesId
+  get speciesId (): number {
+    return Number(this.$route.params.speciesId ?? '-1')
   }
 
   async mounted (): Promise<void> {
