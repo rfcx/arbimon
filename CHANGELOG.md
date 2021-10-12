@@ -24,5 +24,6 @@
 * **features:** Activity patterns species selector (#89)
 * **features:** Detected species by time (#20)
 * **features:** Export csv support multiple datasets(#106)
+* **features:** Each species row in table should be clickable and link to ap page (#110)
 
 * **refactor:** Refactor species richness table display (#112)
