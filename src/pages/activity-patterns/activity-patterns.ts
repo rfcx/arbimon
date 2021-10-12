@@ -16,19 +16,14 @@ export default class ActivityPatterns extends Vue {
   }
 
   @Watch('species')
-  onSpeciesChange (): void {
-    if (this.species.length > 0 && !this.selectedSpeciesId) {
-      this.selectedSpeciesId = this.species[0].speciesId
+  onSpeciesChange (species: TaxonomyModels.Species[]): void {
+    if (species.length > 0 && !this.selectedSpeciesId) {
+      this.selectedSpeciesId = species[0].speciesId
     }
   }
 
   @Watch('selectedSpeciesId')
-  onSelectedSpeciesIdChange (): void {
-    void this.$router.push({
-      name: ROUTES_NAME.activity_patterns,
-      params: {
-        speciesId: this.selectedSpeciesId
-      }
-    })
+  onSelectedSpeciesIdChange (speciesId: number): void {
+    void this.$router.push({ name: ROUTES_NAME.activity_patterns, params: { speciesId } })
   }
 }
