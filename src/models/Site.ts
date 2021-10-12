@@ -1,6 +1,6 @@
 // TODO: Update after connect to /stream endpoint
 export interface Site {
-  id: string
+  siteId: string
   name: string
   latitude?: number
   longitude?: number
