@@ -33,7 +33,7 @@ export function downloadFile (data: string, filename: string, extension: string)
 
 const DATE_FORMAT = 'YYMMDD'
 
-export function getFilterExportName (startDate: Dayjs, endDate: Dayjs, sites: SiteModels.Site[], prefix: string): string {
+export function getExportName (startDate: Dayjs, endDate: Dayjs, sites: SiteModels.Site[], prefix: string): string {
   const project = VuexService.Project.selectedProject.get()
 
   let siteName = 'All_Sites'
