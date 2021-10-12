@@ -1,9 +1,7 @@
-import { Dayjs } from 'dayjs'
 import JSZip from 'jszip'
 import XLSX from 'xlsx'
 
-import { FileModels, SiteModels } from '@/models'
-import { VuexService } from '@/services'
+import { FileModels } from '@/models'
 
 export async function generateSheet (jsonData: any, bookType?: XLSX.BookType, sheetName: string = 'Worksheet'): Promise<string> {
   const workbook = XLSX.utils.book_new()
@@ -41,23 +39,4 @@ export function downloadPng (data: string, filename: string): void {
 
 export function downloadZip (data: string, filename: string): void {
   downloadFile(data, filename, 'zip')
-}
-
-const DATE_FORMAT = 'YYMMDD'
-
-export function getExportName (startDate: Dayjs, endDate: Dayjs, sites: SiteModels.Site[], prefix: string): string {
-  const project = VuexService.Project.selectedProject.get()
-
-  let siteName = 'All_Sites'
-  const siteLength = sites.length
-  if (siteLength === 1) {
-    siteName = sites[0].name
-  } else if (siteLength > 1) {
-    siteName = `${sites[0].name}+${siteLength - 1}-other-sites`
-  }
-
-  const start = startDate.format(DATE_FORMAT)
-  const end = endDate.format(DATE_FORMAT)
-  const date = startDate.isSame(endDate, 'date') ? `${start}-${end}` : start
-  return `${project?.name ?? 'None'}--${prefix}--${siteName}--${date}`
 }
