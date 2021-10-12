@@ -2,9 +2,11 @@ import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { FileModels, SpeciesRichnessFilter } from '@/models'
-import { FileUtils } from '@/utils'
+import { FileUtils, FilterUtils } from '@/utils'
 import { downloadZip } from '@/utils/file'
 import { getReportRawData } from '../../csv'
+
+const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 
 export default class SpeciesRichnessIntroduction extends Vue {
   @Prop() filters!: SpeciesRichnessFilter[]
@@ -17,14 +19,15 @@ export default class SpeciesRichnessIntroduction extends Vue {
       return await getReportRawData({ start, end, sites })
     }))
 
-    // TODO - 106: Update filename and folder name
+    const { name, exportTime } = FilterUtils.getFilterExportGroupName(this.filters, DEFAULT_PREFIX)
+    const filenames = this.filters.map(({ startDate, endDate, sites }) => FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, exportTime, sites))
+
     const files: FileModels.File[] = await Promise.all(csvData.map(async (csvDatum, idx) => ({
-      filename: `report-${idx + 1}.csv`,
+      filename: `${filenames[idx]}.csv`,
       data: await FileUtils.toCsv(csvDatum)
     })))
 
-    const folderName = 'reports'
-    const zipUrl = await FileUtils.zipFiles(files, folderName)
-    downloadZip(zipUrl, folderName)
+    const zipUrl = await FileUtils.zipFiles(files, name)
+    downloadZip(zipUrl, name)
   }
 }
