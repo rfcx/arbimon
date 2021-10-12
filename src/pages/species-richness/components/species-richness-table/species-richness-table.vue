@@ -1,12 +1,19 @@
 <template>
-  <div class="mt-5">
-    <h2 class="text-white text-xl mb-1.5">
+  <div>
+    <h2 class="text-white text-xl">
       Detected Species
     </h2>
-    <div class="mt-2 max-h-100 overflow-y-auto">
+    <no-data-container-view
+      v-if="!hasTableData"
+      class="h-14 mt-2"
+    />
+    <div
+      v-else
+      class="mt-2 max-h-100 overflow-y-auto"
+    >
       <table class="w-full">
         <thead class="h-10">
-          <tr class="sticky top-0">
+          <tr class="sticky top-0 z-10">
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
@@ -50,7 +57,7 @@
                 />
                 <icon-fa-close
                   v-else
-                  class="text-secondary m-auto"
+                  class="text-secondary m-auto opacity-65"
                 />
               </td>
             </template>
@@ -64,12 +71,6 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div
-    v-if="!hasTableData"
-    class="flex justify-center items-center mt-2 h-8 text-secondary"
-  >
-    No data
   </div>
 </template>
 <script lang="ts" src="./species-richness-table.ts"></script>
