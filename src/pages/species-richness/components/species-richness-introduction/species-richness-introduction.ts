@@ -25,7 +25,6 @@ export default class SpeciesRichnessTable extends Vue {
     const dateGroup = FilterUtils.getDateGroup(minDate, maxDate)
     const filenames = this.filters.map(({ startDate, endDate, sites }) => FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, dateGroup, sites))
 
-    // TODO - 106: Update filename and folder name
     const files: FileModels.File[] = await Promise.all(csvs.map(async (csv, idx) => ({
       filename: `${filenames[idx]}.csv`,
       data: await FileUtils.getCsvString(csv)
