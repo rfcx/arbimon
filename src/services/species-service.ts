@@ -1,18 +1,11 @@
-import { SiteModels, TaxonomyModels } from '@/models'
-import { MapSiteData } from '@/models/Chart'
+import { DatasetDefinition, MapModels, TaxonomyModels } from '@/models'
 
 export type Period = 'hour' | 'day' | 'month' | 'year' | 'quarter'
 
-export interface SpeciesRichnessDataset {
-  start: string
-  end: string
-  sites: SiteModels.Site[]
-}
-
-export interface SpeciesRichnessData extends SpeciesRichnessDataset {
+export interface SpeciesRichnessData extends DatasetDefinition {
   detectionCount: number
   speciesByTaxon: { [taxon: string]: number }
-  speciesBySite: MapSiteData[]
+  speciesBySite: MapModels.MapSiteData[]
   speciesByTime: Record<Period, Record<number, number>>
   speciesPresence: { [speciesId: string]: TaxonomyModels.Species }
 }

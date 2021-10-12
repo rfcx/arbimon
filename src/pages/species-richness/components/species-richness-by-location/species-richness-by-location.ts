@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import MapBubbleComponent from '@/components/map-bubble/map-bubble.vue'
-import { ChartModels, MapModels, TaxonomyModels } from '@/models'
+import { MapModels, TaxonomyModels } from '@/models'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/services/mapbox-service'
 import { FilterUtils } from '@/utils'
 
@@ -18,10 +18,10 @@ const DEFAULT_PREFIX = 'Species-By-Site'
     MapBubbleComponent
   }
 })
-export default class SpeciesRichnessMaps extends Vue {
-  @Prop({ default: [] }) public datasets!: ChartModels.MapDataSet[]
+export default class SpeciesRichnessByLocation extends Vue {
+  @Prop({ default: [] }) public datasets!: MapModels.MapDataSet[]
 
-  taxons = TaxonomyModels.TAXONOMIES
+  taxons = TaxonomyModels.TAXONOMY_CLASSES
   taxon = this.taxons[0].name
   isShowLabels = true
   mapStyleId = 'satellite-streets-v11'
@@ -69,7 +69,7 @@ export default class SpeciesRichnessMaps extends Vue {
     this.config = config
   }
 
-  mapExportName (dataset: ChartModels.MapDataSet): string {
+  mapExportName (dataset: MapModels.MapDataSet): string {
     const { startDate, endDate, sites } = dataset
     return FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
   }

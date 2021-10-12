@@ -8,7 +8,7 @@ import { getReportRawData } from '../../csv'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 
-export default class SpeciesRichnessTable extends Vue {
+export default class SpeciesRichnessIntroduction extends Vue {
   @Prop() filters!: SpeciesRichnessFilter[]
   @Prop() haveData!: boolean
 

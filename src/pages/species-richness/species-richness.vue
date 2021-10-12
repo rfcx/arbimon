@@ -5,22 +5,22 @@
   />
   <comparison-list-component @emitSelect="onFilterChange" />
   <horizontal-bar-chart-component
-    dom-id="species-in-taxonomic-group"
+    dom-id="species-by-class"
     chart-title="Distinct species by taxonomic class"
     :chart-data="chartData"
     :chart-export-name="chartExportName"
     class="mt-5"
   />
-  <species-richness-maps
+  <species-richness-by-location
     :datasets="mapDatasets"
     class="mt-5"
   />
   <species-richness-by-time
-    :dom-id="'TODO20'"
+    dom-id="species-by-time"
     :datasets="speciesByTimeDatasets"
     class="mt-5"
   />
-  <species-richness-table
+  <species-richness-detected-species
     :table-data="tableData"
     :colors="colors"
     class="mt-5"

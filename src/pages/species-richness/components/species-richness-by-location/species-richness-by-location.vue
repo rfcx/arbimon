@@ -12,14 +12,14 @@
           :key="a.name"
         >
           <input
-            :id="`taxons-${a.name}`"
+            :id="`species-richness-by-location-taxons-${a.name}`"
             v-model="taxon"
             type="radio"
             :value="a.name"
             class="hidden"
           >
           <label
-            :for="`taxons-${a.name}`"
+            :for="`species-richness-by-location-taxons-${a.name}`"
             class="inline-block text-center text-lg w-7 h-7 mr-2"
           >
             {{ a.symbol }}
@@ -69,7 +69,7 @@
         :key="idx"
         :dataset="dataset"
         :taxon="taxon"
-        :map-id="idx"
+        :map-id="`species-richness-by-location-${idx}`"
         :map-config="config"
         :map-style="mapStyle"
         :map-export-name="mapExportName(dataset)"
@@ -80,7 +80,7 @@
     </div>
   </div>
 </template>
-<script src="./species-richness-maps.ts" lang="ts"></script>
+<script src="./species-richness-by-location.ts" lang="ts"></script>
 <style lang="scss" scoped>
 .taxon-picker {
   float: right;

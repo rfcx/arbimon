@@ -16,7 +16,7 @@ import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-togg
   }
 })
 
-export default class NavigationBarComponent extends Vue {
+export default class NavbarComponent extends Vue {
   @VuexService.Auth.user.bind()
   user!: Auth0User | undefined
 

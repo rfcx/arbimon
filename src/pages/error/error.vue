@@ -1,5 +1,5 @@
 <template>
-  <div id="error-page-not-found">
+  <div>
     <nav-bar />
     <div class="text-secondary">
       Page not found
