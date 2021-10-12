@@ -56,7 +56,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
-    this.chartExportName = FilterUtils.getFilterExportGroupName(filters, DEFAULT_CHART_PREFIX)
+    this.chartExportName = FilterUtils.getFilterExportGroupName(filters, DEFAULT_CHART_PREFIX).name
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
