@@ -10,6 +10,10 @@ export async function generateSheet (jsonData: any, bookType?: XLSX.BookType, sh
   return XLSX.write(workbook, { bookType, type: 'string' })
 }
 
+export async function getCsvString (jsonData: any): Promise<string> {
+  return await generateSheet(jsonData, 'csv')
+}
+
 export async function zipFiles (files: FileModels.File[], folderName: string): Promise<void> {
   const zip = new JSZip()
   files.forEach(file => {
