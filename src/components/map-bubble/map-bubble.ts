@@ -4,7 +4,7 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { ChartModels, MapModels, TaxonomyModels } from '@/models'
 import { mapboxgl } from '@/services/mapbox-service'
-import { downloadPng } from '@/utils'
+import { FileUtils } from '@/utils'
 import ExportButtonView from '@/views/export-button.vue'
 import NoDataContainerView from '@/views/no-data-container.vue'
 
@@ -187,6 +187,6 @@ export default class MapBubbleComponent extends Vue {
 
   downloadMapPng (): void {
     const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng(this.mapIdFull, img)
+    FileUtils.downloadFile(img, this.mapIdFull, 'png')
   }
 }
