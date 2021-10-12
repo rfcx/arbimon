@@ -1,4 +1,5 @@
 import { ChartSVGElement } from '@/models/Chart'
+import { downloadPng } from './file'
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
@@ -7,7 +8,7 @@ export const exportChartWithElement = async (element: Element, filename: string)
 
 const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
   const data = await svgToPngData(chartElement)
-  downloadPng(filename, data)
+  downloadPng(data, filename)
 }
 
 const getChartElement = (element: Element): ChartSVGElement => {
@@ -17,7 +18,7 @@ const getChartElement = (element: Element): ChartSVGElement => {
   return { svg, width, height }
 }
 
-const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
+export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
   const serializer = new XMLSerializer()
   const source = serializer.serializeToString(chartElement.svg)
 
@@ -57,14 +58,4 @@ const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
     // Load the SVG in Base64 to the image
     image.src = svgBase64
   })
-}
-
-export const downloadPng = (filename: string, data: string): void => {
-  const a = document.createElement('a')
-  a.download = `${filename}.png`
-  a.href = data
-  document.body.appendChild(a)
-  a.click()
-  // then remove after click
-  a.parentNode?.removeChild(a)
 }
