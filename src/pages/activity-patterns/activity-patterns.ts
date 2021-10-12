@@ -3,7 +3,7 @@ import { Vue } from 'vue-class-component'
 import { TaxonomyModels } from '@/models'
 import { SpeciesService } from '@/services'
 
-export default class ActivityPatterns extends Vue {
+export default class ActivityPatternsPage extends Vue {
   species: TaxonomyModels.Species[] = []
   selectedSpecies: number | null = null
 

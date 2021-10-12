@@ -68,4 +68,4 @@
     </div>
   </div>
 </template>
-<script lang="ts" src="./species-richness-table.ts"></script>
+<script lang="ts" src="./species-richness-detected-species.ts"></script>

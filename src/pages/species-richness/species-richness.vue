@@ -10,7 +10,7 @@
     :chart-data="chartData"
     class="mt-5"
   />
-  <species-richness-maps
+  <species-richness-by-location
     :datasets="mapDatasets"
     class="mt-5"
   />
@@ -19,7 +19,7 @@
     :datasets="speciesByTimeDatasets"
     class="mt-5"
   />
-  <species-richness-table
+  <species-richness-detected-species
     :table-data="tableData"
     :colors="colors"
     class="mt-5"
