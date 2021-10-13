@@ -2,9 +2,9 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
 
-import { Site } from '@/_services/api/types'
-import { dayjs } from '@/_services/dayjs'
-import { VuexProject } from '@/_services/store'
+import { Site } from '~/api/types'
+import { dayjs } from '~/dayjs'
+import { VuexProject } from '~/store'
 import { Filter } from '..'
 
 interface FilterMenuItem {

@@ -1,7 +1,7 @@
 import { NavigationGuardNext, NavigationGuardWithThis, RouteLocationNormalized } from 'vue-router'
 import * as Vuex from 'vuex'
 
-import { ACTIONS, RootState } from '@/_services/store'
+import { ACTIONS, RootState } from '~/store'
 
 export const createSelectProjectGuard = (store: Vuex.Store<RootState>): NavigationGuardWithThis<undefined> =>
   (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {

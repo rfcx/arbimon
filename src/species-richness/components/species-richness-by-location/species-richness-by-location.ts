@@ -1,10 +1,10 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '@/_services/api/taxonomy-service'
-import { getFilterExportName } from '@/_services/dataset-filters/functions'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/_services/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '@/_services/maps/map-bubble'
+import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { getFilterExportName } from '~/dataset-filters/functions'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
+import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 
 interface MapOptions {
   id: string

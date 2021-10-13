@@ -1,5 +1,5 @@
-import { Site } from '@/_services/api/types'
-import ApiClient from '@/_services/api-helpers/rest/api-service'
+import { Site } from '~/api/types'
+import ApiClient from '~/api-helpers/rest/api-service'
 import { endpointSites } from '../../api-helpers/rest'
 
 export const getSites = async (): Promise<Site[]> => {

@@ -1,9 +1,9 @@
 import { createDecorator, VueDecorator } from 'vue-class-component'
 import Vuex, { ActionTree, GetterTree, MutationTree } from 'vuex'
 
-import { getProjects } from '@/_services/api/project-service'
-import { getSites } from '@/_services/api/site-service'
-import { Project, Site } from '@/_services/api/types'
+import { getProjects } from '~/api/project-service'
+import { getSites } from '~/api/site-service'
+import { Project, Site } from '~/api/types'
 import { Auth0Option, Auth0User } from '../auth/types'
 import * as ACTIONS from './actions'
 import * as ITEMS from './items'

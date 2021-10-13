@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { Site } from '@/_services/api/types'
+import { Site } from '~/api/types'
 import { formatDateRange } from '../utils/dates'
 
 export class FilterImpl {

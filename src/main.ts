@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 
 import appComponent from '@/_layout'
-import { Auth0 } from '@/_services/auth'
-import router from '@/_services/router'
-import stores from '@/_services/store'
+import { Auth0 } from '~/auth'
+import router from '~/router'
+import stores from '~/store'
 import * as globalComponents from './_components'
 
 import 'mapbox-gl/dist/mapbox-gl.css'

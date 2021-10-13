@@ -1,9 +1,9 @@
 import { groupBy, kebabCase, mapValues } from 'lodash'
 
-import { ApiDetection, filterByDataset, getRawDetections, simulateDelay } from '@/_services/api-helpers/mock'
-import { dayjs } from '@/_services/dayjs'
-import { MapSiteData } from '@/_services/maps/map-bubble'
-import { groupByNumber } from '@/_services/utils/lodash-ext'
+import { ApiDetection, filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'
+import { dayjs } from '~/dayjs'
+import { MapSiteData } from '~/maps/map-bubble'
+import { groupByNumber } from '~/utils/lodash-ext'
 import { DatasetDefinition, Species } from '..'
 import { SpeciesRichnessData, TimeBucket } from '.'
 

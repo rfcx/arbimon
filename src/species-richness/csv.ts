@@ -1,6 +1,6 @@
-import { DatasetDefinition } from '@/_services/api'
-import { getAllDetections } from '@/_services/api/detections-service'
-import { dayjs } from '@/_services/dayjs'
+import { DatasetDefinition } from '~/api'
+import { getAllDetections } from '~/api/detections-service'
+import { dayjs } from '~/dayjs'
 
 export interface ReportData {
   species: string

@@ -1,4 +1,4 @@
-import { DatasetDefinition } from '@/_services/api/types'
+import { DatasetDefinition } from '~/api/types'
 import rawSites from './raw-site-01-07-apr-2021.json'
 import rawDetections from './raw-species-richness-data-01-07-apr-2021.json'
 

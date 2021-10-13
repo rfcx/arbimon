@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import stores from '@/_services/store'
+import stores from '~/store'
 import { Auth0 } from '../auth'
 import * as PAGES from './pages'
 import { createSelectProjectGuard } from './select-project-guard'
