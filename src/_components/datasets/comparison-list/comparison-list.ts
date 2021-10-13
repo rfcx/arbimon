@@ -43,6 +43,7 @@ export default class ComparisonListComponent extends Vue {
   }
 
   addFilterConfig (): void {
+    this.currentSelectedFilter = null
     this.isAddSelected = true
     this.isFilterOpen = true
   }
