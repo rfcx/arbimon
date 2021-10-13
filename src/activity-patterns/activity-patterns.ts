@@ -1,10 +1,10 @@
 import { Options, Vue } from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 
-import { ColoredFilter } from '@/_components/datasets'
-import { ComparisonListComponent } from '@/_components/datasets/comparison-list'
 import { Species } from '@/_services/api'
 import { getAllSpecies } from '@/_services/api/species-service'
+import { ColoredFilter } from '@/_services/dataset-filters'
+import { ComparisonListComponent } from '@/_services/dataset-filters/comparison-list'
 import { ROUTE_NAMES } from '@/_services/router'
 
 @Options({

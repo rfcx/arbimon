@@ -1,10 +1,10 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { MapBubbleComponent, MapConfig, MapDataSet } from '@/_components/charts/map-bubble'
 import { TAXONOMY_CLASSES } from '@/_services/api/taxonomy-service'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/_services/mapbox'
-import { FilterUtils } from '@/_services/utils'
+import { getFilterExportName } from '@/_services/dataset-filters/functions'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/_services/maps'
+import { MapBubbleComponent, MapConfig, MapDataSet } from '@/_services/maps/map-bubble'
 
 interface MapOptions {
   id: string
@@ -71,6 +71,6 @@ export default class SpeciesRichnessByLocation extends Vue {
 
   mapExportName (dataset: MapDataSet): string {
     const { startDate, endDate, sites } = dataset
-    return FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
+    return getFilterExportName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
   }
 }

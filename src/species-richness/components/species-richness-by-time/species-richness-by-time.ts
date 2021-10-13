@@ -2,9 +2,9 @@ import { isEmpty } from 'lodash'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '@/_components/charts/line-chart'
 import { TimeBucket } from '@/_services/api/species-richness-service'
-import { svgToPngData } from '@/_services/utils'
+import { svgToPngData } from '@/_services/charts'
+import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '@/_services/charts/line-chart'
 import { downloadPng } from '@/_services/utils/file'
 
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
