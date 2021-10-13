@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-row justify-between items-center w-full">
-    <div class="header-container">
-      <h1 class="text-white text-4xl capitalize">
+    <page-title-view>
+      <template #title>
         Species Richness
-      </h1>
-      <p class="text-white">
+      </template>
+      <template #subtitle>
         Number of distinct species detected
-      </p>
-    </div>
+      </template>
+    </page-title-view>
     <div>
       <export-button-view
         :disabled="!haveData"
