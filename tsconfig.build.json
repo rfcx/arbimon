@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "~/*": ["src/_services/*"]
     }
   },
   "exclude": [
