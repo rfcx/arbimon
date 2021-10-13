@@ -1,4 +1,4 @@
-import { MapSiteData } from '@/_components/charts/map-bubble'
+import { MapSiteData } from '@/_services/maps/map-bubble'
 import { DatasetDefinition, Species } from '..'
 
 export type TimeBucket = 'hour' | 'day' | 'month' | 'year' | 'quarter'

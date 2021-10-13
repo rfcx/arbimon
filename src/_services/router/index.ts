@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import stores from '@/_services/stores'
+import stores from '@/_services/store'
 import { Auth0 } from '../auth'
 import * as PAGES from './pages'
 import { createSelectProjectGuard } from './select-project-guard'
@@ -19,11 +19,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: ROUTE_NAMES.home,
-    component: PAGES.AppHome
+    component: PAGES.Home
   },
   {
     path: '/project/:projectId',
-    component: PAGES.AppRoot,
+    component: PAGES.ProjectRoot,
     beforeEnter: [Auth0.routeGuard, selectProjectGuard],
     children: [
       {
@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
     name: ROUTE_NAMES.error,
-    component: PAGES.AppError
+    component: PAGES.Error
   }
 ]
 

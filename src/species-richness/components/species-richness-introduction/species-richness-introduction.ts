@@ -1,9 +1,9 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { ColoredFilter } from '@/_components/datasets'
-import { FileUtils, FilterUtils } from '@/_services/utils'
-import { downloadZip, FileData } from '@/_services/utils/file'
+import { ColoredFilter } from '@/_services/dataset-filters'
+import { getFilterExportGroupName, getFilterExportName } from '@/_services/dataset-filters/functions'
+import { downloadZip, FileData, toCsv, zipFiles } from '@/_services/utils/file'
 import { getReportRawData } from '../../csv'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
@@ -19,15 +19,15 @@ export default class SpeciesRichnessIntroduction extends Vue {
       return await getReportRawData({ start, end, sites })
     }))
 
-    const { name, exportTime } = FilterUtils.getFilterExportGroupName(this.filters, DEFAULT_PREFIX)
-    const filenames = this.filters.map(({ startDate, endDate, sites }) => FilterUtils.getFilterExportName(startDate, endDate, DEFAULT_PREFIX, exportTime, sites))
+    const { name, exportTime } = getFilterExportGroupName(this.filters, DEFAULT_PREFIX)
+    const filenames = this.filters.map(({ startDate, endDate, sites }) => getFilterExportName(startDate, endDate, DEFAULT_PREFIX, exportTime, sites))
 
     const files: FileData[] = await Promise.all(csvData.map(async (csvDatum, idx) => ({
       filename: `${filenames[idx]}.csv`,
-      data: await FileUtils.toCsv(csvDatum)
+      data: await toCsv(csvDatum)
     })))
 
-    const zipUrl = await FileUtils.zipFiles(files, name)
+    const zipUrl = await zipFiles(files, name)
     downloadZip(zipUrl, name)
   }
 }
