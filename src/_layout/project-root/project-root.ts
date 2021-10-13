@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { Project } from '@/_services/api'
-import { Auth0Option, Auth0User } from '@/_services/auth/types'
-import { VuexAuth, VuexProject } from '@/_services/store'
+import { Project } from '~/api'
+import { Auth0Option, Auth0User } from '~/auth/types'
+import { VuexAuth, VuexProject } from '~/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 import NavbarComponent from '../components/navbar/navbar.vue'
 

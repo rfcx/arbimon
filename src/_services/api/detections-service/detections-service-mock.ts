@@ -1,4 +1,4 @@
-import { filterByDataset, getRawDetections, simulateDelay } from '@/_services/api-helpers/mock'
+import { filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { DatasetDefinition, Detection } from '..'
 
 export const getAllDetections = async (dataset: DatasetDefinition): Promise<Detection[]> => {

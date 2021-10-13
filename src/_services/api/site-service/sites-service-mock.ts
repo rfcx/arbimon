@@ -1,4 +1,4 @@
-import { getRawSites, simulateDelay } from '@/_services/api-helpers/mock'
+import { getRawSites, simulateDelay } from '~/api-helpers/mock'
 import { Site } from '..'
 
 export const getSites = async (): Promise<Site[]> => {

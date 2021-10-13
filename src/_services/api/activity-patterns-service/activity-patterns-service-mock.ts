@@ -1,5 +1,5 @@
-import { DatasetDefinition } from '@/_services/api/types'
-import { filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '@/_services/api-helpers/mock'
+import { DatasetDefinition } from '~/api/types'
+import { filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { ActivityPatternsData } from '.'
 
 export const getActivityPatternsData = async (dataset: DatasetDefinition, speciesId: number): Promise<ActivityPatternsData> => {

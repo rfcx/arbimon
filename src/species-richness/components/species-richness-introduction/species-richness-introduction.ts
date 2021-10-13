@@ -1,9 +1,9 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { ColoredFilter } from '@/_services/dataset-filters'
-import { getFilterExportGroupName, getFilterExportName } from '@/_services/dataset-filters/functions'
-import { downloadZip, FileData, toCsv, zipFiles } from '@/_services/utils/file'
+import { ColoredFilter } from '~/dataset-filters'
+import { getFilterExportGroupName, getFilterExportName } from '~/dataset-filters/functions'
+import { downloadZip, FileData, toCsv, zipFiles } from '~/utils/file'
 import { getReportRawData } from '../../csv'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'

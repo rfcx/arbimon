@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
-import { dayjs } from '@/_services/dayjs'
-import { datasetColors } from '@/_services/store/colors'
+import { dayjs } from '~/dayjs'
+import { datasetColors } from '~/store/colors'
 import { ColoredFilter, Filter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'

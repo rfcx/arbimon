@@ -1,6 +1,6 @@
-import ApiClient from '@/_services/api-helpers/rest/api-service'
-import { endpointProjects } from '@/_services/api-helpers/rest/endpoints'
-import { RawProjectListItem } from '@/_services/api-helpers/rest/types'
+import ApiClient from '~/api-helpers/rest/api-service'
+import { endpointProjects } from '~/api-helpers/rest/endpoints'
+import { RawProjectListItem } from '~/api-helpers/rest/types'
 import { Project } from '../types'
 
 const mapProjectList = (data: RawProjectListItem): Project => {

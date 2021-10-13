@@ -1,6 +1,6 @@
 import { groupBy, kebabCase, mapValues } from 'lodash'
 
-import { getRawDetections, simulateDelay } from '@/_services/api-helpers/mock'
+import { getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { Species } from '..'
 
 export const getAllSpecies = async (): Promise<Species[]> => {

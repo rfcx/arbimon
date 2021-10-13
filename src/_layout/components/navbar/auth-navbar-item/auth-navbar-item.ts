@@ -1,8 +1,8 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Auth0Option, Auth0User } from '@/_services/auth/types'
-import { VuexAuth } from '@/_services/store'
+import { Auth0Option, Auth0User } from '~/auth/types'
+import { VuexAuth } from '~/store'
 
 export default class AuthNavbarItemComponent extends Vue {
   @Prop() domId!: string

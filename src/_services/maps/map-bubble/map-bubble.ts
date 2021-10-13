@@ -2,9 +2,9 @@ import { GeoJSONSource } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASS_ALL } from '@/_services/api/taxonomy-service/taxonomy-service-mock'
-import { mapboxgl } from '@/_services/maps'
-import { downloadPng } from '@/_services/utils/file'
+import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service/taxonomy-service-mock'
+import { mapboxgl } from '~/maps'
+import { downloadPng } from '~/utils/file'
 import { MapConfig, MapDataSet, MapSiteData } from '.'
 
 const DATA_LAYER_ID = 'species-richness'

@@ -2,9 +2,9 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
-import { Project } from '@/_services/api'
-import { ROUTE_NAMES } from '@/_services/router'
-import { VuexProject } from '@/_services/store'
+import { Project } from '~/api'
+import { ROUTE_NAMES } from '~/router'
+import { VuexProject } from '~/store'
 
 @Options({
   components: { OnClickOutside }

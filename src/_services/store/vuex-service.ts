@@ -1,6 +1,6 @@
 // TODO ?? - Delete this file
-import { Project, Site } from '@/_services/api/types'
-import { Auth0Option, Auth0User } from '@/_services/auth/types'
+import { Project, Site } from '~/api/types'
+import { Auth0Option, Auth0User } from '~/auth/types'
 import store, { ACTIONS, createVuexDecorator, ITEMS } from '.'
 
 const get = <T>(key: string, defaultValue: T): T => store.getters[key] ?? defaultValue

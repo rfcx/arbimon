@@ -7,8 +7,8 @@
 import { Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { Auth0Option, Auth0User } from '@/_services/auth/types'
-import { VuexAuth } from '@/_services/store'
+import { Auth0Option, Auth0User } from '~/auth/types'
+import { VuexAuth } from '~/store'
 
 export default class AppRoot extends Vue {
   @Inject() readonly auth!: Auth0Option

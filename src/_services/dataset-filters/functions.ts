@@ -1,8 +1,8 @@
 import { Dayjs } from 'dayjs'
 
-import { Filter } from '@/_services/dataset-filters'
-import { dayjs } from '@/_services/dayjs'
-import { VuexProject } from '@/_services/store'
+import { Filter } from '~/dataset-filters'
+import { dayjs } from '~/dayjs'
+import { VuexProject } from '~/store'
 import { Site } from '../api'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'
