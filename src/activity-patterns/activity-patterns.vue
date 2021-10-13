@@ -12,6 +12,7 @@
         {{ item.speciesName }}
       </option>
     </select>
+    <comparison-list-component @emitSelect="onFilterChange" />
   </div>
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
