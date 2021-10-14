@@ -20,17 +20,14 @@
         >
           <icon-fas-ellipsis-v />
         </button>
-        <ul
-          v-if="isDropdownOpen"
-          class="absolute top-10 right-0 min-w-40 border-t-box-grey border-t-1 bg-box-grey rounded-md text-primary transition-all"
-        >
-          <li
-            class="p-4 hover:(bg-box-grey-dark cursor-pointer)"
+        <dropdown-menu v-if="isDropdownOpen">
+          <dropdown-item
+            class="flex flex-row items-center"
             @click="exportCSVReports()"
           >
-            Export as CSV
-          </li>
-        </ul>
+            <icon-far-file-archive class="text-sm mr-1" /> Export as CSV
+          </dropdown-item>
+        </dropdown-menu>
       </on-click-outside>
     </div>
   </div>
