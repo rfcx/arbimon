@@ -9,7 +9,7 @@
     />
     <div
       v-else
-      class="mt-2 max-h-100 overflow-y-auto"
+      class="mt-2"
     >
       <table class="w-full">
         <thead class="h-10">
@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="row in tableData"
+            v-for="row in tablePiecesData"
             :key="'species-table-row-' + row.speciesName"
             class="capitalize"
           >
@@ -71,6 +71,22 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="flex justify-end mt-4">
+      <button
+        class="btn btn-icon mr-2"
+        :disabled="page === 0"
+        @click="previousPagination()"
+      >
+        <icon-fas-less-than />
+      </button>
+      <button
+        class="btn btn-icon"
+        :disabled="page === maxPage"
+        @click="nextPagination()"
+      >
+        <icon-fas-greater-than />
+      </button>
     </div>
   </div>
 </template>
