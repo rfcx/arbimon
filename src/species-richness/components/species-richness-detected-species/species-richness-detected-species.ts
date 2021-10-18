@@ -51,11 +51,11 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     return dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
   }
 
-  previousPagination (): void {
+  previousPage (): void {
     this.page -= 1
   }
 
-  nextPagination (): void {
+  nextPage (): void {
     this.page += 1
   }
 }
