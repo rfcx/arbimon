@@ -9,7 +9,7 @@
     />
     <div
       v-else
-      class="mt-2 max-h-100 overflow-y-auto"
+      class="mt-2"
     >
       <table class="w-full">
         <thead class="h-10">
@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="row in tableData"
+            v-for="row in pageData"
             :key="'species-table-row-' + row.speciesName"
             class="capitalize"
           >
@@ -71,7 +71,44 @@
           </tr>
         </tbody>
       </table>
+      <div class="flex justify-end items-center mt-4">
+        <div class="mr-2">
+          <input
+            v-model.number="currentPage"
+            type="number"
+            min="1"
+            :max="maxPage"
+            class="text-center px-1 py-0 text-black input-hide-arrows"
+            @keyup.enter="blur"
+          > of {{ maxPage }}
+        </div>
+        <button
+          class="btn btn-icon mr-2"
+          @click="previousPage()"
+        >
+          <icon-fas-less-than />
+        </button>
+        <button
+          class="btn btn-icon"
+          @click="nextPage()"
+        >
+          <icon-fas-greater-than />
+        </button>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" src="./species-richness-detected-species.ts"></script>
+<style lang="scss" scoped>
+/* Chrome, Safari, Edge, Opera */
+.input-hide-arrows::-webkit-outer-spin-button,
+.input-hide-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-hide-arrows {
+  /* Firefox */
+  -moz-appearance: textfield;
+}
+</style>
