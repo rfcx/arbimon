@@ -99,7 +99,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     if (this.currentSortedColumn !== column) {
       this.currentSortedColumn = column
       this.order = 'asc'
-      this.tableDatum = tableData.sort((a, b) => a[column].localeCompare(b[column]))
+      this.tableDatum = tableData.sort((a, b) => a[column as 'speciesName' | 'className'].localeCompare(b[column as 'speciesName' | 'className']))
     } else {
       this.order = this.order === 'asc' ? 'desc' : 'asc'
       this.tableDatum.reverse()
