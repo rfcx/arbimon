@@ -1,5 +1,5 @@
 import { Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Prop, Watch } from 'vue-property-decorator'
 
 import { DetectedSpeciesItem } from './Table'
 
@@ -16,6 +16,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() colors!: string[]
 
   pageIndex = 0
+  currentPage = 0
 
   get tableHeader (): Header[] {
     return [
@@ -41,7 +42,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get maxPage (): number {
-    return Math.ceil(this.dataLength / PAGE_SIZE) - 1
+    return Math.ceil(this.dataLength / PAGE_SIZE)
   }
 
   get dataLength (): number {
@@ -54,15 +55,38 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     return this.dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
   }
 
-  get currentPage (): number {
+  get currentRecord (): number {
     return this.dataLength === 0 ? 0 : (this.pageIndex * PAGE_SIZE) + 1
+  }
+
+  @Watch('tableData')
+  onDataChange (): void {
+    this.pageIndex = 0
+    this.currentPage = this.dataLength === 0 ? 0 : 1
+  }
+
+  setCurrentPage (event: InputEvent & { target: HTMLInputElement }): void {
+    const page = Number(event.target.value)
+
+    if (page < 1 || isNaN(page)) {
+      this.pageIndex = 0
+      this.currentPage = 1
+    } else if (page > this.maxPage) {
+      this.pageIndex = this.maxPage - 1
+      this.currentPage = this.maxPage
+    } else {
+      this.pageIndex = page - 1
+      this.currentPage = page
+    }
   }
 
   previousPage (): void {
     this.pageIndex -= 1
+    this.currentPage = this.currentPage - 1
   }
 
   nextPage (): void {
     this.pageIndex += 1
+    this.currentPage = this.currentPage + 1
   }
 }
