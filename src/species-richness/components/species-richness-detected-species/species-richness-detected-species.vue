@@ -73,8 +73,14 @@
       </table>
     </div>
     <div class="flex justify-end items-center mt-4">
-      <div class="mr-2 py-2 px-4 text-primary rounded-lg shadow-md bg-box-grey">
-        {{ currentPage }} of {{ dataLength }}
+      <div class="mr-2">
+        <input
+          v-model="currentPage"
+          type="text"
+          class="text-center px-1 py-0 text-black w-15"
+          @keyup.enter="setCurrentPage"
+          @blur="setCurrentPage"
+        > of {{ maxPage }}
       </div>
       <button
         class="btn btn-icon mr-2"
@@ -85,7 +91,7 @@
       </button>
       <button
         class="btn btn-icon"
-        :disabled="pageIndex === maxPage || maxPage === -1"
+        :disabled="pageIndex === maxPage - 1 || maxPage === 0"
         @click="nextPage()"
       >
         <icon-fas-greater-than />
