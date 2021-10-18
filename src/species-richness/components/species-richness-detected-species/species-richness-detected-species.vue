@@ -72,7 +72,10 @@
         </tbody>
       </table>
     </div>
-    <div class="flex justify-end mt-4">
+    <div class="flex justify-end items-center mt-4">
+      <div class="mr-2 py-2 px-4 text-primary rounded-lg shadow-md bg-box-grey">
+        {{ currentPage }} of {{ dataLength }}
+      </div>
       <button
         class="btn btn-icon mr-2"
         :disabled="pageIndex === 0"
@@ -82,7 +85,7 @@
       </button>
       <button
         class="btn btn-icon"
-        :disabled="pageIndex === maxPage"
+        :disabled="pageIndex === maxPage || maxPage === -1"
         @click="nextPage()"
       >
         <icon-fas-greater-than />
