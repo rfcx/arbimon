@@ -79,7 +79,7 @@
             min="1"
             :max="maxPage"
             class="text-center px-1 py-0 text-black input-hide-arrows"
-            @keyup.enter="e => e.target.blur()"
+            @keyup.enter="blur"
           > of {{ maxPage }}
         </div>
         <button
