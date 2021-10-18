@@ -73,13 +73,14 @@
             v-for="blankIndex in PAGE_SIZE - pageData.length"
             :key="'blank-row' + blankIndex"
           >
-            <td
-              class="p-2"
-              style="height: 36px"
-            />
+            <td class="p-2">
+&nbsp;
+            </td>
           </tr>
-          <tr class="border-b-1 border-subtle">
-            <td class="h-1.5" />
+          <tr
+            class="h-1.5 border-b-1 border-subtle"
+          >
+            <td :colspan="tableHeader.length" />
           </tr>
         </tbody>
       </table>
