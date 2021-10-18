@@ -10,13 +10,13 @@ interface Header {
 }
 
 const HEADER_COLOR = '#ffffff80'
-const PAGE_SIZE = 10
 
 export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
 
   currentPage = 1 // 1-based for humans
+  pageSize = 10
 
   get hasTableData (): boolean {
     return this.tableData.length > 0
@@ -31,12 +31,12 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get maxPage (): number {
-    return Math.ceil(this.tableData.length / PAGE_SIZE)
+    return Math.ceil(this.tableData.length / this.pageSize)
   }
 
   get pageData (): DetectedSpeciesItem[] {
-    const start = (this.currentPage - 1) * PAGE_SIZE
-    return this.tableData.slice(start, start + PAGE_SIZE)
+    const start = (this.currentPage - 1) * this.pageSize
+    return this.tableData.slice(start, start + this.pageSize)
   }
 
   get tableHeader (): Header[] {

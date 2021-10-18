@@ -11,14 +11,14 @@
       v-else
       class="mt-2"
     >
-      <table class="w-full">
+      <table class="w-full table-fixed">
         <thead class="h-10">
           <tr class="sticky top-0 z-10">
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'text-left': idx < 2 }"
+              :class="{ 'text-left': idx < 2, 'w-66': idx < 1 }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
             >
               {{ item.title }}
@@ -69,8 +69,18 @@
               {{ row.total }}
             </td>
           </tr>
-          <tr class="border-b-1 border-subtle">
-            <td class="h-1.5" />
+          <tr
+            v-for="blankIndex in pageSize - pageData.length"
+            :key="'blank-row' + blankIndex"
+          >
+            <td class="p-2">
+              <span>&nbsp;</span>
+            </td>
+          </tr>
+          <tr
+            class="h-1.5 border-b-1 border-subtle"
+          >
+            <td :colspan="tableHeader.length" />
           </tr>
         </tbody>
       </table>
