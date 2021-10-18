@@ -17,11 +17,30 @@
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
-              class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'text-left': idx < 2, 'w-66': idx < 1 }"
+              class="font-bold capitalize p-2 bg-mirage-grey select-none"
+              :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer': item.key }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
+              @click="sort(item.key)"
             >
-              {{ item.title }}
+              <div
+                class="flex flex-row"
+                :class="{ 'justify-center': idx >= 2 }"
+              >
+                {{ item.title }}
+                <div
+                  v-if="item.key"
+                  class="ml-2 text-faded"
+                >
+                  <icon-fa-chevron-up
+                    class="text-xxs"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
+                  />
+                  <icon-fa-chevron-down
+                    class="text-xxs"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
+                  />
+                </div>
+              </div>
             </th>
           </tr>
         </thead>
@@ -91,7 +110,7 @@
         <div class="flex justify-end items-center">
           <div>
             <input
-              v-model.number="currentPage"
+              v-model.number="pageIndex"
               type="number"
               min="1"
               :max="maxPage"
