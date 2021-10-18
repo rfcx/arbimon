@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="row in tablePiecesData"
+            v-for="row in page"
             :key="'species-table-row-' + row.speciesName"
             class="capitalize"
           >
@@ -75,14 +75,14 @@
     <div class="flex justify-end mt-4">
       <button
         class="btn btn-icon mr-2"
-        :disabled="page === 0"
+        :disabled="pageIndex === 0"
         @click="previousPage()"
       >
         <icon-fas-less-than />
       </button>
       <button
         class="btn btn-icon"
-        :disabled="page === maxPage"
+        :disabled="pageIndex === maxPage"
         @click="nextPage()"
       >
         <icon-fas-greater-than />

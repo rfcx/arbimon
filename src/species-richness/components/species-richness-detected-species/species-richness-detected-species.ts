@@ -15,7 +15,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
 
-  page = 0
+  pageIndex = 0
 
   get tableHeader (): Header[] {
     return [
@@ -44,18 +44,18 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     return Math.ceil(this.tableData.length / PAGE_SIZE) - 1
   }
 
-  get tablePiecesData (): DetectedSpeciesItem[] {
+  get page (): DetectedSpeciesItem[] {
     const dataLength = this.tableData.length
-    const start = this.page * PAGE_SIZE
+    const start = this.pageIndex * PAGE_SIZE
     const end = start + PAGE_SIZE > dataLength ? dataLength : start + PAGE_SIZE
     return dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
   }
 
   previousPage (): void {
-    this.page -= 1
+    this.pageIndex -= 1
   }
 
   nextPage (): void {
-    this.page += 1
+    this.pageIndex += 1
   }
 }
