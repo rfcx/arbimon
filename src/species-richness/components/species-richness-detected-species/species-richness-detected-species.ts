@@ -81,6 +81,11 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     }
   }
 
+  handleEnterKeyup (event: KeyboardEvent): void {
+    const target = event.target as HTMLInputElement
+    target.blur()
+  }
+
   previousPage (): void {
     this.pageIndex -= 1
     this.currentPage = this.currentPage - 1

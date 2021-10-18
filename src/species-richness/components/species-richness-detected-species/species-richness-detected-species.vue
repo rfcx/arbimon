@@ -77,8 +77,9 @@
         <input
           v-model="currentPage"
           type="text"
-          class="text-center px-1 py-0 text-black w-15"
-          @keyup.enter="$event.target?.blur()"
+          class="text-center px-1 py-0 text-black"
+          :style="{ width: `${maxPage.length * 1.25}ch` }"
+          @keyup.enter="handleEnterKeyup($event)"
           @blur="setCurrentPage($event)"
         > of {{ maxPage }}
       </div>
