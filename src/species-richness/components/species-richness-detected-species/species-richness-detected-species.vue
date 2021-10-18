@@ -78,7 +78,7 @@
           v-model="currentPage"
           type="text"
           class="text-center px-1 py-0 text-black"
-          :style="{ width: `${maxPage.length * 1.25}ch` }"
+          :style="{ width: `${String(maxPage).length * 3}ch` }"
           @keyup.enter="handleEnterKeyup($event)"
           @blur="setCurrentPage($event)"
         > of {{ maxPage }}
