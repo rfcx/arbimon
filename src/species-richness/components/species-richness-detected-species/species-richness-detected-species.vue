@@ -18,7 +18,7 @@
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'text-left': idx < 2, 'w-70': idx === 0 }"
+              :class="{ 'text-left': idx < 2 }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
             >
               {{ item.title }}
@@ -68,6 +68,15 @@
             >
               {{ row.total }}
             </td>
+          </tr>
+          <tr
+            v-for="blankIndex in PAGE_SIZE - pageData.length"
+            :key="'blank-row' + blankIndex"
+          >
+            <td
+              class="p-2"
+              style="height: 36px"
+            />
           </tr>
         </tbody>
       </table>
