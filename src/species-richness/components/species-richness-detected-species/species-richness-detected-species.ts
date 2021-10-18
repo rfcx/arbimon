@@ -2,7 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { firstDiffDigit } from '@/_services/utils/number'
-import { DetectedSpeciesItem } from './Table'
+import { DetectedSpeciesItem } from './types'
 
 interface Header {
   title: string
@@ -11,7 +11,6 @@ interface Header {
 }
 
 const HEADER_COLOR = '#ffffff80'
-const PAGE_SIZE = 10
 const SORTABLE_COLUMNS = { speciesName: 'speciesName', className: 'className' }
 
 export default class SpeciesRichnessDetectedSpecies extends Vue {
@@ -20,6 +19,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
 
   tableDatum: DetectedSpeciesItem[] = []
   currentPage = 1 // 1-based for humans
+  pageSize = 10
   currentSortedColumn = SORTABLE_COLUMNS.speciesName
   order = 'asc'
 
@@ -36,12 +36,12 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get maxPage (): number {
-    return Math.ceil(this.tableDatum.length / PAGE_SIZE)
+    return Math.ceil(this.tableDatum.length / this.pageSize)
   }
 
   get pageData (): DetectedSpeciesItem[] {
-    const start = (this.currentPage - 1) * PAGE_SIZE
-    return this.tableDatum.slice(start, start + PAGE_SIZE)
+    const start = (this.currentPage - 1) * this.pageSize
+    return this.tableDatum.slice(start, start + this.pageSize)
   }
 
   get tableHeader (): Header[] {

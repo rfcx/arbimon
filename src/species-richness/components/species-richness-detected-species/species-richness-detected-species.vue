@@ -11,14 +11,14 @@
       v-else
       class="mt-2"
     >
-      <table class="w-full">
+      <table class="w-full table-fixed">
         <thead class="h-10">
           <tr class="sticky top-0 z-10">
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'cursor-pointer hover:underline': item.key }"
+              :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer hover:underline': item.key }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
               @click="sorting(item.key)"
             >
@@ -53,7 +53,7 @@
             <td class="p-2">
               <router-link
                 :to="{ name: 'activity_patterns', params: { speciesSlug: row.speciesSlug }}"
-                class="text-secondary hover:(underline text-white)"
+                class="text-subtle hover:(underline text-white)"
               >
                 <span class="text-white">{{ row.speciesName }}</span>
                 <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
@@ -77,7 +77,7 @@
                 />
                 <icon-fa-close
                   v-else
-                  class="text-secondary m-auto opacity-65"
+                  class="text-subtle m-auto opacity-65"
                 />
               </td>
             </template>
@@ -88,31 +88,51 @@
               {{ row.total }}
             </td>
           </tr>
+          <tr
+            v-for="blankIndex in pageSize - pageData.length"
+            :key="'blank-row' + blankIndex"
+          >
+            <td class="p-2">
+              <span>&nbsp;</span>
+            </td>
+          </tr>
+          <tr
+            class="h-1.5 border-b-1 border-subtle"
+          >
+            <td :colspan="tableHeader.length" />
+          </tr>
         </tbody>
       </table>
-      <div class="flex justify-end items-center mt-4">
-        <div class="mr-2">
-          <input
-            v-model.number="currentPage"
-            type="number"
-            min="1"
-            :max="maxPage"
-            class="text-center px-1 py-0 text-black input-hide-arrows"
-            @keyup.enter="blur"
-          > of {{ maxPage }}
+      <div class="flex justify-between items-center mt-3">
+        <div class="text-subtle px-2">
+          Total: {{ tableData.length }} species
         </div>
-        <button
-          class="btn btn-icon mr-2"
-          @click="previousPage()"
-        >
-          <icon-fas-less-than />
-        </button>
-        <button
-          class="btn btn-icon"
-          @click="nextPage()"
-        >
-          <icon-fas-greater-than />
-        </button>
+        <div class="flex justify-end items-center">
+          <div>
+            <input
+              v-model.number="currentPage"
+              type="number"
+              min="1"
+              :max="maxPage"
+              class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+              @keyup.enter="blur"
+            >
+            of
+            <span class="ml-1.5">{{ maxPage }}</span>
+          </div>
+          <button
+            class="btn btn-icon ml-4"
+            @click="previousPage()"
+          >
+            <icon-fas-chevron-left class="w-3 h-3" />
+          </button>
+          <button
+            class="btn btn-icon ml-2"
+            @click="nextPage()"
+          >
+            <icon-fas-chevron-right class="w-3 h-3" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
