@@ -11,8 +11,8 @@ interface Header {
 const HEADER_COLOR = '#ffffff80'
 
 export default class SpeciesRichnessDetectedSpecies extends Vue {
-  @Prop({ default: [] }) tableData!: DetectedSpeciesItem[]
-  @Prop({ default: [] }) colors!: string[]
+  @Prop() tableData!: DetectedSpeciesItem[]
+  @Prop() colors!: string[]
 
   page = 0
   maxPage = 0
