@@ -65,8 +65,9 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     this.currentPage = this.dataLength === 0 ? 0 : 1
   }
 
-  setCurrentPage (rawInput: string): void {
-    const page = Number(rawInput)
+  setCurrentPage (event: FocusEvent): void {
+    const target = event.target as HTMLInputElement
+    const page = Number(target.value)
 
     if (page < 1 || isNaN(page)) {
       this.pageIndex = 0

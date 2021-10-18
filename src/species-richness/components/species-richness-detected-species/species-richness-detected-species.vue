@@ -78,8 +78,8 @@
           v-model="currentPage"
           type="text"
           class="text-center px-1 py-0 text-black w-15"
-          @keyup.enter="setCurrentPage($event.target.value)"
-          @blur="setCurrentPage($event.target.value)"
+          @keyup.enter="$event.target?.blur()"
+          @blur="setCurrentPage($event)"
         > of {{ maxPage }}
       </div>
       <button
