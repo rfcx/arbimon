@@ -55,8 +55,15 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   @Watch('currentPage')
-  onCurrentPageChange (newVal: number): void {
-    this.setPage(newVal, false)
+  onCurrentPageChange (newVal: number, oldVal: number): void {
+    if (newVal < 1) this.currentPage = 1
+    if (newVal > this.maxPage) {
+      // Try to preserve the last digit that was entered
+      const newDigit = Number(newVal.toString().replace(oldVal.toString(), ''))
+
+      if (isNaN(newDigit) || newDigit < 1 || newDigit > this.maxPage) this.currentPage = this.maxPage
+      else this.currentPage = newDigit
+    }
   }
 
   previousPage (): void {
@@ -67,16 +74,16 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     this.setPage(this.currentPage + 1)
   }
 
-  setPage (page: number, wrap = true): void {
+  setPage (page: number): void {
     // Wrap-around
     let newPage = page
-    if (page < 1) newPage = wrap ? this.maxPage : 1
-    if (page > this.maxPage) newPage = wrap ? 1 : this.maxPage
+    if (page < 1) newPage = this.maxPage
+    if (page > this.maxPage) newPage = 1
 
     this.currentPage = newPage
   }
 
   blur (event: Event): void {
     (event.target as HTMLInputElement).blur()
-}
+  }
 }
