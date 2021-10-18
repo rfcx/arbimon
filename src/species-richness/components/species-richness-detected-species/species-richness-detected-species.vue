@@ -69,33 +69,41 @@
               {{ row.total }}
             </td>
           </tr>
+          <tr class="border-b-1 border-subtle">
+            <td class="h-1.5" />
+          </tr>
         </tbody>
       </table>
-      <div class="flex justify-end items-center mt-4">
-        <div>
-          <input
-            v-model.number="currentPage"
-            type="number"
-            min="1"
-            :max="maxPage"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-            @keyup.enter="blur"
-          >
-          of
-          <span class="ml-1.5">{{ maxPage }}</span>
+      <div class="flex justify-between items-center mt-3">
+        <div class="text-subtle px-2">
+          Total: {{ tableData.length }} species
         </div>
-        <button
-          class="btn btn-icon ml-4"
-          @click="previousPage()"
-        >
-          <icon-fas-chevron-left class="w-3 h-3" />
-        </button>
-        <button
-          class="btn btn-icon ml-2"
-          @click="nextPage()"
-        >
-          <icon-fas-chevron-right class="w-3 h-3" />
-        </button>
+        <div class="flex justify-end items-center">
+          <div>
+            <input
+              v-model.number="currentPage"
+              type="number"
+              min="1"
+              :max="maxPage"
+              class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+              @keyup.enter="blur"
+            >
+            of
+            <span class="ml-1.5">{{ maxPage }}</span>
+          </div>
+          <button
+            class="btn btn-icon ml-4"
+            @click="previousPage()"
+          >
+            <icon-fas-chevron-left class="w-3 h-3" />
+          </button>
+          <button
+            class="btn btn-icon ml-2"
+            @click="nextPage()"
+          >
+            <icon-fas-chevron-right class="w-3 h-3" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
