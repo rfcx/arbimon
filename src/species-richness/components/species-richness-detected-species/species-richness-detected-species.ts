@@ -29,7 +29,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get hasTableData (): boolean {
-    return this.tableData.length > 0
+    return this.dataLength > 0
   }
 
   get hasMoreThanOneDataset (): boolean {
@@ -37,18 +37,25 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get datasetCount (): number {
-    return this.tableData.length > 0 ? this.tableData[0].data.length : 0
+    return this.dataLength > 0 ? this.tableData[0].data.length : 0
   }
 
   get maxPage (): number {
-    return Math.ceil(this.tableData.length / PAGE_SIZE) - 1
+    return Math.ceil(this.dataLength / PAGE_SIZE) - 1
+  }
+
+  get dataLength (): number {
+    return this.tableData.length
   }
 
   get page (): DetectedSpeciesItem[] {
-    const dataLength = this.tableData.length
     const start = this.pageIndex * PAGE_SIZE
-    const end = start + PAGE_SIZE > dataLength ? dataLength : start + PAGE_SIZE
-    return dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
+    const end = start + PAGE_SIZE > this.dataLength ? this.dataLength : start + PAGE_SIZE
+    return this.dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
+  }
+
+  get currentPage (): number {
+    return this.dataLength === 0 ? 0 : (this.pageIndex * PAGE_SIZE) + 1
   }
 
   previousPage (): void {
