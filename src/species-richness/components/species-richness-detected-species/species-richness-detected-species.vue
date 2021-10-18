@@ -76,14 +76,14 @@
       <button
         class="btn btn-icon mr-2"
         :disabled="page === 0"
-        @click="previousPagination()"
+        @click="previousPage()"
       >
         <icon-fas-less-than />
       </button>
       <button
         class="btn btn-icon"
         :disabled="page === maxPage"
-        @click="nextPagination()"
+        @click="nextPage()"
       >
         <icon-fas-greater-than />
       </button>
