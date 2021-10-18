@@ -1,5 +1,5 @@
 import { Vue } from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { Prop } from 'vue-property-decorator'
 
 import { DetectedSpeciesItem } from './Table'
 
@@ -16,7 +16,6 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() colors!: string[]
 
   page = 0
-  tablePiecesData: DetectedSpeciesItem[] = []
 
   get tableHeader (): Header[] {
     return [
@@ -45,17 +44,11 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     return Math.ceil(this.tableData.length / PAGE_SIZE) - 1
   }
 
-  @Watch('tableData')
-  onTableDataChange (): void {
-    this.tablePiecesData = this.tableData.length < PAGE_SIZE ? this.tableData : this.tableData.slice(0, PAGE_SIZE)
-  }
-
-  @Watch('page')
-  onPageChange (): void {
+  get tablePiecesData (): DetectedSpeciesItem[] {
     const dataLength = this.tableData.length
     const start = this.page * PAGE_SIZE
     const end = start + PAGE_SIZE > dataLength ? dataLength : start + PAGE_SIZE
-    this.tablePiecesData = this.tableData.slice(start, end)
+    return dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
   }
 
   previousPagination (): void {
