@@ -2,7 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { firstDiffDigit } from '@/_services/utils/number'
-import { DetectedSpeciesItem } from './Table'
+import { DetectedSpeciesItem } from './types'
 
 interface Header {
   title: string

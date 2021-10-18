@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex justify-center items-center text-secondary border-2 border-secondary"
-  >
+  <div class="flex justify-center items-center text-subtle border-2 border-faded">
     No data
   </div>
 </template>
