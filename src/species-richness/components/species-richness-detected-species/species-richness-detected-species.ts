@@ -75,4 +75,8 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
 
     this.currentPage = newPage
   }
+
+  blur (event: Event): void {
+    (event.target as HTMLInputElement).blur()
+}
 }
