@@ -74,7 +74,7 @@
             :key="'blank-row' + blankIndex"
           >
             <td class="p-2">
-&nbsp;
+              <span>&nbsp;</span>
             </td>
           </tr>
           <tr
