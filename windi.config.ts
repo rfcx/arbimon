@@ -39,6 +39,9 @@ export default defineConfig({
         xl: '1280px',
         '2xl': '1536px'
       },
+      fontSize: {
+        xxs: '0.5rem'
+      },
       textColor: {
         primary: '#fff',
         secondary: '#ffffff80',
