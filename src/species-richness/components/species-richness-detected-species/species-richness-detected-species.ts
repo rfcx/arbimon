@@ -65,8 +65,8 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     this.currentPage = this.dataLength === 0 ? 0 : 1
   }
 
-  setCurrentPage (event: (FocusEvent | KeyboardEvent) & { target: HTMLInputElement }): void {
-    const page = Number(event.target.value)
+  setCurrentPage (rawInput: string): void {
+    const page = Number(rawInput)
 
     if (page < 1 || isNaN(page)) {
       this.pageIndex = 0
@@ -78,8 +78,6 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
       this.pageIndex = page - 1
       this.currentPage = page
     }
-
-    event.target.blur()
   }
 
   previousPage (): void {
