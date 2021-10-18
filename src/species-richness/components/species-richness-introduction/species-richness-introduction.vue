@@ -21,12 +21,12 @@
           <icon-fas-ellipsis-v />
         </button>
         <dropdown-menu v-if="isDropdownOpen">
-          <dropdown-item
+          <dropdown-menu-item
             class="flex flex-row items-center"
             @click="exportCSVReports()"
           >
             <icon-far-file-archive class="text-sm mr-1" /> Export as CSV
-          </dropdown-item>
+          </dropdown-menu-item>
         </dropdown-menu>
       </on-click-outside>
     </div>
