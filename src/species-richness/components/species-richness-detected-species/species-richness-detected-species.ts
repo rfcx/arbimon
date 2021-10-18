@@ -1,6 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
+import { firstDiffDigit } from '@/_services/utils/number'
 import { DetectedSpeciesItem } from './Table'
 
 interface Header {
@@ -59,10 +60,10 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     if (newVal < 1) this.currentPage = 1
     if (newVal > this.maxPage) {
       // Try to preserve the last digit that was entered
-      const newDigit = Number(newVal.toString().replace(oldVal.toString(), ''))
-
-      if (isNaN(newDigit) || newDigit < 1 || newDigit > this.maxPage) this.currentPage = this.maxPage
-      else this.currentPage = newDigit
+      const newDigit = firstDiffDigit(newVal, oldVal)
+      this.currentPage = (!isNaN(newDigit) && newDigit >= 1 && newDigit <= this.maxPage)
+        ? newDigit
+        : this.maxPage
     }
   }
 
