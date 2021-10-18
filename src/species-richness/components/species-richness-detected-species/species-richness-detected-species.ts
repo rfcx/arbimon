@@ -9,14 +9,13 @@ interface Header {
 }
 
 const HEADER_COLOR = '#ffffff80'
+const PAGE_SIZE = 10
 
 export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
 
   page = 0
-  maxPage = 0
-  offset = 10
   tablePiecesData: DetectedSpeciesItem[] = []
 
   get tableHeader (): Header[] {
@@ -42,17 +41,20 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     return this.tableData.length > 0 ? this.tableData[0].data.length : 0
   }
 
+  get maxPage (): number {
+    return Math.ceil(this.tableData.length / PAGE_SIZE) - 1
+  }
+
   @Watch('tableData')
   onTableDataChange (): void {
-    this.tablePiecesData = this.tableData.length < this.offset ? this.tableData : this.tableData.slice(0, this.offset)
-    this.maxPage = Math.ceil(this.tableData.length / this.offset) - 1
+    this.tablePiecesData = this.tableData.length < PAGE_SIZE ? this.tableData : this.tableData.slice(0, PAGE_SIZE)
   }
 
   @Watch('page')
   onPageChange (): void {
     const dataLength = this.tableData.length
-    const start = this.page * this.offset
-    const end = start + this.offset > dataLength ? dataLength : start + this.offset
+    const start = this.page * PAGE_SIZE
+    const end = start + PAGE_SIZE > dataLength ? dataLength : start + PAGE_SIZE
     this.tablePiecesData = this.tableData.slice(start, end)
   }
 
