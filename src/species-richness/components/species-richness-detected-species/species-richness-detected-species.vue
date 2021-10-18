@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="row in page"
+            v-for="row in pageData"
             :key="'species-table-row-' + row.speciesName"
             class="capitalize"
           >
@@ -71,33 +71,44 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="flex justify-end items-center mt-4">
-      <div class="mr-2">
-        <input
-          v-model="currentPage"
-          type="text"
-          class="text-center px-1 py-0 text-black"
-          :style="{ width: `${String(maxPage).length * 3}ch` }"
-          @keyup.enter="handleEnterKeyup($event)"
-          @blur="setCurrentPage($event)"
-        > of {{ maxPage }}
+      <div class="flex justify-end items-center mt-4">
+        <div class="mr-2">
+          <input
+            v-model.number="currentPage"
+            type="number"
+            min="1"
+            :max="maxPage"
+            class="text-center px-1 py-0 text-black input-hide-arrows"
+            @keyup.enter="e => e.target.blur()"
+          > of {{ maxPage }}
+        </div>
+        <button
+          class="btn btn-icon mr-2"
+          @click="previousPage()"
+        >
+          <icon-fas-less-than />
+        </button>
+        <button
+          class="btn btn-icon"
+          @click="nextPage()"
+        >
+          <icon-fas-greater-than />
+        </button>
       </div>
-      <button
-        class="btn btn-icon mr-2"
-        :disabled="pageIndex === 0"
-        @click="previousPage()"
-      >
-        <icon-fas-less-than />
-      </button>
-      <button
-        class="btn btn-icon"
-        :disabled="pageIndex === maxPage - 1 || maxPage === 0"
-        @click="nextPage()"
-      >
-        <icon-fas-greater-than />
-      </button>
     </div>
   </div>
 </template>
 <script lang="ts" src="./species-richness-detected-species.ts"></script>
+<style lang="scss" scoped>
+/* Chrome, Safari, Edge, Opera */
+.input-hide-arrows::-webkit-outer-spin-button,
+.input-hide-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-hide-arrows {
+  /* Firefox */
+  -moz-appearance: textfield;
+}
+</style>
