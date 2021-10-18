@@ -16,7 +16,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() colors!: string[]
 
   currentPage = 1 // 1-based for humans
-  PAGE_SIZE = 10
+  pageSize = 10
 
   get hasTableData (): boolean {
     return this.tableData.length > 0
@@ -31,12 +31,12 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get maxPage (): number {
-    return Math.ceil(this.tableData.length / this.PAGE_SIZE)
+    return Math.ceil(this.tableData.length / this.pageSize)
   }
 
   get pageData (): DetectedSpeciesItem[] {
-    const start = (this.currentPage - 1) * this.PAGE_SIZE
-    return this.tableData.slice(start, start + this.PAGE_SIZE)
+    const start = (this.currentPage - 1) * this.pageSize
+    return this.tableData.slice(start, start + this.pageSize)
   }
 
   get tableHeader (): Header[] {

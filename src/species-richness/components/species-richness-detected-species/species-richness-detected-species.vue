@@ -70,7 +70,7 @@
             </td>
           </tr>
           <tr
-            v-for="blankIndex in PAGE_SIZE - pageData.length"
+            v-for="blankIndex in pageSize - pageData.length"
             :key="'blank-row' + blankIndex"
           >
             <td class="p-2">
