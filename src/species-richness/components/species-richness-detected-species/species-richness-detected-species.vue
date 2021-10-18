@@ -18,13 +18,19 @@
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'text-left': idx < 2, 'cursor-pointer hover:underline': item.key }"
+              :class="{ 'cursor-pointer hover:underline': item.key }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
               @click="sorting(item.key)"
             >
-              <div class="flex flex-row">
+              <div
+                class="flex flex-row"
+                :class="{ 'justify-center': idx >= 2 }"
+              >
                 {{ item.title }}
-                <div class="ml-2 text-steel-grey">
+                <div
+                  v-if="item.key"
+                  class="ml-2 text-steel-grey"
+                >
                   <icon-fa-chevron-up
                     class="text-xxs"
                     :class="{'text-white': item.key === currentSortedColumn && order === 'asc' }"

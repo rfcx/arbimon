@@ -94,7 +94,9 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     (event.target as HTMLInputElement).blur()
   }
 
-  sorting (column: string): void {
+  sorting (column?: string): void {
+    if (!column) return
+
     const tableData = [...this.tableDatum]
     if (this.currentSortedColumn !== column) {
       this.currentSortedColumn = column
