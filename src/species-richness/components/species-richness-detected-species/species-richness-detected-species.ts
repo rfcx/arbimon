@@ -15,8 +15,28 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
 
-  pageIndex = 0
-  currentPage = 0
+  currentPage = 1 // 1-based for humans
+
+  get hasTableData (): boolean {
+    return this.tableData.length > 0
+  }
+
+  get hasMoreThanOneDataset (): boolean {
+    return this.datasetCount > 1
+  }
+
+  get datasetCount (): number {
+    return this.tableData.length > 0 ? this.tableData[0].data.length : 0
+  }
+
+  get maxPage (): number {
+    return Math.ceil(this.tableData.length / PAGE_SIZE)
+  }
+
+  get pageData (): DetectedSpeciesItem[] {
+    const start = (this.currentPage - 1) * PAGE_SIZE
+    return this.tableData.slice(start, start + PAGE_SIZE)
+  }
 
   get tableHeader (): Header[] {
     return [
@@ -29,70 +49,30 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     ]
   }
 
-  get hasTableData (): boolean {
-    return this.dataLength > 0
-  }
-
-  get hasMoreThanOneDataset (): boolean {
-    return this.datasetCount > 1
-  }
-
-  get datasetCount (): number {
-    return this.dataLength > 0 ? this.tableData[0].data.length : 0
-  }
-
-  get maxPage (): number {
-    return Math.ceil(this.dataLength / PAGE_SIZE)
-  }
-
-  get dataLength (): number {
-    return this.tableData.length
-  }
-
-  get page (): DetectedSpeciesItem[] {
-    const start = this.pageIndex * PAGE_SIZE
-    const end = start + PAGE_SIZE > this.dataLength ? this.dataLength : start + PAGE_SIZE
-    return this.dataLength < PAGE_SIZE ? this.tableData : this.tableData.slice(start, end)
-  }
-
-  get currentRecord (): number {
-    return this.dataLength === 0 ? 0 : (this.pageIndex * PAGE_SIZE) + 1
-  }
-
   @Watch('tableData')
   onDataChange (): void {
-    this.pageIndex = 0
-    this.currentPage = this.dataLength === 0 ? 0 : 1
+    if (this.currentPage > this.maxPage) this.currentPage = 1
   }
 
-  setCurrentPage (event: FocusEvent): void {
-    const target = event.target as HTMLInputElement
-    const page = Number(target.value)
-
-    if (page < 1 || isNaN(page)) {
-      this.pageIndex = 0
-      this.currentPage = 1
-    } else if (page > this.maxPage) {
-      this.pageIndex = this.maxPage - 1
-      this.currentPage = this.maxPage
-    } else {
-      this.pageIndex = page - 1
-      this.currentPage = page
-    }
-  }
-
-  handleEnterKeyup (event: KeyboardEvent): void {
-    const target = event.target as HTMLInputElement
-    target.blur()
+  @Watch('currentPage')
+  onCurrentPageChange (newVal: number): void {
+    this.setPage(newVal, false)
   }
 
   previousPage (): void {
-    this.pageIndex -= 1
-    this.currentPage = this.currentPage - 1
+    this.setPage(this.currentPage - 1)
   }
 
   nextPage (): void {
-    this.pageIndex += 1
-    this.currentPage = this.currentPage + 1
+    this.setPage(this.currentPage + 1)
+  }
+
+  setPage (page: number, wrap = true): void {
+    // Wrap-around
+    let newPage = page
+    if (page < 1) newPage = wrap ? this.maxPage : 1
+    if (page > this.maxPage) newPage = wrap ? 1 : this.maxPage
+
+    this.currentPage = newPage
   }
 }
