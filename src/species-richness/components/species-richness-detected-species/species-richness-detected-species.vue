@@ -17,10 +17,10 @@
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
-              class="font-bold capitalize p-2 bg-mirage-grey"
-              :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer hover:underline': item.key }"
+              class="font-bold capitalize p-2 bg-mirage-grey select-none"
+              :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer': item.key }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
-              @click="sorting(item.key)"
+              @click="sort(item.key)"
             >
               <div
                 class="flex flex-row"
@@ -29,15 +29,15 @@
                 {{ item.title }}
                 <div
                   v-if="item.key"
-                  class="ml-2 text-steel-grey"
+                  class="ml-2 text-faded"
                 >
                   <icon-fa-chevron-up
                     class="text-xxs"
-                    :class="{'text-white': item.key === currentSortedColumn && order === 'asc' }"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
                   />
                   <icon-fa-chevron-down
                     class="text-xxs"
-                    :class="{'text-white': item.key === currentSortedColumn && order === 'desc' }"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
                   />
                 </div>
               </div>
@@ -110,7 +110,7 @@
         <div class="flex justify-end items-center">
           <div>
             <input
-              v-model.number="currentPage"
+              v-model.number="pageIndex"
               type="number"
               min="1"
               :max="maxPage"
