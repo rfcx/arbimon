@@ -34,7 +34,7 @@
             <td class="p-2">
               <router-link
                 :to="{ name: 'activity_patterns', params: { speciesSlug: row.speciesSlug }}"
-                class="text-secondary hover:(underline text-white)"
+                class="text-subtle hover:(underline text-white)"
               >
                 <span class="text-white">{{ row.speciesName }}</span>
                 <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
@@ -58,7 +58,7 @@
                 />
                 <icon-fa-close
                   v-else
-                  class="text-secondary m-auto opacity-65"
+                  class="text-subtle m-auto opacity-65"
                 />
               </td>
             </template>
