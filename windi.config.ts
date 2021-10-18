@@ -41,7 +41,7 @@ export default defineConfig({
       },
       textColor: {
         primary: '#fff',
-        secondary: '#ffffff80',
+        secondary: '#ffffff80', // give this a unique name
         warning: '#FFCD00',
         danger: '#D46767'
       },
@@ -56,6 +56,7 @@ export default defineConfig({
           DEFAULT: '#45485D',
           dark: '#2f3140'
         },
+        subtle: '#ffffff80',
         'steel-grey': {
           DEFAULT: '#232436',
           light: '#4a4c72',
