@@ -7,19 +7,24 @@ import { DetectedSpeciesItem } from './Table'
 interface Header {
   title: string
   color: string
+  key?: string
 }
 
 const HEADER_COLOR = '#ffffff80'
 const PAGE_SIZE = 10
+const SORTABLE_COLUMNS = { speciesName: 'speciesName', className: 'className' }
 
 export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
 
+  tableDatum: DetectedSpeciesItem[] = []
   currentPage = 1 // 1-based for humans
+  currentSortedColumn = SORTABLE_COLUMNS.speciesName
+  order = 'asc'
 
   get hasTableData (): boolean {
-    return this.tableData.length > 0
+    return this.tableDatum.length > 0
   }
 
   get hasMoreThanOneDataset (): boolean {
@@ -27,22 +32,22 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get datasetCount (): number {
-    return this.tableData.length > 0 ? this.tableData[0].data.length : 0
+    return this.tableDatum.length > 0 ? this.tableDatum[0].data.length : 0
   }
 
   get maxPage (): number {
-    return Math.ceil(this.tableData.length / PAGE_SIZE)
+    return Math.ceil(this.tableDatum.length / PAGE_SIZE)
   }
 
   get pageData (): DetectedSpeciesItem[] {
     const start = (this.currentPage - 1) * PAGE_SIZE
-    return this.tableData.slice(start, start + PAGE_SIZE)
+    return this.tableDatum.slice(start, start + PAGE_SIZE)
   }
 
   get tableHeader (): Header[] {
     return [
-      { title: 'Species', color: HEADER_COLOR },
-      { title: 'Class', color: HEADER_COLOR },
+      { title: 'Species', color: HEADER_COLOR, key: SORTABLE_COLUMNS.speciesName },
+      { title: 'Class', color: HEADER_COLOR, key: SORTABLE_COLUMNS.className },
       ...((this.hasMoreThanOneDataset)
         ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })), { title: 'Total', color: HEADER_COLOR }]
         : []
@@ -52,6 +57,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
 
   @Watch('tableData')
   onDataChange (): void {
+    this.tableDatum = [...this.tableData]
     if (this.currentPage > this.maxPage) this.currentPage = 1
   }
 
@@ -86,5 +92,17 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
 
   blur (event: Event): void {
     (event.target as HTMLInputElement).blur()
+  }
+
+  sorting (column: string): void {
+    const tableData = [...this.tableDatum]
+    if (this.currentSortedColumn !== column) {
+      this.currentSortedColumn = column
+      this.order = 'asc'
+      this.tableDatum = tableData.sort((a, b) => a[column].localeCompare(b[column]))
+    } else {
+      this.order = this.order === 'asc' ? 'desc' : 'asc'
+      this.tableDatum.reverse()
+    }
   }
 }
