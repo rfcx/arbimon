@@ -17,3 +17,12 @@ export const endpointProjects: Endpoint = {
   method: 'GET',
   url: `${CORE}/projects`
 }
+
+// ===================== WIKI API ==================
+
+const WIKI = 'https://en.wikipedia.org/w/api.php'
+
+export const endpointWiki: Endpoint = {
+  method: 'GET',
+  url: WIKI
+}

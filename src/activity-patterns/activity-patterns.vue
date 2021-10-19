@@ -16,6 +16,7 @@
       {{ item.speciesName }}
     </option>
   </select>
+  <species-information :species-name="selectedSpeciesSlug" />
   <comparison-list-component @emitSelect="onFilterChange" />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
