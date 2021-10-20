@@ -1,16 +1,17 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { getSpeciesThumbnailImage } from '@/_services/api/species-service/species-service-api'
+import { getSpeciesSummary } from '@/_services/api/species-service/species-service-api'
+import { WikiSummary } from '@/_services/api/species-service/types'
 
 export default class SpeciesInformation extends Vue {
   @Prop() speciesName!: string
 
-  speciesImageUrl = ''
+  speciesInformation: WikiSummary | undefined = undefined
 
   async mounted (): Promise<void> {
     try {
-      this.speciesImageUrl = await this.getSpeciesImageUrl()
+      this.speciesInformation = await this.getSpeciesInformation()
     } catch (e) {
       //
     }
@@ -19,13 +20,13 @@ export default class SpeciesInformation extends Vue {
   @Watch('speciesName')
   async onSpeciesNameChange (): Promise<void> {
     try {
-      this.speciesImageUrl = await this.getSpeciesImageUrl()
+      this.speciesInformation = await this.getSpeciesInformation()
     } catch (e) {
       //
     }
   }
 
-  async getSpeciesImageUrl (): Promise<string> {
-    return await getSpeciesThumbnailImage(this.speciesName)
+  async getSpeciesInformation (): Promise<WikiSummary | undefined> {
+    return await getSpeciesSummary(this.speciesName)
   }
 }

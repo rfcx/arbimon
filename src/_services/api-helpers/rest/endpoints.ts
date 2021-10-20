@@ -20,9 +20,14 @@ export const endpointProjects: Endpoint = {
 
 // ===================== WIKI API ==================
 
-const WIKI = 'https://en.wikipedia.org/w/api.php'
+const WIKI = 'https://en.wikipedia.org'
 
-export const endpointWiki: Endpoint = {
+export const endpointWikiMedia: Endpoint = {
   method: 'GET',
-  url: WIKI
+  url: `${WIKI}/w/api.php`
+}
+
+export const endpointWikiSummary: Endpoint = {
+  method: 'GET',
+  url: `${WIKI}/api/rest_v1/page/summary/:speciesName`
 }
