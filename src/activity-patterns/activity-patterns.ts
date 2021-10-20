@@ -20,7 +20,7 @@ export default class ActivityPatternsPage extends Vue {
   filters: ColoredFilter[] = []
 
   get selectedSpeciesName (): string {
-    return this.selectedSpeciesSlug.replace('-', ' ')
+    return this.selectedSpeciesSlug.replaceAll('-', ' ')
   }
 
   async created (): Promise<void> {
