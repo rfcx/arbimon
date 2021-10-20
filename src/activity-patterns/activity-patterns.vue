@@ -7,7 +7,7 @@
   <comparison-list-component @emitSelect="onFilterChange" />
   <select
     v-model="selectedSpeciesSlug"
-    class="capitalize bg-steel-grey rounded p-2 mt-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="capitalize bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <option
       v-for="item in species"

@@ -34,4 +34,8 @@ export default class SpeciesInformation extends Vue {
   async getSpeciesInformation (): Promise<WikiSummary | undefined> {
     return await getSpeciesSummary(this.speciesName)
   }
+
+  redirectToWiki (): string | undefined {
+    return screen.width <= 760 ? this.speciesInformation?.contentUrls?.mobile?.page : this.speciesInformation?.contentUrls?.desktop?.page
+  }
 }
