@@ -19,6 +19,10 @@ export default class ActivityPatternsPage extends Vue {
   selectedSpeciesSlug = ''
   filters: ColoredFilter[] = []
 
+  get selectedSpeciesName (): string {
+    return this.selectedSpeciesSlug.replace('-', ' ')
+  }
+
   async created (): Promise<void> {
     this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
     this.species = (await getAllSpecies())
