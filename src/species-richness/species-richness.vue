@@ -2,6 +2,7 @@
   <species-richness-introduction
     :filters="filters"
     :have-data="haveData"
+    class="mb-6"
   />
   <comparison-list-component @emitSelect="onFilterChange" />
   <horizontal-bar-chart-component
