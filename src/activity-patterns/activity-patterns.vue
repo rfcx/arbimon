@@ -17,6 +17,6 @@
     </option>
   </select>
   <comparison-list-component @emitSelect="onFilterChange" />
-  <activity-patterns-metrics />
+  <activity-patterns-metrics class="mt-6" />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
