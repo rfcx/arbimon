@@ -25,7 +25,7 @@
       </div>
       <div
         v-else
-        class="text-secondary"
+        class="text-subtle"
       >
         Please login to view your projects!
       </div>
