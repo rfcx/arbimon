@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav-bar />
-    <div class="text-secondary">
+    <div class="text-subtle">
       Page not found
     </div>
   </div>
