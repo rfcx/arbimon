@@ -6,10 +6,12 @@ import { getAllSpecies } from '~/api/species-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { ROUTE_NAMES } from '~/router'
+import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 
 @Options({
   components: {
-    ComparisonListComponent
+    ComparisonListComponent,
+    ActivityPatternsMetrics
   }
 })
 export default class ActivityPatternsPage extends Vue {
