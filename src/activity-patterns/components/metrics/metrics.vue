@@ -1,4 +1,4 @@
 <template>
-  <div>Metrics</div>
+  <single-dataset-component />
 </template>
 <script lang="ts" src="./metrics.ts"></script>
