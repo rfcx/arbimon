@@ -1,9 +1,13 @@
 <template>
+  <metrics-title-view
+    :title="title"
+    :information="hint"
+  />
+  <div class="text-3xl my-4">
+    {{ value }}
+  </div>
   <div>
-    <metrics-title-view
-      :title="'test'"
-      :information="'test info'"
-    />
+    {{ description }}
   </div>
 </template>
 <script lang="ts">
@@ -18,6 +22,9 @@ import MetricsTitleView from './metrics-title.vue'
   }
 })
 export default class SingleDatasetComponent extends Vue {
-  @Prop({ default: undefined }) information!: string
+  @Prop() title!: string
+  @Prop() value!: string
+  @Prop({ default: undefined }) hint!: string
+  @Prop({ default: undefined }) description!: string
 }
 </script>
