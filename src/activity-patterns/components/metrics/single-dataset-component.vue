@@ -1,13 +1,15 @@
 <template>
-  <metrics-title-view
-    :title="title"
-    :information="hint"
-  />
-  <div class="text-3xl my-4">
-    {{ value }}
-  </div>
   <div>
-    {{ description }}
+    <metrics-title-view
+      :title="title"
+      :information="hint"
+    />
+    <div class="text-3xl my-4">
+      {{ value }}
+    </div>
+    <div>
+      {{ description }}
+    </div>
   </div>
 </template>
 <script lang="ts">
