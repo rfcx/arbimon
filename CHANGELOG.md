@@ -31,5 +31,6 @@
 * **feature:** Table pagination (#135)
 * **feature:** Update the table row to be consistent row (#160)
 * **feature:** Table sort by species name or class (#147)
+* **feature:** Update SR line-chart to correctly display SR instead of detections (#172)
 
 * **refactor:** Refactor species richness table display (#112)
