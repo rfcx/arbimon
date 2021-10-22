@@ -1,13 +1,9 @@
 <template>
   <div class="flex flex-row justify-between items-center w-full">
-    <page-title-view>
-      <template #title>
-        Species Richness
-      </template>
-      <template #subtitle>
-        Number of distinct species detected
-      </template>
-    </page-title-view>
+    <page-title-view
+      page-title="Species Richness"
+      page-subtitle="Number of distinct species detected"
+    />
     <div class="relative">
       <on-click-outside
         @trigger="openDropdown(false)"
