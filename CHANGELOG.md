@@ -29,6 +29,8 @@
 * **features:** Function to compute shortname to describe dataset and update export filename(#107, #108)
 * **features:** Add comparison box list to Activity patterns page (#129)
 * **feature:** Table pagination (#135)
+* **feature:** Update the table row to be consistent row (#160)
+* **feature:** Table sort by species name or class (#147)
 * **features:** Add export ellipsis button(#131)
 
 * **refactor:** Refactor species richness table display (#112)

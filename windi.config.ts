@@ -39,9 +39,11 @@ export default defineConfig({
         xl: '1280px',
         '2xl': '1536px'
       },
+      fontSize: {
+        xxs: '0.5rem'
+      },
       textColor: {
         primary: '#fff',
-        secondary: '#ffffff80',
         warning: '#FFCD00',
         danger: '#D46767'
       },
@@ -51,7 +53,8 @@ export default defineConfig({
           light: '#E6F3EA',
           dark: '#25713b'
         },
-        secondary: '#333',
+        faded: '#333',
+        subtle: '#ffffff80',
         'box-grey': {
           DEFAULT: '#45485D',
           dark: '#2f3140'
