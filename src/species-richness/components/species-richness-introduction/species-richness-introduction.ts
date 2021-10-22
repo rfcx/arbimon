@@ -1,5 +1,4 @@
-import { OnClickOutside } from '@vueuse/components'
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { ColoredFilter } from '~/dataset-filters'
@@ -9,16 +8,9 @@ import { getReportRawData } from '../../csv'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 
-@Options({
-  components: {
-    OnClickOutside
-  }
-})
 export default class SpeciesRichnessIntroduction extends Vue {
   @Prop() filters!: ColoredFilter[]
   @Prop() haveData!: boolean
-
-  isDropdownOpen = false
 
   async exportCSVReports (): Promise<void> {
     const csvData = await Promise.all(this.filters.map(async ({ startDate, endDate, sites, color }) => {
@@ -37,9 +29,5 @@ export default class SpeciesRichnessIntroduction extends Vue {
 
     const zipUrl = await zipFiles(files, name)
     downloadZip(zipUrl, name)
-  }
-
-  openDropdown (open: boolean): void {
-    this.isDropdownOpen = open
   }
 }
