@@ -4,28 +4,15 @@
       page-title="Species Richness"
       page-subtitle="Number of distinct species detected"
     />
-    <div class="relative">
-      <on-click-outside
-        @trigger="openDropdown(false)"
+    <dropdown-menu>
+      <dropdown-menu-item
+        :disabled="!haveData"
+        :title=" haveData ? '' : 'No data selected'"
+        @click="exportCsvReports()"
       >
-        <button
-          class="btn btn-icon"
-          :disabled="!haveData"
-          title="No data in selections"
-          @click="openDropdown(!isDropdownOpen)"
-        >
-          <icon-fas-ellipsis-v />
-        </button>
-        <dropdown-menu v-if="isDropdownOpen">
-          <dropdown-menu-item
-            class="flex flex-row items-center"
-            @click="exportCSVReports()"
-          >
-            <icon-far-file-archive class="text-sm mr-1" /> Export as CSV
-          </dropdown-menu-item>
-        </dropdown-menu>
-      </on-click-outside>
-    </div>
+        <icon-far-file-archive class="mr-2" /> Export as CSV
+      </dropdown-menu-item>
+    </dropdown-menu>
   </div>
 </template>
 <script lang="ts" src="./species-richness-introduction.ts"></script>
