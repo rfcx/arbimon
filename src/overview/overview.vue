@@ -1,5 +1,5 @@
 <template>
-  <div class="text-secondary">
+  <div class="text-subtle">
     Overview page
   </div>
 </template>
