@@ -2,9 +2,9 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
 
-import { BiodiversityStore } from '@/_services/store'
 import { Project } from '~/api'
 import { ROUTE_NAMES } from '~/router'
+import { BiodiversityStore } from '~/store'
 
 @Options({
   components: { OnClickOutside }
