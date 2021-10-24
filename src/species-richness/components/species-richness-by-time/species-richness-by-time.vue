@@ -9,7 +9,7 @@
       <div
         class="mb-2 flex"
       >
-        <export-button-view
+        <export-button
           v-if="hasData"
           @click="downloadChart()"
         />
