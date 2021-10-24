@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-row justify-between items-center w-full">
-    <page-title-view>
+    <page-title>
       <template #title>
         Species Richness
       </template>
       <template #subtitle>
         Number of distinct species detected
       </template>
-    </page-title-view>
+    </page-title>
     <div>
-      <export-button-view
+      <export-button
         :disabled="!haveData"
         title="No data in selections"
         @click="exportCSVReports()"
@@ -19,7 +19,7 @@
             download csv
           </div>
         </template>
-      </export-button-view>
+      </export-button>
     </div>
   </div>
 </template>
