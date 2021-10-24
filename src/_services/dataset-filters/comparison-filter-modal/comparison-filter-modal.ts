@@ -2,9 +2,9 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { BiodiversityStore } from '@/_services/store'
 import { Site } from '~/api/types'
 import { dayjs } from '~/dayjs'
+import { BiodiversityStore } from '~/store'
 import { Filter } from '..'
 
 interface FilterMenuItem {
