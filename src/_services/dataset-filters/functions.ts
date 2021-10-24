@@ -2,15 +2,15 @@ import { Dayjs } from 'dayjs'
 
 import { Filter } from '~/dataset-filters'
 import { dayjs } from '~/dayjs'
-import { VuexProject } from '~/store'
+import { useStore } from '~/store'
 import { Site } from '../api'
-
-export const EXPORT_DATE_FORMAT = 'YYMMDD'
 
 interface ExportGroupName {
   name: string
   exportTime: string
 }
+
+export const EXPORT_DATE_FORMAT = 'YYMMDD'
 
 export function formatDate (date: Dayjs, dateFormat: string = EXPORT_DATE_FORMAT): string {
   return date.format(dateFormat)
@@ -32,14 +32,14 @@ function getSiteName (sites: Site[]): string {
 }
 
 export function getFilterExportGroupName (filters: Filter[], prefix: string): ExportGroupName {
-  const project = VuexProject.selectedProject.get()
+  const project = useStore().selectedProject
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
 
   return { name: `${projectName}--${prefix.replaceAll(' ', '-')}--${getExportDateTime()}`, exportTime: getExportDateTime() }
 }
 
 export function getFilterExportName (startDate: Dayjs, endDate: Dayjs, prefix: string, dateGroup?: string, sites?: Site[]): string {
-  const project = VuexProject.selectedProject.get()
+  const project = useStore().selectedProject
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''

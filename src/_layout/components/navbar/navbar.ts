@@ -1,10 +1,9 @@
 import { Options, Vue } from 'vue-class-component'
+import { Inject } from 'vue-property-decorator'
 import { RouteLocationRaw } from 'vue-router'
 
-import { Project } from '~/api'
-import { Auth0User } from '~/auth/types'
+import { BiodiversityStore } from '@/_services/store'
 import { ROUTE_NAMES } from '~/router'
-import { VuexAuth, VuexProject } from '~/store'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
@@ -23,18 +22,17 @@ export interface NavMenu {
   }
 })
 export default class NavbarComponent extends Vue {
-  @VuexAuth.user.bind() user!: Auth0User | undefined
-  @VuexProject.selectedProject.bind() selectedProject!: Project | undefined
+  @Inject() readonly store!: BiodiversityStore
 
   hasToggledMobileMenu = false
   hasOpenedProjectSelector = false
 
   get selectedProjectName (): string {
-    return this.selectedProject?.name ?? 'Select Project'
+    return this.store.selectedProject?.name ?? 'Select Project'
   }
 
   get navMenus (): NavMenu[] {
-    const selectedProjectId = this.selectedProject?.id
+    const selectedProjectId = this.store.selectedProject?.id
     return selectedProjectId
       ? [
           {
@@ -50,12 +48,10 @@ export default class NavbarComponent extends Vue {
   }
 
   get arbimonLink (): string {
-    const selectedProjectId = this.selectedProject?.id
+    const selectedProjectId = this.store.selectedProject?.id
     if (!selectedProjectId) return ''
     else return `https://arbimon.rfcx.org/project/${selectedProjectId}` // TODO 17: change this to support staging / production
   }
-
-  // Menu
 
   toggleMobileMenu (): void {
     this.hasToggledMobileMenu = !this.hasToggledMobileMenu
