@@ -27,6 +27,7 @@
                 @click="setSelectedProject(project)"
               >
                 {{ project.name }}
+                <!-- TODO ??? - Replace old icons -->
                 <i
                   v-if="isSelectedProject(project)"
                   class="icon-check"
