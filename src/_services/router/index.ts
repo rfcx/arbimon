@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import stores from '~/store'
+import { selectProjectGuard } from '~/router/select-project-guard'
 import { Auth0 } from '../auth'
 import * as PAGES from './pages'
-import { createSelectProjectGuard } from './select-project-guard'
 
 export const ROUTE_NAMES = Object.freeze({
   home: 'home',
@@ -12,8 +11,6 @@ export const ROUTE_NAMES = Object.freeze({
   activity_patterns: 'activity_patterns',
   error: 'error'
 })
-
-const selectProjectGuard = createSelectProjectGuard(stores)
 
 const routes: RouteRecordRaw[] = [
   {

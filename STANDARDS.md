@@ -47,7 +47,7 @@ The following ordering is an interpretation of the [component/instance order](ht
 // 1 & 4. Name, extends, mixins
 export default class ExampleComponent extends Vue { 
   // 4. Composition
-  @Inject() readonly auth!: AuthApi
+  @Inject() readonly auth!: AuthClient
   @Provide() title = 'Awesome Page!'
 
   // 5. Interface
