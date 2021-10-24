@@ -1,7 +1,7 @@
 import { getRawSites, simulateDelay } from '~/api-helpers/mock'
-import { Site } from '..'
+import { Project, Site } from '..'
 
-export const getSites = async (): Promise<Site[]> => {
+export const getSites = async (project: Project): Promise<Site[]> => {
   return await simulateDelay(
     getRawSites().map(({ site_id: siteId, name, latitude, longitude }) => ({
       siteId,

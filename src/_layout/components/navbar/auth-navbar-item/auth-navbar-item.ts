@@ -1,10 +1,11 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { Auth0Option, Auth0User } from '~/auth/types'
+import { AuthClient } from '~/auth'
 import { BiodiversityStore } from '~/store'
 
 export default class AuthNavbarItemComponent extends Vue {
+  @Inject() readonly auth!: AuthClient
   @Inject() readonly store!: BiodiversityStore
   @Prop() readonly domId!: string
 
@@ -13,10 +14,10 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async login (): Promise<void> {
-    await this.auth?.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
+    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
 
   async logout (): Promise<void> {
-    await this.auth?.logout({ returnTo: window.location.origin })
+    await this.auth.logout()
   }
 }
