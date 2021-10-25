@@ -19,6 +19,7 @@ export default class ActivityPatternsPage extends Vue {
   selectedSpeciesSlug = ''
   filters: ColoredFilter[] = []
 
+  // TODO 156: Get species name from species object (not slug)
   get selectedSpeciesName (): string {
     return this.selectedSpeciesSlug.replaceAll('-', ' ')
   }
