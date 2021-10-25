@@ -21,9 +21,11 @@ export const getSpeciesRichnessData = async (dataset: DatasetDefinition): Promis
   })
 }
 
+const calculateSpeciesRichness = (detections: ApiDetection[]): number => new Set(detections.map(d => d.species_id)).size
+
 const getSpeciesByTaxon = (detections: ApiDetection[]): { [taxon: string]: number } => {
   const detectionsByTaxon = groupBy(detections, 'taxon') // TODO ?? - Extract field names
-  return mapValues(detectionsByTaxon, (value) => new Set(value.map(d => d.species_id)).size)
+  return mapValues(detectionsByTaxon, calculateSpeciesRichness)
 }
 
 const getSpeciesBySite = (detections: ApiDetection[]): MapSiteData[] => {
@@ -32,7 +34,7 @@ const getSpeciesBySite = (detections: ApiDetection[]): MapSiteData[] => {
     siteName,
     longitude: detections[0].lon,
     latitude: detections[0].lat,
-    distinctSpecies: mapValues(groupBy(detections, 'taxon'), ds => new Set(ds.map(d => d.species_id)).size)
+    distinctSpecies: mapValues(groupBy(detections, 'taxon'), calculateSpeciesRichness)
   }))
 
   return Object.values(mapDataBySite)
@@ -40,11 +42,11 @@ const getSpeciesBySite = (detections: ApiDetection[]): MapSiteData[] => {
 
 const getSpeciesByTime = (detections: ApiDetection[]): Record<TimeBucket, Record<number, number>> => {
   return {
-    hour: mapValues(groupByNumber(detections, d => d.hour), ds => ds.length),
-    day: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).date()), ds => ds.length),
-    month: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month() + 1), ds => ds.length),
-    year: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).year()), ds => ds.length),
-    quarter: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).quarter()), ds => ds.length)
+    hour: mapValues(groupByNumber(detections, d => d.hour), calculateSpeciesRichness),
+    day: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).date()), calculateSpeciesRichness),
+    month: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month() + 1), calculateSpeciesRichness),
+    year: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).year()), calculateSpeciesRichness),
+    quarter: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).quarter()), calculateSpeciesRichness)
   }
 }
 
