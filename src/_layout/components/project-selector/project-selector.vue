@@ -21,12 +21,13 @@
             </div>
             <div class="divide-y divide-gray-500">
               <div
-                v-for="(project, idx) in projects"
+                v-for="(project, idx) in store.projects"
                 :key="'project-list-' + idx"
                 class="flex justify-between text-white cursor-pointer hover:bg-steel-grey-dark py-2"
                 @click="setSelectedProject(project)"
               >
                 {{ project.name }}
+                <!-- TODO ??? - Replace old icons -->
                 <i
                   v-if="isSelectedProject(project)"
                   class="icon-check"

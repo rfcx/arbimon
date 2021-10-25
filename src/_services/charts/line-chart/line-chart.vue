@@ -3,7 +3,7 @@
     :id="`wrapper-${domId}`"
     class="w-full"
   >
-    <no-data-container-view
+    <no-data-panel
       v-if="!hasData"
       class="h-32 mt-2"
     />

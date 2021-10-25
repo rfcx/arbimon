@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { firstDiffDigit } from '@/_services/utils/number'
+import { firstDiffDigit } from '~/utils/number'
 import { DetectedSpeciesItem } from './types'
 
 type SortableColumn = Extract<keyof DetectedSpeciesItem, 'speciesName' | 'className' | 'total'>

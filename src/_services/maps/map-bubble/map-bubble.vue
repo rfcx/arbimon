@@ -1,6 +1,6 @@
 <template>
   <div>
-    <no-data-container-view
+    <no-data-panel
       v-if="!hasData"
       class="h-96"
     />
@@ -12,7 +12,7 @@
         :id="mapId"
         class="w-full h-96 text-black"
       />
-      <export-button-view
+      <export-button
         class="absolute top-2 right-2"
         @click="downloadMapPng()"
       />
