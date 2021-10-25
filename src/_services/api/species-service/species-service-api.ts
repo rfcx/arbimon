@@ -2,12 +2,12 @@
 
 import axios from 'axios'
 
-import { endpointWikiSummary } from '../../api-helpers/rest'
+import { WikiEndpoints } from '../../api-helpers/rest'
 import { WikiSummary, WikiSummaryResponse } from './types'
 
 // =================== WIKI ====================
 export const getSpeciesSummary = async (speciesName: string): Promise<WikiSummary | undefined> => {
-  const { method, url } = endpointWikiSummary
+  const { method, url } = WikiEndpoints.endpointWikiSummary
 
   try {
     const response = await axios.request<WikiSummaryResponse>({

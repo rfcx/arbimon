@@ -1,6 +1,6 @@
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-interface Endpoint {
+export interface Endpoint {
   method: RequestMethod
   url: string
 }
@@ -16,18 +16,4 @@ export const endpointSites: Endpoint = {
 export const endpointProjects: Endpoint = {
   method: 'GET',
   url: `${CORE}/projects`
-}
-
-// ===================== WIKI API ==================
-
-const WIKI = 'https://en.wikipedia.org'
-
-export const endpointWikiMedia: Endpoint = {
-  method: 'GET',
-  url: `${WIKI}/w/api.php`
-}
-
-export const endpointWikiSummary: Endpoint = {
-  method: 'GET',
-  url: `${WIKI}/api/rest_v1/page/summary/:speciesName`
 }
