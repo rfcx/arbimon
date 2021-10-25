@@ -26,4 +26,4 @@
     </div>
   </div>
 </template>
-<script lang="ts" src="./species-information.ts"></script>
+<script lang="ts" src="./species-background-information.ts"></script>
