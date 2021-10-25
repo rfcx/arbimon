@@ -1,17 +1,14 @@
 <template>
-  <no-data-container-view
-    v-if="!speciesInformation || isLoading"
-    class="h-32"
-  />
   <div
-    v-else
+    v-if="!isLoading && speciesInformation"
     class="grid grid-cols-4"
   >
-    <div class="col-span-3 self-center px-4 py-2">
-      <div>
-        &emsp;&emsp;{{ speciesInformation?.content }}
-        (
-        <b class="opacity-80">Source: &nbsp;</b>
+    <div class="col-span-3 px-4 py-2">
+      <p>
+        {{ speciesInformation?.content }}
+      </p>
+      <p class="mt-4 text-right">
+        Source:
         <a
           :href="redirectToWiki()"
           target="_blank"
@@ -19,8 +16,7 @@
         >
           Wikipedia
         </a>
-        )
-      </div>
+      </p>
     </div>
     <div class="col-span-1 place-self-center">
       <img
