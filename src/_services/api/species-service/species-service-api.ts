@@ -12,7 +12,7 @@ export const getSpeciesSummary = async (speciesName: string): Promise<WikiSummar
   try {
     const response = await axios.request<WikiSummaryResponse>({
       method,
-      url: url.replace(':speciesName', speciesName)
+      url: url(speciesName)
     })
     const data = response.data
 
