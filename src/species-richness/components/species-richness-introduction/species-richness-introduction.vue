@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row justify-between items-center w-full">
-    <page-title-view
+    <page-title
       page-title="Species Richness"
       page-subtitle="Number of distinct species detected"
     />

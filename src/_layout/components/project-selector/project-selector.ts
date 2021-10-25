@@ -1,38 +1,37 @@
 import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Inject } from 'vue-property-decorator'
 
 import { Project } from '~/api'
 import { ROUTE_NAMES } from '~/router'
-import { VuexProject } from '~/store'
+import { BiodiversityStore } from '~/store'
 
 @Options({
   components: { OnClickOutside }
 })
 export default class ProjectSelectorComponent extends Vue {
-  @Emit()
-  emitCloseProjectSelector (): boolean {
-    return false
+  @Inject() readonly store!: BiodiversityStore
+  @Emit() emitCloseProjectSelector (): boolean { return false }
+
+  newSelectedProject: Project | undefined
+
+  created (): void {
+    this.newSelectedProject = { ...this.store.selectedProject }
   }
 
-  @VuexProject.projects.bind() projects!: Project[]
-  @VuexProject.selectedProject.bind() selectedProject!: Project | undefined
-
-  currentSelectedProject: Project | undefined = { ...VuexProject.selectedProject.get() }
-
   isSelectedProject (project: Project): boolean {
-    return project.id === this.currentSelectedProject?.id
+    return project.id === this.newSelectedProject?.id
   }
 
   setSelectedProject (project: Project): void {
-    this.currentSelectedProject = project
+    this.newSelectedProject = project
   }
 
   async confirmedSelectedProject (): Promise<void> {
-    await VuexProject.selectedProject.set(this.currentSelectedProject)
+    if (this.newSelectedProject) {
+      this.store.updateSelectedProject(this.newSelectedProject)
+      void this.$router.push({ name: ROUTE_NAMES.overview, params: { projectId: this.newSelectedProject.id } })
+    }
     this.emitCloseProjectSelector()
-
-    const newProjectId = this.currentSelectedProject?.id
-    if (newProjectId !== undefined) void this.$router.push({ name: ROUTE_NAMES.overview, params: { projectId: newProjectId } })
   }
 }

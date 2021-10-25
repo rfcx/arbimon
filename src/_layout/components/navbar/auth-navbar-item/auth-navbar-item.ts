@@ -1,23 +1,23 @@
 import { Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
-import { Auth0Option, Auth0User } from '~/auth/types'
-import { VuexAuth } from '~/store'
+import { AuthClient } from '~/auth'
+import { BiodiversityStore } from '~/store'
 
 export default class AuthNavbarItemComponent extends Vue {
-  @Prop() domId!: string
-  @VuexAuth.auth.bind() auth!: Auth0Option | undefined
-  @VuexAuth.user.bind() user!: Auth0User | undefined
+  @Inject() readonly auth!: AuthClient
+  @Inject() readonly store!: BiodiversityStore
+  @Prop() readonly domId!: string
 
   get userImage (): string {
-    return this.user?.picture ?? ''
+    return this.store.user?.picture ?? '' // TODO 156 - Add a default picture
   }
 
   async login (): Promise<void> {
-    await this.auth?.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
+    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
 
   async logout (): Promise<void> {
-    await this.auth?.logout({ returnTo: window.location.origin })
+    await this.auth.logout()
   }
 }
