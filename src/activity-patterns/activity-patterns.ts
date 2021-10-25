@@ -6,6 +6,7 @@ import { getActivityPatternsData } from '~/api/activity-patterns-service/activit
 import { getAllSpecies } from '~/api/species-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
+import { filterToDataset } from '~/dataset-filters/functions'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 
@@ -16,13 +17,17 @@ import ActivityPatternsMetrics from './components/metrics/metrics.vue'
   }
 })
 export default class ActivityPatternsPage extends Vue {
-  species: Species[] = []
+  allSpecies: Species[] = []
   selectedSpeciesSlug = ''
   filters: ColoredFilter[] = []
 
+  get species (): Species | undefined {
+    return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
+  }
+
   async created (): Promise<void> {
     this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
-    this.species = (await getAllSpecies())
+    this.allSpecies = (await getAllSpecies())
       .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
   }
 
@@ -43,7 +48,7 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async getActivityPatternsData (): Promise<void> {
-    const species = this.species.find(s => s.speciesSlug === this.selectedSpeciesSlug)
-    await getActivityPatternsData(this.filters[0], species?.speciesId)
+    if (!this.species) return
+    await getActivityPatternsData(filterToDataset(this.filters[0]), this.species.speciesId)
   }
 }
