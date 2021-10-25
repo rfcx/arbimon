@@ -1,6 +1,6 @@
 <template>
   <button
-    v-if="!auth?.isAuthenticated"
+    v-if="!store.user"
     class="btn btn-primary"
     @click="login"
   >

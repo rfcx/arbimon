@@ -1,6 +1,6 @@
 # Biodiversity Analytics
 
-Biodiversity analytics website build with Vue 3, Typescript, Vite, Windi CSS, and Vuex
+Biodiversity analytics website build with Vue 3, Typescript, Vite, Pinia, Windi CSS
 
 ## Sprint DoD
 

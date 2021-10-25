@@ -1,9 +1,9 @@
-import ApiClient from '~/api-helpers/rest/api-service'
+import { apiClient } from '~/api-helpers/rest/api-service'
 import { endpointProjects } from '~/api-helpers/rest/endpoints'
 import { RawProjectListItem } from '~/api-helpers/rest/types'
 import { Project } from '../types'
 
-const mapProjectList = (data: RawProjectListItem): Project => {
+const toProject = (data: RawProjectListItem): Project => {
   return {
     id: data.id,
     name: data.name,
@@ -14,10 +14,10 @@ const mapProjectList = (data: RawProjectListItem): Project => {
 
 export const getProjects = async (): Promise<Project[]> => {
   try {
-    const resp = await ApiClient.request<RawProjectListItem[]>({
+    const resp = await apiClient.request<RawProjectListItem[]>({
       ...endpointProjects
     })
-    return Array.isArray(resp) ? resp.map(d => mapProjectList(d)) : []
+    return Array.isArray(resp) ? resp.map(toProject) : []
   } catch (error) {
     return await Promise.reject(error)
   }

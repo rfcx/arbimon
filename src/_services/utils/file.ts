@@ -17,17 +17,6 @@ export async function toCsv (jsonData: any): Promise<string> {
   return await toSpreadsheet(jsonData, 'csv')
 }
 
-export async function zipFiles (files: FileData[], folderName: string): Promise<string> {
-  const zip = new JSZip()
-
-  files.forEach(file => {
-    zip.file(`${folderName}/${file.filename}`, file.data)
-  })
-
-  const blob = await zip.generateAsync({ type: 'blob' })
-  return URL.createObjectURL(blob)
-}
-
 export function downloadFile (data: string, filename: string, extension: string): void {
   const a = document.createElement('a')
   a.download = `${filename}.${extension}`
@@ -44,4 +33,19 @@ export function downloadPng (data: string, filename: string): void {
 
 export function downloadZip (data: string, filename: string): void {
   downloadFile(data, filename, 'zip')
+}
+
+export const zipAndDownload = async (files: FileData[], folderName: string): Promise<void> =>
+  await zipFiles(files, folderName)
+    .then(url => downloadZip(url, folderName))
+
+async function zipFiles (files: FileData[], folderName: string): Promise<string> {
+  const zip = new JSZip()
+
+  files.forEach(file => {
+    zip.file(`${folderName}/${file.filename}`, file.data)
+  })
+
+  const blob = await zip.generateAsync({ type: 'blob' })
+  return URL.createObjectURL(blob)
 }
