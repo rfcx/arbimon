@@ -8,31 +8,25 @@ export default class SpeciesInformation extends Vue {
   @Prop() speciesName!: string
 
   speciesInformation: WikiSummary | undefined = undefined
-  isLoading = false
+  isLoading = true
 
   async mounted (): Promise<void> {
-    this.isLoading = true
-    try {
-      this.speciesInformation = await this.getSpeciesInformation()
-    } catch (e) {
-      //
-    }
-    this.isLoading = false
+    await this.getSpeciesInformation()
   }
 
   @Watch('speciesName')
   async onSpeciesNameChange (): Promise<void> {
+    await this.getSpeciesInformation()
+  }
+
+  async getSpeciesInformation (): Promise<void> {
     this.isLoading = true
     try {
-      this.speciesInformation = await this.getSpeciesInformation()
+      this.speciesInformation = await getSpeciesSummary(this.speciesName)
     } catch (e) {
       //
     }
     this.isLoading = false
-  }
-
-  async getSpeciesInformation (): Promise<WikiSummary | undefined> {
-    return await getSpeciesSummary(this.speciesName)
   }
 
   redirectToWiki (): string | undefined {
