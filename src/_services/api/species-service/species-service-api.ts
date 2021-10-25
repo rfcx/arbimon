@@ -25,6 +25,6 @@ export const getSpeciesSummary = async (speciesName: string): Promise<WikiSummar
       thumbnailImage: data.thumbnail?.source
     }
   } catch (e) {
-    //
+    // TODO #191: API Handle
   }
 }
