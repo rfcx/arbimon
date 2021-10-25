@@ -1,5 +1,16 @@
 <template>
-  <page-title title="Activity Patterns" />
+  <div class="flex flex-row justify-between items-center w-full">
+    <page-title
+      page-title="Activity Patterns"
+      page-subtitle="Trends in detections and occupancy"
+    />
+    <dropdown-menu>
+      <dropdown-menu-item>
+        <icon-fas-hammer class="mr-2" /> TODO
+      </dropdown-menu-item>
+    </dropdown-menu>
+  </div>
+
   <select
     v-model="selectedSpeciesSlug"
     class="mt-6 capitalize bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
