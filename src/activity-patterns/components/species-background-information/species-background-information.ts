@@ -13,7 +13,11 @@ export default class SpeciesInformation extends Vue {
   isLoading = true
 
   get speciesWikiUrl (): string | undefined {
-    return screen.width <= WIKIPEDIA_MOBILE_MAX_WIDTH ? this.speciesInformation?.contentUrls?.mobile : this.speciesInformation?.contentUrls?.desktop
+    if (!this.speciesInformation) return ''
+
+    return screen.width <= WIKIPEDIA_MOBILE_MAX_WIDTH
+      ? this.speciesInformation.contentUrls.mobile
+      : this.speciesInformation.contentUrls.desktop
   }
 
   async created (): Promise<void> {
