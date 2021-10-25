@@ -1,8 +1,8 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { getSpeciesSummary } from '@/_services/api/species-service/species-service-api'
-import { WikiSummary } from '@/_services/api/species-service/types'
+import { getSpeciesSummary } from '@/_services/api/wiki-service'
+import { WikiSummary } from '@/_services/api/wiki-service/types'
 
 const WIKIPEDIA_MOBILE_MAX_WIDTH = 760
 
@@ -16,7 +16,7 @@ export default class SpeciesInformation extends Vue {
     return screen.width <= WIKIPEDIA_MOBILE_MAX_WIDTH ? this.speciesInformation?.contentUrls?.mobile : this.speciesInformation?.contentUrls?.desktop
   }
 
-  async mounted (): Promise<void> {
+  async created (): Promise<void> {
     await this.getSpeciesInformation()
   }
 
@@ -31,11 +31,18 @@ export default class SpeciesInformation extends Vue {
 
   async getSpeciesInformation (): Promise<void> {
     this.isLoading = true
+    const speciesName = this.speciesName
     try {
-      this.speciesInformation = await getSpeciesSummary(this.speciesName)
+      const information = await getSpeciesSummary(speciesName)
+      if (this.speciesName === speciesName) {
+        this.speciesInformation = information
+        this.isLoading = false
+      }
     } catch (e) {
-      // TODO #167
+      if (this.speciesName === speciesName) {
+        this.isLoading = false
+      }
+      // TODO 167: Error handling
     }
-    this.isLoading = false
   }
 }
