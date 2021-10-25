@@ -33,4 +33,6 @@
 * **feature:** Table sort by species name or class (#147)
 * **features:** Add export ellipsis button(#131)
 
+* **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
+
 * **refactor:** Refactor species richness table display (#112)
