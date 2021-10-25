@@ -35,10 +35,9 @@ export function downloadZip (data: string, filename: string): void {
   downloadFile(data, filename, 'zip')
 }
 
-export async function zipAndDownload (files: FileData[], folderName: string): Promise<void> {
-  return await zipFiles(files, folderName)
+export const zipAndDownload = async (files: FileData[], folderName: string): Promise<void> =>
+  await zipFiles(files, folderName)
     .then(url => downloadZip(url, folderName))
-}
 
 async function zipFiles (files: FileData[], folderName: string): Promise<string> {
   const zip = new JSZip()
