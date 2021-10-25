@@ -25,8 +25,9 @@ export default class SpeciesInformation extends Vue {
     await this.getSpeciesInformation()
   }
 
-  speciesImage (url: string | undefined): string | URL {
-    return url ?? new URL('../../assets/default-species-image.jpg', import.meta.url)
+  // TODO 190: Improve image handler
+  speciesImage (url: string | undefined): string {
+    return url ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
   }
 
   async getSpeciesInformation (): Promise<void> {
