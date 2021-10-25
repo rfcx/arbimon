@@ -9,10 +9,12 @@
           :title="item.title"
           :information="item.information"
         />
-        <single-dataset-component
-          :value="'25'"
-          :description="'xxx'"
+        <single-metrics
+          v-if="item.datasets.length === 1"
+          :value="item.datasets[0].value"
+          :description="item.datasets[0].description"
         />
+        <multi-metrics v-else />
       </div>
     </template>
   </div>
