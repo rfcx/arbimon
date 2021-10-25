@@ -30,6 +30,6 @@ export default class SpeciesInformation extends Vue {
   }
 
   redirectToWiki (): string | undefined {
-    return screen.width <= 760 ? this.speciesInformation?.contentUrls?.mobile?.page : this.speciesInformation?.contentUrls?.desktop?.page
+    return screen.width <= 760 ? this.speciesInformation?.contentUrls?.mobile : this.speciesInformation?.contentUrls?.desktop
   }
 }

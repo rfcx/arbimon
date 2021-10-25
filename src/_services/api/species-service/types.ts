@@ -49,51 +49,10 @@ export interface WikiSummaryResponse {
 }
 
 export interface WikiSummary {
-  type: string
-  title: string
-  displayTitle: string
-  namespace: {
-    id: number
-    text: string
-  }
-  wikibaseItem: string
-  titles: {
-    canonical: string
-    normalized: string
-    display: string
-  }
-  pageId: number
-  thumbnail: {
-    source: string
-    width: number
-    height: number
-  }
-  originalImage: {
-    source: string
-    width: number
-    height: number
-  }
-  lang: string
-  dir: string
-  revision: string
-  tid: string
-  timestamp: string
-  description: string
-  descriptionSource: string
-  contentUrls: {
-    desktop: {
-      page: string
-      revisions: string
-      edit: string
-      talk: string
-    }
-    mobile: {
-      page: string
-      revisions: string
-      edit: string
-      talk: string
-    }
-  }
   content: string
-  contentHtml: string
+  contentUrls: {
+    desktop: string
+    mobile: string
+  }
+  thumbnailImage: string
 }
