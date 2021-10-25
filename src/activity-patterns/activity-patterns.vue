@@ -1,15 +1,14 @@
 <template>
-  <div class="flex flex-row justify-between items-center w-full">
-    <page-title
-      page-title="Activity Patterns"
-      page-subtitle="Trends in detections and occupancy"
-    />
+  <page-title
+    page-title="Activity Patterns"
+    page-subtitle="Trends in detections and occupancy"
+  >
     <dropdown-menu>
       <dropdown-menu-item>
         <icon-fas-hammer class="mr-2" /> TODO
       </dropdown-menu-item>
     </dropdown-menu>
-  </div>
+  </page-title>
 
   <select
     v-model="selectedSpeciesSlug"
