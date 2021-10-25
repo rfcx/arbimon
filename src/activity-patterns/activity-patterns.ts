@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 
 import { Species } from '~/api'
+import { getActivityPatternsData } from '~/api/activity-patterns-service/activity-patterns-service-mock'
 import { getAllSpecies } from '~/api/species-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
@@ -39,5 +40,10 @@ export default class ActivityPatternsPage extends Vue {
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
     this.filters = filters
+  }
+
+  async getActivityPatternsData (): Promise<void> {
+    const species = this.species.find(s => s.speciesSlug === this.selectedSpeciesSlug)
+    await getActivityPatternsData(this.filters[0], species?.speciesId)
   }
 }
