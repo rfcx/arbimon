@@ -6,7 +6,7 @@ import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/s
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, Filter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
-import { getFilterExportGroupName } from '~/dataset-filters/functions'
+import { getExportGroupName } from '~/dataset-filters/functions'
 import { MapDataSet } from '~/maps/map-bubble'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
@@ -58,7 +58,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
-    this.chartExportName = getFilterExportGroupName(filters, DEFAULT_CHART_PREFIX).name
+    this.chartExportName = getExportGroupName(DEFAULT_CHART_PREFIX)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))

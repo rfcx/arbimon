@@ -1,9 +1,9 @@
 <template>
-  <page-title-view class="mb-6">
+  <page-title class="mb-6">
     <template #title>
       Activity Patterns
     </template>
-  </page-title-view>
+  </page-title>
   <select
     v-model="selectedSpeciesSlug"
     class="capitalize bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"

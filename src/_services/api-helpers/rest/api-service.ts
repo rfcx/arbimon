@@ -1,29 +1,17 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { VuexAuth } from '~/store'
+import { useAuthClient } from '~/auth'
 import { RequestMethod } from './endpoints'
 
 const ApiConfig = axios.create({
   timeout: 30 * 1000 // 30 secs
 })
 
-export const getAccessToken = async (): Promise<string | undefined> => {
-  const auth = VuexAuth.auth.get()
-  const token = await auth?.getTokenSilently()
-  return token
-}
-
-export const getIdToken = async (): Promise<string | undefined> => {
-  const auth = VuexAuth.auth.get()
-  const token = await auth?.getIdTokenClaims()
-  return token?.__raw
-}
-
-interface RequestParams {
+export interface RequestParams<RequestBody> {
   url: string
   method: RequestMethod
   headers?: {[x: string]: string}
-  data?: any
+  data?: RequestBody
   config?: AxiosRequestConfig
 }
 
@@ -31,21 +19,16 @@ interface AuthHeader { Authorization: string }
 
 class ApiClient {
   async authToken (): Promise<AuthHeader> {
-    const token = await getIdToken()
-    return {
-      Authorization: 'Bearer ' + (token ?? '')
-    }
+    const token = await useAuthClient().getIdToken()
+    return { Authorization: 'Bearer ' + (token ?? '') }
   }
 
-  async request <T = any> ({ url, method, headers, data, config }: RequestParams): Promise<T> {
+  async request <ResponseBody, RequestBody = undefined> ({ url, method, headers, data, config }: RequestParams<RequestBody>): Promise<ResponseBody> {
     try {
       const response = await (async (m) => {
         const reqConfig = {
-          ...(config ?? {}),
-          headers: {
-            ...(headers ?? {}),
-            ...await this.authToken()
-          }
+          config: { ...config },
+          headers: { ...headers, ...await this.authToken() }
         }
 
         switch (method) {
@@ -63,6 +46,4 @@ class ApiClient {
   }
 }
 
-const apiClient = new ApiClient()
-
-export default apiClient
+export const apiClient = new ApiClient()

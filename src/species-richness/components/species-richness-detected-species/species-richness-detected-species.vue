@@ -3,7 +3,7 @@
     <h2 class="text-white text-xl">
       Detected Species
     </h2>
-    <no-data-container-view
+    <no-data-panel
       v-if="!hasTableData"
       class="h-32 mt-2"
     />
