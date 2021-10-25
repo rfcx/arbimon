@@ -56,7 +56,14 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
       .datum(xValues)
       .attr('d', line)
       .attr('stroke', dataset.color)
-      .attr('stroke-width', 3)
+      .attr('stroke-width', 2)
+
+    svg.selectAll('.line-point')
+      .data(xValues.filter(line.defined()))
+      .enter().append('circle')
+      .attr('r', 3)
+      .attr('transform', x => `translate(${xScale(x)}, ${yScale(data[x] ?? 0)})`)
+      .style('fill', dataset.color)
   })
 
   return svg.node()
