@@ -1,8 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { getSpeciesSummary } from '@/_services/api/wiki-service'
-import { WikiSummary } from '@/_services/api/wiki-service/types'
+import { wikiService, WikiSummary } from '~/api/wiki-service'
 
 const WIKIPEDIA_MOBILE_MAX_WIDTH = 760
 
@@ -38,7 +37,7 @@ export default class SpeciesInformation extends Vue {
     this.isLoading = true
     const speciesName = this.speciesName
     try {
-      const information = await getSpeciesSummary(speciesName)
+      const information = await wikiService.getSpeciesSummary(speciesName)
       if (this.speciesName === speciesName) {
         this.speciesInformation = information
         this.isLoading = false
