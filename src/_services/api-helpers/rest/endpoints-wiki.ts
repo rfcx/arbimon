@@ -7,7 +7,7 @@ export const endpointWikiMedia: Endpoint = {
   url: `${WIKI}/w/api.php`
 }
 
-export const endpointWikiSummary: Endpoint = {
+export const endpointWikiSummary: Omit<Endpoint, 'url'> & { url: ([key]: string) => string } = {
   method: 'GET',
-  url: `${WIKI}/api/rest_v1/page/summary/:speciesName`
+  url: (speciesName: string) => `${WIKI}/api/rest_v1/page/summary/${speciesName}`
 }
