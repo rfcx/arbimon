@@ -20,7 +20,7 @@
     </div>
     <div class="col-span-1 place-self-center">
       <img
-        :src="speciesInformation?.thumbnail?.source"
+        :src="speciesInformation?.thumbnailImage"
         class="object-contain max-h-50"
       >
     </div>
