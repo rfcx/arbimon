@@ -14,7 +14,10 @@
           :value="item.datasets[0].value"
           :description="item.datasets[0].description"
         />
-        <multi-metrics v-else />
+        <multi-metrics
+          v-else
+          :datasets="item.datasets"
+        />
       </div>
     </template>
   </div>
