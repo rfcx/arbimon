@@ -17,6 +17,6 @@
       {{ item.speciesName }}
     </option>
   </select>
-  <species-information :species-name="selectedSpeciesName" />
+  <species-background-information :species-name="selectedSpeciesName" />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>

@@ -6,12 +6,12 @@ import { getAllSpecies } from '~/api/species-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { ROUTE_NAMES } from '~/router'
-import SpeciesInformation from './components/species-information/species-information.vue'
+import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 
 @Options({
   components: {
     ComparisonListComponent,
-    SpeciesInformation
+    SpeciesBackgroundInformation
   }
 })
 export default class ActivityPatternsPage extends Vue {
