@@ -12,8 +12,8 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "~/*": ["src/_services/*"]
+      "~/*": ["src/_services/*"],
+      "@/*": ["src/*"]
     },
     "lib": ["esnext", "dom"]
   },

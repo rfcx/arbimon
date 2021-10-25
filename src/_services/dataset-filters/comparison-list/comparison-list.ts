@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
-import { Emit } from 'vue-property-decorator'
+import { Emit, Inject } from 'vue-property-decorator'
 
 import { dayjs } from '~/dayjs'
-import { datasetColors } from '~/store/colors'
+import { BiodiversityStore } from '~/store'
 import { ColoredFilter, Filter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
@@ -15,11 +15,11 @@ const defaultFilter = new FilterImpl(dayjs().subtract(7, 'days'), dayjs(), [])
   }
 })
 export default class ComparisonListComponent extends Vue {
-  @Emit()
-  emitSelect (): ColoredFilter[] {
+  @Inject() readonly store!: BiodiversityStore
+  @Emit() emitSelect (): ColoredFilter[] {
     return this.filters.map((f, i) => ({
       ...f,
-      color: datasetColors[i]
+      color: this.store.datasetColors[i]
     }))
   }
 
@@ -49,7 +49,7 @@ export default class ComparisonListComponent extends Vue {
   }
 
   getFilterColor (idx: number): string {
-    return datasetColors[idx]
+    return this.store.datasetColors[idx]
   }
 
   popupOpen (idx: number): void {

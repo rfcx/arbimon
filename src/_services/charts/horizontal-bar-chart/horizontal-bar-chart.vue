@@ -7,12 +7,12 @@
       <h2 class="text-white text-xl">
         {{ chartTitle }}
       </h2>
-      <export-button-view
+      <export-button
         v-if="hasData"
         @click="downloadChart()"
       />
     </div>
-    <no-data-container-view
+    <no-data-panel
       v-if="!hasData"
       class="h-32 mt-2"
     />

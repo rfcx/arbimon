@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar />
+    <navbar-component />
     <div class="text-subtle">
       Page not found
     </div>
