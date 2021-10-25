@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO #188 #189 Handle loading and error case -->
   <div
     v-if="!isLoading && speciesInformation"
     class="grid grid-cols-4"
@@ -10,7 +11,7 @@
       <p class="mt-4 text-right">
         Source:
         <a
-          :href="redirectToWiki()"
+          :href="speciesWikiUrl"
           target="_blank"
           class="opacity-80 hover:(underline opacity-70)"
         >
@@ -20,7 +21,7 @@
     </div>
     <div class="col-span-1 place-self-center">
       <img
-        :src="speciesInformation?.thumbnailImage"
+        :src="speciesImage(speciesInformation?.thumbnailImage)"
         class="object-contain max-h-50"
       >
     </div>
