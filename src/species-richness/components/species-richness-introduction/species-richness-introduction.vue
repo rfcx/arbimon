@@ -1,26 +1,18 @@
 <template>
   <div class="flex flex-row justify-between items-center w-full">
-    <page-title>
-      <template #title>
-        Species Richness
-      </template>
-      <template #subtitle>
-        Number of distinct species detected
-      </template>
-    </page-title>
-    <div>
-      <export-button
+    <page-title
+      page-title="Species Richness"
+      page-subtitle="Number of distinct species detected"
+    />
+    <dropdown-menu>
+      <dropdown-menu-item
         :disabled="!haveData"
-        title="No data in selections"
-        @click="exportCSVReports()"
+        :title=" haveData ? '' : 'No data selected'"
+        @click="exportCsvReports()"
       >
-        <template #label>
-          <div class="ml-2">
-            download csv
-          </div>
-        </template>
-      </export-button>
-    </div>
+        <icon-far-file-archive class="mr-2" /> Export as CSV
+      </dropdown-menu-item>
+    </dropdown-menu>
   </div>
 </template>
 <script lang="ts" src="./species-richness-introduction.ts"></script>
