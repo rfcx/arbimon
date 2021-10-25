@@ -21,7 +21,7 @@
               </div>
             </router-link>
             <div
-              v-if="user"
+              v-if="store.user"
               class="navbar-item text-sm h-9 px-4 hover:bg-box-grey rounded-md cursor-pointer"
               @click="toggleProjectSelector(true)"
             >

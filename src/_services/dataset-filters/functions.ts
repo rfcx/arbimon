@@ -2,7 +2,7 @@ import { Dayjs } from 'dayjs'
 
 import { Filter } from '~/dataset-filters'
 import { dayjs } from '~/dayjs'
-import { VuexProject } from '~/store'
+import { useStore } from '~/store'
 import { Site } from '../api'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'
@@ -17,13 +17,14 @@ export function getFilterFriendlyName (filter: Filter): string {
 }
 
 export function getExportGroupName (prefix: string, exportDatetime: string = getExportDateTime()): string {
-  const project = VuexProject.selectedProject.get()
+  const project = useStore().selectedProject
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   return `${projectName}--${prefix.replaceAll(' ', '-')}--${exportDatetime}`
 }
 
 export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, dateGroup?: string, sites?: Site[]): string {
-  const project = VuexProject.selectedProject.get()
+  const project = useStore().selectedProject
+
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''
   const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getExportDateTime()}`
