@@ -1,9 +1,11 @@
 import { Options, Vue } from 'vue-class-component'
 
+import MetricsTitle from './metrics-title.vue'
 import SingleDatasetComponent from './single-dataset-component.vue'
 
 @Options({
   components: {
+    MetricsTitle,
     SingleDatasetComponent
   }
 })

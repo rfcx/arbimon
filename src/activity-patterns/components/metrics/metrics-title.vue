@@ -3,11 +3,14 @@
     <div class="capitalize text-xl mr-2">
       {{ title }}
     </div>
-    <div class="relative hover:cursor-pointer focus:cursor-pointer group">
-      <icon-fa-info-circle v-if="information" />
-      <div class="absolute min-w-24 max-w-40 -left-4 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md max-w-20">
+    <div
+      v-if="information"
+      class="relative hover:cursor-pointer focus:cursor-pointer group"
+    >
+      <icon-fa-info-circle />
+      <p class="absolute min-w-36 -left-4 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
         {{ information }}
-      </div>
+      </p>
     </div>
   </div>
 </template>
