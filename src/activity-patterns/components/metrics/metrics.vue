@@ -9,12 +9,12 @@
           :title="item.title"
           :information="item.information"
         />
-        <single-metrics
+        <metrics-single
           v-if="item.datasets.length === 1"
           :value="item.datasets[0].percentage"
           :description="item.datasets[0].description"
         />
-        <multi-metrics
+        <metrics-multi
           v-else
           :datasets="item.datasets"
         />
