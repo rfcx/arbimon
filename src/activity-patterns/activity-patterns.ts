@@ -24,7 +24,7 @@ export default class ActivityPatternsPage extends Vue {
   allSpecies: Species[] = []
   selectedSpeciesSlug = ''
   filters: ColoredFilter[] = []
-  metricsDataset: Metrics[] = []
+  metrics: Metrics[] = []
 
   get species (): Species | undefined {
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
@@ -64,6 +64,6 @@ export default class ActivityPatternsPage extends Vue {
     )
 
     this.filters = filters
-    this.metricsDataset = transformToMetricsDatasets(datasets)
+    this.metrics = transformToMetricsDatasets(datasets)
   }
 }
