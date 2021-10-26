@@ -1,7 +1,11 @@
 name: Build, Test
 
 on:
-  pull_request:
+  push:
+    branches-ignore:
+      - master
+      - staging
+      - develop
 
 jobs:
   Main:
