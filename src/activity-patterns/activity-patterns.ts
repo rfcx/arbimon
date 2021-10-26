@@ -9,11 +9,13 @@ import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsMetrics from './components/metrics/metrics.vue'
+import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 
 @Options({
   components: {
     ComparisonListComponent,
-    ActivityPatternsMetrics
+    ActivityPatternsMetrics,
+    SpeciesBackgroundInformation
   }
 })
 export default class ActivityPatternsPage extends Vue {
@@ -23,6 +25,11 @@ export default class ActivityPatternsPage extends Vue {
 
   get species (): Species | undefined {
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
+  }
+
+  // TODO 156: Get species name from species object (not slug)
+  get selectedSpeciesName (): string {
+    return this.selectedSpeciesSlug.replaceAll('-', ' ')
   }
 
   async created (): Promise<void> {
