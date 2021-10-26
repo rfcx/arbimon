@@ -9,7 +9,6 @@ const EXAMPLE_DATE = '2021-04-02T00:00:00.000Z'
 const EXAMPLE_SITE_IDS_INTERESTED = ['100', '200', '300', '400', '500', '600', '700', '800', '900']
 const EXAMPLE_SITES_INTERESTED: Site[] = EXAMPLE_SITE_IDS_INTERESTED.map(siteId => ({ siteId, name: '', longitude: 0, latitude: 0 }))
 const EXAMPLE_SITE_IDS_UNINTERESTED = ['111', '222', '333', '444', '555', '666', '777', '888', '999']
-const EXAMPLE_SITES_UNINTERESTED: Site[] = EXAMPLE_SITE_IDS_UNINTERESTED.map(siteId => ({ siteId, name: '', longitude: 0, latitude: 0 }))
 const EXAMPLE_SPECIES_ID_INTERESTED = 555
 const EXAMPLE_SPECIES_IDS_UNINTERESTED = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 

@@ -20,12 +20,12 @@ export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { da
     const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset.data
     metrics[0].datasets.push({
       percentage: (detectionFrequency * 100).toFixed(1),
-      description: `Found in ${detectionCount.toLocaleString()} recordings out of ${totalRecordingCount.toLocaleString()} recordings`,
+      description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`,
       color: dataset.color
     })
     metrics[1].datasets.push({
       percentage: (occupiedSiteFrequency * 100).toFixed(1),
-      description: `Found in ${occupiedSiteCount.toLocaleString()} sites out of ${totalSiteCount.toLocaleString()} sites`,
+      description: `Found in ${occupiedSiteCount.toLocaleString()} out of ${totalSiteCount.toLocaleString()} sites`,
       color: dataset.color
     })
   }
