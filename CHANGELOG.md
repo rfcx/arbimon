@@ -33,6 +33,7 @@
 * **feature:** Table sort by species name or class (#147)
 * **features:** Add export ellipsis button(#131)
 * **feature:** Research about API to get species information (#163)
+* **features:** Activity patterns page detection frequency and occupancy rate metrics (#130)
 
 * **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
 
