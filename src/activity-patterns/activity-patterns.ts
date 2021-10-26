@@ -42,12 +42,12 @@ export default class ActivityPatternsPage extends Vue {
     await this.onDatasetChange()
   }
 
-  @Watch('species')
+  @Watch('selectedSpecies', { deep: true })
   async onSpeciesChange (species: Species[]): Promise<void> {
     if (species.length > 0 && !this.selectedSpeciesSlug) {
       this.selectedSpeciesSlug = species[0].speciesSlug
-      await this.onDatasetChange()
     }
+    await this.onDatasetChange()
   }
 
   @Watch('selectedSpeciesSlug')
