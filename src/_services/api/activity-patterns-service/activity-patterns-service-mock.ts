@@ -2,29 +2,18 @@ import { DatasetDefinition } from '~/api/types'
 import { filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { ActivityPatternsData } from '.'
 
-export const getActivityPatternsData = async (dataset: DatasetDefinition, speciesId?: number): Promise<ActivityPatternsData> => {
-  if (speciesId === undefined) {
-    return await simulateDelay({
-      detections: 0,
-      detectionFrequency: 0,
-      occupancy: 0,
-      occupancyFrequency: 0
-    })
-  }
+export const getActivityPatternsData = async (dataset: DatasetDefinition, speciesId: number): Promise<ActivityPatternsData> => {
+  const totalRecordings = filterByDataset(getRawDetections(), dataset)
+  const totalRecordingCount = totalRecordings.length
 
-  const detectionsTotal = filterByDataset(getRawDetections(), dataset)
-  const detectionsOfSpecies = filterBySpecies(detectionsTotal, speciesId)
+  const detections = filterBySpecies(totalRecordings, speciesId)
+  const detectionCount = detections.length
 
-  const sites = new Set(detectionsTotal.map(d => d.stream_id)).size
-  const sitesWithThisSpecies = new Set(detectionsOfSpecies.map(d => d.stream_id)).size
+  const totalSiteCount = new Set(totalRecordings.map(d => d.stream_id)).size
+  const occupiedSiteCount = new Set(detections.map(d => d.stream_id)).size
 
-  const detectionFrequency = detectionsOfSpecies.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / sites
-  const occupancyFrequency = sitesWithThisSpecies / sites
+  const detectionFrequency = totalRecordingCount === 0 ? 0 : detections.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / totalRecordingCount
+  const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
-  return await simulateDelay({
-    detections: detectionsOfSpecies.length,
-    detectionFrequency: isNaN(detectionFrequency) ? 0 : detectionFrequency,
-    occupancy: sitesWithThisSpecies,
-    occupancyFrequency: isNaN(occupancyFrequency) ? 0 : occupancyFrequency
-  })
+  return await simulateDelay({ totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency })
 }

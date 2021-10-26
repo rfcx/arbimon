@@ -26,7 +26,7 @@ export default class ActivityPatternsPage extends Vue {
   filters: ColoredFilter[] = []
   metrics: Metrics[] = []
 
-  get species (): Species | undefined {
+  get selectedSpecies (): Species | undefined {
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
   }
 
@@ -39,14 +39,14 @@ export default class ActivityPatternsPage extends Vue {
     this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
     this.allSpecies = (await getAllSpecies())
       .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
-    await this.getMetricDatasets()
+    await this.onDatasetChange()
   }
 
   @Watch('species')
   async onSpeciesChange (species: Species[]): Promise<void> {
     if (species.length > 0 && !this.selectedSpeciesSlug) {
       this.selectedSpeciesSlug = species[0].speciesSlug
-      await this.getMetricDatasets()
+      await this.onDatasetChange()
     }
   }
 
@@ -57,16 +57,17 @@ export default class ActivityPatternsPage extends Vue {
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
     this.filters = filters
-    await this.getMetricDatasets()
+    await this.onDatasetChange()
   }
 
-  async getMetricDatasets (): Promise<void> {
-    if (!this.species) return
+  async onDatasetChange (): Promise<void> {
+    const speciesId = this.selectedSpecies?.speciesId ?? NaN
+    if (!this.selectedSpecies) return
 
     const filters = this.filters
     const datasets = await Promise.all(
       filters.map(async (filter) => {
-        const data = await getActivityPatternsData(filterToDataset(filter), this.species?.speciesId)
+        const data = await getActivityPatternsData(filterToDataset(filter), speciesId)
         return { ...filter, data }
       })
     )

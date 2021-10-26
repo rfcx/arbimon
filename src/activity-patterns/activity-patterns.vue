@@ -25,6 +25,7 @@
   </select>
   <species-background-information :species-name="selectedSpeciesName" />
   <activity-patterns-metrics
+    v-if="metrics"
     class="mt-6"
     :metrics="metrics"
   />
