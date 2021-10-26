@@ -1,15 +1,16 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
+import { Species } from '~/api'
 import { wikiService, WikiSummary } from '~/api/wiki-service'
 
 const WIKIPEDIA_MOBILE_MAX_WIDTH = 760
 
 export default class SpeciesInformation extends Vue {
-  @Prop() speciesName!: string
+  @Prop() species!: Species | null
 
-  speciesInformation: WikiSummary | undefined = undefined
   isLoading = true
+  speciesInformation: WikiSummary | null = null
 
   get speciesWikiUrl (): string | undefined {
     if (!this.speciesInformation) return ''
@@ -23,7 +24,7 @@ export default class SpeciesInformation extends Vue {
     await this.getSpeciesInformation()
   }
 
-  @Watch('speciesName')
+  @Watch('species')
   async onSpeciesNameChange (): Promise<void> {
     await this.getSpeciesInformation()
   }
@@ -34,16 +35,18 @@ export default class SpeciesInformation extends Vue {
   }
 
   async getSpeciesInformation (): Promise<void> {
+    const speciesName = this.species?.speciesName
+    if (!speciesName) return
+
     this.isLoading = true
-    const speciesName = this.speciesName
     try {
       const information = await wikiService.getSpeciesSummary(speciesName)
-      if (this.speciesName === speciesName) {
-        this.speciesInformation = information
+      if (this.species?.speciesName === speciesName) {
+        this.speciesInformation = information ?? null
         this.isLoading = false
       }
     } catch (e) {
-      if (this.speciesName === speciesName) {
+      if (this.species?.speciesName === speciesName) {
         this.isLoading = false
       }
       // TODO 167: Error handling

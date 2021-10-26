@@ -2,7 +2,6 @@
   <page-title
     page-title="Activity Patterns"
     page-subtitle="Trends in detections and occupancy"
-    class="mb-6"
   >
     <dropdown-menu>
       <dropdown-menu-item>
@@ -10,24 +9,21 @@
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>
-  <comparison-list-component @emitSelect="onFilterChange" />
-  <select
-    v-model="selectedSpeciesSlug"
-    class="capitalize bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
-  >
-    <option
-      v-for="species in allSpecies"
-      :key="'species-name-selector-' + species.speciesId"
-      :value="species.speciesSlug"
-    >
-      {{ species.speciesName }}
-    </option>
-  </select>
-  <species-background-information :species-name="selectedSpeciesName" />
+  <comparison-list-component
+    class="mt-5"
+    @emitSelect="onFilterChange"
+  />
+  <species-selector
+    :species-slug="$route.params.speciesSlug"
+    @emitSelectedSpeciesChanged="onSelectedSpeciesChange"
+  />
+  <species-background-information
+    :species="species"
+  />
   <activity-patterns-metrics
     v-if="metrics.length > 0"
-    class="mt-6"
     :metrics="metrics"
+    class="mt-5"
   />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>

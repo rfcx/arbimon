@@ -29,9 +29,7 @@ const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
   }
 })
 export default class SpeciesRichnessPage extends Vue {
-  sites: Site[] = []
-
-  colors: string[] = []
+  colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: Filter[] = []
   detectionCounts: number[] = []
   chartData: GroupedBarChartItem[] = []
