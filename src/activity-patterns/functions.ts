@@ -12,8 +12,8 @@ export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { da
       datasets: []
     },
     {
-      title: 'Occupancy',
-      information: 'Number of sites with a detection',
+      title: 'Occupancy ratio',
+      information: 'Number of sites with detection by the total number of sites',
       datasets: []
     }
   ]

@@ -3,14 +3,14 @@ import { Prop } from 'vue-property-decorator'
 
 import { Metrics } from '@/activity-patterns/types'
 import MetricsTitle from './metrics-title.vue'
-import MultiMetrics from './multi-metrics.vue'
-import SingleMetrics from './single-metrics.vue'
+import MetricsMulti from './multi-metrics.vue'
+import MetricsSingle from './single-metrics.vue'
 
 @Options({
   components: {
     MetricsTitle,
-    MultiMetrics,
-    SingleMetrics
+    MetricsMulti,
+    MetricsSingle
   }
 })
 export default class ActivityPatternsMetrics extends Vue {
