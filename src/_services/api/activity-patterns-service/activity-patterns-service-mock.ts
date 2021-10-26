@@ -18,10 +18,13 @@ export const getActivityPatternsData = async (dataset: DatasetDefinition, specie
   const sites = new Set(detectionsTotal.map(d => d.stream_id)).size
   const sitesWithThisSpecies = new Set(detectionsOfSpecies.map(d => d.stream_id)).size
 
+  const detectionFrequency = detectionsOfSpecies.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / sites
+  const occupancyFrequency = sitesWithThisSpecies / sites
+
   return await simulateDelay({
     detections: detectionsOfSpecies.length,
-    detectionFrequency: detectionsOfSpecies.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / sites,
+    detectionFrequency: isNaN(detectionFrequency) ? 0 : detectionFrequency,
     occupancy: sitesWithThisSpecies,
-    occupancyFrequency: sitesWithThisSpecies / sites
+    occupancyFrequency: isNaN(occupancyFrequency) ? 0 : occupancyFrequency
   })
 }
