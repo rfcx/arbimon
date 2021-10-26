@@ -8,7 +8,7 @@
       class="relative hover:cursor-pointer focus:cursor-pointer group"
     >
       <icon-fa-info-circle />
-      <p class="absolute min-w-36 -left-4 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
+      <p class="absolute min-w-36 -left-4 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
         {{ information }}
       </p>
     </div>
