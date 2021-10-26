@@ -8,12 +8,14 @@ import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
 import { ROUTE_NAMES } from '~/router'
+import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
 
 @Options({
   components: {
+    ActivityPatternsByLocation,
     ActivityPatternsMetrics,
     ComparisonListComponent,
     SpeciesBackgroundInformation,
