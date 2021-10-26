@@ -1,6 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 
+import { transformToMetricsDatasets } from '@/activity-patterns/functions'
+import { Metrics } from '@/activity-patterns/types'
 import { Species } from '~/api'
 import { getActivityPatternsData } from '~/api/activity-patterns-service/activity-patterns-service-mock'
 import { getAllSpecies } from '~/api/species-service'
@@ -22,6 +24,7 @@ export default class ActivityPatternsPage extends Vue {
   allSpecies: Species[] = []
   selectedSpeciesSlug = ''
   filters: ColoredFilter[] = []
+  metricsDataset: Metrics[] = []
 
   get species (): Species | undefined {
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
@@ -51,11 +54,16 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
-    this.filters = filters
-  }
-
-  async getActivityPatternsData (): Promise<void> {
     if (!this.species) return
-    await getActivityPatternsData(filterToDataset(this.filters[0]), this.species.speciesId)
+
+    const datasets = await Promise.all(
+      filters.map(async (filter) => {
+        const data = await getActivityPatternsData(filterToDataset(filter), this.species.speciesId)
+        return { ...filter, data }
+      })
+    )
+
+    this.filters = filters
+    this.metricsDataset = transformToMetricsDatasets(datasets)
   }
 }
