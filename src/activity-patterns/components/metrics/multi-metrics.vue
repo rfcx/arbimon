@@ -9,7 +9,7 @@
     </div>
     <div class="absolute w-full h-4 bg-box-grey rounded-4xl opacity-70" />
     <div
-      class="h-4 bg-box-grey rounded-4xl z-10 opacity-90 group-hover:(opacity-100 border-2)"
+      class="h-4 bg-box-grey rounded-4xl z-5 opacity-90 group-hover:(opacity-100 border-2)"
       :style="{ width: item.value + '%' }"
     />
     <p class="absolute min-w-36 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
