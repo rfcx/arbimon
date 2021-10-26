@@ -22,6 +22,7 @@ export interface ApiDetection {
   'scientific_name': string
   'taxon_id': number
   'taxon': string
+  'num_of_recordings': number
   'detection_frequency': number
 }
 
