@@ -4,9 +4,10 @@
       Activity Patterns
     </template>
   </page-title>
+  <comparison-list-component @emitSelect="onFilterChange" />
   <select
     v-model="selectedSpeciesSlug"
-    class="capitalize bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="capitalize bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <option
       v-for="item in species"
@@ -16,6 +17,6 @@
       {{ item.speciesName }}
     </option>
   </select>
-  <comparison-list-component @emitSelect="onFilterChange" />
+  <species-background-information :species-name="selectedSpeciesName" />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
