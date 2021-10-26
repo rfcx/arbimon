@@ -24,6 +24,9 @@
     </option>
   </select>
   <species-background-information :species-name="selectedSpeciesName" />
-  <activity-patterns-metrics class="mt-6" />
+  <activity-patterns-metrics
+    class="mt-6"
+    :metrics="metrics"
+  />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>

@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-2">
     <template
-      v-for="(item, idx) in metricsInformation"
+      v-for="(item, idx) in metrics"
       :key="'metrics-info-' + idx"
     >
       <div class="px-6 py-4 border-r-2 last:border-none">
