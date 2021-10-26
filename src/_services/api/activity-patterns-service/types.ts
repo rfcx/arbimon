@@ -1,6 +1,8 @@
 export interface ActivityPatternsData {
-  detections: number
+  totalSiteCount: number
+  totalRecordingCount: number
+  detectionCount: number
   detectionFrequency: number
-  occupancy: number
-  occupancyFrequency: number
+  occupiedSiteCount: number
+  occupiedSiteFrequency: number
 }

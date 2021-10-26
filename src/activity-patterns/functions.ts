@@ -3,35 +3,32 @@ import { ColoredFilter } from '~/dataset-filters'
 import { Metrics } from './types'
 
 export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { data: ActivityPatternsData }>): Metrics[] {
-  console.log(datasets)
-  return [
+  const metrics: Metrics[] = [
     {
       title: 'Detection frequency',
       information: 'Number of recordings as a proportion of total recordings',
-      datasets: [
-        {
-          value: 25,
-          description: 'Found in 25 recordings out of 100 recordings'
-        },
-        {
-          value: 35,
-          description: 'Found in 350 recordings out of 1000 recordings'
-        }
-      ]
+      datasets: []
     },
     {
       title: 'Occupancy',
       information: 'Number of sites with a detection',
-      datasets: [
-        {
-          value: 45,
-          description: 'Found in 45 sites out of 100 sites'
-        },
-        {
-          value: 50,
-          description: 'Found in 25 sites out of 50 sites'
-        }
-      ]
+      datasets: []
     }
   ]
+
+  for (const dataset of datasets) {
+    const { totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset.data
+    metrics[0].datasets.push({
+      percentage: Number((detectionFrequency * 100).toFixed(0)),
+      description: `Found in ${detectionCount} recordings out of ${totalRecordingCount} recordings`,
+      color: dataset.color
+    })
+    metrics[1].datasets.push({
+      percentage: Number((occupiedSiteFrequency * 100).toFixed(0)),
+      description: `Found in ${occupiedSiteCount} sites out of ${totalSiteCount} sites`,
+      color: dataset.color
+    })
+  }
+
+  return metrics
 }

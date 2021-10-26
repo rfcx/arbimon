@@ -1,5 +1,5 @@
 export interface MetricsDataset {
-  value: number
+  percentage: number
   description: string
   color?: string
 }
