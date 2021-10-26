@@ -29,15 +29,24 @@ const EMPTY_DETECTION: ApiDetection = {
 }
 
 describe('AP Service Mock', () => {
-  test('can calculate totalRecordingCount', async () => {
-    // Arrange
-    const detections: ApiDetection[] = [
+  const detectionsToRecordingCount: Array<[number, ApiDetection[]]> = [
+    [MOCK_RECORDINGS_PER_HOUR, [
       { ...EMPTY_DETECTION, hour: 0 },
       { ...EMPTY_DETECTION, hour: 0 },
       { ...EMPTY_DETECTION, hour: 0 }
-    ]
-    const expected = MOCK_RECORDINGS_PER_HOUR
-
+    ]],
+    [2 * MOCK_RECORDINGS_PER_HOUR, [
+      { ...EMPTY_DETECTION, hour: 0 },
+      { ...EMPTY_DETECTION, hour: 0 },
+      { ...EMPTY_DETECTION, hour: 1 }
+    ]],
+    [2 * MOCK_RECORDINGS_PER_HOUR, [
+      { ...EMPTY_DETECTION, hour: 0, species_id: EXAMPLE_SPECIES_ID },
+      { ...EMPTY_DETECTION, hour: 0, species_id: EXAMPLE_SPECIES_ID + 1 },
+      { ...EMPTY_DETECTION, hour: 1, species_id: EXAMPLE_SPECIES_ID + 1 }
+    ]]
+  ]
+  test.each(detectionsToRecordingCount)('calculate totalRecordingCount: %s', async (expected, detections) => {
     // Act
     const sut = new ActivityPatternsService(detections)
     const result = await sut.getActivityPatternsData(EXAMPLE_DATASET, EXAMPLE_SPECIES_ID)
