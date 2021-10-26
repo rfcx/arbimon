@@ -42,7 +42,7 @@ export default class SpeciesInformation extends Vue {
     try {
       const information = await wikiService.getSpeciesSummary(speciesName)
       if (this.species?.speciesName === speciesName) {
-        this.speciesInformation = information
+        this.speciesInformation = information ?? null
         this.isLoading = false
       }
     } catch (e) {

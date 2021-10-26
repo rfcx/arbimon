@@ -11,7 +11,7 @@
         />
         <single-metrics
           v-if="item.datasets.length === 1"
-          :value="item.datasets[0].value"
+          :value="item.datasets[0].percentage"
           :description="item.datasets[0].description"
         />
         <multi-metrics
