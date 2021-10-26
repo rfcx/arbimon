@@ -1,10 +1,10 @@
 import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
-import { Emit, Prop } from 'vue-property-decorator'
+import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { Site } from '~/api/types'
 import { dayjs } from '~/dayjs'
-import { VuexProject } from '~/store'
+import { BiodiversityStore } from '~/store'
 import { Filter } from '..'
 
 interface FilterMenuItem {
@@ -25,6 +25,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
   }
 })
 export default class ComparisonFilterModalComponent extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) defaultFilter!: Filter | null
 
   @Emit() emitApply (): Filter {
@@ -37,9 +38,6 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   @Emit() emitClose (): boolean { return false }
-
-  @VuexProject.sites.bind()
-  allSites!: Site[]
 
   selectedSites: Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
@@ -84,7 +82,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   setDefaultSiteCheckboxItems (): void {
-    this.siteCheckboxItems = [...this.allSites]
+    this.siteCheckboxItems = [...this.store.sites]
       .sort((a, b) => a.name.localeCompare(b.name))
       .map(site => ({ site, check: false }))
   }

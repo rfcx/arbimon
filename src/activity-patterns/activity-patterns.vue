@@ -1,24 +1,28 @@
 <template>
-  <page-title-view class="mb-6">
-    <template #title>
-      Activity Patterns
-    </template>
-  </page-title-view>
+  <page-title
+    page-title="Activity Patterns"
+    page-subtitle="Trends in detections and occupancy"
+  >
+    <dropdown-menu>
+      <dropdown-menu-item>
+        <icon-fas-hammer class="mr-2" /> TODO
+      </dropdown-menu-item>
+    </dropdown-menu>
+  </page-title>
+
   <select
     v-model="selectedSpeciesSlug"
-    class="capitalize bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="mt-6 capitalize bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <option
-      v-for="item in species"
-      :key="'species-name-selector-' + item.speciesId"
-      :value="item.speciesSlug"
+      v-for="species in allSpecies"
+      :key="'species-name-selector-' + species.speciesId"
+      :value="species.speciesSlug"
     >
-      {{ item.speciesName }}
+      {{ species.speciesName }}
     </option>
   </select>
   <comparison-list-component @emitSelect="onFilterChange" />
-  <div class="mt-6">
-    <activity-patterns-metrics />
-  </div>
+  <activity-patterns-metrics class="mt-6" />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>

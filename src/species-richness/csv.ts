@@ -1,6 +1,6 @@
 import { ColoredFilter } from '@/_services/dataset-filters'
-import { getFilterExportGroupName, getFilterExportName } from '@/_services/dataset-filters/functions'
-import { downloadZip, FileData, toCsv, zipFiles } from '@/_services/utils/file'
+import { getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/dataset-filters/functions'
+import { FileData, toCsv, zipAndDownload } from '@/_services/utils/file'
 import { DatasetDefinition } from '~/api'
 import { getAllDetections } from '~/api/detections-service'
 import { dayjs } from '~/dayjs'
@@ -18,12 +18,27 @@ export interface ReportData {
 }
 
 export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix: string): Promise<void> => {
-  const { name, exportTime } = getFilterExportGroupName(filters, reportPrefix)
-  const zipUrl = await createSpeciesRichnessCsvZip(filters, reportPrefix, name, exportTime)
-  downloadZip(zipUrl, name)
+  const exportDateTime = getExportDateTime()
+
+  const files = await Promise.all(
+    filters.map(async (filter) => await getCsvFile(filter, reportPrefix, exportDateTime)))
+
+  const groupName = getExportGroupName(reportPrefix, exportDateTime)
+  await zipAndDownload(files, groupName)
 }
 
-const getSpeciesRichnessCsvData = async (dataset: DatasetDefinition): Promise<ReportData[]> => {
+const getCsvFile = async ({ startDate, endDate, sites }: ColoredFilter, reportPrefix: string, exportTime: string): Promise<FileData> => {
+  const start = startDate.toISOString()
+  const end = endDate.add(1, 'days').toISOString()
+  const filename = getExportFilterName(startDate, endDate, reportPrefix, exportTime, sites) + '.csv'
+
+  const dataAsJson = await getCsvForDataset({ start, end, sites })
+  const data = await toCsv(dataAsJson)
+
+  return { filename, data }
+}
+
+const getCsvForDataset = async (dataset: DatasetDefinition): Promise<ReportData[]> => {
   return (await getAllDetections(dataset))
     .map(({ speciesName, siteName, latitude, longitude, date, hour }) => {
       const newDate = dayjs.utc(date)
@@ -39,21 +54,4 @@ const getSpeciesRichnessCsvData = async (dataset: DatasetDefinition): Promise<Re
         hour
       }
     })
-}
-
-const createSpeciesRichnessCsvZip = async (filters: ColoredFilter[], reportPrefix: string, name: string, exportTime: string): Promise<string> => {
-  const csvData = await Promise.all(filters.map(async ({ startDate, endDate, sites, color }) => {
-    const start = startDate.toISOString()
-    const end = endDate.add(1, 'days').toISOString()
-    return await getSpeciesRichnessCsvData({ start, end, sites })
-  }))
-
-  const filenames = filters.map(({ startDate, endDate, sites }) => getFilterExportName(startDate, endDate, reportPrefix, exportTime, sites))
-
-  const files: FileData[] = await Promise.all(csvData.map(async (csvDatum, idx) => ({
-    filename: `${filenames[idx]}.csv`,
-    data: await toCsv(csvDatum)
-  })))
-
-  return await zipFiles(files, name)
 }
