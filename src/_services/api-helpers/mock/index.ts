@@ -1,6 +1,6 @@
 import { DatasetDefinition } from '~/api/types'
-import rawSites from './raw-site-01-07-apr-2021.json'
-import rawDetections from './raw-species-richness-data-01-07-apr-2021.json'
+import rawDetections from './raw-PR-data.json'
+import rawSites from './raw-sites.json'
 
 // TODO 132 - Encapsulate API response types in the API, and return project types
 export interface ApiSite {
