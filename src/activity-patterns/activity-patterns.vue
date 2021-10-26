@@ -9,10 +9,10 @@
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>
-
+  <comparison-list-component @emitSelect="onFilterChange" />
   <select
     v-model="selectedSpeciesSlug"
-    class="mt-6 capitalize bg-steel-grey rounded p-2 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="capitalize bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <option
       v-for="species in allSpecies"
@@ -22,7 +22,7 @@
       {{ species.speciesName }}
     </option>
   </select>
-  <comparison-list-component @emitSelect="onFilterChange" />
+  <species-background-information :species-name="selectedSpeciesName" />
   <activity-patterns-metrics class="mt-6" />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
