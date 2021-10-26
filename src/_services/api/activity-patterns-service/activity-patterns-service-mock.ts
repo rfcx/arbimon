@@ -2,7 +2,16 @@ import { DatasetDefinition } from '~/api/types'
 import { filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { ActivityPatternsData } from '.'
 
-export const getActivityPatternsData = async (dataset: DatasetDefinition, speciesId: number): Promise<ActivityPatternsData> => {
+export const getActivityPatternsData = async (dataset: DatasetDefinition, speciesId?: number): Promise<ActivityPatternsData> => {
+  if (speciesId === undefined) {
+    return await simulateDelay({
+      detections: 0,
+      detectionFrequency: 0,
+      occupancy: 0,
+      occupancyFrequency: 0
+    })
+  }
+
   const detectionsTotal = filterByDataset(getRawDetections(), dataset)
   const detectionsOfSpecies = filterBySpecies(detectionsTotal, speciesId)
 
