@@ -4,17 +4,17 @@
       v-for="(item, idx) in metrics"
       :key="'metrics-info-' + idx"
     >
-      <div class="px-6 py-4 border-r-2 last:border-none">
+      <div class="first:(pr-6 pl-0) px-6 py-4 border-r-1 border-subtle last:border-none">
         <metrics-title
           :title="item.title"
           :information="item.information"
         />
-        <single-metrics
+        <metrics-single
           v-if="item.datasets.length === 1"
           :value="item.datasets[0].percentage"
           :description="item.datasets[0].description"
         />
-        <multi-metrics
+        <metrics-multi
           v-else
           :datasets="item.datasets"
         />
