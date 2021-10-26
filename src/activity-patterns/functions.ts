@@ -1,6 +1,7 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { useStore } from '~/store'
+import { bigNumberFormat } from '~/utils/number'
 import { Metrics } from './types'
 
 export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { data: ActivityPatternsData }>): Metrics[] {
@@ -8,7 +9,7 @@ export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { da
   const metrics: Metrics[] = [
     {
       title: 'Detection frequency',
-      information: 'Number of recordings as a proportion of total recordings',
+      information: 'Number of detections as a proportion of total recordings',
       datasets: []
     },
     {
@@ -23,12 +24,12 @@ export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { da
     const totalSiteCount = dataset.sites.length === 0 ? store.sites.length : dataset.sites.length
     metrics[0].datasets.push({
       percentage: (detectionFrequency * 100).toFixed(1),
-      description: `Found in ${detectionCount} recordings out of ${totalRecordingCount} recordings`,
+      description: `Found in ${bigNumberFormat(detectionCount)} recordings out of ${bigNumberFormat(totalRecordingCount)} recordings`,
       color: dataset.color
     })
     metrics[1].datasets.push({
       percentage: (occupiedSiteFrequency * 100).toFixed(1),
-      description: `Found in ${occupiedSiteCount} sites out of ${totalSiteCount} sites`,
+      description: `Found in ${bigNumberFormat(occupiedSiteCount)} sites out of ${bigNumberFormat(totalSiteCount)} sites`,
       color: dataset.color
     })
   }
