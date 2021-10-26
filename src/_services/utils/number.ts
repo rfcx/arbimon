@@ -9,3 +9,7 @@ export const firstDiffDigit = (newVal: number, oldVal: number): number => {
   }
   return NaN
 }
+
+export const bigNumberFormat = (value: number): string => {
+  return value.toLocaleString()
+}
