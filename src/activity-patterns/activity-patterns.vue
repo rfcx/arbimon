@@ -21,7 +21,7 @@
     :species="species"
   />
   <activity-patterns-metrics
-    v-if="metrics"
+    v-if="metrics.length > 0"
     :metrics="metrics"
     class="mt-5"
   />
