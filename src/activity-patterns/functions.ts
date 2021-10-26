@@ -1,34 +1,31 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
 import { ColoredFilter } from '~/dataset-filters'
-import { useStore } from '~/store'
 import { Metrics } from './types'
 
 export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { data: ActivityPatternsData }>): Metrics[] {
-  const store = useStore()
   const metrics: Metrics[] = [
     {
       title: 'Detection frequency',
-      information: 'Number of recordings as a proportion of total recordings',
+      information: 'Number of detections as a proportion of total recordings',
       datasets: []
     },
     {
-      title: 'Occupancy',
-      information: 'Number of sites with a detection',
+      title: 'Occupancy ratio',
+      information: 'Number of sites with detection by the total number of sites',
       datasets: []
     }
   ]
 
   for (const dataset of datasets) {
-    const { totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset.data
-    const totalSiteCount = dataset.sites.length === 0 ? store.sites.length : dataset.sites.length
+    const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset.data
     metrics[0].datasets.push({
-      percentage: Number((detectionFrequency * 100).toFixed(0)),
-      description: `Found in ${detectionCount} recordings out of ${totalRecordingCount} recordings`,
+      percentage: (detectionFrequency * 100).toFixed(1),
+      description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`,
       color: dataset.color
     })
     metrics[1].datasets.push({
-      percentage: Number((occupiedSiteFrequency * 100).toFixed(0)),
-      description: `Found in ${occupiedSiteCount} sites out of ${totalSiteCount} sites`,
+      percentage: (occupiedSiteFrequency * 100).toFixed(1),
+      description: `Found in ${occupiedSiteCount.toLocaleString()} out of ${totalSiteCount.toLocaleString()} sites`,
       color: dataset.color
     })
   }
