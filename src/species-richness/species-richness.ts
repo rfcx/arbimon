@@ -6,7 +6,7 @@ import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/s
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, Filter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
-import { getFilterExportGroupName } from '~/dataset-filters/functions'
+import { filterToDataset, getExportGroupName } from '~/dataset-filters/functions'
 import { MapDataSet } from '~/maps/map-bubble'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
@@ -47,10 +47,9 @@ export default class SpeciesRichnessPage extends Vue {
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
     // TODO 117 - Only update the changed dataset
     const datasets = await Promise.all(
-      filters.map(async ({ startDate, endDate, sites, color }) => {
-        const start = startDate.toISOString()
-        const end = endDate.add(1, 'days').toISOString()
-        const data = await getSpeciesRichnessData({ start, end, sites })
+      filters.map(async (filter) => {
+        const { startDate, endDate, sites, color } = filter
+        const data = await getSpeciesRichnessData(filterToDataset(filter))
         return { startDate, endDate, sites, color, data }
       })
     )
@@ -58,7 +57,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
-    this.chartExportName = getFilterExportGroupName(filters, DEFAULT_CHART_PREFIX).name
+    this.chartExportName = getExportGroupName(DEFAULT_CHART_PREFIX)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
