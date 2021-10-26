@@ -21,7 +21,7 @@
     <div class="col-span-1">
       <img
         :src="speciesImage(speciesInformation?.thumbnailImage)"
-        :alt="species.speciesName"
+        :alt="species?.speciesName ?? ''"
         class="object-contain max-h-50"
       >
     </div>
