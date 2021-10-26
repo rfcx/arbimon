@@ -1,19 +1,25 @@
 import { DatasetDefinition } from '~/api/types'
-import { filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
+import { ApiDetection, filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { ActivityPatternsData } from '.'
 
-export const getActivityPatternsData = async (dataset: DatasetDefinition, speciesId: number): Promise<ActivityPatternsData> => {
-  const totalRecordings = filterByDataset(getRawDetections(), dataset)
-  const totalRecordingCount = totalRecordings.length
+export class ActivityPatternsService {
+  constructor (private readonly rawDetections: ApiDetection[] = getRawDetections()) {}
 
-  const detections = filterBySpecies(totalRecordings, speciesId)
-  const detectionCount = detections.length
+  async getActivityPatternsData (dataset: DatasetDefinition, speciesId: number): Promise<ActivityPatternsData> {
+    const totalDetections = filterByDataset(this.rawDetections, dataset)
+    const totalRecordingCount = new Set(totalDetections.map(d => `${d.date}-${d.hour}`)).size * 12
 
-  const totalSiteCount = new Set(totalRecordings.map(d => d.stream_id)).size
-  const occupiedSiteCount = new Set(detections.map(d => d.stream_id)).size
+    const detections = filterBySpecies(totalDetections, speciesId)
+    const detectionCount = detections.length
 
-  const detectionFrequency = totalRecordingCount === 0 ? 0 : detections.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / totalRecordingCount
-  const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
+    const totalSiteCount = new Set(totalDetections.map(d => d.stream_id)).size
+    const occupiedSiteCount = new Set(detections.map(d => d.stream_id)).size
 
-  return await simulateDelay({ totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency })
+    const detectionFrequency = totalRecordingCount === 0 ? 0 : detections.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / totalRecordingCount
+    const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
+
+    return await simulateDelay({ totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency })
+  }
 }
+
+export const activityPatternsService = new ActivityPatternsService()

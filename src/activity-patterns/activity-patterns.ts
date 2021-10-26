@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
 import { Species } from '~/api'
-import { getActivityPatternsData } from '~/api/activity-patterns-service/activity-patterns-service-mock'
+import { activityPatternsService } from '~/api/activity-patterns-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
@@ -48,7 +48,7 @@ export default class ActivityPatternsPage extends Vue {
     const filters = this.filters
     const datasets = await Promise.all(
       filters.map(async (filter) => {
-        const data = await getActivityPatternsData(filterToDataset(filter), speciesId)
+        const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
         return { ...filter, data }
       })
     )
