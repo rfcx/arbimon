@@ -45,7 +45,7 @@ export default class HorizontalBarChartComponent extends Vue {
       margins: { top: 40, right: 40, bottom: 50, left: 100 },
       fontColor: 'black'
     }
-    const chart = generateChart(this.chartData, config)
+    const chart = generateChart(this.chartData, config, true)
     if (!chart) return
 
     // TODO: 109 add legend if needed
