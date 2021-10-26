@@ -25,5 +25,9 @@
     :metrics="metrics"
     class="mt-5"
   />
+  <activity-patterns-by-location
+    :datasets="[]"
+    class="mt-5"
+  />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
