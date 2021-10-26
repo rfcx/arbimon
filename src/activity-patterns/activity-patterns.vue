@@ -2,6 +2,7 @@
   <page-title
     page-title="Activity Patterns"
     page-subtitle="Trends in detections and occupancy"
+    class="mb-6"
   >
     <dropdown-menu>
       <dropdown-menu-item>
