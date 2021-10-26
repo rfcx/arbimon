@@ -6,16 +6,23 @@ import { getAllSpecies } from '~/api/species-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { ROUTE_NAMES } from '~/router'
+import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 
 @Options({
   components: {
-    ComparisonListComponent
+    ComparisonListComponent,
+    SpeciesBackgroundInformation
   }
 })
 export default class ActivityPatternsPage extends Vue {
   species: Species[] = []
   selectedSpeciesSlug = ''
   filters: ColoredFilter[] = []
+
+  // TODO 156: Get species name from species object (not slug)
+  get selectedSpeciesName (): string {
+    return this.selectedSpeciesSlug.replaceAll('-', ' ')
+  }
 
   async created (): Promise<void> {
     this.selectedSpeciesSlug = this.$route.params.speciesSlug as string

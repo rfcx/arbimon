@@ -1,6 +1,8 @@
-export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+import { Method } from 'axios'
 
-interface Endpoint {
+export type RequestMethod = Method & ('GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE')
+
+export interface Endpoint {
   method: RequestMethod
   url: string
 }

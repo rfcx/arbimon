@@ -4,7 +4,7 @@
       <div
         v-for="(filter, idx) in filters"
         :key="'site-card' + idx"
-        class="flex flex-col justify-center w-48 max-w-48 h-24 mr-4 mt-6 px-4 cursor-pointer rounded-xl border-white text-white text-sm opacity-100 hover:opacity-90"
+        class="flex flex-col justify-center w-48 max-w-48 h-24 mr-4 px-4 cursor-pointer rounded-xl border-white text-white text-sm opacity-100 hover:opacity-90"
         :style="{ 'border': `solid 3px ${getFilterColor(idx)}`, 'background-color': `${getFilterColor(idx)}80` }"
         @click="popupOpen(idx)"
       >
@@ -31,7 +31,7 @@
       </div>
       <div
         v-if="showAddButton"
-        class="flex flex-col justify-center items-center w-48 max-w-48 h-24 mt-6 px-4 cursor-pointer rounded-xl bg-mirage-grey hover:bg-steel-grey text-white border-2 border-dashed text-sm"
+        class="flex flex-col justify-center items-center w-48 max-w-48 h-24 px-4 cursor-pointer rounded-xl bg-mirage-grey hover:bg-steel-grey text-white border-2 border-dashed text-sm"
         @click="addFilterConfig"
       >
         <div class="uppercase">
