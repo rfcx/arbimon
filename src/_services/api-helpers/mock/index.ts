@@ -27,8 +27,10 @@ export interface ApiDetection {
 
 const MOCK_FLIGHT_TIME = 250 // TODO ?? - Consider longer delay to simulate a real API call
 
-export const simulateDelay = async <T>(result: T): Promise<T> =>
-  await new Promise((resolve) => setTimeout(() => resolve(result), MOCK_FLIGHT_TIME))
+export const simulateDelay = async <T>(result: T, delay: number | undefined = undefined): Promise<T> =>
+  delay === 0
+    ? result
+    : await new Promise((resolve) => setTimeout(() => resolve(result), delay ?? MOCK_FLIGHT_TIME))
 
 export function getRawSites (): ApiSite[] {
   return rawSites

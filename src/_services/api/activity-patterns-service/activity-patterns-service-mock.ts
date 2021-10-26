@@ -3,7 +3,10 @@ import { ApiDetection, filterByDataset, filterBySpecies, getRawDetections, simul
 import { ActivityPatternsData } from '.'
 
 export class ActivityPatternsService {
-  constructor (private readonly rawDetections: ApiDetection[] = getRawDetections()) {}
+  constructor (
+    private readonly rawDetections: ApiDetection[],
+    private readonly delay: number | undefined = undefined
+  ) {}
 
   async getActivityPatternsData (dataset: DatasetDefinition, speciesId: number): Promise<ActivityPatternsData> {
     const totalDetections = filterByDataset(this.rawDetections, dataset)
@@ -18,8 +21,8 @@ export class ActivityPatternsService {
     const detectionFrequency = totalRecordingCount === 0 ? 0 : detections.map(d => d.detection_frequency).reduce((a, b) => a + b, 0) / totalRecordingCount
     const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
-    return await simulateDelay({ totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency })
+    return await simulateDelay({ totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }, this.delay)
   }
 }
 
-export const activityPatternsService = new ActivityPatternsService()
+export const activityPatternsService = new ActivityPatternsService(getRawDetections())
