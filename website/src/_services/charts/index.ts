@@ -71,7 +71,7 @@ export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
 }
 
-export function generateHorizontalLegend (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<SVGGElement, undefined, null, undefined>): d3.Selection<SVGGElement, string, SVGGElement, undefined> {
+export function generateHorizontalLegend <T extends d3.BaseType> (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<T, undefined, null, undefined>): void {
   const contentWidth = 100
   const xStartPosition = ((width - (labels.length * contentWidth)) / 2)
   const yPosition = chartHeight + 50
@@ -92,14 +92,12 @@ export function generateHorizontalLegend (width: number, chartHeight: number, la
     .attr('x', (d, i) => (i * contentWidth) + (xStartPosition + 10))
     .attr('y', yPosition)
     .attr('dy', '.3em')
-    .text(function (d) { return d })
+    .text(d => d)
     .attr('fill', '#000000')
     .style('color', '#000000')
     .style('font-size', '14px')
-
-  return legend
 }
 
 export function getLegendGroupNames (totalGroup: number): string[] {
-  return [...Array(totalGroup).keys()].map(n => 'Group ' + (n + 1))
+  return [...Array(totalGroup).keys()].map(n => `Group ${n + 1}`)
 }
