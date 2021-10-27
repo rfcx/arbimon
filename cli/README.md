@@ -1,6 +1,6 @@
-# Biodiversity Analytics Script
+# Biodiversity > CLI
 
-Node scripts to export data from Arbimon.
+CLI scripts (ex: to export data from Arbimon)
 
 ## Getting started
 
@@ -8,4 +8,4 @@ Node scripts to export data from Arbimon.
 
 2. To export data from Arbimon:
 
-    `node index.js` 
+   `node index.js`
