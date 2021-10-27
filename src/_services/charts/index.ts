@@ -70,3 +70,28 @@ export const svgToPngData = async (chartElement: ChartSVGElement): Promise<strin
 export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
 }
+
+export function generateLegend (svg: d3.Selection<SVGGElement, undefined, null, undefined>): d3.Selection<SVGGElement, string, SVGGElement, undefined> {
+  const legend = svg.selectAll('.legend')
+    .data(['a', 'b', 'c'])
+    .enter()
+    .append('g')
+    .attr('class', 'legend')
+
+  legend.append('circle')
+    .attr('cx', (d, i) => (i * 100) + 150)
+    .attr('cy', 140)
+    .attr('r', 6)
+    .style('fill', '#000aaa')
+
+  legend.append('text')
+    .attr('x', (d, i) => (i * 100) + 160)
+    .attr('y', 140)
+    .attr('dy', '.3em')
+    .text(function (d) { return d })
+    .attr('fill', '#000aaa')
+    .style('color', '#000aaa')
+    .style('font-size', '14px')
+
+  return legend
+}
