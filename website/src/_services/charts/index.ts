@@ -85,7 +85,7 @@ export function generateHorizontalLegend (width: number, chartHeight: number, la
   legend.append('circle')
     .attr('cx', (d, i) => (i * contentWidth) + xStartPosition)
     .attr('cy', yPosition)
-    .attr('r', 6)
+    .attr('r', 8)
     .style('fill', (d, i) => colors[i])
 
   legend.append('text')
@@ -93,9 +93,13 @@ export function generateHorizontalLegend (width: number, chartHeight: number, la
     .attr('y', yPosition)
     .attr('dy', '.3em')
     .text(function (d) { return d })
-    .attr('fill', (d, i) => colors[i])
-    .style('color', (d, i) => colors[i])
+    .attr('fill', '#000000')
+    .style('color', '#000000')
     .style('font-size', '14px')
 
   return legend
+}
+
+export function getLegendGroupNames (totalGroup: number): string[] {
+  return [...Array(totalGroup).keys()].map(n => 'Group ' + (n + 1))
 }
