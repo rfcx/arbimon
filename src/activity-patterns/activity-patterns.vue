@@ -26,6 +26,7 @@
     class="mt-5"
   />
   <activity-patterns-by-location
+    v-if="false"
     :datasets="[]"
     class="mt-5"
   />

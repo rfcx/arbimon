@@ -4,7 +4,7 @@
   >
     <div class="flex justify-between items-end">
       <h2 class="text-white text-xl">
-        Species detection frequency by site
+        Detection frequency by site
       </h2>
     </div>
     <no-data-panel
