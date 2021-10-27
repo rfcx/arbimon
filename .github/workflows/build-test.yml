@@ -28,13 +28,13 @@ jobs:
           restore-keys: ${{ runner.os }}-node-
 
       - name: 'Setup: Install new deps'
-        run: npm ci --include=dev
+        run: cd website && npm ci --include=dev
 
       - name: 'Build'
-        run: npm run build
+        run: cd website && npm run build
 
       - name: 'Lint'
-        run: npm run lint
+        run: cd website && npm run lint
 
       - name: 'Test'
-        run: npm run test
+        run: cd website && npm run test
