@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 import { BarChartConfig, GroupedBarChartItem } from '.'
-import { generateHorizontalLegend } from '..'
+import { generateHorizontalLegend, getLegendGroupNames } from '..'
 
 const GROUP_MARGIN = 20
 const BAR_MARGIN = 2
@@ -19,7 +19,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
 
   const chart = d3.create('div')
 
-  let svg = chart
+  let svg: d3.Selection<SVGGElement, undefined, null, undefined> | d3.Selection<SVGGElement, string, SVGGElement, undefined> = chart
     .append('svg')
     .attr('width', config.width)
     .attr('height', fullHeight)
@@ -121,7 +121,9 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     })
 
   if (isExported) {
-    svg = generateHorizontalLegend(config.width, chartHeight, ['a', 'b', 'c'], ['#ddd', '#999', '#777'], svg)
+    const labels = getLegendGroupNames(data[0].series.length)
+    const colors = data[0].series.map(s => s.color)
+    svg = generateHorizontalLegend(config.width, chartHeight, labels, colors, svg)
   }
 
   return chart.node()
