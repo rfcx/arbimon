@@ -1,6 +1,6 @@
 import { DatasetDefinition } from '~/api/types'
-import rawSites from './raw-site-01-07-apr-2021.json'
-import rawDetections from './raw-species-richness-data-01-07-apr-2021.json'
+import rawDetections from './raw-PR-data.json'
+import rawSites from './raw-sites.json'
 
 // TODO 132 - Encapsulate API response types in the API, and return project types
 export interface ApiSite {
@@ -22,13 +22,16 @@ export interface ApiDetection {
   'scientific_name': string
   'taxon_id': number
   'taxon': string
+  'num_of_recordings': number
   'detection_frequency': number
 }
 
 const MOCK_FLIGHT_TIME = 250 // TODO ?? - Consider longer delay to simulate a real API call
 
-export const simulateDelay = async <T>(result: T): Promise<T> =>
-  await new Promise((resolve) => setTimeout(() => resolve(result), MOCK_FLIGHT_TIME))
+export const simulateDelay = async <T>(result: T, delay: number | undefined = undefined): Promise<T> =>
+  delay === 0
+    ? result
+    : await new Promise((resolve) => setTimeout(() => resolve(result), delay ?? MOCK_FLIGHT_TIME))
 
 export function getRawSites (): ApiSite[] {
   return rawSites

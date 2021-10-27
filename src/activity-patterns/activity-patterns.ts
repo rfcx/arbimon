@@ -1,48 +1,60 @@
 import { Options, Vue } from 'vue-class-component'
-import { Watch } from 'vue-property-decorator'
 
+import { transformToMetricsDatasets } from '@/activity-patterns/functions'
+import { Metrics } from '@/activity-patterns/types'
 import { Species } from '~/api'
-import { getAllSpecies } from '~/api/species-service'
+import { activityPatternsService } from '~/api/activity-patterns-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
+import { filterToDataset } from '~/dataset-filters/functions'
 import { ROUTE_NAMES } from '~/router'
+import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
+import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
+import SpeciesSelector from './components/species-selector/species-selector.vue'
 
 @Options({
   components: {
+    ActivityPatternsByLocation,
+    ActivityPatternsMetrics,
     ComparisonListComponent,
-    SpeciesBackgroundInformation
+    SpeciesBackgroundInformation,
+    SpeciesSelector
   }
 })
 export default class ActivityPatternsPage extends Vue {
-  species: Species[] = []
-  selectedSpeciesSlug = ''
+  // Dataset definitions
+  species: Species | null = null
   filters: ColoredFilter[] = []
 
-  // TODO 156: Get species name from species object (not slug)
-  get selectedSpeciesName (): string {
-    return this.selectedSpeciesSlug.replaceAll('-', ' ')
-  }
+  // Data for children
+  metrics: Metrics[] = []
 
-  async created (): Promise<void> {
-    this.selectedSpeciesSlug = this.$route.params.speciesSlug as string
-    this.species = (await getAllSpecies())
-      .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
-  }
-
-  @Watch('species')
-  onSpeciesChange (species: Species[]): void {
-    if (species.length > 0 && !this.selectedSpeciesSlug) {
-      this.selectedSpeciesSlug = species[0].speciesSlug
-    }
-  }
-
-  @Watch('selectedSpeciesSlug')
-  onSelectedSpeciesSlugChange (speciesSlug: number): void {
+  async onSelectedSpeciesChange (species: Species | undefined): Promise<void> {
+    const speciesSlug = species?.speciesSlug
     void this.$router.replace({ name: ROUTE_NAMES.activity_patterns, params: { speciesSlug } })
+
+    this.species = species ?? null
+    await this.onDatasetChange()
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
     this.filters = filters
+    await this.onDatasetChange()
+  }
+
+  async onDatasetChange (): Promise<void> {
+    const speciesId = this.species?.speciesId ?? NaN
+    if (!speciesId) return
+
+    const filters = this.filters
+    const datasets = await Promise.all(
+      filters.map(async (filter) => {
+        const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
+        return { ...filter, data }
+      })
+    )
+
+    this.metrics = transformToMetricsDatasets(datasets)
   }
 }
