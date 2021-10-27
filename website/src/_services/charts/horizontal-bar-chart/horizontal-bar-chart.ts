@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { clearChart, exportChartWithElement, generateHorizontalLegend } from '..'
+import { clearChart, exportChartWithElement } from '..'
 import { generateChart, GroupedBarChartItem } from '.'
 
 export default class HorizontalBarChartComponent extends Vue {
