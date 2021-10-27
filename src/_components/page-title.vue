@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <h1 class="text-4xl capitalize">
-      {{ pageTitle }}
-    </h1>
-    <p>{{ pageSubtitle }}</p>
+  <div class="flex flex-row justify-between items-center w-full">
+    <div>
+      <h1 class="text-4xl capitalize">
+        {{ pageTitle }}
+      </h1>
+      <p>{{ pageSubtitle }}</p>
+    </div>
+    <slot />
   </div>
 </template>
 

@@ -2,9 +2,11 @@
   <species-richness-introduction
     :filters="filters"
     :have-data="haveData"
-    class="mb-6"
   />
-  <comparison-list-component @emitSelect="onFilterChange" />
+  <comparison-list-component
+    class="mt-5"
+    @emitSelect="onFilterChange"
+  />
   <horizontal-bar-chart-component
     dom-id="species-by-class"
     chart-title="Distinct species by taxonomic class"

@@ -1,9 +1,8 @@
 <template>
-  <div class="flex flex-row justify-between items-center w-full">
-    <page-title
-      page-title="Species Richness"
-      page-subtitle="Number of distinct species detected"
-    />
+  <page-title
+    page-title="Species Richness"
+    page-subtitle="Number of distinct species detected"
+  >
     <dropdown-menu>
       <dropdown-menu-item
         :disabled="!haveData"
@@ -13,6 +12,6 @@
         <icon-far-file-archive class="mr-2" /> Export as CSV
       </dropdown-menu-item>
     </dropdown-menu>
-  </div>
+  </page-title>
 </template>
 <script lang="ts" src="./species-richness-introduction.ts"></script>

@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 const fs = require('fs')
 
-const rawSpeciesRichnessStringData = fs.readFileSync('raw-species-richness-data-01-07-apr-2021.json')
+const rawSpeciesRichnessStringData = fs.readFileSync('raw-PR-data.json')
 const rawSpeciesRichnessData = JSON.parse(rawSpeciesRichnessStringData)
 
 // Call fuction that needed
-transformToSelectedSitesAndExportAsJSONFile(rawSpeciesRichnessData, '07-apr-2021.json')
+transformRawNumberOfDetectionToFrequency(rawSpeciesRichnessData, 'raw-PR-frequency.json')
 
 /**
  * Transfrom raw data into site list json file
@@ -22,6 +22,17 @@ function transformToSitesAndExportAsJSONFile (data, filePath) {
 
 function transformToSelectedSitesAndExportAsJSONFile (data, filePath) {
   const d = data.filter(i => i.date === '2021-04-07T00:00:00.000Z')
+  const json = JSON.stringify(d, null, 2)
+  fs.writeFileSync(filePath, json, 'utf8')
+}
+
+function transformRawNumberOfDetectionToFrequency (data, filePath) {
+  const d = data.map(i => {
+    return {
+      ...i,
+      detection_frequency: i.num_of_recordings / 12
+    }
+  })
   const json = JSON.stringify(d, null, 2)
   fs.writeFileSync(filePath, json, 'utf8')
 }

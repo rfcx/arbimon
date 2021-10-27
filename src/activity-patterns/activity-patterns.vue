@@ -1,22 +1,34 @@
 <template>
-  <page-title class="mb-6">
-    <template #title>
-      Activity Patterns
-    </template>
-  </page-title>
-  <comparison-list-component @emitSelect="onFilterChange" />
-  <select
-    v-model="selectedSpeciesSlug"
-    class="capitalize bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+  <page-title
+    page-title="Activity Patterns"
+    page-subtitle="Trends in detections and occupancy"
   >
-    <option
-      v-for="item in species"
-      :key="'species-name-selector-' + item.speciesId"
-      :value="item.speciesSlug"
-    >
-      {{ item.speciesName }}
-    </option>
-  </select>
-  <species-background-information :species-name="selectedSpeciesName" />
+    <dropdown-menu>
+      <dropdown-menu-item>
+        <icon-fas-hammer class="mr-2" /> TODO
+      </dropdown-menu-item>
+    </dropdown-menu>
+  </page-title>
+  <comparison-list-component
+    class="mt-5"
+    @emitSelect="onFilterChange"
+  />
+  <species-selector
+    :species-slug="$route.params.speciesSlug"
+    @emitSelectedSpeciesChanged="onSelectedSpeciesChange"
+  />
+  <species-background-information
+    :species="species"
+  />
+  <activity-patterns-metrics
+    v-if="metrics.length > 0"
+    :metrics="metrics"
+    class="mt-5"
+  />
+  <activity-patterns-by-location
+    v-if="false"
+    :datasets="[]"
+    class="mt-5"
+  />
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>

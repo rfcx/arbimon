@@ -1,11 +1,17 @@
 import { Dayjs } from 'dayjs'
 
+import { DatasetDefinition, Site } from '~/api'
 import { Filter } from '~/dataset-filters'
 import { dayjs } from '~/dayjs'
 import { useStore } from '~/store'
-import { Site } from '../api'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'
+
+export function filterToDataset ({ startDate, endDate, sites }: Filter): DatasetDefinition {
+  const start = startDate.toISOString()
+  const end = endDate.add(1, 'days').toISOString()
+  return { start, end, sites }
+}
 
 export function getFilterFriendlyName (filter: Filter): string {
   const { startDate, endDate, sites } = filter
