@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { clearChart, exportChartWithElement } from '..'
+import { clearChart, exportChartWithElement, generateHorizontalLegend } from '..'
 import { generateChart, GroupedBarChartItem } from '.'
 
 export default class HorizontalBarChartComponent extends Vue {
@@ -42,7 +42,7 @@ export default class HorizontalBarChartComponent extends Vue {
   async downloadChart (): Promise<void> {
     const config = {
       width: 1024,
-      margins: { top: 40, right: 40, bottom: 50, left: 100 },
+      margins: { top: 40, right: 40, bottom: 100, left: 100 },
       fontColor: 'black'
     }
     const chart = generateChart(this.chartData, config, true)
