@@ -71,26 +71,30 @@ export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
 }
 
-export function generateLegend (svg: d3.Selection<SVGGElement, undefined, null, undefined>): d3.Selection<SVGGElement, string, SVGGElement, undefined> {
+export function generateHorizontalLegend (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<SVGGElement, undefined, null, undefined>): d3.Selection<SVGGElement, string, SVGGElement, undefined> {
+  const contentWidth = 100
+  const xStartPosition = ((width - (labels.length * contentWidth)) / 2)
+  const yPosition = chartHeight + 50
+
   const legend = svg.selectAll('.legend')
-    .data(['a', 'b', 'c'])
+    .data(labels)
     .enter()
     .append('g')
     .attr('class', 'legend')
 
   legend.append('circle')
-    .attr('cx', (d, i) => (i * 100) + 150)
-    .attr('cy', 140)
+    .attr('cx', (d, i) => (i * contentWidth) + xStartPosition)
+    .attr('cy', yPosition)
     .attr('r', 6)
-    .style('fill', '#000aaa')
+    .style('fill', (d, i) => colors[i])
 
   legend.append('text')
-    .attr('x', (d, i) => (i * 100) + 160)
-    .attr('y', 140)
+    .attr('x', (d, i) => (i * contentWidth) + (xStartPosition + 10))
+    .attr('y', yPosition)
     .attr('dy', '.3em')
     .text(function (d) { return d })
-    .attr('fill', '#000aaa')
-    .style('color', '#000aaa')
+    .attr('fill', (d, i) => colors[i])
+    .style('color', (d, i) => colors[i])
     .style('font-size', '14px')
 
   return legend
