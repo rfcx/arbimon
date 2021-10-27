@@ -1,6 +1,5 @@
 import * as d3 from 'd3'
 
-import { generateLegend } from '~/charts'
 import { BarChartConfig, GroupedBarChartItem } from '.'
 
 const GROUP_MARGIN = 20
@@ -19,7 +18,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
 
   const chart = d3.create('div')
 
-  let svg = chart
+  const svg = chart
     .append('svg')
     .attr('width', config.width)
     .attr('height', fullHeight)
@@ -121,7 +120,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     })
 
   if (isExported) {
-    svg = generateLegend(svg)
+    // svg = generateLegend(svg)
   }
 
   return chart.node()
