@@ -24,9 +24,9 @@ The following must be true to consider the Sprint "DONE":
 
 ## Getting started
 
-1. Install dependencies:
+1. Install extensions & dependencies:
 
-    `npm install`
+    `npm run bootstrap`
 
 2. Start developing an application:
 
