@@ -8,7 +8,6 @@ import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } f
 import { getExportGroupName } from '~/dataset-filters/functions'
 import { downloadPng } from '~/utils/file'
 
-
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
   hour: [0, 23],
   day: [1, 31],
