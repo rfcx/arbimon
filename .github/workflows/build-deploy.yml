@@ -91,7 +91,7 @@ jobs:
       - name: "Kubernetes: Deploy"
         uses: actions-hub/kubectl@master
         env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: apply -f ./build/${{ env.NAMESPACE }}
 
