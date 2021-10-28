@@ -26,23 +26,29 @@ jobs:
           map: |
             {
               "master": {
-                "BUILD_ALIAS": "production",
+                "NAMESPACE": "production",
+                "ECR_REPO": "biodiversity-analytics",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment-prod"
+                "SLACK_CHANNEL": "alerts-deployment-prod",
+                "KUBE_CONTEXT_NAME": ""
               },
               "staging": {
-                "BUILD_ALIAS": "staging",
+                "NAMESPACE": "staging",
+                "ECR_REPO": "biodiversity-analytics/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment"
+                "SLACK_CHANNEL": "alerts-deployment",
+                "KUBE_CONTEXT_NAME": ""
               },
               ".*": {
-                "BUILD_ALIAS": "testing",
+                "NAMESPACE": "testing",
+                "ECR_REPO": "biodiversity-analytics/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment"
+                "SLACK_CHANNEL": "alerts-deployment",
+                "KUBE_CONTEXT_NAME": ""
               }
             }
 
-      - name: "Slack failure notify"
+      - name: "Slack: Failure notify"
         uses: ravsamhq/notify-slack-action@v1
         if: always()
         with:
@@ -54,37 +60,27 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
-      - name: "Setup: Node"
-        uses: actions/setup-node@v2
+      - name: "AWS: Configure credentials"
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          node-version: '15.x'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "eu-west-1"
 
-      - name: "Setup: Extract version"
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
-        with:
-          path: website
+      - name: "AWS: Login"
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: "Setup: Copy cached deps"
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+      - name: "AWS: Build, tag, and push image"
+        env:
+          ECR_REGISTRY: "887044485231.dkr.ecr.eu-west-1.amazonaws.com"
+          ECR_REPOSITORY: "${{ env.ECR_REPO }}"
+          IMAGE_TAG: "latest"
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f build/Dockerfile .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: 'Setup: Install new deps'
-        run: cd website && npm ci --include=dev
-
-      - name: 'Lint'
-        run: cd website && npm run lint
-
-      - name: 'Test'
-        run: cd website && npm run test
-
-      - name: 'Build'
-        run: cd website && npm run build
-
-      - name: "Slack success notify"
+      - name: "Slack: Build success notify"
         uses: ravsamhq/notify-slack-action@v1
         with:
           notification_title: ""
@@ -95,60 +91,19 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
-  deploy:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: "Setup: Git check out"
-        uses: actions/checkout@v2
-
-      - name: "Setup: Extract branch name"
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: "Setup: Set env"
-        uses: kanga333/variable-mapper@v0.2.0
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          key: "${{ steps.extract_branch.outputs.branch }}"
-          map: |
-            {
-              "master": {
-                "BUILD_ALIAS": "production",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment-prod"
-              },
-              "staging": {
-                "BUILD_ALIAS": "staging",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment"
-              },
-              ".*": {
-                "BUILD_ALIAS": "testing",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment"
-              }
-            }
+          args: get pods
 
-      - name: "Slack failure notify"
+      - name: "Slack: Deploy success notify"
         uses: ravsamhq/notify-slack-action@v1
-        if: always()
         with:
           notification_title: ""
           status: ${{ job.status }}
-          notify_when: "failure"
+          notify_when: "success"
           message_format: "*Biodiversity Analytics (Website):* Deploy {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
-          footer: "Linked actions: <{run_url}|View Run>"
-        env:
-          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
-
-      - name: "Slack success notify"
-        uses: ravsamhq/notify-slack-action@v1
-        with:
-          notification_title: ""
-          status: ${{ job.status }}
-          notify_when: "success"
-          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
           footer: "Linked actions: <{run_url}|View Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
