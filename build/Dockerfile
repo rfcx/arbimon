@@ -6,15 +6,16 @@ ENV NODE_ENV=production
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY package*.json .
+COPY website/package*.json .
 RUN npm ci --include=dev --production=false
 
-COPY . .
+COPY website .
 RUN npm run build
 
 # production state
 FROM nginx
 
+COPY build .
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 RUN rm /etc/nginx/conf.d/default.conf
