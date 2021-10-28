@@ -1,0 +1,94 @@
+name: "Deploy Frontend"
+on:
+  push:
+    branches:
+      - master
+      - staging
+      - develop
+      - feature/218-migrate-cd-to-github-actions
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: "Setup: Git check out"
+        uses: actions/checkout@v2
+
+      - name: "Setup: Set env"
+        uses: kanga333/variable-mapper@v0.2.0
+        with:
+          key: "${{ steps.extract_branch.outputs.branch }}"
+          map: |
+            {
+              "master": {
+                "BUILD_ALIAS": "production",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
+                "SLACK_CHANNEL": ""alerts-deployment-prod"
+              },
+              "staging": {
+                "BUILD_ALIAS": "staging",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_CHANNEL": ""alerts-deployment"
+              },
+              ".*": {
+                "BUILD_ALIAS": "testing",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_CHANNEL": ""alerts-deployment"
+              }
+            }
+
+      - name: "Setup: Slack failure notify"
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notify_when: "failure"
+          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{repo_url}|{repo}> branch {branch}"
+          footer: "Linked Repo <{repo_url}|{repo}>"
+        env:
+          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
+
+      - name: "Setup: Node"
+        uses: actions/setup-node@v2
+        with:
+          node-version: '15.x'
+
+      - name: "Setup: Extract branch name"
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: "Setup: Extract version"
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+        with:
+          path: website
+
+      - name: "Setup: Copy cached deps"
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: 'Setup: Install new deps'
+        run: cd website && npm ci --include=dev
+
+      - name: 'Lint'
+        run: cd website && npm run lint
+
+      - name: 'Test'
+        run: cd website && npm run test
+
+      - name: 'Build'
+        run: cd website && npm run build
+
+      - name: "Setup: Slack failure notify"
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          status: ${{ job.status }}
+          notify_when: "success"
+          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{repo_url}|{repo}> branch {branch}"
+          footer: "Linked Repo <{repo_url}|{repo}>"
+        env:
+          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
