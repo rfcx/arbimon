@@ -29,22 +29,19 @@ jobs:
                 "NAMESPACE": "production",
                 "ECR_REPO": "biodiversity-analytics",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment-prod",
-                "KUBE_CONTEXT_NAME": ""
+                "SLACK_CHANNEL": "alerts-deployment-prod"
               },
               "staging": {
                 "NAMESPACE": "staging",
                 "ECR_REPO": "biodiversity-analytics/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment",
-                "KUBE_CONTEXT_NAME": ""
+                "SLACK_CHANNEL": "alerts-deployment"
               },
               ".*": {
                 "NAMESPACE": "testing",
                 "ECR_REPO": "biodiversity-analytics/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": "alerts-deployment",
-                "KUBE_CONTEXT_NAME": ""
+                "SLACK_CHANNEL": "alerts-deployment"
               }
             }
 
