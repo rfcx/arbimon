@@ -48,8 +48,6 @@ export default class HorizontalBarChartComponent extends Vue {
     const chart = generateChart(this.chartData, config, true)
     if (!chart) return
 
-    // TODO: 109 add legend if needed
-    // TODO: 107 function to compute shortname of dataset to add to legend
     setTimeout(() => {
       void exportChartWithElement(chart, this.chartExportName)
     }, 200)
