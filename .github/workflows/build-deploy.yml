@@ -20,7 +20,7 @@ jobs:
         id: extract_branch
 
       - name: "Setup: Set env"
-        uses: kanga333/variable-mapper@v92703696e9a3f370901c3d53ae3836569b1055e5
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         with:
           key: "${{ steps.extract_branch.outputs.branch }}"
           map: |

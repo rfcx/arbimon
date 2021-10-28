@@ -35,6 +35,7 @@
 * **feature:** Research about API to get species information (#163)
 * **features:** Activity patterns page detection frequency and occupancy rate metrics (#130)
 
+* **fixed:** Migrate CD to Github Actions (#218)
 * **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
 
 * **refactor:** Refactor species richness table display (#112)
