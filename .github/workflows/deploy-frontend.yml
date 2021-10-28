@@ -23,17 +23,17 @@ jobs:
               "master": {
                 "BUILD_ALIAS": "production",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
-                "SLACK_CHANNEL": ""alerts-deployment-prod"
+                "SLACK_CHANNEL": "alerts-deployment-prod"
               },
               "staging": {
                 "BUILD_ALIAS": "staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": ""alerts-deployment"
+                "SLACK_CHANNEL": "alerts-deployment"
               },
               ".*": {
                 "BUILD_ALIAS": "testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
-                "SLACK_CHANNEL": ""alerts-deployment"
+                "SLACK_CHANNEL": "alerts-deployment"
               }
             }
 
