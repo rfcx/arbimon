@@ -27,7 +27,7 @@ jobs:
             {
               "master": {
                 "BUILD_ALIAS": "production",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
                 "SLACK_CHANNEL": "alerts-deployment-prod"
               },
               "staging": {
