@@ -14,6 +14,11 @@ jobs:
       - name: "Setup: Git check out"
         uses: actions/checkout@v2
 
+      - name: "Setup: Extract branch name"
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: "Setup: Set env"
         uses: kanga333/variable-mapper@v0.2.0
         with:
@@ -53,11 +58,6 @@ jobs:
         with:
           node-version: '15.x'
 
-      - name: "Setup: Extract branch name"
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
       - name: "Setup: Extract version"
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
@@ -83,7 +83,7 @@ jobs:
       - name: 'Build'
         run: cd website && npm run build
 
-      - name: "Setup: Slack failure notify"
+      - name: "Setup: Slack success notify"
         uses: ravsamhq/notify-slack-action@v1
         with:
           status: ${{ job.status }}
