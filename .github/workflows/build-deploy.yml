@@ -1,4 +1,4 @@
-name: "Deploy Frontend"
+name: "Build Image and Deploy Frontend"
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
       - develop
       - feature/218-migrate-cd-to-github-actions
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-20.04
 
     steps:
@@ -83,6 +83,64 @@ jobs:
 
       - name: 'Build'
         run: cd website && npm run build
+
+      - name: "Slack success notify"
+        uses: ravsamhq/notify-slack-action@v1
+        with:
+          notification_title: ""
+          status: ${{ job.status }}
+          notify_when: "success"
+          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
+          footer: "Linked actions: <{run_url}|View Run>"
+        env:
+          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
+
+  deploy:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: "Setup: Git check out"
+        uses: actions/checkout@v2
+
+      - name: "Setup: Extract branch name"
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: "Setup: Set env"
+        uses: kanga333/variable-mapper@v0.2.0
+        with:
+          key: "${{ steps.extract_branch.outputs.branch }}"
+          map: |
+            {
+              "master": {
+                "BUILD_ALIAS": "production",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
+                "SLACK_CHANNEL": "alerts-deployment-prod"
+              },
+              "staging": {
+                "BUILD_ALIAS": "staging",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_CHANNEL": "alerts-deployment"
+              },
+              ".*": {
+                "BUILD_ALIAS": "testing",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_CHANNEL": "alerts-deployment"
+              }
+            }
+
+      - name: "Slack failure notify"
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          notification_title: ""
+          status: ${{ job.status }}
+          notify_when: "failure"
+          message_format: "*Biodiversity Analytics (Website):* Deploy {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
+          footer: "Linked actions: <{run_url}|View Run>"
+        env:
+          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
       - name: "Slack success notify"
         uses: ravsamhq/notify-slack-action@v1
