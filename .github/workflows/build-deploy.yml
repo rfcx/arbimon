@@ -88,11 +88,12 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
-      - uses: actions-hub/kubectl@master
+      - name: "Kubernetes: Deploy"
+        uses: actions-hub/kubectl@master
         env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
-          args: get pods
+          args: apply -f ./build/${{ env.NAMESPACE }}
 
       - name: "Slack: Deploy success notify"
         uses: ravsamhq/notify-slack-action@v1
