@@ -42,14 +42,25 @@ jobs:
               }
             }
 
+      - name: "Setup: Slack success notify"
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          notification_title: ""
+          status: ${{ job.status }}
+          notify_when: "success"
+          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
+        env:
+          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
+
       - name: "Setup: Slack failure notify"
         uses: ravsamhq/notify-slack-action@v1
         if: always()
         with:
+          notification_title: ""
           status: ${{ job.status }}
           notify_when: "failure"
-          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{repo_url}|{repo}> branch {branch}"
-          footer: "Linked Repo <{repo_url}|{repo}>"
+          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
@@ -83,12 +94,3 @@ jobs:
       - name: 'Build'
         run: cd website && npm run build
 
-      - name: "Setup: Slack success notify"
-        uses: ravsamhq/notify-slack-action@v1
-        with:
-          status: ${{ job.status }}
-          notify_when: "success"
-          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{repo_url}|{repo}> branch {branch}"
-          footer: "Linked Repo <{repo_url}|{repo}>"
-        env:
-          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
