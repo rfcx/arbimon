@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Prop, Watch } from 'vue-property-decorator'
 
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
@@ -11,6 +11,11 @@ interface MapOptions {
   name: string
 }
 
+interface DatasetType {
+  label: string
+  value: string
+}
+
 const DEFAULT_PREFIX = 'Patterns-By-Site'
 
 @Options({
@@ -20,6 +25,13 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
 })
 export default class ActivityPatternsByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
+
+  selectedType = 'detection-frequency'
+  datasetTypes: DatasetType[] = [
+    { label: 'Detection', value: 'detection' },
+    { label: 'Detection frequency', value: 'detection-frequency' },
+    { label: 'Occupancy', value: 'occupancy' }
+  ]
 
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
@@ -53,6 +65,11 @@ export default class ActivityPatternsByLocation extends Vue {
 
   get mapStyle (): string {
     return `mapbox://styles/mapbox/${this.mapStyleId}`
+  }
+
+  @Watch('selectedType')
+  onSelectedTypeChange (): void {
+    //
   }
 
   setMapStyle (id: string): void {
