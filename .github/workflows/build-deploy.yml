@@ -9,7 +9,8 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-20.04
-
+    env:
+      ECR_REGISTRY: "887044485231.dkr.ecr.eu-west-1.amazonaws.com"
     steps:
       - name: "Setup: Git check out"
         uses: actions/checkout@fd47087372161c6f2a7b96d2ef87e944d89023ed
@@ -54,20 +55,14 @@ jobs:
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
 
       - name: "Build: Docker build"
-        env:
-          ECR_REGISTRY: "887044485231.dkr.ecr.eu-west-1.amazonaws.com"
-          ECR_REPOSITORY: "${{ env.ECR_REPO }}"
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f build/Dockerfile .
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPO }}:latest -f build/Dockerfile .
           
       - name: "Build: Push image to ECR"
-        env:
-          ECR_REGISTRY: "887044485231.dkr.ecr.eu-west-1.amazonaws.com"
-          ECR_REPOSITORY: "${{ env.ECR_REPO }}"
         run: |
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_number }}
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_SHA::6}
-          docker push -a $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${{ github.run_number }}
+          docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${{ GITHUB_SHA::6 }}
+          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO }}:latest
 
       - name: "Deploy: Kubernetes apply"
         uses: actions-hub/kubectl@4eb1c88a390c884024631213c5d7aa65d2b1892f
@@ -84,7 +79,7 @@ jobs:
           status: ${{ job.status }}
           notify_when: "success,failure,warning"
           message_format: "*Biodiversity Analytics (Website):* <{commit_url}|{commit_sha}> branch {branch}"
-          mention_users: "D02F4V20S69,DF8TSJSBG,DC34N971T"
+          mention_users: "U6LT2N3SS,U19GA1FT2,UC2NVRCAY"
           mention_users_when: "failure,warnings"
           footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
