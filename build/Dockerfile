@@ -13,7 +13,6 @@ RUN npm run build
 # production state
 FROM nginx
 
-COPY build .
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 RUN rm /etc/nginx/conf.d/default.conf
