@@ -4,7 +4,7 @@ import { Prop } from 'vue-property-decorator'
 
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
-import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/dataset-filters/functions'
 import { downloadPng } from '~/utils/file'
 
@@ -44,7 +44,7 @@ export default class SpeciesRichnessByTime extends Vue {
   async downloadChart (): Promise<void> {
     const margins = { ...this.config.margins, bottom: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
-    const svg = await generateChart(this.datasetsForSelectedBucket, exportConfig, true)
+    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
     const png = await svgToPngData({ svg, ...exportConfig })

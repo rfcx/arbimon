@@ -2,7 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { clearChart, exportChartWithElement } from '..'
-import { generateChart, GroupedBarChartItem } from '.'
+import { generateChartExport, generateChartInternal, GroupedBarChartItem } from '.'
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] }) chartData!: GroupedBarChartItem[]
@@ -32,7 +32,7 @@ export default class HorizontalBarChartComponent extends Vue {
       fontColor: 'white'
     }
 
-    const chart = generateChart(this.chartData, config)
+    const chart = generateChartInternal(this.chartData, config)
     if (!chart) return
 
     clearChart(id)
@@ -45,7 +45,7 @@ export default class HorizontalBarChartComponent extends Vue {
       margins: { top: 40, right: 40, bottom: 100, left: 100 },
       fontColor: 'black'
     }
-    const chart = generateChart(this.chartData, config, true)
+    const chart = generateChartExport(this.chartData, config)
     if (!chart) return
 
     setTimeout(() => {
