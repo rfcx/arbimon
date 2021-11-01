@@ -1,4 +1,4 @@
-name: "Build-Deploy"
+name: 'Build-Deploy'
 on:
   push:
     branches:
@@ -9,20 +9,20 @@ jobs:
   build-deploy:
     runs-on: ubuntu-20.04
     env:
-      ECR_REGISTRY: "887044485231.dkr.ecr.eu-west-1.amazonaws.com"
+      ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
-      - name: "Setup: Git check out"
+      - name: 'Setup: Git check out'
         uses: actions/checkout@fd47087372161c6f2a7b96d2ef87e944d89023ed
 
-      - name: "Setup: Extract branch name"
+      - name: 'Setup: Extract branch name'
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
-      - name: "Setup: Set env"
+      - name: 'Setup: Set env'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         with:
-          key: "${{ steps.extract_branch.outputs.branch }}"
+          key: '${{ steps.extract_branch.outputs.branch }}'
           map: |
             {
               "master": {
@@ -42,35 +42,35 @@ jobs:
               }
             }
 
-      - name: "Setup: Configure AWS credentials"
+      - name: 'Setup: Configure AWS credentials'
         uses: aws-actions/configure-aws-credentials@0d9a5be0dceea74e09396820e1e522ba4a110d2f
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "eu-west-1"
+          aws-region: 'eu-west-1'
 
-      - name: "Setup: Login to ECR"
+      - name: 'Setup: Login to ECR'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
 
-      - name: "Build: Docker build"
+      - name: 'Build: Docker build'
         run: |
           docker build -t $ECR_REGISTRY/${{ env.ECR_REPO }}:latest -f build/Dockerfile .
-          
-      - name: "Build: Push image to ECR"
+
+      - name: 'Build: Push image to ECR'
         run: |
           docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${{ github.run_number }}
           docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${GITHUB_SHA::6}
           docker push -a $ECR_REGISTRY/${{ env.ECR_REPO }}
 
-      - name: "Deploy: Kubernetes apply"
+      - name: 'Deploy: Kubernetes apply'
         uses: actions-hub/kubectl@4eb1c88a390c884024631213c5d7aa65d2b1892f
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: apply -f ./build/${{ env.NAMESPACE }}
 
-      - name: "Notify: Slack"
+      - name: 'Notify: Slack'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         if: always()
         with:
@@ -81,4 +81,4 @@ jobs:
           mention_users_when: 'failure,warnings'
           footer: '<{repo_url}/tree/{branch}|{repo}@{branch}>'
         env:
-          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
+          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
