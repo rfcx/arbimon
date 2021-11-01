@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import { generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from '.'
 
-export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig, isExported: boolean = false): SVGSVGElement | null => {
+export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data
   const yBounds = [0, datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)]
   const xBounds = config.xBounds ?? getXBoundsFromDatasets(datasets)
@@ -67,11 +67,20 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
       .style('fill', dataset.color)
   })
 
-  if (isExported) {
-    const labels = getLegendGroupNames(datasets.length)
-    const colors = datasets.map(d => d.color)
-    generateHorizontalLegend(config.width, config.height - config.margins.bottom, labels, colors, svg)
-  }
+  return svg
+}
+
+export const generateChartInternal = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
+  const svg = generateChart(datasets, config)
+  return svg.node()
+}
+
+export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
+  const svg = generateChart(datasets, config)
+
+  const labels = getLegendGroupNames(datasets.length)
+  const colors = datasets.map(d => d.color)
+  generateHorizontalLegend(config.width, config.height - config.margins.bottom, labels, colors, svg)
 
   return svg.node()
 }

@@ -6,7 +6,13 @@ import { BarChartConfig, GroupedBarChartItem } from '.'
 const GROUP_MARGIN = 20
 const BAR_MARGIN = 2
 
-export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig, isExported: boolean = false): HTMLDivElement | null => {
+export interface GeneratedHorizontalChart {
+  chart: d3.Selection<HTMLDivElement, undefined, null, undefined>
+  svg: d3.Selection<SVGGElement, undefined, null, undefined>
+  chartHeight: number
+}
+
+export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig): GeneratedHorizontalChart => {
   const dataLength = data.length
   const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
 
@@ -120,11 +126,20 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
       }
     })
 
-  if (isExported) {
-    const labels = getLegendGroupNames(data[0].series.length)
-    const colors = data[0].series.map(s => s.color)
-    generateHorizontalLegend(config.width, chartHeight, labels, colors, svg)
-  }
+  return { chart, svg, chartHeight }
+}
+
+export const generateChartInternal = (data: GroupedBarChartItem[], config: BarChartConfig): HTMLDivElement | null => {
+  const { chart } = generateChart(data, config)
+  return chart.node()
+}
+
+export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): HTMLDivElement | null => {
+  const { chart, svg, chartHeight } = generateChart(data, config)
+
+  const labels = getLegendGroupNames(data[0].series.length)
+  const colors = data[0].series.map(s => s.color)
+  generateHorizontalLegend(config.width, chartHeight, labels, colors, svg)
 
   return chart.node()
 }
