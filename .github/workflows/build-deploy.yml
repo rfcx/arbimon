@@ -5,6 +5,7 @@ on:
       - master
       - staging
       - develop
+      - feature/218-migrate-cd-to-github-actions
 jobs:
   build-deploy:
     runs-on: ubuntu-20.04
@@ -83,6 +84,8 @@ jobs:
           status: ${{ job.status }}
           notify_when: "success,failure,warning"
           message_format: "*Biodiversity Analytics (Website):* <{commit_url}|{commit_sha}> branch {branch}"
+          mention_groups: "C02G4AR2GEL"
+          mention_groups_when: "failure,warnings"
           footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
