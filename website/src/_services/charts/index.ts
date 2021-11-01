@@ -89,7 +89,7 @@ export function generateHorizontalLegend <T extends d3.BaseType> (width: number,
     .style('fill', (d, i) => colors[i])
 
   legend.append('text')
-    .attr('x', (d, i) => (i * contentWidth) + (xStartPosition + 10))
+    .attr('x', (d, i) => (i * contentWidth) + (xStartPosition + 15))
     .attr('y', yPosition)
     .attr('dy', '.3em')
     .text(d => d)
@@ -99,5 +99,5 @@ export function generateHorizontalLegend <T extends d3.BaseType> (width: number,
 }
 
 export function getLegendGroupNames (totalGroup: number): string[] {
-  return [...Array(totalGroup).keys()].map(n => `Group ${n + 1}`)
+  return [...Array(totalGroup).keys()].map(n => `Dataset ${n + 1}`)
 }
