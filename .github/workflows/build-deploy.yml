@@ -78,9 +78,10 @@ jobs:
         with:
           status: ${{ job.status }}
           notify_when: 'success,failure,warning'
-          message_format: '{emoji} *Biodiversity Analytics:* {workflow} to {branch} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
+          notification_title: '{workflow} {status_message}'
+          message_format: '{emoji} *Biodiversity Analytics:* deploy ${{ steps.extract_branch.outputs.branch }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
           mention_users: 'U6LT2N3SS,U19GA1FT2,UC2NVRCAY'
           mention_users_when: 'failure,warnings'
-          footer: '<{repo_url}/tree/{branch}|{repo}@{branch}>'
+          footer: '<{repo_url}/tree/${{ steps.extract_branch.outputs.branch }}|{repo}@${{ steps.extract_branch.outputs.branch }}>'
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
