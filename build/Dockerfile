@@ -6,7 +6,7 @@ ENV NODE_ENV=production
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY website/package*.json /
+COPY website/package*.json ./
 RUN npm ci --include=dev --production=false
 
 COPY website .
