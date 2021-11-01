@@ -5,6 +5,7 @@ on:
       - master
       - staging
       - develop
+      - feature/218-migrate-cd-to-github-actions
 jobs:
   build-deploy:
     runs-on: ubuntu-20.04
