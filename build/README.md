@@ -1,7 +1,7 @@
 # Deployment
 
 Overview:
-- Biodiversity Analytics is built and deployed by Jenkins (jenkins.rfcx.org) as defined in [Jenkinsfile](./Jenkinsfile) which can be found in [here](https://jenkins.rfcx.org/job/Biodiversity%20Analytics%20Web/)
+- Biodiversity Analytics is built and deployed by Github Actions as defined in [Workflows](../.github/workflows/build-deploy.yml) which can be found in [here](https://github.com/rfcx/biodiversity-analytics/actions)
 - Deployment is triggered by push to master/staging. All configuration is in the sub-folders `testing`, `staging` and `production` (corresponding to a Kubernetes namespace).
 - Deployment notifications are posted on Slack #alerts-deployment and #alerts-deployment-production
 - Deployment is based on nginx
