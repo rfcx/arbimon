@@ -41,18 +41,6 @@ jobs:
               }
             }
 
-      - name: "Slack: Failure notify"
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        if: always()
-        with:
-          notification_title: ""
-          status: ${{ job.status }}
-          notify_when: "failure,warning"
-          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
-          footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
-        env:
-          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
-
       - name: "AWS: Configure credentials"
         uses: aws-actions/configure-aws-credentials@0d9a5be0dceea74e09396820e1e522ba4a110d2f
         with:
@@ -87,6 +75,18 @@ jobs:
           status: ${{ job.status }}
           notify_when: "success"
           message_format: "*Biodiversity Analytics (Website):* Deploy {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
+          footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
+        env:
+          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
+
+      - name: "Slack: Failure notify"
+        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        if: always()
+        with:
+          notification_title: ""
+          status: ${{ job.status }}
+          notify_when: "failure,warnings"
+          message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
           footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
