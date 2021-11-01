@@ -56,11 +56,10 @@ jobs:
 
       - name: "Build: Docker build"
         run: |
-          docker build -t $ECR_REGISTRY/${{ env.ECR_REPO }}:latest -f build/Dockerfile .
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPO }}:latest -t $ECR_REGISTRY/${{ env.ECR_REPO }}:${{ github.run_number }} -t $ECR_REGISTRY/${{ env.ECR_REPO }}:${GITHUB_SHA::6} -f build/Dockerfile .
           
       - name: "Build: Push image to ECR"
         run: |
-          docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${{ github.run_number }}
           docker push -a $ECR_REGISTRY/${{ env.ECR_REPO }}:latest
 
       - name: "Deploy: Kubernetes apply"
