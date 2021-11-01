@@ -5,7 +5,6 @@ on:
       - master
       - staging
       - develop
-      - feature/218-migrate-cd-to-github-actions
 jobs:
   build-deploy:
     runs-on: ubuntu-20.04
@@ -42,13 +41,13 @@ jobs:
               }
             }
 
-      - name: "Slack: Build success notify"
+      - name: "Slack: Start build notify"
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         with:
           notification_title: ""
           status: ${{ job.status }}
           notify_when: "success"
-          message_format: "*Biodiversity Analytics (Website):* Start build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
+          message_format: "*Biodiversity Analytics (Website):* Start build on <{commit_url}|{commit_sha}> branch {branch}"
           footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
@@ -102,7 +101,7 @@ jobs:
           notification_title: ""
           status: ${{ job.status }}
           notify_when: "success"
-          message_format: "*Biodiversity Analytics (Website):* Start deploy {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
+          message_format: "*Biodiversity Analytics (Website):* Start deploy on <{commit_url}|{commit_sha}> branch {branch}"
           footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
