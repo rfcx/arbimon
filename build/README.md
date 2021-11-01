@@ -1,8 +1,9 @@
 # Deployment
 
 Overview:
-- Biodiversity Analytics is built and deployed by Jenkins (jenkins.rfcx.org) as defined in [Jenkinsfile](./Jenkinsfile) which can be found in [here](https://jenkins.rfcx.org/job/Biodiversity%20Analytics%20Web/)
-- Deployment is triggered by push to master/staging. All configuration is in the sub-folders `testing`, `staging` and `production` (corresponding to a Kubernetes namespace).
+
+- Biodiversity Analytics is built and deployed by Github Actions as defined in [Workflows](../.github/workflows/build-deploy.yml) which can be found in [here](https://github.com/rfcx/biodiversity-analytics/actions)
+- Deployment is triggered by push to master/staging/develop. All configuration is in the sub-folders `production`, `staging` and `testing` (corresponding to a Kubernetes namespace).
 - Deployment notifications are posted on Slack #alerts-deployment and #alerts-deployment-production
 - Deployment is based on nginx
 
@@ -11,6 +12,7 @@ Overview:
 Requires Docker.
 
 1.  Build the image
+
     ```
     docker build . -t biodiversity-analytics -f build\Dockerfile
     ```
@@ -20,8 +22,7 @@ Requires Docker.
     docker run --rm -it -p 8080:8080 biodiversity-analytics/testing
     ```
 
-*If your port 8080 is in use, then you can change the port to other e.g. `-p 7373:8080` to open http://localhost:7373/*
-
+_If your port 8080 is in use, then you can change the port to other e.g. `-p 7373:8080` to open http://localhost:7373/_
 
 ## Kubernetes configuration
 
