@@ -1,4 +1,4 @@
-name: "Build Image and Deploy Frontend"
+name: "Build-Deploy"
 on:
   push:
     branches:
@@ -50,9 +50,9 @@ jobs:
         with:
           notification_title: ""
           status: ${{ job.status }}
-          notify_when: "failure"
+          notify_when: "failure,warning"
           message_format: "*Biodiversity Analytics (Website):* Build {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
-          footer: "Linked actions: <{run_url}|View Run>"
+          footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
