@@ -32,6 +32,7 @@ jobs:
               "staging": {
                 "ECR_REPO": "biodiversity-analytics/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
+              },
               ".*": {
                 "ECR_REPO": "biodiversity-analytics/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
