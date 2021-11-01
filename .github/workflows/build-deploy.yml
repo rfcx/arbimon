@@ -7,7 +7,7 @@ on:
       - develop
       - feature/218-migrate-cd-to-github-actions
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-20.04
 
     steps:
@@ -26,14 +26,17 @@ jobs:
           map: |
             {
               "master": {
+                "NAMESPACE": "production",
                 "ECR_REPO": "biodiversity-analytics",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
               },
               "staging": {
+                "NAMESPACE": "staging",
                 "ECR_REPO": "biodiversity-analytics/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               },
               ".*": {
+                "NAMESPACE": "testing",
                 "ECR_REPO": "biodiversity-analytics/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               }
@@ -93,57 +96,13 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
 
-  deploy:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: "Setup: Git check out"
-        uses: actions/checkout@fd47087372161c6f2a7b96d2ef87e944d89023ed
-
-      - name: "Setup: Extract branch name"
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: "Setup: Set env"
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
-        with:
-          key: "${{ steps.extract_branch.outputs.branch }}"
-          map: |
-            {
-              "master": {
-                "NAMESPACE": "production",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
-              },
-              "staging": {
-                "NAMESPACE": "staging",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
-              },
-              ".*": {
-                "NAMESPACE": "testing",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
-              }
-            }
-
-      - name: "Slack: Build success notify"
+      - name: "Slack: Start deploy notify"
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         with:
           notification_title: ""
           status: ${{ job.status }}
           notify_when: "success"
           message_format: "*Biodiversity Analytics (Website):* Start deploy {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
-          footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
-        env:
-          SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
-
-      - name: "Slack: Failure notify"
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        if: always()
-        with:
-          notification_title: ""
-          status: ${{ job.status }}
-          notify_when: "failure,warning"
-          message_format: "*Biodiversity Analytics (Website):* Deploy {status_message} on <{commit_url}|{commit_sha}> branch {branch}"
           footer: "<{repo_url}|{repo}> | <{run_url}|View {status_message} Run>"
         env:
           SLACK_WEBHOOK_URL: "${{ env.SLACK_WEBHOOK }}"
