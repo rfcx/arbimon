@@ -8,3 +8,20 @@ export interface ActivityPatternsData extends DatasetDefinition {
   occupiedSiteCount: number
   occupiedSiteFrequency: number
 }
+
+export interface Detection {
+  siteId: string
+  siteName: string
+  latitude: number
+  longitude: number
+  speciesId: number
+  scientificName: string
+  classId: number
+  className: string
+  detections: number
+  detectionsFrequency: number
+}
+
+export interface DetectionSummary extends DatasetDefinition {
+  summary: Detection[]
+}

@@ -1,8 +1,8 @@
-import { sum } from 'lodash'
+import { groupBy, mapValues, sum } from 'lodash'
 
 import { DatasetDefinition } from '~/api/types'
 import { ApiDetection, filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
-import { ActivityPatternsData } from '.'
+import { ActivityPatternsData, DetectionSummary } from '.'
 
 export class ActivityPatternsService {
   constructor (
@@ -24,6 +24,31 @@ export class ActivityPatternsService {
     const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
     return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }, this.delay)
+  }
+
+  async getDetectionsBySpecies (dataset: DatasetDefinition, speciesId: number): Promise<DetectionSummary> {
+    const totalDetections = filterByDataset(this.rawDetections, dataset)
+    const totalRecordingCount = new Set(totalDetections.map(d => `${d.date}-${d.hour}`)).size * 12
+
+    const detections = filterBySpecies(totalDetections, speciesId)
+    const detectionsBySite = groupBy(detections, 'stream_id')
+    const detectionsSummary = mapValues(detectionsBySite, (value, key) => {
+      const detectionCount = sum(value.map(v => v.num_of_recordings))
+      return {
+        siteId: value[0].stream_id,
+        siteName: value[0].name,
+        latitude: value[0].lat,
+        longitude: value[0].lon,
+        speciesId: value[0].species_id,
+        scientificName: value[0].scientific_name,
+        classId: value[0].taxon_id,
+        className: value[0].taxon,
+        detections: detectionCount,
+        detectionsFrequency: totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
+      }
+    })
+
+    return { ...dataset, summary: Object.values(detectionsSummary) }
   }
 }
 
