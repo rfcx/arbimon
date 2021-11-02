@@ -1,8 +1,7 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
-import { ColoredFilter } from '~/dataset-filters'
 import { Metrics } from './types'
 
-export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { data: ActivityPatternsData }>): Metrics[] {
+export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
     {
       title: 'Detection frequency',
@@ -16,19 +15,18 @@ export function transformToMetricsDatasets (datasets: Array<ColoredFilter & { da
     }
   ]
 
-  for (const dataset of datasets) {
-    const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset.data
+  datasets.forEach(({ totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, color }) => {
     metrics[0].datasets.push({
       percentage: (detectionFrequency * 100).toFixed(1),
       description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`,
-      color: dataset.color
+      color
     })
     metrics[1].datasets.push({
       percentage: (occupiedSiteFrequency * 100).toFixed(1),
       description: `Found in ${occupiedSiteCount.toLocaleString()} out of ${totalSiteCount.toLocaleString()} sites`,
-      color: dataset.color
+      color
     })
-  }
+  })
 
   return metrics
 }

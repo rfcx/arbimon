@@ -1,4 +1,6 @@
-export interface ActivityPatternsData {
+import { ColoredFilter } from '~/dataset-filters'
+
+export interface ActivityPatternsData extends ColoredFilter {
   totalRecordingCount: number
   totalSiteCount: number
   detectionCount: number
