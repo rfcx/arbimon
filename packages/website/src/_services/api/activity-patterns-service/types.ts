@@ -1,4 +1,6 @@
-export interface ActivityPatternsData {
+import { DatasetDefinition } from '..'
+
+export interface ActivityPatternsData extends DatasetDefinition {
   totalRecordingCount: number
   totalSiteCount: number
   detectionCount: number

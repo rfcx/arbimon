@@ -27,6 +27,31 @@ module.exports = {
         allowNullableObject: true
       }
     ],
+    'regex/invalid': [
+      'error', [
+        // TODO ??? - Extract this as an ESLint rule: `import-initialized-library`
+        {
+          regex: '^import dayjs from \'dayjs\'$',
+          message: 'Import the initialized dayjs object from \'~/dayjs\'',
+          replacement: 'import { dayjs } from \'~/dayjs\''
+        },
+        {
+          regex: '^import dayjs, ({[^}]*}) from \'dayjs\'$',
+          message: 'Import the initialized dayjs object from \'~/dayjs\'',
+          replacement: { function: 'return "import { dayjs } from \'~/dayjs\'; import " + captured[0] + " from \'dayjs\'"' }
+        },
+        {
+          regex: '^import mapboxgl from \'mapbox-gl\'$',
+          message: 'Import the initialized mapboxgl object from \'~/maps\'',
+          replacement: 'import { mapboxgl } from \'~/maps\''
+        },
+        {
+          regex: '^import mapboxgl, ({[^}]*}) from \'mapbox-gl\'$',
+          message: 'Import the initialized mapboxgl object from \'~/maps\'',
+          replacement: { function: 'return "import { mapboxgl } from \'~/maps\'; import " + captured[0] + " from \'mapbox-gl\'"' }
+        }
+      ]
+    ],
     'sort-class-members/sort-class-members': [
       'error',
       {

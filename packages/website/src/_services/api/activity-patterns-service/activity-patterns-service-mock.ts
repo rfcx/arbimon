@@ -23,7 +23,7 @@ export class ActivityPatternsService {
     const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
     const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
-    return await simulateDelay({ totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }, this.delay)
+    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }, this.delay)
   }
 }
 
