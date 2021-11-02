@@ -1,7 +1,9 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { clearChart, exportChartWithElement } from '..'
+import { svgToPngData } from '~/charts'
+import { downloadPng } from '~/utils/file'
+import { clearChart } from '..'
 import { generateChartExport, generateChartInternal, GroupedBarChartItem } from '.'
 
 export default class HorizontalBarChartComponent extends Vue {
@@ -32,24 +34,26 @@ export default class HorizontalBarChartComponent extends Vue {
       fontColor: 'white'
     }
 
-    const chart = generateChartInternal(this.chartData, config)
-    if (!chart) return
+    const svg = generateChartInternal(this.chartData, config)
+    if (!svg) return
 
     clearChart(id)
-    document.getElementById(id)?.appendChild(chart)
+    document.getElementById(id)?.appendChild(svg)
   }
 
   async downloadChart (): Promise<void> {
     const config = {
       width: 1024,
-      margins: { top: 40, right: 40, bottom: 100, left: 100 },
+      margins: { top: 40, right: 40, bottom: 50, left: 100 },
       fontColor: 'black'
     }
-    const chart = generateChartExport(this.chartData, config)
-    if (!chart) return
+    const svg = generateChartExport(this.chartData, config)
+    if (!svg) return
 
-    setTimeout(() => {
-      void exportChartWithElement(chart, this.chartExportName)
-    }, 200)
+    console.log(svg)
+
+    const { width, height } = svg.viewBox.baseVal
+    const png = await svgToPngData({ svg, width, height })
+    downloadPng(png, this.chartExportName)
   }
 }
