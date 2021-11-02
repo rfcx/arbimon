@@ -5,7 +5,7 @@ module.exports = {
     'import/newline-after-import': ['error'],
     'no-console': 'error',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 1 }],
+    'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
     'no-void': ['error', { allowAsStatement: true }],
     'prefer-object-spread': 'error',
     'simple-import-sort/imports': [
@@ -20,14 +20,6 @@ module.exports = {
       }
     ],
     'simple-import-sort/exports': ['error'],
-    'unicorn/import-style': ['error',
-      {
-        styles: {
-          'mapbox-gl': { named: true },
-          dayjs: { named: true }
-        }
-      }
-    ],
     'unused-imports/no-unused-imports-ts': 'error'
   }
 }
