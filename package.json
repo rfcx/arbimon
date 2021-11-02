@@ -1,0 +1,22 @@
+{
+  "name": "biodiversity-analytics",
+  "version": "0.0.1",
+  "description": "Monorepo root",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ],
+  "license": "UNLICENSED",
+  "scripts": {}
+}
