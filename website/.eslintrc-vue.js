@@ -12,19 +12,40 @@ module.exports = {
     'regex/invalid': [
       'error', [
         {
-          regex: '^  public',
+          regex: ' public ',
           message: 'Accessibility modifiers are meaningless to vue-class-component',
-          replacement: ''
+          replacement: ' '
         },
         {
-          regex: '^  protected',
+          regex: ' protected ',
           message: 'Accessibility modifiers are meaningless to vue-class-component',
-          replacement: ''
+          replacement: ' '
         },
         {
-          regex: '^  private',
+          regex: ' private ',
           message: 'Accessibility modifiers are meaningless to vue-class-component',
-          replacement: ''
+          replacement: ' '
+        },
+        // TODO ??? - Find a way to avoid repeating this
+        {
+          regex: '^import dayjs from \'dayjs\'$',
+          message: 'Import the initialized dayjs object from \'~/dayjs\'',
+          replacement: 'import { dayjs } from \'~/dayjs\''
+        },
+        {
+          regex: '^import dayjs, ({[^}]*}) from \'dayjs\'$',
+          message: 'Import the initialized dayjs object from \'~/dayjs\'',
+          replacement: { function: 'return "import { dayjs } from \'~/dayjs\'; import " + captured[0] + " from \'dayjs\'"' }
+        },
+        {
+          regex: '^import mapboxgl from \'mapbox-gl\'$',
+          message: 'Import the initialized mapboxgl object from \'~/maps\'',
+          replacement: 'import { mapboxgl } from \'~/maps\''
+        },
+        {
+          regex: '^import mapboxgl, ({[^}]*}) from \'mapbox-gl\'$',
+          message: 'Import the initialized mapboxgl object from \'~/maps\'',
+          replacement: { function: 'return "import { mapboxgl } from \'~/maps\'; import " + captured[0] + " from \'mapbox-gl\'"' }
         }
       ]
     ]
