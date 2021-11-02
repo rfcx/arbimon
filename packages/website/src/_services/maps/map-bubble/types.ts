@@ -17,6 +17,7 @@ export interface MapDataSet {
   data: MapSiteData[]
 }
 
+// TODO Nutto: Update here
 export interface MapSiteData {
   siteName: string
   longitude: number
