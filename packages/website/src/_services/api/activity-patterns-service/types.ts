@@ -7,21 +7,17 @@ export interface ActivityPatternsData extends DatasetDefinition {
   detectionFrequency: number
   occupiedSiteCount: number
   occupiedSiteFrequency: number
+  activityBySite: ActivityPatternsDataBySite
 }
 
-export interface Detection {
-  siteId: string
-  siteName: string
-  latitude: number
-  longitude: number
-  speciesId: number
-  scientificName: string
-  classId: number
-  className: string
-  detections: number
-  detectionsFrequency: number
-}
-
-export interface DetectionSummary extends DatasetDefinition {
-  summary: Detection[]
+export interface ActivityPatternsDataBySite {
+  [siteId: string]: {
+    siteId: string
+    siteName: string
+    latitude: number
+    longitude: number
+    siteDetectionCount: number
+    siteDetectionFrequency: number
+    siteOccupied: boolean
+  }
 }
