@@ -51,7 +51,7 @@ export default class ActivityPatternsPage extends Vue {
     const datasets = await Promise.all(
       filters.map(async (filter) => {
         const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
-        return { ...filter, data }
+        return { ...filter, ...data }
       })
     )
 
