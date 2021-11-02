@@ -7,8 +7,7 @@ const GROUP_MARGIN = 20
 const BAR_MARGIN = 2
 
 export interface GeneratedHorizontalChart {
-  chart: d3.Selection<HTMLDivElement, undefined, null, undefined>
-  svg: d3.Selection<SVGGElement, undefined, null, undefined>
+  svg: d3.Selection<SVGSVGElement, undefined, null, undefined>
   chartHeight: number
 }
 
@@ -22,15 +21,6 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
   const chartWidth = config.width - config.margins.left - config.margins.right
   const chartHeight = (dataLength * groupHeight) + (dataLength * BAR_MARGIN) + (dataLength * GROUP_MARGIN)
   const fullHeight = chartHeight + config.margins.top + config.margins.bottom
-
-  const chart = d3.create('div')
-
-  const svg = chart
-    .append('svg')
-    .attr('width', config.width)
-    .attr('height', fullHeight)
-    .append('g')
-    .attr('transform', `translate(${config.margins.left},${config.margins.top})`)
 
   // =================== Scale setting =================
   // x axis scale configuration: d3 calculate the x number rely on maximum frequency (domain) and chart width (range)
@@ -47,12 +37,6 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     .tickSize(0)
     .tickPadding(5)
 
-  // adding x scale to the svg by setting
-  svg.append('g')
-    .attr('transform', `translate(0, ${chartHeight})`)
-    .transition()
-    .call(xAxis)
-
   // y axis scale configuration: d3 calculate the y position rely on data label (domain) and chart height (range)
   const yScale = d3.scaleBand()
     .domain(d3.map(data, (d) => d.group))
@@ -63,9 +47,20 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     .tickSize(0)
     .tickPadding(5)
 
+  const svg = d3.create('svg')
+    .attr('viewBox', [0, 0, config.width, fullHeight].join(' '))
+    .attr('fill', 'none')
+
+  // adding x scale to the svg by setting
+  svg.append('g')
+    .attr('transform', `translate(${config.margins.left}, ${chartHeight})`)
+    .transition()
+    .call(xAxis)
+
   // adding y scale to the svg by setting
   svg.append('g')
     .transition()
+    .attr('transform', `translate(${config.margins.left}, 0)`)
     .call(yAxis)
 
   // select all x and y matched `domain` class name and set scale stroke to be none (invisible)
@@ -91,7 +86,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     .attr('transform', (d, i) => {
       // center the group bar chart to label
       const y = (yScale(d.group) ?? 0) + 8
-      return `translate(0,${y})`
+      return `translate(${config.margins.left},${y})`
     })
     // adding bar chart by looping item in `data`
     .each(function (d) {
@@ -126,20 +121,20 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
       }
     })
 
-  return { chart, svg, chartHeight }
+  return { svg, chartHeight }
 }
 
-export const generateChartInternal = (data: GroupedBarChartItem[], config: BarChartConfig): HTMLDivElement | null => {
-  const { chart } = generateChart(data, config)
-  return chart.node()
+export const generateChartInternal = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
+  const { svg } = generateChart(data, config)
+  return svg.node()
 }
 
-export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): HTMLDivElement | null => {
-  const { chart, svg, chartHeight } = generateChart(data, config)
+export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
+  const { svg, chartHeight } = generateChart(data, config)
 
   const labels = getLegendGroupNames(data[0].series.length)
   const colors = data[0].series.map(s => s.color)
   generateHorizontalLegend(config.width, chartHeight, labels, colors, svg)
 
-  return chart.node()
+  return svg.node()
 }
