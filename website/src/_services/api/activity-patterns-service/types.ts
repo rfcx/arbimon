@@ -1,6 +1,6 @@
-import { ColoredFilter } from '~/dataset-filters'
+import { DatasetDefinition } from '..'
 
-export interface ActivityPatternsData extends ColoredFilter {
+export interface ActivityPatternsData extends DatasetDefinition {
   totalRecordingCount: number
   totalSiteCount: number
   detectionCount: number

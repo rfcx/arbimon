@@ -15,16 +15,14 @@ export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): M
     }
   ]
 
-  datasets.forEach(({ totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, color }) => {
+  datasets.forEach(({ totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }) => {
     metrics[0].datasets.push({
       percentage: (detectionFrequency * 100).toFixed(1),
-      description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`,
-      color
+      description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`
     })
     metrics[1].datasets.push({
       percentage: (occupiedSiteFrequency * 100).toFixed(1),
-      description: `Found in ${occupiedSiteCount.toLocaleString()} out of ${totalSiteCount.toLocaleString()} sites`,
-      color
+      description: `Found in ${occupiedSiteCount.toLocaleString()} out of ${totalSiteCount.toLocaleString()} sites`
     })
   })
 
