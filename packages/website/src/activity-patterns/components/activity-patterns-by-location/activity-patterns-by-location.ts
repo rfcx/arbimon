@@ -29,8 +29,7 @@ export default class ActivityPatternsByLocation extends Vue {
   selectedType = 'detection-frequency'
   datasetTypes: DatasetType[] = [
     { label: 'Detection', value: 'detection' },
-    { label: 'Detection frequency', value: 'detection-frequency' },
-    { label: 'Occupancy', value: 'occupancy' }
+    { label: 'Detection frequency', value: 'detection-frequency' }
   ]
 
   taxons = TAXONOMY_CLASSES
