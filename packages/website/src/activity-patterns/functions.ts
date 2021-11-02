@@ -1,6 +1,8 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
 import { Metrics } from './types'
 
+export type ActivityPatternsDataBySites = ActivityPatternsData & { color: string }
+
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
     {
@@ -27,4 +29,15 @@ export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): M
   })
 
   return metrics
+}
+
+// TODO Nutto: Update here
+export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): any {
+  return datasets.map(({ start, end, sites, color, activityBySite }) => ({
+    startDate: start,
+    endDate: end,
+    sites,
+    color,
+    data: activityBySite
+  }))
 }
