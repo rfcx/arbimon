@@ -50,8 +50,6 @@ export default class HorizontalBarChartComponent extends Vue {
     const svg = generateChartExport(this.chartData, config)
     if (!svg) return
 
-    console.log(svg)
-
     const { width, height } = svg.viewBox.baseVal
     const png = await svgToPngData({ svg, width, height })
     downloadPng(png, this.chartExportName)
