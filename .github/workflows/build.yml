@@ -11,25 +11,25 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: 'Setup: Node'
-        uses: actions/setup-node@v1
-        with:
-          node-version: '15.x'
-
       - name: 'Setup: Git checkout'
-        uses: actions/checkout@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # v2 @ 03 Nov 2021
+
+      - name: 'Setup: Node'
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # v2 @ 03 Nov 2021
+        with:
+          node-version: '15'
 
       - name: 'Setup: Dependency caching'
-        uses: actions/cache@v2
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 #v2 @ 03 Nov 2021
         with:
           path: ~/.pnpm-store
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-${{ runner.os }}
 
       - name: 'Setup: pnpm install'
-        uses: pnpm/action-setup@v2.0.1
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2 # v2 @ 03 Nov 2021
         with:
-          version: 6.0.2
+          version: 6.20.1
           run_install: |
             - args: --frozen-lockfile
 
