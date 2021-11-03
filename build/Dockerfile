@@ -1,8 +1,6 @@
 # Build container
 FROM node:15-alpine as builder
 
-ENV NODE_ENV=production
-
 ## Install pnpm
 RUN npm i -g pnpm
 
@@ -16,7 +14,10 @@ COPY package.json ./
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
 COPY packages/website/package.json ./packages/website/
-RUN pnpm i -D --frozen-lockfile
+RUN pnpm i --frozen-lockfile
+
+# Change mode to production (after installing all deps)
+ENV NODE_ENV=production
 
 ## Build
 COPY packages/common ./packages/common
