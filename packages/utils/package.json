@@ -5,10 +5,14 @@
   "private": true,
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf './dist' './*.tsbuildinfo'"
+    "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "test": "jest src "
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "dayjs": "^1.10.6",
+    "jszip": "^3.7.1",
+    "xlsx": "^0.17.2"
+  },
   "description": "Generic code (not biodiversity-specific)",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
   "repository": {
@@ -24,5 +28,9 @@
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.6"
+  }
 }
