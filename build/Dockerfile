@@ -4,8 +4,7 @@ FROM node:15-alpine as builder
 ENV NODE_ENV=production
 
 ## Install pnpm
-# RUN npm i -g pnpm
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN npm i -g pnpm
 
 ## Create build folder
 RUN mkdir -p /app
@@ -13,10 +12,10 @@ WORKDIR /app
 
 ## Install deps
 COPY pnpm-*.yaml ./
-COPY package*.json ./
-COPY packages/common/package*.json ./packages/common/
-COPY packages/utils/package*.json ./packages/utils/
-COPY packages/website/package*.json ./packages/website/
+COPY package.json ./
+COPY packages/common/package.json ./packages/common/
+COPY packages/utils/package.json ./packages/utils/
+COPY packages/website/package.json ./packages/website/
 RUN pnpm i --frozen-lockfile
 
 ## Build
