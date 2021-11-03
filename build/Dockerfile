@@ -1,22 +1,32 @@
-# build stage
+# Build container
 FROM node:15-alpine as builder
 
 ENV NODE_ENV=production
 
+## Install pnpm
+RUN npm i -g pnpm
+
+## Create build folder
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY packages/website/package*.json ./
-RUN npm i -g pnpm
+## Install deps
+COPY pnpm-*.yaml ./
+COPY packages/common/package*.json ./packages/common/
+COPY packages/utils/package*.json ./packages/utils/
+COPY packages/website/package*.json ./packages/website/
 RUN pnpm i --frozen-lockfile
 
-COPY packages/website .
+## Build
+COPY packages/common ./packages/common
+COPY packages/utils ./packages/utils
+COPY packages/website ./packages/website
 RUN pnpm -r build
 
-# production state
+# Production container
 FROM nginx
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/packages/website/dist /usr/share/nginx/html
 
 RUN rm /etc/nginx/conf.d/default.conf
 
