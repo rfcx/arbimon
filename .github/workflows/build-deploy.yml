@@ -6,7 +6,6 @@ on:
       - master
       - staging
       - develop
-      - features/210-migrate-to-pnpm
 jobs:
   build-deploy:
     runs-on: ubuntu-20.04
