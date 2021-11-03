@@ -31,7 +31,8 @@ jobs:
         with:
           version: 6.20.1
           run_install: |
-            - args: --frozen-lockfile
+            - recursive: true
+              args: [--frozen-lockfile]
 
       - name: 'Build'
         run: pnpm -r build
