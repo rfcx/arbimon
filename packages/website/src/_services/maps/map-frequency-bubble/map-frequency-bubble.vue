@@ -12,10 +12,7 @@
         :id="mapId"
         class="w-full h-96 text-black"
       />
-      <export-button
-        class="absolute top-2 right-2"
-        @click="downloadMapPng()"
-      />
+      <export-button class="absolute top-2 right-2" />
     </div>
   </div>
 </template>
