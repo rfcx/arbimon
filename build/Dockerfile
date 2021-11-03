@@ -12,6 +12,7 @@ WORKDIR /app
 
 ## Install deps
 COPY pnpm-*.yaml ./
+COPY package*.json ./
 COPY packages/common/package*.json ./packages/common/
 COPY packages/utils/package*.json ./packages/utils/
 COPY packages/website/package*.json ./packages/website/
