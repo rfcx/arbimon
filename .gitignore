@@ -1,8 +1,18 @@
+# Environment & secrets
+.env
+
+# Deps
 node_modules
-.DS_Store
+
+# Build
 dist
 dist-ssr
+lib
+*.tsbuildinfo
 *.local
 
-# Environment
-.env
+# Logs
+*.log
+
+# OS
+.DS_Store
