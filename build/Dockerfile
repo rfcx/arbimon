@@ -7,10 +7,11 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY packages/website/package*.json ./
-RUN npm ci --include=dev --production=false
+RUN npm i -g pnpm
+RUN pnpm i --frozen-lockfile
 
 COPY packages/website .
-RUN npm run build
+RUN pnpm -r build
 
 # production state
 FROM nginx
