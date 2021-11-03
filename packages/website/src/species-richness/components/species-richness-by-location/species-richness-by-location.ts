@@ -4,7 +4,8 @@ import { Prop } from 'vue-property-decorator'
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { MapConfig } from '~/maps/types'
 
 interface MapOptions {
   id: string

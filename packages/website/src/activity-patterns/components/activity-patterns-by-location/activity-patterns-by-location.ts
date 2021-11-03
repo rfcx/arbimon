@@ -4,7 +4,8 @@ import { Prop, Watch } from 'vue-property-decorator'
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MapFrequencyBubbleComponent, MapFrequencyDataset } from '~/maps/map-frequency-bubble'
+import { MapConfig } from '~/maps/types'
 
 interface MapOptions {
   id: string
@@ -20,11 +21,11 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent
+    MapFrequencyBubbleComponent
   }
 })
 export default class ActivityPatternsByLocation extends Vue {
-  @Prop({ default: [] }) public datasets!: MapDataSet[]
+  @Prop({ default: [] }) public datasets!: MapFrequencyDataset[]
 
   selectedType = 'detection-frequency'
   datasetTypes: DatasetType[] = [
@@ -41,10 +42,6 @@ export default class ActivityPatternsByLocation extends Vue {
     sourceMapId: '',
     center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
     zoom: 9
-  }
-
-  get hasData (): boolean {
-    return this.datasets.length > 0
   }
 
   get columnCount (): number {
@@ -79,7 +76,7 @@ export default class ActivityPatternsByLocation extends Vue {
     this.config = config
   }
 
-  mapExportName (dataset: MapDataSet): string {
+  mapExportName (dataset: MapFrequencyDataset): string {
     const { startDate, endDate, sites } = dataset
     return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
   }
