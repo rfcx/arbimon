@@ -15,7 +15,7 @@ COPY pnpm-*.yaml ./
 COPY packages/common/package*.json ./packages/common/
 COPY packages/utils/package*.json ./packages/utils/
 COPY packages/website/package*.json ./packages/website/
-RUN pnpm i --frozen-lockfile
+RUN pnpm i
 
 ## Build
 COPY packages/common ./packages/common
