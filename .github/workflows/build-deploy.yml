@@ -77,17 +77,17 @@ jobs:
         with:
           args: apply -f ./build/${{ env.NAMESPACE }}
 
-      - name: 'Notify: Slack'
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        if: always()
-        with:
-          status: ${{ job.status }}
-          notify_when: 'success,failure,warning'
-          notification_title: '{workflow} {status_message}'
-          message_format: '{emoji} *Biodiversity Analytics:* deploy ${{ steps.extract_branch.outputs.branch }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
-          mention_users: 'U6LT2N3SS,U19GA1FT2,UC2NVRCAY'
-          mention_users_when: 'failure,warnings'
-          footer: '<{repo_url}/tree/${{ steps.extract_branch.outputs.branch }}|{repo}@${{ steps.extract_branch.outputs.branch }}>'
-        env:
-          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
+      # - name: 'Notify: Slack'
+      #   uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+      #   # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+      #   if: always()
+      #   with:
+      #     status: ${{ job.status }}
+      #     notify_when: 'success,failure,warning'
+      #     notification_title: '{workflow} {status_message}'
+      #     message_format: '{emoji} *Biodiversity Analytics:* deploy ${{ steps.extract_branch.outputs.branch }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
+      #     mention_users: 'U6LT2N3SS,U19GA1FT2,UC2NVRCAY'
+      #     mention_users_when: 'failure,warnings'
+      #     footer: '<{repo_url}/tree/${{ steps.extract_branch.outputs.branch }}|{repo}@${{ steps.extract_branch.outputs.branch }}>'
+      #   env:
+      #     SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'

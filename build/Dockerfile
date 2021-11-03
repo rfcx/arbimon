@@ -20,6 +20,7 @@ RUN pnpm i --frozen-lockfile
 ENV NODE_ENV=production
 
 ## Build
+COPY tsconfig*.json ./
 COPY packages/common ./packages/common
 COPY packages/utils ./packages/utils
 COPY packages/website ./packages/website
