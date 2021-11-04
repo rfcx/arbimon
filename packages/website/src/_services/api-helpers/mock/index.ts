@@ -1,6 +1,6 @@
 import { DatasetDefinition } from '~/api/types'
-import * as rawDetections from './raw-PR-data.json'
-import * as rawSites from './raw-sites.json'
+import { rawSummaries } from './raw-PR-data'
+import { rawSites } from './raw-sites'
 
 // TODO 132 - Encapsulate API response types in the API, and return project types
 export interface ApiSite {
@@ -38,7 +38,7 @@ export function getRawSites (): ApiSite[] {
 }
 
 export const getRawDetections = (): ApiDetection[] => {
-  return rawDetections
+  return rawSummaries
 }
 
 export const filterByDataset = (detections: ApiDetection[], dataset: DatasetDefinition): ApiDetection[] => {
