@@ -1,4 +1,4 @@
-import { dayjs } from '~/dayjs'
+import { dayjs } from './dayjs'
 import { formatDateRange } from './dates'
 
 describe('formatDateRange: different days, months, years', () => {

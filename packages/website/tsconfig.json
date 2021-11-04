@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
+      "@rfcx-bio/*": ["packages/*/src"],
       "~/*": ["src/_services/*"],
       "@/*": ["src/*"]
     },
