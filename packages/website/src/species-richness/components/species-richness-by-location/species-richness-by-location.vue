@@ -68,7 +68,7 @@
         v-for="(dataset, idx) in datasets"
         :key="idx"
         :dataset="dataset"
-        :taxon="taxon"
+        :data-key="taxon"
         :map-id="`species-richness-by-location-${idx}`"
         :map-config="config"
         :map-style="mapStyle"

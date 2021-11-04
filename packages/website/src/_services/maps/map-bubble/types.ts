@@ -8,13 +8,14 @@ export interface MapDataSet {
   sites: Site[]
   color: string
   data: MapSiteData[]
+  maximumRadius?: number
+  dataRange?: number[]
 }
 
 export interface MapSiteData {
   siteName: string
   longitude: number
   latitude: number
-  distinctSpecies: { [taxonName: string]: number }
-  popupContent?: string
-  pinRadius?: number
+  distinctSpecies: { [key: string]: number }
+  popupTemplate?: string
 }
