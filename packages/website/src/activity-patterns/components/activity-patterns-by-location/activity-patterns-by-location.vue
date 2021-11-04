@@ -28,6 +28,7 @@
         :key="idx"
         :dataset="dataset"
         :data-key="selectedType"
+        :get-popup-html="getPopupHtml"
         :map-id="`activity-patterns-by-location-${idx}`"
         :map-config="config"
         :map-style="mapStyle"
