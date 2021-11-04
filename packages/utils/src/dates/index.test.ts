@@ -1,5 +1,5 @@
-import { dayjs } from './dayjs'
-import { formatDateRange } from './dates'
+import { dayjs } from 'dayjs-initialized'
+import { formatDateRange } from "."
 
 describe('formatDateRange: different days, months, years', () => {
   const examples = [
