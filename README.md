@@ -2,7 +2,11 @@
 
 Biodiversity analytics platform built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS
 
-## DoD: Sprint
+-----
+
+## Contributing
+
+### *Sprint DoD*
 
 The following must be true to consider the Sprint "DONE":
 
@@ -11,13 +15,17 @@ The following must be true to consider the Sprint "DONE":
 - PRs merged & deployed to staging
 - Demo video & staging URL sent to PO by Tuesday
 
-## Resources
+### *Resources*
 
 - [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/4)
 - [Design (Figma)](https://www.figma.com/files/team/1022436685454438648/Biodiversity-Team)
 - [Other files (Google Drive)](https://drive.google.com/drive/folders/17ZdAoPzetLPqkes4lkGQlKg_uHpkyxxg)
 
-## Requirements
+-----
+
+## Installation
+
+### *Requirements & Setup*
 
 - node 14+
 - pnpm 6+ (`npm i -g pnpm`)
@@ -25,7 +33,7 @@ The following must be true to consider the Sprint "DONE":
 
 _If you have Vetur installed, disable it for this workspace_
 
-## Getting started
+### *Getting Started*
 
 1. Install/update dependencies:
 
@@ -39,7 +47,11 @@ _If you have Vetur installed, disable it for this workspace_
 
    `pnpm -w serve`
 
-## Build, Lint, Test
+-----
+
+## More Commands
+
+### *Build, Lint, Test*
 
 - Use the pnpm arg `-r` to run scripts in all packages:
 
@@ -51,7 +63,7 @@ _If you have Vetur installed, disable it for this workspace_
 
   `pnpm -r lint-fix`
 
-## Resetting Workspace
+### *Resetting Workspace*
 
 - Delete all build artifacts:
 
@@ -60,3 +72,10 @@ _If you have Vetur installed, disable it for this workspace_
 - Delete all dependencies:
 
   `pnpm -w clean-slate`
+
+### *Cheatsheet: pnpm*
+
+- `pnpm -w blah` => run in monorepo-root
+- `pnpm -r blah` => run in all packages
+- `pnpm -r --filter {"packages"} blah` => run in all packages, except root
+- `pnpm --filter=website blah` => run in "website" (or api, cli, ...)

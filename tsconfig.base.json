@@ -1,14 +1,15 @@
 /*
   Each module should `extend` this base & specify:
   - `include` (not `files`)
-  - `exclude`
   - `references`
   - any needed module-specific overrides
 
   Visit https://aka.ms/tsconfig.json to read more about this file
 */
 {
+  // Exclude deps, build artifacts, hidden folders, tests
   "exclude": ["node_modules", "dist", "lib", ".*/**", "**/*.test.ts", "**/*.spec.ts", "**/*.mock.ts", "**/*.stub.ts"],
+
   "compilerOptions": {
     /* Language, Target, Environment */
     "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
