@@ -1,6 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { Prop } from 'vue-property-decorator'
 
+import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
+import { ACTIVITY_PATTERN_KEYS } from '@/activity-patterns/functions'
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
@@ -27,16 +29,17 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
 export default class ActivityPatternsByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
-  selectedType = 'detection-frequency'
+  selectedType = ACTIVITY_PATTERN_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [
-    { label: 'Detection', value: 'detection' },
-    { label: 'Detection frequency', value: 'detection-frequency' }
+    { label: 'Detection', value: ACTIVITY_PATTERN_KEYS.detection },
+    { label: 'Detection frequency', value: ACTIVITY_PATTERN_KEYS.detectionFrequency }
   ]
 
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
   isShowLabels = true
   mapStyleId = 'satellite-streets-v11'
+  getPopupHtml = generateDetectionHtmlPopup
 
   config: MapConfig = {
     sourceMapId: '',
@@ -61,11 +64,6 @@ export default class ActivityPatternsByLocation extends Vue {
 
   get mapStyle (): string {
     return `mapbox://styles/mapbox/${this.mapStyleId}`
-  }
-
-  @Watch('selectedType')
-  onSelectedTypeChange (): void {
-    //
   }
 
   setMapStyle (id: string): void {
