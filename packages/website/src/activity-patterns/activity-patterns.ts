@@ -51,10 +51,11 @@ export default class ActivityPatternsPage extends Vue {
 
     const filters = this.filters
     const datasets = await Promise.all(
+      // TODO ??: Clean the dataset date type between `DatasetDefinition`, `MapDataSet`, and `ColoredFilter`
       filters.map(async (filter) => {
-        const { color } = filter
+        const { color, startDate, endDate } = filter
         const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
-        return { ...data, color }
+        return { ...data, startDate, endDate, color }
       })
     )
 

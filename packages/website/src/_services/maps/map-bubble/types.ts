@@ -9,13 +9,13 @@ export interface MapDataSet {
   color: string
   data: MapSiteData[]
   maximumRadius?: number
-  dataRange?: number[]
+  dataRange?: { [key: string]: number[] }
 }
 
 export interface MapSiteData {
   siteName: string
   longitude: number
   latitude: number
-  distinctSpecies: { [key: string]: number }
+  distinctSpecies: { [key: string]: number | boolean }
   popupTemplate?: string
 }
