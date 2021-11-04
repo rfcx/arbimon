@@ -1,6 +1,6 @@
 import { groupBy, kebabCase, mapValues } from 'lodash'
 
-import { dayjs } from '@rfcx-bio/utils/dayjs'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { ApiDetection, filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'

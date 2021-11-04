@@ -2,7 +2,7 @@ import { NavigationGuardNext, NavigationGuardWithThis, RouteLocationNormalized }
 
 import { useAuthClient } from '~/auth'
 
-export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
   // Already authenticated
   const authClient = useAuthClient()
   if (await authClient.isReady() && authClient.isAuthenticated) return next()

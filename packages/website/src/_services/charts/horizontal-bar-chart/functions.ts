@@ -81,7 +81,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     .enter()
     .append('g')
     .classed('category', true)
-    .attr('transform', (d, i) => {
+    .attr('transform', (d, _i) => {
       // center the group bar chart to label
       const y = (yScale(d.group) ?? 0) + 8
       return `translate(0,${y})`
