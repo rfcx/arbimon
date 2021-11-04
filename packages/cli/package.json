@@ -9,7 +9,7 @@
     "serve": "ts-node --project tsconfig.build.json --files -r tsconfig-paths/register"
   },
   "dependencies": {
-    "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/common": "workspace:*",
     "dotenv": "^10.0.0",
     "mysql": "^2.18.1"
   },

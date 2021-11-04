@@ -8,7 +8,7 @@
     "clean": "rimraf './dist' './*.tsbuildinfo'"
   },
   "dependencies": {
-    "@rfcx-bio/utils": "workspace:^0.0.1"
+    "@rfcx-bio/utils": "workspace:*"
   },
   "devDependencies": {},
   "description": "Biodiversity shared code",
