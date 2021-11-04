@@ -4,7 +4,8 @@ import { Prop, Watch } from 'vue-property-decorator'
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapFrequencyBubbleComponent, MapFrequencyDataset } from '~/maps/map-frequency-bubble'
+import { MapBubbleComponent } from '~/maps/map-bubble'
+import { MapFrequencyDataset } from '~/maps/map-frequency-bubble'
 import { MapConfig } from '~/maps/types'
 
 interface MapOptions {
@@ -21,7 +22,7 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
 
 @Options({
   components: {
-    MapFrequencyBubbleComponent
+    MapBubbleComponent
   }
 })
 export default class ActivityPatternsByLocation extends Vue {
