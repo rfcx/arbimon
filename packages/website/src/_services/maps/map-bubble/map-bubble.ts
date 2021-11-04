@@ -8,7 +8,7 @@ import { MapConfig } from '~/maps/types'
 import { downloadPng } from '~/utils/file'
 import { MapDataSet, MapSiteData } from '.'
 
-const DATA_LAYER_ID = 'species-richness'
+const DATA_LAYER_ID = 'species-information'
 const LABEL_LAYER_IDS = ['tunnel-primary-secondary-tertiary-case', 'tunnel-major-link-case', 'tunnel-motorway-trunk-case', 'tunnel-path', 'tunnel-steps', 'tunnel-major-link', 'tunnel-pedestrian', 'tunnel-primary-secondary-tertiary', 'tunnel-oneway-arrow-blue', 'tunnel-motorway-trunk', 'tunnel-oneway-arrow-white', 'ferry', 'ferry-auto', 'road-pedestrian-case', 'road-street-low', 'road-street-case', 'road-secondary-tertiary-case', 'road-primary-case', 'road-major-link-case', 'road-motorway-trunk-case', 'road-path', 'road-steps', 'road-major-link', 'road-pedestrian', 'road-street', 'road-secondary-tertiary', 'road-primary', 'road-oneway-arrow-blue', 'road-motorway-trunk', 'road-oneway-arrow-white', 'bridge-pedestrian-case', 'bridge-primary-secondary-tertiary-case', 'bridge-major-link-case', 'bridge-motorway-trunk-case', 'bridge-path', 'bridge-steps', 'bridge-major-link', 'bridge-pedestrian', 'bridge-primary-secondary-tertiary', 'bridge-oneway-arrow-blue', 'bridge-motorway-trunk', 'bridge-major-link-2-case', 'bridge-motorway-trunk-2-case', 'bridge-major-link-2', 'bridge-motorway-trunk-2', 'bridge-oneway-arrow-white', 'aerialway', 'admin-1-boundary-bg', 'admin-0-boundary-bg', 'admin-1-boundary', 'admin-0-boundary', 'admin-0-boundary-disputed', 'road-label', 'road-number-shield', 'road-exit-shield', 'waterway-label', 'natural-line-label', 'natural-point-label', 'water-line-label', 'water-point-label', 'poi-label', 'transit-label', 'airport-label', 'settlement-subdivision-label', 'settlement-label', 'state-label', 'country-label']
 
 export default class MapBubbleComponent extends Vue {
@@ -75,11 +75,22 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getRadius (datum: MapSiteData): number {
-    if (this.taxon === TAXONOMY_CLASS_ALL.name) return Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
-    return Math.sqrt(datum.distinctSpecies[this.taxon] ?? 0)
+    if (this.taxon === TAXONOMY_CLASS_ALL.name) {
+      return datum.pinRadius ?? Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
+    }
+
+    if (!datum.distinctSpecies[this.taxon]) {
+      return 0
+    }
+
+    return datum.pinRadius ?? Math.sqrt(datum.distinctSpecies[this.taxon])
   }
 
   getPopup (datum: MapSiteData): string {
+    if (datum.popupContent) {
+      return datum.popupContent
+    }
+
     const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
     return `<strong>${datum.siteName}</strong><p>${speciesCounts.join('<br />')}</p>`
   }

@@ -15,4 +15,6 @@ export interface MapSiteData {
   longitude: number
   latitude: number
   distinctSpecies: { [taxonName: string]: number }
+  popupContent?: string
+  pinRadius?: number
 }
