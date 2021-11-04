@@ -2,10 +2,11 @@ import { isEmpty } from 'lodash'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { downloadPng } from '@rfcx-bio/utils/file'
+
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
 import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
-import { downloadPng } from '~/utils/file'
 
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
   hour: [0, 23],

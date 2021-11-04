@@ -24,7 +24,7 @@ class AuthClientClass implements AuthClient {
     const { domain, clientId, audience } = config
 
     // Other callers must wait for init
-    this.isReadyPromise = new Promise((resolve, reject) => {
+    this.isReadyPromise = new Promise((resolve) => {
       watchEffect(() => { if (this.isReadyInternal.value) return resolve(this.isAuthenticated) })
     })
 
