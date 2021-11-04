@@ -1,23 +1,5 @@
 {
-  "compilerOptions": {
-    "types": ["vite/client", "@types/jest", "unplugin-icons/types/vue"],
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "baseUrl": ".",
-    "paths": {
-      "@rfcx-bio/*": ["packages/*/src"],
-      "~/*": ["src/_services/*"],
-      "@/*": ["src/*"]
-    },
-    "lib": ["esnext", "dom"]
-  },
+  "extends": "./tsconfig.build.json",
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",

@@ -28,24 +28,20 @@ module.exports = {
         },
         // TODO ??? - Find a way to avoid repeating this
         {
-          regex: '^import dayjs from \'dayjs\'$',
-          message: 'Import the initialized dayjs object from \'~/dayjs\'',
-          replacement: 'import { dayjs } from \'~/dayjs\''
+          // eslint-disable-next-line no-useless-escape
+          regex: 'import \\* as [a-zA-Z0-9]* from \'dayjs\'',
+          message: 'Import the initialized dayjs object from \'@rfcx-bio/utils/dayjs-initialized\'',
+          replacement: 'import { dayjs } from \'@rfcx-bio/utils/dayjs-initialized\''
         },
         {
           regex: '^import dayjs, ({[^}]*}) from \'dayjs\'$',
-          message: 'Import the initialized dayjs object from \'~/dayjs\'',
-          replacement: { function: 'return "import { dayjs } from \'~/dayjs\'; import " + captured[0] + " from \'dayjs\'"' }
+          message: 'Import the initialized dayjs object from \'@rfcx-bio/utils/dayjs-initialized\'',
+          replacement: { function: 'return "import { dayjs } from \'@rfcx-bio/utils/dayjs-initialized\'; import " + captured[0] + " from \'dayjs\'"' }
         },
         {
-          regex: '^import mapboxgl from \'mapbox-gl\'$',
-          message: 'Import the initialized mapboxgl object from \'~/maps\'',
-          replacement: 'import { mapboxgl } from \'~/maps\''
-        },
-        {
-          regex: '^import mapboxgl, ({[^}]*}) from \'mapbox-gl\'$',
-          message: 'Import the initialized mapboxgl object from \'~/maps\'',
-          replacement: { function: 'return "import { mapboxgl } from \'~/maps\'; import " + captured[0] + " from \'mapbox-gl\'"' }
+          regex: 'new mapboxgl.Map\\(([^\\)]*)\\)',
+          message: 'Use the createMap(...) function',
+          replacement: { function: 'return "createMap(" + captured[0] + ")"' }
         }
       ]
     ]
