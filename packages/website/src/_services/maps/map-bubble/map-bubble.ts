@@ -16,6 +16,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() dataset!: MapDataSet
   @Prop() mapConfig!: MapConfig
   @Prop() mapExportName!: string
+  @Prop() getPopupHtml!: Function
   @Prop({ default: TAXONOMY_CLASS_ALL.name }) dataKey!: string
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
@@ -50,15 +51,18 @@ export default class MapBubbleComponent extends Vue {
       .on('move', () => { if (!this.isSynchronizingMapPosition) this.emitMapMoved() })
   }
 
-  @Watch('dataset', { deep: true }) onDataChange (): void {
+  @Watch('dataset', { deep: true })
+  onDataChange (): void {
     this.generateChartNextTick()
   }
 
-  @Watch('dataKey') onDataKeyChange (): void {
+  @Watch('dataKey')
+  onDataKeyChange (): void {
     this.generateChartNextTick(false)
   }
 
-  @Watch('mapConfig') onConfigChange (): void {
+  @Watch('mapConfig')
+  onConfigChange (): void {
     if (this.mapConfig.sourceMapId === this.mapId) return // don't react to self
     this.isSynchronizingMapPosition = true // don't emit for sync'd moves
     this.map.setCenter(this.mapConfig.center)
@@ -79,7 +83,7 @@ export default class MapBubbleComponent extends Vue {
       return datum.pinRadius ?? Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
     }
 
-    if (!datum.distinctSpecies[this.dataKey]) {
+    if (!datum.distinctSpecies[this.dataKey] || datum.distinctSpecies[this.dataKey] === 0) {
       return 0
     }
 
@@ -87,12 +91,7 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getPopup (datum: MapSiteData): string {
-    if (datum.popupTemplate) {
-      return datum.popupTemplate
-    }
-
-    const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)
-    return `<strong>${datum.siteName}</strong><p>${speciesCounts.join('<br />')}</p>`
+    return this.getPopupHtml(datum)
   }
 
   setupMapPopup (): void {

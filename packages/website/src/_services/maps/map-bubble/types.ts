@@ -17,5 +17,4 @@ export interface MapSiteData {
   longitude: number
   latitude: number
   distinctSpecies: { [key: string]: number | boolean }
-  popupTemplate?: string
 }

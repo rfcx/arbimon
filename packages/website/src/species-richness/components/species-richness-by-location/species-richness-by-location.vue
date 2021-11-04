@@ -69,6 +69,7 @@
         :key="idx"
         :dataset="dataset"
         :data-key="taxon"
+        :get-popup-html="getPopupHtml"
         :map-id="`species-richness-by-location-${idx}`"
         :map-config="config"
         :map-style="mapStyle"
