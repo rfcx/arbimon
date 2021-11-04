@@ -86,9 +86,9 @@ export default class MapBubbleComponent extends Vue {
     if (dataRange) {
       const range = dataRange[this.dataKey]
       const radius = maximumRadius ?? range.length
-      const belongRange = range.findIndex(r => value < r)
-      const ratio = range.length / radius
-      return belongRange * ratio
+      const belongRange = range.findIndex(r => value <= r)
+      const ratio = Math.ceil(range.length / radius)
+      return (belongRange + 1) * ratio
     }
 
     return (typeof value === 'boolean') ? DEFAULT_RADIUS : Math.sqrt(value)
