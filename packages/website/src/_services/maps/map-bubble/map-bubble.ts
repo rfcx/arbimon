@@ -14,9 +14,9 @@ const LABEL_LAYER_IDS = ['tunnel-primary-secondary-tertiary-case', 'tunnel-major
 export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() dataset!: MapDataSet
-  @Prop() taxon!: string
   @Prop() mapConfig!: MapConfig
   @Prop() mapExportName!: string
+  @Prop({ default: TAXONOMY_CLASS_ALL.name }) taxon!: string
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
 

@@ -23,7 +23,7 @@
       class="grid gap-2 mt-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
-      <map-frequency-bubble-component
+      <map-bubble-component
         v-for="(dataset, idx) in datasets"
         :key="idx"
         :dataset="dataset"
