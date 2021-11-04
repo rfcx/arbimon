@@ -1,17 +1,29 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../tsconfig.base.json",
+
   "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "dist",
     "paths": {
-      "@/*": ["src/*"],
-      "~/*": ["src/_services/*"]
-    }
+      "@rfcx-bio/utils/*": ["../../utils/src/*"],
+      "@rfcx-bio/common/*": ["../../common/src/*"],
+      "~/*": ["./_services/*"],
+      "@/*": ["./*"]
+    },
+
+    // Overrides
+    "composite": false,
+    "incremental": false,
+    "types": ["vite/client", "@types/jest", "unplugin-icons/types/vue"],
+    "target": "ESNext",
+    "jsx": "preserve",
+    "resolveJsonModule": true, // TODO 210 - Remove this once the mock API is removed
+    "noUnusedLocals": false // doesn't understand usage in a Vue template
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "lib",
-    ".*/**",
-    "**/*.test.ts",
-    "**/*.mock.ts"
+
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "references": [
+    { "path": "../utils/tsconfig.build.json" },
+    { "path": "../common/tsconfig.build.json" }
   ]
 }
