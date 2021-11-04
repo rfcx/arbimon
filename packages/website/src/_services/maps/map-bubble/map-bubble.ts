@@ -16,7 +16,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() dataset!: MapDataSet
   @Prop() mapConfig!: MapConfig
   @Prop() mapExportName!: string
-  @Prop({ default: TAXONOMY_CLASS_ALL.name }) taxon!: string
+  @Prop({ default: TAXONOMY_CLASS_ALL.name }) dataKey!: string
   @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
 
@@ -54,7 +54,7 @@ export default class MapBubbleComponent extends Vue {
     this.generateChartNextTick()
   }
 
-  @Watch('taxon') onTaxonChange (): void {
+  @Watch('dataKey') onDataKeyChange (): void {
     this.generateChartNextTick(false)
   }
 
@@ -75,20 +75,20 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getRadius (datum: MapSiteData): number {
-    if (this.taxon === TAXONOMY_CLASS_ALL.name) {
+    if (this.dataKey === TAXONOMY_CLASS_ALL.name) {
       return datum.pinRadius ?? Math.sqrt(Object.values(datum.distinctSpecies).reduce((sum, val) => sum + val, 0))
     }
 
-    if (!datum.distinctSpecies[this.taxon]) {
+    if (!datum.distinctSpecies[this.dataKey]) {
       return 0
     }
 
-    return datum.pinRadius ?? Math.sqrt(datum.distinctSpecies[this.taxon])
+    return datum.pinRadius ?? Math.sqrt(datum.distinctSpecies[this.dataKey])
   }
 
   getPopup (datum: MapSiteData): string {
-    if (datum.popupContent) {
-      return datum.popupContent
+    if (datum.popupTemplate) {
+      return datum.popupTemplate
     }
 
     const speciesCounts = Object.keys(datum.distinctSpecies).sort().map(key => `${key}: ${datum.distinctSpecies[key]}`)

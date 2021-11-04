@@ -1,4 +1,5 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
+import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
 
 export type ActivityPatternsDataBySites = ActivityPatternsData & { color: string }
@@ -32,12 +33,26 @@ export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): M
 }
 
 // TODO Nutto: Update here
-export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): any {
-  return datasets.map(({ start, end, sites, color, activityBySite }) => ({
-    startDate: start,
-    endDate: end,
-    sites,
-    color,
-    data: activityBySite
-  }))
+export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): MapDataSet[] {
+  return datasets.map(({ start, end, sites, color, activityBySite }) => {
+    const activityBySiteValues = Object.values(activityBySite)
+    const data = activityBySiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
+      siteName,
+      latitude,
+      longitude,
+      distinctSpecies: {
+        detection: siteDetectionCount,
+        'detection-frequency': siteDetectionFrequency,
+        occupancy: siteOccupied
+      }
+    }))
+
+    return {
+      startDate: start,
+      endDate: end,
+      sites,
+      color,
+      data
+    }
+  })
 }

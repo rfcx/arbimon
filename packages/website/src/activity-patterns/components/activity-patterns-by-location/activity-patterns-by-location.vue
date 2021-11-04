@@ -27,6 +27,7 @@
         v-for="(dataset, idx) in datasets"
         :key="idx"
         :dataset="dataset"
+        :data-key="selectedType"
         :map-id="`activity-patterns-by-location-${idx}`"
         :map-config="config"
         :map-style="mapStyle"
