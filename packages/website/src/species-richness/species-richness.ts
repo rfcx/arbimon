@@ -3,6 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import { Site, Species } from '~/api'
 import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
+import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, Filter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
@@ -76,7 +77,9 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   getMapDataset (datasets: ColoredDataset[]): MapDataSet[] {
-    return datasets.map(({ color, data, ...filter }) => ({ color, data: data.speciesBySite, ...filter }))
+    return datasets.map(({ color, data, ...filter }) => {
+      return { color, data: data.speciesBySite.map(s => ({ ...s, distinctSpecies: { ...s.distinctSpecies, [TAXONOMY_CLASS_ALL.name]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0) } })), ...filter }
+    })
   }
 
   getTableData (datasets: ColoredDataset[]): DetectedSpeciesItem[] {
