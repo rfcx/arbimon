@@ -5,6 +5,7 @@ import pluginComponents from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
