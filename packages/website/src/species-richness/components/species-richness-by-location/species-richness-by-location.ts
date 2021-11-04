@@ -1,6 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
@@ -26,6 +27,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   taxon = this.taxons[0].name
   isShowLabels = true
   mapStyleId = 'satellite-streets-v11'
+  getPopupHtml = generateHtmlPopup
 
   config: MapConfig = {
     sourceMapId: '',
