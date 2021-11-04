@@ -1,6 +1,5 @@
 // This is the one place we import & configure dayjs
-// eslint-disable-next-line unicorn/import-style
-import * as dayjsBase from 'dayjs'
+import * as dayjsBase from 'dayjs' 
 import * as minMax from 'dayjs/plugin/minMax'
 import * as pluralGetSet from 'dayjs/plugin/pluralGetSet'
 import * as quarterOfYear from 'dayjs/plugin/quarterOfYear'
