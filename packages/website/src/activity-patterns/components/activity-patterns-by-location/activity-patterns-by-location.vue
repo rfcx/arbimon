@@ -20,36 +20,10 @@
           by site
         </h2>
       </div>
-      <div class="taxon-picker">
-        <template
-          v-for="(item, idx) in mapOptions"
-          :key="item.id"
-        >
-          <button
-            class="btn"
-            :class="{
-              'bg-brand-primary': mapStyleId === item.id,
-              'rounded-r-none': idx === 0,
-              'rounded-l-none': idx === mapOptions.length - 1,
-              'mr-2': idx === mapOptions.length - 1
-            }"
-            @click="setMapStyle(item.id)"
-          >
-            {{ item.name }}
-          </button>
-        </template>
-        <button
-          class="btn"
-          @click="isShowLabels = !isShowLabels"
-        >
-          <input
-            type="checkbox"
-            class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
-            :checked="isShowLabels"
-          >
-          Labels
-        </button>
-      </div>
+      <map-tool-menu-component
+        @emit-map-style="setMapStyle"
+        @emit-show-labels-toggle="setShowLabelsToggle"
+      />
     </div>
     <div
       class="grid gap-2 mt-2"
