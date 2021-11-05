@@ -31,7 +31,8 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
 export default class ActivityPatternsByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
-  selectedType = ACTIVITY_PATTERN_KEYS.detectionFrequency
+  selectedDetectionType = ACTIVITY_PATTERN_KEYS.detectionFrequency
+  occupancyType = ACTIVITY_PATTERN_KEYS.occupancy
   datasetTypes: DatasetType[] = [
     { label: 'Detection', value: ACTIVITY_PATTERN_KEYS.detection },
     { label: 'Detection frequency', value: ACTIVITY_PATTERN_KEYS.detectionFrequency }
@@ -80,8 +81,8 @@ export default class ActivityPatternsByLocation extends Vue {
     this.config = config
   }
 
-  mapExportName (dataset: MapDataSet): string {
+  mapExportName (dataset: MapDataSet, type: string): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, undefined, sites)
   }
 }
