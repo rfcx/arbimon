@@ -12,6 +12,15 @@
     "serve": "pnpm serve-website",
     "serve-website": "cd packages/website && pnpm serve"
   },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.11.6",
+    "jest": "^27.3.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.7",
+    "tsconfig-paths": "^3.11.0",
+    "typescript": "^4.4.4"
+  },
   "description": "Monorepo root",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
   "repository": {
@@ -27,14 +36,5 @@
     "rfcx",
     "rainforest",
     "connection"
-  ],
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.6.2",
-    "jest": "^26.6.3",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^26.5.6",
-    "tsconfig-paths": "^3.11.0",
-    "typescript": "^4.3.2"
-  }
+  ]
 }

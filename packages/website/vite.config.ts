@@ -10,13 +10,12 @@ import pluginTsConfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   plugins: [
     pluginComponents({
-      resolvers: pluginIconsResolver({
-        prefix: 'icon',
-        alias: {
-          fas: 'fa-solid',
-          far: 'fa-regular'
-        }
-      })
+      resolvers: [
+        pluginIconsResolver({
+          prefix: 'icon',
+          alias: { fas: 'fa-solid', far: 'fa-regular' }
+        })
+      ]
     }),
     pluginIcons({ compiler: 'vue3' }),
     pluginTsConfigPaths(),
