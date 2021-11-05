@@ -1,0 +1,4 @@
+packages:
+  - 'packages/*'
+
+link-workspace-packages: false # you must use the `workspace:` protocol
