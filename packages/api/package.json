@@ -1,0 +1,30 @@
+{
+  "name": "@rfcx-bio/api",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf './dist' './*.tsbuildinfo'"
+  },
+  "dependencies": {
+    "@rfcx-bio/common": "workspace:*"
+  },
+  "devDependencies": {},
+  "description": "Biodiversity API",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ]
+}
