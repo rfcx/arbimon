@@ -1,7 +1,8 @@
-const mysql = require('mysql')
-const fs = require('fs')
+import * as mysql from 'mysql'
+import * as fs from 'fs'
+import * as dotenv from 'dotenv'
 
-require('dotenv').config()
+dotenv.config()
 
 const config = {
   user: process.env.USERNAME,
@@ -16,7 +17,7 @@ connection.connect()
 
 // Getting validation data
 const speciesRichnessSQLQuery = fs.readFileSync('species-richness.sql').toString()
-connection.query(speciesRichnessSQLQuery, function (error, results, fields) {
+connection.query(speciesRichnessSQLQuery, (error, results, _fields) => {
   if (error) throw error
   const json = JSON.stringify(results, null, 2)
   fs.writeFileSync('raw-species-richness-data-01-07-apr-2021.json', json, 'utf8')

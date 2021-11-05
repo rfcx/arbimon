@@ -1,8 +1,8 @@
 # Biodiversity Analytics
 
-Biodiversity analytics website build with Vue 3, Typescript, Vite, Pinia, Windi CSS
+Biodiversity analytics platform built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS
 
-## Sprint DoD
+## DoD: Sprint
 
 The following must be true to consider the Sprint "DONE":
 
@@ -20,18 +20,43 @@ The following must be true to consider the Sprint "DONE":
 ## Requirements
 
 - node 14+
-- npm 7+
+- pnpm 6+ (`npm i -g pnpm`)
+- VSCode & extensions (`pnpm init-vscode`)
+
+_If you have Vetur installed, disable it for this workspace_
 
 ## Getting started
 
-1. Install extensions & dependencies:
+1. Install/update dependencies:
 
-    `npm run bootstrap`
+   `pnpm i`
 
-2. Start developing an application:
+2. Run the web app (from the monorepo root):
 
-    `npm run serve`
+   `pnpm serve-website` -or- `pnpm serve`
 
-3. Build package:
+3. If you aren't in the monorepo root, you can still call its scripts by adding the `-w` arg:
 
-    `npm run build`
+   `pnpm -w serve`
+
+## Build, Lint, Test
+
+- Use the pnpm arg `-r` to run scripts in all packages:
+
+  `pnpm -r build`  
+   `pnpm -r lint`  
+   `pnpm -r test`
+
+- You can run all lint auto-fixes with:
+
+  `pnpm -r lint-fix`
+
+## Resetting Workspace
+
+- Delete all build artifacts:
+
+  `pnpm -r clean`
+
+- Delete all dependencies:
+
+  `pnpm -w clean-slate`
