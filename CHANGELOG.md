@@ -36,6 +36,7 @@
 * **features:** Activity patterns page detection frequency and occupancy rate metrics (#130)
 * **features:** Activity Patterns Map - Detection Frequency by Location (#193)
 * **features:** Activity Patterns Map - Detection by location (#90)
+* **features:** Activity Patterns Map - Occupancy by Location (#194)
 
 * **fixed:** Migrate CD to Github Actions (#218)
 * **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
