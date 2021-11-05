@@ -1,5 +1,5 @@
 # Build container
-FROM node:15-alpine as builder
+FROM node:16-alpine as builder
 
 ### Install pnpm
 RUN npm i -g pnpm

@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
         # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
         with:
-          node-version: '15'
+          node-version: '16'
 
       - name: 'Setup: Dependency caching'
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
