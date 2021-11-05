@@ -13,8 +13,9 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import './commands'
 import failOnConsoleError, { consoleType } from 'cypress-fail-on-console-error'
+
+import './commands'
 
 failOnConsoleError({
   includeConsoleTypes: [

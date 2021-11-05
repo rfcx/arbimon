@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
 
 /// JSON fixture file can be loaded directly using
 // the built-in JavaScript bundler
@@ -78,7 +77,7 @@ context('Files', () => {
     cy.writeFile('cypress/fixtures/profile.json', {
       id: 8739,
       name: 'Jane',
-      email: 'jane@example.com',
+      email: 'jane@example.com'
     })
 
     cy.fixture('profile').should((profile) => {
