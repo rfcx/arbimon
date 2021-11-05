@@ -10,7 +10,7 @@
         >
           <option
             v-for="item in datasetTypes"
-            :key="'location-dataset-selector' + item.value"
+            :key="'detection-location-selector' + item.value"
             :value="item.value"
           >
             {{ item.label }}
