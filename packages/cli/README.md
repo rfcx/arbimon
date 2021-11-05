@@ -8,4 +8,8 @@ CLI scripts (ex: to export data from Arbimon)
 
 2. To export data from Arbimon:
 
-   `node index.js`
+   `pnpm serve src/abimon-export/export.ts`
+
+3. To tranform the data to different formats:
+
+   `pnpm serve src/abimon-export/translate.ts`

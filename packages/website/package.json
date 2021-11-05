@@ -1,15 +1,11 @@
 {
-  "name": "biodiversity-analytics",
-  "version": "0.0.0",
-  "description": "Analyze biodiversity data from RFCx platform",
+  "name": "@rfcx-bio/website",
+  "version": "0.0.1",
   "license": "UNLICENSED",
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=7.0.0"
-  },
+  "private": true,
   "scripts": {
-    "bootstrap": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension octref.vetur && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer && code --force --install-extension kavod-io.vscode-jest-test-adapter && npm i",
     "build": "vue-tsc --project tsconfig.build.json --noEmit && vite build",
+    "clean": "rimraf './dist'",
     "lint": "eslint . && prettier --check . && stylelint .",
     "lint-fix": "eslint . --fix && prettier --loglevel warn --write . && stylelint . --fix",
     "preview": "vite preview",
@@ -23,6 +19,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.19.2",
     "@iconify-json/fa-regular": "^1.0.2",
+    "@rfcx-bio/common": "workspace:*",
     "@vueuse/components": "^6.7.5",
     "@vueuse/core": "^6.7.5",
     "axios": "^0.24.0",
@@ -39,6 +36,7 @@
     "xlsx": "^0.17.3"
   },
   "devDependencies": {
+    "@babel/core": "^7",
     "@iconify-json/fa": "^1.0.1",
     "@iconify-json/fa-solid": "^1.0.2",
     "@types/color-string": "^1.5.0",
@@ -58,6 +56,7 @@
     "@vue/test-utils": "^2.0.0-rc.16",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-interaction-variants": "^1.0.0",
+    "babel-jest": "24",
     "cypress": "^8.7.0",
     "cypress-fail-on-console-error": "^2.1.2",
     "cypress-wait-until": "^1.7.2",
@@ -92,6 +91,27 @@
     "vite-tsconfig-paths": "^3.3.17",
     "vue-jest": "^5.0.0-alpha.10",
     "vue-tsc": "^0.28.10",
+    "webpack": "^5",
     "windicss": "^3.2.1"
-  }
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "description": "Analyze biodiversity data from the RFCx platform",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ]
 }

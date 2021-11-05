@@ -1,25 +1,43 @@
-# build stage
+# Build container
 FROM node:16-alpine as builder
 
-ENV NODE_ENV=production
+### Install pnpm
+RUN npm i -g pnpm
 
+### Create build folder
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY packages/website/package*.json ./
-RUN npm ci --include=dev --production=false
+### Install deps
+COPY pnpm-*.yaml ./
+COPY package.json ./
+COPY packages/common/package.json ./packages/common/
+COPY packages/utils/package.json ./packages/utils/
+COPY packages/website/package.json ./packages/website/
+RUN pnpm i --frozen-lockfile
 
-COPY packages/website .
-RUN npm run build
+### Change mode to production (after installing all deps)
+ENV NODE_ENV=production
 
-# production state
+### Build
+COPY tsconfig*.json ./
+COPY packages/common ./packages/common
+COPY packages/utils ./packages/utils
+COPY packages/website ./packages/website
+RUN pnpm -r build
+
+# Production container
 FROM nginx
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+### Copy built website from build container
+COPY --from=builder /app/packages/website/dist /usr/share/nginx/html
 
+### Delete old web-server config
 RUN rm /etc/nginx/conf.d/default.conf
 
+### Replace with new web-server config
 COPY build/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
+### Open the ports!
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
