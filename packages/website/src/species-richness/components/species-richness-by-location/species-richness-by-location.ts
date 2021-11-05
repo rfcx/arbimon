@@ -6,6 +6,7 @@ import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
 import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { MapConfig } from '~/maps/types'
 
 interface MapOptions {
@@ -17,7 +18,8 @@ const DEFAULT_PREFIX = 'Species-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent
+    MapBubbleComponent,
+    MapToolMenuComponent
   }
 })
 export default class SpeciesRichnessByLocation extends Vue {
@@ -64,8 +66,16 @@ export default class SpeciesRichnessByLocation extends Vue {
     return `mapbox://styles/mapbox/${this.mapStyleId}`
   }
 
+  setTaxonomyValue (taxon: string): void {
+    this.taxon = taxon
+  }
+
   setMapStyle (id: string): void {
     this.mapStyleId = id
+  }
+
+  setShowLabelsToggle (isShowLabels: boolean): void {
+    this.isShowLabels = isShowLabels
   }
 
   mapMoved (config: MapConfig): void {
