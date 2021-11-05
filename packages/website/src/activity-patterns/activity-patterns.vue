@@ -11,11 +11,11 @@
   </page-title>
   <comparison-list-component
     class="mt-5"
-    @emitSelect="onFilterChange"
+    @emit-select="onFilterChange"
   />
   <species-selector
     :species-slug="$route.params.speciesSlug"
-    @emitSelectedSpeciesChanged="onSelectedSpeciesChange"
+    @emit-selected-species-changed="onSelectedSpeciesChange"
   />
   <species-background-information
     :species="species"
