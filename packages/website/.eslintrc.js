@@ -4,7 +4,7 @@ module.exports = {
     node: true
   },
   extends: ['.eslintrc-js.js'],
-  ignorePatterns: ['!.*.js', 'node_modules', 'dist', 'build', '.*/**/*'],
+  ignorePatterns: ['!.*.js', 'node_modules', 'dist', 'build', '.*/**/*', 'cypress'],
   overrides: [
     {
       files: ['src/_components/**/*.ts', '*.vue'],

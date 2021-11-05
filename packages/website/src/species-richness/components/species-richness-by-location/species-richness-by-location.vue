@@ -76,7 +76,7 @@
         :map-export-name="mapExportName(dataset)"
         :is-show-labels="isShowLabels"
         class="w-full"
-        @emitMapMoved="mapMoved"
+        @emit-map-moved="mapMoved"
       />
     </div>
   </div>
