@@ -3,8 +3,9 @@ module.exports = {
     es2021: true,
     node: true
   },
-  extends: ['standard-with-typescript'],
+  extends: ['plugin:cypress/recommended'],
   ignorePatterns: ['!.*.js', 'node_modules', 'dist', 'build', '.*/**/*'],
+  rules: {    'cypress/no-unnecessary-waiting': 'off'  },
   overrides: [
     {
       files: ['*.ts'],
