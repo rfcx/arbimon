@@ -3,8 +3,9 @@
     "noEmit": true,
     "target": "es5",
     "lib": ["es5", "dom"],
-    "types": ["cypress", "cypress-wait-until"]
+    "types": ["cypress", "cypress-wait-until"],
+    "strict": true
   },
 
-  "include": ["../node_modules/cypress", "**/*.ts", "**/*.js"]
+  "include": ["./**/*.ts", "./**/*.js"]
 }
