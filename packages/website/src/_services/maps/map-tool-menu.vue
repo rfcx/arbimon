@@ -51,7 +51,7 @@
 <script lang="ts">import { Vue } from 'vue-class-component'
 import { Emit } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { TAXONOMY_CLASSES } from '../api/taxonomy-service'
 
 interface MapOptions {
   id: string
@@ -65,17 +65,17 @@ export default class MapToolMenuView extends Vue {
     return this.isShowLabels
   }
 
-  isShowLabels = false
-  mapStyleId = 'satellite-streets-v11'
-  taxons = TAXONOMY_CLASSES
-  taxon = this.taxons[0].name
-
   get mapOptions (): MapOptions[] {
     return [
       { id: 'satellite-streets-v11', name: 'Satellite' },
       { id: 'streets-v11', name: 'Streets' }
     ]
   }
+
+isShowLabels = false
+  mapStyleId = 'satellite-streets-v11'
+  taxons = TAXONOMY_CLASSES
+  taxon = this.taxons[0].name
 
   setMapStyle (id: string): void {
     this.mapStyleId = id
