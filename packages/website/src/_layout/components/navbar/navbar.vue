@@ -6,7 +6,7 @@
           <div class="flex items-center">
             <mobile-menu-toggle-button
               v-model:isToggled="hasToggledMobileMenu"
-              @toggleMobileMenu="toggleMobileMenu()"
+              @toggle-mobile-menu="toggleMobileMenu()"
             />
             <router-link to="/">
               <div class="flex-shrink-0 flex items-center mx-4 <sm:(mx-2)">
@@ -88,7 +88,7 @@
     </nav>
     <project-selector-component
       v-if="hasOpenedProjectSelector"
-      @emitCloseProjectSelector="toggleProjectSelector"
+      @emit-close-project-selector="toggleProjectSelector"
     />
   </div>
 </template>
