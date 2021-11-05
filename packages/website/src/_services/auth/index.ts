@@ -1,12 +1,10 @@
 import createAuth0Client, { Auth0Client, LogoutOptions, RedirectLoginOptions } from '@auth0/auth0-spa-js'
-import { ref, watchEffect } from 'vue'
 
 import { useStoreOutsideSetup } from '~/store'
 import { config } from './env'
 
 export interface AuthClient {
   init: (redirectUri: string) => Promise<string>
-  isReady: () => Promise<boolean>
   isAuthenticated: boolean
   loginWithRedirect: (options: RedirectLoginOptions) => Promise<void>
   logout: (options?: LogoutOptions) => Promise<void>
@@ -17,16 +15,9 @@ export interface AuthClient {
 class AuthClientClass implements AuthClient {
   clientAuth0!: Auth0Client
   isAuthenticated = false
-  isReadyInternal = ref(false)
-  isReadyPromise!: Promise<boolean>
 
   async init (redirectUri: string): Promise<string> {
     const { domain, clientId, audience } = config
-
-    // Other callers must wait for init
-    this.isReadyPromise = new Promise((resolve, reject) => {
-      watchEffect(() => { if (this.isReadyInternal.value) return resolve(this.isAuthenticated) })
-    })
 
     let redirectPath = ''
     try {
@@ -42,16 +33,11 @@ class AuthClientClass implements AuthClient {
       // Get auth status
       const user = await this.clientAuth0.getUser()
       this.isAuthenticated = user !== undefined
-      this.isReadyInternal.value = true
 
       // Store user in Pinia
       void useStoreOutsideSetup().updateUser(user)
     } catch (e: any) { } // TODO 156 - Return error to main
     return redirectPath
-  }
-
-  async isReady (): Promise<boolean> {
-    return await this.isReadyPromise
   }
 
   async loginWithRedirect (options: RedirectLoginOptions): Promise<void> {
