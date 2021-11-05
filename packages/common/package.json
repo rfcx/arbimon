@@ -8,9 +8,11 @@
     "clean": "rimraf './dist' './*.tsbuildinfo'"
   },
   "dependencies": {
-    "@rfcx-bio/utils": "workspace:*"
+    "@rfcx-bio/utils": "workspace:*",
+    "@types/jest": "^27.0.2",
+    "jest": "^27.3.1",
+    "ts-jest": "^27.0.7"
   },
-  "devDependencies": {},
   "description": "Biodiversity shared code",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
   "repository": {

@@ -5,7 +5,7 @@
   />
   <comparison-list-component
     class="mt-5"
-    @emitSelect="onFilterChange"
+    @emit-select="onFilterChange"
   />
   <horizontal-bar-chart-component
     dom-id="species-by-class"
