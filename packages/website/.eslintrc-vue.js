@@ -7,8 +7,12 @@ module.exports = {
   ],
   plugins: ['regex'],
   rules: {
+    // Overrides
     '@typescript-eslint/no-empty-function': 'off',
     indent: 'off',
+    'vue/multi-word-component-names': 'warn',
+
+    // Rules
     'regex/invalid': [
       'error', [
         {

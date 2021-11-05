@@ -13,7 +13,8 @@ jobs:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
       - name: 'Setup: Git check out'
-        uses: actions/checkout@fd47087372161c6f2a7b96d2ef87e944d89023ed
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
 
       - name: 'Setup: Extract branch name'
         shell: bash
@@ -22,6 +23,7 @@ jobs:
 
       - name: 'Setup: Set env'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         with:
           key: '${{ steps.extract_branch.outputs.branch }}'
           map: |
@@ -45,6 +47,7 @@ jobs:
 
       - name: 'Setup: Configure AWS credentials'
         uses: aws-actions/configure-aws-credentials@0d9a5be0dceea74e09396820e1e522ba4a110d2f
+        # v1 (1.5.11) @ 03 Nov 2021 https://github.com/aws-actions/configure-aws-credentials/tags
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -53,6 +56,7 @@ jobs:
       - name: 'Setup: Login to ECR'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+        # v1 (1.3.3) @ 03 Nov 2021 https://github.com/aws-actions/amazon-ecr-login/tags
 
       - name: 'Build: Docker build'
         run: |
@@ -65,7 +69,8 @@ jobs:
           docker push -a $ECR_REGISTRY/${{ env.ECR_REPO }}
 
       - name: 'Deploy: Kubernetes apply'
-        uses: actions-hub/kubectl@4eb1c88a390c884024631213c5d7aa65d2b1892f
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
@@ -73,6 +78,7 @@ jobs:
 
       - name: 'Notify: Slack'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         if: always()
         with:
           status: ${{ job.status }}

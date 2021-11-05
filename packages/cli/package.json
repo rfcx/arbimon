@@ -1,23 +1,35 @@
 {
-  "name": "script",
-  "version": "1.0.0",
-  "description": "A script to export data from Arbimon",
-  "main": "index.js",
+  "name": "@rfcx-bio/cli",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
-    "test": "test"
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "serve": "ts-node --project tsconfig.build.json --files -r tsconfig-paths/register"
   },
+  "dependencies": {
+    "@rfcx-bio/common": "workspace:*",
+    "dotenv": "^10.0.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@types/mysql": "^2.15.19"
+  },
+  "description": "Biodiversity CLI",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/rfcx/biodiversity-analytics/issues"
   },
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "dependencies": {
-    "dotenv": "^10.0.0",
-    "mysql": "^2.18.1"
-  }
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ]
 }
