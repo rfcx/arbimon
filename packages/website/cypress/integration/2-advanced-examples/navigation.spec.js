@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
 
 context('Navigation', () => {
   beforeEach(() => {
@@ -50,7 +49,7 @@ context('Navigation', () => {
       onLoad (contentWindow) {
         // contentWindow is the remote page's window object
         expect(typeof contentWindow === 'object').to.be.true
-      },
+      }
     })
-    })
+  })
 })

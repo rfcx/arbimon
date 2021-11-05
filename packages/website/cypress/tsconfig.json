@@ -6,5 +6,5 @@
     "types": ["cypress", "cypress-wait-until"]
   },
 
-  "include": ["../node_modules/cypress", "**/*.ts"]
+  "include": ["../node_modules/cypress", "**/*.ts", "**/*.js"]
 }
