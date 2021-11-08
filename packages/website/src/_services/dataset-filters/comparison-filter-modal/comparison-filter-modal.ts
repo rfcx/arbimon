@@ -6,6 +6,7 @@ import { Site } from '~/api/types'
 import { dayjs } from '~/dayjs'
 import { BiodiversityStore } from '~/store'
 import { Filter } from '..'
+import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
   id: string
@@ -21,7 +22,8 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 
 @Options({
   components: {
-    OnClickOutside
+    OnClickOutside,
+    FilterTaxon
   }
 })
 export default class ComparisonFilterModalComponent extends Vue {
@@ -55,6 +57,10 @@ export default class ComparisonFilterModalComponent extends Vue {
       {
         id: 'times',
         name: 'Time Range'
+      },
+      {
+        id: 'taxon',
+        name: 'Taxon'
       }
     ]
   }
