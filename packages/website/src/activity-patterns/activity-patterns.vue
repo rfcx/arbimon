@@ -29,6 +29,7 @@
       :datasets="mapDatasets"
       class="mt-5"
     />
+    <activity-patterns-by-time class="my-5" />
   </div>
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>
