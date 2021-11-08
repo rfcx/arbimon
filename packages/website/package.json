@@ -6,8 +6,8 @@
   "scripts": {
     "build": "vue-tsc --project tsconfig.build.json --noEmit && vite build",
     "clean": "rimraf './dist'",
-    "lint": "eslint . && prettier --check . && stylelint .",
-    "lint-fix": "eslint . --fix && prettier --loglevel warn --write . && stylelint . --fix",
+    "lint": "eslint . && prettier . --check && stylelint .",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
     "serve": "vite",
     "test": "jest src",
