@@ -1,6 +1,6 @@
 import { DatasetDefinition } from '~/api/types'
-import { rawSummaries } from './raw-PR-data'
 import { rawSites } from './raw-sites'
+import { rawSummaries } from './raw-summaries'
 
 // TODO 132 - Encapsulate API response types in the API, and return project types
 export interface ApiSite {
