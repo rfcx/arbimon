@@ -3,15 +3,15 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
-    "@types/jest": "^27.0.2",
-    "jest": "^27.3.1",
-    "ts-jest": "^27.0.7"
+    "dayjs": "^1.10.7",
+    "lodash": "^4.17.21"
   },
   "description": "Biodiversity API",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
