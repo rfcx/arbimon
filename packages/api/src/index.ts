@@ -1,1 +1,1 @@
-console.log('Mock `API` module')
+console.info('Mock `API` module')

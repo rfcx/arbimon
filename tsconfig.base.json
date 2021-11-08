@@ -8,13 +8,25 @@
 */
 {
   // Exclude deps, build artifacts, hidden folders, tests
-  "exclude": ["node_modules", "dist", "lib", ".*/**", "**/*.test.ts", "**/*.spec.ts", "**/*.mock.ts", "**/*.stub.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib",
+    ".*/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.mock.ts",
+    "**/*.stub.ts"
+  ],
 
   "compilerOptions": {
     /* Language, Target, Environment */
     "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
     "outDir": "dist" /* Specify an output folder for all emitted files. */,
-    "lib": ["ESNext", "DOM"] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
+    "lib": [
+      "ESNext",
+      "DOM"
+    ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
     "module": "ESNext" /* Specify what module code is generated. */,
     "moduleResolution": "Node" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "target": "ES2015" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,

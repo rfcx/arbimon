@@ -1,5 +1,6 @@
-import { downloadPng } from '@rfcx-bio/utils/file'
 import * as d3 from 'd3'
+
+import { downloadPng } from '@rfcx-bio/utils/file'
 
 export interface ChartSVGElement {
   svg: SVGSVGElement

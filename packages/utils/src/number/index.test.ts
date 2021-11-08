@@ -1,4 +1,4 @@
-import { firstDiffDigit } from "."
+import { firstDiffDigit } from '.'
 
 describe('firstDiffDigit', () => {
   test('Can find a different first digit', () => {
