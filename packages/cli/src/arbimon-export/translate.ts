@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
 import * as fs from 'fs'
+import { dirname, resolve } from 'path'
 import { ArbimonHourlySpeciesRow } from './types'
 
-const inputFilename = 'raw-PR-data.json'
-const outputFilename = 'raw-PR-frequency.json'
+const __dirname = dirname(new URL(import.meta.url).pathname)
+const inputFilename = resolve(__dirname, './raw-PR-data.json')
+const outputFilename = resolve(__dirname, './raw-PR-frequency.json')
 
 const rawSpeciesRichnessStringOrBuffer = fs.readFileSync(inputFilename)
 const rawSpeciesRichnessData = Buffer.isBuffer(rawSpeciesRichnessStringOrBuffer)

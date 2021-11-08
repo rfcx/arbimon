@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
-    "serve": "ts-node --project tsconfig.build.json --files -r tsconfig-paths/register"
+    "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
@@ -17,7 +18,8 @@
     "ts-jest": "^27.0.7"
   },
   "devDependencies": {
-    "@types/mysql": "^2.15.19"
+    "@types/mysql": "^2.15.19",
+    "ts-node": "^10.4.0"
   },
   "description": "Biodiversity CLI",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
