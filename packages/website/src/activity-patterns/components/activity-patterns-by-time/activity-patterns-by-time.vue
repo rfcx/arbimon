@@ -19,6 +19,11 @@
         </h2>
       </div>
     </div>
+    <line-chart-component
+      :dom-id="domId"
+      :config="config"
+      :datasets="[]"
+    />
   </div>
 </template>
 <script lang="ts" src="./activity-patterns-by-time.ts"></script>
