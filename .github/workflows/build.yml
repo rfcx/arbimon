@@ -39,10 +39,10 @@ jobs:
               args: [--frozen-lockfile]
 
       - name: 'Build: tsc/vite'
-        run: pnpm -r build
+        run: pnpm build-ci
 
-      # - name: 'Build: Lint'
-      #   run: cd packages/website && npm run lint
+      - name: 'Build: Lint'
+        run: pnpm lint-ci
 
       # - name: 'Build: Test'
       #   run: cd packages/website && npm run test
