@@ -5,7 +5,7 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 import { Site } from '~/api/types'
 import { dayjs } from '~/dayjs'
 import { BiodiversityStore } from '~/store'
-import { Filter } from '..'
+import { Filter, OptionalFilter } from '..'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
@@ -35,7 +35,8 @@ export default class ComparisonFilterModalComponent extends Vue {
     return {
       sites: this.selectedSites,
       startDate: dayjs.utc(this.startDate),
-      endDate: dayjs.utc(this.endDate)
+      endDate: dayjs.utc(this.endDate),
+      otherFilters: this.otherFilters
     }
   }
 
@@ -46,6 +47,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   startDate: string | null = dayjs().subtract(7, 'days').format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
   readonly today = dayjs().format(DATE_FORMAT)
+  otherFilters: OptionalFilter[] = []
   currentActiveMenuId = 'sites'
 
   get menus (): FilterMenuItem[] {
@@ -115,5 +117,9 @@ export default class ComparisonFilterModalComponent extends Vue {
       this.selectedSites.splice(siteIdx, 1)
       item.check = false
     }
+  }
+
+  updateSelectedTaxons (otherFilters: OptionalFilter[]): void {
+    this.otherFilters = otherFilters
   }
 }

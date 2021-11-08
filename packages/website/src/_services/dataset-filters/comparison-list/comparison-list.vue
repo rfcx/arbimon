@@ -28,6 +28,12 @@
         <div class="flex flex-row items-center mt-2">
           <icon-fas-clock class="mr-2" /> {{ filter.displayDate }}
         </div>
+        <div
+          v-if="filter.otherFilters.length > 0"
+          class="flex flex-row items-center mt-2 border-t-1"
+        >
+          <icon-fas-filter class="mr-2" /> <span class="first-letter:capitalize">{{ getOptionalFilterText(idx) }}</span>
+        </div>
       </div>
       <div
         v-if="showAddButton"

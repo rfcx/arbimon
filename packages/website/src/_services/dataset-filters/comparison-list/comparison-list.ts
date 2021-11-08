@@ -14,6 +14,7 @@ const defaultFilter = new FilterImpl(dayjs().subtract(7, 'days'), dayjs(), [])
     ComparisonFilterModalComponent
   }
 })
+
 export default class ComparisonListComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Emit() emitSelect (): ColoredFilter[] {
@@ -52,6 +53,22 @@ export default class ComparisonListComponent extends Vue {
     return this.store.datasetColors[idx]
   }
 
+  getOptionalFilterText (idx: number): string {
+    const otherFilters = this.filters[idx].otherFilters
+    if (otherFilters.length === 1) {
+      return otherFilters[0].title + ': ' + otherFilters[0].value
+    } else {
+      return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
+    }
+    // TODO: continue on this
+    /*
+    const optionalFilters = groupBy(this.filters[idx].otherFilters, 'title')
+    const getFilterValue = (filters: OptionalFilter[]): string => filters.map(f => f.value).join(', ')
+    const groupedOptionalFilters = mapValues(optionalFilters, getFilterValue) // type ==> { [x: string]: string } ==> e.g. {'taxon': 'frog, bird'}
+    return groupedOptionalFilters // TODO: expect to transform this { [x: string]: string } to string ==> e.g. "Taxon: frog, bird"
+    */
+  }
+
   popupOpen (idx: number): void {
     this.isFilterOpen = true
     this.isAddSelected = false
@@ -72,7 +89,7 @@ export default class ComparisonListComponent extends Vue {
   }
 
   apply (filter: Filter): void {
-    const newFilter = new FilterImpl(filter.startDate, filter.endDate, filter.sites)
+    const newFilter = new FilterImpl(filter.startDate, filter.endDate, filter.sites, filter.otherFilters)
     if (this.isAddSelected) {
       this.filters.push(newFilter)
       this.isAddSelected = false
