@@ -12,6 +12,7 @@
     "lint:eslint": "eslint \"./*.{ts,js}\"",
     "lint:prettier": "prettier . --check",
     "lint": "run-p lint:* --aggregate-output",
+    "lint-ci": "pnpm -r --parallel --no-bail lint",
     "lint-fix": "eslint \"./*.{ts,js}\" --fix && prettier . --loglevel warn --write",
     "test": "jest src",
     "serve": "pnpm serve-website",
