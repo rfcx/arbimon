@@ -60,6 +60,13 @@
           </label>
         </div>
       </div>
+      <!-- Taxon -->
+      <div
+        v-else-if="currentActiveMenuId === menus[2].id"
+        class="w-full"
+      >
+        <filter-taxon />
+      </div>
       <div
         v-else
         class="p-4 flex"
