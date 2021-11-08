@@ -10,11 +10,6 @@ import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { MapConfig } from '~/maps/types'
 
-interface MapOptions {
-  id: string
-  name: string
-}
-
 interface DatasetType {
   label: string
   value: string
@@ -41,7 +36,7 @@ export default class ActivityPatternsByLocation extends Vue {
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
   isShowLabels = true
-  mapStyleId = 'satellite-streets-v11'
+  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
   getPopupHtml = generateDetectionHtmlPopup
 
   config: MapConfig = {
@@ -58,19 +53,8 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
-  get mapOptions (): MapOptions[] {
-    return [
-      { id: 'satellite-streets-v11', name: 'Satellite' },
-      { id: 'streets-v11', name: 'Streets' }
-    ]
-  }
-
-  get mapStyle (): string {
-    return `mapbox://styles/mapbox/${this.mapStyleId}`
-  }
-
-  setMapStyle (id: string): void {
-    this.mapStyleId = id
+  setMapStyle (style: string): void {
+    this.mapStyle = style
   }
 
   setShowLabelsToggle (isShowLabels: boolean): void {

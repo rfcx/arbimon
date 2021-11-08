@@ -30,7 +30,7 @@
       <button
         class="btn"
         :class="{
-          'bg-brand-primary': mapStyleId === item.id,
+          'bg-brand-primary': mapStyle === item.id,
           'rounded-r-none': idx === 0,
           'rounded-l-none': idx === mapOptions.length - 1,
           'mr-2': idx === mapOptions.length - 1

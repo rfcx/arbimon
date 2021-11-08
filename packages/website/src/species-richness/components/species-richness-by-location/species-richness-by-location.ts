@@ -9,11 +9,6 @@ import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { MapConfig } from '~/maps/types'
 
-interface MapOptions {
-  id: string
-  name: string
-}
-
 const DEFAULT_PREFIX = 'Species-By-Site'
 
 @Options({
@@ -28,7 +23,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
   isShowLabels = true
-  mapStyleId = 'satellite-streets-v11'
+  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
   getPopupHtml = generateHtmlPopup
 
   config: MapConfig = {
@@ -49,29 +44,12 @@ export default class SpeciesRichnessByLocation extends Vue {
     }
   }
 
-  get mapOptions (): MapOptions[] {
-    return [
-      {
-        id: 'satellite-streets-v11',
-        name: 'Satellite'
-      },
-      {
-        id: 'streets-v11',
-        name: 'Streets'
-      }
-    ]
-  }
-
-  get mapStyle (): string {
-    return `mapbox://styles/mapbox/${this.mapStyleId}`
-  }
-
   setTaxonomyValue (taxon: string): void {
     this.taxon = taxon
   }
 
-  setMapStyle (id: string): void {
-    this.mapStyleId = id
+  setMapStyle (style: string): void {
+    this.mapStyle = style
   }
 
   setShowLabelsToggle (isShowLabels: boolean): void {
