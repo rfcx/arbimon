@@ -1,22 +1,25 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
+
+import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts'
+
 import { ArbimonHourlySpeciesRow } from './types'
 
 // Parameters
-const __dirname = dirname(new URL(import.meta.url).pathname)
-const inputFilePath = resolve(__dirname, './raw-summaries.json')
-const outputFilePath = resolve(__dirname, './raw-summaries.ts')
+const currentDir = dirname(new URL(import.meta.url).pathname)
+const inputFilePath = resolve(currentDir, './raw-summaries.json')
+const outputFilePath = resolve(currentDir, './raw-summaries.ts')
 const outputConstName = 'rawSummaries'
 
 // Ingest raw data
 const rawSpeciesRichnessStringOrBuffer = fs.readFileSync(inputFilePath)
 const rawSpeciesRichnessData = Buffer.isBuffer(rawSpeciesRichnessStringOrBuffer)
-  ? rawSpeciesRichnessStringOrBuffer.toString() 
+  ? rawSpeciesRichnessStringOrBuffer.toString()
   : rawSpeciesRichnessStringOrBuffer
 
 // Transform as needed & write
-const output = transformCalculateDetectionFrequency(JSON.parse(rawSpeciesRichnessData))
-fs.writeFileSync(outputFilePath, 'export const ' + outputConstName + ' = ' + output, 'utf8')
+const output = jsonToTs(transformCalculateDetectionFrequency(JSON.parse(rawSpeciesRichnessData)), outputConstName)
+fs.writeFileSync(outputFilePath, output, 'utf8')
 
 // Transform functions
 export function transformToSites (data: ArbimonHourlySpeciesRow[]): string {
