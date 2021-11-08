@@ -19,7 +19,7 @@ The following must be true to consider the Sprint "DONE":
 
 ## Requirements
 
-- node 14+
+- node 16+
 - pnpm 6+ (`npm i -g pnpm`)
 - VSCode & extensions (`pnpm init-vscode`)
 
