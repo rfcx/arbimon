@@ -16,6 +16,7 @@ export interface ApiDetection {
   'name': string
   'lat': number
   'lon': number
+  'alt': number
   'date': string // ex: "2021-04-01T00:00:00.000Z"
   'hour': number
   'species_id': number
