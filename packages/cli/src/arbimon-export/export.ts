@@ -1,17 +1,17 @@
-import * as mysql from 'mysql'
-import * as fs from 'fs'
 import * as dotenv from 'dotenv'
+import * as fs from 'fs'
+import * as mysql from 'mysql'
 import { dirname, resolve } from 'path'
 
 // Parameters
-const __dirname = dirname(new URL(import.meta.url).pathname)
-const sqlFilePath = resolve(__dirname, './get-detection-summaries.sql')
-const outputFilePath = resolve(__dirname, './raw-summaries.json')
+const currentDir = dirname(new URL(import.meta.url).pathname)
+const sqlFilePath = resolve(currentDir, './get-detection-summaries.sql')
+const outputFilePath = resolve(currentDir, './raw-summaries.json')
 
 // Env
 dotenv.config()
 
-const config = { 
+const config = {
   user: process.env.USERNAME,
   password: process.env.PASSWORD,
   host: process.env.HOST,

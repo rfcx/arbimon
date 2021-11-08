@@ -6,7 +6,7 @@ export const groupByNumber = <T>(data: T[], keySelector: ((k: T) => number)): Re
     if (!(key in result)) {
       result[key] = [datum]
     } else {
-      result[key]!.push(datum)
+      result[key].push(datum)
     }
   }
 
