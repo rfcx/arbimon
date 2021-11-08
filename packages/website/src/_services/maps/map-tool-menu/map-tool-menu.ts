@@ -1,6 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
+import { MAPBOX_STYLE_WITH_PLACE_LABELS } from '~/maps'
 import { TAXONOMY_CLASSES } from '../../api/taxonomy-service'
 
 interface MapOptions {
@@ -24,18 +25,18 @@ export default class MapToolMenuComponent extends Vue {
 
   @Emit()
   emitMapStyle (): string {
-    return this.mapStyleId
+    return this.mapStyle
   }
 
   isShowLabels = true
-  mapStyleId = 'satellite-streets-v11'
+  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
 
   get mapOptions (): MapOptions[] {
     return [
-      { id: 'satellite-streets-v11', name: 'Satellite' },
-      { id: 'streets-v11', name: 'Streets' }
+      { id: 'mapbox://styles/mapbox/satellite-streets-v11', name: 'Satellite' },
+      { id: MAPBOX_STYLE_WITH_PLACE_LABELS, name: 'Streets' }
     ]
   }
 
@@ -44,12 +45,12 @@ export default class MapToolMenuComponent extends Vue {
     this.emitTaxonomyValue()
   }
 
-  @Watch('mapStyleId')
+  @Watch('mapStyle')
   onMapStyleChange (): void {
     this.emitMapStyle()
   }
 
   setMapStyle (id: string): void {
-    this.mapStyleId = id
+    this.mapStyle = id
   }
 }
