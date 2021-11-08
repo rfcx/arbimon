@@ -1,12 +1,8 @@
 # Ignore everything
-# ...except json/yml/yaml
-*
-!*.json
-!*.yml
-!*.yaml
-
-# Ignore packages
-packages/
+# ...except css/scss
+*.*
+!*.css
+!*.scss
 
 # Just to be safe
 .*/

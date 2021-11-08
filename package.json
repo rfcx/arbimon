@@ -9,7 +9,9 @@
   "scripts": {
     "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension johnsoncodehk.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer && code --force --install-extension kavod-io.vscode-jest-test-adapter",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter {\"packages\"} exec rimraf \"node_modules\" && rimraf \"node_modules\"",
-    "lint": "eslint \"./*.{ts,js}\" && prettier . --check",
+    "lint:eslint": "eslint \"./*.{ts,js}\"",
+    "lint:prettier": "prettier . --check",
+    "lint": "run-p lint:* --aggregate-output",
     "lint-fix": "eslint \"./*.{ts,js}\" --fix && prettier . --loglevel warn --write",
     "test": "jest src",
     "serve": "pnpm serve-website",
@@ -48,6 +50,7 @@
     "eslint-plugin-vue": "^8.0.3",
     "jest": "^27.3.1",
     "node-sass": "^6.0.1",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.3.11",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",

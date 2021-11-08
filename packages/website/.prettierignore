@@ -1,11 +1,13 @@
 # Ignore everything
 # ...except json/yml/yaml
-*.*
+*
 !*.json
 !*.yml
 !*.yaml
 
 # Just to be safe
+.*/
+pnpm-lock.yaml
 node_modules
 dist
 lib
