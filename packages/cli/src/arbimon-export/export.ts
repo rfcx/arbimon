@@ -3,11 +3,13 @@ import * as fs from 'fs'
 import * as dotenv from 'dotenv'
 import { dirname, resolve } from 'path'
 
-dotenv.config()
-
+// Parameters
 const __dirname = dirname(new URL(import.meta.url).pathname)
-const sqlFilePath = resolve(__dirname, './species-richness.sql')
-const outputFilePath = resolve(__dirname, './raw-species-richness-data-01-07-apr-2021.json')
+const sqlFilePath = resolve(__dirname, './get-detection-summaries.sql')
+const outputFilePath = resolve(__dirname, './raw-summaries.json')
+
+// Env
+dotenv.config()
 
 const config = { 
   user: process.env.USERNAME,
@@ -17,15 +19,14 @@ const config = {
   timezone: 'UTC'
 }
 
+// Query & save
 const connection = mysql.createConnection(config)
 connection.connect()
 
-// Getting validation data
 const speciesRichnessSQLQuery = fs.readFileSync(sqlFilePath).toString()
 connection.query(speciesRichnessSQLQuery, (error, results, _fields) => {
   if (error) throw error
   const json = JSON.stringify(results, null, 2)
   fs.writeFileSync(outputFilePath, json, 'utf8')
+  connection.end()
 })
-
-connection.end()
