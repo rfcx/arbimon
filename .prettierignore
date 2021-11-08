@@ -1,0 +1,18 @@
+# Ignore everything
+# ...except root json/yml/yaml
+*.*
+!*.json
+!*.yml
+!*.yaml
+
+# Ignore sub-directories
+./**/*
+
+# Ignore generated files
+pnpm-lock.yaml
+
+# Just to be safe
+node_modules
+dist
+lib
+coverage

@@ -7,7 +7,9 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
-    "test": "jest src "
+    "lint": "eslint . && prettier . --check && stylelint .",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
+    "test": "jest src"
   },
   "dependencies": {
     "dayjs": "^1.10.7",

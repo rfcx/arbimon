@@ -4,8 +4,7 @@ module.exports = {
     ecmaFeatures: { jsx: true },
     ecmaVersion: 2021,
     extraFileExtensions: ['.vue'],
-    parser: '@typescript-eslint/parser',
-    project: ['./tsconfig.json']
+    parser: '@typescript-eslint/parser'
   },
   plugins: ['sort-class-members'],
   rules: {

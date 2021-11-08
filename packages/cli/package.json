@@ -7,7 +7,10 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
-    "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register"
+    "lint": "eslint . && prettier . --check && stylelint .",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
+    "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
+    "test": "jest src"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
