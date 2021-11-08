@@ -1,12 +1,14 @@
 import { Dayjs } from 'dayjs'
 
 import { Site } from '~/api/types'
+import { OptionalFilter } from '~/dataset-filters'
 import { formatDateRange } from '../utils/dates'
 
 export class FilterImpl {
   sites: Site[] = []
   startDate: Dayjs
   endDate: Dayjs
+  otherFilters: OptionalFilter[] = []
   color: string = ''
 
   get displayTitle (): string {
@@ -19,10 +21,11 @@ export class FilterImpl {
     return formatDateRange(this.startDate, this.endDate)
   }
 
-  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], color = '') {
+  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], otherFilters: OptionalFilter[] = [], color = '') {
     this.startDate = startDate
     this.endDate = endDate
     this.sites = sites
+    this.otherFilters = otherFilters
     this.color = color
   }
 }

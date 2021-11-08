@@ -1,8 +1,15 @@
 import { Vue } from 'vue-class-component'
+import { Emit, Prop } from 'vue-property-decorator'
 
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { OptionalFilter } from '~/dataset-filters'
 
 export default class FilterTaxon extends Vue {
+  @Prop({ default: [] }) defaultFilterTaxon!: string[]
+  @Emit() emitSelectedTaxons (): OptionalFilter[] {
+    return this.selectedTaxons.map(i => { return { title: 'taxon', value: i } })
+  }
+
   selectedTaxons: string[] = []
   taxons = TAXONOMY_CLASSES
 
@@ -11,7 +18,11 @@ export default class FilterTaxon extends Vue {
   }
 
   mounted (): void {
-    this.selectAllTaxon()
+    if (this.defaultFilterTaxon.length > 0) {
+      this.selectedTaxons = this.defaultFilterTaxon
+    } else {
+      this.selectAllTaxon()
+    }
   }
 
   isSelectedTaxon (taxon: string): boolean {
@@ -25,6 +36,7 @@ export default class FilterTaxon extends Vue {
     } else {
       this.selectedTaxons.splice(taxonIdx, 1)
     }
+    this.emitSelectedTaxons()
   }
 
   selectAllTaxon (): void {

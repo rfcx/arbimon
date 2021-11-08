@@ -65,7 +65,7 @@
         v-else-if="currentActiveMenuId === menus[2].id"
         class="w-full"
       >
-        <filter-taxon />
+        <filter-taxon @emit-selected-taxons="updateSelectedTaxons" />
       </div>
       <div
         v-else
