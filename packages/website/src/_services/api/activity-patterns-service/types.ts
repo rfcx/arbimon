@@ -1,5 +1,7 @@
 import { DatasetDefinition } from '..'
 
+export type TimeBucket = 'hour' | 'day' | 'month' | 'year' | 'quarter'
+
 export interface ActivityPatternsData extends DatasetDefinition {
   totalRecordingCount: number
   totalSiteCount: number
@@ -20,4 +22,10 @@ export interface ActivityPatternsDataBySite {
     siteDetectionFrequency: number
     siteOccupied: boolean
   }
+}
+
+export interface ActivityPatternsDataByTime {
+  detection: Record<number, number>
+  detectionFrequency: Record<number, number>
+  occupancy: Record<number, number>
 }

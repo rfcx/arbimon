@@ -2,6 +2,7 @@ import { groupBy, mapValues, sum } from 'lodash'
 
 import { DatasetDefinition } from '~/api/types'
 import { ApiHourlySpeciesSummary, filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
+import { groupByNumber } from '~/utils/lodash-ext'
 import { ActivityPatternsData, ActivityPatternsDataBySite } from '.'
 
 export class ActivityPatternsService {
@@ -26,6 +27,7 @@ export class ActivityPatternsService {
 
     // By site
     const activityBySite = this.getActivityDataBySite(totalSummaries, speciesId)
+    const activityByTime = this.getActvityDataByTime(totalSummaries, speciesId)
 
     return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount: detectionCount, detectionFrequency: detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite }, this.delay)
   }
@@ -55,6 +57,25 @@ export class ActivityPatternsService {
         siteOccupied
       }
     })
+  }
+
+  calculateDetectionActvity (detections: ApiHourlySpeciesSummary[]): number {
+    return new Set(detections.map(d => d.species_id)).size
+  }
+
+  getActvityDataByTime (totalSummaries: ApiHourlySpeciesSummary[], speciesId: number): void {
+    const speciesSummaries = filterBySpecies(totalSummaries, speciesId)
+    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
+
+    const hour = {
+      detection: mapValues(hourGrouped, this.calculateDetectionActvity)
+      // detectionFrequency: mapValues(hourGrouped, this.calculateActvity),
+      // occupancy: mapValues(hourGrouped, this.calculateActvity)
+    }
+
+    // return {
+    //   hour: mapValues(groupByNumber())
+    // }
   }
 }
 
