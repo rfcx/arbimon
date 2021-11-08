@@ -7,8 +7,10 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
-    "lint": "eslint . && prettier . --check && stylelint .",
-    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier . --check",
+    "lint": "run-p lint:* --aggregate-output",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "test": "jest src"
   },
   "dependencies": {
