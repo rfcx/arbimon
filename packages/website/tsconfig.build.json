@@ -18,7 +18,6 @@
     "target": "ESNext",
     "jsx": "preserve",
     "resolveJsonModule": true, // TODO 210 - Remove this once the mock API is removed
-    "noUnusedLocals": false // doesn't understand usage in a Vue template
   },
 
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
