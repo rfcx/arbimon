@@ -4,16 +4,16 @@ module.exports = {
   root: true,
   overrides: [
     {
-      extends: ['.eslintrc-js.js'],
+      extends: ['../../.eslintrc-js.js'],
       files: ['*.js']
     },
     {
-      extends: '.eslintrc-vue.js',
-      files: ['*.vue'],
+      extends: '../../.eslintrc-vue.js',
+      files: ['src/_components/**/*.ts', '*.vue'],
       parserOptions: { project: ['./tsconfig.json', 'packages/*/tsconfig.json'] }
     },
     {
-      extends: '.eslintrc-ts.js',
+      extends: '../../.eslintrc-ts.js',
       files: ['*.ts'],
       parserOptions: { project: ['./tsconfig.json', 'packages/*/tsconfig.json'] }
     }
