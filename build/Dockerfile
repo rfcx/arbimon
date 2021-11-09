@@ -37,8 +37,8 @@ CMD ["node", "dist/src/index.js"]
 
 # Website
 FROM nginx as website
-COPY --from=build /app/packages/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
-COPY build/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/packages/website/dist /usr/share/nginx/html
+COPY --from=build /app/build/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
