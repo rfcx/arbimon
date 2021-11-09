@@ -30,6 +30,8 @@ RUN pnpm build-ci
 # API
 FROM build as api
 WORKDIR /app/packages/api
+ENV FASTIFY_PORT=8080
+ENV FASTIFY_ADDRESS=0.0.0.0
 EXPOSE 8080
 CMD ["node", "dist/src/index.js"]
 
