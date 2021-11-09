@@ -11,7 +11,7 @@
         :checked="isSelectedTaxon(taxon.name)"
         @click="updateSelectedTaxons(taxon.name)"
       >
-      <span class="text-white ml-2">{{ taxon.name }} {{ taxon.symbol }}</span>
+      <span class="text-white ml-2">{{ taxon.name }}</span>
     </label>
   </div>
 </template>
