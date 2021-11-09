@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: biodiversity-analytics-service
+  name: biodiversity-website-service
   namespace: testing
   labels:
-    app: biodiversity-analytics
+    app: biodiversity-website
 spec:
   selector:
-    app: biodiversity-analytics
+    app: biodiversity-website
   type: ClusterIP
   ports:
     - name: node
