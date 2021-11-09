@@ -3,7 +3,9 @@ import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service/taxonomy-service-mock'
+import { exportChartWithElement } from '~/charts'
 import { mapboxgl } from '~/maps'
+import { generateNormalizeMapLegend } from '~/maps/export-legend'
 import { MapConfig } from '~/maps/types'
 import { downloadPng } from '~/utils/file'
 import { MapDataSet, MapSiteData } from '.'
@@ -209,8 +211,18 @@ export default class MapBubbleComponent extends Vue {
     this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
   }
 
-  downloadMapPng (): void {
+  async downloadMapPng (): Promise<void> {
     const img = this.map.getCanvas().toDataURL('image/png')
     downloadPng(img, this.mapExportName)
+
+    const { color, dataRange, maximumRadius } = this.dataset
+    if (dataRange) {
+      const range = dataRange[this.dataKey]
+      const svg = generateNormalizeMapLegend(color, range, maximumRadius ?? range.length, 'Number of detections')
+
+      if (!svg) return
+
+      await exportChartWithElement(svg, 'legend-test')
+    }
   }
 }
