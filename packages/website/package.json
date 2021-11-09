@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "clean": "rimraf './dist'",
-    "lint:types": "vue-tsc --project tsconfig.build.json --noEmit",
+    "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint .",
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@iconify-json/fa": "^1.0.1",
     "@iconify-json/fa-solid": "^1.0.2",
+    "@types/color-string": "^1.5.0",
     "@types/d3": "^7.1.0",
     "@types/mapbox-gl": "^2.4.2",
     "@vue/test-utils": "^2.0.0-rc.16",
