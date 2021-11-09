@@ -25,7 +25,7 @@ COPY packages/utils ./packages/utils
 COPY packages/website ./packages/website
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
-RUN pnpm -r build
+RUN pnpm build-ci
 
 # API
 FROM build as api
