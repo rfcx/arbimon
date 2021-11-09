@@ -2,8 +2,6 @@ import { DatasetDefinition } from '..'
 
 export type TimeBucket = 'hour' | 'day' | 'month' | 'year' | 'quarter'
 
-type ActivityPatternsTimeBucket = Record<TimeBucket, ActivityPatternsDataByTimeBucket>
-
 export interface ActivityPatternsData extends DatasetDefinition {
   totalRecordingCount: number
   totalSiteCount: number
@@ -27,10 +25,7 @@ export interface ActivityPatternsDataBySite {
   }
 }
 
-// TODO Nutto: Fix type here
-export interface ActivityPatternsDataByTime {
-  [key in TimeBucket]: ActivityPatternsTimeBucket
-}
+export type ActivityPatternsDataByTime = Record<TimeBucket, ActivityPatternsDataByTimeBucket>
 
 export interface ActivityPatternsDataByTimeBucket {
   detection: Record<number, number>

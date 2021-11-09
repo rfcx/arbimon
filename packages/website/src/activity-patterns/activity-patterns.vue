@@ -31,7 +31,7 @@
     />
     <activity-patterns-by-time
       dom-id="activity-by-time"
-      :datasets="[]"
+      :datasets="timeDatasets"
       class="my-5"
     />
   </div>

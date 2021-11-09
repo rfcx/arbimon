@@ -3,6 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { ACTIVITY_PATTERN_KEYS } from '@/activity-patterns/functions'
+import { TimeDataset } from '@/activity-patterns/types'
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
 import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
@@ -27,12 +28,12 @@ const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
 })
 export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
-  @Prop() datasets!: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}>
+  @Prop() datasets!: TimeDataset[]
+
   selectedType = ACTIVITY_PATTERN_KEYS.detection
   datasetType: DropDownOption[] = [
     { label: 'Detection', value: ACTIVITY_PATTERN_KEYS.detection },
-    { label: 'Detection frequency', value: ACTIVITY_PATTERN_KEYS.detectionFrequency },
-    { label: 'Occupancy', value: ACTIVITY_PATTERN_KEYS.occupancy }
+    { label: 'Detection frequency', value: ACTIVITY_PATTERN_KEYS.detectionFrequency }
   ]
 
   buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
@@ -51,7 +52,7 @@ export default class ActivityPatternsByTime extends Vue {
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
-    return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket] ?? [] }))
+    return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
   }
 
   async downloadChart (): Promise<void> {
