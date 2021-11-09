@@ -5,7 +5,7 @@
     class="group"
   >
     <div class="first:mt-4 hover:cursor-default">
-      {{ item.percentage }}%
+      {{ item.value }}
     </div>
     <div class="relative mb-6">
       <div
@@ -14,7 +14,7 @@
       />
       <div
         class="h-2 rounded-xl z-5 opacity-80 group-hover:(opacity-100)"
-        :style="{ width: item.percentage + '%', backgroundColor: store.datasetColors[idx] }"
+        :style="{ width: (item.value * 100) + '%', backgroundColor: store.datasetColors[idx] }"
       />
       <p class="absolute min-w-36 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
         {{ item.description }}
