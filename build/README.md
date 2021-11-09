@@ -10,7 +10,12 @@ Overview:
 
 ## Test deployment locally
 
-Requires Docker.
+Requires:
+
+- Docker
+- Allocate at least 4GB memory to Docker (preferences > resources)
+
+Steps:
 
 1.  Build & run API image
 

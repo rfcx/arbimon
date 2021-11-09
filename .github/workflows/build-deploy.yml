@@ -63,11 +63,11 @@ jobs:
 
       - name: 'Build: Docker build WEB'
         run: |
-          docker build . -f build/Dockerfile --target website -t $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest
+          docker build -f build/Dockerfile --target website -t $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest .
 
       - name: 'Build: Docker build API'
         run: |
-          docker build . -f build/Dockerfile --target api -t $ECR_REGISTRY/${{ env.ECR_REPO_API }}:latest
+          docker build -f build/Dockerfile --target api -t $ECR_REGISTRY/${{ env.ECR_REPO_API }}:latest .
 
       - name: 'Build: Push images to ECR'
         run: |
