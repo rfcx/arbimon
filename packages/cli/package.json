@@ -7,7 +7,6 @@
   "scripts": {
     "clean": "rimraf './dist' './*.tsbuildinfo'",
     "lint:types": "tsc --project \"tsconfig.json\" --noEmit",
-    "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
