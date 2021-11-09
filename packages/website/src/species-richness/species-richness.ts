@@ -46,7 +46,7 @@ export default class SpeciesRichnessPage extends Vue {
     // TODO 117 - Only update the changed dataset
     const datasets = await Promise.all(
       filters.map(async (filter) => {
-        const { startDate, endDate, sites, color } = filter
+        const { startDate, endDate, sites, otherFilters, color } = filter
         const data = await getSpeciesRichnessData(filterToDataset(filter))
         return { startDate, endDate, sites, color, data }
       })

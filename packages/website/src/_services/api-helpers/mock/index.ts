@@ -1,4 +1,7 @@
+import { groupBy, mapValues } from 'lodash'
+
 import { DatasetDefinition } from '~/api/types'
+import { OptionalFilter } from '~/dataset-filters'
 import rawDetections from './raw-PR-data.json'
 import rawSites from './raw-sites.json'
 
@@ -43,8 +46,18 @@ export const getRawDetections = (): ApiDetection[] => {
 }
 
 export const filterByDataset = (detections: ApiDetection[], dataset: DatasetDefinition): ApiDetection[] => {
-  const { start, end, sites } = dataset
-  return detections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)))
+  const { start, end, sites, otherFilters } = dataset
+  const optionalFilters = groupBy(otherFilters, 'title')
+  const getFilterValue = (filters: OptionalFilter[]): string => filters.map(f => f.value).join(', ')
+  const groupedOptionalFilters = mapValues(optionalFilters, getFilterValue)
+  const taxonFilters = groupedOptionalFilters.taxon ?? []
+  const speciesFilter = groupedOptionalFilters.species ?? []
+  return detections.filter(r => {
+    return r.date >= start && r.date < end &&
+    (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)) &&
+    ((taxonFilters.length === 0 || taxonFilters.includes(r.taxon)) &&
+    (speciesFilter.length === 0 || speciesFilter.includes(`${r.species_id}`)))
+  })
 }
 
 export const filterBySpecies = (detections: ApiDetection[], speciesId: number): ApiDetection[] => {
