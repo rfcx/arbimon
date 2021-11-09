@@ -7,15 +7,15 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
     nginx.ingress.kubernetes.io/enable-cors: 'false'
-  name: biodiversity-analytics-ingress
+  name: biodiversity-api-ingress
   namespace: testing
   labels:
-    app: biodiversity-analytics
+    app: biodiversity-api
 spec:
   rules:
-    - host: testing-ba.rfcx.org
+    - host: testing-ba-api.rfcx.org
       http:
         paths:
           - backend:
-              serviceName: biodiversity-analytics-service
+              serviceName: biodiversity-api-service
               servicePort: 80
