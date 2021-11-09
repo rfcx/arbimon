@@ -7,10 +7,10 @@ import { useStore } from '~/store'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'
 
-export function filterToDataset ({ startDate, endDate, sites }: Filter): DatasetDefinition {
+export function filterToDataset ({ startDate, endDate, sites, otherFilters }: Filter): DatasetDefinition {
   const start = startDate.toISOString()
   const end = endDate.add(1, 'days').toISOString()
-  return { start, end, sites }
+  return { start, end, sites, otherFilters }
 }
 
 export function getFilterFriendlyName (filter: Filter): string {

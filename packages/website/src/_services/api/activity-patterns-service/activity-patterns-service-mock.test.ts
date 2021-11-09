@@ -15,7 +15,8 @@ const EXAMPLE_SPECIES_IDS_UNINTERESTED = [100, 200, 300, 400, 500, 600, 700, 800
 const EXAMPLE_DATASET: DatasetDefinition = {
   start: EXAMPLE_DATE,
   end: dayjs(EXAMPLE_DATE).add(1, 'day').toString(),
-  sites: EXAMPLE_SITES_INTERESTED
+  sites: EXAMPLE_SITES_INTERESTED,
+  otherFilters: []
 }
 
 const EMPTY_DETECTION: ApiDetection = {
