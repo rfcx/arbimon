@@ -54,7 +54,9 @@ jobs:
         run: pnpm build-ci
 
       - name: 'Build: Lint'
-        run: NODE_OPTIONS=--max_old_space_size=4096 pnpm lint-ci
+        run: pnpm lint-ci
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
 
       # - name: 'Build: Test'
       #   run: cd packages/website && npm run test
