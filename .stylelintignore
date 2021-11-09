@@ -4,12 +4,7 @@
 !*.css
 !*.scss
 
-# Ignore sub-directories
-packages/
-build/
-
 # Just to be safe
-.*/
 pnpm-lock.yaml
 node_modules
 dist

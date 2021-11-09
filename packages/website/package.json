@@ -9,7 +9,7 @@
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint .",
-    "lint": "run-p lint:* --aggregate-output",
+    "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
     "serve": "vite",

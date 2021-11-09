@@ -1,15 +1,11 @@
-# Ignore everything
-# ...except json/yml/yaml
-*
-!*.json
-!*.yml
-!*.yaml
-
-# Ignore packages
-packages/
+# Managed by ESLint & Stylelint
+*.js
+*.ts
+*.vue
+*.css
+*.scss
 
 # Just to be safe
-.*/
 pnpm-lock.yaml
 node_modules
 dist
