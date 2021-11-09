@@ -4,7 +4,7 @@ module.exports = {
     es2021: true,
     node: true
   },
-  ignorePatterns: ['!.*.js', 'node_modules', 'dist', 'build', 'lib', '.*/**/*', 'cypress', 'coverage'],
+  ignorePatterns: ['node_modules', 'dist', 'build', 'lib', 'cypress', 'coverage'],
   overrides: [
     {
       files: ['src/_components/**/*.ts', '*.vue'],
