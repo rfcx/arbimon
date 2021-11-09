@@ -77,6 +77,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     if (this.defaultFilter) {
       this.startDate = this.defaultFilter.startDate?.format(DATE_FORMAT)
       this.endDate = this.defaultFilter.endDate?.format(DATE_FORMAT)
+      this.otherFilters = this.defaultFilter.otherFilters
     }
   }
 

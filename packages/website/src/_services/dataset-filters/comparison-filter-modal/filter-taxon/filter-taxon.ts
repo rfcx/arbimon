@@ -5,7 +5,7 @@ import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { OptionalFilter } from '~/dataset-filters'
 
 export default class FilterTaxon extends Vue {
-  @Prop({ default: [] }) defaultFilterTaxon!: string[]
+  @Prop({ default: [] }) defaultTaxonFilter!: string[]
   @Emit() emitSelectedTaxons (): OptionalFilter[] {
     return this.selectedTaxons.map(i => { return { title: 'taxon', value: i } })
   }
@@ -18,8 +18,8 @@ export default class FilterTaxon extends Vue {
   }
 
   mounted (): void {
-    if (this.defaultFilterTaxon.length > 0) {
-      this.selectedTaxons = this.defaultFilterTaxon
+    if (this.defaultTaxonFilter.length > 0) {
+      this.selectedTaxons = this.defaultTaxonFilter
     } else {
       this.selectAllTaxon()
     }
