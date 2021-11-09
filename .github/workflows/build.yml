@@ -29,6 +29,16 @@ jobs:
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-${{ runner.os }}
 
+      - name: 'Setup: ESLint caching'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .eslintcache
+            */*/.eslintcache
+          key: eslint-${{ runner.os }}-${{ hashFiles('**/.eslintcache') }}
+          restore-keys: eslint-${{ runner.os }}
+
       - name: 'Setup: pnpm install'
         uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
