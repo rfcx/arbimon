@@ -11,10 +11,10 @@
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter {\"packages\"} exec rimraf \"node_modules\" && rimraf \"node_modules\"",
     "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension johnsoncodehk.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer && code --force --install-extension kavod-io.vscode-jest-test-adapter",
     "lint:eslint": "eslint \"./*.{ts,js}\"",
-    "lint:prettier": "prettier . --check",
-    "lint": "run-p lint:* --aggregate-output",
+    "lint:prettier": "prettier \"./*.{json,md,yaml}\" \"build/**/*.md\" --check",
+    "lint": "run-s lint:*",
     "lint-ci": "pnpm -r --parallel --no-bail lint",
-    "lint-fix": "eslint \"./*.{ts,js}\" --fix && prettier . --loglevel warn --write",
+    "lint-fix": "eslint \"./*.{ts,js}\" --fix && prettier \"./*.{json,md,yaml}\" \"build/**/*.md\" --loglevel warn --write",
     "test": "jest src",
     "serve": "pnpm serve-website",
     "serve-website": "cd packages/website && pnpm serve"

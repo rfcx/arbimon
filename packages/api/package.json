@@ -9,7 +9,7 @@
     "clean": "rimraf './dist' './*.tsbuildinfo'",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
-    "lint": "run-p lint:* --aggregate-output",
+    "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
     "test": "jest src"
