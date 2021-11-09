@@ -1,7 +1,7 @@
 import { ActivityPatternsDataByTime } from '~/api/activity-patterns-service'
 
 export interface MetricsDataset {
-  percentage: string
+  value: number
   description: string
   color?: string
 }
