@@ -7,7 +7,8 @@
     "paths": {
       "@rfcx-bio/utils/*": ["../../utils/src/*"],
       "@rfcx-bio/common/*": ["../../common/src/*"]
-    }
+    },
+    "composite": false
   },
 
   "include": ["src/**/*.ts"],
