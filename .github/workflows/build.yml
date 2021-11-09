@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
         with:
-          fetch-depth: 2
+          fetch-depth: 100
 
       - name: 'Setup: Node'
         uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
