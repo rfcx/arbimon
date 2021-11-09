@@ -79,13 +79,13 @@ export function generateLegend (svg: d3.Selection<SVGGElement, undefined, null, 
     .attr('class', 'legend')
 
   legend.append('circle')
-    .attr('cx', (_d, i) => (i * 100) + 150)
+    .attr('cx', (d, i) => (i * 100) + 150)
     .attr('cy', 140)
     .attr('r', 6)
     .style('fill', '#000aaa')
 
   legend.append('text')
-    .attr('x', (_d, i) => (i * 100) + 160)
+    .attr('x', (d, i) => (i * 100) + 160)
     .attr('y', 140)
     .attr('dy', '.3em')
     .text(function (d) { return d })

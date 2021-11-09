@@ -78,7 +78,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
       { title: 'Species', color: HEADER_COLOR, key: 'speciesName' },
       { title: 'Class', color: HEADER_COLOR, key: 'className' },
       ...((this.hasMoreThanOneDataset)
-        ? [...Array.from({ length: this.datasetCount }, (_v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] ?? '#FFFFFF' })), { title: 'Total', color: HEADER_COLOR, key: keyTotal }]
+        ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] ?? '#FFFFFF' })), { title: 'Total', color: HEADER_COLOR, key: keyTotal }]
         : []
       )
     ]
