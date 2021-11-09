@@ -14,6 +14,8 @@ async function init (): Promise<void> {
   const authClient = useAuthClient()
   const redirectAfterAuth = await authClient.init(window.location.origin)
 
+  const potato = '123'
+
   createApp(appComponent)
     .use(pinia)
     .use(router)
