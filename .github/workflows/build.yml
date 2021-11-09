@@ -36,7 +36,7 @@ jobs:
           path: |
             .eslintcache
             */*/.eslintcache
-          key: eslint-${{ runner.os }}-${{ hashFiles('**/.eslintcache') }}
+          key: eslint-${{ runner.os }}-${ github.sha }}
           restore-keys: eslint-${{ runner.os }}
 
       - name: 'Setup: pnpm install'
