@@ -1,12 +1,13 @@
 import { Options, Vue } from 'vue-class-component'
 
 import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
-import { Metrics } from '@/activity-patterns/types'
+import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { Species } from '~/api'
 import { activityPatternsService } from '~/api/activity-patterns-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
+import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
@@ -31,7 +32,8 @@ export default class ActivityPatternsPage extends Vue {
 
   // Data for children
   metrics: Metrics[] = []
-  mapDatasets: unknown = []
+  mapDatasets: MapDataSet[] = []
+  timeDatasets: TimeDataset[] = []
 
   async onSelectedSpeciesChange (species: Species | undefined): Promise<void> {
     const speciesSlug = species?.speciesSlug
@@ -63,5 +65,6 @@ export default class ActivityPatternsPage extends Vue {
 
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
+    this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
   }
 }

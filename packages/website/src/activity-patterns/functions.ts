@@ -7,7 +7,7 @@ export type ActivityPatternsDataBySites = ActivityPatternsData & ColoredFilter
 
 const MAXIMUM_RADIUS = 5
 const DATA_SCALE_RANGE = 5
-export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detection-frequency', occupancy: 'occupancy' }
+export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detectionFrequency', occupancy: 'occupancy' }
 
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
