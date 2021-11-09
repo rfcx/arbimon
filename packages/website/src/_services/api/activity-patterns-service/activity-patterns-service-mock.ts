@@ -2,8 +2,9 @@ import { groupBy, mapValues, sum } from 'lodash'
 
 import { DatasetDefinition } from '~/api/types'
 import { ApiHourlySpeciesSummary, filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
+import { dayjs } from '~/dayjs'
 import { groupByNumber } from '~/utils/lodash-ext'
-import { ActivityPatternsData, ActivityPatternsDataBySite } from '.'
+import { ActivityPatternsData, ActivityPatternsDataBySite, ActivityPatternsDataByTime } from '.'
 
 export class ActivityPatternsService {
   constructor (
@@ -29,7 +30,7 @@ export class ActivityPatternsService {
     const activityBySite = this.getActivityDataBySite(totalSummaries, speciesId)
     const activityByTime = this.getActvityDataByTime(totalSummaries, speciesId)
 
-    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount: detectionCount, detectionFrequency: detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite }, this.delay)
+    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount: detectionCount, detectionFrequency: detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite, activityByTime }, this.delay)
   }
 
   getRecordingCount (detections: ApiHourlySpeciesSummary[]): number {
@@ -59,23 +60,51 @@ export class ActivityPatternsService {
     })
   }
 
-  calculateDetectionActvity (detections: ApiHourlySpeciesSummary[]): number {
-    return new Set(detections.map(d => d.species_id)).size
+  calculateDetectionActivity (detections: ApiHourlySpeciesSummary[]): number {
+    return sum(detections.map(d => d.num_of_recordings))
   }
 
-  getActvityDataByTime (totalSummaries: ApiHourlySpeciesSummary[], speciesId: number): void {
-    const speciesSummaries = filterBySpecies(totalSummaries, speciesId)
-    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
+  calculateDetectionFrequencyActivity (detections: ApiHourlySpeciesSummary[], totalRecordingCount: number): number {
+    const detectionCount = sum(detections.map(d => d.num_of_recordings))
+    return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+  }
 
+  getActvityDataByTime (totalSummaries: ApiHourlySpeciesSummary[], speciesId: number): ActivityPatternsDataByTime {
+    const totalRecordingCount = this.getRecordingCount(totalSummaries)
+
+    const speciesSummaries = filterBySpecies(totalSummaries, speciesId)
+
+    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
     const hour = {
-      detection: mapValues(hourGrouped, this.calculateDetectionActvity)
-      // detectionFrequency: mapValues(hourGrouped, this.calculateActvity),
-      // occupancy: mapValues(hourGrouped, this.calculateActvity)
+      detection: mapValues(hourGrouped, this.calculateDetectionActivity),
+      detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
     }
 
-    // return {
-    //   hour: mapValues(groupByNumber())
-    // }
+    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).date())
+    const day = {
+      detection: mapValues(dayGrouped, this.calculateDetectionActivity),
+      detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    }
+
+    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month() + 1)
+    const month = {
+      detection: mapValues(monthGrouped, this.calculateDetectionActivity),
+      detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    }
+
+    const yearGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).year())
+    const year = {
+      detection: mapValues(yearGrouped, this.calculateDetectionActivity),
+      detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    }
+
+    const quarterGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).quarter())
+    const quarter = {
+      detection: mapValues(quarterGrouped, this.calculateDetectionActivity),
+      detectionFrequency: mapValues(quarterGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    }
+
+    return { hour, day, month, year, quarter }
   }
 }
 
