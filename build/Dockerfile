@@ -13,7 +13,7 @@ COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
 COPY packages/website/package.json ./packages/website/
 ENV NODE_ENV=development
-RUN pnpm i --frozen-lockfile
+RUN pnpm i --frozen-lockfile --reporter=silent
 
 # Build
 FROM with-deps as build
@@ -36,7 +36,7 @@ EXPOSE 8080
 CMD ["node", "dist/src/index.js"]
 
 # Website
-FROM nginx as website
+FROM nginx:1.21-alpine as website
 COPY --from=build /app/packages/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY build/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
