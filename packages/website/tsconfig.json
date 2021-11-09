@@ -1,12 +1,6 @@
 {
   "extends": "./tsconfig.build.json",
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "*.config.ts",
-    "*.d.ts"
-  ],
+  "compilerOptions": { "noEmit": true },
+  "include": ["src/**/*.ts", "src/**/*.vue", "./*.ts", "./*.js"],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]
 }

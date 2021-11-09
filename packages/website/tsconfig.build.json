@@ -4,21 +4,19 @@
   "compilerOptions": {
     "baseUrl": "src",
     "outDir": "dist",
+    "composite": false,
+    "incremental": false,
+    "jsx": "preserve",
+    "types": ["vite/client", "@types/jest", "unplugin-icons/types/vue"],
     "paths": {
       "@rfcx-bio/utils/*": ["../../utils/src/*"],
       "@rfcx-bio/common/*": ["../../common/src/*"],
       "~/*": ["./_services/*"],
       "@/*": ["./*"]
-    },
-
-    // Overrides
-    "composite": false,
-    "incremental": false,
-    "types": ["vite/client", "@types/jest", "unplugin-icons/types/vue"],
-    "jsx": "preserve"
+    }
   },
 
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.vue"],
   "references": [
     { "path": "../utils/tsconfig.build.json" },
     { "path": "../common/tsconfig.build.json" }
