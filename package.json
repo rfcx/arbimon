@@ -13,7 +13,7 @@
     "lint:eslint": "eslint \"./*.{ts,js}\"",
     "lint:prettier": "prettier \"./*.{json,md,yaml}\" \"build/**/*.md\" --check",
     "lint": "run-s lint:*",
-    "lint-ci": "pnpm -r lint",
+    "lint-ci": "pnpm -r --filter=!website --parallel --no-bail lint && cd packages/website && pnpm lint",
     "lint-fix": "eslint \"./*.{ts,js}\" --fix && prettier \"./*.{json,md,yaml}\" \"build/**/*.md\" --loglevel warn --write",
     "test": "jest src",
     "serve": "pnpm serve-website",
