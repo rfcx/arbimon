@@ -1,7 +1,8 @@
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { DatasetDefinition, Site } from '~/api'
 import { ActivityPatternsService } from '~/api/activity-patterns-service'
 import { ApiDetection } from '~/api-helpers/mock'
-import { dayjs } from '~/dayjs'
 
 const MOCK_RECORDINGS_PER_HOUR = 12
 
@@ -24,6 +25,7 @@ const EMPTY_DETECTION: ApiDetection = {
   name: '',
   lat: 0,
   lon: 0,
+  alt: 123,
   date: EXAMPLE_DATE,
   hour: 0,
   species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[0],
