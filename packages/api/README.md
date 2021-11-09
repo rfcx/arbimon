@@ -5,6 +5,7 @@ Biodiversity backend code
 ## Standards
 
 This is an ESM module written in TypeScript:
+
 - Imports must end with `.js` (even if the file is `.ts`)
 - Most functions are async
 - We use the [`async`/`return` convention](https://www.fastify.io/docs/latest/Routes/#promise-resolution):
