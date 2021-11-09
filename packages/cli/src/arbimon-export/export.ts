@@ -24,7 +24,7 @@ const connection = mysql.createConnection(config)
 connection.connect()
 
 const speciesRichnessSQLQuery = fs.readFileSync(sqlFilePath).toString()
-connection.query(speciesRichnessSQLQuery, (error, results, _fields) => {
+connection.query(speciesRichnessSQLQuery, (error, results, fields) => {
   if (error) throw error
   const json = JSON.stringify(results, null, 2)
   fs.writeFileSync(outputFilePath, json, 'utf8')
