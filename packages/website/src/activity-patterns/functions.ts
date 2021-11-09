@@ -7,7 +7,11 @@ export type ActivityPatternsDataBySites = ActivityPatternsData & ColoredFilter
 
 const MAXIMUM_RADIUS = 5
 const DATA_SCALE_RANGE = 5
-export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detectionFrequency', occupancy: 'occupancy' }
+export const ACTIVITY_PATTERN_MAP_KEYS = {
+  detection: 'detection',
+  detectionFrequency: 'detectionFrequency',
+  occupancy: 'occupancy'
+}
 
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
@@ -63,15 +67,15 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
       latitude,
       longitude,
       distinctSpecies: {
-        [ACTIVITY_PATTERN_KEYS.detection]: siteDetectionCount,
-        [ACTIVITY_PATTERN_KEYS.detectionFrequency]: siteDetectionFrequency * 100,
-        [ACTIVITY_PATTERN_KEYS.occupancy]: siteOccupied
+        [ACTIVITY_PATTERN_MAP_KEYS.detection]: siteDetectionCount,
+        [ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency]: siteDetectionFrequency * 100,
+        [ACTIVITY_PATTERN_MAP_KEYS.occupancy]: siteOccupied
       }
     }))
 
     const dataRange = {
-      [ACTIVITY_PATTERN_KEYS.detection]: getDataRangeFromMaxNumber(maximumSiteDetectionCount),
-      [ACTIVITY_PATTERN_KEYS.detectionFrequency]: getDataRangeFromMaxNumber(maximumSiteDetectionFrequency)
+      [ACTIVITY_PATTERN_MAP_KEYS.detection]: getDataRangeFromMaxNumber(maximumSiteDetectionCount),
+      [ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency]: getDataRangeFromMaxNumber(maximumSiteDetectionFrequency)
     }
 
     return { startDate, endDate, sites, color, data, dataRange, maximumRadius: MAXIMUM_RADIUS }

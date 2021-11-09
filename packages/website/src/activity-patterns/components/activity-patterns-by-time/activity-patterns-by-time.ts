@@ -2,16 +2,18 @@ import { isEmpty } from 'lodash'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { ACTIVITY_PATTERN_KEYS } from '@/activity-patterns/functions'
 import { TimeDataset } from '@/activity-patterns/types'
+import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
 import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { downloadPng } from '~/utils/file'
 
+type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
+
 interface DropDownOption {
   label: string
-  value: string
+  value: ActivityPatternsDataByTimeType
 }
 
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
@@ -30,10 +32,10 @@ export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: TimeDataset[]
 
-  selectedType = ACTIVITY_PATTERN_KEYS.detection
+  selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detection
   datasetType: DropDownOption[] = [
-    { label: 'Detection', value: ACTIVITY_PATTERN_KEYS.detection },
-    { label: 'Detection frequency', value: ACTIVITY_PATTERN_KEYS.detectionFrequency }
+    { label: 'Detection', value: ACTIVITY_PATTERN_TIME_KEYS.detection },
+    { label: 'Detection frequency', value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency }
   ]
 
   buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
