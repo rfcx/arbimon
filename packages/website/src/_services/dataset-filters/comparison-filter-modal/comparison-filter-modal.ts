@@ -29,6 +29,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 export default class ComparisonFilterModalComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) defaultFilter!: Filter | null
+  @Prop({ default: true }) canFilterByTaxon!: boolean
 
   @Emit() emitApply (): Filter {
     this.emitClose()
@@ -51,20 +52,19 @@ export default class ComparisonFilterModalComponent extends Vue {
   currentActiveMenuId = 'sites'
 
   get menus (): FilterMenuItem[] {
-    return [
-      {
-        id: 'sites',
-        name: 'Sites'
-      },
-      {
-        id: 'times',
-        name: 'Time Range'
-      },
-      {
-        id: 'taxon',
-        name: 'Taxon'
-      }
-    ]
+    const basedMenus = [{
+      id: 'sites',
+      name: 'Sites'
+    },
+    {
+      id: 'times',
+      name: 'Time Range'
+    }]
+    const taxonMenu = {
+      id: 'taxon',
+      name: 'Taxon'
+    }
+    return basedMenus.concat(this.canFilterByTaxon ? [taxonMenu] : [])
   }
 
   get isSelectedAllSites (): boolean {

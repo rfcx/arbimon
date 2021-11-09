@@ -16,6 +16,7 @@
   />
   <species-richness-by-location
     :datasets="mapDatasets"
+    :can-filter-by-taxon="true"
     class="mt-5"
   />
   <species-richness-by-time

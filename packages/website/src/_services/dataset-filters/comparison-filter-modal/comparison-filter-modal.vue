@@ -62,7 +62,7 @@
       </div>
       <!-- Taxon -->
       <div
-        v-else-if="currentActiveMenuId === menus[2].id"
+        v-else-if="menus[2] && currentActiveMenuId === menus[2].id"
         class="w-full"
       >
         <filter-taxon @emit-selected-taxons="updateSelectedTaxons" />
