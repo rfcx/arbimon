@@ -40,13 +40,14 @@ const getCsvFile = async ({ startDate, endDate, sites }: ColoredFilter, reportPr
 
 const getCsvForDataset = async (dataset: DatasetDefinition): Promise<ReportData[]> => {
   return (await getAllDetections(dataset))
-    .map(({ speciesName, siteName, latitude, longitude, date, hour }) => {
+    .map(({ speciesName, siteName, latitude, longitude, altitude, date, hour }) => {
       const newDate = dayjs.utc(date)
       return {
         species: speciesName,
         site: siteName,
         latitude,
         longitude,
+        altitude,
         day: newDate.format('D'),
         month: newDate.format('M'),
         year: newDate.format('YYYY'),
