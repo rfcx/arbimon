@@ -15,9 +15,7 @@
     "composite": false,
     "incremental": false,
     "types": ["vite/client", "@types/jest", "unplugin-icons/types/vue"],
-    "target": "ESNext",
-    "jsx": "preserve",
-    "resolveJsonModule": true // TODO 210 - Remove this once the mock API is removed
+    "jsx": "preserve"
   },
 
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
