@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: staging-biodiversity-analytics-config
+  namespace: staging
+data:
+  VITE_APP_CORE_API_HOST: https://staging-api.rfcx.org
+  VITE_APP_MEDIA_API_HOST: https://media-api.rfcx.org

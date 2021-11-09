@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: biodiversity-analytics-service
+  namespace: biodiversity-analytics
+  labels:
+    app: biodiversity-analytics
+spec:
+  selector:
+    app: biodiversity-analytics
+  type: ClusterIP
+  ports:
+    - name: node
+      port: 80
+      targetPort: 8080
