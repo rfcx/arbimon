@@ -2,9 +2,11 @@ module.exports = {
   extends: ['.eslintrc-js.js'],
   parserOptions: {
     ecmaFeatures: { jsx: true },
-    ecmaVersion: 2021,
+    ecmaVersion: 'latest',
     extraFileExtensions: ['.vue'],
-    parser: '@typescript-eslint/parser'
+    parser: '@typescript-eslint/parser',
+    project: ['./tsconfig.json', './packages/*/tsconfig.json'],
+    sourceType: 'module'
   },
   plugins: ['sort-class-members'],
   rules: {

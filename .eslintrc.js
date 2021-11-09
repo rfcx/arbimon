@@ -1,21 +1,10 @@
 module.exports = {
+  extends: '.eslintrc-js.js',
   ignorePatterns: ['**/node_modules', '**/dist', '**/build', '**/lib', '**/cypress', '**/coverage'],
   env: { es2021: true, node: true },
   root: true,
   overrides: [
-    {
-      extends: ['.eslintrc-js.js'],
-      files: ['*.js']
-    },
-    {
-      extends: '.eslintrc-vue.js',
-      files: ['*.vue'],
-      parserOptions: { project: ['./tsconfig.json', 'packages/*/tsconfig.json'] }
-    },
-    {
-      extends: '.eslintrc-ts.js',
-      files: ['*.ts'],
-      parserOptions: { project: ['./tsconfig.json', 'packages/*/tsconfig.json'] }
-    }
+    { extends: '.eslintrc-vue.js', files: ['*.vue', 'packages/website/src/_components/**/*.ts'] },
+    { extends: '.eslintrc-ts.js', files: ['*.ts', '.*.ts'] }
   ]
 }
