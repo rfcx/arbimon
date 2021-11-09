@@ -7,7 +7,7 @@ import { ColoredFilter, Filter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
-const defaultFilter = new FilterImpl(dayjs().subtract(7, 'days'), dayjs(), [])
+const defaultFilter = new FilterImpl(dayjs('2021-01-01', 'YYYY-MM-DD'), dayjs(), [])
 
 @Options({
   components: {
