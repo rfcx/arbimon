@@ -56,7 +56,7 @@ export default class ComparisonListComponent extends Vue {
   getOptionalFilterText (idx: number): string {
     const otherFilters = this.filters[idx].otherFilters
     if (otherFilters.length === 1) {
-      return otherFilters[0].title + ': ' + otherFilters[0].value
+      return `${otherFilters[0].title}: ${otherFilters[0].value}`
     } else {
       return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
     }
