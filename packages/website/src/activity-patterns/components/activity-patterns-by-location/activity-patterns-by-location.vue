@@ -59,9 +59,11 @@
         :get-popup-html="getPopupHtml"
         :map-id="`activity-patterns-occupancy-by-location-${idx}`"
         :map-config="config"
-        :map-style="mapStyle"
         :map-export-name="mapExportName(dataset, occupancyType)"
+        :map-style="mapStyle"
         :is-show-labels="isShowLabels"
+        :max-circle-radius-pixels="6.0"
+        :min-circle-radius-pixels="4.0"
         class="w-full"
         @emit-map-moved="mapMoved"
       />
