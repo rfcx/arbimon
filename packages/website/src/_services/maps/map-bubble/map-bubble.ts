@@ -1,3 +1,4 @@
+import { partition } from 'lodash'
 import { GeoJSONSource } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
@@ -160,8 +161,7 @@ export default class MapBubbleComponent extends Vue {
   }
 
   updateDataSourcesAndLayers (): void {
-    const rawNonZero = this.dataset.data.filter(d => d.distinctSpecies[this.dataKey] === true || d.distinctSpecies[this.dataKey] > 0)
-    const rawZero = this.dataset.data.filter(d => d.distinctSpecies[this.dataKey] === false || d.distinctSpecies[this.dataKey] <= 0)
+    const [rawNonZero, rawZero] = partition(this.dataset.data, d => d.distinctSpecies[this.dataKey] === true || d.distinctSpecies[this.dataKey] > 0)
 
     // TODO 41 - Remove source/layer if dataset removed
     const dataNonZero: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
