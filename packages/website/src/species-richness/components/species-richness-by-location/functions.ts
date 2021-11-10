@@ -7,5 +7,5 @@ export const generateHtmlPopup = (datum: MapSiteData, _?: string): string => {
     .filter(d => d !== TAXONOMY_CLASS_ALL.name)
     .map(key => `${key}: ${datum?.distinctSpecies[key].toString()}`)
 
-  return `<strong>${datum.siteName}</strong><p>${speciesCounts.join('<br />')}</p>`
+  return `<p>${speciesCounts.join('<br />')}</p>`
 }
