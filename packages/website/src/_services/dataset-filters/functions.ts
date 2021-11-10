@@ -35,6 +35,8 @@ export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: s
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''
   const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getExportDateTime()}`
 
+  // TODO: 271 add optional filter in the file name
+
   return `${projectName}--${prefix}${siteName}--${date}${dateGroup ? '--' + dateGroup : ''}`
 }
 
