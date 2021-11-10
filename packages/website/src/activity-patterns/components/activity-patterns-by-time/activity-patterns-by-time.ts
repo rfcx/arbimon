@@ -32,7 +32,7 @@ export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: TimeDataset[]
 
-  selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detection
+  selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
     { label: 'Detection', value: ACTIVITY_PATTERN_TIME_KEYS.detection },
     { label: 'Detection frequency', value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency }
