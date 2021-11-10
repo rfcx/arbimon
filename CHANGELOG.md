@@ -38,6 +38,8 @@
 * **features:** Activity Patterns Map - Detection Frequency by Location (#193)
 * **features:** Activity Patterns Map - Detection by location (#90)
 * **features:** Activity Patterns Map - Occupancy by Location (#194)
+* **features:** Species richness page add `altitude` column to CSV file (#173)
+* **features:** Activity patterns Line chart - Detection frequency by time (#196)
 
 * **fixed:** Migrate CD to Github Actions (#218)
 * **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
