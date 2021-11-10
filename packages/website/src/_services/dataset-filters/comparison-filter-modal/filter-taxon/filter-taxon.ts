@@ -2,11 +2,12 @@ import { Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
 
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
-import { OptionalFilter } from '~/dataset-filters'
+import { OptionalFilter } from '~/api/types'
 
 export default class FilterTaxon extends Vue {
   @Prop({ default: [] }) defaultTaxonFilter!: string[]
   @Emit() emitSelectedTaxons (): OptionalFilter[] {
+    if (this.selectedTaxons.length === this.taxons.length) { return [] } // select all === no filter
     return this.selectedTaxons.map(i => { return { title: 'taxon', value: i } })
   }
 

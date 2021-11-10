@@ -1,5 +1,3 @@
-import { OptionalFilter } from '~/dataset-filters'
-
 // TODO ?? - Are these properties really optional?!
 export interface Project {
   id?: string
@@ -48,4 +46,11 @@ export interface DatasetDefinition {
   start: string
   end: string
   otherFilters: OptionalFilter[]
+}
+
+export type OptionalFilterType = 'taxon' | 'species'
+
+export interface OptionalFilter {
+  title: OptionalFilterType
+  value: string
 }

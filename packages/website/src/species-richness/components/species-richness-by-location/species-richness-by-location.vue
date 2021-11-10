@@ -8,24 +8,6 @@
       </h2>
       <div class="taxon-picker">
         <template
-          v-for="a in taxons"
-          :key="a.name"
-        >
-          <input
-            :id="`species-richness-by-location-taxons-${a.name}`"
-            v-model="taxon"
-            type="radio"
-            :value="a.name"
-            class="hidden"
-          >
-          <label
-            :for="`species-richness-by-location-taxons-${a.name}`"
-            class="inline-block text-center text-lg w-7 h-7 mr-2"
-          >
-            {{ a.symbol }}
-          </label>
-        </template>
-        <template
           v-for="(item, idx) in mapOptions"
           :key="item.id"
         >
