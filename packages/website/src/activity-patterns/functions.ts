@@ -1,5 +1,11 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
+import { ColoredFilter } from '~/dataset-filters'
+import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
+
+export type ActivityPatternsDataBySites = ActivityPatternsData & ColoredFilter
+
+export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detectionFrequency', occupancy: 'occupancy' }
 
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
@@ -27,4 +33,38 @@ export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): M
   })
 
   return metrics
+}
+
+function getPrettyMax (max: number): number {
+  return max // TODO URGENT - Make this more pretty
+}
+
+export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): MapDataSet[] {
+  const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
+    const activityBySiteValues = Object.values(activityBySite)
+    const siteDetectionCounts = activityBySiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
+    const siteDetectionFrequencies = activityBySiteValues.map(({ siteDetectionFrequency }) => siteDetectionFrequency)
+    return [Math.max(0, ...siteDetectionCounts), Math.max(0, ...siteDetectionFrequencies)]
+  })
+
+  const maxValues = {
+    detection: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
+    detectionFrequency: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
+  }
+
+  return datasets.map(({ startDate, endDate, sites, color, activityBySite }) => {
+    const activityBySiteValues = Object.values(activityBySite)
+    const data = activityBySiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
+      siteName,
+      latitude,
+      longitude,
+      distinctSpecies: {
+        [ACTIVITY_PATTERN_KEYS.detection]: siteDetectionCount,
+        [ACTIVITY_PATTERN_KEYS.detectionFrequency]: siteDetectionFrequency,
+        [ACTIVITY_PATTERN_KEYS.occupancy]: siteOccupied
+      }
+    }))
+
+    return { startDate, endDate, sites, color, data, maxValues }
+  })
 }

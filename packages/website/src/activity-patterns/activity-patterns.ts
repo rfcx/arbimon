@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { transformToMetricsDatasets } from '@/activity-patterns/functions'
+import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
 import { Species } from '~/api'
 import { activityPatternsService } from '~/api/activity-patterns-service'
@@ -29,6 +29,7 @@ export default class ActivityPatternsPage extends Vue {
 
   // Data for children
   metrics: Metrics[] = []
+  mapDatasets: unknown = []
 
   async onSelectedSpeciesChange (species: Species | undefined): Promise<void> {
     const speciesSlug = species?.speciesSlug
@@ -44,13 +45,21 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async onDatasetChange (): Promise<void> {
+    // TODO 117 - Only update the changed dataset
     const speciesId = this.species?.speciesId ?? NaN
     if (!speciesId) return
 
     const filters = this.filters
     const datasets = await Promise.all(
-      filters.map(async (filter) => await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId))
+      // TODO ??: Clean the dataset date type between `DatasetDefinition`, `MapDataSet`, and `ColoredFilter`
+      filters.map(async (filter) => {
+        const { color, startDate, endDate } = filter
+        const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
+        return { ...data, startDate, endDate, color }
+      })
     )
+
     this.metrics = transformToMetricsDatasets(datasets)
+    this.mapDatasets = transformToBySiteDataset(datasets)
   }
 }
