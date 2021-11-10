@@ -61,7 +61,7 @@ export default class ComparisonListComponent extends Vue {
     } else {
       return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
     }
-    // TODO: continue on this
+    // TODO: 268 Show full information of filter when the user hovers over the comparison box
     /*
     const optionalFilters = groupBy(this.filters[idx].otherFilters, 'title')
     const getFilterValue = (filters: OptionalFilter[]): string => filters.map(f => f.value).join(', ')

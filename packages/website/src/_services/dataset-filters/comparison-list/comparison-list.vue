@@ -8,6 +8,8 @@
         :style="{ 'border': `solid 3px ${getFilterColor(idx)}`, 'background-color': `${getFilterColor(idx)}80` }"
         @click="popupOpen(idx)"
       >
+        <!--TODO: 268 Show full information of filter when the user hovers over the comparison box -->
+        <!--TODO: 269 Extract comparison item to separate file -->
         <div class="flex flex-row px-4 mt-2">
           <div
             class="flex flex-row flex-1"
