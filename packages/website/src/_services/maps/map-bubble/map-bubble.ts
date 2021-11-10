@@ -110,6 +110,7 @@ export default class MapBubbleComponent extends Vue {
       closeOnClick: false
     })
 
+    // TODO CHAZ - Extract duplicate logic (ZERO vs NONZERO)
     this.map.on('mouseenter', DATA_LAYER_ZERO_ID, (e) => {
       const coordinates = (e.features?.[0].geometry as GeoJSON.Point | undefined)?.coordinates.slice() as [number, number] | undefined
       const description = e.features?.[0].properties?.popup as string | undefined
@@ -163,6 +164,7 @@ export default class MapBubbleComponent extends Vue {
   updateDataSourcesAndLayers (): void {
     const [rawNonZero, rawZero] = partition(this.dataset.data, d => d.distinctSpecies[this.dataKey] === true || d.distinctSpecies[this.dataKey] > 0)
 
+    // TODO CHAZ - Extract duplicate logic (ZERO vs NONZERO)
     // TODO 41 - Remove source/layer if dataset removed
     const dataNonZero: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
       type: 'FeatureCollection',
