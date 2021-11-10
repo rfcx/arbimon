@@ -1,39 +1,45 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
+import { ACTIVITY_PATTERN_KEYS } from '@/activity-patterns/functions'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { MapConfig } from '~/maps/types'
 
-interface MapOptions {
-  id: string
-  name: string
+interface DatasetType {
+  label: string
+  value: string
 }
 
 const DEFAULT_PREFIX = 'Patterns-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent
+    MapBubbleComponent,
+    MapToolMenuComponent
   }
 })
 export default class ActivityPatternsByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
-  taxons = TAXONOMY_CLASSES
-  taxon = this.taxons[0].name
+  selectedDetectionType = ACTIVITY_PATTERN_KEYS.detectionFrequency
+  occupancyType = ACTIVITY_PATTERN_KEYS.occupancy
+  datasetTypes: DatasetType[] = [
+    { label: 'Detection', value: ACTIVITY_PATTERN_KEYS.detection },
+    { label: 'Detection frequency', value: ACTIVITY_PATTERN_KEYS.detectionFrequency }
+  ]
+
   isShowLabels = true
-  mapStyleId = 'satellite-streets-v11'
+  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
+  getPopupHtml = generateDetectionHtmlPopup
 
   config: MapConfig = {
     sourceMapId: '',
     center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
     zoom: 9
-  }
-
-  get hasData (): boolean {
-    return this.datasets.length > 0
   }
 
   get columnCount (): number {
@@ -44,27 +50,20 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
-  get mapOptions (): MapOptions[] {
-    return [
-      { id: 'satellite-streets-v11', name: 'Satellite' },
-      { id: 'streets-v11', name: 'Streets' }
-    ]
+  setMapStyle (style: string): void {
+    this.mapStyle = style
   }
 
-  get mapStyle (): string {
-    return `mapbox://styles/mapbox/${this.mapStyleId}`
-  }
-
-  setMapStyle (id: string): void {
-    this.mapStyleId = id
+  setShowLabelsToggle (isShowLabels: boolean): void {
+    this.isShowLabels = isShowLabels
   }
 
   mapMoved (config: MapConfig): void {
     this.config = config
   }
 
-  mapExportName (dataset: MapDataSet): string {
+  mapExportName (dataset: MapDataSet, type: string): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, undefined, sites)
   }
 }
