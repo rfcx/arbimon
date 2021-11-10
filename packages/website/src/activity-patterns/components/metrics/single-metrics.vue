@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-3xl my-4">
-      {{ value }}%
+      {{ value }}
     </div>
     <div class="text-subtle">
       {{ description }}
