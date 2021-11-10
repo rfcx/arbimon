@@ -127,7 +127,7 @@ jobs:
           status: ${{ job.status }}
           notify_when: 'success,failure,warning'
           notification_title: '{workflow} {status_message} -- triggered by ${{ github.event.pusher.name }}'
-          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ steps.extract_branch.outputs.branch }} to ${{ NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
+          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ steps.extract_branch.outputs.branch }} to ${{ env.NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
           mention_users: '${{ env.SLACK_MENTION_USERS }}'
           mention_users_when: 'failure,warnings'
           footer: '<{repo_url}/tree/${{ steps.extract_branch.outputs.branch }}|{repo}@${{ steps.extract_branch.outputs.branch }}>'
