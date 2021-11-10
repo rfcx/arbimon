@@ -43,8 +43,8 @@ _If you have Vetur installed, disable it for this workspace_
 
 - Use the pnpm arg `-r` to run scripts in all packages:
 
-  `pnpm -r build`  
-   `pnpm -r lint`  
+  `pnpm -r build`
+   `pnpm -r lint`
    `pnpm -r test`
 
 - You can run all lint auto-fixes with:

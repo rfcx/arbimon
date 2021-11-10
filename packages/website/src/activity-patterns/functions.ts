@@ -5,7 +5,11 @@ import { Metrics } from './types'
 
 export type ActivityPatternsDataBySites = ActivityPatternsData & ColoredFilter
 
-export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detectionFrequency', occupancy: 'occupancy' }
+export const ACTIVITY_PATTERN_MAP_KEYS = {
+  detection: 'detection',
+  detectionFrequency: 'detectionFrequency',
+  occupancy: 'occupancy'
+}
 
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
@@ -59,9 +63,9 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
       latitude,
       longitude,
       distinctSpecies: {
-        [ACTIVITY_PATTERN_KEYS.detection]: siteDetectionCount,
-        [ACTIVITY_PATTERN_KEYS.detectionFrequency]: siteDetectionFrequency,
-        [ACTIVITY_PATTERN_KEYS.occupancy]: siteOccupied
+        [ACTIVITY_PATTERN_MAP_KEYS.detection]: siteDetectionCount,
+        [ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency]: siteDetectionFrequency,
+        [ACTIVITY_PATTERN_MAP_KEYS.occupancy]: siteOccupied
       }
     }))
 
