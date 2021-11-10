@@ -13,6 +13,7 @@ export const getAllDetections = async (dataset: DatasetDefinition): Promise<Dete
           siteName: d.name,
           latitude: d.lat,
           longitude: d.lon,
+          altitude: d.alt,
           date: d.date,
           hour: d.hour,
           speciesId: d.species_id,
