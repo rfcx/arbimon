@@ -8,13 +8,13 @@ export interface MapDataSet {
   sites: Site[]
   color: string
   data: MapSiteData[]
-  maximumRadius?: number
-  dataRange?: { [key: string]: number[] }
+  maxValues: { [key: string]: number }
 }
 
 export interface MapSiteData {
   siteName: string
   longitude: number
   latitude: number
+  // TODO 266 - Decouple maps
   distinctSpecies: { [key: string]: number | boolean }
 }

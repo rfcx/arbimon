@@ -5,9 +5,7 @@ import { Metrics } from './types'
 
 export type ActivityPatternsDataBySites = ActivityPatternsData & ColoredFilter
 
-const MAXIMUM_RADIUS = 5
-const DATA_SCALE_RANGE = 5
-export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detection-frequency', occupancy: 'occupancy' }
+export const ACTIVITY_PATTERN_KEYS = { detection: 'detection', detectionFrequency: 'detectionFrequency', occupancy: 'occupancy' }
 
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
@@ -37,24 +35,22 @@ export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): M
   return metrics
 }
 
-function getDataRangeFromMaxNumber (maxNumber: number): number[] {
-  if (maxNumber === 0) {
-    return [0]
-  }
-  const scaleGap = Math.ceil(maxNumber / DATA_SCALE_RANGE)
-  return [...Array(DATA_SCALE_RANGE).keys()].map(n => n * scaleGap)
+function getPrettyMax (max: number): number {
+  return max // TODO URGENT - Make this more pretty
 }
 
 export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): MapDataSet[] {
-  const maximumNumbers = datasets.map(({ activityBySite }) => {
+  const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
     const activityBySiteValues = Object.values(activityBySite)
     const siteDetectionCounts = activityBySiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
-    const siteDetectionFrequencies = activityBySiteValues.map(({ siteDetectionFrequency }) => siteDetectionFrequency * 100)
+    const siteDetectionFrequencies = activityBySiteValues.map(({ siteDetectionFrequency }) => siteDetectionFrequency)
     return [Math.max(0, ...siteDetectionCounts), Math.max(0, ...siteDetectionFrequencies)]
   })
 
-  const maximumSiteDetectionCount = Math.max(0, ...maximumNumbers.map(m => m[0]))
-  const maximumSiteDetectionFrequency = Math.max(0, ...maximumNumbers.map(m => m[1]))
+  const maxValues = {
+    detection: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
+    detectionFrequency: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
+  }
 
   return datasets.map(({ startDate, endDate, sites, color, activityBySite }) => {
     const activityBySiteValues = Object.values(activityBySite)
@@ -64,16 +60,11 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
       longitude,
       distinctSpecies: {
         [ACTIVITY_PATTERN_KEYS.detection]: siteDetectionCount,
-        [ACTIVITY_PATTERN_KEYS.detectionFrequency]: siteDetectionFrequency * 100,
+        [ACTIVITY_PATTERN_KEYS.detectionFrequency]: siteDetectionFrequency,
         [ACTIVITY_PATTERN_KEYS.occupancy]: siteOccupied
       }
     }))
 
-    const dataRange = {
-      [ACTIVITY_PATTERN_KEYS.detection]: getDataRangeFromMaxNumber(maximumSiteDetectionCount),
-      [ACTIVITY_PATTERN_KEYS.detectionFrequency]: getDataRangeFromMaxNumber(maximumSiteDetectionFrequency)
-    }
-
-    return { startDate, endDate, sites, color, data, dataRange, maximumRadius: MAXIMUM_RADIUS }
+    return { startDate, endDate, sites, color, data, maxValues }
   })
 }
