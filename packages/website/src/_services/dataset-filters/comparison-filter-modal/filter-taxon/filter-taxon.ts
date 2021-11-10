@@ -42,5 +42,6 @@ export default class FilterTaxon extends Vue {
 
   selectAllTaxon (): void {
     this.selectedTaxons = this.taxons.map(t => t.name)
+    this.emitSelectedTaxons()
   }
 }
