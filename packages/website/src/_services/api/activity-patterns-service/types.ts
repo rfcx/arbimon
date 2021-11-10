@@ -1,3 +1,4 @@
+import { TimeBucket } from '~/api/species-richness-service'
 import { DatasetDefinition } from '..'
 
 export interface ActivityPatternsData extends DatasetDefinition {
@@ -7,4 +8,32 @@ export interface ActivityPatternsData extends DatasetDefinition {
   detectionFrequency: number
   occupiedSiteCount: number
   occupiedSiteFrequency: number
+  activityBySite: ActivityPatternsDataBySite
+  activityByTime: ActivityPatternsDataByTime
+}
+
+export interface ActivityPatternsDataBySite {
+  [siteId: string]: {
+    siteId: string
+    siteName: string
+    latitude: number
+    longitude: number
+    siteDetectionCount: number
+    siteDetectionFrequency: number
+    siteOccupied: boolean
+  }
+}
+
+export type ActivityPatternsDataByTime = Record<TimeBucket, ActivityPatternsDataByTimeBucket>
+
+export interface ActivityPatternsDataByTimeBucket {
+  detection: Record<number, number>
+  detectionFrequency: Record<number, number>
+  occupancy: Record<number, number>
+}
+
+export const ACTIVITY_PATTERN_TIME_KEYS: Record<string, keyof ActivityPatternsDataByTimeBucket> = {
+  detection: 'detection',
+  detectionFrequency: 'detectionFrequency',
+  occupancy: 'occupancy'
 }
