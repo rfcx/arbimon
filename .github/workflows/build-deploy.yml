@@ -30,17 +30,17 @@ jobs:
             {
               "master": {
                 "NAMESPACE": "production",
-                "ECR_REPO": "biodiversity-analytics",
+                "ECR_REPO": "biodiversity-website",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
               },
               "staging": {
                 "NAMESPACE": "staging",
-                "ECR_REPO": "biodiversity-analytics/staging",
+                "ECR_REPO": "biodiversity-website/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               },
               ".*": {
                 "NAMESPACE": "testing",
-                "ECR_REPO": "biodiversity-analytics/testing",
+                "ECR_REPO": "biodiversity-website/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               }
             }
