@@ -3,7 +3,6 @@ import { Prop } from 'vue-property-decorator'
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
 import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
@@ -33,8 +32,6 @@ export default class ActivityPatternsByLocation extends Vue {
     { label: 'Detection frequency', value: ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency }
   ]
 
-  taxons = TAXONOMY_CLASSES
-  taxon = this.taxons[0].name
   isShowLabels = true
   mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
   getPopupHtml = generateDetectionHtmlPopup
@@ -48,8 +45,7 @@ export default class ActivityPatternsByLocation extends Vue {
   get columnCount (): number {
     switch (this.datasets.length) {
       case 1: return 1
-      case 2: case 4: return 2
-      default: return 3
+      default: return 2
     }
   }
 

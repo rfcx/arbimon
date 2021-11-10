@@ -14,7 +14,7 @@
       />
       <div
         class="h-2 rounded-xl z-5 opacity-80 group-hover:(opacity-100)"
-        :style="{ width: (item.value * 100) + '%', backgroundColor: store.datasetColors[idx] }"
+        :style="{ width: getWidth(item.value) + '%', backgroundColor: store.datasetColors[idx] }"
       />
       <p class="absolute min-w-36 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
         {{ item.description }}
@@ -32,5 +32,9 @@ import { BiodiversityStore } from '~/store'
 export default class SingleDatasetComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop() datasets!: MetricsDataset[]
+
+  getWidth (value: string): number {
+    return Number(value) * 100
+  }
 }
 </script>
