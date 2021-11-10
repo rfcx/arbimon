@@ -34,6 +34,7 @@
 * **features:** Add export ellipsis button(#131)
 * **feature:** Research about API to get species information (#163)
 * **features:** Activity patterns page detection frequency and occupancy rate metrics (#130)
+* **features:** Species richness page add `altitude` column to CSV file (#173)
 * **features:** Activity Patterns Map - Detection Frequency by Location (#193)
 * **features:** Activity Patterns Map - Detection by location (#90)
 * **features:** Activity Patterns Map - Occupancy by Location (#194)
