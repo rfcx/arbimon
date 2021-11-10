@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { TAXONOMY_CLASSES_WITH_ALL } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
 import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
@@ -21,7 +21,7 @@ const DEFAULT_PREFIX = 'Species-By-Site'
 export default class SpeciesRichnessByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
-  taxons = TAXONOMY_CLASSES
+  taxons = TAXONOMY_CLASSES_WITH_ALL
   taxon = this.taxons[0].name
   isShowLabels = true
   mapStyleId = 'satellite-streets-v11'

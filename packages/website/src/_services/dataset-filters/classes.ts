@@ -1,7 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { Site } from '~/api/types'
-import { OptionalFilter } from '~/dataset-filters'
+import { OptionalFilter, Site } from '~/api/types'
 import { formatDateRange } from '../utils/dates'
 
 export class FilterImpl {

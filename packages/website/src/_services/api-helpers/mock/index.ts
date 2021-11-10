@@ -1,7 +1,6 @@
 import { groupBy, mapValues } from 'lodash'
 
-import { DatasetDefinition } from '~/api/types'
-import { OptionalFilter } from '~/dataset-filters'
+import { DatasetDefinition, OptionalFilter } from '~/api/types'
 import rawDetections from './raw-PR-data.json'
 import rawSites from './raw-sites.json'
 
