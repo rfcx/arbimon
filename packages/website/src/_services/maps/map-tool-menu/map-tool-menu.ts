@@ -36,7 +36,7 @@ export default class MapToolMenuComponent extends Vue {
   get mapOptions (): MapOptions[] {
     return [
       { id: 'mapbox://styles/mapbox/satellite-streets-v11', name: 'Satellite' },
-      { id: MAPBOX_STYLE_WITH_PLACE_LABELS, name: 'Streets' }
+      { id: MAPBOX_STYLE_WITH_PLACE_LABELS, name: 'Simple' }
     ]
   }
 
