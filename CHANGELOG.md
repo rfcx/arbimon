@@ -39,7 +39,9 @@
 * **features:** Activity Patterns Map - Detection by location (#90)
 * **features:** Activity Patterns Map - Occupancy by Location (#194)
 * **features:** Species richness page add `altitude` column to CSV file (#173)
-* **features:** Activity patterns Line chart - Detection frequency by time (#196)
+* **features:** Activity patterns Line chart - Detection and detection frequency by time (#196)
+* **features:** Activity patterns Line chart - Occupancy ratio by time (#153)
+* **features:** Activity patterns Metrics - Eliminate the symbol (%) since “frequency”and “ratio” are not percentage (#230)
 
 * **fixed:** Migrate CD to Github Actions (#218)
 * **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
