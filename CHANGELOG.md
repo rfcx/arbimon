@@ -34,6 +34,7 @@
 * **features:** Add export ellipsis button(#131)
 * **feature:** Research about API to get species information (#163)
 * **features:** Activity patterns page detection frequency and occupancy rate metrics (#130)
+* **features:** Species richness page add `altitude` column to CSV file (#173)
 * **features:** Add legend to bar chart and line chart export (#109)
 
 * **fixed:** Migrate CD to Github Actions (#218)

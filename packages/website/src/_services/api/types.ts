@@ -19,6 +19,7 @@ export interface Detection {
   siteName: string
   latitude: number
   longitude: number
+  altitude: number
   date: string
   hour: number
   speciesId: number
