@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import { Site, Species } from '~/api'
 import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
-import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
+import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, Filter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
@@ -77,9 +77,20 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   getMapDataset (datasets: ColoredDataset[]): MapDataSet[] {
-    return datasets.map(({ color, data, ...filter }) => {
-      return { color, data: data.speciesBySite.map(s => ({ ...s, distinctSpecies: { ...s.distinctSpecies, [TAXONOMY_CLASS_ALL.name]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0) } })), ...filter }
+    const intermediate = datasets.map(({ color, data: srData, ...filter }) => {
+      const data = srData.speciesBySite.map(s => ({
+        ...s,
+        distinctSpecies: {
+          ...s.distinctSpecies,
+          [TAXONOMY_CLASS_ALL.name]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0)
+        }
+      }))
+      return { color, data, ...filter, maxValues: {} }
     })
+    // TODO 209 - Do this natively in the API instead of after the fact
+    const allTaxonClassNames = TAXONOMY_CLASSES.map(c => c.name)
+    const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[TAXONOMY_CLASS_ALL.name] as number))))
+    return intermediate.map(ds => ({ ...ds, maxValues: Object.fromEntries(allTaxonClassNames.map(n => [n, maxAll])) }))
   }
 
   getTableData (datasets: ColoredDataset[]): DetectedSpeciesItem[] {
