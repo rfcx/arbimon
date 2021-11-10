@@ -45,8 +45,7 @@ export default class ActivityPatternsByLocation extends Vue {
   get columnCount (): number {
     switch (this.datasets.length) {
       case 1: return 1
-      case 2: case 4: return 2
-      default: return 3
+      default: return 2
     }
   }
 
