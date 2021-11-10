@@ -18,7 +18,7 @@ export default class MapBubbleComponent extends Vue {
   // Data
   @Prop() dataset!: MapDataSet
   @Prop() dataKey!: string
-  @Prop() getPopupHtml!: Function
+  @Prop() getPopupHtml!: (data: MapSiteData, dataKey: string) => string
 
   // Styles
   @Prop() mapId!: string
@@ -101,7 +101,7 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getPopup (datum: MapSiteData): string {
-    return this.getPopupHtml(datum, this.dataKey)
+    return `<strong>${datum.siteName}: </strong>${this.getPopupHtml(datum, this.dataKey)} `
   }
 
   setupMapPopup (): void {

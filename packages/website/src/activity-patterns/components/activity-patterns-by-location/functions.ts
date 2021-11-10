@@ -11,5 +11,5 @@ const getFormattedValue = (value: number | boolean, dataKey: string): string => 
 
 export const generateDetectionHtmlPopup = (datum: MapSiteData, dataKey: string): string => {
   const value = datum.distinctSpecies[dataKey]
-  return `<strong>${datum.siteName}: </strong><span>${getFormattedValue(value, dataKey)}</span>`
+  return `<span>${getFormattedValue(value, dataKey)}</span>`
 }
