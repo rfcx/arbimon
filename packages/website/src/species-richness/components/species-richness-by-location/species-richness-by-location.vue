@@ -6,7 +6,7 @@
       <h2 class="text-white text-xl">
         Distinct species by site
       </h2>
-      <div class="taxon-picker">
+      <div class="float-right">
         <template
           v-for="(item, idx) in mapOptions"
           :key="item.id"
@@ -63,13 +63,3 @@
   </div>
 </template>
 <script src="./species-richness-by-location.ts" lang="ts"></script>
-<style lang="scss" scoped>
-.taxon-picker {
-  float: right;
-}
-
-.taxon-picker input[type='radio']:checked + label {
-  color: #000;
-  background-color: #fff;
-}
-</style>
