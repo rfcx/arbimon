@@ -1,43 +1,44 @@
-# Build container
-FROM node:16-alpine as builder
+# Install pnpm
+FROM node:16-alpine as node-pnpm
+RUN npm i -g pnpm@6.20.4
 
-### Install pnpm
-RUN npm i -g pnpm
-
-### Create build folder
+# Install deps
+FROM node-pnpm as with-deps
 RUN mkdir -p /app
 WORKDIR /app
-
-### Install deps
 COPY pnpm-*.yaml ./
 COPY package.json ./
+COPY packages/api/package.json ./packages/api/
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
 COPY packages/website/package.json ./packages/website/
-RUN pnpm i --frozen-lockfile
+ENV NODE_ENV=development
+RUN pnpm i --frozen-lockfile --reporter=silent
 
-### Change mode to production (after installing all deps)
-ENV NODE_ENV=production
-
-### Build
+# Build
+FROM with-deps as build
+WORKDIR /app
 COPY tsconfig*.json ./
+COPY packages/api ./packages/api
 COPY packages/common ./packages/common
 COPY packages/utils ./packages/utils
 COPY packages/website ./packages/website
-RUN pnpm -r build
+ENV NODE_ENV=production
+ENV NODE_OPTIONS=--max_old_space_size=4096
+RUN pnpm build-ci
 
-# Production container
-FROM nginx
+# API
+FROM build as api
+WORKDIR /app/packages/api
+ENV FASTIFY_PORT=8080
+ENV FASTIFY_ADDRESS=0.0.0.0
+EXPOSE 8080
+CMD ["node", "dist/src/index.js"]
 
-### Copy built website from build container
-COPY --from=builder /app/packages/website/dist /usr/share/nginx/html
-
-### Delete old web-server config
+# Website
+FROM nginx:1.21-alpine as website
+COPY --from=build /app/packages/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
-
-### Replace with new web-server config
-COPY build/nginx/nginx.conf /etc/nginx/conf.d/default.conf
-
-### Open the ports!
+COPY build/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,7 +1,8 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { firstDiffDigit } from '~/utils/number'
+import { firstDiffDigit } from '@rfcx-bio/utils/number'
+
 import { DetectedSpeciesItem } from './types'
 
 type SortableColumn = Extract<keyof DetectedSpeciesItem, 'speciesName' | 'className' | 'total'>
@@ -77,7 +78,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
       { title: 'Species', color: HEADER_COLOR, key: 'speciesName' },
       { title: 'Class', color: HEADER_COLOR, key: 'className' },
       ...((this.hasMoreThanOneDataset)
-        ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] })), { title: 'Total', color: HEADER_COLOR, key: keyTotal }]
+        ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] ?? '#FFFFFF' })), { title: 'Total', color: HEADER_COLOR, key: keyTotal }]
         : []
       )
     ]
