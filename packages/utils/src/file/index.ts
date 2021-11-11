@@ -1,5 +1,5 @@
-import * as JSZip from 'jszip'
-import * as XLSX from 'xlsx'
+import JSZip from 'jszip'
+import XLSX from 'xlsx'
 
 export interface FileData {
   filename: string
