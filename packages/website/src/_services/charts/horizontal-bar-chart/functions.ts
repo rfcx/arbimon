@@ -34,7 +34,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
 
   // x axis tick configuration: set tick to display only integer, hide tick, and add it padding
   const xAxis = d3.axisBottom(xScale)
-    .tickFormat((d, _) => {
+    .tickFormat((d, i) => {
       return d.valueOf() % 1 !== 0 ? '' : d3.format('d')(d)
     })
     .tickSize(0)
