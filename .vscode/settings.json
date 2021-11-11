@@ -1,4 +1,7 @@
 {
+  // Relative paths
+  "typescript.tsdk": "node_modules/typescript/lib",
+
   // General
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
@@ -9,5 +12,7 @@
   "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
   "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
   "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.useAliasesForRenames": false,
+  "typescript.preferences.useAliasesForRenames": false
 }

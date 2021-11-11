@@ -18,7 +18,7 @@ export default class SpeciesSelector extends Vue {
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
   }
 
-  async created (): Promise<void> {
+  override async created (): Promise<void> {
     this.selectedSpeciesSlug = this.speciesSlug
     this.allSpecies = (await getAllSpecies())
       .sort((a, b) => a.speciesName.localeCompare(b.speciesName))

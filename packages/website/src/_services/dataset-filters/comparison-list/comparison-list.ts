@@ -1,7 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { dayjs } from '~/dayjs'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { BiodiversityStore } from '~/store'
 import { ColoredFilter, Filter } from '..'
 import { FilterImpl } from '../classes'
@@ -40,7 +41,7 @@ export default class ComparisonListComponent extends Vue {
     return this.filters.length < 5
   }
 
-  mounted (): void {
+  override mounted (): void {
     this.emitSelect()
   }
 

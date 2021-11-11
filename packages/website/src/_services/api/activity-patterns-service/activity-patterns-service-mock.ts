@@ -1,9 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
+
 import { DatasetDefinition } from '~/api/types'
 import { ApiHourlySpeciesSummary, filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
-import { dayjs } from '~/dayjs'
-import { groupByNumber } from '~/utils/lodash-ext'
 import { ActivityPatternsData, ActivityPatternsDataBySite, ActivityPatternsDataByTime } from '.'
 
 export class ActivityPatternsService {
