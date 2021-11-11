@@ -23,7 +23,8 @@ export class WikiService {
         thumbnailImage: data.thumbnail?.source
       }
     } catch (e) {
-    // TODO #191: API Handle
+      // TODO #191: API Handle
+      return { content: '', contentUrls: { desktop: '', mobile: '' }, thumbnailImage: '' }
     }
   }
 }

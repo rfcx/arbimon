@@ -1,13 +1,13 @@
 import { partition } from 'lodash'
-import { GeoJSONSource } from 'mapbox-gl'
+import { GeoJSONSource, LngLatBounds, Map as MapboxMap, Popup } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
+import { downloadPng } from '@rfcx-bio/utils/file'
 import { exportChartWithElement } from '~/charts'
-import { mapboxgl } from '~/maps'
+import { createMap } from '~/maps'
 import { generateNormalizeMapLegend } from '~/maps/export-legend'
 import { MapConfig } from '~/maps/types'
-import { downloadPng } from '~/utils/file'
 import { MapDataSet, MapSiteData } from '.'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
@@ -35,13 +35,13 @@ export default class MapBubbleComponent extends Vue {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
   }
 
-  map!: mapboxgl.Map
+  map!: MapboxMap
   mapIsLoading = true
   isSynchronizingMapPosition = false
 
   get hasData (): boolean { return this.dataset.data.length > 0 }
 
-  mounted (): void {
+  override mounted (): void {
     const mapConfig = {
       container: this.mapId,
       style: this.mapStyle,
@@ -51,7 +51,7 @@ export default class MapBubbleComponent extends Vue {
       preserveDrawingBuffer: true
     }
 
-    this.map = new mapboxgl.Map(mapConfig)
+    this.map = createMap(mapConfig)
       .on('load', () => {
         this.mapIsLoading = false
         this.generateChartNextTick()
@@ -107,7 +107,7 @@ export default class MapBubbleComponent extends Vue {
   }
 
   setupMapPopup (): void {
-    const popup = new mapboxgl.Popup({
+    const popup = new Popup({
       closeButton: false,
       closeOnClick: false
     })
@@ -258,7 +258,7 @@ export default class MapBubbleComponent extends Vue {
     // TODO 41 - Merge this aggregation with other loops
     const coordinates: Array<[number, number]> = this.dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number])
     if (coordinates.length === 0) return
-    const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+    const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new LngLatBounds(coordinates[0], coordinates[0]))
     this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
   }
 
