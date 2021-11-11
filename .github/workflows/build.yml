@@ -14,6 +14,8 @@ jobs:
       - name: 'Setup: Git checkout'
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+        with:
+          fetch-depth: 0
 
       - name: 'Setup: Node'
         uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
@@ -29,6 +31,16 @@ jobs:
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-${{ runner.os }}
 
+      - name: 'Setup: ESLint caching'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .eslintcache
+            */*/.eslintcache
+          key: eslint-${{ runner.os }}-${ github.sha }}
+          restore-keys: eslint-${{ runner.os }}
+
       - name: 'Setup: pnpm install'
         uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
@@ -38,11 +50,13 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile]
 
-      - name: 'Build: tsc/vite'
-        run: pnpm -r build
+      - name: 'Build: Lint'
+        run: pnpm lint-ci
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
 
-      # - name: 'Build: Lint'
-      #   run: cd packages/website && npm run lint
+      - name: 'Build: tsc/vite'
+        run: pnpm build-ci
 
       # - name: 'Build: Test'
       #   run: cd packages/website && npm run test

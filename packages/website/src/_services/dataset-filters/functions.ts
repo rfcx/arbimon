@@ -1,8 +1,9 @@
 import { Dayjs } from 'dayjs'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { DatasetDefinition, Site } from '~/api'
 import { Filter } from '~/dataset-filters'
-import { dayjs } from '~/dayjs'
 import { useStore } from '~/store'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'

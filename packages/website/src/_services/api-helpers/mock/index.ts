@@ -1,8 +1,8 @@
 import { groupBy, mapValues } from 'lodash'
 
 import { DatasetDefinition, OptionalFilter } from '~/api/types'
-import rawDetections from './raw-PR-data.json'
-import rawSites from './raw-sites.json'
+import { rawSites } from './raw-sites'
+import { rawSummaries } from './raw-summaries'
 
 // TODO 132 - Encapsulate API response types in the API, and return project types
 export interface ApiSite {
@@ -41,7 +41,7 @@ export function getRawSites (): ApiSite[] {
 }
 
 export const getRawDetections = (): ApiHourlySpeciesSummary[] => {
-  return rawDetections
+  return rawSummaries
 }
 
 export const filterByDataset = (detections: ApiHourlySpeciesSummary[], dataset: DatasetDefinition): ApiHourlySpeciesSummary[] => {
