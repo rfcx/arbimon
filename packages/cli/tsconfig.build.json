@@ -4,6 +4,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "outDir": "dist",
+    "composite": false,
     "paths": {
       "@rfcx-bio/utils/*": ["../../utils/src/*"],
       "@rfcx-bio/common/*": ["../../common/src/*"]

@@ -4,12 +4,12 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "build": "vue-tsc --project tsconfig.build.json --noEmit && vite build",
+    "build": "vite build",
     "clean": "rimraf './dist'",
-    "lint:eslint": "eslint .",
+    "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint .",
-    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
+    "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
     "serve": "vite",
@@ -42,6 +42,7 @@
   "devDependencies": {
     "@iconify-json/fa": "^1.0.1",
     "@iconify-json/fa-solid": "^1.0.2",
+    "@types/color-string": "^1.5.0",
     "@types/d3": "^7.1.0",
     "@types/mapbox-gl": "^2.4.2",
     "@vue/test-utils": "^2.0.0-rc.16",
