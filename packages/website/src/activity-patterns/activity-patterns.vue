@@ -22,14 +22,17 @@
     :species="species"
   />
   <activity-patterns-metrics
-    v-if="metrics.length > 0"
     :metrics="metrics"
     class="mt-5"
   />
   <activity-patterns-by-location
-    v-if="false"
-    :datasets="[]"
+    :datasets="mapDatasets"
     class="mt-5"
   />
+  <activity-patterns-by-time
+    dom-id="activity-by-time"
+    :datasets="timeDatasets"
+    class="my-5"
+  />
 </template>
-<script src="./activity-patterns.ts" lang="ts"></script>
+<script src="./activity-patterns.ts" lang="ts" />
