@@ -3,14 +3,22 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf './dist' './*.tsbuildinfo'"
+    "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "lint:prettier": "prettier . --check",
+    "lint": "run-s lint:*",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
+    "test": "jest src"
   },
   "dependencies": {
-    "@rfcx-bio/common": "workspace:*"
+    "@rfcx-bio/common": "workspace:*",
+    "dayjs": "^1.10.7",
+    "fastify": "^3.23.1",
+    "lodash": "^4.17.21"
   },
-  "devDependencies": {},
   "description": "Biodiversity API",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
   "repository": {

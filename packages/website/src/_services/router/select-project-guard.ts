@@ -3,7 +3,7 @@ import { NavigationGuardNext, NavigationGuardWithThis, RouteLocationNormalized }
 import { useStore } from '~/store'
 
 const createSelectProjectGuard = (): NavigationGuardWithThis<undefined> =>
-  (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     const store = useStore()
     const currentProjectId = store.selectedProject?.id
     const newProjectId = to.params.projectId // TODO 44: Extract `projectId` as a const?

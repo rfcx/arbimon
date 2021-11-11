@@ -3,12 +3,21 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf './dist' './*.tsbuildinfo'"
+    "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "lint:prettier": "prettier . --check",
+    "lint": "run-s lint:*",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "test": "jest src"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "dayjs": "^1.10.7",
+    "jszip": "^3.7.1",
+    "lodash": "^4.17.21",
+    "xlsx": "^0.17.3"
+  },
   "description": "Generic code (not biodiversity-specific)",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
   "repository": {
