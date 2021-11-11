@@ -78,6 +78,10 @@ jobs:
           docker tag $ECR_REGISTRY/${{ env.ECR_REPO_API }}:latest $ECR_REGISTRY/${{ env.ECR_REPO_API }}:${GITHUB_SHA::6}
           docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_API }}
 
+      - name: 'Deploy: Set image version'
+        run: |
+          find build -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
+          
       - name: 'Deploy: Kubernetes apply WEB'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
