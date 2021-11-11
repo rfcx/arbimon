@@ -73,7 +73,10 @@ jobs:
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest  
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${GITHUB_SHA::6}   
 
       - name: 'Build: Docker build API'
         uses: docker/build-push-action@v2
@@ -85,9 +88,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${ECR_REGISTRY}/${{ env.ECR_REPO_API }}:latest
-            ${ECR_REGISTRY}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
-            ${ECR_REGISTRY}/${{ env.ECR_REPO_API }}:${GITHUB_SHA::6}   
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${GITHUB_SHA::6}   
 
       - name: 'Build: Push images to ECR'
         run: |
