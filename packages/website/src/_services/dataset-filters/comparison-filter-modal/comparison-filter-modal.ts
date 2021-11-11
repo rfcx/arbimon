@@ -3,6 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { OptionalFilter, Site } from '~/api/types'
 import { BiodiversityStore } from '~/store'
 import { Filter } from '..'

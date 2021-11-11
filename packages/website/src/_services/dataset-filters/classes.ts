@@ -1,6 +1,7 @@
 import { Dayjs } from 'dayjs'
 
 import { formatDateRange } from '@rfcx-bio/utils/dates'
+
 import { OptionalFilter, Site } from '~/api/types'
 
 export class FilterImpl {
