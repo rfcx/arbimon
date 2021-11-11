@@ -42,7 +42,7 @@
 - **features:** Activity patterns Line chart - Detection and detection frequency by time (#196)
 - **features:** Activity patterns Line chart - Occupancy ratio by time (#153)
 - **features:** Activity patterns Metrics - Eliminate the symbol (%) since “frequency”and “ratio” are not percentage (#230)
-- **features:** Add legend to bar chart and line chart export (#109)
+- **feature:** Add legend to bar chart and line chart export (#109)
 
 - **fixed:** Migrate CD to Github Actions (#218)
 - **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
