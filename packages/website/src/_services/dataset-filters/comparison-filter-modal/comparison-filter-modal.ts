@@ -2,8 +2,9 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { Site } from '~/api/types'
-import { dayjs } from '~/dayjs'
 import { BiodiversityStore } from '~/store'
 import { Filter } from '..'
 
@@ -63,7 +64,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     return this.selectedSites.length === 0
   }
 
-  mounted (): void {
+  override mounted (): void {
     // TODO ?? - What if the list of sites didn't arrive yet?
     this.setDefaultSelectedSites()
     if (this.defaultFilter) {

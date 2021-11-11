@@ -1,8 +1,18 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"],
+
   "compilerOptions": {
+    "baseUrl": "src",
     "outDir": "dist",
-    "rootDir": "src"
-  }
+    "paths": {
+      "@rfcx-bio/utils/*": ["../../utils/src/*"],
+      "@rfcx-bio/common/*": ["../../common/src/*"]
+    }
+  },
+
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../utils/tsconfig.build.json" },
+    { "path": "../common/tsconfig.build.json" }
+  ]
 }

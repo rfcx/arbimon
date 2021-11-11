@@ -30,17 +30,20 @@ jobs:
             {
               "master": {
                 "NAMESPACE": "production",
-                "ECR_REPO": "biodiversity-website",
+                "ECR_REPO_WEBSITE": "biodiversity-website",
+                "ECR_REPO_API": "biodiversity-api",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
               },
               "staging": {
                 "NAMESPACE": "staging",
-                "ECR_REPO": "biodiversity-website/staging",
+                "ECR_REPO_WEBSITE": "biodiversity-website/staging",
+                "ECR_REPO_API": "biodiversity-api/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               },
               ".*": {
                 "NAMESPACE": "testing",
-                "ECR_REPO": "biodiversity-website/testing",
+                "ECR_REPO_WEBSITE": "biodiversity-website/testing",
+                "ECR_REPO_API": "biodiversity-api/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               }
             }
@@ -58,23 +61,62 @@ jobs:
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
         # v1 (1.3.3) @ 03 Nov 2021 https://github.com/aws-actions/amazon-ecr-login/tags
 
-      - name: 'Build: Docker build'
+      - name: 'Build: Docker build WEB'
         run: |
-          docker build -t $ECR_REGISTRY/${{ env.ECR_REPO }}:latest -f build/Dockerfile .
+          docker build -f build/Dockerfile --target website -t $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest .
 
-      - name: 'Build: Push image to ECR'
+      - name: 'Build: Docker build API'
         run: |
-          docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${{ github.run_number }}
-          docker tag $ECR_REGISTRY/${{ env.ECR_REPO }}:latest $ECR_REGISTRY/${{ env.ECR_REPO }}:${GITHUB_SHA::6}
-          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO }}
+          docker build -f build/Dockerfile --target api -t $ECR_REGISTRY/${{ env.ECR_REPO_API }}:latest .
 
-      - name: 'Deploy: Kubernetes apply'
+      - name: 'Build: Push images to ECR'
+        run: |
+          docker tag $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
+          docker tag $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:${GITHUB_SHA::6}
+          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}
+          docker tag $ECR_REGISTRY/${{ env.ECR_REPO_API }}:latest $ECR_REGISTRY/${{ env.ECR_REPO_API }}:${{ github.run_number }}
+          docker tag $ECR_REGISTRY/${{ env.ECR_REPO_API }}:latest $ECR_REGISTRY/${{ env.ECR_REPO_API }}:${GITHUB_SHA::6}
+          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_API }}
+
+      - name: 'Deploy: Kubernetes apply WEB'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: apply -f ./build/${{ env.NAMESPACE }}
+          args: apply -f ./build/website/${{ env.NAMESPACE }}
+
+      - name: 'Deploy: Kubernetes apply API'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f ./build/api/${{ env.NAMESPACE }}
+
+      - name: 'Notify: Get author'
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        with:
+          key: '${{ github.event.pusher.name }}'
+          map: |
+            {
+              "charles-allen": {
+                "SLACK_MENTION_USERS": "U6LT2N3SS"
+              },
+              "Nutto55": {
+                "SLACK_MENTION_USERS": "UC2NVRCAY"
+              },
+              "naluinui": {
+                "SLACK_MENTION_USERS": "U19GA1FT2"
+              },
+              "antonyharfield": {
+                "SLACK_MENTION_USERS": "U09HZUDUY"
+              },
+              ".*": {
+                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY"
+              }
+            }
 
       - name: 'Notify: Slack'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
@@ -83,9 +125,9 @@ jobs:
         with:
           status: ${{ job.status }}
           notify_when: 'success,failure,warning'
-          notification_title: '{workflow} {status_message}'
-          message_format: '{emoji} *Biodiversity Analytics:* deploy ${{ steps.extract_branch.outputs.branch }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
-          mention_users: 'U6LT2N3SS,U19GA1FT2,UC2NVRCAY'
+          notification_title: '{workflow} {status_message} -- triggered by ${{ github.event.pusher.name }}'
+          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ steps.extract_branch.outputs.branch }} to ${{ env.NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
+          mention_users: '${{ env.SLACK_MENTION_USERS }}'
           mention_users_when: 'failure,warnings'
           footer: '<{repo_url}/tree/${{ steps.extract_branch.outputs.branch }}|{repo}@${{ steps.extract_branch.outputs.branch }}>'
         env:

@@ -13,7 +13,7 @@ export default class LineChartComponent extends Vue {
     return this.datasets.length > 0 && this.datasets.some(ds => Object.keys(ds.data).length > 0)
   }
 
-  mounted (): void {
+  override mounted (): void {
     window.addEventListener('resize', this.updateChart)
   }
 
