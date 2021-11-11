@@ -5,6 +5,13 @@ module.exports = {
     '@vue/typescript/recommended',
     '.eslintrc-ts.js'
   ],
+  parserOptions: {
+    parser: {
+      ts: '@typescript-eslint/parser',
+      js: '@typescript-eslint/parser',
+      '<template>': 'espree'
+    }
+  },
   plugins: ['regex'],
   rules: {
     // Overrides

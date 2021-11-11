@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: biodiversity-analytics-config
+  name: biodiversity-website-config
   namespace: production
 data:
   VITE_APP_CORE_API_HOST: https://api.rfcx.org
