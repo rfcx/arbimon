@@ -50,13 +50,13 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile]
 
-      - name: 'Build: tsc/vite'
-        run: pnpm build-ci
-
       - name: 'Build: Lint'
         run: pnpm lint-ci
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
+
+      - name: 'Build: tsc/vite'
+        run: pnpm build-ci
 
       # - name: 'Build: Test'
       #   run: cd packages/website && npm run test
