@@ -1,6 +1,17 @@
 <template>
-  <div>
-    Hello
-  </div>
+  <page-title
+    page-title="Activity Overview / Detection"
+    page-subtitle="Number of detection / frequency"
+  >
+    <dropdown-menu>
+      <dropdown-menu-item>
+        <icon-fas-hammer class="mr-2" /> TODO
+      </dropdown-menu-item>
+    </dropdown-menu>
+  </page-title>
+  <comparison-list-component
+    class="mt-5"
+    @emit-select="onFilterChange"
+  />
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>
