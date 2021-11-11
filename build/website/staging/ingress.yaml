@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    nginx.ingress.kubernetes.io/enable-cors: 'false'
+  name: biodiversity-website-ingress
+  namespace: staging
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+    - host: staging-ba.rfcx.org
+      http:
+        paths:
+          - backend:
+              serviceName: biodiversity-website-service
+              servicePort: 80

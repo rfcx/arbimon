@@ -1,27 +1,38 @@
 /*
   Each module should `extend` this base & specify:
   - `include` (not `files`)
-  - `exclude`
   - `references`
   - any needed module-specific overrides
 
   Visit https://aka.ms/tsconfig.json to read more about this file
 */
 {
-  "compilerOptions": {
-    // RFCx Biodiversity-specific
-    "paths": { "@rfcx-bio/*": ["packages/*/src"] } /* Specify a set of entries that re-map imports to additional lookup locations. */,
+  // Exclude deps, build artifacts, hidden folders, tests
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib",
+    ".*/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.mock.ts",
+    "**/*.stub.ts"
+  ],
 
+  "compilerOptions": {
     /* Language, Target, Environment */
     "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
     "outDir": "dist" /* Specify an output folder for all emitted files. */,
-    "lib": ["ESNext", "DOM"] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
+    "lib": [
+      "ESNext",
+      "DOM"
+    ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
     "module": "ESNext" /* Specify what module code is generated. */,
     "moduleResolution": "Node" /* Specify how TypeScript looks up a file from a given module specifier. */,
-    "target": "ES2015" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
 
-    "allowSyntheticDefaultImports": false /* Allow 'import x from y' when a module doesn't have a default export. */,
-    "esModuleInterop": false /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
+    "allowSyntheticDefaultImports": true /* Allow 'import x from y' when a module doesn't have a default export. */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
     "experimentalDecorators": true /* Enable experimental support for TC39 stage 2 draft decorators. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
     "useDefineForClassFields": true /* Emit ECMAScript-standard-compliant class fields. */,
@@ -46,9 +57,9 @@
     "noImplicitOverride": true /* Ensure overriding members in derived classes are marked with an override modifier. */,
     "noImplicitReturns": true /* Enable error reporting for codepaths that do not explicitly return in a function. */,
     "noPropertyAccessFromIndexSignature": false, // Seems undesirable /* Enforces using indexed accessors for keys declared using an indexed type */
-    "noUncheckedIndexedAccess": true, // troublesome for array indexing /* Include 'undefined' in index signature results */
-    "noUnusedLocals": true /* Enable error reporting when a local variables aren't read. */,
-    "noUnusedParameters": true /* Raise an error when a function parameter isn't read */,
+    "noUncheckedIndexedAccess": false, // troublesome for array indexing /* Include 'undefined' in index signature results */
+    "noUnusedLocals": false, // eslint is smarter; and this doesn't support vue templates /* Enable error reporting when a local variables aren't read. */,
+    "noUnusedParameters": false, // eslint is smarter /* Raise an error when a function parameter isn't read */,
     "pretty": true,
     "strict": true /* Enable all strict type-checking options. */,
     "useUnknownInCatchVariables": true /* Type catch clause variables as 'unknown' instead of 'any'. */
@@ -101,6 +112,5 @@
     // "strictNullChecks": true, // part of strict /* When type checking, take into account `null` and `undefined`. */
     // "strictPropertyInitialization": true, // part of strict /* Check for class properties that are declared but not set in the constructor. */
     // "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */
-  },
-  "exclude": ["node_modules", "dist", "lib", ".*/**"]
+  }
 }

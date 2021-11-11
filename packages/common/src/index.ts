@@ -1,1 +1,1 @@
-console.log('Mock `common` module')
+console.info('Mock `common` module')

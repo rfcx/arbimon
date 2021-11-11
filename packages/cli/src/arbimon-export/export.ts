@@ -1,7 +1,14 @@
-import * as mysql from 'mysql'
-import * as fs from 'fs'
 import * as dotenv from 'dotenv'
+import * as fs from 'fs'
+import * as mysql from 'mysql'
+import { dirname, resolve } from 'path'
 
+// Parameters
+const currentDir = dirname(new URL(import.meta.url).pathname)
+const sqlFilePath = resolve(currentDir, './get-detection-summaries.sql')
+const outputFilePath = resolve(currentDir, './raw-summaries.json')
+
+// Env
 dotenv.config()
 
 const config = {
@@ -12,15 +19,14 @@ const config = {
   timezone: 'UTC'
 }
 
+// Query & save
 const connection = mysql.createConnection(config)
 connection.connect()
 
-// Getting validation data
-const speciesRichnessSQLQuery = fs.readFileSync('species-richness.sql').toString()
-connection.query(speciesRichnessSQLQuery, (error, results, _fields) => {
+const speciesRichnessSQLQuery = fs.readFileSync(sqlFilePath).toString()
+connection.query(speciesRichnessSQLQuery, (error, results, fields) => {
   if (error) throw error
   const json = JSON.stringify(results, null, 2)
-  fs.writeFileSync('raw-species-richness-data-01-07-apr-2021.json', json, 'utf8')
+  fs.writeFileSync(outputFilePath, json, 'utf8')
+  connection.end()
 })
-
-connection.end()
