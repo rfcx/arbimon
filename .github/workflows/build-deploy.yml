@@ -73,10 +73,7 @@ jobs:
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: |
-            ${ECR_REGISTRY}/${{ env.ECR_REPO_WEBSITE }}:latest
-            ${ECR_REGISTRY}/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
-            ${ECR_REGISTRY}/${{ env.ECR_REPO_WEBSITE }}:${GITHUB_SHA::6}   
+          tags: $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}:latest  
 
       - name: 'Build: Docker build API'
         uses: docker/build-push-action@v2
