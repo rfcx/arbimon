@@ -35,6 +35,13 @@
 - **feature:** Research about API to get species information (#163)
 - **features:** Activity patterns page detection frequency and occupancy rate metrics (#130)
 - **features:** Species richness page add `altitude` column to CSV file (#173)
+- **features:** Activity Patterns Map - Detection Frequency by Location (#193)
+- **features:** Activity Patterns Map - Detection by location (#90)
+- **features:** Activity Patterns Map - Occupancy by Location (#194)
+- **features:** Species richness page add `altitude` column to CSV file (#173)
+- **features:** Activity patterns Line chart - Detection and detection frequency by time (#196)
+- **features:** Activity patterns Line chart - Occupancy ratio by time (#153)
+- **features:** Activity patterns Metrics - Eliminate the symbol (%) since “frequency”and “ratio” are not percentage (#230)
 - **features:** Add taxon in dataset comparison filter (#219)
 
 - **fixed:** Migrate CD to Github Actions (#218)

@@ -6,36 +6,10 @@
       <h2 class="text-white text-xl">
         Distinct species by site
       </h2>
-      <div class="float-right">
-        <template
-          v-for="(item, idx) in mapOptions"
-          :key="item.id"
-        >
-          <button
-            class="btn"
-            :class="{
-              'bg-brand-primary': mapStyleId === item.id,
-              'rounded-r-none': idx === 0,
-              'rounded-l-none': idx === mapOptions.length - 1,
-              'mr-2': idx === mapOptions.length - 1
-            }"
-            @click="setMapStyle(item.id)"
-          >
-            {{ item.name }}
-          </button>
-        </template>
-        <button
-          class="btn"
-          @click="isShowLabels = !isShowLabels"
-        >
-          <input
-            type="checkbox"
-            class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
-            :checked="isShowLabels"
-          >
-          Labels
-        </button>
-      </div>
+      <map-tool-menu-component
+        @emit-map-style="setMapStyle"
+        @emit-show-labels-toggle="setShowLabelsToggle"
+      />
     </div>
     <no-data-panel
       v-if="!hasData"
@@ -50,7 +24,8 @@
         v-for="(dataset, idx) in datasets"
         :key="idx"
         :dataset="dataset"
-        :taxon="taxon"
+        :data-key="taxon"
+        :get-popup-html="getPopupHtml"
         :map-id="`species-richness-by-location-${idx}`"
         :map-config="config"
         :map-style="mapStyle"
