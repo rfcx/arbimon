@@ -1,21 +1,20 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
-
-interface MapOptions {
-  id: string
-  name: string
-}
+import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { MapConfig } from '~/maps/types'
 
 const DEFAULT_PREFIX = 'Species-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent
+    MapBubbleComponent,
+    MapToolMenuComponent
   }
 })
 export default class SpeciesRichnessByLocation extends Vue {
@@ -24,7 +23,8 @@ export default class SpeciesRichnessByLocation extends Vue {
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
   isShowLabels = true
-  mapStyleId = 'satellite-streets-v11'
+  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
+  getPopupHtml = generateHtmlPopup
 
   config: MapConfig = {
     sourceMapId: '',
@@ -39,30 +39,20 @@ export default class SpeciesRichnessByLocation extends Vue {
   get columnCount (): number {
     switch (this.datasets.length) {
       case 1: return 1
-      case 2: case 4: return 2
-      default: return 3
+      default: return 2
     }
   }
 
-  get mapOptions (): MapOptions[] {
-    return [
-      {
-        id: 'satellite-streets-v11',
-        name: 'Satellite'
-      },
-      {
-        id: 'streets-v11',
-        name: 'Streets'
-      }
-    ]
+  setTaxonomyValue (taxon: string): void {
+    this.taxon = taxon
   }
 
-  get mapStyle (): string {
-    return `mapbox://styles/mapbox/${this.mapStyleId}`
+  setMapStyle (style: string): void {
+    this.mapStyle = style
   }
 
-  setMapStyle (id: string): void {
-    this.mapStyleId = id
+  setShowLabelsToggle (isShowLabels: boolean): void {
+    this.isShowLabels = isShowLabels
   }
 
   mapMoved (config: MapConfig): void {

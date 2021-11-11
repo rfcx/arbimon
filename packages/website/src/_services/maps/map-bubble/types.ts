@@ -1,13 +1,6 @@
 import { Dayjs } from 'dayjs'
-import { LngLatLike } from 'mapbox-gl'
 
 import { Site } from '~/api'
-
-export interface MapConfig {
-  sourceMapId: string
-  center: LngLatLike
-  zoom: number
-}
 
 export interface MapDataSet {
   startDate: Dayjs
@@ -15,11 +8,13 @@ export interface MapDataSet {
   sites: Site[]
   color: string
   data: MapSiteData[]
+  maxValues: { [key: string]: number }
 }
 
 export interface MapSiteData {
   siteName: string
   longitude: number
   latitude: number
-  distinctSpecies: { [taxonName: string]: number }
+  // TODO 266 - Decouple maps
+  distinctSpecies: { [key: string]: number | boolean }
 }

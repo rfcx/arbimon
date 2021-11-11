@@ -10,7 +10,7 @@ export interface ApiSite {
   'longitude': string
 }
 
-export interface ApiDetection {
+export interface ApiHourlySpeciesSummary {
   'arbimon_site_id': number
   'stream_id': string
   'name': string
@@ -38,15 +38,15 @@ export function getRawSites (): ApiSite[] {
   return rawSites
 }
 
-export const getRawDetections = (): ApiDetection[] => {
+export const getRawDetections = (): ApiHourlySpeciesSummary[] => {
   return rawSummaries
 }
 
-export const filterByDataset = (detections: ApiDetection[], dataset: DatasetDefinition): ApiDetection[] => {
+export const filterByDataset = (detections: ApiHourlySpeciesSummary[], dataset: DatasetDefinition): ApiHourlySpeciesSummary[] => {
   const { start, end, sites } = dataset
   return detections.filter(r => r.date >= start && r.date < end && (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)))
 }
 
-export const filterBySpecies = (detections: ApiDetection[], speciesId: number): ApiDetection[] => {
+export const filterBySpecies = (detections: ApiHourlySpeciesSummary[], speciesId: number): ApiHourlySpeciesSummary[] => {
   return detections.filter(r => r.species_id === speciesId)
 }
