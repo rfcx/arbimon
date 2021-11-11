@@ -10,6 +10,7 @@ dist-ssr
 lib
 *.tsbuildinfo
 *.local
+.eslintcache
 
 # Logs
 *.log
