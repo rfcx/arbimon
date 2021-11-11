@@ -13,5 +13,9 @@
     class="mt-5"
     @emit-select="onFilterChange"
   />
+  <activity-overview-by-location
+    class="mt-5"
+    datasets="mapDataset"
+  />
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>

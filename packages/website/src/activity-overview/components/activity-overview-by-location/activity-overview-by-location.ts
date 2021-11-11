@@ -1,40 +1,29 @@
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
-import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
+import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
-import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { MapDataSet } from '~/maps/map-bubble'
 import { MapConfig } from '~/maps/types'
 
-interface DatasetType {
+interface DropdownOption {
   label: string
   value: string
 }
 
-const DEFAULT_PREFIX = 'Patterns-By-Site'
+const DEFAULT_PREFIX = 'Overview-By-Site'
 
-@Options({
-  components: {
-    MapBubbleComponent,
-    MapToolMenuComponent
-  }
-})
-export default class ActivityPatternsByLocation extends Vue {
+export default class ActivityOverviewByLocation extends Vue {
   @Prop({ default: [] }) datasets!: MapDataSet[]
-
-  selectedDetectionType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
-  occupancyType = ACTIVITY_PATTERN_MAP_KEYS.occupancy
-  datasetTypes: DatasetType[] = [
-    { label: 'Detection', value: ACTIVITY_PATTERN_MAP_KEYS.detection },
-    { label: 'Detection frequency', value: ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency }
-  ]
 
   isShowLabels = true
   mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
-  getPopupHtml = generateDetectionHtmlPopup
+
+  selectedDatasetType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
+  datasetTypes: DropdownOption[] = [
+    { label: 'Detection frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency }
+  ]
 
   config: MapConfig = {
     sourceMapId: '',
