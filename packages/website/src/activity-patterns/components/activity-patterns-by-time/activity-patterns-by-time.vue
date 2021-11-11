@@ -15,7 +15,7 @@
           </option>
         </select>
         <h2 class="text-white text-xl ml-2">
-          by time
+          by 
         </h2>
         <select
           v-model="selectedBucket"
