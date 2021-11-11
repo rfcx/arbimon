@@ -4,6 +4,7 @@ export interface ArbimonHourlySpeciesRow {
   'name': string
   'lat': number
   'lon': number
+  'alt': number
   'date': string
   'hour': number
   'species_id': number
