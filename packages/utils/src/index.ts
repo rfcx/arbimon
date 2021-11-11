@@ -1,1 +1,0 @@
-console.log('Mock `utils` module')

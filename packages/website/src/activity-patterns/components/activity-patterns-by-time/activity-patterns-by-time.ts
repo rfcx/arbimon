@@ -2,12 +2,13 @@ import { isEmpty } from 'lodash'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { downloadPng } from '@rfcx-bio/utils/file'
+
 import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
 import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
-import { downloadPng } from '~/utils/file'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
 
