@@ -76,7 +76,7 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:latest
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${GITHUB_SHA::6}   
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.sha }}
 
       - name: 'Build: Docker build API'
         uses: docker/build-push-action@v2
@@ -90,12 +90,12 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:latest
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${GITHUB_SHA::6}   
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.sha }}
 
       - name: 'Build: Push images to ECR'
         run: |
-          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_WEBSITE }}
-          docker push -a $ECR_REGISTRY/${{ env.ECR_REPO_API }}
+          docker push -a $ECR_REGISTRY/$ECR_REPO_WEBSITE
+          docker push -a $ECR_REGISTRY/$ECR_REPO_API
 
       - name: 'Deploy: Set image version'
         run: |
