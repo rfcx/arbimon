@@ -19,16 +19,16 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@v1
 
-      - name: 'Setup: Extract branch name'
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+      - name: 'Setup: Additional environment variables'
+        run: |
+          echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
+          echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
 
-      - name: 'Setup: Set env'
+      - name: 'Setup: Branch-specific config'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         with:
-          key: '${{ steps.extract_branch.outputs.branch }}'
+          key: '${{ env.BRANCH_NAME }}'
           map: |
             {
               "master": {
@@ -76,7 +76,7 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:latest
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.sha }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ env.SHORT_SHA }}
 
       - name: 'Build: Docker build API'
         uses: docker/build-push-action@v2
@@ -90,7 +90,7 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:latest
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.sha }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ env.SHORT_SHA }}
 
       - name: 'Deploy: Set image version'
         run: |
@@ -144,9 +144,9 @@ jobs:
           status: ${{ job.status }}
           notify_when: 'success,failure,warning'
           notification_title: '{workflow} {status_message} -- triggered by ${{ github.event.pusher.name }}'
-          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ steps.extract_branch.outputs.branch }} to ${{ env.NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
+          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ env.BRANCH_NAME }} to ${{ env.NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
           mention_users: '${{ env.SLACK_MENTION_USERS }}'
           mention_users_when: 'failure,warnings'
-          footer: '<{repo_url}/tree/${{ steps.extract_branch.outputs.branch }}|{repo}@${{ steps.extract_branch.outputs.branch }}>'
+          footer: '<{repo_url}/tree/${{ env.BRANCH_NAME }}|{repo}@${{ env.BRANCH_NAME }}>'
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
