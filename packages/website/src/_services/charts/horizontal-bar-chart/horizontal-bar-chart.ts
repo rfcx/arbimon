@@ -14,7 +14,7 @@ export default class HorizontalBarChartComponent extends Vue {
     return this.chartData.length > 0
   }
 
-  mounted (): void {
+  override mounted (): void {
     window.addEventListener('resize', this.renderChart)
   }
 

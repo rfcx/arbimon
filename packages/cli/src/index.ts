@@ -1,1 +1,1 @@
-console.log('This is an example script')
+console.info('This is an example script')

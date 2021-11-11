@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { downloadPng } from '../utils/file'
+import { downloadPng } from '@rfcx-bio/utils/file'
 
 export interface ChartSVGElement {
   svg: SVGSVGElement
@@ -33,7 +33,7 @@ export const svgToPngData = async (chartElement: ChartSVGElement): Promise<strin
   const quality = 0.92
   const svgString = source
 
-  return await new Promise(function (resolve, reject) {
+  return await new Promise((resolve) => {
     // Create a non-visible node to render the SVG string
     const SVGContainer = document.createElement('div')
     SVGContainer.style.display = 'none'
