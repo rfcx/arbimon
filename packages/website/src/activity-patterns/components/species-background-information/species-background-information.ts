@@ -20,7 +20,7 @@ export default class SpeciesInformation extends Vue {
       : this.speciesInformation.contentUrls.desktop
   }
 
-  async created (): Promise<void> {
+  override async created (): Promise<void> {
     await this.getSpeciesInformation()
   }
 

@@ -15,7 +15,7 @@ export default class ProjectSelectorComponent extends Vue {
 
   newSelectedProject: Project | undefined
 
-  created (): void {
+  override created (): void {
     this.newSelectedProject = { ...this.store.selectedProject }
   }
 
