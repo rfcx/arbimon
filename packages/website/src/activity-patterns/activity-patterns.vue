@@ -26,7 +26,7 @@
       class="mt-5"
     />
     <activity-patterns-predicted-occupancy
-      :species="species"
+      :predicted-occupancy-maps="predictedOccupancyMaps"
       class="mt-5"
     />
     <activity-patterns-by-location

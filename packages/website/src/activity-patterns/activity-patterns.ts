@@ -4,6 +4,7 @@ import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { Species } from '~/api'
 import { activityPatternsService } from '~/api/activity-patterns-service'
+import { getPredictedOccupancyMaps, PredictedOccupancyMap } from '~/api/predicted-occupancy-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
@@ -33,6 +34,7 @@ export default class ActivityPatternsPage extends Vue {
   filters: ColoredFilter[] = []
 
   // Data for children
+  predictedOccupancyMaps: PredictedOccupancyMap[] = []
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
@@ -42,6 +44,7 @@ export default class ActivityPatternsPage extends Vue {
     void this.$router.replace({ name: ROUTE_NAMES.activity_patterns, params: { speciesSlug } })
 
     this.species = species ?? null
+    this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesId)
     await this.onDatasetChange()
   }
 
