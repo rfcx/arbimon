@@ -31,7 +31,7 @@ export const useStore = defineStore('root', {
       if (user) {
         // TODO 17 - Make this conditional on build mode (dev, staging, prod)
         // TODO 65 - Replace this with a mock service
-        const projects = [...await getProjects(), FAKE_PROJECT]
+        const projects = [FAKE_PROJECT, ...await getProjects()]
         const selectedProject = projects.length > 0 ? projects[0] : undefined
         const sites = selectedProject ? await getSites(selectedProject) : []
 
