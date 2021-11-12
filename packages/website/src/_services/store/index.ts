@@ -4,6 +4,7 @@ import { createPinia, defineStore } from 'pinia'
 import { Project, Site } from '~/api'
 import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
+import router, { ROUTE_NAMES } from '~/router'
 
 // Designed for contrast & color-blind support:
 const DEFAULT_DATASET_COLORS = ['#85EBBA', '#6FC1F5', '#B578DB', '#EAC3E4', '#D6E68C']
@@ -37,6 +38,8 @@ export const useStore = defineStore('root', {
         this.projects = projects
         this.selectedProject = selectedProject
         this.sites = sites
+
+        if (selectedProject) await router.push({ name: ROUTE_NAMES.overview, params: { projectId: selectedProject.id } })
       }
     },
     updateSelectedProject (project?: Project) { this.selectedProject = project }
