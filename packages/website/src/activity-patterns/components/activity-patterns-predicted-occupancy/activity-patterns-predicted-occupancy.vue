@@ -1,22 +1,25 @@
 <template>
   <div
-    v-if="predictedOccupancyImages.length > 0"
+    v-if="predictedOccupancyMaps.length > 0"
     class="w-full"
   >
     <div class="flex justify-between items-end mb-1.5">
       <h2 class="text-white text-xl">
-        Predicted Occupancy Analysis
+        Predicted Occupancy
       </h2>
     </div>
-    <div class="mt-5 grid gap-4 md:grid-cols-2">
+    <div
+      class="mt-5 grid gap-4"
+      :class="{ ['md:grid-cols-2']: predictedOccupancyMaps.length> 1 }"
+    >
       <a
-        v-for="predictedOccupancyImage in predictedOccupancyImages"
-        :key="predictedOccupancyImage[0]"
-        :href="predictedOccupancyImage[1]"
+        v-for="predictedOccupancyMap in predictedOccupancyMaps"
+        :key="predictedOccupancyMap.title"
+        :href="predictedOccupancyMap.url"
       >
         <img
-          :src="predictedOccupancyImage[1]"
-          :alt="predictedOccupancyImage[0]"
+          :src="predictedOccupancyMap.url"
+          :alt="predictedOccupancyMap.title"
         >
       </a>
     </div>
