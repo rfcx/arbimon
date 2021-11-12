@@ -11,6 +11,7 @@ import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
+import ActivityPatternsPredictedOccupancy from './components/activity-patterns-predicted-occupancy/activity-patterns-predicted-occupancy.vue'
 import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
@@ -20,6 +21,7 @@ import SpeciesSelector from './components/species-selector/species-selector.vue'
     ActivityPatternsByLocation,
     ActivityPatternsByTime,
     ActivityPatternsMetrics,
+    ActivityPatternsPredictedOccupancy,
     ComparisonListComponent,
     SpeciesBackgroundInformation,
     SpeciesSelector
