@@ -10,6 +10,7 @@
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "preview": "pnpm build && NODE_ENV=\"production\" node dist/src/index.js",
     "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
     "test": "jest src"
   },
