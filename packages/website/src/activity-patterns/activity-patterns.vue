@@ -25,6 +25,10 @@
       :metrics="metrics"
       class="mt-5"
     />
+    <activity-patterns-predicted-occupancy
+      :species="species"
+      class="mt-5"
+    />
     <activity-patterns-by-location
       :datasets="mapDatasets"
       class="mt-5"
