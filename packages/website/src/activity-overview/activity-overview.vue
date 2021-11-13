@@ -15,7 +15,7 @@
   />
   <activity-overview-by-location
     class="mt-5"
-    datasets="mapDataset"
+    :datasets="mapDatasets"
   />
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>
