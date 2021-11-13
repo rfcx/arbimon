@@ -38,7 +38,9 @@ export default class MapBubbleComponent extends Vue {
   mapIsLoading = true
   isSynchronizingMapPosition = false
 
-  get hasData (): boolean { return this.dataset.data.length > 0 }
+  get hasData (): boolean {
+    return this.dataset.data.length > 0
+  }
 
   override mounted (): void {
     const mapConfig = {
@@ -62,6 +64,7 @@ export default class MapBubbleComponent extends Vue {
 
   @Watch('dataset', { deep: true })
   onDataChange (): void {
+    console.log('check', this.dataset)
     this.generateChartNextTick()
   }
 
