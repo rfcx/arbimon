@@ -18,7 +18,9 @@ function getPrettyMax (max: number): number {
 export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): MapDataSet[] {
   const { startDate, endDate, sites, color, overviewBySite } = dataset
 
-  const maximumNumbers = Object.values(overviewBySite)
+  const overviewBySiteSortedByKey = Object.fromEntries(Object.entries(overviewBySite).sort((a, b) => a[0].localeCompare(b[0])))
+
+  const maximumNumbers = Object.values(overviewBySiteSortedByKey)
     .map(detectionsBySite => Object.values(detectionsBySite))
     .map(detections => {
       const detectionCounts = detections.map(({ detection }) => detection)
@@ -28,7 +30,7 @@ export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): 
 
   const mapDatasets: MapDataSet[] = []
 
-  for (const [taxonKey, value] of Object.entries(overviewBySite)) {
+  for (const [taxonKey, value] of Object.entries(overviewBySiteSortedByKey)) {
     const taxon = TAXONOMY_CLASSES.find(taxon => taxon.name === taxonKey)
 
     const data = Object.values(value).map(({ siteName, latitude, longitude, detection, detectionFrequency }) => ({

@@ -48,6 +48,10 @@ export default class ActivityOverviewByLocation extends Vue {
     }
   }
 
+  get hasNoData (): boolean {
+    return this.datasets.length === 0
+  }
+
   setMapStyle (style: string): void {
     this.mapStyle = style
   }
