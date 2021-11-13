@@ -1,10 +1,12 @@
 import { Options, Vue } from 'vue-class-component'
 
 import ActivityOverviewByLocation from '@/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
+import { transformToBySiteDataset } from '@/activity-overview/functions'
 import { activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
+import { MapDataSet } from '~/maps/map-bubble'
 
 @Options({
   components: {
@@ -14,6 +16,7 @@ import { filterToDataset } from '~/dataset-filters/functions'
 })
 export default class ActivityOverviewPage extends Vue {
   filter!: ColoredFilter
+  mapDatasets: MapDataSet[] = []
 
   // TODO ??: Use individual comparison box
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
@@ -23,8 +26,8 @@ export default class ActivityOverviewPage extends Vue {
 
   async onDatasetChange (): Promise<void> {
     const { color, ...filter } = this.filter
-    const mapDataset = []
+    const data = await activityOverviewService.getActivityOverviewData(filterToDataset(filter))
 
-    const dataset = await activityOverviewService.getActivityOverviewData(filterToDataset(filter))
+    this.mapDatasets = transformToBySiteDataset({ ...data, startDate: filter.startDate, endDate: filter.endDate, color })
   }
 }
