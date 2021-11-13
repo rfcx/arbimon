@@ -23,24 +23,31 @@
         @emit-show-labels-toggle="setShowLabelsToggle"
       />
     </div>
-    <div
-      class="grid gap-2 mt-2"
-      :class="{ [`md:grid-cols-${columnCount}`]: true }"
-    >
-      <map-bubble-component
-        v-for="(dataset, idx) in datasets"
-        :key="idx"
-        :dataset="dataset"
-        :data-key="selectedDatasetType"
-        :get-popup-html="getPopupHtml"
-        :map-id="`activity-patterns-detection-by-location-${idx}`"
-        :map-config="config"
-        :map-style="mapStyle"
-        :map-export-name="mapExportName(dataset, selectedDatasetType)"
-        :is-show-labels="isShowLabels"
-        class="w-full"
-        @emit-map-moved="mapMoved"
+    <div class="mt-2">
+      <no-data-panel
+        v-if="hasNoData"
+        class="h-192"
       />
+      <div
+        v-else
+        class="grid gap-2 mt-2"
+        :class="{ [`md:grid-cols-${columnCount}`]: true }"
+      >
+        <map-bubble-component
+          v-for="(dataset, idx) in datasets"
+          :key="idx"
+          :dataset="dataset"
+          :data-key="selectedDatasetType"
+          :get-popup-html="getPopupHtml"
+          :map-id="`activity-patterns-detection-by-location-${idx}`"
+          :map-config="config"
+          :map-style="mapStyle"
+          :map-export-name="mapExportName(dataset, selectedDatasetType)"
+          :is-show-labels="isShowLabels"
+          class="w-full"
+          @emit-map-moved="mapMoved"
+        />
+      </div>
     </div>
   </div>
 </template>
