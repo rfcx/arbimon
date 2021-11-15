@@ -12,7 +12,7 @@
         >
           Not found information.
         </span>
-        {{ iucnSpeciesInformation?.content }}
+        {{ speciesIUCNCleanContent }}
         <span class="mt-2 text-right text-subtle">
           &mdash; <a
             :href="speciesIUCNUrl"
