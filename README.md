@@ -47,6 +47,8 @@ _If you have Vetur installed, disable it for this workspace_
 
    `pnpm -w serve`
 
+4. For developing `website`, please copy `.env.example` to `.env` at the same directory level and fill in all variables.
+
 ---
 
 ## More Commands
