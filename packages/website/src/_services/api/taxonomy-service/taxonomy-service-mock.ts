@@ -8,4 +8,4 @@ export const TAXONOMY_CLASSES: TaxonomyClass[] = [
   { name: 'Mammals', symbol: '🐗' }
 ]
 
-export const TAXONOMY_CLASSES_WITH_ALL: TaxonomyClass[] = [TAXONOMY_CLASS_ALL, { name: 'Amphibians', symbol: '🐸' }, { name: 'Birds', symbol: '🐦' }] // TODO: remove this in #267
+export const TAXONOMY_CLASSES_WITH_ALL: TaxonomyClass[] = [TAXONOMY_CLASS_ALL, { name: 'Amphibians', symbol: '🐸' }, { name: 'Birds', symbol: '🐦' }]
