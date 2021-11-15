@@ -43,6 +43,7 @@
 - **feature:** Activity patterns Metrics - Eliminate the symbol (%) since “frequency”and “ratio” are not percentage (#230)
 - **feature:** API prototype
 - **features:** Add taxon in dataset comparison filter (#219)
+- **feature:** Added Puerto Rico project information
 
 - **fixed:** Migrate CD to Github Actions (#218)
 - **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
