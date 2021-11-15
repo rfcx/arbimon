@@ -1,13 +1,13 @@
 import { Dayjs } from 'dayjs'
 
-import { OptionalFilter, Site } from '~/api'
+import { Filter, Site } from '~/api'
 
 // TODO 93 - Remove colors & simplify
-export interface Filter {
+export interface ComparisonFilter {
   sites: Site[]
   startDate: Dayjs
   endDate: Dayjs
-  otherFilters: OptionalFilter[]
+  otherFilters: Filter[]
 }
 
 export interface ColoredFilter extends Filter {
