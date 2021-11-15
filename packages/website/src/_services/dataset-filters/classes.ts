@@ -2,13 +2,13 @@ import { Dayjs } from 'dayjs'
 
 import { formatDateRange } from '@rfcx-bio/utils/dates'
 
-import { OptionalFilter, Site } from '~/api/types'
+import { Filter, Site } from '~/api/types'
 
 export class FilterImpl {
   sites: Site[] = []
   startDate: Dayjs
   endDate: Dayjs
-  otherFilters: OptionalFilter[] = []
+  otherFilters: Filter[] = []
   color: string = ''
 
   get displayTitle (): string {
@@ -21,7 +21,7 @@ export class FilterImpl {
     return formatDateRange(this.startDate, this.endDate)
   }
 
-  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], otherFilters: OptionalFilter[] = [], color = '') {
+  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], otherFilters: Filter[] = [], color = '') {
     this.startDate = startDate
     this.endDate = endDate
     this.sites = sites

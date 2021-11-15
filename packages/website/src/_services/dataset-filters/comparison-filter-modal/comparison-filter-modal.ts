@@ -4,9 +4,8 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { OptionalFilter, Site } from '~/api/types'
+import { Filter, Site } from '~/api/types'
 import { BiodiversityStore } from '~/store'
-import { Filter } from '..'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
@@ -29,10 +28,10 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 })
 export default class ComparisonFilterModalComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop({ default: null }) defaultFilter!: Filter | null
+  @Prop({ default: null }) defaultFilter!: ComparisonFilter | null
   @Prop({ default: true }) canFilterByTaxon!: boolean
 
-  @Emit() emitApply (): Filter {
+  @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
     return {
       sites: this.selectedSites,
@@ -49,7 +48,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   startDate: string | null = dayjs().subtract(7, 'days').format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
   readonly today = dayjs().format(DATE_FORMAT)
-  otherFilters: OptionalFilter[] = []
+  otherFilters: Filter[] = []
   currentActiveMenuId = 'sites'
 
   get menus (): FilterMenuItem[] {
@@ -121,7 +120,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
-  updateSelectedTaxons (otherFilters: OptionalFilter[]): void {
+  updateSelectedTaxons (otherFilters: Filter[]): void {
     this.otherFilters = otherFilters
   }
 }

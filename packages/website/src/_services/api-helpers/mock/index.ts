@@ -1,6 +1,6 @@
 import { groupBy, mapValues } from 'lodash'
 
-import { DatasetDefinition, OptionalFilter } from '~/api/types'
+import { DatasetDefinition, Filter } from '~/api/types'
 import { rawSites } from './raw-sites'
 import { rawSummaries } from './raw-summaries'
 
@@ -46,11 +46,11 @@ export const getRawDetections = (): ApiHourlySpeciesSummary[] => {
 
 export const filterByDataset = (detections: ApiHourlySpeciesSummary[], dataset: DatasetDefinition): ApiHourlySpeciesSummary[] => {
   const { start, end, sites, otherFilters } = dataset
-  const optionalFilters = groupBy(otherFilters, 'title')
-  const getFilterValue = (filters: OptionalFilter[]): string => filters.map(f => f.value).join(', ')
-  const groupedOptionalFilters = mapValues(optionalFilters, getFilterValue)
-  const taxonFilters = groupedOptionalFilters.taxon ?? []
-  const speciesFilter = groupedOptionalFilters.species ?? []
+  const filters = groupBy(otherFilters, 'title')
+  const getFilterValue = (filters: Filter[]): string => filters.map(f => f.value).join(', ')
+  const groupedFilters = mapValues(filters, getFilterValue)
+  const taxonFilters = groupedFilters.taxon ?? []
+  const speciesFilter = groupedFilters.species ?? []
   return detections.filter(r => {
     return r.date >= start && r.date < end &&
     (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)) &&

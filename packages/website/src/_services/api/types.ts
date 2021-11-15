@@ -45,12 +45,12 @@ export interface DatasetDefinition {
   sites: Site[]
   start: string
   end: string
-  otherFilters: OptionalFilter[]
+  otherFilters: Filter[]
 }
 
-export type OptionalFilterType = 'taxon' | 'species'
+export type FilterType = 'taxon' | 'species'
 
-export interface OptionalFilter {
-  title: OptionalFilterType
+export interface Filter {
+  title: FilterType
   value: string
 }
