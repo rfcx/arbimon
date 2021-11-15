@@ -26,6 +26,16 @@ export default class SpeciesInformation extends Vue {
       : this.wikiSpeciesInformation.contentUrls.desktop
   }
 
+  /**
+   * Clean up html tag from raw content from iucn api
+   */
+  get speciesIUCNCleanContent (): string {
+    const rawContent = this.iucnSpeciesInformation?.content ?? ''
+    const div = document.createElement('div')
+    div.innerHTML = rawContent
+    return div.innerText
+  }
+
   override async created (): Promise<void> {
     await this.getSpeciesInformation()
   }
