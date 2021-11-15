@@ -2,6 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { Species } from '~/api'
+import { iucnService, IUCNSummary } from '~/api/iucn-service'
 import { wikiService, WikiSummary } from '~/api/wiki-service'
 
 const WIKIPEDIA_MOBILE_MAX_WIDTH = 760
@@ -10,14 +11,19 @@ export default class SpeciesInformation extends Vue {
   @Prop() species!: Species | null
 
   isLoading = true
-  speciesInformation: WikiSummary | null = null
+  iucnSpeciesInformation: IUCNSummary | null = null
+  wikiSpeciesInformation: WikiSummary | null = null
 
-  get speciesWikiUrl (): string | undefined {
-    if (!this.speciesInformation) return ''
+  get speciesIUCNUrl (): string {
+    return this.iucnSpeciesInformation?.redirectUrl ?? ''
+  }
+
+  get speciesWikiUrl (): string {
+    if (!this.wikiSpeciesInformation) return ''
 
     return screen.width <= WIKIPEDIA_MOBILE_MAX_WIDTH
-      ? this.speciesInformation.contentUrls.mobile
-      : this.speciesInformation.contentUrls.desktop
+      ? this.wikiSpeciesInformation.contentUrls.mobile
+      : this.wikiSpeciesInformation.contentUrls.desktop
   }
 
   override async created (): Promise<void> {
@@ -30,7 +36,8 @@ export default class SpeciesInformation extends Vue {
   }
 
   // TODO 190: Improve image handler
-  speciesImage (url: string | undefined): string {
+  speciesImage (): string {
+    const url = this.wikiSpeciesInformation?.thumbnailImage
     return url ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
   }
 
@@ -40,9 +47,13 @@ export default class SpeciesInformation extends Vue {
 
     this.isLoading = true
     try {
-      const information = await wikiService.getSpeciesSummary(speciesName)
+      const [iucnInformation, wikiInformation] = await Promise.all([
+        iucnService.getSpeciesSummary(speciesName),
+        wikiService.getSpeciesSummary(speciesName)
+      ])
       if (this.species?.speciesName === speciesName) {
-        this.speciesInformation = information ?? null
+        this.iucnSpeciesInformation = iucnInformation ?? null
+        this.wikiSpeciesInformation = wikiInformation ?? null
         this.isLoading = false
       }
     } catch (e) {
