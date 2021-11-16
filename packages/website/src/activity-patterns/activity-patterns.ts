@@ -44,7 +44,7 @@ export default class ActivityPatternsPage extends Vue {
     void this.$router.replace({ name: ROUTE_NAMES.activity_patterns, params: { speciesSlug } })
 
     this.species = species ?? null
-    this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug)
+    this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug ?? '')
     await this.onDatasetChange()
   }
 
