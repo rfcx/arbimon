@@ -1,49 +1,21 @@
 <template>
   <!-- TODO #188 #189 Handle loading and error case -->
   <div
-    v-if="iucnSpeciesInformation"
+    v-if="iucnSpeciesInformation || wikiSpeciesInformation"
     class="grid grid-cols-4"
   >
     <div class="col-span-3 pr-6">
-      <p>
-        <span
-          v-if="!iucnSpeciesInformation?.content"
-          class="italic"
-        >
-          Not found information.
-        </span>
-        {{ speciesIUCNCleanContent }}
-        <span class="mt-2 text-right text-subtle">
-          &mdash; <a
-            :href="speciesIUCNUrl"
-            target="_blank"
-            class="opacity-80 hover:(underline opacity-70)"
-          >
-            Source: IUCN Red List
-          </a>
-        </span>
-      </p>
-      <p
-        v-if="!iucnSpeciesInformation?.content"
-        class="mt-2"
-      >
-        <span
-          v-if="!wikiSpeciesInformation?.content"
-          class="italic"
-        >
-          Not found information.
-        </span>
-        {{ wikiSpeciesInformation?.content }}
-        <span class="mt-2 text-right text-subtle">
-          &mdash; <a
-            :href="speciesWikiUrl"
-            target="_blank"
-            class="opacity-80 hover:(underline opacity-70)"
-          >
-            Source: Wikipedia
-          </a>
-        </span>
-      </p>
+      <species-information-content-component
+        :content="speciesIUCNCleanContent"
+        :redirect-url="speciesIUCNUrl"
+        source="IUCN Red List"
+      />
+      <species-information-content-component
+        v-if="!speciesIUCNCleanContent"
+        :content="wikiSpeciesInformation?.content"
+        :redirect-url="speciesWikiUrl"
+        source="Wikipedia"
+      />
     </div>
     <div class="col-span-1">
       <div class="relative max-h-60 max-w-full flex justify-end">

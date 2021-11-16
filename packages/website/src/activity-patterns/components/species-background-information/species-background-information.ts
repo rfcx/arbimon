@@ -1,12 +1,18 @@
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { Species } from '~/api'
 import { iucnService, IUCNSummary } from '~/api/iucn-service'
 import { wikiService, WikiSummary } from '~/api/wiki-service'
+import SpeciesInformationContentComponent from './species-information-content.vue'
 
 const WIKIPEDIA_MOBILE_MAX_WIDTH = 760
 
+@Options({
+  components: {
+    SpeciesInformationContentComponent
+  }
+})
 export default class SpeciesInformation extends Vue {
   @Prop() species!: Species | null
 
