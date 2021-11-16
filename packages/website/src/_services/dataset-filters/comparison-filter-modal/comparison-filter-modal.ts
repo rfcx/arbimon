@@ -5,6 +5,7 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { Filter, Site } from '~/api/types'
+import { ComparisonFilter } from '~/dataset-filters'
 import { BiodiversityStore } from '~/store'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 

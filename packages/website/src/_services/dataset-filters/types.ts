@@ -10,6 +10,6 @@ export interface ComparisonFilter {
   otherFilters: Filter[]
 }
 
-export interface ColoredFilter extends Filter {
+export interface ColoredFilter extends ComparisonFilter {
   color: string
 }

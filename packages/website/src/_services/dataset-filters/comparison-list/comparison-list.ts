@@ -4,7 +4,7 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { BiodiversityStore } from '~/store'
-import { ColoredFilter, Filter } from '..'
+import { ColoredFilter, ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
@@ -90,7 +90,7 @@ export default class ComparisonListComponent extends Vue {
     this.emitSelect()
   }
 
-  apply (filter: Filter): void {
+  apply (filter: ComparisonFilter): void {
     const newFilter = new FilterImpl(filter.startDate, filter.endDate, filter.sites, filter.otherFilters)
     if (this.isAddSelected) {
       this.filters.push(newFilter)
