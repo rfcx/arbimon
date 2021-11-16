@@ -24,6 +24,7 @@ export interface ActicvityOverviewDataBySite {
       longitude: number
       detection: number
       detectionFrequency: number
+      occupancy: boolean
     }
   }
 }
