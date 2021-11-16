@@ -4,7 +4,9 @@
       <h1 class="text-4xl capitalize">
         {{ pageTitle }}
       </h1>
-      <p>{{ pageSubtitle }}</p>
+      <p class="italic">
+        {{ pageSubtitle }}
+      </p>
     </div>
     <slot />
   </div>
