@@ -21,7 +21,7 @@ export const getPredictedOccupancyMaps = async (speciesId?: number): Promise<Pre
     .filter(filename => filename.startsWith(species.speciesSlug))
     .map(name => ({
       title: name,
-      url: `${bioApiHost}/activity-patterns/predicted-occupancy/${name}.png`
+      url: `${bioApiHost}/projects/123/predicted-occupancy/${name}`
     }))
     .sort((a, b) => a.title.localeCompare(b.title))
 }
