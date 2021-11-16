@@ -1,0 +1,584 @@
+[
+  {
+    "species_id": "34",
+    "scientific_name": "Margarops fuscatus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "21391",
+    "scientific_name": "Rallus crepitans",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "18",
+    "scientific_name": "Coereba flaveola",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "51",
+    "scientific_name": "Crotophaga ani",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "10",
+    "scientific_name": "Tyrannus dominicensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1042",
+    "scientific_name": "Falco sparverius",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "16084",
+    "scientific_name": "Rhinella marina",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "57",
+    "scientific_name": "Zenaida aurita",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2082",
+    "scientific_name": "Columbina passerina",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1271",
+    "scientific_name": "Buteo jamaicensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2077",
+    "scientific_name": "Zenaida asiatica",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "16766",
+    "scientific_name": "Gallus gallus domesticus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "8251",
+    "scientific_name": "Mimus polyglottos",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "9",
+    "scientific_name": "Eleutherodactylus cochranae",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "7",
+    "scientific_name": "Eleutherodactylus coqui",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "12240",
+    "scientific_name": "Eleutherodactylus antillensis",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "16",
+    "scientific_name": "Myiarchus antillarum",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "8534",
+    "scientific_name": "Turdus plumbeus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40135",
+    "scientific_name": "Icterus portoricensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "4111",
+    "scientific_name": "Melanerpes portoricensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "10150",
+    "scientific_name": "Tiaris bicolor",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40475",
+    "scientific_name": "Setophaga adelaidae",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "6908",
+    "scientific_name": "Progne dominicensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1645",
+    "scientific_name": "Charadrius vociferus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "3065",
+    "scientific_name": "Asio flammeus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "55",
+    "scientific_name": "Quiscalus niger",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "10494",
+    "scientific_name": "Spindalis portoricensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "4939",
+    "scientific_name": "Tyrannus caudifasciatus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40405",
+    "scientific_name": "Setophaga petechia",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "9852",
+    "scientific_name": "Icterus icterus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "6338",
+    "scientific_name": "Vireo altiloquus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "10153",
+    "scientific_name": "Loxigilla portoricensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2789",
+    "scientific_name": "Coccyzus vieilloti",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "3817",
+    "scientific_name": "Todus mexicanus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "6327",
+    "scientific_name": "Vireo latimeri",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2887",
+    "scientific_name": "Megascops nudipes",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2124",
+    "scientific_name": "Geotrygon montana",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2783",
+    "scientific_name": "Coccyzus minor",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "3813",
+    "scientific_name": "Megaceryle alcyon",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "889",
+    "scientific_name": "Butorides virescens",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "9887",
+    "scientific_name": "Molothrus bonariensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "3097",
+    "scientific_name": "Chordeiles gundlachii",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "9899",
+    "scientific_name": "Agelaius xanthomus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1638",
+    "scientific_name": "Pluvialis squatarola",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "14536",
+    "scientific_name": "Osteopilus septentrionalis",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "1999",
+    "scientific_name": "Patagioenas squamosa",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2595",
+    "scientific_name": "Brotogeris versicolurus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "6",
+    "scientific_name": "leptodactylus albilabris ",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "1604",
+    "scientific_name": "Himantopus mexicanus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1742",
+    "scientific_name": "Tringa melanoleuca",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "20406",
+    "scientific_name": "Antrostomus noctitherus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "4580",
+    "scientific_name": "Elaenia martinica",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "21518",
+    "scientific_name": "Gallinula galeata",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "10149",
+    "scientific_name": "Tiaris olivaceus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1997",
+    "scientific_name": "Patagioenas leucocephala",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2026",
+    "scientific_name": "Streptopelia decaocto",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "12395",
+    "scientific_name": "Eleutherodactylus wightmanae",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "10487",
+    "scientific_name": "Nesospingus speculiferus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40385",
+    "scientific_name": "Setophaga angelae",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40391",
+    "scientific_name": "Setophaga americana",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2581",
+    "scientific_name": "Myiopsitta monachus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1749",
+    "scientific_name": "Actitis macularius",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "22167",
+    "scientific_name": "Thalasseus maximus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "28358",
+    "scientific_name": "Contopus latirostris blancoi",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "13725",
+    "scientific_name": "Lithobates catesbeianus",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "896",
+    "scientific_name": "Bubulcus ibis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1555",
+    "scientific_name": "Aramus guarauna",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "8",
+    "scientific_name": "Eleutherodactylus juanariveroi",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "5",
+    "scientific_name": "Eleutherodactylus brittoni",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "8489",
+    "scientific_name": "Catharus minimus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40472",
+    "scientific_name": "Setophaga discolor",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40445",
+    "scientific_name": "Setophaga caerulescens",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2659",
+    "scientific_name": "Amazona amazonica",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "40323",
+    "scientific_name": "Parkesia noveboracensis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "43907",
+    "scientific_name": "Equus caballus",
+    "taxon_id": "5",
+    "taxon": "Mammals"
+  },
+  {
+    "species_id": "12297",
+    "scientific_name": "Eleutherodactylus hedricki",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "22864",
+    "scientific_name": "Accipiter striatus venator",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "12360",
+    "scientific_name": "Eleutherodactylus richmondi",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "12257",
+    "scientific_name": "Eleutherodactylus cooki",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "1527",
+    "scientific_name": "Fulica caribaea",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1259",
+    "scientific_name": "Buteo platypterus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2643",
+    "scientific_name": "Amazona vittata",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "12356",
+    "scientific_name": "Eleutherodactylus portoricensis",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "12319",
+    "scientific_name": "Eleutherodactylus locustus",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "22987",
+    "scientific_name": "Buteo platypterus brunnescens",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "10511",
+    "scientific_name": "Euphonia musica",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "9100",
+    "scientific_name": "Passer domesticus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "21869",
+    "scientific_name": "Tringa semipalmata",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "12291",
+    "scientific_name": "Eleutherodactylus gryllus",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "12386",
+    "scientific_name": "Eleutherodactylus unicolor",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "1510",
+    "scientific_name": "Porphyrio martinica",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "2646",
+    "scientific_name": "Amazona viridigenalis",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1072",
+    "scientific_name": "Pandion haliaetus",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "1854",
+    "scientific_name": "Larus atricilla",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  },
+  {
+    "species_id": "42791",
+    "scientific_name": "Capra aegagrus",
+    "taxon_id": "5",
+    "taxon": "Mammals"
+  },
+  {
+    "species_id": "12332",
+    "scientific_name": "Eleutherodactylus monensis",
+    "taxon_id": "2",
+    "taxon": "Amphibians"
+  },
+  {
+    "species_id": "953",
+    "scientific_name": "Sula sula",
+    "taxon_id": "1",
+    "taxon": "Birds"
+  }
+]
