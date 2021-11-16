@@ -4,10 +4,11 @@ import { createPinia, defineStore } from 'pinia'
 import { Project, Site } from '~/api'
 import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
+import router, { ROUTE_NAMES } from '~/router'
 
 // Designed for contrast & color-blind support:
 const DEFAULT_DATASET_COLORS = ['#85EBBA', '#6FC1F5', '#B578DB', '#EAC3E4', '#D6E68C']
-const FAKE_PROJECT = { id: '123', name: 'Test Project', isPublic: true, externalId: 123456 }
+const FAKE_PROJECT = { id: '123', name: 'Puerto Rico', isPublic: true, externalId: 123456 }
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -30,13 +31,15 @@ export const useStore = defineStore('root', {
       if (user) {
         // TODO 17 - Make this conditional on build mode (dev, staging, prod)
         // TODO 65 - Replace this with a mock service
-        const projects = [...await getProjects(), FAKE_PROJECT]
+        const projects = [FAKE_PROJECT, ...await getProjects()]
         const selectedProject = projects.length > 0 ? projects[0] : undefined
         const sites = selectedProject ? await getSites(selectedProject) : []
 
         this.projects = projects
         this.selectedProject = selectedProject
         this.sites = sites
+
+        if (selectedProject) await router.push({ name: ROUTE_NAMES.overview, params: { projectId: selectedProject.id } })
       }
     },
     updateSelectedProject (project?: Project) { this.selectedProject = project }
