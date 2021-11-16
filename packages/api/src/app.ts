@@ -1,4 +1,5 @@
 import fastify from 'fastify'
+import fastifyCors from 'fastify-cors'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
@@ -12,6 +13,7 @@ export const app = fastify({
 })
 
 // Register plugins
+await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
 
 // Register routes
