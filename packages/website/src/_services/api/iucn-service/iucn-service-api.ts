@@ -17,7 +17,7 @@ export class IUCNService {
     try {
       const information = await this.getSpeciesInformation(speciesName)
       const redirectUrl = `${this.baseUrl}/website/${speciesName}`
-      return { content: information?.habitat ?? '', redirectUrl }
+      return { content: information?.habitat ?? information?.rationale ?? '', redirectUrl }
     } catch (e) {
       // TODO #191: API Handle
       return undefined
