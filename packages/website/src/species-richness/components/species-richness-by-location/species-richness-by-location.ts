@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
+import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
 import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
@@ -29,6 +30,10 @@ export default class SpeciesRichnessByLocation extends Vue {
     zoom: 9
   }
 
+  get mapDataKey (): string {
+    return TAXONOMY_CLASS_ALL.name
+  }
+
   get hasData (): boolean {
     return this.datasets.length > 0
   }
@@ -38,10 +43,6 @@ export default class SpeciesRichnessByLocation extends Vue {
       case 1: return 1
       default: return 2
     }
-  }
-
-  setTaxonomyValue (taxon: string): void {
-    this.taxon = taxon
   }
 
   setMapStyle (style: string): void {

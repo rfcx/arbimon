@@ -3,18 +3,18 @@ import { Dayjs } from 'dayjs'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { DatasetDefinition, Site } from '~/api'
-import { Filter } from '~/dataset-filters'
+import { ComparisonFilter } from '~/dataset-filters'
 import { useStore } from '~/store'
 
 export const EXPORT_DATE_FORMAT = 'YYMMDD'
 
-export function filterToDataset ({ startDate, endDate, sites, otherFilters }: Filter): DatasetDefinition {
+export function filterToDataset ({ startDate, endDate, sites, otherFilters }: ComparisonFilter): DatasetDefinition {
   const start = startDate.toISOString()
   const end = endDate.add(1, 'days').toISOString()
   return { start, end, sites, otherFilters }
 }
 
-export function getFilterFriendlyName (filter: Filter): string {
+export function getFilterFriendlyName (filter: ComparisonFilter): string {
   const { startDate, endDate, sites } = filter
 
   const siteName = getSiteName(sites)

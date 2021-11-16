@@ -21,8 +21,8 @@ export default class FilterTaxon extends Vue {
   }
 
   override mounted (): void {
-    if (this.defaultTaxonFilter.length > 0) {
-      this.selectedTaxons = this.defaultTaxonFilter
+    if (this.defaultTaxonFilters.length > 0) {
+      this.selectedTaxons = this.defaultTaxonFilters
     } else {
       this.selectAllTaxon()
     }
