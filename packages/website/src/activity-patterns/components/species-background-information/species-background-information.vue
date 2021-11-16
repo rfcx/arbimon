@@ -2,9 +2,9 @@
   <!-- TODO #188 #189 Handle loading and error case -->
   <div
     v-if="iucnSpeciesInformation || wikiSpeciesInformation"
-    class="grid grid-cols-4"
+    class="grid grid-cols-6"
   >
-    <div class="col-span-3 pr-6">
+    <div class="col-span-5">
       <species-information-content-component
         :content="speciesIUCNCleanContent"
         :redirect-url="speciesIUCNUrl"
@@ -12,6 +12,7 @@
       />
       <species-information-content-component
         v-if="!speciesIUCNCleanContent"
+        class="mt-2"
         :content="wikiSpeciesInformation?.content"
         :redirect-url="speciesWikiUrl"
         source="Wikipedia"
