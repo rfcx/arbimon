@@ -36,5 +36,8 @@
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "devDependencies": {
+    "fastify-cors": "^6.0.2"
+  }
 }
