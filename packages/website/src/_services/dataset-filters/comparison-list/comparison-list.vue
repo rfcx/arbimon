@@ -38,10 +38,8 @@
           class="flex flex-row items-center mt-2 py-2 px-4"
           :style="{ 'border-top': `solid 1px ${getFilterColor(idx)}`}"
         >
-          <icon-fas-filter
-            class="
-          mr-2"
-          /> <span class="first-letter:capitalize">{{ getOptionalFilterText(idx) }}</span>
+          <icon-fas-filterclass="mr-2" />
+          <span class="first-letter:capitalize">{{ getOptionalFilterText(idx) }}</span>
         </div>
       </div>
       <div

@@ -5,9 +5,11 @@ import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { Filter } from '~/api/types'
 
 export default class FilterTaxon extends Vue {
-  @Prop({ default: [] }) defaultTaxonFilter!: string[]
+  @Prop({ default: [] }) defaultTaxonFilters!: string[]
+
   @Emit() emitSelectedTaxons (): Filter[] {
-    if (this.selectedTaxons.length === this.taxons.length) { return [] } // select all === no filter
+    if (this.selectedTaxons.length === this.taxons.length) return [] // select all === no filter
+
     return this.selectedTaxons.map(i => { return { title: 'taxon', value: i } })
   }
 

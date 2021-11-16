@@ -66,7 +66,7 @@
         class="w-full"
       >
         <filter-taxon
-          :default-taxon-filter="otherFilters.filter(f => f.title === 'taxon').map(f => f.value)"
+          :default-taxon-filter="selectedTaxons"
           @emit-selected-taxons="updateSelectedTaxons"
         />
       </div>
