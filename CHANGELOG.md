@@ -42,6 +42,7 @@
 - **feature:** Activity patterns Line chart - Occupancy ratio by time (#153)
 - **feature:** Activity patterns Metrics - Eliminate the symbol (%) since “frequency”and “ratio” are not percentage (#230)
 - **feature:** API prototype
+- **feature:** Added Puerto Rico project information
 
 - **fixed:** Migrate CD to Github Actions (#218)
 - **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
