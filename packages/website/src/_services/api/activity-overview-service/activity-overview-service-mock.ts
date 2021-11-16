@@ -22,8 +22,8 @@ export class ActivityOverviewService {
     return new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
   }
 
-  async getOverviewDataBySite (detection: DetectionGroupByTaxonClass): Promise<ActicvityOverviewDataBySite> {
-    const summariesEachTaxonBySite: DetectionGroupedBySiteAndTaxon = mapValues(detection, (detection) => {
+  async getOverviewDataBySite (detectionsByTaxon: DetectionGroupByTaxonClass): Promise<ActicvityOverviewDataBySite> {
+    const summariesEachTaxonBySite: DetectionGroupedBySiteAndTaxon = mapValues(detectionsByTaxon, (detection) => {
       const groupedSites = groupBy(detection, 'stream_id')
       return groupedSites
     })
@@ -34,6 +34,7 @@ export class ActivityOverviewService {
 
         const siteDetectionCount = sum(detections.map(d => d.num_of_recordings))
         const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionCount / siteTotalRecordingCount
+        const siteOccupiedFrequency = detections.length > 0
 
         return {
           siteId,
@@ -41,7 +42,8 @@ export class ActivityOverviewService {
           latitude: detections[0].lat,
           longitude: detections[0].lon,
           detection: siteDetectionCount,
-          detectionFrequency: siteDetectionFrequency
+          detectionFrequency: siteDetectionFrequency,
+          occupancy: siteOccupiedFrequency
         }
       })
     })

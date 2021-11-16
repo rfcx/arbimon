@@ -33,13 +33,14 @@ export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): 
   for (const [taxonKey, value] of Object.entries(overviewBySiteSortedByKey)) {
     const taxon = TAXONOMY_CLASSES.find(taxon => taxon.name === taxonKey)
 
-    const data = Object.values(value).map(({ siteName, latitude, longitude, detection, detectionFrequency }) => ({
+    const data = Object.values(value).map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,
       longitude,
       distinctSpecies: {
         [ACTIVITY_OVERVIEW_MAP_KEYS.detection]: detection,
-        [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency
+        [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency,
+        [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }
     }))
 
