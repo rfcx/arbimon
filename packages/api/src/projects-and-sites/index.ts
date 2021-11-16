@@ -27,12 +27,17 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
     if (!speciesId) return { error: 'missing speciesId' }
 
     // Queries
-    const predictedOccupancyImages = (await readdir(mockPredictionsFolderPath))
+    const predictedOccupancyMaps = (await readdir(mockPredictionsFolderPath))
       .filter(filename => filename.startsWith(speciesId))
       .map(filename => filename.substr(0, filename.lastIndexOf('.')) || filename)
+      .sort()
+      .map(filename => ({
+        title: filename,
+        url: `/projects/123/predicted-occupancy/${filename}`
+      }))
 
     // Respond
-    return { predictedOccupancyImages } // TODO ??? - return the rest of the data
+    return { predictedOccupancyMaps } // TODO ??? - return the rest of the data
   })
 
   interface ProjectSpeciesPredictedOccupancyRoute {
