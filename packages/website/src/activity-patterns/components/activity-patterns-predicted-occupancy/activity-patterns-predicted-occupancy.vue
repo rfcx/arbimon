@@ -16,6 +16,7 @@
         v-for="predictedOccupancyMap in predictedOccupancyMaps"
         :key="predictedOccupancyMap.title"
         :href="predictedOccupancyMap.url"
+        target="_blank"
       >
         <img
           :src="predictedOccupancyMap.url"
