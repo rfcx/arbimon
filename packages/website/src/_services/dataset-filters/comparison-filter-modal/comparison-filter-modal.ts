@@ -72,6 +72,10 @@ export default class ComparisonFilterModalComponent extends Vue {
     return this.selectedSites.length === 0
   }
 
+  get selectedTaxons (): string[] {
+    return this.otherFilters.filter(f => f.title === 'taxon').map(f => f.value)
+  }
+
   override mounted (): void {
     // TODO ?? - What if the list of sites didn't arrive yet?
     this.setDefaultSelectedSites()
