@@ -16,11 +16,12 @@ export const getPredictedOccupancyMaps = async (speciesId?: number): Promise<Pre
   if (!species) return []
 
   // Return mock data
+  const bioApiHost: string = import.meta.env.VITE_BIO_API_HOST // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
   return rawPredictedOccupancyFilenames
     .filter(filename => filename.startsWith(species.speciesSlug))
     .map(name => ({
       title: name,
-      url: `${import.meta.env.VITE_BIO_API_HOST}/activity-patterns/predicted-occupancy/${name}.png`
+      url: `${bioApiHost}/activity-patterns/predicted-occupancy/${name}.png`
     }))
     .sort((a, b) => a.title.localeCompare(b.title))
 }
