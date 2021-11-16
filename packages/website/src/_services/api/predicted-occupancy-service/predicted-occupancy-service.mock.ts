@@ -1,24 +1,14 @@
-import { getAllSpecies } from '~/api/species-service'
 import { rawPredictedOccupancyFilenames } from './raw-predicted-occupancy-filenames'
+import { GetPredictedOccupancyMaps, PredictedOccupancyMap } from './types'
 
-export interface PredictedOccupancyMap {
-  title: string
-  url: string
-}
-
-export const getPredictedOccupancyMaps = async (speciesId?: number): Promise<PredictedOccupancyMap[]> => {
-  // Check ID exists
-  if (speciesId === undefined || isNaN(speciesId)) return []
-
-  // Check species exists
-  const allSpecies = await getAllSpecies()
-  const species = allSpecies.find(s => s.speciesId === speciesId)
-  if (!species) return []
+export const getPredictedOccupancyMaps: GetPredictedOccupancyMaps = async (speciesSlug: string): Promise<PredictedOccupancyMap[]> => {
+  // Check slug exists
+  if (!speciesSlug) return []
 
   // Return mock data
   const bioApiHost: string = import.meta.env.VITE_BIO_API_HOST // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
   return rawPredictedOccupancyFilenames
-    .filter(filename => filename.startsWith(species.speciesSlug))
+    .filter(filename => filename.startsWith(speciesSlug))
     .map(name => ({
       title: name,
       url: `${bioApiHost}/projects/123/predicted-occupancy/${name}`

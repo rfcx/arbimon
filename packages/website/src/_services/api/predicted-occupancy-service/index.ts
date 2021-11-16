@@ -1,1 +1,1 @@
-export * from './predicted-occupancy-service.mock'
+export * from './predicted-occupancy-service.api'
