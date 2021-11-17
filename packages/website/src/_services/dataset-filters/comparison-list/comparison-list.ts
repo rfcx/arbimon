@@ -44,7 +44,16 @@ export default class ComparisonListComponent extends Vue {
   }
 
   addFilterConfig (): void {
-    this.currentSelectedFilter = null
+    // Copy previous filter
+    const previousFilter = this.filters[this.filters.length - 1]
+    this.currentSelectedFilter = new FilterImpl(
+      previousFilter.startDate,
+      previousFilter.endDate,
+      [...previousFilter.sites],
+      previousFilter.color
+    )
+
+    // Open modal
     this.isAddSelected = true
     this.isFilterOpen = true
   }
