@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { IUCNRoute } from 'iucn/types'
 
+import { APIError } from '../services/errors/types.js'
 import { getSpeciesSummary } from './iucn.js'
 
 export const routesIUCN: FastifyPluginAsync = async (app, options): Promise<void> => {
@@ -8,25 +9,19 @@ export const routesIUCN: FastifyPluginAsync = async (app, options): Promise<void
     const { speciesName } = req.params
 
     if (!speciesName) {
-      return await res.code(404).send({
-        error: 'Bad request',
-        message: 'Missing species name'
-      })
+      return await res.code(404).send({ message: 'Missing species name' })
     }
 
     try {
       const iucnInformation = await getSpeciesSummary(speciesName)
-      if (!iucnInformation) {
-        return await res.send({
-          message: 'Species not found'
-        })
-      }
       return await res.send(iucnInformation)
     } catch (e) {
-      return await res.code(500).send({
-        error: 'Server error',
-        message: 'Can\'t get species information.'
-      })
+      console.error('IUCN:', e)
+      if (e instanceof APIError) {
+        return await res.code(e.code).send({ message: e.message })
+      }
+
+      return await res.code(500).send({ message: 'Can\'t get species information.' })
     }
   })
 }
