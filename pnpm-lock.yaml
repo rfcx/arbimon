@@ -115,6 +115,7 @@ importers:
   packages/api:
     specifiers:
       '@rfcx-bio/common': workspace:*
+      axios: ^0.24.0
       dayjs: ^1.10.7
       fastify: ^3.23.1
       fastify-cors: ^6.0.2
@@ -122,6 +123,7 @@ importers:
       lodash: ^4.17.21
     dependencies:
       '@rfcx-bio/common': link:../common
+      axios: 0.24.0
       dayjs: 1.10.7
       fastify: 3.23.1
       fastify-static: 4.5.0
@@ -2662,6 +2664,7 @@ packages:
 
   /bindings/1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+    requiresBuild: true
     dependencies:
       file-uri-to-path: 1.0.0
     dev: true
@@ -4999,6 +5002,7 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: true
     optional: true
 

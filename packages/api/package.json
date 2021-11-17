@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
+    "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "fastify": "^3.23.1",
     "fastify-static": "^4.5.0",
