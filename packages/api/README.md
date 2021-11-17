@@ -2,6 +2,10 @@
 
 Biodiversity backend code
 
+## Set up
+
+- For the environment variables (bot config and secrets), please copy `.env.example` to `.env` and fill in all values
+
 ## Standards
 
 This is an ESM module written in TypeScript:

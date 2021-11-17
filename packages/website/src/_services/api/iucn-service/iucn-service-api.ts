@@ -18,7 +18,6 @@ export class IUCNService {
 
     try {
       const { data } = await axios.request<IUCNSummary>(endpoint)
-      console.log('front', data)
       return data
     } catch (e) {
       return undefined
