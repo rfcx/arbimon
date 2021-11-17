@@ -7,7 +7,7 @@ import { getSites } from '~/api/site-service'
 
 // Designed for contrast & color-blind support:
 const DEFAULT_DATASET_COLORS = ['#85EBBA', '#6FC1F5', '#B578DB', '#EAC3E4', '#D6E68C']
-const FAKE_PUERTO_RICO_PROJECT = { id: 'puerto-rico-island-wide', name: 'Puerto Rico Island-Wide (Fake)', isPublic: true, externalId: 123456 }
+const FAKE_PUERTO_RICO_PROJECT = { id: 'puerto-rico-island-wide', name: 'Puerto Rico Island-Wide', isPublic: true, externalId: 123456 }
 
 export const useStore = defineStore('root', {
   state: () => ({
