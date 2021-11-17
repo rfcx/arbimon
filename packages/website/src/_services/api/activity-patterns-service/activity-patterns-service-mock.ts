@@ -31,7 +31,7 @@ export class ActivityPatternsService {
     const activityBySite = this.getActivityDataBySite(totalSummaries, speciesId)
     const activityByTime = this.getActvityDataByTime(totalSummaries, speciesId)
 
-    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount: detectionCount, detectionFrequency: detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite, activityByTime }, this.delay)
+    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite, activityByTime }, this.delay)
   }
 
   getRecordingCount (detections: ApiHourlySpeciesSummary[]): number {
