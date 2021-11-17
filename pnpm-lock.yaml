@@ -18,6 +18,7 @@ importers:
       '@vue/eslint-config-standard': ^6.1.0
       '@vue/eslint-config-typescript': ^9.0.1
       babel-jest: ^24.9.0
+      cross-env: ^7.0.3
       cypress: ^8.7.0
       cypress-fail-on-console-error: ^2.1.2
       cypress-wait-until: ^1.7.2
@@ -72,6 +73,7 @@ importers:
       '@vue/eslint-config-standard': 6.1.0_5f9b2f3a44dac3bc0a792ca144f1d0b4
       '@vue/eslint-config-typescript': 9.0.1_6e2aa7baa83ea64b77c81400f52e762e
       babel-jest: 24.9.0_@babel+core@7.16.0
+      cross-env: 7.0.3
       cypress: 8.7.0
       cypress-fail-on-console-error: 2.1.2
       cypress-wait-until: 1.7.2
@@ -3287,6 +3289,14 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn/6.0.5:

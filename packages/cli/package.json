@@ -10,7 +10,7 @@
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
+    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
     "test": "jest src"
   },
   "dependencies": {
