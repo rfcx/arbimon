@@ -2,12 +2,12 @@
   <!-- TODO #188 #189 Handle loading and error case -->
   <div
     v-if="speciesInformation"
-    class="grid grid-cols-4"
+    class="flex gap-10"
   >
-    <div class="col-span-3 pr-6">
+    <div>
       <p>
         {{ speciesInformation?.content }}
-        <span class="mt-2 text-right text-subtle">
+        <span class="mt-2 text-subtle">
           &mdash; <a
             :href="speciesWikiUrl"
             target="_blank"
@@ -18,11 +18,11 @@
         </span>
       </p>
     </div>
-    <div class="col-span-1">
+    <div>
       <img
         :src="speciesImage(speciesInformation?.thumbnailImage)"
         :alt="species?.speciesName ?? ''"
-        class="object-contain max-h-50"
+        class="object-contain min-w-40 md:min-w-50 lg:min-w-60"
       >
     </div>
   </div>

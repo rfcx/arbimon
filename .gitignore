@@ -1,15 +1,14 @@
-# Environment & secrets
-.env
+# Secrets
+*.local
 
 # Deps
 node_modules
 
-# Build
+# Build, lint
 dist
 dist-ssr
 lib
 *.tsbuildinfo
-*.local
 .eslintcache
 
 # Logs

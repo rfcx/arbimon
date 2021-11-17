@@ -3,3 +3,6 @@ kind: ConfigMap
 metadata:
   name: biodiversity-api-config
   namespace: testing
+# data:
+#   VITE_APP_CORE_API_HOST: https://staging-api.rfcx.org
+#   VITE_APP_MEDIA_API_HOST: https://media-api.rfcx.org
