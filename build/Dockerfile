@@ -23,9 +23,11 @@ COPY packages/api ./packages/api
 COPY packages/common ./packages/common
 COPY packages/utils ./packages/utils
 COPY packages/website ./packages/website
+ARG mode=production
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
-RUN pnpm build-ci
+RUN pnpm --filter=!website build
+RUN pnpm --filter=website build -- --mode ${mode}
 
 # API
 FROM build as api
