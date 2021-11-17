@@ -45,6 +45,8 @@
 - **feature:** Remove taxon toggle from map (#267)
 - **features:** Add taxon in dataset comparison filter (#219)
 - **feature:** Added Puerto Rico project information
+- **feature:** Puerto Rico project information
+- **feature:** Puerto Rico "Predicted Occupancy" maps
 
 - **fixed:** Migrate CD to Github Actions (#218)
 - **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
