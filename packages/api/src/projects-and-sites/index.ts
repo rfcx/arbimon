@@ -18,12 +18,14 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
 
   interface ProjectSpeciesRoute {
     Params: {
+      projectId?: string
       speciesId?: string
     }
   }
   app.get<ProjectSpeciesRoute>('/projects/:projectId/species/:speciesId', async (req, res) => {
     // Inputs & validation
-    const { speciesId } = req.params
+    const { projectId, speciesId } = req.params
+    if (!projectId) return { error: 'missing projectId' }
     if (!speciesId) return { error: 'missing speciesId' }
 
     // Queries
@@ -33,7 +35,7 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
       .sort()
       .map(filename => ({
         title: filename,
-        url: `/projects/123/predicted-occupancy/${filename}`
+        url: `/projects/${projectId}/predicted-occupancy/${filename}`
       }))
 
     // Respond
