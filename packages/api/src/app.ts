@@ -5,6 +5,7 @@ import { resolve } from 'path'
 
 import { routesActivityPatterns } from './activity-patterns/index.js'
 import { routesIndex } from './index/index.js'
+import { routesIUCN } from './iucn/index.js'
 import { routesProjectSite } from './projects-and-sites/index.js'
 import { routesSpeciesRichness } from './species-richness/index.js'
 
@@ -17,5 +18,5 @@ await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
 
 // Register routes
-const routePlugins = [routesIndex, routesProjectSite, routesSpeciesRichness, routesActivityPatterns]
+const routePlugins = [routesIndex, routesProjectSite, routesSpeciesRichness, routesActivityPatterns, routesIUCN]
 await Promise.all(routePlugins.map(plugin => app.register(plugin)))
