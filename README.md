@@ -77,5 +77,5 @@ _If you have Vetur installed, disable it for this workspace_
 
 - `pnpm -w blah` => run in monorepo-root
 - `pnpm -r blah` => run in all packages
-- `pnpm -r --filter {"packages"} blah` => run in all packages, except root
+- `pnpm --filter {"packages"} blah` => run in all packages, except root
 - `pnpm --filter=website blah` => run in "website" (or api, cli, ...)

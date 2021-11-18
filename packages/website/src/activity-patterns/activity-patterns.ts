@@ -4,6 +4,7 @@ import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { Species } from '~/api'
 import { activityPatternsService } from '~/api/activity-patterns-service'
+import { getPredictedOccupancyMaps, PredictedOccupancyMap } from '~/api/predicted-occupancy-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
@@ -11,6 +12,7 @@ import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
+import ActivityPatternsPredictedOccupancy from './components/activity-patterns-predicted-occupancy/activity-patterns-predicted-occupancy.vue'
 import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
@@ -20,6 +22,7 @@ import SpeciesSelector from './components/species-selector/species-selector.vue'
     ActivityPatternsByLocation,
     ActivityPatternsByTime,
     ActivityPatternsMetrics,
+    ActivityPatternsPredictedOccupancy,
     ComparisonListComponent,
     SpeciesBackgroundInformation,
     SpeciesSelector
@@ -31,6 +34,7 @@ export default class ActivityPatternsPage extends Vue {
   filters: ColoredFilter[] = []
 
   // Data for children
+  predictedOccupancyMaps: PredictedOccupancyMap[] = []
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
@@ -40,6 +44,7 @@ export default class ActivityPatternsPage extends Vue {
     void this.$router.replace({ name: ROUTE_NAMES.activity_patterns, params: { speciesSlug } })
 
     this.species = species ?? null
+    this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug ?? '')
     await this.onDatasetChange()
   }
 
