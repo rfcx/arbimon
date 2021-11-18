@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { IUCNRoute } from 'iucn/types'
 
-import { APIError } from '../services/errors/types.js'
+import { APIError } from '../_services/errors/types.js'
 import { getSpeciesSummary } from './iucn.js'
 
 export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void> => {

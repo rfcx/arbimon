@@ -1,9 +1,9 @@
 import axios from 'axios'
 import * as dotenv from 'dotenv'
 import { IUCNNarrativeInfoResponse, IUCNNarrativeInfoResultResponse, IUCNSummary } from 'iucn/types'
-import { Endpoint } from 'services/api-helper/types'
 
-import { APIError } from '../services/errors/types.js'
+import { Endpoint } from '../_services/api-helper/types'
+import { APIError } from '../_services/errors/types.js'
 
 dotenv.config()
 
