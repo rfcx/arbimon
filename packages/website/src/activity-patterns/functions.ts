@@ -14,13 +14,13 @@ export const ACTIVITY_PATTERN_MAP_KEYS = {
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
   const metrics: Metrics[] = [
     {
-      title: 'Detection frequency',
-      information: 'Number of recordings with detections divided by the total number of recordings',
+      title: 'Detection Frequency',
+      information: 'Number of detections ÷<br />Total number of recordings',
       datasets: []
     },
     {
-      title: 'Occupancy ratio',
-      information: 'Number of sites with detection by the total number of sites',
+      title: 'Naive Occupancy',
+      information: 'Number of sites with detections ÷<br />Total number of sites',
       datasets: []
     }
   ]

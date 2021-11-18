@@ -1,6 +1,100 @@
-# Biodiversity Analytics Release Notes
+<!---
+All logs should be useful to & readable by end-users
+Do not write about internal work (ex: refactoring) unless it has an impact on the end-user
 
-## 0.0.1 (2021-??-??)
+Allowed categories:
+- Notes
+- Features
+- Bug Fixes
+- Enhancements
+- Breaking changes
+--->
+
+# 0.0.7 (2021-11-25)
+
+## Features
+
+- **overview:** Puerto Rico project information [#278]
+- **activity-patterns:** Puerto Rico "Predicted Occupancy" maps [#285]
+
+## Bug Fixes
+
+- **auth:** Do not redirect to overview after deep-link [#293]
+
+# 0.0.6 (2021-11-12)
+
+> // TODO: Replace this with logs
+> Sprint Goal:
+>
+> - [Activity Pattern]
+>   - Map: detection, detection frequency, occupancy by location
+>   - Line chart: detection, detection frequency, occupancy ratio by time
+> - [Filter]
+>   - Add taxon filter in the Dataset comparison
+>   - Remember Dataset filter across different reports
+> - [API] Setup API & Species Richness data structure
+> - [UI] Increase map bubble contrast
+> - [Export] Add legends on chart and map exports
+
+# 0.0.5 (2021-10-27)
+
+> // TODO: Replace this with logs
+> Sprint Goal:
+>
+> - [Species Richness]
+>   - Real data from Puerto Rico project (as embed JSON file in the project)
+>   - UI & Usability improvement
+>   - Export menu
+>   - Table sort & pagination
+>   - Line chart bug fixes & UI improvement
+> - [Activity Pattern]
+>   - Add title & comparison box
+>   - POC on species information with Wikipedia / IUCN Red List
+>   - Add detection frequency & occupancy metrics
+> - Other improvements
+>   - refactoring code, prepare for the new structure of data
+
+# 0.0.4 (2021-10-13)
+
+> // TODO: Replace this with logs
+> Sprint Goal:
+>
+> - New elements in Species Richness page
+> - Line chart that represents dataset by time (hour, day, month, year)
+> - Map
+> - Add export feature to map chart
+> - Pick background style & toggle place names
+> - Table represents species name data, and export as csv feature
+> - Other improvements
+> - Move species group toggle to the top level filter
+> - Improve png export to be dark foreground
+> - Support responsive: bar chart, filter box
+> - Start on Activity Pattern page (if all mentioned above are done)
+
+- **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
+- **refactor:** Refactor species richness table display (#112)
+
+# 0.0.3 (2021-09-29)
+
+> // TODO: Replace this with logs
+> Sprint Goal:
+>
+> - First version of Map chart
+> - Improve species richness count graph to include the comparison data source
+> - Export graph as image figure
+> - [Bonus] Refactor some code: stream => site / env file / pop up component / search sites
+
+# 0.0.2 (2021-09-23)
+
+> // TODO: Replace this with logs
+>
+> - Sprint Goal:
+> - Species count per Taxonomic Group (histogram)
+> - Real data from Puerto Rico project (via export)
+> - Filter site list
+> - Filter start/end dates
+
+# 0.0.1 (2021-09-15)
 
 - **setup:** CE-1261 Setup biodiversity analytics project ([CE-1261](https://jira.rfcx.org/browse/CE-1261))
 - **setup:** CE-1297 Setup biodiversity analytics deployment ([CE-1297](https://jira.rfcx.org/browse/CE-1297))
@@ -8,6 +102,10 @@
 - **setup:** CE-1262 Set up authentication page ([CE-1262](https://jira.rfcx.org/browse/CE-1262))
 - **setup:** CE-1348 Set up biodiversity analytics store data tool([CE-1348](https://jira.rfcx.org/browse/CE-1348))
 - **setup:** Set up api service for calling an api
+
+# LEGACY
+
+// TODO: Move to correct version: 0.0.2 - 0.0.6
 
 - **feature:** CE-1327 User can see the comparison box at the top of report ([CE-1327](https://jira.rfcx.org/browse/CE-1327))
 - **feature:** CE-1357 User can change project directly in Analytics website ([CE-1357](https://jira.rfcx.org/browse/CE-1357))
@@ -42,8 +140,3 @@
 - **feature:** Activity patterns Line chart - Occupancy ratio by time (#153)
 - **feature:** Activity patterns Metrics - Eliminate the symbol (%) since “frequency”and “ratio” are not percentage (#230)
 - **feature:** API prototype
-
-- **fixed:** Migrate CD to Github Actions (#218)
-- **fixed:** Update SR line-chart to correctly display SR instead of detections (#172)
-
-- **refactor:** Refactor species richness table display (#112)
