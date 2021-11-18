@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { Endpoint } from '~/api-helpers/rest'
+import { useStore } from '~/store'
 import { GetPredictedOccupancyMaps, PredictedOccupancyMap } from './types'
 
 // TODO ??? - Extract API types to common
@@ -14,9 +15,14 @@ export const getPredictedOccupancyMaps: GetPredictedOccupancyMaps = async (speci
   // Check slug exists
   if (!speciesSlug) return []
 
+  // Check project exists
+  const store = useStore()
+  const projectId = store.selectedProject?.id
+  if (!projectId) return []
+
   try {
     // Call API
-    const url = `${bioApiHost}/projects/123/species/${speciesSlug}`
+    const url = `${bioApiHost}/projects/${projectId}/species/${speciesSlug}`
     const endpoint: Endpoint = ({ method: 'GET', url })
     const { data } = await axios.request<ProjectSpeciesRouteResponse>(endpoint)
 
@@ -26,7 +32,6 @@ export const getPredictedOccupancyMaps: GetPredictedOccupancyMaps = async (speci
       url: `${bioApiHost}${url}`
     }))
   } catch (e) {
-    console.log(e)
     return []
   }
 }
