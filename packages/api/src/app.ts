@@ -3,6 +3,7 @@ import fastifyCors from 'fastify-cors'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
+import { env } from './_services/env/index.js'
 import { routesActivityPatterns } from './activity-patterns/index.js'
 import { routesIndex } from './index/index.js'
 import { routesIucn } from './iucn/index.js'
@@ -10,7 +11,7 @@ import { routesProjectSite } from './projects-and-sites/index.js'
 import { routesSpeciesRichness } from './species-richness/index.js'
 
 export const app = fastify({
-  logger: process.env.NODE_ENV !== 'production'
+  logger: env.NODE_ENV !== 'production'
 })
 
 // Register plugins

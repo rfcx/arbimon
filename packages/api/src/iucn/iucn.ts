@@ -1,7 +1,7 @@
 import axios from 'axios'
-import * as dotenv from 'dotenv'
 
 import { Endpoint } from '../_services/api-helper/types'
+import { env } from '../_services/env/index.js'
 
 export interface IucnSpeciesNarrativeResult {
   species_id: number
@@ -21,15 +21,10 @@ interface IucnSpeciesNarrativeResponse {
   result?: IucnSpeciesNarrativeResult[]
 }
 
-dotenv.config()
-
-const IUCN_TOKEN = process.env.IUCN_TOKEN ?? ''
-const IUCN_BASE_URL = process.env.IUCN_BASE_URL ?? ''
-
 export async function getSpeciesInformation (speciesName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
   const endpoint: Endpoint = {
     method: 'GET',
-    url: `${IUCN_BASE_URL}/species/narrative/${speciesName}?token=${IUCN_TOKEN}`
+    url: `${env.IUCN_BASE_URL}/species/narrative/${speciesName}?token=${env.IUCN_TOKEN}`
   }
 
   const { data } = await axios.request<IucnSpeciesNarrativeResponse>(endpoint)

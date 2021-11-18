@@ -1,10 +1,9 @@
 import { FastifyPluginAsync } from 'fastify'
 import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from 'iucn/types'
 
+import { env } from '../_services/env/index.js'
 import { ApiClientError, ApiNotFoundError, ApiServerError } from '../_services/errors/types.js'
 import { getSpeciesInformation } from './iucn.js'
-
-const IUCN_BASE_URL = process.env.IUCN_BASE_URL ?? ''
 
 export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void> => {
   app.get<{ Params: Partial<BioIucnSpeciesRequest> } >('/iucn/info/:speciesName', async (req, res): Promise<BioIucnSpeciesResponse> => {
@@ -26,7 +25,7 @@ export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void
     // Transform & return
     return {
       content: iucnInformation?.habitat ?? iucnInformation?.rationale ?? '',
-      redirectUrl: `${IUCN_BASE_URL}/website/${speciesName}`
+      redirectUrl: `${env.IUCN_BASE_URL}/website/${speciesName}`
     }
   })
 }
