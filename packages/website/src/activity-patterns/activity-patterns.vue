@@ -1,8 +1,8 @@
 <template>
   <div>
     <page-title
-      page-title="Activity Patterns"
-      page-subtitle="Trends in detections and occupancy"
+      page-title="Species Spotlight"
+      page-subtitle="An in-depth look at the detections and occupancy trends of a single species"
     >
       <dropdown-menu>
         <dropdown-menu-item>

@@ -9,23 +9,23 @@
               @toggle-mobile-menu="toggleMobileMenu()"
             />
             <router-link to="/">
-              <div class="flex-shrink-0 flex items-center mx-4 <sm:(mx-2)">
+              <div class="flex-shrink-0 flex items-center ml-4 <sm:(mx-2)">
                 <img
                   class="h-9 <sm:(h-7)"
                   src="/src/_services/assets/rfcx-logo.svg"
                   alt="Rainforest connection logo"
                 >
-                <div class="font-semibold text-primary <sm:hidden">
-                  Biodiversity Analytics
+                <div class="font-semibold text-primary ml-2 <md:hidden">
+                  Biodiversity<span class="<lg:hidden"> Analytics</span>
                 </div>
               </div>
             </router-link>
             <div
               v-if="store.user"
-              class="navbar-item text-sm h-9 px-4 hover:bg-box-grey rounded-md cursor-pointer"
+              class="navbar-item text-sm h-9 mx-2 sm:(px-2 hover:bg-box-grey rounded-md cursor-pointer)"
               @click="toggleProjectSelector(true)"
             >
-              <span>{{ selectedProjectName }}</span>
+              <span class="max-w-36 sm:max-w-24 lg:max-w-36 truncate">{{ selectedProjectName }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-3 w-3 ml-1 text-white"
