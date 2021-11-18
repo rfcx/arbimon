@@ -16,8 +16,8 @@ Allowed categories:
 
 - **overview:** Puerto Rico project information [#278]
 - **activity-patterns:** Puerto Rico "Predicted Occupancy" maps [#285]
-- **scope:** Add taxon in dataset comparison filter (#219)
-- **scope:** Remove taxon toggle from map (#267)
+- **selection:** Add taxon in dataset comparison filter [#219]
+- **selection:** Remove taxon toggle from map [#267]
 
 ## Bug Fixes
 
