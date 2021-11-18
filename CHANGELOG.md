@@ -6,38 +6,20 @@ Allowed categories:
 - Notes
 - Features
 - Bug Fixes
+- Enhancements
 - Breaking changes
 --->
 
 # 0.0.7 (2021-11-25)
 
-> // TODO: Replace this with logs
-> Sprint Goal:
->
-> - [Project Overview Page] — aim to be ready before Marconi’s workshop with Partner @ 22/11/2021
->   - Information panel: to show brief information about the project
->   - Map: to show the location of site (for the user to explore where the sites are easier)
->   - Change / add other source of species information
-> - [Activity Overview]
->   - Map: to show activity (detection, frequency, occupancy) by location (group by taxon)
->   - Line chart: to show activity by time (group by taxon - each line represent 1 taxon)
->   - Table: to show list of species with activity numbers
->   - Export: csv export data that matches the table
-> - [API]
->   - Species Richness data from API
->   - Activity Pattern data from API
->   - Species data from API
-> - [Map] Add legends on map exports
-> - [iOS] Review design for iOS / prepare mock data to use
-
 ## Features
 
-- **overview:** Puerto Rico project information
-- **activity-patterns:** Puerto Rico "Predicted Occupancy" maps
+- **overview:** Puerto Rico project information [#278]
+- **activity-patterns:** Puerto Rico "Predicted Occupancy" maps [#285]
 
 ## Bug Fixes
 
-- // TODO
+- **auth:** Do not redirect to overview after deep-link [#293]
 
 # 0.0.6 (2021-11-12)
 
