@@ -19,6 +19,7 @@
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "fastify": "^3.23.1",
+    "fastify-cors": "^6.0.2",
     "fastify-static": "^4.5.0",
     "lodash": "^4.17.21"
   },
@@ -37,8 +38,5 @@
     "rfcx",
     "rainforest",
     "connection"
-  ],
-  "devDependencies": {
-    "fastify-cors": "^6.0.2"
-  }
+  ]
 }
