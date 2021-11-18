@@ -5,7 +5,6 @@ on:
     branches-ignore: # everything except branches that deploy too
       - master
       - staging
-      - develop
 jobs:
   Main:
     runs-on: ubuntu-20.04

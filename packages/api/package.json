@@ -10,6 +10,7 @@
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "preview": "pnpm build && NODE_ENV=\"production\" node dist/src/index.js",
     "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
     "test": "jest src"
   },
@@ -17,6 +18,7 @@
     "@rfcx-bio/common": "workspace:*",
     "dayjs": "^1.10.7",
     "fastify": "^3.23.1",
+    "fastify-static": "^4.5.0",
     "lodash": "^4.17.21"
   },
   "description": "Biodiversity API",
@@ -34,5 +36,8 @@
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "devDependencies": {
+    "fastify-cors": "^6.0.2"
+  }
 }
