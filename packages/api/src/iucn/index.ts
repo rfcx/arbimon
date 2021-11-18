@@ -4,7 +4,7 @@ import { IUCNRoute } from 'iucn/types'
 import { APIError } from '../services/errors/types.js'
 import { getSpeciesSummary } from './iucn.js'
 
-export const routesIUCN: FastifyPluginAsync = async (app, options): Promise<void> => {
+export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void> => {
   app.get<IUCNRoute>('/iucn/info/:speciesName', async (req, res) => {
     const { speciesName } = req.params
 
