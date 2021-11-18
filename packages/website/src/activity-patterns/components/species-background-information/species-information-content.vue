@@ -5,7 +5,7 @@
         v-if="!content"
         class="italic"
       >
-        Narrative not found.
+        No information found.
       </span>
       {{ content }}
       <span class="mt-2 text-right text-subtle">

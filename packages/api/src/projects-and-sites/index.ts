@@ -1,6 +1,8 @@
-import { FastifyPluginAsync } from 'fastify'
+import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { readdir } from 'fs/promises'
 import { resolve } from 'path'
+
+import { ApiClientError, ApiMissingParam } from '../_services/errors/index.js'
 
 // TODO ??? - Move files to S3 & index them in the database
 const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
@@ -25,8 +27,8 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
   app.get<ProjectSpeciesRoute>('/projects/:projectId/species/:speciesId', async (req, res) => {
     // Inputs & validation
     const { projectId, speciesId } = req.params
-    if (!projectId) return { error: 'missing projectId' }
-    if (!speciesId) return { error: 'missing speciesId' }
+    if (!projectId) throw ApiMissingParam('projectId')
+    if (!speciesId) throw ApiMissingParam('speciesId')
 
     // Queries
     const predictedOccupancyMaps = (await readdir(mockPredictionsFolderPath))
@@ -47,14 +49,14 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
       filename: string
     }
   }
-  app.get<ProjectSpeciesPredictedOccupancyRoute>('/projects/:projectId/predicted-occupancy/:filename', async (req, res) => {
+  app.get<ProjectSpeciesPredictedOccupancyRoute>('/projects/:projectId/predicted-occupancy/:filename', async (req, res): Promise<FastifyReply> => {
     // Inputs & validation
     const { filename } = req.params
-    if (!filename) return { error: 'missing filename' }
+    if (!filename) throw ApiMissingParam('filename')
 
     // Queries
     const resolvedFilename = resolve(mockPredictionsFolderPath, filename)
-    if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) return { error: 'illegal filename' }
+    if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw ApiClientError('illegal filename')
 
     // Respond
     return await res.sendFile(mockPredictionsFolderName + '/' + filename + '.png')
