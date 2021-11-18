@@ -35,9 +35,9 @@ export default class ActivityPatternsByTime extends Vue {
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
-    { label: 'Detection', value: ACTIVITY_PATTERN_TIME_KEYS.detection },
-    { label: 'Detection frequency', value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
-    { label: 'Occupancy ratio', value: ACTIVITY_PATTERN_TIME_KEYS.occupancy }
+    { label: 'Detections', value: ACTIVITY_PATTERN_TIME_KEYS.detection },
+    { label: 'Detection Frequency', value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
+    { label: 'Naive Occupancy', value: ACTIVITY_PATTERN_TIME_KEYS.occupancy }
   ]
 
   buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
