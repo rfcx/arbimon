@@ -5,5 +5,3 @@ metadata:
   namespace: production
 data:
   IUCN_BASE_URL: https://apiv3.iucnredlist.org/api/v3
-#   VITE_APP_CORE_API_HOST: https://staging-api.rfcx.org
-#   VITE_APP_MEDIA_API_HOST: https://media-api.rfcx.org
