@@ -81,6 +81,26 @@ Any branch can be deployed to the `testing` cluster:
 - every push to `staging` branch => `staging` deploy
 - every push to `master` branch => `production` deploy
 
+## Environment (Config & Secrets)
+
+### _Local Environment_
+
+- Developers can set the values of configuration and secrets locally using:
+  - `.env` in `/packages/api`
+  - `.env.local` in `/packages/website`
+  - // TODO: Standardize this; I like that `website` is ready to go on fresh clones...
+
+### _Deployed Environment_
+
+- _Config_ variables are committed to Git:
+  - `/build/api/<NAMESPACE>/config.yaml`
+  - `/packages/website/.env`
+- _Secret_ variables must be manually configured:
+  - API secrets can be set manually via Kubernetes apply
+  - Website secrets can be set manually as GitHub secrets
+  - // TODO: run Kubernetes apply from CD
+  - **The values of secrets should never be committed to Git**
+
 ---
 
 ## More Commands
