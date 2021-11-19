@@ -41,6 +41,6 @@ The app names are always `biodiversity-api` and `biodiversity-website`. Each sub
 - deployment.yaml - configure resources
 - ingress.yaml - configure sub-domain
 - secrets.yaml - runtime secret environment variables ("secrets") (**do not commit this file**);
-  - you can copy `secrets.example.yaml` from the parent directory into each namespace, and fill-in values as needed (
+  - you can copy `secrets.example.yaml` from the parent directory into each namespace, and fill-in values as needed (value must encode to base64)
   - please contact team to apply this, because it protected by kubernetes permissions
 - service.yaml - configure ports
