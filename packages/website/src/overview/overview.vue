@@ -88,11 +88,7 @@
       </div>
       <div class="md:col-span-2 lg:col-span-1 grid justify-center text-center">
         <div>
-          <p class="font-mono">
-            ******************<br>
-            SITE MAP GOES HERE<br>
-            ******************
-          </p>
+          <overview-location-component />
           <p class="mt-5 font-mono">
             *******************<br>
             EXCITING HIGHLIGHTS<br>
@@ -103,4 +99,5 @@
     </div>
   </div>
 </template>
-<script src="./overview.ts" lang="ts"></script>
+<script src="./overview.ts" lang="ts">
+ </script>
