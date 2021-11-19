@@ -16,6 +16,8 @@ Allowed categories:
 
 - **overview:** Puerto Rico project information [#278]
 - **activity-patterns:** Puerto Rico "Predicted Occupancy" maps [#285]
+- **activity-patterns:** Species information from IUCN [#165][#294]
+- **activity-patterns:** Group detection, detection frequency, and occupancy map [#261]
 
 ## Bug Fixes
 
