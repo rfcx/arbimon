@@ -51,6 +51,38 @@ _If you have Vetur installed, disable it for this workspace_
 
 ---
 
+## Deployment
+
+There are 3 shared deployments:
+
+- testing: for the DT to test features when deployed & collaborate
+  - https://testing-ba.rfcx.org
+  - https://testing-ba-api.rfcx.org
+- staging: for stakeholders to review & give early feedback
+  - https://staging-ba.rfcx.org
+  - https://staging-ba-api.rfcx.org
+- production: real public project
+  - https://ba.rfcx.org
+  - https://ba-api.rfcx.org
+
+### _Testing_
+
+Any branch can be deployed to the `testing` cluster:
+
+- Open the "Actions" tab on GitHub
+- Select the "Build-Deploy" action
+- Click "Run workflow" and select the branch you wish to deploy
+- // TODO: Auto-deploy from `develop` branch once per day?
+
+### _Staging & Production_
+
+`staging` & `production` are automatically deployed by GitHub Actions (CD):
+
+- every push to `staging` branch => `staging` deploy
+- every push to `master` branch => `production` deploy
+
+---
+
 ## More Commands
 
 ### _Build, Lint, Test_
