@@ -1,10 +1,12 @@
 import createAuth0Client, { Auth0Client, LogoutOptions, RedirectLoginOptions } from '@auth0/auth0-spa-js'
+import { RouteLocationRaw } from 'vue-router'
 
+import { ROUTE_NAMES } from '~/router'
 import { useStoreOutsideSetup } from '~/store'
 import { config } from './env'
 
 export interface AuthClient {
-  init: (redirectUri: string) => Promise<string>
+  init: (redirectUri: string) => Promise<RouteLocationRaw | undefined>
   isAuthenticated: boolean
   loginWithRedirect: (options: RedirectLoginOptions) => Promise<void>
   logout: (options?: LogoutOptions) => Promise<void>
@@ -14,12 +16,13 @@ export interface AuthClient {
 
 class AuthClientClass implements AuthClient {
   clientAuth0!: Auth0Client
+  store = useStoreOutsideSetup()
+
   isAuthenticated = false
 
-  async init (redirectUri: string): Promise<string> {
+  async init (redirectUri: string): Promise<RouteLocationRaw | undefined> {
     const { domain, clientId, audience } = config
 
-    let redirectPath = ''
     try {
       // Init
       this.clientAuth0 = await createAuth0Client({ audience, client_id: clientId, domain, redirect_uri: redirectUri, theme: 'dark' })
@@ -27,17 +30,20 @@ class AuthClientClass implements AuthClient {
       // Handle callbacks
       if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
         const redirectLoginResult = await this.clientAuth0.handleRedirectCallback()
-        redirectPath = redirectLoginResult.appState?.redirectPath ?? '/'
+        const redirectAfterAuth = redirectLoginResult.appState?.redirectPath
+
+        // Init auth state & store user
+        await this.initAuthState()
+
+        // Redirects
+        if (redirectAfterAuth !== undefined && redirectAfterAuth !== '/') return redirectAfterAuth
+        if (this.store.selectedProject) return { name: ROUTE_NAMES.overview, params: { projectId: this.store.selectedProject.id } }
+        return '/'
+      } else {
+        await this.initAuthState()
       }
-
-      // Get auth status
-      const user = await this.clientAuth0.getUser()
-      this.isAuthenticated = user !== undefined
-
-      // Store user in Pinia
-      void useStoreOutsideSetup().updateUser(user)
-    } catch (e: any) { } // TODO 156 - Return error to main
-    return redirectPath
+    } catch (e: any) {}
+    return undefined
   }
 
   async loginWithRedirect (options: RedirectLoginOptions): Promise<void> {
@@ -54,6 +60,12 @@ class AuthClientClass implements AuthClient {
 
   async getIdToken (): Promise<string | undefined> {
     return (await this.clientAuth0.getIdTokenClaims())?.__raw
+  }
+
+  async initAuthState (): Promise<void> {
+    const user = await this.clientAuth0.getUser()
+    this.isAuthenticated = user !== undefined
+    await this.store.updateUser(user)
   }
 }
 
