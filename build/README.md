@@ -37,8 +37,10 @@ _If your local port 8080 is in use, then you can select another port e.g. `-p 73
 
 The app names are always `biodiversity-api` and `biodiversity-website`. Each sub-folder matches a namespace in Kubernetes. Inside the namespace folder is:
 
+- config.yaml - runtime non-secret environment variables ("configuration")
 - deployment.yaml - configure resources
-- config.yaml - environment variables (non secret configuration)
 - ingress.yaml - configure sub-domain
+- secrets.yaml - runtime secret environment variables ("secrets") (**do not commit this file**);
+  - you can copy `secrets.example.yaml` from the parent directory into each namespace, and fill-in values as needed (value must encode to base64)
+  - please contact team to apply this, because it protected by kubernetes permissions
 - service.yaml - configure ports
-- secrets.yaml - Store the secret variable (not push this file). Please copy `secrets.example.yaml` to `secrets.yaml` and put it in each namespace with filled values (Please contact team to apply this because it protected by kubernetes permission config).
