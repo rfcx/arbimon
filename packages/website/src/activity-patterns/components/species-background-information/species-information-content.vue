@@ -5,14 +5,17 @@
         v-if="!content"
         class="italic"
       >
-        Narrative not found.
+        No information found.
       </span>
       {{ content }}
-      <span class="mt-2 text-right text-subtle">
+      <span
+        class="mt-2 text-right text-subtle"
+      >
         &mdash; <a
           :href="redirectUrl"
           target="_blank"
           class="opacity-80 hover:(underline opacity-70)"
+          :class="{ 'pointer-events-none': !redirectUrl }"
         >
           Source: {{ source }}
         </a>

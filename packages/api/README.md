@@ -1,26 +1,22 @@
 # Biodiversity > API
 
-Biodiversity backend code
+Biodiversity backend code built with Fastify, Typescript, and pnpm.  
+**Beware:** The project is a TypeScript ESM. Imports must end with `.js` (even if the file is `.ts`)
 
-## Set up
+## Setup
 
-- For the environment variables (bot config and secrets), please copy `.env.example` to `.env` and fill in all values
+- Copy `.env.example` to `.env`
+- Fill in values as needed
+- **Verify that you have not accidentally changed `.env.example`**
 
 ## Standards
 
-This is an ESM module written in TypeScript:
+- We use the `async` / `return` / `throw` convention [[1]](https://www.fastify.io/docs/latest/Routes/#promise-resolution)[[2]](https://www.fastify.io/docs/latest/Reply/#async-await-and-promises):
 
-- Imports must end with `.js` (even if the file is `.ts`)
-- Most functions are async
-- We use the [`async`/`return` convention](https://www.fastify.io/docs/latest/Routes/#promise-resolution):
-
-```ts
-app.get('/', async (req, res) => {
-  return { hello: 'world' }
-  // do not call res.send
-})
-```
-
-## Resources
-
-- [TypeScript for Fastify](https://www.fastify.io/docs/latest/TypeScript)
+  ```ts
+  app.get('/', async (req, res) => {
+    // do not call res.send
+    if(...) throw ApiServerError()
+    return { hello: 'world' }
+  })
+  ```
