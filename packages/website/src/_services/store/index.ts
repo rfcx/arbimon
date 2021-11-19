@@ -29,9 +29,7 @@ export const useStore = defineStore('root', {
       // Load data asynchronously
       if (user) {
         const realProjects = await getProjects()
-        const [realPuertoRicoProject] = realProjects.splice(realProjects.findIndex(p => p.id === 'puerto-rico-island-wide'))
-        const projects = [realPuertoRicoProject ?? FAKE_PUERTO_RICO_PROJECT, ...realProjects]
-
+        const projects = [FAKE_PUERTO_RICO_PROJECT, ...realProjects]
         const selectedProject = projects.length > 0 ? projects[0] : undefined
         const sites = selectedProject ? await getSites(selectedProject) : []
 

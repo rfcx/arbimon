@@ -18,9 +18,11 @@ importers:
       '@vue/eslint-config-standard': ^6.1.0
       '@vue/eslint-config-typescript': ^9.0.1
       babel-jest: ^24.9.0
+      cross-env: ^7.0.3
       cypress: ^8.7.0
       cypress-fail-on-console-error: ^2.1.2
       cypress-wait-until: ^1.7.2
+      dotenv: ^10.0.0
       eslint: ^8.1.0
       eslint-config-standard-with-typescript: ^21.0.1
       eslint-plugin-cypress: ^2.12.1
@@ -36,7 +38,7 @@ importers:
       eslint-plugin-vue: ^8.0.3
       jest: ^27.3.1
       node-sass: ^6.0.1
-      nodemon: ^2.0.14
+      nodemon: ^2.0.15
       npm-run-all: ^4.1.5
       postcss: ^8.3.11
       prettier: ^2.4.1
@@ -72,9 +74,11 @@ importers:
       '@vue/eslint-config-standard': 6.1.0_5f9b2f3a44dac3bc0a792ca144f1d0b4
       '@vue/eslint-config-typescript': 9.0.1_6e2aa7baa83ea64b77c81400f52e762e
       babel-jest: 24.9.0_@babel+core@7.16.0
+      cross-env: 7.0.3
       cypress: 8.7.0
       cypress-fail-on-console-error: 2.1.2
       cypress-wait-until: 1.7.2
+      dotenv: 10.0.0
       eslint: 8.1.0
       eslint-config-standard-with-typescript: 21.0.1_04de89a6dde7ca03319db4963b211e11
       eslint-plugin-cypress: 2.12.1_eslint@8.1.0
@@ -90,7 +94,7 @@ importers:
       eslint-plugin-vue: 8.0.3_eslint@8.1.0
       jest: 27.3.1_ts-node@10.4.0
       node-sass: 6.0.1
-      nodemon: 2.0.14
+      nodemon: 2.0.15
       npm-run-all: 4.1.5
       postcss: 8.3.11
       prettier: 2.4.1
@@ -115,6 +119,7 @@ importers:
   packages/api:
     specifiers:
       '@rfcx-bio/common': workspace:*
+      axios: ^0.24.0
       dayjs: ^1.10.7
       fastify: ^3.23.1
       fastify-cors: ^6.0.2
@@ -122,12 +127,12 @@ importers:
       lodash: ^4.17.21
     dependencies:
       '@rfcx-bio/common': link:../common
+      axios: 0.24.0
       dayjs: 1.10.7
       fastify: 3.23.1
+      fastify-cors: 6.0.2
       fastify-static: 4.5.0
       lodash: 4.17.21
-    devDependencies:
-      fastify-cors: 6.0.2
 
   packages/cli:
     specifiers:
@@ -2662,6 +2667,7 @@ packages:
 
   /bindings/1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+    requiresBuild: true
     dependencies:
       file-uri-to-path: 1.0.0
     dev: true
@@ -3284,6 +3290,14 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn/6.0.5:
@@ -3925,7 +3939,6 @@ packages:
   /dotenv/10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
-    dev: false
 
   /duplexer3/0.1.4:
     resolution: {integrity: sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=}
@@ -4915,7 +4928,7 @@ packages:
     dependencies:
       fastify-plugin: 3.0.0
       vary: 1.1.2
-    dev: true
+    dev: false
 
   /fastify-error/0.3.1:
     resolution: {integrity: sha512-oCfpcsDndgnDVgiI7bwFKAun2dO+4h84vBlkWsWnz/OUK9Reff5UFoFl241xTiLeHWX/vU9zkDVXqYUxjOwHcQ==}
@@ -4923,6 +4936,7 @@ packages:
 
   /fastify-plugin/3.0.0:
     resolution: {integrity: sha512-ZdCvKEEd92DNLps5n0v231Bha8bkz1DjnPP/aEz37rz/q42Z5JVLmgnqR4DYuNn3NXAO3IDCPyRvgvxtJ4Ym4w==}
+    dev: false
 
   /fastify-static/4.5.0:
     resolution: {integrity: sha512-Q7Tgl55AjsmBwiO4hKYib2BUCt+XTWLJ6Xp8YPPHU3EsrKNpevJ4cz8pjf1Ey1QhHw9O8Y2FDKdu+IC74oHvqw==}
@@ -4999,6 +5013,7 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -7569,8 +7584,8 @@ packages:
       true-case-path: 1.0.3
     dev: true
 
-  /nodemon/2.0.14:
-    resolution: {integrity: sha512-frcpDx+PviKEQRSYzwhckuO2zoHcBYLHI754RE9z5h1RGtrngerc04mLpQQCPWBkH/2ObrX7We9YiwVSYZpFJQ==}
+  /nodemon/2.0.15:
+    resolution: {integrity: sha512-gdHMNx47Gw7b3kWxJV64NI+Q5nfl0y5DgDbiVtShiwa7Z0IZ07Ll4RLFo6AjrhzMtoEZn5PDE3/c2AbVsiCkpA==}
     engines: {node: '>=8.10.0'}
     hasBin: true
     requiresBuild: true
@@ -10209,7 +10224,7 @@ packages:
   /vary/1.1.2:
     resolution: {integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=}
     engines: {node: '>= 0.8'}
-    dev: true
+    dev: false
 
   /verror/1.10.0:
     resolution: {integrity: sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=}
