@@ -42,7 +42,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   selectedSites: Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
-  startDate: string | null = dayjs().subtract(7, 'days').format(DATE_FORMAT)
+  startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
   readonly today = dayjs().format(DATE_FORMAT)
   currentActiveMenuId = 'sites'
