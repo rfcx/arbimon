@@ -5,7 +5,7 @@ import { SpeciesMock } from 'species/types.js'
 
 import { env } from '../_services/env/index.js'
 import { ApiMissingParam, ApiNotFoundError } from '../_services/errors/index.js'
-import { getSpeciesInformation, getSpeciesRank } from '../iucn/iucn.js'
+import { getSpeciesInformation, getSpeciesRank } from './iucn/iucn.js'
 
 // TODO ??? - Move this data to database
 const mockSpeciesPath = resolve('./public', 'mock/raw-species.json')
@@ -55,6 +55,8 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
     const speciesData = JSON.parse(rawSpeciesData)
     console.log(speciesData.length)
 
+    // TODO: get image / wiki information
+
     const speciesDataWithIUCNRank: SpeciesMock[] = await Promise.all(
       speciesData.map(async (item: SpeciesMock) => {
         const iucnRank = await getSpeciesRank(item.scientific_name)
@@ -70,7 +72,7 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
       })
     )
 
-    // Get information
+    // Get IUCN information
     const IUCN = 'IUCN'
     const speciesDataWithInformation: SpeciesMock[] = await Promise.all(
       speciesDataWithIUCNRank.map(async (item: SpeciesMock) => {
@@ -95,8 +97,6 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
         return updatedInfo
       })
     )
-
-    // TODO: get image / wiki information
 
     return speciesDataWithInformation
   })

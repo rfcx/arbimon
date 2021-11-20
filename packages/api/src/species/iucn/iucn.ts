@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import { Endpoint } from '../_services/api-helper/types'
-import { env } from '../_services/env/index.js'
-import { ApiNotFoundError } from '../_services/errors/index.js'
+import { Endpoint } from '../../_services/api-helper/types'
+import { env } from '../../_services/env/index.js'
+import { ApiNotFoundError } from '../../_services/errors/index.js'
 
 export interface IucnSpeciesNarrativeResult {
   species_id: number
