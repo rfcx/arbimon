@@ -1,9 +1,9 @@
 import { FastifyPluginAsync } from 'fastify'
-import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from 'iucn/types'
 
-import { env } from '../_services/env/index.js'
-import { ApiMissingParam, ApiNotFoundError, ApiServerError } from '../_services/errors/index.js'
+import { env } from '../../_services/env/index.js'
+import { ApiMissingParam, ApiNotFoundError, ApiServerError } from '../../_services/errors/index.js'
 import { getSpeciesInformation } from './iucn.js'
+import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from './types'
 
 export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void> => {
   app.get<{ Params: Partial<BioIucnSpeciesRequest> } >('/iucn/info/:speciesName', async (req, res): Promise<BioIucnSpeciesResponse> => {
