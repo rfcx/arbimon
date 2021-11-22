@@ -13,7 +13,8 @@ const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
 const DATA_LAYER_ZERO_ID = 'species-information-zero'
 const LABEL_LAYER_IDS = ['tunnel-primary-secondary-tertiary-case', 'tunnel-major-link-case', 'tunnel-motorway-trunk-case', 'tunnel-path', 'tunnel-steps', 'tunnel-major-link', 'tunnel-pedestrian', 'tunnel-primary-secondary-tertiary', 'tunnel-oneway-arrow-blue', 'tunnel-motorway-trunk', 'tunnel-oneway-arrow-white', 'ferry', 'ferry-auto', 'road-pedestrian-case', 'road-street-low', 'road-street-case', 'road-secondary-tertiary-case', 'road-primary-case', 'road-major-link-case', 'road-motorway-trunk-case', 'road-path', 'road-steps', 'road-major-link', 'road-pedestrian', 'road-street', 'road-secondary-tertiary', 'road-primary', 'road-oneway-arrow-blue', 'road-motorway-trunk', 'road-oneway-arrow-white', 'bridge-pedestrian-case', 'bridge-primary-secondary-tertiary-case', 'bridge-major-link-case', 'bridge-motorway-trunk-case', 'bridge-path', 'bridge-steps', 'bridge-major-link', 'bridge-pedestrian', 'bridge-primary-secondary-tertiary', 'bridge-oneway-arrow-blue', 'bridge-motorway-trunk', 'bridge-major-link-2-case', 'bridge-motorway-trunk-2-case', 'bridge-major-link-2', 'bridge-motorway-trunk-2', 'bridge-oneway-arrow-white', 'aerialway', 'admin-1-boundary-bg', 'admin-0-boundary-bg', 'admin-1-boundary', 'admin-0-boundary', 'admin-0-boundary-disputed', 'road-label', 'road-number-shield', 'road-exit-shield', 'waterway-label', 'natural-line-label', 'natural-point-label', 'water-line-label', 'water-point-label', 'poi-label', 'transit-label', 'airport-label', 'settlement-subdivision-label', 'settlement-label', 'state-label', 'country-label', 'settlement-minor-label', 'settlement-major-label']
 
-const DEFAULT_COLOR = '#DDDDDD'
+const DEFAULT_FILL_COLOR = '#111111'
+const DEFAULT_STROKE_COLOR = '#EEEEEE'
 
 export default class MapBubbleComponent extends Vue {
   // Data
@@ -223,9 +224,10 @@ export default class MapBubbleComponent extends Vue {
         source: DATA_LAYER_ZERO_ID,
         paint: {
           'circle-radius': this.minCircleRadiusPixels,
-          'circle-color': DEFAULT_COLOR,
-          'circle-stroke-width': 0.5,
-          'circle-opacity': 0.8
+          'circle-color': DEFAULT_FILL_COLOR,
+          'circle-stroke-color': DEFAULT_STROKE_COLOR,
+          'circle-stroke-width': 0.65,
+          'circle-opacity': 0.85
         }
       })
     }
@@ -238,8 +240,9 @@ export default class MapBubbleComponent extends Vue {
         paint: {
           'circle-radius': ['max', ['get', 'radius'], this.minCircleRadiusPixels],
           'circle-color': this.dataset.color,
-          'circle-stroke-width': 0.5,
-          'circle-opacity': 0.65
+          'circle-stroke-color': DEFAULT_STROKE_COLOR,
+          'circle-stroke-width': 0.65,
+          'circle-opacity': 0.85
         }
       })
     }
