@@ -17,5 +17,8 @@
     class="mt-5"
     :datasets="mapDatasets"
   />
+  <div v-if="toggles.toggleAoLine">
+    EXAMPLE
+  </div>
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>
