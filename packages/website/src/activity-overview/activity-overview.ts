@@ -9,7 +9,6 @@ import { activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
-import { FeatureToggles } from '~/feature-toggles'
 import { MapDataSet } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
 
