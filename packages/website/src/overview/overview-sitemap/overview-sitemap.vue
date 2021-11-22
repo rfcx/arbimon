@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-96">
+  <div class="w-full">
     <map-bubble-component
       v-if="dataset"
       :dataset="dataset"
