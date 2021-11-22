@@ -15,7 +15,6 @@ export class ActivityOverviewService {
     const detectionsBySites = groupBy(totalSummaries, 'stream_id')
     const detectionsByTaxon: DetectionGroupByDetectionKey = groupBy(totalSummaries, 'taxon')
     const overviewBySite = await this.getOverviewDataBySite(detectionsByTaxon, detectionsBySites)
-    console.log(overviewBySite)
 
     return await simulateDelay({ ...dataset, overviewBySite }, this.delay)
   }
