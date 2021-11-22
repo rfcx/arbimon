@@ -7,8 +7,8 @@ export interface DetectionGroupedBySiteAndTaxon {
   }
 }
 
-export interface DetectionGroupByTaxonClass {
-  [taxon: string]: ApiHourlySpeciesSummary[]
+export interface DetectionGroupByDetectionKey {
+  [taxonClassNameOrSiteId: string]: ApiHourlySpeciesSummary[]
 }
 
 export interface ActivityOverviewData extends DatasetDefinition {
