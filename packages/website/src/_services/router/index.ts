@@ -10,6 +10,7 @@ export const ROUTE_NAMES = Object.freeze({
   species_richness: 'species_richness',
   activity_overview: 'activity_overview',
   activity_patterns: 'activity_patterns',
+  preferences: 'preferences',
   error: 'error'
 })
 
@@ -45,6 +46,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.ActivityPatterns
       }
     ]
+  },
+  {
+    path: '/preferences',
+    name: ROUTE_NAMES.preferences,
+    component: PAGES.Preferences
   },
   {
     path: '/:pathMatch(.*)*',
