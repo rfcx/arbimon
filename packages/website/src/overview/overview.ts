@@ -2,11 +2,13 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
 import { BiodiversityStore } from '~/store'
-import OverviewLocationComponent from './overview-location/overview-location.vue'
+import OverviewSitemap from './overview-sitemap/overview-sitemap.vue'
+import ProjectInfo from './project-info/project-info.vue'
 
 @Options({
   components: {
-    OverviewLocationComponent
+    OverviewSitemap,
+    ProjectInfo
   }
 })
 export default class OverviewPage extends Vue {
