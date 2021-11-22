@@ -10,13 +10,25 @@ Allowed categories:
 - Breaking changes
 --->
 
-# 0.0.7 (2021-11-25)
+# 0.0.9 (2021-11-25)
+
+- **export:** Legend for bar & line charts [#109]
+
+# 0.0.8 (2021-11-22)
+
+# Feature
+
+- **inclusion:** New inclusive color theme (better contrast & color-blindness support) [#300]
+- **overview:** Sitemap on overview page [#277]
+
+# 0.0.7 (2021-11-19)
 
 ## Features
 
 - **overview:** Puerto Rico project information [#278]
 - **activity-patterns:** Puerto Rico "Predicted Occupancy" maps [#285]
-- **export:** Legend for bar & line charts [#109]
+- **activity-patterns:** Species information from IUCN [#165][#294]
+- **activity-patterns:** Group detection, detection frequency, and occupancy map [#261]
 
 ## Bug Fixes
 
