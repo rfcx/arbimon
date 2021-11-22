@@ -23,7 +23,7 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
   }
 })
 export default class ActivityPatternsByLocation extends Vue {
-  @Prop({ default: [] }) public datasets!: MapDataSet[]
+  @Prop({ default: [] }) datasets!: MapDataSet[]
 
   selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [

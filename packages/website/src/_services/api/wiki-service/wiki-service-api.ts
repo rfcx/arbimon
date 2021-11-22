@@ -3,10 +3,19 @@ import axios from 'axios'
 import { WikiSummary } from '~/api/wiki-service/types'
 import { Endpoint } from '~/api-helpers/rest'
 
+export function mapSpecies (speciesName: string): string {
+  switch (speciesName) {
+    // None sub species on wiki
+    case ('Contopus latirostris blancoi'): return 'Contopus latirostris'
+    default: return speciesName
+  }
+}
+
 export class WikiService {
   constructor (private readonly baseUrl: string) {}
 
-  async getSpeciesSummary (speciesName: string): Promise<WikiSummary | undefined> {
+  async getSpeciesSummary (sciencetificName: string): Promise<WikiSummary | undefined> {
+    const speciesName = mapSpecies(sciencetificName)
     try {
       const endpoint: Endpoint = ({
         method: 'GET',
@@ -24,7 +33,7 @@ export class WikiService {
       }
     } catch (e) {
       // TODO #191: API Handle
-      return { content: '', contentUrls: { desktop: '', mobile: '' }, thumbnailImage: '' }
+      return undefined
     }
   }
 }
