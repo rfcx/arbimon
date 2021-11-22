@@ -36,18 +36,24 @@ jobs:
                 "ECR_REPO_WEBSITE": "biodiversity-website",
                 "ECR_REPO_API": "biodiversity-api",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
+                "URL_WEB": "https://ba.rfcx.org"
+                "URL_API": "https://ba-api.rfcx.org"
               },
               "staging": {
                 "NAMESPACE": "staging",
                 "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "ECR_REPO_API": "biodiversity-api/staging",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
+                "URL_WEB": "https://staging-ba.rfcx.org"
+                "URL_API": "https://staging-ba-api.rfcx.org"
               },
               ".*": {
                 "NAMESPACE": "testing",
                 "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "ECR_REPO_API": "biodiversity-api/testing",
                 "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
+                "URL_WEB": "https://testing-ba.rfcx.org"
+                "URL_API": "https://testing-ba-api.rfcx.org"
               }
             }
 
@@ -126,7 +132,7 @@ jobs:
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         with:
-          key: '${{ github.event.pusher.name }}'
+          key: '${{ github.actor }}'
           map: |
             {
               "charles-allen": {
@@ -153,10 +159,10 @@ jobs:
         with:
           status: ${{ job.status }}
           notify_when: 'success,failure,warning'
-          notification_title: '{workflow} {status_message} -- triggered by ${{ github.event.pusher.name }}'
-          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ env.BRANCH_NAME }} to ${{ env.NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
+          notification_title: '*Biodiversity:* deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<${{ env.URL_WEB }}|${{ env.NAMESPACE }}>*'
+          message_format: '{emoji} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
           mention_users: '${{ env.SLACK_MENTION_USERS }}'
           mention_users_when: 'failure,warnings'
-          footer: '<{repo_url}/tree/${{ env.BRANCH_NAME }}|{repo}@${{ env.BRANCH_NAME }}>'
+          footer: '<${{ env.URL_WEB }}|web> | <${{ env.URL_API }}|api> '
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
