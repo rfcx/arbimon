@@ -1,5 +1,3 @@
-export const FEATURE_TOGGLES = {
-  toggleAoLine: import.meta.env.VITE_TOGGLE_AO_LINE === 'true'
-}
+export const FEATURE_TOGGLES = {}
 
 export type FeatureToggles = typeof FEATURE_TOGGLES
