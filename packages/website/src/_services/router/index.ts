@@ -8,6 +8,7 @@ export const ROUTE_NAMES = Object.freeze({
   home: 'home',
   overview: 'overview',
   species_richness: 'species_richness',
+  activity_overview: 'activity_overview',
   activity_patterns: 'activity_patterns',
   preferences: 'preferences',
   error: 'error'
@@ -33,6 +34,11 @@ const routes: RouteRecordRaw[] = [
         path: 'species-richness',
         name: ROUTE_NAMES.species_richness,
         component: PAGES.SpeciesRichness
+      },
+      {
+        path: 'activity-overview',
+        name: ROUTE_NAMES.activity_overview,
+        component: PAGES.ActivityOverviewPage
       },
       {
         path: 'activity-patterns/:speciesSlug?',
