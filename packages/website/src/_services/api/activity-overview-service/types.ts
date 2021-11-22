@@ -7,8 +7,8 @@ export interface DetectionGroupedBySiteAndTaxon {
   }
 }
 
-export interface DetectionGroupByTaxonClass {
-  [taxon: string]: ApiHourlySpeciesSummary[]
+export interface DetectionGroupByDetectionKey {
+  [taxonClassNameOrSiteId: string]: ApiHourlySpeciesSummary[]
 }
 
 export interface ActivityOverviewData extends DatasetDefinition {
@@ -24,6 +24,7 @@ export interface ActicvityOverviewDataBySite {
       longitude: number
       detection: number
       detectionFrequency: number
+      occupancy: boolean
     }
   }
 }
