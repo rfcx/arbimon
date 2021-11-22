@@ -1,4 +1,5 @@
 import { DatasetDefinition } from '~/api'
+import { TimeBucket } from '~/api/species-richness-service'
 import { ApiHourlySpeciesSummary } from '~/api-helpers/mock'
 
 export interface DetectionGroupedBySiteAndTaxon {
@@ -13,6 +14,15 @@ export interface DetectionGroupByDetectionKey {
 
 export interface ActivityOverviewData extends DatasetDefinition {
   overviewBySite: ActicvityOverviewDataBySite
+  overviewByTime: ActivityOverviewDataByTime[]
+}
+
+export type ActivityOverviewDataByTime = Record<TimeBucket, ActivityOverviewDataByTimeBucket>
+
+export interface ActivityOverviewDataByTimeBucket {
+  detection: Record<number, number>
+  detectionFrequency: Record<number, number>
+  occupancy: Record<number, number>
 }
 
 export interface ActicvityOverviewDataBySite {
@@ -28,3 +38,5 @@ export interface ActicvityOverviewDataBySite {
     }
   }
 }
+
+// export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof>
