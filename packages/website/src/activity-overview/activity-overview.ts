@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
 import ActivityOverviewByLocation from '@/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
+import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { transformToBySiteDataset } from '@/activity-overview/functions'
 import { activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter } from '~/dataset-filters'
@@ -13,7 +14,8 @@ import { MapDataSet } from '~/maps/map-bubble'
 @Options({
   components: {
     ComparisonListComponent,
-    ActivityOverviewByLocation
+    ActivityOverviewByLocation,
+    ActivityOverviewByTime
   }
 })
 export default class ActivityOverviewPage extends Vue {
