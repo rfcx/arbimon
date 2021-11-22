@@ -1,10 +1,6 @@
 <template>
   <div>
-    <p class="italic">
-      Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities
-    </p>
-
-    <h2 class="mt-5 text-xl">
+    <h2 class="text-xl">
       Background
     </h2>
     <p class="mt-3">
