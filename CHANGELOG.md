@@ -19,6 +19,7 @@ To be update
 # Feature
 
 - **inclusion:** New inclusive color theme (better contrast & color-blindness support) [#300]
+- **overview:** Sitemap on overview page [#277]
 
 # 0.0.7 (2021-11-19)
 
