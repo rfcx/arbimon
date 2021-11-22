@@ -160,7 +160,7 @@ jobs:
           status: ${{ job.status }}
           notify_when: 'success,failure,warning'
           notification_title: '*Biodiversity*'
-          message_format: "{emoji} deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<${{ env.URL_WEB }}|${{ env.NAMESPACE }}>* { \"type\": \"divider\" } <${{ env.URL_WEB }}|${{ env.URL_WEB }}> \n <${{ env.URL_API }}|${{ env.URL_API }}>"
+          message_format: '{emoji} deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<${{ env.URL_WEB }}|${{ env.NAMESPACE }}>* %0A <${{ env.URL_WEB }}|${{ env.URL_WEB }}> %0A <${{ env.URL_API }}|${{ env.URL_API }}>'
           mention_users: '${{ env.SLACK_MENTION_USERS }}'
           mention_users_when: 'failure,warnings'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
