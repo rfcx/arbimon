@@ -22,7 +22,6 @@ import { BiodiversityStore } from '~/store'
 })
 export default class ActivityOverviewPage extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Inject() readonly toggles!: FeatureToggles
 
   filter!: ColoredFilter
 
