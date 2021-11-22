@@ -35,24 +35,24 @@ jobs:
                 "NAMESPACE": "production",
                 "ECR_REPO_WEBSITE": "biodiversity-website",
                 "ECR_REPO_API": "biodiversity-api",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
-                "URL_WEB": "https://ba.rfcx.org"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
+                "URL_WEB": "https://ba.rfcx.org",
                 "URL_API": "https://ba-api.rfcx.org"
               },
               "staging": {
                 "NAMESPACE": "staging",
                 "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "ECR_REPO_API": "biodiversity-api/staging",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
-                "URL_WEB": "https://staging-ba.rfcx.org"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "URL_WEB": "https://staging-ba.rfcx.org",
                 "URL_API": "https://staging-ba-api.rfcx.org"
               },
               ".*": {
                 "NAMESPACE": "testing",
                 "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "ECR_REPO_API": "biodiversity-api/testing",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
-                "URL_WEB": "https://testing-ba.rfcx.org"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "URL_WEB": "https://testing-ba.rfcx.org",
                 "URL_API": "https://testing-ba-api.rfcx.org"
               }
             }
