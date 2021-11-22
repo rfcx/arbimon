@@ -1,20 +1,20 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
-import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
+import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
+import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { getExportFilterName } from '~/dataset-filters/functions'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
 import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { MapConfig } from '~/maps/types'
 
-interface DatasetType {
+interface DropdownOption {
   label: string
   value: string
 }
 
-const DEFAULT_PREFIX = 'Patterns-By-Site'
+const DEFAULT_PREFIX = 'Overview-By-Site'
 
 @Options({
   components: {
@@ -22,19 +22,19 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
     MapToolMenuComponent
   }
 })
-export default class ActivityPatternsByLocation extends Vue {
+export default class ActivityOverviewByLocation extends Vue {
   @Prop({ default: [] }) datasets!: MapDataSet[]
-
-  selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
-  datasetTypes: DatasetType[] = [
-    { label: 'Detections', value: ACTIVITY_PATTERN_MAP_KEYS.detection },
-    { label: 'Detection Frequency', value: ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency },
-    { label: 'Naive Occupancy', value: ACTIVITY_PATTERN_MAP_KEYS.occupancy }
-  ]
 
   isShowLabels = true
   mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
   getPopupHtml = generateDetectionHtmlPopup
+
+  selectedDatasetType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
+  datasetTypes: DropdownOption[] = [
+    { label: 'Detection', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
+    { label: 'Detection frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
+    { label: 'Occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
+  ]
 
   config: MapConfig = {
     sourceMapId: '',
@@ -47,6 +47,10 @@ export default class ActivityPatternsByLocation extends Vue {
       case 1: return 1
       default: return 2
     }
+  }
+
+  get hasNoData (): boolean {
+    return this.datasets.length === 0
   }
 
   setMapStyle (style: string): void {
