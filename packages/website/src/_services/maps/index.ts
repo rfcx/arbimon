@@ -1,6 +1,8 @@
 // This is the one place we import & configure mapbox
 import { Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 
+export * from './types'
+
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicmZjeCIsImEiOiJoMEptMnlJIn0.LPKrjG_3AeYB5cqsyLpcrg'
 
 export const MAPBOX_STYLE = 'mapbox://styles/rfcx/ckapdhmby26zo1io3nqd84dsd'
