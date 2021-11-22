@@ -26,7 +26,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() mapConfig!: MapConfig
   @Prop() mapExportName!: string
-  @Prop({ default: 'mapbox://styles/mapbox/streets-v11' }) mapStyle!: string
+  @Prop({ default: 'mapbox://styles/mapbox/satellite-streets-v11' }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
   @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
@@ -65,7 +65,6 @@ export default class MapBubbleComponent extends Vue {
 
   @Watch('dataset', { deep: true })
   onDataChange (): void {
-    console.log('check', this.dataset)
     this.generateChartNextTick()
   }
 
