@@ -1,16 +1,17 @@
 <template>
   <div class="w-full h-96">
     <map-bubble-component
-      key="overview-location"
-      :dataset="siteMapDataset"
+      v-if="dataset"
+      :dataset="dataset"
       data-key="site"
-      map-id="overview-by-location"
-      map-export-name="overview-by-location"
       :get-popup-html="getPopupHtml"
+      map-id="overview-sitemap"
       :map-config="config"
+      map-export-name="overview-sitemap"
+      max-circle-radius-pixels="5.0"
       class="w-full"
       @emit-map-moved="mapMoved"
     />
   </div>
 </template>
-<script lang="ts" src="./overview-location.ts"></script>
+<script src="./overview-sitemap.ts" lang="ts"></script>

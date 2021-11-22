@@ -1,9 +1,9 @@
 import { Options, Vue } from 'vue-class-component'
+import { Inject } from 'vue-property-decorator'
 
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapDataSet } from '~/maps/map-bubble'
-import MapBubbleComponent from '~/maps/map-bubble/map-bubble'
-import { MapConfig } from '~/maps/types'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MapConfig } from '~/maps'
+import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { BiodiversityStore } from '~/store'
 import { generatePopupHtml, transformToMapDataset } from './functions'
 
 @Options({
@@ -11,8 +11,10 @@ import { generatePopupHtml, transformToMapDataset } from './functions'
     MapBubbleComponent
   }
 })
-export default class OverviewLocationComponent extends Vue {
-  siteMapDataset!: MapDataSet
+export default class OverviewSitemap extends Vue {
+  @Inject() readonly store!: BiodiversityStore
+
+  dataset: MapDataSet | null = null
   getPopupHtml = generatePopupHtml
 
   config: MapConfig = {
@@ -22,7 +24,7 @@ export default class OverviewLocationComponent extends Vue {
   }
 
   override mounted (): void {
-    this.siteMapDataset = transformToMapDataset()
+    this.dataset = transformToMapDataset(this.store.sites)
   }
 
   mapMoved (config: MapConfig): void {
