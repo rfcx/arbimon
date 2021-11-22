@@ -157,12 +157,25 @@ jobs:
         # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         if: always()
         with:
+          notify_when: 'success'
           status: ${{ job.status }}
-          notify_when: 'success,failure,warning'
-          notification_title: '*Biodiversity*'
-          message_format: '{emoji} deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<${{ env.URL_WEB }}|${{ env.NAMESPACE }}>* %0A <${{ env.URL_WEB }}|${{ env.URL_WEB }}> %0A <${{ env.URL_API }}|${{ env.URL_API }}>'
-          mention_users: '${{ env.SLACK_MENTION_USERS }}'
-          mention_users_when: 'failure,warnings'
+          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<${{ env.URL_WEB }}|${{ env.NAMESPACE }}>*'
+          message_format: '{emoji} SUCCESS: <${{ env.URL_WEB }}|${{ env.URL_WEB }}> | <${{ env.URL_API }}|${{ env.URL_API }}>'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+        env:
+          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
+
+      - name: 'Notify: Slack'
+        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+        if: always()
+        with:
+          notify_when: 'failure,warning'
+          status: ${{ job.status }}
+          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<${{ env.URL_WEB }}|${{ env.NAMESPACE }}>*'
+          message_format: '{emoji} *FAILED*'
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          mention_users_when: 'failure,warnings'
+          mention_users: '${{ env.SLACK_MENTION_USERS }}'
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
