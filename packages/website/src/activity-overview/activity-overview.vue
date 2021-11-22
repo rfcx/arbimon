@@ -21,6 +21,7 @@
     v-if="toggles.toggleAoLine"
     class="mt-5"
     dom-id="activity-overview-by-time"
+    :datasets="timeDatasets"
   />
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>
