@@ -17,14 +17,6 @@ export interface ActivityOverviewData extends DatasetDefinition {
   overviewByTime: ActivityOverviewDataByTime[]
 }
 
-export type ActivityOverviewDataByTime = Record<TimeBucket, ActivityOverviewDataByTimeBucket>
-
-export interface ActivityOverviewDataByTimeBucket {
-  detection: Record<number, number>
-  detectionFrequency: Record<number, number>
-  occupancy: Record<number, number>
-}
-
 export interface ActicvityOverviewDataBySite {
   [taxon: string]: {
     [siteId: string]: {
@@ -39,4 +31,16 @@ export interface ActicvityOverviewDataBySite {
   }
 }
 
-// export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof>
+export type ActivityOverviewDataByTime = Record<TimeBucket, ActivityOverviewDataByTimeBucket>
+
+export interface ActivityOverviewDataByTimeBucket {
+  detection: Record<number, number>
+  detectionFrequency: Record<number, number>
+  occupancy: Record<number, number>
+}
+
+export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof ActivityOverviewDataByTimeBucket> = {
+  detection: 'detection',
+  detectionFrequency: 'detectionFrequency',
+  occupancy: 'occupancy'
+}
