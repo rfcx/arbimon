@@ -7,3 +7,5 @@ export const TAXONOMY_CLASSES: TaxonomyClass[] = [
   { name: 'Birds', symbol: '🐦' },
   { name: 'Mammals', symbol: '🐗' }
 ]
+
+export const TAXONOMY_UNKNOWN_CLASS: TaxonomyClass = { name: 'unknown', symbol: '❓' }

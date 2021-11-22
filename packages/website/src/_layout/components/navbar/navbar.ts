@@ -45,7 +45,7 @@ export default class NavbarComponent extends Vue {
           },
           {
             label: 'Activity',
-            destination: { name: ROUTE_NAMES.error }
+            destination: { name: ROUTE_NAMES.activity_overview, params: { projectId: selectedProjectId } }
           },
           {
             label: 'Spotlight',
