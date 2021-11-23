@@ -9,6 +9,7 @@ export interface MapDataSet {
   color: string
   data: MapSiteData[]
   maxValues: { [key: string]: number }
+  title?: string
 }
 
 export interface MapSiteData {
