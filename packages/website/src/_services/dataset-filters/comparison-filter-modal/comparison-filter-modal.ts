@@ -53,12 +53,11 @@ export default class ComparisonFilterModalComponent extends Vue {
   otherFilters: Filter[] = []
 
   get menus (): FilterMenuItem[] {
-    const basedMenus = [
+    return [
       { id: 'sites', name: 'Sites' },
-      { id: 'times', name: 'Date Range' }
+      { id: 'times', name: 'Date Range' },
+      ...(this.canFilterByTaxon ? [{ id: 'taxon', name: 'Taxon' }] : [])
     ]
-    const taxonMenu = { id: 'taxon', name: 'Taxon' }
-    return basedMenus.concat(this.canFilterByTaxon ? [taxonMenu] : [])
   }
 
   get isSelectedAllSites (): boolean {
@@ -70,6 +69,8 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   override mounted (): void {
+    if (!(this.currentActiveMenuId in this.menus)) this.currentActiveMenuId = this.menus[0].id
+
     // TODO ?? - What if the list of sites didn't arrive yet?
     this.setDefaultSelectedSites()
     if (this.defaultFilter) {
