@@ -16,14 +16,12 @@ export default class FilterTaxon extends Vue {
   taxons = TAXONOMY_CLASSES
 
   get isSelectedAllTaxons (): boolean {
-    return this.selectedTaxons.length === this.taxons.length
+    return this.selectedTaxons.length === 0 || this.selectedTaxons.length === this.taxons.length
   }
 
   override mounted (): void {
     if (this.initialTaxonClasses.length > 0) {
       this.selectedTaxons = this.initialTaxonClasses
-    } else {
-      this.selectAllTaxon()
     }
   }
 
@@ -42,7 +40,7 @@ export default class FilterTaxon extends Vue {
   }
 
   selectAllTaxon (): void {
-    this.selectedTaxons = this.taxons.map(t => t.name)
+    this.selectedTaxons = []
     this.emitSelectedTaxons()
   }
 }
