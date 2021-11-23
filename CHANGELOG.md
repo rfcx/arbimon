@@ -10,9 +10,17 @@ Allowed categories:
 - Breaking changes
 --->
 
-# 0.0.8 (2021-11-25)
+# 0.0.9 (2021-11-25)
 
-To be update
+- **activity-overview:** Group detection, detection frequency, and occupancy map [#255][#257]
+- **activity-overview:** Group detection, detection frequency, and occupancy map [#259][#260]
+
+# 0.0.8 (2021-11-22)
+
+# Feature
+
+- **inclusion:** New inclusive color theme (better contrast & color-blindness support) [#300]
+- **overview:** Sitemap on overview page [#277]
 
 # 0.0.7 (2021-11-19)
 

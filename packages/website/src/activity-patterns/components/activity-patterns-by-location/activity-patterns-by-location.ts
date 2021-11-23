@@ -4,10 +4,9 @@ import { Prop } from 'vue-property-decorator'
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
 import { getExportFilterName } from '~/dataset-filters/functions'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { MapConfig } from '~/maps/types'
 
 interface DatasetType {
   label: string
@@ -23,7 +22,7 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
   }
 })
 export default class ActivityPatternsByLocation extends Vue {
-  @Prop({ default: [] }) public datasets!: MapDataSet[]
+  @Prop({ default: [] }) datasets!: MapDataSet[]
 
   selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [
@@ -33,7 +32,7 @@ export default class ActivityPatternsByLocation extends Vue {
   ]
 
   isShowLabels = true
-  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
+  mapStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
   config: MapConfig = {
@@ -49,17 +48,9 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
-  setMapStyle (style: string): void {
-    this.mapStyle = style
-  }
-
-  setShowLabelsToggle (isShowLabels: boolean): void {
-    this.isShowLabels = isShowLabels
-  }
-
-  mapMoved (config: MapConfig): void {
-    this.config = config
-  }
+  propagateMapMove (config: MapConfig): void { this.config = config }
+  propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
+  propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, type: string): string {
     const { startDate, endDate, sites } = dataset

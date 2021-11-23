@@ -5,7 +5,7 @@ import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { DatasetDefinition } from '~/api/types'
 import { ApiHourlySpeciesSummary, filterByDataset, filterBySpecies, getRawDetections, simulateDelay } from '~/api-helpers/mock'
-import { ActivityPatternsData, ActivityPatternsDataBySite, ActivityPatternsDataByTime } from '.'
+import { ActivityPatternsData, ActivityPatternsDataBySite, ActivityPatternsDataByTime } from './types'
 
 export class ActivityPatternsService {
   constructor (

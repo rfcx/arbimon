@@ -2,7 +2,8 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { clearChart, exportChartWithElement } from '..'
-import { generateChart, GroupedBarChartItem } from '.'
+import { generateChart } from './functions'
+import { GroupedBarChartItem } from './types'
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] }) chartData!: GroupedBarChartItem[]

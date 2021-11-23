@@ -20,6 +20,11 @@ interface SiteCheckbox {
 
 const DATE_FORMAT = 'YYYY-MM-DD'
 
+const menus: FilterMenuItem[] = [
+  { id: 'sites', name: 'Sites' },
+  { id: 'times', name: 'Date Range' }
+]
+
 @Options({
   components: {
     OnClickOutside
@@ -40,25 +45,14 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitClose (): boolean { return false }
 
+  menus = menus
+  currentActiveMenuId = menus[0].id
+
   selectedSites: Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
+  readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
-  readonly today = dayjs().format(DATE_FORMAT)
-  currentActiveMenuId = 'sites'
-
-  get menus (): FilterMenuItem[] {
-    return [
-      {
-        id: 'sites',
-        name: 'Sites'
-      },
-      {
-        id: 'times',
-        name: 'Time Range'
-      }
-    ]
-  }
 
   get isSelectedAllSites (): boolean {
     return this.selectedSites.length === 0

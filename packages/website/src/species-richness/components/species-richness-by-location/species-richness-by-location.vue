@@ -8,9 +8,10 @@
       </h2>
       <map-tool-menu-component
         display-taxonomies="true"
-        @emit-taxonomy-value="setTaxonomyValue"
-        @emit-map-style="setMapStyle"
-        @emit-show-labels-toggle="setShowLabelsToggle"
+        :map-style="mapStyle"
+        @emit-taxonomy-value="propagateTaxonomyValue"
+        @emit-map-style="propagateMapStyle"
+        @emit-show-labels-toggle="propagateToggleLabels"
       />
     </div>
     <no-data-panel
@@ -34,7 +35,7 @@
         :map-export-name="mapExportName(dataset)"
         :is-show-labels="isShowLabels"
         class="w-full"
-        @emit-map-moved="mapMoved"
+        @emit-map-moved="propagateMapMove"
       />
     </div>
   </div>
