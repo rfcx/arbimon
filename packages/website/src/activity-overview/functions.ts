@@ -1,6 +1,9 @@
-import { ActivityOverviewData } from '~/api/activity-overview-service'
+import { downloadSpreadsheet } from '@rfcx-bio/utils/file'
+
+import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { TAXONOMY_CLASSES, TAXONOMY_UNKNOWN_CLASS } from '~/api/taxonomy-service'
 import { ColoredFilter } from '~/dataset-filters'
+import { getExportDateTime, getExportFilterName } from '~/dataset-filters/functions'
 import { MapDataSet } from '~/maps/map-bubble'
 
 export type ActivityOverviewDataBySite = ActivityOverviewData & ColoredFilter
@@ -13,6 +16,15 @@ export const ACTIVITY_OVERVIEW_MAP_KEYS = {
 
 function getPrettyMax (max: number): number {
   return max // TODO URGENT - Make this more pretty
+}
+
+export interface CsvData {
+  'species name': string
+  'taxonomy class': string
+  'number of detections': number
+  'detection frequency': number
+  'number of occupied sites': number
+  'naive occupancy': number
 }
 
 export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): MapDataSet[] {
@@ -61,4 +73,23 @@ export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): 
   }
 
   return mapDatasets
+}
+
+// TODO: Update when multiple datasets
+export async function exportCSV (filter: ColoredFilter, dataset: ActivityOverviewDataBySpecies[], prefix: string): Promise<void> {
+  const exportTime = getExportDateTime()
+  const filename = getExportFilterName(filter.startDate, filter.endDate, prefix, exportTime, filter.sites) + '.csv'
+  const dataAsJson = getJsonForDataset(dataset)
+  await downloadSpreadsheet(dataAsJson, filename)
+}
+
+function getJsonForDataset (dataset: ActivityOverviewDataBySpecies[]): CsvData[] {
+  return dataset.map(({ speciesName, taxonomyClass, detectionCount, detectionFrequency, occupiedSites, occupancyNaive }) => ({
+    'species name': speciesName,
+    'taxonomy class': taxonomyClass,
+    'number of detections': detectionCount,
+    'detection frequency': detectionFrequency,
+    'number of occupied sites': occupiedSites,
+    'naive occupancy': occupancyNaive
+  }))
 }
