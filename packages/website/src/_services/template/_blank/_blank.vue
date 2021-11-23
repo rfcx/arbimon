@@ -1,4 +1,4 @@
 <template>
-  <div>Hello</div>
+  <div>Blank</div>
 </template>
-<script lang="ts" src="./activity-overview-by-species.ts"></script>
+<script lang="ts" src="./_blank.ts"></script>
