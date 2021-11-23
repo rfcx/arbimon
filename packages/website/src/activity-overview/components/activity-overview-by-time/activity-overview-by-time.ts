@@ -36,7 +36,7 @@ export default class ActivityOverviewByTime extends Vue {
   datasetType: DropDownOption[] = [
     { label: 'Detections', value: ACTIVITY_OVERVIEW_TIME_KEYS.detection },
     { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
-    { label: 'Naive Occupancy', value: ACTIVITY_OVERVIEW_TIME_KEYS.occupancy }
+    { label: 'Naive occupancy', value: ACTIVITY_OVERVIEW_TIME_KEYS.occupancy }
   ]
 
   buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
