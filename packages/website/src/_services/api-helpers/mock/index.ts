@@ -48,13 +48,15 @@ export const filterByDataset = (detections: ApiHourlySpeciesSummary[], dataset: 
   const { start, end, sites, otherFilters } = dataset
   const propertyEqualFilters = mapValues(groupBy(otherFilters, 'propertyName'), f => f.map(v => v.value))
 
+  // TODO ??? - Extract this before calling API
+  const sideIds = sites.map(s => s.siteId)
   const taxonClasses = propertyEqualFilters.taxon ?? []
   const taxonSpecies = propertyEqualFilters.species ?? []
 
   return detections.filter(r =>
     r.date >= start &&
     r.date < end &&
-    (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)) &&
+    (sites.length === 0 || sideIds.includes(r.stream_id)) &&
     (taxonClasses.length === 0 || taxonClasses.includes(r.taxon)) &&
     (taxonSpecies.length === 0 || taxonSpecies.includes(r.species_id.toString()))
   )
