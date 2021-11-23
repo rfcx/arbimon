@@ -14,6 +14,6 @@ CLI scripts (ex: to export data from Arbimon)
 
    `pnpm serve src/abimon-export/translate.ts`
 
-4. To export species data with IUCN / Wiki 
+4. To export species data with IUCN / Wiki
 
-  `pnpm serve src/species/index.ts`
+`pnpm serve src/species/index.ts`
