@@ -2,7 +2,8 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { clearChart } from '..'
-import { generateChart, LineChartConfig, LineChartSeries } from '.'
+import { generateChart } from './functions'
+import { LineChartConfig, LineChartSeries } from './types'
 
 export default class LineChartComponent extends Vue {
   @Prop() domId!: string
