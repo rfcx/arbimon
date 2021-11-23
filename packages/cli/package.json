@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
+    "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
     "lodash": "^4.17.21",
