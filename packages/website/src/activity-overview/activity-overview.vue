@@ -1,11 +1,13 @@
 <template>
   <page-title
-    page-title="Activity Overview / Detection"
-    page-subtitle="Number of detection / frequency"
+    page-title="Activity Overview"
   >
     <dropdown-menu>
-      <dropdown-menu-item>
-        <icon-fas-hammer class="mr-2" /> TODO
+      <dropdown-menu-item
+        :disabled="!hasData"
+        @click="exportCSV"
+      >
+        <icon-fas-hammer class="mr-2" /> Export as CSV
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>
