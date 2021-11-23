@@ -88,9 +88,11 @@ export default class SpeciesRichnessPage extends Vue {
       return { color, data, ...filter, maxValues: {} }
     })
     // TODO 209 - Do this natively in the API instead of after the fact
-    const allTaxonClassNames = TAXONOMY_CLASSES.map(c => c.name)
     const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[TAXONOMY_CLASS_ALL.name] as number))))
-    return intermediate.map(ds => ({ ...ds, maxValues: Object.fromEntries(allTaxonClassNames.map(n => [n, maxAll])) }))
+    return intermediate.map(ds => ({
+      ...ds,
+      maxValues: Object.fromEntries([...TAXONOMY_CLASSES, TAXONOMY_CLASS_ALL].map(c => [c.name, maxAll]))
+    }))
   }
 
   getTableData (datasets: ColoredDataset[]): DetectedSpeciesItem[] {
