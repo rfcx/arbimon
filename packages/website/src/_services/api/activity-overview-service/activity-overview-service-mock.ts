@@ -4,7 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { DatasetDefinition } from '~/api'
-import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataByTime, DetectionGroupByDetectionKey, DetectionGroupedBySiteAndTaxon } from '~/api/activity-overview-service'
+import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupByDetectionKey, DetectionGroupedBySiteAndTaxon } from '~/api/activity-overview-service'
 import { ApiHourlySpeciesSummary, filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 
 export class ActivityOverviewService {
@@ -19,8 +19,9 @@ export class ActivityOverviewService {
     const detectionsByTaxon: DetectionGroupByDetectionKey = groupBy(totalSummaries, 'taxon')
     const overviewBySite = await this.getOverviewDataBySite(detectionsByTaxon, detectionsBySites)
     const overviewByTime = await this.getOverviewDataByTime(totalSummaries, detectionsByTaxon)
+    const overviewBySpecies = await this.getOverviewDataBySpecies(totalSummaries)
 
-    return await simulateDelay({ ...dataset, overviewBySite, overviewByTime }, this.delay)
+    return await simulateDelay({ ...dataset, overviewBySite, overviewByTime, overviewBySpecies }, this.delay)
   }
 
   getRecordingCount (detections: ApiHourlySpeciesSummary[]): number {
@@ -141,6 +142,31 @@ export class ActivityOverviewService {
       occupancy: mapValues(quarterGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
     }
     return { hour, day, month, year, quarter }
+  }
+
+  async getOverviewDataBySpecies (totalSummaries: ApiHourlySpeciesSummary[]): Promise<ActivityOverviewDataBySpecies[]> {
+    const detectionsBySpecies = groupBy(totalSummaries, 'scientific_name')
+    const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
+    const totalRecordingCount = this.getRecordingCount(totalSummaries)
+
+    const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
+    for (const [speciesName, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
+      const detectionCount = this.calculateDetectionActivity(speciesDetectedDetections)
+      const detectionFrequency = this.calculateDetectionFrequencyActivity(speciesDetectedDetections, totalRecordingCount)
+      const occupiedSites = new Set(speciesDetectedDetections.map(d => d.stream_id)).size
+      const occupancyNaive = this.calculateOccupancyActivity(speciesDetectedDetections, totalSiteCount)
+
+      activityOverviewDataBySpecies.push({
+        speciesName,
+        taxonomyClass: speciesDetectedDetections[0].taxon,
+        detectionCount,
+        detectionFrequency,
+        occupiedSites,
+        occupancyNaive
+      })
+    }
+
+    return activityOverviewDataBySpecies
   }
 }
 
