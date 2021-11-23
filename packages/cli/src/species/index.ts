@@ -46,6 +46,7 @@ export async function getSpeciesDataWithWiki (species: Species): Promise<Species
       source_type: 'Wiki',
       source_url: wikiInformation?.contentUrls.desktop
     },
+    thumbnail_image: wikiInformation?.thumbnailImage,
     external_links: []
   }
   updatedData.external_links?.push({
