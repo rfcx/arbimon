@@ -8,7 +8,7 @@ import { ColoredFilter, ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
-const defaultFilter = new FilterImpl(dayjs().subtract(20, 'years'), dayjs(), [])
+const defaultFilter = new FilterImpl(dayjs().subtract(20, 'years'), dayjs())
 
 @Options({
   components: {
@@ -52,6 +52,7 @@ export default class ComparisonListComponent extends Vue {
       previousFilter.startDate,
       previousFilter.endDate,
       [...previousFilter.sites],
+      [],
       previousFilter.color
     )
 
