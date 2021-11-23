@@ -77,9 +77,15 @@ export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): 
 
 // TODO: Update when multiple datasets
 export async function exportCSV (filter: ColoredFilter, dataset: ActivityOverviewDataBySpecies[], prefix: string): Promise<void> {
+  const sortedDataset = dataset.sort((a, b) => a.speciesName.localeCompare(b.speciesName) ||
+    a.taxonomyClass.localeCompare(b.taxonomyClass) ||
+    a.detectionCount - b.detectionCount ||
+    a.occupiedSites - b.occupiedSites)
+
+  const { startDate, endDate, sites } = filter
   const exportTime = getExportDateTime()
-  const filename = getExportFilterName(filter.startDate, filter.endDate, prefix, exportTime, filter.sites) + '.csv'
-  const dataAsJson = getJsonForDataset(dataset)
+  const filename = getExportFilterName(startDate, endDate, prefix, exportTime, sites) + '.csv'
+  const dataAsJson = getJsonForDataset(sortedDataset)
   await downloadSpreadsheet(dataAsJson, filename)
 }
 
