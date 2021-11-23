@@ -8,7 +8,7 @@
       map-id="overview-sitemap"
       :map-config="config"
       map-export-name="overview-sitemap"
-      max-circle-radius-pixels="5.0"
+      :max-circle-radius-pixels="5.0"
       class="w-full"
       @emit-map-moved="mapMoved"
     />
