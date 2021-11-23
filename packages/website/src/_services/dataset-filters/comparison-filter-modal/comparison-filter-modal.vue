@@ -64,11 +64,11 @@
       </div>
       <!-- Taxon -->
       <div
-        v-else-if="menus[2] && currentActiveMenuId === menus[2].id"
+        v-else-if="currentActiveMenuId === 'taxon'"
         class="w-full"
       >
         <filter-taxon
-          :default-taxon-filter="selectedTaxons"
+          :initial-taxon-classes="selectedTaxons"
           @emit-selected-taxons="updateSelectedTaxons"
         />
       </div>

@@ -1,6 +1,6 @@
-import { groupBy, mapValues } from 'lodash'
+import { groupBy } from 'lodash'
 
-import { DatasetDefinition, Filter } from '~/api/types'
+import { DatasetDefinition } from '~/api/types'
 import { rawSites } from './raw-sites'
 import { rawSummaries } from './raw-summaries'
 
@@ -46,17 +46,20 @@ export const getRawDetections = (): ApiHourlySpeciesSummary[] => {
 
 export const filterByDataset = (detections: ApiHourlySpeciesSummary[], dataset: DatasetDefinition): ApiHourlySpeciesSummary[] => {
   const { start, end, sites, otherFilters } = dataset
-  const filters = groupBy(otherFilters, 'title')
-  const getFilterValue = (filters: Filter[]): string => filters.map(f => f.value).join(', ')
-  const groupedFilters = mapValues(filters, getFilterValue)
+
+  const groupedFilters = groupBy(otherFilters, 'propertyName')
+  const speciesFilters = groupedFilters.species ?? []
   const taxonFilters = groupedFilters.taxon ?? []
-  const speciesFilter = groupedFilters.species ?? []
-  return detections.filter(r => {
-    return r.date >= start && r.date < end &&
+
+  if (taxonFilters.length > 1) return [] // Cannot be in multiple taxonomies
+
+  return detections.filter(r =>
+    r.date >= start &&
+    r.date < end &&
     (sites.length === 0 || sites.map(s => s.siteId).includes(r.stream_id)) &&
-    ((taxonFilters.length === 0 || taxonFilters.includes(r.taxon)) &&
-    (speciesFilter.length === 0 || speciesFilter.includes(`${r.species_id}`)))
-  })
+    (taxonFilters.length === 0 || taxonFilters[0].value === r.taxon) &&
+    (speciesFilters.length === 0 || speciesFilters.find(f => f.value === r.species_id.toString()))
+  )
 }
 
 export const filterBySpecies = (detections: ApiHourlySpeciesSummary[], speciesId: number): ApiHourlySpeciesSummary[] => {

@@ -45,12 +45,12 @@ export interface DatasetDefinition {
   sites: Site[]
   start: string
   end: string
-  otherFilters: Filter[]
+  otherFilters: FilterPropertyEquals[]
 }
 
-export type FilterType = 'taxon' | 'species'
+export type FilterableProperty = 'taxon' | 'species'
 
-export interface Filter {
-  title: FilterType
+export interface FilterPropertyEquals {
+  propertyName: FilterableProperty
   value: string
 }

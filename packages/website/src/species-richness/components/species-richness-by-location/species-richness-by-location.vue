@@ -8,7 +8,6 @@
       </h2>
       <map-tool-menu-component
         :map-style="mapStyle"
-        @emit-taxonomy-value="propagateTaxonomyValue"
         @emit-map-style="propagateMapStyle"
         @emit-show-labels-toggle="propagateToggleLabels"
       />

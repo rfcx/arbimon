@@ -2,15 +2,14 @@ import { Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
 
 import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
-import { Filter } from '~/api/types'
+import { FilterPropertyEquals } from '~/api/types'
 
 export default class FilterTaxon extends Vue {
-  @Prop({ default: [] }) defaultTaxonFilters!: string[]
+  @Prop({ default: [] }) initialTaxonClasses!: string[]
 
-  @Emit() emitSelectedTaxons (): Filter[] {
+  @Emit() emitSelectedTaxons (): FilterPropertyEquals[] {
     if (this.selectedTaxons.length === this.taxons.length) return [] // select all === no filter
-
-    return this.selectedTaxons.map(i => { return { title: 'taxon', value: i } })
+    return this.selectedTaxons.map(i => { return { propertyName: 'taxon', value: i } })
   }
 
   selectedTaxons: string[] = []
@@ -21,8 +20,8 @@ export default class FilterTaxon extends Vue {
   }
 
   override mounted (): void {
-    if (this.defaultTaxonFilters.length > 0) {
-      this.selectedTaxons = this.defaultTaxonFilters
+    if (this.initialTaxonClasses.length > 0) {
+      this.selectedTaxons = this.initialTaxonClasses
     } else {
       this.selectAllTaxon()
     }
