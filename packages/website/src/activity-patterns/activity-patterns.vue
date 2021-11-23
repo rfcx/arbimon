@@ -12,6 +12,7 @@
     </page-title>
     <comparison-list-component
       class="mt-5"
+      :can-filter-by-taxon="false"
       @emit-select="onFilterChange"
     />
     <species-selector

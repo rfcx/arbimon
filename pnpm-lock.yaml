@@ -18,6 +18,7 @@ importers:
       '@vue/eslint-config-standard': ^6.1.0
       '@vue/eslint-config-typescript': ^9.0.1
       babel-jest: ^24.9.0
+      concurrently: ^6.4.0
       cross-env: ^7.0.3
       cypress: ^8.7.0
       cypress-fail-on-console-error: ^2.1.2
@@ -74,6 +75,7 @@ importers:
       '@vue/eslint-config-standard': 6.1.0_5f9b2f3a44dac3bc0a792ca144f1d0b4
       '@vue/eslint-config-typescript': 9.0.1_6e2aa7baa83ea64b77c81400f52e762e
       babel-jest: 24.9.0_@babel+core@7.16.0
+      concurrently: 6.4.0
       cross-env: 7.0.3
       cypress: 8.7.0
       cypress-fail-on-console-error: 2.1.2
@@ -138,12 +140,14 @@ importers:
     specifiers:
       '@rfcx-bio/common': workspace:*
       '@types/mysql': ^2.15.19
+      axios: ^0.24.0
       dayjs: ^1.10.7
       dotenv: ^10.0.0
       lodash: ^4.17.21
       mysql: ^2.18.1
     dependencies:
       '@rfcx-bio/common': link:../common
+      axios: 0.24.0
       dayjs: 1.10.7
       dotenv: 10.0.0
       lodash: 4.17.21
@@ -3202,6 +3206,21 @@ packages:
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
+  /concurrently/6.4.0:
+    resolution: {integrity: sha512-HZ3D0RTQMH3oS4gvtYj1P+NBc6PzE2McEra6yEFcQKrUQ9HvtTGU4Dbne083F034p+LRb7kWU0tPRNvSGs1UCQ==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      date-fns: 2.26.0
+      lodash: 4.17.21
+      rxjs: 6.6.7
+      spawn-command: 0.0.2-1
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 16.2.0
+    dev: true
+
   /configstore/5.0.1:
     resolution: {integrity: sha512-aMKprgk5YhBNyH25hj8wGt2+D52Sw1DRRIzqBwLp2Ya9mFmY8KPvvtvmna8SxVR9JMZ4kzMD68N22vlaRpkeFA==}
     engines: {node: '>=8'}
@@ -3687,6 +3706,11 @@ packages:
       abab: 2.0.5
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
+    dev: true
+
+  /date-fns/2.26.0:
+    resolution: {integrity: sha512-VQI812dRi3cusdY/fhoBKvc6l2W8BPWU1FNVnFH9Nttjx4AFBRzfSVb/Eyc7jBT6e9sg1XtAGsYpBQ6c/jygbg==}
+    engines: {node: '>=0.11'}
     dev: true
 
   /dayjs/1.10.7:
@@ -9177,6 +9201,10 @@ packages:
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
 
+  /spawn-command/0.0.2-1:
+    resolution: {integrity: sha1-YvXpRmmBwbeW3Fkpk34RycaSG9A=}
+    dev: true
+
   /spdx-correct/3.1.1:
     resolution: {integrity: sha512-cOYcUWwhCuHCXi49RhFRCyJEK3iPj1Ziz9DpViV3tbZOwXD49QzIN3MpOLJNxh2qwq2lJJZaKMVw9qNi4jTC0w==}
     dependencies:
@@ -9778,6 +9806,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       punycode: 2.1.1
+    dev: true
+
+  /tree-kill/1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
     dev: true
 
   /trim-newlines/3.0.1:

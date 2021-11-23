@@ -1,5 +1,15 @@
-export const FEATURE_TOGGLES = {
-  toggleAoLine: import.meta.env.VITE_TOGGLE_AO_LINE === 'true'
+import { mapValues } from 'lodash'
+
+const featureTogglesRaw = {
+  /* START: Declare toggles here */
+
+  // Example:
+  // toggleAoLine: import.meta.env.VITE_TOGGLE_AO_LINE
+
+  /* STOP: Declare toggles here */
 }
 
-export type FeatureToggles = typeof FEATURE_TOGGLES
+// Setup types & export
+type FeatureTogglesRaw = typeof featureTogglesRaw
+export type FeatureToggles = { [K in keyof FeatureTogglesRaw]: boolean}
+export const featureToggles: FeatureToggles = mapValues(featureTogglesRaw, value => value as boolean)
