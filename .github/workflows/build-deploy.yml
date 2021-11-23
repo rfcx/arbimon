@@ -35,19 +35,25 @@ jobs:
                 "NAMESPACE": "production",
                 "ECR_REPO_WEBSITE": "biodiversity-website",
                 "ECR_REPO_API": "biodiversity-api",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
+                "URL_WEB": "ba.rfcx.org",
+                "URL_API": "ba-api.rfcx.org"
               },
               "staging": {
                 "NAMESPACE": "staging",
                 "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "ECR_REPO_API": "biodiversity-api/staging",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "URL_WEB": "staging-ba.rfcx.org",
+                "URL_API": "staging-ba-api.rfcx.org"
               },
               ".*": {
                 "NAMESPACE": "testing",
                 "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "ECR_REPO_API": "biodiversity-api/testing",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "URL_WEB": "testing-ba.rfcx.org",
+                "URL_API": "testing-ba-api.rfcx.org"
               }
             }
 
@@ -126,7 +132,7 @@ jobs:
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         with:
-          key: '${{ github.event.pusher.name }}'
+          key: '${{ github.actor }}'
           map: |
             {
               "charles-allen": {
@@ -151,12 +157,25 @@ jobs:
         # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         if: always()
         with:
+          notify_when: 'success'
           status: ${{ job.status }}
-          notify_when: 'success,failure,warning'
-          notification_title: '{workflow} {status_message} -- triggered by ${{ github.event.pusher.name }}'
-          message_format: '{emoji} *Biodiversity Analytics:* {status_message} deploying ${{ env.BRANCH_NAME }} to ${{ env.NAMESPACE }} <{run_url}|{status_message}> at <{commit_url}|{commit_sha}>'
-          mention_users: '${{ env.SLACK_MENTION_USERS }}'
+          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<https://${{ env.URL_WEB }}|${{ env.NAMESPACE }}>*'
+          message_format: '{emoji} SUCCESS: <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+        env:
+          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
+
+      - name: 'Notify: Slack'
+        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+        if: always()
+        with:
+          notify_when: 'failure,warning'
+          status: ${{ job.status }}
+          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *${{ env.NAMESPACE }}*'
+          message_format: '{emoji} *FAILED*'
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
           mention_users_when: 'failure,warnings'
-          footer: '<{repo_url}/tree/${{ env.BRANCH_NAME }}|{repo}@${{ env.BRANCH_NAME }}>'
+          mention_users: '${{ env.SLACK_MENTION_USERS }}'
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
