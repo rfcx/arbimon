@@ -151,8 +151,8 @@ export class ActivityOverviewService {
 
     const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
     for (const [speciesName, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
-      const detectionCount = speciesDetectedDetections.length
-      const detectionFrequency = detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+      const detectionCount = this.calculateDetectionActivity(speciesDetectedDetections)
+      const detectionFrequency = this.calculateDetectionFrequencyActivity(speciesDetectedDetections, totalRecordingCount)
       const occupiedSites = new Set(speciesDetectedDetections.map(d => d.stream_id)).size
       const occupancyNaive = this.calculateOccupancyActivity(speciesDetectedDetections, totalSiteCount)
 
