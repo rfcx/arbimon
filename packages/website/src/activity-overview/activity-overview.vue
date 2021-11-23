@@ -22,5 +22,6 @@
     dom-id="activity-overview-by-time"
     :datasets="timeDatasets"
   />
+  <activity-overview-by-species :table-data="tableDatasets" />
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>
