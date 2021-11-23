@@ -1,5 +1,7 @@
 <template>
-  <modal-popup name="buildComparisonModal">
+  <modal-popup
+    name="buildComparisonModal"
+  >
     <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
       Build comparison
     </h1>
@@ -113,7 +115,7 @@
       </button>
       <button
         class="btn btn-primary"
-        @click="emitApply()"
+        @click="emitApply"
       >
         Apply
       </button>

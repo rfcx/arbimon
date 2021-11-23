@@ -6,6 +6,14 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? ['error', { allow: ['info', 'warn', 'error'] }] : 'off', // prefer specific log types
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
+    'no-restricted-imports': ['error', {
+      paths: [
+        {
+          name: '.',
+          message: 'Importing the current folder\'s index is likely to cause circular imports. Prefer a specific import such as `./types`, and only use the index to proxy exports.'
+        }
+      ]
+    }],
     'no-void': ['error', { allowAsStatement: true }],
     'prefer-object-spread': 'error',
     'simple-import-sort/imports': [
