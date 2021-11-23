@@ -21,4 +21,5 @@ export interface Species {
   information?: SpeciesInformation | undefined
   external_links?: SpeciesExternalLink[]
   iucn_rank?: SpeciesCategory
+  thumbnail_image?: string
 }
