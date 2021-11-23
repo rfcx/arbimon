@@ -5,7 +5,7 @@ import { Site, Species } from '~/api'
 import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, Filter } from '~/dataset-filters'
+import { ColoredFilter, ComparisonFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset, getExportGroupName } from '~/dataset-filters/functions'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -31,7 +31,7 @@ const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
 })
 export default class SpeciesRichnessPage extends Vue {
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
-  filters: Filter[] = []
+  filters: ComparisonFilter[] = []
   detectionCounts: number[] = []
   chartData: GroupedBarChartItem[] = []
   chartExportName = ''

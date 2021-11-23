@@ -62,6 +62,16 @@
           </label>
         </div>
       </div>
+      <!-- Taxon -->
+      <div
+        v-else-if="currentActiveMenuId === 'taxon'"
+        class="w-full"
+      >
+        <filter-taxon
+          :initial-taxon-classes="selectedTaxons"
+          @emit-selected-taxons="updateSelectedTaxons"
+        />
+      </div>
       <div
         v-else
         class="p-4 flex"
