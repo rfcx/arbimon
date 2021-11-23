@@ -52,7 +52,7 @@ export default class ActivityOverviewPage extends Vue {
     this.tableDatasets = data.overviewBySpecies
   }
 
-  async exportCSV (): Promise<void> {
+  async exportSpeciesData (): Promise<void> {
     await exportCSV(this.filter, this.tableDatasets, DEFAULT_PREFIX)
   }
 }
