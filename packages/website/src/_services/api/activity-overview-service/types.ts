@@ -15,6 +15,7 @@ export interface DetectionGroupByDetectionKey {
 export interface ActivityOverviewData extends DatasetDefinition {
   overviewBySite: ActicvityOverviewDataBySite
   overviewByTime: ActivityOverviewDataByTime[]
+  overviewBySpecies: ActivityOverviewDataBySpecies[]
 }
 
 export interface ActicvityOverviewDataBySite {
@@ -43,4 +44,13 @@ export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof ActivityOverviewD
   detection: 'detection',
   detectionFrequency: 'detectionFrequency',
   occupancy: 'occupancy'
+}
+
+export interface ActivityOverviewDataBySpecies {
+  speciesName: string
+  taxonomyClass: string
+  detectionCount: number
+  detectionFrequency: number
+  occupiedSites: number
+  occupancyNaive: number
 }
