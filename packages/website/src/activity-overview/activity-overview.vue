@@ -5,7 +5,7 @@
     <dropdown-menu>
       <dropdown-menu-item
         :disabled="!hasData"
-        @click="exportCSV"
+        @click="exportSpeciesData"
       >
         <icon-fas-hammer class="mr-2" /> Export as CSV
       </dropdown-menu-item>
