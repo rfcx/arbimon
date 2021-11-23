@@ -19,8 +19,9 @@
         </h2>
       </div>
       <map-tool-menu-component
-        @emit-map-style="setMapStyle"
-        @emit-show-labels-toggle="setShowLabelsToggle"
+        :map-style="mapStyle"
+        @emit-map-style="propagateMapStyle"
+        @emit-show-labels-toggle="propagateToggleLabels"
       />
     </div>
     <div class="mt-2">
@@ -45,7 +46,7 @@
           :map-export-name="mapExportName(dataset, selectedDatasetType)"
           :is-show-labels="isShowLabels"
           class="w-full"
-          @emit-map-moved="mapMoved"
+          @emit-map-moved="propagateMapMove"
         />
       </div>
     </div>

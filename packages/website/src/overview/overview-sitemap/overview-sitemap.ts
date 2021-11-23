@@ -27,7 +27,5 @@ export default class OverviewSitemap extends Vue {
     this.dataset = transformToMapDataset(this.store.sites)
   }
 
-  mapMoved (config: MapConfig): void {
-    this.config = config
-  }
+  propagateMapMove (config: MapConfig): void { this.config = config }
 }
