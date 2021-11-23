@@ -13,3 +13,7 @@ CLI scripts (ex: to export data from Arbimon)
 3. To tranform the data to different formats:
 
    `pnpm serve src/abimon-export/translate.ts`
+
+4. To export species data with IUCN / Wiki 
+
+  `pnpm serve src/species/index.ts`
