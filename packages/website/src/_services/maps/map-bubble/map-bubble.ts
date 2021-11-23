@@ -106,7 +106,8 @@ export default class MapBubbleComponent extends Vue {
   }
 
   getPopup (datum: MapSiteData): string {
-    return `<strong>${datum.siteName}: </strong>${this.getPopupHtml(datum, this.dataKey)} `
+    const value = this.getPopupHtml(datum, this.dataKey)
+    return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}`
   }
 
   setupMapPopup (): void {
