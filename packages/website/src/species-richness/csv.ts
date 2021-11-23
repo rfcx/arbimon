@@ -28,12 +28,12 @@ export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix:
   await zipAndDownload(files, groupName)
 }
 
-const getCsvFile = async ({ startDate, endDate, sites }: ColoredFilter, reportPrefix: string, exportTime: string): Promise<FileData> => {
+const getCsvFile = async ({ startDate, endDate, sites, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string): Promise<FileData> => {
   const start = startDate.toISOString()
   const end = endDate.add(1, 'days').toISOString()
   const filename = getExportFilterName(startDate, endDate, reportPrefix, exportTime, sites) + '.csv'
 
-  const dataAsJson = await getCsvForDataset({ start, end, sites })
+  const dataAsJson = await getCsvForDataset({ start, end, sites, otherFilters })
   const data = await toCsv(dataAsJson)
 
   return { filename, data }

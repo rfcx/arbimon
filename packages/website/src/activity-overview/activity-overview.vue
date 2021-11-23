@@ -1,11 +1,13 @@
 <template>
   <page-title
-    page-title="Activity Overview / Detection"
-    page-subtitle="Number of detection / frequency"
+    page-title="Activity Overview"
   >
     <dropdown-menu>
-      <dropdown-menu-item>
-        <icon-fas-hammer class="mr-2" /> TODO
+      <dropdown-menu-item
+        :disabled="!hasData"
+        @click="exportSpeciesData"
+      >
+        <icon-fas-hammer class="mr-2" /> Export as CSV
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>
@@ -18,9 +20,10 @@
     :datasets="mapDatasets"
   />
   <activity-overview-by-time
-    v-if="toggles.toggleAoLine"
     class="mt-5"
     dom-id="activity-overview-by-time"
+    :datasets="timeDatasets"
   />
+  <activity-overview-by-species :table-data="tableDatasets" />
 </template>
 <script lang="ts" src="./activity-overview.ts"></script>

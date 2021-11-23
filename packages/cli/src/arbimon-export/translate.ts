@@ -18,7 +18,7 @@ const rawSpeciesRichnessData = Buffer.isBuffer(rawSpeciesRichnessStringOrBuffer)
   : rawSpeciesRichnessStringOrBuffer
 
 // Transform as needed & write
-const output = jsonToTs(transformCalculateDetectionFrequency(JSON.parse(rawSpeciesRichnessData)), outputConstName)
+const output = jsonToTs(transformToSpecies(JSON.parse(rawSpeciesRichnessData)), outputConstName)
 fs.writeFileSync(outputFilePath, output, 'utf8')
 
 // Transform functions
@@ -27,6 +27,13 @@ export function transformToSites (data: ArbimonHourlySpeciesRow[]): string {
   const rawSiteList: string[] = Array.from(new Set(data.map(r => `${r.stream_id}${splitter}${r.name}${splitter}${r.lat}${splitter}${r.lon}${splitter}${r.alt}`)))
   const siteList = rawSiteList.map(s => s.split(splitter)).map(tuple => ({ site_id: tuple[0], name: tuple[1], latitude: tuple[2], longitude: tuple[3], altitude: tuple[4] }))
   return JSON.stringify(siteList, null, 2)
+}
+
+export function transformToSpecies (data: ArbimonHourlySpeciesRow[]): string {
+  const splitter = '-----'
+  const rawSpeciesList: string[] = Array.from(new Set(data.map(r => `${r.species_id}${splitter}${r.scientific_name}${splitter}${r.taxon_id}${splitter}${r.taxon}`)))
+  const speciesList = rawSpeciesList.map(s => s.split(splitter)).map(tuple => ({ species_id: tuple[0], scientific_name: tuple[1], taxon_id: tuple[2], taxon: tuple[3] }))
+  return JSON.stringify(speciesList, null, 2)
 }
 
 export function transformToSelectedSites (data: ArbimonHourlySpeciesRow[]): string {
