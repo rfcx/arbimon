@@ -1,18 +1,19 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { MAPBOX_STYLE_WITH_PLACE_LABELS } from '~/maps'
+import { MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { TAXONOMY_CLASSES } from '../../api/taxonomy-service'
 
 interface MapOptions {
-  id: string
+  style: MapboxStyle
   name: string
 }
 
 export default class MapToolMenuComponent extends Vue {
   @Prop({ default: false }) displayTaxonomies!: boolean
+  @Prop() mapStyle!: MapboxStyle
 
-  @Emit()
+  @Emit() @Watch('taxon')
   emitTaxonomyValue (): string {
     return this.taxon
   }
@@ -24,33 +25,15 @@ export default class MapToolMenuComponent extends Vue {
   }
 
   @Emit()
-  emitMapStyle (): string {
-    return this.mapStyle
+  emitMapStyle (style: MapboxStyle): MapboxStyle {
+    return style
   }
 
-  isShowLabels = true
-  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
   taxons = TAXONOMY_CLASSES
   taxon = this.taxons[0].name
-
-  get mapOptions (): MapOptions[] {
-    return [
-      { id: 'mapbox://styles/mapbox/satellite-streets-v11', name: 'Satellite' },
-      { id: MAPBOX_STYLE_WITH_PLACE_LABELS, name: 'Simple' }
-    ]
-  }
-
-  @Watch('taxon')
-  onTaxononyChange (): void {
-    this.emitTaxonomyValue()
-  }
-
-  @Watch('mapStyle')
-  onMapStyleChange (): void {
-    this.emitMapStyle()
-  }
-
-  setMapStyle (id: string): void {
-    this.mapStyle = id
-  }
+  isShowLabels = true
+  mapStyleOptions: MapOptions[] = [
+    { style: MAPBOX_STYLE_SATELLITE_STREETS, name: 'Satellite' },
+    { style: MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, name: 'Simple' }
+  ]
 }

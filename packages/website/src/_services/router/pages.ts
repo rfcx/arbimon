@@ -1,6 +1,8 @@
 export { default as Error } from '@/_layout/error'
 export { default as ProjectRoot } from '@/_layout/project-root'
+export { default as ActivityOverviewPage } from '@/activity-overview'
 export { default as ActivityPatterns } from '@/activity-patterns'
 export { default as Home } from '@/home'
 export { default as Overview } from '@/overview'
+export { default as Preferences } from '@/preferences'
 export { default as SpeciesRichness } from '@/species-richness'
