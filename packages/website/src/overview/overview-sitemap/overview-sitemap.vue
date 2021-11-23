@@ -10,7 +10,7 @@
       map-export-name="overview-sitemap"
       :max-circle-radius-pixels="5.0"
       class="w-full"
-      @emit-map-moved="mapMoved"
+      @emit-map-moved="propagateMapMove"
     />
   </div>
 </template>

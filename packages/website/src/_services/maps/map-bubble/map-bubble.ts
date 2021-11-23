@@ -5,9 +5,8 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-import { createMap } from '~/maps'
-import { MapConfig } from '~/maps/types'
-import { MapDataSet, MapSiteData } from '.'
+import { createMap, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { MapConfig, MapDataSet, MapSiteData } from './types'
 
 const DEFAULT_FILL_COLOR = '#111111'
 const DEFAULT_STROKE_COLOR = '#EEEEEE'
@@ -28,7 +27,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() mapId!: string
   @Prop() mapConfig!: MapConfig
   @Prop() mapExportName!: string
-  @Prop({ default: 'mapbox://styles/mapbox/satellite-streets-v11' }) mapStyle!: string
+  @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
   @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
