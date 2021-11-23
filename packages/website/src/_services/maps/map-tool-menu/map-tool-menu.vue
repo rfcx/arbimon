@@ -1,24 +1,23 @@
 <template>
   <div class="float-right">
     <template
-      v-for="(item, idx) in mapOptions"
+      v-for="(item, idx) in mapStyleOptions"
       :key="item.id"
     >
       <button
         class="btn"
         :class="{
-          'bg-brand-primary': mapStyle === item.id,
-          'rounded-r-none': idx === 0,
-          'rounded-l-none': idx === mapOptions.length - 1,
-          'mr-2': idx === mapOptions.length - 1
+          'bg-brand-primary': mapStyle === item.style,
+          'rounded-r-none': idx !== mapStyleOptions.length - 1,
+          'rounded-l-none': idx !== 0
         }"
-        @click="setMapStyle(item.id)"
+        @click="emitMapStyle(item.style)"
       >
         {{ item.name }}
       </button>
     </template>
     <button
-      class="btn"
+      class="btn ml-2"
       @click="emitShowLabelsToggle()"
     >
       <input

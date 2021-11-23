@@ -44,27 +44,20 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitClose (): boolean { return false }
 
+  currentActiveMenuId = ''
   selectedSites: Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
+  readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
-  readonly today = dayjs().format(DATE_FORMAT)
   otherFilters: Filter[] = []
-  currentActiveMenuId = 'sites'
 
   get menus (): FilterMenuItem[] {
-    const basedMenus = [{
-      id: 'sites',
-      name: 'Sites'
-    },
-    {
-      id: 'times',
-      name: 'Time Range'
-    }]
-    const taxonMenu = {
-      id: 'taxon',
-      name: 'Taxon'
-    }
+    const basedMenus = [
+      { id: 'sites', name: 'Sites' },
+      { id: 'times', name: 'Date Range' }
+    ]
+    const taxonMenu = { id: 'taxon', name: 'Taxon' }
     return basedMenus.concat(this.canFilterByTaxon ? [taxonMenu] : [])
   }
 

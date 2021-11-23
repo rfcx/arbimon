@@ -1,6 +1,13 @@
 import { Dayjs } from 'dayjs'
+import { LngLatLike } from 'mapbox-gl'
 
 import { Site } from '~/api'
+
+export interface MapConfig {
+  sourceMapId: string
+  center: LngLatLike
+  zoom: number
+}
 
 export interface MapDataSet {
   startDate: Dayjs
