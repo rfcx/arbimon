@@ -30,7 +30,7 @@ export default class ComparisonListComponent extends Vue {
   isAddSelected = false
   isFilterOpen = false
   filters: FilterImpl[] = [defaultFilter]
-  currentSelectedFilter: FilterImpl | null = null
+  modalFilter: FilterImpl | null = null
 
   //  TODO: Have to improve this logic to check what is `all` meaning
   get isDefaultFilter (): boolean {
@@ -48,11 +48,11 @@ export default class ComparisonListComponent extends Vue {
   addFilterConfig (): void {
     // Copy previous filter
     const previousFilter = this.filters[this.filters.length - 1]
-    this.currentSelectedFilter = new FilterImpl(
+    this.modalFilter = new FilterImpl(
       previousFilter.startDate,
       previousFilter.endDate,
-      [...previousFilter.sites],
-      [],
+      previousFilter.sites.map(s => ({ ...s })),
+      previousFilter.otherFilters.map(f => ({ ...f })),
       previousFilter.color
     )
 
@@ -68,7 +68,7 @@ export default class ComparisonListComponent extends Vue {
   getOptionalFilterText (idx: number): string {
     const otherFilters = this.filters[idx].otherFilters
     if (otherFilters.length === 1) {
-      return `${otherFilters[0].title}: ${otherFilters[0].value}`
+      return `${otherFilters[0].propertyName}: ${otherFilters[0].value}`
     } else {
       return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
     }
@@ -85,7 +85,7 @@ export default class ComparisonListComponent extends Vue {
     this.isFilterOpen = true
     this.isAddSelected = false
     this.selectedFilterId = idx
-    this.currentSelectedFilter = this.filters[this.selectedFilterId]
+    this.modalFilter = this.filters[this.selectedFilterId]
   }
 
   popupClose (): void {

@@ -54,7 +54,7 @@
     </div>
     <comparison-filter-modal-component
       v-if="isFilterOpen"
-      :default-filter="currentSelectedFilter"
+      :initial-values="modalFilter"
       :can-filter-by-taxon="canFilterByTaxon"
       @emit-apply="apply"
       @emit-close="popupClose"

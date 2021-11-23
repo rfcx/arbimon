@@ -4,7 +4,7 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { Filter, Site } from '~/api/types'
+import { FilterPropertyEquals, Site } from '~/api/types'
 import { ComparisonFilter } from '~/dataset-filters'
 import { BiodiversityStore } from '~/store'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
@@ -29,7 +29,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 })
 export default class ComparisonFilterModalComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop({ default: null }) defaultFilter!: ComparisonFilter | null
+  @Prop({ default: null }) initialValues!: ComparisonFilter | null
   @Prop({ default: true }) canFilterByTaxon!: boolean
 
   @Emit() emitApply (): ComparisonFilter {
@@ -50,7 +50,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
-  otherFilters: Filter[] = []
+  otherFilters: FilterPropertyEquals[] = []
 
   get menus (): FilterMenuItem[] {
     return [
@@ -65,24 +65,24 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   get selectedTaxons (): string[] {
-    return this.otherFilters.filter(f => f.title === 'taxon').map(f => f.value)
+    return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
   }
 
   override mounted (): void {
     if (!(this.currentActiveMenuId in this.menus)) this.currentActiveMenuId = this.menus[0].id
 
     // TODO ?? - What if the list of sites didn't arrive yet?
-    this.setDefaultSelectedSites()
-    if (this.defaultFilter) {
-      this.startDate = this.defaultFilter.startDate?.format(DATE_FORMAT)
-      this.endDate = this.defaultFilter.endDate?.format(DATE_FORMAT)
-      this.otherFilters = this.defaultFilter.otherFilters
+    this.setDefaultSelectedSites() // TODO ??? - This should clone the sites to avoid mutating it
+    if (this.initialValues) {
+      this.startDate = this.initialValues.startDate?.format(DATE_FORMAT)
+      this.endDate = this.initialValues.endDate?.format(DATE_FORMAT)
+      this.otherFilters = this.initialValues.otherFilters.map(f => ({ ...f }))
     }
   }
 
   setDefaultSelectedSites (): void {
     this.setDefaultSiteCheckboxItems()
-    const selectedSites = this.defaultFilter?.sites ?? []
+    const selectedSites = this.initialValues?.sites ?? []
     const selectedSiteIds = new Set(selectedSites.map(s => s.siteId))
     this.selectedSites = this.siteCheckboxItems
       .filter(cb => selectedSiteIds.has(cb.site.siteId))
@@ -119,7 +119,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
-  updateSelectedTaxons (otherFilters: Filter[]): void {
-    this.otherFilters = otherFilters
+  updateSelectedTaxons (otherFilters: FilterPropertyEquals[]): void {
+    this.otherFilters = otherFilters // TODO ??? - Are you sure this is an overwrite?
   }
 }
