@@ -10,6 +10,10 @@ Allowed categories:
 - Breaking changes
 --->
 
+# 0.0.10 (2021-12-8)
+
+To be update
+
 # 0.0.9 (2021-11-25)
 
 - **activity-overview:** Group detection, detection frequency, and occupancy map [#255][#257]
