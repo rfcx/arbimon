@@ -11,7 +11,7 @@
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
-    "test": "jest src"
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest src --passWithNoTests"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
