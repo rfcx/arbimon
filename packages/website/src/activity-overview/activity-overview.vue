@@ -7,7 +7,7 @@
         :disabled="!hasData"
         @click="exportSpeciesData"
       >
-        <icon-fas-hammer class="mr-2" /> Export as CSV
+        <icon-far-file-archive class="mr-2" /> Export as CSV
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>
