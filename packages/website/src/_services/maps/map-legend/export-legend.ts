@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { getLegendEntries, LegendEntry } from './index'
+import { getLegendEntries, LegendEntry } from './legend-entries'
 
 // pixels
 const CONTAINER_DEFAULT_WIDTH = 160
