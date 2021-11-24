@@ -223,7 +223,7 @@ export default class MapBubbleComponent extends Vue {
     const img = this.map.getCanvas().toDataURL('image/png')
     downloadPng(img, this.mapExportName)
 
-    const { color, maxValues } = this.dataset
+    // const { color, maxValues } = this.dataset
     // if (dataRange) {
     //   const range = dataRange[this.dataKey]
     //   const svg = generateNormalizeMapLegend(color, range, maximumRadius ?? range.length, 'Number of detections')
