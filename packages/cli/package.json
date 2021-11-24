@@ -5,13 +5,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
-    "lint:types": "tsc --project \"tsconfig.json\" --noEmit",
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
-    "test": "jest src"
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
