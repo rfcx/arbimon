@@ -1,6 +1,7 @@
 <template>
   <page-title
     page-title="Activity Overview"
+    page-subtitle="The detections and occupancy trends of species"
   >
     <dropdown-menu>
       <dropdown-menu-item
