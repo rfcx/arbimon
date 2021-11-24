@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
-    "lint:types": "tsc --project \"tsconfig.json\" --noEmit",
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
