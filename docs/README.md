@@ -10,8 +10,8 @@ Biodiversity analytics platform built with Vue 3, Typescript, Vite, pnpm, Pinia,
 
 The following must be true to consider the Sprint "DONE":
 
-- Code follows [STANDARDS.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/STANDARDS.md)
-- Updated [CHANGELOG.md](https://github.com/rfcx/biodiversity-analytics/blob/develop/CHANGELOG.md)
+- Code follows [STANDARDS.md](./STANDARDS.md)
+- Updated [CHANGELOG.md](./CHANGELOG.md)
 - PRs merged & deployed to staging
 - Demo video & staging URL sent to PO by Tuesday
 
