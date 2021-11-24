@@ -1,12 +1,12 @@
 import * as d3 from 'd3'
 
 // pixels
-const DEFAULT_WIDTH = 160
+const CONTAINER_DEFAULT_WIDTH = 160
 const DEFAULT_ROW_HEIGHT = 16
-const DEFAULT_GAP_X = 10
-const DEFAULT_GAP_Y = 5
 const CONTAINER_PADDING_X = 5
 const CONTAINER_PADDING_Y = 20
+const DEFAULT_GAP_X = 10
+const DEFAULT_GAP_Y = 5
 const TITLE_HEIGHT = DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y
 
 export interface LegendEntry {
@@ -20,13 +20,13 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
   const container = d3.create('div')
   const legendEntries = getLegendEntries(maxRadius, maxValue, legendEntriesNumber)
   const maxRadiusPixels = legendEntries[legendEntries.length - 1].pixels
-  const plotHeight = (maxRadiusPixels * 2) * DEFAULT_GAP_Y
-  const legendHeight = (CONTAINER_PADDING_Y * 2) + (title ? plotHeight + TITLE_HEIGHT : plotHeight)
+  const legendEntriesHeight = (maxRadiusPixels * 2) * DEFAULT_GAP_Y
+  const containerHeight = (CONTAINER_PADDING_Y * 2) + (title ? legendEntriesHeight + TITLE_HEIGHT : legendEntriesHeight)
 
   const svg = container
     .append('svg')
-    .attr('width', DEFAULT_WIDTH)
-    .attr('height', legendHeight)
+    .attr('width', CONTAINER_DEFAULT_WIDTH)
+    .attr('height', containerHeight)
     .append('g')
     .attr('transform', 'translate(0,0)')
 
