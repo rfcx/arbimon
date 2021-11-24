@@ -7,6 +7,7 @@ const DEFAULT_GAP_X = 10
 const DEFAULT_GAP_Y = 5
 const CONTAINER_PADDING_X = 5
 const CONTAINER_PADDING_Y = 20
+const TITLE_HEIGHT = DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y
 
 export interface LegendEntry {
   pixels: number
@@ -18,8 +19,9 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
 
   const container = d3.create('div')
   const legendEntries = getLegendEntries(maxRadius, maxValue, legendEntriesNumber)
-  const plotHeight = (legendEntries[legendEntries.length - 1].pixels * 2) * DEFAULT_GAP_Y
-  const legendHeight = (CONTAINER_PADDING_Y * 2) + (title ? plotHeight + (DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y) : plotHeight)
+  const maxRadiusPixels = legendEntries[legendEntries.length - 1].pixels
+  const plotHeight = (maxRadiusPixels * 2) * DEFAULT_GAP_Y
+  const legendHeight = (CONTAINER_PADDING_Y * 2) + (title ? plotHeight + TITLE_HEIGHT : plotHeight)
 
   const svg = container
     .append('svg')
@@ -44,14 +46,14 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
     .attr('class', 'legend')
 
   legend.append('circle')
-    .attr('cx', CONTAINER_PADDING_X + DEFAULT_GAP_X + legendEntries[legendEntries.length - 1].pixels)
-    .attr('cy', (d, i) => CONTAINER_PADDING_Y + (title ? (DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y) + (((legendEntries[legendEntries.length - 1].pixels * 2) + DEFAULT_GAP_Y) * i) : ((legendEntries[legendEntries.length - 1].pixels * 2) + DEFAULT_GAP_Y) * i))
+    .attr('cx', CONTAINER_PADDING_X + DEFAULT_GAP_X + maxRadiusPixels)
+    .attr('cy', (d, i) => CONTAINER_PADDING_Y + calculateYAxis(maxRadiusPixels, i) + (title ? TITLE_HEIGHT : 0))
     .attr('r', (d, i) => legendEntries[i].pixels)
     .style('fill', color)
 
   legend.append('text')
-    .attr('x', CONTAINER_PADDING_X + (DEFAULT_GAP_X * 2) + (legendEntries[legendEntries.length - 1].pixels * 2))
-    .attr('y', (d, i) => CONTAINER_PADDING_Y + (title ? (DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y) + (((legendEntries[legendEntries.length - 1].pixels * 2) + DEFAULT_GAP_Y) * i) : ((legendEntries[legendEntries.length - 1].pixels * 2) + DEFAULT_GAP_Y) * i))
+    .attr('x', CONTAINER_PADDING_X + (DEFAULT_GAP_X * 2) + (maxRadiusPixels * 2))
+    .attr('y', (d, i) => CONTAINER_PADDING_Y + calculateYAxis(maxRadiusPixels, i) + (title ? TITLE_HEIGHT : 0))
     .attr('dy', '.3em')
     .text((d, i) => legendEntries[i].value)
     .attr('fill', '#000')
@@ -59,6 +61,10 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
     .style('font-size', '14px')
 
   return container.node()
+}
+
+function calculateYAxis (maxRadius: number, idx: number): number {
+  return ((maxRadius * 2) + DEFAULT_GAP_Y) * idx
 }
 
 const prettyRound = (input: number): number => {
