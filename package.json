@@ -23,6 +23,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
     "@mixer/parallel-prettier": "^2.0.1",
     "@types/estree": "^0.0.50",
     "@types/jest": "^27.0.2",
