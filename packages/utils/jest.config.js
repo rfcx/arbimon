@@ -1,4 +1,5 @@
 export default {
+  rootDir: 'src',
   moduleFileExtensions: [
     'js',
     'ts',
