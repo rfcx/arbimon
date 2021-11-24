@@ -1,4 +1,4 @@
-import { getLegendEntries } from './export-legend'
+import { getLegendEntries } from './index'
 
 describe('getLegendEntries', () => {
   test('Returns requested number of legend entries', () => {
