@@ -54,8 +54,8 @@ jobs:
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
 
-      - name: 'Build: tsc/vite'
-        run: pnpm build-ci
+      - name: 'Build: Test'
+        run: pnpm test-ci
 
-      # - name: 'Build: Test'
-      #   run: cd packages/website && npm run test
+      - name: 'Build: Compile'
+        run: pnpm build-ci
