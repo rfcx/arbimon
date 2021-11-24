@@ -6,7 +6,7 @@ const DEFAULT_ROW_HEIGHT = 16
 const DEFAULT_GAP_X = 10
 const DEFAULT_GAP_Y = 5
 const CONTAINER_PADDING_X = 5
-const CONTAINER_PADDING_Y = 10
+const CONTAINER_PADDING_Y = 20
 
 export interface LegendEntry {
   pixels: number

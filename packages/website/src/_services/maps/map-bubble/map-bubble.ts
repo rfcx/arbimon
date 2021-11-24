@@ -220,13 +220,14 @@ export default class MapBubbleComponent extends Vue {
   }
 
   async downloadMapPng (): Promise<void> {
+    const baseFilename = this.mapExportName
     const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng(img, this.mapExportName)
+    downloadPng(img, baseFilename)
 
     const { color, maxValues } = this.dataset
     const maxValue = maxValues[this.dataKey]
     const svg = generateNormalizeMapLegend(color, maxValue, this.maxCircleRadiusPixels)
     if (!svg) return
-    await exportChartWithElement(svg, 'legend-test')
+    await exportChartWithElement(svg, `${baseFilename}-legend`)
   }
 }
