@@ -8,7 +8,7 @@ import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
-import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
 
@@ -63,7 +63,7 @@ export default class ActivityPatternsByTime extends Vue {
 
   async downloadChart (): Promise<void> {
     const exportConfig = { ...this.config, width: 800, height: 450 }
-    const svg = await generateChart(this.datasetsForSelectedBucket, exportConfig)
+    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
     const png = await svgToPngData({ svg, ...exportConfig })
