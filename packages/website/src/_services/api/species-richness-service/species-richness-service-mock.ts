@@ -6,7 +6,7 @@ import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 import { ApiHourlySpeciesSummary, filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { MapSiteData } from '~/maps/map-bubble'
 import { DatasetDefinition, Species } from '..'
-import { SpeciesRichnessData, TimeBucket } from '.'
+import { SpeciesRichnessData, TimeBucket } from './types'
 
 // TODO ?? - Move this logic to the API
 export const getSpeciesRichnessData = async (dataset: DatasetDefinition): Promise<SpeciesRichnessData> => {

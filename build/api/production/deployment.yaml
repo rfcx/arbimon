@@ -26,5 +26,7 @@ spec:
               memory: '2000Mi'
               cpu: '2'
           envFrom:
+            - secretRef:
+                name: biodiversity-api-secrets
             - configMapRef:
                 name: biodiversity-api-config

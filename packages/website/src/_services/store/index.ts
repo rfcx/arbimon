@@ -4,15 +4,14 @@ import { createPinia, defineStore } from 'pinia'
 import { Project, Site } from '~/api'
 import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
+import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
-// Designed for contrast & color-blind support:
-const DEFAULT_DATASET_COLORS = ['#85EBBA', '#6FC1F5', '#B578DB', '#EAC3E4', '#D6E68C']
 const FAKE_PUERTO_RICO_PROJECT = { id: 'puerto-rico-island-wide', name: 'Puerto Rico Island-Wide', isPublic: true, externalId: 123456 }
 
 export const useStore = defineStore('root', {
   state: () => ({
     user: undefined as User | undefined,
-    datasetColors: DEFAULT_DATASET_COLORS,
+    datasetColors: COLORS_BIO_INCLUSIVE,
     projects: [] as Project[],
     selectedProject: undefined as Project | undefined,
     sites: [] as Site[]
@@ -29,9 +28,7 @@ export const useStore = defineStore('root', {
       // Load data asynchronously
       if (user) {
         const realProjects = await getProjects()
-        const [realPuertoRicoProject] = realProjects.splice(realProjects.findIndex(p => p.id === 'puerto-rico-island-wide'))
-        const projects = [realPuertoRicoProject ?? FAKE_PUERTO_RICO_PROJECT, ...realProjects]
-
+        const projects = [FAKE_PUERTO_RICO_PROJECT, ...realProjects]
         const selectedProject = projects.length > 0 ? projects[0] : undefined
         const sites = selectedProject ? await getSites(selectedProject) : []
 

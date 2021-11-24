@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { LineChartConfig, LineChartSeries } from '.'
+import { LineChartConfig, LineChartSeries } from './types'
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   // Prepare data

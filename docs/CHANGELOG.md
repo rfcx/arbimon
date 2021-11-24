@@ -10,12 +10,36 @@ Allowed categories:
 - Breaking changes
 --->
 
-# 0.0.7 (2021-11-25)
+# 0.0.10 (2021-12-8)
+
+To be update
+
+# 0.0.9 (2021-11-25)
+
+## Features
+
+- **activity-overview:** Export species information match to the table species as csv [#282]
+- **activity-overview:** Species table which display each species detection, detection frequency, occupied sites, and naive occupancy [#281]
+- **activity-overview:** Group detection, detection frequency, and occupancy map [#255][#257]
+- **activity-overview:** Group detection, detection frequency, and occupancy line chart [#259][#260]
+- **selection:** Add taxon in dataset comparison filter [#219]
+- **selection:** Remove taxon toggle from map [#267]
+
+# 0.0.8 (2021-11-22)
+
+## Features
+
+- **inclusion:** New inclusive color theme (better contrast & color-blindness support) [#300]
+- **overview:** Sitemap on overview page [#277]
+
+# 0.0.7 (2021-11-19)
 
 ## Features
 
 - **overview:** Puerto Rico project information [#278]
 - **activity-patterns:** Puerto Rico "Predicted Occupancy" maps [#285]
+- **activity-patterns:** Species information from IUCN [#165][#294]
+- **activity-patterns:** Group detection, detection frequency, and occupancy map [#261]
 
 ## Bug Fixes
 

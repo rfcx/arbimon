@@ -1,47 +1,23 @@
 <template>
-  <div class="taxon-picker flex flex-row items-center">
-    <div
-      v-if="displayTaxonomies"
-      class="flex flex-row"
-    >
-      <div
-        v-for="a in taxons"
-        :key="a.name"
-      >
-        <input
-          :id="`species-richness-by-location-taxons-${a.name}`"
-          v-model="taxon"
-          type="radio"
-          :value="a.name"
-          class="hidden"
-        >
-        <label
-          :for="`species-richness-by-location-taxons-${a.name}`"
-          class="inline-block text-center text-lg w-7 h-7 mr-2"
-        >
-          {{ a.symbol }}
-        </label>
-      </div>
-    </div>
-    <div
-      v-for="(item, idx) in mapOptions"
+  <div class="float-right">
+    <template
+      v-for="(item, idx) in mapStyleOptions"
       :key="item.id"
     >
       <button
         class="btn"
         :class="{
-          'bg-brand-primary': mapStyle === item.id,
-          'rounded-r-none': idx === 0,
-          'rounded-l-none': idx === mapOptions.length - 1,
-          'mr-2': idx === mapOptions.length - 1
+          'bg-brand-primary': mapStyle === item.style,
+          'rounded-r-none': idx !== mapStyleOptions.length - 1,
+          'rounded-l-none': idx !== 0
         }"
-        @click="setMapStyle(item.id)"
+        @click="emitMapStyle(item.style)"
       >
         {{ item.name }}
       </button>
-    </div>
+    </template>
     <button
-      class="btn"
+      class="btn ml-2"
       @click="emitShowLabelsToggle()"
     >
       <input
@@ -54,9 +30,3 @@
   </div>
 </template>
 <script src="./map-tool-menu.ts" lang="ts"></script>
-<style lang="scss" scoped>
-.taxon-picker input[type='radio']:checked + label {
-  color: #000;
-  background-color: #fff;
-}
-</style>

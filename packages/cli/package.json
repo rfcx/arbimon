@@ -10,11 +10,12 @@
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "serve": "TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
+    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
     "test": "jest src"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
+    "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
     "lodash": "^4.17.21",
