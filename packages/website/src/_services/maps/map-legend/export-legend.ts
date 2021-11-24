@@ -23,6 +23,10 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
   const legendEntriesHeight = (maxRadiusPixels * 2) * DEFAULT_GAP_Y
   const containerHeight = (CONTAINER_PADDING_Y * 2) + (title ? legendEntriesHeight + TITLE_HEIGHT : legendEntriesHeight)
 
+  const calculateYPosition = (d: LegendEntry, idx: number): number => {
+    return CONTAINER_PADDING_Y + (title ? TITLE_HEIGHT : 0) + ((maxRadius * 2) + DEFAULT_GAP_Y) * idx
+  }
+
   const svg = container
     .append('svg')
     .attr('width', CONTAINER_DEFAULT_WIDTH)
@@ -47,13 +51,13 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
 
   legend.append('circle')
     .attr('cx', CONTAINER_PADDING_X + DEFAULT_GAP_X + maxRadiusPixels)
-    .attr('cy', (d, i) => CONTAINER_PADDING_Y + calculateYAxis(maxRadiusPixels, i) + (title ? TITLE_HEIGHT : 0))
+    .attr('cy', calculateYPosition)
     .attr('r', (d, i) => legendEntries[i].pixels)
     .style('fill', color)
 
   legend.append('text')
     .attr('x', CONTAINER_PADDING_X + (DEFAULT_GAP_X * 2) + (maxRadiusPixels * 2))
-    .attr('y', (d, i) => CONTAINER_PADDING_Y + calculateYAxis(maxRadiusPixels, i) + (title ? TITLE_HEIGHT : 0))
+    .attr('y', calculateYPosition)
     .attr('dy', '.3em')
     .text((d, i) => legendEntries[i].value)
     .attr('fill', '#000')
@@ -61,10 +65,6 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
     .style('font-size', '14px')
 
   return container.node()
-}
-
-function calculateYAxis (maxRadius: number, idx: number): number {
-  return ((maxRadius * 2) + DEFAULT_GAP_Y) * idx
 }
 
 const prettyRound = (input: number): number => {
@@ -77,7 +77,7 @@ export const getLegendEntries = (maxPixels: number, maxValue: number, legendEntr
 
   // Round maxValue up to nice number (& scale pixels proportionally)
   const maxValuePretty = prettyRound(maxValue)
-  const maxPixelsLegend = maxPixels / maxValue * maxValuePretty
+  const maxPixelsLegend = maxPixels * maxValuePretty / maxValue
 
   // Create requested number of entries
   return Array.from({ length: legendEntryCount }, (_, idx) => ({
