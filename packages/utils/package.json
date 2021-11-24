@@ -10,7 +10,7 @@
     "lint:prettier": "prettier . --check",
     "lint": "run-s lint:*",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "test": "jest src"
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest"
   },
   "dependencies": {
     "dayjs": "^1.10.7",

@@ -13,7 +13,7 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
     "serve": "vite",
-    "test": "jest src",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest",
     "test-ui:explorer": "cypress open"
   },
   "active-issues": {
