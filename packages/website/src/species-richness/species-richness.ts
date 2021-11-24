@@ -5,7 +5,7 @@ import { Site, Species } from '~/api'
 import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, Filter } from '~/dataset-filters'
+import { ColoredFilter, ComparisonFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset, getExportGroupName } from '~/dataset-filters/functions'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -31,7 +31,7 @@ const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
 })
 export default class SpeciesRichnessPage extends Vue {
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
-  filters: Filter[] = []
+  filters: ComparisonFilter[] = []
   detectionCounts: number[] = []
   chartData: GroupedBarChartItem[] = []
   chartExportName = ''
@@ -88,9 +88,11 @@ export default class SpeciesRichnessPage extends Vue {
       return { color, data, ...filter, maxValues: {} }
     })
     // TODO 209 - Do this natively in the API instead of after the fact
-    const allTaxonClassNames = TAXONOMY_CLASSES.map(c => c.name)
     const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[TAXONOMY_CLASS_ALL.name] as number))))
-    return intermediate.map(ds => ({ ...ds, maxValues: Object.fromEntries(allTaxonClassNames.map(n => [n, maxAll])) }))
+    return intermediate.map(ds => ({
+      ...ds,
+      maxValues: Object.fromEntries([...TAXONOMY_CLASSES, TAXONOMY_CLASS_ALL].map(c => [c.name, maxAll]))
+    }))
   }
 
   getTableData (datasets: ColoredDataset[]): DetectedSpeciesItem[] {

@@ -35,6 +35,13 @@ export function downloadZip (data: string, filename: string): void {
   downloadFile(data, filename, 'zip')
 }
 
+export async function downloadSpreadsheet (jsonData: any, filename: string, fileType: XLSX.BookType = 'csv', sheetName: string = 'Worksheet'): Promise<void> {
+  const worksheet = XLSX.utils.json_to_sheet(jsonData)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
+  await XLSX.writeFile(workbook, filename, { bookType: fileType, type: 'string' })
+}
+
 export const zipAndDownload = async (files: FileData[], folderName: string): Promise<void> =>
   await zipFiles(files, folderName)
     .then(url => downloadZip(url, folderName))

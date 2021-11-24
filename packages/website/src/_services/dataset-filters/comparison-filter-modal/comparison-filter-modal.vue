@@ -1,5 +1,7 @@
 <template>
-  <modal-popup name="buildComparisonModal">
+  <modal-popup
+    name="buildComparisonModal"
+  >
     <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
       Build comparison
     </h1>
@@ -60,6 +62,16 @@
           </label>
         </div>
       </div>
+      <!-- Taxon -->
+      <div
+        v-else-if="currentActiveMenuId === 'taxon'"
+        class="w-full"
+      >
+        <filter-taxon
+          :initial-taxon-classes="selectedTaxons"
+          @emit-selected-taxons="updateSelectedTaxons"
+        />
+      </div>
       <div
         v-else
         class="p-4 flex"
@@ -103,7 +115,7 @@
       </button>
       <button
         class="btn btn-primary"
-        @click="emitApply()"
+        @click="emitApply"
       >
         Apply
       </button>

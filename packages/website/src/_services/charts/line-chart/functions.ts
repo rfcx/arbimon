@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 import { generateHorizontalLegend, getLegendGroupNames } from '..'
-import { LineChartConfig, LineChartSeries } from '.'
+import { LineChartConfig, LineChartSeries } from './types'
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data

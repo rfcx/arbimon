@@ -1,10 +1,12 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
+import { downloadPng } from '@rfcx-bio/utils/file'
+
 import { svgToPngData } from '~/charts'
-import { downloadPng } from '~/utils/file'
 import { clearChart } from '..'
-import { generateChartExport, generateChartInternal, GroupedBarChartItem } from '.'
+import { generateChartExport, generateChartInternal } from './functions'
+import { GroupedBarChartItem } from './types'
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] }) chartData!: GroupedBarChartItem[]
