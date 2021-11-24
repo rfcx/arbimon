@@ -4,10 +4,9 @@ import { Prop } from 'vue-property-decorator'
 import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { getExportFilterName } from '~/dataset-filters/functions'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { MapConfig } from '~/maps/types'
 
 interface DropdownOption {
   label: string
@@ -26,20 +25,24 @@ export default class ActivityOverviewByLocation extends Vue {
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   isShowLabels = true
-  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
+  mapStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
   selectedDatasetType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
   datasetTypes: DropdownOption[] = [
     { label: 'Detection', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
     { label: 'Detection frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
-    { label: 'Occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
+    { label: 'Naive occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
   ]
 
   config: MapConfig = {
     sourceMapId: '',
     center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
     zoom: 9
+  }
+
+  get hasNoData (): boolean {
+    return this.datasets.length === 0
   }
 
   get columnCount (): number {
@@ -49,21 +52,9 @@ export default class ActivityOverviewByLocation extends Vue {
     }
   }
 
-  get hasNoData (): boolean {
-    return this.datasets.length === 0
-  }
-
-  setMapStyle (style: string): void {
-    this.mapStyle = style
-  }
-
-  setShowLabelsToggle (isShowLabels: boolean): void {
-    this.isShowLabels = isShowLabels
-  }
-
-  mapMoved (config: MapConfig): void {
-    this.config = config
-  }
+  propagateMapMove (config: MapConfig): void { this.config = config }
+  propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
+  propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, type: string): string {
     const { startDate, endDate, sites } = dataset

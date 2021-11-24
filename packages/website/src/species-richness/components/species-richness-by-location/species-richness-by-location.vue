@@ -7,10 +7,9 @@
         Distinct species by site
       </h2>
       <map-tool-menu-component
-        display-taxonomies="true"
-        @emit-taxonomy-value="setTaxonomyValue"
-        @emit-map-style="setMapStyle"
-        @emit-show-labels-toggle="setShowLabelsToggle"
+        :map-style="mapStyle"
+        @emit-map-style="propagateMapStyle"
+        @emit-show-labels-toggle="propagateToggleLabels"
       />
     </div>
     <no-data-panel
@@ -26,7 +25,7 @@
         v-for="(dataset, idx) in datasets"
         :key="idx"
         :dataset="dataset"
-        :data-key="taxon"
+        :data-key="mapDataKey"
         :get-popup-html="getPopupHtml"
         :map-id="`species-richness-by-location-${idx}`"
         :map-config="config"
@@ -34,7 +33,7 @@
         :map-export-name="mapExportName(dataset)"
         :is-show-labels="isShowLabels"
         class="w-full"
-        @emit-map-moved="mapMoved"
+        @emit-map-moved="propagateMapMove"
       />
     </div>
   </div>

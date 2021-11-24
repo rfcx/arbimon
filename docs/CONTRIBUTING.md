@@ -1,6 +1,6 @@
 # Biodiversity Project - Developer Style Guide
 
-_This is a living document. If you want to propose a new standard/convention, feel free to create PR!_
+_This is a living document. If you want to propose a new standard/convention, feel free to PR!_
 
 ## Vue
 

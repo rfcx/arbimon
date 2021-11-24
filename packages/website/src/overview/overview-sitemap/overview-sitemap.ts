@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MapConfig } from '~/maps'
-import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
+import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
 import { generatePopupHtml, transformToMapDataset } from './functions'
 
@@ -27,7 +27,5 @@ export default class OverviewSitemap extends Vue {
     this.dataset = transformToMapDataset(this.store.sites)
   }
 
-  mapMoved (config: MapConfig): void {
-    this.config = config
-  }
+  propagateMapMove (config: MapConfig): void { this.config = config }
 }
