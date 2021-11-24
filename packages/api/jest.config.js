@@ -5,6 +5,7 @@ import tsjestUtils from 'ts-jest/utils/index.js'
 import tsconfig from './tsconfig.build.json'
 
 export default {
+  rootDir: 'src',
   moduleFileExtensions: [
     'js',
     'ts',
@@ -12,7 +13,7 @@ export default {
   ],
   moduleNameMapper: tsjestUtils.pathsToModuleNameMapper(
     tsconfig.compilerOptions.paths,
-    { prefix: '<rootDir>/' + tsconfig.compilerOptions.baseUrl }
+    { prefix: '<rootDir>/' }
   ),
   transform: {
     '^.+\\.ts$': 'ts-jest'
