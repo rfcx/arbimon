@@ -12,7 +12,7 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "preview": "pnpm build && cross-env NODE_ENV=\"production\" node dist/src/index.js",
     "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest src --passWithNoTests"
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
