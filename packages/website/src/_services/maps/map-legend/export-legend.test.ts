@@ -1,13 +1,13 @@
-import { getLegendSizes as sut } from './index'
+import { getLegendEntries } from './export-legend'
 
-describe('getLegendSizes', () => {
+describe('getLegendEntries', () => {
   test('Returns requested number of legend entries', () => {
-    const legendSizes = sut(10.0, 100, 5)
+    const legendSizes = getLegendEntries(10.0, 100, 5)
     expect(legendSizes.length).toBe(5)
   })
 
   test('Returns empty array if maxValue is zero', () => {
-    const legendSizes = sut(10.0, 0, 5)
+    const legendSizes = getLegendEntries(10.0, 0, 5)
     expect(legendSizes.length).toBe(0)
   })
 
@@ -17,7 +17,7 @@ describe('getLegendSizes', () => {
     const inputMaxValues = [0.1398, 1, 1.7, 5, 10, 37.1415, 123.123, 1923]
 
     // Act
-    const results = inputMaxValues.map(inputMaxValue => sut(maxPixels, inputMaxValue, 5))
+    const results = inputMaxValues.map(inputMaxValue => getLegendEntries(maxPixels, inputMaxValue, 5))
 
     // Assert
     results.forEach((result, i) => {
