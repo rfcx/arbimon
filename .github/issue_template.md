@@ -3,7 +3,7 @@ name: PBI
 about: An incremental improvement to our product
 title: ''
 labels: 'feature'
-assignees: '' # charles-allen Nutto55 naluinui antonyharfield
+assignees: ''
 ---
 
 <!--
@@ -17,7 +17,7 @@ How does the feature work?
 - Write example flows & calculations
 -->
 
-## Exclusions
+## 🙅 Exclusions
 
 <!--
 If the exclusions are covered by other PBIs, link them here
@@ -25,7 +25,7 @@ If the exclusions are covered by other PBIs, link them here
 
 - Don't...
 
-## Modules
+## 👩‍💻 Modules
 
 <!--
 Identify APIs methods, UI components, helpers
@@ -37,7 +37,9 @@ Identify APIs methods, UI components, helpers
   _Does not know about..._
 - ...
 
-## DoR Checklist
+## ✅ DoR Checklist
+
+<!-- Check each item ONLY after you have completed it -->
 
 _Is this PBI...?_
 
