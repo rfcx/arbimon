@@ -54,12 +54,10 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
   // adding x scale to the svg by setting
   svg.append('g')
     .attr('transform', `translate(${config.margins.left}, ${chartHeight})`)
-    .transition()
     .call(xAxis)
 
   // adding y scale to the svg by setting
   svg.append('g')
-    .transition()
     .attr('transform', `translate(${config.margins.left}, 0)`)
     .call(yAxis)
 
