@@ -12,11 +12,13 @@ import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } f
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
 
+// TODO ???: Reduce and move to somewhere for center use
 interface DropDownOption {
   label: string
   value: ActivityPatternsDataByTimeType
 }
 
+// TODO ???: Reduce and move to somewhere for center use
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
   hour: [0, 23],
   day: [1, 31],

@@ -2,12 +2,11 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/dataset-filters/functions'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapDataSet } from '~/maps/map-bubble'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { MapConfig } from '~/maps/types'
 
 const DEFAULT_PREFIX = 'Species-By-Site'
 
@@ -20,16 +19,18 @@ const DEFAULT_PREFIX = 'Species-By-Site'
 export default class SpeciesRichnessByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
-  taxons = TAXONOMY_CLASSES
-  taxon = this.taxons[0].name
   isShowLabels = true
-  mapStyle = 'mapbox://styles/mapbox/satellite-streets-v11'
+  mapStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateHtmlPopup
 
   config: MapConfig = {
     sourceMapId: '',
     center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
     zoom: 9
+  }
+
+  get mapDataKey (): string {
+    return TAXONOMY_CLASS_ALL.name
   }
 
   get hasData (): boolean {
@@ -43,21 +44,9 @@ export default class SpeciesRichnessByLocation extends Vue {
     }
   }
 
-  setTaxonomyValue (taxon: string): void {
-    this.taxon = taxon
-  }
-
-  setMapStyle (style: string): void {
-    this.mapStyle = style
-  }
-
-  setShowLabelsToggle (isShowLabels: boolean): void {
-    this.isShowLabels = isShowLabels
-  }
-
-  mapMoved (config: MapConfig): void {
-    this.config = config
-  }
+  propagateMapMove (config: MapConfig): void { this.config = config }
+  propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
+  propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet): string {
     const { startDate, endDate, sites } = dataset

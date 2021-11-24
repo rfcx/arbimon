@@ -1,6 +1,13 @@
 import { Dayjs } from 'dayjs'
+import { LngLatLike } from 'mapbox-gl'
 
 import { Site } from '~/api'
+
+export interface MapConfig {
+  sourceMapId: string
+  center: LngLatLike
+  zoom: number
+}
 
 export interface MapDataSet {
   startDate: Dayjs
@@ -9,6 +16,7 @@ export interface MapDataSet {
   color: string
   data: MapSiteData[]
   maxValues: { [key: string]: number }
+  title?: string
 }
 
 export interface MapSiteData {
