@@ -1,5 +1,7 @@
 import * as d3 from 'd3'
 
+import { getLegendEntries, LegendEntry } from './index'
+
 // pixels
 const CONTAINER_DEFAULT_WIDTH = 160
 const DEFAULT_ROW_HEIGHT = 16
@@ -8,11 +10,6 @@ const CONTAINER_PADDING_Y = 20
 const DEFAULT_GAP_X = 10
 const DEFAULT_GAP_Y = 5
 const TITLE_HEIGHT = DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y
-
-export interface LegendEntry {
-  pixels: number
-  value: number
-}
 
 export const generateNormalizeMapLegend = (color: string, maxValue: number, maxRadius: number, legendEntriesNumber = 5, title?: string): Element | null => {
   if (maxValue === 0) return null
@@ -65,23 +62,4 @@ export const generateNormalizeMapLegend = (color: string, maxValue: number, maxR
     .style('font-size', '14px')
 
   return container.node()
-}
-
-const prettyRound = (input: number): number => {
-  return Math.ceil(input) // TODO ??? - Make this prettier...
-}
-
-export const getLegendEntries = (maxPixels: number, maxValue: number, legendEntryCount: number): LegendEntry[] => {
-  // Only support positive integer values
-  if (maxValue <= 0) return []
-
-  // Round maxValue up to nice number (& scale pixels proportionally)
-  const maxValuePretty = prettyRound(maxValue)
-  const maxPixelsLegend = maxPixels * maxValuePretty / maxValue
-
-  // Create requested number of entries
-  return Array.from({ length: legendEntryCount }, (_, idx) => ({
-    pixels: maxPixelsLegend * ((idx + 1) / legendEntryCount),
-    value: maxValuePretty * ((idx + 1) / legendEntryCount)
-  }))
 }
