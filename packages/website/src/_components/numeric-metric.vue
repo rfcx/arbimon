@@ -23,7 +23,6 @@ export default class NumericMetric extends Vue {
   }
 
   get totalShortScale (): string | null {
-    console.log(this.totalValue)
     return this.totalValue === null ? this.totalValue : numeral(this.totalValue).format('0a')
   }
 
