@@ -72,19 +72,19 @@ jobs:
           map: |
             {
               "charles-allen": {
-                "SLACK_MENTION_USERS": 'U6LT2N3SS'
+                "SLACK_MENTION_USERS": "U6LT2N3SS"
               },
               "Nutto55": {
-                "SLACK_MENTION_USERS": 'UC2NVRCAY'
+                "SLACK_MENTION_USERS": "UC2NVRCAY"
               },
               "naluinui": {
-                "SLACK_MENTION_USERS": 'U19GA1FT2'
+                "SLACK_MENTION_USERS": "U19GA1FT2"
               },
               "antonyharfield": {
-                "SLACK_MENTION_USERS": 'U09HZUDUY'
+                "SLACK_MENTION_USERS": "U09HZUDUY"
               },
               ".*": {
-                "SLACK_MENTION_USERS": 'U6LT2N3SS'
+                "SLACK_MENTION_USERS": "U6LT2N3SS"
               }
             }
 
