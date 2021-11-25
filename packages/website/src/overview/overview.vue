@@ -4,7 +4,11 @@
     <p class="text-center opacity-50">
       Last generated/synced at: November 18, 2021 16:03
     </p>
-    <overview-metrics class="mt-5" />
+    <overview-metrics
+      v-if="metrics"
+      class="mt-5"
+      :metrics="metrics"
+    />
     <overview-sitemap class="mt-5" />
     <page-title
       class="mt-5"
