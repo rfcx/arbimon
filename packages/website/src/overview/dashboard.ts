@@ -5,7 +5,7 @@ import { Metrics } from '@rfcx-bio/common/api-types/dashboard'
 
 import { dashboardService } from '~/api/dashboard-service'
 import { BiodiversityStore } from '~/store'
-import DashboardSitemap from './components/overview-sitemap/overview-sitemap.vue'
+import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
 import ProjectInfo from './components/project-info/project-info.vue'
 import ProjectMetrics from './components/project-metrics/project-metrics.vue'
 

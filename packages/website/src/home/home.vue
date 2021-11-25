@@ -15,8 +15,7 @@
             class="mt-2"
           >
             <router-link
-
-              :to="{ name: 'overview', params: { projectId: project.id }}"
+              :to="{ name: dashboardRoutename, params: { projectId: project.id }}"
             >
               {{ project.name }}
             </router-link>
