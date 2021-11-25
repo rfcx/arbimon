@@ -2,6 +2,10 @@
   // Relative paths
   "typescript.tsdk": "../../node_modules/typescript/lib",
 
+  // ESM
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+
   // General
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
@@ -15,8 +19,22 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "javascript.preferences.useAliasesForRenames": false,
   "typescript.preferences.useAliasesForRenames": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
 
-  // ESM
-  "javascript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.preferences.importModuleSpecifierEnding": "js"
+  // Formatter: Stylelint
+  "[css]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
+  "[scss]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
+
+  // Formatter: ESLint
+  "[javascript]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
+  "[typescript]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
+  "[typescriptreact]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
+  "[vue]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
+
+  // Formatter: VSCode
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
 }
