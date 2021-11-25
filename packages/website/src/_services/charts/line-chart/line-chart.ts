@@ -2,7 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { clearChart } from '..'
-import { generateChart } from './functions'
+import { generateChartInternal } from './functions'
 import { LineChartConfig, LineChartSeries } from './types'
 
 export default class LineChartComponent extends Vue {
@@ -28,7 +28,7 @@ export default class LineChartComponent extends Vue {
 
     const width = (document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 500)
     const config = { ...this.config, width }
-    const chart = generateChart(this.datasets, config)
+    const chart = generateChartInternal(this.datasets, config)
     if (!chart) return
 
     clearChart(this.domId)

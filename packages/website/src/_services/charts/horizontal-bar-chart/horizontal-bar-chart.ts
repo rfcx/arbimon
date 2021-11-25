@@ -1,8 +1,11 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { clearChart, exportChartWithElement } from '..'
-import { generateChart } from './functions'
+import { downloadPng } from '@rfcx-bio/utils/file'
+
+import { svgToPngData } from '~/charts'
+import { clearChart } from '..'
+import { generateChartExport, generateChartInternal } from './functions'
 import { GroupedBarChartItem } from './types'
 
 export default class HorizontalBarChartComponent extends Vue {
@@ -33,11 +36,11 @@ export default class HorizontalBarChartComponent extends Vue {
       fontColor: 'white'
     }
 
-    const chart = generateChart(this.chartData, config)
-    if (!chart) return
+    const svg = generateChartInternal(this.chartData, config)
+    if (!svg) return
 
     clearChart(id)
-    document.getElementById(id)?.appendChild(chart)
+    document.getElementById(id)?.appendChild(svg)
   }
 
   async downloadChart (): Promise<void> {
@@ -46,13 +49,11 @@ export default class HorizontalBarChartComponent extends Vue {
       margins: { top: 40, right: 40, bottom: 50, left: 100 },
       fontColor: 'black'
     }
-    const chart = generateChart(this.chartData, config, true)
-    if (!chart) return
+    const svg = generateChartExport(this.chartData, config)
+    if (!svg) return
 
-    // TODO: 109 add legend if needed
-    // TODO: 107 function to compute shortname of dataset to add to legend
-    setTimeout(() => {
-      void exportChartWithElement(chart, this.chartExportName)
-    }, 200)
+    const { width, height } = svg.viewBox.baseVal
+    const png = await svgToPngData({ svg, width, height })
+    downloadPng(png, this.chartExportName)
   }
 }
