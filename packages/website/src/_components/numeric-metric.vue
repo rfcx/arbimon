@@ -1,7 +1,11 @@
 <template>
-  <div class="rounded-2xl bg-steel-grey text-center p-4 w-50">
-    <p class="font-bold text-3xl">
+  <div class="rounded-xl bg-steel-grey text-center p-4 min-w-32 inline-block">
+    <p class="font-bold text-4xl">
       {{ valueShortScale }}
+      <span
+        v-if="totalShortScale"
+        class="text-base font-normal"
+      >/ {{ totalShortScale }}</span>
     </p>
     <p>
       {{ subtitle }}
@@ -18,7 +22,13 @@ export default class NumericMetric extends Vue {
     return numeral(this.value).format('0a')
   }
 
+  get totalShortScale (): string | null {
+    console.log(this.totalValue)
+    return this.totalValue === null ? this.totalValue : numeral(this.totalValue).format('0a')
+  }
+
   @Prop() value!: number
+  @Prop({ default: null }) totalValue!: number | null
   @Prop() subtitle!: string
 }
 </script>
