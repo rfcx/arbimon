@@ -5,18 +5,18 @@ import { Metrics } from '@rfcx-bio/common/api-types/dashboard'
 
 import { dashboardService } from '~/api/dashboard-service'
 import { BiodiversityStore } from '~/store'
-import OverviewMetrics from './components/overview-metrics/overview-metrics.vue'
-import OverviewSitemap from './components/overview-sitemap/overview-sitemap.vue'
+import DashboardSitemap from './components/overview-sitemap/overview-sitemap.vue'
 import ProjectInfo from './components/project-info/project-info.vue'
+import ProjectMetrics from './components/project-metrics/project-metrics.vue'
 
 @Options({
   components: {
-    OverviewMetrics,
-    OverviewSitemap,
+    ProjectMetrics,
+    DashboardSitemap,
     ProjectInfo
   }
 })
-export default class OverviewPage extends Vue {
+export default class DashboardPage extends Vue {
   @Inject() readonly store!: BiodiversityStore
   metrics: Metrics | null = null
 

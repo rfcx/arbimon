@@ -6,7 +6,7 @@ import * as PAGES from './pages'
 
 export const ROUTE_NAMES = Object.freeze({
   home: 'home',
-  overview: 'overview',
+  dashboard: 'dashboard',
   species_richness: 'species_richness',
   activity_overview: 'activity_overview',
   activity_patterns: 'activity_patterns',
@@ -27,8 +27,8 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        name: ROUTE_NAMES.overview,
-        component: PAGES.Overview
+        name: ROUTE_NAMES.dashboard,
+        component: PAGES.Dashboard
       },
       {
         path: 'species-richness',
@@ -38,7 +38,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'activity-overview',
         name: ROUTE_NAMES.activity_overview,
-        component: PAGES.ActivityOverviewPage
+        component: PAGES.ActivityOverview
       },
       {
         path: 'activity-patterns/:speciesSlug?',

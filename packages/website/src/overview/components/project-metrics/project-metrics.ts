@@ -3,6 +3,6 @@ import { Prop } from 'vue-property-decorator'
 
 import { Metrics } from '@rfcx-bio/common/api-types/dashboard'
 
-export default class OverviewMetrics extends Vue {
+export default class ProjectMetrics extends Vue {
   @Prop() metrics!: Metrics
 }
