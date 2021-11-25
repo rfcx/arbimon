@@ -12,7 +12,7 @@ Allowed categories:
 
 # 0.0.10 (2021-12-8)
 
-To be update
+- **export:** Legend for bar & line charts [#109]
 
 # 0.0.9 (2021-11-25)
 
