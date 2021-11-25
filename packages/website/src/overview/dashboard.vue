@@ -4,7 +4,7 @@
     <p class="text-center opacity-50">
       Last generated/synced at: November 18, 2021 16:03
     </p>
-    <overview-metrics
+    <project-metrics
       v-if="metrics"
       class="mt-5"
       :metrics="metrics"
@@ -18,4 +18,4 @@
     <project-info class="mt-5" />
   </div>
 </template>
-<script src="./overview.ts" lang="ts"></script>
+<script src="./dashboard.ts" lang="ts"></script>

@@ -37,7 +37,7 @@ class AuthClientClass implements AuthClient {
 
         // Redirects
         if (redirectAfterAuth !== undefined && redirectAfterAuth !== '/') return redirectAfterAuth
-        if (this.store.selectedProject) return { name: ROUTE_NAMES.overview, params: { projectId: this.store.selectedProject.id } }
+        if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectId: this.store.selectedProject.id } }
         return '/'
       } else {
         await this.initAuthState()
