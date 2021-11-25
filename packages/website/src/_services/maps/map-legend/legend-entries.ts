@@ -13,11 +13,11 @@ export const getLegendEntries = (maxPixels: number, maxValue: number, legendEntr
 
   // Round maxValue up to nice number (& scale pixels proportionally)
   const maxValuePretty = prettyRound(maxValue)
-  const maxPixelsLegend = maxValue > 1 ? maxPixels * maxValuePretty / maxValue : maxPixels
+  const maxPixelsLegend = maxValue < 1 ? maxPixels : maxPixels * maxValuePretty / maxValue
 
   // Create requested number of entries
   return Array.from({ length: legendEntryCount }, (_, idx) => ({
     pixels: maxPixelsLegend * ((idx + 1) / legendEntryCount),
-    value: maxValue > 1 ? maxValuePretty * ((idx + 1) / legendEntryCount) : (maxValue * (idx + 1) / legendEntryCount)
+    value: maxValue < 1 ? maxValue * (idx + 1) / legendEntryCount : maxValuePretty * ((idx + 1) / legendEntryCount)
   }))
 }
