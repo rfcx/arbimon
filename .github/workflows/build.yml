@@ -112,7 +112,8 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED* - <https://www.youtube.com/watch?v=fXLicO0CRvk|OH NO!>'
-          footer: '[${{ env.SLACK_MENTION_USERS }}] <{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          # footer: '[${{ env.SLACK_MENTION_USERS }}] <{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          footer: ${{ env.SLACK_MENTION_USERS }}
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
