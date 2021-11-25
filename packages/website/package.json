@@ -9,7 +9,7 @@
     "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint .",
-    "lint": "run-s lint:*",
+    "lint": "concurrently -m 1 \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
     "serve": "vite",
