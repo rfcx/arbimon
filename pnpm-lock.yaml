@@ -19,6 +19,7 @@ importers:
       '@vue/compiler-sfc': ^3.2.21
       '@vue/eslint-config-standard': ^6.1.0
       '@vue/eslint-config-typescript': ^9.0.1
+      '@vue/test-utils': ^2.0.0-rc.16
       babel-jest: ^24.9.0
       concurrently: ^6.4.0
       cross-env: ^7.0.3
@@ -77,6 +78,7 @@ importers:
       '@vue/compiler-sfc': 3.2.21
       '@vue/eslint-config-standard': 6.1.0_5f9b2f3a44dac3bc0a792ca144f1d0b4
       '@vue/eslint-config-typescript': 9.0.1_6e2aa7baa83ea64b77c81400f52e762e
+      '@vue/test-utils': 2.0.0-rc.16
       babel-jest: 24.9.0_@babel+core@7.16.0
       concurrently: 6.4.0
       cross-env: 7.0.3
@@ -190,7 +192,6 @@ importers:
       '@types/d3': ^7.1.0
       '@types/mapbox-gl': ^2.4.2
       '@types/numeral': ^2.0.2
-      '@vue/test-utils': ^2.0.0-rc.16
       '@vueuse/components': ^6.7.6
       '@vueuse/core': ^6.7.6
       '@windicss/plugin-animations': ^1.0.9
@@ -237,7 +238,6 @@ importers:
       '@types/d3': 7.1.0
       '@types/mapbox-gl': 2.4.2
       '@types/numeral': 2.0.2
-      '@vue/test-utils': 2.0.0-rc.16_vue@3.2.21
       '@windicss/plugin-animations': 1.0.9
       '@windicss/plugin-interaction-variants': 1.0.0
       unplugin-icons: 0.12.18_7eda3f731498845f803d0ed98f571d36
@@ -2775,12 +2775,10 @@ packages:
   /@vue/shared/3.2.21:
     resolution: {integrity: sha512-5EQmIPK6gw4UVYUbM959B0uPsJ58+xoMESCZs3N89XyvJ9e+fX4pqEPrOGV8OroIk3SbEvJcC+eYc8BH9JQrHA==}
 
-  /@vue/test-utils/2.0.0-rc.16_vue@3.2.21:
+  /@vue/test-utils/2.0.0-rc.16:
     resolution: {integrity: sha512-TubikDVkI2LuRKRPSLv3lYpbpvvucT2DIcGqfBVpvYs4W19u0EBTJEdmfwmSuLY7H1TyAr9Stur3PI1sWWvTGQ==}
     peerDependencies:
       vue: ^3.0.1
-    dependencies:
-      vue: 3.2.21
     dev: true
 
   /@vueuse/components/6.7.6_vue@3.2.21:
