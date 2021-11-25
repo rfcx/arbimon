@@ -12,7 +12,7 @@ export const routesDashboard: FastifyPluginAsync = async (app, option): Promise<
     const { projectId } = req.params
     if (!projectId) throw ApiMissingParam('projectId')
 
-    const metrics = getMetrics()
+    const metrics = await getMetrics()
 
     return {
       metrics
@@ -21,7 +21,7 @@ export const routesDashboard: FastifyPluginAsync = async (app, option): Promise<
 }
 
 // TODO: Update to query from DB
-function getMetrics (): Metrics {
+async function getMetrics (): Promise<Metrics> {
   return {
     detectionCount: 50000,
     siteCount: 200,
