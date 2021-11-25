@@ -28,7 +28,7 @@ jobs:
           map: |
             {
               ".*": {
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}"
               }
             }
 
