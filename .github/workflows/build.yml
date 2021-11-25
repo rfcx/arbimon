@@ -114,6 +114,6 @@ jobs:
           message_format: '{emoji} *FAILED* - <https://www.youtube.com/watch?v=fXLicO0CRvk|OH NO!>'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
           mention_users_when: 'failure,warnings'
-          mention_users: '${{ env.SLACK_MENTION_USERS }}'
+          mention_users: 'U6LT2N3SS'
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
