@@ -72,19 +72,19 @@ jobs:
           map: |
             {
               "charles-allen": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS"
+                "SLACK_MENTION_USERS": 'U6LT2N3SS'
               },
               "Nutto55": {
-                "SLACK_MENTION_USERS": "UC2NVRCAY"
+                "SLACK_MENTION_USERS": 'UC2NVRCAY'
               },
               "naluinui": {
-                "SLACK_MENTION_USERS": "U19GA1FT2"
+                "SLACK_MENTION_USERS": 'U19GA1FT2'
               },
               "antonyharfield": {
-                "SLACK_MENTION_USERS": "U09HZUDUY"
+                "SLACK_MENTION_USERS": 'U09HZUDUY'
               },
               ".*": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS"
+                "SLACK_MENTION_USERS": 'U6LT2N3SS'
               }
             }
 
@@ -112,7 +112,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED* - <https://www.youtube.com/watch?v=fXLicO0CRvk|OH NO!>'
-          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          footer: '[${{ env.SLACK_MENTION_USERS }}] <{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
           mention_users_when: 'failure,warnings'
           mention_users: '${{ env.SLACK_MENTION_USERS }}'
         env:
