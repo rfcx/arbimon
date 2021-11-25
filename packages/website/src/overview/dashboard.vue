@@ -9,7 +9,7 @@
       class="mt-5"
       :metrics="metrics"
     />
-    <overview-sitemap class="mt-5" />
+    <dashboard-sitemap class="mt-5" />
     <page-title
       class="mt-5"
       :page-title="store.selectedProject.name"

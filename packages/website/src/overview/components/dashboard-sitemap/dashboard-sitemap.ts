@@ -11,7 +11,7 @@ import { generatePopupHtml, transformToMapDataset } from './functions'
     MapBubbleComponent
   }
 })
-export default class OverviewSitemap extends Vue {
+export default class DashboardSitemap extends Vue {
   @Inject() readonly store!: BiodiversityStore
 
   dataset: MapDataSet | null = null

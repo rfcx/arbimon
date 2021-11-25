@@ -5,13 +5,13 @@
       :dataset="dataset"
       data-key="site"
       :get-popup-html="getPopupHtml"
-      map-id="overview-sitemap"
+      map-id="dashboard-sitemap"
       :map-config="config"
-      map-export-name="overview-sitemap"
+      map-export-name="dasboard-sitemap"
       :max-circle-radius-pixels="5.0"
       class="w-full"
       @emit-map-moved="propagateMapMove"
     />
   </div>
 </template>
-<script src="./overview-sitemap.ts" lang="ts"></script>
+<script src="./dashboard-sitemap.ts" lang="ts"></script>
