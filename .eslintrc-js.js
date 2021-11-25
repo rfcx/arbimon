@@ -1,5 +1,4 @@
 module.exports = {
-  cabbages
   extends: ['plugin:jest/recommended', 'standard-with-typescript'],
   plugins: ['simple-import-sort', 'unicorn', 'unused-imports'],
   rules: {
