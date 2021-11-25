@@ -117,3 +117,4 @@ jobs:
           mention_users: '${{ env.SLACK_MENTION_USERS }}'
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
+          SLACK_MENTION_USERS: '${{ env.SLACK_MENTION_USERS }}'
