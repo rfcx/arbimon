@@ -9,6 +9,39 @@ jobs:
   Main:
     runs-on: ubuntu-20.04
     steps:
+      - name: 'Setup: Node'
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
+        # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
+        with:
+          node-version: '16'
+
+      - name: 'Setup: Get author'
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        with:
+          key: '${{ github.actor }}'
+          map: |
+            {
+              "charles-allen": {
+                "SLACK_MENTION_USERS": "U6LT2N3SS"
+              },
+              "Nutto55": {
+                "SLACK_MENTION_USERS": "UC2NVRCAY"
+              },
+              "naluinui": {
+                "SLACK_MENTION_USERS": "U19GA1FT2"
+              },
+              "antonyharfield": {
+                "SLACK_MENTION_USERS": "U09HZUDUY"
+              },
+              ".*": {
+                "SLACK_MENTION_USERS": "U6LT2N3SS"
+              }
+            }
+
+      - name: 'DEBUG'
+        run: echo ${{ env.SLACK_MENTION_USERS }}
+
       - name: 'Setup: Git checkout'
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
@@ -19,12 +52,6 @@ jobs:
         run: |
           echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
           echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-
-      - name: 'Setup: Node'
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
-        # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
-        with:
-          node-version: '16'
 
       - name: 'Setup: Dependency caching'
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
@@ -63,33 +90,6 @@ jobs:
 
       - name: 'Build: Compile'
         run: pnpm build-ci
-
-      - name: 'Notify: Get author'
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
-        with:
-          key: '${{ github.actor }}'
-          map: |
-            {
-              "charles-allen": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS"
-              },
-              "Nutto55": {
-                "SLACK_MENTION_USERS": "UC2NVRCAY"
-              },
-              "naluinui": {
-                "SLACK_MENTION_USERS": "U19GA1FT2"
-              },
-              "antonyharfield": {
-                "SLACK_MENTION_USERS": "U09HZUDUY"
-              },
-              ".*": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS"
-              }
-            }
-
-      - name: 'DEBUG'
-        run: echo ${{ env.SLACK_MENTION_USERS }}
 
       # I'd like to use this for ONLY the first successful build after a failure
       # - name: 'Notify: Slack Success'
