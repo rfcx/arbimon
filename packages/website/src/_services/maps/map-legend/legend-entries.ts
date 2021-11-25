@@ -9,7 +9,7 @@ const prettyRound = (input: number): number => {
 
 export const getLegendEntries = (maxPixels: number, maxValue: number, legendEntryCount: number): LegendEntry[] => {
   // Only support positive integer values
-  if (maxValue === 0) return []
+  if (maxValue <= 0) return []
 
   // Round maxValue up to nice number (& scale pixels proportionally)
   const maxValuePretty = prettyRound(maxValue)
