@@ -76,4 +76,4 @@
     </ul>
   </div>
 </template>
-<script lang="ts" src="./project-info.ts"></script>
+<script lang="ts" src="./dashboard-project-profile.ts"></script>

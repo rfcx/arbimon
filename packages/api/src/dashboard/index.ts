@@ -1,31 +1,8 @@
-import { DashboardGeneratedResponse, Metrics } from 'api-types/dashboard'
+import { dashboardGeneratedController } from 'dashboard/dashboard-generated-controller.js'
 import { FastifyPluginAsync } from 'fastify'
 
-import { ApiMissingParam } from '../_services/errors/index.js'
-
-export interface DashboardGeneratedRequest {
-  projectId: string
-}
+import { dashboardGeneratedRoute } from '../TEMP/api-bio-types/dashboard-generated.js'
 
 export const routesDashboard: FastifyPluginAsync = async (app, option): Promise<void> => {
-  app.get<{ Params: Partial<DashboardGeneratedRequest> }>('/:projectId/dashboard-generated', async (req, res): Promise<DashboardGeneratedResponse> => {
-    const { projectId } = req.params
-    if (!projectId) throw ApiMissingParam('projectId')
-
-    const metrics = await getMetrics()
-
-    return {
-      metrics
-    }
-  })
-}
-
-// TODO: Update to query from DB
-async function getMetrics (): Promise<Metrics> {
-  return {
-    detectionCount: 50000,
-    siteCount: 200,
-    speciesCount: 97,
-    endangeredSpecies: 10
-  }
+  app.get(dashboardGeneratedRoute, dashboardGeneratedController)
 }

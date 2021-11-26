@@ -4,7 +4,7 @@
     <p class="text-center opacity-50">
       Last generated/synced at: November 18, 2021 16:03
     </p>
-    <project-metrics
+    <dashboard-metrics
       v-if="metrics"
       class="mt-5"
       :metrics="metrics"
@@ -15,7 +15,7 @@
       :page-title="store.selectedProject.name"
       page-subtitle="Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities"
     />
-    <project-info class="mt-5" />
+    <dashboard-project-profile class="mt-5" />
   </div>
 </template>
 <script src="./dashboard.ts" lang="ts"></script>

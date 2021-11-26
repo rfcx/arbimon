@@ -1,19 +1,22 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { Metrics } from '@rfcx-bio/common/api-types/dashboard'
-
-import { dashboardService } from '~/api/dashboard-service'
 import { BiodiversityStore } from '~/store'
+import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
+import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
+import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
-import ProjectInfo from './components/project-info/project-info.vue'
-import ProjectMetrics from './components/project-metrics/project-metrics.vue'
+import { dashboardService } from './services'
+
+export interface DashboardData {
+  metrics: Metrics
+}
 
 @Options({
   components: {
-    ProjectMetrics,
-    DashboardSitemap,
-    ProjectInfo
+    DashboardMetrics,
+    DashboardProjectProfile,
+    DashboardSitemap
   }
 })
 export default class DashboardPage extends Vue {
@@ -25,11 +28,15 @@ export default class DashboardPage extends Vue {
   }
 
   async getDashboardInformation (): Promise<void> {
-    try {
-      const { metrics } = await dashboardService.getDashboardInformation()
-      this.metrics = metrics
-    } catch {
-      // TODO: Handle API error
-    }
+    // Get data
+    const projectId = this.store.selectedProject?.id
+    if (!projectId) return
+
+    const data = await dashboardService.getDashboardInformation(projectId)
+    if (!data) return // TODO: Show error message
+
+    // Bind
+    const { metrics } = data
+    this.metrics = metrics
   }
 }
