@@ -10,9 +10,10 @@ Allowed categories:
 - Breaking changes
 --->
 
-# 0.0.10 (2021-12-8)
+# 0.0.10 (2021-12-08)
 
 - **export:** Legend for bar & line charts [#109]
+- **dashboard:** Project metrics with mock api connecting [#303]
 
 # 0.0.9 (2021-11-25)
 

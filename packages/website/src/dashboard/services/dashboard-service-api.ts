@@ -9,8 +9,10 @@ export class DashboardService {
   async getDashboardInformation (projectId: string): Promise<DashboardData | undefined> {
     const endpoint: Endpoint = ({
       method: 'GET',
-      url: `${this.baseUrl}/${dashboardUrl({ projectId })}`
+      url: `${this.baseUrl}${dashboardUrl({ projectId })}`
     })
+
+    console.log(endpoint.url)
 
     try {
       const body = await apiClient.request<DashboardGeneratedResponse>(endpoint)
