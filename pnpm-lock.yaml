@@ -210,6 +210,7 @@ importers:
       vue-class-component: ^8.0.0-rc.1
       vue-property-decorator: ^10.0.0-rc.3
       vue-router: ^4.0.12
+      vue3-markdown-it: ^1.0.9
       windicss: ^3.2.1
       xlsx: ^0.17.3
     dependencies:
@@ -230,6 +231,7 @@ importers:
       vue-class-component: 8.0.0-rc.1_vue@3.2.21
       vue-property-decorator: 10.0.0-rc.3_6f5031032aabf5cb20c4b6677c34c6b6
       vue-router: 4.0.12_vue@3.2.21
+      vue3-markdown-it: 1.0.9
       xlsx: 0.17.3
     devDependencies:
       '@iconify-json/fa': 1.0.1
@@ -3195,7 +3197,6 @@ packages:
 
   /argparse/2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
-    dev: true
 
   /arr-diff/4.0.0:
     resolution: {integrity: sha1-1kYQdP6/7HHn4VI1dhoyml3HxSA=}
@@ -4942,6 +4943,10 @@ packages:
       ansi-colors: 4.1.1
     dev: true
 
+  /entities/2.1.0:
+    resolution: {integrity: sha512-hCx1oky9PFrJ611mf0ifBLBRW8lUUVRlFolb5gWRfIELabBlbp9xZvrqZLZAs+NxFnbfQoeGd8wDkygjg7U85w==}
+    dev: false
+
   /entities/2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
     dev: true
@@ -6486,6 +6491,10 @@ packages:
       tslib: 2.3.1
     dev: true
 
+  /highlight.js/10.7.3:
+    resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
+    dev: false
+
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
     dev: true
@@ -7983,6 +7992,12 @@ packages:
     resolution: {integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=}
     dev: true
 
+  /linkify-it/3.0.3:
+    resolution: {integrity: sha512-ynTsyrFSdE5oZ/O9GEf00kPngmOfVwazR5GKDq6EYfhlpFug3J2zybX56a2PRRpc9P+FuSoGNAwjlbDs9jJBPQ==}
+    dependencies:
+      uc.micro: 1.0.6
+    dev: false
+
   /listr2/3.13.3_enquirer@2.3.6:
     resolution: {integrity: sha512-VqAgN+XVfyaEjSaFewGPcDs5/3hBbWVaX1VgWv2f52MF7US45JuARlArULctiB44IIcEk3JF7GtoFCLqEdeuPA==}
     engines: {node: '>=10.0.0'}
@@ -8061,6 +8076,10 @@ packages:
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
     dev: true
+
+  /lodash.flow/3.5.0:
+    resolution: {integrity: sha1-h79AKSuM+D5OjOGjrkIJ4gBxZ1o=}
+    dev: false
 
   /lodash.get/4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
@@ -8204,9 +8223,79 @@ packages:
       vt-pbf: 3.1.3
     dev: false
 
+  /markdown-it-abbr/1.0.4:
+    resolution: {integrity: sha1-1mtTZFIcuz3Yqlna37ovtoZcj9g=}
+    dev: false
+
+  /markdown-it-anchor/7.1.0_markdown-it@12.2.0:
+    resolution: {integrity: sha512-loQggrwsIkkP7TOrESvmYkV2ikbQNNKhHcWyqC7/C2CmfHl1tkUizJJU8C5aGgg7J6oXVQJx17gk7i47tNn/lQ==}
+    peerDependencies:
+      markdown-it: '*'
+    dependencies:
+      markdown-it: 12.2.0
+    dev: false
+
+  /markdown-it-deflist/2.1.0:
+    resolution: {integrity: sha512-3OuqoRUlSxJiuQYu0cWTLHNhhq2xtoSFqsZK8plANg91+RJQU1ziQ6lA2LzmFAEes18uPBsHZpcX6We5l76Nzg==}
+    dev: false
+
+  /markdown-it-emoji/2.0.0:
+    resolution: {integrity: sha512-39j7/9vP/CPCKbEI44oV8yoPJTpvfeReTn/COgRhSpNrjWF3PfP/JUxxB0hxV6ynOY8KH8Y8aX9NMDdo6z+6YQ==}
+    dev: false
+
+  /markdown-it-footnote/3.0.3:
+    resolution: {integrity: sha512-YZMSuCGVZAjzKMn+xqIco9d1cLGxbELHZ9do/TSYVzraooV8ypsppKNmUJ0fVH5ljkCInQAtFpm8Rb3eXSrt5w==}
+    dev: false
+
+  /markdown-it-highlightjs/3.5.0:
+    resolution: {integrity: sha512-ENlFiNFSKwnXD0umIzyhpFe5JtetdQnSYhwTdC72VU3C69uVpk1Mn3sPv1Ov8opVE2nv7SaS97QbY/aEH7PUzw==}
+    dependencies:
+      highlight.js: 10.7.3
+      lodash.flow: 3.5.0
+    dev: false
+
+  /markdown-it-ins/3.0.1:
+    resolution: {integrity: sha512-32SSfZqSzqyAmmQ4SHvhxbFqSzPDqsZgMHDwxqPzp+v+t8RsmqsBZRG+RfRQskJko9PfKC2/oxyOs4Yg/CfiRw==}
+    dev: false
+
+  /markdown-it-mark/3.0.1:
+    resolution: {integrity: sha512-HyxjAu6BRsdt6Xcv6TKVQnkz/E70TdGXEFHRYBGLncRE9lBFwDNLVtFojKxjJWgJ+5XxUwLaHXy+2sGBbDn+4A==}
+    dev: false
+
+  /markdown-it-sub/1.0.0:
+    resolution: {integrity: sha1-N1/WAm6ufdywEkl/ZBEZXqHjr+g=}
+    dev: false
+
+  /markdown-it-sup/1.0.0:
+    resolution: {integrity: sha1-y5yf+RpSVawI8/09YyhuFd8KH8M=}
+    dev: false
+
+  /markdown-it-task-lists/2.1.1:
+    resolution: {integrity: sha512-TxFAc76Jnhb2OUu+n3yz9RMu4CwGfaT788br6HhEDlvWfdeJcLUsxk1Hgw2yJio0OXsxv7pyIPmvECY7bMbluA==}
+    dev: false
+
+  /markdown-it-toc-done-right/4.2.0:
+    resolution: {integrity: sha512-UB/IbzjWazwTlNAX0pvWNlJS8NKsOQ4syrXZQ/C72j+jirrsjVRT627lCaylrKJFBQWfRsPmIVQie8x38DEhAQ==}
+    dev: false
+
+  /markdown-it/12.2.0:
+    resolution: {integrity: sha512-Wjws+uCrVQRqOoJvze4HCqkKl1AsSh95iFAeQDwnyfxM09divCBSXlDR1uTvyUP3Grzpn4Ru8GeCxYPM8vkCQg==}
+    hasBin: true
+    dependencies:
+      argparse: 2.0.1
+      entities: 2.1.0
+      linkify-it: 3.0.3
+      mdurl: 1.0.1
+      uc.micro: 1.0.6
+    dev: false
+
   /mathml-tag-names/2.1.3:
     resolution: {integrity: sha512-APMBEanjybaPzUrfqU0IMU5I0AswKMH7k8OTLs0vvV4KZpExkTkY87nR/zpbuTPj+gARop7aGUbl11pnDfW6xg==}
     dev: true
+
+  /mdurl/1.0.1:
+    resolution: {integrity: sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=}
+    dev: false
 
   /memory-fs/0.2.0:
     resolution: {integrity: sha1-8rslNovBIeORwlIN6Slpyu4KApA=}
@@ -10901,6 +10990,10 @@ packages:
     hasBin: true
     dev: true
 
+  /uc.micro/1.0.6:
+    resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
+    dev: false
+
   /unbox-primitive/1.0.1:
     resolution: {integrity: sha512-tZU/3NqK3dA5gpE1KtyiJUrEB0lxnGkMFHptJ7q6ewdZ8s12QrODwNbhIJStmJkd1QDXa1NRA8aF2A1zk/Ypyw==}
     dependencies:
@@ -11505,6 +11598,24 @@ packages:
       '@vue/runtime-dom': 3.2.21
       '@vue/server-renderer': 3.2.21_vue@3.2.21
       '@vue/shared': 3.2.21
+    dev: false
+
+  /vue3-markdown-it/1.0.9:
+    resolution: {integrity: sha512-8swtALTX8NG2ebGAYEcrKavPLUbg8dr+vBH7cOylgzu/nO0RBeVNud84ToffSCVxG5bCX2Vp8mkeQiBetzqxiw==}
+    dependencies:
+      markdown-it: 12.2.0
+      markdown-it-abbr: 1.0.4
+      markdown-it-anchor: 7.1.0_markdown-it@12.2.0
+      markdown-it-deflist: 2.1.0
+      markdown-it-emoji: 2.0.0
+      markdown-it-footnote: 3.0.3
+      markdown-it-highlightjs: 3.5.0
+      markdown-it-ins: 3.0.1
+      markdown-it-mark: 3.0.1
+      markdown-it-sub: 1.0.0
+      markdown-it-sup: 1.0.0
+      markdown-it-task-lists: 2.1.1
+      markdown-it-toc-done-right: 4.2.0
     dev: false
 
   /w3c-hr-time/1.0.2:
