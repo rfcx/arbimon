@@ -12,8 +12,6 @@ export class DashboardService {
       url: `${this.baseUrl}${dashboardUrl({ projectId })}`
     })
 
-    console.log(endpoint.url)
-
     try {
       const body = await apiClient.request<DashboardGeneratedResponse>(endpoint)
       // TODO - Validate data is correct type
