@@ -20,6 +20,6 @@ export interface Species {
   taxon: string
   information?: SpeciesInformation | undefined
   external_links?: SpeciesExternalLink[]
-  iucn_rank?: SpeciesCategory
+  iucn_rank?: SpeciesCategory | null
   thumbnail_image?: string
 }
