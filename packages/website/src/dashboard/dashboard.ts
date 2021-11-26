@@ -1,5 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
+import Markdown from 'vue3-markdown-it'
 
 import { BiodiversityStore } from '~/store'
 import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
@@ -16,7 +17,8 @@ export interface DashboardData {
   components: {
     DashboardMetrics,
     DashboardProjectProfile,
-    DashboardSitemap
+    DashboardSitemap,
+    Markdown
   }
 })
 export default class DashboardPage extends Vue {

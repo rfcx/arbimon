@@ -13,6 +13,7 @@ export const dashboardUrl = (params: DashboardGeneratedParams): string =>
 // Response
 export interface DashboardGeneratedResponse {
   metrics: DashboardGeneratedResponseMetrics
+  profile: DashboardGeneratedResponseProfile
 }
 
 export interface DashboardGeneratedResponseMetrics {
@@ -20,4 +21,9 @@ export interface DashboardGeneratedResponseMetrics {
   siteCount: number
   speciesCount: number
   endangeredSpecies: number
+}
+
+export interface DashboardGeneratedResponseProfile {
+  description: string
+  information: string // markdown string
 }
