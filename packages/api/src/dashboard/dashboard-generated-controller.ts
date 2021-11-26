@@ -1,6 +1,5 @@
-import { Controller } from '_services/api-helper/types.js'
-import { assertParamsExist } from '_services/validation/index.js'
-
+import { Controller } from '../_services/api-helper/types.js'
+import { assertParamsExist } from '../_services/validation/index.js'
 import { DashboardGeneratedParams, DashboardGeneratedResponse } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { getMetrics } from './dao.js'
 
