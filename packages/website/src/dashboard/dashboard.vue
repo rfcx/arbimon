@@ -13,9 +13,13 @@
     <page-title
       class="mt-5"
       :page-title="store.selectedProject.name"
-      page-subtitle="Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities"
+      :page-subtitle="profile?.description"
     />
-    <dashboard-project-profile class="mt-5" />
+    <dashboard-project-profile
+      v-if="profile"
+      :information="profile?.information"
+      class="mt-5"
+    />
   </div>
 </template>
 <script src="./dashboard.ts" lang="ts"></script>

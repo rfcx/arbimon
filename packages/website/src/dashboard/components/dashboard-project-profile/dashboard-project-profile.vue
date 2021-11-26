@@ -1,4 +1,5 @@
 <template>
+  <!-- <markdown :source="information" /> -->
   <div>
     <h2 class="text-xl">
       Background
