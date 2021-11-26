@@ -69,5 +69,13 @@ export async function getSpeciesRank (speciesName: string): Promise<SpeciesCateg
   }
 
   const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
+  if (data?.result?.length === 0) {
+    console.log('error IUCN Rank: ', speciesName)
+    return undefined
+  }
   return data?.result?.[0].category
+}
+
+export function getSpeciesRedirectLink (speciesName: string): string {
+  return `${IUCN_BASE_URL ?? ''}/website/${speciesName}`
 }
