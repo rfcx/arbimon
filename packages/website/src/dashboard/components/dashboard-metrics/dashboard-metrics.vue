@@ -15,4 +15,4 @@
     subtitle="endangered"
   />
 </template>
-<script lang="ts" src="./project-metrics.ts"></script>
+<script lang="ts" src="./dashboard-metrics.ts"></script>
