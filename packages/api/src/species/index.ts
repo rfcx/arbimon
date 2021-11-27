@@ -3,7 +3,6 @@ import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
 import { ApiMissingParam, ApiNotFoundError } from '../_services/errors/index.js'
-import { urlify } from '../TEMP/url-helpers/index.js'
 import { Species } from './types'
 
 // TODO ??? - Move this data to database
@@ -20,38 +19,25 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
   app.get('/species', async (req, res) => {
     return JSON.parse(rawSpeciesData).map((item: Species) => {
       return {
-        speciesId: item.species_id,
-        speciesSlug: urlify(item.scientific_name),
-        speciesName: item.scientific_name,
+        speciesId: item.speciesId,
+        speciesSlug: item.speciesSlug,
+        speciesName: item.scientificName,
         className: item.taxon
       }
     })
   })
 
-  interface SpeciesIdRoute {
-    Params: {
-      speciesId?: number
-    }
-  }
-
   interface SpeciesRoute {
     Params: {
-      speciesName?: string
+      speciesSlug?: string
     }
   }
 
-  app.get<SpeciesIdRoute>('/species/id/:speciesId', async (req, res) => {
+  app.get<SpeciesRoute>('/species/:speciesSlug', async (req, res) => {
     // Inputs & validation
-    const { speciesId } = req.params
-    if (speciesId == null) throw ApiMissingParam('speciesId')
-    return JSON.parse(rawSpeciesData).filter((s: Species) => s.species_id === speciesId)
-  })
-
-  app.get<SpeciesRoute>('/species/:speciesName', async (req, res) => {
-    // Inputs & validation
-    const { speciesName } = req.params
-    if (!speciesName) throw ApiMissingParam('speciesName')
-    const matchesSpecies = JSON.parse(rawSpeciesData).filter((s: Species) => s.scientific_name.search(speciesName) !== -1)
+    const { speciesSlug } = req.params
+    if (!speciesSlug) throw ApiMissingParam('speciesSlug')
+    const matchesSpecies = JSON.parse(rawSpeciesData).filter((s: Species) => s.speciesSlug.search(speciesSlug) !== -1)
 
     if (matchesSpecies.length === 0) return ApiNotFoundError()
     return matchesSpecies[0]
