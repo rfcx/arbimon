@@ -1,6 +1,5 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
-import { Endpoint } from '~/api-helpers/rest'
 import { useStore } from '~/store'
 import { GetPredictedOccupancyMaps, PredictedOccupancyMap } from './types'
 
@@ -23,7 +22,7 @@ export const getPredictedOccupancyMaps: GetPredictedOccupancyMaps = async (speci
   try {
     // Call API
     const url = `${bioApiHost}/projects/${projectId}/species/${speciesSlug}`
-    const endpoint: Endpoint = ({ method: 'GET', url })
+    const endpoint: AxiosRequestConfig = ({ method: 'GET', url })
     const { data } = await axios.request<ProjectSpeciesRouteResponse>(endpoint)
 
     // Prepend baseUrl

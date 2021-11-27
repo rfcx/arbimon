@@ -1,7 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
 import { IUCNSummary } from '~/api/iucn-service/types'
-import { Endpoint } from '~/api-helpers/rest'
 
 export class IUCNService {
   constructor (private readonly baseUrl: string) {}
@@ -11,7 +10,7 @@ export class IUCNService {
     const extractedGenusAndSpecies = sciencetificName.split(' ').slice(0, 2)
     const speciesName = extractedGenusAndSpecies.join(' ')
 
-    const endpoint: Endpoint = ({
+    const endpoint: AxiosRequestConfig = ({
       method: 'GET',
       url: `${this.baseUrl}/iucn/info/${speciesName}`
     })
