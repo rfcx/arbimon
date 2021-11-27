@@ -95,6 +95,22 @@ jobs:
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
 
+      - id: latest_run
+        name: GitHub API Request
+        uses: octokit/request-action@v2.1.0
+        if: always()
+        with:
+          route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
+          owner: rfcx
+          repo: biodiversity-analytics
+          workflow_id: build
+          per_page: 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: DEBUG
+        run: 'echo Latest run: ${{ steps.latest_run.outputs.data }}'
+
       # I'd like:
       # - to notify ONLY on the first failed build
       # - to notify ONLY on the first successful build after a failure
