@@ -75,7 +75,7 @@ jobs:
                 "NAMESPACE": "staging",
                 "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "ECR_REPO_API": "biodiversity-api/staging",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
                 "URL_WEB": "staging-ba.rfcx.org",
                 "URL_API": "staging-ba-api.rfcx.org"
               },
@@ -83,7 +83,7 @@ jobs:
                 "NAMESPACE": "testing",
                 "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "ECR_REPO_API": "biodiversity-api/testing",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_WEBHOOK }}",
+                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "testing-ba.rfcx.org",
                 "URL_API": "testing-ba-api.rfcx.org"
               }
