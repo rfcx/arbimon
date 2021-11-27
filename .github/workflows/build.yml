@@ -77,15 +77,18 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile]
 
-      - name: 'Build: Lint'
+      - id: lint
+        name: 'Build: Lint'
         run: pnpm lint-ci
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
 
-      - name: 'Build: Test'
+      - id: test
+        name: 'Build: Test'
         run: pnpm test-ci
 
-      - name: 'Build: Compile'
+      - id: build
+        name: 'Build: Compile'
         run: pnpm build-ci
 
       # -------------------------------------------------- #
@@ -103,8 +106,8 @@ jobs:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
-          message_format: '{emoji} *FAILED* - <https://www.youtube.com/watch?v=fXLicO0CRvk|OH NO!>'
-          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          message_format: '{emoji} *FAILED* @ <{run_url}|${{ github.run_id	}}-${{ github.run_attempt }}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          footer: 'Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | Build: ${{ steps.build.outcome }} | <{commit_url}|Last commit: ${{ github.sha }}> '
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
