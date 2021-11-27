@@ -20,7 +20,7 @@ export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void
       })
 
     // Error: not found
-    if (!iucnInformation) throw ApiNotFoundError(`No information found for ${speciesName}`)
+    if (!iucnInformation) throw ApiNotFoundError()
 
     // Transform & return
     return {

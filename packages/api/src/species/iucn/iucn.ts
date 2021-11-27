@@ -65,6 +65,6 @@ export async function getSpeciesRank (speciesName: string): Promise<RedListCateg
   }
 
   const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
-  if (data?.result?.length === 0) { throw ApiNotFoundError('species not found') }
+  if (data?.result?.length === 0) { throw ApiNotFoundError() }
   return data?.result?.[0].category
 }
