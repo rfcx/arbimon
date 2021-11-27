@@ -5,7 +5,6 @@ on:
     branches-ignore: # ignore branches using the CD workflow
       - master
       - staging
-      - develop
 jobs:
   Main:
     runs-on: ubuntu-20.04
@@ -78,6 +77,20 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile]
 
+      - id: latest_run
+        name: 'Setup: Get status of previous run'
+        uses: octokit/request-action@v2.1.0
+        if: always()
+        with:
+          route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
+          owner: rfcx
+          repo: biodiversity-analytics
+          workflow_id: build.yml
+          per_page: 2
+          branch: ${{ env.BRANCH_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - id: lint
         name: 'Build: Lint'
         run: pnpm lint-ci
@@ -96,35 +109,15 @@ jobs:
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
 
-      - id: latest_run
-        name: 'Notify: Get status of previous run'
-        uses: octokit/request-action@v2.1.0
+      - name: 'Notify: Log previous run result'
         if: always()
-        with:
-          route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
-          owner: rfcx
-          repo: biodiversity-analytics
-          workflow_id: build.yml
-          per_page: 2
-          branch: ${{ env.BRANCH_NAME }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Notify: DEBUG'
-        if: always()
-        run: |
-          echo "${{ steps.latest_run.outputs.data.workflow_runs[0] }}"
-          echo "${{ steps.latest_run.outputs.data.workflow_runs[1] }}"
-
-      # - name: 'Notify: Log previous result'
-      #   if: always()
-      #   run: echo "Latest run: ${{ steps.latest_run.outputs.data.workflow_runs[0].status }}"
+        run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion }}'
 
       # Notify success if previous run was not also a success
       - name: 'Notify: Slack Success'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        if: always() && steps.latest_run.outputs.data.workflow_runs[0].status != 'success'
+        if: always() && fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion != 'success'
         with:
           notify_when: 'success'
           status: ${{ job.status }}
@@ -138,7 +131,7 @@ jobs:
       - name: 'Notify: Slack Failed'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        if: always() && steps.latest_run.outputs.data.workflow_runs[0].status != 'failed'
+        if: always() && fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion != 'failed'
         with:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
