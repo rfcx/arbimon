@@ -96,15 +96,16 @@ jobs:
       # -------------------------------------------------- #
 
       - id: latest_run
-        name: GitHub API Request
+        name: 'Notify: Get status of previous run'
         uses: octokit/request-action@v2.1.0
         if: always()
         with:
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
           owner: rfcx
           repo: biodiversity-analytics
-          workflow_id: build
+          workflow_id: Build
           per_page: 1
+          branch: ${{ env.BRANCH_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
