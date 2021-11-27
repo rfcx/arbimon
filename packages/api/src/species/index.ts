@@ -53,7 +53,7 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
     if (!speciesName) throw ApiMissingParam('speciesName')
     const matchesSpecies = JSON.parse(rawSpeciesData).filter((s: Species) => s.scientific_name.search(speciesName) !== -1)
 
-    if (matchesSpecies.length === 0) return ApiNotFoundError('matching species not found')
+    if (matchesSpecies.length === 0) return ApiNotFoundError()
     return matchesSpecies[0]
   })
 }
