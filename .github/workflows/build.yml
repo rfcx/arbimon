@@ -91,6 +91,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 'Setup: Log status of previous run'
+        if: always()
+        run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion }}'
+
       - id: lint
         name: 'Build: Lint'
         run: pnpm lint-ci
@@ -108,10 +112,6 @@ jobs:
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
-
-      - name: 'Notify: Log previous run result'
-        if: always()
-        run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion }}'
 
       # Notify success if previous run was not also a success
       - name: 'Notify: Slack Success'
