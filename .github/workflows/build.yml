@@ -112,8 +112,6 @@ jobs:
       - name: 'Notify: DEBUG'
         if: always()
         run: |
-          'echo ${{ steps.latest_run.outputs.data }}'
-          'echo ${{ steps.latest_run.outputs.data.workflow_runs }}'
           'echo ${{ steps.latest_run.outputs.data.workflow_runs[0] }}'
           'echo ${{ steps.latest_run.outputs.data.workflow_runs[1] }}'
 
