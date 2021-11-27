@@ -8,14 +8,13 @@ import DashboardProjectProfile from './components/dashboard-project-profile/dash
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
 import { dashboardService } from './services'
 
-export interface Profile {
-  description: string
-  information: string // markdown string
+export interface DashboardGeneratedData {
+  metrics: Metrics
 }
 
-export interface DashboardData {
-  metrics: Metrics
-  profile: Profile
+export interface DashboardProfileData {
+  description: string
+  readme: string // markdown string
 }
 
 @Options({
@@ -27,24 +26,38 @@ export interface DashboardData {
 })
 export default class DashboardPage extends Vue {
   @Inject() readonly store!: BiodiversityStore
+
   metrics: Metrics | null = null
-  profile: Profile | null = null
+  projectDescription: string | null = null
+  projectReadme: string | null = null
 
   override async mounted (): Promise<void> {
-    await this.getDashboardInformation()
+    await this.getData()
   }
 
-  async getDashboardInformation (): Promise<void> {
+  async getData (): Promise<void> {
     // Get data
     const projectId = this.store.selectedProject?.id
     if (!projectId) return
 
-    const data = await dashboardService.getDashboardInformation(projectId)
-    if (!data) return // TODO: Show error message
+    await Promise.all([
+      this.getGeneratedData(projectId),
+      this.getProfileData(projectId)
+    ])
+  }
 
-    // Bind
-    const { metrics, profile } = data
-    this.metrics = metrics
-    this.profile = profile
+  async getGeneratedData (projectId: string): Promise<void> {
+    const generated = await dashboardService.getDashboardGeneratedData(projectId)
+    if (generated) {
+      this.metrics = generated.metrics
+    }
+  }
+
+  async getProfileData (projectId: string): Promise<void> {
+    const profile = await dashboardService.getDashboardProfileData(projectId)
+    if (profile) {
+      this.projectDescription = profile.description
+      this.projectReadme = profile.readme
+    }
   }
 }

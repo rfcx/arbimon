@@ -1,7 +1,8 @@
-import { DashboardGeneratedResponseMetrics, DashboardGeneratedResponseProfile } from '../TEMP/api-bio-types/dashboard-generated.js'
+import { DashboardGeneratedResponse } from '../TEMP/api-bio-types/dashboard-generated.js'
+import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
 
 // TODO: Update to query from DB
-export async function getMetrics (): Promise<DashboardGeneratedResponseMetrics> {
+export async function getMetrics (): Promise<DashboardGeneratedResponse> {
   return {
     detectionCount: 50000,
     siteCount: 200,
@@ -10,10 +11,10 @@ export async function getMetrics (): Promise<DashboardGeneratedResponseMetrics> 
   }
 }
 
-export async function getProfile (): Promise<DashboardGeneratedResponseProfile> {
+export async function getProfile (): Promise<DashboardProfileResponse> {
   return {
     description: 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities',
-    information:
+    readme:
     '## Background\n\n' +
     'One of the greatest challenges of ecology is the prediction of species diversity. Traditional methods to assess species diversity often focus on direct observations of a small range of taxonomic groups and on limited spatial and temporal scales. In contrast, passive acoustic monitoring (PAM) can greatly improve our ability to predict species diversity because we can detect the presence of a wide range of animal taxa (e.g., anurans, birds, insects and mammals). In addition, our current methods for mapping species distributions are insufficient. The ability to deploy multiple acoustic sensors across landscapes in a short period of time enables simultaneous recording, which allows researchers to accurately map species distributions. Furthermore, acoustic data collected over a large spatial scale can be used to answer broader questions regarding the effects of environmental change on species phenology and distribution.\n\n' +
     'Given the high number of endemic species in Puerto Rico and the high vulnerability of these species to natural (e.g., hurricanes) and human impacts (e.g., climate change), it is essential that researchers and stakeholders take advantage of novel methods to accurately estimate the population status and species distributions of Puerto Rican fauna. Moreover, obtaining current baseline information on the distribution of Species of Greatest Conservation Need (SGCN) that have been identified in Puerto Rico State Wildlife Action Plan (SWAP) is a critical step for the development of proactive climate adaptation strategies. In addition, monitoring of SGCN is one of the Eight Critical Elements identified in the Wildlife Action Plans for each state or territory.\n\n' +
