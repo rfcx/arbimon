@@ -5,6 +5,7 @@ on:
     branches-ignore: # ignore branches using the CD workflow
       - master
       - staging
+      - develop
 jobs:
   Main:
     runs-on: ubuntu-20.04
@@ -128,7 +129,7 @@ jobs:
           notify_when: 'success'
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
-          message_format: '{emoji} *SUCCESS* @ <{run_url}|${{ github.run_id	}}-${{ github.run_attempt }}> - WOO WOO!!'
+          message_format: '{emoji} *SUCCESS* @ <{run_url}|${{ github.run_id	}}-${{ github.run_attempt }}> - ${{ github.actor }} fixed the build!!'
           footer: 'Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | Build: ${{ steps.build.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
