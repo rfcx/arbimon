@@ -1,13 +1,14 @@
 <template>
   <page-title
     page-title="Activity Overview"
+    page-subtitle="The detections and occupancy trends of species"
   >
     <dropdown-menu>
       <dropdown-menu-item
         :disabled="!hasData"
         @click="exportSpeciesData"
       >
-        <icon-fas-hammer class="mr-2" /> Export as CSV
+        <icon-far-file-archive class="mr-2" /> Export as CSV
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>

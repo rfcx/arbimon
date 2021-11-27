@@ -6,7 +6,7 @@ import * as PAGES from './pages'
 
 export const ROUTE_NAMES = Object.freeze({
   home: 'home',
-  overview: 'overview',
+  dashboard: 'dashboard',
   species_richness: 'species_richness',
   activity_overview: 'activity_overview',
   activity_patterns: 'activity_patterns',
@@ -21,36 +21,36 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Home
   },
   {
-    path: '/project/:projectId',
+    path: '/preferences',
+    name: ROUTE_NAMES.preferences,
+    component: PAGES.Preferences
+  },
+  {
+    path: '/:projectId',
     component: PAGES.ProjectRoot,
     beforeEnter: [authRequiredGuard, selectProjectGuard],
     children: [
       {
         path: '',
-        name: ROUTE_NAMES.overview,
-        component: PAGES.Overview
+        name: ROUTE_NAMES.dashboard,
+        component: PAGES.Dashboard
       },
       {
-        path: 'species-richness',
+        path: 'richness',
         name: ROUTE_NAMES.species_richness,
         component: PAGES.SpeciesRichness
       },
       {
-        path: 'activity-overview',
+        path: 'activity',
         name: ROUTE_NAMES.activity_overview,
-        component: PAGES.ActivityOverviewPage
+        component: PAGES.ActivityOverview
       },
       {
-        path: 'activity-patterns/:speciesSlug?',
+        path: 'spotlight/:speciesSlug?',
         name: ROUTE_NAMES.activity_patterns,
         component: PAGES.ActivityPatterns
       }
     ]
-  },
-  {
-    path: '/preferences',
-    name: ROUTE_NAMES.preferences,
-    component: PAGES.Preferences
   },
   {
     path: '/:pathMatch(.*)*',

@@ -36,8 +36,8 @@ export default class NavbarComponent extends Vue {
     return selectedProjectId
       ? [
           {
-            label: 'Overview',
-            destination: { name: ROUTE_NAMES.overview, params: { projectId: selectedProjectId } }
+            label: 'Dashboard',
+            destination: { name: ROUTE_NAMES.dashboard, params: { projectId: selectedProjectId } }
           },
           {
             label: 'Richness',

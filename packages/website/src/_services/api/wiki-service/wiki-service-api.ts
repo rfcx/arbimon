@@ -1,7 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
 import { WikiSummary } from '~/api/wiki-service/types'
-import { Endpoint } from '~/api-helpers/rest'
 
 export function mapSpecies (speciesName: string): string {
   switch (speciesName) {
@@ -17,7 +16,7 @@ export class WikiService {
   async getSpeciesSummary (sciencetificName: string): Promise<WikiSummary | undefined> {
     const speciesName = mapSpecies(sciencetificName)
     try {
-      const endpoint: Endpoint = ({
+      const endpoint: AxiosRequestConfig = ({
         method: 'GET',
         url: `${this.baseUrl}/api/rest_v1/page/summary/${speciesName}`
       })

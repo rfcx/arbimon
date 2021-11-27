@@ -1,12 +1,10 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { WikiSummary, WikiSummaryResponse } from 'species/wiki/types'
-
-import { Endpoint } from '../../_services/api-helper/types'
 
 const WIKI_BASE_URL = 'https://en.wikipedia.org'
 
 export async function getWikiSpeciesInformation (speciesName: string): Promise<WikiSummary | undefined> {
-  const endpoint: Endpoint = {
+  const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${speciesName}`
   }
