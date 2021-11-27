@@ -56,7 +56,7 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
 
     // Queries
     const resolvedFilename = resolve(mockPredictionsFolderPath, filename)
-    if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw ApiClientError('illegal filename')
+    if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw ApiClientError()
 
     // Respond
     return await res.sendFile(mockPredictionsFolderName + '/' + filename + '.png')
