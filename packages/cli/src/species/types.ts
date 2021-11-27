@@ -3,23 +3,24 @@ export type SpeciesCategory = 'NE' | 'DD' | 'LC' | 'NT' | 'VU' | 'EN' | 'CR' | '
 
 export interface SpeciesInformation {
   description: string
-  source_url: string | undefined
-  source_type: string
+  sourceUrl: string | undefined
+  sourceType: string
 }
 
 export interface SpeciesExternalLink {
   title: string
-  source_url: string | undefined
-  source_type: string
+  sourceUrl: string | undefined
+  sourceType: string
 }
 
 export interface Species {
-  species_id: number
-  scientific_name: string
-  taxon_id: number
+  speciesId: number
+  speciesSlug: string
+  scientificName: string
+  speciesCategory: SpeciesCategory | null
+  thumbnailImageUrl?: string
+  taxonId: number
   taxon: string
   information?: SpeciesInformation | undefined
-  external_links?: SpeciesExternalLink[]
-  iucn_rank?: SpeciesCategory | null
-  thumbnail_image?: string
+  externalLinks?: SpeciesExternalLink[]
 }

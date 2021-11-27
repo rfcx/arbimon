@@ -32,7 +32,12 @@ export function transformToSites (data: ArbimonHourlySpeciesRow[]): string {
 export function transformToSpecies (data: ArbimonHourlySpeciesRow[]): string {
   const splitter = '-----'
   const rawSpeciesList: string[] = Array.from(new Set(data.map(r => `${r.species_id}${splitter}${r.scientific_name}${splitter}${r.taxon_id}${splitter}${r.taxon}`)))
-  const speciesList = rawSpeciesList.map(s => s.split(splitter)).map(tuple => ({ species_id: tuple[0], scientific_name: tuple[1], taxon_id: tuple[2], taxon: tuple[3] }))
+  const urlify = (input: string): string =>
+    input.toLowerCase()
+      .replace(/[ _]/g, '-')
+      .replace(/[^\da-z-]/g, '') // remove non-latin
+      .replace(/-+/g, '-') // merge consecutive dashes
+  const speciesList = rawSpeciesList.map(s => s.split(splitter)).map(tuple => ({ speciesId: tuple[0], speciesSlug: urlify(tuple[1]), scientificName: tuple[1], taxonId: tuple[2], taxon: tuple[3] }))
   return JSON.stringify(speciesList, null, 2)
 }
 
