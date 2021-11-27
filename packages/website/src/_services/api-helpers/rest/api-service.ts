@@ -1,19 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { useAuthClient } from '~/auth'
-import { RequestMethod } from './endpoints'
 
-const ApiConfig = axios.create({
+const axiosClient = axios.create({
   timeout: 30 * 1000 // 30 secs
 })
-
-export interface RequestParams<RequestBody> {
-  url: string
-  method: RequestMethod
-  headers?: {[x: string]: string}
-  data?: RequestBody
-  config?: AxiosRequestConfig
-}
 
 interface AuthHeader { Authorization: string }
 
@@ -23,26 +14,25 @@ class ApiClient {
     return { Authorization: 'Bearer ' + (token ?? '') }
   }
 
-  async request <ResponseBody, RequestBody = undefined> ({ url, method, headers, data, config }: RequestParams<RequestBody>): Promise<ResponseBody> {
-    try {
-      const response = await (async (m) => {
-        const reqConfig = {
-          config: { ...config },
-          headers: { ...headers, ...await this.authToken() }
-        }
+  async request <ResponseBody, RequestBody = undefined> (config: AxiosRequestConfig<RequestBody>): Promise<ResponseBody> {
+    const response = await axiosClient.request<ResponseBody, AxiosResponse<ResponseBody, RequestBody>, RequestBody>({
+      ...config,
+      headers: { ...config.headers, ...await this.authToken() }
+    })
 
-        switch (method) {
-          case 'DELETE': return await m.delete(url, { ...reqConfig, data })
-          case 'POST': return await m.post(url, data, reqConfig)
-          case 'PATCH': return await m.patch(url, data, reqConfig)
-          case 'PUT': return await m.put(url, data, reqConfig)
-          default: return await m.get(url, { ...reqConfig, data })
-        }
-      })(ApiConfig)
-      return response.data
-    } catch (e) {
-      return await Promise.reject(e)
-    }
+    return response.data
+  }
+
+  async requestOrUndefined <ResponseBody, RequestBody = undefined> (config: AxiosRequestConfig<RequestBody>): Promise<ResponseBody | undefined> {
+    return await this.request<ResponseBody, RequestBody>(config).catch(() => undefined)
+  }
+
+  async get <ResponseBody> (url: string): Promise<ResponseBody> {
+    return await this.request<ResponseBody>({ url })
+  }
+
+  async getOrUndefined <ResponseBody> (url: string): Promise<ResponseBody | undefined> {
+    return await this.requestOrUndefined<ResponseBody>({ url })
   }
 }
 

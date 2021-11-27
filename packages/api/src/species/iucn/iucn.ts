@@ -1,6 +1,5 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
-import { Endpoint } from '../../_services/api-helper/types'
 import { env } from '../../_services/env/index.js'
 import { ApiNotFoundError } from '../../_services/errors/index.js'
 
@@ -50,7 +49,7 @@ interface IucnSpeciesResult {
 }
 
 export async function getSpeciesInformation (speciesName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
-  const endpoint: Endpoint = {
+  const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${env.IUCN_BASE_URL}/species/narrative/${speciesName}?token=${env.IUCN_TOKEN}`
   }
@@ -60,12 +59,12 @@ export async function getSpeciesInformation (speciesName: string): Promise<IucnS
 }
 
 export async function getSpeciesRank (speciesName: string): Promise<RedListCategory | undefined> {
-  const endpoint: Endpoint = {
+  const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${env.IUCN_BASE_URL}/species/${speciesName}?token=${env.IUCN_TOKEN}`
   }
 
   const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
-  if (data?.result?.length === 0) { throw ApiNotFoundError('species not found') }
+  if (data?.result?.length === 0) { throw ApiNotFoundError() }
   return data?.result?.[0].category
 }

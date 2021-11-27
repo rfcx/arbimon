@@ -9,11 +9,11 @@
     "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint .",
-    "lint": "run-s lint:*",
+    "lint": "concurrently -m 1 \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
     "serve": "vite",
-    "test": "jest src",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest",
     "test-ui:explorer": "cypress open"
   },
   "active-issues": {
@@ -32,11 +32,13 @@
     "jszip": "^3.7.1",
     "lodash": "^4.17.21",
     "mapbox-gl": "^2.5.1",
+    "numeral": "^2.0.6",
     "pinia": "^2.0.2",
     "vue": "^3.2.21",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-property-decorator": "^10.0.0-rc.3",
     "vue-router": "^4.0.12",
+    "vue3-markdown-it": "^1.0.9",
     "xlsx": "^0.17.3"
   },
   "devDependencies": {
@@ -45,7 +47,7 @@
     "@types/color-string": "^1.5.0",
     "@types/d3": "^7.1.0",
     "@types/mapbox-gl": "^2.4.2",
-    "@vue/test-utils": "^2.0.0-rc.16",
+    "@types/numeral": "^2.0.2",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-interaction-variants": "^1.0.0",
     "unplugin-icons": "^0.12.18",

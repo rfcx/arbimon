@@ -5,7 +5,9 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
+import { exportChartWithElement } from '~/charts'
 import { createMap, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
 import { MapConfig, MapDataSet, MapSiteData } from './types'
 
 const DEFAULT_FILL_COLOR = '#111111'
@@ -217,8 +219,15 @@ export default class MapBubbleComponent extends Vue {
     this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
   }
 
-  downloadMapPng (): void {
+  async downloadMapPng (): Promise<void> {
+    const baseFilename = this.mapExportName
     const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng(img, this.mapExportName)
+    downloadPng(img, baseFilename)
+
+    const { color, maxValues } = this.dataset
+    const maxValue = maxValues[this.dataKey]
+    const svg = generateNormalizeMapLegend(color, maxValue, this.maxCircleRadiusPixels)
+    if (!svg) return
+    await exportChartWithElement(svg, `${baseFilename}-legend`)
   }
 }

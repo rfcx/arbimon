@@ -1,7 +1,6 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import * as dotenv from 'dotenv'
 
-import { Endpoint } from '../../_services/api-helper/types'
 import { SpeciesCategory } from '../types'
 
 dotenv.config()
@@ -53,7 +52,7 @@ interface IucnSpeciesResult {
 }
 
 export async function getSpeciesInformation (speciesName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
-  const endpoint: Endpoint = {
+  const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${IUCN_BASE_URL}/species/narrative/${speciesName}?token=${IUCN_TOKEN}`
   }
@@ -63,11 +62,19 @@ export async function getSpeciesInformation (speciesName: string): Promise<IucnS
 }
 
 export async function getSpeciesRank (speciesName: string): Promise<SpeciesCategory | undefined> {
-  const endpoint: Endpoint = {
+  const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${IUCN_BASE_URL}/species/${speciesName}?token=${IUCN_TOKEN}`
   }
 
   const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
+  if (data?.result?.length === 0) {
+    console.log('error IUCN Rank: ', speciesName)
+    return undefined
+  }
   return data?.result?.[0].category
+}
+
+export function getSpeciesRedirectLink (speciesName: string): string {
+  return `${IUCN_BASE_URL ?? ''}/website/${speciesName}`
 }

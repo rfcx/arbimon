@@ -6,7 +6,8 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
-import { generateChart, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { getExportGroupName } from '~/dataset-filters/functions'
 
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
   hour: [0, 23],
@@ -42,11 +43,12 @@ export default class SpeciesRichnessByTime extends Vue {
   }
 
   async downloadChart (): Promise<void> {
-    const exportConfig = { ...this.config, width: 800, height: 450 }
-    const svg = await generateChart(this.datasetsForSelectedBucket, exportConfig)
+    const margins = { ...this.config.margins, bottom: 80 }
+    const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
+    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
     const png = await svgToPngData({ svg, ...exportConfig })
-    downloadPng(png, `${this.domId}-${this.selectedBucket}`) // TODO 107 - Better filename
+    downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }

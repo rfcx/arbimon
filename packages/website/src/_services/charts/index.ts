@@ -8,6 +8,9 @@ export interface ChartSVGElement {
   height: number
 }
 
+const LEGEND_MARGIN_TOP = 50
+const LEGEND_ITEM_WIDTH = 100
+
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
   await exportChart(chartElement, filename)
@@ -71,27 +74,32 @@ export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
 }
 
-export function generateLegend (svg: d3.Selection<SVGGElement, undefined, null, undefined>): d3.Selection<SVGGElement, string, SVGGElement, undefined> {
+export function generateHorizontalLegend <T extends d3.BaseType> (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<T, undefined, null, undefined>): void {
+  const xStartPosition = ((width - (labels.length * LEGEND_ITEM_WIDTH)) / 2)
+  const yPosition = chartHeight + LEGEND_MARGIN_TOP
+
   const legend = svg.selectAll('.legend')
-    .data(['a', 'b', 'c'])
+    .data(labels)
     .enter()
     .append('g')
     .attr('class', 'legend')
 
   legend.append('circle')
-    .attr('cx', (d, i) => (i * 100) + 150)
-    .attr('cy', 140)
-    .attr('r', 6)
-    .style('fill', '#000aaa')
+    .attr('cx', (d, i) => (i * LEGEND_ITEM_WIDTH) + xStartPosition)
+    .attr('cy', yPosition)
+    .attr('r', 8)
+    .style('fill', (d, i) => colors[i])
 
   legend.append('text')
-    .attr('x', (d, i) => (i * 100) + 160)
-    .attr('y', 140)
+    .attr('x', (d, i) => (i * LEGEND_ITEM_WIDTH) + (xStartPosition + 15))
+    .attr('y', yPosition)
     .attr('dy', '.3em')
-    .text(function (d) { return d })
-    .attr('fill', '#000aaa')
-    .style('color', '#000aaa')
+    .text(d => d)
+    .attr('fill', '#000000')
+    .style('color', '#000000')
     .style('font-size', '14px')
+}
 
-  return legend
+export function getLegendGroupNames (totalGroup: number): string[] {
+  return [...Array(totalGroup).keys()].map(n => `Dataset ${n + 1}`)
 }
