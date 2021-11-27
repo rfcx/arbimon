@@ -13,11 +13,11 @@
     <page-title
       class="mt-5"
       :page-title="store.selectedProject.name"
-      :page-subtitle="profile?.description"
+      :page-subtitle="projectDescription"
     />
     <dashboard-project-profile
-      v-if="profile"
-      :information="profile?.information"
+      v-if="projectReadme"
+      :information="projectReadme"
       class="mt-5"
     />
   </div>

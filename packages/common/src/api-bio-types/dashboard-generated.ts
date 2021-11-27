@@ -7,23 +7,13 @@ export interface DashboardGeneratedParams {
 
 export const dashboardGeneratedRoute = '/:projectId/dashboard-generated'
 
-export const dashboardUrl = (params: DashboardGeneratedParams): string =>
+export const dashboardGeneratedUrl = (params: DashboardGeneratedParams): string =>
   `/${params.projectId}/dashboard-generated` // TODO: Generate automatically from dashboardGeneratedRoute
 
 // Response
 export interface DashboardGeneratedResponse {
-  metrics: DashboardGeneratedResponseMetrics
-  profile: DashboardGeneratedResponseProfile
-}
-
-export interface DashboardGeneratedResponseMetrics {
   detectionCount: number
   siteCount: number
   speciesCount: number
   endangeredSpecies: number
-}
-
-export interface DashboardGeneratedResponseProfile {
-  description: string
-  information: string // markdown string
 }
