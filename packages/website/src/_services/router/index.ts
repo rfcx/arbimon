@@ -21,7 +21,12 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Home
   },
   {
-    path: '/project/:projectId',
+    path: '/preferences',
+    name: ROUTE_NAMES.preferences,
+    component: PAGES.Preferences
+  },
+  {
+    path: '/:projectId',
     component: PAGES.ProjectRoot,
     beforeEnter: [authRequiredGuard, selectProjectGuard],
     children: [
@@ -31,26 +36,21 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.Dashboard
       },
       {
-        path: 'species-richness',
+        path: 'richness',
         name: ROUTE_NAMES.species_richness,
         component: PAGES.SpeciesRichness
       },
       {
-        path: 'activity-overview',
+        path: 'activity',
         name: ROUTE_NAMES.activity_overview,
         component: PAGES.ActivityOverview
       },
       {
-        path: 'activity-patterns/:speciesSlug?',
+        path: 'spotlight/:speciesSlug?',
         name: ROUTE_NAMES.activity_patterns,
         component: PAGES.ActivityPatterns
       }
     ]
-  },
-  {
-    path: '/preferences',
-    name: ROUTE_NAMES.preferences,
-    component: PAGES.Preferences
   },
   {
     path: '/:pathMatch(.*)*',
