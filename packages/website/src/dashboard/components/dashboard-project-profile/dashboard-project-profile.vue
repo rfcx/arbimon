@@ -21,5 +21,9 @@
     list-style-type: square;
     margin-left: 1.25rem;
   }
+  a:hover {
+    -webkit-text-decoration-line: underline;
+    text-decoration-line: underline;
+  }
 }
 </style>
