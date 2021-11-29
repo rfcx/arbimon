@@ -6,6 +6,7 @@ import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
+import DashboardTopTaxons from './components/dashboard-top-taxons/dashboard-top-taxons.vue'
 import { dashboardService } from './services'
 
 export interface DashboardGeneratedData {
@@ -21,7 +22,8 @@ export interface DashboardProfileData {
   components: {
     DashboardMetrics,
     DashboardProjectProfile,
-    DashboardSitemap
+    DashboardSitemap,
+    DashboardTopTaxons
   }
 })
 export default class DashboardPage extends Vue {

@@ -1,25 +1,35 @@
 <template>
   <div v-if="store.selectedProject">
-    <!-- TODO: Update after have api -->
     <p class="text-center opacity-50">
+      <!-- TODO: Update after have api -->
       Last generated/synced at: November 18, 2021 16:03
     </p>
-    <dashboard-metrics
-      v-if="metrics"
-      class="mt-5"
-      :metrics="metrics"
-    />
-    <dashboard-sitemap class="mt-5" />
-    <page-title
-      class="mt-5"
-      :page-title="store.selectedProject.name"
-      :page-subtitle="projectDescription"
-    />
-    <dashboard-project-profile
-      v-if="projectReadme"
-      :information="projectReadme"
-      class="mt-5"
-    />
+    <div class="grid gap-4 grid-cols-8">
+      <!-- Left content -->
+      <div class="col-span-6 mt-5">
+        <dashboard-metrics
+          v-if="metrics"
+          :metrics="metrics"
+        />
+        <dashboard-sitemap class="mt-5" />
+        <page-title
+          class="mt-5"
+          :page-title="store.selectedProject.name"
+          :page-subtitle="projectDescription"
+        />
+        <dashboard-project-profile
+          v-if="projectReadme"
+          :information="projectReadme"
+          class="mt-5"
+        />
+      </div>
+      <!-- Right content -->
+      <div class="col-span-2 mt-5">
+        <dashboard-top-taxons
+          :total-species="metrics?.speciesCount"
+        />
+      </div>
+    </div>
   </div>
 </template>
 <script src="./dashboard.ts" lang="ts"></script>
