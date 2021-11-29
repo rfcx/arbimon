@@ -33,3 +33,20 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
     '- [Rainforest Connection (marconi@rfcx.org)](https://rfcx.org/)\n'
   }
 }
+
+export async function getRichness (): Promise<any> {
+  return [
+    {
+      taxonClass: 'Amphibians',
+      speciesNo: 10
+    },
+    {
+      taxonClass: 'Birds',
+      speciesNo: 75
+    },
+    {
+      taxonClass: 'Mammals',
+      species: 12
+    }
+  ]
+}

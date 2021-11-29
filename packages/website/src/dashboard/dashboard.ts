@@ -18,6 +18,11 @@ export interface DashboardProfileData {
   readme: string // markdown string
 }
 
+export interface DashboardRichnessData {
+  taxonClass: string
+  speciesNo: string
+}
+
 @Options({
   components: {
     DashboardMetrics,
@@ -32,6 +37,7 @@ export default class DashboardPage extends Vue {
   metrics: Metrics | null = null
   projectDescription: string | null = null
   projectReadme: string | null = null
+  richness: DashboardRichnessData[] | null = null
 
   override async mounted (): Promise<void> {
     await this.getData()
@@ -44,7 +50,8 @@ export default class DashboardPage extends Vue {
 
     await Promise.all([
       this.getGeneratedData(projectId),
-      this.getProfileData(projectId)
+      this.getProfileData(projectId),
+      this.getRichnessData(projectId)
     ])
   }
 
@@ -60,6 +67,13 @@ export default class DashboardPage extends Vue {
     if (profile) {
       this.projectDescription = profile.description
       this.projectReadme = profile.readme
+    }
+  }
+
+  async getRichnessData (projectId: string): Promise<void> {
+    const richness = await dashboardService.getDashboardRichnessData(projectId)
+    if (richness) {
+      this.richness = richness
     }
   }
 }
