@@ -19,7 +19,10 @@
       :key="'dashboard-richness-' + item.taxonClass"
       class="inline-flex"
     >
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> {{ item.taxonClass }} ({{ displayPercentage(item.percentage) }} %)
+      <div
+        class="rounded-full w-2 h-2 self-center mx-2"
+        :style="{ backgroundColor: item.color }"
+      /> {{ item.taxonClass }} ({{ displayPercentage(item.percentage) }} %)
     </li>
   </ul>
 </template>

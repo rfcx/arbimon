@@ -32,6 +32,7 @@ export interface Detection {
 export interface TaxonomyClass {
   symbol: string
   name: string
+  color?: string
 }
 
 export interface Species {
