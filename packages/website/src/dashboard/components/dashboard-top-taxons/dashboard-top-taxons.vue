@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full rounded-2xl bg-steel-grey mb-2 p-4 flex justify-between">
+  <div class="w-full rounded-2xl bg-steel-grey mb-4 p-4 flex justify-between">
     <div class="font-semibold">
       Richness
     </div>
@@ -19,11 +19,11 @@
   />
   <div v-else>
     <div class="relative">
-      <div class="absolute w-full h-2 rounded-xl bg-steel-grey-light" />
+      <div class="absolute w-full h-1 rounded-xl bg-steel-grey-light" />
       <div
         v-for="(item, idx) in richnessPercentage"
         :key="'dashboard-richness-percentage-' + item.taxonClass"
-        class="absolute h-2 rounded-xl"
+        class="absolute h-1 rounded-xl"
         :style="{ width: calculateBarWidth(idx) + '%', backgroundColor: item.color , zIndex: richnessPercentage.length - idx }"
       />
     </div>
