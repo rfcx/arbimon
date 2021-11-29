@@ -1,6 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
+import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 
@@ -12,6 +13,7 @@ export interface DashboardRichnessData {
 export interface DashboardRichnessPercentage {
   taxonClass: string
   percentage: number
+  color: string
 }
 
 export default class DashboardTopTaxons extends Vue {
@@ -32,7 +34,8 @@ export default class DashboardTopTaxons extends Vue {
     return richness.map(({ taxonClass, speciesNo }) => {
       return {
         taxonClass,
-        percentage: (speciesNo / totalSpecies) * 100
+        percentage: (speciesNo / totalSpecies) * 100,
+        color: TAXONOMY_CLASSES.find(c => c.name === taxonClass)?.color ?? '#FFFFFF'
       }
     })
   }
