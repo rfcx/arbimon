@@ -9,7 +9,6 @@ export default class DashboardTopTaxons extends Vue {
   @Prop() totalSpecies!: number
 
   get richnessRoutename (): string {
-    console.log(this.totalSpecies)
     return ROUTE_NAMES.species_richness
   }
 
