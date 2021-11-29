@@ -1,6 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
+import { DashboardRichnessData } from '@/dashboard/components/dashboard-top-taxons/dashboard-top-taxons'
 import { BiodiversityStore } from '~/store'
 import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
@@ -16,11 +17,6 @@ export interface DashboardGeneratedData {
 export interface DashboardProfileData {
   description: string
   readme: string // markdown string
-}
-
-export interface DashboardRichnessData {
-  taxonClass: string
-  speciesNo: string
 }
 
 @Options({

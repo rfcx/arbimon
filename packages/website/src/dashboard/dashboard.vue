@@ -26,7 +26,9 @@
       <!-- Right content -->
       <div class="col-span-2 mt-5">
         <dashboard-top-taxons
+          v-if="richness"
           :total-species="metrics?.speciesCount"
+          :richness="richness"
         />
       </div>
     </div>

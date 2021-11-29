@@ -13,5 +13,5 @@ export const dashboardRichnessUrl = (params: DashboardRichnessParams): string =>
 // Response
 export interface DashboardRichnessResponse {
   taxonClass: string
-  speciesNo: string
+  speciesNo: number
 }

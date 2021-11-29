@@ -2,8 +2,9 @@ import { DashboardGeneratedResponse, dashboardGeneratedUrl } from '@rfcx-bio/com
 import { DashboardProfileResponse, dashboardProfileUrl } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
 import { DashboardRichnessResponse, dashboardRichnessUrl } from '@rfcx-bio/common/api-bio-types/dashboard-richness'
 
+import { DashboardRichnessData } from '@/dashboard/components/dashboard-top-taxons/dashboard-top-taxons'
 import { apiClient } from '~/api-helpers/rest'
-import { DashboardGeneratedData, DashboardProfileData, DashboardRichnessData } from '../dashboard'
+import { DashboardGeneratedData, DashboardProfileData } from '../dashboard'
 
 export class DashboardService {
   constructor (private readonly baseUrl: string) {}

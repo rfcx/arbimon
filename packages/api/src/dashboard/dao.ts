@@ -1,3 +1,5 @@
+import { DashboardRichnessResponse } from 'TEMP/api-bio-types/dashboard-richness.js'
+
 import { DashboardGeneratedResponse } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
 
@@ -34,7 +36,7 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
   }
 }
 
-export async function getRichness (): Promise<any> {
+export async function getRichness (): Promise<DashboardRichnessResponse[]> {
   return [
     {
       taxonClass: 'Amphibians',
@@ -46,7 +48,7 @@ export async function getRichness (): Promise<any> {
     },
     {
       taxonClass: 'Mammals',
-      species: 12
+      speciesNo: 12
     }
   ]
 }
