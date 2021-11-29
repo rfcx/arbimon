@@ -16,4 +16,10 @@ export interface DashboardGeneratedResponse {
   siteCount: number
   speciesCount: number
   endangeredSpecies: number
+  richness: DashboardRichness[]
+}
+
+export interface DashboardRichness {
+  taxonClass: string
+  speciesNo: number
 }
