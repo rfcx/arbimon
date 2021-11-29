@@ -1,7 +1,7 @@
 import { Controller } from '../_services/api-helper/types.js'
 import { assertParamsExist } from '../_services/validation/index.js'
 import { DashboardGeneratedParams, DashboardGeneratedResponse } from '../TEMP/api-bio-types/dashboard-generated.js'
-import { getMetrics } from './dao.js'
+import { getGeneratedData } from './dao.js'
 
 export const dashboardGeneratedController: Controller<DashboardGeneratedParams, DashboardGeneratedResponse> = async (req) => {
   // Inputs
@@ -9,11 +9,11 @@ export const dashboardGeneratedController: Controller<DashboardGeneratedParams, 
   assertParamsExist({ projectId })
 
   // Query
-  const metrics = await getMetrics()
+  const data = await getGeneratedData()
 
   // Response
   const response: DashboardGeneratedResponse = {
-    ...metrics
+    ...data
   }
 
   return response

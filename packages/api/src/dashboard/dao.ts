@@ -1,15 +1,14 @@
-import { DashboardRichnessResponse } from 'TEMP/api-bio-types/dashboard-richness.js'
-
-import { DashboardGeneratedResponse } from '../TEMP/api-bio-types/dashboard-generated.js'
+import { DashboardGeneratedResponse, DashboardRichness } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
 
 // TODO: Update to query from DB
-export async function getMetrics (): Promise<DashboardGeneratedResponse> {
+export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
   return {
     detectionCount: 50000,
     siteCount: 200,
     speciesCount: 97,
-    endangeredSpecies: 10
+    endangeredSpecies: 10,
+    richness: await getRichness()
   }
 }
 
@@ -36,7 +35,7 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
   }
 }
 
-export async function getRichness (): Promise<DashboardRichnessResponse[]> {
+export async function getRichness (): Promise<DashboardRichness[]> {
   return [
     {
       taxonClass: 'Amphibians',

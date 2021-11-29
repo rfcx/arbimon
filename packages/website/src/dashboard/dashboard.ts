@@ -1,17 +1,18 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { DashboardRichnessData } from '@/dashboard/components/dashboard-top-taxons/dashboard-top-taxons'
 import { BiodiversityStore } from '~/store'
 import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
+import { DashboardRichnessData } from './components/dashboard-top-taxons/dashboard-top-taxons'
 import DashboardTopTaxons from './components/dashboard-top-taxons/dashboard-top-taxons.vue'
 import { dashboardService } from './services'
 
 export interface DashboardGeneratedData {
   metrics: Metrics
+  richness: DashboardRichnessData[]
 }
 
 export interface DashboardProfileData {
@@ -46,8 +47,7 @@ export default class DashboardPage extends Vue {
 
     await Promise.all([
       this.getGeneratedData(projectId),
-      this.getProfileData(projectId),
-      this.getRichnessData(projectId)
+      this.getProfileData(projectId)
     ])
   }
 
@@ -55,6 +55,7 @@ export default class DashboardPage extends Vue {
     const generated = await dashboardService.getDashboardGeneratedData(projectId)
     if (generated) {
       this.metrics = generated.metrics
+      this.richness = generated.richness
     }
   }
 
@@ -63,13 +64,6 @@ export default class DashboardPage extends Vue {
     if (profile) {
       this.projectDescription = profile.description
       this.projectReadme = profile.readme
-    }
-  }
-
-  async getRichnessData (projectId: string): Promise<void> {
-    const richness = await dashboardService.getDashboardRichnessData(projectId)
-    if (richness) {
-      this.richness = richness
     }
   }
 }
