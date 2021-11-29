@@ -1,3 +1,4 @@
+import { sumBy } from 'lodash'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
@@ -37,10 +38,19 @@ export default class DashboardTopTaxons extends Vue {
         percentage: (speciesNo / totalSpecies) * 100,
         color: TAXONOMY_CLASSES.find(c => c.name === taxonClass)?.color ?? '#FFFFFF'
       }
-    })
+    }).sort((a, b) => b.percentage - a.percentage)
+  }
+
+  get hasData (): boolean {
+    return this.richness.length > 0
   }
 
   displayPercentage (percentage: number): string {
     return percentage.toFixed(1)
+  }
+
+  calculateBarWidth (idx: number): number {
+    const items = this.richnessPercentage.slice(0, idx + 1)
+    return sumBy(items, 'percentage')
   }
 }
