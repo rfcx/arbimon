@@ -14,23 +14,11 @@
     </router-link>
   </div>
   <ul class="mt-2 list-none">
-    <li class="inline-flex">
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> bird
-    </li>
-    <li class="inline-flex">
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> bird
-    </li>
-    <li class="inline-flex">
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> bird
-    </li>
-    <li class="inline-flex">
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> bird
-    </li>
-    <li class="inline-flex">
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> bird
-    </li>
-    <li class="inline-flex">
-      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> bird
+    <li
+      v-for="(item, idx) in richnessPercentage"
+      class="inline-flex"
+    >
+      <div class="bg-fuchsia-400 rounded-full w-2 h-2 self-center mx-2" /> {{ item.taxonClass }} ({{ displayPercentage(item.percentage) }} %)
     </li>
   </ul>
 </template>
