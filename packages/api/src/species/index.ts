@@ -1,12 +1,13 @@
 import { FastifyPluginAsync } from 'fastify'
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
 import { ApiMissingParam, ApiNotFoundError } from '../_services/errors/index.js'
 import { Species } from './types'
 
 // TODO ??? - Move this data to database
-const currentDir = dirname(new URL(import.meta.url).pathname)
+const currentDir = dirname(fileURLToPath(import.meta.url))
 const mockSpeciesPath = resolve(currentDir, './raw-species.json')
 
 // Ingest raw data
