@@ -4,7 +4,7 @@
       Richness
     </div>
     <router-link
-      class="flex hover:(underline)"
+      class="flex hover:(underline opacity-70)"
       :to="{ name: richnessRoutename, params: { projectId } }"
     >
       <div v-if="hasData">
@@ -18,7 +18,7 @@
     class="h-20"
   />
   <div v-else>
-    <div class="relative">
+    <div class="relative mx-2">
       <div class="absolute w-full h-1 rounded-xl bg-steel-grey-light" />
       <div
         v-for="(item, idx) in richnessPercentage"
