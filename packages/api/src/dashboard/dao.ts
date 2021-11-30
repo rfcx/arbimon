@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
-import { Species } from '../species/types.js'
+import { EXTINCT_LIST, Species } from '../species/types.js'
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
 
@@ -72,8 +72,8 @@ const rawSpeciesData = Buffer.isBuffer(rawSpeciesStringOrBuffer)
   : rawSpeciesStringOrBuffer
 
 export async function getEndangered (): Promise<DashboardSpecies[]> {
-  return JSON.parse(rawSpeciesData)
-    .filter((item: Species) => item.speciesCategory === 'EN')
+  const species = JSON.parse(rawSpeciesData)
+    .filter((item: Species) => EXTINCT_LIST.includes(item.speciesCategory ?? ''))
     .map((item: Species) => {
       return {
         speciesId: item.speciesId,
@@ -84,6 +84,10 @@ export async function getEndangered (): Promise<DashboardSpecies[]> {
         thumbnailImageUrl: item.thumbnailImageUrl
       }
     })
+    .sort((a: DashboardSpecies, b: DashboardSpecies) => {
+      return EXTINCT_LIST.indexOf(b.speciesCategory) - EXTINCT_LIST.indexOf(a.speciesCategory) || a.speciesName.localeCompare(b.speciesName)
+    })
+  return species.length <= 10 ? species : species.slice(0, 10)
 }
 
 export async function getHilighted (): Promise<DashboardSpecies[]> {
