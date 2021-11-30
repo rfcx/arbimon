@@ -1,3 +1,8 @@
+import * as fs from 'fs'
+import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
+
+import { Species } from '../species/types.js'
 import { DashboardGeneratedResponse, DashboardRichness } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
 
@@ -8,7 +13,9 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     siteCount: 200,
     speciesCount: 97,
     endangeredSpecies: 10,
-    richness: await getRichness()
+    richness: await getRichness(),
+    endangered: await getEndangered(),
+    hilighted: await getHilighted()
   }
 }
 
@@ -50,4 +57,24 @@ export async function getRichness (): Promise<DashboardRichness[]> {
       speciesNo: 12
     }
   ]
+}
+
+// TODO ??? - Getting species data from DB instead (The code is from species controller)
+const currentDir = dirname(fileURLToPath(import.meta.url))
+console.log('check species ->', currentDir)
+
+const mockSpeciesPath = resolve(currentDir, '../species/raw-species.json')
+
+// Ingest raw data
+const rawSpeciesStringOrBuffer = fs.readFileSync(mockSpeciesPath)
+const rawSpeciesData = Buffer.isBuffer(rawSpeciesStringOrBuffer)
+  ? rawSpeciesStringOrBuffer.toString()
+  : rawSpeciesStringOrBuffer
+
+export async function getEndangered (): Promise<Species[]> {
+  return JSON.parse(rawSpeciesData).filter((item: Species) => item.speciesCategory === 'EN')
+}
+
+export async function getHilighted (): Promise<Species[]> {
+  return JSON.parse(rawSpeciesData).slice(0, 5)
 }
