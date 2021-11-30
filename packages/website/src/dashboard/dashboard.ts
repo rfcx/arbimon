@@ -8,18 +8,29 @@ import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
-import { DashboardRichnessData } from './components/dashboard-top-taxons/dashboard-top-taxons'
+import { RichnessData } from './components/dashboard-top-taxons/dashboard-top-taxons'
 import DashboardTopTaxons from './components/dashboard-top-taxons/dashboard-top-taxons.vue'
 import { dashboardService } from './services'
 
 export interface DashboardGeneratedData {
   metrics: Metrics
-  richness: DashboardRichnessData[]
+  endangered: DashboardSpecies[]
+  hilighted: DashboardSpecies[]
+  richness: RichnessData[]
 }
 
 export interface DashboardProfileData {
   description: string
   readme: string // markdown string
+}
+
+export interface DashboardSpecies {
+  speciesId: string
+  speciesSlug: string
+  speciesName: string
+  speciesCategory: string
+  className: string
+  thumbnailImageUrl: string
 }
 
 @Options({
@@ -38,7 +49,9 @@ export default class DashboardPage extends Vue {
   metrics: Metrics | null = null
   projectDescription: string | null = null
   projectReadme: string | null = null
-  richness: DashboardRichnessData[] | null = null
+  richness: RichnessData[] | null = null
+  endangered: DashboardSpecies[] | null = null
+  hilighted: DashboardSpecies[] | null = null
 
   override async mounted (): Promise<void> {
     await this.getData()
@@ -58,8 +71,11 @@ export default class DashboardPage extends Vue {
   async getGeneratedData (projectId: string): Promise<void> {
     const generated = await dashboardService.getDashboardGeneratedData(projectId)
     if (generated) {
-      this.metrics = generated.metrics
-      this.richness = generated.richness
+      const { endangered, hilighted, richness, metrics } = generated
+      this.metrics = metrics
+      this.endangered = endangered
+      this.hilighted = hilighted
+      this.richness = richness
     }
   }
 

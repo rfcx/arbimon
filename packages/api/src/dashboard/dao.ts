@@ -3,7 +3,7 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
 import { Species } from '../species/types.js'
-import { DashboardGeneratedResponse, DashboardRichness } from '../TEMP/api-bio-types/dashboard-generated.js'
+import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
 
 // TODO: Update to query from DB
@@ -71,10 +71,31 @@ const rawSpeciesData = Buffer.isBuffer(rawSpeciesStringOrBuffer)
   ? rawSpeciesStringOrBuffer.toString()
   : rawSpeciesStringOrBuffer
 
-export async function getEndangered (): Promise<Species[]> {
-  return JSON.parse(rawSpeciesData).filter((item: Species) => item.speciesCategory === 'EN')
+export async function getEndangered (): Promise<DashboardSpecies[]> {
+  return JSON.parse(rawSpeciesData)
+    .filter((item: Species) => item.speciesCategory === 'EN')
+    .map((item: Species) => {
+      return {
+        speciesId: item.speciesId,
+        speciesSlug: item.speciesSlug,
+        speciesName: item.scientificName,
+        speciesCategory: item.speciesCategory,
+        className: item.taxon,
+        thumbnailImageUrl: item.thumbnailImageUrl
+      }
+    })
 }
 
-export async function getHilighted (): Promise<Species[]> {
+export async function getHilighted (): Promise<DashboardSpecies[]> {
   return JSON.parse(rawSpeciesData).slice(0, 5)
+    .map((item: Species) => {
+      return {
+        speciesId: item.speciesId,
+        speciesSlug: item.speciesSlug,
+        speciesName: item.scientificName,
+        speciesCategory: item.speciesCategory,
+        className: item.taxon,
+        thumbnailImageUrl: item.thumbnailImageUrl
+      }
+    })
 }

@@ -1,5 +1,4 @@
 // TEMP - Please update this file in both `common` AND `api`
-import { Species } from '../../species/types.js'
 
 // Request
 export interface DashboardGeneratedParams {
@@ -18,11 +17,20 @@ export interface DashboardGeneratedResponse {
   speciesCount: number
   endangeredSpecies: number
   richness: DashboardRichness[]
-  endangered: Species[]
-  hilighted: Species[]
+  endangered: DashboardSpecies[]
+  hilighted: DashboardSpecies[]
 }
 
 export interface DashboardRichness {
   taxonClass: string
   speciesNo: number
+}
+
+export interface DashboardSpecies {
+  speciesId: string
+  speciesSlug: string
+  speciesName: string
+  speciesCategory: string
+  className: string
+  thumbnailImageUrl: string
 }
