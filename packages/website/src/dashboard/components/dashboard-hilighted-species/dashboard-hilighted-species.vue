@@ -1,7 +1,7 @@
 <template>
   <div class="w-full rounded-2xl bg-steel-grey my-4 p-4 flex justify-between">
     <div class="font-semibold">
-      Endangered species
+      Highlighted species
     </div>
     <router-link
       class="flex hover:(underline opacity-70)"
@@ -24,7 +24,8 @@
       <p class="text-lg">
         Cat
       </p>
+      <p>Endangered</p>
     </div>
   </div>
 </template>
-<script lang="ts" src="./dashboard-endangered-species.ts"></script>
+<script lang="ts" src="./dashboard-hilighted-species.ts"></script>

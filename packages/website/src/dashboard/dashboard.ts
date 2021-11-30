@@ -3,6 +3,7 @@ import { Inject } from 'vue-property-decorator'
 
 import { BiodiversityStore } from '~/store'
 import DashboardEndangeredSpecies from './components/dashboard-endangered-species/dashboard-endangered-species.vue'
+import DashboardHilightedSpecies from './components/dashboard-hilighted-species/dashboard-hilighted-species.vue'
 import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
@@ -24,6 +25,7 @@ export interface DashboardProfileData {
 @Options({
   components: {
     DashboardEndangeredSpecies,
+    DashboardHilightedSpecies,
     DashboardMetrics,
     DashboardProjectProfile,
     DashboardSitemap,
