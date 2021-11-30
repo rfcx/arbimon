@@ -6,7 +6,7 @@ import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 
-export interface DashboardRichnessData {
+export interface RichnessData {
   taxonClass: string
   speciesNo: number
 }
@@ -20,7 +20,7 @@ export interface DashboardRichnessPercentage {
 export default class DashboardTopTaxons extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop() totalSpecies!: number
-  @Prop() richness!: DashboardRichnessData[]
+  @Prop() richness!: RichnessData[]
 
   get richnessRoutename (): string {
     return ROUTE_NAMES.species_richness

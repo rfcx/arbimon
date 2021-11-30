@@ -11,9 +11,9 @@ export class DashboardService {
     const body = await apiClient.getOrUndefined<DashboardGeneratedResponse>(`${this.baseUrl}${dashboardGeneratedUrl({ projectId })}`)
     if (!body) return body
 
-    const { richness, ...metrics } = body
+    const { endangered, hilighted, richness, ...metrics } = body
 
-    return { metrics, richness }
+    return { metrics, endangered, hilighted, richness }
   }
 
   async getDashboardProfileData (projectId: string): Promise<DashboardProfileData | undefined> {
