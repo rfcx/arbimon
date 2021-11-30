@@ -1,6 +1,6 @@
 # Biodiversity Analytics
 
-Biodiversity analytics platform built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS
+Website for exploring biodiversity data; built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS.
 
 ---
 
@@ -12,13 +12,14 @@ The following must be true to consider the Sprint "DONE":
 
 - Code follows [STANDARDS.md](./STANDARDS.md)
 - Updated [CHANGELOG.md](./CHANGELOG.md)
-- PRs merged & deployed to staging
+- Code deployed to staging
 - Demo video & staging URL sent to PO by Tuesday
 
 ### _Resources_
 
-- [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/4)
+- [Roadmap (Figma)](https://www.figma.com/file/Z4ybxswWvqiTdEsOgI2w7P/Milestone-and-Epic)
 - [Design (Figma)](https://www.figma.com/files/team/1022436685454438648/Biodiversity-Team)
+- [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/4)
 - [Other files (Google Drive)](https://drive.google.com/drive/folders/17ZdAoPzetLPqkes4lkGQlKg_uHpkyxxg)
 
 ---
@@ -27,9 +28,9 @@ The following must be true to consider the Sprint "DONE":
 
 ### _Requirements & Setup_
 
-- node 16+
-- pnpm 6+ (`npm i -g pnpm`)
-- VSCode & extensions (`pnpm init-vscode`)
+- node 16: [https://nodejs.org](https://nodejs.org)
+- pnpm 6: `npm i -g pnpm`
+- VSCode & extensions: `pnpm init-vscode`
 
 _If you have Vetur installed, disable it for this workspace_
 
@@ -39,15 +40,15 @@ _If you have Vetur installed, disable it for this workspace_
 
    `pnpm i`
 
-2. Run the web app (from the monorepo root):
+2. In the `api` package, copy `.env.example` to `.env` and fill in all missing variables (see "**Environment**" below).
 
-   `pnpm serve-website` -or- `pnpm serve`
+3. Run the **Website** and **API** (from the monorepo root):
 
-3. If you aren't in the monorepo root, you can still call its scripts by adding the `-w` arg:
+   `pnpm serve`
+
+   If you aren't in the monorepo root, you can still call its scripts by adding the `-w` arg:
 
    `pnpm -w serve`
-
-4. For developing `website`, please copy `.env.example` to `.env` at the same directory level and fill in all variables.
 
 ---
 
@@ -67,12 +68,13 @@ There are 3 shared deployments:
 
 ### _Testing_
 
+// TODO: Auto-deploy from `develop` branch once per day?
+
 Any branch can be deployed to the `testing` cluster:
 
 - Open the "Actions" tab on GitHub
 - Select the "Build-Deploy" action
 - Click "Run workflow" and select the branch you wish to deploy
-- // TODO: Auto-deploy from `develop` branch once per day?
 
 ### _Staging & Production_
 
@@ -85,10 +87,11 @@ Any branch can be deployed to the `testing` cluster:
 
 ### _Local Environment_
 
+// TODO: Standardize this; I like that `website` is ready to go on fresh clones...
+
 - Developers can set the values of configuration and secrets locally using:
-  - `.env` in `/packages/api`
-  - `.env.local` in `/packages/website`
-  - // TODO: Standardize this; I like that `website` is ready to go on fresh clones...
+  - `/packages/api/.env` (copy `.env.example` to get started)
+  - `/packages/website/.env.local` (override any variable in `.env`)
 
 ### _Deployed Environment_
 
@@ -109,8 +112,8 @@ Any branch can be deployed to the `testing` cluster:
 
 - Use the pnpm arg `-r` to run scripts in all packages:
 
-  `pnpm -r build`
-  `pnpm -r lint`
+  `pnpm -r build`  
+  `pnpm -r lint`  
   `pnpm -r test`
 
 - You can run all lint auto-fixes with:
@@ -123,9 +126,9 @@ Any branch can be deployed to the `testing` cluster:
 
   `pnpm -r clean`
 
-- Delete all dependencies:
+- Delete all build artifacts AND dependencies (node_modules):
 
-  `pnpm -w clean-slate`
+  `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
 
 ### _Cheatsheet: pnpm_
 
