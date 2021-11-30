@@ -13,18 +13,34 @@
       <icon-fas-angle-right class="font-semibold self-center" />
     </router-link>
   </div>
-  <div class="flex items-center ml-2">
-    <img
-      src="../../assets/default-species-image.jpg"
-      class="max-h-20 mr-4"
-    >
+  <no-data-panel
+    v-if="!hasData"
+    class="h-20"
+  />
+  <div
+    v-else
+    class="ml-2"
+  >
     <div
-      class="hover:(underline opacity-70 cursor-pointer)"
+      v-for="item in species"
+      :key="'dashboard-endangered-' + item.speciesId"
+      class="flex content-center mb-2"
     >
-      <p class="text-lg">
-        Cat
-      </p>
-      <p>Endangered</p>
+      <img
+        class="h-16 w-16 object-cover mr-2"
+        :src="speciesImage(item.thumbnailImageUrl)"
+      >
+      <router-link
+        class="self-center hover:(underline opacity-70)"
+        :to="{ name: activityPatternRoutename, params: { projectId, speciesSlug: item.speciesSlug } }"
+      >
+        <p class="text-lg">
+          {{ item.speciesName }}
+        </p>
+        <p v-if="item.speciesCategory">
+          {{ getSpeciesCategory(item.speciesCategory) }}
+        </p>
+      </router-link>
     </div>
   </div>
 </template>
