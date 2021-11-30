@@ -38,7 +38,7 @@
           {{ item.speciesName }}
         </p>
         <p v-if="item.speciesCategory">
-          {{ getSpeciesCategory(item.speciesCategory) }}
+          {{ displayCategory(item.speciesCategory) }}
         </p>
       </router-link>
     </div>

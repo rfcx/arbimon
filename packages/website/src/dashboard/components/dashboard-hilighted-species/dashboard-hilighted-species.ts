@@ -1,6 +1,8 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
+import { getSpeciesCategory } from '@rfcx-bio/common/species/species-categories'
+
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 import { DashboardSpecies } from '../../dashboard'
@@ -29,20 +31,7 @@ export default class DashboardHilightedSpecies extends Vue {
     return thumbnailImage ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
   }
 
-  // TODO: Should move to somewhere
-  getSpeciesCategory (category: string): string {
-    switch (category) {
-      case 'EX': return 'Extinct'
-      case 'EW': return 'Extinct in the wild'
-      case 'RE': return 'Regionally extinct'
-      case 'CR': return 'Critically endangered'
-      case 'EN': return 'Endangered'
-      case 'VU': return 'Vulnerable'
-      case 'NT': return 'Near threatened'
-      case 'LC': return 'Least concern'
-      case 'DD': return 'Data deficient'
-      case 'NA': return 'Not applicable'
-      default: return 'Not evaluated' // 'NE'
-    }
+  displayCategory (category: string): string {
+    return getSpeciesCategory(category)
   }
 }

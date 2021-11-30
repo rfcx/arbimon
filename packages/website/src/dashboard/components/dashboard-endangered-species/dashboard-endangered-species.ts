@@ -1,6 +1,8 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
+import { getSpeciesCategory } from '@rfcx-bio/common/species/species-categories'
+
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 import { DashboardSpecies } from '../../dashboard'
@@ -27,5 +29,9 @@ export default class DashboardEndangeredSpecies extends Vue {
 
   speciesImage (thumbnailImage: string | undefined): string {
     return thumbnailImage ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
+  }
+
+  displayCategory (category: string): string {
+    return getSpeciesCategory(category)
   }
 }
