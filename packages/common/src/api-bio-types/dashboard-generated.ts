@@ -19,6 +19,12 @@ export interface DashboardGeneratedResponse {
   richness: DashboardRichness[]
   endangered: DashboardSpecies[]
   highlighted: DashboardSpecies[]
+  speciesRichness: {
+    time: Record<number, number>
+  }
+  detectionFrequency: {
+    time: Record<number, number>
+  }
 }
 
 export interface DashboardRichness {
