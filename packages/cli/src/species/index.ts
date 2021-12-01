@@ -2,8 +2,10 @@ import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio-types/species'
+import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn/index.js'
+
 import { getSpeciesInformation, getSpeciesRank, getSpeciesRedirectLink } from './iucn/iucn.js'
-import { Species } from './types'
 import { getWikiSpeciesInformation } from './wiki/wiki.js'
 
 // Env
@@ -44,13 +46,13 @@ export async function getSpeciesDataWithWiki (species: Species): Promise<Species
   if (wikiInformation?.content) {
     updatedData.information = {
       description: wikiInformation?.content ?? '',
-      sourceType: 'Wiki',
+      sourceType: SPECIES_SOURCE_WIKI,
       sourceUrl: wikiInformation?.contentUrls.desktop
     }
 
     updatedData.externalLinks?.push({
       title: 'Wiki',
-      sourceType: 'Wiki',
+      sourceType: SPECIES_SOURCE_WIKI,
       sourceUrl: wikiInformation?.contentUrls.desktop
     })
   }
@@ -81,19 +83,19 @@ export async function getSpeciesDataWithIUCN (species: Species): Promise<Species
   const updatedData = species
 
   if (iucnRank) {
-    updatedData.speciesCategory = iucnRank
+    updatedData.extinctionRisk = iucnRank
     updatedData.externalLinks?.push({
       title: 'IUCN',
-      sourceType: 'IUCN',
+      sourceType: SPECIES_SOURCE_IUCN,
       sourceUrl: `${process.env.IUCN_BASE_URL ?? ''}/website/${species.scientificName}`
     })
   } else {
-    updatedData.speciesCategory = null
+    updatedData.extinctionRisk = EXTINCTION_RISK_NOT_EVALUATED.code
   }
   if (iucnDesc) {
     updatedData.information = {
       description: iucnDesc ?? '',
-      sourceType: 'IUCN',
+      sourceType: SPECIES_SOURCE_IUCN,
       sourceUrl: iucnSourceLink
     }
   }

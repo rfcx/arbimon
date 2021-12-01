@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import * as dotenv from 'dotenv'
 
-import { SpeciesCategory } from '../types'
+import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
 dotenv.config()
 
@@ -32,7 +32,7 @@ interface IucnSpeciesResponse {
 }
 
 interface IucnSpeciesResult {
-  category: SpeciesCategory | undefined
+  category: ExtinctionRiskCode | undefined
   criteria: string | null
   marine_system: boolean | null
   freshwater_system: boolean | null
@@ -61,7 +61,7 @@ export async function getSpeciesInformation (speciesName: string): Promise<IucnS
   return data?.result?.[0]
 }
 
-export async function getSpeciesRank (speciesName: string): Promise<SpeciesCategory | undefined> {
+export async function getSpeciesRank (speciesName: string): Promise<ExtinctionRiskCode | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${IUCN_BASE_URL}/species/${speciesName}?token=${IUCN_TOKEN}`

@@ -1,4 +1,4 @@
-// TEMP - Please update this file in both `common` AND `api`
+import { ExtinctionRiskCode } from '../iucn'
 
 // Request
 export interface DashboardGeneratedParams {
@@ -36,7 +36,7 @@ export interface DashboardSpecies {
   speciesId: string
   speciesSlug: string
   speciesName: string
-  speciesCategory: string
+  extinctionRisk: ExtinctionRiskCode
   className: string
   thumbnailImageUrl: string
 }

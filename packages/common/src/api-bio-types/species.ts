@@ -1,25 +1,28 @@
-export type SpeciesSource = 'IUCN' | 'Wiki'
-export type SpeciesCategory = 'NE' | 'NA' | 'DD' | 'LC' | 'NT' | 'VU' | 'EN' | 'CR' | 'RE' | 'EW' | 'EX'
+import { ExtinctionRiskCode } from '../iucn'
 
-export const EXTINCT_LIST = ['VU', 'EN', 'CR', 'RE', 'EW', 'EX']
+export const SPECIES_SOURCE_IUCN = 'IUCN'
+export const SPECIES_SOURCE_WIKI = 'Wiki'
+
+const SPECIES_SOURCES = <const>[SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI]
+export type SpeciesSource = typeof SPECIES_SOURCES[number]
 
 export interface SpeciesInformation {
   description: string
   sourceUrl: string | undefined
-  sourceType: string
+  sourceType: SpeciesSource
 }
 
 export interface SpeciesExternalLink {
   title: string
   sourceUrl: string | undefined
-  sourceType: string
+  sourceType: SpeciesSource
 }
 
 export interface Species {
   speciesId: number
   speciesSlug: string
   scientificName: string
-  speciesCategory: SpeciesCategory | null
+  extinctionRisk: ExtinctionRiskCode
   thumbnailImageUrl?: string
   taxonId: number
   taxon: string
