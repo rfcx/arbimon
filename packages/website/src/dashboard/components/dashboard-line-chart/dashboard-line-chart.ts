@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
@@ -14,7 +15,7 @@ export default class DashboardLineChart extends Vue {
   @Prop() timeData!: Record<number, number> | null
 
   get hasData (): boolean {
-    return this.timeData !== null
+    return this.timeData !== null && !isEmpty(this.timeData)
   }
 
   get config (): Omit<LineChartConfig, 'width'> {
