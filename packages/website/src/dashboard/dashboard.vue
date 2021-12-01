@@ -11,7 +11,10 @@
           v-if="metrics"
           :metrics="metrics"
         />
-        <dashboard-sitemap class="mt-5" />
+        <div class="grid gap-2 mt-5 lg:grid-cols-2">
+          <dashboard-sitemap />
+          <dashboard-line-chart />
+        </div>
         <page-title
           class="mt-5"
           :page-title="store.selectedProject.name"
