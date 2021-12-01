@@ -2,8 +2,6 @@
 
 Website for exploring biodiversity data; built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS.
 
----
-
 ## Contributing
 
 ### _Sprint DoD_
@@ -22,35 +20,63 @@ The following must be true to consider the Sprint "DONE":
 - [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/4)
 - [Other files (Google Drive)](https://drive.google.com/drive/folders/17ZdAoPzetLPqkes4lkGQlKg_uHpkyxxg)
 
----
-
 ## Installation
 
-### _Requirements & Setup_
+### _One-Time Setup_
 
-- node 16: [https://nodejs.org](https://nodejs.org)
-- pnpm 6: `npm i -g pnpm`
-- VSCode & extensions: `pnpm init-vscode`
+1. Install tools:
 
-_If you have Vetur installed, disable it for this workspace_
+   - node 16: [https://nodejs.org](https://nodejs.org)
+   - pnpm 6: `npm i -g pnpm`
+   - VSCode & extensions: `pnpm init-vscode`
+   - If you have Vetur installed, disable it for this workspace
 
-### _Getting Started_
-
-1. Install/update dependencies:
+2. Install/update dependencies:
 
    `pnpm i`
 
-2. In the `api` package, copy `.env.example` to `.env` and fill in all missing variables (see "**Environment**" below).
+3. Setup local environment:
+   - Copy `packages/api/.env.example` to `.env` (and fill missing variables)
+   - Copy `packages/website/.env` to `.env.local` (and fill missing variables)
 
-3. Run the **Website** and **API** (from the monorepo root):
+## Run the App!
 
-   `pnpm serve`
+1. Start **Website** and **API** in dev-mode:
 
-   If you aren't in the monorepo root, you can still call its scripts by adding the `-w` arg:
+   `pnpm serve` (from the monorepo root)  
+   _or_  
+   `pnpm -w serve` (from anywhere in the project)
 
-   `pnpm -w serve`
+## More Commands
 
----
+### _Build, Lint, Test_
+
+- Use the pnpm arg `-r` to run scripts in all packages:
+
+  `pnpm -r build`  
+  `pnpm -r lint`  
+  `pnpm -r test`
+
+- You can run all lint auto-fixes with:
+
+  `pnpm -r lint-fix`
+
+### _Resetting Workspace_
+
+- Delete all build artifacts:
+
+  `pnpm -r clean`
+
+- Delete all build artifacts AND dependencies (node_modules):
+
+  `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
+
+### _Cheatsheet: pnpm_
+
+- `pnpm -w blah` => run in monorepo-root
+- `pnpm -r blah` => run in all packages
+- `pnpm --filter {"packages"} blah` => run in all packages, except root
+- `pnpm --filter=website blah` => run in "website" (or api, cli, ...)
 
 ## Deployment
 
@@ -103,36 +129,3 @@ Any branch can be deployed to the `testing` cluster:
   - Website secrets can be set manually as GitHub secrets
   - // TODO: run Kubernetes apply from CD
   - **The values of secrets should never be committed to Git**
-
----
-
-## More Commands
-
-### _Build, Lint, Test_
-
-- Use the pnpm arg `-r` to run scripts in all packages:
-
-  `pnpm -r build`  
-  `pnpm -r lint`  
-  `pnpm -r test`
-
-- You can run all lint auto-fixes with:
-
-  `pnpm -r lint-fix`
-
-### _Resetting Workspace_
-
-- Delete all build artifacts:
-
-  `pnpm -r clean`
-
-- Delete all build artifacts AND dependencies (node_modules):
-
-  `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
-
-### _Cheatsheet: pnpm_
-
-- `pnpm -w blah` => run in monorepo-root
-- `pnpm -r blah` => run in all packages
-- `pnpm --filter {"packages"} blah` => run in all packages, except root
-- `pnpm --filter=website blah` => run in "website" (or api, cli, ...)
