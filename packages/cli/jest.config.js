@@ -6,6 +6,10 @@ import tsconfig from './tsconfig.build.json'
 
 export default {
   rootDir: 'src',
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': { useESM: true }
+  },
   moduleFileExtensions: [
     'js',
     'ts',
