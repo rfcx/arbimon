@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 
 import appComponent from '@/_layout'
 import { useAuthClient } from '~/auth'
-import { featureToggles } from '~/feature-toggles'
-import router from '~/router'
+import { FEATURE_TOGGLES } from '~/feature-toggles'
+import router, { ROUTE_NAMES } from '~/router'
 import { pinia, useStore } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
 
@@ -21,7 +21,8 @@ async function init (): Promise<void> {
     .use(componentsFromGlob, import.meta.globEager('/src/_components/**/*.vue'))
     .provide('auth', authClient)
     .provide('store', useStore())
-    .provide('toggles', featureToggles)
+    .provide('TOGGLES', FEATURE_TOGGLES)
+    .provide('ROUTE_NAMES', ROUTE_NAMES)
     .mount('#app')
 
   if (redirectAfterAuth !== undefined) await router.replace(redirectAfterAuth)
