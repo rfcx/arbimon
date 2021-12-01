@@ -41,7 +41,7 @@ export default class ActivityPatternsPage extends Vue {
 
   async onSelectedSpeciesChange (species: Species | undefined): Promise<void> {
     const speciesSlug = species?.speciesSlug
-    void this.$router.replace({ name: ROUTE_NAMES.activity_patterns, params: { speciesSlug } })
+    void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
 
     this.species = species ?? null
     this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug ?? '')

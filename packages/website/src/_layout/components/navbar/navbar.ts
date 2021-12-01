@@ -41,15 +41,15 @@ export default class NavbarComponent extends Vue {
           },
           {
             label: 'Richness',
-            destination: { name: ROUTE_NAMES.species_richness, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.speciesRichness, params: { projectId: selectedProjectId } }
           },
           {
             label: 'Activity',
-            destination: { name: ROUTE_NAMES.activity_overview, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.activityOverview, params: { projectId: selectedProjectId } }
           },
           {
             label: 'Spotlight',
-            destination: { name: ROUTE_NAMES.activity_patterns, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.activityPatterns, params: { projectId: selectedProjectId } }
           }
         ]
       : []

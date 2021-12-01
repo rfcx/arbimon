@@ -4,15 +4,16 @@ import { authRequiredGuard } from '~/auth/auth-required-guard'
 import { selectProjectGuard } from '~/router/select-project-guard'
 import * as PAGES from './pages'
 
-export const ROUTE_NAMES = Object.freeze({
+export const ROUTE_NAMES = <const>{
   home: 'home',
   dashboard: 'dashboard',
-  species_richness: 'species_richness',
-  activity_overview: 'activity_overview',
-  activity_patterns: 'activity_patterns',
+  speciesRichness: 'species_richness',
+  activityOverview: 'activity_overview',
+  activityPatterns: 'activity_patterns',
   preferences: 'preferences',
   error: 'error'
-})
+}
+export type RouteNames = typeof ROUTE_NAMES
 
 const routes: RouteRecordRaw[] = [
   {
@@ -37,17 +38,17 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'richness',
-        name: ROUTE_NAMES.species_richness,
+        name: ROUTE_NAMES.speciesRichness,
         component: PAGES.SpeciesRichness
       },
       {
         path: 'activity',
-        name: ROUTE_NAMES.activity_overview,
+        name: ROUTE_NAMES.activityOverview,
         component: PAGES.ActivityOverview
       },
       {
         path: 'spotlight/:speciesSlug?',
-        name: ROUTE_NAMES.activity_patterns,
+        name: ROUTE_NAMES.activityPatterns,
         component: PAGES.ActivityPatterns
       }
     ]

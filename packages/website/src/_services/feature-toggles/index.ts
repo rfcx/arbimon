@@ -12,4 +12,4 @@ const featureTogglesRaw = {
 // Setup types & export
 type FeatureTogglesRaw = typeof featureTogglesRaw
 export type FeatureToggles = { [K in keyof FeatureTogglesRaw]: boolean}
-export const featureToggles: FeatureToggles = mapValues(featureTogglesRaw, value => value as boolean)
+export const FEATURE_TOGGLES: FeatureToggles = mapValues(featureTogglesRaw, value => value as boolean)
