@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Inject } from 'vue-property-decorator'
+import { Inject, Watch } from 'vue-property-decorator'
 
 import { BiodiversityStore } from '~/store'
 import DashboardEndangeredSpecies from './components/dashboard-endangered-species/dashboard-endangered-species.vue'
@@ -15,9 +15,11 @@ import { dashboardService } from './services'
 
 export interface DashboardGeneratedData {
   metrics: Metrics
+  speciesRichness: DashboardDisplayData
+  detectionFrequency: DashboardDisplayData
+  richness: RichnessData[]
   endangered: DashboardSpecies[]
   highlighted: DashboardSpecies[]
-  richness: RichnessData[]
 }
 
 export interface DashboardProfileData {
@@ -34,9 +36,18 @@ export interface DashboardSpecies {
   thumbnailImageUrl: string
 }
 
-interface DataOption {
+export interface DataOption {
   label: string
   value: string
+}
+
+export interface DashboardDisplayData {
+  time: Record<number, number>
+}
+
+const OPTION_VALUES = {
+  richness: 'speciesRichness',
+  frequency: 'detectionFrequency'
 }
 
 @Options({
@@ -59,23 +70,33 @@ export default class DashboardPage extends Vue {
   richness: RichnessData[] | null = null
   endangered: DashboardSpecies[] | null = null
   highlighted: DashboardSpecies[] | null = null
-  selectedDataOption = 'speciesRichness'
+
+  speciesRichness: DashboardDisplayData | null = null
+  detectionFrequency: DashboardDisplayData | null = null
+  timeData: Record<number, number> | null = null
+  selectedDataOption = OPTION_VALUES.richness
 
   get dataOptions (): DataOption[] {
     return [
       {
         label: 'Species richness',
-        value: 'speciesRichness'
+        value: OPTION_VALUES.richness
       },
       {
         label: 'Detection frequency',
-        value: 'detectionFrequency'
+        value: OPTION_VALUES.frequency
       }
     ]
   }
 
   override async mounted (): Promise<void> {
     await this.getData()
+    this.onSelectedDataOptionChange()
+  }
+
+  @Watch('selectedDataOption')
+  onSelectedDataOptionChange (): void {
+    this.timeData = this.selectedDataOption === OPTION_VALUES.richness ? this.speciesRichness?.time ?? null : this.detectionFrequency?.time ?? null
   }
 
   async getData (): Promise<void> {
@@ -92,8 +113,10 @@ export default class DashboardPage extends Vue {
   async getGeneratedData (projectId: string): Promise<void> {
     const generated = await dashboardService.getDashboardGeneratedData(projectId)
     if (generated) {
-      const { endangered, highlighted, richness, metrics } = generated
+      const { speciesRichness, detectionFrequency, richness, endangered, highlighted, metrics } = generated
       this.metrics = metrics
+      this.speciesRichness = speciesRichness
+      this.detectionFrequency = detectionFrequency
       this.endangered = endangered
       this.highlighted = highlighted
       this.richness = richness

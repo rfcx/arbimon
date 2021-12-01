@@ -24,7 +24,10 @@
         </div>
         <div class="grid gap-2 mt-2 lg:grid-cols-2">
           <dashboard-sitemap />
-          <dashboard-line-chart />
+          <dashboard-line-chart
+            v-if="timeData"
+            :time-data="timeData"
+          />
         </div>
         <page-title
           class="mt-5"
