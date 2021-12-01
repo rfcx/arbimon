@@ -1,23 +1,27 @@
-const { pathsToModuleNameMapper } = require('ts-jest/utils')
+import tsJestUtils from 'ts-jest/utils/index.js'
 
 // pathsToModuleNameMapper doesn't follow `extends` to parent configs
 // => we need a direct ref to the config with `paths` defined
-const { compilerOptions } = require('./tsconfig.build.json')
+import tsconfig from './tsconfig.build.json'
 
-module.exports = {
+export default {
   rootDir: 'src',
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': { useESM: true }
+  },
   moduleFileExtensions: [
     'js',
     'ts',
     'json',
     'vue'
   ],
-  moduleNameMapper: pathsToModuleNameMapper(
-    compilerOptions.paths,
+  moduleNameMapper: tsJestUtils.pathsToModuleNameMapper(
+    tsconfig.compilerOptions.paths,
     { prefix: '<rootDir>/' }
   ),
   transform: {
-    '^.+\\.ts$': 'ts-jest',
-    '^.+\\.vue$': 'vue-jest'
+    '^.+\\.vue$': 'vue-jest',
+    '^.+\\.ts$': 'ts-jest'
   }
 }

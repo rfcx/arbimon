@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "clean": "rimraf './dist'",
@@ -50,7 +51,7 @@
     "@types/numeral": "^2.0.2",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-interaction-variants": "^1.0.0",
-    "unplugin-icons": "^0.12.18",
+    "unplugin-icons": "^0.12.22",
     "unplugin-vue-components": "^0.17.1",
     "windicss": "^3.2.1"
   },
