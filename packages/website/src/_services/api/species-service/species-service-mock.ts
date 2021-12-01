@@ -1,4 +1,4 @@
-import { groupBy, kebabCase, mapValues } from 'lodash'
+import { groupBy, kebabCase, mapValues } from 'lodash-es'
 
 import { getRawDetections, simulateDelay } from '~/api-helpers/mock'
 import { Species } from '..'

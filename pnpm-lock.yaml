@@ -10,7 +10,7 @@ importers:
       '@mixer/parallel-prettier': ^2.0.1
       '@types/estree': ^0.0.50
       '@types/jest': ^27.0.2
-      '@types/lodash': ^4.14.176
+      '@types/lodash-es': ^4.17.5
       '@types/node': ^16.11.6
       '@types/webpack': ^5.28.0
       '@typescript-eslint/eslint-plugin': ^5.3.0
@@ -69,7 +69,7 @@ importers:
       '@mixer/parallel-prettier': 2.0.1
       '@types/estree': 0.0.50
       '@types/jest': 27.0.2
-      '@types/lodash': 4.14.176
+      '@types/lodash-es': 4.17.5
       '@types/node': 16.11.6
       '@types/webpack': 5.28.0
       '@typescript-eslint/eslint-plugin': 5.3.0_f8873316f48f7781ccc3e081fc76e214
@@ -130,7 +130,7 @@ importers:
       fastify: ^3.23.1
       fastify-cors: ^6.0.2
       fastify-static: ^4.5.0
-      lodash: ^4.17.21
+      lodash-es: ^4.17.21
     dependencies:
       '@rfcx-bio/common': link:../common
       axios: 0.24.0
@@ -138,7 +138,7 @@ importers:
       fastify: 3.23.1
       fastify-cors: 6.0.2
       fastify-static: 4.5.0
-      lodash: 4.17.21
+      lodash-es: 4.17.21
 
   packages/cli:
     specifiers:
@@ -147,14 +147,14 @@ importers:
       axios: ^0.24.0
       dayjs: ^1.10.7
       dotenv: ^10.0.0
-      lodash: ^4.17.21
+      lodash-es: ^4.17.21
       mysql: ^2.18.1
     dependencies:
       '@rfcx-bio/common': link:../common
       axios: 0.24.0
       dayjs: 1.10.7
       dotenv: 10.0.0
-      lodash: 4.17.21
+      lodash-es: 4.17.21
       mysql: 2.18.1
     devDependencies:
       '@types/mysql': 2.15.19
@@ -163,22 +163,22 @@ importers:
     specifiers:
       '@rfcx-bio/utils': workspace:*
       dayjs: ^1.10.7
-      lodash: ^4.17.21
+      lodash-es: ^4.17.21
     dependencies:
       '@rfcx-bio/utils': link:../utils
       dayjs: 1.10.7
-      lodash: 4.17.21
+      lodash-es: 4.17.21
 
   packages/utils:
     specifiers:
       dayjs: ^1.10.7
       jszip: ^3.7.1
-      lodash: ^4.17.21
+      lodash-es: ^4.17.21
       xlsx: ^0.17.3
     dependencies:
       dayjs: 1.10.7
       jszip: 3.7.1
-      lodash: 4.17.21
+      lodash-es: 4.17.21
       xlsx: 0.17.3
 
   packages/website:
@@ -200,7 +200,7 @@ importers:
       d3: ^7.1.1
       dayjs: ^1.10.7
       jszip: ^3.7.1
-      lodash: ^4.17.21
+      lodash-es: ^4.17.21
       mapbox-gl: ^2.5.1
       numeral: ^2.0.6
       pinia: ^2.0.2
@@ -223,7 +223,7 @@ importers:
       d3: 7.1.1
       dayjs: 1.10.7
       jszip: 3.7.1
-      lodash: 4.17.21
+      lodash-es: 4.17.21
       mapbox-gl: 2.5.1
       numeral: 2.0.6
       pinia: 2.0.2_typescript@4.4.4+vue@3.2.21
@@ -2316,6 +2316,12 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=}
+    dev: true
+
+  /@types/lodash-es/4.17.5:
+    resolution: {integrity: sha512-SHBoI8/0aoMQWAgUHMQ599VM6ZiSKg8sh/0cFqqlQQMyY9uEplc0ULU5yQNzcvdR4ZKa0ey8+vFmahuRbOCT1A==}
+    dependencies:
+      '@types/lodash': 4.14.176
     dev: true
 
   /@types/lodash/4.14.176:
@@ -8072,6 +8078,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}

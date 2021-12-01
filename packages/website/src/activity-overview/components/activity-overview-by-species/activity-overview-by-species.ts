@@ -1,4 +1,4 @@
-import { kebabCase } from 'lodash'
+import { kebabCase } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 

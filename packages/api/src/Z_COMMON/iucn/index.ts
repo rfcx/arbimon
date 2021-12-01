@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 
 const EXTINCTION_RISK_CODES_AND_LABELS = <const>[
   { code: 'NE', label: 'Not Evaluated' },

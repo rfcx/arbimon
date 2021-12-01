@@ -1,4 +1,4 @@
-import { groupBy, mapValues } from 'lodash'
+import { groupBy, mapValues } from 'lodash-es'
 
 import { DatasetDefinition } from '~/api/types'
 import { rawSites } from './raw-sites'

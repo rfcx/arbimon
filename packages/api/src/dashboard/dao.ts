@@ -1,4 +1,4 @@
-import { mapValues, sum } from 'lodash'
+import { mapValues, sum } from 'lodash-es'
 
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
