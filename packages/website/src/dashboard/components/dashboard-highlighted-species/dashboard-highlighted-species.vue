@@ -44,4 +44,4 @@
     </div>
   </div>
 </template>
-<script lang="ts" src="./dashboard-hilighted-species.ts"></script>
+<script lang="ts" src="./dashboard-highlighted-species.ts"></script>

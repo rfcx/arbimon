@@ -15,7 +15,7 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     endangeredSpecies: 10,
     richness: await getRichness(),
     endangered: await getEndangered(),
-    hilighted: await getHilighted()
+    highlighted: await getHighlighted()
   }
 }
 
@@ -90,7 +90,7 @@ export async function getEndangered (): Promise<DashboardSpecies[]> {
   return species.length <= 10 ? species : species.slice(0, 10)
 }
 
-export async function getHilighted (): Promise<DashboardSpecies[]> {
+export async function getHighlighted (): Promise<DashboardSpecies[]> {
   return JSON.parse(rawSpeciesData).slice(0, 5)
     .map((item: Species) => {
       return {

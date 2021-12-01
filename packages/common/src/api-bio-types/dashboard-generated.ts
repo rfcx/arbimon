@@ -18,7 +18,7 @@ export interface DashboardGeneratedResponse {
   endangeredSpecies: number
   richness: DashboardRichness[]
   endangered: DashboardSpecies[]
-  hilighted: DashboardSpecies[]
+  highlighted: DashboardSpecies[]
 }
 
 export interface DashboardRichness {

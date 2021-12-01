@@ -30,7 +30,7 @@
           :total-species="metrics?.speciesCount"
           :richness="richness"
         />
-        <dashboard-hilighted-species :species="hilighted" />
+        <dashboard-highlighted-species :species="highlighted" />
         <dashboard-endangered-species :species="endangered" />
       </div>
     </div>
