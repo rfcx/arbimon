@@ -1,5 +1,3 @@
-// TEMP - Please update this file in both `common` AND `api`
-
 // Request
 export interface DashboardProfileParams {
   projectId: string

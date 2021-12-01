@@ -4,7 +4,7 @@ import { DashboardProfileParams, DashboardProfileResponse } from '../Z_COMMON/ap
 import { getProfile } from './dao.js'
 
 export const dashboardProfileController: Controller<DashboardProfileParams, DashboardProfileResponse> = async (req) => {
-  // Inputs
+  // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
 
