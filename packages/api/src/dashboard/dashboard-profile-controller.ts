@@ -1,4 +1,4 @@
-import { DashboardProfileParams, DashboardProfileResponse } from 'TEMP/api-bio-types/dashboard-profile.js'
+import { DashboardProfileParams, DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
 
 import { Controller } from '../_services/api-helper/types.js'
 import { assertParamsExist } from '../_services/validation/index.js'
