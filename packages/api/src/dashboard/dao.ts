@@ -1,10 +1,14 @@
 import * as fs from 'fs'
+import lodash from 'lodash'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
+import { rawDetections } from '../MOCK/raw-detections/raw-detections.js'
 import { EXTINCT_LIST, Species } from '../species/types.js'
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../TEMP/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../TEMP/api-bio-types/dashboard-profile.js'
+
+const { mapValues, sum } = lodash
 
 // TODO: Update to query from DB
 export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
@@ -15,7 +19,13 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     endangeredSpecies: 10,
     richness: await getRichness(),
     endangered: await getEndangered(),
-    highlighted: await getHighlighted()
+    highlighted: await getHighlighted(),
+    speciesRichness: {
+      time: await getRichnessDetectionByTime()
+    },
+    detectionFrequency: {
+      time: await getDetectionFrequencyByTime()
+    }
   }
 }
 
@@ -61,7 +71,6 @@ export async function getRichness (): Promise<DashboardRichness[]> {
 
 // TODO ??? - Getting species data from DB instead (The code is from species controller)
 const currentDir = dirname(fileURLToPath(import.meta.url))
-console.log('check species ->', currentDir)
 
 const mockSpeciesPath = resolve(currentDir, '../species/raw-species.json')
 
@@ -102,4 +111,32 @@ export async function getHighlighted (): Promise<DashboardSpecies[]> {
         thumbnailImageUrl: item.thumbnailImageUrl
       }
     })
+}
+
+export async function getRichnessDetectionByTime (): Promise<Record<number, number>> {
+  return mapValues(groupByNumber(rawDetections, d => d.hour), detections => new Set(detections.map(d => d.species_id)).size)
+}
+
+export async function getDetectionFrequencyByTime (): Promise<Record<number, number>> {
+  const totalRecordingCount = new Set(rawDetections.map(d => `${d.date}-${d.hour}`)).size * 12
+  return mapValues(groupByNumber(rawDetections, d => d.hour), detections => {
+    const detectionCount = sum(detections.map(d => d.num_of_recordings))
+    return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+  })
+}
+
+// TODO: Remove this function and use it from `utils/src/lodash-ext/index.ts` instead
+export const groupByNumber = <T>(data: T[], keySelector: ((k: T) => number)): Record<number, T[]> => {
+  const result: Record<number, T[]> = {}
+
+  for (const datum of data) {
+    const key = keySelector(datum)
+    if (!(key in result)) {
+      result[key] = [datum]
+    } else {
+      result[key].push(datum)
+    }
+  }
+
+  return result
 }
