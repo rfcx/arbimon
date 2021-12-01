@@ -7,7 +7,7 @@ import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 import { DashboardSpecies } from '../../dashboard'
 
-export default class DashboardHilightedSpecies extends Vue {
+export default class DashboardHighlightedSpecies extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop() species!: DashboardSpecies[] | null
 
