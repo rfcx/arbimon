@@ -33,7 +33,7 @@ export interface DashboardRichness {
 }
 
 export interface DashboardSpecies {
-  speciesId: string
+  speciesId: number
   speciesSlug: string
   speciesName: string
   extinctionRisk: ExtinctionRiskCode

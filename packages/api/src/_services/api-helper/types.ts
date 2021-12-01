@@ -1,6 +1,6 @@
 import { RouteHandlerMethod } from 'fastify'
 
-import { NoExtraProperties } from '../../Z_COMMON/utility-types'
+import { NoExtraProperties } from '../../Z_UTILS/utility-types'
 
 type FastifyController<Params, Response> = RouteHandlerMethod<any, any, any, {
   Params: Partial<Params>
