@@ -4,13 +4,13 @@ import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { env } from './_services/env/index.js'
-import { routesActivityPatterns } from './activity-patterns/index.js'
 import { routesDashboard } from './dashboard/index.js'
 import { routesIndex } from './index/index.js'
 import { routesProjectSite } from './projects-and-sites/index.js'
+import { routesRichness } from './richness/index.js'
 import { routesSpecies } from './species/index.js'
 import { routesIucn } from './species/iucn/index.js'
-import { routesSpeciesRichness } from './species-richness/index.js'
+import { routesSpotlight } from './spotlight/index.js'
 
 export const app = fastify({
   logger: env.NODE_ENV !== 'production'
@@ -25,8 +25,8 @@ const routePlugins = [
   routesIndex,
   routesProjectSite,
   routesSpecies,
-  routesSpeciesRichness,
-  routesActivityPatterns,
+  routesRichness,
+  routesSpotlight,
   routesIucn,
   routesDashboard
 ]

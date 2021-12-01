@@ -3,10 +3,10 @@ import lodash from 'lodash'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
-import { rawDetections } from '../Z_MOCK/raw-detections/raw-detections.js'
 import { EXTINCT_LIST, Species } from '../species/types.js'
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
+import { rawDetections } from '../Z_MOCK/raw-detections/raw-detections.js'
 
 const { mapValues, sum } = lodash
 
