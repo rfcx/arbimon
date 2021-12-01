@@ -11,7 +11,18 @@
           v-if="metrics"
           :metrics="metrics"
         />
-        <div class="grid gap-2 mt-5 lg:grid-cols-2">
+        <div class="flex flex-row flex-1 items-center mt-5">
+          <p
+            v-for="option in dataOptions"
+            :key="'dashboard-data-display-' + option.value"
+            class="text-lg capitalize py-2 px-4 cursor-pointer"
+            :class="option.value === selectedDataOption ? 'border-b-4 border-brand-primary' : 'border-b-1 border-steel-grey'"
+            @click="selectedDataOption = option.value"
+          >
+            {{ option.label }}
+          </p>
+        </div>
+        <div class="grid gap-2 mt-2 lg:grid-cols-2">
           <dashboard-sitemap />
           <dashboard-line-chart />
         </div>
