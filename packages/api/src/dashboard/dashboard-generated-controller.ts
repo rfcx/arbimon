@@ -4,7 +4,7 @@ import { DashboardGeneratedParams, DashboardGeneratedResponse } from '../Z_COMMO
 import { getGeneratedData } from './dao.js'
 
 export const dashboardGeneratedController: Controller<DashboardGeneratedParams, DashboardGeneratedResponse> = async (req) => {
-  // Inputs
+  // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
 
