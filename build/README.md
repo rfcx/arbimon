@@ -15,13 +15,13 @@ Requires:
 - Docker
 - Allocate at least 4GB memory to Docker (preferences > resources)
 
-Steps:
+Steps (from the root directory):
 
 1.  Build & run API image
 
     ```
     docker build -f build/Dockerfile --target api -t bio-api .
-    docker run --rm -it -p 8080:8080 bio-api
+    docker run --rm -it -p 3000:8080 bio-api
     ```
 
 2.  Build & run Website image
