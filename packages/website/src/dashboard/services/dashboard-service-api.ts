@@ -2,22 +2,15 @@ import { DashboardGeneratedResponse, dashboardGeneratedUrl } from '@rfcx-bio/com
 import { DashboardProfileResponse, dashboardProfileUrl } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
 
 import { apiClient } from '~/api-helpers/rest'
-import { DashboardGeneratedData, DashboardProfileData } from '../dashboard'
 
 export class DashboardService {
   constructor (private readonly baseUrl: string) {}
 
-  async getDashboardGeneratedData (projectId: string): Promise<DashboardGeneratedData | undefined> {
-    const body = await apiClient.getOrUndefined<DashboardGeneratedResponse>(`${this.baseUrl}${dashboardGeneratedUrl({ projectId })}`)
-    if (!body) return body
-
-    const { speciesRichness, detectionFrequency, richness, endangered, highlighted, ...metrics } = body
-
-    return { metrics, speciesRichness, detectionFrequency, richness, endangered, highlighted }
+  async getDashboardGeneratedData (projectId: string): Promise<DashboardGeneratedResponse | undefined> {
+    return await apiClient.getOrUndefined<DashboardGeneratedResponse>(`${this.baseUrl}${dashboardGeneratedUrl({ projectId })}`)
   }
 
-  async getDashboardProfileData (projectId: string): Promise<DashboardProfileData | undefined> {
-    const body = await apiClient.getOrUndefined<DashboardProfileResponse>(`${this.baseUrl}${dashboardProfileUrl({ projectId })}`)
-    return body
+  async getDashboardProfileData (projectId: string): Promise<DashboardProfileResponse | undefined> {
+    return await apiClient.getOrUndefined<DashboardProfileResponse>(`${this.baseUrl}${dashboardProfileUrl({ projectId })}`)
   }
 }

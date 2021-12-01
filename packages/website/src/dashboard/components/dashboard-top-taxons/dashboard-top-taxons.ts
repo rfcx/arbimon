@@ -11,7 +11,7 @@ export interface RichnessData {
   speciesNo: number
 }
 
-export interface DashboardRichnessPercentage {
+interface DashboardRichnessPercentage {
   taxonClass: string
   percentage: number
   color: string
@@ -23,7 +23,7 @@ export default class DashboardTopTaxons extends Vue {
   @Prop() richness!: RichnessData[]
 
   get richnessRoutename (): string {
-    return ROUTE_NAMES.species_richness
+    return ROUTE_NAMES.speciesRichness
   }
 
   get projectId (): string | undefined {

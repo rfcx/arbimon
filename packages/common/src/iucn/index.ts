@@ -28,6 +28,6 @@ export const EXTINCTION_RISK_VULNERABLE_CODES: ExtinctionRiskCode[] = EXTINCTION
   .filter(el => el.level >= EXTINCTION_RISK_VULNERABLE.level)
   .map(el => el.code)
 
-export const getExtinctionRiskLabel = (code: ExtinctionRiskCode): ExtinctionRisk['label'] =>
-  EXTINCTION_RISKS_KEYED[code]?.label ??
-  EXTINCTION_RISK_NOT_EVALUATED.label
+export const getExtinctionRisk = (code: ExtinctionRiskCode): ExtinctionRisk =>
+  EXTINCTION_RISKS_KEYED[code] ??
+  EXTINCTION_RISK_NOT_EVALUATED
