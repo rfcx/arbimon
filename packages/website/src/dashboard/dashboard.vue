@@ -22,9 +22,9 @@
             {{ option.label }}
           </p>
         </div>
-        <div class="grid gap-2 mt-2 lg:grid-cols-2">
+        <div class="grid gap-2 mt-2 xl:grid-cols-2">
           <dashboard-sitemap />
-          <dashboard-line-chart />
+          <dashboard-line-chart :time-data="timeData" />
         </div>
         <page-title
           class="mt-5"
