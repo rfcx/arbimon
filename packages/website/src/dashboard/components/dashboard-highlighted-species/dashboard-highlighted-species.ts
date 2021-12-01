@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { getSpeciesCategory } from '@rfcx-bio/common/species/species-categories'
+import { ExtinctionRiskCode, getExtinctionRiskLabel } from '@rfcx-bio/common/iucn'
 
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -31,7 +31,7 @@ export default class DashboardHighlightedSpecies extends Vue {
     return thumbnailImage ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
   }
 
-  displayCategory (category: string): string {
-    return getSpeciesCategory(category)
+  displayCategory (category: ExtinctionRiskCode): string {
+    return getExtinctionRiskLabel(category)
   }
 }
