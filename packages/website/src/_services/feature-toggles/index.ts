@@ -1,4 +1,4 @@
-import { mapValues } from 'lodash'
+import { mapValues } from 'lodash-es'
 
 const featureTogglesRaw = {
   /* START: Declare toggles here */

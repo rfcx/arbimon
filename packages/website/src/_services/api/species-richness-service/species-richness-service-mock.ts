@@ -1,4 +1,4 @@
-import { groupBy, kebabCase, mapValues } from 'lodash'
+import { groupBy, kebabCase, mapValues } from 'lodash-es'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'

@@ -1,4 +1,4 @@
-import { sumBy } from 'lodash'
+import { sumBy } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
