@@ -1,37 +1,25 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { ExtinctionRiskCode, getExtinctionRiskLabel } from '@rfcx-bio/common/iucn'
+import { ExtinctionRisk } from '@rfcx-bio/common/iucn'
 
-import { ROUTE_NAMES } from '~/router'
+import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
-import { DashboardSpecies } from '../../dashboard'
+
+export interface EndangeredSpeciesRow {
+  speciesId: number
+  speciesName: string
+  speciesSlug: string
+  imageUrl: string
+  extinctionRisk: ExtinctionRisk
+}
 
 export default class DashboardEndangeredSpecies extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop() species!: DashboardSpecies[] | null
-
-  get activityOverviewRoutename (): string {
-    return ROUTE_NAMES.activity_overview
-  }
-
-  get activityPatternRoutename (): string {
-    return ROUTE_NAMES.activity_patterns
-  }
-
-  get projectId (): string | undefined {
-    return this.store.selectedProject?.id
-  }
+  @Inject() readonly ROUTE_NAMES!: RouteNames
+  @Prop() species!: EndangeredSpeciesRow[]
 
   get hasData (): boolean {
-    return this.species !== null && this.species?.length > 0
-  }
-
-  speciesImage (thumbnailImage: string | undefined): string {
-    return thumbnailImage ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
-  }
-
-  displayCategory (category: ExtinctionRiskCode): string {
-    return getExtinctionRiskLabel(category)
+    return this.species.length > 0
   }
 }

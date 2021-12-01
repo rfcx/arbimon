@@ -5,7 +5,7 @@
     </div>
     <router-link
       class="flex hover:(underline opacity-70)"
-      :to="{ name: activityOverview, params: { projectId } }"
+      :to="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
     >
       <div>
         Compare
@@ -28,17 +28,17 @@
     >
       <img
         class="h-16 w-16 object-cover mr-2"
-        :src="speciesImage(item.thumbnailImageUrl)"
+        :src="item.imageUrl"
       >
       <router-link
         class="self-center hover:(underline opacity-70)"
-        :to="{ name: activityPatternRoutename, params: { projectId, speciesSlug: item.speciesSlug } }"
+        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
       >
         <p class="text-lg italic">
           {{ item.speciesName }}
         </p>
-        <p v-if="item.speciesCategory">
-          {{ displayCategory(item.speciesCategory) }}
+        <p>
+          {{ item.extinctionRisk.label }}
         </p>
       </router-link>
     </div>
