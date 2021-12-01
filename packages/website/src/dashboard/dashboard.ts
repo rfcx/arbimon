@@ -34,6 +34,11 @@ export interface DashboardSpecies {
   thumbnailImageUrl: string
 }
 
+interface DataOption {
+  label: string
+  value: string
+}
+
 @Options({
   components: {
     DashboardEndangeredSpecies,
@@ -54,6 +59,20 @@ export default class DashboardPage extends Vue {
   richness: RichnessData[] | null = null
   endangered: DashboardSpecies[] | null = null
   highlighted: DashboardSpecies[] | null = null
+  selectedDataOption = 'speciesRichness'
+
+  get dataOptions (): DataOption[] {
+    return [
+      {
+        label: 'Species richness',
+        value: 'speciesRichness'
+      },
+      {
+        label: 'Detection frequency',
+        value: 'detectionFrequency'
+      }
+    ]
+  }
 
   override async mounted (): Promise<void> {
     await this.getData()
