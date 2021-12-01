@@ -34,7 +34,7 @@
         class="self-center hover:(underline opacity-70)"
         :to="{ name: activityPatternRoutename, params: { projectId, speciesSlug: item.speciesSlug } }"
       >
-        <p class="text-lg">
+        <p class="text-lg italic">
           {{ item.speciesName }}
         </p>
         <p v-if="item.speciesCategory">
