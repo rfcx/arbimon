@@ -89,9 +89,8 @@ export default class DashboardPage extends Vue {
     ]
   }
 
-  override async mounted (): Promise<void> {
+  override async created (): Promise<void> {
     await this.getData()
-    this.onSelectedDataOptionChange()
   }
 
   @Watch('selectedDataOption')
@@ -120,6 +119,7 @@ export default class DashboardPage extends Vue {
       this.endangered = endangered
       this.highlighted = highlighted
       this.richness = richness
+      this.timeData = speciesRichness.time
     }
   }
 
