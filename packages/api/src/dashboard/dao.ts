@@ -1,14 +1,11 @@
-import * as fs from 'fs'
-import lodash from 'lodash'
-import { dirname, resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { mapValues, sum } from 'lodash'
 
-import { EXTINCT_LIST, Species } from '../species/types.js'
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
-import { rawDetections } from '../Z_MOCK/raw-detections/raw-detections.js'
-
-const { mapValues, sum } = lodash
+import { EXTINCTION_RISK_VULNERABLE_CODES } from '../Z_COMMON/iucn/index.js'
+import { rawDetections } from '../Z_MOCK/raw-detections.js'
+import { rawSpecies } from '../Z_MOCK/raw-species.js'
+import { groupByNumber } from '../Z_UTILS/lodash-ext/index.js'
 
 // TODO: Update to query from DB
 export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
@@ -54,63 +51,42 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
 
 export async function getRichness (): Promise<DashboardRichness[]> {
   return [
-    {
-      taxonClass: 'Amphibians',
-      speciesNo: 10
-    },
-    {
-      taxonClass: 'Birds',
-      speciesNo: 75
-    },
-    {
-      taxonClass: 'Mammals',
-      speciesNo: 12
-    }
+    { taxonClass: 'Amphibians', speciesNo: 10 },
+    { taxonClass: 'Birds', speciesNo: 75 },
+    { taxonClass: 'Mammals', speciesNo: 12 }
   ]
 }
 
 // TODO ??? - Getting species data from DB instead (The code is from species controller)
-const currentDir = dirname(fileURLToPath(import.meta.url))
-
-const mockSpeciesPath = resolve(currentDir, '../species/raw-species.json')
-
-// Ingest raw data
-const rawSpeciesStringOrBuffer = fs.readFileSync(mockSpeciesPath)
-const rawSpeciesData = Buffer.isBuffer(rawSpeciesStringOrBuffer)
-  ? rawSpeciesStringOrBuffer.toString()
-  : rawSpeciesStringOrBuffer
-
 export async function getEndangered (): Promise<DashboardSpecies[]> {
-  const species = JSON.parse(rawSpeciesData)
-    .filter((item: Species) => EXTINCT_LIST.includes(item.speciesCategory ?? ''))
-    .map((item: Species) => {
-      return {
-        speciesId: item.speciesId,
-        speciesSlug: item.speciesSlug,
-        speciesName: item.scientificName,
-        speciesCategory: item.speciesCategory,
-        className: item.taxon,
-        thumbnailImageUrl: item.thumbnailImageUrl
-      }
-    })
-    .sort((a: DashboardSpecies, b: DashboardSpecies) => {
-      return EXTINCT_LIST.indexOf(b.speciesCategory) - EXTINCT_LIST.indexOf(a.speciesCategory) || a.speciesName.localeCompare(b.speciesName)
-    })
-  return species.length <= 10 ? species : species.slice(0, 10)
+  return rawSpecies
+    .filter(species => EXTINCTION_RISK_VULNERABLE_CODES.includes(species.extinctionRisk))
+    .map(species => ({
+      speciesId: species.speciesId,
+      speciesSlug: species.speciesSlug,
+      speciesName: species.scientificName,
+      extinctionRisk: species.extinctionRisk,
+      className: species.taxon,
+      thumbnailImageUrl: species.thumbnailImageUrl ?? ''
+    }))
+    .sort((a, b) =>
+      EXTINCTION_RISK_VULNERABLE_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_VULNERABLE_CODES.indexOf(a.extinctionRisk) ||
+      a.speciesName.localeCompare(b.speciesName)
+    )
+    .slice(0, 10)
 }
 
 export async function getHighlighted (): Promise<DashboardSpecies[]> {
-  return JSON.parse(rawSpeciesData).slice(0, 5)
-    .map((item: Species) => {
-      return {
-        speciesId: item.speciesId,
-        speciesSlug: item.speciesSlug,
-        speciesName: item.scientificName,
-        speciesCategory: item.speciesCategory,
-        className: item.taxon,
-        thumbnailImageUrl: item.thumbnailImageUrl
-      }
-    })
+  return rawSpecies
+    .slice(0, 5)
+    .map(species => ({
+      speciesId: species.speciesId,
+      speciesSlug: species.speciesSlug,
+      speciesName: species.scientificName,
+      extinctionRisk: species.extinctionRisk,
+      className: species.taxon,
+      thumbnailImageUrl: species.thumbnailImageUrl ?? ''
+    }))
 }
 
 export async function getRichnessDetectionByTime (): Promise<Record<number, number>> {
@@ -123,20 +99,4 @@ export async function getDetectionFrequencyByTime (): Promise<Record<number, num
     const detectionCount = sum(detections.map(d => d.num_of_recordings))
     return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
   })
-}
-
-// TODO: Remove this function and use it from `utils/src/lodash-ext/index.ts` instead
-export const groupByNumber = <T>(data: T[], keySelector: ((k: T) => number)): Record<number, T[]> => {
-  const result: Record<number, T[]> = {}
-
-  for (const datum of data) {
-    const key = keySelector(datum)
-    if (!(key in result)) {
-      result[key] = [datum]
-    } else {
-      result[key].push(datum)
-    }
-  }
-
-  return result
 }
