@@ -54,7 +54,7 @@ export default class SpeciesInformation extends Vue {
   // TODO 190: Improve image handler
   speciesImage (): string {
     const url = this.wikiSpeciesInformation?.thumbnailImage
-    return url ?? new URL('../../assets/default-species-image.jpg', import.meta.url).toString()
+    return url ?? new URL('../../../_assets/default-species-image.jpg', import.meta.url).toString()
   }
 
   async getSpeciesInformation (): Promise<void> {

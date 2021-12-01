@@ -1,51 +1,28 @@
 import { Options, Vue } from 'vue-class-component'
-import { Inject, Watch } from 'vue-property-decorator'
+import { Inject } from 'vue-property-decorator'
+
+import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
+import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+import { getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import { BiodiversityStore } from '~/store'
+import { EndangeredSpeciesRow } from './components/dashboard-endangered-species/dashboard-endangered-species'
 import DashboardEndangeredSpecies from './components/dashboard-endangered-species/dashboard-endangered-species.vue'
+import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
 import DashboardLineChart from './components/dashboard-line-chart/dashboard-line-chart.vue'
-import { Metrics } from './components/dashboard-metrics/dashboard-metrics'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
-import { RichnessData } from './components/dashboard-top-taxons/dashboard-top-taxons'
 import DashboardTopTaxons from './components/dashboard-top-taxons/dashboard-top-taxons.vue'
 import { dashboardService } from './services'
 
-export interface DashboardGeneratedData {
-  metrics: Metrics
-  speciesRichness: DashboardDisplayData
-  detectionFrequency: DashboardDisplayData
-  richness: RichnessData[]
-  endangered: DashboardSpecies[]
-  highlighted: DashboardSpecies[]
-}
-
-export interface DashboardProfileData {
-  description: string
-  readme: string // markdown string
-}
-
-export interface DashboardSpecies {
-  speciesId: string
-  speciesSlug: string
-  speciesName: string
-  speciesCategory: string
-  className: string
-  thumbnailImageUrl: string
-}
-
-export interface DataOption {
+export interface Tab {
   label: string
   value: string
 }
 
-export interface DashboardDisplayData {
-  time: Record<number, number>
-}
-
-const OPTION_VALUES = {
+const TAB_VALUES = {
   richness: 'speciesRichness',
   frequency: 'detectionFrequency'
 }
@@ -64,70 +41,55 @@ const OPTION_VALUES = {
 export default class DashboardPage extends Vue {
   @Inject() readonly store!: BiodiversityStore
 
-  metrics: Metrics | null = null
-  projectDescription: string | null = null
-  projectReadme: string | null = null
-  richness: RichnessData[] | null = null
-  endangered: DashboardSpecies[] | null = null
-  highlighted: DashboardSpecies[] | null = null
+  generated: DashboardGeneratedResponse | null = null
+  profile: DashboardProfileResponse | null = null
 
-  speciesRichness: DashboardDisplayData | null = null
-  detectionFrequency: DashboardDisplayData | null = null
-  timeData: Record<number, number> | null = null
-  selectedDataOption = OPTION_VALUES.richness
+  selectedTab = TAB_VALUES.richness
+  tabs = [
+    { label: 'Species Richness', value: TAB_VALUES.richness },
+    { label: 'Detection Frequency', value: TAB_VALUES.frequency }
+  ]
 
-  get dataOptions (): DataOption[] {
-    return [
-      {
-        label: 'Species richness',
-        value: OPTION_VALUES.richness
-      },
-      {
-        label: 'Detection frequency',
-        value: OPTION_VALUES.frequency
-      }
-    ]
+  get lineChartData (): Record<number, number> | null {
+    return this.selectedTab === TAB_VALUES.richness
+      ? this.generated?.speciesRichness?.time ?? null
+      : this.generated?.detectionFrequency?.time ?? null
+  }
+
+  get highlighted (): HighlightedSpeciesRow[] {
+    if (!this.generated) return []
+
+    return this.generated.highlighted.map(({ speciesId, speciesName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+      speciesId,
+      speciesName,
+      speciesSlug,
+      imageUrl: thumbnailImageUrl ?? new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
+      extinctionRisk: getExtinctionRisk(extinctionRisk)
+    }))
+  }
+
+  get endangered (): EndangeredSpeciesRow[] {
+    if (!this.generated) return []
+
+    return this.generated.highlighted.map(({ speciesId, speciesName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+      speciesId,
+      speciesName,
+      speciesSlug,
+      imageUrl: thumbnailImageUrl ?? new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
+      extinctionRisk: getExtinctionRisk(extinctionRisk)
+    }))
   }
 
   override async created (): Promise<void> {
-    await this.getData()
-  }
-
-  @Watch('selectedDataOption')
-  onSelectedDataOptionChange (): void {
-    this.timeData = this.selectedDataOption === OPTION_VALUES.richness ? this.speciesRichness?.time ?? null : this.detectionFrequency?.time ?? null
-  }
-
-  async getData (): Promise<void> {
-    // Get data
     const projectId = this.store.selectedProject?.id
     if (!projectId) return
 
-    await Promise.all([
-      this.getGeneratedData(projectId),
-      this.getProfileData(projectId)
+    const [generated, profile] = await Promise.all([
+      dashboardService.getDashboardGeneratedData(projectId),
+      dashboardService.getDashboardProfileData(projectId)
     ])
-  }
 
-  async getGeneratedData (projectId: string): Promise<void> {
-    const generated = await dashboardService.getDashboardGeneratedData(projectId)
-    if (generated) {
-      const { speciesRichness, detectionFrequency, richness, endangered, highlighted, metrics } = generated
-      this.metrics = metrics
-      this.speciesRichness = speciesRichness
-      this.detectionFrequency = detectionFrequency
-      this.endangered = endangered
-      this.highlighted = highlighted
-      this.richness = richness
-      this.timeData = speciesRichness.time
-    }
-  }
-
-  async getProfileData (projectId: string): Promise<void> {
-    const profile = await dashboardService.getDashboardProfileData(projectId)
-    if (profile) {
-      this.projectDescription = profile.description
-      this.projectReadme = profile.readme
-    }
+    this.generated = generated ?? null
+    this.profile = profile ?? null
   }
 }
