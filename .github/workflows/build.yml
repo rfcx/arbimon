@@ -34,8 +34,11 @@ jobs:
               "antonyharfield": {
                 "SLACK_MENTION_USERS": "U09HZUDUY"
               },
+              "Crave61341416": {
+                "SLACK_MENTION_USERS": "U02NUJCUV99"
+              },
               ".*": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY"
+                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99"
               }
             }
 
