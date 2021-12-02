@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/*"
   ],
@@ -16,9 +17,9 @@
     "lint-ci": "pnpm -r lint",
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier \"./*.{json,md,yaml}\" \"build/**/*.{md,yaml}\" --loglevel warn --write",
     "test-ci": "pnpm -r test",
-    "serve": "concurrently \"pnpm:serve-*\"",
-    "serve-api": "pnpm --filter=api serve",
-    "serve-website": "pnpm --filter=website serve"
+    "serve:api": "pnpm --filter=api serve",
+    "serve:website": "pnpm --filter=website serve",
+    "serve": "concurrently --kill-others-on-fail \"pnpm:serve:*\""
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
