@@ -1,13 +1,5 @@
 module.exports = {
-  extends: ['.eslintrc-js.js'],
-  parserOptions: {
-    ecmaFeatures: { jsx: true },
-    ecmaVersion: 'latest',
-    extraFileExtensions: ['.vue'],
-    parser: '@typescript-eslint/parser',
-    project: ['./tsconfig.json', './packages/*/tsconfig.json'],
-    sourceType: 'module'
-  },
+  extends: ['./.eslintrc-js.cjs'],
   plugins: ['sort-class-members'],
   rules: {
     '@typescript-eslint/space-before-function-paren': [
