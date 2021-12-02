@@ -13,10 +13,6 @@ export default class DashboardLineChart extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop() timeData!: Record<number, number> | null
 
-  get hasData (): boolean {
-    return this.timeData !== null && Object.keys(this.timeData).length > 0
-  }
-
   get config (): Omit<LineChartConfig, 'width'> {
     return {
       height: 576,

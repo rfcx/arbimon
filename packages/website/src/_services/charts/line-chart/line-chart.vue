@@ -5,7 +5,7 @@
   >
     <no-data-panel
       v-if="!hasData"
-      class="h-32 mt-2"
+      class="h-full min-h-32"
     />
     <div
       v-show="hasData"

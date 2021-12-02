@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
@@ -44,10 +43,6 @@ export default class ActivityPatternsByTime extends Vue {
 
   buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
   selectedBucket: TimeBucket = 'hour'
-
-  get hasData (): boolean {
-    return this.datasetsForSelectedBucket.some(ds => !isEmpty(ds.data))
-  }
 
   get config (): Omit<LineChartConfig, 'width'> {
     return {
