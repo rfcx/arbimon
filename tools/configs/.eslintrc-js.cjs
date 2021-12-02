@@ -1,5 +1,12 @@
 module.exports = {
   extends: ['plugin:jest/recommended', 'standard-with-typescript'],
+  parserOptions: {
+    ecmaFeatures: { jsx: true },
+    ecmaVersion: 'latest',
+    extraFileExtensions: ['.cjs', '.mjs', '.vue'],
+    parser: '@typescript-eslint/parser',
+    sourceType: 'module'
+  },
   plugins: ['simple-import-sort', 'unicorn', 'unused-imports'],
   rules: {
     'import/newline-after-import': ['error'],
