@@ -10,12 +10,20 @@ export default class SpeciesSelector extends Vue {
     return species
   }
 
-  selectedSpeciesSlug: string = ''
+  selectedSpeciesSlug = ''
   allSpecies: Species[] = []
+  loadingSpecies = false
+  currentSpeciesQuery = ''
 
   get selectedSpecies (): Species | undefined {
     if (!this.selectedSpeciesSlug) return undefined
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
+  }
+
+  get filteredSpecies (): Species[] {
+    if (!this.currentSpeciesQuery) return this.allSpecies
+    const query = this.currentSpeciesQuery.trim().toLowerCase()
+    return this.allSpecies.filter(s => s.speciesName.toLowerCase().split(' ').some(w => w.startsWith(query)))
   }
 
   override async created (): Promise<void> {
@@ -38,5 +46,15 @@ export default class SpeciesSelector extends Vue {
   @Watch('selectedSpeciesSlug')
   onSelectedSpeciesSlugChange (): void {
     if (this.selectedSpecies) this.emitSelectedSpeciesChanged(this.selectedSpecies)
+  }
+
+  async onType (query: string): Promise<void> {
+    this.loadingSpecies = true
+    // TODO: Call species API
+    setTimeout(() => { this.loadingSpecies = false }, 1000)
+  }
+
+  onFilterType (query: string): void {
+    this.currentSpeciesQuery = query
   }
 }
