@@ -34,7 +34,7 @@
             v-else
             :href="speciesImage()"
             target="_blank"
-            class="hover:underline"
+            class="italic hover:underline"
           >{{ species?.speciesName }}</a>
         </div>
       </div>
