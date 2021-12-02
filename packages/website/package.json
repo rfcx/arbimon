@@ -30,6 +30,7 @@
     "axios": "^0.24.0",
     "d3": "^7.1.1",
     "dayjs": "^1.10.7",
+    "element-plus": "^1.2.0-beta.5",
     "jszip": "^3.7.1",
     "lodash-es": "^4.17.21",
     "mapbox-gl": "^2.5.1",
@@ -51,6 +52,7 @@
     "@types/numeral": "^2.0.2",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-interaction-variants": "^1.0.0",
+    "unplugin-auto-import": "^0.5.1",
     "unplugin-icons": "^0.12.22",
     "unplugin-vue-components": "^0.17.1",
     "windicss": "^3.2.1"
