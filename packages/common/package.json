@@ -7,8 +7,9 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
-    "lint": "concurrently -m 1 \"pnpm:lint:*\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
