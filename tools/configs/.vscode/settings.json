@@ -1,10 +1,6 @@
 {
   // Relative paths
-  "typescript.tsdk": "../../node_modules/typescript/lib",
-
-  // ESM
-  "javascript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.tsdk": "../node_modules/typescript/lib",
 
   // General
   "editor.tabSize": 2,
