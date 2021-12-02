@@ -4,9 +4,6 @@
   "license": "UNLICENSED",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "build-ci": "pnpm -r build",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter {\"packages\"} exec rimraf \"node_modules\" && rimraf \"node_modules\"",
@@ -14,12 +11,13 @@
     "lint:eslint": "eslint . --ignore-pattern \"*/\"",
     "lint:prettier": "prettier \"./*.{json,md,yaml}\" \"build/**/*.md\" --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
-    "lint-ci": "pnpm -r lint",
+    "lint-ci": "pnpm -r lint:types && pnpm -r lint:prettier && pnpm -r lint:stylelint && pnpm lint-eslint-diff",
+    "lint-eslint-diff": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier \"./*.{json,md,yaml}\" \"build/**/*.{md,yaml}\" --loglevel warn --write",
-    "test-ci": "pnpm -r test",
     "serve:api": "pnpm --filter=api serve",
     "serve:website": "pnpm --filter=website serve",
-    "serve": "concurrently --kill-others-on-fail \"pnpm:serve:*\""
+    "serve": "concurrently --kill-others-on-fail \"pnpm:serve:*\"",
+    "test-ci": "pnpm -r test"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
