@@ -207,7 +207,7 @@ importers:
       pinia: ^2.0.2
       unplugin-auto-import: ^0.5.1
       unplugin-icons: ^0.12.22
-      unplugin-vue-components: ^0.17.1
+      unplugin-vue-components: ^0.17.2
       vue: ^3.2.21
       vue-class-component: ^8.0.0-rc.1
       vue-property-decorator: ^10.0.0-rc.3
@@ -247,7 +247,7 @@ importers:
       '@windicss/plugin-interaction-variants': 1.0.0
       unplugin-auto-import: 0.5.1_7b60fe9e88f20bfc0d80a2bf89337fa9
       unplugin-icons: 0.12.22_7eda3f731498845f803d0ed98f571d36
-      unplugin-vue-components: 0.17.1_1e9fab465cb0908daa6ce3998d23cab5
+      unplugin-vue-components: 0.17.2_1e9fab465cb0908daa6ce3998d23cab5
       windicss: 3.2.1
 
 packages:
@@ -11226,8 +11226,8 @@ packages:
       - webpack
     dev: true
 
-  /unplugin-vue-components/0.17.1_1e9fab465cb0908daa6ce3998d23cab5:
-    resolution: {integrity: sha512-y/Gj5+y2PsMQp90JQ/ZxCF7AxfyWsDLiplQLRkzDgXoI5MLmoVZ/4Z0dNjXPcz5oF9uY7xU8F2BhXc3Jz9tJPQ==}
+  /unplugin-vue-components/0.17.2_1e9fab465cb0908daa6ce3998d23cab5:
+    resolution: {integrity: sha512-e4ZdOpnzFMQJx3rDLotLyucTap0bUlMy+6BRYyoN6jE1ZyGAgR6jodmpHZAPR3xkC4pkqW5PLlyDfIH/+lzkng==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
