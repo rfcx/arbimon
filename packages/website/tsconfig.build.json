@@ -7,7 +7,12 @@
     "composite": false,
     "incremental": false,
     "jsx": "preserve",
-    "types": ["vite/client", "@types/jest", "unplugin-icons/types/vue"],
+    "types": [
+      "vite/client",
+      "@types/jest",
+      "unplugin-icons/types/vue",
+      "element-plus/global"
+    ],
     "paths": {
       "@rfcx-bio/utils/*": ["../../utils/src/*"],
       "@rfcx-bio/common/*": ["../../common/src/*"],
