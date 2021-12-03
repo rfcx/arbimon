@@ -8,7 +8,7 @@
     "build": "vite build",
     "clean": "rimraf './dist'",
     "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
-    "lint:eslint": "eslint .",
+    "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint . --cache",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
