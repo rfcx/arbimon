@@ -107,7 +107,7 @@ jobs:
           build-args: |
             mode=${{ env.NAMESPACE }}
           target: website
-          file: build/Dockerfile
+          file: tools/deployment/Dockerfile
           context: .
           push: true
           cache-from: type=gha
@@ -126,7 +126,7 @@ jobs:
           build-args: |
             mode=${{ env.NAMESPACE }}
           target: api
-          file: build/Dockerfile
+          file: tools/deployment/Dockerfile
           context: .
           push: true
           cache-from: type=gha
@@ -148,7 +148,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: apply -f ./build/website/${{ env.NAMESPACE }}
+          args: apply -f ./tools/deployment/website/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
@@ -156,7 +156,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: apply -f ./build/api/${{ env.NAMESPACE }}
+          args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
 
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
