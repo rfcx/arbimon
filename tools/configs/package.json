@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
+    "lint:prettier": "prettier . --check",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix"
   },
   "description": "Base configs & config factories for RFCx Biodiversity project",
