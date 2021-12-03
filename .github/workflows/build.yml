@@ -82,7 +82,8 @@ jobs:
 
       - id: latest_run
         name: 'Setup: Get status of previous run'
-        uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
         if: always()
         with:
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
@@ -98,19 +99,21 @@ jobs:
         if: always()
         run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion }}'
 
+      - id: build
+        name: 'Build: Compile'
+        run: pnpm ci-build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
+
       - id: lint
         name: 'Build: Lint'
-        run: pnpm lint-ci
+        run: pnpm ci-lint
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
 
       - id: test
         name: 'Build: Test'
-        run: pnpm test-ci
-
-      - id: build
-        name: 'Build: Compile'
-        run: pnpm build-ci
+        run: pnpm ci-test
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
 
