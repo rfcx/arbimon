@@ -11,6 +11,7 @@ dist-ssr
 lib
 *.tsbuildinfo
 .eslintcache
+.stylelintcache
 
 # Logs
 *.log

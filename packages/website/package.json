@@ -10,7 +10,7 @@
     "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
-    "lint:stylelint": "stylelint .",
+    "lint:stylelint": "stylelint . --cache",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview",
