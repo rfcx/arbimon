@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix"

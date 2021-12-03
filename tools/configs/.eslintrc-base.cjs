@@ -3,8 +3,8 @@ module.exports = {
   env: { es2021: true, node: true },
   ignorePatterns: [
     'node_modules/',
-    'dist/',
     'build/',
+    'dist/',
     'lib/',
     'cypress/',
     'coverage/',
