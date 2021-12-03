@@ -41,6 +41,6 @@ CMD ["node", "dist/src/index.js"]
 FROM nginx:1.21-alpine as website
 COPY --from=build /app/packages/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
-COPY build/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY tools/deployment/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]

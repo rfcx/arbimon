@@ -20,14 +20,14 @@ Steps (from the root directory):
 1.  Build & run API image
 
     ```
-    docker build -f build/Dockerfile --target api -t bio-api .
+    docker build -f tools/deployment/Dockerfile --target api -t bio-api .
     docker run --rm -it -p 3000:8080 bio-api
     ```
 
 2.  Build & run Website image
 
     ```
-    docker build -f build/Dockerfile --target website -t bio-website .
+    docker build -f tools/deployment/Dockerfile --target website -t bio-website .
     docker run --rm -it -p 8080:8080 bio-website
     ```
 

@@ -122,7 +122,7 @@ Any branch can be deployed to the `testing` cluster:
 ### _Deployed Environment_
 
 - _Config_ variables are committed to Git:
-  - `/build/api/<NAMESPACE>/config.yaml`
+  - `/tools/deployment/api/<NAMESPACE>/config.yaml`
   - `/packages/website/.env`
 - _Secret_ variables must be manually configured:
   - API secrets can be set manually via Kubernetes apply
