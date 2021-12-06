@@ -13,7 +13,7 @@
     "lint:stylelint": "stylelint . --cache",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
-    "preview": "vite preview",
+    "preview": "vite preview --port 8080",
     "serve": "vite",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest",
     "test-ui:explorer": "cypress open"

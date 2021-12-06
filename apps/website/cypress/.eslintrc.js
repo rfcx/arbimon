@@ -4,7 +4,7 @@ module.exports = {
     node: true
   },
   extends: ['plugin:cypress/recommended'],
-  ignorePatterns: ['!.*.js', 'node_modules', 'dist', 'build', '.*/**/*'],
+  ignorePatterns: ['!.*.js', 'node_modules', 'build', 'dist', 'lib', '.*/**/*'],
   rules: { 'cypress/no-unnecessary-waiting': 'off' },
   overrides: [
     {

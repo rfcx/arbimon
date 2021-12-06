@@ -6,8 +6,8 @@
  * - `tools/deployment/api/staging/config.yaml` -- CONFIG ONLY
  * - `tools/deployment/api/testing/config.yaml` -- CONFIG ONLY
  * - `tools/deployment/api/secrets.example.yaml` -- SECRETS ONLY
- * - `packages/api/.env.example` -- BOTH
- * - `packages/api/src/_services/env/keys.ts` -- BOTH
+ * - `apps/api/.env.example` -- BOTH
+ * - `apps/api/src/_services/env/keys.ts` -- BOTH
  */
 
 // CANNOT be undefined or an empty string
