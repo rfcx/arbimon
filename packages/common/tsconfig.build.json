@@ -3,7 +3,7 @@
 
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "dist",
+    "outDir": "lib",
     "paths": {
       "@rfcx-bio/utils/*": ["../../utils/src/*"]
     }

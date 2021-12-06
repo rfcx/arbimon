@@ -8,10 +8,10 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY pnpm-*.yaml ./
 COPY package.json ./
-COPY packages/api/package.json ./packages/api/
+COPY apps/api/package.json ./apps/api/
+COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
-COPY packages/website/package.json ./packages/website/
 ENV NODE_ENV=development
 RUN pnpm i --frozen-lockfile --reporter=silent
 
@@ -19,27 +19,32 @@ RUN pnpm i --frozen-lockfile --reporter=silent
 FROM with-deps as build
 WORKDIR /app
 COPY tsconfig*.json ./
-COPY packages/api ./packages/api
+COPY apps/api ./apps/api
+COPY apps/website ./apps/website
 COPY packages/common ./packages/common
 COPY packages/utils ./packages/utils
-COPY packages/website ./packages/website
 ARG mode=production
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN pnpm --filter=!website build
 RUN pnpm --filter=website build -- --mode ${mode}
+RUN pnpm pack-all
+COPY packages/common/rfcx-bio-utils-0.0.1.tgz apps/api/rfcx-bio-utils-0.0.1.tgz
+COPY packages/common/rfcx-bio-common-0.0.1.tgz apps/api/rfcx-bio-common-0.0.1.tgz
+RUN pnpm --filter=api add ./rfcx-bio-utils-0.0.1.tgz
+RUN pnpm --filter=api add ./rfcx-bio-common-0.0.1.tgz
 
 # API
 FROM build as api
-WORKDIR /app/packages/api
+WORKDIR /app/apps/api
 ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
 EXPOSE 8080
-CMD ["node", "dist/src/index.js"]
+CMD ["node", "lib/src/index.js"]
 
 # Website
 FROM nginx:1.21-alpine as website
-COPY --from=build /app/packages/website/dist /usr/share/nginx/html
+COPY --from=build /app/apps/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY tools/deployment/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8080

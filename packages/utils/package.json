@@ -4,9 +4,12 @@
   "license": "UNLICENSED",
   "private": true,
   "type": "module",
+  "files": ["lib/**/*.js"],
+  "main": "lib/index.js",
+  "module": "lib/index.js",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "clean": "rimraf './lib' './*.tsbuildinfo'",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
