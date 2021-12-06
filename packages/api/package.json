@@ -11,8 +11,10 @@
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "preview": "pnpm build && cross-env NODE_ENV=\"production\" node dist/src/index.js",
-    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
+    "open": "wait-port http://localhost:3000 && open-cli http://localhost:3000",
+    "preview": "cross-env NODE_ENV=production pnpm build && concurrently -r --kill-others-on-fail \"cross-env NODE_ENV=production nodemon --watch dist --exec node dist/src/index.js\" \"pnpm open\"",
+    "serve-no-open": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
+    "serve": "concurrently -r --kill-others-on-fail \"pnpm serve-no-open\" \"pnpm open\"",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
   "dependencies": {

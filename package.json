@@ -16,7 +16,7 @@
     "lint-diff:eslint": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
     "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
-    "serve:api": "pnpm --filter=api serve",
+    "serve:api": "pnpm --filter=api serve-no-open",
     "serve:website": "pnpm --filter=website serve",
     "serve": "concurrently --kill-others-on-fail \"pnpm:serve:*\""
   },
@@ -60,6 +60,7 @@
     "jest": "^27.3.1",
     "node-sass": "^6.0.1",
     "nodemon": "^2.0.15",
+    "open-cli": "^7.0.1",
     "postcss": "^8.3.11",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
@@ -78,6 +79,7 @@
     "vite-tsconfig-paths": "^3.3.17",
     "vue-jest": "^5.0.0-alpha.10",
     "vue-tsc": "0.28.7",
+    "wait-port": "^0.2.9",
     "webpack": "^5.61.0"
   },
   "description": "Monorepo root",
