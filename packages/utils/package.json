@@ -4,7 +4,9 @@
   "license": "UNLICENSED",
   "private": true,
   "type": "module",
-  "files": ["lib/**/*.js"],
+  "files": [
+    "lib/**/*.js"
+  ],
   "main": "lib/index.js",
   "module": "lib/index.js",
   "scripts": {
