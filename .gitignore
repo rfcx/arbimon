@@ -9,6 +9,7 @@ node_modules
 dist
 dist-ssr
 lib
+*.tgz
 *.tsbuildinfo
 .eslintcache
 .stylelintcache
