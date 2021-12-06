@@ -4,12 +4,7 @@ import { ApiMissingParam, ApiNotFoundError } from '../_services/errors/index.js'
 import { rawSpecies } from '../Z_MOCK/raw-species.js'
 
 export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<void> => {
-  app.get('/species', async (req, res) => rawSpecies.map(species => ({
-    speciesId: species.speciesId,
-    speciesSlug: species.speciesSlug,
-    speciesName: species.scientificName,
-    className: species.taxon
-  })))
+  app.get('/species', async (req, res) => rawSpecies)
 
   interface SpeciesRoute {
     Params: {
