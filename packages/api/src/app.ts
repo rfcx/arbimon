@@ -5,12 +5,12 @@ import { resolve } from 'path'
 
 import { env } from './_services/env/index.js'
 import { routesDashboard } from './dashboard/index.js'
-import { routesIndex } from './index/index.js'
 import { routesProjectSite } from './projects-and-sites/index.js'
 import { routesRichness } from './richness/index.js'
 import { routesSpecies } from './species/index.js'
 import { routesIucn } from './species/iucn/index.js'
 import { routesSpotlight } from './spotlight/index.js'
+import { routesStatus } from './status/index.js'
 
 export const app = fastify({
   logger: env.NODE_ENV !== 'production'
@@ -22,7 +22,7 @@ await app.register(fastifyStatic, { root: resolve('./public') })
 
 // Register routes
 const routePlugins = [
-  routesIndex,
+  routesStatus,
   routesProjectSite,
   routesSpecies,
   routesRichness,
