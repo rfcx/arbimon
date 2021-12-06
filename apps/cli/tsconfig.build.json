@@ -1,0 +1,19 @@
+{
+  "extends": "../../tools/configs/tsconfig.base.json",
+
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "lib",
+    "composite": false,
+    "paths": {
+      "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
+      "@rfcx-bio/common/*": ["../../../packages/common/src/*"]
+    }
+  },
+
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../../packages/utils/tsconfig.build.json" },
+    { "path": "../../packages/common/tsconfig.build.json" }
+  ]
+}

@@ -36,8 +36,8 @@ The following must be true to consider the Sprint "DONE":
    `pnpm i`
 
 3. Setup local environment:
-   - Copy `packages/api/.env.example` to `.env` (and fill missing variables)
-   - Copy `packages/website/.env` to `.env.local` (and fill missing variables)
+   - Copy `apps/api/.env.example` to `.env` (and fill missing variables)
+   - Copy `apps/website/.env` to `.env.local` (and fill missing variables)
 
 ## Run the App!
 
@@ -75,8 +75,10 @@ The following must be true to consider the Sprint "DONE":
 
 - `pnpm -w blah` => run in monorepo-root
 - `pnpm -r blah` => run in all packages
-- `pnpm --filter {"packages"} blah` => run in all packages, except root
-- `pnpm --filter=website blah` => run in "website" (or api, cli, ...)
+- `pnpm --filter=!rfcx-bio blah` => run in all packages, except root  
+  (or `pnpm --filter=\!rfcx-bio blah` in zsh)
+- `pnpm -r --filter=./apps blah` => run in some packages
+- `pnpm --filter=website blah` => run in one package
 
 ## Deployment
 
@@ -116,14 +118,14 @@ Any branch can be deployed to the `testing` cluster:
 // TODO: Standardize this; I like that `website` is ready to go on fresh clones...
 
 - Developers can set the values of configuration and secrets locally using:
-  - `/packages/api/.env` (copy `.env.example` to get started)
-  - `/packages/website/.env.local` (override any variable in `.env`)
+  - `/apps/api/.env` (copy `.env.example` to get started)
+  - `/apps/website/.env.local` (override any variable in `.env`)
 
 ### _Deployed Environment_
 
 - _Config_ variables are committed to Git:
   - `/tools/deployment/api/<NAMESPACE>/config.yaml`
-  - `/packages/website/.env`
+  - `/apps/website/.env`
 - _Secret_ variables must be manually configured:
   - API secrets can be set manually via Kubernetes apply
   - Website secrets can be set manually as GitHub secrets

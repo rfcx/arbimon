@@ -126,9 +126,10 @@ importers:
       wait-port: 0.2.9
       webpack: 5.61.0
 
-  packages/api:
+  apps/api:
     specifiers:
       '@rfcx-bio/common': workspace:*
+      '@rfcx-bio/utils': workspace:*
       axios: ^0.24.0
       dayjs: ^1.10.7
       fastify: ^3.23.1
@@ -136,7 +137,8 @@ importers:
       fastify-static: ^4.5.0
       lodash-es: ^4.17.21
     dependencies:
-      '@rfcx-bio/common': link:../common
+      '@rfcx-bio/common': link:../../packages/common
+      '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.24.0
       dayjs: 1.10.7
       fastify: 3.23.1
@@ -144,7 +146,7 @@ importers:
       fastify-static: 4.5.0
       lodash-es: 4.17.21
 
-  packages/cli:
+  apps/cli:
     specifiers:
       '@rfcx-bio/common': workspace:*
       '@types/mysql': ^2.15.19
@@ -154,7 +156,7 @@ importers:
       lodash-es: ^4.17.21
       mysql: ^2.18.1
     dependencies:
-      '@rfcx-bio/common': link:../common
+      '@rfcx-bio/common': link:../../packages/common
       axios: 0.24.0
       dayjs: 1.10.7
       dotenv: 10.0.0
@@ -163,29 +165,7 @@ importers:
     devDependencies:
       '@types/mysql': 2.15.19
 
-  packages/common:
-    specifiers:
-      '@rfcx-bio/utils': workspace:*
-      dayjs: ^1.10.7
-      lodash-es: ^4.17.21
-    dependencies:
-      '@rfcx-bio/utils': link:../utils
-      dayjs: 1.10.7
-      lodash-es: 4.17.21
-
-  packages/utils:
-    specifiers:
-      dayjs: ^1.10.7
-      jszip: ^3.7.1
-      lodash-es: ^4.17.21
-      xlsx: ^0.17.3
-    dependencies:
-      dayjs: 1.10.7
-      jszip: 3.7.1
-      lodash-es: 4.17.21
-      xlsx: 0.17.3
-
-  packages/website:
+  apps/website:
     specifiers:
       '@auth0/auth0-spa-js': ^1.19.2
       '@iconify-json/fa': ^1.0.1
@@ -222,7 +202,7 @@ importers:
     dependencies:
       '@auth0/auth0-spa-js': 1.19.2
       '@iconify-json/fa-regular': 1.0.2
-      '@rfcx-bio/common': link:../common
+      '@rfcx-bio/common': link:../../packages/common
       '@vueuse/components': 6.7.6_vue@3.2.21
       '@vueuse/core': 6.7.6_vue@3.2.21
       axios: 0.24.0
@@ -253,6 +233,26 @@ importers:
       unplugin-icons: 0.12.22_7eda3f731498845f803d0ed98f571d36
       unplugin-vue-components: 0.17.2_1e9fab465cb0908daa6ce3998d23cab5
       windicss: 3.2.1
+
+  packages/common:
+    specifiers:
+      dayjs: ^1.10.7
+      lodash-es: ^4.17.21
+    dependencies:
+      dayjs: 1.10.7
+      lodash-es: 4.17.21
+
+  packages/utils:
+    specifiers:
+      dayjs: ^1.10.7
+      jszip: ^3.7.1
+      lodash-es: ^4.17.21
+      xlsx: ^0.17.3
+    dependencies:
+      dayjs: 1.10.7
+      jszip: 3.7.1
+      lodash-es: 4.17.21
+      xlsx: 0.17.3
 
   tools/configs:
     specifiers: {}
@@ -1547,6 +1547,7 @@ packages:
 
   /@element-plus/icons/0.0.11:
     resolution: {integrity: sha512-iKQXSxXu131Ai+I9Ymtcof9WId7kaXvB1+WRfAfpQCW7UiAMYgdNDqb/u0hgTo2Yq3MwC4MWJnNuTBEpG8r7+A==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
   /@emmetio/abbreviation/2.2.2:
@@ -1606,27 +1607,23 @@ packages:
   /@iconify-json/fa-regular/1.0.2:
     resolution: {integrity: sha512-eBxgGj36qbVxjwo7hPA8dxlVZ2pGDSDKg1hi7K56zIlPFz+1WWXfXOfu7X8oAv54QdOXdOKsqpQAuCvEyf6jqg==}
     dependencies:
-      '@iconify/types': 1.0.10
+      '@iconify/types': 1.0.12
     dev: false
 
   /@iconify-json/fa-solid/1.0.2:
     resolution: {integrity: sha512-XqtBaFqQkhkNX6GUMFde/ZCwmsnZNf2ydkGevIHOa8SXnRwTHHYdMGSJzkyAubUpfRO6d440dZBP0yc3zJ2p0g==}
     dependencies:
-      '@iconify/types': 1.0.10
+      '@iconify/types': 1.0.12
     dev: true
 
   /@iconify-json/fa/1.0.1:
     resolution: {integrity: sha512-GKi6TqDX/kA4K3A4ULm7Jg2t01Sg1WQ/pRfkJOgbCvQ96Ib+2GNA50ntd6MSdhYhUddy/GPEIMvsVgWTO7vR0w==}
     dependencies:
-      '@iconify/types': 1.0.10
+      '@iconify/types': 1.0.12
     dev: true
-
-  /@iconify/types/1.0.10:
-    resolution: {integrity: sha512-SN3z6einVeUckDQiE8p4POF7X4hk4/y2+a7a4ogJOCxX5XT6z1zXNN8dwS5O1vloXpc6mkHizRZm2qPnhK6NnQ==}
 
   /@iconify/types/1.0.12:
     resolution: {integrity: sha512-6er6wSGF3hgc1JEZqiGpg21CTCjHBYOUwqLmb2Idzkjiw6ogalGP0ZMLVutCzah+0WB4yP+Zd2oVPN8jvJ+Ftg==}
-    dev: true
 
   /@iconify/utils/1.0.20:
     resolution: {integrity: sha512-J5IriR8KeANs8vIEFKWzOlOvNgZHkwqkmqaIwvqtuDbBeFHtXGfM/LYMDmjtRJ0AAa7f254qw6TK7gAibYfHUA==}
@@ -3385,7 +3382,7 @@ packages:
     resolution: {integrity: sha512-XW2CMCmZaCmCCsIaJaLKxAzPwF37fXi1KGxNOvedOpeisLdmxZnblGc3hpHWYnlP+KOUxZsazh43WXNHgXpbqw==}
     dependencies:
       archy: 1.0.0
-      debug: 4.3.2
+      debug: 4.3.3
       fastq: 1.13.0
       queue-microtask: 1.2.3
     transitivePeerDependencies:
@@ -4710,6 +4707,7 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+    dev: true
 
   /debug/4.3.2_supports-color@8.1.1:
     resolution: {integrity: sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==}
@@ -4734,7 +4732,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /debug/4.3.3_supports-color@8.1.1:
     resolution: {integrity: sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==}
@@ -11531,38 +11528,19 @@ packages:
       '@antfu/utils': 0.3.0
       '@rollup/pluginutils': 4.1.1
       chokidar: 3.5.2
-      debug: 4.3.2
+      debug: 4.3.3
       fast-glob: 3.2.7
       local-pkg: 0.1.0
       magic-string: 0.25.7
       minimatch: 3.0.4
       resolve: 1.20.0
-      unplugin: 0.2.20_vite@2.6.13+webpack@5.61.0
+      unplugin: 0.2.21_vite@2.6.13+webpack@5.61.0
       vue: 3.2.21
     transitivePeerDependencies:
       - rollup
       - supports-color
       - vite
       - webpack
-    dev: true
-
-  /unplugin/0.2.20_vite@2.6.13+webpack@5.61.0:
-    resolution: {integrity: sha512-CGnCaTqNjqeixpIlNEkpysxfR2hb4xv21xa4IURXnhYTfCp73UWuG0KcdanuhFJbwO5w+EGK4XaAaqdb/1vWbg==}
-    peerDependencies:
-      rollup: ^2.50.0
-      vite: ^2.3.0
-      webpack: 4 || 5
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      vite:
-        optional: true
-      webpack:
-        optional: true
-    dependencies:
-      vite: 2.6.13_sass@1.43.4
-      webpack: 5.61.0
-      webpack-virtual-modules: 0.4.3
     dev: true
 
   /unplugin/0.2.21_vite@2.6.13+webpack@5.61.0:
