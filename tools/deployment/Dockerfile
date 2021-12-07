@@ -19,7 +19,7 @@ RUN pnpm i --frozen-lockfile --reporter=silent
 FROM with-deps as build
 WORKDIR /app
 COPY tsconfig*.json ./
-COPY configs/deployment ./configs/deployment
+COPY tools/configs ./tools/configs
 COPY apps/api ./apps/api
 COPY apps/website ./apps/website
 COPY packages/common ./packages/common
