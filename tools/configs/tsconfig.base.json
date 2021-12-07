@@ -9,15 +9,15 @@
 {
   // Exclude deps, build artifacts, hidden folders, tests
   "exclude": [
-    "node_modules",
-    "build",
-    "dist",
-    "lib",
-    ".*/**",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.mock.ts",
-    "**/*.stub.ts"
+    "../../**/node_modules",
+    "../../**/build",
+    "../../**/dist",
+    "../../**/lib",
+    "../../**/.*/**",
+    "../../**/*.test.ts",
+    "../../**/*.spec.ts",
+    "../../**/*.mock.ts",
+    "../../**/*.stub.ts"
   ],
 
   "compilerOptions": {
