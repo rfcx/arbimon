@@ -7,9 +7,15 @@ import pluginComponents from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
-
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@use "./src/element.scss" as *;'
+      }
+    }
+  },
   plugins: [
     pluginAutoImport({
       resolvers: [pluginElementPlusResolver()]
@@ -20,7 +26,7 @@ export default defineConfig({
           prefix: 'icon',
           alias: { fas: 'fa-solid', far: 'fa-regular' }
         }),
-        pluginElementPlusResolver()
+        pluginElementPlusResolver({ importStyle: 'sass' })
       ]
     }),
     pluginIcons({ compiler: 'vue3' }),
