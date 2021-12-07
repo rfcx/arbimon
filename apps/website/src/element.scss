@@ -1,4 +1,5 @@
 /* just override what you need */
+
 /*
 textColor: { primary: '#fff', warning: '#FFCD00', danger: '#D46767' },
 colors: { 'brand-primary': { DEFAULT: '#31984F', light: '#E6F3EA', dark: '#25713b' },
@@ -8,52 +9,53 @@ colors: { 'brand-primary': { DEFAULT: '#31984F', light: '#E6F3EA', dark: '#25713
 danger: { DEFAULT: '#D46767', light: '#e5a4a4', dark: '#7f3e3e' },
 warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
 */
-@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
   $colors: (
-    'white': #ffffff,
-    'black': #000000,
-    'primary': (
-      'base': #31984F,
+    "white": #ffffff,
+    "black": #000000,
+    "primary": (
+      "base": #31984F,
     ),
-    'warning': (
-      'base': #FFCD00,
+    "warning": (
+      "base": #FFCD00,
     ),
-    'danger': (
-      'base': #D46767,
+    "danger": (
+      "base": #D46767,
     ),
   ),
   $text-color: (
-    'primary': #fff,
-    'regular': #fff,
-    'secondary': #fff,
-    'placeholder': #999,
+    "primary": #fff,
+    "regular": #fff,
+    "secondary": #fff,
+    "placeholder": #999,
   ),
   $background-color-base: #141525,
   $border-color: (
-    'base': #45485D,
-    'light': #45485D,
-    'lighter': #45485D,
-    'extra-light': #45485D,
+    "base": #45485D,
+    "light": #45485D,
+    "lighter": #45485D,
+    "extra-light": #45485D,
   ),
   $font-size:   (
-    'extra-large': 1.25rem,
-    'large': 1.125rem,
-    'medium': 1rem,
-    'base': 1rem,
-    'small': 0.875rem,
-    'extra-small': 0.75rem,
+    "extra-large": 1.25rem,
+    "large": 1.125rem,
+    "medium": 1rem,
+    "base": 1rem,
+    "small": 0.875rem,
+    "extra-small": 0.75rem,
   ),
   $select: (
-    'input-color': var(--el-bg-color-base),
-    'bg-color': var(--el-bg-color-base),
+    "input-color": var(--el-bg-color-base),
+    "bg-color": var(--el-bg-color-base),
   ),
   $select-dropdown: (
-    'bg-color': var(--el-bg-color-base),
+    "bg-color": var(--el-bg-color-base),
   ),
   $select-option: (
-    'hover-background': var(--el-bg-color-base),
+    "hover-background": var(--el-bg-color-base),
   ),
   $input: (
-    'bg-color': var(--el-bg-color-base),
+    "bg-color": var(--el-bg-color-base),
   ),
 );
