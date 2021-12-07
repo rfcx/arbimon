@@ -236,11 +236,14 @@ importers:
 
   packages/common:
     specifiers:
+      '@rfcx-bio/utils': workspace:*
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
     dependencies:
       dayjs: 1.10.7
       lodash-es: 4.17.21
+    devDependencies:
+      '@rfcx-bio/utils': link:../utils
 
   packages/utils:
     specifiers:
