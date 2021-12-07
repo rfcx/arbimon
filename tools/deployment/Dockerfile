@@ -19,6 +19,7 @@ RUN pnpm i --frozen-lockfile --reporter=silent
 FROM with-deps as build
 WORKDIR /app
 COPY tsconfig*.json ./
+COPY configs/deployment ./configs/deployment
 COPY apps/api ./apps/api
 COPY apps/website ./apps/website
 COPY packages/common ./packages/common
@@ -28,9 +29,8 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN pnpm --filter=!website build
 RUN pnpm --filter=website build -- --mode ${mode}
-RUN pnpm pack-all -- --pack-destination ./apps/api
-RUN pnpm --filter=api add ./rfcx-bio-utils-0.0.1.tgz
-RUN pnpm --filter=api add ./rfcx-bio-common-0.0.1.tgz
+# RUN pnpm pack-all -- --pack-destination ../../apps/api
+# RUN pnpm --filter=api add ./rfcx-bio-utils-0.0.1.tgz ./rfcx-bio-common-0.0.1.tgz
 
 # API
 FROM build as api
