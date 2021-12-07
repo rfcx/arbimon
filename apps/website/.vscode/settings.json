@@ -4,7 +4,10 @@
 
   // General
   "editor.tabSize": 2,
-  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "editor.codeActionsOnSave": [
+    "source.fixAll.eslint",
+    "source.fixAll.stylelint"
+  ],
   "eslint.validate": ["typescript"],
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "npm.packageManager": "pnpm",
