@@ -23,6 +23,9 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
+    "@rfcx-bio/utils": "*"
+  },
+  "devDependencies": {
     "@rfcx-bio/utils": "workspace:*"
   },
   "description": "Biodiversity shared code",
