@@ -20,4 +20,7 @@
 .el-input__inner {
   font-style: italic;
 }
+.el-input [type='text']{
+  background-color: #141525;
+}
 </style>
