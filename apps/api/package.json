@@ -1,0 +1,46 @@
+{
+  "name": "@rfcx-bio/api",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf './lib' './*.tsbuildinfo' './*.tgz'",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
+    "preview": "cross-env NODE_ENV=production pnpm build && concurrently -r --kill-others-on-fail \"cross-env NODE_ENV=production nodemon --watch lib --exec node lib/src/index.js\" \"pnpm open\"",
+    "serve-no-open": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
+    "serve": "concurrently -r \"pnpm serve-no-open\" \"pnpm open\"",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@rfcx-bio/common": "workspace:*",
+    "@rfcx-bio/utils": "workspace:*",
+    "axios": "^0.24.0",
+    "dayjs": "^1.10.7",
+    "fastify": "^3.23.1",
+    "fastify-cors": "^6.0.2",
+    "fastify-static": "^4.5.0",
+    "lodash-es": "^4.17.21"
+  },
+  "description": "Biodiversity API",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ]
+}

@@ -34,8 +34,11 @@ jobs:
               "antonyharfield": {
                 "SLACK_MENTION_USERS": "U09HZUDUY"
               },
+              "Crave61341416": {
+                "SLACK_MENTION_USERS": "U02NUJCUV99"
+              },
               ".*": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY"
+                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99"
               }
             }
 
@@ -67,7 +70,8 @@ jobs:
                 "NAMESPACE": "production",
                 "ECR_REPO_WEBSITE": "biodiversity-website",
                 "ECR_REPO_API": "biodiversity-api",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
+                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
+                "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "ba.rfcx.org",
                 "URL_API": "ba-api.rfcx.org"
               },
@@ -75,7 +79,8 @@ jobs:
                 "NAMESPACE": "staging",
                 "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "ECR_REPO_API": "biodiversity-api/staging",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
+                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
+                "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "staging-ba.rfcx.org",
                 "URL_API": "staging-ba-api.rfcx.org"
               },
@@ -83,7 +88,8 @@ jobs:
                 "NAMESPACE": "testing",
                 "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "ECR_REPO_API": "biodiversity-api/testing",
-                "SLACK_WEBHOOK": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
+                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
+                "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "testing-ba.rfcx.org",
                 "URL_API": "testing-ba-api.rfcx.org"
               }
@@ -101,7 +107,7 @@ jobs:
           build-args: |
             mode=${{ env.NAMESPACE }}
           target: website
-          file: build/Dockerfile
+          file: tools/deployment/Dockerfile
           context: .
           push: true
           cache-from: type=gha
@@ -120,7 +126,7 @@ jobs:
           build-args: |
             mode=${{ env.NAMESPACE }}
           target: api
-          file: build/Dockerfile
+          file: tools/deployment/Dockerfile
           context: .
           push: true
           cache-from: type=gha
@@ -134,7 +140,7 @@ jobs:
 
       - name: 'Deploy: Set image version'
         run: |
-          find build -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
+          find tools/deployment -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
 
       - name: 'Deploy: Kubernetes apply WEB'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
@@ -142,7 +148,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: apply -f ./build/website/${{ env.NAMESPACE }}
+          args: apply -f ./tools/deployment/website/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
@@ -150,7 +156,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: apply -f ./build/api/${{ env.NAMESPACE }}
+          args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
 
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
@@ -163,11 +169,11 @@ jobs:
         with:
           notify_when: 'success'
           status: ${{ job.status }}
-          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *<https://${{ env.URL_WEB }}|${{ env.NAMESPACE }}>*'
-          message_format: '{emoji} SUCCESS: <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
+          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
+          message_format: '{emoji} *SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
         env:
-          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
+          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK_SUCCESS }}'
 
       - name: 'Notify: Slack Failed'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
@@ -176,10 +182,10 @@ jobs:
         with:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
-          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>* to *${{ env.NAMESPACE }}*'
+          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED*'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
-          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK }}'
+          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK_FAILURE }}'

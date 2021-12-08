@@ -1,0 +1,15 @@
+# Ignore everything
+# ...except css/scss
+*.*
+!*.css
+!*.scss
+
+# Deps & build
+node_modules/
+build/
+dist/
+lib/
+
+# Generated
+pnpm-lock.yaml
+coverage/

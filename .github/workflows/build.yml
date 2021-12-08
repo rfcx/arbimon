@@ -15,71 +15,11 @@ jobs:
         with:
           node-version: '16'
 
-      - name: 'Setup: ENV from workflow'
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
-        with:
-          key: '${{ github.actor }}'
-          map: |
-            {
-              "charles-allen": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS"
-              },
-              "Nutto55": {
-                "SLACK_MENTION_USERS": "UC2NVRCAY"
-              },
-              "naluinui": {
-                "SLACK_MENTION_USERS": "U19GA1FT2"
-              },
-              "antonyharfield": {
-                "SLACK_MENTION_USERS": "U09HZUDUY"
-              },
-              ".*": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY"
-              }
-            }
-
-      - name: 'Setup: Git checkout'
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
-        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
-        with:
-          fetch-depth: 0
-
-      - name: 'Setup: ENV from Git'
-        run: |
-          echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
-          echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-
-      - name: 'Setup: Dependency caching'
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
-        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
-        with:
-          path: ~/.pnpm-store
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: pnpm-${{ runner.os }}
-
-      - name: 'Setup: ESLint caching'
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
-        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
-        with:
-          path: |
-            .eslintcache
-            */*/.eslintcache
-          key: eslint-${{ runner.os }}-${{ github.sha }}
-          restore-keys: eslint-${{ runner.os }}
-
-      - name: 'Setup: pnpm install'
-        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
-        # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
-        with:
-          version: 6.20.1
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile]
-
+      # Need to execute this early (before another run starts)
       - id: latest_run
         name: 'Setup: Get status of previous run'
-        uses: octokit/request-action@v2.1.0
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
         if: always()
         with:
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
@@ -95,19 +35,71 @@ jobs:
         if: always()
         run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion }}'
 
+      - name: 'Setup: Git checkout'
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+        with:
+          fetch-depth: 0
+
+      - name: 'Setup: ENV from Git'
+        run: |
+          echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
+          echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+
+      - name: 'Cache: Dependencies'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-${{ runner.os }}
+
+      - name: 'Cache: ESLint'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .eslintcache
+            */*/.eslintcache
+          key: eslint-${{ runner.os }}-${{ github.sha }}
+          restore-keys: eslint-${{ runner.os }}
+
+      - name: 'Cache: Stylelint'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .stylelintcache
+            */*/.stylelintcache
+          key: stylelint-${{ runner.os }}-${{ github.sha }}
+          restore-keys: stylelint-${{ runner.os }}
+
+      - name: 'Verify: pnpm install'
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        with:
+          version: 6.20.1
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+
+      - id: build
+        name: 'Verify: Build'
+        run: pnpm ci-build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
+
       - id: lint
-        name: 'Build: Lint'
-        run: pnpm lint-ci
+        name: 'Verify: Lint'
+        run: pnpm ci-lint
         env:
           NODE_OPTIONS: '--max_old_space_size=4096'
 
       - id: test
-        name: 'Build: Test'
-        run: pnpm test-ci
-
-      - id: build
-        name: 'Build: Compile'
-        run: pnpm build-ci
+        name: 'Verify: Test'
+        run: pnpm ci-test
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
 
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
@@ -126,6 +118,34 @@ jobs:
           footer: 'Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | Build: ${{ steps.build.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
+
+      - name: 'Notify: Get Slack User'
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        if: always() && fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion != 'failure'
+        with:
+          key: '${{ github.actor }}'
+          map: |
+            {
+              "charles-allen": {
+                "SLACK_MENTION_USERS": "U6LT2N3SS"
+              },
+              "Nutto55": {
+                "SLACK_MENTION_USERS": "UC2NVRCAY"
+              },
+              "naluinui": {
+                "SLACK_MENTION_USERS": "U19GA1FT2"
+              },
+              "antonyharfield": {
+                "SLACK_MENTION_USERS": "U09HZUDUY"
+              },
+              "Crave61341416": {
+                "SLACK_MENTION_USERS": "U02NUJCUV99"
+              },
+              ".*": {
+                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99"
+              }
+            }
 
       # Notify failure if previous run was not also a failure
       - name: 'Notify: Slack Failed'

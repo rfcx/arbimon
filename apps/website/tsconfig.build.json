@@ -1,0 +1,29 @@
+{
+  "extends": "../../tools/configs/tsconfig.base.json",
+
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "dist",
+    "composite": false,
+    "incremental": false,
+    "jsx": "preserve",
+    "types": [
+      "vite/client",
+      "@types/jest",
+      "unplugin-icons/types/vue",
+      "element-plus/global"
+    ],
+    "paths": {
+      "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
+      "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
+      "~/*": ["./_services/*"],
+      "@/*": ["./*"]
+    }
+  },
+
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "references": [
+    { "path": "../../packages/utils/tsconfig.build.json" },
+    { "path": "../../packages/common/tsconfig.build.json" }
+  ]
+}
