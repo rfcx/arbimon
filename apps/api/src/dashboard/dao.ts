@@ -2,7 +2,7 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
-import { EXTINCTION_RISK_VULNERABLE_CODES } from '../Z_COMMON/iucn/index.js'
+import { EXTINCTION_RISK_THREATENED_CODES } from '../Z_COMMON/iucn/index.js'
 import { rawDetections } from '../Z_MOCK/raw-detections.js'
 import { rawSites } from '../Z_MOCK/raw-sites.js'
 import { rawSpecies } from '../Z_MOCK/raw-species.js'
@@ -60,7 +60,7 @@ export async function getRichness (): Promise<DashboardRichness[]> {
 // TODO ??? - Getting species data from DB instead (The code is from species controller)
 export async function getEndangered (): Promise<DashboardSpecies[]> {
   return rawSpecies
-    .filter(species => EXTINCTION_RISK_VULNERABLE_CODES.includes(species.extinctionRisk))
+    .filter(species => EXTINCTION_RISK_THREATENED_CODES.includes(species.extinctionRisk))
     .map(species => ({
       speciesId: species.speciesId,
       speciesSlug: species.speciesSlug,
@@ -70,7 +70,7 @@ export async function getEndangered (): Promise<DashboardSpecies[]> {
       thumbnailImageUrl: species.thumbnailImageUrl ?? ''
     }))
     .sort((a, b) =>
-      EXTINCTION_RISK_VULNERABLE_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_VULNERABLE_CODES.indexOf(a.extinctionRisk) ||
+      EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
       a.speciesName.localeCompare(b.speciesName)
     )
     .slice(0, 10)

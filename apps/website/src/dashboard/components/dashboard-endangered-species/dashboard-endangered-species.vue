@@ -4,7 +4,7 @@
     :to="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
   >
     <div class="font-semibold">
-      Endangered species
+      Threatened species
     </div>
     <icon-fas-angle-right class="font-semibold self-center" />
   </router-link>
