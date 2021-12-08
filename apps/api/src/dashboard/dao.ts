@@ -10,13 +10,15 @@ import { groupByNumber } from '../Z_UTILS/lodash-ext/index.js'
 
 // TODO: Update to query from DB
 export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
+  const endangered = await getEndangered()
+
   return {
     detectionCount: 50000,
     siteCount: rawSites.length,
     speciesCount: rawSpecies.length,
-    endangeredSpecies: 10,
+    endangeredSpecies: endangered.length,
     richness: await getRichness(),
-    endangered: await getEndangered(),
+    endangered,
     highlighted: await getHighlighted(),
     speciesRichness: {
       time: await getRichnessDetectionByTime()
