@@ -4,6 +4,7 @@ import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from 
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
 import { EXTINCTION_RISK_VULNERABLE_CODES } from '../Z_COMMON/iucn/index.js'
 import { rawDetections } from '../Z_MOCK/raw-detections.js'
+import { rawSites } from '../Z_MOCK/raw-sites.js'
 import { rawSpecies } from '../Z_MOCK/raw-species.js'
 import { groupByNumber } from '../Z_UTILS/lodash-ext/index.js'
 
@@ -11,8 +12,8 @@ import { groupByNumber } from '../Z_UTILS/lodash-ext/index.js'
 export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
   return {
     detectionCount: 50000,
-    siteCount: 200,
-    speciesCount: 97,
+    siteCount: rawSites.length,
+    speciesCount: rawSpecies.length,
     endangeredSpecies: 10,
     richness: await getRichness(),
     endangered: await getEndangered(),
