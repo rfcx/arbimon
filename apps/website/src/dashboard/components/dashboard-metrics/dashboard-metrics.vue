@@ -1,0 +1,20 @@
+<template>
+  <div>
+    <numeric-metric
+      :value="metrics.detectionCount"
+      subtitle="detections"
+    />
+    <numeric-metric
+      class="ml-4"
+      :value="metrics.siteCount"
+      subtitle="sites"
+    />
+    <numeric-metric
+      class="ml-4"
+      :value="metrics.endangeredSpecies"
+      :total-value="metrics.speciesCount"
+      subtitle="threatened"
+    />
+  </div>
+</template>
+<script lang="ts" src="./dashboard-metrics.ts"></script>

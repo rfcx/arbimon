@@ -1,4 +1,6 @@
 packages:
+  - 'apps/*'
   - 'packages/*'
+  - 'tools/*'
 
 link-workspace-packages: false # you must use the `workspace:` protocol

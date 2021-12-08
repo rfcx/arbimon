@@ -1,9 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tools/configs/tsconfig.base.json",
 
   "compilerOptions": {
+    "rootDir": "src",
     "baseUrl": "src",
-    "outDir": "dist",
+    "outDir": "lib",
     "paths": {
       "@rfcx-bio/utils/*": ["../../utils/src/*"]
     }

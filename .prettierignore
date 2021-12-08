@@ -1,13 +1,20 @@
-# Managed by ESLint & Stylelint
-*.js
-*.ts
-*.vue
-*.css
-*.scss
+# Ignore everything
+# ...except json, md, yml/yaml
+*.*
+!*.json
+!*.md
+!*.yml
+!*.yaml
 
-# Just to be safe
+# Subdirectories (because this is the package root)
+*/
+
+# Deps & build
+node_modules/
+build/
+dist/
+lib/
+
+# Generated
 pnpm-lock.yaml
-node_modules
-dist
-lib
-coverage
+coverage/

@@ -1,0 +1,19 @@
+# !WARNING: MANUAL ACTION REQUIRED!
+
+# You must keep these file in sync:
+# - `tools/deployment/api/production/config.yaml` -- CONFIG ONLY
+# - `tools/deployment/api/staging/config.yaml` -- CONFIG ONLY
+# - `tools/deployment/api/testing/config.yaml` -- CONFIG ONLY
+# - `tools/deployment/api/secrets.example.yaml` -- SECRETS ONLY
+# - `apps/api/.env.example` -- BOTH
+# - `apps/api/src/_services/env/keys.ts` -- BOTH
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: biodiversity-api-config
+  namespace: production
+data:
+  ## Config
+
+  IUCN_BASE_URL: https://apiv3.iucnredlist.org/api/v3

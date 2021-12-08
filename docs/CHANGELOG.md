@@ -10,11 +10,14 @@ Allowed categories:
 - Breaking changes
 --->
 
-<!-- # 0.0.11 (2021-12-08)
+# 0.0.11 (2021-12-08)
 
 ## Features
 
-- TODO -->
+- **dashboard:** Project profile panel [#308]
+- **dashboard:** "Top Taxons" bar & badges panel [#315]
+- **dashboard:** Highlighted Species panel [#304]
+- **dashboard:** Endangered species panel [#316]
 
 # 0.0.10 (2021-11-27)
 

@@ -4,18 +4,30 @@
   "license": "UNLICENSED",
   "private": true,
   "type": "module",
+  "files": [
+    "lib/**/*.js"
+  ],
+  "main": "lib/index.js",
+  "module": "lib/index.js",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf './dist' './*.tsbuildinfo'",
+    "clean": "rimraf './lib' './*.tsbuildinfo'",
+    "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
-    "lint": "concurrently -m 1 \"pnpm:lint:*\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api && pnpm --filter=api add ./rfcx-bio-common-0.0.1.tgz",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
   "dependencies": {
-    "@rfcx-bio/utils": "workspace:*",
     "dayjs": "^1.10.7",
-    "lodash": "^4.17.21"
+    "lodash-es": "^4.17.21"
+  },
+  "peerDependencies": {
+    "@rfcx-bio/utils": "*"
+  },
+  "devDependencies": {
+    "@rfcx-bio/utils": "workspace:*"
   },
   "description": "Biodiversity shared code",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",

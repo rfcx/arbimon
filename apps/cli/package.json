@@ -1,0 +1,44 @@
+{
+  "name": "@rfcx-bio/cli",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf './lib' './*.tsbuildinfo'",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@rfcx-bio/common": "workspace:*",
+    "axios": "^0.24.0",
+    "dayjs": "^1.10.7",
+    "dotenv": "^10.0.0",
+    "lodash-es": "^4.17.21",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@types/mysql": "^2.15.19"
+  },
+  "description": "Biodiversity CLI",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ]
+}
