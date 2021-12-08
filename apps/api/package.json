@@ -13,7 +13,7 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
     "preview": "cross-env NODE_ENV=production pnpm build && concurrently -r --kill-others-on-fail \"cross-env NODE_ENV=production nodemon --watch lib --exec node lib/src/index.js\" \"pnpm open\"",
-    "serve-no-open": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ./loader.js src/index.ts\"",
+    "serve-no-open": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" nodemon --watch src -e ts --ignore \"**/*.test.ts\" --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/index.ts\"",
     "serve": "concurrently -r \"pnpm serve-no-open\" \"pnpm open\"",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
