@@ -1,4 +1,4 @@
-import { groupBy, mapValues, sum } from 'lodash-es'
+import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
@@ -13,12 +13,12 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
   const endangered = await getEndangered()
 
   return {
-    detectionCount: 50000,
+    detectionCount: await getDetectionNumber(),
     siteCount: rawSites.length,
     speciesCount: rawSpecies.length,
     endangeredSpecies: endangered.length,
     richness: await getRichness(),
-    endangered,
+    endangered: endangered.slice(0, 10),
     highlighted: await getHighlighted(),
     speciesRichness: {
       time: await getRichnessDetectionByTime()
@@ -52,6 +52,10 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
   }
 }
 
+export async function getDetectionNumber (): Promise<number> {
+  return sumBy(rawDetections, 'num_of_recordings')
+}
+
 export async function getRichness (): Promise<DashboardRichness[]> {
   const richness = mapValues(groupBy(rawSpecies, 'taxon'), (species) => species.length)
   return Object.keys(richness).map(taxonClass => ({ taxonClass, speciesNo: richness[taxonClass] })).sort((a, b) => a.taxonClass.localeCompare(b.taxonClass))
@@ -73,7 +77,6 @@ export async function getEndangered (): Promise<DashboardSpecies[]> {
       EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
       a.speciesName.localeCompare(b.speciesName)
     )
-    .slice(0, 10)
 }
 
 export async function getHighlighted (): Promise<DashboardSpecies[]> {
