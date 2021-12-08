@@ -18,7 +18,7 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     speciesCount: rawSpecies.length,
     endangeredSpecies: endangered.length,
     richness: await getRichness(),
-    endangered: endangered.slice(0, 10),
+    endangered: endangered,
     highlighted: await getHighlighted(),
     speciesRichness: {
       time: await getRichnessDetectionByTime()
