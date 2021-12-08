@@ -1,4 +1,4 @@
-import { mapValues, sum } from 'lodash-es'
+import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
 import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
@@ -50,11 +50,8 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
 }
 
 export async function getRichness (): Promise<DashboardRichness[]> {
-  return [
-    { taxonClass: 'Amphibians', speciesNo: 10 },
-    { taxonClass: 'Birds', speciesNo: 75 },
-    { taxonClass: 'Mammals', speciesNo: 12 }
-  ]
+  const richness = mapValues(groupBy(rawSpecies, 'taxon'), (species) => species.length)
+  return Object.keys(richness).map(taxonClass => ({ taxonClass, speciesNo: richness[taxonClass] })).sort((a, b) => a.taxonClass.localeCompare(b.taxonClass))
 }
 
 // TODO ??? - Getting species data from DB instead (The code is from species controller)
