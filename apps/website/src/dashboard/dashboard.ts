@@ -63,7 +63,7 @@ export default class DashboardPage extends Vue {
       speciesId,
       speciesName,
       speciesSlug,
-      imageUrl: thumbnailImageUrl ?? new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
+      imageUrl: thumbnailImageUrl.length > 0 ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
       extinctionRisk: getExtinctionRisk(extinctionRisk)
     }))
   }
@@ -75,7 +75,7 @@ export default class DashboardPage extends Vue {
       speciesId,
       speciesName,
       speciesSlug,
-      imageUrl: thumbnailImageUrl ?? new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
+      imageUrl: thumbnailImageUrl.length > 0 ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
       extinctionRisk: getExtinctionRisk(extinctionRisk)
     }))
   }
