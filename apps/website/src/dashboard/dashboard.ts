@@ -71,7 +71,7 @@ export default class DashboardPage extends Vue {
   get endangered (): EndangeredSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.highlighted.map(({ speciesId, speciesName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+    return this.generated.endangered.map(({ speciesId, speciesName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
       speciesId,
       speciesName,
       speciesSlug,
