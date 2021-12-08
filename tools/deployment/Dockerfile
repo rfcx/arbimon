@@ -29,8 +29,9 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN pnpm --filter=!website build
 RUN pnpm --filter=website build -- --mode ${mode}
-# RUN pnpm pack-all -- --pack-destination ../../apps/api
-# RUN pnpm --filter=api add ./rfcx-bio-utils-0.0.1.tgz ./rfcx-bio-common-0.0.1.tgz
+ENV NODE_ENV=development
+RUN pnpm -r pack-api
+ENV NODE_ENV=production
 
 # API
 FROM build as api
