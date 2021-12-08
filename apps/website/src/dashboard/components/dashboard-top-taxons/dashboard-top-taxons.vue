@@ -1,16 +1,18 @@
 <template>
-  <div class="w-full rounded-2xl bg-steel-grey mb-4 p-4 flex justify-between">
-    <div class="font-semibold">
-      Richness
-    </div>
+  <div class="w-full rounded-2xl bg-steel-grey mb-4 p-4">
     <router-link
-      class="flex hover:(underline opacity-70)"
+      class="flex justify-between"
       :to="{ name: richnessRoutename, params: { projectId } }"
     >
-      <div v-if="hasData">
-        {{ totalSpecies }} species
+      <div class="font-semibold">
+        Richness
       </div>
-      <icon-fas-angle-right class="font-semibold self-center" />
+      <div class="flex">
+        <div v-if="hasData">
+          {{ totalSpecies }} species
+        </div>
+        <icon-fas-angle-right class="font-semibold self-center" />
+      </div>
     </router-link>
   </div>
   <no-data-panel
