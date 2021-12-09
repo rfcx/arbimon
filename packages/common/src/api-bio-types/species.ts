@@ -23,6 +23,7 @@ export interface Species {
   speciesId: number
   speciesSlug: string
   scientificName: string
+  commonName: string
   extinctionRisk: ExtinctionRiskCode
   thumbnailImageUrl?: string
   taxonId: number

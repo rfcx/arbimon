@@ -2,10 +2,10 @@ import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio-types/species'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesExternalLink, SpeciesInformation } from '@rfcx-bio/common/api-bio-types/species'
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn/index.js'
 
-import { getSpeciesInformation, getSpeciesRank, getSpeciesRedirectLink } from './iucn/iucn.js'
+import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn.js'
 import { getWikiSpeciesInformation } from './wiki/wiki.js'
 
 // Env
@@ -70,36 +70,40 @@ export async function getAllSpeciesDataWithIUCN (data: Species[]): Promise<Speci
 }
 
 export async function getSpeciesDataWithIUCN (species: Species): Promise<Species> {
-  const iucnRank = await getSpeciesRank(species.scientificName)
+  const iucnCommonInformation = await getSpeciesCommonInformation(species.scientificName)
     .catch(e => {
-      console.error('error IUCN rank:', e)
+      console.error('error IUCN common information:', e)
+      return undefined
     })
   const iucnInformation = await getSpeciesInformation(species.scientificName)
     .catch(e => {
-      console.log('error IUCN information:', e, species.scientificName)
+      console.error('error IUCN information:', e, species.scientificName)
+      return undefined
     })
-  const iucnSourceLink = getSpeciesRedirectLink(species.scientificName)
+  if (!iucnCommonInformation && !iucnInformation) return species
+
   const iucnDesc = (iucnInformation?.habitat ?? iucnInformation?.rationale ?? iucnInformation?.taxonomicnotes)
-  const updatedData = species
 
-  if (iucnRank) {
-    updatedData.extinctionRisk = iucnRank
-    updatedData.externalLinks?.push({
-      title: 'IUCN',
-      sourceType: SPECIES_SOURCE_IUCN,
-      sourceUrl: `${process.env.IUCN_BASE_URL ?? ''}/website/${species.scientificName}`
-    })
-  } else {
-    updatedData.extinctionRisk = EXTINCTION_RISK_NOT_EVALUATED.code
-  }
-  if (iucnDesc) {
-    updatedData.information = {
-      description: iucnDesc ?? '',
-      sourceType: SPECIES_SOURCE_IUCN,
-      sourceUrl: iucnSourceLink,
-      sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. Version 2021-2 <www.iucnredlist.org>'
-    }
+  const iucnInfo: SpeciesInformation | undefined = iucnDesc
+    ? {
+        description: iucnDesc ?? '',
+        sourceType: SPECIES_SOURCE_IUCN,
+        sourceUrl: getSpeciesRedirectLink(species.scientificName),
+        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. Version 2021-2 <www.iucnredlist.org>'
+      }
+    : undefined
+
+  const iucnLink: SpeciesExternalLink = {
+    title: 'IUCN',
+    sourceType: SPECIES_SOURCE_IUCN,
+    sourceUrl: `${process.env.IUCN_BASE_URL ?? ''}/website/${species.scientificName}`
   }
 
-  return updatedData
+  return {
+    ...species,
+    commonName: iucnCommonInformation?.main_common_name ?? '',
+    externalLinks: [...species.externalLinks ?? [], iucnLink],
+    extinctionRisk: iucnCommonInformation?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
+    information: iucnInfo
+  }
 }
