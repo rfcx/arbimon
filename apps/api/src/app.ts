@@ -3,8 +3,6 @@ import fastifyCors from 'fastify-cors'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
-import { urlify } from '@rfcx-bio/utils/url-helpers/index.js'
-
 import { env } from './_services/env/index.js'
 import { routesDashboard } from './dashboard/index.js'
 import { routesProjectSite } from './projects-and-sites/index.js'
@@ -17,8 +15,6 @@ import { routesStatus } from './status/index.js'
 export const app = fastify({
   logger: env.NODE_ENV !== 'production'
 })
-
-console.log(urlify('potato'))
 
 // Register plugins
 await app.register(fastifyCors)

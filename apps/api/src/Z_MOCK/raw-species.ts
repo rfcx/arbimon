@@ -1,4 +1,4 @@
-import { Species } from '../Z_COMMON/api-bio-types/species'
+import { Species } from '@rfcx-bio/common/api-bio-types/species'
 
 export const rawSpecies: Species[] = [
   {

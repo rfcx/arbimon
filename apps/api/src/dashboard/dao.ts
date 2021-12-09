@@ -1,8 +1,9 @@
 import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
-import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
-import { DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
-import { EXTINCTION_RISK_THREATENED_CODES } from '../Z_COMMON/iucn/index.js'
+import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '@rfcx-bio/common/api-bio-types/dashboard-generated.js'
+import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile.js'
+import { EXTINCTION_RISK_THREATENED_CODES } from '@rfcx-bio/common/iucn/index.js'
+
 import { rawDetections } from '../Z_MOCK/raw-detections.js'
 import { rawSites } from '../Z_MOCK/raw-sites.js'
 import { rawSpecies } from '../Z_MOCK/raw-species.js'
