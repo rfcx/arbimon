@@ -96,7 +96,8 @@ export async function getSpeciesDataWithIUCN (species: Species): Promise<Species
     updatedData.information = {
       description: iucnDesc ?? '',
       sourceType: SPECIES_SOURCE_IUCN,
-      sourceUrl: iucnSourceLink
+      sourceUrl: iucnSourceLink,
+      sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. Version 2021-2 <www.iucnredlist.org>'
     }
   }
 

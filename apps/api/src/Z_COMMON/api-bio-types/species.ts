@@ -10,6 +10,7 @@ export interface SpeciesInformation {
   description: string
   sourceUrl: string | undefined
   sourceType: SpeciesSource
+  sourceCite?: string
 }
 
 export interface SpeciesExternalLink {
