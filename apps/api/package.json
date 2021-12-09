@@ -12,14 +12,16 @@
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
-    "preview": "cross-env NODE_ENV=production pnpm build && concurrently -r --kill-others-on-fail \"cross-env NODE_ENV=production nodemon --watch lib --exec node lib/src/index.js\" \"pnpm open\"",
-    "serve-no-open": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ./loader.js src/index.ts",
-    "serve": "concurrently -r \"pnpm serve-no-open\" \"pnpm open\"",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
+    "preview": "pnpm build && pnpm -r pack-api && pnpm use-packed && concurrently -r --kill-others-on-fail \"node lib/index.js\" \"pnpm open\"",
+    "preview-reset": "rimraf './*.tgz' && pnpm use-ws",
+    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ./loader.js src/index.ts",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests",
+    "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
+    "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"
   },
   "dependencies": {
-    "@rfcx-bio/common": "workspace:*",
-    "@rfcx-bio/utils": "workspace:*",
+    "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "fastify": "^3.23.1",
