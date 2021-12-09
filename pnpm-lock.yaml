@@ -128,8 +128,8 @@ importers:
 
   apps/api:
     specifiers:
-      '@rfcx-bio/common': workspace:*
-      '@rfcx-bio/utils': workspace:*
+      '@rfcx-bio/common': workspace:^0.0.1
+      '@rfcx-bio/utils': workspace:^0.0.1
       axios: ^0.24.0
       dayjs: ^1.10.7
       fastify: ^3.23.1
