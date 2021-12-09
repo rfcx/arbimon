@@ -32,19 +32,32 @@ interface IucnSpeciesResponse {
 }
 
 interface IucnSpeciesResult {
+  taxonid: number | null
+  scientific_name: string | null
+  kingdom: string | null
+  phylum: string | null
+  class: string | null
+  order: string | null
+  family: string | null
+  genus: string | null
+  main_common_name: string | null
+  authority: string | null
+  published_year: null | null
+  assessment_date: string | null
   category: ExtinctionRiskCode | undefined
   criteria: string | null
+  population_trend: string | null
   marine_system: boolean | null
   freshwater_system: boolean | null
   terrestrial_system: boolean | null
+  assessor: string | null
+  reviewer: string | null
   aoo_km2: boolean | null
   eoo_km2: boolean | null
   elevation_upper: number | null
   elevation_lower: number | null
   depth_upper: number | null
   depth_lower: number | null
-  assessor: string | null
-  reviewer: string | null
   errata_flag: boolean | null
   errata_reason: string | null
   amended_flag: boolean | null
@@ -61,7 +74,7 @@ export async function getSpeciesInformation (speciesName: string): Promise<IucnS
   return data?.result?.[0]
 }
 
-export async function getSpeciesRank (speciesName: string): Promise<ExtinctionRiskCode | undefined> {
+export async function getSpeciesCommonInformation (speciesName: string): Promise<IucnSpeciesResult | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${IUCN_BASE_URL}/species/${speciesName}?token=${IUCN_TOKEN}`
@@ -69,10 +82,10 @@ export async function getSpeciesRank (speciesName: string): Promise<ExtinctionRi
 
   const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
   if (data?.result?.length === 0) {
-    console.log('error IUCN Rank: ', speciesName)
+    console.log('error IUCN common information: ', speciesName)
     return undefined
   }
-  return data?.result?.[0].category
+  return data?.result?.[0]
 }
 
 export function getSpeciesRedirectLink (speciesName: string): string {
