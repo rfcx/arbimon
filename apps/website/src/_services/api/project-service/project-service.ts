@@ -1,7 +1,8 @@
+import { Project } from '@rfcx-bio/common/api-bio-types/projects'
+
 import { apiClient } from '~/api-helpers/rest/api-service'
 import { endpointProjects } from '~/api-helpers/rest/endpoints'
 import { RawProjectListItem } from '~/api-helpers/rest/types'
-import { Project } from '../types'
 
 const toProject = (data: RawProjectListItem): Project => {
   return {

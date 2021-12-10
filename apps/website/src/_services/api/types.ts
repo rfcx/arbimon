@@ -1,3 +1,5 @@
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+
 export interface Detection {
   arbimonSiteId: number
   siteId: string

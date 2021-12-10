@@ -1,16 +1,10 @@
 import { groupBy, mapValues } from 'lodash-es'
 
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+
 import { DatasetDefinition } from '~/api/types'
 import { rawSites } from './raw-sites'
 import { rawSummaries } from './raw-summaries'
-
-// TODO 132 - Encapsulate API response types in the API, and return project types
-export interface ApiSite {
-  'site_id': string
-  'name': string
-  'latitude': string
-  'longitude': string
-}
 
 export interface ApiHourlySpeciesSummary {
   'arbimon_site_id': number
@@ -36,7 +30,7 @@ export const simulateDelay = async <T>(result: T, delay: number | undefined = un
     ? result
     : await new Promise((resolve) => setTimeout(() => resolve(result), delay ?? MOCK_FLIGHT_TIME))
 
-export function getRawSites (): ApiSite[] {
+export function getRawSites (): Site[] {
   return rawSites
 }
 

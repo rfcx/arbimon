@@ -1,8 +1,9 @@
 import { Dayjs } from 'dayjs'
 
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { formatDateRange } from '@rfcx-bio/utils/dates'
 
-import { FilterPropertyEquals, Site } from '~/api/types'
+import { FilterPropertyEquals } from '~/api/types'
 
 export class FilterImpl {
   sites: Site[] = []
