@@ -1,21 +1,21 @@
 import { ExtinctionRiskCode } from '../iucn'
 
-export const SPECIES_SOURCE_IUCN = 'IUCN'
-export const SPECIES_SOURCE_WIKI = 'Wiki'
-
-const SPECIES_SOURCES = <const>[SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI]
+const SPECIES_SOURCES = <const>['IUCN', 'Wiki']
 export type SpeciesSource = typeof SPECIES_SOURCES[number]
+
+export const SPECIES_SOURCE_IUCN: SpeciesSource = SPECIES_SOURCES[0]
+export const SPECIES_SOURCE_WIKI: SpeciesSource = SPECIES_SOURCES[1]
 
 export interface SpeciesInformation {
   description: string
-  sourceUrl: string | undefined
+  sourceUrl: string
   sourceType: SpeciesSource
   sourceCite?: string
 }
 
 export interface SpeciesExternalLink {
   title: string
-  sourceUrl: string | undefined
+  sourceUrl: string
   sourceType: SpeciesSource
 }
 
@@ -24,10 +24,10 @@ export interface Species {
   speciesSlug: string
   scientificName: string
   commonName: string
+  externalLinks: SpeciesExternalLink[]
   extinctionRisk: ExtinctionRiskCode
-  thumbnailImageUrl?: string
-  taxonId: number
+  information: SpeciesInformation[]
   taxon: string
-  information?: SpeciesInformation | undefined
-  externalLinks?: SpeciesExternalLink[]
+  taxonId: number
+  thumbnailImageUrl?: string
 }

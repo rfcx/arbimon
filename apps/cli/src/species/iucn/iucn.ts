@@ -5,6 +5,7 @@ import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
 dotenv.config()
 
+// TODO: Validate env
 const IUCN_BASE_URL = process.env.IUCN_BASE_URL ?? ''
 const IUCN_TOKEN = process.env.IUCN_TOKEN ?? ''
 
@@ -65,29 +66,37 @@ interface IucnSpeciesResult {
 }
 
 export async function getSpeciesInformation (speciesName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
-  const endpoint: AxiosRequestConfig = {
-    method: 'GET',
-    url: `${IUCN_BASE_URL}/species/narrative/${speciesName}?token=${IUCN_TOKEN}`
-  }
+  try {
+    const endpoint: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${IUCN_BASE_URL}/species/narrative/${speciesName}?token=${IUCN_TOKEN}`
+    }
 
-  const { data } = await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
-  return data?.result?.[0]
+    const { data } = await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
+    if (data?.result?.length === 0) console.warn('iucn/getSpeciesInformation: no data', speciesName)
+    return data?.result?.[0]
+  } catch (error) {
+    console.error('iucn/getSpeciesInformation: api error', error)
+    return undefined
+  }
 }
 
 export async function getSpeciesCommonInformation (speciesName: string): Promise<IucnSpeciesResult | undefined> {
-  const endpoint: AxiosRequestConfig = {
-    method: 'GET',
-    url: `${IUCN_BASE_URL}/species/${speciesName}?token=${IUCN_TOKEN}`
-  }
+  try {
+    const endpoint: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${IUCN_BASE_URL}/species/${speciesName}?token=${IUCN_TOKEN}`
+    }
 
-  const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
-  if (data?.result?.length === 0) {
-    console.log('error IUCN common information: ', speciesName)
+    const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
+    if (data?.result?.length === 0) console.warn('iucn/getSpeciesCommonInformation: no data', speciesName)
+    return data?.result?.[0]
+  } catch (error) {
+    console.error('iucn/getSpeciesCommonInformation: api error', error)
     return undefined
   }
-  return data?.result?.[0]
 }
 
 export function getSpeciesRedirectLink (speciesName: string): string {
-  return `${IUCN_BASE_URL ?? ''}/website/${speciesName}`
+  return `${IUCN_BASE_URL ?? ''}/website/${encodeURIComponent(speciesName)}`
 }
