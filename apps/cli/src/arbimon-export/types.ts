@@ -13,3 +13,14 @@ export interface ArbimonHourlySpeciesRow {
   'taxon': string
   'num_of_recordings': number
 }
+
+export interface ArbimonSpecieCallRow {
+  'scientific_name': string
+  'songtype': string
+  'start': string
+  'end': string
+  'stream_id': string
+  'stream_name': string
+  'project_id': string
+  'project_name': string
+}

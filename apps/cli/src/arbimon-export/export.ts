@@ -5,8 +5,6 @@ import { dirname, resolve } from 'path'
 
 // Parameters
 const currentDir = dirname(new URL(import.meta.url).pathname)
-const sqlFilePath = resolve(currentDir, './get-detection-summaries.sql')
-const outputFilePath = resolve(currentDir, './raw-summaries.json')
 
 // Env
 dotenv.config()
@@ -23,10 +21,30 @@ const config = {
 const connection = mysql.createConnection(config)
 connection.connect()
 
-const speciesRichnessSQLQuery = fs.readFileSync(sqlFilePath).toString()
-connection.query(speciesRichnessSQLQuery, (error, results, fields) => {
-  if (error) throw error
-  const json = JSON.stringify(results, null, 2)
-  fs.writeFileSync(outputFilePath, json, 'utf8')
-  connection.end()
-})
+const exportDetection = exportQueryResultToJsonFile(connection,
+  resolve(currentDir, './get-detection-summaries.sql'),
+  resolve(currentDir, './raw-summaries.json')
+)
+const exportSpeciesCall = exportQueryResultToJsonFile(connection,
+  resolve(currentDir, './get-example-of-species-call.sql'),
+  resolve(currentDir, './raw-species-call.json')
+)
+await Promise.all([exportDetection, exportSpeciesCall])
+
+connection.end()
+
+// TODO: move this to common / helper file
+async function query (connection: mysql.Connection, queryString: string): Promise<unknown> {
+  return await new Promise((resolve, reject) => {
+    connection.query(queryString, (error, results, _fields) => {
+      if (error) reject(error)
+      resolve(results)
+    })
+  })
+}
+
+async function exportQueryResultToJsonFile (connection: mysql.Connection, sqlFilePath: string, outputFilePath: string): Promise<void> {
+  const sqlQuery = fs.readFileSync(sqlFilePath).toString()
+  const results = (await query(connection, sqlQuery))
+  fs.writeFileSync(outputFilePath, JSON.stringify(results, null, 2), 'utf8')
+}
