@@ -10,6 +10,12 @@ Allowed categories:
 - Breaking changes
 --->
 
+# 0.0.12 (2021-12-22)
+
+## Featues
+
+// TODO: Add new change
+
 # 0.0.11 (2021-12-08)
 
 ## Features
