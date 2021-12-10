@@ -1,8 +1,9 @@
 import { Dayjs } from 'dayjs'
 
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { DatasetDefinition, Site } from '~/api'
+import { DatasetDefinition } from '~/api'
 import { ComparisonFilter } from '~/dataset-filters'
 import { useStore } from '~/store'
 

@@ -2,9 +2,10 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { FilterPropertyEquals, Site } from '~/api/types'
+import { FilterPropertyEquals } from '~/api/types'
 import { ComparisonFilter } from '~/dataset-filters'
 import { BiodiversityStore } from '~/store'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'

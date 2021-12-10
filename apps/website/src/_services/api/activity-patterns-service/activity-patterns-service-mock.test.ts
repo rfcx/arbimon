@@ -1,6 +1,7 @@
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { DatasetDefinition, Site } from '~/api'
+import { DatasetDefinition } from '~/api'
 import { ActivityPatternsService } from '~/api/activity-patterns-service'
 import { ApiHourlySpeciesSummary } from '~/api-helpers/mock'
 
@@ -8,7 +9,7 @@ const MOCK_RECORDINGS_PER_HOUR = 12
 
 const EXAMPLE_DATE = '2021-04-02T00:00:00.000Z'
 const EXAMPLE_SITE_IDS_INTERESTED = ['100', '200', '300', '400', '500', '600', '700', '800', '900']
-const EXAMPLE_SITES_INTERESTED: Site[] = EXAMPLE_SITE_IDS_INTERESTED.map(siteId => ({ siteId, name: '', longitude: 0, latitude: 0 }))
+const EXAMPLE_SITES_INTERESTED: Site[] = EXAMPLE_SITE_IDS_INTERESTED.map(siteId => ({ siteId, name: '', longitude: 0, latitude: 0, altitude: 0 }))
 const EXAMPLE_SITE_IDS_UNINTERESTED = ['111', '222', '333', '444', '555', '666', '777', '888', '999']
 const EXAMPLE_SPECIES_ID_INTERESTED = 555
 const EXAMPLE_SPECIES_IDS_UNINTERESTED = [100, 200, 300, 400, 500, 600, 700, 800, 900]

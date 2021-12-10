@@ -1,7 +1,9 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { Project, Site } from '~/api'
+import { Project } from '@rfcx-bio/common/api-bio-types/projects'
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+
 import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'

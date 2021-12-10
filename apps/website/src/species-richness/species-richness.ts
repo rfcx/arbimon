@@ -1,7 +1,9 @@
 import { Dayjs } from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 
-import { Site, Species } from '~/api'
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+
+import { Species } from '~/api'
 import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'

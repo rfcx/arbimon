@@ -1,6 +1,6 @@
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { Site } from '~/api'
 import { MapDataSet, MapSiteData } from '~/maps/map-bubble'
 
 export const transformToMapDataset = (sites: Site[]): MapDataSet => ({
