@@ -5,6 +5,7 @@ export const rawSpecies: Species[] = [
     speciesId: 34,
     speciesSlug: 'margarops-fuscatus',
     scientificName: 'Margarops fuscatus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -31,6 +32,7 @@ export const rawSpecies: Species[] = [
     speciesId: 21391,
     speciesSlug: 'rallus-crepitans',
     scientificName: 'Rallus crepitans',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -57,6 +59,7 @@ export const rawSpecies: Species[] = [
     speciesId: 18,
     speciesSlug: 'coereba-flaveola',
     scientificName: 'Coereba flaveola',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -83,6 +86,7 @@ export const rawSpecies: Species[] = [
     speciesId: 51,
     speciesSlug: 'crotophaga-ani',
     scientificName: 'Crotophaga ani',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -109,6 +113,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10,
     speciesSlug: 'tyrannus-dominicensis',
     scientificName: 'Tyrannus dominicensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -135,6 +140,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1042,
     speciesSlug: 'falco-sparverius',
     scientificName: 'Falco sparverius',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -161,6 +167,7 @@ export const rawSpecies: Species[] = [
     speciesId: 16084,
     speciesSlug: 'rhinella-marina',
     scientificName: 'Rhinella marina',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -187,6 +194,7 @@ export const rawSpecies: Species[] = [
     speciesId: 57,
     speciesSlug: 'zenaida-aurita',
     scientificName: 'Zenaida aurita',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -213,6 +221,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2082,
     speciesSlug: 'columbina-passerina',
     scientificName: 'Columbina passerina',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -239,6 +248,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1271,
     speciesSlug: 'buteo-jamaicensis',
     scientificName: 'Buteo jamaicensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -265,6 +275,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2077,
     speciesSlug: 'zenaida-asiatica',
     scientificName: 'Zenaida asiatica',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -291,6 +302,7 @@ export const rawSpecies: Species[] = [
     speciesId: 16766,
     speciesSlug: 'gallus-gallus-domesticus',
     scientificName: 'Gallus gallus domesticus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -312,6 +324,7 @@ export const rawSpecies: Species[] = [
     speciesId: 8251,
     speciesSlug: 'mimus-polyglottos',
     scientificName: 'Mimus polyglottos',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -338,6 +351,7 @@ export const rawSpecies: Species[] = [
     speciesId: 9,
     speciesSlug: 'eleutherodactylus-cochranae',
     scientificName: 'Eleutherodactylus cochranae',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -363,6 +377,7 @@ export const rawSpecies: Species[] = [
     speciesId: 7,
     speciesSlug: 'eleutherodactylus-coqui',
     scientificName: 'Eleutherodactylus coqui',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -389,6 +404,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12240,
     speciesSlug: 'eleutherodactylus-antillensis',
     scientificName: 'Eleutherodactylus antillensis',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -415,6 +431,7 @@ export const rawSpecies: Species[] = [
     speciesId: 16,
     speciesSlug: 'myiarchus-antillarum',
     scientificName: 'Myiarchus antillarum',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -441,6 +458,7 @@ export const rawSpecies: Species[] = [
     speciesId: 8534,
     speciesSlug: 'turdus-plumbeus',
     scientificName: 'Turdus plumbeus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -467,6 +485,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40135,
     speciesSlug: 'icterus-portoricensis',
     scientificName: 'Icterus portoricensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -493,6 +512,7 @@ export const rawSpecies: Species[] = [
     speciesId: 4111,
     speciesSlug: 'melanerpes-portoricensis',
     scientificName: 'Melanerpes portoricensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -519,6 +539,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10150,
     speciesSlug: 'tiaris-bicolor',
     scientificName: 'Tiaris bicolor',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -540,6 +561,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40475,
     speciesSlug: 'setophaga-adelaidae',
     scientificName: 'Setophaga adelaidae',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -566,6 +588,7 @@ export const rawSpecies: Species[] = [
     speciesId: 6908,
     speciesSlug: 'progne-dominicensis',
     scientificName: 'Progne dominicensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -592,6 +615,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1645,
     speciesSlug: 'charadrius-vociferus',
     scientificName: 'Charadrius vociferus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -618,6 +642,7 @@ export const rawSpecies: Species[] = [
     speciesId: 3065,
     speciesSlug: 'asio-flammeus',
     scientificName: 'Asio flammeus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -644,6 +669,7 @@ export const rawSpecies: Species[] = [
     speciesId: 55,
     speciesSlug: 'quiscalus-niger',
     scientificName: 'Quiscalus niger',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -670,6 +696,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10494,
     speciesSlug: 'spindalis-portoricensis',
     scientificName: 'Spindalis portoricensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -696,6 +723,7 @@ export const rawSpecies: Species[] = [
     speciesId: 4939,
     speciesSlug: 'tyrannus-caudifasciatus',
     scientificName: 'Tyrannus caudifasciatus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -722,6 +750,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40405,
     speciesSlug: 'setophaga-petechia',
     scientificName: 'Setophaga petechia',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -748,6 +777,7 @@ export const rawSpecies: Species[] = [
     speciesId: 9852,
     speciesSlug: 'icterus-icterus',
     scientificName: 'Icterus icterus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -774,6 +804,7 @@ export const rawSpecies: Species[] = [
     speciesId: 6338,
     speciesSlug: 'vireo-altiloquus',
     scientificName: 'Vireo altiloquus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -800,6 +831,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10153,
     speciesSlug: 'loxigilla-portoricensis',
     scientificName: 'Loxigilla portoricensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -821,6 +853,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2789,
     speciesSlug: 'coccyzus-vieilloti',
     scientificName: 'Coccyzus vieilloti',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -847,6 +880,7 @@ export const rawSpecies: Species[] = [
     speciesId: 3817,
     speciesSlug: 'todus-mexicanus',
     scientificName: 'Todus mexicanus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -873,6 +907,7 @@ export const rawSpecies: Species[] = [
     speciesId: 6327,
     speciesSlug: 'vireo-latimeri',
     scientificName: 'Vireo latimeri',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -899,6 +934,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2887,
     speciesSlug: 'megascops-nudipes',
     scientificName: 'Megascops nudipes',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -925,6 +961,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2124,
     speciesSlug: 'geotrygon-montana',
     scientificName: 'Geotrygon montana',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -951,6 +988,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2783,
     speciesSlug: 'coccyzus-minor',
     scientificName: 'Coccyzus minor',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -977,6 +1015,7 @@ export const rawSpecies: Species[] = [
     speciesId: 3813,
     speciesSlug: 'megaceryle-alcyon',
     scientificName: 'Megaceryle alcyon',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1003,6 +1042,7 @@ export const rawSpecies: Species[] = [
     speciesId: 889,
     speciesSlug: 'butorides-virescens',
     scientificName: 'Butorides virescens',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1024,6 +1064,7 @@ export const rawSpecies: Species[] = [
     speciesId: 9887,
     speciesSlug: 'molothrus-bonariensis',
     scientificName: 'Molothrus bonariensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1050,6 +1091,7 @@ export const rawSpecies: Species[] = [
     speciesId: 3097,
     speciesSlug: 'chordeiles-gundlachii',
     scientificName: 'Chordeiles gundlachii',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1076,6 +1118,7 @@ export const rawSpecies: Species[] = [
     speciesId: 9899,
     speciesSlug: 'agelaius-xanthomus',
     scientificName: 'Agelaius xanthomus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1102,6 +1145,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1638,
     speciesSlug: 'pluvialis-squatarola',
     scientificName: 'Pluvialis squatarola',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1128,6 +1172,7 @@ export const rawSpecies: Species[] = [
     speciesId: 14536,
     speciesSlug: 'osteopilus-septentrionalis',
     scientificName: 'Osteopilus septentrionalis',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1154,6 +1199,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1999,
     speciesSlug: 'patagioenas-squamosa',
     scientificName: 'Patagioenas squamosa',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1180,6 +1226,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2595,
     speciesSlug: 'brotogeris-versicolurus',
     scientificName: 'Brotogeris versicolurus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1206,6 +1253,7 @@ export const rawSpecies: Species[] = [
     speciesId: 6,
     speciesSlug: 'leptodactylus-albilabris-',
     scientificName: 'leptodactylus albilabris ',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1232,6 +1280,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1604,
     speciesSlug: 'himantopus-mexicanus',
     scientificName: 'Himantopus mexicanus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1253,6 +1302,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1742,
     speciesSlug: 'tringa-melanoleuca',
     scientificName: 'Tringa melanoleuca',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1279,6 +1329,7 @@ export const rawSpecies: Species[] = [
     speciesId: 20406,
     speciesSlug: 'antrostomus-noctitherus',
     scientificName: 'Antrostomus noctitherus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1305,6 +1356,7 @@ export const rawSpecies: Species[] = [
     speciesId: 4580,
     speciesSlug: 'elaenia-martinica',
     scientificName: 'Elaenia martinica',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1331,6 +1383,7 @@ export const rawSpecies: Species[] = [
     speciesId: 21518,
     speciesSlug: 'gallinula-galeata',
     scientificName: 'Gallinula galeata',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1357,6 +1410,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10149,
     speciesSlug: 'tiaris-olivaceus',
     scientificName: 'Tiaris olivaceus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1383,6 +1437,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1997,
     speciesSlug: 'patagioenas-leucocephala',
     scientificName: 'Patagioenas leucocephala',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1409,6 +1464,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2026,
     speciesSlug: 'streptopelia-decaocto',
     scientificName: 'Streptopelia decaocto',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1435,6 +1491,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12395,
     speciesSlug: 'eleutherodactylus-wightmanae',
     scientificName: 'Eleutherodactylus wightmanae',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1461,6 +1518,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10487,
     speciesSlug: 'nesospingus-speculiferus',
     scientificName: 'Nesospingus speculiferus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1487,6 +1545,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40385,
     speciesSlug: 'setophaga-angelae',
     scientificName: 'Setophaga angelae',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1513,6 +1572,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40391,
     speciesSlug: 'setophaga-americana',
     scientificName: 'Setophaga americana',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1539,6 +1599,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2581,
     speciesSlug: 'myiopsitta-monachus',
     scientificName: 'Myiopsitta monachus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1565,6 +1626,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1749,
     speciesSlug: 'actitis-macularius',
     scientificName: 'Actitis macularius',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1591,6 +1653,7 @@ export const rawSpecies: Species[] = [
     speciesId: 22167,
     speciesSlug: 'thalasseus-maximus',
     scientificName: 'Thalasseus maximus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1617,6 +1680,7 @@ export const rawSpecies: Species[] = [
     speciesId: 28358,
     speciesSlug: 'contopus-latirostris-blancoi',
     scientificName: 'Contopus latirostris blancoi',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [],
@@ -1626,6 +1690,7 @@ export const rawSpecies: Species[] = [
     speciesId: 13725,
     speciesSlug: 'lithobates-catesbeianus',
     scientificName: 'Lithobates catesbeianus',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1652,6 +1717,7 @@ export const rawSpecies: Species[] = [
     speciesId: 896,
     speciesSlug: 'bubulcus-ibis',
     scientificName: 'Bubulcus ibis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1678,6 +1744,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1555,
     speciesSlug: 'aramus-guarauna',
     scientificName: 'Aramus guarauna',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1704,6 +1771,7 @@ export const rawSpecies: Species[] = [
     speciesId: 8,
     speciesSlug: 'eleutherodactylus-juanariveroi',
     scientificName: 'Eleutherodactylus juanariveroi',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1730,6 +1798,7 @@ export const rawSpecies: Species[] = [
     speciesId: 5,
     speciesSlug: 'eleutherodactylus-brittoni',
     scientificName: 'Eleutherodactylus brittoni',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1756,6 +1825,7 @@ export const rawSpecies: Species[] = [
     speciesId: 8489,
     speciesSlug: 'catharus-minimus',
     scientificName: 'Catharus minimus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1782,6 +1852,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40472,
     speciesSlug: 'setophaga-discolor',
     scientificName: 'Setophaga discolor',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1808,6 +1879,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40445,
     speciesSlug: 'setophaga-caerulescens',
     scientificName: 'Setophaga caerulescens',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1834,6 +1906,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2659,
     speciesSlug: 'amazona-amazonica',
     scientificName: 'Amazona amazonica',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1860,6 +1933,7 @@ export const rawSpecies: Species[] = [
     speciesId: 40323,
     speciesSlug: 'parkesia-noveboracensis',
     scientificName: 'Parkesia noveboracensis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1886,6 +1960,7 @@ export const rawSpecies: Species[] = [
     speciesId: 43907,
     speciesSlug: 'equus-caballus',
     scientificName: 'Equus caballus',
+    commonName: '',
     taxonId: 5,
     taxon: 'Mammals',
     externalLinks: [
@@ -1907,6 +1982,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12297,
     speciesSlug: 'eleutherodactylus-hedricki',
     scientificName: 'Eleutherodactylus hedricki',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1933,6 +2009,7 @@ export const rawSpecies: Species[] = [
     speciesId: 22864,
     speciesSlug: 'accipiter-striatus-venator',
     scientificName: 'Accipiter striatus venator',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1954,6 +2031,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12360,
     speciesSlug: 'eleutherodactylus-richmondi',
     scientificName: 'Eleutherodactylus richmondi',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -1980,6 +2058,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12257,
     speciesSlug: 'eleutherodactylus-cooki',
     scientificName: 'Eleutherodactylus cooki',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -2006,6 +2085,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1527,
     speciesSlug: 'fulica-caribaea',
     scientificName: 'Fulica caribaea',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2027,6 +2107,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1259,
     speciesSlug: 'buteo-platypterus',
     scientificName: 'Buteo platypterus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2053,6 +2134,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2643,
     speciesSlug: 'amazona-vittata',
     scientificName: 'Amazona vittata',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2079,6 +2161,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12356,
     speciesSlug: 'eleutherodactylus-portoricensis',
     scientificName: 'Eleutherodactylus portoricensis',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -2105,6 +2188,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12319,
     speciesSlug: 'eleutherodactylus-locustus',
     scientificName: 'Eleutherodactylus locustus',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -2130,6 +2214,7 @@ export const rawSpecies: Species[] = [
     speciesId: 22987,
     speciesSlug: 'buteo-platypterus-brunnescens',
     scientificName: 'Buteo platypterus brunnescens',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2151,6 +2236,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10511,
     speciesSlug: 'euphonia-musica',
     scientificName: 'Euphonia musica',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2177,6 +2263,7 @@ export const rawSpecies: Species[] = [
     speciesId: 9100,
     speciesSlug: 'passer-domesticus',
     scientificName: 'Passer domesticus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2203,6 +2290,7 @@ export const rawSpecies: Species[] = [
     speciesId: 21869,
     speciesSlug: 'tringa-semipalmata',
     scientificName: 'Tringa semipalmata',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2229,6 +2317,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12291,
     speciesSlug: 'eleutherodactylus-gryllus',
     scientificName: 'Eleutherodactylus gryllus',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -2255,6 +2344,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12386,
     speciesSlug: 'eleutherodactylus-unicolor',
     scientificName: 'Eleutherodactylus unicolor',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -2281,6 +2371,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1510,
     speciesSlug: 'porphyrio-martinica',
     scientificName: 'Porphyrio martinica',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2302,6 +2393,7 @@ export const rawSpecies: Species[] = [
     speciesId: 2646,
     speciesSlug: 'amazona-viridigenalis',
     scientificName: 'Amazona viridigenalis',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2328,6 +2420,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1072,
     speciesSlug: 'pandion-haliaetus',
     scientificName: 'Pandion haliaetus',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2354,6 +2447,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1854,
     speciesSlug: 'larus-atricilla',
     scientificName: 'Larus atricilla',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2380,6 +2474,7 @@ export const rawSpecies: Species[] = [
     speciesId: 42791,
     speciesSlug: 'capra-aegagrus',
     scientificName: 'Capra aegagrus',
+    commonName: '',
     taxonId: 5,
     taxon: 'Mammals',
     externalLinks: [
@@ -2406,6 +2501,7 @@ export const rawSpecies: Species[] = [
     speciesId: 12332,
     speciesSlug: 'eleutherodactylus-monensis',
     scientificName: 'Eleutherodactylus monensis',
+    commonName: '',
     taxonId: 2,
     taxon: 'Amphibians',
     externalLinks: [
@@ -2432,6 +2528,7 @@ export const rawSpecies: Species[] = [
     speciesId: 953,
     speciesSlug: 'sula-sula',
     scientificName: 'Sula sula',
+    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
