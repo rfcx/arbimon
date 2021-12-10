@@ -26,7 +26,7 @@ fs.writeFileSync(outputFilePath, output, 'utf8')
 export function transformToSites (data: ArbimonHourlySpeciesRow[]): string {
   const splitter = '-----'
   const rawSiteList: string[] = Array.from(new Set(data.map(r => `${r.stream_id}${splitter}${r.name}${splitter}${r.lat}${splitter}${r.lon}${splitter}${r.alt}`)))
-  const siteList = rawSiteList.map(s => s.split(splitter)).map(tuple => ({ site_id: tuple[0], name: tuple[1], latitude: tuple[2], longitude: tuple[3], altitude: tuple[4] }))
+  const siteList = rawSiteList.map(s => s.split(splitter)).map(tuple => ({ siteId: tuple[0], name: tuple[1], latitude: tuple[2], longitude: tuple[3], altitude: tuple[4] }))
   return JSON.stringify(siteList, null, 2)
 }
 

@@ -1,18 +1,3 @@
-// TODO ?? - Are these properties really optional?!
-export interface Project {
-  id?: string
-  name?: string
-  isPublic?: boolean
-  externalId?: number
-}
-
-export interface Site {
-  siteId: string
-  name: string
-  latitude?: number
-  longitude?: number
-}
-
 export interface Detection {
   arbimonSiteId: number
   siteId: string
