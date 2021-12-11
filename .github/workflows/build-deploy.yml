@@ -34,7 +34,7 @@ jobs:
               "antonyharfield": {
                 "SLACK_MENTION_USERS": "U09HZUDUY"
               },
-              "Crave61341416": {
+              "Crave-dev": {
                 "SLACK_MENTION_USERS": "U02NUJCUV99"
               },
               ".*": {
