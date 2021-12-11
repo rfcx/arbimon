@@ -16,12 +16,6 @@ export interface Detection {
   detectionFrequency: number
 }
 
-export interface TaxonomyClass {
-  symbol: string
-  name: string
-  color?: string
-}
-
 export interface Species {
   speciesSlug: string
   speciesId: number
