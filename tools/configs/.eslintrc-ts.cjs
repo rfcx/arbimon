@@ -2,6 +2,7 @@ module.exports = {
   extends: ['./.eslintrc-js.cjs'],
   plugins: ['sort-class-members'],
   rules: {
+    '@typescript-eslint/indent': 'off',
     '@typescript-eslint/space-before-function-paren': [
       'error',
       {
