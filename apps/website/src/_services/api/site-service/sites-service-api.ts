@@ -1,11 +1,18 @@
+// import { AxiosRequestConfig } from 'axios'
+//
 // import { Project, Site } from '~/api/types'
 // import ApiClient from '~/api-helpers/rest/api-service'
 // import { endpointSites } from '../../api-helpers/rest'
-
+//
+// export const endpointSites: AxiosRequestConfig = {
+//   method: 'GET',
+//   url: `${import.meta.env.VITE_CORE_API_HOST}/streams`
+// }
+//
 // TODO 132 - Fix this; it ignores the project
 // export const getSites = async (project: Project): Promise<Site[]> => {
 //   const { method, url } = endpointSites
-
+//
 //   try {
 //     const resp = await ApiClient.request<Site[]>({
 //       url,
