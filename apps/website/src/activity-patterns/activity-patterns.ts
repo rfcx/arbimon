@@ -1,10 +1,11 @@
 import { Options, Vue } from 'vue-class-component'
 
+import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species.js'
 import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { Species } from '~/api'
 import { activityPatternsService } from '~/api/activity-patterns-service'
-import { getPredictedOccupancyMaps, PredictedOccupancyMap } from '~/api/predicted-occupancy-service'
+import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
 import { ColoredFilter } from '~/dataset-filters'
 import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
 import { filterToDataset } from '~/dataset-filters/functions'
