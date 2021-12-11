@@ -87,19 +87,19 @@ jobs:
         name: 'Verify: Build'
         run: pnpm ci-build
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=6144'
 
       - id: lint
         name: 'Verify: Lint'
         run: pnpm ci-lint
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=6144'
 
       - id: test
         name: 'Verify: Test'
         run: pnpm ci-test
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=6144'
 
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
