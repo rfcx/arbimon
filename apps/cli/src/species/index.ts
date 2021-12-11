@@ -1,4 +1,3 @@
-import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
@@ -7,9 +6,6 @@ import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn/index.js'
 
 import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn.js'
 import { getWikiSpeciesInformation } from './wiki/wiki.js'
-
-// TODO - Wrap CLI env
-dotenv.config()
 
 // TODO - Extract this
 const MODE = process.argv.find(arg => arg.startsWith('--mode='))?.split('=')[1].toLowerCase() ?? 'dev'

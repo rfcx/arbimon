@@ -3,6 +3,8 @@ import * as fs from 'fs'
 import * as mysql from 'mysql'
 import { dirname, resolve } from 'path'
 
+import { env } from '../_services/env/index.js'
+
 // Parameters
 const currentDir = dirname(new URL(import.meta.url).pathname)
 
@@ -10,10 +12,10 @@ const currentDir = dirname(new URL(import.meta.url).pathname)
 dotenv.config()
 
 const config = {
-  user: process.env.USERNAME,
-  password: process.env.PASSWORD,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
+  user: env.USERNAME,
+  password: env.PASSWORD,
+  host: env.HOST,
+  database: env.DATABASE,
   timezone: 'UTC'
 }
 
@@ -27,7 +29,7 @@ const exportDetection = exportQueryResultToJsonFile(connection,
 )
 const exportSpeciesCall = exportQueryResultToJsonFile(connection,
   resolve(currentDir, './get-example-of-species-call.sql'),
-  resolve(currentDir, './raw-species-call.json')
+  resolve(currentDir, './raw-species-callw.json')
 )
 await Promise.all([exportDetection, exportSpeciesCall])
 
