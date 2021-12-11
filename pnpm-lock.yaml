@@ -193,7 +193,7 @@ importers:
       pinia: ^2.0.2
       unplugin-auto-import: ^0.5.1
       unplugin-icons: ^0.12.22
-      unplugin-vue-components: ^0.17.2
+      unplugin-vue-components: ^0.17.8
       vue: ^3.2.21
       vue-class-component: ^8.0.0-rc.1
       vue-property-decorator: ^10.0.0-rc.3
@@ -233,7 +233,7 @@ importers:
       '@windicss/plugin-interaction-variants': 1.0.0
       unplugin-auto-import: 0.5.1_7b60fe9e88f20bfc0d80a2bf89337fa9
       unplugin-icons: 0.12.22_7eda3f731498845f803d0ed98f571d36
-      unplugin-vue-components: 0.17.2_1e9fab465cb0908daa6ce3998d23cab5
+      unplugin-vue-components: 0.17.8_1e9fab465cb0908daa6ce3998d23cab5
       windicss: 3.2.1
 
   packages/common:
@@ -8265,12 +8265,6 @@ packages:
     engines: {node: '>=6.11.5'}
     dev: true
 
-  /local-pkg/0.1.0:
-    resolution: {integrity: sha512-WsR2tHvRGIxcC2clC30ECb5fjywzsjQagaHIy1+ykZaHz0ByoB0OL2riHqIYA5YYnensRXLszwbzHkhKzehZDg==}
-    dependencies:
-      mlly: 0.2.10
-    dev: true
-
   /local-pkg/0.4.0:
     resolution: {integrity: sha512-2XBWjO/v63JeR1HPzLJxdTVRQDB84Av2p2KtBA5ahvpyLUPubcAU6iXlAJrONcY7aSqgJhXxElAnKtnYsRolPQ==}
     engines: {node: '>=14'}
@@ -11560,8 +11554,8 @@ packages:
       - webpack
     dev: true
 
-  /unplugin-vue-components/0.17.2_1e9fab465cb0908daa6ce3998d23cab5:
-    resolution: {integrity: sha512-e4ZdOpnzFMQJx3rDLotLyucTap0bUlMy+6BRYyoN6jE1ZyGAgR6jodmpHZAPR3xkC4pkqW5PLlyDfIH/+lzkng==}
+  /unplugin-vue-components/0.17.8_1e9fab465cb0908daa6ce3998d23cab5:
+    resolution: {integrity: sha512-biyIE8TQwolK/ii3vu3xJ4w83+bliAgka3AuhU2cX5OOvJP+xuq39Skhf+BkNkZoY8xoeU65WHOgLFl//m3/YQ==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
@@ -11578,7 +11572,7 @@ packages:
       chokidar: 3.5.2
       debug: 4.3.3
       fast-glob: 3.2.7
-      local-pkg: 0.1.0
+      local-pkg: 0.4.0
       magic-string: 0.25.7
       minimatch: 3.0.4
       resolve: 1.20.0
