@@ -17,6 +17,7 @@
     "lint-diff:eslint": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
     "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
+    "profile-eslint": "TIMING=1 eslint . --ignore-pattern \"*/\"",
     "serve:api": "pnpm --filter=api serve",
     "serve:website": "pnpm --filter=website serve",
     "serve": "concurrently --kill-others-on-fail \"pnpm:serve:*\""
