@@ -19,6 +19,16 @@ export interface SpeciesExternalLink {
   sourceType: SpeciesSource
 }
 
+export interface SpeciesCall {
+  mediaWavUrl: string
+  mediaSpecUrl: string
+  songType: string
+  recordedAt: string
+  timezone: string
+  projectName: string
+  siteName: string
+}
+
 export interface Species {
   speciesId: number
   speciesSlug: string
@@ -30,4 +40,5 @@ export interface Species {
   taxon: string
   taxonId: number
   thumbnailImageUrl?: string
+  speciesCall?: SpeciesCall
 }
