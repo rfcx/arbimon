@@ -7,6 +7,8 @@ import pluginComponents from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
+import pluginNodeResolve from '@rollup/plugin-node-resolve'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   css: {
@@ -17,9 +19,7 @@ export default defineConfig({
     }
   },
   plugins: [
-    pluginAutoImport({
-      resolvers: [pluginElementPlusResolver()]
-    }),
+    pluginAutoImport({ resolvers: [pluginElementPlusResolver()] }),
     pluginComponents({
       resolvers: [
         pluginIconsResolver({
@@ -30,6 +30,7 @@ export default defineConfig({
       ]
     }),
     pluginIcons({ compiler: 'vue3' }),
+    pluginNodeResolve({ extensions: ['.js', '.ts'] }),
     pluginTsConfigPaths(),
     pluginVue(),
     pluginWindiCSS()
