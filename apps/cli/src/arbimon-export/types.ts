@@ -23,5 +23,7 @@ export interface ArbimonSpecieCallRow {
   'stream_name': string
   'project_id': string
   'project_name': string
-  'media_url': string | null
+  'timezone': string
+  'media_wav_url': string | null
+  'media_spec_url': string | null
 }

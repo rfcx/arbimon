@@ -5,6 +5,7 @@ import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/com
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn/index.js'
 
 import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn.js'
+import { rawSpeciesWithCall } from './raw-species-with-call.js'
 import { getWikiSpeciesInformation } from './wiki/wiki.js'
 
 // TODO - Extract this
@@ -14,7 +15,6 @@ console.info(`Running species data lookup in ${MODE} mode`)
 
 // Script config
 const currentDir = dirname(new URL(import.meta.url).pathname)
-const mockSpeciesPath = resolve(currentDir, './raw-species.json')
 const outputFilePath = resolve(currentDir, './species-with-information.json')
 
 const MIN_DELAY = 500
@@ -23,8 +23,7 @@ const delay = async (ms: number): Promise<void> => await new Promise(resolve => 
 
 async function main (): Promise<void> {
   // Read existing data
-  const rawSpeciesString = fs.readFileSync(mockSpeciesPath, { encoding: 'utf8' })
-  const speciesInput = (JSON.parse(rawSpeciesString) as Species[])
+  const speciesInput = (rawSpeciesWithCall as Species[])
     .sort((s1, s2) => s1.scientificName.localeCompare(s2.scientificName))
 
   // Call APIs sequentially (to avoid spamming APIs)
