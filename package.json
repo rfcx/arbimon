@@ -27,6 +27,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.0",
     "@mixer/parallel-prettier": "^2.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "@types/estree": "^0.0.50",
     "@types/jest": "^27.0.2",
     "@types/lodash-es": "^4.17.5",
