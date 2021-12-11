@@ -1,22 +1,30 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts'
-import { urlify } from '@rfcx-bio/utils/url-helpers'
+import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts.js'
+import { dateQueryParamify, urlify } from '@rfcx-bio/utils/url-helpers/index.js'
 
-import { ArbimonHourlySpeciesRow } from './types'
+import { ArbimonHourlySpeciesRow, ArbimonSpecieCallRow } from './types'
 
 // Parameters
 const currentDir = dirname(new URL(import.meta.url).pathname)
-const inputFilePath = resolve(currentDir, './raw-summaries.json')
-const outputFilePath = resolve(currentDir, './raw-summaries.ts')
-const outputConstName = 'rawSummaries'
+const rawSpeciesRichnessFilePath = resolve(currentDir, './raw-summaries.json')
+const rawSpeciesCallFilePath = resolve(currentDir, './raw-species-call.json')
+
+// Output
+const outputFilePath = resolve(currentDir, './raw-species.ts')
+const outputConstName = 'rawSpecies'
 
 // Ingest raw data
-const rawSpeciesRichnessStringOrBuffer = fs.readFileSync(inputFilePath)
+const rawSpeciesRichnessStringOrBuffer = fs.readFileSync(rawSpeciesRichnessFilePath)
 const rawSpeciesRichnessData = Buffer.isBuffer(rawSpeciesRichnessStringOrBuffer)
   ? rawSpeciesRichnessStringOrBuffer.toString()
   : rawSpeciesRichnessStringOrBuffer
+
+const rawSpeciesCallStringOrBuffer = fs.readFileSync(rawSpeciesCallFilePath)
+const rawSpeciesCallData = Buffer.isBuffer(rawSpeciesCallStringOrBuffer)
+  ? rawSpeciesCallStringOrBuffer.toString()
+  : rawSpeciesCallStringOrBuffer
 
 // Transform as needed & write
 const output = jsonToTs(transformToSpecies(JSON.parse(rawSpeciesRichnessData)), outputConstName)
@@ -34,7 +42,26 @@ export function transformToSpecies (data: ArbimonHourlySpeciesRow[]): string {
   const splitter = '-----'
   const rawSpeciesList: string[] = Array.from(new Set(data.map(r => `${r.species_id}${splitter}${r.scientific_name}${splitter}${r.taxon_id}${splitter}${r.taxon}`)))
   const speciesList = rawSpeciesList.map(s => s.split(splitter)).map(tuple => ({ speciesId: tuple[0], speciesSlug: urlify(tuple[1]), scientificName: tuple[1], taxonId: tuple[2], taxon: tuple[3] }))
-  return JSON.stringify(speciesList, null, 2)
+
+  if (!rawSpeciesCallData) {
+    return JSON.stringify(speciesList, null, 2)
+  }
+
+  const speciesCallOutput: ArbimonSpecieCallRow[] = JSON.parse(transformToMediaURL(JSON.parse(rawSpeciesCallData)))
+  const updatedSpeciesList = speciesList.map(s => {
+    const speciesCall = speciesCallOutput.find(c => c.scientific_name === s.scientificName)
+    if (!speciesCall) return s
+    return {
+      ...s,
+      speciesCall: {
+        mediaUrlWav: speciesCall.media_url,
+        siteName: speciesCall.stream_name,
+        projectName: speciesCall.project_name,
+        songType: speciesCall.songtype
+      }
+    }
+  })
+  return JSON.stringify(updatedSpeciesList, null, 2)
 }
 
 export function transformToSelectedSites (data: ArbimonHourlySpeciesRow[]): string {
@@ -47,6 +74,16 @@ export function transformCalculateDetectionFrequency (data: ArbimonHourlySpecies
     return {
       ...i,
       detection_frequency: i.num_of_recordings / 12
+    }
+  })
+  return JSON.stringify(d, null, 2)
+}
+
+export function transformToMediaURL (data: ArbimonSpecieCallRow[]): string {
+  const d = data.map((i: ArbimonSpecieCallRow) => {
+    return {
+      ...i,
+      media_url: `https://media-api.rfcx.org/internal/assets/streams/${i.stream_id}_t${dateQueryParamify(i.start)}.${dateQueryParamify(i.end)}_fwav.wav`
     }
   })
   return JSON.stringify(d, null, 2)
