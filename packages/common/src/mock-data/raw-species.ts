@@ -578,7 +578,8 @@ export const rawSpecies: Species[] = [
       siteName: 'MO_MG',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
-      recordedAt: '2021-05-17T22:35:53.823Z'
+      recordedAt: '2021-05-17T22:35:53.823Z',
+      timezone: 'America/Puerto_Rico'
     }
   },
   {
