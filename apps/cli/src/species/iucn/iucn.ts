@@ -1,13 +1,12 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import * as dotenv from 'dotenv'
 
 import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
-dotenv.config()
+import { env } from '../../_services/env'
 
 // TODO: Validate env
-const IUCN_BASE_URL = process.env.IUCN_BASE_URL ?? ''
-const IUCN_TOKEN = process.env.IUCN_TOKEN ?? ''
+const IUCN_BASE_URL = env.IUCN_BASE_URL ?? ''
+const IUCN_TOKEN = env.IUCN_TOKEN ?? ''
 
 export interface IucnSpeciesNarrativeResult {
   species_id: number
