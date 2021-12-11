@@ -41,7 +41,7 @@ export function transformToSites (data: ArbimonHourlySpeciesRow[]): string {
 export function transformToSpecies (data: ArbimonHourlySpeciesRow[]): string {
   const splitter = '-----'
   const rawSpeciesList: string[] = Array.from(new Set(data.map(r => `${r.species_id}${splitter}${r.scientific_name}${splitter}${r.taxon_id}${splitter}${r.taxon}`)))
-  const speciesList = rawSpeciesList.map(s => s.split(splitter)).map(tuple => ({ speciesId: tuple[0], speciesSlug: urlify(tuple[1]), scientificName: tuple[1], taxonId: tuple[2], taxon: tuple[3] }))
+  const speciesList = rawSpeciesList.map(s => s.split(splitter)).map(tuple => ({ speciesId: parseInt(tuple[0]), speciesSlug: urlify(tuple[1]), scientificName: tuple[1], taxonId: parseInt(tuple[2]), taxon: tuple[3] }))
 
   if (!rawSpeciesCallData) {
     return JSON.stringify(speciesList, null, 2)
@@ -54,10 +54,13 @@ export function transformToSpecies (data: ArbimonHourlySpeciesRow[]): string {
     return {
       ...s,
       speciesCall: {
-        mediaUrlWav: speciesCall.media_url,
+        mediaWavUrl: speciesCall.media_wav_url,
+        mediaSpecUrl: speciesCall.media_spec_url,
         siteName: speciesCall.stream_name,
         projectName: speciesCall.project_name,
-        songType: speciesCall.songtype
+        songType: speciesCall.songtype,
+        recordedAt: speciesCall.start,
+        timezone: speciesCall.timezone
       }
     }
   })
@@ -83,7 +86,8 @@ export function transformToMediaURL (data: ArbimonSpecieCallRow[]): string {
   const d = data.map((i: ArbimonSpecieCallRow) => {
     return {
       ...i,
-      media_url: `https://media-api.rfcx.org/internal/assets/streams/${i.stream_id}_t${dateQueryParamify(i.start)}.${dateQueryParamify(i.end)}_fwav.wav`
+      media_wav_url: `https://media-api.rfcx.org/internal/assets/streams/${i.stream_id}_t${dateQueryParamify(i.start)}.${dateQueryParamify(i.end)}_fwav.wav`,
+      media_spec_url: `https://media-api.rfcx.org/internal/assets/streams/${i.stream_id}_t${dateQueryParamify(i.start)}.${dateQueryParamify(i.end)}_fspec.png`
     }
   })
   return JSON.stringify(d, null, 2)
