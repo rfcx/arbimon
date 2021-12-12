@@ -8,7 +8,6 @@ importers:
       '@babel/preset-env': ^7.16.4
       '@babel/preset-typescript': ^7.16.0
       '@mixer/parallel-prettier': ^2.0.1
-      '@rollup/plugin-node-resolve': ^13.0.6
       '@types/estree': ^0.0.50
       '@types/jest': ^27.0.2
       '@types/lodash-es': ^4.17.5
@@ -70,7 +69,6 @@ importers:
       '@babel/preset-env': 7.16.4_@babel+core@7.16.0
       '@babel/preset-typescript': 7.16.0_@babel+core@7.16.0
       '@mixer/parallel-prettier': 2.0.1
-      '@rollup/plugin-node-resolve': 13.0.6
       '@types/estree': 0.0.50
       '@types/jest': 27.0.2
       '@types/lodash-es': 4.17.5
@@ -1994,31 +1992,6 @@ packages:
     resolution: {integrity: sha512-zrsUxjLOKAzdewIDRWy9nsV1GQsKBCWaGwsZQlCgr6/q+vjyZhFgqedLfFBuI9anTPEUT4APq9Mu0SZBTzIcGQ==}
     dev: false
 
-  /@rollup/plugin-node-resolve/13.0.6:
-    resolution: {integrity: sha512-sFsPDMPd4gMqnh2gS0uIxELnoRUp5kBl5knxD2EO0778G1oOJv4G1vyT2cpWz75OU2jDVcXhjVUuTAczGyFNKA==}
-    engines: {node: '>= 10.0.0'}
-    peerDependencies:
-      rollup: ^2.42.0
-    dependencies:
-      '@rollup/pluginutils': 3.1.0
-      '@types/resolve': 1.17.1
-      builtin-modules: 3.2.0
-      deepmerge: 4.2.2
-      is-module: 1.0.0
-      resolve: 1.20.0
-    dev: true
-
-  /@rollup/pluginutils/3.1.0:
-    resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
-    engines: {node: '>= 8.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0
-    dependencies:
-      '@types/estree': 0.0.39
-      estree-walker: 1.0.1
-      picomatch: 2.3.0
-    dev: true
-
   /@rollup/pluginutils/4.1.1:
     resolution: {integrity: sha512-clDjivHqWGXi7u+0d2r2sBi4Ie6VLEAzWMIkvJLnDmxoOhBYOTfzGbOQBA32THHm11/LiJbd01tJUpJsbshSWQ==}
     engines: {node: '>= 8.0.0'}
@@ -2320,10 +2293,6 @@ packages:
       '@types/json-schema': 7.0.9
     dev: true
 
-  /@types/estree/0.0.39:
-    resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
-    dev: true
-
   /@types/estree/0.0.50:
     resolution: {integrity: sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw==}
     dev: true
@@ -2424,12 +2393,6 @@ packages:
 
   /@types/prettier/2.4.1:
     resolution: {integrity: sha512-Fo79ojj3vdEZOHg3wR9ksAMRz4P3S5fDB5e/YWZiFnyFQI1WY2Vftu9XoXVVtJfxB7Bpce/QTqWSSntkz2Znrw==}
-    dev: true
-
-  /@types/resolve/1.17.1:
-    resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
-    dependencies:
-      '@types/node': 16.11.6
     dev: true
 
   /@types/sinonjs__fake-timers/6.0.4:
@@ -5799,10 +5762,6 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
-  /estree-walker/1.0.1:
-    resolution: {integrity: sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==}
-    dev: true
-
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
 
@@ -7124,10 +7083,6 @@ packages:
   /is-interactive/1.0.0:
     resolution: {integrity: sha512-2HvIEKRoqS62guEC+qBjpvRubdX910WCMuJTZ+I9yvqKU2/12eSL549HMwtabb4oupdj2sMP50k+XJfB/8JE6w==}
     engines: {node: '>=8'}
-    dev: true
-
-  /is-module/1.0.0:
-    resolution: {integrity: sha1-Mlj7afeMFNW4FdZkM2tM/7ZEFZE=}
     dev: true
 
   /is-negated-glob/1.0.0:
