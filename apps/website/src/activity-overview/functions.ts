@@ -2,8 +2,7 @@ import { downloadSpreadsheet } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { TAXONOMY_CLASSES, TAXONOMY_UNKNOWN_CLASS } from '~/api/taxonomy-service'
-import { ColoredFilter } from '~/dataset-filters'
-import { getExportDateTime, getExportFilterName } from '~/dataset-filters/functions'
+import { ColoredFilter, getExportDateTime, getExportFilterName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
 export type ActivityOverviewDataBySite = ActivityOverviewData & ColoredFilter

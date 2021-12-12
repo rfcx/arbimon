@@ -7,7 +7,7 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 import { TimeBucket } from '~/api/species-richness-service'
 import { svgToPngData } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
-import { getExportGroupName } from '~/dataset-filters/functions'
+import { getExportGroupName } from '~/filters'
 
 const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
   hour: [0, 23],

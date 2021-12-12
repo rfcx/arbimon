@@ -1,20 +1,20 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
+import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { DatasetDefinition } from '~/api'
 import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupByDetectionKey, DetectionGroupedBySiteAndTaxon } from '~/api/activity-overview-service'
-import { ApiHourlySpeciesSummary, filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'
+import { DatasetParameters, filterMocksByParameters } from '~/filters'
 
 export class ActivityOverviewService {
   constructor (
-    private readonly rawHourlySpeciesSummaries: ApiHourlySpeciesSummary[],
+    private readonly rawHourlySpeciesSummaries: MockHourlyDetectionSummary[],
     private readonly delay: number | undefined = undefined
   ) {}
 
-  async getActivityOverviewData (dataset: DatasetDefinition): Promise<ActivityOverviewData> {
-    const totalSummaries = filterByDataset(this.rawHourlySpeciesSummaries, dataset)
+  async getActivityOverviewData (dataset: DatasetParameters): Promise<ActivityOverviewData> {
+    const totalSummaries = filterMocksByParameters(this.rawHourlySpeciesSummaries, dataset)
     const detectionsBySites = groupBy(totalSummaries, 'stream_id')
     const detectionsByTaxon: DetectionGroupByDetectionKey = groupBy(totalSummaries, 'taxon')
     const overviewBySite = await this.getOverviewDataBySite(detectionsByTaxon, detectionsBySites)
@@ -24,7 +24,7 @@ export class ActivityOverviewService {
     return await simulateDelay({ ...dataset, overviewBySite, overviewByTime, overviewBySpecies }, this.delay)
   }
 
-  getRecordingCount (detections: ApiHourlySpeciesSummary[]): number {
+  getRecordingCount (detections: MockHourlyDetectionSummary[]): number {
     return new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
   }
 
@@ -78,21 +78,21 @@ export class ActivityOverviewService {
     return summariesBySites
   }
 
-  calculateDetectionActivity (detections: ApiHourlySpeciesSummary[]): number {
+  calculateDetectionActivity (detections: MockHourlyDetectionSummary[]): number {
     return sum(detections.map(d => d.num_of_recordings))
   }
 
-  calculateDetectionFrequencyActivity (detections: ApiHourlySpeciesSummary[], totalRecordingCount: number): number {
+  calculateDetectionFrequencyActivity (detections: MockHourlyDetectionSummary[], totalRecordingCount: number): number {
     const detectionCount = sum(detections.map(d => d.num_of_recordings))
     return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
   }
 
-  calculateOccupancyActivity (detections: ApiHourlySpeciesSummary[], totalSiteCount: number): number {
+  calculateOccupancyActivity (detections: MockHourlyDetectionSummary[], totalSiteCount: number): number {
     const occupiedCount = new Set(detections.map(d => d.stream_id)).size
     return occupiedCount === 0 ? 0 : occupiedCount / totalSiteCount
   }
 
-  async getOverviewDataByTime (totalSummaries: ApiHourlySpeciesSummary[], detectionsByTaxon: DetectionGroupByDetectionKey): Promise<ActivityOverviewDataByTime[]> {
+  async getOverviewDataByTime (totalSummaries: MockHourlyDetectionSummary[], detectionsByTaxon: DetectionGroupByDetectionKey): Promise<ActivityOverviewDataByTime[]> {
     const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
 
@@ -106,7 +106,7 @@ export class ActivityOverviewService {
     return overviewByTime
   }
 
-  calculateOverviewDataByTime (totalSiteCount: number, totalRecordingCount: number, speciesSummaries: ApiHourlySpeciesSummary[]): ActivityOverviewDataByTime {
+  calculateOverviewDataByTime (totalSiteCount: number, totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime {
     const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
     const hour = {
       detection: mapValues(hourGrouped, this.calculateDetectionActivity),
@@ -144,7 +144,7 @@ export class ActivityOverviewService {
     return { hour, day, month, year, quarter }
   }
 
-  async getOverviewDataBySpecies (totalSummaries: ApiHourlySpeciesSummary[]): Promise<ActivityOverviewDataBySpecies[]> {
+  async getOverviewDataBySpecies (totalSummaries: MockHourlyDetectionSummary[]): Promise<ActivityOverviewDataBySpecies[]> {
     const detectionsBySpecies = groupBy(totalSummaries, 'scientific_name')
     const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
@@ -170,4 +170,4 @@ export class ActivityOverviewService {
   }
 }
 
-export const activityOverviewService = new ActivityOverviewService(getRawDetections())
+export const activityOverviewService = new ActivityOverviewService(rawDetections)

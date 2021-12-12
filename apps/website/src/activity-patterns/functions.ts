@@ -1,5 +1,5 @@
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
-import { ColoredFilter } from '~/dataset-filters'
+import { ColoredFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
 

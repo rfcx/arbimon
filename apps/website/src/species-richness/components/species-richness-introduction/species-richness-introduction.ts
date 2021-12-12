@@ -2,7 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { downloadCsvReports } from '@/species-richness/csv'
-import { ColoredFilter } from '~/dataset-filters'
+import { ColoredFilter } from '~/filters'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 

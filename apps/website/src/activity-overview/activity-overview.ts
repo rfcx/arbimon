@@ -7,9 +7,7 @@ import ActivityOverviewByTime from '@/activity-overview/components/activity-over
 import { exportCSV, transformToBySiteDataset } from '@/activity-overview/functions'
 import { TimeDataset } from '@/activity-patterns/types'
 import { ActivityOverviewDataBySpecies, activityOverviewService } from '~/api/activity-overview-service'
-import { ColoredFilter } from '~/dataset-filters'
-import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
-import { filterToDataset } from '~/dataset-filters/functions'
+import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
 
