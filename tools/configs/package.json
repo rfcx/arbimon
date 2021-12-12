@@ -9,7 +9,7 @@
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix",
-    "profile-eslint": "TIMING=1 eslint ."
+    "profile-eslint": "cross-env TIMING=1 eslint ."
   },
   "description": "Base configs & config factories for RFCx Biodiversity project",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
