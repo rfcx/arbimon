@@ -4,9 +4,11 @@
 // import ApiClient from '~/api-helpers/rest/api-service'
 // import { endpointSites } from '../../api-helpers/rest'
 //
+// const CORE_API_HOST: string = import.meta.env.VITE_CORE_API_HOST // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
+//
 // export const endpointSites: AxiosRequestConfig = {
 //   method: 'GET',
-//   url: `${import.meta.env.VITE_CORE_API_HOST}/streams`
+//   url: `${CORE_API_HOST}/streams`
 // }
 //
 // TODO 132 - Fix this; it ignores the project
