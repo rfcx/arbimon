@@ -1,4 +1,4 @@
-import { Species } from '../api-bio-types/species.js'
+import { Species } from '../api-bio-types/species'
 
 export const rawSpecies: Species[] = [
   {

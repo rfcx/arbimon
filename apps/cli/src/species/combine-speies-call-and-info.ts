@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { rawSpeciesWithCall } from './raw-species-with-call.js'
-import { rawSpeciesWithInfo } from './raw-species-with-info.js'
+import { rawSpeciesWithCall } from './raw-species-with-call'
+import { rawSpeciesWithInfo } from './raw-species-with-info'
 
 // Script config
 const currentDir = dirname(new URL(import.meta.url).pathname)

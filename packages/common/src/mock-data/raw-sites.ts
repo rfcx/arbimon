@@ -1,4 +1,4 @@
-import { Site } from '../api-bio-types/sites.js'
+import { Site } from '../api-bio-types/sites'
 
 export const rawSites: Site[] = [
   {

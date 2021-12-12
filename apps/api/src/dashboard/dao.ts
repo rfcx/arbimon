@@ -1,10 +1,10 @@
 import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
-import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '@rfcx-bio/common/api-bio-types/dashboard-generated.js'
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile.js'
-import { EXTINCTION_RISK_THREATENED_CODES } from '@rfcx-bio/common/iucn/index.js'
-import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data/index.js'
-import { groupByNumber } from '@rfcx-bio/utils/lodash-ext/index.js'
+import { DashboardGeneratedResponse, DashboardRichness, DashboardSpecies } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
+import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+import { EXTINCTION_RISK_THREATENED_CODES } from '@rfcx-bio/common/iucn'
+import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
+import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 // TODO: Update to query from DB
 export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
