@@ -1,12 +1,12 @@
-import { groupBy, kebabCase, mapValues } from 'lodash-es'
+import { groupBy, keyBy, mapValues } from 'lodash-es'
 
-import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 import { MapSiteData } from '~/maps/map-bubble'
-import { Species } from '..'
 import { SpeciesRichnessData, TimeBucket } from './types'
 
 // TODO ?? - Move this logic to the API
@@ -52,12 +52,12 @@ const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<Time
   }
 }
 
-const getSpeciesPresence = (detections: MockHourlyDetectionSummary[]): { [speciesId: string]: Species } => {
-  const detectionsBySpecies = groupBy(detections, 'species_id')
-  return mapValues(detectionsBySpecies, (value, key) => ({
-    speciesSlug: kebabCase(value[0].scientific_name),
-    speciesId: Number(key),
-    speciesName: value[0].scientific_name,
-    className: value[0].taxon
-  }))
+const getSpeciesPresence = (detections: MockHourlyDetectionSummary[]): { [speciesId: string]: SpeciesLight } => {
+  const speciesIds = new Set(detections.map(d => d.species_id))
+
+  const species = rawSpecies
+    .filter(s => speciesIds.has(s.speciesId))
+    .map(({ speciesId, speciesSlug, scientificName, commonName, taxon: taxonClass }) =>
+      ({ speciesId, speciesSlug, scientificName, commonName, taxonClass }))
+    return keyBy(species, 'speciesId')
 }

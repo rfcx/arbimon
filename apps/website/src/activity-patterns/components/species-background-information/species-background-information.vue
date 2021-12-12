@@ -22,11 +22,11 @@
       <div class="relative max-h-60 max-w-full flex justify-end">
         <img
           :src="speciesImage()"
-          :alt="species?.speciesName ?? ''"
+          :alt="species?.scientificName ?? ''"
           class="max-h-60"
         >
         <div
-          v-if="species?.speciesName"
+          v-if="species?.scientificName"
           class="absolute px-2 py-1 bottom-0 right-0 bg-dark-300 bg-opacity-70"
         >
           <span v-if="isLoading">Loading...</span>
@@ -35,7 +35,7 @@
             :href="speciesImage()"
             target="_blank"
             class="italic hover:underline"
-          >{{ species?.speciesName }}</a>
+          >{{ species?.scientificName }}</a>
         </div>
       </div>
     </div>
