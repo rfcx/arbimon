@@ -16,7 +16,6 @@
     "preview": "vite preview --port 8080",
     "profile-eslint": "cross-env TIMING=1 NODE_OPTIONS=\"--max_old_space_size=8192\" eslint .",
     "serve": "vite",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest",
     "test-ui:explorer": "cypress open"
   },
   "active-issues": {
