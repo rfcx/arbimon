@@ -3,7 +3,7 @@ import { Prop } from 'vue-property-decorator'
 
 import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
-import { getExportFilterName } from '~/dataset-filters/functions'
+import { getExportFilterName } from '~/filters'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'

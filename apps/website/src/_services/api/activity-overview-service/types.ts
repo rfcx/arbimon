@@ -1,18 +1,19 @@
-import { DatasetDefinition } from '~/api'
+import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
+
 import { TimeBucket } from '~/api/species-richness-service'
-import { ApiHourlySpeciesSummary } from '~/api-helpers/mock'
+import { DatasetParameters } from '~/filters'
 
 export interface DetectionGroupedBySiteAndTaxon {
   [taxon: string]: {
-    [siteId: string]: ApiHourlySpeciesSummary[]
+    [siteId: string]: MockHourlyDetectionSummary[]
   }
 }
 
 export interface DetectionGroupByDetectionKey {
-  [taxonClassNameOrSiteId: string]: ApiHourlySpeciesSummary[]
+  [taxonClassNameOrSiteId: string]: MockHourlyDetectionSummary[]
 }
 
-export interface ActivityOverviewData extends DatasetDefinition {
+export interface ActivityOverviewData extends DatasetParameters {
   overviewBySite: ActicvityOverviewDataBySite
   overviewByTime: ActivityOverviewDataByTime[]
   overviewBySpecies: ActivityOverviewDataBySpecies[]

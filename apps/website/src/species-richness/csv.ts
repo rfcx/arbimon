@@ -1,10 +1,8 @@
+import { rawDetections } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ColoredFilter } from '@/_services/dataset-filters'
-import { getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/dataset-filters/functions'
-import { DatasetDefinition } from '~/api'
-import { getAllDetections } from '~/api/detections-service'
+import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/filters'
 
 export interface ReportData {
   species: string
@@ -39,13 +37,13 @@ const getCsvFile = async ({ startDate, endDate, sites, otherFilters }: ColoredFi
   return { filename, data }
 }
 
-const getCsvForDataset = async (dataset: DatasetDefinition): Promise<ReportData[]> => {
-  return (await getAllDetections(dataset))
-    .map(({ speciesName, siteName, latitude, longitude, altitude, date, hour }) => {
+const getCsvForDataset = async (dataset: DatasetParameters): Promise<ReportData[]> => {
+  return (await filterMocksByParameters(rawDetections, dataset))
+    .map(({ scientific_name: species, name: site, lat: latitude, lon: longitude, alt: altitude, date, hour }) => {
       const newDate = dayjs.utc(date)
       return {
-        species: speciesName,
-        site: siteName,
+        species,
+        site,
         latitude,
         longitude,
         altitude,

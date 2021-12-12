@@ -1,16 +1,17 @@
 import { groupBy, kebabCase, mapValues } from 'lodash-es'
 
+import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { ApiHourlySpeciesSummary, filterByDataset, getRawDetections, simulateDelay } from '~/api-helpers/mock'
+import { DatasetParameters, filterMocksByParameters } from '~/filters'
 import { MapSiteData } from '~/maps/map-bubble'
-import { DatasetDefinition, Species } from '..'
+import { Species } from '..'
 import { SpeciesRichnessData, TimeBucket } from './types'
 
 // TODO ?? - Move this logic to the API
-export const getSpeciesRichnessData = async (dataset: DatasetDefinition): Promise<SpeciesRichnessData> => {
-  const filteredDetections = filterByDataset(getRawDetections(), dataset)
+export const getSpeciesRichnessData = async (dataset: DatasetParameters): Promise<SpeciesRichnessData> => {
+  const filteredDetections = filterMocksByParameters(rawDetections, dataset)
 
   return await simulateDelay({
     ...dataset,
@@ -22,14 +23,14 @@ export const getSpeciesRichnessData = async (dataset: DatasetDefinition): Promis
   })
 }
 
-const calculateSpeciesRichness = (detections: ApiHourlySpeciesSummary[]): number => new Set(detections.map(d => d.species_id)).size
+const calculateSpeciesRichness = (detections: MockHourlyDetectionSummary[]): number => new Set(detections.map(d => d.species_id)).size
 
-const getSpeciesByTaxon = (detections: ApiHourlySpeciesSummary[]): { [taxon: string]: number } => {
+const getSpeciesByTaxon = (detections: MockHourlyDetectionSummary[]): { [taxon: string]: number } => {
   const detectionsByTaxon = groupBy(detections, 'taxon') // TODO ?? - Extract field names
   return mapValues(detectionsByTaxon, calculateSpeciesRichness)
 }
 
-const getSpeciesBySite = (detections: ApiHourlySpeciesSummary[]): MapSiteData[] => {
+const getSpeciesBySite = (detections: MockHourlyDetectionSummary[]): MapSiteData[] => {
   const detectionsBySite = groupBy(detections, 'name') // TODO ?? - Extract field names
   const mapDataBySite = mapValues(detectionsBySite, (detections, siteName) => ({
     siteName,
@@ -41,7 +42,7 @@ const getSpeciesBySite = (detections: ApiHourlySpeciesSummary[]): MapSiteData[] 
   return Object.values(mapDataBySite)
 }
 
-const getSpeciesByTime = (detections: ApiHourlySpeciesSummary[]): Record<TimeBucket, Record<number, number>> => {
+const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<TimeBucket, Record<number, number>> => {
   return {
     hour: mapValues(groupByNumber(detections, d => d.hour), calculateSpeciesRichness),
     day: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).date()), calculateSpeciesRichness),
@@ -51,7 +52,7 @@ const getSpeciesByTime = (detections: ApiHourlySpeciesSummary[]): Record<TimeBuc
   }
 }
 
-const getSpeciesPresence = (detections: ApiHourlySpeciesSummary[]): { [speciesId: string]: Species } => {
+const getSpeciesPresence = (detections: MockHourlyDetectionSummary[]): { [speciesId: string]: Species } => {
   const detectionsBySpecies = groupBy(detections, 'species_id')
   return mapValues(detectionsBySpecies, (value, key) => ({
     speciesSlug: kebabCase(value[0].scientific_name),

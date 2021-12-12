@@ -1,9 +1,9 @@
 import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { DatasetDefinition } from '~/api'
 import { ActivityPatternsService } from '~/api/activity-patterns-service'
-import { ApiHourlySpeciesSummary } from '~/api-helpers/mock'
+import { DatasetParameters } from '~/filters'
 
 const MOCK_RECORDINGS_PER_HOUR = 12
 
@@ -14,14 +14,14 @@ const EXAMPLE_SITE_IDS_UNINTERESTED = ['111', '222', '333', '444', '555', '666',
 const EXAMPLE_SPECIES_ID_INTERESTED = 555
 const EXAMPLE_SPECIES_IDS_UNINTERESTED = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
-const EXAMPLE_DATASET_DEFINITION: DatasetDefinition = {
+const EXAMPLE_DATASET_DEFINITION: DatasetParameters = {
   start: EXAMPLE_DATE,
   end: dayjs(EXAMPLE_DATE).add(1, 'day').toString(),
   sites: EXAMPLE_SITES_INTERESTED,
   otherFilters: []
 }
 
-const EMPTY_DETECTION: ApiHourlySpeciesSummary = {
+const EMPTY_DETECTION: MockHourlyDetectionSummary = {
   arbimon_site_id: 0,
   stream_id: EXAMPLE_SITES_INTERESTED[0].siteId,
   name: '',
@@ -39,7 +39,7 @@ const EMPTY_DETECTION: ApiHourlySpeciesSummary = {
 }
 
 describe('AP Service Mock', () => {
-  const recordingCountAndSummaries: Array<[number, ApiHourlySpeciesSummary[]]> = [
+  const recordingCountAndSummaries: Array<[number, MockHourlyDetectionSummary[]]> = [
     [MOCK_RECORDINGS_PER_HOUR, [
       { ...EMPTY_DETECTION, hour: 0 },
       { ...EMPTY_DETECTION, hour: 0 },
@@ -66,7 +66,7 @@ describe('AP Service Mock', () => {
     expect(result.totalRecordingCount).toEqual(expected)
   })
 
-  const totalDetectionsToSiteCount: Array<[number, ApiHourlySpeciesSummary[]]> = [
+  const totalDetectionsToSiteCount: Array<[number, MockHourlyDetectionSummary[]]> = [
     [1, [
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITES_INTERESTED[0].siteId },
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITES_INTERESTED[0].siteId },
@@ -111,7 +111,7 @@ describe('AP Service Mock', () => {
     expect(result.totalSiteCount).toEqual(expected)
   })
 
-  const totalDetectionsToDetectionCount: Array<[number, ApiHourlySpeciesSummary[]]> = [
+  const totalDetectionsToDetectionCount: Array<[number, MockHourlyDetectionSummary[]]> = [
     [3, [
       { ...EMPTY_DETECTION, species_id: EXAMPLE_SPECIES_ID_INTERESTED, hour: 0, num_of_recordings: 1 },
       { ...EMPTY_DETECTION, species_id: EXAMPLE_SPECIES_ID_INTERESTED, hour: 1, num_of_recordings: 2 },
@@ -138,7 +138,7 @@ describe('AP Service Mock', () => {
     expect(result.detectionCount).toEqual(expected)
   })
 
-  const totalDetectionsToDetectionFrequency: Array<[number, ApiHourlySpeciesSummary[]]> = [
+  const totalDetectionsToDetectionFrequency: Array<[number, MockHourlyDetectionSummary[]]> = [
     [3 / (2 * MOCK_RECORDINGS_PER_HOUR), [
       { ...EMPTY_DETECTION, species_id: EXAMPLE_SPECIES_ID_INTERESTED, hour: 0, num_of_recordings: 1 },
       { ...EMPTY_DETECTION, species_id: EXAMPLE_SPECIES_ID_INTERESTED, hour: 1, num_of_recordings: 2 },
@@ -165,7 +165,7 @@ describe('AP Service Mock', () => {
     expect(result.detectionFrequency).toEqual(expected)
   })
 
-  const totalDetectionsToOccupiedSiteCount: Array<[number, ApiHourlySpeciesSummary[]]> = [
+  const totalDetectionsToOccupiedSiteCount: Array<[number, MockHourlyDetectionSummary[]]> = [
     [2, [
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_INTERESTED[0], species_id: EXAMPLE_SPECIES_ID_INTERESTED },
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_INTERESTED[1], species_id: EXAMPLE_SPECIES_ID_INTERESTED }
@@ -192,7 +192,7 @@ describe('AP Service Mock', () => {
     expect(result.occupiedSiteCount).toEqual(expected)
   })
 
-  const totalDetectionsToOccupiedSiteFrequency: Array<[number, ApiHourlySpeciesSummary[]]> = [
+  const totalDetectionsToOccupiedSiteFrequency: Array<[number, MockHourlyDetectionSummary[]]> = [
     [1 / 1, [
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_INTERESTED[0], species_id: EXAMPLE_SPECIES_ID_INTERESTED },
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_INTERESTED[1], species_id: EXAMPLE_SPECIES_ID_INTERESTED }
@@ -223,7 +223,7 @@ describe('AP Service Mock', () => {
     expect(result.occupiedSiteFrequency).toEqual(expected)
   })
 
-  const sitesOccupiedAndSummaries: Array<[{ [siteId: string]: boolean }, ApiHourlySpeciesSummary[]]> = [
+  const sitesOccupiedAndSummaries: Array<[{ [siteId: string]: boolean }, MockHourlyDetectionSummary[]]> = [
     [
       { [EXAMPLE_SITE_IDS_INTERESTED[0]]: true, [EXAMPLE_SITE_IDS_INTERESTED[1]]: false },
       [
@@ -242,7 +242,7 @@ describe('AP Service Mock', () => {
       .forEach(([siteId, data]) => expect(data.siteOccupied).toEqual(expected[siteId]))
   })
 
-  const siteDetectionCountAndSummaries: Array<[{ [siteId: string]: number }, ApiHourlySpeciesSummary[]]> = [
+  const siteDetectionCountAndSummaries: Array<[{ [siteId: string]: number }, MockHourlyDetectionSummary[]]> = [
     [
       { [EXAMPLE_SITE_IDS_INTERESTED[0]]: 0, [EXAMPLE_SITE_IDS_INTERESTED[1]]: 1, [EXAMPLE_SITE_IDS_INTERESTED[2]]: 2 },
       [
@@ -263,7 +263,7 @@ describe('AP Service Mock', () => {
       .forEach(([siteId, data]) => expect(data.siteDetectionCount).toEqual(expected[siteId]))
   })
 
-  const siteDetectionFrequencyAndSummaries: Array<[{ [siteId: string]: number }, ApiHourlySpeciesSummary[]]> = [
+  const siteDetectionFrequencyAndSummaries: Array<[{ [siteId: string]: number }, MockHourlyDetectionSummary[]]> = [
     [
       { [EXAMPLE_SITE_IDS_INTERESTED[0]]: 0, [EXAMPLE_SITE_IDS_INTERESTED[1]]: 1 / 12, [EXAMPLE_SITE_IDS_INTERESTED[2]]: 18 / (12 * 2) },
       [
