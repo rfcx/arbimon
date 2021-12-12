@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as mysql from 'mysql'
 import { dirname, resolve } from 'path'
 
-import { env } from '../_services/env/index.js'
+import { env } from '../_services/env'
 
 // Parameters
 const currentDir = dirname(new URL(import.meta.url).pathname)

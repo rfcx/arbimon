@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
 
-import { envKeysOptional, envKeysRequired } from './keys.js'
+import { envKeysOptional, envKeysRequired } from './keys'
 
 dotenv.config()
 

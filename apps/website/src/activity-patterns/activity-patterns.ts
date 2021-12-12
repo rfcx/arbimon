@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species.js'
+import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species'
 import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { Species } from '~/api'

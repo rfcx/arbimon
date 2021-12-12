@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 
 import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
-import { env } from '../../_services/env/index.js'
+import { env } from '../../_services/env'
 
 // TODO: Validate env
 const IUCN_BASE_URL = env.IUCN_BASE_URL ?? ''

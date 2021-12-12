@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { env } from '../../_services/env/index.js'
-import { ApiNotFoundError } from '../../_services/errors/index.js'
+import { env } from '../../_services/env'
+import { ApiNotFoundError } from '../../_services/errors'
 
 export interface IucnSpeciesNarrativeResult {
   species_id: number

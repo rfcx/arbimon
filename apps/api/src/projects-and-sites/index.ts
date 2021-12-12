@@ -2,9 +2,9 @@ import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { readdir } from 'fs/promises'
 import { resolve } from 'path'
 
-import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio-types/project-species.js'
+import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio-types/project-species'
 
-import { ApiClientError, ApiMissingParam } from '../_services/errors/index.js'
+import { ApiClientError, ApiMissingParam } from '../_services/errors'
 
 // TODO ??? - Move files to S3 & index them in the database
 const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'

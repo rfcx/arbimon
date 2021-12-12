@@ -1,12 +1,12 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio-types/species.js'
-import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn/index.js'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio-types/species'
+import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 
-import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn.js'
-import { rawSpeciesWithCall } from './raw-species-with-call.js'
-import { getWikiSpeciesInformation } from './wiki/wiki.js'
+import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn'
+import { rawSpeciesWithCall } from './raw-species-with-call'
+import { getWikiSpeciesInformation } from './wiki/wiki'
 
 // TODO - Extract this
 const MODE = process.argv.find(arg => arg.startsWith('--mode='))?.split('=')[1].toLowerCase() ?? 'dev'

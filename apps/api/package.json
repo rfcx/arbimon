@@ -12,10 +12,10 @@
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
-    "preview": "pnpm build && pnpm -r pack-api && pnpm use-packed && concurrently -r --kill-others-on-fail \"node lib/index.js\" \"pnpm open\"",
+    "preview": "pnpm build && pnpm -r pack-api && pnpm use-packed && concurrently -r --kill-others-on-fail \"node --experimental-specifier-resolution=node lib/index.js\" \"pnpm open\"",
     "preview-reset": "rimraf './*.tgz' && pnpm use-ws",
     "profile-eslint": "TIMING=1 eslint .",
-    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ./loader.js src/index.ts",
+    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --experimental-specifier-resolution=node --loader ./loader.js src/index.ts",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests",
     "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
     "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"

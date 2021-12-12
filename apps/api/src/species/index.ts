@@ -1,8 +1,8 @@
 import { FastifyPluginAsync } from 'fastify'
 
-import { rawSpecies } from '@rfcx-bio/common/mock-data/index.js'
+import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { ApiMissingParam, ApiNotFoundError } from '../_services/errors/index.js'
+import { ApiMissingParam, ApiNotFoundError } from '../_services/errors'
 
 export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<void> => {
   app.get('/species', async (req, res) => rawSpecies)

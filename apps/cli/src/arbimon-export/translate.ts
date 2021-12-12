@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts.js'
-import { dateQueryParamify, urlify } from '@rfcx-bio/utils/url-helpers/index.js'
+import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts'
+import { dateQueryParamify, urlify } from '@rfcx-bio/utils/url-helpers'
 
 import { ArbimonHourlySpeciesRow, ArbimonSpecieCallRow } from './types'
 
