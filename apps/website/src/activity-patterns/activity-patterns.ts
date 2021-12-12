@@ -1,10 +1,10 @@
 import { Options, Vue } from 'vue-class-component'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
 
 import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
-import { Species } from '~/api'
 import { activityPatternsService } from '~/api/activity-patterns-service'
 import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
@@ -30,7 +30,7 @@ import SpeciesSelector from './components/species-selector/species-selector.vue'
 })
 export default class ActivityPatternsPage extends Vue {
   // Dataset definitions
-  species: Species | null = null
+  species: SpeciesLight | null = null
   filters: ColoredFilter[] = []
 
   // Data for children
@@ -39,7 +39,7 @@ export default class ActivityPatternsPage extends Vue {
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
 
-  async onSelectedSpeciesChange (species: Species | undefined): Promise<void> {
+  async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
     const speciesSlug = species?.speciesSlug
     void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
 

@@ -11,7 +11,7 @@
       :key="'species-selector-' + species.speciesId"
       :value="species.speciesSlug"
       class="italic"
-      :label="species.speciesName"
+      :label="species.scientificName"
     />
   </el-select>
 </template>

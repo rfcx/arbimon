@@ -1,16 +1,7 @@
-import { groupBy, kebabCase, mapValues } from 'lodash-es'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+import { rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
 
-import { rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
-
-import { Species } from '..'
-
-export const getAllSpecies = async (): Promise<Species[]> => {
-  const detectionsBySpeciesId = groupBy(rawDetections, 'species_id')
-  const speciesBySpeciesId = mapValues(detectionsBySpeciesId, (value, key) => ({
-    speciesSlug: kebabCase(value[0].scientific_name),
-    speciesId: Number(key),
-    speciesName: value[0].scientific_name,
-    className: value[0].taxon
-  }))
-  return await simulateDelay(Object.values(speciesBySpeciesId))
-}
+export const getAllSpecies = async (): Promise<SpeciesLight[]> => await simulateDelay(
+  rawSpecies.map(({ speciesId, speciesSlug, scientificName, commonName, taxon: taxonClass }) =>
+    ({ speciesId, speciesSlug, scientificName, commonName, taxonClass }))
+)

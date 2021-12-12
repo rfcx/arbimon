@@ -1,35 +1,36 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { Species } from '../../../_services/api'
-import { getAllSpecies } from '../../../_services/api/species-service'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+
+import { getAllSpecies } from '~/api/species-service'
 
 export default class SpeciesSelector extends Vue {
   @Prop() speciesSlug!: string
-  @Emit() emitSelectedSpeciesChanged (species: Species): Species {
+  @Emit() emitSelectedSpeciesChanged (species: SpeciesLight): SpeciesLight {
     return species
   }
 
   selectedSpeciesSlug = ''
-  allSpecies: Species[] = []
+  allSpecies: SpeciesLight[] = []
   loadingSpecies = false
   currentSpeciesQuery = ''
 
-  get selectedSpecies (): Species | undefined {
+  get selectedSpecies (): SpeciesLight | undefined {
     if (!this.selectedSpeciesSlug) return undefined
     return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
   }
 
-  get filteredSpecies (): Species[] {
+  get filteredSpecies (): SpeciesLight[] {
     if (!this.currentSpeciesQuery) return this.allSpecies
     const query = this.currentSpeciesQuery.trim().toLowerCase()
-    return this.allSpecies.filter(s => s.speciesName.toLowerCase().split(' ').some(w => w.startsWith(query)))
+    return this.allSpecies.filter(s => s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)))
   }
 
   override async created (): Promise<void> {
     this.selectedSpeciesSlug = this.speciesSlug
     this.allSpecies = (await getAllSpecies())
-      .sort((a, b) => a.speciesName.localeCompare(b.speciesName))
+      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
   }
 
   @Watch('speciesSlug')
@@ -38,7 +39,7 @@ export default class SpeciesSelector extends Vue {
   }
 
   @Watch('allSpecies')
-  onAllSpeciesChange (allSpecies: Species[]): void {
+  onAllSpeciesChange (allSpecies: SpeciesLight[]): void {
     if (allSpecies.length > 0 && !this.selectedSpeciesSlug) this.selectedSpeciesSlug = allSpecies[0].speciesSlug
     if (this.selectedSpecies) this.emitSelectedSpeciesChanged(this.selectedSpecies)
   }
