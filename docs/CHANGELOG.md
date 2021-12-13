@@ -13,10 +13,13 @@ Allowed categories:
 
 # x.x.x (2021-12-22)
 
+## Enhancements
+
+- **species:** Add species common name [#330]
+
 ## Fix bugs
 
 - **spotlight:** Correct IUCN citation [#321]
-
 
 # 1.0.0-rc1 (2021-12-13)
 
