@@ -5,7 +5,7 @@ import ActivityOverviewByLocation from '@/activity-overview/components/activity-
 import ActivityOverviewBySpecies from '@/activity-overview/components/activity-overview-by-species/activity-overview-by-species.vue'
 import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { exportCSV, transformToBySiteDataset } from '@/activity-overview/functions'
-import { TimeDataset } from '@/activity-patterns/types'
+import { TimeDataset } from '@/activity-overview/types'
 import { ActivityOverviewDataBySpecies, activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
