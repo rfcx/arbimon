@@ -1,6 +1,6 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
-import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
+import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
@@ -158,6 +158,7 @@ export class ActivityOverviewService {
 
       activityOverviewDataBySpecies.push({
         scientificName,
+        commonName: rawSpecies.find((raw) => raw?.scientificName === scientificName)?.commonName ?? '',
         taxon: speciesDetectedDetections[0].taxon,
         detectionCount,
         detectionFrequency,
