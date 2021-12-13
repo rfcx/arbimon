@@ -5,6 +5,8 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { ActivityPatternsService } from '~/api/activity-patterns-service'
 import { DatasetParameters } from '~/filters'
 
+jest.useFakeTimers()
+
 const MOCK_RECORDINGS_PER_HOUR = 12
 
 const EXAMPLE_DATE = '2021-04-02T00:00:00.000Z'
