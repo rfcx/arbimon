@@ -48,7 +48,7 @@ export default class SpeciesInformation extends Vue {
   }
 
   @Watch('species')
-  async onSpeciesNameChange (): Promise<void> {
+  async onSpeciesChange (): Promise<void> {
     await this.getSpeciesInformation()
   }
 

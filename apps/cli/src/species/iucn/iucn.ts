@@ -64,15 +64,15 @@ interface IucnSpeciesResult {
   amended_reason: string | null
 }
 
-export async function getSpeciesInformation (speciesName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
+export async function getSpeciesInformation (scientificName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
   try {
     const endpoint: AxiosRequestConfig = {
       method: 'GET',
-      url: `${IUCN_BASE_URL}/species/narrative/${speciesName}?token=${IUCN_TOKEN}`
+      url: `${IUCN_BASE_URL}/species/narrative/${scientificName}?token=${IUCN_TOKEN}`
     }
 
     const { data } = await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
-    if (data?.result?.length === 0) console.warn('iucn/getSpeciesInformation: no data', speciesName)
+    if (data?.result?.length === 0) console.warn('iucn/getSpeciesInformation: no data', scientificName)
     return data?.result?.[0]
   } catch (error) {
     console.error('iucn/getSpeciesInformation: api error', error)
@@ -80,15 +80,15 @@ export async function getSpeciesInformation (speciesName: string): Promise<IucnS
   }
 }
 
-export async function getSpeciesCommonInformation (speciesName: string): Promise<IucnSpeciesResult | undefined> {
+export async function getSpeciesCommonInformation (scientificName: string): Promise<IucnSpeciesResult | undefined> {
   try {
     const endpoint: AxiosRequestConfig = {
       method: 'GET',
-      url: `${IUCN_BASE_URL}/species/${speciesName}?token=${IUCN_TOKEN}`
+      url: `${IUCN_BASE_URL}/species/${scientificName}?token=${IUCN_TOKEN}`
     }
 
     const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
-    if (data?.result?.length === 0) console.warn('iucn/getSpeciesCommonInformation: no data', speciesName)
+    if (data?.result?.length === 0) console.warn('iucn/getSpeciesCommonInformation: no data', scientificName)
     return data?.result?.[0]
   } catch (error) {
     console.error('iucn/getSpeciesCommonInformation: api error', error)
@@ -96,6 +96,6 @@ export async function getSpeciesCommonInformation (speciesName: string): Promise
   }
 }
 
-export function getSpeciesRedirectLink (speciesName: string): string {
-  return `${IUCN_BASE_URL ?? ''}/website/${encodeURIComponent(speciesName)}`
+export function getSpeciesRedirectLink (scientificName: string): string {
+  return `${IUCN_BASE_URL ?? ''}/website/${encodeURIComponent(scientificName)}`
 }

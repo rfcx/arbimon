@@ -2,11 +2,11 @@ import axios, { AxiosRequestConfig } from 'axios'
 
 import { WikiSummary } from '~/api/wiki-service/types'
 
-export function mapSpecies (speciesName: string): string {
-  switch (speciesName) {
+export function mapSpecies (scientificName: string): string {
+  switch (scientificName) {
     // None sub species on wiki
     case ('Contopus latirostris blancoi'): return 'Contopus latirostris'
-    default: return speciesName
+    default: return scientificName
   }
 }
 
@@ -14,11 +14,11 @@ export class WikiService {
   constructor (private readonly baseUrl: string) {}
 
   async getSpeciesSummary (sciencetificName: string): Promise<WikiSummary | undefined> {
-    const speciesName = mapSpecies(sciencetificName)
+    const scientificName = mapSpecies(sciencetificName)
     try {
       const endpoint: AxiosRequestConfig = ({
         method: 'GET',
-        url: `${this.baseUrl}/api/rest_v1/page/summary/${speciesName}`
+        url: `${this.baseUrl}/api/rest_v1/page/summary/${scientificName}`
       })
 
       const { data } = await axios.request<WikiSummaryResponse>(endpoint)
