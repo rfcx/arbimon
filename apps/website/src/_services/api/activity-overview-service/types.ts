@@ -10,7 +10,7 @@ export interface DetectionGroupedBySiteAndTaxon {
 }
 
 export interface DetectionGroupByDetectionKey {
-  [taxonClassNameOrSiteId: string]: MockHourlyDetectionSummary[]
+  [taxonNameOrSiteId: string]: MockHourlyDetectionSummary[]
 }
 
 export interface ActivityOverviewData extends DatasetParameters {
@@ -48,8 +48,8 @@ export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof ActivityOverviewD
 }
 
 export interface ActivityOverviewDataBySpecies {
-  speciesName: string
-  taxonomyClass: string
+  scientificName: string
+  taxon: string
   detectionCount: number
   detectionFrequency: number
   occupiedSites: number

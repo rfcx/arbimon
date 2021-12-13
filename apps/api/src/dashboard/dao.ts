@@ -56,38 +56,21 @@ export async function getDetectionNumber (): Promise<number> {
 
 export async function getRichness (): Promise<DashboardRichness[]> {
   const richness = mapValues(groupBy(rawSpecies, 'taxon'), (species) => species.length)
-  return Object.keys(richness).map(taxonClass => ({ taxonClass, speciesNo: richness[taxonClass] })).sort((a, b) => a.taxonClass.localeCompare(b.taxonClass))
+  return Object.keys(richness).map(taxon => ({ taxon, speciesNo: richness[taxon] })).sort((a, b) => a.taxon.localeCompare(b.taxon))
 }
 
 // TODO ??? - Getting species data from DB instead (The code is from species controller)
 export async function getEndangered (): Promise<DashboardSpecies[]> {
   return rawSpecies
     .filter(species => EXTINCTION_RISK_THREATENED_CODES.includes(species.extinctionRisk))
-    .map(species => ({
-      speciesId: species.speciesId,
-      speciesSlug: species.speciesSlug,
-      speciesName: species.scientificName,
-      extinctionRisk: species.extinctionRisk,
-      className: species.taxon,
-      thumbnailImageUrl: species.thumbnailImageUrl ?? ''
-    }))
     .sort((a, b) =>
       EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
-      a.speciesName.localeCompare(b.speciesName)
+      a.scientificName.localeCompare(b.scientificName)
     )
 }
 
 export async function getHighlighted (): Promise<DashboardSpecies[]> {
-  return rawSpecies
-    .slice(0, 5)
-    .map(species => ({
-      speciesId: species.speciesId,
-      speciesSlug: species.speciesSlug,
-      speciesName: species.scientificName,
-      extinctionRisk: species.extinctionRisk,
-      className: species.taxon,
-      thumbnailImageUrl: species.thumbnailImageUrl ?? ''
-    }))
+  return rawSpecies.slice(0, 5)
 }
 
 export async function getRichnessDetectionByTime (): Promise<Record<number, number>> {

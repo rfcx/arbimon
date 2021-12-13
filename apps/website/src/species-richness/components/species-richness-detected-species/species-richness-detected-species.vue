@@ -59,7 +59,7 @@
               </router-link>
             </td>
             <td class="p-2">
-              {{ row.taxonClass }}
+              {{ row.taxon }}
             </td>
             <template
               v-for="(dataset, idx) in datasetCount"

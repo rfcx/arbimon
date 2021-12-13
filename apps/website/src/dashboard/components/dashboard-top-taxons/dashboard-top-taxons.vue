@@ -24,7 +24,7 @@
       <div class="absolute w-full h-1 rounded-xl bg-steel-grey-light" />
       <div
         v-for="(item, idx) in richnessPercentage"
-        :key="'dashboard-richness-percentage-' + item.taxonClass"
+        :key="'dashboard-richness-percentage-' + item.taxon"
         class="absolute h-1 rounded-xl"
         :style="{ width: calculateBarWidth(idx) + '%', backgroundColor: item.color , zIndex: richnessPercentage.length - idx }"
       />
@@ -33,13 +33,13 @@
       <ul class="list-none">
         <li
           v-for="item in richnessPercentage"
-          :key="'dashboard-richness-class-' + item.taxonClass"
+          :key="'dashboard-richness-class-' + item.taxon"
           class="inline-flex"
         >
           <div
             class="rounded-full w-2 h-2 self-center mx-2"
             :style="{ backgroundColor: item.color }"
-          /> {{ item.taxonClass }} ({{ displayPercentage(item.percentage) }} %)
+          /> {{ item.taxon }} ({{ displayPercentage(item.percentage) }} %)
         </li>
       </ul>
     </div>

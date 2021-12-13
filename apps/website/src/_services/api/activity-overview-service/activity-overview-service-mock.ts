@@ -29,7 +29,7 @@ export class ActivityOverviewService {
   }
 
   async getOverviewDataBySite (detectionsByTaxon: DetectionGroupByDetectionKey, detectionsBySites: DetectionGroupByDetectionKey): Promise<ActicvityOverviewDataBySite> {
-    const taxonClasses = Object.keys(detectionsByTaxon)
+    const taxons = Object.keys(detectionsByTaxon)
 
     const summariesEachTaxonBySite: DetectionGroupedBySiteAndTaxon = mapValues(detectionsByTaxon, (detection) => {
       const groupedSites = groupBy(detection, 'stream_id')
@@ -58,7 +58,7 @@ export class ActivityOverviewService {
     })
 
     // Add non detection sites
-    for (const taxon of taxonClasses) {
+    for (const taxon of taxons) {
       const summariesByTaxonGroup = summariesBySites[taxon]
       for (const [siteId, values] of Object.entries(detectionsBySites)) {
         if (summariesByTaxonGroup[siteId] === undefined) {
@@ -97,8 +97,8 @@ export class ActivityOverviewService {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
 
     const overviewByTime: ActivityOverviewDataByTime[] = []
-    for (const taxonClass of Object.keys(detectionsByTaxon)) {
-      const speciesSummaries = detectionsByTaxon[taxonClass]
+    for (const taxon of Object.keys(detectionsByTaxon)) {
+      const speciesSummaries = detectionsByTaxon[taxon]
       const eachTaxonByTime = this.calculateOverviewDataByTime(totalSiteCount, totalRecordingCount, speciesSummaries)
       overviewByTime.push(eachTaxonByTime)
     }
@@ -150,15 +150,15 @@ export class ActivityOverviewService {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
 
     const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
-    for (const [speciesName, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
+    for (const [scientificName, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
       const detectionCount = this.calculateDetectionActivity(speciesDetectedDetections)
       const detectionFrequency = this.calculateDetectionFrequencyActivity(speciesDetectedDetections, totalRecordingCount)
       const occupiedSites = new Set(speciesDetectedDetections.map(d => d.stream_id)).size
       const occupancyNaive = this.calculateOccupancyActivity(speciesDetectedDetections, totalSiteCount)
 
       activityOverviewDataBySpecies.push({
-        speciesName,
-        taxonomyClass: speciesDetectedDetections[0].taxon,
+        scientificName,
+        taxon: speciesDetectedDetections[0].taxon,
         detectionCount,
         detectionFrequency,
         occupiedSites,
