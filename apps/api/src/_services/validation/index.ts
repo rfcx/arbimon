@@ -1,4 +1,4 @@
-import { ApiMissingParam } from '../errors/index.js'
+import { ApiMissingParam } from '../errors'
 
 /**
  * Validates multiple parameters at once, throwing an error if any of them are undefined.

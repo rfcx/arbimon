@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs'
 import { LngLatLike } from 'mapbox-gl'
 
-import { Site } from '~/api'
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 
 export interface MapConfig {
   sourceMapId: string

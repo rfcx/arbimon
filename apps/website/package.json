@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "clean": "rimraf './dist'",
+    "clean": "rimraf \"./dist\"",
     "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
@@ -14,8 +14,8 @@
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "preview": "vite preview --port 8080",
+    "profile-eslint": "cross-env TIMING=1 NODE_OPTIONS=\"--max_old_space_size=8192\" eslint .",
     "serve": "vite",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest",
     "test-ui:explorer": "cypress open"
   },
   "active-issues": {
@@ -55,7 +55,7 @@
     "@windicss/plugin-interaction-variants": "^1.0.0",
     "unplugin-auto-import": "^0.5.1",
     "unplugin-icons": "^0.12.22",
-    "unplugin-vue-components": "^0.17.2",
+    "unplugin-vue-components": "^0.17.8",
     "windicss": "^3.2.1"
   },
   "engines": {

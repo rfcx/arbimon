@@ -31,6 +31,7 @@ RUN pnpm --filter=!website build
 RUN pnpm --filter=website build -- --mode ${mode}
 ENV NODE_ENV=development
 RUN pnpm -r pack-api
+RUN pnpm --filter=api use-packed
 ENV NODE_ENV=production
 
 # API
@@ -39,7 +40,7 @@ WORKDIR /app/apps/api
 ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
 EXPOSE 8080
-CMD ["node", "lib/src/index.js"]
+CMD ["node", "--experimental-specifier-resolution=node", "lib/index.js"]
 
 # Website
 FROM nginx:1.21-alpine as website

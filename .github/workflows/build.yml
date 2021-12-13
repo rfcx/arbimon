@@ -87,19 +87,19 @@ jobs:
         name: 'Verify: Build'
         run: pnpm ci-build
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=6656'
 
       - id: lint
         name: 'Verify: Lint'
         run: pnpm ci-lint
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=6656'
 
       - id: test
         name: 'Verify: Test'
         run: pnpm ci-test
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=6656'
 
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
@@ -139,7 +139,7 @@ jobs:
               "antonyharfield": {
                 "SLACK_MENTION_USERS": "U09HZUDUY"
               },
-              "Crave61341416": {
+              "Crave-dev": {
                 "SLACK_MENTION_USERS": "U02NUJCUV99"
               },
               ".*": {
@@ -157,7 +157,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED* @ <{run_url}|${{ github.event.head_commit.message }}>'
-          footer: 'Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | Build: ${{ steps.build.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
+          footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:

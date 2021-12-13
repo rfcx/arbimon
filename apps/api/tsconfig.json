@@ -1,6 +1,15 @@
 {
   "extends": "./tsconfig.build.json",
-  "compilerOptions": { "noEmit": true },
-  "include": ["src/**/*.ts", "./*.ts", "./*.js"],
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "../../"
+  },
+  "include": [
+    "src/**/*.ts",
+    "./*.ts",
+    "./*.js",
+    "../../packages/*/src/**/*.ts",
+    "../../packages/*/src/**/*.js"
+  ],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]
 }

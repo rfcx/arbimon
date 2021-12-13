@@ -1,4 +1,4 @@
-// eslint-disable-next-line regex/invalid -- this is the one place we import & configure dayjs
+// eslint-disable-next-line regex/invalid -- this is the one place we import & configure da
 import dayjsBase from 'dayjs'
 import minMax from 'dayjs/plugin/minMax'
 import pluralGetSet from 'dayjs/plugin/pluralGetSet'

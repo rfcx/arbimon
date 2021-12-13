@@ -1,5 +1,5 @@
-import { env } from './_services/env/index.js'
-import { app } from './app.js'
+import { env } from './_services/env'
+import { app } from './app'
 
 const port = env.FASTIFY_PORT ?? 3000
 const address = env.FASTIFY_ADDRESS ?? 'localhost'

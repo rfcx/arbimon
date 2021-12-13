@@ -15,13 +15,13 @@ type SortDirection = 1 | -1
 const SORT_ASC: SortDirection = 1
 const SORT_DESC: SortDirection = -1
 const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection, sortFunction: (e1: ActivityOverviewDataBySpecies, e2: ActivityOverviewDataBySpecies) => number }> = {
-  speciesName: {
+  scientificName: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.speciesName.localeCompare(e2.speciesName)
+    sortFunction: (e1, e2) => e1.scientificName.localeCompare(e2.scientificName)
   },
-  taxonomyClass: {
+  taxon: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.taxonomyClass.localeCompare(e2.taxonomyClass)
+    sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon)
   },
   detectionCount: {
     defaultDirection: SORT_DESC,
@@ -51,8 +51,8 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   get tableHeader (): Header[] {
     return [
-      { title: 'Species name', key: 'speciesName' },
-      { title: 'Class', key: 'taxonomyClass' },
+      { title: 'Species name', key: 'scientificName' },
+      { title: 'Class', key: 'taxon' },
       { title: 'Detection', key: 'detectionCount' },
       { title: 'Detection frequency', key: 'detectionFrequency' },
       { title: 'Occupied sites', key: 'occupiedSites' },
@@ -85,8 +85,8 @@ export default class ActivityOverviewBySpecies extends Vue {
     if (this.pageIndex > this.maxPage) this.pageIndex = 1
   }
 
-  getSpeciesSlug (speciesName: string): string {
-    return kebabCase(speciesName)
+  getSpeciesSlug (scientificName: string): string {
+    return kebabCase(scientificName)
   }
 
   getThreeDecimalNumber (value: number): string {

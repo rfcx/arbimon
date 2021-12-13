@@ -2,8 +2,7 @@ import { downloadSpreadsheet } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { TAXONOMY_CLASSES, TAXONOMY_UNKNOWN_CLASS } from '~/api/taxonomy-service'
-import { ColoredFilter } from '~/dataset-filters'
-import { getExportDateTime, getExportFilterName } from '~/dataset-filters/functions'
+import { ColoredFilter, getExportDateTime, getExportFilterName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
 export type ActivityOverviewDataBySite = ActivityOverviewData & ColoredFilter
@@ -77,8 +76,8 @@ export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): 
 
 // TODO: Update when multiple datasets
 export async function exportCSV (filter: ColoredFilter, dataset: ActivityOverviewDataBySpecies[], prefix: string): Promise<void> {
-  const sortedDataset = dataset.sort((a, b) => a.speciesName.localeCompare(b.speciesName) ||
-    a.taxonomyClass.localeCompare(b.taxonomyClass) ||
+  const sortedDataset = dataset.sort((a, b) => a.scientificName.localeCompare(b.scientificName) ||
+    a.taxon.localeCompare(b.taxon) ||
     a.detectionCount - b.detectionCount ||
     a.occupiedSites - b.occupiedSites)
 
@@ -90,9 +89,9 @@ export async function exportCSV (filter: ColoredFilter, dataset: ActivityOvervie
 }
 
 function getJsonForDataset (dataset: ActivityOverviewDataBySpecies[]): CsvData[] {
-  return dataset.map(({ speciesName, taxonomyClass, detectionCount, detectionFrequency, occupiedSites, occupancyNaive }) => ({
-    'species name': speciesName,
-    'taxonomy class': taxonomyClass,
+  return dataset.map(({ scientificName, taxon, detectionCount, detectionFrequency, occupiedSites, occupancyNaive }) => ({
+    'species name': scientificName,
+    'taxonomy class': taxon,
     'number of detections': detectionCount,
     'detection frequency': detectionFrequency,
     'number of occupied sites': occupiedSites,

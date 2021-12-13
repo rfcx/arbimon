@@ -2,7 +2,9 @@ import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { readdir } from 'fs/promises'
 import { resolve } from 'path'
 
-import { ApiClientError, ApiMissingParam } from '../_services/errors/index.js'
+import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio-types/project-species'
+
+import { ApiClientError, ApiMissingParam } from '../_services/errors'
 
 // TODO ??? - Move files to S3 & index them in the database
 const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
@@ -31,7 +33,7 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
     if (!speciesId) throw ApiMissingParam('speciesId')
 
     // Queries
-    const predictedOccupancyMaps = (await readdir(mockPredictionsFolderPath))
+    const predictedOccupancyMaps: PredictedOccupancyMap[] = (await readdir(mockPredictionsFolderPath))
       .filter(filename => filename.startsWith(speciesId))
       .map(filename => filename.substr(0, filename.lastIndexOf('.')) || filename)
       .sort()
@@ -41,7 +43,8 @@ export const routesProjectSite: FastifyPluginAsync = async (app, options): Promi
       }))
 
     // Respond
-    return { predictedOccupancyMaps } // TODO ??? - return the rest of the data
+    const response: ProjectSpeciesRouteResponse = { predictedOccupancyMaps } // TODO ??? - return the rest of the data
+    return response
   })
 
   interface ProjectSpeciesPredictedOccupancyRoute {

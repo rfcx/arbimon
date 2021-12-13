@@ -1,7 +1,7 @@
 import { DashboardGeneratedResponse, dashboardGeneratedUrl } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
 import { DashboardProfileResponse, dashboardProfileUrl } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
 
-import { apiClient } from '~/api-helpers/rest'
+import { apiClient } from '~/api'
 
 export class DashboardService {
   constructor (private readonly baseUrl: string) {}

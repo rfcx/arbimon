@@ -45,19 +45,19 @@
       <tbody>
         <tr
           v-for="row in pageData"
-          :key="'species-table-row-' + row.speciesName"
+          :key="'species-table-row-' + row.scientificName"
         >
           <td class="p-2">
             <router-link
-              :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.speciesName) }}"
+              :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.scientificName) }}"
               class="text-subtle hover:(underline text-white)"
             >
-              <span class="text-white italic">{{ row.speciesName }}</span>
+              <span class="text-white italic">{{ row.scientificName }}</span>
               <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
             </router-link>
           </td>
           <td class="p-2">
-            {{ row.taxonomyClass }}
+            {{ row.taxon }}
           </td>
           <td class="p-2 text-center">
             {{ row.detectionCount }}

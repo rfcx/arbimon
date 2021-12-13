@@ -5,14 +5,14 @@ import { IUCNSummary } from '~/api/iucn-service/types'
 export class IUCNService {
   constructor (private readonly baseUrl: string) {}
 
-  async getSpeciesSummary (sciencetificName: string): Promise<IUCNSummary | undefined> {
+  async getSpeciesSummary (arbimonScientificName: string): Promise<IUCNSummary | undefined> {
     // Extract species from sub species name
-    const extractedGenusAndSpecies = sciencetificName.split(' ').slice(0, 2)
-    const speciesName = extractedGenusAndSpecies.join(' ')
+    const extractedGenusAndSpecies = arbimonScientificName.split(' ').slice(0, 2)
+    const scientificName = extractedGenusAndSpecies.join(' ')
 
     const endpoint: AxiosRequestConfig = ({
       method: 'GET',
-      url: `${this.baseUrl}/iucn/info/${speciesName}`
+      url: `${this.baseUrl}/iucn/info/${scientificName}`
     })
 
     try {

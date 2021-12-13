@@ -10,6 +10,18 @@ Allowed categories:
 - Breaking changes
 --->
 
+<!-- 
+# x.x.x (2021-12-22)
+
+TODO
+-->
+
+# 1.0.0-rc1 (2021-12-13)
+
+## Enhancements
+
+- **project:** Support Puerto Rico project id in staging
+
 # 0.0.11 (2021-12-08)
 
 ## Features
@@ -18,6 +30,12 @@ Allowed categories:
 - **dashboard:** "Top Taxons" bar & badges panel [#315]
 - **dashboard:** Highlighted Species panel [#304]
 - **dashboard:** Endangered species panel [#316]
+- **dashboard:** Line chart for species and detection frequency [#313]
+
+## Enhancements
+
+- **spotlight:** Searchable species selector [#228]
+- **species:** Update species name style [#229]
 
 # 0.0.10 (2021-11-27)
 

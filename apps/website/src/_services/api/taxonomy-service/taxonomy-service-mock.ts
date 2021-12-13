@@ -1,4 +1,8 @@
-import { TaxonomyClass } from '../types'
+export interface TaxonomyClass {
+  symbol: string
+  name: string
+  color?: string
+}
 
 export const TAXONOMY_CLASS_ALL: TaxonomyClass = { name: 'All', symbol: 'Σ' }
 export const TAXONOMY_UNKNOWN_CLASS: TaxonomyClass = { name: 'unknown', symbol: '❓' }

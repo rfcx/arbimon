@@ -3,7 +3,7 @@ import { Prop } from 'vue-property-decorator'
 
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
-import { getExportFilterName } from '~/dataset-filters/functions'
+import { getExportFilterName } from '~/filters'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'

@@ -6,12 +6,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf './lib' './*.tsbuildinfo'",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --loader ts-node/esm -r tsconfig-paths/register",
+    "profile-eslint": "cross-env TIMING=1 eslint .",
+    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --experimental-specifier-resolution=node --loader ./loader.js",
     "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
   },
   "dependencies": {

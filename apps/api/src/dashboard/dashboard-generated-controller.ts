@@ -1,7 +1,8 @@
-import { Controller } from '../_services/api-helper/types.js'
-import { assertParamsExist } from '../_services/validation/index.js'
-import { DashboardGeneratedParams, DashboardGeneratedResponse } from '../Z_COMMON/api-bio-types/dashboard-generated.js'
-import { getGeneratedData } from './dao.js'
+import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
+
+import { Controller } from '../_services/api-helper/types'
+import { assertParamsExist } from '../_services/validation'
+import { getGeneratedData } from './dao'
 
 export const dashboardGeneratedController: Controller<DashboardGeneratedParams, DashboardGeneratedResponse> = async (req) => {
   // Inputs & validation
