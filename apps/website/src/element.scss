@@ -48,7 +48,7 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
   $select: (
     "input-color": var(--el-bg-color-base),
     "bg-color": var(--el-bg-color-base),
-    "input-focus-border-color": var(--el-bg-color-placeholder),
+    "input-focus-border-color": var(--el-text-color-placeholder),
     "input-font-size": var(--el-font-size-base)
   ),
   $select-dropdown: (
