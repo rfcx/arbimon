@@ -25,7 +25,7 @@ connection.connect()
 
 const exportDetection = exportQueryResultToJsonFile(connection,
   resolve(currentDir, './get-detection-summaries.sql'),
-  resolve(currentDir, './raw-summaries.json')
+  resolve(currentDir, './raw-detections-by-hour.json')
 )
 const exportSpeciesCall = exportQueryResultToJsonFile(connection,
   resolve(currentDir, './get-example-of-species-call.sql'),
@@ -46,7 +46,7 @@ async function query (connection: mysql.Connection, queryString: string): Promis
 }
 
 async function exportQueryResultToJsonFile (connection: mysql.Connection, sqlFilePath: string, outputFilePath: string): Promise<void> {
-  const sqlQuery = fs.readFileSync(sqlFilePath).toString()
+  const sqlQuery = fs.readFileSync(sqlFilePath, 'utf8')
   const results = (await query(connection, sqlQuery))
   fs.writeFileSync(outputFilePath, JSON.stringify(results, null, 2), 'utf8')
 }
