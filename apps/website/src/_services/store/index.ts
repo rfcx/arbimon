@@ -8,8 +8,7 @@ import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
-const FAKE_PUERTO_RICO_PROJECT = { id: 'puerto-rico-island-wide', name: 'Puerto Rico Island-Wide', isPublic: true, externalId: 123456 }
-const FAKE_STAGING_PUERTO_RICO_PROJECT = { id: 'puerto-rico', name: 'Staging Puerto Rico Island-Wide', isPublic: true, externalId: 654321 }
+const FAKE_PUERTO_RICO_PROJECT = { id: import.meta.env.VITE_PUERTO_RICO_PROJECT_SLUG, name: 'Puerto Rico Island-Wide', isPublic: true, externalId: 123456 }
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -31,7 +30,7 @@ export const useStore = defineStore('root', {
       // Load data asynchronously
       if (user) {
         const realProjects = await getProjects()
-        const projects = [FAKE_PUERTO_RICO_PROJECT, FAKE_STAGING_PUERTO_RICO_PROJECT, ...realProjects]
+        const projects = [FAKE_PUERTO_RICO_PROJECT, ...realProjects]
         const selectedProject = projects.length > 0 ? projects[0] : undefined
         const sites = selectedProject ? await getSites(selectedProject) : []
 
