@@ -9,7 +9,7 @@ interface Header {
   key: SortableColumn
 }
 
-type SortableColumn = Exclude<keyof ActivityOverviewDataBySpecies, 'commonName'>
+type SortableColumn = Extract<keyof ActivityOverviewDataBySpecies, 'scientificName'| 'taxon' | 'detectionCount' | 'detectionFrequency' | 'occupiedSites' | 'occupancyNaive'>
 type SortDirection = 1 | -1
 
 const SORT_ASC: SortDirection = 1
