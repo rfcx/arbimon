@@ -7,14 +7,14 @@
     <div class="col-span-5">
       <species-information-content-component
         :content="speciesIUCNCleanContent"
-        :redirect-url="speciesIUCNUrl"
-        source="IUCN Red List"
+        :redirect-url="iucnSpeciesInformation?.sourceUrl"
+        :source="iucnSpeciesInformation?.sourceCite ?? 'IUCN Red List'"
       />
       <species-information-content-component
         v-if="!speciesIUCNCleanContent"
         class="mt-2"
-        :content="wikiSpeciesInformation?.content"
-        :redirect-url="speciesWikiUrl"
+        :content="wikiSpeciesInformation?.description"
+        :redirect-url="wikiSpeciesInformation?.sourceUrl"
         source="Wikipedia"
       />
     </div>
