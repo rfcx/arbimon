@@ -1,6 +1,5 @@
-// TODO ??? - Move to `common`
 export interface BioIucnSpeciesRequest {
-  speciesName: string
+  scientificName: string
 }
 
 export interface BioIucnSpeciesResponse {

@@ -85,8 +85,8 @@ export default class ActivityOverviewBySpecies extends Vue {
     if (this.pageIndex > this.maxPage) this.pageIndex = 1
   }
 
-  getSpeciesSlug (speciesName: string): string {
-    return kebabCase(speciesName)
+  getSpeciesSlug (scientificName: string): string {
+    return kebabCase(scientificName)
   }
 
   getThreeDecimalNumber (value: number): string {
