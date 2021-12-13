@@ -10,9 +10,18 @@
       v-for="species in filteredSpecies"
       :key="'species-selector-' + species.speciesId"
       :value="species.speciesSlug"
-      class="italic"
+      class="min-h-12 h-12"
       :label="species.scientificName"
-    />
+    >
+      <div class="leading-tight mt-1">
+        <div class="italic">
+          {{ species.scientificName }}
+        </div>
+        <div class="text-xs text-white text-opacity-50">
+          {{ species.commonName || 'Unknown' }}
+        </div>
+      </div>
+    </el-option>
   </el-select>
 </template>
 <script src="./species-selector.ts" lang="ts"></script>
@@ -22,5 +31,8 @@
 }
 .el-input [type='text']{
   background-color: #141525;
+}
+.el-input [type='text']:focus{
+  box-shadow: none;
 }
 </style>

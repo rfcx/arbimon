@@ -34,6 +34,9 @@
           {{ item.scientificName }}
         </p>
         <p class="text-xs">
+          {{ item.commonName }}
+        </p>
+        <p class="text-xs">
           {{ item.extinctionRisk.label }}
         </p>
       </router-link>
