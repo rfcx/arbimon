@@ -1,18 +1,19 @@
 import { FastifyPluginAsync } from 'fastify'
 
-import { env } from '../../_services/env/index.js'
-import { ApiMissingParam, ApiNotFoundError, ApiServerError } from '../../_services/errors/index.js'
-import { getSpeciesInformation } from './iucn.js'
-import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from './types'
+import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from '@rfcx-bio/common/api-bio-types/iucn'
+
+import { env } from '../../_services/env'
+import { ApiMissingParam, ApiNotFoundError, ApiServerError } from '../../_services/errors'
+import { getSpeciesInformation } from './iucn'
 
 export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void> => {
-  app.get<{ Params: Partial<BioIucnSpeciesRequest> } >('/iucn/info/:speciesName', async (req, res): Promise<BioIucnSpeciesResponse> => {
+  app.get<{ Params: Partial<BioIucnSpeciesRequest> } >('/iucn/info/:scientificName', async (req, res): Promise<BioIucnSpeciesResponse> => {
     // Input params
-    const { speciesName } = req.params
-    if (!speciesName) throw ApiMissingParam('speciesName')
+    const { scientificName } = req.params
+    if (!scientificName) throw ApiMissingParam('scientificName')
 
     // Call IUCN API
-    const iucnInformation = await getSpeciesInformation(speciesName)
+    const iucnInformation = await getSpeciesInformation(scientificName)
       .catch(e => {
         // Error: calling IUCN API
         console.error('IUCN:', e)
@@ -25,7 +26,7 @@ export const routesIucn: FastifyPluginAsync = async (app, options): Promise<void
     // Transform & return
     return {
       content: iucnInformation?.habitat ?? iucnInformation?.rationale ?? '',
-      redirectUrl: `${env.IUCN_BASE_URL}/website/${speciesName}`
+      redirectUrl: `${env.IUCN_BASE_URL}/website/${scientificName}`
     }
   })
 }

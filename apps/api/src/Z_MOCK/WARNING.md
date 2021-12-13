@@ -1,3 +1,0 @@
-# WARNING: Put mock data here (in `ts` format)
-
-Later we will replace it with proper database queries...

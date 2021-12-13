@@ -1,8 +1,9 @@
 export interface DetectedSpeciesItem {
   speciesSlug: string
   speciesId: number
-  speciesName: string
-  className: string
+  scientificName: string
+  commonName: string
+  taxon: string
   data: boolean[]
   total: number
 }

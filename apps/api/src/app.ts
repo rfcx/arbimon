@@ -3,21 +3,18 @@ import fastifyCors from 'fastify-cors'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
-// import { urlify } from '@rfcx-bio/utils/url-helpers/index.js'
-import { env } from './_services/env/index.js'
-import { routesDashboard } from './dashboard/index.js'
-import { routesProjectSite } from './projects-and-sites/index.js'
-import { routesRichness } from './richness/index.js'
-import { routesSpecies } from './species/index.js'
-import { routesIucn } from './species/iucn/index.js'
-import { routesSpotlight } from './spotlight/index.js'
-import { routesStatus } from './status/index.js'
+import { env } from './_services/env'
+import { routesDashboard } from './dashboard'
+import { routesProjectSite } from './projects-and-sites'
+import { routesRichness } from './richness'
+import { routesSpecies } from './species'
+import { routesIucn } from './species/iucn'
+import { routesSpotlight } from './spotlight'
+import { routesStatus } from './status'
 
 export const app = fastify({
   logger: env.NODE_ENV !== 'production'
 })
-
-// console.log(urlify('potato'))
 
 // Register plugins
 await app.register(fastifyCors)

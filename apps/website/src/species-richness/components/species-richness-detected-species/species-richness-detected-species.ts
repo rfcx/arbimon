@@ -5,7 +5,7 @@ import { firstDiffDigit } from '@rfcx-bio/utils/number'
 
 import { DetectedSpeciesItem } from './types'
 
-type SortableColumn = Extract<keyof DetectedSpeciesItem, 'speciesName' | 'className' | 'total'>
+type SortableColumn = Extract<keyof DetectedSpeciesItem, 'scientificName' | 'taxon' | 'total'>
 type SortDirection = 1 | -1
 
 interface Header {
@@ -17,13 +17,13 @@ interface Header {
 const SORT_ASC: SortDirection = 1
 const SORT_DESC: SortDirection = -1
 const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection, sortFunction: (e1: DetectedSpeciesItem, e2: DetectedSpeciesItem) => number }> = {
-  speciesName: {
+  scientificName: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.speciesName.localeCompare(e2.speciesName)
+    sortFunction: (e1, e2) => e1.scientificName.localeCompare(e2.scientificName)
   },
-  className: {
+  taxon: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.className.localeCompare(e2.className)
+    sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon)
   },
   total: {
     defaultDirection: SORT_DESC,
@@ -59,11 +59,11 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   }
 
   get sortedTableData (): DetectedSpeciesItem[] {
-    // Sort by user choice then our default
+    // Sort by user-chosen sort, then our default sort
     return this.tableData.sort((a, b) =>
       SORTABLE_COLUMNS[this.sortColumn].sortFunction(a, b) * this.sortDirection ||
       SORTABLE_COLUMNS.total.sortFunction(a, b) * SORTABLE_COLUMNS.total.defaultDirection ||
-      SORTABLE_COLUMNS.speciesName.sortFunction(a, b) * SORTABLE_COLUMNS.speciesName.defaultDirection
+      SORTABLE_COLUMNS.scientificName.sortFunction(a, b) * SORTABLE_COLUMNS.scientificName.defaultDirection
     )
   }
 
@@ -75,8 +75,8 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   get tableHeader (): Header[] {
     const keyTotal: SortableColumn = 'total'
     return [
-      { title: 'Species', color: HEADER_COLOR, key: 'speciesName' },
-      { title: 'Class', color: HEADER_COLOR, key: 'className' },
+      { title: 'Species', color: HEADER_COLOR, key: 'scientificName' },
+      { title: 'Class', color: HEADER_COLOR, key: 'taxon' },
       ...((this.hasMoreThanOneDataset)
         ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] ?? '#FFFFFF' })), { title: 'Total', color: HEADER_COLOR, key: keyTotal }]
         : []

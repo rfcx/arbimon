@@ -1,7 +1,7 @@
 import { TimeBucket } from '~/api/species-richness-service'
-import { DatasetDefinition } from '..'
+import { DatasetParameters } from '~/filters'
 
-export interface ActivityPatternsData extends DatasetDefinition {
+export interface ActivityPatternsData extends DatasetParameters {
   totalRecordingCount: number
   totalSiteCount: number
   detectionCount: number

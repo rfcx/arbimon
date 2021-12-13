@@ -1,13 +1,7 @@
-import { getRawSites, simulateDelay } from '~/api-helpers/mock'
-import { Project, Site } from '..'
+import { Project } from '@rfcx-bio/common/api-bio-types/projects'
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { rawSites, simulateDelay } from '@rfcx-bio/common/mock-data'
 
 export const getSites = async (project: Project): Promise<Site[]> => {
-  return await simulateDelay(
-    getRawSites().map(({ site_id: siteId, name, latitude, longitude }) => ({
-      siteId,
-      name,
-      latitude: Number(latitude),
-      longitude: Number(longitude)
-    }))
-  )
+  return await simulateDelay(rawSites)
 }

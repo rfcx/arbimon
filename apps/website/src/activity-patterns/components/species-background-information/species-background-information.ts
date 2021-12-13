@@ -1,7 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { Species } from '~/api'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+
 import { iucnService, IUCNSummary } from '~/api/iucn-service'
 import { wikiService, WikiSummary } from '~/api/wiki-service'
 import SpeciesInformationContentComponent from './species-information-content.vue'
@@ -14,7 +15,7 @@ const WIKIPEDIA_MOBILE_MAX_WIDTH = 760
   }
 })
 export default class SpeciesInformation extends Vue {
-  @Prop() species!: Species | null
+  @Prop() species!: SpeciesLight | null
 
   isLoading = true
   iucnSpeciesInformation: IUCNSummary | null = null
@@ -47,7 +48,7 @@ export default class SpeciesInformation extends Vue {
   }
 
   @Watch('species')
-  async onSpeciesNameChange (): Promise<void> {
+  async onSpeciesChange (): Promise<void> {
     await this.getSpeciesInformation()
   }
 
@@ -58,22 +59,22 @@ export default class SpeciesInformation extends Vue {
   }
 
   async getSpeciesInformation (): Promise<void> {
-    const speciesName = this.species?.speciesName
-    if (!speciesName) return
+    const scientificName = this.species?.scientificName
+    if (!scientificName) return
 
     this.isLoading = true
     try {
       const [iucnInformation, wikiInformation] = await Promise.all([
-        iucnService.getSpeciesSummary(speciesName),
-        wikiService.getSpeciesSummary(speciesName)
+        iucnService.getSpeciesSummary(scientificName),
+        wikiService.getSpeciesSummary(scientificName)
       ])
-      if (this.species?.speciesName === speciesName) {
+      if (this.species?.scientificName === scientificName) {
         this.iucnSpeciesInformation = iucnInformation ?? null
         this.wikiSpeciesInformation = wikiInformation ?? null
         this.isLoading = false
       }
     } catch (e) {
-      if (this.species?.speciesName === speciesName) {
+      if (this.species?.scientificName === scientificName) {
         this.isLoading = false
       }
       // TODO 167: Error handling

@@ -2,6 +2,7 @@ module.exports = {
   extends: ['./.eslintrc-js.cjs'],
   plugins: ['sort-class-members'],
   rules: {
+    '@typescript-eslint/indent': 'off', // This rule is totally broken: https://github.com/typescript-eslint/typescript-eslint/issues/1824
     '@typescript-eslint/space-before-function-paren': [
       'error',
       {

@@ -8,7 +8,8 @@ import { BiodiversityStore } from '~/store'
 
 export interface EndangeredSpeciesRow {
   speciesId: number
-  speciesName: string
+  scientificName: string
+  commonName: string
   speciesSlug: string
   imageUrl: string
   extinctionRisk: ExtinctionRisk

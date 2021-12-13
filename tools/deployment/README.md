@@ -17,14 +17,20 @@ Requires:
 
 Steps (from the root directory):
 
-1.  Build & run API image
+1. If you have previously built your code, you should run clean:
+
+    ```
+    pnpm -r clean
+    ```
+
+2.  Build & run API image
 
     ```
     docker build -f tools/deployment/Dockerfile --target api -t bio-api .
     docker run --rm -it -p 3000:8080 bio-api
     ```
 
-2.  Build & run Website image
+3.  Build & run Website image
 
     ```
     docker build -f tools/deployment/Dockerfile --target website -t bio-website .

@@ -1,7 +1,8 @@
-import { Controller } from '../_services/api-helper/types.js'
-import { assertParamsExist } from '../_services/validation/index.js'
-import { DashboardProfileParams, DashboardProfileResponse } from '../Z_COMMON/api-bio-types/dashboard-profile.js'
-import { getProfile } from './dao.js'
+import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+
+import { Controller } from '../_services/api-helper/types'
+import { assertParamsExist } from '../_services/validation'
+import { getProfile } from './dao'
 
 export const dashboardProfileController: Controller<DashboardProfileParams, DashboardProfileResponse> = async (req) => {
   // Inputs & validation

@@ -1,13 +1,13 @@
 import { Dayjs } from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 
-import { Site, Species } from '~/api'
+import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+
 import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, ComparisonFilter } from '~/dataset-filters'
-import { ComparisonListComponent } from '~/dataset-filters/comparison-list'
-import { filterToDataset, getExportGroupName } from '~/dataset-filters/functions'
+import { ColoredFilter, ComparisonFilter, ComparisonListComponent, filterToDataset, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
@@ -97,7 +97,7 @@ export default class SpeciesRichnessPage extends Vue {
 
   getTableData (datasets: ColoredDataset[]): DetectedSpeciesItem[] {
     const speciesPresences = datasets.map(ds => ds.data.speciesPresence)
-    const allSpecies: { [speciesId: string]: Species } = Object.assign({}, ...speciesPresences)
+    const allSpecies: { [speciesId: string]: SpeciesLight } = Object.assign({}, ...speciesPresences)
 
     return Object.entries(allSpecies)
       .map(([key, value]) => ({
@@ -105,6 +105,6 @@ export default class SpeciesRichnessPage extends Vue {
         data: speciesPresences.map(sp => key in sp),
         total: speciesPresences.filter(sp => key in sp).length
       }))
-      .sort((a, b) => b.total - a.total || a.speciesName.localeCompare(b.speciesName))
+      .sort((a, b) => b.total - a.total || a.scientificName.localeCompare(b.scientificName))
   }
 }

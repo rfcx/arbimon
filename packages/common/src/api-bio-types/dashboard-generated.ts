@@ -28,15 +28,16 @@ export interface DashboardGeneratedResponse {
 }
 
 export interface DashboardRichness {
-  taxonClass: string
+  taxon: string
   speciesNo: number
 }
 
 export interface DashboardSpecies {
   speciesId: number
   speciesSlug: string
-  speciesName: string
+  scientificName: string
+  commonName: string
   extinctionRisk: ExtinctionRiskCode
-  className: string
-  thumbnailImageUrl: string
+  taxon: string
+  thumbnailImageUrl?: string
 }

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { env } from '../../_services/env/index.js'
-import { ApiNotFoundError } from '../../_services/errors/index.js'
+import { env } from '../../_services/env'
+import { ApiNotFoundError } from '../../_services/errors'
 
 export interface IucnSpeciesNarrativeResult {
   species_id: number
@@ -48,20 +48,20 @@ interface IucnSpeciesResult {
   amended_reason: string | null
 }
 
-export async function getSpeciesInformation (speciesName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
+export async function getSpeciesInformation (scientificName: string): Promise<IucnSpeciesNarrativeResult | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${env.IUCN_BASE_URL}/species/narrative/${speciesName}?token=${env.IUCN_TOKEN}`
+    url: `${env.IUCN_BASE_URL}/species/narrative/${scientificName}?token=${env.IUCN_TOKEN}`
   }
 
   const { data } = await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
   return data?.result?.[0]
 }
 
-export async function getSpeciesRank (speciesName: string): Promise<RedListCategory | undefined> {
+export async function getSpeciesRank (scientificName: string): Promise<RedListCategory | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${env.IUCN_BASE_URL}/species/${speciesName}?token=${env.IUCN_TOKEN}`
+    url: `${env.IUCN_BASE_URL}/species/${scientificName}?token=${env.IUCN_TOKEN}`
   }
 
   const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
