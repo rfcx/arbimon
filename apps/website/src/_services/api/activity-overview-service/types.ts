@@ -49,6 +49,7 @@ export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof ActivityOverviewD
 
 export interface ActivityOverviewDataBySpecies {
   scientificName: string
+  commonName: string
   taxon: string
   detectionCount: number
   detectionFrequency: number
