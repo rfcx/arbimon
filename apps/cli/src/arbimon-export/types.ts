@@ -1,20 +1,11 @@
-export interface ArbimonHourlySpeciesRow {
-  'arbimon_site_id': number
-  'stream_id': string
-  'name': string
-  'lat': number
-  'lon': number
-  'alt': number
-  'date': string
-  'hour': number
-  'species_id': number
-  'scientific_name': string
-  'taxon_id': number
-  'taxon': string
-  'num_of_recordings': number
-}
+import { Species } from '@rfcx-bio/common/api-bio-types/species'
+import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
-export interface ArbimonSpecieCallRow {
+export type ArbimonHourlyDetectionSummary = Omit<MockHourlyDetectionSummary, 'detection_frequency'>
+
+export type ArbimonSpeciesData = Pick<Species, 'speciesId' | 'speciesSlug' | 'scientificName' | 'taxonId' | 'taxon' | 'speciesCall'>
+
+export interface ArbimonSpeciesCallRow {
   'scientific_name': string
   'songtype': string
   'start': string
@@ -24,6 +15,4 @@ export interface ArbimonSpecieCallRow {
   'project_id': string
   'project_name': string
   'timezone': string
-  'media_wav_url': string | null
-  'media_spec_url': string | null
 }
