@@ -38,13 +38,11 @@ export type ActivityOverviewDataByTime = Record<TimeBucket, ActivityOverviewData
 export interface ActivityOverviewDataByTimeBucket {
   detection: Record<number, number>
   detectionFrequency: Record<number, number>
-  occupancy: Record<number, number>
 }
 
 export const ACTIVITY_OVERVIEW_TIME_KEYS: Record<string, keyof ActivityOverviewDataByTimeBucket> = {
   detection: 'detection',
-  detectionFrequency: 'detectionFrequency',
-  occupancy: 'occupancy'
+  detectionFrequency: 'detectionFrequency'
 }
 
 export interface ActivityOverviewDataBySpecies {
