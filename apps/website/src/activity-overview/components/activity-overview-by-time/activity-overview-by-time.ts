@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { TimeDataset } from '@/activity-patterns/types'
+import { TimeDataset } from '@/activity-overview/types'
 import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
 import { TimeBucket } from '~/api/species-richness-service'
 import { LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
@@ -35,8 +35,7 @@ export default class ActivityOverviewByTime extends Vue {
   selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detection
   datasetType: DropDownOption[] = [
     { label: 'Detections', value: ACTIVITY_OVERVIEW_TIME_KEYS.detection },
-    { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
-    { label: 'Naive occupancy', value: ACTIVITY_OVERVIEW_TIME_KEYS.occupancy }
+    { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency }
   ]
 
   buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
