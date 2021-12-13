@@ -10,11 +10,13 @@ Allowed categories:
 - Breaking changes
 --->
 
-<!-- 
+
 # x.x.x (2021-12-22)
 
-TODO
--->
+## Fix bugs
+
+- **spotlight:** Correct IUCN citation [#321]
+
 
 # 1.0.0-rc1 (2021-12-13)
 
