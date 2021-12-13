@@ -31,7 +31,7 @@
         :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
       >
         <p class="italic">
-          {{ item.speciesName }}
+          {{ item.scientificName }}
         </p>
         <p class="text-xs">
           {{ item.extinctionRisk.label }}

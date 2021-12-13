@@ -20,16 +20,16 @@ export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[]
   // TODO - Extract this to UI filter package
   const propertyEqualFilters = mapValues(groupBy(otherFilters, 'propertyName'), f => f.map(v => v.value))
   const siteIds = sites.map(s => s.siteId)
-  const taxonClasses = propertyEqualFilters.taxon ?? []
-  const taxonSpecies = propertyEqualFilters.species ?? []
+  const taxons = propertyEqualFilters.taxon ?? []
+  const species = propertyEqualFilters.species ?? []
 
   // TODO - Move to API
   return detections.filter(r =>
     r.date >= start &&
     r.date < end &&
     (sites.length === 0 || siteIds.includes(r.stream_id)) &&
-    (taxonClasses.length === 0 || taxonClasses.includes(r.taxon)) &&
-    (taxonSpecies.length === 0 || taxonSpecies.includes(r.species_id.toString()))
+    (taxons.length === 0 || taxons.includes(r.taxon)) &&
+    (species.length === 0 || species.includes(r.species_id.toString()))
   )
 }
 

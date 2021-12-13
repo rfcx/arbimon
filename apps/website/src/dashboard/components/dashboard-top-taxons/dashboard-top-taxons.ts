@@ -7,12 +7,12 @@ import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 
 export interface RichnessData {
-  taxonClass: string
+  taxon: string
   speciesNo: number
 }
 
 interface DashboardRichnessPercentage {
-  taxonClass: string
+  taxon: string
   percentage: number
   color: string
 }
@@ -32,11 +32,11 @@ export default class DashboardTopTaxons extends Vue {
 
   get richnessPercentage (): DashboardRichnessPercentage[] {
     const { richness, totalSpecies } = this
-    return richness.map(({ taxonClass, speciesNo }) => {
+    return richness.map(({ taxon, speciesNo }) => {
       return {
-        taxonClass,
+        taxon,
         percentage: (speciesNo / totalSpecies) * 100,
-        color: TAXONOMY_CLASSES.find(c => c.name === taxonClass)?.color ?? '#FFFFFF'
+        color: TAXONOMY_CLASSES.find(c => c.name === taxon)?.color ?? '#FFFFFF'
       }
     }).sort((a, b) => b.percentage - a.percentage)
   }

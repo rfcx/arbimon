@@ -5,7 +5,7 @@ import { firstDiffDigit } from '@rfcx-bio/utils/number'
 
 import { DetectedSpeciesItem } from './types'
 
-type SortableColumn = Extract<keyof DetectedSpeciesItem, 'scientificName' | 'taxonClass' | 'total'>
+type SortableColumn = Extract<keyof DetectedSpeciesItem, 'scientificName' | 'taxon' | 'total'>
 type SortDirection = 1 | -1
 
 interface Header {
@@ -21,9 +21,9 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
     defaultDirection: SORT_ASC,
     sortFunction: (e1, e2) => e1.scientificName.localeCompare(e2.scientificName)
   },
-  taxonClass: {
+  taxon: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.taxonClass.localeCompare(e2.taxonClass)
+    sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon)
   },
   total: {
     defaultDirection: SORT_DESC,
@@ -76,7 +76,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
     const keyTotal: SortableColumn = 'total'
     return [
       { title: 'Species', color: HEADER_COLOR, key: 'scientificName' },
-      { title: 'Class', color: HEADER_COLOR, key: 'taxonClass' },
+      { title: 'Class', color: HEADER_COLOR, key: 'taxon' },
       ...((this.hasMoreThanOneDataset)
         ? [...Array.from({ length: this.datasetCount }, (v, i) => ({ title: `Dataset ${i + 1}`, color: this.colors[i] ?? '#FFFFFF' })), { title: 'Total', color: HEADER_COLOR, key: keyTotal }]
         : []

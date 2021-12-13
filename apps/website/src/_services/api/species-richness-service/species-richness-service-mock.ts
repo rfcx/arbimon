@@ -57,7 +57,7 @@ const getSpeciesPresence = (detections: MockHourlyDetectionSummary[]): { [specie
 
   const species = rawSpecies
     .filter(s => speciesIds.has(s.speciesId))
-    .map(({ speciesId, speciesSlug, scientificName, commonName, taxon: taxonClass }) =>
-      ({ speciesId, speciesSlug, scientificName, commonName, taxonClass }))
+    .map(({ speciesId, speciesSlug, scientificName, commonName, taxon: taxon }) =>
+      ({ speciesId, speciesSlug, scientificName, commonName, taxon }))
     return keyBy(species, 'speciesId')
 }

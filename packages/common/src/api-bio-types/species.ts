@@ -37,10 +37,10 @@ export interface Species {
   externalLinks: SpeciesExternalLink[]
   extinctionRisk: ExtinctionRiskCode
   information: SpeciesInformation[]
-  taxon: string // TODO: Rename to taxonClass
+  taxon: string
   taxonId: number
   thumbnailImageUrl?: string
   speciesCall?: SpeciesCall
 }
 
-export type SpeciesLight = Pick<Species, 'speciesId' | 'speciesSlug' | 'scientificName' | 'commonName'> & { taxonClass: string }
+export type SpeciesLight = Pick<Species, 'speciesId' | 'speciesSlug' | 'scientificName' | 'commonName' | 'taxon'>
