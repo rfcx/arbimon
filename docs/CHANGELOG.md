@@ -16,6 +16,7 @@ Allowed categories:
 ## Enhancements
 
 - **species:** Add species common name [#330]
+- **activity-overview:** Remove naive occupancy from line chart [#328]
 
 ## Fix bugs
 
