@@ -55,7 +55,7 @@
               <span class="text-white italic">{{ row.scientificName }}</span>
               <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
               <p class="text-xs italic ">
-                {{ row.commonName || 'Unknown' }}
+                {{ row.commonName }}
               </p>
             </router-link>
           </td>

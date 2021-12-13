@@ -18,7 +18,7 @@
           {{ species.scientificName }}
         </div>
         <div class="text-xs text-white text-opacity-50">
-          {{ species.commonName || 'Unknown' }}
+          {{ species.commonName }}
         </div>
       </div>
     </el-option>
@@ -26,13 +26,18 @@
 </template>
 <script src="./species-selector.ts" lang="ts"></script>
 <style lang="scss">
-.el-input__inner {
-  font-style: italic;
+.el-input {
+  &__inner {
+    font-style: italic;
+  }
+  & [type='text'] {
+    background-color: #141525;
+      &:focus {
+        box-shadow: none;
+      }
+  }
 }
-.el-input [type='text']{
-  background-color: #141525;
-}
-.el-input [type='text']:focus{
-  box-shadow: none;
+.el-popper.is-light .el-popper__arrow::before {
+  background: #141525;
 }
 </style>
