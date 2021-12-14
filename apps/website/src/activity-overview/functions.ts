@@ -1,7 +1,6 @@
 import { downloadSpreadsheet } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
-import { TAXONOMY_CLASSES, TAXONOMY_UNKNOWN_CLASS } from '~/api/taxonomy-service'
 import { ColoredFilter, getExportDateTime, getExportFilterName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
@@ -26,25 +25,22 @@ export interface CsvData {
   'naive occupancy': number
 }
 
-export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): MapDataSet[] {
-  const { startDate, endDate, sites, color, overviewBySite } = dataset
+export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[]): MapDataSet[] {
+  const maximumNumbers: Array<[number, number]> = datasets.map(({ overviewBySite }) => {
+    const overviewBySiteValues = Object.values(overviewBySite)
+    const detectionCounts = overviewBySiteValues.map(({ detection }) => detection)
+    const detectionFrequencies = overviewBySiteValues.map(({ detectionFrequency }) => detectionFrequency)
+    return [Math.max(0, ...detectionCounts), Math.max(0, ...detectionFrequencies)]
+  })
 
-  const overviewBySiteSortedByKey = Object.fromEntries(Object.entries(overviewBySite).sort((a, b) => a[0].localeCompare(b[0])))
+  const maxValues = {
+    [ACTIVITY_OVERVIEW_MAP_KEYS.detection]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
+    [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
+  }
 
-  const maximumNumbers = Object.values(overviewBySiteSortedByKey)
-    .map(detectionsBySite => Object.values(detectionsBySite))
-    .map(detections => {
-      const detectionCounts = detections.map(({ detection }) => detection)
-      const detectionFrequencies = detections.map(({ detectionFrequency }) => detectionFrequency)
-      return [Math.max(0, ...detectionCounts), Math.max(0, ...detectionFrequencies)]
-    })
-
-  const mapDatasets: MapDataSet[] = []
-
-  for (const [taxonKey, value] of Object.entries(overviewBySiteSortedByKey)) {
-    const taxon = TAXONOMY_CLASSES.find(taxon => taxon.name === taxonKey)
-
-    const data = Object.values(value).map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
+  return datasets.map(({ startDate, endDate, sites, color, overviewBySite }) => {
+    const overviewBySiteValues = Object.values(overviewBySite)
+    const data = overviewBySiteValues.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,
       longitude,
@@ -54,24 +50,8 @@ export function transformToBySiteDataset (dataset: ActivityOverviewDataBySite): 
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }
     }))
-
-    const maxValues = {
-      [ACTIVITY_OVERVIEW_MAP_KEYS.detection]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
-      [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
-    }
-
-    mapDatasets.push({
-      startDate,
-      endDate,
-      sites,
-      color,
-      data,
-      maxValues,
-      title: taxon ? taxon.symbol : TAXONOMY_UNKNOWN_CLASS.symbol
-    })
-  }
-
-  return mapDatasets
+    return { startDate, endDate, sites, color, data, maxValues }
+  })
 }
 
 // TODO: Update when multiple datasets
