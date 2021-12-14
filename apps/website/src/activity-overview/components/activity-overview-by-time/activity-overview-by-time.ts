@@ -32,7 +32,7 @@ export default class ActivityOverviewByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: TimeDataset[]
 
-  selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detection
+  selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
     { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
     { label: 'Detections', value: ACTIVITY_OVERVIEW_TIME_KEYS.detection }
