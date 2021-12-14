@@ -19,7 +19,7 @@
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "serve:api": "pnpm --filter=api serve",
-    "serve:website": "pnpm --filter=website serve",
+    "serve:website": "wait-port 3000 && pnpm --filter=website serve",
     "serve": "concurrently --kill-others-on-fail \"pnpm:serve:*\""
   },
   "devDependencies": {
