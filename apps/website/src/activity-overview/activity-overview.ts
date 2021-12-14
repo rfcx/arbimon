@@ -4,7 +4,7 @@ import { Inject } from 'vue-property-decorator'
 import ActivityOverviewByLocation from '@/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
 import ActivityOverviewBySpecies from '@/activity-overview/components/activity-overview-by-species/activity-overview-by-species.vue'
 import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
-import { exportCSV, transformToBySiteDataset } from '@/activity-overview/functions'
+import { transformToBySiteDatasets } from '@/activity-overview/functions'
 import { TimeDataset } from '@/activity-overview/types'
 import { ActivityOverviewDataBySpecies, activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
@@ -24,7 +24,7 @@ const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 export default class ActivityOverviewPage extends Vue {
   @Inject() readonly store!: BiodiversityStore
 
-  filter!: ColoredFilter
+  filters!: ColoredFilter[]
 
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
@@ -34,23 +34,28 @@ export default class ActivityOverviewPage extends Vue {
     return this.tableDatasets.length > 0
   }
 
-  // TODO ??: Use individual comparison box
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
-    this.filter = filters[0]
+    this.filters = filters
     await this.onDatasetChange()
   }
 
+  // TODO: Dix bound single filter to multi filter
   async onDatasetChange (): Promise<void> {
-    const { color, ...filter } = this.filter
-    const data = await activityOverviewService.getActivityOverviewData(filterToDataset(filter))
+    const filters = this.filters
+    const datasets = await Promise.all(
+      filters.map(async (filter) => {
+        const { color, startDate, endDate } = filter
+        const data = await activityOverviewService.getActivityOverviewData(filterToDataset(filter))
+        return { ...data, startDate, endDate, color }
+      })
+    )
 
-    // TODO ???: Update color logic
-    this.mapDatasets = transformToBySiteDataset({ ...data, startDate: filter.startDate, endDate: filter.endDate, color })
-    this.timeDatasets = data.overviewByTime.map((data, idx) => ({ color: this.store.datasetColors[idx], data }))
-    this.tableDatasets = data.overviewBySpecies
+    this.mapDatasets = transformToBySiteDatasets(datasets)
+    // this.timeDatasets = data.overviewByTime.map((data, idx) => ({ color: this.store.datasetColors[idx], data }))
+    // this.tableDatasets = data.overviewBySpecies
   }
 
   async exportSpeciesData (): Promise<void> {
-    await exportCSV(this.filter, this.tableDatasets, DEFAULT_PREFIX)
+    // await exportCSV(this.filter, this.tableDatasets, DEFAULT_PREFIX)
   }
 }
