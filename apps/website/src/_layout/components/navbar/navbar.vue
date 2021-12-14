@@ -16,7 +16,7 @@
                   alt="Rainforest connection logo"
                 >
                 <div class="font-semibold text-primary ml-2 <md:hidden">
-                  Biodiversity<span class="<lg:hidden"> Analytics</span>
+                  Biodiversity
                 </div>
               </div>
             </router-link>
@@ -25,7 +25,7 @@
               class="navbar-item text-sm h-9 mx-2 sm:(px-2 hover:bg-box-grey rounded-md cursor-pointer)"
               @click="toggleProjectSelector(true)"
             >
-              <span class="max-w-36 sm:max-w-24 lg:max-w-36 truncate">{{ selectedProjectName }}</span>
+              <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-3 w-3 ml-1 text-white"
