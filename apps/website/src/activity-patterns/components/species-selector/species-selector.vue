@@ -4,7 +4,7 @@
     filterable
     :filter-method="onFilterType"
     :loading="loadingSpecies"
-    class="bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <el-option
       v-for="species in filteredSpecies"
@@ -32,6 +32,7 @@
   }
   & [type='text'] {
     background-color: #141525;
+    border-radius: 0.25rem;
       &:focus {
         box-shadow: none;
       }
