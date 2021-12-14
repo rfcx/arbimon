@@ -1,7 +1,7 @@
-import { downloadSpreadsheet } from '@rfcx-bio/utils/file'
+import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
-import { ColoredFilter, getExportDateTime, getExportFilterName } from '~/filters'
+import { ColoredFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
 export type ActivityOverviewDataBySite = ActivityOverviewData & ColoredFilter
@@ -54,18 +54,31 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
   })
 }
 
-// TODO: Update when multiple datasets
-export async function exportCSV (filter: ColoredFilter, dataset: ActivityOverviewDataBySpecies[], prefix: string): Promise<void> {
-  const sortedDataset = dataset.sort((a, b) => a.scientificName.localeCompare(b.scientificName) ||
-    a.taxon.localeCompare(b.taxon) ||
-    a.detectionCount - b.detectionCount ||
-    a.occupiedSites - b.occupiedSites)
+export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOverviewDataBySpecies[][], reportPrefix: string): Promise<void> {
+  const sortedDatasets = datasets.map(dataset => {
+    return dataset.sort((a, b) => a.scientificName.localeCompare(b.scientificName) ||
+      a.taxon.localeCompare(b.taxon) ||
+      a.detectionCount - b.detectionCount ||
+      a.occupiedSites - b.occupiedSites)
+  })
 
-  const { startDate, endDate, sites } = filter
-  const exportTime = getExportDateTime()
-  const filename = getExportFilterName(startDate, endDate, prefix, exportTime, sites) + '.csv'
-  const dataAsJson = getJsonForDataset(sortedDataset)
-  await downloadSpreadsheet(dataAsJson, filename)
+  const exportDateTime = getExportDateTime()
+  const groupName = getExportGroupName(reportPrefix, exportDateTime)
+
+  const files: FileData[] = await Promise.all(
+    filters.map(async ({ startDate, endDate, sites }, idx) => {
+      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites) + '.csv'
+      const data = await getCSVData(sortedDatasets[idx])
+      return { filename, data }
+    })
+  )
+
+  await zipAndDownload(files, groupName)
+}
+
+export async function getCSVData (dataset: ActivityOverviewDataBySpecies[]): Promise<string> {
+  const dataAsJson = getJsonForDataset(dataset)
+  return await toCsv(dataAsJson)
 }
 
 function getJsonForDataset (dataset: ActivityOverviewDataBySpecies[]): CsvData[] {

@@ -4,7 +4,7 @@ import { Inject } from 'vue-property-decorator'
 import ActivityOverviewByLocation from '@/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
 import ActivityOverviewBySpecies from '@/activity-overview/components/activity-overview-by-species/activity-overview-by-species.vue'
 import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
-import { transformToBySiteDatasets } from '@/activity-overview/functions'
+import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { TimeDataset } from '@/activity-overview/types'
 import { ActivityOverviewDataBySpecies, activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
@@ -28,7 +28,7 @@ export default class ActivityOverviewPage extends Vue {
 
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
-  tableDatasets: ActivityOverviewDataBySpecies[] = []
+  tableDatasets: ActivityOverviewDataBySpecies[][] = []
 
   get hasData (): boolean {
     return this.tableDatasets.length > 0
@@ -52,10 +52,10 @@ export default class ActivityOverviewPage extends Vue {
 
     this.mapDatasets = transformToBySiteDatasets(datasets)
     this.timeDatasets = datasets.map(({ color, overviewByTime }) => ({ color, data: overviewByTime }))
-    // this.tableDatasets = data.overviewBySpecies
+    this.tableDatasets = datasets.map(({ overviewBySpecies }) => overviewBySpecies)
   }
 
   async exportSpeciesData (): Promise<void> {
-    // await exportCSV(this.filter, this.tableDatasets, DEFAULT_PREFIX)
+    await exportCSV(this.filters, this.tableDatasets, DEFAULT_PREFIX)
   }
 }
