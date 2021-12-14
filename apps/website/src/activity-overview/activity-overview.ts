@@ -51,7 +51,7 @@ export default class ActivityOverviewPage extends Vue {
     )
 
     this.mapDatasets = transformToBySiteDatasets(datasets)
-    // this.timeDatasets = data.overviewByTime.map((data, idx) => ({ color: this.store.datasetColors[idx], data }))
+    this.timeDatasets = datasets.map(({ color, overviewByTime }) => ({ color, data: overviewByTime }))
     // this.tableDatasets = data.overviewBySpecies
   }
 

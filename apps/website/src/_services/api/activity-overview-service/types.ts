@@ -13,7 +13,7 @@ export interface DetectionGroupByDetectionKey {
 
 export interface ActivityOverviewData extends DatasetParameters {
   overviewBySite: ActicvityOverviewDataBySite
-  overviewByTime: ActivityOverviewDataByTime[]
+  overviewByTime: ActivityOverviewDataByTime
   overviewBySpecies: ActivityOverviewDataBySpecies[]
 }
 

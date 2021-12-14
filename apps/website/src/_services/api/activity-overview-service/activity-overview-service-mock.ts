@@ -4,7 +4,7 @@ import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupByDetectionKey, DetectionGroupedBySite } from '~/api/activity-overview-service'
+import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '~/api/activity-overview-service'
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 
 export class ActivityOverviewService {
@@ -17,8 +17,7 @@ export class ActivityOverviewService {
     const totalSummaries = filterMocksByParameters(this.rawHourlySpeciesSummaries, dataset)
     const detectionsBySites = groupBy(totalSummaries, 'stream_id')
     const overviewBySite = await this.getOverviewDataBySite(detectionsBySites)
-    // const overviewByTime = await this.getOverviewDataByTime(detectionsBySites)
-    const overviewByTime: ActivityOverviewDataByTime[] = []
+    const overviewByTime = await this.getOverviewDataByTime(totalSummaries)
     const overviewBySpecies = await this.getOverviewDataBySpecies(totalSummaries)
 
     return await simulateDelay({ ...dataset, overviewBySite, overviewByTime, overviewBySpecies }, this.delay)
@@ -63,17 +62,9 @@ export class ActivityOverviewService {
     return occupiedCount === 0 ? 0 : occupiedCount / totalSiteCount
   }
 
-  async getOverviewDataByTime (totalSummaries: MockHourlyDetectionSummary[], detectionsByTaxon: DetectionGroupByDetectionKey): Promise<ActivityOverviewDataByTime[]> {
+  async getOverviewDataByTime (totalSummaries: MockHourlyDetectionSummary[]): Promise<ActivityOverviewDataByTime> {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
-
-    const overviewByTime: ActivityOverviewDataByTime[] = []
-    for (const taxon of Object.keys(detectionsByTaxon)) {
-      const speciesSummaries = detectionsByTaxon[taxon]
-      const eachTaxonByTime = this.calculateOverviewDataByTime(totalRecordingCount, speciesSummaries)
-      overviewByTime.push(eachTaxonByTime)
-    }
-
-    return overviewByTime
+    return this.calculateOverviewDataByTime(totalRecordingCount, totalSummaries)
   }
 
   calculateOverviewDataByTime (totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime {
