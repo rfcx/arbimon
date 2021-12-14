@@ -45,6 +45,8 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Emit() emitClose (): boolean { return false }
 
   currentActiveMenuId = ''
+  inputFilter = ''
+  isAllMatchedFilteredChecked = false
   selectedSites: Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
   readonly today = dayjs().format(DATE_FORMAT)
@@ -66,6 +68,15 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   get selectedTaxons (): string[] {
     return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
+  }
+
+  get filterInputSites (): SiteCheckbox[] {
+      if (!this.inputFilter) {
+        this.isAllMatchedFilteredChecked = false
+        return this.siteCheckboxItems
+      }
+      return this.siteCheckboxItems
+          .filter(w => w.site.name.toLocaleLowerCase().startsWith(this.inputFilter.toLocaleLowerCase()))
   }
 
   override mounted (): void {
@@ -121,5 +132,24 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   updateSelectedTaxons (otherFilters: FilterPropertyEquals[]): void {
     this.otherFilters = otherFilters // TODO ??? - Are you sure this is an overwrite?
+  }
+
+  updateSelectedAllFilterSites (): void {
+    this.isAllMatchedFilteredChecked = !this.isAllMatchedFilteredChecked
+    this.siteCheckboxItems = this.siteCheckboxItems.map(s => {
+      if (this.filterInputSites.includes(s)) {
+        return {
+          ...s,
+          check: this.isAllMatchedFilteredChecked
+        }
+      }
+      return { ...s }
+    })
+    if (this.isAllMatchedFilteredChecked) {
+      this.selectedSites = [...this.selectedSites, ...this.filterInputSites.map(f => f.site)]
+      return
+    }
+    const filteredInputSiteIds = this.filterInputSites.map(f => f.site.siteId)
+    this.selectedSites = this.selectedSites.filter(s => !filteredInputSiteIds.includes(s.siteId))
   }
 }

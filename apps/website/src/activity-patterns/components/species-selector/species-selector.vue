@@ -37,6 +37,9 @@
         box-shadow: none;
       }
   }
+  &__inner[type='text'] {
+    max-width: 300px;
+  }
 }
 .el-popper.is-light .el-popper__arrow::before {
   background: #141525;

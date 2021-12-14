@@ -47,8 +47,22 @@
           <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
             Filter results from some sites only
           </h2>
+          <el-input
+            v-model="inputFilter"
+            class="mx-2 mb-2"
+            placeholder="Filter site..."
+          />
           <label
-            v-for="(item) in siteCheckboxItems"
+            v-if="inputFilter && filterInputSites.length > 0"
+            class="px-4 pb-2 align-middle list-item"
+          ><input
+            v-model="isAllMatchedFilteredChecked"
+            class="rounded"
+            type="checkbox"
+            @click="updateSelectedAllFilterSites()"
+          ><span class="text-white ml-2">Select matched sites start with '{{ inputFilter }}'</span></label>
+          <label
+            v-for="(item) in filterInputSites"
             :key="'site-list-' + item.site.siteId"
             class="px-4 pb-2 align-middle list-item"
           >
