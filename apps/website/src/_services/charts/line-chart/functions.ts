@@ -82,6 +82,9 @@ export const generateChartExport = (datasets: LineChartSeries[], config: LineCha
   const colors = datasets.map(d => d.color)
   generateHorizontalLegend(config.width, config.height - config.margins.bottom, labels, colors, svg)
 
+  svg.selectAll('text')
+    .style('font-size', '1.5rem')
+
   return svg.node()
 }
 
