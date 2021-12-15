@@ -10,6 +10,7 @@ import { ActivityOverviewDataBySpecies, activityOverviewService } from '~/api/ac
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
+import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
@@ -28,10 +29,11 @@ export default class ActivityOverviewPage extends Vue {
 
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
-  tableDatasets: ActivityOverviewDataBySpecies[][] = []
+  tableDatasets: SpeciesDataset[] = []
+  exportDatasets: ActivityOverviewDataBySpecies[][] = []
 
   get hasData (): boolean {
-    return this.tableDatasets.length > 0
+    return this.exportDatasets.length > 0
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
@@ -52,10 +54,11 @@ export default class ActivityOverviewPage extends Vue {
 
     this.mapDatasets = transformToBySiteDatasets(datasets)
     this.timeDatasets = datasets.map(({ color, overviewByTime }) => ({ color, data: overviewByTime }))
-    this.tableDatasets = datasets.map(({ overviewBySpecies }) => overviewBySpecies)
+    this.tableDatasets = datasets.map(({ color, overviewBySpecies }) => ({ color, data: overviewBySpecies }))
+    this.exportDatasets = datasets.map(({ overviewBySpecies }) => overviewBySpecies)
   }
 
   async exportSpeciesData (): Promise<void> {
-    await exportCSV(this.filters, this.tableDatasets, DEFAULT_PREFIX)
+    await exportCSV(this.filters, this.exportDatasets, DEFAULT_PREFIX)
   }
 }

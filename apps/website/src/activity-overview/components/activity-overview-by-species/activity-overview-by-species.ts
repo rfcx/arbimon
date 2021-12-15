@@ -9,6 +9,13 @@ interface Header {
   key: SortableColumn
 }
 
+export interface SpeciesDataset {
+  color: string
+  data: ActivityOverviewDataBySpecies[]
+}
+
+type ActivityOverviewDataBySpeciesWithColor = ActivityOverviewDataBySpecies & { color: string }
+
 type SortableColumn = Extract<keyof ActivityOverviewDataBySpecies, 'scientificName'| 'taxon' | 'detectionCount' | 'detectionFrequency' | 'occupiedSites' | 'occupancyNaive'>
 type SortDirection = 1 | -1
 
@@ -42,7 +49,7 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
 }
 
 export default class ActivityOverviewBySpecies extends Vue {
-  @Prop() tableData!: ActivityOverviewDataBySpecies[]
+  @Prop() tableData!: SpeciesDataset[]
 
   pageIndex = 1 // 1-based for humans
   pageSize = 10
@@ -65,19 +72,25 @@ export default class ActivityOverviewBySpecies extends Vue {
   }
 
   get maxPage (): number {
-    return Math.ceil(this.tableData.length / this.pageSize)
+    return Math.ceil(this.sortedTableData.length / this.pageSize)
   }
 
-  get sortedTableData (): ActivityOverviewDataBySpecies[] {
-    // Sort by user choice then our default
-    return this.tableData.sort((a, b) =>
+  /**
+   * Sort by user choice then our default
+   */
+  get sortedTableData (): ActivityOverviewDataBySpeciesWithColor[] {
+    return this.tableData.flatMap(({ color, data }) => data.map(d => ({ color, ...d }))).sort((a, b) =>
       SORTABLE_COLUMNS[this.sortColumn].sortFunction(a, b) * this.sortDirection
     )
   }
 
-  get pageData (): ActivityOverviewDataBySpecies[] {
+  get pageData (): ActivityOverviewDataBySpeciesWithColor[] {
     const start = (this.pageIndex - 1) * this.pageSize
     return this.sortedTableData.slice(start, start + this.pageSize)
+  }
+
+  get totalSpecies (): number {
+    return Math.max(0, ...this.tableData.map(d => d.data.length))
   }
 
   @Watch('tableData')

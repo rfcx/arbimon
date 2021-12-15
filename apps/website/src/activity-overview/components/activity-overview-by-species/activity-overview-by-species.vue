@@ -71,7 +71,11 @@
           <td class="p-2">
             {{ row.taxon }}
           </td>
-          <td class="p-2 text-center">
+          <td
+            class="p-2 text-center"
+            :class="tableData.length > 1 ? 'border-l-4' : ''"
+            :style="tableData.length > 1 ? `border-color:${row.color}` : ''"
+          >
             {{ row.detectionCount }}
           </td>
           <td class="p-2 text-center">
@@ -101,7 +105,7 @@
     </table>
     <div class="flex justify-between items-center mt-3">
       <div class="text-subtle px-2">
-        Total: {{ tableData.length }} species
+        Total: {{ totalSpecies }} species
       </div>
       <div class="flex justify-end items-center">
         <div>
