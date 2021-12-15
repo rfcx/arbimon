@@ -1,9 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { Prop } from 'vue-property-decorator'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation, SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio-types/species'
 
-import { getSpecies } from '~/api/species-service'
 import SpeciesInformationContentComponent from './species-information-content.vue'
 
 @Options({
@@ -12,10 +11,7 @@ import SpeciesInformationContentComponent from './species-information-content.vu
   }
 })
 export default class SpeciesBackgroundInformation extends Vue {
-  @Prop() species!: SpeciesLight | null
-
-  isLoading = true
-  speciesInformation: Species | null = null
+  @Prop() species!: Species | null
 
   /**
    * Clean up html tag from raw content from iucn api
@@ -28,42 +24,16 @@ export default class SpeciesBackgroundInformation extends Vue {
   }
 
   get iucnSpeciesInformation (): SpeciesInformation | null {
-    return this.speciesInformation?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_IUCN) ?? null
+    return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_IUCN) ?? null
   }
 
   get wikiSpeciesInformation (): SpeciesInformation | null {
-    return this.speciesInformation?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
-  }
-
-  override async created (): Promise<void> {
-    await this.getSpeciesInformation()
-  }
-
-  @Watch('species')
-  async onSpeciesChange (): Promise<void> {
-    await this.getSpeciesInformation()
+    return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
   }
 
   // TODO 190: Improve image handler
   speciesImage (): string {
-    const url = this.speciesInformation?.thumbnailImageUrl
+    const url = this.species?.thumbnailImageUrl
     return url && url.length > 0 ? url : new URL('../../../_assets/default-species-image.jpg', import.meta.url).toString()
-  }
-
-  async getSpeciesInformation (): Promise<void> {
-    const scientificName = this.species?.scientificName
-    if (!scientificName) return
-    try {
-      const speciesInformation = await getSpecies(scientificName)
-      if (this.species?.scientificName === scientificName) {
-        this.speciesInformation = speciesInformation ?? null
-        this.isLoading = false
-      }
-    } catch (e) {
-      if (this.species?.scientificName === scientificName) {
-        this.isLoading = false
-      }
-      // TODO 167: Error handling
-    }
   }
 }

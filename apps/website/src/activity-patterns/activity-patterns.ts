@@ -1,12 +1,13 @@
 import { Options, Vue } from 'vue-class-component'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species'
-import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { activityPatternsService } from '~/api/activity-patterns-service'
 import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
+import { getSpecies } from '~/api/species-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
@@ -40,6 +41,7 @@ export default class ActivityPatternsPage extends Vue {
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
+  speciesInformation: Species | null = null
 
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0
@@ -51,7 +53,10 @@ export default class ActivityPatternsPage extends Vue {
 
     this.species = species ?? null
     this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug ?? '')
-    await this.onDatasetChange()
+    await Promise.all([
+      this.onDatasetChange(),
+      this.getSpeciesInformation()
+    ])
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
@@ -77,6 +82,19 @@ export default class ActivityPatternsPage extends Vue {
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
+  }
+
+  async getSpeciesInformation (): Promise<void> {
+    const scientificName = this.species?.scientificName
+    if (!scientificName) return
+    try {
+      const speciesInformation = await getSpecies(scientificName)
+      if (this.species?.scientificName === scientificName) {
+        this.speciesInformation = speciesInformation ?? null
+      }
+    } catch (e) {
+      // TODO 167: Error handling
+    }
   }
 
   async exportDetectionsData (): Promise<void> {
