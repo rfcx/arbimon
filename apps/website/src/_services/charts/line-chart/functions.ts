@@ -14,9 +14,12 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
     .domain(xBounds)
     .range([config.margins.left, config.width - config.margins.right])
 
+  const xLabels = config.xLabels
+  const xTickFormatter = xLabels ? (val: d3.NumberValue): string => xLabels[val.valueOf()] : d3.format('d')
+
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(0, ${config.height - config.margins.bottom})`)
-    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(d3.format('d')))
+    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(xTickFormatter))
 
   const yScale = d3.scaleLinear()
     .domain(yBounds).nice()

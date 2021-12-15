@@ -7,7 +7,8 @@ import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 import { MapSiteData } from '~/maps/map-bubble'
-import { SpeciesRichnessData, TimeBucket } from './types'
+import { TimeBucket } from '~/time-buckets'
+import { SpeciesRichnessData } from './types'
 
 // TODO ?? - Move this logic to the API
 export const getSpeciesRichnessData = async (dataset: DatasetParameters): Promise<SpeciesRichnessData> => {
@@ -44,11 +45,9 @@ const getSpeciesBySite = (detections: MockHourlyDetectionSummary[]): MapSiteData
 
 const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<TimeBucket, Record<number, number>> => {
   return {
-    hour: mapValues(groupByNumber(detections, d => d.hour), calculateSpeciesRichness),
-    day: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).date()), calculateSpeciesRichness),
-    month: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month() + 1), calculateSpeciesRichness),
-    year: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).year()), calculateSpeciesRichness),
-    quarter: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).quarter()), calculateSpeciesRichness)
+    hourOfDay: mapValues(groupByNumber(detections, d => d.hour), calculateSpeciesRichness),
+    dayOfWeek: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).isoWeekday() - 1), calculateSpeciesRichness),
+    monthOfYear: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month()), calculateSpeciesRichness)
   }
 }
 

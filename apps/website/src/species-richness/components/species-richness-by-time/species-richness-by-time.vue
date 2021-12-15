@@ -1,30 +1,28 @@
 <template>
-  <div
-    class="w-full"
-  >
-    <div class="flex justify-between items-end mb-1.5">
-      <h2 class="text-white text-xl">
-        Distinct species by time
-      </h2>
-      <div
-        class="mb-2 flex"
-      >
+  <div class="w-full">
+    <div class="flex flex-row justify-between items-center">
+      <div class="flex flex-row items-center">
+        <h2 class="text-white text-xl">
+          Distinct species by
+        </h2>
+        <select
+          v-model="selectedBucket"
+          class="text-xl lowercase ml-2 py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-2 focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-2 ring-0 outline-none)"
+        >
+          <option
+            v-for="bucket in Object.entries(buckets)"
+            :key="bucket[0]"
+            :value="bucket[0]"
+          >
+            {{ bucket[1] }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-2 flex">
         <export-button
           v-if="hasData"
           @click="downloadChart()"
         />
-        <select
-          v-model="selectedBucket"
-          class="bg-steel-grey border-box-grey ml-2 pl-2 pt-0.5 pb-1 rounded focus:(border-box-grey ring-0 outline-none)"
-        >
-          <option
-            v-for="bucket in buckets"
-            :key="bucket"
-            :value="bucket"
-          >
-            {{ bucket }}
-          </option>
-        </select>
       </div>
     </div>
     <line-chart-component
