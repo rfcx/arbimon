@@ -14,12 +14,11 @@ module.exports = {
   },
   plugins: ['regex'],
   rules: {
-    // Overrides
+    // Override imported rules
     '@typescript-eslint/no-empty-function': 'off',
     indent: 'off',
-    'vue/multi-word-component-names': 'warn',
 
-    // Rules
+    // Customize Rules
     'regex/invalid': [
       'error', [
         {
