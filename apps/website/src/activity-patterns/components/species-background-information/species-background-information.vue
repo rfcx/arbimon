@@ -29,9 +29,7 @@
           v-if="species?.scientificName"
           class="absolute px-2 py-1 bottom-0 right-0 bg-dark-300 bg-opacity-70"
         >
-          <span v-if="isLoading">Loading...</span>
           <a
-            v-else
             :href="speciesImage()"
             target="_blank"
             class="italic hover:underline"
