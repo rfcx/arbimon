@@ -1,1 +1,1 @@
-export { default } from './error.vue'
+export { default } from './error-page.vue'

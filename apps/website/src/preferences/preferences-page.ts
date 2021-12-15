@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import NavbarComponent from '@/_layout/components/navbar/navbar.vue'
+import NavbarComponent from '@/_layout/components/navbar/nav-bar.vue'
 import { BiodiversityStore } from '~/store'
 
 @Options({

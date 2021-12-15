@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 
-import NavbarComponent from '@/_layout/components/navbar/navbar'
+import NavbarComponent from '@/_layout/components/navbar/nav-bar'
 
 @Options({
   components: { NavbarComponent }

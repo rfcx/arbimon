@@ -50,4 +50,4 @@
     </div>
   </div>
 </template>
-<script src="./dashboard.ts" lang="ts"></script>
+<script src="./dashboard-page" lang="ts"></script>

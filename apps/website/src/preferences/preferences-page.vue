@@ -45,4 +45,4 @@
     </div>
   </div>
 </template>
-<script src="./preferences.ts" lang="ts"></script>
+<script src="./preferences-page" lang="ts"></script>
