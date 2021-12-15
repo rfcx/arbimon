@@ -23,7 +23,7 @@
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
     <species-background-information
-      :species="species"
+      :species="speciesInformation"
     />
     <activity-patterns-metrics
       :metrics="metrics"
