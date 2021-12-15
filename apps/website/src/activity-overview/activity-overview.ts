@@ -41,7 +41,6 @@ export default class ActivityOverviewPage extends Vue {
     await this.onDatasetChange()
   }
 
-  // TODO: Dix bound single filter to multi filter
   async onDatasetChange (): Promise<void> {
     const filters = this.filters
     const datasets = await Promise.all(
