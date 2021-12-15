@@ -5,6 +5,7 @@ on:
     branches-ignore: # ignore branches using the CD workflow
       - master
       - staging
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   Main:
     runs-on: ubuntu-20.04
@@ -107,7 +108,7 @@ jobs:
       # -------------------------------------------------- #
 
       - id: latest_run_conclusion
-        name: 'Notify: Get status of previous run'
+        name: 'Notify: Get conclusion of previous run'
         uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
         # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
         if: always()
