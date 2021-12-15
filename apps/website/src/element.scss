@@ -62,4 +62,7 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
     "focus-border": var(--el-bg-color-base),
     "hover-border": var(--el-bg-color-base),
   ),
+  $tag: (
+    "font-size": var(--el-font-size-base)
+  )
 );

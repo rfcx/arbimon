@@ -24,12 +24,12 @@
         @emit-selected-species-changed="onSelectedSpeciesChange"
       />
       <el-tag
-        v-if="speciesInformation?.extinctionRisk"
-        class="ml-2 font-bold"
+        v-if="riskInformation"
+        class="ml-2 border-none"
         effect="dark"
-        type="danger"
+        :color="riskInformation.color"
       >
-        {{ speciesInformation.extinctionRisk }}
+        {{ riskInformation.label }} ({{ riskInformation.code }})
       </el-tag>
     </div>
     <species-background-information
