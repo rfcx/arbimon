@@ -4,16 +4,17 @@ import { Options, Vue } from 'vue-class-component'
 import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
 
-import { getSpeciesRichnessData, SpeciesRichnessData, TimeBucket } from '~/api/species-richness-service'
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, ComparisonFilter, ComparisonListComponent, filterToDataset, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { TimeBucket } from '~/time-buckets'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessDetectedSpecies from './components/species-richness-detected-species/species-richness-detected-species.vue'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
+import { getSpeciesRichnessData, SpeciesRichnessData } from './repository'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData, startDate: Dayjs, endDate: Dayjs, sites: Site[]}
 

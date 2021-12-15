@@ -1,5 +1,5 @@
-import { TimeBucket } from '~/api/species-richness-service'
 import { DatasetParameters } from '~/filters'
+import { TimeBucket } from '~/time-buckets'
 
 export interface ActivityPatternsData extends DatasetParameters {
   totalRecordingCount: number
