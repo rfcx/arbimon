@@ -30,9 +30,9 @@ export default class ActivityOverviewByLocation extends Vue {
 
   selectedDatasetType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
   datasetTypes: DropdownOption[] = [
-    { label: 'Detection frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
-    { label: 'Detection', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
-    { label: 'Naive occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
+    { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
+    { label: 'Detections (raw)', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
+    { label: 'Naive Occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
   ]
 
   config: MapConfig = {
