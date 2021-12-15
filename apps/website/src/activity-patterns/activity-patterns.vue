@@ -18,10 +18,20 @@
       :can-filter-by-taxon="false"
       @emit-select="onFilterChange"
     />
-    <species-selector
-      :species-slug="$route.params.speciesSlug"
-      @emit-selected-species-changed="onSelectedSpeciesChange"
-    />
+    <div class="flex items-center">
+      <species-selector
+        :species-slug="$route.params.speciesSlug"
+        @emit-selected-species-changed="onSelectedSpeciesChange"
+      />
+      <el-tag
+        v-if="speciesInformation?.extinctionRisk"
+        class="ml-2 font-bold"
+        effect="dark"
+        type="danger"
+      >
+        {{ speciesInformation.extinctionRisk }}
+      </el-tag>
+    </div>
     <species-background-information
       :species="speciesInformation"
     />
