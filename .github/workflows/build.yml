@@ -17,11 +17,12 @@ jobs:
 
       # Need to execute this early (before another run starts)
       - id: latest_run
-        name: 'Setup: Get status of previous run'
+        name: 'Setup: Get ID of previous run'
         uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
         # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
         if: always()
         with:
+          # https://docs.github.com/en/rest/reference/actions#list-workflow-runs
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
           owner: rfcx
           repo: biodiversity-analytics
@@ -31,9 +32,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Setup: Log status of previous run'
+      - name: 'Setup: Log ID of previous run'
         if: always()
-        run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion }}'
+        run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].id }}'
 
       - name: 'Setup: Git checkout'
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
@@ -105,11 +106,29 @@ jobs:
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
 
-      # Notify success if previous run was not also a success
+      - id: latest_run_conclusion
+        name: 'Notify: Get status of previous run'
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        if: always()
+        with:
+          # https://docs.github.com/en/rest/reference/actions#get-a-workflow-run
+          route: GET /repos/{owner}/{repo}/actions/runs/{run_id}
+          owner: rfcx
+          repo: biodiversity-analytics
+          run_id: fromJson(steps.latest_run.outputs.data).workflow_runs[1].id
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Notify: Log conclusion of previous run'
+        if: always()
+        run: 'echo ${{ fromJson(steps.latest_run_conclusion.outputs.data).conclusion }}'
+
       - name: 'Notify: Slack Success'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        if: always() && fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion == 'failure'
+        # Notify success if previous run was not also a success
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
         with:
           notify_when: 'success'
           status: ${{ job.status }}
@@ -122,7 +141,7 @@ jobs:
       - name: 'Notify: Get Slack User'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
-        if: always() && fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion != 'failure'
+        if: always()
         with:
           key: '${{ github.actor }}'
           map: |
@@ -147,11 +166,11 @@ jobs:
               }
             }
 
-      # Notify failure if previous run was not also a failure
       - name: 'Notify: Slack Failed'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
         # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        if: always() && fromJson(steps.latest_run.outputs.data).workflow_runs[1].conclusion != 'failure'
+        # Notify failure if previous run was not also a failure
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'failure'
         with:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
