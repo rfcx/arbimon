@@ -1,7 +1,7 @@
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
-import { TimeBucket } from '~/api/species-richness-service'
 import { DatasetParameters } from '~/filters'
+import { TimeBucket } from '~/time-buckets'
 
 export interface DetectionGroupedBySite {
   [siteId: string]: MockHourlyDetectionSummary[]
@@ -12,12 +12,12 @@ export interface DetectionGroupByDetectionKey {
 }
 
 export interface ActivityOverviewData extends DatasetParameters {
-  overviewBySite: ActicvityOverviewDataBySite
+  overviewBySite: ActivityOverviewDataBySite
   overviewByTime: ActivityOverviewDataByTime
   overviewBySpecies: ActivityOverviewDataBySpecies[]
 }
 
-export interface ActicvityOverviewDataBySite {
+export interface ActivityOverviewDataBySite {
   [siteId: string]: {
     siteId: string
     siteName: string

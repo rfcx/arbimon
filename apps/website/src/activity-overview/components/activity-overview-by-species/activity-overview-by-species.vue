@@ -1,6 +1,6 @@
 <template>
   <h2 class="text-white text-xl">
-    Detected species
+    Species detected
   </h2>
   <no-data-panel
     v-if="!hasTableData"
@@ -16,7 +16,7 @@
           <th
             v-for="(item, idx) in tableHeader"
             :key="'species-table-header-' + item.title"
-            class="font-bold capitalize p-2 bg-mirage-grey select-none"
+            class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
             :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer': item.key }"
             @click="sort(item.key)"
           >
@@ -47,7 +47,7 @@
           v-for="row in pageData"
           :key="'species-table-row-' + row.scientificName"
         >
-          <td class="p-2">
+          <td class="pt-2 px-1">
             <router-link
               :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.scientificName) }}"
               class="text-subtle hover:(underline text-white)"
@@ -97,7 +97,7 @@
           </td>
         </tr>
         <tr
-          class="h-1.5 border-b-1 border-subtle"
+          class="h-2 border-b-1 border-subtle"
         >
           <td :colspan="tableHeader.length" />
         </tr>

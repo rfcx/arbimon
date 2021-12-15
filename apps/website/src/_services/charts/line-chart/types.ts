@@ -8,6 +8,7 @@ export interface LineChartConfig {
     right: number
   }
   xBounds?: [number, number]
+  xLabels?: string[]
 }
 
 export interface LineChartSeries {

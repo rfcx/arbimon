@@ -92,7 +92,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ti
 }
 
 export async function getCSVData (dataset: TimeDataset): Promise<string> {
-  const detection = dataset.data.hour.detection
+  const detection = dataset.data.hourOfDay.detection
   const dataAsJson = Array.from(Array(23).keys()).map(n => ({
     hour: n,
     detections: detection[n] ?? 0

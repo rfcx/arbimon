@@ -27,7 +27,7 @@ export default class ActivityPatternsByLocation extends Vue {
   selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [
     { label: 'Detection Frequency', value: ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency },
-    { label: 'Detections', value: ACTIVITY_PATTERN_MAP_KEYS.detection },
+    { label: 'Detections (raw)', value: ACTIVITY_PATTERN_MAP_KEYS.detection },
     { label: 'Naive Occupancy', value: ACTIVITY_PATTERN_MAP_KEYS.occupancy }
   ]
 
