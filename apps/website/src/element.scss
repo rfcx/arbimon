@@ -46,7 +46,7 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
     "extra-small": 0.75rem,
   ),
   $select: (
-    "input-color": var(--el-bg-color-base),
+    "input-color": var(--el-bg-color-white),
     "bg-color": var(--el-bg-color-base),
     "input-focus-border-color": var(--el-text-color-placeholder),
     "input-font-size": var(--el-font-size-base)
