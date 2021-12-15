@@ -13,11 +13,16 @@ Allowed categories:
 
 # 1.0.0-rc2 (2021-12-22)
 
+## Features
+
+- **spotlight:** CSV Export [#146]
+
 ## Enhancements
 
 - **species:** Add species common name [#330]
 - **activity-overview:** Remove naive occupancy from line chart [#328]
 - **line-charts:** Show hour-of-day, day-of-week, month-of-year (remove by quarter, by year) [#325]
+- **line-chart:** Export line chart with larger font for x/y axis ticks [#327]
 
 ## Bug Fixes
 
