@@ -11,14 +11,15 @@ Allowed categories:
 --->
 
 
-# x.x.x (2021-12-22)
+# 1.0.0-rc2 (2021-12-22)
 
 ## Enhancements
 
 - **species:** Add species common name [#330]
 - **activity-overview:** Remove naive occupancy from line chart [#328]
+- **line-charts:** Show hour-of-day, day-of-week, month-of-year (remove by quarter, by year) [#325]
 
-## Fix bugs
+## Bug Fixes
 
 - **spotlight:** Correct IUCN citation [#321]
 
