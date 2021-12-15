@@ -1,18 +1,5 @@
 <template>
   <!-- TODO #188 #189 Handle loading and error case -->
-  <!-- <div class="flex items-center mb-2">
-    <div class="text-lg">
-      {{ species?.scientificName }} <span v-if="species?.commonName ">({{ species.commonName }})</span>
-    </div>
-    <el-tag
-      v-if="species?.extinctionRisk"
-      class="ml-2 font-bold"
-      effect="dark"
-      type="danger"
-    >
-      {{ species.extinctionRisk }}
-    </el-tag>
-  </div> -->
   <div
     v-if="iucnSpeciesInformation || wikiSpeciesInformation"
     class="grid grid-cols-6"
