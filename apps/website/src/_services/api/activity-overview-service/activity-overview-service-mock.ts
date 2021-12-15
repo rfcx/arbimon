@@ -4,7 +4,7 @@ import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '~/api/activity-overview-service'
+import { ActivityOverviewData, ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '~/api/activity-overview-service'
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 
 export class ActivityOverviewService {
@@ -27,7 +27,7 @@ export class ActivityOverviewService {
     return new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
   }
 
-  async getOverviewDataBySite (detectionsBySites: DetectionGroupedBySite): Promise<ActicvityOverviewDataBySite> {
+  async getOverviewDataBySite (detectionsBySites: DetectionGroupedBySite): Promise<ActivityOverviewDataBySite> {
     const summariesBySites = mapValues(detectionsBySites, (detections, siteId) => {
       const totalRecordingCount = this.getRecordingCount(detections)
       const detectionCount = sum(detections.map(d => d.num_of_recordings))
@@ -68,36 +68,24 @@ export class ActivityOverviewService {
   }
 
   calculateOverviewDataByTime (totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime {
-    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
-    const hour = {
-      detection: mapValues(hourGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
+    const byHour = groupByNumber(speciesSummaries, d => d.hour)
+    const byDay = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
+    const byMonth = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
 
-    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).date())
-    const day = {
-      detection: mapValues(dayGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    return {
+      hourOfDay: {
+        detection: mapValues(byHour, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byHour, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      dayOfWeek: {
+        detection: mapValues(byDay, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byDay, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      monthOfYear: {
+        detection: mapValues(byMonth, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byMonth, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      }
     }
-
-    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month() + 1)
-    const month = {
-      detection: mapValues(monthGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-
-    const yearGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).year())
-    const year = {
-      detection: mapValues(yearGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-
-    const quarterGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).quarter())
-    const quarter = {
-      detection: mapValues(quarterGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(quarterGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-    return { hour, day, month, year, quarter }
   }
 
   async getOverviewDataBySpecies (totalSummaries: MockHourlyDetectionSummary[]): Promise<ActivityOverviewDataBySpecies[]> {

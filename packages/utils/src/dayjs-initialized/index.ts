@@ -1,13 +1,13 @@
 // eslint-disable-next-line regex/invalid -- this is the one place we import & configure da
 import dayjsBase from 'dayjs'
+import isoWeek from 'dayjs/plugin/isoWeek'
 import minMax from 'dayjs/plugin/minMax'
 import pluralGetSet from 'dayjs/plugin/pluralGetSet'
-import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 import utc from 'dayjs/plugin/utc'
 
-dayjsBase.extend(utc)
-dayjsBase.extend(quarterOfYear)
-dayjsBase.extend(pluralGetSet)
+dayjsBase.extend(isoWeek)
 dayjsBase.extend(minMax)
+dayjsBase.extend(pluralGetSet)
+dayjsBase.extend(utc)
 
 export const dayjs = dayjsBase

@@ -72,40 +72,26 @@ export class ActivityPatternsService {
 
   getActvityDataByTime (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivityPatternsDataByTime {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
-
     const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
     const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
-    const hour = {
+    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
+    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
+
+    return {
+      hourOfDay: {
       detection: mapValues(hourGrouped, this.calculateDetectionActivity),
       detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-
-    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).date())
-    const day = {
+    },
+    dayOfWeek: {
       detection: mapValues(dayGrouped, this.calculateDetectionActivity),
       detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-
-    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month() + 1)
-    const month = {
+    },
+    monthOfYear: {
       detection: mapValues(monthGrouped, this.calculateDetectionActivity),
       detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
     }
-
-    const yearGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).year())
-    const year = {
-      detection: mapValues(yearGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-
-    const quarterGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).quarter())
-    const quarter = {
-      detection: mapValues(quarterGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(quarterGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
-
-    return { hour, day, month, year, quarter }
+   }
   }
 }
 

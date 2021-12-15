@@ -2,8 +2,7 @@ import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
 
 import { DatasetParameters } from '~/filters'
 import { MapSiteData } from '~/maps/map-bubble'
-
-export type TimeBucket = 'hour' | 'day' | 'month' | 'year' | 'quarter'
+import { TimeBucket } from '~/time-buckets'
 
 export interface SpeciesRichnessData extends DatasetParameters {
   detectionCount: number
