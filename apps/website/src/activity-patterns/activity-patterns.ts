@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species'
 import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
@@ -42,6 +43,7 @@ export default class ActivityPatternsPage extends Vue {
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
   speciesInformation: Species | null = null
+  riskInformation: ExtinctionRisk | null = null
 
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0
@@ -91,6 +93,7 @@ export default class ActivityPatternsPage extends Vue {
       const speciesInformation = await getSpecies(scientificName)
       if (this.species?.scientificName === scientificName) {
         this.speciesInformation = speciesInformation ?? null
+        this.riskInformation = speciesInformation?.extinctionRisk ? getExtinctionRisk(speciesInformation.extinctionRisk) : null
       }
     } catch (e) {
       // TODO 167: Error handling
