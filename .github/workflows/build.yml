@@ -116,7 +116,7 @@ jobs:
           route: GET /repos/{owner}/{repo}/actions/runs/{run_id}
           owner: rfcx
           repo: biodiversity-analytics
-          run_id: fromJson(steps.latest_run.outputs.data).workflow_runs[1].id
+          run_id: ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].id }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
