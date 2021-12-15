@@ -22,4 +22,4 @@
     </template>
   </div>
 </template>
-<script lang="ts" src="./metrics.ts"></script>
+<script lang="ts" src="./spotlight-metrics"></script>

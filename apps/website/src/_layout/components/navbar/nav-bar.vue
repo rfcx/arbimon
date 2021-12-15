@@ -92,4 +92,4 @@
     />
   </div>
 </template>
-<script src="./navbar.ts" lang="ts"></script>
+<script src="./nav-bar" lang="ts"></script>

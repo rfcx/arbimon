@@ -31,4 +31,4 @@
     </div>
   </div>
 </template>
-<script src="./home.ts" lang="ts"></script>
+<script src="./home-page" lang="ts"></script>
