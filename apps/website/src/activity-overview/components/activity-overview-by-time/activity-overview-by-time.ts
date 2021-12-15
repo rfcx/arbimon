@@ -27,7 +27,7 @@ export default class ActivityOverviewByTime extends Vue {
   selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
     { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
-    { label: 'Detections', value: ACTIVITY_OVERVIEW_TIME_KEYS.detection }
+    { label: 'Detections (raw)', value: ACTIVITY_OVERVIEW_TIME_KEYS.detection }
   ]
 
   selectedBucket: TimeBucket = 'hourOfDay'

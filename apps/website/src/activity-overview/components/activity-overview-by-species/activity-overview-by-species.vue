@@ -1,6 +1,6 @@
 <template>
   <h2 class="text-white text-xl">
-    Detected species
+    Species detected
   </h2>
   <no-data-panel
     v-if="!hasTableData"
