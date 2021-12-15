@@ -5,8 +5,11 @@
       page-subtitle="An in-depth look at the detections and occupancy trends of a single species"
     >
       <dropdown-menu>
-        <dropdown-menu-item>
-          <icon-fas-hammer class="mr-2" /> TODO
+        <dropdown-menu-item
+          :disabled="!hasExportData"
+          @click="exportDetectionsData"
+        >
+          <icon-fas-hammer class="mr-2" /> Export as CSV
         </dropdown-menu-item>
       </dropdown-menu>
     </page-title>

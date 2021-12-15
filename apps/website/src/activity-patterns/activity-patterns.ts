@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
 
-import { transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
+import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { activityPatternsService } from '~/api/activity-patterns-service'
 import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
@@ -16,6 +16,8 @@ import ActivityPatternsPredictedOccupancy from './components/activity-patterns-p
 import ActivityPatternsMetrics from './components/metrics/metrics.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
+
+const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
 @Options({
   components: {
@@ -38,6 +40,10 @@ export default class ActivityPatternsPage extends Vue {
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
+
+  get hasExportData (): boolean {
+    return this.timeDatasets.length > 0
+  }
 
   async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
     const speciesSlug = species?.speciesSlug
@@ -71,5 +77,10 @@ export default class ActivityPatternsPage extends Vue {
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
+  }
+
+  async exportDetectionsData (): Promise<void> {
+    const prefix = this.species ? `${DEFAULT_PREFIX}-${this.species?.speciesSlug}` : DEFAULT_PREFIX
+    await exportDetectionCSV(this.filters, this.timeDatasets, prefix)
   }
 }

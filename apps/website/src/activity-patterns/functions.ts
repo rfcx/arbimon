@@ -1,5 +1,8 @@
+import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+
+import { TimeDataset } from '@/activity-overview/types'
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
-import { ColoredFilter } from '~/filters'
+import { ColoredFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
 
@@ -71,4 +74,28 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
 
     return { startDate, endDate, sites, color, data, maxValues }
   })
+}
+
+export async function exportDetectionCSV (filters: ColoredFilter[], datasets: TimeDataset[], reportPrefix: string): Promise<void> {
+  const exportDateTime = getExportDateTime()
+  const groupName = getExportGroupName(reportPrefix, exportDateTime)
+
+  const files: FileData[] = await Promise.all(
+    filters.map(async ({ startDate, endDate, sites }, idx) => {
+      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites) + '.csv'
+      const data = await getCSVData(datasets[idx])
+      return { filename, data }
+    })
+  )
+
+  await zipAndDownload(files, groupName)
+}
+
+export async function getCSVData (dataset: TimeDataset): Promise<string> {
+  const detection = dataset.data.hour.detection
+  const dataAsJson = Array.from(Array(23).keys()).map(n => ({
+    hour: n,
+    detections: detection[n] ?? 0
+  }))
+  return await toCsv(dataAsJson)
 }
