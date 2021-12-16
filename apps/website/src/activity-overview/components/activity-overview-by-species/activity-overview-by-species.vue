@@ -47,35 +47,39 @@
           v-for="row in pageData"
           :key="'species-table-row-' + row.scientificName"
         >
-          <td class="pt-2 px-1">
-            <router-link
-              :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.scientificName) }}"
-              class="text-subtle hover:(underline text-white)"
-            >
-              <span class="text-white italic">{{ row.scientificName }}</span>
-              <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
-              <p
-                v-if="row.commonName"
-                class="text-xs"
+          <td class="pt-2 px-1 flex">
+            <div v-if="tableData.length > 1">
+              <span
+                class="border-l-4 pl-1"
+                :style="`border-color:${row.color}`"
+              />
+            </div>
+            <div>
+              <router-link
+                :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.scientificName) }}"
+                class="text-subtle hover:(underline text-white)"
               >
-                {{ row.commonName }}
-              </p>
-              <p
-                v-else
-                class="invisible"
-              >
-                Unknown
-              </p>
-            </router-link>
+                <span class="text-white italic">{{ row.scientificName }}</span>
+                <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
+                <p
+                  v-if="row.commonName"
+                  class="text-xs"
+                >
+                  {{ row.commonName }}
+                </p>
+                <p
+                  v-else
+                  class="invisible text-xs"
+                >
+                  Unknown
+                </p>
+              </router-link>
+            </div>
           </td>
           <td class="p-2">
             {{ row.taxon }}
           </td>
-          <td
-            class="p-2 text-center"
-            :class="tableData.length > 1 ? 'border-l-4' : ''"
-            :style="tableData.length > 1 ? `border-color:${row.color}` : ''"
-          >
+          <td class="p-2 text-center">
             {{ row.detectionCount }}
           </td>
           <td class="p-2 text-center">
