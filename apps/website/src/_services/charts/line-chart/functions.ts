@@ -99,7 +99,6 @@ export const generateChartInternal = (datasets: LineChartSeries[], config: LineC
 }
 
 export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig, xTitle: string, yTitle: string): SVGSVGElement | null => {
-  console.log(config, config.margins)
   const { width, height, margins } = config
   const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + Y_AXIS_GAP } }
   const svg = generateChart(datasets, newConfig)
