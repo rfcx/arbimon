@@ -48,6 +48,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   inputFilter = ''
   isAllMatchedFilteredChecked = false
   selectedSites: Site[] = []
+  tempSelectedSites: Site[] = []
   siteCheckboxItems: SiteCheckbox[] = []
   readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
@@ -89,6 +90,15 @@ export default class ComparisonFilterModalComponent extends Vue {
       this.endDate = this.initialValues.endDate?.format(DATE_FORMAT)
       this.otherFilters = this.initialValues.otherFilters.map(f => ({ ...f }))
     }
+  }
+
+  onFilterType (query: string): void {
+    this.inputFilter = query
+  }
+
+  onRemoveSiteTags (value: Site): Site[] {
+    this.selectedSites = this.selectedSites.filter(s => s.siteId !== value.siteId)
+    return this.selectedSites
   }
 
   setDefaultSelectedSites (): void {

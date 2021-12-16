@@ -27,9 +27,6 @@
 <script src="./species-selector.ts" lang="ts"></script>
 <style lang="scss">
 .species-input * > .el-input {
-  &__suffix * > .el-icon.el-select__caret {
-    display: flex;
-  }
   &__inner {
     font-style: italic;
   }
@@ -40,6 +37,12 @@
         box-shadow: none;
       }
   }
+}
+.species-input .select-trigger {
+  width: 300px;
+  & .el-input * > .el-icon.el-select__caret {
+      display: flex;
+    }
 }
 .el-popper.is-light .el-popper__arrow::before {
   background: #141525;
