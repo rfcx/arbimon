@@ -8,6 +8,7 @@ import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { svgToPngData } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
@@ -54,12 +55,12 @@ export default class ActivityPatternsByTime extends Vue {
   }
 
   async downloadChart (): Promise<void> {
-    const margins = { ...this.config.margins, bottom: 80, left: 50 }
+    const margins = { ...this.config.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
     const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
     const png = await svgToPngData({ svg, ...exportConfig })
-    downloadPng(png, `${this.domId}-${this.selectedBucket}`) // TODO 107 - Better filename
+    downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`)) // TODO 107 - Better filename
   }
 }
