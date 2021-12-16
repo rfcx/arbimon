@@ -54,7 +54,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   pageIndex = 1 // 1-based for humans
   pageSize = 10
   sortColumn: SortableColumn = 'detectionCount'
-  sortDirection: SortDirection = SORTABLE_COLUMNS.detectionCount.defaultDirection
+  sortDirection: SortDirection = SORTABLE_COLUMNS.scientificName.defaultDirection
 
   get tableHeader (): Header[] {
     return [
