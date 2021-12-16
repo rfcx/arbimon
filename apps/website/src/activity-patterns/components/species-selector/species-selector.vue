@@ -4,7 +4,7 @@
     filterable
     :filter-method="onFilterType"
     :loading="loadingSpecies"
-    class="bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="species-input bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <el-option
       v-for="species in filteredSpecies"
@@ -26,19 +26,19 @@
 </template>
 <script src="./species-selector.ts" lang="ts"></script>
 <style lang="scss">
-.el-input {
+.species-input * > .el-input {
+  &__suffix * > .el-icon.el-select__caret {
+    display: flex;
+  }
   &__inner {
     font-style: italic;
   }
-  & [type='text'] {
+  [type='text'] {
     background-color: #141525;
     border-radius: 0.25rem;
       &:focus {
         box-shadow: none;
       }
-  }
-  &__inner[type='text'] {
-    max-width: 300px;
   }
 }
 .el-popper.is-light .el-popper__arrow::before {
