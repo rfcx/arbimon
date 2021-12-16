@@ -16,6 +16,7 @@ Allowed categories:
 ## Features
 
 - **spotlight:** CSV Export [#146]
+- **spotlight:** Show extinction risk level [#320]
 
 ## Enhancements
 
@@ -23,6 +24,7 @@ Allowed categories:
 - **activity-overview:** Remove naive occupancy from line chart [#328]
 - **line-charts:** Show hour-of-day, day-of-week, month-of-year (remove by quarter, by year) [#325]
 - **line-chart:** Export line chart with larger font for x/y axis ticks [#327]
+- **activity-overview:** Reconnecting filter to the page content and improve the table UI [#312]
 
 ## Bug Fixes
 
