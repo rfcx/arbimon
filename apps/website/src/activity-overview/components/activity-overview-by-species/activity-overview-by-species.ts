@@ -24,27 +24,27 @@ const SORT_DESC: SortDirection = -1
 const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection, sortFunction: (e1: SpeciesDataWithColorAndDatasetIndex, e2: SpeciesDataWithColorAndDatasetIndex) => number }> = {
   scientificName: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.scientificName.localeCompare(e2.scientificName) || e2.datasetIdx - e1.datasetIdx
+    sortFunction: (e1, e2) => e1.scientificName.localeCompare(e2.scientificName)
   },
   taxon: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon) || e2.datasetIdx - e1.datasetIdx
+    sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon)
   },
   detectionCount: {
     defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => e1.detectionCount - e2.detectionCount || e2.datasetIdx - e1.datasetIdx
+    sortFunction: (e1, e2) => e1.detectionCount - e2.detectionCount
   },
   detectionFrequency: {
     defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => e1.detectionFrequency - e2.detectionFrequency || e2.datasetIdx - e1.datasetIdx
+    sortFunction: (e1, e2) => e1.detectionFrequency - e2.detectionFrequency
   },
   occupiedSites: {
     defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => e1.occupiedSites - e2.occupiedSites || e2.datasetIdx - e1.datasetIdx
+    sortFunction: (e1, e2) => e1.occupiedSites - e2.occupiedSites
   },
   occupancyNaive: {
     defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => e1.occupancyNaive - e2.occupancyNaive || e2.datasetIdx - e1.datasetIdx
+    sortFunction: (e1, e2) => e1.occupancyNaive - e2.occupancyNaive
   }
 }
 
