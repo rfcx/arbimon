@@ -2,9 +2,13 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { downloadPng } from '@rfcx-bio/utils/file'
+
 import { TimeDataset } from '@/activity-overview/types'
 import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
-import { LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { svgToPngData } from '~/charts'
+import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
@@ -48,5 +52,15 @@ export default class ActivityOverviewByTime extends Vue {
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
+  }
+
+  async downloadChart (): Promise<void> {
+    const margins = { ...this.config.margins, bottom: 80, left: 50 }
+    const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
+    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
+    if (!svg) return
+
+    const png = await svgToPngData({ svg, ...exportConfig })
+    downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }
