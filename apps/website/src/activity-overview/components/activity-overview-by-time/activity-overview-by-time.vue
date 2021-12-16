@@ -30,6 +30,7 @@
           </option>
         </select>
       </div>
+      <export-button v-if="hasData" @click="downloadChart()" />
     </div>
     <line-chart-component
       :dom-id="domId"
@@ -38,4 +39,5 @@
     />
   </div>
 </template>
-<script lang="ts" src="./activity-overview-by-time.ts"></script>
+<script lang="ts" src="./activity-overview-by-time.ts">
+ </script>
