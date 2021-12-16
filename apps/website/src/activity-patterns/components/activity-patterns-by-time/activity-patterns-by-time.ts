@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
@@ -48,8 +49,13 @@ export default class ActivityPatternsByTime extends Vue {
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
   }
 
+  get hasData (): boolean {
+    return this.datasetsForSelectedBucket.some(({ data }) => !isEmpty(data))
+  }
+
   async downloadChart (): Promise<void> {
-    const exportConfig = { ...this.config, width: 800, height: 450 }
+    const margins = { ...this.config.margins, bottom: 80, left: 50 }
+    const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
     const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 

@@ -30,6 +30,10 @@
           </option>
         </select>
       </div>
+      <export-button
+        v-if="hasData"
+        @click="downloadChart()"
+      />
     </div>
     <line-chart-component
       :dom-id="domId"
