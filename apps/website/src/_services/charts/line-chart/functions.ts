@@ -1,9 +1,7 @@
 import * as d3 from 'd3'
 
-import { generateHorizontalLegend, getLegendGroupNames } from '..'
+import { generateHorizontalLegend, getLegendGroupNames, Y_AXIS_GAP } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
-
-const X_TITLE_MARGIN_TOP = 50
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data
@@ -88,7 +86,7 @@ export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, 
   svg.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0)
-      .attr('x', 0 - ((chartHeight - X_TITLE_MARGIN_TOP) / 2))
+      .attr('x', 0 - ((chartHeight - Y_AXIS_GAP) / 2))
       .attr('dy', '1em')
       .attr('fill', 'currentColor')
       .style('text-anchor', 'middle')
@@ -101,16 +99,17 @@ export const generateChartInternal = (datasets: LineChartSeries[], config: LineC
 }
 
 export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig, xTitle: string, yTitle: string): SVGSVGElement | null => {
+  console.log(config, config.margins)
   const { width, height, margins } = config
-  const extendedMarginBottom = margins.bottom + X_TITLE_MARGIN_TOP
-  const svg = generateChart(datasets, { ...config, margins: { ...margins, bottom: extendedMarginBottom } })
+  const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + Y_AXIS_GAP } }
+  const svg = generateChart(datasets, newConfig)
 
   const labels = getLegendGroupNames(datasets.length)
   const colors = datasets.map(d => d.color)
   const chartHeight = height - margins.bottom
 
   generateAxisTitle(svg, width, chartHeight, xTitle, yTitle)
-  generateHorizontalLegend(width, chartHeight, labels, colors, svg)
+  generateHorizontalLegend(width, chartHeight - (Y_AXIS_GAP / 2), labels, colors, svg)
 
   svg.selectAll('text')
     .style('font-size', '1.25rem')

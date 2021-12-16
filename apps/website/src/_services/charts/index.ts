@@ -8,8 +8,8 @@ export interface ChartSVGElement {
   height: number
 }
 
-const LEGEND_MARGIN_TOP = 50
-const LEGEND_ITEM_WIDTH = 100
+export const Y_AXIS_GAP = 50
+const LEGEND_ITEM_WIDTH = 80
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
@@ -76,7 +76,7 @@ export const clearChart = (id: string): void => {
 
 export function generateHorizontalLegend <T extends d3.BaseType> (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<T, undefined, null, undefined>): void {
   const xStartPosition = ((width - (labels.length * LEGEND_ITEM_WIDTH)) / 2)
-  const yPosition = chartHeight + LEGEND_MARGIN_TOP
+  const yPosition = chartHeight + Y_AXIS_GAP
 
   const legend = svg.selectAll('.legend')
     .data(labels)
