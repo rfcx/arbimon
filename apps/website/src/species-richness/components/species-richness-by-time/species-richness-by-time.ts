@@ -37,7 +37,7 @@ export default class SpeciesRichnessByTime extends Vue {
   }
 
   async downloadChart (): Promise<void> {
-    const margins = { ...this.config.margins, bottom: 80 }
+    const margins = { ...this.config.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
     const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
