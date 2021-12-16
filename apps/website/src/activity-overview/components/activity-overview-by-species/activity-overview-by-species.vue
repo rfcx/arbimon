@@ -45,7 +45,7 @@
       <tbody>
         <tr
           v-for="(row, idx) in pageData"
-          :key="'species-table-row-' + row.scientificName + idx"
+          :key="'species-table-row-' + row.scientificName + row.datasetIdx"
         >
           <td class="pt-2 px-1 flex">
             <div v-if="tableData.length > 1">
