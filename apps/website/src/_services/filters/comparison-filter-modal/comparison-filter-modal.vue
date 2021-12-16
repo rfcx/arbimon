@@ -47,35 +47,37 @@
           <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
             Filter results from some sites only
           </h2>
-          <el-input
-            v-model="inputFilter"
-            class="mx-2 mb-2"
-            placeholder="Filter site..."
-          />
-          <label
-            v-if="inputFilter && filterInputSites.length > 0"
-            class="px-4 pb-2 align-middle list-item"
-          ><input
-            v-model="isAllMatchedFilteredChecked"
-            class="rounded"
-            type="checkbox"
-            @click="updateSelectedAllFilterSites()"
-          ><span class="text-white ml-2">Select matched sites start with '{{ inputFilter }}'</span></label>
-          <label
-            v-for="(item) in filterInputSites"
-            :key="'site-list-' + item.site.siteId"
-            class="px-4 pb-2 align-middle list-item"
+
+          <el-select
+            v-model="selectedSites"
+            value-key="siteId"
+            multiple
+            filterable
+            :filter-method="onFilterType"
+            fit-input-width
+            reserve-keyword
+            placeholder=" "
+            class="search-select mx-2 mb-2"
           >
-            <input
-              type="checkbox"
-              class="rounded"
-              :checked="item.check"
-              @click="updateSelectedSites(item)"
-            >
-            <span class="text-white ml-2">{{ item.site.name }}</span>
-          </label>
+            <el-option
+              v-for="(item) in filterInputSites"
+              :key="'site-list-' + item.site.siteId"
+              :label="item.site.name"
+              :value="item.site"
+            />
+          </el-select>
+          <el-tag
+            v-for="site in selectedSites"
+            :key="site.siteId"
+            class="ml-2 mb-2"
+            closable
+            effect="dark"
+          >
+            {{ site.name }}
+          </el-tag>
         </div>
       </div>
+
       <!-- Taxon -->
       <div
         v-else-if="currentActiveMenuId === 'taxon'"
@@ -137,3 +139,27 @@
   </modal-popup>
 </template>
 <script src="./comparison-filter-modal.ts" lang="ts"></script>
+<style lang="scss">
+.search-select {
+  .select-trigger{
+    width: 500px;
+    background-color: #141525;
+    & .el-input * > .el-icon.el-select__caret {
+      display: flex;
+    }
+  }
+  span.el-tag {
+    display: none;
+  }
+  * > input {
+    background-color: #141525;
+    border-radius: 0.25rem;
+  }
+  & * > .el-select__input {
+    margin: 0 0 0 2px;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+</style>
