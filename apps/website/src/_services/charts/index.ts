@@ -100,25 +100,6 @@ export function generateHorizontalLegend <T extends d3.BaseType> (width: number,
     .style('font-size', '14px')
 }
 
-export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, width: number, height: number): void {
-  svg.append('text')
-      .attr('y', height)
-      .attr('x', width / 2)
-      .attr('dx', '1em')
-      .attr('fill', 'currentColor')
-      .style('text-anchor', 'middle')
-      .text('X Axis')
-
-  svg.append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0)
-      .attr('x', 0 - (height / 2))
-      .attr('dy', '1em')
-      .attr('fill', 'currentColor')
-      .style('text-anchor', 'middle')
-      .text('Y Axis')
-}
-
 export function getLegendGroupNames (totalGroup: number): string[] {
   return [...Array(totalGroup).keys()].map(n => `Dataset ${n + 1}`)
 }
