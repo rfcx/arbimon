@@ -68,10 +68,11 @@
           </el-select>
           <el-tag
             v-for="site in selectedSites"
-            :key="site.siteId"
+            :key="'site-tag-'+ site.siteId"
             class="ml-2 mb-2"
             closable
             effect="dark"
+            @close="onRemoveSiteTags(site)"
           >
             {{ site.name }}
           </el-tag>
