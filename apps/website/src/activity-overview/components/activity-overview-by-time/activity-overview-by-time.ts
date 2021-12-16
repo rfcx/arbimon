@@ -66,7 +66,6 @@ export default class ActivityOverviewByTime extends Vue {
     if (!svg) return
 
     const png = await svgToPngData({ svg, ...exportConfig })
-    console.log(getExportGroupName(`${this.domId}-${this.selectedBucket}`))
     downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }
