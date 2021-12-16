@@ -1,7 +1,9 @@
 import * as d3 from 'd3'
 
-import { generateAxisTitle, generateHorizontalLegend, getLegendGroupNames } from '..'
+import { generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
+
+const X_TITLE_MARGIN_TOP = 50
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data
@@ -74,18 +76,41 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
   return svg
 }
 
+export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, width: number, chartHeight: number, xTitle: string, yTitle: string): void {
+  svg.append('text')
+      .attr('y', chartHeight)
+      .attr('x', width / 2)
+      .attr('dx', '1em')
+      .attr('fill', 'currentColor')
+      .style('text-anchor', 'middle')
+      .text(xTitle)
+
+  svg.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0)
+      .attr('x', 0 - ((chartHeight - X_TITLE_MARGIN_TOP) / 2))
+      .attr('dy', '1em')
+      .attr('fill', 'currentColor')
+      .style('text-anchor', 'middle')
+      .text(yTitle)
+}
+
 export const generateChartInternal = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   const svg = generateChart(datasets, config)
   return svg.node()
 }
 
-export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
-  const svg = generateChart(datasets, config)
+export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig, xTitle: string, yTitle: string): SVGSVGElement | null => {
+  const { width, height, margins } = config
+  const extendedMarginBottom = margins.bottom + X_TITLE_MARGIN_TOP
+  const svg = generateChart(datasets, { ...config, margins: { ...margins, bottom: extendedMarginBottom } })
 
   const labels = getLegendGroupNames(datasets.length)
   const colors = datasets.map(d => d.color)
-  generateAxisTitle(svg, config.width, config.height)
-  generateHorizontalLegend(config.width, config.height - config.margins.bottom, labels, colors, svg)
+  const chartHeight = height - margins.bottom
+
+  generateAxisTitle(svg, width, chartHeight, xTitle, yTitle)
+  generateHorizontalLegend(width, chartHeight, labels, colors, svg)
 
   svg.selectAll('text')
     .style('font-size', '1.25rem')

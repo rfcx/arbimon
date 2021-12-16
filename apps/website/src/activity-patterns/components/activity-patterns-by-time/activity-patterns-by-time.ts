@@ -19,6 +19,11 @@ interface DropDownOption {
   value: ActivityPatternsDataByTimeType
 }
 
+const DATASET_LABELS = {
+  [ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency]: 'Detection Frequency',
+  [ACTIVITY_PATTERN_TIME_KEYS.detection]: 'Detections (raw)'
+}
+
 @Options({
   components: {
     LineChartComponent
@@ -30,8 +35,8 @@ export default class ActivityPatternsByTime extends Vue {
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
-    { label: 'Detection Frequency', value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
-    { label: 'Detections (raw)', value: ACTIVITY_PATTERN_TIME_KEYS.detection }
+    { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detection], value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
+    { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detection], value: ACTIVITY_PATTERN_TIME_KEYS.detection }
   ]
 
   selectedBucket: TimeBucket = 'hourOfDay'
@@ -57,7 +62,7 @@ export default class ActivityPatternsByTime extends Vue {
   async downloadChart (): Promise<void> {
     const margins = { ...this.config.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
-    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
+    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig, TIME_BUCKET_LABELS[this.selectedBucket], DATASET_LABELS[this.selectedType])
     if (!svg) return
 
     const png = await svgToPngData({ svg, ...exportConfig })
