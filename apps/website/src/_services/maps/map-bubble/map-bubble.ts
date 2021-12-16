@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es'
-import { CirclePaint, GeoJSONSource, LngLatBounds, Map as MapboxMap, Popup } from 'mapbox-gl'
+import { CirclePaint, GeoJSONSource, LngLatBounds, Map as MapboxMap, NavigationControl, Popup } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
@@ -64,6 +64,9 @@ export default class MapBubbleComponent extends Vue {
       })
       .on('style.load', () => { this.generateChartNextTick(false) })
       .on('move', () => { if (!this.isSynchronizingMapPosition) this.emitMapMoved() })
+
+    this.map.scrollZoom.disable()
+    this.map.addControl(new NavigationControl(), 'bottom-right')
   }
 
   @Watch('dataset', { deep: true })
