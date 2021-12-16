@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { generateHorizontalLegend, getLegendGroupNames } from '..'
+import { generateAxisTitle, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
@@ -84,6 +84,7 @@ export const generateChartExport = (datasets: LineChartSeries[], config: LineCha
 
   const labels = getLegendGroupNames(datasets.length)
   const colors = datasets.map(d => d.color)
+  generateAxisTitle(svg, config.width, config.height)
   generateHorizontalLegend(config.width, config.height - config.margins.bottom, labels, colors, svg)
 
   svg.selectAll('text')
