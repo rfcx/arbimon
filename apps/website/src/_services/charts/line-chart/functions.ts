@@ -16,6 +16,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
 
   const xLabels = config.xLabels
   const xTickFormatter = xLabels ? (val: d3.NumberValue): string => xLabels[val.valueOf()] : d3.format('d')
+  const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? d3.format('d')(val) : d3.format('.1e')(val)
 
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(0, ${config.height - config.margins.bottom})`)
@@ -27,7 +28,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
 
   const yAxis = (g: any): unknown => g
     .attr('transform', `translate(${config.margins.left}, 0)`)
-    .call(d3.axisLeft(yScale))
+    .call(d3.axisLeft(yScale).tickFormat(yTickFormatter))
 
   // Render chart
   const svg = d3.create('svg')
