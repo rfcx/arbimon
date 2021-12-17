@@ -31,11 +31,11 @@
       >
         {{ riskInformation.label }} ({{ riskInformation.code }})
       </el-tag>
-      <!-- <spotlight-player
+      <spotlight-player
         v-if="speciesInformation?.speciesCall"
         :species-call="speciesInformation.speciesCall"
         class="ml-2"
-      /> -->
+      />
     </div>
     <species-background-information
       :species="speciesInformation"
