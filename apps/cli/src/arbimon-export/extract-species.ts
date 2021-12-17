@@ -60,7 +60,7 @@ const transformToMediaURL = (data: ArbimonSpeciesCallRow[]): SpeciesCall[] =>
       recordedAt,
       timezone,
       mediaWavUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_fwav.wav`,
-      mediaSpecUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_fspec.png`
+      mediaSpecUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}.d512.512_fspec.png`
   }))
 
 await main()
