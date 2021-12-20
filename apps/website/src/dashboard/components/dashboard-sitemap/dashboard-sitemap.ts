@@ -6,7 +6,7 @@ import { BiodiversityStore } from '~/store'
 import { generatePopupHtml, transformToMapDataset } from './functions'
 
 @Options({
-  components: { 
+  components: {
     MapBubbleComponent
   }
 })

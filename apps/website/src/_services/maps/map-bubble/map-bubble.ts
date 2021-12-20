@@ -8,7 +8,7 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 import { exportChartWithElement } from '~/charts'
 import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
-import { MapMoveEvent, MapDataSet, MapSiteData } from './types'
+import { MapDataSet, MapMoveEvent, MapSiteData } from './types'
 
 const DEFAULT_FILL_COLOR = '#111111'
 const DEFAULT_STROKE_COLOR = '#EEEEEE'

@@ -4,11 +4,11 @@ import { Inject, Prop } from 'vue-property-decorator'
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
 import { getExportFilterName } from '~/filters'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapMoveEvent, MapDataSet } from '~/maps/map-bubble'
+import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { BiodiversityStore } from '~/store'
- 
+
 interface DatasetType {
   label: string
   value: string
