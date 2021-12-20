@@ -1,8 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio-types/project-species'
-import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
-import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
@@ -16,6 +15,7 @@ import ActivityPatternsByLocation from './components/activity-patterns-by-locati
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
 import ActivityPatternsPredictedOccupancy from './components/activity-patterns-predicted-occupancy/activity-patterns-predicted-occupancy.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
+import SpeciesImages from './components/species-images/species-images.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
@@ -30,6 +30,7 @@ const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
     ActivityPatternsPredictedOccupancy,
     ComparisonListComponent,
     SpeciesBackgroundInformation,
+    SpeciesImages,
     SpeciesSelector,
     SpotlightPlayer
   }
@@ -45,10 +46,13 @@ export default class ActivityPatternsPage extends Vue {
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
   speciesInformation: Species | null = null
-  riskInformation: ExtinctionRisk | null = null
 
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0
+  }
+
+  get speciesCall (): SpeciesCall | null {
+    return this.speciesInformation?.speciesCall ?? null
   }
 
   async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
@@ -95,7 +99,6 @@ export default class ActivityPatternsPage extends Vue {
       const speciesInformation = await getSpecies(scientificName)
       if (this.species?.scientificName === scientificName) {
         this.speciesInformation = speciesInformation ?? null
-        this.riskInformation = speciesInformation?.extinctionRisk ? getExtinctionRisk(speciesInformation.extinctionRisk) : null
       }
     } catch (e) {
       // TODO 167: Error handling

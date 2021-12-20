@@ -4,8 +4,8 @@ import { Inject, Prop } from 'vue-property-decorator'
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
 import { getExportFilterName } from '~/filters'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { BiodiversityStore } from '~/store'
 
@@ -24,7 +24,6 @@ const DEFAULT_PREFIX = 'Patterns-By-Site'
 })
 export default class ActivityPatternsByLocation extends Vue {
   @Inject() readonly store!: BiodiversityStore
-
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
@@ -38,11 +37,7 @@ export default class ActivityPatternsByLocation extends Vue {
   mapStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
-  config: MapConfig = {
-    sourceMapId: '',
-    center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
-    zoom: 9
-  }
+  mapMoveEvent: MapMoveEvent | null = null
 
   get columnCount (): number {
     switch (this.datasets.length) {
@@ -51,7 +46,11 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
-  propagateMapMove (config: MapConfig): void { this.config = config }
+  get hasData (): boolean {
+    return this.datasets.length > 0
+  }
+
+  propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 

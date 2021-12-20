@@ -37,7 +37,7 @@ async function main (): Promise<void> {
   // Write output
   const json = JSON.stringify(speciesOutput, null, 2)
   fs.writeFileSync(outputFilePath, json, 'utf8')
-  console.log(`Finished writing to ${outputFilePath}`)
+  console.info(`Finished writing to ${outputFilePath}`)
 }
 
 async function updateSpeciesData (species: Species): Promise<Species> {
