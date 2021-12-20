@@ -93,7 +93,6 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   onFilterType (query: string): void {
     this.inputFilter = query
-    console.log('tempSelectedSites', this.tempSelectedSites)
   }
 
   onRemoveSiteTags (item: SiteGroup): void {
