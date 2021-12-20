@@ -53,11 +53,12 @@
             value-key="label"
             multiple
             filterable
-            :filter-method="onFilterType"
             fit-input-width
-            class="search-select m-4"
             reserve-keyword
-            placeholder=" "
+            placeholder="Type to filter sites"
+            no-data-text="No matching sites"
+            :filter-method="onFilterType"
+            class="search-select m-4"
           >
             <el-option
               v-if="optionAllMatchingFilter"
