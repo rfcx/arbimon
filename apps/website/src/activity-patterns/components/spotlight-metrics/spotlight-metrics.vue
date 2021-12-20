@@ -1,10 +1,10 @@
 <template>
-  <div class="grid grid-cols-2">
+  <div class="grid grid-cols-2 <sm:grid-cols-1">
     <template
       v-for="(item, idx) in metrics"
       :key="'metrics-info-' + idx"
     >
-      <div class="first:(pr-6 pl-0) px-6 py-4 border-r-1 border-subtle last:border-none">
+      <div class="<sm:(first:mb-4) mr-8 px-8 py-6 bg-steel-grey rounded-4xl border-subtle last:border-none">
         <metrics-title
           :title="item.title"
           :information="item.information"
