@@ -44,20 +44,15 @@
             >
             <span class="text-white ml-2">All sites in the project</span>
           </label>
-          <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
-            Filter results from some sites only
-          </h2>
-
           <el-select
-            v-model="selectedSites"
+            v-model="selectedSite"
             value-key="label"
-            multiple
             filterable
             fit-input-width
-            reserve-keyword
             placeholder="Type to filter sites"
             no-data-text="No matching sites"
             :filter-method="onFilterType"
+            @change="onSiteSelected"
             class="search-select m-4"
           >
             <el-option
