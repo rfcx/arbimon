@@ -28,7 +28,7 @@ export default defineConfig({
         pluginElementPlusResolver({ importStyle: 'sass' })
       ]
     }),
-    pluginIcons({ 
+    pluginIcons({
       compiler: 'vue3'
     }),
     pluginTsConfigPaths(),
