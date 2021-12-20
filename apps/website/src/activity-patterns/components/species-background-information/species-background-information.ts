@@ -30,10 +30,4 @@ export default class SpeciesBackgroundInformation extends Vue {
   get wikiSpeciesInformation (): SpeciesInformation | null {
     return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
   }
-
-  // TODO 190: Improve image handler
-  speciesImage (): string {
-    const url = this.species?.thumbnailImageUrl
-    return url && url.length > 0 ? url : new URL('../../../_assets/default-species-image.jpg', import.meta.url).toString()
-  }
 }
