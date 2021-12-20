@@ -22,7 +22,7 @@ export default class SpotlightPlayer extends Vue {
   audio: Howl | null = null
   playing = false
   playedTime = 0
-  playedProgress = 0
+  playedProgressPercentage = 0
 
   get displayPlayedTime (): string {
     return `${dayjs.duration(this.playedTime, 'seconds').format('m:ss')}`
@@ -57,6 +57,7 @@ export default class SpotlightPlayer extends Vue {
       },
       onpause: () => {
         this.playing = false
+        this.audio?.stop()
       },
       onplay: () => {
         this.playing = true
@@ -70,9 +71,25 @@ export default class SpotlightPlayer extends Vue {
     const seek = audio?.seek() ?? 0
     if (audio?.playing() ?? false) {
       this.playedTime = seek
-      this.playedProgress = (seek / (audio?.duration() ?? 0)) * 100
+      this.playedProgressPercentage = (seek / (audio?.duration() ?? 0)) * 100
       requestAnimationFrame(this.step)
     }
+  }
+
+  setAudioPlayProgerss (event: MouseEvent): void {
+    const target = event.currentTarget as HTMLDivElement
+    const targetWidth = target.offsetWidth
+    const offsetX = event.offsetX
+    const playedProgress = (offsetX / targetWidth)
+    this.playedProgressPercentage = playedProgress * 100
+    this.selectedDuration(playedProgress)
+  }
+
+  selectedDuration (progress: number): void {
+    const audio = this.audio
+    const selectedTime = (audio?.duration() ?? 0) * progress
+    this.playedTime = selectedTime
+    audio?.seek(selectedTime)
   }
 
   async play (): Promise<void> {
