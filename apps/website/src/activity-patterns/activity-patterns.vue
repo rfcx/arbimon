@@ -24,22 +24,6 @@
     />
     <div class="grid grid-cols-6 py-2">
       <div class="col-span-4">
-        <div class="flex items-center mb-1">
-          <div
-            v-if="speciesInformation?.commonName"
-            class="text-lg mr-2"
-          >
-            {{ speciesInformation?.commonName }}
-          </div>
-          <el-tag
-            v-if="riskInformation"
-            class="border-none"
-            effect="dark"
-            :color="riskInformation.color"
-          >
-            {{ riskInformation.label }} ({{ riskInformation.code }})
-          </el-tag>
-        </div>
         <species-background-information
           :species="speciesInformation"
         />
