@@ -9,7 +9,7 @@
     >
       <icon-fa-info-circle />
       <p
-        class="absolute min-w-60 -left-24 -top-20 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md"
+        class="absolute min-w-70 -left-24 -top-20 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md"
         v-html="information"
       />
     </div>
