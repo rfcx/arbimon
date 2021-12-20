@@ -9,7 +9,7 @@ jest.useFakeTimers()
 
 const MOCK_RECORDINGS_PER_HOUR = 12
 
-const EXAMPLE_DATE = '2021-04-02T00:00:00.000Z'
+const EXAMPLE_DATE = dayjs('2021-04-02T00:00:00.000Z')
 const EXAMPLE_SITE_IDS_INTERESTED = ['100', '200', '300', '400', '500', '600', '700', '800', '900']
 const EXAMPLE_SITES_INTERESTED: Site[] = EXAMPLE_SITE_IDS_INTERESTED.map(siteId => ({ siteId, name: '', longitude: 0, latitude: 0, altitude: 0 }))
 const EXAMPLE_SITE_IDS_UNINTERESTED = ['111', '222', '333', '444', '555', '666', '777', '888', '999']
@@ -17,8 +17,8 @@ const EXAMPLE_SPECIES_ID_INTERESTED = 555
 const EXAMPLE_SPECIES_IDS_UNINTERESTED = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
 const EXAMPLE_DATASET_DEFINITION: DatasetParameters = {
-  start: EXAMPLE_DATE,
-  end: dayjs(EXAMPLE_DATE).add(1, 'day').toString(),
+  startDate: EXAMPLE_DATE,
+  endDate: EXAMPLE_DATE,
   sites: EXAMPLE_SITES_INTERESTED,
   otherFilters: []
 }
@@ -30,7 +30,7 @@ const EMPTY_DETECTION: MockHourlyDetectionSummary = {
   lat: 0,
   lon: 0,
   alt: 123,
-  date: EXAMPLE_DATE,
+  date: EXAMPLE_DATE.toISOString(),
   hour: 0,
   species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[0],
   scientific_name: '',
