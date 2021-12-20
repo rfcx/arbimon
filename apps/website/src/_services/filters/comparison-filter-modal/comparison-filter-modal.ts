@@ -39,13 +39,19 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitClose (): boolean { return false }
 
+  // Tabs
   currentActiveMenuId = ''
+
+  // Sites
   inputFilter = ''
-  isAllMatchedFilteredChecked = false
   selectedSites: SiteGroup[] = []
+
+  // Dates
   readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
+  
+  // Other filters
   otherFilters: FilterPropertyEquals[] = []
 
   get menus (): FilterMenuItem[] {

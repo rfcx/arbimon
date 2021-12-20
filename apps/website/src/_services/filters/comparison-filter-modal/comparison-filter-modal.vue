@@ -55,9 +55,9 @@
             filterable
             :filter-method="onFilterType"
             fit-input-width
+            class="search-select m-4"
             reserve-keyword
             placeholder=" "
-            class="search-select mx-2 mb-2"
           >
             <el-option
               v-if="optionAllMatchingFilter"
@@ -71,16 +71,18 @@
               :value="{ label: item.name, value: [item] }"
             />
           </el-select>
-          <el-tag
-            v-for="site in selectedSites"
-            :key="'site-tag-'+ site.label"
-            class="ml-2 mb-2"
-            closable
-            effect="dark"
-            @close="onRemoveSiteTags(site)"
-          >
-            {{ site.label }}
-          </el-tag>
+          <div class="ml-2">
+            <el-tag
+              v-for="site in selectedSites"
+              :key="'site-tag-'+ site.label"
+              class="ml-2 mb-2 select-none"
+              closable
+              effect="dark"
+              @close="onRemoveSiteTags(site)"
+            >
+              {{ site.label }}
+            </el-tag>
+          </div>
         </div>
       </div>
 
@@ -147,27 +149,33 @@
 <script src="./comparison-filter-modal.ts" lang="ts"></script>
 <style lang="scss">
 .search-select {
-  .select-trigger{
+  .select-trigger {
     width: 500px;
     background-color: #141525;
+
     & .el-input * > .el-icon.el-select__caret {
       display: flex;
     }
   }
+
   span.el-tag {
     display: none;
   }
+
   * > input {
     background-color: #141525;
     border-radius: 0.25rem;
   }
+
   & * > .el-select__input {
     margin: 0 0 0 2px;
+
     &:focus {
       box-shadow: none;
     }
   }
 }
+
 @media (max-width: 700px) {
   .search-select .select-trigger {
     width: 300px;
