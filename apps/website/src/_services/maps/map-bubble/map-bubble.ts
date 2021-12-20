@@ -8,7 +8,7 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 import { exportChartWithElement } from '~/charts'
 import { createMap, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
-import { MapConfig, MapDataSet, MapSiteData } from './types'
+import { MapMoveEvent, MapDataSet, MapSiteData } from './types'
 
 const DEFAULT_FILL_COLOR = '#111111'
 const DEFAULT_STROKE_COLOR = '#EEEEEE'
@@ -24,17 +24,19 @@ export default class MapBubbleComponent extends Vue {
   @Prop() dataset!: MapDataSet
   @Prop() dataKey!: string
   @Prop() getPopupHtml!: (data: MapSiteData, dataKey: string) => string
+  @Prop() mapExportName!: string
+
+  // Events
+  @Prop({ default: null }) mapMoveEvent!: MapMoveEvent | null
 
   // Styles
   @Prop() mapId!: string
-  @Prop() mapConfig!: MapConfig
-  @Prop() mapExportName!: string
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
   @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
 
-  @Emit() emitMapMoved (): MapConfig {
+  @Emit() emitMapMoved (): MapMoveEvent {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
   }
 
@@ -79,12 +81,12 @@ export default class MapBubbleComponent extends Vue {
     this.generateChartNextTick(false)
   }
 
-  @Watch('mapConfig')
-  onConfigChange (): void {
-    if (this.mapConfig.sourceMapId === this.mapId) return // don't react to self
+  @Watch('mapMoveEvent')
+  onSiblingMapMove (): void {
+    if (!this.mapMoveEvent || this.mapMoveEvent.sourceMapId === this.mapId) return // don't react to self
     this.isSynchronizingMapPosition = true // don't emit for sync'd moves
-    this.map.setCenter(this.mapConfig.center)
-    this.map.setZoom(this.mapConfig.zoom)
+    this.map.setCenter(this.mapMoveEvent.center)
+    this.map.setZoom(this.mapMoveEvent.zoom)
     this.isSynchronizingMapPosition = false
   }
 

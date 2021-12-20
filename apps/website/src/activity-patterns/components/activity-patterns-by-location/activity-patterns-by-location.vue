@@ -42,7 +42,7 @@
         :data-key="selectedType"
         :get-popup-html="getPopupHtml"
         :map-id="`activity-patterns-by-location-${idx}`"
-        :map-config="config"
+        :map-move-event="mapMoveEvent"
         :map-style="mapStyle"
         :map-export-name="mapExportName(dataset, selectedType)"
         :is-show-labels="isShowLabels"

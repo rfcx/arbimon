@@ -3,7 +3,7 @@ import { LngLatLike } from 'mapbox-gl'
 
 import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 
-export interface MapConfig {
+export interface MapMoveEvent {
   sourceMapId: string
   center: LngLatLike
   zoom: number
