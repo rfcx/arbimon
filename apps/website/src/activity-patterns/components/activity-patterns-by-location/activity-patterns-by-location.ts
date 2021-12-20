@@ -48,6 +48,10 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
+  get hasData (): boolean {
+    return this.datasets.length > 0
+  }
+
   propagateMapMove (config: MapConfig): void { this.config = config }
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
