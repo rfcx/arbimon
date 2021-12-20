@@ -218,7 +218,6 @@ importers:
       xlsx: ^0.17.3
     dependencies:
       '@auth0/auth0-spa-js': 1.19.2
-      '@iconify-json/fa-regular': 1.0.2
       '@rfcx-bio/common': link:../../packages/common
       '@vueuse/components': 6.7.6_vue@3.2.21
       '@vueuse/core': 6.7.6_vue@3.2.21
@@ -240,6 +239,7 @@ importers:
       xlsx: 0.17.3
     devDependencies:
       '@iconify-json/fa': 1.0.1
+      '@iconify-json/fa-regular': 1.0.2
       '@iconify-json/fa-solid': 1.0.2
       '@types/color-string': 1.5.0
       '@types/d3': 7.1.0
@@ -1627,7 +1627,7 @@ packages:
     resolution: {integrity: sha512-eBxgGj36qbVxjwo7hPA8dxlVZ2pGDSDKg1hi7K56zIlPFz+1WWXfXOfu7X8oAv54QdOXdOKsqpQAuCvEyf6jqg==}
     dependencies:
       '@iconify/types': 1.0.12
-    dev: false
+    dev: true
 
   /@iconify-json/fa-solid/1.0.2:
     resolution: {integrity: sha512-XqtBaFqQkhkNX6GUMFde/ZCwmsnZNf2ydkGevIHOa8SXnRwTHHYdMGSJzkyAubUpfRO6d440dZBP0yc3zJ2p0g==}
@@ -1643,6 +1643,7 @@ packages:
 
   /@iconify/types/1.0.12:
     resolution: {integrity: sha512-6er6wSGF3hgc1JEZqiGpg21CTCjHBYOUwqLmb2Idzkjiw6ogalGP0ZMLVutCzah+0WB4yP+Zd2oVPN8jvJ+Ftg==}
+    dev: true
 
   /@iconify/utils/1.0.20:
     resolution: {integrity: sha512-J5IriR8KeANs8vIEFKWzOlOvNgZHkwqkmqaIwvqtuDbBeFHtXGfM/LYMDmjtRJ0AAa7f254qw6TK7gAibYfHUA==}
