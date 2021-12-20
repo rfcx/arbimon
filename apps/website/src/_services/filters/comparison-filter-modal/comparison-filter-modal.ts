@@ -26,7 +26,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) initialValues!: ComparisonFilter | null
   @Prop({ default: true }) canFilterByTaxon!: boolean
-
+  
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
     return {
@@ -44,6 +44,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Sites
   inputFilter = ''
+  selectedSite: SiteGroup | null = null
   selectedSites: SiteGroup[] = []
 
   // Dates
@@ -82,7 +83,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   get filtered (): Site[] {
     const prefix = this.inputFilter.toLocaleLowerCase()
     return this.store.sites
-          .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
+      .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
   }
 
   override mounted (): void {
@@ -99,6 +100,12 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   onFilterType (query: string): void {
     this.inputFilter = query
+  }
+
+  onSiteSelected (item: SiteGroup): void {
+    this.selectedSite = null
+    if(this.selectedSites.find(sg => sg.label === item.label)) return
+    this.selectedSites.push(item)
   }
 
   onRemoveSiteTags (item: SiteGroup): void {
