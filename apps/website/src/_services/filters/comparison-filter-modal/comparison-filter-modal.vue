@@ -61,6 +61,7 @@
           >
             <el-option
               v-if="optionAllMatchingFilter"
+              :key="'site-match-' + optionAllMatchingFilter.label"
               :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
               :value="optionAllMatchingFilter"
             />
