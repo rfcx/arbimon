@@ -26,7 +26,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) initialValues!: ComparisonFilter | null
   @Prop({ default: true }) canFilterByTaxon!: boolean
-  
+
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
     return {
@@ -51,7 +51,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
-  
+
   // Other filters
   otherFilters: FilterPropertyEquals[] = []
 
@@ -104,7 +104,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   onSiteSelected (item: SiteGroup): void {
     this.selectedSite = null
-    if(this.selectedSites.find(sg => sg.label === item.label)) return
+    if (this.selectedSites.find(sg => sg.label === item.label)) return
     this.selectedSites.push(item)
   }
 

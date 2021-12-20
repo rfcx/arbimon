@@ -51,9 +51,9 @@
             fit-input-width
             placeholder="Type to filter sites"
             no-data-text="No matching sites"
+            class="search-select m-4"
             :filter-method="onFilterType"
             @change="onSiteSelected"
-            class="search-select m-4"
           >
             <el-option
               v-if="optionAllMatchingFilter"
