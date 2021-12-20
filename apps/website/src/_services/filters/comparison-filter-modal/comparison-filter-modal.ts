@@ -44,7 +44,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Sites
   inputFilter = ''
-  selectedSite: SiteGroup | undefined = undefined
+  selectedSite: SiteGroup | null = null
   selectedSites: SiteGroup[] = []
 
   // Dates
@@ -54,6 +54,10 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Other filters
   otherFilters: FilterPropertyEquals[] = []
+
+  get selectedSiteOrUndefined (): SiteGroup | undefined {
+    return this.selectedSite ?? undefined
+  }
 
   get menus (): FilterMenuItem[] {
     return [
@@ -103,7 +107,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   onSiteSelected (item: SiteGroup): void {
-    this.selectedSite = undefined
+    this.selectedSite = null
     if (this.selectedSites.find(sg => sg.label === item.label)) return
     this.selectedSites.push(item)
   }
