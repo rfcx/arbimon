@@ -90,6 +90,7 @@ export default class SpotlightPlayer extends Vue {
     const selectedTime = (audio?.duration() ?? 0) * progress
     this.playedTime = selectedTime
     audio?.seek(selectedTime)
+    audio?.play()
   }
 
   async play (): Promise<void> {
