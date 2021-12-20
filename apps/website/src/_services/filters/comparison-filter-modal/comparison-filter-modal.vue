@@ -3,7 +3,7 @@
     name="buildComparisonModal"
   >
     <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
-      Build comparison
+      Customize dataset
     </h1>
     <div class="flex flex-row min-h-lg">
       <!-- left menu bar -->
