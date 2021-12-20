@@ -40,7 +40,6 @@
         <spotlight-player
           v-if="speciesInformation?.speciesCall"
           :species-call="speciesInformation.speciesCall"
-          class="ml-2"
         />
       </div>
     </div>

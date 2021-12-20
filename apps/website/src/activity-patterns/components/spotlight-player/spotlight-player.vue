@@ -27,11 +27,16 @@
           :playing="playing"
           @click="playing ? pause() : play()"
         />
-        <div class="relative w-full mx-2">
-          <div class="absolute w-full h-1 bg-white opacity-50 rounded-full" />
+        <div
+          class="relative w-full mx-2"
+          @click="setAudioPlayProgerss($event)"
+        >
           <div
-            class="absolute h-1 bg-white rounded-full z-51"
-            :style="{ width: playedProgress + '%' }"
+            class="absolute w-full h-1 bg-white opacity-50 rounded-full cursor-pointer"
+          />
+          <div
+            class="absolute h-1 bg-white rounded-full z-51 cursor-pointer"
+            :style="{ width: playedProgressPercentage + '%' }"
           />
         </div>
         <div>{{ displayPlayedTime }}</div>
