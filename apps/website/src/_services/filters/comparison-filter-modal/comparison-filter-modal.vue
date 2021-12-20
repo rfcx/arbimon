@@ -45,7 +45,7 @@
             <span class="text-white ml-2">All sites in the project</span>
           </label>
           <el-select
-            v-model="selectedSite"
+            v-model="selectedSiteOrUndefined"
             value-key="label"
             filterable
             fit-input-width
