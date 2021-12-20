@@ -1,12 +1,12 @@
 import { partition } from 'lodash-es'
-import { CirclePaint, GeoJSONSource, LngLatBounds, Map as MapboxMap, NavigationControl, Popup } from 'mapbox-gl'
+import { CirclePaint, GeoJSONSource, LngLatBounds, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, NavigationControl, Popup } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { exportChartWithElement } from '~/charts'
-import { createMap, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
 import { MapMoveEvent, MapDataSet, MapSiteData } from './types'
 
@@ -31,6 +31,7 @@ export default class MapBubbleComponent extends Vue {
 
   // Styles
   @Prop() mapId!: string
+  @Prop() mapInitialBounds!: LngLatBoundsLike | null
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
@@ -49,11 +50,10 @@ export default class MapBubbleComponent extends Vue {
   }
 
   override mounted (): void {
-    const mapConfig = {
+    const mapConfig: MapboxOptions = {
       container: this.mapId,
       style: this.mapStyle,
-      center: this.mapConfig.center,
-      zoom: this.mapConfig.zoom,
+      bounds: this.mapInitialBounds ?? [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
       attributionControl: false,
       preserveDrawingBuffer: true
     }
