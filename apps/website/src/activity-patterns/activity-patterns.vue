@@ -18,32 +18,31 @@
       :can-filter-by-taxon="false"
       @emit-select="onFilterChange"
     />
-    <div class="flex items-center">
-      <species-selector
-        :species-slug="$route.params.speciesSlug"
-        @emit-selected-species-changed="onSelectedSpeciesChange"
-      />
-      <el-tag
-        v-if="riskInformation"
-        class="ml-2 border-none"
-        effect="dark"
-        :color="riskInformation.color"
-      >
-        {{ riskInformation.label }} ({{ riskInformation.code }})
-      </el-tag>
-      <spotlight-player
-        v-if="speciesInformation?.speciesCall"
-        :species-call="speciesInformation.speciesCall"
-        class="ml-2"
-      />
+    <species-selector
+      :species-slug="$route.params.speciesSlug"
+      @emit-selected-species-changed="onSelectedSpeciesChange"
+    />
+    <div class="grid grid-cols-6 py-2">
+      <div class="col-span-4">
+        <species-background-information
+          :species="speciesInformation"
+        />
+        <activity-patterns-metrics
+          :metrics="metrics"
+          class="mt-5"
+        />
+      </div>
+      <div class="col-span-2 border-l-2 px-4">
+        <species-images
+          v-if="speciesInformation"
+          :species="speciesInformation"
+        />
+        <spotlight-player
+          v-if="speciesCall"
+          :species-call="speciesCall"
+        />
+      </div>
     </div>
-    <species-background-information
-      :species="speciesInformation"
-    />
-    <activity-patterns-metrics
-      :metrics="metrics"
-      class="mt-5"
-    />
     <activity-patterns-predicted-occupancy
       :predicted-occupancy-maps="predictedOccupancyMaps"
       class="mt-5"
