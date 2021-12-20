@@ -1,6 +1,6 @@
 import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Prop, Watch } from 'vue-property-decorator'
 
 import { SpeciesCall } from '@rfcx-bio/common/api-bio-types/species'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -29,6 +29,15 @@ export default class SpotlightPlayer extends Vue {
   }
 
   override async created (): Promise<void> {
+    await this.getSpeciesCallAssets()
+  }
+
+  @Watch('speciesCall')
+  async onSpeciesCallChange (): Promise<void> {
+    await this.getSpeciesCallAssets()
+  }
+
+  async getSpeciesCallAssets (): Promise<void> {
     this.loading = true
     await Promise.all([
       await this.getSpectrogramImage(),
