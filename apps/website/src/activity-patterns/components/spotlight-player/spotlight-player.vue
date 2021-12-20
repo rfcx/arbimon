@@ -1,32 +1,33 @@
 <template>
-  <div class="text-lg capitalize">
-    Species call
-  </div>
-  <div
-    v-if="!loading"
-    class="max-w-full my-4 flex justify-center"
-  >
-    <div class="relative">
-      <img
-        :src="spectrogram"
-        class="max-w-60"
-      >
-      <div class="absolute bottom-2 right-2">
-        <div
-          v-if="!playing"
-          class="hover:(opacity-80 cursor-pointer)"
-          title="Species call"
-          @click="play()"
+  <div v-if="!loading">
+    <div class="text-lg capitalize">
+      Species call
+    </div>
+    <div
+      class="max-w-full my-4 flex justify-left"
+    >
+      <div class="relative">
+        <img
+          :src="spectrogram"
+          class="max-w-60"
         >
-          <icon-fa-volume-up />
-        </div>
-        <div
-          v-else
-          class="hover:(opacity-80 cursor-pointer)"
-          title="Pause"
-          @click="pause()"
-        >
-          <icon-fa-pause />
+        <div class="absolute bottom-2 right-2">
+          <div
+            v-if="!playing"
+            class="hover:(opacity-80 cursor-pointer)"
+            title="Play"
+            @click="play()"
+          >
+            <icon-fa-play />
+          </div>
+          <div
+            v-else
+            class="hover:(opacity-80 cursor-pointer)"
+            title="Pause"
+            @click="pause()"
+          >
+            <icon-fa-pause />
+          </div>
         </div>
       </div>
     </div>
