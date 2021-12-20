@@ -20,6 +20,7 @@
       </div>
     </div>
     <div
+      v-if="playing"
       class="fixed w-72 h-12 bottom-4 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md"
     >
       <div class="h-full flex items-center content-center">
