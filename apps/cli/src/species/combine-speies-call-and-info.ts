@@ -19,4 +19,4 @@ const speciesOutput = rawSpeciesWithInfo.map(i => {
 // Write output
 const json = JSON.stringify(speciesOutput, null, 2)
 fs.writeFileSync(outputFilePath, json, 'utf8')
-console.log(`Finished writing to ${outputFilePath}`)
+console.info(`Finished writing to ${outputFilePath}`)
