@@ -9,11 +9,24 @@ import { assetsService } from '@/activity-patterns/services'
 export default class SpotlightPlayer extends Vue {
   @Prop() speciesCall!: SpeciesCall
 
+  loading = false
+
+  spectrogram = ''
   audio: Howl | null = null
   playing = false
 
   override async created (): Promise<void> {
-    await this.getAudio()
+    this.loading = true
+    await Promise.all([
+      await this.getSpectrogramImage(),
+      await this.getAudio()
+    ])
+    this.loading = false
+  }
+
+  async getSpectrogramImage (): Promise<void> {
+    const data = await assetsService.getSpectrogramImage(this.speciesCall.mediaSpecUrl)
+    this.spectrogram = data ? window.URL.createObjectURL(data) : ''
   }
 
   async getAudio (): Promise<void> {
