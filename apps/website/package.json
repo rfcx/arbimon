@@ -18,10 +18,6 @@
     "serve": "vite",
     "test-ui:explorer": "cypress open"
   },
-  "active-issues": {
-    "@vitejs/plugin-vue": "1.8.1 breaks vue-class-component - https://github.com/vitejs/vite/pull/5374",
-    "vue-tsc": "0.28.8 breaks website build - https://github.com/johnsoncodehk/volar/issues/670"
-  },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.19.2",
     "@iconify-json/fa-regular": "^1.0.2",
