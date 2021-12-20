@@ -14,10 +14,12 @@ export default class ProjectSelectorComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Emit() emitCloseProjectSelector (): boolean { return false }
 
-  newSelectedProject: Project | undefined
+  newSelectedProject: Project | null = null
 
   override created (): void {
-    this.newSelectedProject = { ...this.store.selectedProject }
+    this.newSelectedProject = this.store.selectedProject 
+      ? { ...this.store.selectedProject }
+      : null
   }
 
   isSelectedProject (project: Project): boolean {
