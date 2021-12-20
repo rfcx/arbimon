@@ -22,7 +22,7 @@
       :species-slug="$route.params.speciesSlug"
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
-    <div class="grid grid-cols-6">
+    <div class="grid grid-cols-6 py-2">
       <div class="col-span-4">
         <div class="flex items-center mb-1">
           <div
@@ -48,7 +48,11 @@
           class="mt-5"
         />
       </div>
-      <div class="col-span-2 border-l-2">
+      <div class="col-span-2 border-l-2 px-4">
+        <species-images
+          v-if="speciesInformation"
+          :species="speciesInformation"
+        />
         <spotlight-player
           v-if="speciesInformation?.speciesCall"
           :species-call="speciesInformation.speciesCall"

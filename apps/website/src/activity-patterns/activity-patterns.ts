@@ -16,6 +16,7 @@ import ActivityPatternsByLocation from './components/activity-patterns-by-locati
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
 import ActivityPatternsPredictedOccupancy from './components/activity-patterns-predicted-occupancy/activity-patterns-predicted-occupancy.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
+import SpeciesImages from './components/species-images/species-images.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
@@ -30,6 +31,7 @@ const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
     ActivityPatternsPredictedOccupancy,
     ComparisonListComponent,
     SpeciesBackgroundInformation,
+    SpeciesImages,
     SpeciesSelector,
     SpotlightPlayer
   }
