@@ -66,9 +66,14 @@ export default class MapBubbleComponent extends Vue {
       })
       .on('style.load', () => { this.generateChartNextTick(false) })
       .on('move', () => { if (!this.isSynchronizingMapPosition) this.emitMapMoved() })
+      .addControl(new NavigationControl({ showCompass: false }), 'bottom-right')
 
+    // Disable scroll zoom & all rotation
     this.map.scrollZoom.disable()
-    this.map.addControl(new NavigationControl(), 'bottom-right')
+    this.map.dragRotate.disable()
+    this.map.keyboard.disableRotation()
+    this.map.touchZoomRotate.disableRotation()
+    this.map.touchPitch.disable()
   }
 
   @Watch('dataset', { deep: true })
