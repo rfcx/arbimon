@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
 import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
@@ -7,6 +7,7 @@ import { getExportFilterName } from '~/filters'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { BiodiversityStore } from '~/store'
 
 interface DropdownOption {
   label: string
@@ -22,6 +23,8 @@ const DEFAULT_PREFIX = 'Overview-By-Site'
   }
 })
 export default class ActivityOverviewByLocation extends Vue {
+  @Inject() readonly store!: BiodiversityStore
+
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   isShowLabels = true

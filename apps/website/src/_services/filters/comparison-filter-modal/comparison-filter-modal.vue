@@ -49,8 +49,8 @@
           </h2>
 
           <el-select
-            v-model="selectedSites"
-            value-key="siteId"
+            v-model="tempSelectedSites"
+            value-key="label"
             multiple
             filterable
             :filter-method="onFilterType"
@@ -60,21 +60,26 @@
             class="search-select mx-2 mb-2"
           >
             <el-option
-              v-for="(item) in filterInputSites"
-              :key="'site-list-' + item.site.siteId"
-              :label="item.site.name"
-              :value="item.site"
+              v-if="allMatchOption"
+              :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
+              :value="allMatchOption"
+            />
+            <el-option
+              v-for="item in filtered"
+              :key="'site-list-' + item.siteId"
+              :label="item.name"
+              :value="{ label: item.name, value: [item] }"
             />
           </el-select>
           <el-tag
-            v-for="site in selectedSites"
-            :key="'site-tag-'+ site.siteId"
+            v-for="site in tempSelectedSites"
+            :key="'site-tag-'+ site.label"
             class="ml-2 mb-2"
             closable
             effect="dark"
             @close="onRemoveSiteTags(site)"
           >
-            {{ site.name }}
+            {{ site.label }}
           </el-tag>
         </div>
       </div>
@@ -161,6 +166,11 @@
     &:focus {
       box-shadow: none;
     }
+  }
+}
+@media (max-width: 700px) {
+  .search-select .select-trigger {
+    width: 300px;
   }
 }
 </style>

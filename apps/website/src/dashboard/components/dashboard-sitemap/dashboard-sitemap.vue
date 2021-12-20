@@ -2,6 +2,7 @@
   <div class="w-full">
     <map-bubble-component
       v-if="dataset"
+      color="#EFEFEF"
       :dataset="dataset"
       data-key="site"
       :get-popup-html="getPopupHtml"

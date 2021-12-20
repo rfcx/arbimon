@@ -26,6 +26,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() getPopupHtml!: (data: MapSiteData, dataKey: string) => string
 
   // Styles
+  @Prop() color!: string
   @Prop() mapId!: string
   @Prop() mapConfig!: MapConfig
   @Prop() mapExportName!: string
@@ -169,7 +170,7 @@ export default class MapBubbleComponent extends Vue {
 
     this.updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, {
       'circle-radius': ['max', ['get', 'radius'], this.minCircleRadiusPixels],
-      'circle-color': this.dataset.color,
+      'circle-color': this.color,
       'circle-stroke-color': DEFAULT_STROKE_COLOR,
       'circle-stroke-width': 0.65,
       'circle-opacity': 0.85
@@ -227,9 +228,8 @@ export default class MapBubbleComponent extends Vue {
     const img = this.map.getCanvas().toDataURL('image/png')
     downloadPng(img, baseFilename)
 
-    const { color, maxValues } = this.dataset
-    const maxValue = maxValues[this.dataKey]
-    const svg = generateNormalizeMapLegend(color, maxValue, this.maxCircleRadiusPixels)
+    const maxValue = this.dataset.maxValues[this.dataKey]
+    const svg = generateNormalizeMapLegend(this.color, maxValue, this.maxCircleRadiusPixels)
     if (!svg) return
     await exportChartWithElement(svg, `${baseFilename}-legend`)
   }

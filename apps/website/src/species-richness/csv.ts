@@ -26,12 +26,11 @@ export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix:
   await zipAndDownload(files, groupName)
 }
 
-const getCsvFile = async ({ startDate, endDate, sites, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string): Promise<FileData> => {
-  const start = startDate.toISOString()
-  const end = endDate.add(1, 'days').toISOString()
+const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string): Promise<FileData> => {
+  const sites = siteGroups.flatMap(sg => sg.value)
   const filename = getExportFilterName(startDate, endDate, reportPrefix, exportTime, sites) + '.csv'
 
-  const dataAsJson = await getCsvForDataset({ start, end, sites, otherFilters })
+  const dataAsJson = await getCsvForDataset({ startDate, endDate, sites, otherFilters })
   const data = await toCsv(dataAsJson)
 
   return { filename, data }
