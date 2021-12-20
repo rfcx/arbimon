@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio-types/species'
+import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import SpeciesInformationContentComponent from './species-information-content.vue'
 
@@ -29,5 +30,9 @@ export default class SpeciesBackgroundInformation extends Vue {
 
   get wikiSpeciesInformation (): SpeciesInformation | null {
     return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
+  }
+
+  get riskInformation (): ExtinctionRisk | null {
+    return this.species?.extinctionRisk ? getExtinctionRisk(this.species.extinctionRisk) : null
   }
 }
