@@ -64,10 +64,10 @@ export default class ComparisonFilterModalComponent extends Vue {
     return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
   }
 
-  get allMatchOption (): SiteGroup | undefined {
-    return this.inputFilter
+  get optionAllMatchingFilter (): SiteGroup | undefined {
+    return this.inputFilter && this.filtered.length > 0
       ? {
-        label: `${this.inputFilter.toLocaleUpperCase()}*`,
+        label: `${this.inputFilter}*`,
         value: this.filtered
       }
       : undefined

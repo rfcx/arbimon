@@ -60,9 +60,9 @@
             class="search-select mx-2 mb-2"
           >
             <el-option
-              v-if="allMatchOption"
+              v-if="optionAllMatchingFilter"
               :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
-              :value="allMatchOption"
+              :value="optionAllMatchingFilter"
             />
             <el-option
               v-for="item in filtered"
