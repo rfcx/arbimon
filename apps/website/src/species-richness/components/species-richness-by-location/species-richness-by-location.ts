@@ -4,8 +4,8 @@ import { Inject, Prop } from 'vue-property-decorator'
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/filters'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { BiodiversityStore } from '~/store'
 
@@ -19,18 +19,13 @@ const DEFAULT_PREFIX = 'Species-By-Site'
 })
 export default class SpeciesRichnessByLocation extends Vue {
   @Inject() readonly store!: BiodiversityStore
-
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
   isShowLabels = true
   mapStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateHtmlPopup
 
-  config: MapConfig = {
-    sourceMapId: '',
-    center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
-    zoom: 9
-  }
+  mapMoveEvent: MapMoveEvent | null = null
 
   get mapDataKey (): string {
     return TAXONOMY_CLASS_ALL.name
@@ -47,7 +42,7 @@ export default class SpeciesRichnessByLocation extends Vue {
     }
   }
 
-  propagateMapMove (config: MapConfig): void { this.config = config }
+  propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
