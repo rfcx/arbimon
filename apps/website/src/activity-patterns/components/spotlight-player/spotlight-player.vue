@@ -12,23 +12,29 @@
           class="max-w-60"
         >
         <div class="absolute bottom-2 right-2">
-          <div
-            v-if="!playing"
-            class="hover:(opacity-80 cursor-pointer)"
-            title="Play"
-            @click="play()"
-          >
-            <icon-fa-play />
-          </div>
-          <div
-            v-else
-            class="hover:(opacity-80 cursor-pointer)"
-            title="Pause"
-            @click="pause()"
-          >
-            <icon-fa-pause />
-          </div>
+          <audio-controller
+            :playing="playing"
+            @click="playing ? pause() : play()"
+          />
         </div>
+      </div>
+    </div>
+    <div
+      class="fixed w-72 h-12 bottom-4 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md"
+    >
+      <div class="h-full flex items-center content-center">
+        <audio-controller
+          :playing="playing"
+          @click="playing ? pause() : play()"
+        />
+        <div class="relative w-full mx-2">
+          <div class="absolute w-full h-1 bg-white opacity-50 rounded-full" />
+          <div
+            class="absolute h-1 bg-white rounded-full z-51"
+            :style="{ width: playedProgress + '%' }"
+          />
+        </div>
+        <div>{{ displayPlayedTime }}</div>
       </div>
     </div>
   </div>
