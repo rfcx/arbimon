@@ -49,7 +49,7 @@
           </h2>
 
           <el-select
-            v-model="tempSelectedSites"
+            v-model="selectedSites"
             value-key="label"
             multiple
             filterable
@@ -72,7 +72,7 @@
             />
           </el-select>
           <el-tag
-            v-for="site in tempSelectedSites"
+            v-for="site in selectedSites"
             :key="'site-tag-'+ site.label"
             class="ml-2 mb-2"
             closable

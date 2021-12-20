@@ -101,7 +101,6 @@ export default class ComparisonListComponent extends Vue {
   }
 
   apply (filter: ComparisonFilter): void {
-    console.log(filter)
     const newFilter = new FilterImpl(filter.startDate, filter.endDate, filter.sites, filter.otherFilters)
     if (this.isAddSelected) {
       this.filters.push(newFilter)
