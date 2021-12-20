@@ -41,7 +41,7 @@
           :data-key="selectedDatasetType"
           :get-popup-html="getPopupHtml"
           :map-id="`activity-patterns-detection-by-location-${idx}`"
-          :map-config="config"
+          :map-move-event="mapMoveEvent"
           :map-style="mapStyle"
           :map-export-name="mapExportName(dataset, selectedDatasetType)"
           :is-show-labels="isShowLabels"

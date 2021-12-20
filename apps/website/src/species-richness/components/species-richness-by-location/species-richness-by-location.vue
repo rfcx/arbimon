@@ -28,7 +28,7 @@
         :data-key="mapDataKey"
         :get-popup-html="getPopupHtml"
         :map-id="`species-richness-by-location-${idx}`"
-        :map-config="config"
+        :map-move-event="mapMoveEvent"
         :map-style="mapStyle"
         :map-export-name="mapExportName(dataset)"
         :is-show-labels="isShowLabels"

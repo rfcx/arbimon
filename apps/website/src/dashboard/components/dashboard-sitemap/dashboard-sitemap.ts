@@ -1,13 +1,12 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
 import { generatePopupHtml, transformToMapDataset } from './functions'
 
 @Options({
-  components: {
+  components: { 
     MapBubbleComponent
   }
 })
@@ -17,15 +16,11 @@ export default class DashboardSitemap extends Vue {
   dataset: MapDataSet | null = null
   getPopupHtml = generatePopupHtml
 
-  config: MapConfig = {
-    sourceMapId: '',
-    center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
-    zoom: 9
-  }
+  mapMoveEvent: MapMoveEvent | null = null
 
   override mounted (): void {
     this.dataset = transformToMapDataset(this.store.sites)
   }
 
-  propagateMapMove (config: MapConfig): void { this.config = config }
+  propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
 }

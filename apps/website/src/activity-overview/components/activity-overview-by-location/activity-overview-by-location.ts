@@ -5,7 +5,7 @@ import { generateDetectionHtmlPopup } from '@/activity-overview/components/activ
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { getExportFilterName } from '~/filters'
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MapBubbleComponent, MapMoveEvent, MapDataSet } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 
 interface DropdownOption {
@@ -35,11 +35,7 @@ export default class ActivityOverviewByLocation extends Vue {
     { label: 'Naive Occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
   ]
 
-  config: MapConfig = {
-    sourceMapId: '',
-    center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
-    zoom: 9
-  }
+  mapMoveEvent: MapMoveEvent | null = null
 
   get hasNoData (): boolean {
     return this.datasets.length === 0
@@ -52,7 +48,7 @@ export default class ActivityOverviewByLocation extends Vue {
     }
   }
 
-  propagateMapMove (config: MapConfig): void { this.config = config }
+  propagateMapMove (mapMoveEvent: MapMoveEvent): void { this.mapMoveEvent = mapMoveEvent }
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
