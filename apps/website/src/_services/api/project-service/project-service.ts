@@ -21,10 +21,10 @@ const toProject = (data: CoreApiProject): Project => {
     name: data.name,
     isPublic: data.is_public,
     externalId: data.external_id,
-    geoBounds: {
-      ne: { lon: -65.24505, lat: 18.51375 },
-      sw: { lon: -67.94469784, lat: 17.93168 }
-    }
+    geoBounds: [
+      { lon: -65.24505, lat: 18.51375 },
+      { lon: -67.94469784, lat: 17.93168 }
+    ]
   }
 }
 
