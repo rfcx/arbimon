@@ -8,7 +8,16 @@ import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
-const FAKE_PUERTO_RICO_PROJECT = { id: import.meta.env.VITE_PUERTO_RICO_PROJECT_SLUG, name: 'Puerto Rico Island-Wide', isPublic: true, externalId: 123456 }
+const FAKE_PUERTO_RICO_PROJECT: Project = { 
+  id: import.meta.env.VITE_PUERTO_RICO_PROJECT_SLUG, 
+  name: 'Puerto Rico Island-Wide', 
+  isPublic: true, 
+  externalId: 123456,
+  geoBounds: [
+    { lon: -65.24505, lat: 18.51375 },
+    { lon: -67.94469784, lat: 17.93168 }
+  ]
+}
 
 export const useStore = defineStore('root', {
   state: () => ({
