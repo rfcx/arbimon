@@ -11,7 +11,7 @@
           :src="spectrogram"
           class="max-w-60"
         >
-        <div class="absolute bg-dark-100 bg-opacity-70 p-1 bottom-2 right-2">
+        <div class="absolute bottom-2 right-2 bg-dark-100 bg-opacity-70 p-2 rounded-sm">
           <audio-controller
             :playing="playing"
             @click="playing ? pause() : play()"
