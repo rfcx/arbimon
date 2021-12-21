@@ -44,16 +44,26 @@
             >
             <span class="text-white ml-2">All sites in the project</span>
           </label>
+          <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
+            Filter results from some sites only
+          </h2>
+
           <el-select
-            v-model="selectedSiteOrUndefined"
+            v-model="selectedSites"
             value-key="label"
+            multiple
             filterable
+            popper-class="selector-sites"
+            name="input-site"
             fit-input-width
+            reserve-keyword
             placeholder="Type to filter sites"
             no-data-text="No matching sites"
             class="search-select m-4"
             :filter-method="onFilterType"
-            @change="onSiteSelected"
+            @blur="onSetSelectorPlaceHolder"
+            @input="onRemoveSelectorPlaceHolder"
+            @focus="onRemoveSelectorPlaceHolder"
           >
             <el-option
               v-if="optionAllMatchingFilter"
@@ -74,6 +84,7 @@
               :key="'site-tag-'+ site.label"
               class="ml-2 mb-2 select-none"
               closable
+              type="info"
               effect="dark"
               @close="onRemoveSiteTags(site)"
             >
@@ -160,7 +171,7 @@
   }
 
   * > input {
-    background-color: #141525;
+    background-color: transparent;
     border-radius: 0.25rem;
   }
 
@@ -171,6 +182,27 @@
       box-shadow: none;
     }
   }
+}
+.selector-sites {
+  background-color:hsl(236, 25%, 15%);
+  border: 1px solid #45485D;
+  & .el-popper__arrow {
+    display: none;
+  }
+  & .el-select-dropdown__item {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid var(--el-border-color-base);
+    &:hover {
+      background-color: var(--el-border-color-base);
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.el-scrollbar__view.el-select-dropdown__list {
+  padding: 0;
 }
 
 @media (max-width: 700px) {

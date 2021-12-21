@@ -102,6 +102,23 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
+  onSetSelectorPlaceHolder (): void {
+    const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
+    const searchSelector = document.querySelector('.search-select')
+    const getClass = searchSelector?.querySelector('.el-input--suffix')
+    const isFocusSiteSelector = getClass?.classList.contains('is-focus') ?? false
+
+    if (isFocusSiteSelector ?? false) {
+      inputEl.removeAttribute('placeholder')
+      inputEl.setAttribute('placeholder', 'Type to filter sites')
+    }
+  }
+
+  onRemoveSelectorPlaceHolder (e: Event): void {
+    const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
+    inputEl.removeAttribute('placeholder')
+  }
+
   onFilterType (query: string): void {
     this.inputFilter = query
   }
