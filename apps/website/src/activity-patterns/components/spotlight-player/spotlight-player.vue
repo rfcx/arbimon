@@ -11,14 +11,14 @@
           :src="spectrogram"
           class="w-40"
         >
-        <div class="absolute bottom-2 right-2">
+        <div class="absolute bottom-3 right-3">
           <div
             v-if="!playing"
             class="hover:(opacity-80 cursor-pointer)"
             title="Play"
             @click="play()"
           >
-            <icon-fa-play />
+            <icon-fas-play />
           </div>
           <div
             v-else
@@ -26,7 +26,7 @@
             title="Pause"
             @click="pause()"
           >
-            <icon-fa-pause />
+            <icon-fas-pause />
           </div>
         </div>
       </div>
