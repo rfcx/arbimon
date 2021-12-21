@@ -28,28 +28,19 @@ const getChartElement = (element: Element): SvgAndDimensions => {
   return { svg, width, height }
 }
 
-export const svgToPng = async (svg: SvgAndDimensions): Promise<string> => {
+export const svgToPng = async (params: SvgAndDimensions): Promise<string> => {
   // Params
   const mimetype = 'image/png'
   const quality = 0.92
-  const width = svg.width
-  const height = svg.height
+  const width = params.width
+  const height = params.height
 
   return await new Promise((resolve) => {
-    // Render SVG to DOM (hidden)
-    const serializer = new XMLSerializer()
-    const inputXml = serializer.serializeToString(svg.svg)
-    const parent = document.createElement('div')
-    parent.style.display = 'none'
-    parent.innerHTML = inputXml
-
-    // Get SVG & set width/height props (required by Firefox)
-    const svgNode = parent.firstElementChild as SVGSVGElement
-    svgNode.setAttribute('width', `${width}px`)
-    svgNode.setAttribute('height', `${height}px`)
-
     // Convert to Base64 SVG/XML
-    const svgXml = serializer.serializeToString(svgNode)
+    const svgXml = new XMLSerializer()
+      .serializeToString(params.svg)
+      .replace('<svg', `<svg width="${width}" height="${height}"`)
+
     const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(svgXml)
 
     // Convert to Base64 PNG
