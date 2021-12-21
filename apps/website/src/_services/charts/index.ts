@@ -29,43 +29,44 @@ const getChartElement = (element: Element): SvgAndDimensions => {
 }
 
 export const svgToPng = async (svg: SvgAndDimensions): Promise<string> => {
-  const serializer = new XMLSerializer()
-  const source = serializer.serializeToString(chartElement.svg)
-
+  // Params
   const mimetype = 'image/png'
   const quality = 0.92
-  const svgString = source
+  const width = svg.width
+  const height = svg.height
 
   return await new Promise((resolve) => {
-    // Create a non-visible node to render the SVG string
-    const SVGContainer = document.createElement('div')
-    SVGContainer.style.display = 'none'
-    SVGContainer.innerHTML = svgString
-    const svgNode = SVGContainer.firstElementChild as Node
+    // Render SVG to DOM (hidden)
+    const serializer = new XMLSerializer()
+    const inputXml = serializer.serializeToString(svg.svg)
+    const parent = document.createElement('div')
+    parent.style.display = 'none'
+    parent.innerHTML = inputXml
 
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    const svgXml = new XMLSerializer().serializeToString(svgNode)
-    const svgBase64 = 'data:image/svg+xml;base64,' + btoa(svgXml)
+    // Get SVG & set width/height props (required by Firefox)
+    const svgNode = parent.firstElementChild as SVGSVGElement
+    svgNode.setAttribute('width', `${width}px`)
+    svgNode.setAttribute('height', `${height}px`)
 
+    // Convert to Base64 SVG/XML
+    const svgXml = serializer.serializeToString(svgNode)
+    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(svgXml)
+
+    // Convert to Base64 PNG
     const image = new Image()
+    image.onload = () => {
+      // Setup canvas
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
 
-    image.onload = function () {
-      const finalWidth = chartElement.width
-      const finalHeight = chartElement.height
+      // Render image to canvas
+      canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
 
-      // Define the canvas intrinsic size
-      canvas.width = finalWidth
-      canvas.height = finalHeight
-
-      // Render image in the canvas
-      context?.drawImage(image, 0, 0, finalWidth, finalHeight)
-      // Fullfil and Return the Base64 image
+      // Extract base64 image
       const pngDataURL = canvas.toDataURL(mimetype, quality)
       resolve(pngDataURL)
     }
-
-    // Load the SVG in Base64 to the image
     image.src = svgBase64
   })
 }
