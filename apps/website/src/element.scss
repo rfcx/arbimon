@@ -64,5 +64,13 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
   ),
   $tag: (
     "font-size": var(--el-font-size-base)
+  ),
+  $button: (
+    "bg-color": var(--el-bg-color-lighter),
+    "hover-bg-color": var(--el-color-primary),
+    "active-bg-color": var(--el-color-primary),
+    "text-color": var(--el-text-color-regular),
+    "hover-text-color": var(--el-text-color-regular),
+    "active-text-color": var(--el-text-color-regular),
   )
 );
