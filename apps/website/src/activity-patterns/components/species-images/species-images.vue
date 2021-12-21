@@ -1,7 +1,7 @@
 <template>
-  <div class="text-lg">
+  <h3 class="text-lg">
     Photo
-  </div>
+  </h3>
   <div class="max-h-60 max-w-full my-4 flex justify-left">
     <div class="relative">
       <img
