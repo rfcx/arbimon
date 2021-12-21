@@ -7,6 +7,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { ComparisonFilter, FilterPropertyEquals } from '~/filters'
 import { BiodiversityStore } from '~/store'
+import DateRangePicker from './date-range-picker/date-range-picker.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
@@ -24,6 +25,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 @Options({
   components: {
     OnClickOutside,
+    DateRangePicker,
     FilterTaxon
   }
 })

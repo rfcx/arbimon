@@ -89,11 +89,14 @@
           @emit-selected-taxons="updateSelectedTaxons"
         />
       </div>
+
+      <!-- Date range -->
       <div
         v-else
         class="p-4 flex"
       >
-        <div>
+        <date-range-picker />
+        <!-- <div>
           <label
             class="text-white block"
             for="start"
@@ -120,7 +123,7 @@
             :max="today"
             class="bg-white text-black rounded-lg mr-2"
           >
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="flex justify-end px-4 py-2 border-t-1">
