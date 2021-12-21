@@ -1,5 +1,5 @@
 import { Vue } from 'vue-class-component'
-import { Emit, Watch } from 'vue-property-decorator'
+import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -8,21 +8,27 @@ export interface DateRangeShortcut {
   value: () => [Date, Date]
 }
 
-export const DEFAULT_DATE_RANGE: [Date, Date] = [dayjs().subtract(20, 'years').toDate(), dayjs().toDate()]
+// TODO: Remove this! This is for assume as the date range for the whole project
+export const MOCK_WHOLE_PROJECT_DATE_RANGE: [Date, Date] = [dayjs().subtract(20, 'years').toDate(), dayjs().toDate()]
 
 export default class DateRangePicker extends Vue {
+  @Prop({ default: null }) defaultStartDate!: string | null
+  @Prop({ default: null }) defaultEndDate!: string | null
+
   @Emit()
-  emitDateChange (): [Date, Date] {
+  emitDateChange (): Date[] {
+    // TODO: TODO: Update to the date range for the whole project when API ready
+    this.dateValues = this.dateValues ?? MOCK_WHOLE_PROJECT_DATE_RANGE
     return this.dateValues
   }
 
-  dateValues: [Date, Date] = DEFAULT_DATE_RANGE
+  dateValues: Date[] = []
 
   get dateShortcuts (): DateRangeShortcut[] {
     return [
       {
         text: 'All dates',
-        value: () => DEFAULT_DATE_RANGE
+        value: () => MOCK_WHOLE_PROJECT_DATE_RANGE
       },
       {
         text: 'This year',
@@ -40,6 +46,13 @@ export default class DateRangePicker extends Vue {
           return [start, end]
         }
       }
+    ]
+  }
+
+  override mounted (): void {
+    this.dateValues = [
+      this.defaultStartDate ? dayjs(this.defaultStartDate).toDate() : MOCK_WHOLE_PROJECT_DATE_RANGE[0],
+      this.defaultEndDate ? dayjs(this.defaultEndDate).toDate() : MOCK_WHOLE_PROJECT_DATE_RANGE[1]
     ]
   }
 
