@@ -3,7 +3,7 @@ import { Prop, Watch } from 'vue-property-decorator'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-import { svgToPngData } from '~/charts'
+import { svgToPng } from '~/charts'
 import { clearChart } from '..'
 import { generateChartExport, generateChartInternal } from './functions'
 import { GroupedBarChartItem } from './types'
@@ -53,7 +53,7 @@ export default class HorizontalBarChartComponent extends Vue {
     if (!svg) return
 
     const { width, height } = svg.viewBox.baseVal
-    const png = await svgToPngData({ svg, width, height })
+    const png = await svgToPng({ svg, width, height })
     downloadPng(png, this.chartExportName)
   }
 }
