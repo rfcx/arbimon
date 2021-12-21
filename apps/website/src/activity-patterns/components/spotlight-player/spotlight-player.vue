@@ -20,8 +20,8 @@
       </div>
     </div>
     <div
-      v-if="playing"
-      class="fixed w-72 h-12 bottom-4 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md"
+      class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md transition-all duration-500"
+      :class="playing ? 'bottom-4' : '-bottom-12'"
     >
       <div class="h-full flex items-center content-center">
         <audio-controller
