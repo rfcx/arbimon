@@ -66,15 +66,3 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
     "font-size": var(--el-font-size-base)
   )
 );
-
-
-// ------------ Manual customization ----------
-@import "./variables.scss";
-
-.el-date-editor .el-range-input {
-  background-color: $color-mirage-grey !important;
-}
-
-.el-date-range-picker .el-picker-panel__content {
-  background-color: $color-mirage-grey !important;
-}

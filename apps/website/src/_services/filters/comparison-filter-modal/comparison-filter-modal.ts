@@ -103,6 +103,11 @@ export default class ComparisonFilterModalComponent extends Vue {
     return this.selectedSites
   }
 
+  onDateChange (dateRange: [Date, Date]): void {
+    this.startDate = dayjs(dateRange[0]).format(DATE_FORMAT)
+    this.endDate = dayjs(dateRange[1]).format(DATE_FORMAT)
+  }
+
   setDefaultSelectedSites (): void {
     this.setDefaultSiteCheckboxItems()
     const selectedSites = this.initialValues?.sites ?? []
