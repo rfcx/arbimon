@@ -1,4 +1,5 @@
 import { Vue } from 'vue-class-component'
+import { Emit, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -7,18 +8,21 @@ export interface DateRangeShortcut {
   value: () => [Date, Date]
 }
 
+export const DEFAULT_DATE_RANGE: [Date, Date] = [dayjs().subtract(20, 'years').toDate(), dayjs().toDate()]
+
 export default class DateRangePicker extends Vue {
-  dateValues: Date[] = []
+  @Emit()
+  emitDateChange (): [Date, Date] {
+    return this.dateValues
+  }
+
+  dateValues: [Date, Date] = DEFAULT_DATE_RANGE
 
   get dateShortcuts (): DateRangeShortcut[] {
     return [
       {
-        text: 'All detections dates',
-        value: () => {
-          const start = dayjs().subtract(20, 'years').toDate()
-          const end = dayjs().toDate()
-          return [start, end]
-        }
+        text: 'All dates',
+        value: () => DEFAULT_DATE_RANGE
       },
       {
         text: 'This year',
@@ -37,5 +41,10 @@ export default class DateRangePicker extends Vue {
         }
       }
     ]
+  }
+
+  @Watch('dateValues')
+  onDateRangeChange (): void {
+    this.emitDateChange()
   }
 }

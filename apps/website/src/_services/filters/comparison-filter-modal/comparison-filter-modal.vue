@@ -95,7 +95,7 @@
         v-else
         class="p-4 flex"
       >
-        <date-range-picker />
+        <date-range-picker @emit-date-change="onDateChange" />
         <!-- <div>
           <label
             class="text-white block"
