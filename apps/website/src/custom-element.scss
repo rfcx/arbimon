@@ -2,10 +2,13 @@
 
 @import "./variables";
 
+/* stylelint-disable selector-class-pattern */
 .el-date-editor .el-range-input {
   background-color: $color-mirage-grey !important;
 }
 
-.el-picker-panel, .el-picker-panel__sidebar {
+.el-picker-panel,
+.el-picker-panel__sidebar {
   background-color: $color-mirage-grey !important;
 }
+/* stylelint-enable selector-class-pattern */
