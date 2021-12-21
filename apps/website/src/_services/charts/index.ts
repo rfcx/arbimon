@@ -8,6 +8,7 @@ interface SvgAndDimensions {
   height: number
 }
 
+export const X_AXIS_GAP = 30
 export const Y_AXIS_GAP = 50
 const LEGEND_ITEM_WIDTH = 80
 
