@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { generateHorizontalLegend, getLegendGroupNames, Y_AXIS_GAP } from '..'
+import { generateHorizontalLegend, getLegendGroupNames, X_AXIS_GAP, Y_AXIS_GAP } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
@@ -100,7 +100,7 @@ export const generateChartInternal = (datasets: LineChartSeries[], config: LineC
 
 export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig, xTitle: string, yTitle: string): SVGSVGElement | null => {
   const { width, height, margins } = config
-  const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + Y_AXIS_GAP } }
+  const newConfig = { ...config, margins: { ...margins, left: margins.left + X_AXIS_GAP, bottom: margins.bottom + Y_AXIS_GAP } }
   const svg = generateChart(datasets, newConfig)
 
   const labels = getLegendGroupNames(datasets.length)
