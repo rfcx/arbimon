@@ -177,9 +177,6 @@ importers:
       '@types/mysql': 2.15.19
       '@types/validator': 13.7.0
 
-  apps/db:
-    specifiers: {}
-
   apps/website:
     specifiers:
       '@auth0/auth0-spa-js': ^1.19.2
@@ -277,6 +274,9 @@ importers:
       xlsx: 0.17.3
 
   tools/configs:
+    specifiers: {}
+
+  tools/db:
     specifiers: {}
 
 packages:
