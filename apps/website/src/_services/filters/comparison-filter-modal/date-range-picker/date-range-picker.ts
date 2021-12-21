@@ -49,7 +49,7 @@ export default class DateRangePicker extends Vue {
     ]
   }
 
-  override mounted (): void {
+  override created (): void {
     this.dateValues = [
       this.defaultStartDate ? dayjs(this.defaultStartDate).toDate() : MOCK_WHOLE_PROJECT_DATE_RANGE[0],
       this.defaultEndDate ? dayjs(this.defaultEndDate).toDate() : MOCK_WHOLE_PROJECT_DATE_RANGE[1]
