@@ -95,35 +95,11 @@
         v-else
         class="p-4 flex"
       >
-        <date-range-picker @emit-date-change="onDateChange" />
-        <!-- <div>
-          <label
-            class="text-white block"
-            for="start"
-          >
-            Start
-          </label>
-          <input
-            v-model="startDate"
-            type="date"
-            :max="today"
-            class="bg-white text-black rounded-lg mr-2"
-          >
-        </div>
-        <div>
-          <label
-            class="text-white block"
-            for="end"
-          >
-            End
-          </label>
-          <input
-            v-model="endDate"
-            type="date"
-            :max="today"
-            class="bg-white text-black rounded-lg mr-2"
-          >
-        </div> -->
+        <date-range-picker
+          :default-start-date="startDate"
+          :default-end-date="endDate"
+          @emit-date-change="onDateChange"
+        />
       </div>
     </div>
     <div class="flex justify-end px-4 py-2 border-t-1">
