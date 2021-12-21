@@ -1,0 +1,11 @@
+/* Element plus class customization */ 
+
+@import "./variables";
+
+.el-date-editor .el-range-input {
+  background-color: $color-mirage-grey !important;
+}
+
+.el-date-range-picker {
+  background-color: $color-mirage-grey !important;
+}
