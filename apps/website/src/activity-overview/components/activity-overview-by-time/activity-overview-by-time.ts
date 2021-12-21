@@ -6,7 +6,7 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { TimeDataset } from '@/activity-overview/types'
 import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
-import { svgToPngData } from '~/charts'
+import { svgToPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
@@ -65,7 +65,7 @@ export default class ActivityOverviewByTime extends Vue {
     const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig, TIME_BUCKET_LABELS[this.selectedBucket], DATASET_LABELS[this.selectedType])
     if (!svg) return
 
-    const png = await svgToPngData({ svg, ...exportConfig })
+    const png = await svgToPng({ svg, ...exportConfig })
     downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }

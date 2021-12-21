@@ -2,7 +2,7 @@ import * as d3 from 'd3'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-export interface ChartSVGElement {
+interface SvgAndDimensions {
   svg: SVGSVGElement
   width: number
   height: number
@@ -16,19 +16,19 @@ export const exportChartWithElement = async (element: Element, filename: string)
   await exportChart(chartElement, filename)
 }
 
-const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
-  const data = await svgToPngData(chartElement)
+const exportChart = async (svg: SvgAndDimensions, filename: string): Promise<void> => {
+  const data = await svgToPng(svg)
   downloadPng(data, filename)
 }
 
-const getChartElement = (element: Element): ChartSVGElement => {
+const getChartElement = (element: Element): SvgAndDimensions => {
   const svg = element.getElementsByTagName('svg')[0]
   const width = Number(svg.getAttribute('width') as string)
   const height = Number(svg.getAttribute('height') as string)
   return { svg, width, height }
 }
 
-export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
+export const svgToPng = async (svg: SvgAndDimensions): Promise<string> => {
   const serializer = new XMLSerializer()
   const source = serializer.serializeToString(chartElement.svg)
 
