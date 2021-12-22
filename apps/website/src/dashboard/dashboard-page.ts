@@ -3,19 +3,21 @@ import { Inject } from 'vue-property-decorator'
 
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
-import { getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
+import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
+import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
-import { ThreatenedSpeciesRow } from './components/dashboard-endangered-species/dashboard-endangered-species'
-import DashboardEndangeredSpecies from './components/dashboard-endangered-species/dashboard-endangered-species.vue'
 import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
 import DashboardLineChart from './components/dashboard-line-chart/dashboard-line-chart.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
+import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
 import DashboardSitemap from './components/dashboard-sitemap/dashboard-sitemap.vue'
-import DashboardTopTaxons from './components/dashboard-top-taxons/dashboard-top-taxons.vue'
+import { ThreatenedSpeciesRow } from './components/dashboard-threatened-species/dashboard-threatened-species'
+import DashboardThreatenedSpecies from './components/dashboard-threatened-species/dashboard-threatened-species.vue'
 import { dashboardService } from './services'
 
 export interface Tab {
@@ -30,16 +32,18 @@ const TAB_VALUES = {
 
 @Options({
   components: {
-    DashboardEndangeredSpecies,
     DashboardHighlightedSpecies,
     DashboardLineChart,
     DashboardMetrics,
     DashboardProjectProfile,
+    DashboardSidebarTitle,
     DashboardSitemap,
-    DashboardTopTaxons
+    DashboardThreatenedSpecies,
+    HorizontalStackedDistribution
   }
 })
 export default class DashboardPage extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
   @Inject() readonly store!: BiodiversityStore
 
   generated: DashboardGeneratedResponse | null = null
@@ -85,6 +89,10 @@ export default class DashboardPage extends Vue {
 
   get taxonColors (): Record<string, string> {
     return TAXONOMY_COLORS
+  }
+
+  get extinctionColors (): Record<string, string> {
+    return EXTINCTION_LABELS_AND_COLORS
   }
 
   override async created (): Promise<void> {

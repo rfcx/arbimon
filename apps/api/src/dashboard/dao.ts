@@ -2,7 +2,7 @@ import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
 import { DashboardGeneratedResponse, DashboardSpecies } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
-import { EXTINCTION_RISK_THREATENED_CODES } from '@rfcx-bio/common/iucn'
+import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
@@ -11,13 +11,14 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
   const speciesThreatened = await getSpeciesThreatened()
 
   return {
-    detectionCount: await getDetectionNumber(),
+    detectionCount: await getDetectionCount(),
     siteCount: rawSites.length,
     speciesCount: rawSpecies.length,
     speciesThreatenedCount: speciesThreatened.length,
-    richnessByTaxon: await getRichness(),
     speciesThreatened,
     speciesHighlighted: await getHighlighted(),
+    richnessByTaxon: await getRichnessByTaxon(),
+    richnessByExtinction: await getRichnessByExtinction(),
     richnessByHour: await getRichnessDetectionByTime(),
     detectionFrequencyByHour: await getDetectionFrequencyByTime()
   }
@@ -46,12 +47,23 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
   }
 }
 
-export async function getDetectionNumber (): Promise<number> {
+export async function getDetectionCount (): Promise<number> {
   return sumBy(rawDetections, 'num_of_recordings')
 }
 
-export const getRichness = async (): Promise<Record<string, number>> =>
-  mapValues(groupBy(rawSpecies, 'taxon'), species => species.length)
+export const getRichnessByTaxon = async (): Promise<Array<[string, number]>> =>
+  Object.entries(groupBy(rawSpecies, 'taxon'))
+    .map(([taxon, species]) => [taxon, species.length] as [string, number])
+    .sort((a, b) => b[1] - a[1])
+
+export const getRichnessByExtinction = async (): Promise<Array<[string, number]>> =>
+    Object.entries(groupBy(rawSpecies, 'extinctionRisk'))
+      .map(([extinctionCode, speciesList]) => [
+        getExtinctionRisk(extinctionCode as ExtinctionRiskCode),
+        speciesList.length
+      ] as [ExtinctionRisk, number])
+      .sort((a, b) => b[0].level - a[0].level)
+      .map(([extinctionRisk, speciesCount]) => [extinctionRisk.label, speciesCount])
 
 // TODO ??? - Getting species data from DB instead (The code is from species controller)
 export async function getSpeciesThreatened (): Promise<DashboardSpecies[]> {

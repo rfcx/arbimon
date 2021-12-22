@@ -11,7 +11,7 @@
     />
     <numeric-metric
       class="ml-4"
-      :value="metrics.endangeredSpecies"
+      :value="metrics.speciesThreatenedCount"
       :total-value="metrics.speciesCount"
       subtitle="threatened"
     />

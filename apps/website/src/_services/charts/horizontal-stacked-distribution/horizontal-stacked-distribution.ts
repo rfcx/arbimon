@@ -12,7 +12,7 @@ interface Bar {
 const DEFAULT_COLOR = '#FFFFFF'
 
 export default class DashboardTopTaxons extends Vue {
-  @Prop() dataset!: Record<string, number>
+  @Prop() dataset!: Array<[string, number]>
   @Prop() colors!: Record<string, string>
   @Prop({ default: undefined }) knownTotalCount!: number | undefined
 
@@ -21,7 +21,7 @@ export default class DashboardTopTaxons extends Vue {
   }
 
   get totalCount (): number {
-    return this.knownTotalCount ?? sum(Object.values(this.dataset))
+    return this.knownTotalCount ?? sum(this.dataset.map(([_, count]) => count))
   }
 
   get bars (): Bar[] {
@@ -30,9 +30,8 @@ export default class DashboardTopTaxons extends Vue {
     if (totalCount === 0) return []
 
     // Remove empty bars & sort
-    const inputs = Object.entries(this.dataset)
+    const inputs = this.dataset
       .filter(([, count]) => count > 0)
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
 
     // Calculate percentages & bar-widths (width is cumulative percentage)
     let width = 0
