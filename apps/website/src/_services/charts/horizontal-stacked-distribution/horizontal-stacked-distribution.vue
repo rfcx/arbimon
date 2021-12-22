@@ -9,7 +9,7 @@
       <div
         v-for="(bar, idx) in bars"
         :key="'dashboard-richness-percentage-' + bar.name"
-        class="absolute h-1 rounded-xl"
+        class="absolute h-1 rounded-4xl"
         :style="{ width: bar.width + '%', backgroundColor: bar.color , zIndex: bars.length - idx }"
       />
     </div>
