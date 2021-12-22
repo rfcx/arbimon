@@ -6,7 +6,7 @@ import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboa
 import { getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import { BiodiversityStore } from '~/store'
-import { EndangeredSpeciesRow } from './components/dashboard-endangered-species/dashboard-endangered-species'
+import { ThreatenedSpeciesRow } from './components/dashboard-endangered-species/dashboard-endangered-species'
 import DashboardEndangeredSpecies from './components/dashboard-endangered-species/dashboard-endangered-species.vue'
 import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
@@ -52,14 +52,14 @@ export default class DashboardPage extends Vue {
 
   get lineChartData (): Record<number, number> | null {
     return this.selectedTab === TAB_VALUES.richness
-      ? this.generated?.speciesRichness?.time ?? null
-      : this.generated?.detectionFrequency?.time ?? null
+      ? this.generated?.richnessByHour ?? null
+      : this.generated?.detectionFrequencyByHour ?? null
   }
 
-  get highlighted (): HighlightedSpeciesRow[] {
+  get speciesHighlighted (): HighlightedSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.highlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+    return this.generated.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
       speciesId,
       scientificName,
       commonName,
@@ -69,10 +69,10 @@ export default class DashboardPage extends Vue {
     }))
   }
 
-  get endangered (): EndangeredSpeciesRow[] {
+  get speciesThreatened (): ThreatenedSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.endangered.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+    return this.generated.speciesThreatened.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
       speciesId,
       scientificName,
       commonName,

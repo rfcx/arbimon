@@ -6,7 +6,7 @@ import { ExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 
-export interface EndangeredSpeciesRow {
+export interface ThreatenedSpeciesRow {
   speciesId: number
   scientificName: string
   commonName: string
@@ -18,7 +18,7 @@ export interface EndangeredSpeciesRow {
 export default class DashboardEndangeredSpecies extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Inject() readonly ROUTE_NAMES!: RouteNames
-  @Prop() species!: EndangeredSpeciesRow[]
+  @Prop() species!: ThreatenedSpeciesRow[]
 
   get hasData (): boolean {
     return this.species.length > 0
