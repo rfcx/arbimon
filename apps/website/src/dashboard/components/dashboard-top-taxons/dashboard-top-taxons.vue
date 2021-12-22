@@ -8,43 +8,15 @@
         Richness
       </div>
       <div class="flex">
-        <div v-if="hasData">
-          {{ totalCount }} species
-        </div>
+        {{ speciesCount }} species
         <icon-fas-angle-right class="font-semibold self-center" />
       </div>
     </router-link>
   </div>
-  <no-data-panel
-    v-if="!hasData"
-    class="h-20"
+  <horizontal-stacked-distribution
+    :dataset="dataset"
+    :colors="colors"
+    :known-total-count="speciesCount"
   />
-  <div v-else>
-    <div class="relative mx-2">
-      <div class="absolute w-full h-1 rounded-xl bg-steel-grey-light" />
-      <div
-        v-for="(bar, idx) in bars"
-        :key="'dashboard-richness-percentage-' + bar.name"
-        class="absolute h-1 rounded-xl"
-        :style="{ width: bar.width + '%', backgroundColor: bar.color , zIndex: bars.length - idx }"
-      />
-    </div>
-    <div class="pt-3">
-      <ul class="list-none">
-        <li
-          v-for="bar in bars"
-          :key="'dashboard-richness-class-' + bar.name"
-          class="inline-flex items-baseline text-xs"
-        >
-          <div
-            class="rounded-full w-1.5 h-1.5 self-center mx-2"
-            :style="{ backgroundColor: bar.color }"
-          />
-          {{ bar.name }}
-          <span class="ml-1 text-subtle font-light">{{ bar.percentage < 5 ? bar.percentage.toFixed(1) : bar.percentage.toFixed(0) }}%</span>
-        </li>
-      </ul>
-    </div>
-  </div>
 </template>
 <script lang="ts" src="./dashboard-top-taxons.ts"></script>

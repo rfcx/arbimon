@@ -36,10 +36,10 @@
       <!-- Right content -->
       <div class="col-span-2">
         <dashboard-top-taxons
-          v-if="generated?.richnessByTaxon"
+          v-if="generated?.richnessByTaxon && generated?.speciesCount"
           :dataset="generated?.richnessByTaxon ?? {}"
           :colors="taxonColors"
-          :known-total-count="generated?.speciesCount ?? 0"
+          :species-count="generated?.speciesCount ?? 0"
         />
         <dashboard-highlighted-species :species="speciesHighlighted" />
         <dashboard-endangered-species :species="speciesThreatened" />
