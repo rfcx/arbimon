@@ -2,11 +2,11 @@ import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { TimeDataset } from '@/activity-overview/types'
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
-import { ColoredFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
+import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
 
-export type ActivityPatternsDataBySites = ActivityPatternsData & ColoredFilter
+export type ActivityPatternsDataBySites = ActivityPatternsData & DatasetParameters
 
 export const ACTIVITY_PATTERN_MAP_KEYS = {
   detection: 'detection',
@@ -59,7 +59,7 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
     detectionFrequency: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, color, activityBySite }) => {
+  return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
     const activityBySiteValues = Object.values(activityBySite)
     const data = activityBySiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
       siteName,
@@ -72,7 +72,7 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
       }
     }))
 
-    return { startDate, endDate, sites, color, data, maxValues }
+    return { startDate, endDate, sites, data, maxValues }
   })
 }
 
@@ -82,7 +82,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ti
 
   const files: FileData[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites) + '.csv'
+      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites.flatMap(sg => sg.value)) + '.csv'
       const data = await getCSVData(datasets[idx])
       return { filename, data }
     })

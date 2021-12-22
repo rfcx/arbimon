@@ -38,6 +38,7 @@
       <map-bubble-component
         v-for="(dataset, idx) in datasets"
         :key="idx"
+        :color="store.datasetColors[idx]"
         :dataset="dataset"
         :data-key="selectedType"
         :get-popup-html="getPopupHtml"
