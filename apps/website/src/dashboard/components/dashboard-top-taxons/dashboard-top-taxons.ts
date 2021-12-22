@@ -1,56 +1,20 @@
-import { sumBy } from 'lodash-es'
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
-import { ROUTE_NAMES } from '~/router'
+import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
+import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 
-export interface RichnessData {
-  taxon: string
-  speciesNo: number
-}
-
-interface DashboardRichnessPercentage {
-  taxon: string
-  percentage: number
-  color: string
-}
-
+@Options({
+  components: {
+    HorizontalStackedDistribution
+  }
+})
 export default class DashboardTopTaxons extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
   @Inject() readonly store!: BiodiversityStore
-  @Prop() totalSpecies!: number
-  @Prop() richness!: RichnessData[]
 
-  get richnessRoutename (): string {
-    return ROUTE_NAMES.speciesRichness
-  }
-
-  get projectId (): string | undefined {
-    return this.store.selectedProject?.id
-  }
-
-  get richnessPercentage (): DashboardRichnessPercentage[] {
-    const { richness, totalSpecies } = this
-    return richness.map(({ taxon, speciesNo }) => {
-      return {
-        taxon,
-        percentage: (speciesNo / totalSpecies) * 100,
-        color: TAXONOMY_CLASSES.find(c => c.name === taxon)?.color ?? '#FFFFFF'
-      }
-    }).sort((a, b) => b.percentage - a.percentage)
-  }
-
-  get hasData (): boolean {
-    return this.richness.length > 0
-  }
-
-  displayPercentage (percentage: number): string {
-    return percentage.toFixed(1)
-  }
-
-  calculateBarWidth (idx: number): number {
-    const items = this.richnessPercentage.slice(0, idx + 1)
-    return sumBy(items, 'percentage')
-  }
+  @Prop() dataset!: Record<string, number>
+  @Prop() colors!: Record<string, string>
+  @Prop() speciesCount!: number
 }

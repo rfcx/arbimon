@@ -23,6 +23,9 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
     "danger": (
       "base": #D46767,
     ),
+    "info" : (
+      "base": #45485D,
+    )
   ),
   $text-color: (
     "primary": #fff,
@@ -33,7 +36,7 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
   $background-color-base: #141525,
   $border-color: (
     "base": #45485D,
-    "light": #45485D,
+    "light": #232436,
     "lighter": #45485D,
     "extra-light": #45485D,
   ),
@@ -46,16 +49,31 @@ warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
     "extra-small": 0.75rem,
   ),
   $select: (
-    "input-color": var(--el-bg-color-base),
+    "input-color": var(--el-bg-color-white),
     "bg-color": var(--el-bg-color-base),
+    "input-focus-border-color": var(--el-text-color-placeholder),
+    "input-font-size": var(--el-font-size-base)
   ),
   $select-dropdown: (
     "bg-color": var(--el-bg-color-base),
   ),
   $select-option: (
-    "hover-background": var(--el-bg-color-base),
+    "hover-background": var(--el-border-color-light),
   ),
   $input: (
     "bg-color": var(--el-bg-color-base),
+    "focus-border": var(--el-bg-color-base),
+    "hover-border": var(--el-bg-color-base),
   ),
+  $tag: (
+    "font-size": var(--el-font-size-base)
+  ),
+  $button: (
+    "bg-color": var(--el-bg-color-lighter),
+    "hover-bg-color": var(--el-color-primary),
+    "active-bg-color": var(--el-color-primary),
+    "text-color": var(--el-text-color-regular),
+    "hover-text-color": var(--el-text-color-regular),
+    "active-text-color": var(--el-text-color-regular),
+  )
 );

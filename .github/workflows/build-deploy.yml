@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - staging
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   build-deploy:
     runs-on: ubuntu-20.04
@@ -70,7 +71,7 @@ jobs:
                 "NAMESPACE": "production",
                 "ECR_REPO_WEBSITE": "biodiversity-website",
                 "ECR_REPO_API": "biodiversity-api",
-                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_PROD_WEBHOOK }}",
+                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
                 "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "ba.rfcx.org",
                 "URL_API": "ba-api.rfcx.org"

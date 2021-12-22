@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-row justify-between items-center w-full">
+  <div class="flex flex-row justify-between items-top w-full">
     <div>
-      <h1 class="text-4xl capitalize">
+      <h1 class="text-4xl capitalize py-1">
         {{ pageTitle }}
       </h1>
-      <p class="italic">
+      <p class="text-subtle text-sm">
         {{ pageSubtitle }}
       </p>
     </div>

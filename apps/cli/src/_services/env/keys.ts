@@ -12,12 +12,21 @@
 
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
-  'USERNAME',
-  'PASSWORD',
-  'DATABASE',
-  'HOST',
-  'IUCN_TOKEN',
+  'USERNAME', // TODO: More precise name
+  'PASSWORD', // TODO: More precise name
+  'DATABASE', // TODO: More precise name
+  'HOST', // TODO: More precise name
+
+  'BIO_DB_DBNAME',
+  'BIO_DB_HOSTNAME',
+  'BIO_DB_PASSWORD',
+  'BIO_DB_PORT',
+  'BIO_DB_SSL_ENABLED',
+  'BIO_DB_USER',
+
   'IUCN_BASE_URL',
+  'IUCN_TOKEN',
+
   'WIKI_BASE_URL'
 ]
 

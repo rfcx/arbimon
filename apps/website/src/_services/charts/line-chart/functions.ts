@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
+import numeral from 'numeral'
 
-import { generateHorizontalLegend, getLegendGroupNames } from '..'
+import { generateHorizontalLegend, getLegendGroupNames, X_AXIS_GAP, Y_AXIS_GAP } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
@@ -14,9 +15,13 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
     .domain(xBounds)
     .range([config.margins.left, config.width - config.margins.right])
 
+  const xLabels = config.xLabels
+  const xTickFormatter = xLabels ? (val: d3.NumberValue): string => xLabels[val.valueOf()] : d3.format('d')
+  const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? numeral(val).format('0,0') : d3.format('.1e')(val)
+
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(0, ${config.height - config.margins.bottom})`)
-    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(d3.format('d')))
+    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(xTickFormatter))
 
   const yScale = d3.scaleLinear()
     .domain(yBounds).nice()
@@ -24,7 +29,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
 
   const yAxis = (g: any): unknown => g
     .attr('transform', `translate(${config.margins.left}, 0)`)
-    .call(d3.axisLeft(yScale))
+    .call(d3.axisLeft(yScale).tickFormat(yTickFormatter))
 
   // Render chart
   const svg = d3.create('svg')
@@ -70,17 +75,44 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
   return svg
 }
 
+export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, width: number, chartHeight: number, xTitle: string, yTitle: string): void {
+  svg.append('text')
+      .attr('y', chartHeight)
+      .attr('x', width / 2)
+      .attr('dx', '1em')
+      .attr('fill', 'currentColor')
+      .style('text-anchor', 'middle')
+      .text(xTitle)
+
+  svg.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0)
+      .attr('x', 0 - ((chartHeight - Y_AXIS_GAP) / 2))
+      .attr('dy', '1em')
+      .attr('fill', 'currentColor')
+      .style('text-anchor', 'middle')
+      .text(yTitle)
+}
+
 export const generateChartInternal = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   const svg = generateChart(datasets, config)
   return svg.node()
 }
 
-export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
-  const svg = generateChart(datasets, config)
+export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig, xTitle: string, yTitle: string): SVGSVGElement | null => {
+  const { width, height, margins } = config
+  const newConfig = { ...config, margins: { ...margins, left: margins.left + X_AXIS_GAP, bottom: margins.bottom + Y_AXIS_GAP } }
+  const svg = generateChart(datasets, newConfig)
 
   const labels = getLegendGroupNames(datasets.length)
   const colors = datasets.map(d => d.color)
-  generateHorizontalLegend(config.width, config.height - config.margins.bottom, labels, colors, svg)
+  const chartHeight = height - margins.bottom
+
+  generateAxisTitle(svg, width, chartHeight, xTitle, yTitle)
+  generateHorizontalLegend(width, chartHeight - (Y_AXIS_GAP / 2), labels, colors, svg)
+
+  svg.selectAll('text')
+    .style('font-size', '1.25rem')
 
   return svg.node()
 }

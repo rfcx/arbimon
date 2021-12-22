@@ -12,24 +12,20 @@ export const dashboardGeneratedUrl = (params: DashboardGeneratedParams): string 
 
 // Response
 export interface DashboardGeneratedResponse {
+  // Metrics
   detectionCount: number
   siteCount: number
   speciesCount: number
-  endangeredSpecies: number
-  richness: DashboardRichness[]
-  endangered: DashboardSpecies[]
-  highlighted: DashboardSpecies[]
-  speciesRichness: {
-    time: Record<number, number>
-  }
-  detectionFrequency: {
-    time: Record<number, number>
-  }
-}
+  speciesThreatenedCount: number
 
-export interface DashboardRichness {
-  taxon: string
-  speciesNo: number
+  // Species
+  speciesThreatened: DashboardSpecies[]
+  speciesHighlighted: DashboardSpecies[]
+
+  // Charts & maps
+  richnessByTaxon: Record<string, number>
+  richnessByHour: Record<number, number>
+  detectionFrequencyByHour: Record<number, number>
 }
 
 export interface DashboardSpecies {

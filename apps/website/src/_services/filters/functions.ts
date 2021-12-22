@@ -5,17 +5,23 @@ import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { SiteGroup } from '~/filters'
 import { useStore } from '~/store'
 import { ComparisonFilter, DatasetParameters } from './types'
 
 export function filterToDataset ({ startDate, endDate, sites, otherFilters }: ComparisonFilter): DatasetParameters {
-  const start = startDate.toISOString()
-  const end = endDate.add(1, 'days').toISOString()
-  return { start, end, sites, otherFilters }
+  return {
+    startDate: startDate,
+    endDate: endDate,
+    sites: sites.flatMap(sg => sg.value),
+    otherFilters
+  }
 }
 
 export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[], datasetParams: DatasetParameters): MockHourlyDetectionSummary[] => {
-  const { start, end, sites, otherFilters } = datasetParams
+  const { startDate, endDate, sites, otherFilters } = datasetParams
+  const start = startDate.toISOString()
+  const end = endDate.add(1, 'day').toISOString()
 
   // TODO - Extract this to UI filter package
   const propertyEqualFilters = mapValues(groupBy(otherFilters, 'propertyName'), f => f.map(v => v.value))
@@ -41,7 +47,7 @@ export const filterMocksBySpecies = (detections: MockHourlyDetectionSummary[], s
 export function getFilterFriendlyName (filter: ComparisonFilter): string {
   const { startDate, endDate, sites } = filter
 
-  const siteName = getSiteName(sites)
+  const siteName = getSiteGroupName(sites)
   const date = getDateFormatted(startDate, endDate, 'DD MMM YY')
 
   return `${siteName} (${date})`
@@ -81,5 +87,14 @@ function getSiteName (sites: Site[]): string {
     case 0: return 'All sites'
     case 1: return sites[0].name
     default: return `${sites[0].name} + ${siteLength - 1} other sites`
+  }
+}
+
+function getSiteGroupName (sites: SiteGroup[]): string {
+  const siteLength = sites.length
+  switch (siteLength) {
+    case 0: return 'All sites'
+    case 1: return sites[0].label
+    default: return `${sites[0].label} + ${siteLength - 1} other groups`
   }
 }

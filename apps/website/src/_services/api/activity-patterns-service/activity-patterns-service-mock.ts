@@ -70,53 +70,28 @@ export class ActivityPatternsService {
     return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
   }
 
-  calculateOccupancyActivity (detections: MockHourlyDetectionSummary[], totalSiteCount: number): number {
-    const occupiedCount = new Set(detections.map(d => d.stream_id)).size
-    return occupiedCount === 0 ? 0 : occupiedCount / totalSiteCount
-  }
-
   getActvityDataByTime (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivityPatternsDataByTime {
-    const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
-
     const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
     const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
-    const hour = {
+    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
+    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
+
+    return {
+      hourOfDay: {
       detection: mapValues(hourGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(hourGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-
-    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).date())
-    const day = {
+      detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    },
+    dayOfWeek: {
       detection: mapValues(dayGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(dayGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-
-    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month() + 1)
-    const month = {
+      detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    },
+    monthOfYear: {
       detection: mapValues(monthGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(monthGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
+      detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
     }
-
-    const yearGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).year())
-    const year = {
-      detection: mapValues(yearGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(yearGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-
-    const quarterGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).quarter())
-    const quarter = {
-      detection: mapValues(quarterGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(quarterGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(quarterGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-
-    return { hour, day, month, year, quarter }
+   }
   }
 }
 

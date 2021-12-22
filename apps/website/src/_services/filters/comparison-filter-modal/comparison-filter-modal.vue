@@ -3,7 +3,7 @@
     name="buildComparisonModal"
   >
     <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
-      Build comparison
+      Customize dataset
     </h1>
     <div class="flex flex-row min-h-lg">
       <!-- left menu bar -->
@@ -24,17 +24,16 @@
         v-if="currentActiveMenuId === menus[0].id"
         class="w-full"
       >
-        <div class="w-full p-4">
-          <!-- TODO: 50 implement search logic -->
+        <div class="w-full px-4 pt-3">
           <input
             type="text"
             placeholder="Search"
             class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary hidden"
           >
         </div>
-        <div class="max-h-md overflow-auto">
+        <div class="max-h-md">
           <label
-            class="px-4 pb-2 align-middle list-item"
+            class="pl-4 pb-2 align-middle list-item select-all"
           >
             <input
               type="radio"
@@ -44,24 +43,53 @@
             >
             <span class="text-white ml-2">All sites in the project</span>
           </label>
-          <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
-            Filter results from some sites only
-          </h2>
-          <label
-            v-for="(item) in siteCheckboxItems"
-            :key="'site-list-' + item.site.siteId"
-            class="px-4 pb-2 align-middle list-item"
+
+          <el-select
+            v-model="selectedSiteGroups"
+            value-key="label"
+            multiple
+            filterable
+            popper-class="selector-sites"
+            name="input-site"
+            fit-input-width
+            reserve-keyword
+            placeholder="Type to filter sites"
+            no-data-text="No matching sites"
+            class="search-select ml-4 mt-2"
+            :filter-method="onFilterType"
+            @blur="onSetSelectorPlaceHolder"
+            @input="onRemoveSelectorPlaceHolder"
+            @focus="onRemoveSelectorPlaceHolder"
           >
-            <input
-              type="checkbox"
-              class="rounded"
-              :checked="item.check"
-              @click="updateSelectedSites(item)"
+            <el-option
+              v-if="optionAllMatchingFilter"
+              :key="'site-match-' + optionAllMatchingFilter.label"
+              :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
+              :value="optionAllMatchingFilter"
+            />
+            <el-option
+              v-for="item in filtered"
+              :key="'site-list-' + item.siteId"
+              :label="item.name"
+              :value="{ label: item.name, value: [item] }"
+            />
+          </el-select>
+          <div class="ml-2 mt-3">
+            <el-tag
+              v-for="site in selectedSiteGroups"
+              :key="'site-tag-'+ site.label"
+              class="ml-2 mb-2 select-none"
+              closable
+              type="info"
+              effect="dark"
+              @close="onRemoveSiteTags(site)"
             >
-            <span class="text-white ml-2">{{ item.site.name }}</span>
-          </label>
+              {{ site.label }}
+            </el-tag>
+          </div>
         </div>
       </div>
+
       <!-- Taxon -->
       <div
         v-else-if="currentActiveMenuId === 'taxon'"
@@ -72,38 +100,17 @@
           @emit-selected-taxons="updateSelectedTaxons"
         />
       </div>
+
+      <!-- Date range -->
       <div
         v-else
         class="p-4 flex"
       >
-        <div>
-          <label
-            class="text-white block"
-            for="start"
-          >
-            Start
-          </label>
-          <input
-            v-model="startDate"
-            type="date"
-            :max="today"
-            class="bg-white text-black rounded-lg mr-2"
-          >
-        </div>
-        <div>
-          <label
-            class="text-white block"
-            for="end"
-          >
-            End
-          </label>
-          <input
-            v-model="endDate"
-            type="date"
-            :max="today"
-            class="bg-white text-black rounded-lg mr-2"
-          >
-        </div>
+        <date-range-picker
+          :default-start-date="startDate"
+          :default-end-date="endDate"
+          @emit-date-change="onDateChange"
+        />
       </div>
     </div>
     <div class="flex justify-end px-4 py-2 border-t-1">
@@ -123,3 +130,61 @@
   </modal-popup>
 </template>
 <script src="./comparison-filter-modal.ts" lang="ts"></script>
+<style lang="scss">
+.search-select {
+  .select-trigger {
+    width: 520px;
+    background-color: #141525;
+    margin-right: 1rem;
+
+    & .el-input * > .el-icon.el-select__caret {
+      display: flex;
+    }
+  }
+
+  span.el-tag {
+    display: none;
+  }
+
+  * > input {
+    background-color: transparent;
+    border-radius: 0.25rem;
+  }
+
+  & * > .el-select__input {
+    margin: 0 0 0 2px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+.selector-sites {
+  background-color:hsl(236, 25%, 15%);
+  border: 1px solid #45485D;
+  & .el-popper__arrow {
+    display: none;
+  }
+  & .el-select-dropdown__item {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid var(--el-border-color-base);
+    &:hover {
+      background-color: var(--el-border-color-base);
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.el-scrollbar__view.el-select-dropdown__list {
+  padding: 0;
+}
+
+@media (max-width: 700px) {
+  .search-select .select-trigger {
+    width: 180px;
+    margin-right: 1rem;
+  }
+}
+</style>

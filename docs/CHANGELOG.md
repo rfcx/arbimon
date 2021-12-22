@@ -10,11 +10,38 @@ Allowed categories:
 - Breaking changes
 --->
 
-<!-- 
-# x.x.x (2021-12-22)
 
-TODO
--->
+# 1.0.0-rc2 (2021-12-22)
+
+## Features
+
+- **spotlight:** Species call spectrogram and audio [#326]
+- **spotlight:** Extinction risk rating [#320]
+- **spotlight:** CSV Export [#146]
+
+## Enhancements
+
+- **species:** Add species common name [#330]
+- **spotlight:** Fix species-selector styles & alignment [#146]
+- **activity:** Reconnect filter [#312]
+- **activity:** Improve table UI for multiple datasets [#312]
+- **activity:** Update CSV to support multiple datasets [#370]
+- **exports:** Add export button to charts and maps everywhere consistently [#329]
+- **filters:** Searchable drop-down for site filter [#50]
+- **filters:** Improve date-range picker [#55]
+- **maps:** Center map on project [#351]
+- **maps:** Replace scroll to zoom with +/- buttons (to avoid conflicts with page scrolling) [#350]
+- **navbar:** Remove "analytics" and give more space for project title [#353]
+- **line-charts:** Show hour-of-day, day-of-week, month-of-year (remove by quarter, by year) [#325]
+- **line-charts:** Add axis titles to chart exports [#199]
+- **line-chart:** Increase font size for x/y axis ticks [#327]
+
+## Bug Fixes
+
+- **activity:** Remove naive occupancy from line chart [#328]
+- **spotlight:** Fix IUCN citation [#321]
+- **charts:** Fix chart downloads on Firefox [#171]
+- **dx:** Verify Safari serve is working [#246]
 
 # 1.0.0-rc1 (2021-12-13)
 

@@ -14,12 +14,11 @@ module.exports = {
   },
   plugins: ['regex'],
   rules: {
-    // Overrides
+    // Override imported rules
     '@typescript-eslint/no-empty-function': 'off',
     indent: 'off',
-    'vue/multi-word-component-names': 'warn',
 
-    // Rules
+    // Customize Rules
     'regex/invalid': [
       'error', [
         {
@@ -38,6 +37,11 @@ module.exports = {
           replacement: ' '
         },
         // TODO ??? - Find a way to avoid repeating this
+        {
+          regex: 'from \'lodash\'',
+          message: 'Use lodash-es',
+          replacement: 'from \'lodash-es\''
+        },
         {
           // eslint-disable-next-line no-useless-escape
           regex: 'import \\* as [a-zA-Z0-9]* from \'dayjs\'',

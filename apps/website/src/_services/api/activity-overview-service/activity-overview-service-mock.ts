@@ -1,10 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
-import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
+import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { ActicvityOverviewDataBySite, ActivityOverviewData, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupByDetectionKey, DetectionGroupedBySiteAndTaxon } from '~/api/activity-overview-service'
+import { ActivityOverviewData, ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '~/api/activity-overview-service'
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 
 export class ActivityOverviewService {
@@ -16,9 +16,8 @@ export class ActivityOverviewService {
   async getActivityOverviewData (dataset: DatasetParameters): Promise<ActivityOverviewData> {
     const totalSummaries = filterMocksByParameters(this.rawHourlySpeciesSummaries, dataset)
     const detectionsBySites = groupBy(totalSummaries, 'stream_id')
-    const detectionsByTaxon: DetectionGroupByDetectionKey = groupBy(totalSummaries, 'taxon')
-    const overviewBySite = await this.getOverviewDataBySite(detectionsByTaxon, detectionsBySites)
-    const overviewByTime = await this.getOverviewDataByTime(totalSummaries, detectionsByTaxon)
+    const overviewBySite = await this.getOverviewDataBySite(detectionsBySites)
+    const overviewByTime = await this.getOverviewDataByTime(totalSummaries)
     const overviewBySpecies = await this.getOverviewDataBySpecies(totalSummaries)
 
     return await simulateDelay({ ...dataset, overviewBySite, overviewByTime, overviewBySpecies }, this.delay)
@@ -28,52 +27,23 @@ export class ActivityOverviewService {
     return new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
   }
 
-  async getOverviewDataBySite (detectionsByTaxon: DetectionGroupByDetectionKey, detectionsBySites: DetectionGroupByDetectionKey): Promise<ActicvityOverviewDataBySite> {
-    const taxons = Object.keys(detectionsByTaxon)
+  async getOverviewDataBySite (detectionsBySites: DetectionGroupedBySite): Promise<ActivityOverviewDataBySite> {
+    const summariesBySites = mapValues(detectionsBySites, (detections, siteId) => {
+      const totalRecordingCount = this.getRecordingCount(detections)
+      const detectionCount = sum(detections.map(d => d.num_of_recordings))
+      const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
+      const siteOccupiedFrequency = detections.length > 0
 
-    const summariesEachTaxonBySite: DetectionGroupedBySiteAndTaxon = mapValues(detectionsByTaxon, (detection) => {
-      const groupedSites = groupBy(detection, 'stream_id')
-      return groupedSites
-    })
-
-    // Calculate all have detection sites
-    const summariesBySites = mapValues(summariesEachTaxonBySite, (siteWithDetections, siteId) => {
-      return mapValues(siteWithDetections, (detections) => {
-        const siteTotalRecordingCount = this.getRecordingCount(detections)
-
-        const siteDetectionCount = sum(detections.map(d => d.num_of_recordings))
-        const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionCount / siteTotalRecordingCount
-        const siteOccupiedFrequency = detections.length > 0
-
-        return {
-          siteId,
-          siteName: detections[0].name,
-          latitude: detections[0].lat,
-          longitude: detections[0].lon,
-          detection: siteDetectionCount,
-          detectionFrequency: siteDetectionFrequency,
-          occupancy: siteOccupiedFrequency
-        }
-      })
-    })
-
-    // Add non detection sites
-    for (const taxon of taxons) {
-      const summariesByTaxonGroup = summariesBySites[taxon]
-      for (const [siteId, values] of Object.entries(detectionsBySites)) {
-        if (summariesByTaxonGroup[siteId] === undefined) {
-          summariesByTaxonGroup[siteId] = {
-            siteId,
-            siteName: values[0].name,
-            latitude: values[0].lat,
-            longitude: values[0].lon,
-            detection: 0,
-            detectionFrequency: 0,
-            occupancy: false
-          }
-        }
+      return {
+        siteId,
+        siteName: detections[0].name,
+        latitude: detections[0].lat,
+        longitude: detections[0].lon,
+        detection: detectionCount,
+        detectionFrequency: detectionFrequency,
+        occupancy: siteOccupiedFrequency
       }
-    }
+    })
 
     return summariesBySites
   }
@@ -92,56 +62,30 @@ export class ActivityOverviewService {
     return occupiedCount === 0 ? 0 : occupiedCount / totalSiteCount
   }
 
-  async getOverviewDataByTime (totalSummaries: MockHourlyDetectionSummary[], detectionsByTaxon: DetectionGroupByDetectionKey): Promise<ActivityOverviewDataByTime[]> {
-    const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
+  async getOverviewDataByTime (totalSummaries: MockHourlyDetectionSummary[]): Promise<ActivityOverviewDataByTime> {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
-
-    const overviewByTime: ActivityOverviewDataByTime[] = []
-    for (const taxon of Object.keys(detectionsByTaxon)) {
-      const speciesSummaries = detectionsByTaxon[taxon]
-      const eachTaxonByTime = this.calculateOverviewDataByTime(totalSiteCount, totalRecordingCount, speciesSummaries)
-      overviewByTime.push(eachTaxonByTime)
-    }
-
-    return overviewByTime
+    return this.calculateOverviewDataByTime(totalRecordingCount, totalSummaries)
   }
 
-  calculateOverviewDataByTime (totalSiteCount: number, totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime {
-    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
-    const hour = {
-      detection: mapValues(hourGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(hourGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
+  calculateOverviewDataByTime (totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime {
+    const byHour = groupByNumber(speciesSummaries, d => d.hour)
+    const byDay = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
+    const byMonth = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
 
-    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).date())
-    const day = {
-      detection: mapValues(dayGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(dayGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
+    return {
+      hourOfDay: {
+        detection: mapValues(byHour, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byHour, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      dayOfWeek: {
+        detection: mapValues(byDay, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byDay, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      monthOfYear: {
+        detection: mapValues(byMonth, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byMonth, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      }
     }
-
-    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month() + 1)
-    const month = {
-      detection: mapValues(monthGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(monthGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-
-    const yearGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).year())
-    const year = {
-      detection: mapValues(yearGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(yearGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-
-    const quarterGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).quarter())
-    const quarter = {
-      detection: mapValues(quarterGrouped, this.calculateDetectionActivity),
-      detectionFrequency: mapValues(quarterGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount)),
-      occupancy: mapValues(quarterGrouped, (data) => this.calculateOccupancyActivity(data, totalSiteCount))
-    }
-    return { hour, day, month, year, quarter }
   }
 
   async getOverviewDataBySpecies (totalSummaries: MockHourlyDetectionSummary[]): Promise<ActivityOverviewDataBySpecies[]> {
@@ -158,6 +102,7 @@ export class ActivityOverviewService {
 
       activityOverviewDataBySpecies.push({
         scientificName,
+        commonName: rawSpecies.find((raw) => raw?.scientificName === scientificName)?.commonName ?? '',
         taxon: speciesDetectedDetections[0].taxon,
         detectionCount,
         detectionFrequency,

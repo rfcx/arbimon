@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="text-white text-xl">
-      Detected Species
+      Species detected
     </h2>
     <no-data-panel
       v-if="!hasTableData"
@@ -17,7 +17,7 @@
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
-              class="font-bold capitalize p-2 bg-mirage-grey select-none"
+              class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
               :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer': item.key }"
               :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
               @click="sort(item.key)"
@@ -49,13 +49,25 @@
             v-for="row in pageData"
             :key="'species-table-row-' + row.scientificName"
           >
-            <td class="p-2">
+            <td class="pt-2 px-1">
               <router-link
                 :to="{ name: 'activity_patterns', params: { speciesSlug: row.speciesSlug }}"
                 class="text-subtle hover:(underline text-white)"
               >
                 <span class="text-white italic">{{ row.scientificName }}</span>
                 <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
+                <p
+                  v-if="row.commonName"
+                  class="text-xs"
+                >
+                  {{ row.commonName }}
+                </p>
+                <p
+                  v-else
+                  class="invisible"
+                >
+                  Unknown
+                </p>
               </router-link>
             </td>
             <td class="p-2">
@@ -96,7 +108,7 @@
             </td>
           </tr>
           <tr
-            class="h-1.5 border-b-1 border-subtle"
+            class="h-2 border-b-1 border-subtle"
           >
             <td :colspan="tableHeader.length" />
           </tr>

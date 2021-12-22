@@ -4,23 +4,47 @@
     filterable
     :filter-method="onFilterType"
     :loading="loadingSpecies"
-    class="bg-steel-grey rounded p-2 my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="species-input bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
   >
     <el-option
       v-for="species in filteredSpecies"
       :key="'species-selector-' + species.speciesId"
       :value="species.speciesSlug"
-      class="italic"
+      class="min-h-12 h-12"
       :label="species.scientificName"
-    />
+    >
+      <div class="leading-tight mt-1">
+        <div class="italic">
+          {{ species.scientificName }}
+        </div>
+        <div class="text-xs text-white text-opacity-50">
+          {{ species.commonName }}
+        </div>
+      </div>
+    </el-option>
   </el-select>
 </template>
 <script src="./species-selector.ts" lang="ts"></script>
 <style lang="scss">
-.el-input__inner {
-  font-style: italic;
+.species-input * > .el-input {
+  &__inner {
+    font-style: italic;
+  }
+  [type='text'] {
+    background-color: #141525;
+    border-radius: 0.25rem;
+      &:focus {
+        box-shadow: none;
+      }
+  }
 }
-.el-input [type='text']{
-  background-color: #141525;
+.species-input .select-trigger {
+  width: 300px;
+  & .el-input * > .el-icon.el-select__caret {
+      display: flex;
+    }
+}
+.el-popper.is-light .el-popper__arrow::before {
+  background: #141525;
 }
 </style>

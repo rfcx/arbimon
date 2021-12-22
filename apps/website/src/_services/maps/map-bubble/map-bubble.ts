@@ -1,14 +1,14 @@
 import { partition } from 'lodash-es'
-import { CirclePaint, GeoJSONSource, LngLatBounds, Map as MapboxMap, Popup } from 'mapbox-gl'
+import { CirclePaint, GeoJSONSource, LngLatBounds, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, NavigationControl, Popup } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { exportChartWithElement } from '~/charts'
-import { createMap, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
-import { MapConfig, MapDataSet, MapSiteData } from './types'
+import { MapDataSet, MapMoveEvent, MapSiteData } from './types'
 
 const DEFAULT_FILL_COLOR = '#111111'
 const DEFAULT_STROKE_COLOR = '#EEEEEE'
@@ -24,17 +24,21 @@ export default class MapBubbleComponent extends Vue {
   @Prop() dataset!: MapDataSet
   @Prop() dataKey!: string
   @Prop() getPopupHtml!: (data: MapSiteData, dataKey: string) => string
+  @Prop() mapExportName!: string
+
+  // Events
+  @Prop({ default: null }) mapMoveEvent!: MapMoveEvent | null
 
   // Styles
+  @Prop() color!: string
   @Prop() mapId!: string
-  @Prop() mapConfig!: MapConfig
-  @Prop() mapExportName!: string
+  @Prop() mapInitialBounds!: LngLatBoundsLike | null
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
   @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
 
-  @Emit() emitMapMoved (): MapConfig {
+  @Emit() emitMapMoved (): MapMoveEvent {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
   }
 
@@ -47,11 +51,10 @@ export default class MapBubbleComponent extends Vue {
   }
 
   override mounted (): void {
-    const mapConfig = {
+    const mapConfig: MapboxOptions = {
       container: this.mapId,
       style: this.mapStyle,
-      center: this.mapConfig.center,
-      zoom: this.mapConfig.zoom,
+      bounds: this.mapInitialBounds ?? [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
       attributionControl: false,
       preserveDrawingBuffer: true
     }
@@ -64,6 +67,14 @@ export default class MapBubbleComponent extends Vue {
       })
       .on('style.load', () => { this.generateChartNextTick(false) })
       .on('move', () => { if (!this.isSynchronizingMapPosition) this.emitMapMoved() })
+      .addControl(new NavigationControl({ showCompass: false }), 'bottom-right')
+
+    // Disable scroll zoom & all rotation
+    this.map.scrollZoom.disable()
+    this.map.dragRotate.disable()
+    this.map.keyboard.disableRotation()
+    this.map.touchZoomRotate.disableRotation()
+    this.map.touchPitch.disable()
   }
 
   @Watch('dataset', { deep: true })
@@ -76,12 +87,12 @@ export default class MapBubbleComponent extends Vue {
     this.generateChartNextTick(false)
   }
 
-  @Watch('mapConfig')
-  onConfigChange (): void {
-    if (this.mapConfig.sourceMapId === this.mapId) return // don't react to self
+  @Watch('mapMoveEvent')
+  onSiblingMapMove (): void {
+    if (!this.mapMoveEvent || this.mapMoveEvent.sourceMapId === this.mapId) return // don't react to self
     this.isSynchronizingMapPosition = true // don't emit for sync'd moves
-    this.map.setCenter(this.mapConfig.center)
-    this.map.setZoom(this.mapConfig.zoom)
+    this.map.setCenter(this.mapMoveEvent.center)
+    this.map.setZoom(this.mapMoveEvent.zoom)
     this.isSynchronizingMapPosition = false
   }
 
@@ -166,7 +177,7 @@ export default class MapBubbleComponent extends Vue {
 
     this.updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, {
       'circle-radius': ['max', ['get', 'radius'], this.minCircleRadiusPixels],
-      'circle-color': this.dataset.color,
+      'circle-color': this.color,
       'circle-stroke-color': DEFAULT_STROKE_COLOR,
       'circle-stroke-width': 0.65,
       'circle-opacity': 0.85
@@ -224,9 +235,8 @@ export default class MapBubbleComponent extends Vue {
     const img = this.map.getCanvas().toDataURL('image/png')
     downloadPng(img, baseFilename)
 
-    const { color, maxValues } = this.dataset
-    const maxValue = maxValues[this.dataKey]
-    const svg = generateNormalizeMapLegend(color, maxValue, this.maxCircleRadiusPixels)
+    const maxValue = this.dataset.maxValues[this.dataKey]
+    const svg = generateNormalizeMapLegend(this.color, maxValue, this.maxCircleRadiusPixels)
     if (!svg) return
     await exportChartWithElement(svg, `${baseFilename}-legend`)
   }

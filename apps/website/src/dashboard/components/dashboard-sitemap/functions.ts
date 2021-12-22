@@ -7,7 +7,6 @@ export const transformToMapDataset = (sites: Site[]): MapDataSet => ({
   startDate: dayjs(),
   endDate: dayjs(),
   sites,
-  color: '#EFEFEF',
   data: sites.map(({ name, latitude, longitude }) => {
     return {
       siteName: name,

@@ -17,3 +17,11 @@ CLI scripts (ex: to export data from Arbimon)
 4. To export species data with IUCN / Wiki
 
 `pnpm serve src/species/index.ts`
+
+## Database Migrations
+
+Run migrations manually (note: the target database must be running)
+
+```
+pnpm serve src/db-migrations -- --verbose
+```
