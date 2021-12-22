@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 import { dirname, resolve } from 'path'
 
 import { SpeciesCall } from '@rfcx-bio/common/api-bio-types/species'
