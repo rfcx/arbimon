@@ -15,20 +15,31 @@ Allowed categories:
 
 ## Features
 
+- **arbimon:** Add Biodiversity report link in Arbimon project nav bar [#37]
+- **database:** Setup Bio database [#331]
+- **filter:** Searchable drop-down for site filter [#50]
 - **spotlight:** CSV Export [#146]
 - **spotlight:** Show extinction risk level [#320]
+- **spotlight:** Redesign the page and add species call to see/listen [#326]
+- **activity-overview:** Export 1 csv per dataset [#370]
+- **line-charts:** Add axis titles [#199]
 
 ## Enhancements
 
 - **species:** Add species common name [#330]
+- **filter:** Improve date-range picker [#55]
 - **activity-overview:** Remove naive occupancy from line chart [#328]
+- **activity-overview:** Reconnecting filter to the page content and improve the table UI [#312]
+- **map:** Disable scroll to zoom and replace with +/- buttons [#350]
+- **export:** Add export button to chart and map everywhere consistently [#329]
 - **line-charts:** Show hour-of-day, day-of-week, month-of-year (remove by quarter, by year) [#325]
 - **line-chart:** Export line chart with larger font for x/y axis ticks [#327]
-- **activity-overview:** Reconnecting filter to the page content and improve the table UI [#312]
 
 ## Bug Fixes
 
 - **spotlight:** Correct IUCN citation [#321]
+- **browser:** Download on Firefox [#171]
+- **browser:** Error issue on Safari [#246]
 
 # 1.0.0-rc1 (2021-12-13)
 
