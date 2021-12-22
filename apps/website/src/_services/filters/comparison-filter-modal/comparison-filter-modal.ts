@@ -111,7 +111,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
-  onRemoveSelectorPlaceHolder (e: Event): void {
+  onRemoveSelectorPlaceHolder (): void {
     const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
     inputEl.removeAttribute('placeholder')
   }
