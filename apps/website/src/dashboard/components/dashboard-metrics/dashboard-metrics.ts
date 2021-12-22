@@ -5,7 +5,7 @@ export interface Metrics {
   detectionCount: number
   siteCount: number
   speciesCount: number
-  endangeredSpecies: number
+  speciesThreatenedCount: number
 }
 
 export default class DashboardMetrics extends Vue {
