@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex items-center">
-      <el-button-group class="mr-2">
+      <!-- <el-button-group class="mr-2">
         <el-button
           v-for="item in datePickerTypeOptions"
           :key="'filter-date-picker-' + item.value"
@@ -12,7 +12,7 @@
         >
           {{ item.label }}
         </el-button>
-      </el-button-group>
+      </el-button-group> -->
       <el-date-picker
         v-model="dateValues"
         :type="selectedType"
