@@ -32,7 +32,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
     return {
-      sites: this.selectedSites,
+      sites: this.selectedSiteGroups,
       startDate: dayjs.utc(this.startDate),
       endDate: dayjs.utc(this.endDate),
       otherFilters: this.otherFilters
@@ -46,8 +46,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Sites
   inputFilter = ''
-  selectedSite: SiteGroup | null = null
-  selectedSites: SiteGroup[] = []
+  selectedSiteGroups: SiteGroup[] = []
 
   // Dates
   readonly today = dayjs().format(DATE_FORMAT)
@@ -56,10 +55,6 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Other filters
   otherFilters: FilterPropertyEquals[] = []
-
-  get selectedSiteOrUndefined (): SiteGroup | undefined {
-    return this.selectedSite ?? undefined
-  }
 
   get menus (): FilterMenuItem[] {
     return [
@@ -70,7 +65,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   get isSelectedAllSites (): boolean {
-    return this.selectedSites.length === 0
+    return this.selectedSiteGroups.length === 0
   }
 
   get selectedTaxons (): string[] {
@@ -126,9 +121,8 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   onSiteSelected (item: SiteGroup): void {
-    this.selectedSite = null
-    if (this.selectedSites.find(sg => sg.label === item.label)) return
-    this.selectedSites.push(item)
+    if (this.selectedSiteGroups.find(sg => sg.label === item.label)) return
+    this.selectedSiteGroups.push(item)
   }
 
   onDateChange (dateRange: [Date, Date]): void {
@@ -137,12 +131,12 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   onRemoveSiteTags (item: SiteGroup): void {
-    const index = this.selectedSites.findIndex(sg => sg.label === item.label)
-    this.selectedSites.splice(index, 1)
+    const index = this.selectedSiteGroups.findIndex(sg => sg.label === item.label)
+    this.selectedSiteGroups.splice(index, 1)
   }
 
   setDefaultSelectedSites (): void {
-    this.selectedSites = this.initialValues?.sites ?? []
+    this.selectedSiteGroups = this.initialValues?.sites ?? []
   }
 
   setActiveMenuId (id: string): void {
@@ -154,7 +148,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   selectAllSites (): void {
-    this.selectedSites = []
+    this.selectedSiteGroups = []
   }
 
   updateSelectedTaxons (otherFilters: FilterPropertyEquals[]): void {
