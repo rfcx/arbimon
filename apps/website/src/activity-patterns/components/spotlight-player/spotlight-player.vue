@@ -1,17 +1,17 @@
 <template>
   <div v-if="!loading">
-    <div class="text-lg capitalize">
+    <h3 class="text-lg capitalize">
       Species call
-    </div>
+    </h3>
     <div
-      class="max-w-full my-4 flex justify-left"
+      class="my-4 flex justify-left"
     >
       <div class="relative">
         <img
           :src="spectrogram"
-          class="max-w-60"
+          class="w-40"
         >
-        <div class="absolute bottom-2 right-2 bg-dark-100 bg-opacity-70 p-2 rounded-sm">
+        <div class="absolute bottom-3 right-3">
           <audio-controller
             :playing="playing"
             @click="playing ? pause() : play()"
@@ -20,8 +20,8 @@
       </div>
     </div>
     <div
-      v-if="playing"
-      class="fixed w-72 h-12 bottom-4 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md"
+      class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md transition-all duration-500"
+      :class="playing ? 'bottom-4' : '-bottom-12'"
     >
       <div class="h-full flex items-center content-center">
         <audio-controller

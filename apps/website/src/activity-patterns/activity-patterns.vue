@@ -23,26 +23,29 @@
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
     <div class="grid grid-cols-6 py-2">
-      <div class="col-span-4">
+      <div class="col-span-6 md:col-span-4">
         <species-background-information
           :species="speciesInformation"
         />
-        <activity-patterns-metrics
-          :metrics="metrics"
-          class="mt-5"
-        />
       </div>
-      <div class="col-span-2 border-l-2 px-4">
-        <species-images
-          v-if="speciesInformation"
-          :species="speciesInformation"
-        />
-        <spotlight-player
-          v-if="speciesCall"
-          :species-call="speciesCall"
-        />
+      <div class="col-span-6 px-0 mt-6 md:(col-span-2 border-l-2 border-faded mt-0 px-4)">
+        <!-- TODO ?? : Add tab to swap between photo / species call -->
+        <div class="grid grid-cols-2 gap-4">
+          <species-images
+            v-if="speciesInformation"
+            :species="speciesInformation"
+          />
+          <spotlight-player
+            v-if="speciesCall"
+            :species-call="speciesCall"
+          />
+        </div>
       </div>
     </div>
+    <activity-patterns-metrics
+      :metrics="metrics"
+      class="mt-6"
+    />
     <activity-patterns-predicted-occupancy
       :predicted-occupancy-maps="predictedOccupancyMaps"
       class="mt-5"

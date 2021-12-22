@@ -7,6 +7,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
 import { BiodiversityStore } from '~/store'
+import DateRangePicker from './date-range-picker/date-range-picker.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
@@ -19,6 +20,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
 @Options({
   components: {
     OnClickOutside,
+    DateRangePicker,
     FilterTaxon
   }
 })
@@ -127,6 +129,11 @@ export default class ComparisonFilterModalComponent extends Vue {
     this.selectedSite = null
     if (this.selectedSites.find(sg => sg.label === item.label)) return
     this.selectedSites.push(item)
+  }
+
+  onDateChange (dateRange: [Date, Date]): void {
+    this.startDate = dayjs(dateRange[0]).format(DATE_FORMAT)
+    this.endDate = dayjs(dateRange[1]).format(DATE_FORMAT)
   }
 
   onRemoveSiteTags (item: SiteGroup): void {
