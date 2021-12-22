@@ -1,14 +1,4 @@
 <template>
-  <router-link
-    class="w-full rounded-2xl bg-steel-grey my-4 p-4 flex justify-between"
-    :to="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
-  >
-    <div class="font-semibold">
-      Highlighted species
-    </div>
-    <icon-fas-angle-right class="font-semibold self-center" />
-  </router-link>
-
   <no-data-panel
     v-if="!hasData"
     class="h-20"
@@ -19,7 +9,7 @@
   >
     <div
       v-for="item in species"
-      :key="'dashboard-endangered-' + item.speciesId"
+      :key="'dashboard-highlighted-' + item.speciesId"
       class="flex content-center mb-2"
     >
       <img

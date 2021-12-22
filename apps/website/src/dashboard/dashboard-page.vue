@@ -35,14 +35,32 @@
       </div>
       <!-- Right content -->
       <div class="col-span-2">
-        <dashboard-top-taxons
+        <dashboard-sidebar-title
+          v-if="generated?.richnessByTaxon && generated?.speciesCount"
+          title="Richness"
+          :subtitle="`${generated?.speciesCount ?? 0} species`"
+          :route="{ name: ROUTE_NAMES.speciesRichness, params: { id: store.selectedProject?.id } }"
+        />
+        <horizontal-stacked-distribution
           v-if="generated?.richnessByTaxon && generated?.speciesCount"
           :dataset="generated?.richnessByTaxon ?? {}"
           :colors="taxonColors"
-          :species-count="generated?.speciesCount ?? 0"
+          :known-total-count="generated?.speciesCount ?? 0"
         />
-        <dashboard-highlighted-species :species="speciesHighlighted" />
-        <dashboard-endangered-species :species="speciesThreatened" />
+        <dashboard-sidebar-title
+          title="Highlighted species"
+          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+        />
+        <dashboard-highlighted-species
+          :species="speciesHighlighted"
+        />
+        <dashboard-sidebar-title
+          title="Threatened species"
+          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+        />
+        <dashboard-threatened-species
+          :species="speciesThreatened"
+        />
       </div>
     </div>
     <p class="text-center opacity-50">
