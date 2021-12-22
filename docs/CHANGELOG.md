@@ -18,6 +18,7 @@ Allowed categories:
 - **spotlight:** Species call spectrogram and audio [#326]
 - **spotlight:** Extinction risk rating [#320]
 - **spotlight:** CSV Export [#146]
+- **dashboard:** Richness by extinction rating [#332]
 
 ## Enhancements
 

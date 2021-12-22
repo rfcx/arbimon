@@ -35,14 +35,39 @@
       </div>
       <!-- Right content -->
       <div class="col-span-2">
-        <dashboard-top-taxons
+        <dashboard-sidebar-title
           v-if="generated?.richnessByTaxon && generated?.speciesCount"
-          :dataset="generated?.richnessByTaxon ?? {}"
-          :colors="taxonColors"
-          :species-count="generated?.speciesCount ?? 0"
+          title="Richness"
+          :subtitle="`${generated?.speciesCount ?? 0} species`"
+          :route="{ name: ROUTE_NAMES.speciesRichness, params: { id: store.selectedProject?.id } }"
         />
-        <dashboard-highlighted-species :species="speciesHighlighted" />
-        <dashboard-endangered-species :species="speciesThreatened" />
+        <horizontal-stacked-distribution
+          v-if="generated?.richnessByTaxon && generated?.speciesCount"
+          :dataset="generated?.richnessByTaxon ?? []"
+          :colors="taxonColors"
+          :known-total-count="generated?.speciesCount ?? 0"
+        />
+        <dashboard-sidebar-title
+          title="Highlighted species"
+          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+        />
+        <dashboard-highlighted-species
+          :species="speciesHighlighted"
+        />
+        <dashboard-sidebar-title
+          title="Threatened species"
+          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+        />
+        <horizontal-stacked-distribution
+          v-if="generated?.richnessByExtinction && generated?.speciesCount"
+          :dataset="generated?.richnessByExtinction ?? []"
+          :colors="extinctionColors"
+          :known-total-count="generated?.speciesCount ?? 0"
+        />
+        <dashboard-threatened-species
+          :species="speciesThreatened"
+          class="mt-5"
+        />
       </div>
     </div>
     <p class="text-center opacity-50">
