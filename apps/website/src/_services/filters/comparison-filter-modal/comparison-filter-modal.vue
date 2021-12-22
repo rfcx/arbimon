@@ -45,7 +45,7 @@
           </label>
 
           <el-select
-            v-model="selectedSites"
+            v-model="selectedSiteGroups"
             value-key="label"
             multiple
             filterable
@@ -74,9 +74,9 @@
               :value="{ label: item.name, value: [item] }"
             />
           </el-select>
-          <div class="ml-2">
+          <div class="ml-2 mt-3">
             <el-tag
-              v-for="site in selectedSites"
+              v-for="site in selectedSiteGroups"
               :key="'site-tag-'+ site.label"
               class="ml-2 mb-2 select-none"
               closable
