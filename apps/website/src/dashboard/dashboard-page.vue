@@ -43,7 +43,7 @@
         />
         <horizontal-stacked-distribution
           v-if="generated?.richnessByTaxon && generated?.speciesCount"
-          :dataset="generated?.richnessByTaxon ?? {}"
+          :dataset="generated?.richnessByTaxon ?? []"
           :colors="taxonColors"
           :known-total-count="generated?.speciesCount ?? 0"
         />
@@ -58,8 +58,15 @@
           title="Threatened species"
           :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
         />
+        <horizontal-stacked-distribution
+          v-if="generated?.richnessByExtinction && generated?.speciesCount"
+          :dataset="generated?.richnessByExtinction ?? []"
+          :colors="extinctionColors"
+          :known-total-count="generated?.speciesCount ?? 0"
+        />
         <dashboard-threatened-species
           :species="speciesThreatened"
+          class="mt-5"
         />
       </div>
     </div>

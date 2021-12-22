@@ -23,7 +23,8 @@ export interface DashboardGeneratedResponse {
   speciesHighlighted: DashboardSpecies[]
 
   // Charts & maps
-  richnessByTaxon: Record<string, number>
+  richnessByTaxon: Array<[string, number]>
+  richnessByExtinction: Array<[string, number]>
   richnessByHour: Record<number, number>
   detectionFrequencyByHour: Record<number, number>
 }

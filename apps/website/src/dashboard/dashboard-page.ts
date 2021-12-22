@@ -3,7 +3,7 @@ import { Inject } from 'vue-property-decorator'
 
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
-import { getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
@@ -89,6 +89,10 @@ export default class DashboardPage extends Vue {
 
   get taxonColors (): Record<string, string> {
     return TAXONOMY_COLORS
+  }
+
+  get extinctionColors (): Record<string, string> {
+    return EXTINCTION_LABELS_AND_COLORS
   }
 
   override async created (): Promise<void> {
