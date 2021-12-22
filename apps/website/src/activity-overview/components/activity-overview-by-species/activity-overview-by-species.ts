@@ -1,4 +1,5 @@
 import { kebabCase } from 'lodash-es'
+import numeral from 'numeral'
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
@@ -100,6 +101,10 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   getSpeciesSlug (scientificName: string): string {
     return kebabCase(scientificName)
+  }
+
+  getFormattedNumber (value: number): string {
+    return numeral(value).format()
   }
 
   getThreeDecimalNumber (value: number): string {
