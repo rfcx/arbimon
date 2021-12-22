@@ -5,6 +5,7 @@ import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashb
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
 import { getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
+import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import { BiodiversityStore } from '~/store'
 import { ThreatenedSpeciesRow } from './components/dashboard-endangered-species/dashboard-endangered-species'
 import DashboardEndangeredSpecies from './components/dashboard-endangered-species/dashboard-endangered-species.vue'
@@ -80,6 +81,10 @@ export default class DashboardPage extends Vue {
       imageUrl: (thumbnailImageUrl && thumbnailImageUrl.length > 0) ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
       extinctionRisk: getExtinctionRisk(extinctionRisk)
     }))
+  }
+
+  get taxonColors (): Record<string, string> {
+    return TAXONOMY_COLORS
   }
 
   override async created (): Promise<void> {

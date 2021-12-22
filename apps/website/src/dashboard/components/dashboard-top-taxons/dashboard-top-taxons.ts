@@ -1,56 +1,61 @@
-import { sumBy } from 'lodash-es'
+import { sum } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
-import { ROUTE_NAMES } from '~/router'
+import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 
-export interface RichnessData {
-  taxon: string
-  speciesNo: number
-}
-
-interface DashboardRichnessPercentage {
-  taxon: string
+interface Bar {
+  name: string
   percentage: number
+  width: number
   color: string
 }
 
+const DEFAULT_COLOR = '#FFFFFF'
+
 export default class DashboardTopTaxons extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
   @Inject() readonly store!: BiodiversityStore
-  @Prop() totalSpecies!: number
-  @Prop() richness!: RichnessData[]
 
-  get richnessRoutename (): string {
-    return ROUTE_NAMES.speciesRichness
-  }
-
-  get projectId (): string | undefined {
-    return this.store.selectedProject?.id
-  }
-
-  get richnessPercentage (): DashboardRichnessPercentage[] {
-    const { richness, totalSpecies } = this
-    return richness.map(({ taxon, speciesNo }) => {
-      return {
-        taxon,
-        percentage: (speciesNo / totalSpecies) * 100,
-        color: TAXONOMY_CLASSES.find(c => c.name === taxon)?.color ?? '#FFFFFF'
-      }
-    }).sort((a, b) => b.percentage - a.percentage)
-  }
+  @Prop() dataset!: Record<string, number>
+  @Prop() colors!: Record<string, string>
+  @Prop({ default: undefined }) knownTotalCount!: number | undefined
 
   get hasData (): boolean {
-    return this.richness.length > 0
+    return this.totalCount > 0
   }
 
-  displayPercentage (percentage: number): string {
-    return percentage.toFixed(1)
+  get totalCount (): number {
+    return this.knownTotalCount ?? sum(Object.values(this.dataset))
   }
 
-  calculateBarWidth (idx: number): number {
-    const items = this.richnessPercentage.slice(0, idx + 1)
-    return sumBy(items, 'percentage')
+  get bars (): Bar[] {
+    // Avoid divByZero
+    const totalCount = this.totalCount
+    if (totalCount === 0) return []
+
+    // Remove empty bars & sort
+    const inputs = Object.entries(this.dataset)
+      .filter(([, count]) => count > 0)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+
+    // Calculate percentages & bar-widths (width is cumulative percentage)
+    let width = 0
+    const outputs: Bar[] = []
+
+    inputs.forEach(([name, count]) => {
+      const percentage = count / totalCount * 100
+      width += percentage
+
+      outputs.push({
+        name,
+        percentage,
+        width: Math.round(width),
+        color: this.colors[name] ?? DEFAULT_COLOR
+      })
+    })
+
+    return outputs
   }
 }
