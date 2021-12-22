@@ -40,9 +40,10 @@
       <!-- Right content -->
       <div class="col-span-2 mt-5">
         <dashboard-top-taxons
-          v-if="generated?.richness"
-          :total-species="generated?.speciesCount"
-          :richness="generated?.richness"
+          v-if="generated?.richnessByTaxon"
+          :dataset="generated?.richnessByTaxon ?? {}"
+          :colors="taxonColors"
+          :known-total-count="generated?.speciesCount ?? 0"
         />
         <dashboard-highlighted-species :species="speciesHighlighted" />
         <dashboard-endangered-species :species="speciesThreatened" />

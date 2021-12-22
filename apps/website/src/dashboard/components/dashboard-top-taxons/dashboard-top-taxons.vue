@@ -2,14 +2,14 @@
   <div class="w-full rounded-2xl bg-steel-grey mb-4 p-4">
     <router-link
       class="flex justify-between"
-      :to="{ name: richnessRoutename, params: { projectId } }"
+      :to="{ name: ROUTE_NAMES.speciesRichness, params: { id: store.selectedProject?.id } }"
     >
       <div class="font-semibold">
         Richness
       </div>
       <div class="flex">
         <div v-if="hasData">
-          {{ totalSpecies }} species
+          {{ totalCount }} species
         </div>
         <icon-fas-angle-right class="font-semibold self-center" />
       </div>
@@ -23,23 +23,25 @@
     <div class="relative mx-2">
       <div class="absolute w-full h-1 rounded-xl bg-steel-grey-light" />
       <div
-        v-for="(item, idx) in richnessPercentage"
-        :key="'dashboard-richness-percentage-' + item.taxon"
+        v-for="(bar, idx) in bars"
+        :key="'dashboard-richness-percentage-' + bar.name"
         class="absolute h-1 rounded-xl"
-        :style="{ width: calculateBarWidth(idx) + '%', backgroundColor: item.color , zIndex: richnessPercentage.length - idx }"
+        :style="{ width: bar.width + '%', backgroundColor: bar.color , zIndex: bars.length - idx }"
       />
     </div>
-    <div class="pt-4">
+    <div class="pt-3">
       <ul class="list-none">
         <li
-          v-for="item in richnessPercentage"
-          :key="'dashboard-richness-class-' + item.taxon"
-          class="inline-flex"
+          v-for="bar in bars"
+          :key="'dashboard-richness-class-' + bar.name"
+          class="inline-flex items-baseline text-xs"
         >
           <div
-            class="rounded-full w-2 h-2 self-center mx-2"
-            :style="{ backgroundColor: item.color }"
-          /> {{ item.taxon }} ({{ displayPercentage(item.percentage) }} %)
+            class="rounded-full w-1.5 h-1.5 self-center mx-2"
+            :style="{ backgroundColor: bar.color }"
+          />
+          {{ bar.name }}
+          <span class="ml-1 text-subtle font-light">{{ bar.percentage < 5 ? bar.percentage.toFixed(1) : bar.percentage.toFixed(0) }}%</span>
         </li>
       </ul>
     </div>
