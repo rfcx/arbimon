@@ -80,13 +80,13 @@
             {{ row.taxon }}
           </td>
           <td class="p-2 text-center">
-            {{ row.detectionCount }}
+            {{ getFormattedNumber(row.detectionCount) }}
           </td>
           <td class="p-2 text-center">
             {{ getThreeDecimalNumber(row.detectionFrequency) }}
           </td>
           <td class="p-2 text-center">
-            {{ row.occupiedSites }}
+            {{ getFormattedNumber(row.occupiedSites) }}
           </td>
           <td class="p-2 text-center">
             {{ getThreeDecimalNumber(row.occupancyNaive) }}
