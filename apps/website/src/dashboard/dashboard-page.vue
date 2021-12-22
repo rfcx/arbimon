@@ -2,7 +2,7 @@
   <div v-if="store.selectedProject">
     <div class="grid gap-4 grid-cols-8">
       <!-- Left content -->
-      <div class="col-span-6 mt-5">
+      <div class="col-span-6">
         <dashboard-metrics
           v-if="generated"
           :metrics="generated"
@@ -34,7 +34,7 @@
         />
       </div>
       <!-- Right content -->
-      <div class="col-span-2 mt-5">
+      <div class="col-span-2">
         <dashboard-top-taxons
           v-if="generated?.richnessByTaxon"
           :dataset="generated?.richnessByTaxon ?? {}"
