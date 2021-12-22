@@ -38,6 +38,11 @@ module.exports = {
         },
         // TODO ??? - Find a way to avoid repeating this
         {
+          regex: 'from \'lodash\'',
+          message: 'Use lodash-es',
+          replacement: 'from \'lodash-es\''
+        },
+        {
           // eslint-disable-next-line no-useless-escape
           regex: 'import \\* as [a-zA-Z0-9]* from \'dayjs\'',
           message: 'Import the initialized dayjs object from \'@rfcx-bio/utils/dayjs-initialized\'',
