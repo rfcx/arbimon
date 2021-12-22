@@ -31,9 +31,9 @@
             class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary hidden"
           >
         </div>
-        <div class="max-h-md overflow-auto">
+        <div class="max-h-md">
           <label
-            class="px-4 pb-2 align-middle list-item"
+            class="pl-4 pb-2 align-middle list-item select-all"
           >
             <input
               type="radio"
@@ -55,7 +55,7 @@
             reserve-keyword
             placeholder="Type to filter sites"
             no-data-text="No matching sites"
-            class="search-select mx-4 mt-2"
+            class="search-select ml-4 mt-2"
             :filter-method="onFilterType"
             @blur="onSetSelectorPlaceHolder"
             @input="onRemoveSelectorPlaceHolder"
@@ -133,8 +133,9 @@
 <style lang="scss">
 .search-select {
   .select-trigger {
-    width: 500px;
+    width: 520px;
     background-color: #141525;
+    margin-right: 1rem;
 
     & .el-input * > .el-icon.el-select__caret {
       display: flex;
@@ -182,7 +183,8 @@
 
 @media (max-width: 700px) {
   .search-select .select-trigger {
-    width: 300px;
+    width: 180px;
+    margin-right: 1rem;
   }
 }
 </style>
