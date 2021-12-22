@@ -44,8 +44,8 @@
           :total-species="generated?.speciesCount"
           :richness="generated?.richness"
         />
-        <dashboard-highlighted-species :species="highlighted" />
-        <dashboard-endangered-species :species="endangered" />
+        <dashboard-highlighted-species :species="speciesHighlighted" />
+        <dashboard-endangered-species :species="speciesThreatened" />
       </div>
     </div>
   </div>
