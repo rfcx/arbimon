@@ -104,7 +104,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   }
 
   getFormattedNumber (value: number): string {
-    return numeral(value).format()
+    return numeral(value).format('0,0')
   }
 
   getThreeDecimalNumber (value: number): string {
