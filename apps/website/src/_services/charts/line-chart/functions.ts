@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import numeral from 'numeral'
 
 import { generateHorizontalLegend, getLegendGroupNames, X_AXIS_GAP, Y_AXIS_GAP } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
@@ -16,7 +17,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
 
   const xLabels = config.xLabels
   const xTickFormatter = xLabels ? (val: d3.NumberValue): string => xLabels[val.valueOf()] : d3.format('d')
-  const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? d3.format('d')(val) : d3.format('.1e')(val)
+  const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? numeral(val).format('0a') : d3.format('.1e')(val)
 
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(0, ${config.height - config.margins.bottom})`)
