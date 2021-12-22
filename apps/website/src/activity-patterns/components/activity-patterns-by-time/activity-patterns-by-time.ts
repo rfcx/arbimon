@@ -35,7 +35,7 @@ export default class ActivityPatternsByTime extends Vue {
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
-    { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detection], value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
+    { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency], value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
     { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detection], value: ACTIVITY_PATTERN_TIME_KEYS.detection }
   ]
 
