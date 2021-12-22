@@ -2,11 +2,13 @@
   <div class="w-full">
     <map-bubble-component
       v-if="dataset"
+      color="#EFEFEF"
       :dataset="dataset"
       data-key="site"
       :get-popup-html="getPopupHtml"
       map-id="dashboard-sitemap"
-      :map-config="config"
+      :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+      :map-move-event="mapMoveEvent"
       map-export-name="dasboard-sitemap"
       :max-circle-radius-pixels="5.0"
       class="w-full"

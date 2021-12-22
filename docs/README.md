@@ -28,7 +28,7 @@ The following must be true to consider the Sprint "DONE":
 
    - node 16: [https://nodejs.org](https://nodejs.org)
    - pnpm 6: `npm i -g pnpm`
-   - VSCode & extensions: `pnpm init-vscode`
+   - VSCode & extensions: `pnpm init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
    - If you have Vetur installed, disable it for this workspace
 
 2. Install/update dependencies:

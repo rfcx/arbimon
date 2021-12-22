@@ -18,12 +18,16 @@ export async function toCsv (jsonData: any): Promise<string> {
 }
 
 export function downloadFile (data: string, filename: string, extension: string): void {
+  // Create download link
   const a = document.createElement('a')
   a.download = `${filename}.${extension}`
   a.href = data
   document.body.appendChild(a)
+
+  // Start download
   a.click()
-  // then remove after click
+
+  // Clean up
   a.parentNode?.removeChild(a)
 }
 
@@ -33,13 +37,6 @@ export function downloadPng (data: string, filename: string): void {
 
 export function downloadZip (data: string, filename: string): void {
   downloadFile(data, filename, 'zip')
-}
-
-export async function downloadSpreadsheet (jsonData: any, filename: string, fileType: XLSX.BookType = 'csv', sheetName: string = 'Worksheet'): Promise<void> {
-  const worksheet = XLSX.utils.json_to_sheet(jsonData)
-  const workbook = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-  await XLSX.writeFile(workbook, filename, { bookType: fileType, type: 'string' })
 }
 
 export const zipAndDownload = async (files: FileData[], folderName: string): Promise<void> =>
@@ -54,5 +51,5 @@ async function zipFiles (files: FileData[], folderName: string): Promise<string>
   })
 
   const blob = await zip.generateAsync({ type: 'blob' })
-  return URL.createObjectURL(blob)
+  return URL.createObjectURL(blob) // URGENT - This is being deprecated: https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL#using_object_urls_for_media_streams
 }

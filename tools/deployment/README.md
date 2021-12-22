@@ -41,7 +41,9 @@ _If your local port 8080 is in use, then you can select another port e.g. `-p 73
 
 ## Kubernetes configuration
 
-The app names are always `biodiversity-api` and `biodiversity-website`. Each sub-folder matches a namespace in Kubernetes. Inside the namespace folder is:
+***Warning:** If you rename a Kubernetes namespace, configuration for the old name is not deleted automatically by CD -- you must manually delete it (or you will have 2 copies of everything).*
+
+The Biodiversity app names are `biodiversity-api` and `biodiversity-website`. Each sub-folder matches a namespace in Kubernetes. Inside the namespace folder is:
 
 - config.yaml - runtime non-secret environment variables ("configuration")
 - deployment.yaml - configure resources

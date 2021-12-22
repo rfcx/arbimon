@@ -1,5 +1,5 @@
-import { TimeBucket } from '~/api/species-richness-service'
 import { DatasetParameters } from '~/filters'
+import { TimeBucket } from '~/time-buckets'
 
 export interface ActivityPatternsData extends DatasetParameters {
   totalRecordingCount: number
@@ -29,11 +29,9 @@ export type ActivityPatternsDataByTime = Record<TimeBucket, ActivityPatternsData
 export interface ActivityPatternsDataByTimeBucket {
   detection: Record<number, number>
   detectionFrequency: Record<number, number>
-  occupancy: Record<number, number>
 }
 
 export const ACTIVITY_PATTERN_TIME_KEYS: Record<string, keyof ActivityPatternsDataByTimeBucket> = {
   detection: 'detection',
-  detectionFrequency: 'detectionFrequency',
-  occupancy: 'occupancy'
+  detectionFrequency: 'detectionFrequency'
 }

@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
@@ -5,9 +6,10 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
-import { TimeBucket } from '~/api/species-richness-service'
-import { svgToPngData } from '~/charts'
+import { svgToPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { getExportGroupName } from '~/filters'
+import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
 
@@ -17,12 +19,9 @@ interface DropDownOption {
   value: ActivityPatternsDataByTimeType
 }
 
-// TODO ???: Reduce and move to somewhere for center use
-const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
-  hour: [0, 23],
-  day: [1, 31],
-  month: [1, 12],
-  quarter: [1, 4]
+const DATASET_LABELS = {
+  [ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency]: 'Detection Frequency',
+  [ACTIVITY_PATTERN_TIME_KEYS.detection]: 'Detections (raw)'
 }
 
 @Options({
@@ -36,19 +35,19 @@ export default class ActivityPatternsByTime extends Vue {
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
-    { label: 'Detections', value: ACTIVITY_PATTERN_TIME_KEYS.detection },
-    { label: 'Detection Frequency', value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
-    { label: 'Naive Occupancy', value: ACTIVITY_PATTERN_TIME_KEYS.occupancy }
+    { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency], value: ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency },
+    { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detection], value: ACTIVITY_PATTERN_TIME_KEYS.detection }
   ]
 
-  buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
-  selectedBucket: TimeBucket = 'hour'
+  selectedBucket: TimeBucket = 'hourOfDay'
+  buckets: Record<TimeBucket, string> = TIME_BUCKET_LABELS
 
   get config (): Omit<LineChartConfig, 'width'> {
     return {
       height: 450,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
-      xBounds: BUCKETS_TO_X_BOUNDS[this.selectedBucket]
+      xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
+      xLabels: TIME_LABELS[this.selectedBucket]
     }
   }
 
@@ -56,12 +55,17 @@ export default class ActivityPatternsByTime extends Vue {
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
   }
 
+  get hasData (): boolean {
+    return this.datasetsForSelectedBucket.some(({ data }) => !isEmpty(data))
+  }
+
   async downloadChart (): Promise<void> {
-    const exportConfig = { ...this.config, width: 800, height: 450 }
-    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
+    const margins = { ...this.config.margins, bottom: 80, left: 80 }
+    const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
+    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig, TIME_BUCKET_LABELS[this.selectedBucket], DATASET_LABELS[this.selectedType])
     if (!svg) return
 
-    const png = await svgToPngData({ svg, ...exportConfig })
-    downloadPng(png, `${this.domId}-${this.selectedBucket}`) // TODO 107 - Better filename
+    const png = await svgToPng({ svg, ...exportConfig })
+    downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`)) // TODO 107 - Better filename
   }
 }

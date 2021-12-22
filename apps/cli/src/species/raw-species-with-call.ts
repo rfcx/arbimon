@@ -7,7 +7,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_d512.512_fspec.png',
       siteName: 'VI06',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Simple Call',
@@ -37,7 +37,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_d512.512_fspec.png',
       siteName: 'CU38',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Simple Call',
@@ -67,7 +67,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_d512.512_fspec.png',
       siteName: 'RO14',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -97,7 +97,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_d512.512_fspec.png',
       siteName: 'LU12',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -134,7 +134,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_d512.512_fspec.png',
       siteName: 'DO12',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -150,7 +150,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_d512.512_fspec.png',
       siteName: 'PA28',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -166,7 +166,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_d512.512_fspec.png',
       siteName: 'PA53',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -182,7 +182,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_d512.512_fspec.png',
       siteName: 'CR29',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -198,7 +198,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_d512.512_fspec.png',
       siteName: 'LU04',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -214,7 +214,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_d512.512_fspec.png',
       siteName: 'TO18',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -244,7 +244,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_d512.512_fspec.png',
       siteName: 'GU32',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -260,7 +260,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_d512.512_fspec.png',
       siteName: 'PA31',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -297,7 +297,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_d512.512_fspec.png',
       siteName: 'PA40_NEW',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -320,7 +320,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_d512.512_fspec.png',
       siteName: 'CR30',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -336,7 +336,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_d512.512_fspec.png',
       siteName: 'CR18',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -359,7 +359,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_d512.512_fspec.png',
       siteName: 'GUI04',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -389,7 +389,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_d512.512_fspec.png',
       siteName: 'GUI08',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -405,7 +405,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_d512.512_fspec.png',
       siteName: 'PA24_NEW',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Alternative Song',
@@ -421,7 +421,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_d512.512_fspec.png',
       siteName: 'RA28',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -458,7 +458,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_d512.512_fspec.png',
       siteName: 'POEXTRA13',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -474,7 +474,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_d512.512_fspec.png',
       siteName: 'CR01',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -490,7 +490,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_d512.512_fspec.png',
       siteName: 'CR12',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -506,7 +506,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_d512.512_fspec.png',
       siteName: 'CR13',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Simple Call',
@@ -529,7 +529,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_d512.512_fspec.png',
       siteName: 'CR09',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -552,7 +552,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d512.512_fspec.png',
       siteName: 'RO10_repeated',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -582,7 +582,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_d512.512_fspec.png',
       siteName: 'GU36',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -619,7 +619,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_d512.512_fspec.png',
       siteName: 'DO33',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -649,7 +649,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_d512.512_fspec.png',
       siteName: 'LU_50',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -700,7 +700,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_d512.512_fspec.png',
       siteName: 'LU_48',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -716,7 +716,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_d512.512_fspec.png',
       siteName: 'SA34',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -739,7 +739,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_d512.512_fspec.png',
       siteName: 'DO16',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -755,7 +755,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_d512.512_fspec.png',
       siteName: 'DO16',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -771,7 +771,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_d512.512_fspec.png',
       siteName: 'LU_46',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -794,7 +794,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_d512.512_fspec.png',
       siteName: 'GU09',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -810,7 +810,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_d512.512_fspec.png',
       siteName: 'RI03',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -840,7 +840,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Mammals',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_d512.512_fspec.png',
       siteName: 'AR_eG',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -863,7 +863,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Birds',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_d512.512_fspec.png',
       siteName: 'MA11',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -886,7 +886,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_d512.512_fspec.png',
       siteName: 'PA11_NEW',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -1007,7 +1007,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Mammals',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_d512.512_fspec.png',
       siteName: 'MO_MG',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
@@ -1022,7 +1022,7 @@ export const rawSpeciesWithCall = [
     taxon: 'Amphibians',
     speciesCall: {
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_fspec.png',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_d512.512_fspec.png',
       siteName: 'MO_MA',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',

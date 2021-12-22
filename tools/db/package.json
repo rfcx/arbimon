@@ -1,0 +1,29 @@
+{
+  "name": "@rfcx-bio/db",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "logs": "docker compose logs timescaledb",
+    "reset": "docker compose down && docker volume rm db_data-timescaledb",
+    "serve": "docker compose up -d",
+    "stop": "docker compose down"
+  },
+  "description": "Biodiversity DB",
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ]
+}

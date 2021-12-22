@@ -2,70 +2,63 @@ import * as d3 from 'd3'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-export interface ChartSVGElement {
+interface SvgAndDimensions {
   svg: SVGSVGElement
   width: number
   height: number
 }
 
-const LEGEND_MARGIN_TOP = 50
-const LEGEND_ITEM_WIDTH = 100
+export const X_AXIS_GAP = 30
+export const Y_AXIS_GAP = 50
+const LEGEND_ITEM_WIDTH = 80
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
   await exportChart(chartElement, filename)
 }
 
-const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
-  const data = await svgToPngData(chartElement)
+const exportChart = async (svg: SvgAndDimensions, filename: string): Promise<void> => {
+  const data = await svgToPng(svg)
   downloadPng(data, filename)
 }
 
-const getChartElement = (element: Element): ChartSVGElement => {
+const getChartElement = (element: Element): SvgAndDimensions => {
   const svg = element.getElementsByTagName('svg')[0]
   const width = Number(svg.getAttribute('width') as string)
   const height = Number(svg.getAttribute('height') as string)
   return { svg, width, height }
 }
 
-export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
-  const serializer = new XMLSerializer()
-  const source = serializer.serializeToString(chartElement.svg)
-
+export const svgToPng = async (params: SvgAndDimensions): Promise<string> => {
+  // Params
   const mimetype = 'image/png'
   const quality = 0.92
-  const svgString = source
+  const width = params.width
+  const height = params.height
 
   return await new Promise((resolve) => {
-    // Create a non-visible node to render the SVG string
-    const SVGContainer = document.createElement('div')
-    SVGContainer.style.display = 'none'
-    SVGContainer.innerHTML = svgString
-    const svgNode = SVGContainer.firstElementChild as Node
+    // Convert to Base64 SVG/XML
+    const svgXml = new XMLSerializer()
+      .serializeToString(params.svg)
+      .replace('<svg', `<svg width="${width}" height="${height}"`)
 
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    const svgXml = new XMLSerializer().serializeToString(svgNode)
-    const svgBase64 = 'data:image/svg+xml;base64,' + btoa(svgXml)
+    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(svgXml)
 
+    // Convert to Base64 PNG
     const image = new Image()
+    image.onload = () => {
+      // Setup canvas
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
 
-    image.onload = function () {
-      const finalWidth = chartElement.width
-      const finalHeight = chartElement.height
+      // Render image to canvas
+      canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
 
-      // Define the canvas intrinsic size
-      canvas.width = finalWidth
-      canvas.height = finalHeight
-
-      // Render image in the canvas
-      context?.drawImage(image, 0, 0, finalWidth, finalHeight)
-      // Fullfil and Return the Base64 image
+      // Extract base64 image
       const pngDataURL = canvas.toDataURL(mimetype, quality)
       resolve(pngDataURL)
     }
-
-    // Load the SVG in Base64 to the image
     image.src = svgBase64
   })
 }
@@ -76,7 +69,7 @@ export const clearChart = (id: string): void => {
 
 export function generateHorizontalLegend <T extends d3.BaseType> (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<T, undefined, null, undefined>): void {
   const xStartPosition = ((width - (labels.length * LEGEND_ITEM_WIDTH)) / 2)
-  const yPosition = chartHeight + LEGEND_MARGIN_TOP
+  const yPosition = chartHeight + Y_AXIS_GAP
 
   const legend = svg.selectAll('.legend')
     .data(labels)

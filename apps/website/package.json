@@ -18,13 +18,8 @@
     "serve": "vite",
     "test-ui:explorer": "cypress open"
   },
-  "active-issues": {
-    "@vitejs/plugin-vue": "1.8.1 breaks vue-class-component - https://github.com/vitejs/vite/pull/5374",
-    "vue-tsc": "0.28.8 breaks website build - https://github.com/johnsoncodehk/volar/issues/670"
-  },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.19.2",
-    "@iconify-json/fa-regular": "^1.0.2",
     "@rfcx-bio/common": "workspace:*",
     "@vueuse/components": "^6.7.6",
     "@vueuse/core": "^6.7.6",
@@ -32,6 +27,7 @@
     "d3": "^7.1.1",
     "dayjs": "^1.10.7",
     "element-plus": "^1.2.0-beta.5",
+    "howler": "^2.2.3",
     "jszip": "^3.7.1",
     "lodash-es": "^4.17.21",
     "mapbox-gl": "^2.5.1",
@@ -46,9 +42,11 @@
   },
   "devDependencies": {
     "@iconify-json/fa": "^1.0.1",
+    "@iconify-json/fa-regular": "^1.0.2",
     "@iconify-json/fa-solid": "^1.0.2",
     "@types/color-string": "^1.5.0",
     "@types/d3": "^7.1.0",
+    "@types/howler": "^2.2.4",
     "@types/mapbox-gl": "^2.4.2",
     "@types/numeral": "^2.0.2",
     "@windicss/plugin-animations": "^1.0.9",
