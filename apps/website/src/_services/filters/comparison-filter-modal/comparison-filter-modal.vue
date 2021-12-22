@@ -3,7 +3,7 @@
     name="buildComparisonModal"
   >
     <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
-      Build comparison
+      Customize dataset
     </h1>
     <div class="flex flex-row min-h-lg">
       <!-- left menu bar -->
@@ -24,8 +24,7 @@
         v-if="currentActiveMenuId === menus[0].id"
         class="w-full"
       >
-        <div class="w-full p-4">
-          <!-- TODO: 50 implement search logic -->
+        <div class="w-full px-4 pt-3">
           <input
             type="text"
             placeholder="Search"
@@ -44,38 +43,50 @@
             >
             <span class="text-white ml-2">All sites in the project</span>
           </label>
-          <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
-            Filter results from some sites only
-          </h2>
 
           <el-select
-            v-model="selectedSites"
-            value-key="siteId"
+            v-model="selectedSiteGroups"
+            value-key="label"
             multiple
             filterable
-            :filter-method="onFilterType"
+            popper-class="selector-sites"
+            name="input-site"
             fit-input-width
             reserve-keyword
-            placeholder=" "
-            class="search-select mx-2 mb-2"
+            placeholder="Type to filter sites"
+            no-data-text="No matching sites"
+            class="search-select mx-4 mt-2"
+            :filter-method="onFilterType"
+            @blur="onSetSelectorPlaceHolder"
+            @input="onRemoveSelectorPlaceHolder"
+            @focus="onRemoveSelectorPlaceHolder"
           >
             <el-option
-              v-for="(item) in filterInputSites"
-              :key="'site-list-' + item.site.siteId"
-              :label="item.site.name"
-              :value="item.site"
+              v-if="optionAllMatchingFilter"
+              :key="'site-match-' + optionAllMatchingFilter.label"
+              :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
+              :value="optionAllMatchingFilter"
+            />
+            <el-option
+              v-for="item in filtered"
+              :key="'site-list-' + item.siteId"
+              :label="item.name"
+              :value="{ label: item.name, value: [item] }"
             />
           </el-select>
-          <el-tag
-            v-for="site in selectedSites"
-            :key="'site-tag-'+ site.siteId"
-            class="ml-2 mb-2"
-            closable
-            effect="dark"
-            @close="onRemoveSiteTags(site)"
-          >
-            {{ site.name }}
-          </el-tag>
+          <div class="ml-2 mt-3">
+            <el-tag
+              v-for="site in selectedSiteGroups"
+              :key="'site-tag-'+ site.label"
+              class="ml-2 mb-2 select-none"
+              closable
+              type="info"
+              effect="dark"
+              @close="onRemoveSiteTags(site)"
+            >
+              {{ site.label }}
+            </el-tag>
+          </div>
         </div>
       </div>
 
@@ -121,25 +132,57 @@
 <script src="./comparison-filter-modal.ts" lang="ts"></script>
 <style lang="scss">
 .search-select {
-  .select-trigger{
+  .select-trigger {
     width: 500px;
     background-color: #141525;
+
     & .el-input * > .el-icon.el-select__caret {
       display: flex;
     }
   }
+
   span.el-tag {
     display: none;
   }
+
   * > input {
-    background-color: #141525;
+    background-color: transparent;
     border-radius: 0.25rem;
   }
+
   & * > .el-select__input {
     margin: 0 0 0 2px;
+
     &:focus {
       box-shadow: none;
     }
+  }
+}
+.selector-sites {
+  background-color:hsl(236, 25%, 15%);
+  border: 1px solid #45485D;
+  & .el-popper__arrow {
+    display: none;
+  }
+  & .el-select-dropdown__item {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid var(--el-border-color-base);
+    &:hover {
+      background-color: var(--el-border-color-base);
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.el-scrollbar__view.el-select-dropdown__list {
+  padding: 0;
+}
+
+@media (max-width: 700px) {
+  .search-select .select-trigger {
+    width: 300px;
   }
 }
 </style>

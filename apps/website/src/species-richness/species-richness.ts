@@ -50,7 +50,7 @@ export default class SpeciesRichnessPage extends Vue {
       filters.map(async (filter) => {
         const { startDate, endDate, sites, color } = filter
         const data = await getSpeciesRichnessData(filterToDataset(filter))
-        return { startDate, endDate, sites, color, data }
+        return { startDate, endDate, sites: sites.flatMap(sg => sg.value), color, data }
       })
     )
 

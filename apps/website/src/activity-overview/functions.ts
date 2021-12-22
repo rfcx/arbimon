@@ -1,10 +1,10 @@
 import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
-import { ColoredFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
+import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
-export type ActivityOverviewDataBySite = ActivityOverviewData & ColoredFilter
+export type ActivityOverviewDataBySite = ActivityOverviewData & DatasetParameters
 
 export const ACTIVITY_OVERVIEW_MAP_KEYS = {
   detection: 'detection',
@@ -38,7 +38,7 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
     [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, color, overviewBySite }) => {
+  return datasets.map(({ startDate, endDate, sites, overviewBySite }) => {
     const overviewBySiteValues = Object.values(overviewBySite)
     const data = overviewBySiteValues.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
       siteName,
@@ -50,7 +50,7 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }
     }))
-    return { startDate, endDate, sites, color, data, maxValues }
+    return { startDate, endDate, sites, data, maxValues }
   })
 }
 
@@ -67,12 +67,11 @@ export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOve
 
   const files: FileData[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites) + '.csv'
+      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites.flatMap(sg => sg.value)) + '.csv'
       const data = await getCSVData(sortedDatasets[idx])
       return { filename, data }
     })
   )
-
   await zipAndDownload(files, groupName)
 }
 

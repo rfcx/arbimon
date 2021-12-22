@@ -5,7 +5,7 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { ComparisonFilter, FilterPropertyEquals } from '~/filters'
+import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
 import { BiodiversityStore } from '~/store'
 import DateRangePicker from './date-range-picker/date-range-picker.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
@@ -13,11 +13,6 @@ import FilterTaxon from './filter-taxon/filter-taxon.vue'
 interface FilterMenuItem {
   id: string
   name: string
-}
-
-interface SiteCheckbox {
-  site: Site
-  check: boolean
 }
 
 const DATE_FORMAT = 'YYYY-MM-DD'
@@ -37,7 +32,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
     return {
-      sites: this.selectedSites,
+      sites: this.selectedSiteGroups,
       startDate: dayjs.utc(this.startDate),
       endDate: dayjs.utc(this.endDate),
       otherFilters: this.otherFilters
@@ -46,15 +41,19 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitClose (): boolean { return false }
 
+  // Tabs
   currentActiveMenuId = ''
+
+  // Sites
   inputFilter = ''
-  isAllMatchedFilteredChecked = false
-  selectedSites: Site[] = []
-  tempSelectedSites: Site[] = []
-  siteCheckboxItems: SiteCheckbox[] = []
+  selectedSiteGroups: SiteGroup[] = []
+
+  // Dates
   readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
+
+  // Other filters
   otherFilters: FilterPropertyEquals[] = []
 
   get menus (): FilterMenuItem[] {
@@ -66,20 +65,26 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   get isSelectedAllSites (): boolean {
-    return this.selectedSites.length === 0
+    return this.selectedSiteGroups.length === 0
   }
 
   get selectedTaxons (): string[] {
     return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
   }
 
-  get filterInputSites (): SiteCheckbox[] {
-      if (!this.inputFilter) {
-        this.isAllMatchedFilteredChecked = false
-        return this.siteCheckboxItems
+  get optionAllMatchingFilter (): SiteGroup | undefined {
+    return this.inputFilter && this.filtered.length > 0
+      ? {
+        label: `${this.inputFilter}*`,
+        value: this.filtered
       }
-      return this.siteCheckboxItems
-          .filter(w => w.site.name.toLocaleLowerCase().startsWith(this.inputFilter.toLocaleLowerCase()))
+      : undefined
+  }
+
+  get filtered (): Site[] {
+    const prefix = this.inputFilter.toLocaleLowerCase()
+    return this.store.sites
+      .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
   }
 
   override mounted (): void {
@@ -94,13 +99,30 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
+  onSetSelectorPlaceHolder (): void {
+    const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
+    const searchSelector = document.querySelector('.search-select')
+    const getClass = searchSelector?.querySelector('.el-input--suffix')
+    const isFocusSiteSelector = getClass?.classList.contains('is-focus') ?? false
+
+    if (isFocusSiteSelector ?? false) {
+      inputEl.removeAttribute('placeholder')
+      inputEl.setAttribute('placeholder', 'Type to filter sites')
+    }
+  }
+
+  onRemoveSelectorPlaceHolder (e: Event): void {
+    const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
+    inputEl.removeAttribute('placeholder')
+  }
+
   onFilterType (query: string): void {
     this.inputFilter = query
   }
 
-  onRemoveSiteTags (value: Site): Site[] {
-    this.selectedSites = this.selectedSites.filter(s => s.siteId !== value.siteId)
-    return this.selectedSites
+  onSiteSelected (item: SiteGroup): void {
+    if (this.selectedSiteGroups.find(sg => sg.label === item.label)) return
+    this.selectedSiteGroups.push(item)
   }
 
   onDateChange (dateRange: [Date, Date]): void {
@@ -108,19 +130,13 @@ export default class ComparisonFilterModalComponent extends Vue {
     this.endDate = dayjs(dateRange[1]).format(DATE_FORMAT)
   }
 
-  setDefaultSelectedSites (): void {
-    this.setDefaultSiteCheckboxItems()
-    const selectedSites = this.initialValues?.sites ?? []
-    const selectedSiteIds = new Set(selectedSites.map(s => s.siteId))
-    this.selectedSites = this.siteCheckboxItems
-      .filter(cb => selectedSiteIds.has(cb.site.siteId))
-      .map(cb => { cb.check = true; return cb.site })
+  onRemoveSiteTags (item: SiteGroup): void {
+    const index = this.selectedSiteGroups.findIndex(sg => sg.label === item.label)
+    this.selectedSiteGroups.splice(index, 1)
   }
 
-  setDefaultSiteCheckboxItems (): void {
-    this.siteCheckboxItems = [...this.store.sites]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(site => ({ site, check: false }))
+  setDefaultSelectedSites (): void {
+    this.selectedSiteGroups = this.initialValues?.sites ?? []
   }
 
   setActiveMenuId (id: string): void {
@@ -132,41 +148,10 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   selectAllSites (): void {
-    this.selectedSites = []
-    this.setDefaultSiteCheckboxItems()
-  }
-
-  updateSelectedSites (item: SiteCheckbox): void {
-    const siteIdx = this.selectedSites.findIndex(s => s.siteId === item.site.siteId)
-    if (siteIdx === -1) {
-      this.selectedSites.push(item.site)
-      item.check = true
-    } else {
-      this.selectedSites.splice(siteIdx, 1)
-      item.check = false
-    }
+    this.selectedSiteGroups = []
   }
 
   updateSelectedTaxons (otherFilters: FilterPropertyEquals[]): void {
     this.otherFilters = otherFilters // TODO ??? - Are you sure this is an overwrite?
-  }
-
-  updateSelectedAllFilterSites (): void {
-    this.isAllMatchedFilteredChecked = !this.isAllMatchedFilteredChecked
-    this.siteCheckboxItems = this.siteCheckboxItems.map(s => {
-      if (this.filterInputSites.includes(s)) {
-        return {
-          ...s,
-          check: this.isAllMatchedFilteredChecked
-        }
-      }
-      return { ...s }
-    })
-    if (this.isAllMatchedFilteredChecked) {
-      this.selectedSites = [...this.selectedSites, ...this.filterInputSites.map(f => f.site)]
-      return
-    }
-    const filteredInputSiteIds = this.filterInputSites.map(f => f.site.siteId)
-    this.selectedSites = this.selectedSites.filter(s => !filteredInputSiteIds.includes(s.siteId))
   }
 }

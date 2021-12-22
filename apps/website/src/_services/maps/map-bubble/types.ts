@@ -13,7 +13,6 @@ export interface MapDataSet {
   startDate: Dayjs
   endDate: Dayjs
   sites: Site[]
-  color: string
   data: MapSiteData[]
   maxValues: { [key: string]: number }
   title?: string

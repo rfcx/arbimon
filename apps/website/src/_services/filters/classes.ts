@@ -1,12 +1,12 @@
 import { Dayjs } from 'dayjs'
 
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { formatDateRange } from '@rfcx-bio/utils/dates'
 
-import { FilterPropertyEquals } from './types'
+import { SiteGroup } from '~/filters'
+import { ComparisonFilter, FilterPropertyEquals } from './types'
 
-export class FilterImpl {
-  sites: Site[] = []
+export class FilterImpl implements ComparisonFilter {
+  sites: SiteGroup[] = []
   startDate: Dayjs
   endDate: Dayjs
   otherFilters: FilterPropertyEquals[] = []
@@ -15,14 +15,14 @@ export class FilterImpl {
   get displayTitle (): string {
     const length = this.sites.length
     if (length === 0) { return 'All sites' }
-    return this.sites.map(s => s.name).join(', ')
+    return this.sites.map(s => s.label).join(', ')
   }
 
   get displayDate (): string {
     return formatDateRange(this.startDate, this.endDate)
   }
 
-  constructor (startDate: Dayjs, endDate: Dayjs, sites: Site[] = [], otherFilters: FilterPropertyEquals[] = [], color = '') {
+  constructor (startDate: Dayjs, endDate: Dayjs, sites: SiteGroup[] = [], otherFilters: FilterPropertyEquals[] = [], color = '') {
     this.startDate = startDate
     this.endDate = endDate
     this.sites = sites
