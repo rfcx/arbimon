@@ -24,8 +24,7 @@
         v-if="currentActiveMenuId === menus[0].id"
         class="w-full"
       >
-        <div class="w-full p-4">
-          <!-- TODO: 50 implement search logic -->
+        <div class="w-full px-4 pt-3">
           <input
             type="text"
             placeholder="Search"
@@ -44,9 +43,6 @@
             >
             <span class="text-white ml-2">All sites in the project</span>
           </label>
-          <h2 class="text-primary px-4 pt-2 pb-4 border-t-1 border-grey">
-            Filter results from some sites only
-          </h2>
 
           <el-select
             v-model="selectedSites"
@@ -59,7 +55,7 @@
             reserve-keyword
             placeholder="Type to filter sites"
             no-data-text="No matching sites"
-            class="search-select m-4"
+            class="search-select mx-4 mt-2"
             :filter-method="onFilterType"
             @blur="onSetSelectorPlaceHolder"
             @input="onRemoveSelectorPlaceHolder"
