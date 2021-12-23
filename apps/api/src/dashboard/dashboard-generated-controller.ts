@@ -1,4 +1,4 @@
-import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
+import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 
 import { Controller } from '../_services/api-helper/types'
 import { assertParamsExist } from '../_services/validation'

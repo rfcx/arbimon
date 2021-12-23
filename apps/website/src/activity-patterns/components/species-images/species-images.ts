@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species } from '@rfcx-bio/common/api-bio-types/species'
+import { Species } from '@rfcx-bio/common/api-bio/species/species'
 
 export default class SpeciesImage extends Vue {
   @Prop() species!: Species

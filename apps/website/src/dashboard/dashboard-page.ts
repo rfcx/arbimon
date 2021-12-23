@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
-import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import { TAXONOMY_COLORS } from '~/api/taxonomy-service'

@@ -2,7 +2,7 @@ import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { readdir } from 'fs/promises'
 import { resolve } from 'path'
 
-import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio-types/project-species'
+import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio/species/project-species'
 
 import { ApiClientError, ApiMissingParam } from '../_services/errors'
 

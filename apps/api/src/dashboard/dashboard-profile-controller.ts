@@ -1,4 +1,4 @@
-import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 
 import { Controller } from '../_services/api-helper/types'
 import { assertParamsExist } from '../_services/validation'

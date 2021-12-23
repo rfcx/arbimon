@@ -1,8 +1,8 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { Project } from '@rfcx-bio/common/api-bio-types/projects'
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Project } from '@rfcx-bio/common/api-bio/common/projects'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 
 import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'

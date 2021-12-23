@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios'
 
-import { Project } from '@rfcx-bio/common/api-bio-types/projects'
+import { Project } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { apiClient } from '..'
 

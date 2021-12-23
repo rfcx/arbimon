@@ -1,7 +1,7 @@
 import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
-import { DashboardGeneratedResponse, DashboardSpecies } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+import { DashboardGeneratedResponse, DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
@@ -17,9 +17,9 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     speciesThreatenedCount: speciesThreatened.length,
     speciesThreatened,
     speciesHighlighted: await getHighlighted(),
-    richnessByTaxon: await getRichnessByTaxon(),
     richnessByExtinction: await getRichnessByExtinction(),
     richnessByHour: await getRichnessDetectionByTime(),
+    richnessByTaxon: await getRichnessByTaxon(),
     detectionFrequencyByHour: await getDetectionFrequencyByTime()
   }
 }
