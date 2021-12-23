@@ -56,6 +56,8 @@ export default class ActivityOverviewByLocation extends Vue {
 
   mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, datasetIndex, undefined, sites)
+    const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, datasetIndex, undefined, siteGroup)
   }
 }

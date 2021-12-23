@@ -1,7 +1,6 @@
 import { Dayjs } from 'dayjs'
 import { groupBy, mapValues } from 'lodash-es'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -59,7 +58,7 @@ export function getExportGroupName (prefix: string, exportDatetime: string = get
   return `${projectName}--${prefix.replaceAll(' ', '-')}--${exportDatetime}`
 }
 
-export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, sites?: Site[]): string {
+export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, sites?: SiteGroup[]): string {
   const project = useStore().selectedProject
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
@@ -82,12 +81,12 @@ function getDateFormatted (startDate: Dayjs, endDate: Dayjs, dateFormat: string)
   return startDate.isSame(endDate, 'date') ? start : `${start} - ${end}`
 }
 
-function getSiteName (sites: Site[]): string {
+function getSiteName (sites: SiteGroup[]): string {
   const siteLength = sites.length
   switch (siteLength) {
     case 0: return 'All sites'
-    case 1: return sites[0].name
-    default: return `${sites[0].name} + ${siteLength - 1} other sites`
+    case 1: return sites[0].label
+    default: return `${sites[0].label} + ${siteLength - 1} other sites`
   }
 }
 
