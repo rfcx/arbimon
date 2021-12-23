@@ -29,7 +29,10 @@
             :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
             class="w-full"
           />
-          <dashboard-line-chart :time-data="lineChartData" />
+          <dashboard-line-chart
+            :time-data="lineChartData"
+            :dataset-type="selectedTab"
+          />
         </div>
         <page-title
           class="mt-5"

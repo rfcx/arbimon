@@ -1,9 +1,9 @@
 export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear'
 
 export const TIME_BUCKET_LABELS: Record<TimeBucket, string> = {
-  hourOfDay: 'Hour of Day',
-  dayOfWeek: 'Day of Week',
-  monthOfYear: 'Month of Year'
+  hourOfDay: 'Hour of day',
+  dayOfWeek: 'Day of week',
+  monthOfYear: 'Month of year'
 }
 
 export const TIME_BUCKET_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
