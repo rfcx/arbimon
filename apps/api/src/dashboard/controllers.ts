@@ -3,7 +3,8 @@ import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/comm
 
 import { Controller } from '../_services/api-helper/types'
 import { assertParamsExist } from '../_services/validation'
-import { getGeneratedData, getProfile } from './dao-dashboard-generated'
+import { getGeneratedData } from './dao-dashboard-generated'
+import { getProfile } from './dao-dashboard-profile'
 
 export const dashboardGeneratedController: Controller<DashboardGeneratedParams, DashboardGeneratedResponse> = async (req) => {
   // Inputs & validation
