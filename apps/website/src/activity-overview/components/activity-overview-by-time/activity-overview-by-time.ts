@@ -46,8 +46,8 @@ export default class ActivityOverviewByTime extends Vue {
     return {
       height: 450,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
-      xTitle: DATASET_LABELS[this.selectedType],
-      yTitle: TIME_BUCKET_LABELS[this.selectedBucket],
+      xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
+      yTitle: DATASET_LABELS[this.selectedType],
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabels: TIME_LABELS[this.selectedBucket]
     }
