@@ -10,6 +10,19 @@ Allowed categories:
 - Breaking changes
 --->
 
+# 1.0.0-rc3 (2021-12-23)
+
+## Features
+
+- **dashboard:** Maps for Species Richness & Detection Frequency [#314]
+
+## Enhancements
+
+- TODO
+
+## Bug Fixes
+
+- TODO
 
 # 1.0.0-rc2 (2021-12-22)
 
