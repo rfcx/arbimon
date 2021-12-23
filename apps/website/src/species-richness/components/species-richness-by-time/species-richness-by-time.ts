@@ -27,6 +27,8 @@ export default class SpeciesRichnessByTime extends Vue {
     return {
       height: 450,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      xTitle: 'Number of species',
+      yTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabels: TIME_LABELS[this.selectedBucket]
     }
@@ -39,7 +41,7 @@ export default class SpeciesRichnessByTime extends Vue {
   async downloadChart (): Promise<void> {
     const margins = { ...this.config.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
-    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig, TIME_BUCKET_LABELS[this.selectedBucket], 'Number of species')
+    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
     const png = await svgToPng({ svg, ...exportConfig })
