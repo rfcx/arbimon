@@ -59,16 +59,17 @@ export function getExportGroupName (prefix: string, exportDatetime: string = get
   return `${projectName}--${prefix.replaceAll(' ', '-')}--${exportDatetime}`
 }
 
-export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, dateGroup?: string, sites?: Site[]): string {
+export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, sites?: Site[]): string {
   const project = useStore().selectedProject
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''
   const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getExportDateTime()}`
+  const indexPrefix = `${(datasetIndex + 1).toString() + '-'}`
 
   // TODO: 271 add optional filter in the file name
 
-  return `${projectName}--${prefix}${siteName}--${date}${dateGroup ? '--' + dateGroup : ''}`
+  return `${indexPrefix}${projectName}--${prefix}${siteName}--${date}${dateGroup ? '--' + dateGroup : ''}`
 }
 
 export function getExportDateTime (): string {
