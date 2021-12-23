@@ -20,15 +20,15 @@ export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix:
   const exportDateTime = getExportDateTime()
 
   const files = await Promise.all(
-    filters.map(async (filter) => await getCsvFile(filter, reportPrefix, exportDateTime)))
+    filters.map(async (filter, idx) => await getCsvFile(filter, reportPrefix, exportDateTime, idx)))
 
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
   await zipAndDownload(files, groupName)
 }
 
-const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string): Promise<FileData> => {
+const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string, datasetIndex: number): Promise<FileData> => {
   const sites = siteGroups.flatMap(sg => sg.value)
-  const filename = getExportFilterName(startDate, endDate, reportPrefix, exportTime, sites) + '.csv'
+  const filename = getExportFilterName(startDate, endDate, reportPrefix, datasetIndex, exportTime, sites) + '.csv'
 
   const dataAsJson = await getCsvForDataset({ startDate, endDate, sites, otherFilters })
   const data = await toCsv(dataAsJson)
