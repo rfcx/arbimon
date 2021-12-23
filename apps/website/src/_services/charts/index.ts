@@ -10,7 +10,7 @@ interface SvgAndDimensions {
 
 export const X_AXIS_GAP = 30
 export const Y_AXIS_GAP = 50
-const LEGEND_ITEM_WIDTH = 80
+const LEGEND_ITEM_WIDTH = 100
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
