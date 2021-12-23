@@ -1,4 +1,4 @@
-import { ExtinctionRiskCode } from '../iucn'
+import { ExtinctionRiskCode } from '../../iucn'
 
 const SPECIES_SOURCES = <const>['IUCN', 'Wiki']
 export type SpeciesSource = typeof SPECIES_SOURCES[number]

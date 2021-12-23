@@ -1,4 +1,4 @@
-import { ExtinctionRiskCode } from '../iucn'
+import { ExtinctionRiskCode } from '../../iucn'
 
 // Request
 export interface DashboardGeneratedParams {
@@ -23,9 +23,10 @@ export interface DashboardGeneratedResponse {
   speciesHighlighted: DashboardSpecies[]
 
   // Charts & maps
-  richnessByTaxon: Array<[string, number]>
+  // TODO - Write new types for StackData, MapData, LineData
   richnessByExtinction: Array<[string, number]>
   richnessByHour: Record<number, number>
+  richnessByTaxon: Array<[string, number]>
   detectionFrequencyByHour: Record<number, number>
 }
 
