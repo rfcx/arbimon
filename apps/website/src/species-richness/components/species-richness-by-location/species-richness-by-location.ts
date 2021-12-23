@@ -48,6 +48,8 @@ export default class SpeciesRichnessByLocation extends Vue {
 
   mapExportName (dataset: MapDataSet, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, datasetIndex, undefined, sites)
+    const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+
+    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, datasetIndex, undefined, siteGroup)
   }
 }
