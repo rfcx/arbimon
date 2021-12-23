@@ -33,7 +33,7 @@
         </div>
         <div class="max-h-md">
           <label
-            class="pl-4 pb-2 align-middle list-item select-all"
+            class="select-all-items pl-4 pb-2 align-middle list-item list-none"
           >
             <input
               type="radio"
@@ -133,9 +133,10 @@
 <style lang="scss">
 .search-select {
   .select-trigger {
-    width: 520px;
+    width: 32.5rem;
     background-color: #141525;
     margin-right: 1rem;
+    border-radius: 0.25rem;
 
     & .el-input * > .el-icon.el-select__caret {
       display: flex;
@@ -183,7 +184,7 @@
 
 @media (max-width: 700px) {
   .search-select .select-trigger {
-    width: 180px;
+    width: 11.25rem;
     margin-right: 1rem;
   }
 }
