@@ -17,6 +17,8 @@ export default class DashboardLineChart extends Vue {
     return {
       height: 576,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      xTitle: '',
+      yTitle: '',
       xBounds: [0, 23]
     }
   }

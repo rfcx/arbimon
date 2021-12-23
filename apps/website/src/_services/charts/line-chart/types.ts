@@ -2,6 +2,8 @@ export interface LineChartConfig {
   height: number
   width: number
   margins: Margin
+  xTitle: string
+  yTitle: string
   xBounds?: [number, number]
   xLabels?: string[]
 }

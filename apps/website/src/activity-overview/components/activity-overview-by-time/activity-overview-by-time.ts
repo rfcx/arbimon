@@ -46,6 +46,8 @@ export default class ActivityOverviewByTime extends Vue {
     return {
       height: 450,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      xTitle: DATASET_LABELS[this.selectedType],
+      yTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabels: TIME_LABELS[this.selectedBucket]
     }
@@ -62,7 +64,7 @@ export default class ActivityOverviewByTime extends Vue {
   async downloadChart (): Promise<void> {
     const margins = { ...this.config.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
-    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig, TIME_BUCKET_LABELS[this.selectedBucket], DATASET_LABELS[this.selectedType])
+    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
     const png = await svgToPng({ svg, ...exportConfig })
