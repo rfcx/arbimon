@@ -158,12 +158,11 @@ export const generateChartInternal = (data: GroupedBarChartItem[], config: BarCh
 export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
   const { svg, fullHeight } = generateChart(data, config)
 
-  const xTitleDistance = 25
   const labels = getLegendGroupNames(data[0].series.length)
   const colors = data[0].series.map(s => s.color)
 
-  const positionX = config.margins.left - xTitleDistance
-  const positionY = fullHeight - config.margins.bottom + (xTitleDistance * 2)
+  const positionX = config.margins.left - X_TITLE_DISTANCE
+  const positionY = fullHeight - config.margins.bottom
   generateHorizontalLegend(svg, config.width, positionX, positionY, labels, colors)
 
   return svg.node()
