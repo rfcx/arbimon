@@ -8,6 +8,7 @@ import { clearChart } from '..'
 import { generateChartExport, generateChartInternal } from './functions'
 import { GroupedBarChartItem } from './types'
 
+// TODO: Refactor by extract richness page information to have pure bar chart logic
 export default class HorizontalBarChartComponent extends Vue {
   @Prop({ default: [] }) chartData!: GroupedBarChartItem[]
   @Prop() domId!: string
@@ -33,6 +34,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const config = {
       width: document.getElementById(`wrapper-${id}`)?.clientWidth ?? 0,
       margins: { top: 20, right: 20, bottom: 30, left: 80 },
+      xTitle: 'Species richness',
       fontColor: 'white'
     }
 
@@ -47,6 +49,7 @@ export default class HorizontalBarChartComponent extends Vue {
     const config = {
       width: 1024,
       margins: { top: 40, right: 40, bottom: 50, left: 100 },
+      xTitle: 'Species richness',
       fontColor: 'black'
     }
     const svg = generateChartExport(this.chartData, config)
