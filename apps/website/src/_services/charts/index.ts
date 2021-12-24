@@ -8,9 +8,10 @@ interface SvgAndDimensions {
   height: number
 }
 
-export const X_AXIS_GAP = 30
-export const Y_AXIS_GAP = 50
-const LEGEND_ITEM_WIDTH = 100
+export const DATASET_LEGEND_GAP = 30
+const EACH_LEGEND_WIDTH = 100
+const GAP_BETWEEN_CIRCLE_AND_LEGEND = 15
+const GAP_BETWEEN_LEGEND = 20
 
 export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
   const chartElement = getChartElement(element)
@@ -67,30 +68,26 @@ export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
 }
 
-export function generateHorizontalLegend <T extends d3.BaseType> (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<T, undefined, null, undefined>): void {
-  const xStartPosition = ((width - (labels.length * LEGEND_ITEM_WIDTH)) / 2)
-  const yPosition = chartHeight + Y_AXIS_GAP
+export function generateHorizontalLegend <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, width: number, positionX: number, positionY: number, labels: string[], colors: string[]): void {
+  const startXPosition = ((width / 2) - (((labels.length * EACH_LEGEND_WIDTH) + (labels.length * GAP_BETWEEN_CIRCLE_AND_LEGEND)) / 2))
 
   const legend = svg.selectAll('.legend')
     .data(labels)
     .enter()
     .append('g')
     .attr('class', 'legend')
+    .attr('transform', `translate(${positionX} , ${positionY})`)
 
   legend.append('circle')
-    .attr('cx', (d, i) => (i * LEGEND_ITEM_WIDTH) + xStartPosition)
-    .attr('cy', yPosition)
     .attr('r', 8)
-    .style('fill', (d, i) => colors[i])
+    .attr('cx', (_, i) => (i * (EACH_LEGEND_WIDTH + GAP_BETWEEN_LEGEND)) + startXPosition)
+    .style('fill', (_, i) => colors[i])
 
   legend.append('text')
-    .attr('x', (d, i) => (i * LEGEND_ITEM_WIDTH) + (xStartPosition + 15))
-    .attr('y', yPosition)
-    .attr('dy', '.3em')
     .text(d => d)
-    .attr('fill', '#000000')
-    .style('color', '#000000')
-    .style('font-size', '14px')
+    .attr('x', (_, i) => (i * (EACH_LEGEND_WIDTH + GAP_BETWEEN_LEGEND)) + GAP_BETWEEN_CIRCLE_AND_LEGEND + startXPosition)
+    .attr('dy', '.3em')
+    .attr('fill', 'currentColor')
 }
 
 export function getLegendGroupNames (totalGroup: number): string[] {
