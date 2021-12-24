@@ -69,7 +69,7 @@ export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: s
 
   // TODO: 271 add optional filter in the file name
 
-  return `${indexPrefix}${projectName}--${prefix}${siteName}--${taxonFilterName + '--'}${date}${dateGroup ? '--' + dateGroup : ''}`
+  return `${indexPrefix}${projectName}--${prefix}${siteName}--${taxonFilterName}${date}${dateGroup ? '--' + dateGroup : ''}`
 }
 
 export function getExportDateTime (): string {
@@ -103,8 +103,8 @@ function getSiteGroupName (sites: SiteGroup[]): string {
 function getTaxonFilterName (taxonFilter: string[]): string {
   switch (taxonFilter.length) {
     case 0: return ''
-    case 1: return `Taxon=${taxonFilter[0]}`
-    case 2: return `Taxon=${taxonFilter[0]}&${taxonFilter[1]}`
-    default: return `Taxon=${taxonFilter?.[0]}+ ${taxonFilter.length - 1} other taxons`
+    case 1: return `Taxon=${taxonFilter[0]}--`
+    case 2: return `Taxon=${taxonFilter[0]}&${taxonFilter[1]}--`
+    default: return `Taxon=${taxonFilter?.[0]}+ ${taxonFilter.length - 1} other taxons--`
   }
 }
