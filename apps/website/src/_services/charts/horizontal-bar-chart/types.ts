@@ -15,5 +15,6 @@ export interface BarChartConfig {
   width: number
   margins: ChartMargin
   xTitle: string
+  displayXAxisTick: boolean
   fontColor: string
 }
