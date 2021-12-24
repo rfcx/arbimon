@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import numeral from 'numeral'
 
-import { generateHorizontalLegend, getLegendGroupNames, X_AXIS_GAP, Y_AXIS_GAP } from '..'
+import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig, xTitleDistance = 25, yTitleDistance = 25): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
@@ -81,42 +81,38 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
 }
 
 export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, config: LineChartConfig, xTitleDistance: number, yTitleDistance: number): void {
-  let mostLeft = 0
-  let mostBottom = 0
+  const { width, height, margins, xTitle, yTitle } = config
 
+  let mostBottom = 0
   svg.selectAll('text')
     .each(function () {
       const element = d3.select(this)
-      const x = Number(element.attr('x'))
       const y = Number(element.attr('y'))
       if (mostBottom < y) {
         mostBottom = y
-      }
-      if (mostLeft > x) {
-        mostLeft = x
       }
     })
 
   // X Title
   svg.append('g')
-    .attr('transform', `translate(0, ${config.height - (config.margins.top + config.margins.bottom) + (xTitleDistance + mostBottom)})`)
+    .attr('transform', `translate(0, ${height - (margins.top + margins.bottom) + (xTitleDistance + mostBottom)})`)
     .append('text')
-    .attr('x', ((config.width - config.margins.left) / 2) + config.margins.left)
+    .attr('x', ((width - margins.left) / 2) + margins.left)
     .attr('y', mostBottom + xTitleDistance)
     .attr('fill', 'currentColor')
     .style('text-anchor', 'middle')
-    .text(config.xTitle)
+    .text(xTitle)
 
   // Y Title
   svg.append('g')
-    .attr('transform', `translate(${config.margins.left - yTitleDistance}, 0)`)
+    .attr('transform', `translate(${margins.left - yTitleDistance}, 0)`)
     .append('text')
     .attr('transform', 'rotate(-90)')
-    .attr('x', 0 - ((config.height - config.margins.bottom) / 2))
+    .attr('x', 0 - ((height - margins.bottom) / 2))
     .attr('y', 0)
     .attr('fill', 'currentColor')
     .style('text-anchor', 'middle')
-    .text(config.yTitle)
+    .text(yTitle)
 }
 
 export const generateChartInternal = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
@@ -126,14 +122,17 @@ export const generateChartInternal = (datasets: LineChartSeries[], config: LineC
 
 export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   const { width, height, margins } = config
-  const newConfig = { ...config, margins: { ...margins, left: margins.left + X_AXIS_GAP, bottom: margins.bottom + Y_AXIS_GAP } }
-  const svg = generateChart(datasets, newConfig, 25, 40)
+  const newConfig = { ...config, margins: { ...margins, left: margins.left, bottom: margins.bottom + DATASET_LEGEND_GAP } }
+
+  const xTitleDistance = 25
+  const yTitleDistance = 40
+  const svg = generateChart(datasets, newConfig, xTitleDistance, yTitleDistance)
 
   const labels = getLegendGroupNames(datasets.length)
   const colors = datasets.map(d => d.color)
-  const chartHeight = height - margins.bottom
-
-  generateHorizontalLegend(width, chartHeight - (Y_AXIS_GAP / 2), labels, colors, svg)
+  const positionX = margins.left - xTitleDistance
+  const positionY = height - margins.bottom + (xTitleDistance * 2)
+  generateHorizontalLegend(svg, width, positionX, positionY, labels, colors)
 
   svg.selectAll('text')
     .style('font-size', '1.25rem')

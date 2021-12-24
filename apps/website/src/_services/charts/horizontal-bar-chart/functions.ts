@@ -8,7 +8,7 @@ const BAR_MARGIN = 2
 
 export interface GeneratedHorizontalChart {
   svg: d3.Selection<SVGSVGElement, undefined, null, undefined>
-  chartHeight: number
+  fullHeight: number
 }
 
 export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig): GeneratedHorizontalChart => {
@@ -119,7 +119,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
       }
     })
 
-  return { svg, chartHeight }
+  return { svg, fullHeight }
 }
 
 export const generateChartInternal = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
@@ -128,11 +128,15 @@ export const generateChartInternal = (data: GroupedBarChartItem[], config: BarCh
 }
 
 export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
-  const { svg, chartHeight } = generateChart(data, config)
+  const { svg, fullHeight } = generateChart(data, config)
 
+  const xTitleDistance = 25
   const labels = getLegendGroupNames(data[0].series.length)
   const colors = data[0].series.map(s => s.color)
-  generateHorizontalLegend(config.width, chartHeight, labels, colors, svg)
+
+  const positionX = config.margins.left - xTitleDistance
+  const positionY = fullHeight - config.margins.bottom
+  generateHorizontalLegend(svg, config.width, positionX, positionY, labels, colors)
 
   return svg.node()
 }
