@@ -4,6 +4,7 @@ import { Prop, Watch } from 'vue-property-decorator'
 import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { svgToPng } from '~/charts'
+import { BarChartConfig } from '~/charts/horizontal-bar-chart'
 import { clearChart } from '..'
 import { generateChartExport, generateChartInternal } from './functions'
 import { GroupedBarChartItem } from './types'
@@ -19,6 +20,16 @@ export default class HorizontalBarChartComponent extends Vue {
     return this.chartData.length > 0
   }
 
+  get config (): BarChartConfig {
+    return {
+      width: document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 0,
+      margins: { top: 20, right: 20, bottom: 30, left: 80 },
+      xTitle: 'Species richness',
+      displayXAxisTick: false,
+      fontColor: 'white'
+    }
+  }
+
   override mounted (): void {
     window.addEventListener('resize', this.renderChart)
   }
@@ -31,14 +42,7 @@ export default class HorizontalBarChartComponent extends Vue {
   renderChart (): void {
     const id = this.domId
 
-    const config = {
-      width: document.getElementById(`wrapper-${id}`)?.clientWidth ?? 0,
-      margins: { top: 20, right: 20, bottom: 30, left: 80 },
-      xTitle: 'Species richness',
-      fontColor: 'white'
-    }
-
-    const svg = generateChartInternal(this.chartData, config)
+    const svg = generateChartInternal(this.chartData, this.config)
     if (!svg) return
 
     clearChart(id)
@@ -46,12 +50,7 @@ export default class HorizontalBarChartComponent extends Vue {
   }
 
   async downloadChart (): Promise<void> {
-    const config = {
-      width: 1024,
-      margins: { top: 40, right: 40, bottom: 50, left: 100 },
-      xTitle: 'Species richness',
-      fontColor: 'black'
-    }
+    const config = { ...this.config, width: 1024, displayXAxisTick: true, fontColor: 'black' }
     const svg = generateChartExport(this.chartData, config)
     if (!svg) return
 
