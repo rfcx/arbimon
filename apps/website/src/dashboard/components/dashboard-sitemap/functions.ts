@@ -1,4 +1,4 @@
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { MapDataSet, MapSiteData } from '~/maps/map-bubble'

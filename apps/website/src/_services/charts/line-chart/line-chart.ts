@@ -22,6 +22,11 @@ export default class LineChartComponent extends Vue {
     this.updateChart()
   }
 
+  @Watch('config')
+  onConfigChange (): void {
+    this.updateChart()
+  }
+
   updateChart (): void {
     const parent = document.getElementById(this.domId)
     if (!parent) return

@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio-types/species'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio/species/species'
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 
 import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn'

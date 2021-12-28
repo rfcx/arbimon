@@ -1,4 +1,4 @@
-import { Species } from '@rfcx-bio/common/api-bio-types/species'
+import { Species } from '@rfcx-bio/common/api-bio/species/species'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
 export type ArbimonHourlyDetectionSummary = Omit<MockHourlyDetectionSummary, 'detection_frequency'>
