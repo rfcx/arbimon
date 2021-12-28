@@ -5,10 +5,10 @@ import { getAvailableBrowsers, launchBrowser } from 'detect-browsers'
  * `launch-config.js` in this folder, for example:
  *
  * ```js
- * export const ignores = new Set([
+ * export const ignores = [
  *   'Brave Browser',
  *   'Safari'
- * ])
+ * ]
  * ```
  *
  * Browser names are listed in `detect-browsers.d.ts`
@@ -22,11 +22,13 @@ const SERVE_URL = 'http://localhost:8080'
 
 const main = async () => {
   // Detect browsers
-  const launchConfig = await import('./launch-config.js')
-    .catch(() => ({ ignores: new Set() }))
+  const ignores = new Set(
+    (await import('./launch-config.js').catch(() => ({ ignores: [] })))
+      .ignores.map(n => n.toLowerCase())
+  )
 
   const browsers = (await getAvailableBrowsers())
-    .filter(({ browser }) => !launchConfig.ignores.has(browser))
+    .filter(({ browser }) => !ignores.has(browser.toLowerCase()))
 
   // Warn if none found
   if (!browsers.length) {
