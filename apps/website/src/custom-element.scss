@@ -11,4 +11,9 @@
 .el-picker-panel__sidebar {
   background-color: $color-mirage-grey !important;
 }
+
+.el-popover .el-popper__arrow::before {
+  background: $color-box-grey !important;
+  border: none !important;
+}
 /* stylelint-enable selector-class-pattern */
