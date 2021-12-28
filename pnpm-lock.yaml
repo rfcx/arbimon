@@ -196,7 +196,7 @@ importers:
       axios: ^0.24.0
       d3: ^7.1.1
       dayjs: ^1.10.7
-      element-plus: ^1.2.0-beta.5
+      element-plus: ^1.2.0-beta.6
       howler: ^2.2.3
       jszip: ^3.7.1
       lodash-es: ^4.17.21
@@ -221,7 +221,7 @@ importers:
       axios: 0.24.0
       d3: 7.1.1
       dayjs: 1.10.7
-      element-plus: 1.2.0-beta.5_vue@3.2.21
+      element-plus: 1.2.0-beta.6_vue@3.2.21
       howler: 2.2.3
       jszip: 3.7.1
       lodash-es: 4.17.21
@@ -1564,9 +1564,12 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@element-plus/icons/0.0.11:
-    resolution: {integrity: sha512-iKQXSxXu131Ai+I9Ymtcof9WId7kaXvB1+WRfAfpQCW7UiAMYgdNDqb/u0hgTo2Yq3MwC4MWJnNuTBEpG8r7+A==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+  /@element-plus/icons-vue/0.2.4_vue@3.2.21:
+    resolution: {integrity: sha512-RsJNyL58rwxtsjeMy34o8txkL6UlME1stWsUlRpTac6UE9Bx9gdJvnDXbIKhOJqBLX17fBjmposdrn6VTqim2w==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      vue: 3.2.21
     dev: false
 
   /@emmetio/abbreviation/2.2.2:
@@ -4821,12 +4824,12 @@ packages:
     resolution: {integrity: sha512-suEUoPTD1mExjL9TdmH7cvEiWJVM2oEiAi+Y1p0QKxI2HcRlT44qDTP2c1aZmVwRemIPYOpxmV7CxQCOWcm4XQ==}
     dev: true
 
-  /element-plus/1.2.0-beta.5_vue@3.2.21:
-    resolution: {integrity: sha512-8KNGsNZ6RjVJ7kmxq/WLeTBMhVxSjfaGdW2QdcdXz4km1MgxbyBfdiNGVQG4XH/n+hbtLFldCPw0mVT4vkncuA==}
+  /element-plus/1.2.0-beta.6_vue@3.2.21:
+    resolution: {integrity: sha512-8EdSIR/5/FHcSB8w1diAh+gJMHgxIvxuZoayY99k6taAR1QyEFHuPTgFccZLopJ1+iP4UEsZFz49l57qS08Utw==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
-      '@element-plus/icons': 0.0.11
+      '@element-plus/icons-vue': 0.2.4_vue@3.2.21
       '@popperjs/core': 2.11.0
       '@vueuse/core': 7.1.2_vue@3.2.21
       async-validator: 4.0.7
