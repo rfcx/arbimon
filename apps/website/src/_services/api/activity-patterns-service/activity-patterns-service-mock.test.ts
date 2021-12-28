@@ -1,11 +1,11 @@
+import { describe, expect, test } from 'vitest'
+
 import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { ActivityPatternsService } from '~/api/activity-patterns-service'
 import { DatasetParameters } from '~/filters'
-
-jest.useFakeTimers()
 
 const MOCK_RECORDINGS_PER_HOUR = 12
 
@@ -59,13 +59,16 @@ describe('AP Service Mock', () => {
       { ...EMPTY_DETECTION, hour: 2, species_id: EXAMPLE_SPECIES_ID_INTERESTED }
     ]]
   ]
-  test.each(recordingCountAndSummaries)('calculate totalRecordingCount: %s', async (expected, summaries) => {
-    // Act
-    const sut = new ActivityPatternsService(summaries, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    expect(result.totalRecordingCount).toEqual(expected)
+  test('calculate totalRecordingCount', async () => {
+    await Promise.all(recordingCountAndSummaries.map(async ([expected, summaries]) => {
+      // Act
+      const sut = new ActivityPatternsService(summaries, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+
+      // Assert
+      expect(result.totalRecordingCount).toEqual(expected)
+    }))
   })
 
   const totalDetectionsToSiteCount: Array<[number, MockHourlyDetectionSummary[]]> = [
@@ -104,13 +107,15 @@ describe('AP Service Mock', () => {
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_UNINTERESTED[5], species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[1] }
     ]]
   ]
-  test.each(totalDetectionsToSiteCount)('calculate totalSiteCount: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate totalSiteCount', async () => {
+    await Promise.all(totalDetectionsToSiteCount.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    expect(result.totalSiteCount).toEqual(expected)
+      // Assert
+      expect(result.totalSiteCount).toEqual(expected)
+    }))
   })
 
   const totalDetectionsToDetectionCount: Array<[number, MockHourlyDetectionSummary[]]> = [
@@ -131,13 +136,15 @@ describe('AP Service Mock', () => {
       { ...EMPTY_DETECTION, species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[1], hour: 1, num_of_recordings: 5 }
     ]]
   ]
-  test.each(totalDetectionsToDetectionCount)('calculate detectionCount: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate detectionCount', async () => {
+    await Promise.all(totalDetectionsToDetectionCount.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    expect(result.detectionCount).toEqual(expected)
+      // Assert
+      expect(result.detectionCount).toEqual(expected)
+    }))
   })
 
   const totalDetectionsToDetectionFrequency: Array<[number, MockHourlyDetectionSummary[]]> = [
@@ -158,13 +165,15 @@ describe('AP Service Mock', () => {
       { ...EMPTY_DETECTION, species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[1], hour: 1, num_of_recordings: 5 }
     ]]
   ]
-  test.each(totalDetectionsToDetectionFrequency)('calculate detectionFrequency: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate detectionFrequency', async () => {
+    await Promise.all(totalDetectionsToDetectionFrequency.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    expect(result.detectionFrequency).toEqual(expected)
+      // Assert
+      expect(result.detectionFrequency).toEqual(expected)
+    }))
   })
 
   const totalDetectionsToOccupiedSiteCount: Array<[number, MockHourlyDetectionSummary[]]> = [
@@ -185,13 +194,15 @@ describe('AP Service Mock', () => {
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_INTERESTED[6], species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[1] }
     ]]
   ]
-  test.each(totalDetectionsToOccupiedSiteCount)('calculate occupiedSiteCount: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate occupiedSiteCount', async () => {
+    await Promise.all(totalDetectionsToOccupiedSiteCount.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    expect(result.occupiedSiteCount).toEqual(expected)
+      // Assert
+      expect(result.occupiedSiteCount).toEqual(expected)
+    }))
   })
 
   const totalDetectionsToOccupiedSiteFrequency: Array<[number, MockHourlyDetectionSummary[]]> = [
@@ -216,13 +227,15 @@ describe('AP Service Mock', () => {
       { ...EMPTY_DETECTION, stream_id: EXAMPLE_SITE_IDS_INTERESTED[6], species_id: EXAMPLE_SPECIES_IDS_UNINTERESTED[1] }
     ]]
   ]
-  test.each(totalDetectionsToOccupiedSiteFrequency)('calculate occupiedSiteFrequency: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate occupiedSiteFrequency', async () => {
+    await Promise.all(totalDetectionsToOccupiedSiteFrequency.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    expect(result.occupiedSiteFrequency).toEqual(expected)
+      // Assert
+      expect(result.occupiedSiteFrequency).toEqual(expected)
+    }))
   })
 
   const sitesOccupiedAndSummaries: Array<[{ [siteId: string]: boolean }, MockHourlyDetectionSummary[]]> = [
@@ -234,14 +247,16 @@ describe('AP Service Mock', () => {
       ]
     ]
   ]
-  test.each(sitesOccupiedAndSummaries)('calculate siteOccupied: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate siteOccupied', async () => {
+    await Promise.all(sitesOccupiedAndSummaries.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    Object.entries(result.activityBySite)
-      .forEach(([siteId, data]) => expect(data.siteOccupied).toEqual(expected[siteId]))
+      // Assert
+      Object.entries(result.activityBySite)
+        .forEach(([siteId, data]) => expect(data.siteOccupied).toEqual(expected[siteId]))
+    }))
   })
 
   const siteDetectionCountAndSummaries: Array<[{ [siteId: string]: number }, MockHourlyDetectionSummary[]]> = [
@@ -255,14 +270,16 @@ describe('AP Service Mock', () => {
       ]
     ]
   ]
-  test.each(siteDetectionCountAndSummaries)('calculate siteDetectionCount: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate siteDetectionCount', async () => {
+    await Promise.all(siteDetectionCountAndSummaries.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    Object.entries(result.activityBySite)
-      .forEach(([siteId, data]) => expect(data.siteDetectionCount).toEqual(expected[siteId]))
+      // Assert
+      Object.entries(result.activityBySite)
+        .forEach(([siteId, data]) => expect(data.siteDetectionCount).toEqual(expected[siteId]))
+    }))
   })
 
   const siteDetectionFrequencyAndSummaries: Array<[{ [siteId: string]: number }, MockHourlyDetectionSummary[]]> = [
@@ -276,13 +293,15 @@ describe('AP Service Mock', () => {
       ]
     ]
   ]
-  test.each(siteDetectionFrequencyAndSummaries)('calculate siteDetectionFrequency: %s', async (expected, detections) => {
-    // Act
-    const sut = new ActivityPatternsService(detections, 0)
-    const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
+  test('calculate siteDetectionFrequency', async () => {
+    await Promise.all(siteDetectionFrequencyAndSummaries.map(async ([expected, detections]) => {
+      // Act
+      const sut = new ActivityPatternsService(detections, 0)
+      const result = await sut.getActivityPatternsData(EXAMPLE_DATASET_DEFINITION, EXAMPLE_SPECIES_ID_INTERESTED)
 
-    // Assert
-    Object.entries(result.activityBySite)
-      .forEach(([siteId, data]) => expect(data.siteDetectionFrequency).toEqual(expected[siteId]))
+      // Assert
+      Object.entries(result.activityBySite)
+        .forEach(([siteId, data]) => expect(data.siteDetectionFrequency).toEqual(expected[siteId]))
+    }))
   })
 })
