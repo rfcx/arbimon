@@ -18,7 +18,10 @@ export default defineConfig({
     }
   },
   plugins: [
-    pluginAutoImport({ resolvers: [pluginElementPlusResolver()] }),
+    pluginAutoImport({
+      resolvers: [pluginElementPlusResolver()],
+      dts: true
+    }),
     pluginComponents({
       resolvers: [
         pluginIconsResolver({
@@ -38,5 +41,8 @@ export default defineConfig({
   server: {
     port: 8080,
     open: true
+  },
+  test: {
+    include: ['src/**/*.{test,spec}.ts']
   }
 })
