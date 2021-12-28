@@ -24,7 +24,7 @@ export default class HorizontalBarChartComponent extends Vue {
     return {
       width: document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 0,
       margins: { top: 20, right: 20, bottom: 30, left: 80 },
-      xTitle: 'Species richness',
+      xTitle: 'Number of species',
       displayXAxisTick: false,
       fontColor: 'white'
     }
