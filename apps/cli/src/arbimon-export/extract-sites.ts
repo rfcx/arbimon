@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { objectToTs } from '@rfcx-bio/utils/file/json-to-ts'
 
 import { ArbimonHourlyDetectionSummary } from './types'

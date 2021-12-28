@@ -1,4 +1,5 @@
-import { ExtinctionRiskCode } from '../iucn'
+import { ExtinctionRiskCode } from '../../iucn'
+import { ApiLine, ApiMap, ApiStack } from '../_helpers'
 
 // Request
 export interface DashboardGeneratedParams {
@@ -11,6 +12,16 @@ export const dashboardGeneratedUrl = (params: DashboardGeneratedParams): string 
   `/${params.projectId}/dashboard-generated` // TODO: Generate automatically from dashboardGeneratedRoute
 
 // Response
+export interface DashboardSpecies {
+  speciesId: number
+  speciesSlug: string
+  scientificName: string
+  commonName: string
+  extinctionRisk: ExtinctionRiskCode
+  taxon: string
+  thumbnailImageUrl?: string
+}
+
 export interface DashboardGeneratedResponse {
   // Metrics
   detectionCount: number
@@ -23,18 +34,10 @@ export interface DashboardGeneratedResponse {
   speciesHighlighted: DashboardSpecies[]
 
   // Charts & maps
-  richnessByTaxon: Array<[string, number]>
-  richnessByExtinction: Array<[string, number]>
-  richnessByHour: Record<number, number>
-  detectionFrequencyByHour: Record<number, number>
-}
-
-export interface DashboardSpecies {
-  speciesId: number
-  speciesSlug: string
-  scientificName: string
-  commonName: string
-  extinctionRisk: ExtinctionRiskCode
-  taxon: string
-  thumbnailImageUrl?: string
+  richnessByExtinction: ApiStack
+  richnessByHour: ApiLine
+  richnessBySite: ApiMap
+  richnessByTaxon: ApiStack
+  detectionFrequencyByHour: ApiLine
+  detectionFrequencyBySite: ApiMap
 }

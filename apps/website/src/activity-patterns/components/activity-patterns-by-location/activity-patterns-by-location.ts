@@ -54,8 +54,10 @@ export default class ActivityPatternsByLocation extends Vue {
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
-  mapExportName (dataset: MapDataSet, type: string): string {
+  mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, undefined, sites)
+    const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, datasetIndex, undefined, siteGroup)
   }
 }

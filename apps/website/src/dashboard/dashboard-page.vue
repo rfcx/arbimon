@@ -19,8 +19,20 @@
           </p>
         </div>
         <div class="grid gap-2 mt-2 xl:grid-cols-2">
-          <dashboard-sitemap />
-          <dashboard-line-chart :time-data="lineChartData" />
+          <map-bubble-component
+            :dataset="mapDataset"
+            data-key="refactorThis"
+            :get-popup-html="getPopupHtml"
+            map-export-name="dashboard-map"
+            color="#EFEFEF"
+            :map-id="`dashboard-by-site`"
+            :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+            class="w-full"
+          />
+          <dashboard-line-chart
+            :time-data="lineChartData"
+            :dataset-type="selectedTab"
+          />
         </div>
         <page-title
           class="mt-5"

@@ -1,7 +1,6 @@
 import { Dayjs } from 'dayjs'
 import { groupBy, mapValues } from 'lodash-es'
 
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -59,16 +58,18 @@ export function getExportGroupName (prefix: string, exportDatetime: string = get
   return `${projectName}--${prefix.replaceAll(' ', '-')}--${exportDatetime}`
 }
 
-export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, dateGroup?: string, sites?: Site[]): string {
+export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, sites?: SiteGroup[], taxonFilter?: string[]): string {
   const project = useStore().selectedProject
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''
   const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getExportDateTime()}`
+  const indexPrefix = `${(datasetIndex + 1).toString() + '-'}`
+  const taxonFilterName = getTaxonFilterName(taxonFilter ?? [])
 
   // TODO: 271 add optional filter in the file name
 
-  return `${projectName}--${prefix}${siteName}--${date}${dateGroup ? '--' + dateGroup : ''}`
+  return `${indexPrefix}${projectName}--${prefix}${siteName}--${taxonFilterName}${date}${dateGroup ? '--' + dateGroup : ''}`
 }
 
 export function getExportDateTime (): string {
@@ -81,12 +82,12 @@ function getDateFormatted (startDate: Dayjs, endDate: Dayjs, dateFormat: string)
   return startDate.isSame(endDate, 'date') ? start : `${start} - ${end}`
 }
 
-function getSiteName (sites: Site[]): string {
+function getSiteName (sites: SiteGroup[]): string {
   const siteLength = sites.length
   switch (siteLength) {
     case 0: return 'All sites'
-    case 1: return sites[0].name
-    default: return `${sites[0].name} + ${siteLength - 1} other sites`
+    case 1: return sites[0].label
+    default: return `${sites[0].label} + ${siteLength - 1} other sites`
   }
 }
 
@@ -96,5 +97,14 @@ function getSiteGroupName (sites: SiteGroup[]): string {
     case 0: return 'All sites'
     case 1: return sites[0].label
     default: return `${sites[0].label} + ${siteLength - 1} other groups`
+  }
+}
+
+function getTaxonFilterName (taxonFilter: string[]): string {
+  switch (taxonFilter.length) {
+    case 0: return ''
+    case 1: return `Taxon=${taxonFilter[0]}--`
+    case 2: return `Taxon=${taxonFilter[0]}&${taxonFilter[1]}--`
+    default: return `Taxon=${taxonFilter?.[0]}+ ${taxonFilter.length - 1} other taxons--`
   }
 }

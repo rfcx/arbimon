@@ -46,7 +46,7 @@
         :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
         :map-move-event="mapMoveEvent"
         :map-style="mapStyle"
-        :map-export-name="mapExportName(dataset, selectedType)"
+        :map-export-name="mapExportName(dataset, selectedType, idx)"
         :is-show-labels="isShowLabels"
         class="w-full"
         @emit-map-moved="propagateMapMove"

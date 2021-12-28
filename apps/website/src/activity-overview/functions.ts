@@ -67,7 +67,7 @@ export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOve
 
   const files: FileData[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = getExportFilterName(startDate, endDate, reportPrefix, exportDateTime, sites.flatMap(sg => sg.value)) + '.csv'
+      const filename = getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites) + '.csv'
       const data = await getCSVData(sortedDatasets[idx])
       return { filename, data }
     })

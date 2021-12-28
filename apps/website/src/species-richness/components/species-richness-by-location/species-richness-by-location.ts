@@ -46,8 +46,10 @@ export default class SpeciesRichnessByLocation extends Vue {
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
-  mapExportName (dataset: MapDataSet): string {
+  mapExportName (dataset: MapDataSet, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, undefined, sites)
+    const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+
+    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, datasetIndex, undefined, siteGroup)
   }
 }

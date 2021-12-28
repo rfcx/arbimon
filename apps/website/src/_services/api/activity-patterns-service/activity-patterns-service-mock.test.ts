@@ -1,4 +1,4 @@
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
