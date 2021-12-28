@@ -9,9 +9,9 @@
     "jsx": "preserve",
     "types": [
       "vite/client",
-      "@types/jest",
-      "unplugin-icons/types/vue",
-      "element-plus/global"
+      "vitest/global",
+      "element-plus/global",
+      "unplugin-icons/types/vue"
     ],
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
