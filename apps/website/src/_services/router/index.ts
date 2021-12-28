@@ -10,6 +10,7 @@ export const ROUTE_NAMES = <const>{
   speciesRichness: 'species_richness',
   activityOverview: 'activity_overview',
   activityPatterns: 'activity_patterns',
+  info: 'info',
   preferences: 'preferences',
   error: 'error'
 }
@@ -25,6 +26,11 @@ const routes: RouteRecordRaw[] = [
     path: '/preferences',
     name: ROUTE_NAMES.preferences,
     component: PAGES.Preferences
+  },
+  {
+    path: '/info/:topic',
+    name: ROUTE_NAMES.info,
+    component: PAGES.Info
   },
   {
     path: '/:projectId',
