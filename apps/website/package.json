@@ -13,9 +13,10 @@
     "lint:stylelint": "stylelint . --cache",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
+    "open": "wait-port -o silent localhost:8080 && node ./launch.js",
     "preview": "vite preview --port 8080",
     "profile-eslint": "cross-env TIMING=1 NODE_OPTIONS=\"--max_old_space_size=8192\" eslint .",
-    "serve": "vite",
+    "serve": "concurrently -r \"vite\" \"pnpm open\"",
     "test-ui:explorer": "cypress open"
   },
   "dependencies": {
