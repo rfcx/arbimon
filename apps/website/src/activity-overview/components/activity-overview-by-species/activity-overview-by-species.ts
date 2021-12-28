@@ -1,9 +1,10 @@
 import { kebabCase } from 'lodash-es'
 import numeral from 'numeral'
 import { Vue } from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
+import { RouteNames } from '~/router'
 
 interface Header {
   title: string
@@ -50,6 +51,7 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
 }
 
 export default class ActivityOverviewBySpecies extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
   @Prop() tableData!: SpeciesDataset[]
 
   pageIndex = 1 // 1-based for humans

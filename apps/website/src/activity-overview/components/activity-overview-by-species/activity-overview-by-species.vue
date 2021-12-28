@@ -56,7 +56,7 @@
             </div>
             <div>
               <router-link
-                :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.scientificName) }}"
+                :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
                 class="text-subtle hover:(underline text-white)"
               >
                 <span class="text-white italic">{{ row.scientificName }}</span>
