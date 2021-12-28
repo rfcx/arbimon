@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest'
+
 import { getLegendEntries } from './legend-entries'
 
 describe('getLegendEntries', () => {
