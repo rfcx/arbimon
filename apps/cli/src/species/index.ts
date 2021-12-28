@@ -50,7 +50,7 @@ async function updateSpeciesData (species: Species): Promise<Species> {
   ])
 
   // Merge data
-  const informationIucn = iucnData?.habitat ?? iucnData?.rationale ?? iucnData?.taxonomicnotes
+  const informationIucn = iucnData?.habitat
   const information = [
     ...(informationIucn ? [{ description: informationIucn ?? '', sourceType: SPECIES_SOURCE_IUCN, sourceUrl: getSpeciesRedirectLink(species.scientificName), sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)' }] : []),
     ...(wikiData?.content ? [{ description: wikiData.content, sourceType: SPECIES_SOURCE_WIKI, sourceUrl: wikiData.contentUrls.desktop }] : [])
