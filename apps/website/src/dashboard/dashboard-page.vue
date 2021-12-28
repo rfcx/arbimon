@@ -84,7 +84,7 @@
     </div>
     <p class="text-center opacity-50">
       <!-- TODO: Update after have api -->
-      Last generated/synced at: November 18, 2021 16:03
+      Last generated/synced at: December 28, 2021 03:00PM (UTC)
     </p>
   </div>
 </template>
