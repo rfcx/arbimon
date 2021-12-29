@@ -38,9 +38,6 @@
         <p class="text-xs text-subtle">
           {{ item.commonName }}
         </p>
-        <!-- <p class="text-xs">
-          {{ item.extinctionRisk.label }}
-        </p> -->
       </router-link>
     </div>
   </div>
