@@ -5,8 +5,8 @@
  * (> 7:1 is "AAA" WCAG rating for body text)
  **/
 export const COLORS_BIO_INCLUSIVE = [
-  '#FFB000', // 11.46:1
   '#66CCFF', // 11.64:1
+  '#FFB000', // 11.46:1
   '#B477FF', // 7.02:1
   '#D6FF8C', // 18.54:1
   '#FF50B0' // 7.02:1
