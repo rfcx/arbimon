@@ -3,6 +3,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/filters'
+import { getCSVDatasetMetadata } from '~/export'
 
 export interface ReportData {
   species: string
@@ -19,8 +20,10 @@ export interface ReportData {
 export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix: string): Promise<void> => {
   const exportDateTime = getExportDateTime()
 
+  const metadataFile = await getCSVDatasetMetadata(filters)
   const files = await Promise.all(
     filters.map(async (filter, idx) => await getCsvFile(filter, reportPrefix, exportDateTime, idx)))
+  files.push(metadataFile)
 
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
   await zipAndDownload(files, groupName)
@@ -28,7 +31,7 @@ export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix:
 
 const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string, datasetIndex: number): Promise<FileData> => {
   const sites = siteGroups.flatMap(sg => sg.value)
-  const taxonFilter = otherFilters.map(f => f.value)
+  const taxonFilter = otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
   const filename = getExportFilterName(startDate, endDate, reportPrefix, datasetIndex, exportTime, siteGroups, taxonFilter) + '.csv'
 
   const dataAsJson = await getCsvForDataset({ startDate, endDate, sites, otherFilters })
