@@ -30,7 +30,7 @@ export default class ActivityOverviewByLocation extends Vue {
   mapStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
-  selectedDatasetType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
+  selectedType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
   datasetTypes: DropdownOption[] = [
     { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
     { label: 'Detections (raw)', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
@@ -41,6 +41,12 @@ export default class ActivityOverviewByLocation extends Vue {
 
   get hasNoData (): boolean {
     return this.datasets.length === 0
+  }
+
+  get maxCircleRadiusPixels (): number {
+    return this.selectedType === ACTIVITY_OVERVIEW_MAP_KEYS.occupancy
+      ? 6.0
+      : 10.0
   }
 
   get columnCount (): number {
