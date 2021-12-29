@@ -20,9 +20,10 @@ export interface ReportData {
 export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix: string): Promise<void> => {
   const exportDateTime = getExportDateTime()
 
-  const metadataFile = await getCSVDatasetMetadata(filters)
   const files = await Promise.all(
     filters.map(async (filter, idx) => await getCsvFile(filter, reportPrefix, exportDateTime, idx)))
+
+  const metadataFile = await getCSVDatasetMetadata(filters)
   files.push(metadataFile)
 
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
