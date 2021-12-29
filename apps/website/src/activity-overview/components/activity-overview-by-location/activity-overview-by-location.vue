@@ -3,7 +3,7 @@
     <div class="flex flex-row justify-between items-center">
       <div class="flex flex-row items-center">
         <select
-          v-model="selectedDatasetType"
+          v-model="selectedType"
           class="text-xl py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-2 focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-2 ring-0 outline-none)"
         >
           <option
@@ -39,14 +39,15 @@
           :key="idx"
           :color="store.datasetColors[idx]"
           :dataset="dataset"
-          :data-key="selectedDatasetType"
+          :data-key="selectedType"
           :get-popup-html="getPopupHtml"
           :map-id="`activity-patterns-detection-by-location-${idx}`"
           :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
           :map-move-event="mapMoveEvent"
           :map-style="mapStyle"
-          :map-export-name="mapExportName(dataset, selectedDatasetType, idx)"
+          :map-export-name="mapExportName(dataset, selectedType, idx)"
           :is-show-labels="isShowLabels"
+          :max-circle-radius-pixels="maxCircleRadiusPixels"
           class="w-full"
           @emit-map-moved="propagateMapMove"
         />

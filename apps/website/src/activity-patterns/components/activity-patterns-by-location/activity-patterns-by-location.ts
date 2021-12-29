@@ -39,6 +39,12 @@ export default class ActivityPatternsByLocation extends Vue {
 
   mapMoveEvent: MapMoveEvent | null = null
 
+  get maxCircleRadiusPixels (): number {
+    return this.selectedType === ACTIVITY_PATTERN_MAP_KEYS.occupancy
+      ? 6.0
+      : 10.0
+  }
+
   get columnCount (): number {
     switch (this.datasets.length) {
       case 1: return 1
