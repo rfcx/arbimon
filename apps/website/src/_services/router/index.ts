@@ -28,11 +28,6 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Preferences
   },
   {
-    path: '/info/:topic',
-    name: ROUTE_NAMES.info,
-    component: PAGES.Info
-  },
-  {
     path: '/:projectId',
     component: PAGES.ProjectRoot,
     beforeEnter: [authRequiredGuard, selectProjectGuard],
@@ -56,6 +51,11 @@ const routes: RouteRecordRaw[] = [
         path: 'spotlight/:speciesSlug?',
         name: ROUTE_NAMES.activityPatterns,
         component: PAGES.ActivityPatterns
+      },
+      {
+        path: '/info/:topic',
+        name: ROUTE_NAMES.info,
+        component: PAGES.Info
       }
     ]
   },

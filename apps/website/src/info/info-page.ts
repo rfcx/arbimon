@@ -1,7 +1,5 @@
-import { Options, Vue } from 'vue-class-component'
-import Markdown from 'vue3-markdown-it'
+import { Vue } from 'vue-class-component'
 
-import NavbarComponent from '@/_layout/components/navbar/nav-bar.vue'
 import { ROUTE_NAMES } from '~/router'
 
 interface Information {
@@ -10,12 +8,6 @@ interface Information {
   slug: string
 }
 
-@Options({
-  components: {
-    NavbarComponent,
-    Markdown
-  }
-})
 export default class InfoPage extends Vue {
   selectedInfo = this.information[0].slug
 
