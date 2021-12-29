@@ -1,6 +1,10 @@
 name: 'Build-Deploy'
 on:
   workflow_dispatch:
+  schedule:
+    # Every weekday at 03:00 UTC (10:00 in Thailand) https://crontab.guru/#0_3_*_*_1-5
+    - cron:  '30 15 * * 1-5'
+    # - cron:  '0 3 * * 1-5'
   push:
     branches:
       - master
