@@ -24,7 +24,7 @@
             data-key="refactorThis"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
-            color="#EFEFEF"
+            :color="store.datasetColors[0] ?? '#EFEFEF'"
             :map-id="`dashboard-by-site`"
             :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
             class="w-full"
