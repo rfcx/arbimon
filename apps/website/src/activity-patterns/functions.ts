@@ -2,6 +2,7 @@ import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { TimeDataset } from '@/activity-overview/types'
 import { ActivityPatternsData } from '~/api/activity-patterns-service'
+import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
@@ -87,6 +88,9 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ti
       return { filename, data }
     })
   )
+
+  const metadataFile = await getCSVDatasetMetadata(filters)
+  files.push(metadataFile)
 
   await zipAndDownload(files, groupName)
 }
