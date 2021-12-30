@@ -41,7 +41,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   ],
   server: {
     port: 8080,
-    open: true
+    open: false
   },
   test: {
     include: ['src/**/*.{test,spec}.ts']

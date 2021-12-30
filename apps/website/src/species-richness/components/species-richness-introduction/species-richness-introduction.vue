@@ -1,7 +1,8 @@
 <template>
   <page-title
     page-title="Species Richness"
-    page-subtitle="Number of distinct species detected"
+    page-information="This page will allow you to explore how the number of detected species changes over time and across the landscape."
+    :topic="$route.name"
   >
     <dropdown-menu>
       <dropdown-menu-item

@@ -5,7 +5,7 @@ import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/spe
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
-import { activityPatternsService } from '~/api/activity-patterns-service'
+import { ActivityPatternsDataByExport, activityPatternsService } from '~/api/activity-patterns-service'
 import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
 import { getSpecies } from '~/api/species-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
@@ -45,6 +45,7 @@ export default class ActivityPatternsPage extends Vue {
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
+  exportDatasets: ActivityPatternsDataByExport[] = []
   speciesInformation: Species | null = null
 
   get hasExportData (): boolean {
@@ -90,6 +91,7 @@ export default class ActivityPatternsPage extends Vue {
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
+    this.exportDatasets = datasets.map(({ activityByExport }) => activityByExport)
   }
 
   async getSpeciesInformation (): Promise<void> {
@@ -107,6 +109,6 @@ export default class ActivityPatternsPage extends Vue {
 
   async exportDetectionsData (): Promise<void> {
     const prefix = this.species ? `${DEFAULT_PREFIX}-${this.species?.speciesSlug}` : DEFAULT_PREFIX
-    await exportDetectionCSV(this.filters, this.timeDatasets, prefix)
+    await exportDetectionCSV(this.filters, this.exportDatasets, prefix)
   }
 }

@@ -1,6 +1,9 @@
 name: 'Build-Deploy'
 on:
   workflow_dispatch:
+  schedule:
+    # Every weekday at 02:19 UTC (09:19 in Thailand, to avoid GitHub Actions peak) https://crontab.guru
+    - cron:  '19 2 * * 1-5'
   push:
     branches:
       - master
@@ -20,7 +23,7 @@ jobs:
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         with:
-          key: '${{ github.actor }}'
+          key: '${{ github.event.sender.login }}'
           map: |
             {
               "charles-allen": {
@@ -172,7 +175,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
-          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ github.event.sender.login || "CRON" }})'
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK_SUCCESS }}'
 
@@ -185,7 +188,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED*'
-          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by <https://github.com/${{ github.actor }}|${{ github.actor }}>)'
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ github.event.sender.login || "CRON" }})'
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:

@@ -2,7 +2,7 @@
   <div>
     <no-data-panel
       v-if="!hasData"
-      class="h-144"
+      :style="{ height: `${mapHeight}px` }"
     />
     <div
       v-show="hasData"
@@ -10,7 +10,8 @@
     >
       <div
         :id="mapId"
-        class="w-full h-144 text-black"
+        class="w-full text-black"
+        :style="{ height: `${mapHeight}px` }"
       />
       <div
         v-if="dataset.title"

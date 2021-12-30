@@ -1,8 +1,8 @@
 <template>
   <div v-if="store.selectedProject">
-    <div class="grid gap-4 grid-cols-8">
+    <div class="grid gap-4 grid-cols-5 lg:grid-cols-3 xl:grid-cols-4">
       <!-- Left content -->
-      <div class="col-span-6">
+      <div class="col-span-3 lg:col-span-2 xl:col-span-3">
         <dashboard-metrics
           v-if="generated"
           :metrics="generated"
@@ -18,20 +18,22 @@
             {{ tab.label }}
           </p>
         </div>
-        <div class="grid gap-2 mt-2 xl:grid-cols-2">
+        <div class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
           <map-bubble-component
             :dataset="mapDataset"
             data-key="refactorThis"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
-            color="#EFEFEF"
+            :color="color"
             :map-id="`dashboard-by-site`"
             :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+            :map-height="tabHeight"
             class="w-full"
           />
-          <dashboard-line-chart
-            :time-data="lineChartData"
-            :dataset-type="selectedTab"
+          <line-chart-component
+            dom-id="dashboard-line-chart"
+            :config="lineChartConfig"
+            :datasets="lineChartSeries"
           />
         </div>
         <page-title
@@ -46,7 +48,7 @@
         />
       </div>
       <!-- Right content -->
-      <div class="col-span-2">
+      <div class="col-span-2 lg:col-span-1">
         <dashboard-sidebar-title
           v-if="generated?.richnessByTaxon && generated?.speciesCount"
           title="Richness"
@@ -84,7 +86,7 @@
     </div>
     <p class="text-center opacity-50">
       <!-- TODO: Update after have api -->
-      Last generated/synced at: November 18, 2021 16:03
+      Last generated/synced at: December 28, 2021 03:00PM (UTC)
     </p>
   </div>
 </template>

@@ -10,6 +10,7 @@ export const ROUTE_NAMES = <const>{
   speciesRichness: 'species_richness',
   activityOverview: 'activity_overview',
   activityPatterns: 'activity_patterns',
+  info: 'info',
   preferences: 'preferences',
   error: 'error'
 }
@@ -50,6 +51,11 @@ const routes: RouteRecordRaw[] = [
         path: 'spotlight/:speciesSlug?',
         name: ROUTE_NAMES.activityPatterns,
         component: PAGES.ActivityPatterns
+      },
+      {
+        path: 'info/:topic',
+        name: ROUTE_NAMES.info,
+        component: PAGES.Info
       }
     ]
   },

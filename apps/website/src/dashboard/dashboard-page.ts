@@ -9,12 +9,13 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
+import { LineChartComponent, LineChartSeries } from '~/charts/line-chart'
 import { MapBubbleComponent, MapDataSet, MapSiteData } from '~/maps/map-bubble'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
+import { TIME_BUCKET_LABELS } from '~/time-buckets'
 import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
-import DashboardLineChart from './components/dashboard-line-chart/dashboard-line-chart.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
@@ -40,11 +41,11 @@ const tabs: Tab[] = [
 @Options({
   components: {
     DashboardHighlightedSpecies,
-    DashboardLineChart,
     DashboardMetrics,
     DashboardProjectProfile,
     DashboardSidebarTitle,
     DashboardThreatenedSpecies,
+    LineChartComponent,
     HorizontalStackedDistribution,
     MapBubbleComponent
   }
@@ -56,6 +57,7 @@ export default class DashboardPage extends Vue {
   generated: DashboardGeneratedResponse | null = null
   profile: DashboardProfileResponse | null = null
 
+  tabHeight = 360
   tabs = tabs
   selectedTab = tabs[0].value
 
@@ -63,10 +65,30 @@ export default class DashboardPage extends Vue {
     ? data.distinctSpecies[dataKey]
     : (data.distinctSpecies[dataKey] as number).toFixed(3)
 
+  get color (): string {
+    return this.store.datasetColors[0] ?? '#EFEFEF'
+  }
+
   get lineChartData (): Record<number, number> | null {
     return this.selectedTab === TAB_VALUES.richness
       ? this.generated?.richnessByHour ?? null
       : this.generated?.detectionFrequencyByHour ?? null
+  }
+
+  get lineChartSeries (): LineChartSeries[] {
+    return this.lineChartData
+      ? [{ color: this.color, data: this.lineChartData }]
+      : []
+  }
+
+  get lineChartConfig (): unknown {
+    return {
+      height: this.tabHeight,
+      margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      xTitle: TIME_BUCKET_LABELS.hourOfDay,
+      yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detection frequency',
+      xBounds: [0, 23]
+    }
   }
 
   get mapDataset (): MapDataSet {
@@ -93,9 +115,9 @@ export default class DashboardPage extends Vue {
   }
 
   get speciesHighlighted (): HighlightedSpeciesRow[] {
-    if (!this.generated) return []
+    if (!this.profile) return []
 
-    return this.generated.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+    return this.profile.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
       speciesId,
       scientificName,
       commonName,

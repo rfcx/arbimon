@@ -1,7 +1,8 @@
 <template>
   <page-title
     page-title="Activity Overview"
-    page-subtitle="The detections and occupancy trends of species"
+    page-information="This page will allow you to explore how vocal activity patterns of entire bird, amphibians, insects or mammal communities change through time and space."
+    :topic="$route.name"
   >
     <dropdown-menu>
       <dropdown-menu-item

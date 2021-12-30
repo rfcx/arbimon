@@ -25,13 +25,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg',
     extinctionRisk: 'NE',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_d512.512_mtrue_fspec.png',
       siteName: 'MA11',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-18T11:25:02.517Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -67,7 +67,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Actitis-macularia-005.jpg/320px-Actitis-macularia-005.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CR30',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-03T09:55:00.770Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210503T095500770Z.20210503T095504770Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210503T095500770Z.20210503T095504770Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 9899,
@@ -104,13 +113,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Yellow-shouldered_Blackbird_5_Mike_Morel.jpg/320px-Yellow-shouldered_Blackbird_5_Mike_Morel.jpg',
     extinctionRisk: 'EN',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_d512.512_mtrue_fspec.png',
       siteName: 'CR12',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-05-02T09:45:53.174Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -146,7 +155,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Amazona_amazonica_%281%29.jpg/320px-Amazona_amazonica_%281%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'DO12',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-03-08T11:40:15.592Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210308T114015592Z.20210308T114020853Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210308T114015592Z.20210308T114020853Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2646,
@@ -181,7 +199,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Red_Crowned_Amazon.jpg/253px-Red_Crowned_Amazon.jpg',
-    extinctionRisk: 'EN'
+    extinctionRisk: 'EN',
+    speciesCall: {
+      siteName: 'SAE10',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-31T10:10:53.828Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2pipm18yo0tv_t20210331T101053828Z.20210331T101056829Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2pipm18yo0tv_t20210331T101053828Z.20210331T101056829Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2643,
@@ -216,7 +243,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Puerto_Rican_parrot.jpg/270px-Puerto_Rican_parrot.jpg',
-    extinctionRisk: 'CR'
+    extinctionRisk: 'CR',
+    speciesCall: {
+      siteName: 'RA21',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-14T12:35:00.850Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/SnXZB3m2O1HC_t20210414T123500850Z.20210414T123505470Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SnXZB3m2O1HC_t20210414T123500850Z.20210414T123505470Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 20406,
@@ -253,13 +289,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Antrostomus_noctitherus_-Puerto_Rico-8.jpg/256px-Antrostomus_noctitherus_-Puerto_Rico-8.jpg',
     extinctionRisk: 'EN',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_d512.512_mtrue_fspec.png',
       siteName: 'GU36',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-16T02:35:49.794Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -297,13 +333,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Limpkin%2C_Florida_05.jpg/320px-Limpkin%2C_Florida_05.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_d512.512_mtrue_fspec.png',
       siteName: 'DO16',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-04T05:30:43.032Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -339,7 +375,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Short_Eared_Owl_on_the_Ground.jpg/320px-Short_Eared_Owl_on_the_Ground.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'SU04',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-08T05:45:33.175Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/w5bOYgeziUo5_t20210308T054533175Z.20210308T054537096Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/w5bOYgeziUo5_t20210308T054533175Z.20210308T054537096Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2595,
@@ -374,7 +419,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Brotogeris_versicolurus_-Leticia_-Colombia-6.jpg/320px-Brotogeris_versicolurus_-Leticia_-Colombia-6.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'PA48_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-07T18:20:33.015Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6mb6mdlt48gv_t20210407T182033015Z.20210407T182035265Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6mb6mdlt48gv_t20210407T182033015Z.20210407T182035265Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 896,
@@ -409,7 +463,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Cattle_egret_%28Bubulcus_ibis%29_summer_plumage_Cyprus.jpg/213px-Cattle_egret_%28Bubulcus_ibis%29_summer_plumage_Cyprus.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CR12',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-05-02T06:50:22.883Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T065022883Z.20210502T065027214Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T065022883Z.20210502T065027214Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 1271,
@@ -446,13 +509,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Red-tailed_Hawk.jpg/213px-Red-tailed_Hawk.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_d512.512_mtrue_fspec.png',
       siteName: 'LU12',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-30T21:55:45.056Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -488,7 +551,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Julie_Waters_broad_winged_hawk.JPG/208px-Julie_Waters_broad_winged_hawk.JPG',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'RA29',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-15T13:45:39.516Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/LPTFIfN8Mqg4_t20210415T134539516Z.20210415T134541376Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/LPTFIfN8Mqg4_t20210415T134539516Z.20210415T134541376Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 22987,
@@ -512,7 +584,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg/320px-Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'RA29',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-15T13:45:39.496Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/LPTFIfN8Mqg4_t20210415T134539496Z.20210415T134541386Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/LPTFIfN8Mqg4_t20210415T134539496Z.20210415T134541386Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 889,
@@ -536,7 +617,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Butorides_virescens2.jpg/275px-Butorides_virescens2.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'CU38',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-03-24T02:10:15.152Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210324T021015152Z.20210324T021019603Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210324T021015152Z.20210324T021019603Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 42791,
@@ -573,13 +663,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Bezoarziege.jpg/320px-Bezoarziege.jpg',
     extinctionRisk: 'NT',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_d512.512_mtrue_fspec.png',
       siteName: 'MO_MG',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-05-17T22:35:53.823Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -650,7 +740,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Killdeer_3.jpg/320px-Killdeer_3.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'SA28',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-06T15:20:28.924Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Q0B3AhaedTfI_t20210406T152028924Z.20210406T152033735Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Q0B3AhaedTfI_t20210406T152028924Z.20210406T152033735Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 3097,
@@ -687,13 +786,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Antillean_Nighthawk_%28Chordeiles_gundlachii%29%3B_with_distinctive_white_patch%2C_resting_in_Cabo_Rojo_National_Wildlife_Refuge%2C_Puerto_Rico.JPG/320px-Antillean_Nighthawk_%28Chordeiles_gundlachii%29%3B_with_distinctive_white_patch%2C_resting_in_Cabo_Rojo_National_Wildlife_Refuge%2C_Puerto_Rico.JPG',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_d512.512_mtrue_fspec.png',
       siteName: 'CR01',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-29T08:35:00.326Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -729,7 +828,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Mangrove_Cuckoo.jpg/320px-Mangrove_Cuckoo.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'MO04',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-14T16:40:39.176Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pyvggipxazca_t20210514T164039176Z.20210514T164046817Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pyvggipxazca_t20210514T164039176Z.20210514T164046817Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2789,
@@ -764,7 +872,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Coccyzus_vieilloti.jpg/320px-Coccyzus_vieilloti.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'RO16',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-08T18:50:51.188Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/ebnq6zz4onp5_t20210308T185051188Z.20210308T185059789Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ebnq6zz4onp5_t20210308T185051188Z.20210308T185059789Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 18,
@@ -799,7 +916,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Bananaquits.jpg/320px-Bananaquits.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'MA03',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-19T16:00:27.684Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/B5H7MI7YGWj4_t20210419T160027684Z.20210419T160030805Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/B5H7MI7YGWj4_t20210419T160027684Z.20210419T160030805Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2082,
@@ -834,7 +960,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Columbina_passerina_-near_Salton_Sea%2C_California%2C_USA-8.jpg/320px-Columbina_passerina_-near_Salton_Sea%2C_California%2C_USA-8.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CR29',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-03T11:00:09.391Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T110009391Z.20210503T110012562Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T110009391Z.20210503T110012562Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 28358,
@@ -848,13 +983,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: '',
     information: [],
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_d512.512_mtrue_fspec.png',
       siteName: 'LU_48',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-05T12:35:05.908Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -892,13 +1027,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Smooth-billed_ani_%28Crotophaga_ani%29_GC.JPG/320px-Smooth-billed_ani_%28Crotophaga_ani%29_GC.JPG',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_d512.512_mtrue_fspec.png',
       siteName: 'CU38',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Simple Call',
       recordedAt: '2021-03-17T20:20:41.882Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -934,7 +1069,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Caribbean_Elaenia.jpg/290px-Caribbean_Elaenia.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'GU19',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-24T10:40:23.883Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6DPJFwyOeknw_t20210324T104023883Z.20210324T104025084Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6DPJFwyOeknw_t20210324T104023883Z.20210324T104025084Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 12240,
@@ -971,13 +1115,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Eleutherodactylus_antillensis01.jpg/320px-Eleutherodactylus_antillensis01.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_d512.512_mtrue_fspec.png',
       siteName: 'PA53',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-08T04:50:12.055Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1015,13 +1159,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Eleutherodactylus_brittoni_front_view.jpg/320px-Eleutherodactylus_brittoni_front_view.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_d512.512_mtrue_fspec.png',
       siteName: 'LU_46',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-31T08:20:23.922Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1059,13 +1203,13 @@ export const rawSpecies: Species[] = [
     extinctionRisk: 'LC',
     thumbnailImageUrl: '',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_d512.512_mtrue_fspec.png',
       siteName: 'DO12',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-09T00:00:30.749Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1103,13 +1247,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Female_guajon_frog_on_tree.jpg/320px-Female_guajon_frog_on_tree.jpg',
     extinctionRisk: 'EN',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_d512.512_mtrue_fspec.png',
       siteName: 'PA11_NEW',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-02T01:30:27.439Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1147,13 +1291,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Common_Coqu%C3%AD.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_d512.512_mtrue_fspec.png',
       siteName: 'PA28',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-02T06:25:36.298Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1189,7 +1333,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Eleutherodactylus_gryllus.jpg/320px-Eleutherodactylus_gryllus.jpg',
-    extinctionRisk: 'CR'
+    extinctionRisk: 'CR',
+    speciesCall: {
+      siteName: 'LU24',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-31T22:55:11.991Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/LNXvylzVbChX_t20210331T225511991Z.20210331T225516362Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/LNXvylzVbChX_t20210331T225511991Z.20210331T225516362Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 12297,
@@ -1224,7 +1377,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Eleutherodactylus_hedricki.jpg/320px-Eleutherodactylus_hedricki.jpg',
-    extinctionRisk: 'EN'
+    extinctionRisk: 'EN',
+    speciesCall: {
+      siteName: 'LU_47',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-31T00:00:55.379Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jusxxxp5fcmv_t20210331T000055379Z.20210331T000059769Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jusxxxp5fcmv_t20210331T000055379Z.20210331T000059769Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 8,
@@ -1261,13 +1423,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/CoquiLlanero.jpg/320px-CoquiLlanero.jpg',
     extinctionRisk: 'CR',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_d512.512_mtrue_fspec.png',
       siteName: 'DO16',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-08T08:05:09.440Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1303,7 +1465,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     extinctionRisk: 'EN',
-    thumbnailImageUrl: ''
+    thumbnailImageUrl: '',
+    speciesCall: {
+      siteName: 'LU24',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-04T02:55:51.968Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/LNXvylzVbChX_t20210404T025551968Z.20210404T025555949Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/LNXvylzVbChX_t20210404T025551968Z.20210404T025555949Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 12332,
@@ -1340,13 +1511,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Eleutherodactylus_monensis.jpg/320px-Eleutherodactylus_monensis.jpg',
     extinctionRisk: 'VU',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_d512.512_mtrue_fspec.png',
-      siteName: 'MO_MA',
+      siteName: 'MO06',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
-      recordedAt: '2021-05-12T22:10:09.991Z',
-      timezone: 'America/Puerto_Rico'
+      recordedAt: '2021-05-18T07:05:42.964Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qxnbao85u98s_t20210518T070542964Z.20210518T070544025Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qxnbao85u98s_t20210518T070542964Z.20210518T070544025Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1382,7 +1553,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Eleutherodactylus_portoricensis.jpg/320px-Eleutherodactylus_portoricensis.jpg',
-    extinctionRisk: 'EN'
+    extinctionRisk: 'EN',
+    speciesCall: {
+      siteName: 'LU_48',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-05T09:40:08.461Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T094008461Z.20210405T094014942Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T094008461Z.20210405T094014942Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 12360,
@@ -1417,7 +1597,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Richmond_coqui.jpg/320px-Richmond_coqui.jpg',
-    extinctionRisk: 'EN'
+    extinctionRisk: 'EN',
+    speciesCall: {
+      siteName: 'PA37',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-08T23:05:31.215Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/18QZItvSQvri_t20210408T230531215Z.20210408T230531685Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/18QZItvSQvri_t20210408T230531215Z.20210408T230531685Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 12386,
@@ -1452,7 +1641,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Coqui_frog.jpg/320px-Coqui_frog.jpg',
-    extinctionRisk: 'CR'
+    extinctionRisk: 'CR',
+    speciesCall: {
+      siteName: 'PA40_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-08T02:45:24.884Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210408T024524884Z.20210408T024525684Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210408T024524884Z.20210408T024525684Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 12395,
@@ -1487,7 +1685,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/Eleutherodactylus_wightmanae.jpg/320px-Eleutherodactylus_wightmanae.jpg',
-    extinctionRisk: 'EN'
+    extinctionRisk: 'EN',
+    speciesCall: {
+      siteName: 'MA04',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-14T09:35:33.538Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/1mJ5HrClbhpp_t20210414T093533538Z.20210414T093534567Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/1mJ5HrClbhpp_t20210414T093533538Z.20210414T093534567Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 43907,
@@ -1513,13 +1720,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/320px-Nokota_Horses_cropped.jpg',
     extinctionRisk: 'NE',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_d512.512_mtrue_fspec.png',
       siteName: 'AR_eG',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-27T21:30:25.681Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1555,7 +1762,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Antillean_Euphonia.jpg/320px-Antillean_Euphonia.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'SU16',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-07T21:05:37.072Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6e4HD0NqxlfM_t20210307T210537072Z.20210307T210544414Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6e4HD0NqxlfM_t20210307T210537072Z.20210307T210544414Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 1042,
@@ -1590,7 +1806,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/AmericanKestrel02.jpg/256px-AmericanKestrel02.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'TNe04',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-23T12:20:30.705Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/d9zhdohowr7m_t20210323T122030705Z.20210323T122032575Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/d9zhdohowr7m_t20210323T122030705Z.20210323T122032575Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 1527,
@@ -1614,7 +1839,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/American-coot-casey-klebba.jpg/320px-American-coot-casey-klebba.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'PA45',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-07T05:00:22.953Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/SentGrxBxPIs_t20210407T050022953Z.20210407T050026814Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SentGrxBxPIs_t20210407T050022953Z.20210407T050026814Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 21518,
@@ -1649,7 +1883,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Common-gallinule-galapagos-casey-klebba.jpg/228px-Common-gallinule-galapagos-casey-klebba.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'AR_29m',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-04T11:00:47.777Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/xgsa7dx5q5sj_t20210504T110047777Z.20210504T110051618Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/xgsa7dx5q5sj_t20210504T110047777Z.20210504T110051618Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 16766,
@@ -1673,7 +1916,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Male_and_female_chicken_sitting_together.jpg/240px-Male_and_female_chicken_sitting_together.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'VI15_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-16T08:50:51.048Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2218q4o5zwpj_t20210416T085051048Z.20210416T085053038Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2218q4o5zwpj_t20210416T085051048Z.20210416T085053038Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2124,
@@ -1710,13 +1962,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Geotrygon_montana_-_Ruddy_Quail-Dove%2C_Trememb%C3%A9%2C_S%C3%A3o_Paulo%2C_Brazil.jpg/320px-Geotrygon_montana_-_Ruddy_Quail-Dove%2C_Trememb%C3%A9%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_d512.512_mtrue_fspec.png',
       siteName: 'RA28',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
-      recordedAt: '2021-04-13T13:10:13.298Z',
-      timezone: 'America/Puerto_Rico'
+      recordedAt: '2021-04-13T12:50:10.407Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T125010407Z.20210413T125012423Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T125010407Z.20210413T125012423Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1741,7 +1993,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg/257px-Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'CR02',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-05-03T05:45:36.386Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Vq4L8FklmztV_t20210503T054536386Z.20210503T054545457Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Vq4L8FklmztV_t20210503T054536386Z.20210503T054545457Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 9852,
@@ -1778,13 +2039,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Curacao-Icterus-Icterus-2013.JPG/320px-Curacao-Icterus-Icterus-2013.JPG',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_d512.512_mtrue_fspec.png',
-      siteName: 'CR18',
+      siteName: 'CR10',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
-      recordedAt: '2021-05-02T13:00:08.841Z',
-      timezone: 'America/Puerto_Rico'
+      recordedAt: '2021-05-01T09:40:52.931Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/hTA9TYWAg8Ow_t20210501T094052931Z.20210501T094054352Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/hTA9TYWAg8Ow_t20210501T094052931Z.20210501T094054352Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1822,13 +2083,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Icterus_portoricensis_imported_from_iNaturalist_photo_6037124_on_4_September_2019.jpg/320px-Icterus_portoricensis_imported_from_iNaturalist_photo_6037124_on_4_September_2019.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_d512.512_mtrue_fspec.png',
       siteName: 'TO18',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-23T14:15:22.634Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1864,7 +2125,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Leucophaeus_atricilla_stare.jpg/320px-Leucophaeus_atricilla_stare.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'MO08',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-17T20:55:54.809Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6shq44n6q8rr_t20210517T205554809Z.20210517T205559779Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6shq44n6q8rr_t20210517T205554809Z.20210517T205559779Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 6,
@@ -1901,13 +2171,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Leptodactylus_albilabris.jpg/320px-Leptodactylus_albilabris.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d512.512_mtrue_fspec.png',
       siteName: 'RO10_repeated',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-05-05T18:55:51.443Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1945,13 +2215,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/North-American-bullfrog1.jpg/320px-North-American-bullfrog1.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_d512.512_mtrue_fspec.png',
       siteName: 'SA34',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-06T05:15:36.025Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -1978,13 +2248,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Come%C3%B1ame.jpg/320px-Come%C3%B1ame.jpg',
     extinctionRisk: 'NE',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_d512.512_mtrue_fspec.png',
       siteName: 'GUI04',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-08T13:05:20.853Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2022,13 +2292,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Margarops_fuscatus_-Guana_Island%2C_British_Virgin_Islands-8.jpg/320px-Margarops_fuscatus_-Guana_Island%2C_British_Virgin_Islands-8.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_d512.512_mtrue_fspec.png',
-      siteName: 'VI06',
+      siteName: 'MA12',
       projectName: 'Puerto Rico Island-Wide',
-      songType: 'Simple Call',
-      recordedAt: '2021-04-20T11:55:53.911Z',
-      timezone: 'America/Puerto_Rico'
+      songType: 'Common Song',
+      recordedAt: '2021-04-18T14:55:21.343Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/36yUsjbFHpbS_t20210418T145521343Z.20210418T145525138Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/36yUsjbFHpbS_t20210418T145521343Z.20210418T145525138Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2064,7 +2334,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Belted_Kingfisher.jpg/320px-Belted_Kingfisher.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'PO05_2',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-08T19:10:39.356Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qur86alqdlpt_t20210308T191039356Z.20210308T191042667Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qur86alqdlpt_t20210308T191039356Z.20210308T191042667Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 2887,
@@ -2101,13 +2380,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Megascops_nudipes-Mucarito-Screech_Owl_of_Puerto_Rico.jpeg/268px-Megascops_nudipes-Mucarito-Screech_Owl_of_Puerto_Rico.jpeg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_d512.512_mtrue_fspec.png',
       siteName: 'PA24_NEW',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Alternative Song',
       recordedAt: '2021-04-08T03:50:40.768Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2143,7 +2422,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Puerto_Rican_Woodpecker_%28Melanerpes_portoricensis%29.jpg/213px-Puerto_Rican_Woodpecker_%28Melanerpes_portoricensis%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'PA40_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-12T14:15:29.444Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T141529444Z.20210412T141536516Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T141529444Z.20210412T141536516Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 8251,
@@ -2178,7 +2466,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Mimus_polyglottos_adult_02_cropped.jpg/320px-Mimus_polyglottos_adult_02_cropped.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'MO19',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-14T22:10:34.099Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/rgr967d3lc5k_t20210514T221034099Z.20210514T221051666Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/rgr967d3lc5k_t20210514T221034099Z.20210514T221051666Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 9887,
@@ -2215,13 +2512,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Shiny_cowbird_%28Molothrus_bonariensis%29_male.JPG/320px-Shiny_cowbird_%28Molothrus_bonariensis%29_male.JPG',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_d512.512_mtrue_fspec.png',
-      siteName: 'POEXTRA13',
+      siteName: 'SA03',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
-      recordedAt: '2021-03-09T16:35:38.456Z',
-      timezone: 'America/Puerto_Rico'
+      recordedAt: '2021-04-02T19:10:03.437Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BuyvsZ4mo8lB_t20210402T191003437Z.20210402T191006337Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BuyvsZ4mo8lB_t20210402T191003437Z.20210402T191006337Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2259,13 +2556,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Puerto_Rican_Flycatcher.jpg/256px-Puerto_Rican_Flycatcher.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_d512.512_mtrue_fspec.png',
       siteName: 'CR29',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-05-03T08:40:52.666Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2301,7 +2598,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Monk_Parakeet_%28Myiopsitta_monachus%29_%2828420470712%29.jpg/320px-Monk_Parakeet_%28Myiopsitta_monachus%29_%2828420470712%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'AR30',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-04-27T12:25:25.675Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tsU4AMTbFo0p_t20210427T122525675Z.20210427T122539909Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tsU4AMTbFo0p_t20210427T122525675Z.20210427T122539909Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 10487,
@@ -2338,13 +2644,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Puerto_Rican_Tanager.jpg/320px-Puerto_Rican_Tanager.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_d512.512_mtrue_fspec.png',
-      siteName: 'LU_50',
+      siteName: 'LU_47',
       projectName: 'Puerto Rico Island-Wide',
-      songType: 'Common Song',
-      recordedAt: '2021-04-04T10:15:14.026Z',
-      timezone: 'America/Puerto_Rico'
+      songType: 'Simple Call',
+      recordedAt: '2021-04-05T12:15:46.083Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jusxxxp5fcmv_t20210405T121546083Z.20210405T121546867Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jusxxxp5fcmv_t20210405T121546083Z.20210405T121546867Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2380,7 +2686,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Cuban_tree_frog_%28Osteopilus_septentrionalis%29_6.jpg/320px-Cuban_tree_frog_%28Osteopilus_septentrionalis%29_6.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CR50',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-04T06:10:15.902Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/OnralGaiviCo_t20210504T061015902Z.20210504T061021043Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/OnralGaiviCo_t20210504T061015902Z.20210504T061021043Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 1072,
@@ -2450,7 +2765,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Seiurus_noveboracensis_MP1_%28cropped%29.jpg/320px-Seiurus_noveboracensis_MP1_%28cropped%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'GU34',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-03-16T21:45:05.570Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/IqkLFBEDJTzH_t20210316T214505570Z.20210316T214508051Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/IqkLFBEDJTzH_t20210316T214505570Z.20210316T214508051Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 9100,
@@ -2485,7 +2809,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Passer_domesticus_male_%2815%29.jpg/320px-Passer_domesticus_male_%2815%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'SAE11',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-12T09:50:06.381Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/21p9sh6zsfro_t20210512T095006381Z.20210512T095008581Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/21p9sh6zsfro_t20210512T095006381Z.20210512T095008581Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 1997,
@@ -2522,13 +2855,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/White-crowned_Pigeon_%28Patagioenas_leucocephala%29.jpg/256px-White-crowned_Pigeon_%28Patagioenas_leucocephala%29.jpg',
     extinctionRisk: 'NT',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_d512.512_mtrue_fspec.png',
       siteName: 'DO33',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-03T14:25:42.823Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2566,13 +2899,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Patagioenas_squamosa_in_Barbados_a-01.jpg/206px-Patagioenas_squamosa_in_Barbados_a-01.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_d512.512_mtrue_fspec.png',
       siteName: 'CR09',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-05-03T10:45:39.604Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2610,13 +2943,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Pluvialis_squatarola_%28summer_plumage%29.jpg/320px-Pluvialis_squatarola_%28summer_plumage%29.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_d512.512_mtrue_fspec.png',
       siteName: 'CR13',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Simple Call',
       recordedAt: '2021-05-02T10:10:43.447Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2641,7 +2974,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/PurpleGallinule.jpg/320px-PurpleGallinule.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'PO05_2',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-02T11:20:22.543Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qur86alqdlpt_t20210302T112022543Z.20210302T112027984Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qur86alqdlpt_t20210302T112022543Z.20210302T112027984Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 6908,
@@ -2678,13 +3020,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Progne_dominicensis_1894.jpg/300px-Progne_dominicensis_1894.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_d512.512_mtrue_fspec.png',
       siteName: 'PA31',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-04-01T11:05:08.988Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2720,7 +3062,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Greater_antillean_grackle_%28Quiscalus_niger_gundlachii%29.JPG/320px-Greater_antillean_grackle_%28Quiscalus_niger_gundlachii%29.JPG',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'GUE02',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-03-18T10:40:28.108Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/oipvm95xkzm2_t20210318T104028108Z.20210318T104039504Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/oipvm95xkzm2_t20210318T104028108Z.20210318T104039504Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 21391,
@@ -2755,7 +3106,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Rallus_crepitans.jpg/320px-Rallus_crepitans.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'RO_new_C',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-05T21:45:42.937Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/y9akeir4o23i_t20210305T214542937Z.20210305T214550248Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/y9akeir4o23i_t20210305T214542937Z.20210305T214550248Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 16084,
@@ -2792,13 +3152,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Canetoadmale.jpg/320px-Canetoadmale.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_d512.512_mtrue_fspec.png',
       siteName: 'RO14',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-04T05:40:23.012Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2836,13 +3196,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Dendroica_adelaidae.jpg/320px-Dendroica_adelaidae.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_d512.512_mtrue_fspec.png',
       siteName: 'GU32',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-16T19:50:21.801Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2878,7 +3238,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Northernparalua20.jpg/320px-Northernparalua20.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'DO40',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-07T17:25:01.575Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/WLcD4QTZXP4k_t20210307T172501575Z.20210307T172503667Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WLcD4QTZXP4k_t20210307T172501575Z.20210307T172503667Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 40385,
@@ -2913,7 +3282,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Elfin-woods_warbler_perched_on_a_tree_branch.jpg/320px-Elfin-woods_warbler_perched_on_a_tree_branch.jpg',
-    extinctionRisk: 'EN'
+    extinctionRisk: 'EN',
+    speciesCall: {
+      siteName: 'MA_eh',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-15T15:25:05.560Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/b9k6a8kb1ub1_t20210415T152505560Z.20210415T152508781Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/b9k6a8kb1ub1_t20210415T152505560Z.20210415T152508781Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 40445,
@@ -2950,13 +3328,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Black-throated_Blue_Warbler%2C_Parc_%C3%89coforestier_de_Johnville%2C_Quebec%2C_Canada.jpg/320px-Black-throated_Blue_Warbler%2C_Parc_%C3%89coforestier_de_Johnville%2C_Quebec%2C_Canada.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_d512.512_mtrue_fspec.png',
       siteName: 'RI03',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-18T12:15:34.085Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -2994,13 +3372,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Prairie_warbler_%28Setophaga_discolor_paludicola%29_male_J.jpg/320px-Prairie_warbler_%28Setophaga_discolor_paludicola%29_male_J.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_d512.512_mtrue_fspec.png',
       siteName: 'GU09',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-24T11:50:12.952Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -3038,13 +3416,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Dendroica-aestiva-001.jpg/320px-Dendroica-aestiva-001.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_d512.512_mtrue_fspec.png',
-      siteName: 'CR30',
+      siteName: 'CR01',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
-      recordedAt: '2021-04-28T14:30:15.572Z',
-      timezone: 'America/Puerto_Rico'
+      recordedAt: '2021-04-29T11:05:45.160Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T110545160Z.20210429T110546815Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T110545160Z.20210429T110546815Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -3082,13 +3460,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Spindalis_portoricensis_by_Mike%27s_Birds.jpg/320px-Spindalis_portoricensis_by_Mike%27s_Birds.jpg',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_d512.512_mtrue_fspec.png',
-      siteName: 'PA40_NEW',
+      siteName: 'DO16',
       projectName: 'Puerto Rico Island-Wide',
-      songType: 'Common Song',
-      recordedAt: '2021-04-12T14:05:02.490Z',
-      timezone: 'America/Puerto_Rico'
+      songType: 'Simple Call',
+      recordedAt: '2021-03-04T21:00:18.218Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T210018218Z.20210304T210022549Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T210018218Z.20210304T210022549Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -3124,7 +3502,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg/213px-Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CU47',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-25T14:00:29.174Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BK44qRFAdx82_t20210325T140029174Z.20210325T140033965Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BK44qRFAdx82_t20210325T140029174Z.20210325T140033965Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 953,
@@ -3159,7 +3546,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Sula_sula_by_Gregg_Yan_01.jpg/240px-Sula_sula_by_Gregg_Yan_01.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'MO40',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-14T10:25:35.525Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/gwg6ut8tp5fx_t20210514T102535525Z.20210514T102537946Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/gwg6ut8tp5fx_t20210514T102535525Z.20210514T102537946Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 22167,
@@ -3194,7 +3590,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Royal_Tern.jpg/320px-Royal_Tern.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CR41',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-29T13:05:42.197Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/l0uUffLc4RCX_t20210429T130542197Z.20210429T130544147Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/l0uUffLc4RCX_t20210429T130542197Z.20210429T130544147Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 10150,
@@ -3218,7 +3623,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg/320px-Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg',
-    extinctionRisk: 'NE'
+    extinctionRisk: 'NE',
+    speciesCall: {
+      siteName: 'GUI05',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-07T10:30:27.244Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/a3ve3YStjM1x_t20210307T103027244Z.20210307T103029994Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/a3ve3YStjM1x_t20210307T103027244Z.20210307T103029994Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 10149,
@@ -3253,7 +3667,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Yellow-faced-grassquit-eating-seeds.jpg/320px-Yellow-faced-grassquit-eating-seeds.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'DO16',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-04T12:30:25.284Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T123025284Z.20210304T123027044Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T123025284Z.20210304T123027044Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 3817,
@@ -3288,7 +3711,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/IMG_2932crop-puerto-rican-tody.JPG/320px-IMG_2932crop-puerto-rican-tody.JPG',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'RI14',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-23T12:25:30.015Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/z0IYAkBondFb_t20210323T122530015Z.20210323T122532215Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/z0IYAkBondFb_t20210323T122530015Z.20210323T122532215Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 1742,
@@ -3323,7 +3755,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Greater_Yellowlegs2.jpg/256px-Greater_Yellowlegs2.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CR02',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-28T02:50:38.676Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Vq4L8FklmztV_t20210428T025038676Z.20210428T025042807Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Vq4L8FklmztV_t20210428T025038676Z.20210428T025042807Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 21869,
@@ -3358,7 +3799,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Catoptrophorus_semipalmatus_edit.jpg/320px-Catoptrophorus_semipalmatus_edit.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'SA23',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-06T11:50:54.739Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCgqhKP6baGd_t20210406T115054739Z.20210406T115058459Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCgqhKP6baGd_t20210406T115054739Z.20210406T115058459Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 8534,
@@ -3395,13 +3845,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Red-legged_thrush_%28Turdus_plumbeus_rubripes%29.JPG/320px-Red-legged_thrush_%28Turdus_plumbeus_rubripes%29.JPG',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_d512.512_mtrue_fspec.png',
-      siteName: 'LU04',
+      siteName: 'LU01',
       projectName: 'Puerto Rico Island-Wide',
-      songType: 'Common Song',
-      recordedAt: '2021-04-06T10:05:25.854Z',
-      timezone: 'America/Puerto_Rico'
+      songType: 'Simple Call',
+      recordedAt: '2021-03-30T16:15:11.206Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BpeZMsJr4UPO_t20210330T161511206Z.20210330T161513227Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BpeZMsJr4UPO_t20210330T161511206Z.20210330T161513227Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -3437,7 +3887,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tyrannus_caudifasciatus_-Camaguey_Province%2C_Cuba-8_%282%29.jpg/320px-Tyrannus_caudifasciatus_-Camaguey_Province%2C_Cuba-8_%282%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'BA13',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-28T11:40:32.375Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dm1ht7aLUPX_t20210428T114032375Z.20210428T114035525Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dm1ht7aLUPX_t20210428T114032375Z.20210428T114035525Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 10,
@@ -3472,7 +3931,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Tyrannus_dominicensis_103778882_%28cropped%29.jpg/187px-Tyrannus_dominicensis_103778882_%28cropped%29.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'CU24',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-24T10:05:43.827Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/uNhkJLYFMAvb_t20210324T100543827Z.20210324T100545167Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/uNhkJLYFMAvb_t20210324T100543827Z.20210324T100545167Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 6338,
@@ -3507,7 +3975,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Black-whiskered_Vireo.jpg/276px-Black-whiskered_Vireo.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'PA02',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-07T16:50:32.975Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/8EQWSVm4ig8h_t20210407T165032975Z.20210407T165034305Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/8EQWSVm4ig8h_t20210407T165032975Z.20210407T165034305Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 6327,
@@ -3544,13 +4021,13 @@ export const rawSpecies: Species[] = [
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Vireo_latimeri_map.svg/320px-Vireo_latimeri_map.svg.png',
     extinctionRisk: 'LC',
     speciesCall: {
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_d512.512_mtrue_fspec.png',
       siteName: 'GUI08',
       projectName: 'Puerto Rico Island-Wide',
       songType: 'Common Song',
       recordedAt: '2021-03-02T16:15:01.563Z',
-      timezone: 'America/Puerto_Rico'
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_d512.512_mtrue_fspec.png'
     }
   },
   {
@@ -3586,7 +4063,16 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Zenaida_asiatica_-Tuscon_-Arizona_-USA_-8a.jpg/320px-Zenaida_asiatica_-Tuscon_-Arizona_-USA_-8a.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'RO37_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-10T13:15:43.437Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/f082fnghvqrz_t20210310T131543437Z.20210310T131549558Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/f082fnghvqrz_t20210310T131543437Z.20210310T131549558Z_d512.512_mtrue_fspec.png'
+    }
   },
   {
     speciesId: 57,
@@ -3621,6 +4107,15 @@ export const rawSpecies: Species[] = [
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Zenaida_Dove%2C_St._Thomas.jpg/320px-Zenaida_Dove%2C_St._Thomas.jpg',
-    extinctionRisk: 'LC'
+    extinctionRisk: 'LC',
+    speciesCall: {
+      siteName: 'RI17_dupRI14',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-17T10:35:52.668Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/QKD4SRSn4hTI_t20210317T103552668Z.20210317T103557309Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/QKD4SRSn4hTI_t20210317T103552668Z.20210317T103557309Z_d512.512_mtrue_fspec.png'
+    }
   }
 ]

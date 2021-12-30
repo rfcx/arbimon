@@ -1,15 +1,16 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { rawSpeciesWithCall } from './raw-species-with-call'
+import { rawSpeciesFromArbimon } from './raw-species-from-arbimon'
 import { rawSpeciesWithInfo } from './raw-species-with-info'
 
 // Script config
 const currentDir = dirname(new URL(import.meta.url).pathname)
-const outputFilePath = resolve(currentDir, './species-with-information.json')
+const outputFilePath = resolve(currentDir, './raw-species.json')
+// const outputTsConstName = 'rawSpecies'
 
 const speciesOutput = rawSpeciesWithInfo.map(i => {
-  const speciesWithCall = rawSpeciesWithCall.find(j => i.scientificName === j.scientificName)
+  const speciesWithCall = rawSpeciesFromArbimon.find(j => i.scientificName === j.scientificName)
   return {
     ...i,
     speciesCall: speciesWithCall?.speciesCall
