@@ -13,14 +13,14 @@
       class="flex content-center mb-2"
     >
       <img
-        class="h-12 w-12 object-cover mr-2"
+        class="min-h-12 h-12 min-w-12 w-12 object-cover mr-2"
         :src="item.imageUrl"
       >
       <router-link
         class="self-center hover:(text-subtle)"
         :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
       >
-        <div class="flex items-center">
+        <div class="flex items-start">
           <el-tag
             v-if="item.extinctionRisk"
             class="border-none text-sm"
