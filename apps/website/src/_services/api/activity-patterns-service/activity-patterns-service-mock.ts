@@ -31,7 +31,7 @@ export class ActivityPatternsService {
     // By site
     const activityBySite = this.getActivityDataBySite(totalSummaries, speciesId)
     const activityByTime = this.getActivityDataByTime(totalSummaries, speciesId)
-    const activityByExport = this.getActivityDataExport(totalSummaries, speciesId)
+    const activityByExport = this.getActivityDataExport(totalSummaries, speciesId, activityBySite)
 
     return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite, activityByTime, activityByExport }, this.delay)
   }
@@ -96,7 +96,7 @@ export class ActivityPatternsService {
     }
   }
 
-  getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivityPatternsDataByExport {
+  getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], speciesId: number, sites: ActivityPatternsDataBySite): ActivityPatternsDataByExport {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
     const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
@@ -116,7 +116,8 @@ export class ActivityPatternsService {
       year: {
         detection: mapValues(yearGrouped, this.calculateDetectionActivity),
         detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
-      }
+      },
+      sites
     }
   }
 }
