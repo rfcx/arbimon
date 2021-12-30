@@ -18,20 +18,22 @@
             {{ tab.label }}
           </p>
         </div>
-        <div class="grid gap-2 mt-2 xl:grid-cols-2">
+        <div class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
           <map-bubble-component
             :dataset="mapDataset"
             data-key="refactorThis"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
-            :color="store.datasetColors[0] ?? '#EFEFEF'"
+            :color="color"
             :map-id="`dashboard-by-site`"
             :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+            :map-height="tabHeight"
             class="w-full"
           />
-          <dashboard-line-chart
-            :time-data="lineChartData"
-            :dataset-type="selectedTab"
+          <line-chart-component
+            dom-id="dashboard-line-chart"
+            :config="lineChartConfig"
+            :datasets="lineChartSeries"
           />
         </div>
         <page-title
