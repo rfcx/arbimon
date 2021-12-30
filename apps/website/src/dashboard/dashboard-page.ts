@@ -93,9 +93,9 @@ export default class DashboardPage extends Vue {
   }
 
   get speciesHighlighted (): HighlightedSpeciesRow[] {
-    if (!this.generated) return []
+    if (!this.profile) return []
 
-    return this.generated.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
+    return this.profile.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
       speciesId,
       scientificName,
       commonName,
