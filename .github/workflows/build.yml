@@ -44,8 +44,6 @@ jobs:
       - name: 'Setup: Git checkout'
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
-        with:
-          fetch-depth: 0
 
       - name: 'Setup: ENV from Git'
         run: |
@@ -133,7 +131,7 @@ jobs:
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         if: always()
         with:
-          key: '${{ github.actor }}'
+          key: '${{ github.event.sender.login }}'
           map: |
             {
               "charles-allen": {

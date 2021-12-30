@@ -26,6 +26,7 @@ importers:
       cypress: ^8.7.0
       cypress-fail-on-console-error: ^2.1.2
       cypress-wait-until: ^1.7.2
+      detect-browsers: ^5.0.5
       dotenv: ^10.0.0
       eslint: ^8.1.0
       eslint-config-standard-with-typescript: ^21.0.1
@@ -89,6 +90,7 @@ importers:
       cypress: 8.7.0
       cypress-fail-on-console-error: 2.1.2
       cypress-wait-until: 1.7.2
+      detect-browsers: 5.0.5
       dotenv: 10.0.0
       eslint: 8.1.0
       eslint-config-standard-with-typescript: 21.0.1_04de89a6dde7ca03319db4963b211e11
@@ -199,7 +201,7 @@ importers:
       c8: ^7.10.0
       d3: ^7.1.1
       dayjs: ^1.10.7
-      element-plus: ^1.2.0-beta.5
+      element-plus: ^1.2.0-beta.6
       howler: ^2.2.3
       jszip: ^3.7.1
       lodash-es: ^4.17.21
@@ -4723,6 +4725,12 @@ packages:
   /destroy/1.0.4:
     resolution: {integrity: sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=}
     dev: false
+
+  /detect-browsers/5.0.5:
+    resolution: {integrity: sha512-Fk3JAiq9El1FSCodmwHx40BMe4NGpWWhxOIjuPPrzyluHcnpEGELeXqNgCDZyRMl0c5fFIcllaZcDJy0o+/Pvg==}
+    dependencies:
+      which: 2.0.2
+    dev: true
 
   /detect-newline/3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}

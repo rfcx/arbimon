@@ -10,7 +10,8 @@ import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_
 import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
 import { MapDataSet, MapMoveEvent, MapSiteData } from './types'
 
-const DEFAULT_FILL_COLOR = '#111111'
+const ZERO_FILL_COLOR = '#111111'
+const DEFAULT_FILL_COLOR = '#F9F9F9'
 const DEFAULT_STROKE_COLOR = '#EEEEEE'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
@@ -30,11 +31,12 @@ export default class MapBubbleComponent extends Vue {
   @Prop({ default: null }) mapMoveEvent!: MapMoveEvent | null
 
   // Styles
-  @Prop() color!: string
+  @Prop({ default: DEFAULT_FILL_COLOR }) color!: string
   @Prop() mapId!: string
   @Prop() mapInitialBounds!: LngLatBoundsLike | null
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
+  @Prop({ default: 576 }) mapHeight!: number
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
   @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
 
@@ -169,7 +171,7 @@ export default class MapBubbleComponent extends Vue {
     // TODO 41 - Remove source/layer if dataset removed
     this.updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, {
       'circle-radius': this.minCircleRadiusPixels,
-      'circle-color': DEFAULT_FILL_COLOR,
+      'circle-color': ZERO_FILL_COLOR,
       'circle-stroke-color': DEFAULT_STROKE_COLOR,
       'circle-stroke-width': 0.65,
       'circle-opacity': 0.85

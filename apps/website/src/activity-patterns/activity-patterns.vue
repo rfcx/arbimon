@@ -2,7 +2,8 @@
   <div>
     <page-title
       page-title="Species Spotlight"
-      page-subtitle="An in-depth look at the detections and occupancy trends of a single species"
+      page-information="This page will allow you to explore essential information about species natural history and how vocal activity patterns of specific species change through time and space."
+      :topic="$route.name"
     >
       <dropdown-menu>
         <dropdown-menu-item

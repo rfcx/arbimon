@@ -1,3 +1,5 @@
+import { DashboardSpecies } from './common'
+
 // Request
 export interface DashboardProfileParams {
   projectId: string
@@ -12,4 +14,5 @@ export const dashboardProfileUrl = (params: DashboardProfileParams): string =>
 export interface DashboardProfileResponse {
   description: string
   readme: string // markdown string
+  speciesHighlighted: DashboardSpecies[]
 }

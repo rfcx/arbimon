@@ -48,6 +48,7 @@
         :map-style="mapStyle"
         :map-export-name="mapExportName(dataset, selectedType, idx)"
         :is-show-labels="isShowLabels"
+        :max-circle-radius-pixels="maxCircleRadiusPixels"
         class="w-full"
         @emit-map-moved="propagateMapMove"
       />
