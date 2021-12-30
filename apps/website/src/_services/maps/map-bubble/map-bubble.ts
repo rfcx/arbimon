@@ -36,6 +36,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() mapInitialBounds!: LngLatBoundsLike | null
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
+  @Prop({ default: 576 }) mapHeight!: number
   @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
   @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
 
