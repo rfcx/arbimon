@@ -1,8 +1,8 @@
 <template>
   <div v-if="store.selectedProject">
-    <div class="grid gap-4 grid-cols-8">
+    <div class="grid gap-4 grid-cols-5 lg:grid-cols-3 xl:grid-cols-4">
       <!-- Left content -->
-      <div class="col-span-6">
+      <div class="col-span-3 lg:col-span-2 xl:col-span-3">
         <dashboard-metrics
           v-if="generated"
           :metrics="generated"
@@ -46,7 +46,7 @@
         />
       </div>
       <!-- Right content -->
-      <div class="col-span-2">
+      <div class="col-span-2 lg:col-span-1">
         <dashboard-sidebar-title
           v-if="generated?.richnessByTaxon && generated?.speciesCount"
           title="Richness"
