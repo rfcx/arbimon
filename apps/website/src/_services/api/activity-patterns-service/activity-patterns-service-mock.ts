@@ -4,6 +4,7 @@ import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
+import { ActivityPatternsDataByExport } from '~/api/activity-patterns-service'
 import { DatasetParameters, filterMocksByParameters, filterMocksBySpecies } from '~/filters'
 import { ActivityPatternsData, ActivityPatternsDataBySite, ActivityPatternsDataByTime } from './types'
 
@@ -30,8 +31,9 @@ export class ActivityPatternsService {
     // By site
     const activityBySite = this.getActivityDataBySite(totalSummaries, speciesId)
     const activityByTime = this.getActivityDataByTime(totalSummaries, speciesId)
+    const activityByExport = this.getActivityDataExport(totalSummaries, speciesId)
 
-    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite, activityByTime }, this.delay)
+    return await simulateDelay({ ...dataset, totalSiteCount, totalRecordingCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency, activityBySite, activityByTime, activityByExport }, this.delay)
   }
 
   getRecordingCount (detections: MockHourlyDetectionSummary[]): number {
@@ -90,6 +92,30 @@ export class ActivityPatternsService {
       monthOfYear: {
         detection: mapValues(monthGrouped, this.calculateDetectionActivity),
         detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      }
+    }
+  }
+
+  getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivityPatternsDataByExport {
+    const totalRecordingCount = this.getRecordingCount(totalSummaries)
+    const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
+
+    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
+    const monthYearGrouped = groupBy(speciesSummaries, d => dayjs.utc(d.date).format('MM/YYYY'))
+    const yearGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).year())
+
+    return {
+      hour: {
+        detection: mapValues(hourGrouped, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      month: {
+        detection: mapValues(monthYearGrouped, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(monthYearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      year: {
+        detection: mapValues(yearGrouped, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(yearGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
       }
     }
   }
