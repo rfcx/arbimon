@@ -1,7 +1,16 @@
+import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-export async function getProfile (): Promise<DashboardProfileResponse> {
-  return {
+const HIGHLIGHTED_SPECIES_SLUGS = [
+  'amazona-vittata',
+  'accipiter-striatus-venator',
+  'agelaius-xanthomus',
+  'setophaga-angelae',
+  'antrostomus-noctitherus'
+]
+
+export const getProfile = async (): Promise<DashboardProfileResponse> => ({
     description: 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities',
     readme:
     '## Background\n\n' +
@@ -19,6 +28,11 @@ export async function getProfile (): Promise<DashboardProfileResponse> {
     '- [Departamento de Recursos Naturales y Ambientales de Puerto Rico](https://www.drna.pr.gov)\n' +
     '- [U.S. Fish and Wildlife Service](https://www.fws.gov)\n' +
     '- [Para la Naturaleza](https://www.paralanaturaleza.org/en/)\n' +
-    '- [Rainforest Connection (marconi@rfcx.org)](https://rfcx.org/)\n'
-  }
-}
+    '- [Rainforest Connection (marconi@rfcx.org)](https://rfcx.org/)\n',
+    speciesHighlighted: await getSpeciesHighlighted()
+})
+
+const getSpeciesHighlighted = async (): Promise<DashboardSpecies[]> =>
+  HIGHLIGHTED_SPECIES_SLUGS
+    .map(slug => rawSpecies.find(s => s.speciesSlug === slug))
+    .filter(s => s !== undefined) as DashboardSpecies[]
