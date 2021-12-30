@@ -162,14 +162,20 @@ export async function getYearCSVData (startDate: Dayjs, endDate: Dayjs, dataset:
 }
 
 export async function getSiteCSVData (dataset: ActivityPatternsDataBySite): Promise<string> {
-  const dataAsJson = Object.keys(dataset).map(siteId => {
-    const site = dataset[siteId]
-    return {
-      site: site.siteName,
-      site_id: siteId,
-      detections: site.siteDetectionCount,
-      detection_frequency: site.siteDetectionFrequency
-    }
-  })
+  const dataAsJson = Object.keys(dataset)
+    .sort((a, b) => {
+      const site1 = dataset[a]
+      const site2 = dataset[b]
+      return site1.siteName.localeCompare(site2.siteName) || site1.siteId.localeCompare(site2.siteId)
+    })
+    .map(siteId => {
+      const site = dataset[siteId]
+      return {
+        site: site.siteName,
+        site_id: siteId,
+        detections: site.siteDetectionCount,
+        detection_frequency: site.siteDetectionFrequency
+      }
+    })
   return await toCsv(dataAsJson)
 }
