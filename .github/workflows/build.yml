@@ -131,7 +131,7 @@ jobs:
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         if: always()
         with:
-          key: '${{ github.actor }}'
+          key: '${{ github.event.sender.login }}'
           map: |
             {
               "charles-allen": {
