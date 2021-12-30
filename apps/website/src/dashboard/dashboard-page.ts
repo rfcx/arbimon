@@ -16,7 +16,6 @@ import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
 import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
-import DashboardLineChart from './components/dashboard-line-chart/dashboard-line-chart.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
@@ -42,7 +41,6 @@ const tabs: Tab[] = [
 @Options({
   components: {
     DashboardHighlightedSpecies,
-    DashboardLineChart,
     DashboardMetrics,
     DashboardProjectProfile,
     DashboardSidebarTitle,
