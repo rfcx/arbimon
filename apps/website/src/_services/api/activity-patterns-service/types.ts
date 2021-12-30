@@ -38,12 +38,13 @@ export const ACTIVITY_PATTERN_TIME_KEYS: Record<string, keyof ActivityPatternsDa
 }
 
 export interface ActivityPatternsDataByExport {
-  hour: ActivityPatternsDataByExportTimeBucket
-  month: ActivityPatternsDataByExportTimeBucket
-  year: ActivityPatternsDataByExportTimeBucket
+  hour: ActivityPatternsDataByExportBucket
+  month: ActivityPatternsDataByExportBucket
+  year: ActivityPatternsDataByExportBucket
+  sites: ActivityPatternsDataBySite
 }
 
-export interface ActivityPatternsDataByExportTimeBucket {
+export interface ActivityPatternsDataByExportBucket {
   detection: Record<number|string, number>
   detectionFrequency: Record<number|string, number>
 }
