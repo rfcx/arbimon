@@ -27,7 +27,7 @@
     <div class="mt-2">
       <no-data-panel
         v-if="hasNoData"
-        class="h-192"
+        class="h-144"
       />
       <div
         v-else
