@@ -24,7 +24,9 @@ jobs:
           echo "github.event.sender.login: ${{ github.event.sender.login }}"
           echo "github.spoon.sender.login: ${{ github.spoon.sender.login }}"
           echo "github.event && github.event.sender.login: ${{ github.event && github.event.sender.login }}"
+          echo "github.spoon && github.spoon.sender.login: ${{ github.spoon && github.spoon.sender.login }}"
           echo "github.event.sender.login || 'CRON': ${{ github.event.sender.login || 'CRON' }}"
+          echo "github.spoon.sender.login || 'CRON': ${{ github.spoon.sender.login || 'CRON' }}"
 
       - name: 'Setup: ENV from workflow'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
