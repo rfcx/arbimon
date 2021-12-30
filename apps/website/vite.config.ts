@@ -4,12 +4,13 @@ import pluginIconsResolver from 'unplugin-icons/resolver'
 import pluginIcons from 'unplugin-icons/vite'
 import { ElementPlusResolver as pluginElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import pluginComponents from 'unplugin-vue-components/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, UserConfig as UserConfigVite } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
+import { UserConfig as UserConfigVitest } from 'vitest'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+const config: UserConfigVite & { test: UserConfigVitest } = {
   css: {
     preprocessorOptions: {
       scss: {
@@ -45,4 +46,6 @@ export default defineConfig({
   test: {
     include: ['src/**/*.{test,spec}.ts']
   }
-})
+}
+
+export default defineConfig(config)
