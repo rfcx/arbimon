@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.ActivityPatterns
       },
       {
-        path: '/info/:topic',
+        path: 'info/:topic',
         name: ROUTE_NAMES.info,
         component: PAGES.Info
       }
