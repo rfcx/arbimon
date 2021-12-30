@@ -1,7 +1,9 @@
+import { Dayjs } from 'dayjs'
+
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { TimeDataset } from '@/activity-overview/types'
-import { ActivityPatternsData } from '~/api/activity-patterns-service'
+import { ActivityPatternsData, ActivityPatternsDataByExport } from '~/api/activity-patterns-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -13,6 +15,19 @@ export const ACTIVITY_PATTERN_MAP_KEYS = {
   detection: 'detection',
   detectionFrequency: 'detectionFrequency',
   occupancy: 'occupancy'
+}
+
+export interface JSONBase {
+  detections: number
+  detection_frequency: number
+}
+
+export interface MonthJson extends JSONBase {
+  month: string
+}
+
+export interface YearJson extends JSONBase {
+  year: string
 }
 
 export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
@@ -77,30 +92,116 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
   })
 }
 
-export async function exportDetectionCSV (filters: ColoredFilter[], datasets: TimeDataset[], reportPrefix: string): Promise<void> {
+export async function exportDetectionCSV (filters: ColoredFilter[], datasets: ActivityPatternsDataByExport[], reportPrefix: string): Promise<void> {
   const exportDateTime = getExportDateTime()
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 
-  const files: FileData[] = await Promise.all(
+  const hourFiles: FileData[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites) + '.csv'
-      const data = await getCSVData(datasets[idx])
+      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-h.csv`
+      const data = await getHourCSVData(datasets[idx])
+      return { filename, data }
+    })
+  )
+
+  const monthFiles: FileData[] = await Promise.all(
+    filters.map(async ({ startDate, endDate, sites }, idx) => {
+      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-m.csv`
+      const data = await getMonthCSVData(datasets[idx])
+      return { filename, data }
+    })
+  )
+
+  const yearFiles: FileData[] = await Promise.all(
+    filters.map(async ({ startDate, endDate, sites }, idx) => {
+      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-y.csv`
+      const data = await getYearCSVData(datasets[idx])
       return { filename, data }
     })
   )
 
   const metadataFile = await getCSVDatasetMetadata(filters)
-  files.push(metadataFile)
-
+  const files = [...hourFiles, ...monthFiles, ...yearFiles, metadataFile]
   await zipAndDownload(files, groupName)
 }
 
-export async function getCSVData (dataset: TimeDataset): Promise<string> {
-  const { detection, detectionFrequency } = dataset.data.hourOfDay
+export async function getHourCSVData (dataset: ActivityPatternsDataByExport): Promise<string> {
+  const { detection, detectionFrequency } = dataset.hour
   const dataAsJson = Array.from(Array(23).keys()).map(n => ({
     hour: n,
     detections: detection[n] ?? 0,
     detection_frequency: detectionFrequency[n] ?? 0
+  }))
+  return await toCsv(dataAsJson)
+}
+
+export function getDateRange (currentDate: Dayjs, startRange: Dayjs, endRange: Dayjs, unit: 'month'|'year'): string[] {
+  const ranges: string[] = []
+  while (currentDate.isBefore(endRange) || currentDate.isSame(endRange)) {
+    ranges.push(currentDate.format('MM/YYYY'))
+    currentDate = currentDate.add(1, unit)
+  }
+  return ranges
+}
+
+export async function getMonthCSVData (dataset: ActivityPatternsDataByExport): Promise<string> {
+  const { detection, detectionFrequency } = dataset.month
+  const jsonFormatted = (monthKeys: string[]): MonthJson[] => {
+    return monthKeys.map(month => ({
+      month,
+      detections: detection[month] ?? 0,
+      detection_frequency: detectionFrequency[month] ?? 0
+    }))
+  }
+
+  const monthKeys = Object.keys(detection)
+  if (monthKeys.length === 1) {
+    const dataAsJson = jsonFormatted(monthKeys)
+    return await toCsv(dataAsJson)
+  }
+
+  const month = monthKeys.map(m => dayjs(m, 'MM/YYYY'))
+  const startOfRange = dayjs.min(month)
+  const endOfRange = dayjs.max(month)
+
+  const currentDate = dayjs(startOfRange)
+  const monthRanges = getDateRange(currentDate, startOfRange, endOfRange, 'month')
+
+  const dataAsJson = monthRanges.map(month => ({
+    month,
+    detections: detection[month] ?? 0,
+    detection_frequency: detectionFrequency[month] ?? 0
+  }))
+  return await toCsv(dataAsJson)
+}
+
+export async function getYearCSVData (dataset: ActivityPatternsDataByExport): Promise<string> {
+  const { detection, detectionFrequency } = dataset.year
+  const jsonFormatted = (yearKeys: string[]): YearJson[] => {
+    return yearKeys.map(year => ({
+      year,
+      detections: detection[year] ?? 0,
+      detection_frequency: detectionFrequency[year] ?? 0
+    }))
+  }
+
+  const yearKeys = Object.keys(detection)
+  if (yearKeys.length === 1) {
+    const dataAsJson = jsonFormatted(yearKeys)
+    return await toCsv(dataAsJson)
+  }
+
+  const month = yearKeys.map(y => dayjs(y, 'YYYY'))
+  const startOfRange = dayjs.min(month)
+  const endOfRange = dayjs.max(month)
+
+  const currentDate = dayjs(startOfRange)
+  const yearRanges = getDateRange(currentDate, startOfRange, endOfRange, 'year')
+
+  const dataAsJson = yearRanges.map(year => ({
+    year,
+    detections: detection[year] ?? 0,
+    detection_frequency: detectionFrequency[year] ?? 0
   }))
   return await toCsv(dataAsJson)
 }

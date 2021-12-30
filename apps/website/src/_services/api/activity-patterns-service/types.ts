@@ -10,6 +10,7 @@ export interface ActivityPatternsData extends DatasetParameters {
   occupiedSiteFrequency: number
   activityBySite: ActivityPatternsDataBySite
   activityByTime: ActivityPatternsDataByTime
+  activityByExport: ActivityPatternsDataByExport
 }
 
 export interface ActivityPatternsDataBySite {
@@ -34,4 +35,15 @@ export interface ActivityPatternsDataByTimeBucket {
 export const ACTIVITY_PATTERN_TIME_KEYS: Record<string, keyof ActivityPatternsDataByTimeBucket> = {
   detection: 'detection',
   detectionFrequency: 'detectionFrequency'
+}
+
+export interface ActivityPatternsDataByExport {
+  hour: ActivityPatternsDataByExportTimeBucket
+  month: ActivityPatternsDataByExportTimeBucket
+  year: ActivityPatternsDataByExportTimeBucket
+}
+
+export interface ActivityPatternsDataByExportTimeBucket {
+  detection: Record<number|string, number>
+  detectionFrequency: Record<number|string, number>
 }
