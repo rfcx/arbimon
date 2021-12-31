@@ -63,14 +63,14 @@
         />
         <dashboard-sidebar-title
           title="Highlighted species"
-          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+          :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
         />
         <dashboard-highlighted-species
           :species="speciesHighlighted"
         />
         <dashboard-sidebar-title
           title="Threatened species"
-          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+          :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
         />
         <horizontal-stacked-distribution
           v-if="generated?.richnessByExtinction && generated?.speciesCount"
