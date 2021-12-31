@@ -175,7 +175,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
-          footer: format('<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by {0})', ${{ github.event.sender.login || 'CRON' }})
+          footer: ${{ format('<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by {0})', github.event.sender.login || 'CRON') }}
         env:
           SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK_SUCCESS }}'
 
@@ -188,7 +188,7 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED*'
-          footer: format('<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by {0})', ${{ github.event.sender.login || 'CRON' }})
+          footer: ${{ format('<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by {0})', github.event.sender.login || 'CRON') }}
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
