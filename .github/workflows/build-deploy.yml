@@ -62,11 +62,6 @@ jobs:
         run: |
           echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
           echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-          echo "SENDER=`${{ github.event.sender.login || 'CRON' }}`" >> $GITHUB_ENV
-
-      - name: 'Hax0r'
-        run: |
-          echo "${{ env.SENDER }}"
 
       - name: 'Setup: ENV from Branch'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
@@ -182,7 +177,8 @@ jobs:
           message_format: '{emoji} *SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }})'
         env:
-          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK_SUCCESS }}'
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_SUCCESS }}
+          SENDER: ${{ github.event.sender.login || 'CRON' }}
 
       - name: 'Notify: Slack Failed'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
@@ -193,8 +189,9 @@ jobs:
           status: ${{ job.status }}
           notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
           message_format: '{emoji} *FAILED*'
-          footer: "<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }} / ${{ github.event.sender.login || 'CRON' }})"
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }})'
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
-          SLACK_WEBHOOK_URL: '${{ env.SLACK_WEBHOOK_FAILURE }}'
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_FAILURE }}
+          SENDER: ${{ github.event.sender.login || 'CRON' }}
