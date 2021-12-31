@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row justify-between items-top w-full">
+  <div class="flex flex-row justify-between items-center w-full">
     <div>
       <div class="flex flex-row items-baseline">
         <h1 class="text-4xl capitalize py-1 mr-2">

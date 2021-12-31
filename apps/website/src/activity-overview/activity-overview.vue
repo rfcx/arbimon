@@ -5,11 +5,14 @@
     :topic="$route.name"
   >
     <dropdown-menu>
+      <template #label>
+        <icon-fa-download class="mr-2" /> Download Data
+      </template>
       <dropdown-menu-item
         :disabled="!hasData"
         @click="exportSpeciesData"
       >
-        <icon-far-file-archive class="mr-2" /> Export as CSV
+        <icon-far-file-archive class="mr-2" /> Export CSV
       </dropdown-menu-item>
     </dropdown-menu>
   </page-title>
