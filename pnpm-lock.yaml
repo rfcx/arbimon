@@ -16,6 +16,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.3.0
       '@typescript-eslint/parser': ^5.3.0
       '@vitejs/plugin-vue': ^1.10.2
+      '@vitest/ui': ^0.0.126
       '@vue/compiler-sfc': ^3.2.21
       '@vue/eslint-config-standard': ^6.1.0
       '@vue/eslint-config-typescript': ^9.0.1
@@ -80,6 +81,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.3.0_f8873316f48f7781ccc3e081fc76e214
       '@typescript-eslint/parser': 5.3.0_eslint@8.1.0+typescript@4.4.4
       '@vitejs/plugin-vue': 1.10.2_vite@2.7.7
+      '@vitest/ui': 0.0.126_vitest@0.0.124
       '@vue/compiler-sfc': 3.2.21
       '@vue/eslint-config-standard': 6.1.0_5f9b2f3a44dac3bc0a792ca144f1d0b4
       '@vue/eslint-config-typescript': 9.0.1_6e2aa7baa83ea64b77c81400f52e762e
@@ -125,7 +127,7 @@ importers:
       vite-plugin-style-import: 1.3.0_vite@2.7.7
       vite-plugin-windicss: 1.5.1_vite@2.7.7
       vite-tsconfig-paths: 3.3.17_vite@2.7.7
-      vitest: 0.0.124_sass@1.43.4
+      vitest: 0.0.124_@vitest+ui@0.0.126+sass@1.43.4
       vue: 3.2.21
       vue-tsc: 0.28.10_typescript@4.4.4
       vue3-jest: 27.0.0-alpha.1_59d38cfc09e7e63cd68c6dfbdde0aae9
@@ -193,6 +195,7 @@ importers:
       '@types/howler': ^2.2.4
       '@types/mapbox-gl': ^2.4.2
       '@types/numeral': ^2.0.2
+      '@vitest/ui': ^0.0.126
       '@vueuse/components': ^6.7.6
       '@vueuse/core': ^6.7.6
       '@windicss/plugin-animations': ^1.0.9
@@ -248,6 +251,7 @@ importers:
       '@types/howler': 2.2.4
       '@types/mapbox-gl': 2.4.2
       '@types/numeral': 2.0.2
+      '@vitest/ui': 0.0.126_vitest@0.0.124
       '@windicss/plugin-animations': 1.0.9
       '@windicss/plugin-interaction-variants': 1.0.0
       c8: 7.10.0
@@ -1945,6 +1949,10 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@polka/url/1.0.0-next.21:
+    resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
+    dev: true
+
   /@popperjs/core/2.11.0:
     resolution: {integrity: sha512-zrsUxjLOKAzdewIDRWy9nsV1GQsKBCWaGwsZQlCgr6/q+vjyZhFgqedLfFBuI9anTPEUT4APq9Mu0SZBTzIcGQ==}
     dev: false
@@ -2619,6 +2627,15 @@ packages:
       vite: ^2.5.10
     dependencies:
       vite: 2.7.7_sass@1.43.4
+    dev: true
+
+  /@vitest/ui/0.0.126_vitest@0.0.124:
+    resolution: {integrity: sha512-G2+3x4DBb7g9CUwKnuBE7t/bRBDhYU8SDBdqRY5cqK90OAilsNoZo7I3L38BCS6sVooIRQ8ZWgUliMKDO84OuA==}
+    peerDependencies:
+      vitest: 0.0.126
+    dependencies:
+      sirv: 1.0.19
+      vitest: 0.0.124_@vitest+ui@0.0.126+sass@1.43.4
     dev: true
 
   /@volar/code-gen/0.28.10:
@@ -8146,6 +8163,11 @@ packages:
     resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
     dev: false
 
+  /mrmime/1.0.0:
+    resolution: {integrity: sha512-a70zx7zFfVO7XpnQ2IX1Myh9yY4UYvfld/dikWRnsXxbyvMcfz+u6UfgNAtH+k2QqtJuzVpv6eLTx1G2+WKZbQ==}
+    engines: {node: '>=10'}
+    dev: true
+
   /ms/2.0.0:
     resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=}
 
@@ -9816,6 +9838,15 @@ packages:
       supports-color: 7.2.0
     dev: true
 
+  /sirv/1.0.19:
+    resolution: {integrity: sha512-JuLThK3TnZG1TAKDwNIqNq6QA2afLOCcm+iE8D1Kj3GA40pSPsxQjjJl0J8X3tsR7T+CP1GavpzLwYkgVLWrZQ==}
+    engines: {node: '>= 10'}
+    dependencies:
+      '@polka/url': 1.0.0-next.21
+      mrmime: 1.0.0
+      totalist: 1.1.0
+    dev: true
+
   /sisteransi/1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
     dev: true
@@ -10517,6 +10548,11 @@ packages:
     resolution: {integrity: sha1-f/0feMi+KMO6Rc1OGj9e4ZO9mYg=}
     dev: false
 
+  /totalist/1.1.0:
+    resolution: {integrity: sha512-gduQwd1rOdDMGxFG1gEvhV88Oirdo2p+KjoYFU7k2g+i7n6AFFbDQ5kMPUsW0pNbfQsB/cwXvT1i4Bue0s9g5g==}
+    engines: {node: '>=6'}
+    dev: true
+
   /touch/3.1.0:
     resolution: {integrity: sha512-WBx8Uy5TLtOSRtIq+M03/sKDrXCLHxwDcquSP2c43Le03/9serjQBIztjRz6FkJez9D/hleyAXTBGLwwZUw9lA==}
     hasBin: true
@@ -11160,7 +11196,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.0.124_sass@1.43.4:
+  /vitest/0.0.124_@vitest+ui@0.0.126+sass@1.43.4:
     resolution: {integrity: sha512-azhSsniZCRkInFD/VXONs90WrgNDZLq1hemNVBfX+xE44Ock06R+zFSpk2Jz/LYfZhXXFi/Xr32RCjgquKsklw==}
     engines: {node: '>=14.14.0'}
     hasBin: true
@@ -11181,6 +11217,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.0
       '@types/chai-subset': 1.3.3
+      '@vitest/ui': 0.0.126_vitest@0.0.124
       chai: 4.3.4
       local-pkg: 0.4.0
       tinypool: 0.0.6
