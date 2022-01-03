@@ -24,7 +24,7 @@ describe('radius calculation', () => {
 })
 
 describe('legend', () => {
-  test('legend includes "<=" for min entry', () => {
+  test('legend includes "≤" for min entry', () => {
     // Arrange
     const formatter = new CircleFormatterNormalizedWithMin()
 
@@ -32,7 +32,7 @@ describe('legend', () => {
     const entries = formatter.getLegendEntries()
 
     // Assert
-    expect(entries.find(entry => entry.label.includes('<'))).toBeDefined()
+    expect(entries.find(entry => entry.label.includes('≤'))).toBeDefined()
   })
 
   test('legend should not include "zero" entry if not requested', () => {
