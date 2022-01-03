@@ -44,7 +44,7 @@ export const svgToCanvas = async (svg: SVGSVGElement): Promise<HTMLCanvasElement
 
     // Convert to Base64 SVG/XML
     const svgXml = new XMLSerializer().serializeToString(svg)
-    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(svgXml)
+    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(window.unescape(window.encodeURIComponent(svgXml)))
 
     // Setup canvas
     const canvas = document.createElement('canvas')
@@ -73,8 +73,7 @@ export const svgToPng = async (params: SvgAndDimensions): Promise<string> => {
     const svgXml = new XMLSerializer()
       .serializeToString(params.svg)
       .replace('<svg', `<svg width="${width}" height="${height}"`)
-
-    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(svgXml)
+    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(window.unescape(window.encodeURIComponent(svgXml)))
 
     // Convert to Base64 PNG
     const image = new Image()
