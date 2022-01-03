@@ -35,6 +35,30 @@ export const getChartElement = (element: Element): SvgAndDimensions => {
     height: Number(svg.getAttribute('height') as string)
   }
 }
+
+export const svgToCanvas = async (svg: SVGSVGElement): Promise<HTMLCanvasElement> => {
+  return await new Promise(resolve => {
+    // Extract width/height
+    const width = Number(svg.getAttribute('width'))
+    const height = Number(svg.getAttribute('height'))
+
+    // Convert to Base64 SVG/XML
+    const svgXml = new XMLSerializer().serializeToString(svg)
+    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(svgXml)
+
+    // Setup canvas
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+
+    // Render image to canvas
+    const image = new Image()
+    image.onload = () => {
+      canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
+      resolve(canvas)
+    }
+    image.src = svgBase64
+  })
 }
 
 export const svgToPng = async (params: SvgAndDimensions): Promise<string> => {
@@ -70,6 +94,20 @@ export const svgToPng = async (params: SvgAndDimensions): Promise<string> => {
     image.src = svgBase64
   })
 }
+
+export const canvasToPngDataUrl = async (canvas: HTMLCanvasElement, mimetype = 'image/png', quality = 0.92): Promise<string> =>
+  canvas.toDataURL(mimetype, quality)
+
+export const canvasToPngBlob = async (canvas: HTMLCanvasElement, mimetype = 'image/png', quality = 0.92): Promise<Blob> =>
+  await new Promise((resolve, reject) =>
+    canvas.toBlob(
+      (result: Blob | null): void => {
+        if (result) resolve(result)
+        else reject(new Error('Failed to convert canvas to blob'))
+      },
+      mimetype,
+      quality
+    ))
 
 export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
