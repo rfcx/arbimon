@@ -1,11 +1,11 @@
-import { FileData, toCsv } from '@rfcx-bio/utils/file'
+import { JsZipFile, toCsv } from '@rfcx-bio/utils/file'
 
 import { ColoredFilter } from '~/filters'
 import { DatasetMetadata } from './types'
 
 const META_DATE_FORMAT = 'YYYY/MM/DD'
 
-export async function getCSVDatasetMetadata (filters: ColoredFilter[]): Promise<FileData> {
+export async function getCSVDatasetMetadata (filters: ColoredFilter[]): Promise<JsZipFile> {
   const data = await toCsv(getDatasetMetadata(filters))
   return {
     filename: 'metadata.csv',
