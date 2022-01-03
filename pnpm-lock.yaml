@@ -195,7 +195,6 @@ importers:
       '@types/howler': ^2.2.4
       '@types/mapbox-gl': ^2.4.2
       '@types/numeral': ^2.0.2
-      '@vitest/ui': ^0.0.126
       '@vueuse/components': ^6.7.6
       '@vueuse/core': ^6.7.6
       '@windicss/plugin-animations': ^1.0.9
@@ -251,7 +250,6 @@ importers:
       '@types/howler': 2.2.4
       '@types/mapbox-gl': 2.4.2
       '@types/numeral': 2.0.2
-      '@vitest/ui': 0.0.126_vitest@0.0.124
       '@windicss/plugin-animations': 1.0.9
       '@windicss/plugin-interaction-variants': 1.0.0
       c8: 7.10.0
