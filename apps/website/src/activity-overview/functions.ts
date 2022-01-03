@@ -1,4 +1,4 @@
-import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { getCSVDatasetMetadata } from '~/export'
@@ -66,7 +66,7 @@ export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOve
   const exportDateTime = getExportDateTime()
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 
-  const files: FileData[] = await Promise.all(
+  const files: JsZipFile[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
       const filename = getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites) + '.csv'
       const data = await getCSVData(sortedDatasets[idx])

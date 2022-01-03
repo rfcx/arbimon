@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityPatternsData, ActivityPatternsDataByExport, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
 import { getCSVDatasetMetadata } from '~/export'
@@ -82,7 +82,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ac
   const exportDateTime = getExportDateTime()
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 
-  const hourFiles: FileData[] = await Promise.all(
+  const hourFiles: JsZipFile[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
       const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-h.csv`
       const data = await getHourCSVData(datasets[idx].hour)
@@ -90,7 +90,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ac
     })
   )
 
-  const monthFiles: FileData[] = await Promise.all(
+  const monthFiles: JsZipFile[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
       const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-m.csv`
       const data = await getMonthCSVData(startDate, endDate, datasets[idx].month)
@@ -98,7 +98,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ac
     })
   )
 
-  const yearFiles: FileData[] = await Promise.all(
+  const yearFiles: JsZipFile[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
       const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-y.csv`
       const data = await getYearCSVData(startDate, endDate, datasets[idx].year)
@@ -106,7 +106,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Ac
     })
   )
 
-  const siteFiles: FileData[] = await Promise.all(
+  const siteFiles: JsZipFile[] = await Promise.all(
     filters.map(async ({ startDate, endDate, sites }, idx) => {
       const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-s.csv`
       const data = await getSiteCSVData(datasets[idx].sites)

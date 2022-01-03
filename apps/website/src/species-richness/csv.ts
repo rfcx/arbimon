@@ -1,6 +1,6 @@
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/filters'
 import { getCSVDatasetMetadata } from '~/export'
@@ -30,7 +30,7 @@ export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix:
   await zipAndDownload(files, groupName)
 }
 
-const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string, datasetIndex: number): Promise<FileData> => {
+const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string, datasetIndex: number): Promise<JsZipFile> => {
   const sites = siteGroups.flatMap(sg => sg.value)
   const taxonFilter = otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
   const filename = getExportFilterName(startDate, endDate, reportPrefix, datasetIndex, exportTime, siteGroups, taxonFilter) + '.csv'
