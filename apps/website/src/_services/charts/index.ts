@@ -2,6 +2,7 @@ import * as d3 from 'd3'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
+// TODO 170: Delete this type (get from the SVG directly)
 interface SvgAndDimensions {
   svg: SVGSVGElement
   width: number
@@ -23,11 +24,17 @@ const exportChart = async (svg: SvgAndDimensions, filename: string): Promise<voi
   downloadPng(data, filename)
 }
 
-const getChartElement = (element: Element): SvgAndDimensions => {
-  const svg = element.getElementsByTagName('svg')[0]
-  const width = Number(svg.getAttribute('width') as string)
-  const height = Number(svg.getAttribute('height') as string)
-  return { svg, width, height }
+export const getChartElement = (element: Element): SvgAndDimensions => {
+  const svg = element.tagName === 'svg'
+    ? element as SVGSVGElement
+    : element.getElementsByTagName('svg')[0]
+
+  return {
+    svg,
+    width: Number(svg.getAttribute('width') as string),
+    height: Number(svg.getAttribute('height') as string)
+  }
+}
 }
 
 export const svgToPng = async (params: SvgAndDimensions): Promise<string> => {
