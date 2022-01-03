@@ -32,7 +32,7 @@ export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized 
 
     return [
       ...zeroEntry,
-      { ...head, label: `<= ${head.label}` },
+      { ...head, label: `≤ ${head.label}` },
       ...tail
     ]
   }
