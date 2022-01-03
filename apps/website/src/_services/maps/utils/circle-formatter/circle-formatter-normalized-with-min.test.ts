@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 
-const NULL_ROUND_FUNCTION = (v: number): number => v
+const NULL_FORMAT_FUNCTION = (v: number): string => v.toString()
 
 describe('contract', () => {
   test('should not throw with default params', () => {
@@ -13,7 +13,7 @@ describe('contract', () => {
 describe('radius calculation', () => {
   test('radius should be minimum (> 0) if value 0', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalizedWithMin({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalizedWithMin({ formatFunction: NULL_FORMAT_FUNCTION })
 
     // Act
     const radius = formatter.getRadius(0)

@@ -1,8 +1,10 @@
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '../circle-style/constants'
 import { CircleFormatter, CircleLegendEntry } from './types'
 
+export const DEFAULT_MAX_VALUE_RAW = 1.0
 export const DEFAULT_LEGEND_COUNT = 4
 export const DEFAULT_RADIUS_IN_PIXELS = 10.0
+export const DEFAULT_FORMAT_FUNCTION = (value: number): string => value.toPrecision(3)
 
 export class CircleFormatterNormalized implements CircleFormatter {
   protected readonly stepValue: number
@@ -10,13 +12,13 @@ export class CircleFormatterNormalized implements CircleFormatter {
   protected readonly maxValue: number
   protected readonly maxPixels: number
   protected readonly legendEntryCount: number
-  protected readonly roundFunction: (value: number) => number
+  protected readonly formatFunction: (value: number) => string
 
   constructor ({
-    maxValueRaw = 1.0,
+    maxValueRaw = DEFAULT_MAX_VALUE_RAW,
     maxPixels = DEFAULT_RADIUS_IN_PIXELS,
     legendEntryCount = DEFAULT_LEGEND_COUNT,
-    roundFunction = (value: number) => value
+    formatFunction = DEFAULT_FORMAT_FUNCTION
   } = {}) {
     // Validate params
     if (maxValueRaw < 0) throw new Error('maxPixels must be >= 0')
@@ -27,17 +29,17 @@ export class CircleFormatterNormalized implements CircleFormatter {
     // Store as props
     this.maxPixels = maxPixels
     this.legendEntryCount = legendEntryCount
-    this.roundFunction = roundFunction
+    this.formatFunction = formatFunction
 
     // Calc pixels per step
-    this.stepPixels = this.maxPixels / this.legendEntryCount
+    this.stepPixels = maxPixels / legendEntryCount
 
     // Round step value
-    const stepValueRaw = (maxValueRaw || 1.0) / this.legendEntryCount
-    this.stepValue = this.roundFunction(stepValueRaw)
+    const stepValueRaw = (maxValueRaw || 1.0) / legendEntryCount
+    this.stepValue = Number(formatFunction(stepValueRaw))
 
     // Calculate max from rounded step
-    this.maxValue = this.stepValue * this.legendEntryCount
+    this.maxValue = this.stepValue * legendEntryCount
   }
 
   getRadius (value: number): number {
