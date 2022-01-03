@@ -24,10 +24,11 @@
             data-key="refactorThis"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
-            :color="color"
             :map-id="`dashboard-by-site`"
             :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+            :circle-formatter="circleFormatter"
             :map-height="tabHeight"
+            :circle-style-non-zero="circleStyle"
             class="w-full"
           />
           <line-chart-component

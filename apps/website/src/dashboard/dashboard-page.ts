@@ -11,6 +11,10 @@ import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { LineChartComponent, LineChartSeries } from '~/charts/line-chart'
 import { MapBubbleComponent, MapDataSet, MapSiteData } from '~/maps/map-bubble'
+import { CircleFormatterNumericWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
+import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
@@ -37,6 +41,8 @@ const tabs: Tab[] = [
   { label: 'Species Richness', value: TAB_VALUES.richness },
   { label: 'Detection Frequency', value: TAB_VALUES.frequency }
 ]
+
+const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 
 @Options({
   components: {
@@ -67,6 +73,14 @@ export default class DashboardPage extends Vue {
 
   get color (): string {
     return this.store.datasetColors[0] ?? '#EFEFEF'
+  }
+
+  get circleFormatter (): CircleFormatter {
+    return new CircleFormatterNumericWithMin({ maxValueRaw: this.mapDataset.maxValues[MAP_KEY_THAT_SHOULD_NOT_EXIST] })
+  }
+
+  get circleStyle (): CircleStyle {
+    return { ...DEFAULT_NON_ZERO_STYLE, color: this.color }
   }
 
   get lineChartData (): Record<number, number> | null {
@@ -102,11 +116,11 @@ export default class DashboardPage extends Vue {
           latitude,
           longitude,
           distinctSpecies: {
-            refactorThis: value
+            [MAP_KEY_THAT_SHOULD_NOT_EXIST]: value
           }
         })),
       maxValues: {
-        refactorThis: max(this.selectedTab === TAB_VALUES.richness
+        [MAP_KEY_THAT_SHOULD_NOT_EXIST]: max(this.selectedTab === TAB_VALUES.richness
           ? this.generated?.richnessBySite.map(d => d.value)
           : this.generated?.detectionFrequencyBySite.map(d => d.value)
         ) ?? 0
