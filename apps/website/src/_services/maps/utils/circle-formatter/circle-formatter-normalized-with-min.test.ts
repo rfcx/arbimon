@@ -1,19 +1,19 @@
 import { describe, expect, test } from 'vitest'
 
-import { CircleFormatterNumericWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 
 const NULL_ROUND_FUNCTION = (v: number): number => v
 
 describe('contract', () => {
   test('should not throw with default params', () => {
-    expect(() => new CircleFormatterNumericWithMin()).not.toThrow()
+    expect(() => new CircleFormatterNormalizedWithMin()).not.toThrow()
   })
 })
 
 describe('radius calculation', () => {
   test('radius should be minimum (> 0) if value 0', () => {
     // Arrange
-    const formatter = new CircleFormatterNumericWithMin({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalizedWithMin({ roundFunction: NULL_ROUND_FUNCTION })
 
     // Act
     const radius = formatter.getRadius(0)
@@ -26,7 +26,7 @@ describe('radius calculation', () => {
 describe('legend', () => {
   test('legend includes "<=" for min entry', () => {
     // Arrange
-    const formatter = new CircleFormatterNumericWithMin()
+    const formatter = new CircleFormatterNormalizedWithMin()
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -37,7 +37,7 @@ describe('legend', () => {
 
   test('legend should not include "zero" entry if not requested', () => {
     // Arrange
-    const formatter = new CircleFormatterNumericWithMin({ showZeroInLegend: false })
+    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: false })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -48,7 +48,7 @@ describe('legend', () => {
 
   test('legend should include "zero" entry if requested', () => {
     // Arrange
-    const formatter = new CircleFormatterNumericWithMin({ showZeroInLegend: true })
+    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -59,7 +59,7 @@ describe('legend', () => {
 
   test('entries has "zero" entry first', () => {
     // Arrange
-    const formatter = new CircleFormatterNumericWithMin({ showZeroInLegend: true })
+    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -70,8 +70,8 @@ describe('legend', () => {
 
   test('entries should add "zero" on top of legendEntryCount', () => {
     // Arrange
-    const formatterNoZero = new CircleFormatterNumericWithMin({ showZeroInLegend: false })
-    const formatterWithZero = new CircleFormatterNumericWithMin({ showZeroInLegend: true })
+    const formatterNoZero = new CircleFormatterNormalizedWithMin({ showZeroInLegend: false })
+    const formatterWithZero = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true })
 
     // Act
     const entriesNoZero = formatterNoZero.getLegendEntries()

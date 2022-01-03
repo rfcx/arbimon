@@ -8,7 +8,7 @@ import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
-import { CircleFormatterNumericWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
@@ -58,7 +58,7 @@ export default class ActivityOverviewByLocation extends Vue {
   get circleFormatter (): CircleFormatter {
     return this.selectedType === ACTIVITY_OVERVIEW_MAP_KEYS.occupancy
       ? new CircleFormatterBinary()
-      : new CircleFormatterNumericWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })
+      : new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })
   }
 
   get circleStyles (): CircleStyle[] {

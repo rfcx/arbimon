@@ -1,8 +1,8 @@
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '../circle-style/constants'
-import { CircleFormatterNumeric, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
+import { CircleFormatterNormalized, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
 import { CircleLegendEntry } from './types'
 
-export class CircleFormatterNumericWithMin extends CircleFormatterNumeric {
+export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized {
   protected readonly showZeroInLegend: boolean
 
   constructor ({

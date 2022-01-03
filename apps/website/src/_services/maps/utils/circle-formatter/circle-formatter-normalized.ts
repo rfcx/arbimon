@@ -4,7 +4,7 @@ import { CircleFormatter, CircleLegendEntry } from './types'
 export const DEFAULT_LEGEND_COUNT = 4
 export const DEFAULT_RADIUS_IN_PIXELS = 10.0
 
-export class CircleFormatterNumeric implements CircleFormatter {
+export class CircleFormatterNormalized implements CircleFormatter {
   protected readonly stepValue: number
   protected readonly stepPixels: number
   protected readonly maxValue: number
