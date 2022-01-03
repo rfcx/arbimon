@@ -3,15 +3,16 @@ import { CirclePaint, GeoJSONSource, LngLatBounds, LngLatBoundsLike, Map as Mapb
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { downloadPng } from '@rfcx-bio/utils/file'
+import { withFileName, zipAndDownload } from '@rfcx-bio/utils/file'
+import { asPromise } from '@rfcx-bio/utils/fp'
 
-// import { exportChartWithElement } from '~/charts'
+import { canvasToPngBlob, svgToCanvas } from '~/charts'
 import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { generateMapLegend } from '~/maps/map-legend/export-legend'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { styleToPaint } from '~/maps/utils/circle-style/style-to-paint'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
-// import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
 import { MapDataSet, MapMoveEvent, MapSiteData } from './types'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
@@ -194,14 +195,16 @@ export default class MapBubbleComponent extends Vue {
   }
 
   async downloadMapPng (): Promise<void> {
-    const baseFilename = this.mapExportName
-    const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng(img, baseFilename)
+    const mapBlobPromise = canvasToPngBlob(this.map.getCanvas())
+      .then(withFileName(`${this.mapExportName}.png`))
 
-    // TODO: Fix legend
-    // const maxValue = this.dataset.maxValues[this.dataKey]
-    // const svg = generateNormalizeMapLegend(this.color, maxValue, this.maxCircleRadiusPixels)
-    // if (!svg) return
-    // await exportChartWithElement(svg, `${baseFilename}-legend`)
+    const legendBlobPromise = asPromise(this.circleFormatter.getLegendEntries(this.circleStyleNonZero, this.circleStyleZero))
+      .then(generateMapLegend)
+      .then(svgToCanvas)
+      .then(canvasToPngBlob)
+      .then(withFileName(`${this.mapExportName}-legend.png`))
+
+    await Promise.all([mapBlobPromise, legendBlobPromise])
+      .then(async files => await zipAndDownload(files, this.mapExportName))
   }
 }
