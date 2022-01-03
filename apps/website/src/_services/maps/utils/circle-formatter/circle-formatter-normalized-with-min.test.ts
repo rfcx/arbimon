@@ -37,35 +37,38 @@ describe('legend', () => {
 
   test('legend should not include "zero" entry if not requested', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: false })
+    const labelZero = 'RIDICULOUS_LABEL'
+    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: false, labelZero })
 
     // Act
     const entries = formatter.getLegendEntries()
 
     // Assert
-    expect(entries.find(entry => entry.label === '0')).toBeUndefined()
+    expect(entries.find(entry => entry.label === labelZero)).toBeUndefined()
   })
 
   test('legend should include "zero" entry if requested', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true })
+    const labelZero = 'RIDICULOUS_LABEL'
+    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true, labelZero })
 
     // Act
     const entries = formatter.getLegendEntries()
 
     // Assert
-    expect(entries.find(entry => entry.label === '0')).toBeDefined()
+    expect(entries.find(entry => entry.label === labelZero)).toBeDefined()
   })
 
   test('entries has "zero" entry first', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true })
+    const labelZero = 'RIDICULOUS_LABEL'
+    const formatter = new CircleFormatterNormalizedWithMin({ showZeroInLegend: true, labelZero })
 
     // Act
     const entries = formatter.getLegendEntries()
 
     // Assert
-    expect(entries[0].label).toBe('0')
+    expect(entries[0].label).toBe(labelZero)
   })
 
   test('entries should add "zero" on top of legendEntryCount', () => {
