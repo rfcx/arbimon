@@ -48,7 +48,7 @@ export class CircleFormatterNormalized implements CircleFormatter {
 
   getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): CircleLegendEntry[] {
     return Array.from({ length: this.legendEntryCount }, (_, idx) => ({
-        label: `${this.stepValue * (idx + 1)}`,
+        label: this.formatFunction(this.stepValue * (idx + 1)),
         radiusPx: this.stepPixels * (idx + 1),
         style: styleNonZero
       }))
