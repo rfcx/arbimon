@@ -7,7 +7,7 @@ import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { CircleFormatterNumericWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
@@ -47,7 +47,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   }
 
   get circleFormatter (): CircleFormatter {
-    return new CircleFormatterNumericWithMin({ maxValueRaw: this.datasets[0].maxValues[this.mapDataKey] })
+    return new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.mapDataKey] })
   }
 
   get circleStyles (): CircleStyle[] {

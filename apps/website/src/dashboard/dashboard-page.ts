@@ -11,7 +11,7 @@ import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { LineChartComponent, LineChartSeries } from '~/charts/line-chart'
 import { MapBubbleComponent, MapDataSet, MapSiteData } from '~/maps/map-bubble'
-import { CircleFormatterNumericWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
@@ -76,7 +76,7 @@ export default class DashboardPage extends Vue {
   }
 
   get circleFormatter (): CircleFormatter {
-    return new CircleFormatterNumericWithMin({ maxValueRaw: this.mapDataset.maxValues[MAP_KEY_THAT_SHOULD_NOT_EXIST] })
+    return new CircleFormatterNormalizedWithMin({ maxValueRaw: this.mapDataset.maxValues[MAP_KEY_THAT_SHOULD_NOT_EXIST] })
   }
 
   get circleStyle (): CircleStyle {

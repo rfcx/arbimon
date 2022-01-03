@@ -1,41 +1,41 @@
 import { describe, expect, test } from 'vitest'
 
-import { CircleFormatterNumeric } from '~/maps/utils/circle-formatter/circle-formatter-normalized'
+import { CircleFormatterNormalized } from '~/maps/utils/circle-formatter/circle-formatter-normalized'
 
 const NULL_ROUND_FUNCTION = (v: number): number => v
 
 describe('contract', () => {
   test('should throw if maxValueRaw < 0', () => {
-    expect(() => new CircleFormatterNumeric({ maxValueRaw: -0.1 })).toThrow()
-    expect(() => new CircleFormatterNumeric({ maxValueRaw: -10.0 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ maxValueRaw: -0.1 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ maxValueRaw: -10.0 })).toThrow()
   })
 
   test('should throw if maxPixels <= 0', () => {
-    expect(() => new CircleFormatterNumeric({ maxPixels: 0 })).toThrow()
-    expect(() => new CircleFormatterNumeric({ maxPixels: -0.1 })).toThrow()
-    expect(() => new CircleFormatterNumeric({ maxPixels: -10.0 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ maxPixels: 0 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ maxPixels: -0.1 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ maxPixels: -10.0 })).toThrow()
   })
 
   test('should throw if legendEntryCount < 1', () => {
-    expect(() => new CircleFormatterNumeric({ legendEntryCount: 0 })).toThrow()
-    expect(() => new CircleFormatterNumeric({ legendEntryCount: -1 })).toThrow()
-    expect(() => new CircleFormatterNumeric({ legendEntryCount: -2 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ legendEntryCount: 0 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ legendEntryCount: -1 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ legendEntryCount: -2 })).toThrow()
   })
 
   test('should throw if legendEntryCount is non-integer', () => {
-    expect(() => new CircleFormatterNumeric({ legendEntryCount: 0.5 })).toThrow()
-    expect(() => new CircleFormatterNumeric({ legendEntryCount: 10.5 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ legendEntryCount: 0.5 })).toThrow()
+    expect(() => new CircleFormatterNormalized({ legendEntryCount: 10.5 })).toThrow()
   })
 
   test('should not throw with default params', () => {
-    expect(() => new CircleFormatterNumeric()).not.toThrow()
+    expect(() => new CircleFormatterNormalized()).not.toThrow()
   })
 })
 
 describe('radius calculation', () => {
   test('radius should be 0 if value 0', () => {
     // Arrange
-    const formatter = new CircleFormatterNumeric({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
 
     // Act
     const radius = formatter.getRadius(0)
@@ -47,7 +47,7 @@ describe('radius calculation', () => {
   test('radius should scale proportionally to value', () => {
     // Arrange
     const maxValue = 123.45
-    const formatter = new CircleFormatterNumeric({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
 
     // Act
     const radius1 = formatter.getRadius(1.0)
@@ -65,7 +65,7 @@ describe('legend', () => {
   test('legend length matches legendEntryCount', () => {
     // Arrange
     const legendEntryCount = 10
-    const formatter = new CircleFormatterNumeric({ roundFunction: NULL_ROUND_FUNCTION, legendEntryCount })
+    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION, legendEntryCount })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -76,7 +76,7 @@ describe('legend', () => {
 
   test('legend entries should be positive', () => {
     // Arrange
-    const formatter = new CircleFormatterNumeric({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -89,7 +89,7 @@ describe('legend', () => {
 
   test('legend is sorted smallest to largest', () => {
     // Arrange
-    const formatter = new CircleFormatterNumeric({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -102,7 +102,7 @@ describe('legend', () => {
 
   test('legend is equally spaced', () => {
     // Arrange
-    const formatter = new CircleFormatterNumeric({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -116,7 +116,7 @@ describe('legend', () => {
   test('legend values should be rounded', () => {
     // Arrange
     const roundFunction = Math.round
-    const formatter = new CircleFormatterNumeric({ roundFunction })
+    const formatter = new CircleFormatterNormalized({ roundFunction })
 
     // Act
     const entries = formatter.getLegendEntries()
