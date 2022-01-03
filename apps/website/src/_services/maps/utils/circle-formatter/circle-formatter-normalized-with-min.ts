@@ -2,20 +2,26 @@ import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '../circle-style/cons
 import { CircleFormatterNormalized, DEFAULT_FORMAT_FUNCTION, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
 import { CircleLegendEntry } from './types'
 
+export const DEFAULT_SHOW_IN_LEGEND = true
+export const DEFAULT_LABEL_ZERO = 'No detections'
+
 export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized {
   protected readonly showZeroInLegend: boolean
+  protected readonly labelZero: string
 
   constructor ({
       maxValueRaw = 1.0,
       maxPixels = DEFAULT_RADIUS_IN_PIXELS,
       legendEntryCount = DEFAULT_LEGEND_COUNT,
       formatFunction = DEFAULT_FORMAT_FUNCTION,
-      showZeroInLegend = true
+      showZeroInLegend = DEFAULT_SHOW_IN_LEGEND,
+      labelZero = DEFAULT_LABEL_ZERO
   } = {}) {
     super({ maxValueRaw, maxPixels, legendEntryCount, formatFunction })
 
     // Store as props
     this.showZeroInLegend = showZeroInLegend
+    this.labelZero = labelZero
   }
 
   override getRadius (value: number): number {
@@ -27,7 +33,7 @@ export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized 
     const [head, ...tail] = super.getLegendEntries(styleNonZero, styleZero)
 
     const zeroEntry = this.showZeroInLegend
-      ? [{ label: '0', radiusPx: this.stepPixels, style: styleZero }]
+      ? [{ label: this.labelZero, radiusPx: this.stepPixels, style: styleZero }]
       : []
 
     return [
