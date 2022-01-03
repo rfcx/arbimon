@@ -7,6 +7,11 @@ import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
+import { CircleFormatterNumericWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
+import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { BiodiversityStore } from '~/store'
 
 interface DatasetType {
@@ -39,10 +44,8 @@ export default class ActivityPatternsByLocation extends Vue {
 
   mapMoveEvent: MapMoveEvent | null = null
 
-  get maxCircleRadiusPixels (): number {
-    return this.selectedType === ACTIVITY_PATTERN_MAP_KEYS.occupancy
-      ? 6.0
-      : 10.0
+  get hasData (): boolean {
+    return this.datasets.length > 0
   }
 
   get columnCount (): number {
@@ -52,8 +55,14 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
-  get hasData (): boolean {
-    return this.datasets.length > 0
+  get circleFormatter (): CircleFormatter {
+    return this.selectedType === ACTIVITY_PATTERN_MAP_KEYS.occupancy
+      ? new CircleFormatterBinary()
+      : new CircleFormatterNumericWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })
+  }
+
+  get circleStyles (): CircleStyle[] {
+    return this.datasets.map((d, idx) => ({ ...DEFAULT_NON_ZERO_STYLE, color: this.store.datasetColors[idx] }))
   }
 
   propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
