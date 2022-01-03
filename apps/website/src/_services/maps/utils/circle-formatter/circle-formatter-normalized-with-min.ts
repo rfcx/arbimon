@@ -1,5 +1,5 @@
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '../circle-style/constants'
-import { CircleFormatterNormalized, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
+import { CircleFormatterNormalized, DEFAULT_FORMAT_FUNCTION, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
 import { CircleLegendEntry } from './types'
 
 export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized {
@@ -9,10 +9,10 @@ export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized 
       maxValueRaw = 1.0,
       maxPixels = DEFAULT_RADIUS_IN_PIXELS,
       legendEntryCount = DEFAULT_LEGEND_COUNT,
-      roundFunction = (value: number) => value,
+      formatFunction = DEFAULT_FORMAT_FUNCTION,
       showZeroInLegend = true
   } = {}) {
-    super({ maxValueRaw, maxPixels, legendEntryCount, roundFunction })
+    super({ maxValueRaw, maxPixels, legendEntryCount, formatFunction })
 
     // Store as props
     this.showZeroInLegend = showZeroInLegend

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { CircleFormatterNormalized } from '~/maps/utils/circle-formatter/circle-formatter-normalized'
 
-const NULL_ROUND_FUNCTION = (v: number): number => v
+const NULL_FORMAT_FUNCTION = (v: number): string => v.toString()
 
 describe('contract', () => {
   test('should throw if maxValueRaw < 0', () => {
@@ -35,7 +35,7 @@ describe('contract', () => {
 describe('radius calculation', () => {
   test('radius should be 0 if value 0', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION })
 
     // Act
     const radius = formatter.getRadius(0)
@@ -47,7 +47,7 @@ describe('radius calculation', () => {
   test('radius should scale proportionally to value', () => {
     // Arrange
     const maxValue = 123.45
-    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION })
 
     // Act
     const radius1 = formatter.getRadius(1.0)
@@ -65,7 +65,7 @@ describe('legend', () => {
   test('legend length matches legendEntryCount', () => {
     // Arrange
     const legendEntryCount = 10
-    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION, legendEntryCount })
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION, legendEntryCount })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -76,7 +76,7 @@ describe('legend', () => {
 
   test('legend entries should be positive', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -89,7 +89,7 @@ describe('legend', () => {
 
   test('legend is sorted smallest to largest', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -102,7 +102,7 @@ describe('legend', () => {
 
   test('legend is equally spaced', () => {
     // Arrange
-    const formatter = new CircleFormatterNormalized({ roundFunction: NULL_ROUND_FUNCTION })
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION })
 
     // Act
     const entries = formatter.getLegendEntries()
@@ -115,16 +115,16 @@ describe('legend', () => {
 
   test('legend values should be rounded', () => {
     // Arrange
-    const roundFunction = Math.round
-    const formatter = new CircleFormatterNormalized({ roundFunction })
+    const formatFunction = (v: number): string => Math.round(v).toString()
+    const formatter = new CircleFormatterNormalized({ formatFunction })
 
     // Act
     const entries = formatter.getLegendEntries()
 
     // Assert
     entries.forEach(entry => {
-      const value = Number(entry.label) ?? 0
-      expect(value).toEqual(roundFunction(value))
+      const roundedValue = formatFunction(Number(entry.label))
+      expect(entry.label).toBe(roundedValue)
     })
   })
 })
