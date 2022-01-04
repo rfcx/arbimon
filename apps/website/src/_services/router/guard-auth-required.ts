@@ -1,8 +1,8 @@
-import { NavigationGuardNext, NavigationGuardWithThis, RouteLocationNormalized } from 'vue-router'
+import { NavigationGuardWithThis } from 'vue-router'
 
 import { useAuthClient } from '~/auth'
 
-export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to, from, next) => {
   // Already authenticated
   const authClient = useAuthClient()
   if (authClient.isAuthenticated) return next()
