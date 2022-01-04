@@ -3,7 +3,7 @@
     <page-title
       page-title="Species Spotlight"
       page-information="This page will allow you to explore essential information about species natural history and how vocal activity patterns of specific species change through time and space."
-      :topic="$route.name"
+      :topic="infoTopic"
     >
       <dropdown-menu>
         <template #label>

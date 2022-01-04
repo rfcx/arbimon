@@ -5,6 +5,7 @@ import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/spe
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
+import { INFO_TOPICS } from '@/info/info-page'
 import { ActivityPatternsDataByExport, activityPatternsService } from '~/api/activity-patterns-service'
 import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
 import { getSpecies } from '~/api/species-service'
@@ -54,6 +55,10 @@ export default class ActivityPatternsPage extends Vue {
 
   get speciesCall (): SpeciesCall | null {
     return this.speciesInformation?.speciesCall ?? null
+  }
+
+  get infoTopic (): string {
+    return INFO_TOPICS.spotlight
   }
 
   async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
