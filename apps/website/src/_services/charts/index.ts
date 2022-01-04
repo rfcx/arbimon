@@ -9,7 +9,7 @@ interface SvgAndDimensions {
   height: number
 }
 
-export const DATASET_LEGEND_GAP = 30
+export const DATASET_LEGEND_GAP = 10
 const EACH_LEGEND_WIDTH = 100
 const GAP_BETWEEN_CIRCLE_AND_LEGEND = 15
 const GAP_BETWEEN_LEGEND = 20

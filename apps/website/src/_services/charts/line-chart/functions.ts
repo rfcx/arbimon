@@ -20,23 +20,20 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
   const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? numeral(val).format('0,0') : d3.format('.1e')(val)
 
   const xAxis = (g: any): unknown => g
-    .attr('transform', `translate(${yTitleDistance}, ${config.height - config.margins.bottom})`)
+    .attr('transform', `translate(${yTitleDistance}, ${config.height - config.margins.bottom - xTitleDistance})`)
     .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(xTickFormatter))
 
   const yScale = d3.scaleLinear()
     .domain(yBounds).nice()
-    .range([config.height - config.margins.bottom, config.margins.top])
+    .range([config.height - config.margins.bottom - xTitleDistance, config.margins.top])
 
   const yAxis = (g: any): unknown => g
     .attr('transform', `translate(${config.margins.left + yTitleDistance}, 0)`)
     .call(d3.axisLeft(yScale).tickFormat(yTickFormatter))
 
-  const width = config.width + yTitleDistance
-  const height = config.height + xTitleDistance
-
   // Render chart
   const svg = d3.create('svg')
-    .attr('viewBox', [0, 0, width, height].join(' '))
+    .attr('viewBox', [0, 0, config.width, config.height].join(' '))
     .attr('fill', 'none')
     .attr('stroke-linejoin', 'round')
     .attr('stroke-linecap', 'round')
@@ -98,7 +95,7 @@ export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, 
     .attr('transform', `translate(0, ${height - (margins.top + margins.bottom) + (xTitleDistance + mostBottom)})`)
     .append('text')
     .attr('x', ((width - margins.left) / 2) + margins.left)
-    .attr('y', mostBottom + xTitleDistance)
+    .attr('y', mostBottom)
     .attr('fill', 'currentColor')
     .style('text-anchor', 'middle')
     .text(xTitle)
