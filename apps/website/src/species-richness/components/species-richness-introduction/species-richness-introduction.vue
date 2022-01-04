@@ -2,7 +2,7 @@
   <page-title
     page-title="Species Richness"
     page-information="This page will allow you to explore how the number of detected species changes over time and across the landscape."
-    :topic="$route.name"
+    :topic="infoTopic"
   >
     <dropdown-menu>
       <template #label>
