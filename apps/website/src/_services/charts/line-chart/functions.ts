@@ -119,7 +119,7 @@ export const generateChartInternal = (datasets: LineChartSeries[], config: LineC
 
 export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   const { width, height, margins } = config
-  const newConfig = { ...config, margins: { ...margins, left: margins.left, bottom: margins.bottom + DATASET_LEGEND_GAP } }
+  const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + DATASET_LEGEND_GAP } }
 
   const xTitleDistance = 25
   const yTitleDistance = 40
