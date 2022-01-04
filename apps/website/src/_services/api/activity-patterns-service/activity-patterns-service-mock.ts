@@ -1,6 +1,7 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { MockHourlyDetectionSummary, rawDetections, simulateDelay } from '@rfcx-bio/common/mock-data'
+import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
@@ -41,11 +42,26 @@ export class ActivityPatternsService {
   }
 
   getActivityDataBySite (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivityPatternsDataBySite {
-    const summariesBySite: { [siteId: string]: MockHourlyDetectionSummary[] } = groupBy(totalSummaries, 'stream_id')
-    return mapValues(summariesBySite, (totalSummaries, siteId) => {
-      const siteTotalRecordingCount = this.getRecordingCount(totalSummaries)
+    // Redact critically endangered species
+    if (criticallyEndangeredSpeciesIds.has(speciesId)) {
+      return {
+        1: {
+          siteId: '1',
+          siteName: 'location data redacted',
+          latitude: 0,
+          longitude: 0,
+          siteDetectionCount: 0,
+          siteDetectionFrequency: 0,
+          siteOccupied: false
+        }
+      }
+    }
 
-      const siteSpeciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
+    const summariesBySite: { [siteId: string]: MockHourlyDetectionSummary[] } = groupBy(totalSummaries, 'stream_id')
+    return mapValues(summariesBySite, (siteSummaries, siteId) => {
+      const siteTotalRecordingCount = this.getRecordingCount(siteSummaries)
+
+      const siteSpeciesSummaries = filterMocksBySpecies(siteSummaries, speciesId)
       const siteDetectionCount = sum(siteSpeciesSummaries.map(d => d.num_of_recordings))
       const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionCount / siteTotalRecordingCount
 
@@ -53,9 +69,9 @@ export class ActivityPatternsService {
 
       return {
         siteId,
-        siteName: totalSummaries[0].name,
-        latitude: totalSummaries[0].lat,
-        longitude: totalSummaries[0].lon,
+        siteName: siteSummaries[0].name,
+        latitude: siteSummaries[0].lat,
+        longitude: siteSummaries[0].lon,
         siteDetectionCount,
         siteDetectionFrequency,
         siteOccupied
