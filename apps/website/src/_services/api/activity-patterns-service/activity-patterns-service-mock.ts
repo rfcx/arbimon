@@ -46,7 +46,7 @@ export class ActivityPatternsService {
     if (criticallyEndangeredSpeciesIds.has(speciesId)) {
       return {
         1: {
-          siteId: 1,
+          siteId: '1',
           siteName: 'location data redacted',
           latitude: 0,
           longitude: 0,
