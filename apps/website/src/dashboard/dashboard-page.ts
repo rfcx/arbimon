@@ -6,10 +6,13 @@ import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/d
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
+import { svgToPng } from '~/charts'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
-import { LineChartComponent, LineChartSeries } from '~/charts/line-chart'
+import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { getExportGroupName } from '~/filters'
 import { MapBubbleComponent, MapDataSet, MapSiteData } from '~/maps/map-bubble'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
@@ -95,7 +98,7 @@ export default class DashboardPage extends Vue {
       : []
   }
 
-  get lineChartConfig (): unknown {
+  get lineChartConfig (): Omit<LineChartConfig, 'width'> {
     return {
       height: this.tabHeight,
       margins: { top: 20, right: 30, bottom: 30, left: 40 },
@@ -173,5 +176,15 @@ export default class DashboardPage extends Vue {
 
     this.generated = generated ?? null
     this.profile = profile ?? null
+  }
+
+  async downloadLineChart (): Promise<void> {
+    const margins = { ...this.lineChartConfig.margins, bottom: 80, left: 80 }
+    const exportConfig = { ...this.lineChartConfig, margins, width: 1024, height: 576 }
+    const svg = await generateChartExport(this.lineChartSeries, exportConfig)
+    if (!svg) return
+
+    const png = await svgToPng({ svg, ...exportConfig })
+    downloadPng(png, getExportGroupName(`dashboard-${this.selectedTab}-line-chart`))
   }
 }
