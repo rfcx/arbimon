@@ -16,7 +16,9 @@ spec:
     - host: testing-ba.rfcx.org
       http:
         paths:
-          - backend:
+          - path: /
+            pathType: Prefix
+            backend:
               serviceName: biodiversity-website-service
               servicePort: 80
 ---
