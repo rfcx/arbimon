@@ -5,7 +5,7 @@ import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
 
-export { ROUTE_NAMES } from './route-names'
+export * from './route-names'
 
 const routes: RouteRecordRaw[] = [
   {
