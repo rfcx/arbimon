@@ -1,4 +1,5 @@
 import { rawDetections } from '@rfcx-bio/common/mock-data'
+import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
@@ -43,14 +44,15 @@ const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters 
 
 const getCsvForDataset = async (dataset: DatasetParameters): Promise<ReportData[]> => {
   return (await filterMocksByParameters(rawDetections, dataset))
-    .map(({ scientific_name: species, name: site, lat: latitude, lon: longitude, alt: altitude, date, hour }) => {
+    .map(({ species_id: speciesId, scientific_name: species, name: site, lat: latitude, lon: longitude, alt: altitude, date, hour }) => {
       const newDate = dayjs.utc(date)
+      const siteData = criticallyEndangeredSpeciesIds.has(speciesId)
+        ? { site: 'redacted', latitude: 0, longitude: 0, altitude: 0 }
+        : { site, latitude, longitude, altitude }
+
       return {
         species,
-        site,
-        latitude,
-        longitude,
-        altitude,
+        ...siteData,
         day: newDate.format('D'),
         month: newDate.format('M'),
         year: newDate.format('YYYY'),

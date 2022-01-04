@@ -1,20 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import { authRequiredGuard } from '~/auth/auth-required-guard'
-import { selectProjectGuard } from '~/router/select-project-guard'
+import { authRequiredGuard } from './guard-auth-required'
+import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
+import { ROUTE_NAMES } from './route-names'
 
-export const ROUTE_NAMES = <const>{
-  home: 'home',
-  dashboard: 'dashboard',
-  speciesRichness: 'species_richness',
-  activityOverview: 'activity_overview',
-  activityPatterns: 'activity_patterns',
-  info: 'info',
-  preferences: 'preferences',
-  error: 'error'
-}
-export type RouteNames = typeof ROUTE_NAMES
+export * from './route-names'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,7 +21,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:projectId',
     component: PAGES.ProjectRoot,
-    beforeEnter: [authRequiredGuard, selectProjectGuard],
+    beforeEnter: [authRequiredGuard, storeProjectGuard],
     children: [
       {
         path: '',
