@@ -1,18 +1,17 @@
 import * as d3 from 'd3'
 
-import { generateHorizontalLegend, getLegendGroupNames } from '..'
+import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { BarChartConfig, GroupedBarChartItem } from './types'
 
 const GROUP_MARGIN = 20
 const BAR_MARGIN = 2
-const X_TITLE_DISTANCE = 30
 
 export interface GeneratedHorizontalChart {
   svg: d3.Selection<SVGSVGElement, undefined, null, undefined>
   fullHeight: number
 }
 
-export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig): GeneratedHorizontalChart => {
+export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig, xTitleDistance = 25): GeneratedHorizontalChart => {
   const dataLength = data.length
   const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
 
@@ -21,7 +20,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
   const groupHeight = dataSeriesLength * barHeight /** bar chart group y axis height */
   const chartWidth = config.width - config.margins.left - config.margins.right
   const chartHeight = (dataLength * groupHeight) + (dataLength * BAR_MARGIN) + (dataLength * GROUP_MARGIN)
-  const fullHeight = chartHeight + config.margins.top + config.margins.bottom + X_TITLE_DISTANCE
+  const fullHeight = chartHeight + config.margins.top + config.margins.bottom
 
   // =================== Scale setting =================
   // x axis scale configuration: d3 calculate the x number rely on maximum frequency (domain) and chart width (range)
@@ -83,7 +82,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
   svg.selectAll('line')
     .style('color', 'none')
 
-  generateXAxisTitle(svg, config, chartHeight)
+  generateXAxisTitle(svg, config, chartHeight, xTitleDistance)
 
   // =================== Generate bar group =================
   // select all match `category` class in `g` tag and binding data
@@ -133,7 +132,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
   return { svg, fullHeight }
 }
 
-export function generateXAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, config: BarChartConfig, height: number): void {
+export function generateXAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, config: BarChartConfig, height: number, xTitleDistance: number): void {
   const { width, margins, xTitle } = config
 
   let mostBottom = 0
@@ -148,7 +147,7 @@ export function generateXAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T,
 
   // X Title
   svg.append('g')
-    .attr('transform', `translate(0, ${height + (X_TITLE_DISTANCE + mostBottom)})`)
+    .attr('transform', `translate(0, ${height + (xTitleDistance + mostBottom)})`)
     .append('text')
     .attr('x', ((width - margins.left) / 2) + margins.left)
     .attr('y', mostBottom)
@@ -163,14 +162,18 @@ export const generateChartInternal = (data: GroupedBarChartItem[], config: BarCh
 }
 
 export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
-  const { svg, fullHeight } = generateChart(data, config)
+  const xTitleDistance = 30
+
+  const { width, margins } = config
+  const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + xTitleDistance + DATASET_LEGEND_GAP } }
+  const { svg, fullHeight } = generateChart(data, newConfig)
 
   const labels = getLegendGroupNames(data[0].series.length)
   const colors = data[0].series.map(s => s.color)
 
-  const positionX = config.margins.left - X_TITLE_DISTANCE
-  const positionY = fullHeight - (X_TITLE_DISTANCE / 2)
-  generateHorizontalLegend(svg, config.width, positionX, positionY, labels, colors)
+  const positionX = margins.left - margins.right
+  const positionY = fullHeight - (margins.bottom - DATASET_LEGEND_GAP)
+  generateHorizontalLegend(svg, width, positionX, positionY, labels, colors)
 
   return svg.node()
 }
