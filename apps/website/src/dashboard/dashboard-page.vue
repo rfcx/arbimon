@@ -31,11 +31,18 @@
             :circle-style-non-zero="circleStyle"
             class="w-full"
           />
-          <line-chart-component
-            dom-id="dashboard-line-chart"
-            :config="lineChartConfig"
-            :datasets="lineChartSeries"
-          />
+          <div class="relative">
+            <line-chart-component
+              dom-id="dashboard-line-chart"
+              :config="lineChartConfig"
+              :datasets="lineChartSeries"
+            />
+            <export-button
+              v-if="lineChartSeries.length > 0"
+              class="absolute top-2 right-2"
+              @click="downloadLineChart"
+            />
+          </div>
         </div>
         <page-title
           class="mt-5"
