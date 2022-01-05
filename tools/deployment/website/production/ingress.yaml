@@ -38,3 +38,16 @@ spec:
             backend:
               serviceName: biodiversity-api-service
               servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://bio.rfcx.org
+  name: biodiversity-website-ingress-legacy-redirect
+  namespace: production
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+    - host: ba.rfcx.org
