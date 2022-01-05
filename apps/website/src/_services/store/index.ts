@@ -4,7 +4,6 @@ import { createPinia, defineStore } from 'pinia'
 import { Project } from '@rfcx-bio/common/api-bio/common/projects'
 import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 
-import { getProjects } from '~/api/project-service'
 import { getSites } from '~/api/site-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
@@ -38,8 +37,9 @@ export const useStore = defineStore('root', {
 
       // Load data asynchronously
       if (user) {
-        const realProjects = await getProjects()
-        const projects = [FAKE_PUERTO_RICO_PROJECT, ...realProjects]
+        // const realProjects = await getProjects()
+        // const projects = [FAKE_PUERTO_RICO_PROJECT, ...realProjects]
+        const projects = [FAKE_PUERTO_RICO_PROJECT]
         const selectedProject = projects.length > 0 ? projects[0] : undefined
         const sites = selectedProject ? await getSites(selectedProject) : []
 

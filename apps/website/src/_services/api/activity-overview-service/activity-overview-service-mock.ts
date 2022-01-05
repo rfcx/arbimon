@@ -68,9 +68,12 @@ export class ActivityOverviewService {
   }
 
   calculateOverviewDataByTime (totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime {
+    const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
+
     const byHour = groupByNumber(speciesSummaries, d => d.hour)
     const byDay = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
     const byMonth = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
+    const byDate = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).startOf('day').unix() / SECONDS_PER_DAY) // each chart tick should be a day not a second
 
     return {
       hourOfDay: {
@@ -84,6 +87,10 @@ export class ActivityOverviewService {
       monthOfYear: {
         detection: mapValues(byMonth, this.calculateDetectionActivity),
         detectionFrequency: mapValues(byMonth, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      dateSeries: {
+        detection: mapValues(byDate, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byDate, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
       }
     }
   }

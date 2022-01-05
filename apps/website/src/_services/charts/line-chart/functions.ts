@@ -4,39 +4,50 @@ import numeral from 'numeral'
 import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
 
+type Formatter<Domain> = (domainValue: Domain, index: number) => string
+
+const PIXELS_PER_CHAR = 11
+
+export const skipTickFormatter = <T>(interval: number, innerFormatter: Formatter<T>): Formatter<T> =>
+  (interval > 1)
+    ? (val: T, idx: number) => (idx % interval) === 0 ? innerFormatter(val, idx) : ''
+    : innerFormatter
+
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig, xTitleDistance = 25, yTitleDistance = 25): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data
   const yBounds = [0, datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)]
   const xBounds = config.xBounds ?? getXBoundsFromDatasets(datasets)
   const xValues = Array.from({ length: xBounds[1] - xBounds[0] + 1 }, (_, i) => i + xBounds[0])
+  const xLabelFormatter = config.xLabelFormatter
+
+  // Calculate how many ticks will fit
+  const xTickCount = xBounds[1] - xBounds[0]
+  const xLabelWidth = (xLabelFormatter?.(xBounds[1]).length ?? xBounds[1].toString().length) * PIXELS_PER_CHAR
+  const xTickInterval = Math.ceil(xTickCount * xLabelWidth / config.width)
 
   // Setup axes
   const xScale = d3.scaleLinear()
     .domain(xBounds)
-    .range([config.margins.left, config.width - config.margins.right])
+    .range([config.margins.left, config.width - config.margins.left - config.margins.right])
 
-  const xLabels = config.xLabels
-  const xTickFormatter = xLabels ? (val: d3.NumberValue): string => xLabels[val.valueOf()] : d3.format('d')
+  const xTickFormatter = xLabelFormatter ? (val: d3.NumberValue): string => xLabelFormatter(val.valueOf()) : d3.format('d')
   const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? numeral(val).format('0,0') : d3.format('.1e')(val)
 
   const xAxis = (g: any): unknown => g
-    .attr('transform', `translate(${yTitleDistance}, ${config.height - config.margins.bottom})`)
-    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(xTickFormatter))
+    .attr('transform', `translate(${yTitleDistance}, ${config.height - config.margins.bottom - xTitleDistance})`)
+    .call(d3.axisBottom(xScale).ticks(xValues.length).tickSizeOuter(0).tickFormat(skipTickFormatter(xTickInterval, xTickFormatter)))
 
   const yScale = d3.scaleLinear()
     .domain(yBounds).nice()
-    .range([config.height - config.margins.bottom, config.margins.top])
+    .range([config.height - config.margins.bottom - xTitleDistance, config.margins.top])
 
   const yAxis = (g: any): unknown => g
     .attr('transform', `translate(${config.margins.left + yTitleDistance}, 0)`)
     .call(d3.axisLeft(yScale).tickFormat(yTickFormatter))
 
-  const width = config.width + yTitleDistance
-  const height = config.height + xTitleDistance
-
   // Render chart
   const svg = d3.create('svg')
-    .attr('viewBox', [0, 0, width, height].join(' '))
+    .attr('viewBox', [0, 0, config.width, config.height].join(' '))
     .attr('fill', 'none')
     .attr('stroke-linejoin', 'round')
     .attr('stroke-linecap', 'round')
@@ -98,7 +109,7 @@ export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, 
     .attr('transform', `translate(0, ${height - (margins.top + margins.bottom) + (xTitleDistance + mostBottom)})`)
     .append('text')
     .attr('x', ((width - margins.left) / 2) + margins.left)
-    .attr('y', mostBottom + xTitleDistance)
+    .attr('y', mostBottom)
     .attr('fill', 'currentColor')
     .style('text-anchor', 'middle')
     .text(xTitle)
@@ -122,7 +133,7 @@ export const generateChartInternal = (datasets: LineChartSeries[], config: LineC
 
 export const generateChartExport = (datasets: LineChartSeries[], config: LineChartConfig): SVGSVGElement | null => {
   const { width, height, margins } = config
-  const newConfig = { ...config, margins: { ...margins, left: margins.left, bottom: margins.bottom + DATASET_LEGEND_GAP } }
+  const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + DATASET_LEGEND_GAP } }
 
   const xTitleDistance = 25
   const yTitleDistance = 40

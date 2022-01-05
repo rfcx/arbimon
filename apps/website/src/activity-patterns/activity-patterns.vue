@@ -2,14 +2,18 @@
   <div>
     <page-title
       page-title="Species Spotlight"
-      page-subtitle="An in-depth look at the detections and occupancy trends of a single species"
+      page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
+      :topic="infoTopic"
     >
       <dropdown-menu>
+        <template #label>
+          <icon-fa-download class="mr-2" /> Download Data
+        </template>
         <dropdown-menu-item
           :disabled="!hasExportData"
           @click="exportDetectionsData"
         >
-          <icon-far-file-archive class="mr-2" /> Export as CSV
+          <icon-far-file-archive class="mr-2" /> Export CSV
         </dropdown-menu-item>
       </dropdown-menu>
     </page-title>
@@ -46,12 +50,12 @@
       :metrics="metrics"
       class="mt-6"
     />
-    <activity-patterns-predicted-occupancy
-      :predicted-occupancy-maps="predictedOccupancyMaps"
-      class="mt-5"
-    />
     <activity-patterns-by-location
       :datasets="mapDatasets"
+      class="mt-5"
+    />
+    <activity-patterns-predicted-occupancy
+      :predicted-occupancy-maps="predictedOccupancyMaps"
       class="mt-5"
     />
     <activity-patterns-by-time

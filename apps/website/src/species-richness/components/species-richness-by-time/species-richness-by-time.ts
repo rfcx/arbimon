@@ -2,12 +2,14 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { downloadPng } from '@rfcx-bio/utils/file'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { svgToPng } from '~/charts'
+import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
-import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
+import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
+
+const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
 
 @Options({
   components: { LineChartComponent }
@@ -26,11 +28,13 @@ export default class SpeciesRichnessByTime extends Vue {
   get config (): Omit<LineChartConfig, 'width'> {
     return {
       height: 450,
-      margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       yTitle: 'Number of species',
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
-      xLabels: TIME_LABELS[this.selectedBucket]
+      xLabelFormatter: this.selectedBucket === 'dateSeries'
+        ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
+        : TIME_LABEL_FORMATTERS[this.selectedBucket]
     }
   }
 
@@ -44,7 +48,6 @@ export default class SpeciesRichnessByTime extends Vue {
     const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
-    const png = await svgToPng({ svg, ...exportConfig })
-    downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
+    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }

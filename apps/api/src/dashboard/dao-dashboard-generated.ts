@@ -1,7 +1,8 @@
 import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { DashboardGeneratedResponse, DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
+import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
@@ -15,7 +16,6 @@ export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     speciesCount: rawSpecies.length,
     speciesThreatenedCount: speciesThreatened.length,
     speciesThreatened,
-    speciesHighlighted: await getSpeciesHighlighted(),
     richnessByExtinction: await getRichnessByExtinction(),
     richnessByHour: await getRichnessByHour(),
     richnessBySite: await getRichnessBySite(),
@@ -35,9 +35,6 @@ const getSpeciesThreatened = async (): Promise<DashboardSpecies[]> =>
       EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
       a.scientificName.localeCompare(b.scientificName)
     )
-
-const getSpeciesHighlighted = async (): Promise<DashboardSpecies[]> =>
-  rawSpecies.slice(0, 5)
 
 const getRichnessByExtinction = async (): Promise<Array<[string, number]>> =>
   Object.entries(groupBy(rawSpecies, 'extinctionRisk'))

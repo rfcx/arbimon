@@ -20,6 +20,7 @@ export interface SpeciesExternalLink {
 }
 
 export interface SpeciesCall {
+  scientificName?: string
   mediaWavUrl: string
   mediaSpecUrl: string
   songType: string
