@@ -2,7 +2,7 @@
   <div>
     <page-title
       page-title="Species Spotlight"
-      page-information="This page will allow you to explore essential information about species natural history and how vocal activity patterns of specific species change through time and space."
+      page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
       :topic="infoTopic"
     >
       <dropdown-menu>
