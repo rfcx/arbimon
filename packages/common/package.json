@@ -18,7 +18,8 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
     "profile-eslint": "cross-env TIMING=1 eslint .",
-    "test": "cross-env NODE_OPTIONS=\"--experimental-json-modules --experimental-vm-modules\" jest --passWithNoTests"
+    "test": "vitest --run --passWithNoTests",
+    "test-coverage": "vitest --run --coverage --passWithNoTests"
   },
   "dependencies": {
     "dayjs": "^1.10.7",

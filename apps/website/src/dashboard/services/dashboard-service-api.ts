@@ -1,5 +1,5 @@
-import { DashboardGeneratedResponse, dashboardGeneratedUrl } from '@rfcx-bio/common/api-bio-types/dashboard-generated'
-import { DashboardProfileResponse, dashboardProfileUrl } from '@rfcx-bio/common/api-bio-types/dashboard-profile'
+import { DashboardGeneratedResponse, dashboardGeneratedUrl } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { DashboardProfileResponse, dashboardProfileUrl } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 
 import { apiClient } from '~/api'
 

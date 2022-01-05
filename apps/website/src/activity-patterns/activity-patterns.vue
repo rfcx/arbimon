@@ -2,11 +2,18 @@
   <div>
     <page-title
       page-title="Species Spotlight"
-      page-subtitle="An in-depth look at the detections and occupancy trends of a single species"
+      page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
+      :topic="infoTopic"
     >
       <dropdown-menu>
-        <dropdown-menu-item>
-          <icon-fas-hammer class="mr-2" /> TODO
+        <template #label>
+          <icon-fa-download class="mr-2" /> Download Data
+        </template>
+        <dropdown-menu-item
+          :disabled="!hasExportData"
+          @click="exportDetectionsData"
+        >
+          <icon-far-file-archive class="mr-2" /> Export CSV
         </dropdown-menu-item>
       </dropdown-menu>
     </page-title>
@@ -19,19 +26,36 @@
       :species-slug="$route.params.speciesSlug"
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
-    <species-background-information
-      :species="species"
-    />
+    <div class="grid grid-cols-6 py-2">
+      <div class="col-span-6 md:col-span-4">
+        <species-background-information
+          :species="speciesInformation"
+        />
+      </div>
+      <div class="col-span-6 px-0 mt-6 md:(col-span-2 border-l-2 border-faded mt-0 px-4)">
+        <!-- TODO ?? : Add tab to swap between photo / species call -->
+        <div class="grid grid-cols-2 gap-4">
+          <species-images
+            v-if="speciesInformation"
+            :species="speciesInformation"
+          />
+          <spotlight-player
+            v-if="speciesCall"
+            :species-call="speciesCall"
+          />
+        </div>
+      </div>
+    </div>
     <activity-patterns-metrics
       :metrics="metrics"
+      class="mt-6"
+    />
+    <activity-patterns-by-location
+      :datasets="mapDatasets"
       class="mt-5"
     />
     <activity-patterns-predicted-occupancy
       :predicted-occupancy-maps="predictedOccupancyMaps"
-      class="mt-5"
-    />
-    <activity-patterns-by-location
-      :datasets="mapDatasets"
       class="mt-5"
     />
     <activity-patterns-by-time

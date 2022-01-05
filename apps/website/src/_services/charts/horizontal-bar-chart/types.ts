@@ -1,3 +1,5 @@
+import { ChartMargin } from '../types'
+
 export interface BarChartItem {
   category: string
   frequency: number
@@ -11,11 +13,8 @@ export interface GroupedBarChartItem {
 
 export interface BarChartConfig {
   width: number
-  margins: {
-    top: number
-    bottom: number
-    left: number
-    right: number
-  }
+  margins: ChartMargin
+  xTitle: string
+  displayXAxisTick: boolean
   fontColor: string
 }

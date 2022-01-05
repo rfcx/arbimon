@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest'
+
 import { firstDiffDigit } from './index'
 
 describe('firstDiffDigit', () => {

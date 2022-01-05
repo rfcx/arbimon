@@ -1,6 +1,6 @@
 <template>
   <h2 class="text-white text-xl">
-    Detected species
+    Species detected
   </h2>
   <no-data-panel
     v-if="!hasTableData"
@@ -16,7 +16,7 @@
           <th
             v-for="(item, idx) in tableHeader"
             :key="'species-table-header-' + item.title"
-            class="font-bold capitalize p-2 bg-mirage-grey select-none"
+            class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
             :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer': item.key }"
             @click="sort(item.key)"
           >
@@ -44,29 +44,49 @@
       </thead>
       <tbody>
         <tr
-          v-for="row in pageData"
-          :key="'species-table-row-' + row.scientificName"
+          v-for="(row) in pageData"
+          :key="'species-table-row-' + row.scientificName + row.datasetIdx"
         >
-          <td class="p-2">
-            <router-link
-              :to="{ name: 'activity_patterns', params: { speciesSlug: getSpeciesSlug(row.scientificName) }}"
-              class="text-subtle hover:(underline text-white)"
-            >
-              <span class="text-white italic">{{ row.scientificName }}</span>
-              <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
-            </router-link>
+          <td class="pt-2 px-1 flex">
+            <div v-if="tableData.length > 1">
+              <span
+                class="border-l-4 pl-1"
+                :style="`border-color:${row.color}`"
+              />
+            </div>
+            <div>
+              <router-link
+                :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
+                class="text-subtle hover:(underline text-white)"
+              >
+                <span class="text-white italic">{{ row.scientificName }}</span>
+                <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
+                <p
+                  v-if="row.commonName"
+                  class="text-xs"
+                >
+                  {{ row.commonName }}
+                </p>
+                <p
+                  v-else
+                  class="invisible text-xs"
+                >
+                  Unknown
+                </p>
+              </router-link>
+            </div>
           </td>
           <td class="p-2">
             {{ row.taxon }}
           </td>
           <td class="p-2 text-center">
-            {{ row.detectionCount }}
+            {{ getFormattedNumber(row.detectionCount) }}
           </td>
           <td class="p-2 text-center">
             {{ getThreeDecimalNumber(row.detectionFrequency) }}
           </td>
           <td class="p-2 text-center">
-            {{ row.occupiedSites }}
+            {{ getFormattedNumber(row.occupiedSites) }}
           </td>
           <td class="p-2 text-center">
             {{ getThreeDecimalNumber(row.occupancyNaive) }}
@@ -81,7 +101,7 @@
           </td>
         </tr>
         <tr
-          class="h-1.5 border-b-1 border-subtle"
+          class="h-2 border-b-1 border-subtle"
         >
           <td :colspan="tableHeader.length" />
         </tr>
@@ -89,7 +109,7 @@
     </table>
     <div class="flex justify-between items-center mt-3">
       <div class="text-subtle px-2">
-        Total: {{ tableData.length }} species
+        Total: {{ totalSpecies }} species
       </div>
       <div class="flex justify-end items-center">
         <div>

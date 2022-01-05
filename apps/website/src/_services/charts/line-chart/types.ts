@@ -1,13 +1,13 @@
+import { ChartMargin } from '../types'
+
 export interface LineChartConfig {
   height: number
   width: number
-  margins: {
-    top: number
-    bottom: number
-    left: number
-    right: number
-  }
+  margins: ChartMargin
+  xTitle: string
+  yTitle: string
   xBounds?: [number, number]
+  xLabelFormatter?: (val: number) => string
 }
 
 export interface LineChartSeries {

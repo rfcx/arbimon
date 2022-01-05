@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 
 export type FilterableProperty = 'taxon' | 'species'
 
@@ -9,9 +9,14 @@ export interface FilterPropertyEquals {
   value: string
 }
 
+export interface SiteGroup {
+  label: string
+  value: Site[]
+}
+
 // TODO 93 - Remove colors & simplify
 export interface ComparisonFilter {
-  sites: Site[]
+  sites: SiteGroup[]
   startDate: Dayjs
   endDate: Dayjs
   otherFilters: FilterPropertyEquals[]
@@ -24,7 +29,7 @@ export interface ColoredFilter extends ComparisonFilter {
 // TODO - Move this to common
 export interface DatasetParameters {
   sites: Site[]
-  start: string
-  end: string
+  startDate: Dayjs
+  endDate: Dayjs
   otherFilters: FilterPropertyEquals[] // TODO - Limit this to UI filters; expand it explicitly for the API
 }

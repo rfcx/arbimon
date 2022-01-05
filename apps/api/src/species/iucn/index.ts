@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 
-import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from '@rfcx-bio/common/api-bio-types/iucn'
+import { BioIucnSpeciesRequest, BioIucnSpeciesResponse } from '@rfcx-bio/common/api-bio/species/species-iucn'
 
 import { env } from '../../_services/env'
 import { ApiMissingParam, ApiNotFoundError, ApiServerError } from '../../_services/errors'

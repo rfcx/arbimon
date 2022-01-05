@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import { dirname, resolve } from 'path'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio-types/species'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio/species/species'
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 
 import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn'
@@ -37,7 +37,7 @@ async function main (): Promise<void> {
   // Write output
   const json = JSON.stringify(speciesOutput, null, 2)
   fs.writeFileSync(outputFilePath, json, 'utf8')
-  console.log(`Finished writing to ${outputFilePath}`)
+  console.info(`Finished writing to ${outputFilePath}`)
 }
 
 async function updateSpeciesData (species: Species): Promise<Species> {
@@ -50,7 +50,7 @@ async function updateSpeciesData (species: Species): Promise<Species> {
   ])
 
   // Merge data
-  const informationIucn = iucnData?.habitat ?? iucnData?.rationale ?? iucnData?.taxonomicnotes
+  const informationIucn = iucnData?.habitat
   const information = [
     ...(informationIucn ? [{ description: informationIucn ?? '', sourceType: SPECIES_SOURCE_IUCN, sourceUrl: getSpeciesRedirectLink(species.scientificName), sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)' }] : []),
     ...(wikiData?.content ? [{ description: wikiData.content, sourceType: SPECIES_SOURCE_WIKI, sourceUrl: wikiData.contentUrls.desktop }] : [])

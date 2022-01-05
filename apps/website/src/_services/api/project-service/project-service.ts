@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios'
 
-import { Project } from '@rfcx-bio/common/api-bio-types/projects'
+import { Project } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { apiClient } from '..'
 
@@ -20,7 +20,11 @@ const toProject = (data: CoreApiProject): Project => {
     id: data.id,
     name: data.name,
     isPublic: data.is_public,
-    externalId: data.external_id
+    externalId: data.external_id,
+    geoBounds: [
+      { lon: -65.24505, lat: 18.51375 },
+      { lon: -67.94469784, lat: 17.93168 }
+    ]
   }
 }
 

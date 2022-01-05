@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { generateHorizontalLegend, getLegendGroupNames } from '..'
+import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { BarChartConfig, GroupedBarChartItem } from './types'
 
 const GROUP_MARGIN = 20
@@ -8,10 +8,10 @@ const BAR_MARGIN = 2
 
 export interface GeneratedHorizontalChart {
   svg: d3.Selection<SVGSVGElement, undefined, null, undefined>
-  chartHeight: number
+  fullHeight: number
 }
 
-export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig): GeneratedHorizontalChart => {
+export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfig, xTitleDistance = 25): GeneratedHorizontalChart => {
   const dataLength = data.length
   const dataSeriesLength = dataLength > 0 ? data[0].series.length : 0
 
@@ -34,7 +34,7 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     .tickFormat((d, i) => {
       return d.valueOf() % 1 !== 0 ? '' : d3.format('d')(d)
     })
-    .tickSize(0)
+    .tickSize(config.displayXAxisTick ? 5 : 0)
     .tickPadding(5)
 
   // y axis scale configuration: d3 calculate the y position rely on data label (domain) and chart height (range)
@@ -53,17 +53,25 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
 
   // adding x scale to the svg by setting
   svg.append('g')
+    .attr('class', 'x-axis-scale')
     .attr('transform', `translate(${config.margins.left}, ${chartHeight})`)
     .call(xAxis)
 
   // adding y scale to the svg by setting
   svg.append('g')
+    .attr('class', 'y-axis-scale')
     .attr('transform', `translate(${config.margins.left}, 0)`)
     .call(yAxis)
 
-  // select all x and y matched `domain` class name and set scale stroke to be none (invisible)
-  svg.selectAll('.domain')
+  // select matched `domain` class name in `y-axis-scale` class name and set scale stroke to be none (invisible)
+  svg.select('.y-axis-scale')
+    .selectAll('.domain')
     .style('stroke', 'none')
+
+  // select matched `domain` class name in `x-axis-scale` class name and set scale stroke to be none (invisible) or current color (visible)
+  svg.select('.x-axis-scale')
+    .selectAll('.domain')
+    .style('stroke', config.displayXAxisTick ? 'currentColor' : 'none')
 
   // select all x and y matched `text` tag name and set text color and font size
   svg.selectAll('text')
@@ -73,6 +81,8 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
   // select all x and y matched `line` tag name and set scale line color to be none (invisible)
   svg.selectAll('line')
     .style('color', 'none')
+
+  generateXAxisTitle(svg, config, chartHeight, xTitleDistance)
 
   // =================== Generate bar group =================
   // select all match `category` class in `g` tag and binding data
@@ -119,7 +129,31 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
       }
     })
 
-  return { svg, chartHeight }
+  return { svg, fullHeight }
+}
+
+export function generateXAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, config: BarChartConfig, height: number, xTitleDistance: number): void {
+  const { width, margins, xTitle } = config
+
+  let mostBottom = 0
+  svg.selectAll('text')
+    .each(function () {
+      const element = d3.select(this)
+      const y = Number(element.attr('y'))
+      if (mostBottom < y) {
+        mostBottom = y
+      }
+    })
+
+  // X Title
+  svg.append('g')
+    .attr('transform', `translate(0, ${height + (xTitleDistance + mostBottom)})`)
+    .append('text')
+    .attr('x', ((width - margins.left) / 2) + margins.left)
+    .attr('y', mostBottom)
+    .attr('fill', 'currentColor')
+    .style('text-anchor', 'middle')
+    .text(xTitle)
 }
 
 export const generateChartInternal = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
@@ -128,11 +162,18 @@ export const generateChartInternal = (data: GroupedBarChartItem[], config: BarCh
 }
 
 export const generateChartExport = (data: GroupedBarChartItem[], config: BarChartConfig): SVGSVGElement | null => {
-  const { svg, chartHeight } = generateChart(data, config)
+  const xTitleDistance = 30
+
+  const { width, margins } = config
+  const newConfig = { ...config, margins: { ...margins, bottom: margins.bottom + xTitleDistance + DATASET_LEGEND_GAP } }
+  const { svg, fullHeight } = generateChart(data, newConfig)
 
   const labels = getLegendGroupNames(data[0].series.length)
   const colors = data[0].series.map(s => s.color)
-  generateHorizontalLegend(config.width, chartHeight, labels, colors, svg)
+
+  const positionX = margins.left - margins.right
+  const positionY = fullHeight - (margins.bottom - DATASET_LEGEND_GAP)
+  generateHorizontalLegend(svg, width, positionX, positionY, labels, colors)
 
   return svg.node()
 }

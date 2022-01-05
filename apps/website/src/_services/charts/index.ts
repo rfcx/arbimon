@@ -2,102 +2,84 @@ import * as d3 from 'd3'
 
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-export interface ChartSVGElement {
-  svg: SVGSVGElement
-  width: number
-  height: number
-}
+export const DATASET_LEGEND_GAP = 10
+const EACH_LEGEND_WIDTH = 100
+const GAP_BETWEEN_CIRCLE_AND_LEGEND = 15
+const GAP_BETWEEN_LEGEND = 20
 
-const LEGEND_MARGIN_TOP = 50
-const LEGEND_ITEM_WIDTH = 100
+export const downloadSvgAsPng = async (svg: SVGSVGElement, filename: string): Promise<void> =>
+  await svgToCanvas(svg)
+    .then(canvasToPngDataUrl)
+    .then(async pngDataUrl => downloadPng(pngDataUrl, filename))
 
-export const exportChartWithElement = async (element: Element, filename: string): Promise<void> => {
-  const chartElement = getChartElement(element)
-  await exportChart(chartElement, filename)
-}
+export const svgToCanvas = async (svg: SVGSVGElement): Promise<HTMLCanvasElement> => {
+  return await new Promise(resolve => {
+    // Extract width/height
+    const width = Number(svg.getAttribute('width')) || svg.viewBox.baseVal.width
+    const height = Number(svg.getAttribute('height')) || svg.viewBox.baseVal.height
 
-const exportChart = async (chartElement: ChartSVGElement, filename: string): Promise<void> => {
-  const data = await svgToPngData(chartElement)
-  downloadPng(data, filename)
-}
+    // Ensure width/height explicitly set (required by Firefox)
+    svg.setAttribute('width', `${width}`)
+    svg.setAttribute('height', `${height}`)
 
-const getChartElement = (element: Element): ChartSVGElement => {
-  const svg = element.getElementsByTagName('svg')[0]
-  const width = Number(svg.getAttribute('width') as string)
-  const height = Number(svg.getAttribute('height') as string)
-  return { svg, width, height }
-}
+    // Convert to Base64 SVG/XML
+    const svgXml = new XMLSerializer().serializeToString(svg)
+    const svgBase64 = 'data:image/svg+xml;base64,' + window.btoa(window.unescape(window.encodeURIComponent(svgXml)))
 
-export const svgToPngData = async (chartElement: ChartSVGElement): Promise<string> => {
-  const serializer = new XMLSerializer()
-  const source = serializer.serializeToString(chartElement.svg)
-
-  const mimetype = 'image/png'
-  const quality = 0.92
-  const svgString = source
-
-  return await new Promise((resolve) => {
-    // Create a non-visible node to render the SVG string
-    const SVGContainer = document.createElement('div')
-    SVGContainer.style.display = 'none'
-    SVGContainer.innerHTML = svgString
-    const svgNode = SVGContainer.firstElementChild as Node
-
+    // Setup canvas
     const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    const svgXml = new XMLSerializer().serializeToString(svgNode)
-    const svgBase64 = 'data:image/svg+xml;base64,' + btoa(svgXml)
+    canvas.width = width
+    canvas.height = height
 
+    // Render image to canvas
     const image = new Image()
-
-    image.onload = function () {
-      const finalWidth = chartElement.width
-      const finalHeight = chartElement.height
-
-      // Define the canvas intrinsic size
-      canvas.width = finalWidth
-      canvas.height = finalHeight
-
-      // Render image in the canvas
-      context?.drawImage(image, 0, 0, finalWidth, finalHeight)
-      // Fullfil and Return the Base64 image
-      const pngDataURL = canvas.toDataURL(mimetype, quality)
-      resolve(pngDataURL)
+    image.onload = () => {
+      canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
+      resolve(canvas)
     }
-
-    // Load the SVG in Base64 to the image
     image.src = svgBase64
   })
 }
+
+export const canvasToPngDataUrl = async (canvas: HTMLCanvasElement, mimetype = 'image/png', quality = 0.92): Promise<string> =>
+  canvas.toDataURL(mimetype, quality)
+
+export const canvasToPngBlob = async (canvas: HTMLCanvasElement, mimetype = 'image/png', quality = 0.92): Promise<Blob> =>
+  await new Promise((resolve, reject) =>
+    canvas.toBlob(
+      (result: Blob | null): void => {
+        if (result) resolve(result)
+        else reject(new Error('Failed to convert canvas to blob'))
+      },
+      mimetype,
+      quality
+    ))
 
 export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()
 }
 
-export function generateHorizontalLegend <T extends d3.BaseType> (width: number, chartHeight: number, labels: string[], colors: string[], svg: d3.Selection<T, undefined, null, undefined>): void {
-  const xStartPosition = ((width - (labels.length * LEGEND_ITEM_WIDTH)) / 2)
-  const yPosition = chartHeight + LEGEND_MARGIN_TOP
+// TODO: Return instead of mutate
+export function generateHorizontalLegend <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, width: number, positionX: number, positionY: number, labels: string[], colors: string[]): void {
+  const startXPosition = ((width / 2) - (((labels.length * EACH_LEGEND_WIDTH) + (labels.length * GAP_BETWEEN_CIRCLE_AND_LEGEND)) / 2))
 
   const legend = svg.selectAll('.legend')
     .data(labels)
     .enter()
     .append('g')
     .attr('class', 'legend')
+    .attr('transform', `translate(${positionX} , ${positionY})`)
 
   legend.append('circle')
-    .attr('cx', (d, i) => (i * LEGEND_ITEM_WIDTH) + xStartPosition)
-    .attr('cy', yPosition)
     .attr('r', 8)
-    .style('fill', (d, i) => colors[i])
+    .attr('cx', (_, i) => (i * (EACH_LEGEND_WIDTH + GAP_BETWEEN_LEGEND)) + startXPosition)
+    .style('fill', (_, i) => colors[i])
 
   legend.append('text')
-    .attr('x', (d, i) => (i * LEGEND_ITEM_WIDTH) + (xStartPosition + 15))
-    .attr('y', yPosition)
-    .attr('dy', '.3em')
     .text(d => d)
-    .attr('fill', '#000000')
-    .style('color', '#000000')
-    .style('font-size', '14px')
+    .attr('x', (_, i) => (i * (EACH_LEGEND_WIDTH + GAP_BETWEEN_LEGEND)) + GAP_BETWEEN_CIRCLE_AND_LEGEND + startXPosition)
+    .attr('dy', '.3em')
+    .attr('fill', 'currentColor')
 }
 
 export function getLegendGroupNames (totalGroup: number): string[] {

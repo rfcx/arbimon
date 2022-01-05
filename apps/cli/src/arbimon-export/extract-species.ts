@@ -1,8 +1,8 @@
 import * as fs from 'fs'
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 import { dirname, resolve } from 'path'
 
-import { SpeciesCall } from '@rfcx-bio/common/api-bio-types/species'
+import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/species'
 import { objectToTs } from '@rfcx-bio/utils/file/json-to-ts'
 import { dateQueryParamify, urlify } from '@rfcx-bio/utils/url-helpers'
 
@@ -12,8 +12,8 @@ import { ArbimonHourlyDetectionSummary, ArbimonSpeciesCallRow, ArbimonSpeciesDat
 const currentDir = dirname(new URL(import.meta.url).pathname)
 const inputDetectionsPath = resolve(currentDir, './raw-detections-by-hour.json')
 const inputSpeciesCallPath = resolve(currentDir, './raw-species-call.json')
-const outputPath = resolve(currentDir, './raw-species.ts')
-const outputTsConstName = 'rawSpecies'
+const outputPath = resolve(currentDir, './raw-species-from-arbimon.ts')
+const outputTsConstName = 'rawSpeciesFromArbimon'
 
 const main = async (): Promise<void> => {
   // Read inputs
@@ -49,18 +49,23 @@ const transformToSpecies = (data: ArbimonHourlyDetectionSummary[]): ArbimonSpeci
 
   // Merge SpeciesCall data
   const speciesCalls: Record<string, SpeciesCall | undefined> = keyBy(transformToMediaURL(JSON.parse(rawSpeciesCallJson)), 'scientificName')
-  return speciesList.map(s => ({ ...s, speciesCall: speciesCalls[s.scientificName] }))
+  return speciesList.map(s => {
+    const speciesCall = speciesCalls[s.scientificName]
+    delete speciesCall?.scientificName
+    return { ...s, speciesCall: speciesCalls[s.scientificName] }
+  })
 }
 
 const transformToMediaURL = (data: ArbimonSpeciesCallRow[]): SpeciesCall[] =>
-  data.map(({ stream_id: streamId, stream_name: siteName, project_name: projectName, songtype: songType, start: recordedAt, end, timezone }) => ({
+  data.map(({ scientific_name: scientificName, stream_id: streamId, stream_name: siteName, project_name: projectName, songtype: songType, start: recordedAt, end, timezone }) => ({
+      scientificName,
       siteName,
       projectName,
       songType,
       recordedAt,
       timezone,
       mediaWavUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_fwav.wav`,
-      mediaSpecUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_fspec.png`
+      mediaSpecUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_d512.512_mtrue_fspec.png`
   }))
 
 await main()
