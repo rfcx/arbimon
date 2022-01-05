@@ -9,7 +9,7 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: testing-ba.rfcx.org
+    - host: testing-bio.rfcx.org
       http:
         paths:
           - path: /
@@ -30,7 +30,7 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: testing-ba.rfcx.org
+    - host: testing-bio.rfcx.org
       http:
         paths:
           - path: /api(/|$)(.*)
