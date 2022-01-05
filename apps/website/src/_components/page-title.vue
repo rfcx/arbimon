@@ -5,33 +5,13 @@
         <h1 class="text-4xl capitalize py-1 mr-2">
           {{ pageTitle }}
         </h1>
-        <el-popover
-          v-if="pageInformation"
-          trigger="hover"
-          :placement="popoverPlacement"
-          popper-class="info-popover"
-        >
-          <div class="break-words">
-            {{ pageInformation }}
-            <router-link
-              v-if="topic"
-              :to="learnmoreRoute"
-              class="text-subtle hover:(underline text-white cursor-pointer)"
-            >
-              Learn more
-            </router-link>
-          </div>
-          <template #reference>
-            <icon-fas-info-circle />
-          </template>
-        </el-popover>
       </div>
-      <p class="text-subtle text-sm">
-        {{ pageSubtitle }}
+      <p class="text-sm">
+        {{ pageSubtitle }} ·
         <router-link
           v-if="topic"
           :to="learnmoreRoute"
-          class="text-subtle hover:(underline text-white cursor-pointer)"
+          class="text-subtle inline hover:(underline text-white cursor-pointer)"
         >
           Learn more
         </router-link>
