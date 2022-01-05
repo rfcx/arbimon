@@ -2,11 +2,9 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { downloadPng } from '@rfcx-bio/utils/file'
-
 import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
-import { svgToPng } from '~/charts'
+import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
@@ -64,10 +62,9 @@ export default class ActivityPatternsByTime extends Vue {
   async downloadChart (): Promise<void> {
     const margins = { ...this.config.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
-    const svg = await generateChartExport(this.datasetsForSelectedBucket, exportConfig)
+    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
-    const png = await svgToPng({ svg, ...exportConfig })
-    downloadPng(png, getExportGroupName(`${this.domId}-${this.selectedBucket}`)) // TODO 107 - Better filename
+    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }
