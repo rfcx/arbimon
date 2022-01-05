@@ -85,14 +85,14 @@ The following must be true to consider the Sprint "DONE":
 There are 3 shared deployments:
 
 - testing: for the DT to test features when deployed & collaborate
-  - https://testing-ba.rfcx.org
-  - https://testing-ba-api.rfcx.org
+  - https://testing-bio.rfcx.org
+  - https://testing-bio.rfcx.org/api
 - staging: for stakeholders to review & give early feedback
-  - https://staging-ba.rfcx.org
-  - https://staging-ba-api.rfcx.org
+  - https://staging-bio.rfcx.org
+  - https://staging-bio.rfcx.org/api
 - production: real public project
-  - https://ba.rfcx.org
-  - https://ba-api.rfcx.org
+  - https://bio.rfcx.org
+  - https://bio.rfcx.org/api
 
 ### _Testing_
 
