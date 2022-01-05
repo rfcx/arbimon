@@ -5,7 +5,7 @@ export const rawSpecies: Species[] = [
     speciesId: 22864,
     speciesSlug: 'accipiter-striatus-venator',
     scientificName: 'Accipiter striatus venator',
-    commonName: '',
+    commonName: 'Puerto Rican sharp-shinned hawk',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -566,7 +566,7 @@ export const rawSpecies: Species[] = [
     speciesId: 22987,
     speciesSlug: 'buteo-platypterus-brunnescens',
     scientificName: 'Buteo platypterus brunnescens',
-    commonName: '',
+    commonName: 'Puerto Rican broad-winged hawk"',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -599,7 +599,7 @@ export const rawSpecies: Species[] = [
     speciesId: 889,
     speciesSlug: 'butorides-virescens',
     scientificName: 'Butorides virescens',
-    commonName: '',
+    commonName: 'Green heron',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1700,7 +1700,7 @@ export const rawSpecies: Species[] = [
     speciesId: 43907,
     speciesSlug: 'equus-caballus',
     scientificName: 'Equus caballus',
-    commonName: '',
+    commonName: 'Horse',
     taxonId: 5,
     taxon: 'Mammals',
     externalLinks: [
@@ -1821,7 +1821,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1527,
     speciesSlug: 'fulica-caribaea',
     scientificName: 'Fulica caribaea',
-    commonName: '',
+    commonName: 'American coot',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1898,7 +1898,7 @@ export const rawSpecies: Species[] = [
     speciesId: 16766,
     speciesSlug: 'gallus-gallus-domesticus',
     scientificName: 'Gallus gallus domesticus',
-    commonName: '',
+    commonName: 'Chicken',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -1975,7 +1975,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1604,
     speciesSlug: 'himantopus-mexicanus',
     scientificName: 'Himantopus mexicanus',
-    commonName: '',
+    commonName: 'Black-necked stilt',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2228,7 +2228,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10153,
     speciesSlug: 'loxigilla-portoricensis',
     scientificName: 'Loxigilla portoricensis',
-    commonName: '',
+    commonName: 'Puerto Rican bullfinch',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -2956,7 +2956,7 @@ export const rawSpecies: Species[] = [
     speciesId: 1510,
     speciesSlug: 'porphyrio-martinica',
     scientificName: 'Porphyrio martinica',
-    commonName: '',
+    commonName: 'American purple gallinule',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
@@ -3605,7 +3605,7 @@ export const rawSpecies: Species[] = [
     speciesId: 10150,
     speciesSlug: 'tiaris-bicolor',
     scientificName: 'Tiaris bicolor',
-    commonName: '',
+    commonName: 'Black-faced grassquit',
     taxonId: 1,
     taxon: 'Birds',
     externalLinks: [
