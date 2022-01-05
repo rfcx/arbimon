@@ -1,7 +1,7 @@
 <template>
   <page-title
     page-title="Activity Overview"
-    page-information="This page will allow you to explore how vocal activity patterns of entire bird, amphibians, insects or mammal communities change through time and space."
+    page-subtitle="Temporal and spatial activity trends for all species"
     :topic="infoTopic"
   >
     <dropdown-menu>

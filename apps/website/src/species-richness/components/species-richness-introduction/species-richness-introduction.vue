@@ -1,7 +1,7 @@
 <template>
   <page-title
     page-title="Species Richness"
-    page-information="This page will allow you to explore how the number of detected species changes over time and across the landscape."
+    page-subtitle="Diversity of detected species"
     :topic="infoTopic"
   >
     <dropdown-menu>
