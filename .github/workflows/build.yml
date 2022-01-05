@@ -162,8 +162,8 @@ jobs:
         with:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
-          notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
-          message_format: '{emoji} *FAILED* @ <{run_url}|${{ github.event.head_commit.message }}>'
+          notification_title: '{emoji} CI: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
+          message_format: '*FAILED* @ <{run_url}|${{ github.event.head_commit.message }}>'
           footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
@@ -178,8 +178,8 @@ jobs:
         with:
           notify_when: 'success'
           status: ${{ job.status }}
-          notification_title: '*Biodiversity* - CI for *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
-          message_format: '{emoji} *SUCCESS* @ <{run_url}|${{ github.event.head_commit.message }}> - ${{ github.event.head_commit.author.name }} fixed the build!!'
+          notification_title: '{emoji} CI: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
+          message_format: '*SUCCESS* @ <{run_url}|${{ github.event.head_commit.message }}> - ${{ github.event.head_commit.author.name }} fixed the build!!'
           footer: 'Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | Build: ${{ steps.build.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
