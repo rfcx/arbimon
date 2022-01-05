@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio-types/species'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
 
 import { getAllSpecies } from '~/api/species-service'
 
@@ -24,7 +24,7 @@ export default class SpeciesSelector extends Vue {
   get filteredSpecies (): SpeciesLight[] {
     if (!this.currentSpeciesQuery) return this.allSpecies
     const query = this.currentSpeciesQuery.trim().toLowerCase()
-    return this.allSpecies.filter(s => s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)))
+    return this.allSpecies.filter(s => s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) || s.commonName.toLowerCase().split(' ').some(w => w.startsWith(query)))
   }
 
   override async created (): Promise<void> {

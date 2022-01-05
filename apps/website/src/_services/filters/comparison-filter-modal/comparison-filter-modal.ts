@@ -2,11 +2,12 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { ComparisonFilter, FilterPropertyEquals } from '~/filters'
+import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
 import { BiodiversityStore } from '~/store'
+import DateRangePicker from './date-range-picker/date-range-picker.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
@@ -14,16 +15,12 @@ interface FilterMenuItem {
   name: string
 }
 
-interface SiteCheckbox {
-  site: Site
-  check: boolean
-}
-
 const DATE_FORMAT = 'YYYY-MM-DD'
 
 @Options({
   components: {
     OnClickOutside,
+    DateRangePicker,
     FilterTaxon
   }
 })
@@ -35,7 +32,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
     return {
-      sites: this.selectedSites,
+      sites: this.selectedSiteGroups,
       startDate: dayjs.utc(this.startDate),
       endDate: dayjs.utc(this.endDate),
       otherFilters: this.otherFilters
@@ -44,12 +41,19 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitClose (): boolean { return false }
 
+  // Tabs
   currentActiveMenuId = ''
-  selectedSites: Site[] = []
-  siteCheckboxItems: SiteCheckbox[] = []
+
+  // Sites
+  inputFilter = ''
+  selectedSiteGroups: SiteGroup[] = []
+
+  // Dates
   readonly today = dayjs().format(DATE_FORMAT)
   startDate: string | null = dayjs().format(DATE_FORMAT)
   endDate: string | null = dayjs().format(DATE_FORMAT)
+
+  // Other filters
   otherFilters: FilterPropertyEquals[] = []
 
   get menus (): FilterMenuItem[] {
@@ -61,11 +65,26 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   get isSelectedAllSites (): boolean {
-    return this.selectedSites.length === 0
+    return this.selectedSiteGroups.length === 0
   }
 
   get selectedTaxons (): string[] {
     return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
+  }
+
+  get optionAllMatchingFilter (): SiteGroup | undefined {
+    return this.inputFilter && this.filtered.length > 0
+      ? {
+        label: `${this.inputFilter}*`,
+        value: this.filtered
+      }
+      : undefined
+  }
+
+  get filtered (): Site[] {
+    const prefix = this.inputFilter.toLocaleLowerCase()
+    return this.store.sites
+      .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
   }
 
   override mounted (): void {
@@ -80,19 +99,44 @@ export default class ComparisonFilterModalComponent extends Vue {
     }
   }
 
-  setDefaultSelectedSites (): void {
-    this.setDefaultSiteCheckboxItems()
-    const selectedSites = this.initialValues?.sites ?? []
-    const selectedSiteIds = new Set(selectedSites.map(s => s.siteId))
-    this.selectedSites = this.siteCheckboxItems
-      .filter(cb => selectedSiteIds.has(cb.site.siteId))
-      .map(cb => { cb.check = true; return cb.site })
+  onSetSelectorPlaceHolder (): void {
+    const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
+    const searchSelector = document.querySelector('.search-select')
+    const getClass = searchSelector?.querySelector('.el-input--suffix')
+    const isFocusSiteSelector = getClass?.classList.contains('is-focus') ?? false
+
+    if (isFocusSiteSelector ?? false) {
+      inputEl.removeAttribute('placeholder')
+      inputEl.setAttribute('placeholder', 'Type to filter sites')
+    }
   }
 
-  setDefaultSiteCheckboxItems (): void {
-    this.siteCheckboxItems = [...this.store.sites]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(site => ({ site, check: false }))
+  onRemoveSelectorPlaceHolder (): void {
+    const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
+    inputEl.removeAttribute('placeholder')
+  }
+
+  onFilterType (query: string): void {
+    this.inputFilter = query
+  }
+
+  onSiteSelected (item: SiteGroup): void {
+    if (this.selectedSiteGroups.find(sg => sg.label === item.label)) return
+    this.selectedSiteGroups.push(item)
+  }
+
+  onDateChange (dateRange: [Date, Date]): void {
+    this.startDate = dayjs(dateRange[0]).format(DATE_FORMAT)
+    this.endDate = dayjs(dateRange[1]).format(DATE_FORMAT)
+  }
+
+  onRemoveSiteTags (item: SiteGroup): void {
+    const index = this.selectedSiteGroups.findIndex(sg => sg.label === item.label)
+    this.selectedSiteGroups.splice(index, 1)
+  }
+
+  setDefaultSelectedSites (): void {
+    this.selectedSiteGroups = this.initialValues?.sites ?? []
   }
 
   setActiveMenuId (id: string): void {
@@ -104,19 +148,7 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   selectAllSites (): void {
-    this.selectedSites = []
-    this.setDefaultSiteCheckboxItems()
-  }
-
-  updateSelectedSites (item: SiteCheckbox): void {
-    const siteIdx = this.selectedSites.findIndex(s => s.siteId === item.site.siteId)
-    if (siteIdx === -1) {
-      this.selectedSites.push(item.site)
-      item.check = true
-    } else {
-      this.selectedSites.splice(siteIdx, 1)
-      item.check = false
-    }
+    this.selectedSiteGroups = []
   }
 
   updateSelectedTaxons (otherFilters: FilterPropertyEquals[]): void {

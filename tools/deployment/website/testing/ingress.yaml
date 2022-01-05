@@ -2,20 +2,39 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
-    nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
-    nginx.ingress.kubernetes.io/enable-cors: 'false'
   name: biodiversity-website-ingress
   namespace: testing
   labels:
     app: biodiversity-website
 spec:
   rules:
-    - host: testing-ba.rfcx.org
+    - host: testing-bio.rfcx.org
       http:
         paths:
-          - backend:
+          - path: /
+            pathType: Prefix
+            backend:
               serviceName: biodiversity-website-service
+              servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: biodiversity-website-with-api-ingress
+  namespace: testing
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+    - host: testing-bio.rfcx.org
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: biodiversity-api-service
               servicePort: 80

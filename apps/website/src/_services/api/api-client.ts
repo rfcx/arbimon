@@ -31,8 +31,8 @@ class ApiClient {
     return await this.request<ResponseBody>({ url })
   }
 
-  async getOrUndefined <ResponseBody> (url: string): Promise<ResponseBody | undefined> {
-    return await this.requestOrUndefined<ResponseBody>({ url })
+  async getOrUndefined <ResponseBody> (url: string, config?: AxiosRequestConfig): Promise<ResponseBody | undefined> {
+    return await this.requestOrUndefined<ResponseBody>({ url, ...config })
   }
 }
 

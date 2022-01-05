@@ -26,7 +26,12 @@
         @emit-show-labels-toggle="propagateToggleLabels"
       />
     </div>
+    <no-data-panel
+      v-if="!hasData"
+      class="h-32 mt-2"
+    />
     <div
+      v-show="hasData"
       class="grid gap-2 mt-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
@@ -36,11 +41,14 @@
         :dataset="dataset"
         :data-key="selectedType"
         :get-popup-html="getPopupHtml"
+        :map-export-name="mapExportName(dataset, selectedType, idx)"
         :map-id="`activity-patterns-by-location-${idx}`"
-        :map-config="config"
+        :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+        :circle-formatter="circleFormatter"
         :map-style="mapStyle"
-        :map-export-name="mapExportName(dataset, selectedType)"
         :is-show-labels="isShowLabels"
+        :circle-style-non-zero="circleStyles[idx]"
+        :map-move-event="mapMoveEvent"
         class="w-full"
         @emit-map-moved="propagateMapMove"
       />

@@ -2,10 +2,14 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { TimeDataset } from '@/activity-patterns/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
+import { TimeDataset } from '@/activity-overview/types'
 import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
-import { TimeBucket } from '~/api/species-richness-service'
-import { LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { downloadSvgAsPng } from '~/charts'
+import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { getExportGroupName } from '~/filters'
+import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
 
@@ -15,12 +19,11 @@ interface DropDownOption {
   value: ActivityOverviewDataByTimeType
 }
 
-// TODO ???: Reduce and move to somewhere for center use
-const BUCKETS_TO_X_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {
-  hour: [0, 23],
-  day: [1, 31],
-  month: [1, 12],
-  quarter: [1, 4]
+const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
+
+const DATASET_LABELS = {
+  [ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency]: 'Detection Frequency',
+  [ACTIVITY_OVERVIEW_TIME_KEYS.detection]: 'Detections (raw)'
 }
 
 @Options({
@@ -32,21 +35,25 @@ export default class ActivityOverviewByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: TimeDataset[]
 
-  selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detection
+  selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
-    { label: 'Detections', value: ACTIVITY_OVERVIEW_TIME_KEYS.detection },
-    { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
-    { label: 'Naive occupancy', value: ACTIVITY_OVERVIEW_TIME_KEYS.occupancy }
+    { label: DATASET_LABELS[ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency], value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
+    { label: DATASET_LABELS[ACTIVITY_OVERVIEW_TIME_KEYS.detection], value: ACTIVITY_OVERVIEW_TIME_KEYS.detection }
   ]
 
-  buckets: TimeBucket[] = ['hour', 'day', 'month', 'year', 'quarter']
-  selectedBucket: TimeBucket = 'hour'
+  selectedBucket: TimeBucket = 'hourOfDay'
+  buckets: Record<TimeBucket, string> = TIME_BUCKET_LABELS
 
   get config (): Omit<LineChartConfig, 'width'> {
     return {
       height: 450,
-      margins: { top: 20, right: 30, bottom: 30, left: 40 },
-      xBounds: BUCKETS_TO_X_BOUNDS[this.selectedBucket]
+      margins: { top: 20, right: 10, bottom: 30, left: 40 },
+      xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
+      yTitle: DATASET_LABELS[this.selectedType],
+      xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
+      xLabelFormatter: this.selectedBucket === 'dateSeries'
+        ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
+        : TIME_LABEL_FORMATTERS[this.selectedBucket]
     }
   }
 
@@ -56,5 +63,14 @@ export default class ActivityOverviewByTime extends Vue {
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
+  }
+
+  async downloadChart (): Promise<void> {
+    const margins = { ...this.config.margins, bottom: 80, left: 80 }
+    const exportConfig = { ...this.config, margins, width: 1024, height: 576 }
+    const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
+    if (!svg) return
+
+    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
   }
 }

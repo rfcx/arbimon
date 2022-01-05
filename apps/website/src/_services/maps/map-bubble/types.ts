@@ -1,9 +1,9 @@
 import { Dayjs } from 'dayjs'
 import { LngLatLike } from 'mapbox-gl'
 
-import { Site } from '@rfcx-bio/common/api-bio-types/sites'
+import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 
-export interface MapConfig {
+export interface MapMoveEvent {
   sourceMapId: string
   center: LngLatLike
   zoom: number
@@ -13,7 +13,6 @@ export interface MapDataSet {
   startDate: Dayjs
   endDate: Dayjs
   sites: Site[]
-  color: string
   data: MapSiteData[]
   maxValues: { [key: string]: number }
   title?: string

@@ -1,12 +1,18 @@
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
 import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { getExportFilterName } from '~/filters'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapConfig, MapDataSet } from '~/maps/map-bubble'
+import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
+import { CircleStyle } from '~/maps/utils/circle-style/types'
+import { BiodiversityStore } from '~/store'
 
 interface DropdownOption {
   label: string
@@ -22,24 +28,21 @@ const DEFAULT_PREFIX = 'Overview-By-Site'
   }
 })
 export default class ActivityOverviewByLocation extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   isShowLabels = true
   mapStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
-  selectedDatasetType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
+  selectedType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
   datasetTypes: DropdownOption[] = [
-    { label: 'Detection', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
-    { label: 'Detection frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
-    { label: 'Naive occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
+    { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
+    { label: 'Detections (raw)', value: ACTIVITY_OVERVIEW_MAP_KEYS.detection },
+    { label: 'Naive Occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
   ]
 
-  config: MapConfig = {
-    sourceMapId: '',
-    center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
-    zoom: 9
-  }
+  mapMoveEvent: MapMoveEvent | null = null
 
   get hasNoData (): boolean {
     return this.datasets.length === 0
@@ -52,12 +55,24 @@ export default class ActivityOverviewByLocation extends Vue {
     }
   }
 
-  propagateMapMove (config: MapConfig): void { this.config = config }
+  get circleFormatter (): CircleFormatter {
+    return this.selectedType === ACTIVITY_OVERVIEW_MAP_KEYS.occupancy
+      ? new CircleFormatterBinary()
+      : new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })
+  }
+
+  get circleStyles (): CircleStyle[] {
+    return this.datasets.map((d, idx) => ({ ...DEFAULT_NON_ZERO_STYLE, color: this.store.datasetColors[idx] }))
+  }
+
+  propagateMapMove (mapMoveEvent: MapMoveEvent): void { this.mapMoveEvent = mapMoveEvent }
   propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
-  mapExportName (dataset: MapDataSet, type: string): string {
+  mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
-    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, undefined, sites)
+    const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, datasetIndex, undefined, siteGroup)
   }
 }
