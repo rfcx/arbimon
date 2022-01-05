@@ -1,8 +1,10 @@
 import { rawDetections } from '@rfcx-bio/common/mock-data'
+import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-import { FileData, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/filters'
+import { getCSVDatasetMetadata } from '~/export'
 
 export interface ReportData {
   species: string
@@ -22,13 +24,16 @@ export const downloadCsvReports = async (filters: ColoredFilter[], reportPrefix:
   const files = await Promise.all(
     filters.map(async (filter, idx) => await getCsvFile(filter, reportPrefix, exportDateTime, idx)))
 
+  const metadataFile = await getCSVDatasetMetadata(filters)
+  files.push(metadataFile)
+
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
   await zipAndDownload(files, groupName)
 }
 
-const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string, datasetIndex: number): Promise<FileData> => {
+const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters }: ColoredFilter, reportPrefix: string, exportTime: string, datasetIndex: number): Promise<JsZipFile> => {
   const sites = siteGroups.flatMap(sg => sg.value)
-  const taxonFilter = otherFilters.map(f => f.value)
+  const taxonFilter = otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
   const filename = getExportFilterName(startDate, endDate, reportPrefix, datasetIndex, exportTime, siteGroups, taxonFilter) + '.csv'
 
   const dataAsJson = await getCsvForDataset({ startDate, endDate, sites, otherFilters })
@@ -39,14 +44,15 @@ const getCsvFile = async ({ startDate, endDate, sites: siteGroups, otherFilters 
 
 const getCsvForDataset = async (dataset: DatasetParameters): Promise<ReportData[]> => {
   return (await filterMocksByParameters(rawDetections, dataset))
-    .map(({ scientific_name: species, name: site, lat: latitude, lon: longitude, alt: altitude, date, hour }) => {
+    .map(({ species_id: speciesId, scientific_name: species, name: site, lat: latitude, lon: longitude, alt: altitude, date, hour }) => {
       const newDate = dayjs.utc(date)
+      const siteData = criticallyEndangeredSpeciesIds.has(speciesId)
+        ? { site: 'redacted', latitude: 0, longitude: 0, altitude: 0 }
+        : { site, latitude, longitude, altitude }
+
       return {
         species,
-        site,
-        latitude,
-        longitude,
-        altitude,
+        ...siteData,
         day: newDate.format('D'),
         month: newDate.format('M'),
         year: newDate.format('YYYY'),

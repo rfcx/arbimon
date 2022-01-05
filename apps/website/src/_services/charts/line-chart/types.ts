@@ -7,7 +7,7 @@ export interface LineChartConfig {
   xTitle: string
   yTitle: string
   xBounds?: [number, number]
-  xLabels?: string[]
+  xLabelFormatter?: (val: number) => string
 }
 
 export interface LineChartSeries {

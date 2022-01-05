@@ -1,8 +1,8 @@
 <template>
   <div v-if="store.selectedProject">
-    <div class="grid gap-4 grid-cols-8">
+    <div class="grid gap-4 grid-cols-5 lg:grid-cols-3 xl:grid-cols-4">
       <!-- Left content -->
-      <div class="col-span-6">
+      <div class="col-span-3 lg:col-span-2 xl:col-span-3">
         <dashboard-metrics
           v-if="generated"
           :metrics="generated"
@@ -18,21 +18,31 @@
             {{ tab.label }}
           </p>
         </div>
-        <div class="grid gap-2 mt-2 xl:grid-cols-2">
+        <div class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
           <map-bubble-component
             :dataset="mapDataset"
             data-key="refactorThis"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
-            color="#EFEFEF"
             :map-id="`dashboard-by-site`"
             :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+            :circle-formatter="circleFormatter"
+            :map-height="tabHeight"
+            :circle-style-non-zero="circleStyle"
             class="w-full"
           />
-          <dashboard-line-chart
-            :time-data="lineChartData"
-            :dataset-type="selectedTab"
-          />
+          <div class="relative">
+            <line-chart-component
+              dom-id="dashboard-line-chart"
+              :config="lineChartConfig"
+              :datasets="lineChartSeries"
+            />
+            <export-button
+              v-if="lineChartSeries.length > 0"
+              class="absolute top-2 right-2"
+              @click="downloadLineChart"
+            />
+          </div>
         </div>
         <page-title
           class="mt-5"
@@ -46,7 +56,7 @@
         />
       </div>
       <!-- Right content -->
-      <div class="col-span-2">
+      <div class="col-span-2 lg:col-span-1">
         <dashboard-sidebar-title
           v-if="generated?.richnessByTaxon && generated?.speciesCount"
           title="Richness"
@@ -61,14 +71,14 @@
         />
         <dashboard-sidebar-title
           title="Highlighted species"
-          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+          :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
         />
         <dashboard-highlighted-species
           :species="speciesHighlighted"
         />
         <dashboard-sidebar-title
           title="Threatened species"
-          :route="{ name: ROUTE_NAMES.activityOverview, params: { projectId: store.selectedProject?.id } }"
+          :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
         />
         <horizontal-stacked-distribution
           v-if="generated?.richnessByExtinction && generated?.speciesCount"
@@ -84,7 +94,7 @@
     </div>
     <p class="text-center opacity-50">
       <!-- TODO: Update after have api -->
-      Last generated/synced at: November 18, 2021 16:03
+      Last generated/synced at: December 28, 2021 03:00PM (UTC)
     </p>
   </div>
 </template>

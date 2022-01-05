@@ -5,14 +5,19 @@ secrets.yaml
 # Deps
 node_modules
 
-# Build, lint
+# Build
 dist
 dist-ssr
 lib
 *.tgz
 *.tsbuildinfo
+
+# Lint
 .eslintcache
 .stylelintcache
+
+# Test
+**/coverage/
 
 # Logs
 *.log

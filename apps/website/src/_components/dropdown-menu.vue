@@ -7,7 +7,11 @@
       class="btn btn-icon"
       @click="isDropdownOpen = !isDropdownOpen"
     >
-      <icon-fas-ellipsis-v />
+      <div class="flex items-center px-1">
+        <slot name="label">
+          <icon-fas-ellipsis-v />
+        </slot>
+      </div>
     </button>
     <div
       v-if="isDropdownOpen"

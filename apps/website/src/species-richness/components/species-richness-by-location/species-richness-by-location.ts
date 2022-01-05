@@ -7,6 +7,10 @@ import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
+import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { BiodiversityStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-By-Site'
@@ -27,10 +31,6 @@ export default class SpeciesRichnessByLocation extends Vue {
 
   mapMoveEvent: MapMoveEvent | null = null
 
-  get mapDataKey (): string {
-    return TAXONOMY_CLASS_ALL.name
-  }
-
   get hasData (): boolean {
     return this.datasets.length > 0
   }
@@ -40,6 +40,18 @@ export default class SpeciesRichnessByLocation extends Vue {
       case 1: return 1
       default: return 2
     }
+  }
+
+  get mapDataKey (): string {
+    return TAXONOMY_CLASS_ALL.name
+  }
+
+  get circleFormatter (): CircleFormatter {
+    return new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.mapDataKey] })
+  }
+
+  get circleStyles (): CircleStyle[] {
+    return this.datasets.map((d, idx) => ({ ...DEFAULT_NON_ZERO_STYLE, color: this.store.datasetColors[idx] }))
   }
 
   propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }

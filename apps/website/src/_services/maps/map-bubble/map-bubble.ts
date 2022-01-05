@@ -3,15 +3,17 @@ import { CirclePaint, GeoJSONSource, LngLatBounds, LngLatBoundsLike, Map as Mapb
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { downloadPng } from '@rfcx-bio/utils/file'
+import { withFileName, zipAndDownload } from '@rfcx-bio/utils/file'
+import { asPromise } from '@rfcx-bio/utils/fp'
 
-import { exportChartWithElement } from '~/charts'
+import { canvasToPngBlob, svgToCanvas } from '~/charts'
 import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
-import { generateNormalizeMapLegend } from '~/maps/map-legend/export-legend'
+import { generateMapLegend } from '~/maps/map-legend/export-legend'
+import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
+import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
+import { styleToPaint } from '~/maps/utils/circle-style/style-to-paint'
+import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { MapDataSet, MapMoveEvent, MapSiteData } from './types'
-
-const DEFAULT_FILL_COLOR = '#111111'
-const DEFAULT_STROKE_COLOR = '#EEEEEE'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
 const DATA_LAYER_ZERO_ID = 'species-information-zero'
@@ -26,17 +28,20 @@ export default class MapBubbleComponent extends Vue {
   @Prop() getPopupHtml!: (data: MapSiteData, dataKey: string) => string
   @Prop() mapExportName!: string
 
-  // Events
-  @Prop({ default: null }) mapMoveEvent!: MapMoveEvent | null
-
   // Styles
-  @Prop() color!: string
   @Prop() mapId!: string
   @Prop() mapInitialBounds!: LngLatBoundsLike | null
+  @Prop() circleFormatter!: CircleFormatter
+
+  // Styles (optional)
+  @Prop({ default: 576 }) mapHeight!: number
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
-  @Prop({ default: 10.0 }) maxCircleRadiusPixels!: number
-  @Prop({ default: 3.0 }) minCircleRadiusPixels!: number
+  @Prop({ default: DEFAULT_NON_ZERO_STYLE }) circleStyleNonZero!: CircleStyle
+  @Prop({ default: DEFAULT_ZERO_STYLE }) circleStyleZero!: CircleStyle
+
+  // Events
+  @Prop({ default: null }) mapMoveEvent!: MapMoveEvent | null
 
   @Emit() emitMapMoved (): MapMoveEvent {
     return { sourceMapId: this.mapId, center: this.map.getCenter(), zoom: this.map.getZoom() }
@@ -77,15 +82,10 @@ export default class MapBubbleComponent extends Vue {
     this.map.touchPitch.disable()
   }
 
-  @Watch('dataset', { deep: true })
-  onDataChange (): void {
-    this.generateChartNextTick()
-  }
-
-  @Watch('dataKey')
-  onDataKeyChange (): void {
-    this.generateChartNextTick(false)
-  }
+  @Watch('dataset', { deep: true }) onDataChange (): void { this.generateChartNextTick() }
+  @Watch('dataKey') onDataKeyChange (): void { this.generateChartNextTick(false) }
+  @Watch('mapStyle') onStyleChange (currentStyle: string): void { this.map.setStyle(currentStyle) }
+  @Watch('isShowLabels') onShowLabelsChange (): void { this.updateLabels() }
 
   @Watch('mapMoveEvent')
   onSiblingMapMove (): void {
@@ -94,28 +94,6 @@ export default class MapBubbleComponent extends Vue {
     this.map.setCenter(this.mapMoveEvent.center)
     this.map.setZoom(this.mapMoveEvent.zoom)
     this.isSynchronizingMapPosition = false
-  }
-
-  @Watch('mapStyle') onStyleChange (currentStyle: string): void {
-    this.map.setStyle(currentStyle)
-  }
-
-  @Watch('isShowLabels') onShowLabelsChange (): void {
-    this.updateLabels()
-  }
-
-  getRadius (datum: MapSiteData): number {
-    const value = datum.distinctSpecies[this.dataKey]
-
-    // true/false
-    if (typeof value === 'boolean') {
-      return value ? this.maxCircleRadiusPixels : this.minCircleRadiusPixels
-    }
-
-    // numeric continuous
-    const maxValue = this.dataset.maxValues[this.dataKey]
-    const normalizedValue = Math.sqrt(value / maxValue) * this.maxCircleRadiusPixels
-    return normalizedValue
   }
 
   getPopup (datum: MapSiteData): string {
@@ -166,22 +144,9 @@ export default class MapBubbleComponent extends Vue {
   updateDataSourcesAndLayers (): void {
     const [rawNonZero, rawZero] = partition(this.dataset.data, d => d.distinctSpecies[this.dataKey] === true || d.distinctSpecies[this.dataKey] > 0)
 
-    // TODO 41 - Remove source/layer if dataset removed
-    this.updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, {
-      'circle-radius': this.minCircleRadiusPixels,
-      'circle-color': DEFAULT_FILL_COLOR,
-      'circle-stroke-color': DEFAULT_STROKE_COLOR,
-      'circle-stroke-width': 0.65,
-      'circle-opacity': 0.85
-    })
-
-    this.updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, {
-      'circle-radius': ['max', ['get', 'radius'], this.minCircleRadiusPixels],
-      'circle-color': this.color,
-      'circle-stroke-color': DEFAULT_STROKE_COLOR,
-      'circle-stroke-width': 0.65,
-      'circle-opacity': 0.85
-    })
+    const radiusForZero = this.circleFormatter.getRadius(0)
+    this.updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint(this.circleStyleZero), 'circle-radius': radiusForZero })
+    this.updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint(this.circleStyleNonZero), 'circle-radius': ['get', 'radius'] })
   }
 
   updateDataSourceAndLayer (id: string, mapData: MapSiteData[], paint: CirclePaint): void {
@@ -193,11 +158,10 @@ export default class MapBubbleComponent extends Vue {
         geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
         properties: {
           title: datum.siteName,
-          radius: this.getRadius(datum),
+          radius: this.circleFormatter.getRadius(datum.distinctSpecies[this.dataKey] as number),
           popup: this.getPopup(datum)
         }
-      })
-      )
+      }))
     }
 
     // Add source
@@ -231,13 +195,16 @@ export default class MapBubbleComponent extends Vue {
   }
 
   async downloadMapPng (): Promise<void> {
-    const baseFilename = this.mapExportName
-    const img = this.map.getCanvas().toDataURL('image/png')
-    downloadPng(img, baseFilename)
+    const mapBlobPromise = canvasToPngBlob(this.map.getCanvas())
+      .then(withFileName(`${this.mapExportName}.png`))
 
-    const maxValue = this.dataset.maxValues[this.dataKey]
-    const svg = generateNormalizeMapLegend(this.color, maxValue, this.maxCircleRadiusPixels)
-    if (!svg) return
-    await exportChartWithElement(svg, `${baseFilename}-legend`)
+    const legendBlobPromise = asPromise(this.circleFormatter.getLegendEntries(this.circleStyleNonZero, this.circleStyleZero))
+      .then(generateMapLegend)
+      .then(svgToCanvas)
+      .then(canvasToPngBlob)
+      .then(withFileName(`${this.mapExportName}-legend.png`))
+
+    await Promise.all([mapBlobPromise, legendBlobPromise])
+      .then(async files => await zipAndDownload(files, this.mapExportName))
   }
 }

@@ -1,9 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { downloadPng } from '@rfcx-bio/utils/file'
-
-import { svgToPng } from '~/charts'
+import { downloadSvgAsPng } from '~/charts'
 import { BarChartConfig } from '~/charts/horizontal-bar-chart'
 import { clearChart } from '..'
 import { generateChartExport, generateChartInternal } from './functions'
@@ -24,7 +22,7 @@ export default class HorizontalBarChartComponent extends Vue {
     return {
       width: document.getElementById(`wrapper-${this.domId}`)?.clientWidth ?? 0,
       margins: { top: 20, right: 20, bottom: 30, left: 80 },
-      xTitle: 'Species richness',
+      xTitle: 'Number of species',
       displayXAxisTick: false,
       fontColor: 'white'
     }
@@ -54,8 +52,6 @@ export default class HorizontalBarChartComponent extends Vue {
     const svg = generateChartExport(this.chartData, config)
     if (!svg) return
 
-    const { width, height } = svg.viewBox.baseVal
-    const png = await svgToPng({ svg, width, height })
-    downloadPng(png, this.chartExportName)
+    await downloadSvgAsPng(svg, this.chartExportName)
   }
 }

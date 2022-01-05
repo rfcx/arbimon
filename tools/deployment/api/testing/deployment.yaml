@@ -20,11 +20,11 @@ spec:
             - containerPort: 8080
           resources:
             requests:
-              memory: '128Mi'
-              cpu: '0.25'
+              memory: '200Mi'
+              cpu: '200m'
             limits:
-              memory: '256Mi'
-              cpu: '0.5'
+              memory: '400Mi'
+              cpu: '400m'
           envFrom:
             - secretRef:
                 name: biodiversity-api-secrets

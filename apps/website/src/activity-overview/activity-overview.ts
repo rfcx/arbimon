@@ -6,6 +6,7 @@ import ActivityOverviewBySpecies from '@/activity-overview/components/activity-o
 import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { TimeDataset } from '@/activity-overview/types'
+import { INFO_TOPICS } from '@/info/info-page'
 import { ActivityOverviewDataBySpecies, activityOverviewService } from '~/api/activity-overview-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -34,6 +35,10 @@ export default class ActivityOverviewPage extends Vue {
 
   get hasData (): boolean {
     return this.exportDatasets.length > 0
+  }
+
+  get infoTopic (): string {
+    return INFO_TOPICS.activity
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
