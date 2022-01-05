@@ -13,7 +13,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
   // Setup axes
   const xScale = d3.scaleLinear()
     .domain(xBounds)
-    .range([config.margins.left, config.width - config.margins.right])
+    .range([config.margins.left, config.width - config.margins.left - config.margins.right])
 
   const xLabels = config.xLabels
   const xTickFormatter = xLabels ? (val: d3.NumberValue): string => xLabels[val.valueOf()] : d3.format('d')
