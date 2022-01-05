@@ -6,10 +6,9 @@ import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/d
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
-import { svgToPng } from '~/charts'
+import { downloadSvgAsPng } from '~/charts'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
@@ -184,7 +183,6 @@ export default class DashboardPage extends Vue {
     const svg = await generateChartExport(this.lineChartSeries, exportConfig)
     if (!svg) return
 
-    const png = await svgToPng({ svg, ...exportConfig })
-    downloadPng(png, getExportGroupName(`dashboard-${this.selectedTab}-line-chart`))
+    await downloadSvgAsPng(svg, getExportGroupName(`dashboard-${this.selectedTab}-line-chart`))
   }
 }
