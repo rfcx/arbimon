@@ -95,7 +95,7 @@ jobs:
                 "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "testing-ba.rfcx.org",
-                "URL_API": "testing-ba-api.rfcx.org"
+                "URL_API": "testing-ba.rfcx.org/api"
               }
             }
 
