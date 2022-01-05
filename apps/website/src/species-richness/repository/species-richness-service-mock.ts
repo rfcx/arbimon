@@ -44,10 +44,13 @@ const getSpeciesBySite = (detections: MockHourlyDetectionSummary[]): MapSiteData
 }
 
 const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<TimeBucket, Record<number, number>> => {
+  const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
+
   return {
     hourOfDay: mapValues(groupByNumber(detections, d => d.hour), calculateSpeciesRichness),
     dayOfWeek: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).isoWeekday() - 1), calculateSpeciesRichness),
-    monthOfYear: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month()), calculateSpeciesRichness)
+    monthOfYear: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month()), calculateSpeciesRichness),
+    dateSeries: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).startOf('day').unix() / SECONDS_PER_DAY), calculateSpeciesRichness)
   }
 }
 

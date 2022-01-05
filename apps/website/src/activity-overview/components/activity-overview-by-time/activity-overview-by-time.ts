@@ -2,12 +2,14 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { TimeDataset } from '@/activity-overview/types'
 import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
 import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
-import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABELS, TimeBucket } from '~/time-buckets'
+import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
 
@@ -16,6 +18,8 @@ interface DropDownOption {
   label: string
   value: ActivityOverviewDataByTimeType
 }
+
+const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
 
 const DATASET_LABELS = {
   [ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency]: 'Detection Frequency',
@@ -47,7 +51,9 @@ export default class ActivityOverviewByTime extends Vue {
       xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       yTitle: DATASET_LABELS[this.selectedType],
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
-      xLabels: TIME_LABELS[this.selectedBucket]
+      xLabelFormatter: this.selectedBucket === 'dateSeries'
+        ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
+        : TIME_LABEL_FORMATTERS[this.selectedBucket]
     }
   }
 
