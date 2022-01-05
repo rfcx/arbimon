@@ -92,22 +92,29 @@ export class ActivityPatternsService {
     const totalRecordingCount = this.getRecordingCount(totalSummaries)
     const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
-    const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
-    const dayGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
-    const monthGrouped = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
+    const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
+
+    const byHour = groupByNumber(speciesSummaries, d => d.hour)
+    const byDay = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
+    const byMonth = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
+    const byDate = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).startOf('day').unix() / SECONDS_PER_DAY) // each chart tick should be a day not a second
 
     return {
       hourOfDay: {
-        detection: mapValues(hourGrouped, this.calculateDetectionActivity),
-        detectionFrequency: mapValues(hourGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+        detection: mapValues(byHour, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byHour, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
       },
       dayOfWeek: {
-        detection: mapValues(dayGrouped, this.calculateDetectionActivity),
-        detectionFrequency: mapValues(dayGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+        detection: mapValues(byDay, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byDay, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
       },
       monthOfYear: {
-        detection: mapValues(monthGrouped, this.calculateDetectionActivity),
-        detectionFrequency: mapValues(monthGrouped, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+        detection: mapValues(byMonth, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byMonth, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
+      },
+      dateSeries: {
+        detection: mapValues(byDate, this.calculateDetectionActivity),
+        detectionFrequency: mapValues(byDate, (data) => this.calculateDetectionFrequencyActivity(data, totalRecordingCount))
       }
     }
   }
