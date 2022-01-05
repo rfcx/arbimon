@@ -100,7 +100,7 @@ export default class DashboardPage extends Vue {
   get lineChartConfig (): Omit<LineChartConfig, 'width'> {
     return {
       height: this.tabHeight,
-      margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS.hourOfDay,
       yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detection frequency',
       xBounds: [0, 23]

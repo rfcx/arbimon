@@ -24,7 +24,7 @@ export default class SpeciesRichnessByTime extends Vue {
   get config (): Omit<LineChartConfig, 'width'> {
     return {
       height: 450,
-      margins: { top: 20, right: 30, bottom: 30, left: 40 },
+      margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       yTitle: 'Number of species',
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
