@@ -173,8 +173,8 @@ jobs:
         with:
           notify_when: 'success'
           status: ${{ job.status }}
-          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
-          message_format: '{emoji} *SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
+          notification_title: '{emoji} CD: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
+          message_format: '*SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }})'
         env:
           SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_SUCCESS }}
@@ -187,7 +187,7 @@ jobs:
         with:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
-          notification_title: '*Biodiversity* - deploying *<{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>*'
+          notification_title: '{emoji} CD: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
           message_format: '{emoji} *FAILED*'
           footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }})'
           mention_users_when: 'failure,warnings'
