@@ -28,6 +28,13 @@
       </div>
       <p class="text-subtle text-sm">
         {{ pageSubtitle }}
+        <router-link
+          v-if="topic"
+          :to="learnmoreRoute"
+          class="text-subtle hover:(underline text-white cursor-pointer)"
+        >
+          Learn more
+        </router-link>
       </p>
     </div>
     <slot />
