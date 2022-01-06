@@ -18,7 +18,7 @@
             :href="imageRef"
             target="_blank"
             class="italic hover:underline"
-          >Wiki: {{ species?.commonName }}</a>
+          >Wiki: {{ species?.imageCaption }}</a>
         </div>
       </div>
     </div>
