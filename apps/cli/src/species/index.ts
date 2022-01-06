@@ -58,10 +58,11 @@ async function updateSpeciesData (species: Species): Promise<Species> {
 
   return {
     ...species,
-    commonName: iucnCommonData?.main_common_name ?? wikiData?.title ?? '',
+    commonName: iucnCommonData?.main_common_name ?? '',
     extinctionRisk: iucnCommonData?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
     externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
     thumbnailImageUrl: wikiData?.thumbnailImage ?? '',
+    imageCaption: wikiData?.title ?? '',
     information
   }
 }
