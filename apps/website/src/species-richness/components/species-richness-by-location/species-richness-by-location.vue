@@ -2,16 +2,15 @@
   <div
     class="w-full"
   >
-    <div class="flex justify-between items-end">
-      <h2 class="text-white text-xl">
-        Distinct species by site
-      </h2>
-      <map-tool-menu-component
-        :map-style="mapStyle"
-        @emit-map-style="propagateMapStyle"
-        @emit-show-labels-toggle="propagateToggleLabels"
-      />
-    </div>
+    <section-title title="Distinct species by site">
+      <template #controls>
+        <map-tool-menu-component
+          :map-style="mapStyle"
+          @emit-map-style="propagateMapStyle"
+          @emit-show-labels-toggle="propagateToggleLabels"
+        />
+      </template>
+    </section-title>
     <no-data-panel
       v-if="!hasData"
       class="h-32 mt-2"

@@ -1,14 +1,13 @@
 <template>
   <div class="w-full">
-    <div class="flex justify-between items-end">
-      <h2 class="text-white text-xl">
-        Distinct species by taxonomic class
-      </h2>
-      <export-button
-        v-if="hasData"
-        @click="downloadChart()"
-      />
-    </div>
+    <section-title title="Distinct species by taxonomic class">
+      <template #controls>
+        <export-button
+          v-if="hasData"
+          @click="downloadChart()"
+        />
+      </template>
+    </section-title>
     <horizontal-bar-chart-component
       dom-id="species-by-class"
       :config="config"
