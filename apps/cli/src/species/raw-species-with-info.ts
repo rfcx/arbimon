@@ -3,9 +3,19 @@ export const rawSpeciesWithInfo = [
     speciesId: 22864,
     speciesSlug: 'accipiter-striatus-venator',
     scientificName: 'Accipiter striatus venator',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_d512.512_fspec.png',
+      siteName: 'MA11',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-18T11:25:02.517Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican sharp-shinned hawk',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -13,58 +23,56 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg',
     information: [
       {
         description: 'The Puerto Rican sharp-shinned hawk, (Accipiter striatus venator), falcón de sierra or gavilán pecho rufo in Spanish, is an endemic subspecies of the North American sharp-shinned hawk, occurring only in Puerto Rico. Discovered in 1912 and described as a distinct sub-species, it has been placed on the United States Fish and Wildlife Service list of endangered species because of its rapidly dwindling population in Puerto Rico. It can be found in the Toro Negro State Forest.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_sharp-shinned_hawk'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 1749,
     speciesSlug: 'actitis-macularius',
     scientificName: 'Actitis macularius',
-    commonName: 'Spotted Sandpiper',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Spotted Sandpiper',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Actitis%20macularius',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Spotted_sandpiper',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Actitis-macularia-005.jpg/320px-Actitis-macularia-005.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Actitis%20macularius',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The spotted sandpiper is a small shorebird. Together with its sister species the common sandpiper, it makes up the genus Actitis. They replace each other geographically; stray birds may settle down with breeders of the other species and hybridize.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Spotted_sandpiper'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Actitis-macularia-005.jpg/320px-Actitis-macularia-005.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 9899,
     speciesSlug: 'agelaius-xanthomus',
     scientificName: 'Agelaius xanthomus',
-    commonName: 'Yellow-shouldered Blackbird',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/DO4Oc7KAafBq_t20210502T094553174Z.20210502T094554403Z_d512.512_fspec.png',
+      siteName: 'CR12',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-02T09:45:53.174Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Yellow-shouldered Blackbird',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -77,6 +85,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Yellow-shouldered_Blackbird_5_Mike_Morel.jpg/320px-Yellow-shouldered_Blackbird_5_Mike_Morel.jpg',
     information: [
       {
         description: "The Yellow-shouldered Blackbird occupies a variety of habitats, all typically along the coast where it is most common (Jaramillo and Burke 1999). Such habitats include: mud flats, salt flats, offshore red mangroves&#160;(<em>Rhizophora mangle</em>) cays, black mangrove (<em>Avicennia germinans</em>) forests, lowland dry coastal pastures, suburban areas (including buildings), coconut (<em>Cocos nucifera</em>) plantations, and coastal cliffs (Skutch 1996, Lewis <em>et al</em>. 1999, Falcon <em>et al</em>. 2000, USFWS 2018).&#160;The species was once common in coastal forests, however during the early 20th century, the majority of Puerto Rico's coastal forests were replaced by sugar cane plantations, and latterly housing or livestock pasture (USFWS 2011, 2018, J.&#160;Martínez <em>in litt</em>. 2020). Many birds now breed on offshore cays (Skutch 1996)<strong></strong>. Whilst non-migratory, some individuals of the main island population are known to move inland to inhabit subtropical wet forest during the non-breeding season to forage (USFWS 2011). Whilst typically an arboreal insectivore, the species also forages terrestrially, consuming arachnids, small molluscs, fruits, seeds and nectar from various plant species (Skutch 1996,&#160;Raffaele <em>et al</em>. 1998, Jaramillo and Burke 1999, USFWS 2011); it has also been evidenced to consume exposed or discarded human food and livestock feed (USFWS 2018). Birds gather at communal feeding-sites, with large flocks forming during the non-breeding season (Jaramillo and Burke 1999)<strong></strong><strong></strong>. Nests are often built low in mangrove trees, or in large deciduous trees in pastures near to mangroves (Skutch 1996)<strong></strong>, with several nests being built in close proximity (Jaramillo and Burke 1999)<strong></strong><strong></strong>. On Mona Island, nests are placed in crevices or on ledges on high, vertical sea-cliffs (Skutch 1996)<strong></strong>. Three clutches are usually laid per year (Skutch 1996)<strong></strong>, and the breeding season is May-September.<p></p>",
@@ -89,52 +98,40 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Yellow-shouldered_blackbird'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Yellow-shouldered_Blackbird_5_Mike_Morel.jpg/320px-Yellow-shouldered_Blackbird_5_Mike_Morel.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 2659,
     speciesSlug: 'amazona-amazonica',
     scientificName: 'Amazona amazonica',
-    commonName: 'Orange-winged Amazon',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Orange-winged Amazon',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Amazona%20amazonica',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Orange-winged_amazon',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Amazona_amazonica_%281%29.jpg/320px-Amazona_amazonica_%281%29.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Amazona%20amazonica',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The orange-winged amazon, also known locally as orange-winged parrot and loro guaro, is a large amazon parrot. It is a resident breeding bird in tropical South America, from Colombia, Trinidad and Tobago south to Peru, Bolivia and central Brazil. Its habitat is forest and semi-open country. Although common, it is persecuted as an agricultural pest and by capture for the pet trade. It is also hunted as a food source. Introduced breeding populations have been reported in Puerto Rico and Tenerife in the Canary Islands.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Orange-winged_amazon'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Amazona_amazonica_%281%29.jpg/320px-Amazona_amazonica_%281%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2646,
     speciesSlug: 'amazona-viridigenalis',
     scientificName: 'Amazona viridigenalis',
-    commonName: 'Red-crowned Amazon',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Red-crowned Amazon',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -147,6 +144,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Red_Crowned_Amazon.jpg/253px-Red_Crowned_Amazon.jpg',
     information: [
       {
         description: 'The species inhabits lush areas in arid lowlands and foothills, especially gallery forest, deciduous woodland and dry, open pine-oak woodland on ridges up to 1,000 m. In central Tamaulipas it has been observed in mixed landscapes of wooded mountain slopes with adjacent mixed scrub, citrus or villages (T. Brush <em>in litt. </em>2016). Smaller numbers occur in agricultural landscapes with a few large trees. Nests are usually in tree-cavities, with breeding from March-May. Clutches of 2-5 eggs are incubated for 25-31 days (Enkerlin-Hoeflich and Hogan 1997)<strong><sup></sup></strong>. It is nomadic in winter, with large flocks moving south (and apparently north) and to higher elevations. It feeds largely on the fruits of dominant tree species (Enkerlin-Hoeflich and Hogan 1997)<strong><sup></sup></strong>. <p></p>',
@@ -159,17 +157,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-crowned_amazon'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Red_Crowned_Amazon.jpg/253px-Red_Crowned_Amazon.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 2643,
     speciesSlug: 'amazona-vittata',
     scientificName: 'Amazona vittata',
-    commonName: 'Puerto Rican Amazon',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Puerto Rican Amazon',
+    extinctionRisk: 'CR',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -182,6 +179,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Puerto_Rican_parrot.jpg/270px-Puerto_Rican_parrot.jpg',
     information: [
       {
         description: 'Historically, the species occurred in montane and lowland forest and mangroves. It is now restricted to forest at elevations of 200-600 m. It breeds between late February and July, when it nests in large, deep tree-cavities and lays 3-4 eggs (Raffaele <em>et al.</em> 1998; Arendt 2000)<strong></strong>. Since 2001, all known nesting in the wild has occurred in artificial cavities (White <em>et al</em><span style="font-style: italic;">.</span> 2006) until in 2013, the first natural nest in 42 years was recorded in Río Abajo (V. Anadon <em>in litt. </em>2013; Coto 2013).<strong></strong><p></p>',
@@ -194,17 +192,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_amazon'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Puerto_Rican_parrot.jpg/270px-Puerto_Rican_parrot.jpg',
-    extinctionRisk: 'CR'
+    ]
   },
   {
     speciesId: 20406,
     speciesSlug: 'antrostomus-noctitherus',
     scientificName: 'Antrostomus noctitherus',
-    commonName: 'Puerto Rican Nightjar',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/9Evtlqg7k69x_t20210316T023549794Z.20210316T023551317Z_d512.512_fspec.png',
+      siteName: 'GU36',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-16T02:35:49.794Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Nightjar',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -217,6 +223,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Antrostomus_noctitherus_-Puerto_Rico-8.jpg/256px-Antrostomus_noctitherus_-Puerto_Rico-8.jpg',
     information: [
       {
         description: 'The historical range probably comprised moist limestone and coastal forest in northern Puerto Rico, as well as currently occupied dry limestone forest, drier sections of the lower cordillera forest and perhaps dry coastal forest. It is presently more abundant in closed canopy dry forest on limestone soils, composed mainly of semi-deciduous hardwood trees with abundant leaf litter and an open understorey (little or no ground vegetation) at elevations up to 620 m asl, but more commonly above 75 m asl. It occurs at lower densities in dry, open, scrubby secondary growth, xeric or dry scrubland, open scrub-forest and thorny forest undergrowth, with a few birds in <em>Eucalyptus robusta</em> plantations (Cleere and Nurney 1998)<strong></strong><strong></strong>. Breeding occurs between late February and early July, mainly between April and June (Vilella 1995)<strong></strong>. Nests are common at elevations above 100 m asl and are characterised by a deep layer of leaf litter and an open midstorey beneath a closed canopy (Vilella 2008)<strong></strong>. Birds are perhaps permanently territorial, exhibiting strong interannual site fidelity<strong></strong>. In Guánica forest, <em>c.</em> 87% of nests in one year produced at least one fledgling (Vilella 1995)<strong></strong>. It feeds on beetles, moths and other insects (Cleere and Nurney 1998)<strong></strong><strong></strong>. <p></p>',
@@ -229,122 +236,97 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_nightjar'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Antrostomus_noctitherus_-Puerto_Rico-8.jpg/256px-Antrostomus_noctitherus_-Puerto_Rico-8.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 1555,
     speciesSlug: 'aramus-guarauna',
     scientificName: 'Aramus guarauna',
-    commonName: 'Limpkin',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210304T053043032Z.20210304T053046447Z_d512.512_fspec.png',
+      siteName: 'DO16',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-04T05:30:43.032Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Limpkin',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Aramus%20guarauna',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Limpkin',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Limpkin%2C_Florida_05.jpg/320px-Limpkin%2C_Florida_05.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Aramus%20guarauna',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The limpkin, also called carrao, courlan, and crying bird, is a large wading bird related to rails and cranes, and the only extant species in the family Aramidae. It is found mostly in wetlands in warm parts of the Americas, from Florida to northern Argentina. It feeds on molluscs, with the diet dominated by apple snails of the genus Pomacea. Its name derives from its seeming limp when it walks.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Limpkin'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Limpkin%2C_Florida_05.jpg/320px-Limpkin%2C_Florida_05.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 3065,
     speciesSlug: 'asio-flammeus',
     scientificName: 'Asio flammeus',
-    commonName: 'Short-eared Owl',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Short-eared Owl',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Asio%20flammeus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Short-eared_owl',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Short_Eared_Owl_on_the_Ground.jpg/320px-Short_Eared_Owl_on_the_Ground.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (extent of occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Asio%20flammeus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The short-eared owl is a widespread grassland species in the family Strigidae. Owls belonging to genus Asio are known as the eared owls, as they have tufts of feathers resembling mammalian ears. These "ear" tufts may or may not be visible. The short-eared owl will display its tufts when in a defensive pose, although its very short tufts are usually not visible. The short-eared owl is found in open country and grasslands.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Short-eared_owl'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Short_Eared_Owl_on_the_Ground.jpg/320px-Short_Eared_Owl_on_the_Ground.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2595,
     speciesSlug: 'brotogeris-versicolurus',
     scientificName: 'Brotogeris versicolurus',
-    commonName: 'White-winged Parakeet',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'White-winged Parakeet',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Brotogeris%20versicolurus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/White-winged_parakeet',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Brotogeris_versicolurus_-Leticia_-Colombia-6.jpg/320px-Brotogeris_versicolurus_-Leticia_-Colombia-6.jpg',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Brotogeris%20versicolurus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The white-winged parakeet, or canary-winged parakeet is a small parrot native to the Amazon River basin from southeast Colombia to the river's mouth in Brazil. Caged birds have been released and the birds have established self-sustaining populations in Lima, Peru, Los Angeles and San Francisco, California, and Miami, Florida areas of the United States, and in Puerto Rico. Although feral birds are showing some recent declines as nesters in the United States, they seem to be doing well in their native habitat.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/White-winged_parakeet'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Brotogeris_versicolurus_-Leticia_-Colombia-6.jpg/320px-Brotogeris_versicolurus_-Leticia_-Colombia-6.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 896,
     speciesSlug: 'bubulcus-ibis',
     scientificName: 'Bubulcus ibis',
-    commonName: 'Cattle Egret',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Cattle Egret',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -357,6 +339,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Cattle_egret_%28Bubulcus_ibis%29_summer_plumage_Cyprus.jpg/213px-Cattle_egret_%28Bubulcus_ibis%29_summer_plumage_Cyprus.jpg',
     information: [
       {
         description: '<strong>Behaviour</strong> Most populations of this species are partially migratory, making long-distance dispersive movements related to food resources in connection with seasonal rainfall (del Hoyo <em>et al.</em> 1992). Other populations (e.g. in north-east Asia and North America) are fully migratory (del Hoyo <em>et al.</em> 1992, Snow and Perrins 1998). The species breeds throughout the year in the tropics with different regional peaks (del Hoyo <em>et al.</em> 1992) depending on food availability (Kushlan and Hancock 2005). It breeds colonially, often with other species, in groups that number from a few dozen to several thousand pairs, even up to 10,000 pairs in Africa (del Hoyo <em>et al.</em> 1992). The nesting effort of the species is related to rainfall patterns, leading to an annual variation in productivity (Kushlan and Hancock 2005). Outside of the breeding season the species remains gregarious (Brown <em>et al.</em> 1982, del Hoyo <em>et al.</em> 1992), feeding in loose flocks of 10-20 individuals (Brown <em>et al.</em> 1982) and often gathering in flocks of hundreds or even thousands of individuals where food is abundant (del Hoyo <em>et al.</em> 1992). Nocturnal roosting sites in Africa commonly hold a few hundred to 2,000 individuals (Brown <em>et al.</em> 1982). The species is a diurnal feeder (del Hoyo <em>et al.</em> 1992) and commonly associates with native grazing mammals or domesticated livestock (Kushlan and Hancock 2005) and may follow farm machinery to capture disturbed prey (del Hoyo <em>et al.</em> 1992). <strong>Habitat</strong> The species inhabits open grassy areas such as meadows (del Hoyo <em>et al.</em> 1992), livestock pastures (Kushlan and Hancock 2005), semi-arid steppe (del Hoyo <em>et al.</em> 1992) and open savanna grassland subject to seasonal inundation (Kushlan and Hancock 2005), dry arable fields (del Hoyo <em>et al.</em> 1992), artificial grassland sites (e.g. lawns, parks, road margins and sports fields) (Kushlan and Hancock 2005), flood-plains (Hancock and Kushlan 1984), freshwater swamps, rice-fields, wet pastures (del Hoyo <em>et al.</em> 1992), shallow marshes (Kushlan and Hancock 2005), mangroves (Hancock and Kushlan 1984) and irrigated grasslands (with ponds, small impoundments, wells, canals, small rivers and streams) (Kushlan and Hancock 2005). It rarely occupies marine habitats or forested areas (del Hoyo <em>et al.</em> 1992) although in Australia it may enter woodlands and forests, and it shows a preference for freshwater (Marchant and Higgins 1990) although it may also use brackish or saline habitats (Kushlan and Hancock 2005). It occurs from sea-level up to c.1,500 m (Kushlan and Hancock 2005) or locally up to c.4,000 m (Peru) (del Hoyo <em>et al.</em> 1992). <strong>Diet</strong> Its diet consists primarily of insects such as locusts, grasshoppers (del Hoyo <em>et al.</em> 1992), beetles, adult and larval Lepidoptera, Hemiptera, dragonflies (Hancock and Kushlan 1984) and centipedes but worms (Brown <em>et al.</em> 1982), spiders (Hancock and Kushlan 1984), crustaceans, frogs, tadpoles, molluscs, fish, lizards, small birds, rodents and vegetable matter (e.g. palm-nut pulp) may also be taken (del Hoyo <em>et al.</em> 1992). <strong>Breeding site</strong> The nest is constructed of twigs and vegetation (Kushlan and Hancock 2005) and is positioned up to 20 m high in reedbeds (del Hoyo <em>et al.</em> 1992, Kushlan and Hancock 2005), marshes, mangroves, dense thickets (Kushlan and Hancock 2005), bushes or trees (del Hoyo <em>et al.</em> 1992, Kushlan and Hancock 2005), usually over or surrounded by water (Kushlan and Hancock 2005). The species nests colonially in single- or mixed-species groups with the nests placed close or touching (Snow and Perrins 1998). <strong>Management information</strong> The species can adversely affect the trees and bushes it uses for nesting, which may lead to the abandonment of the colony site if it is not managed (Kushlan and Hancock 2005).',
@@ -369,87 +352,73 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Western_cattle_egret'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Cattle_egret_%28Bubulcus_ibis%29_summer_plumage_Cyprus.jpg/213px-Cattle_egret_%28Bubulcus_ibis%29_summer_plumage_Cyprus.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1271,
     speciesSlug: 'buteo-jamaicensis',
     scientificName: 'Buteo jamaicensis',
-    commonName: 'Red-tailed Hawk',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/h0bHg9b2q6M3_t20210330T215545056Z.20210330T215547577Z_d512.512_fspec.png',
+      siteName: 'LU12',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-30T21:55:45.056Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Red-tailed Hawk',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Buteo%20jamaicensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-tailed_hawk',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Red-tailed_Hawk.jpg/213px-Red-tailed_Hawk.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Buteo%20jamaicensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The red-tailed hawk is a bird of prey that breeds throughout most of North America, from the interior of Alaska and northern Canada to as far south as Panama and the West Indies. It is one of the most common members within the genus of Buteo in North America or worldwide. The red-tailed hawk is one of three species colloquially known in the United States as the "chickenhawk", though it rarely preys on standard-sized chickens. The bird is sometimes also referred to as the red-tail for short, when the meaning is clear in context. Red-tailed hawks can acclimate to all the biomes within their range, occurring on the edges of non-ideal habitats such as dense forests and sandy deserts. The red-tailed hawk occupies a wide range of habitats and altitudes, including deserts, grasslands, coniferous and deciduous forests, agricultural fields, and urban areas. Its latitudinal limits fall around the tree line in the subarctic and the species is absent from the high Arctic. Generally it favors varied habitats with open woodland, woodland edge and open terrain. It is legally protected in Canada, Mexico, and the United States by the Migratory Bird Treaty Act.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-tailed_hawk'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Red-tailed_Hawk.jpg/213px-Red-tailed_Hawk.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1259,
     speciesSlug: 'buteo-platypterus',
     scientificName: 'Buteo platypterus',
-    commonName: 'Broad-winged Hawk',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Broad-winged Hawk',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Buteo%20platypterus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Broad-winged_hawk',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Julie_Waters_broad_winged_hawk.JPG/208px-Julie_Waters_broad_winged_hawk.JPG',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Buteo%20platypterus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The broad-winged hawk is a medium-sized hawk of the genus Buteo. During the summer, some subspecies are distributed over eastern North America, as far west as British Columbia and Texas; they then migrate south to winter in the Neotropics from Mexico south to southern Brazil. Other subspecies are all-year residents on Caribbean islands. As in most raptors, females are slightly larger than males. Broad-winged hawks' wings are relatively short and broad with a tapered, somewhat pointed appearance. The two types of coloration are a dark morph with fewer white areas and a light morph that is more pale overall. Although the broad-winged hawk's numbers are relatively stable, populations are declining in some parts of its breeding range because of forest fragmentation.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Broad-winged_hawk'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Julie_Waters_broad_winged_hawk.JPG/208px-Julie_Waters_broad_winged_hawk.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 22987,
     speciesSlug: 'buteo-platypterus-brunnescens',
     scientificName: 'Buteo platypterus brunnescens',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Puerto Rican broad-winged hawk',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -457,23 +426,23 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg/320px-Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg',
     information: [
       {
         description: 'The Puerto Rican broad-winged hawk is an endangered subspecies of the broad-winged hawk. It is a small hawk that occurs in Puerto Rico, inhabiting the Toro Negro State Forest. Its Spanish common name is guaragüao de bosque.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_broad-winged_hawk'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg/320px-Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 889,
     speciesSlug: 'butorides-virescens',
     scientificName: 'Butorides virescens',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Green heron',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -481,23 +450,31 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Butorides_virescens2.jpg/275px-Butorides_virescens2.jpg',
     information: [
       {
         description: 'The green heron is a small heron of North and Central America. Butorides is from Middle English butor "bittern" and Ancient Greek -oides, "resembling", and virescens is Latin for "greenish".',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Green_heron'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Butorides_virescens2.jpg/275px-Butorides_virescens2.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 42791,
     speciesSlug: 'capra-aegagrus',
     scientificName: 'Capra aegagrus',
-    commonName: 'Wild Goat',
     taxonId: 5,
     taxon: 'Mammals',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2dy2l48u7ksp_t20210517T223553823Z.20210517T223554717Z_d512.512_fspec.png',
+      siteName: 'MO_MG',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-17T22:35:53.823Z'
+    },
+    commonName: 'Wild Goat',
+    extinctionRisk: 'NT',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -510,6 +487,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Bezoarziege.jpg/320px-Bezoarziege.jpg',
     information: [
       {
         description: '<p>The wild goat inhabits mountainous areas, where there is a mixture of rocky outcrops (including scree slopes) and vegetation (shrubby thickets (maquis) or conifer forests). It is a mixed forest species in the Caucasus, especially in the Greater Caucasus (Magomedov et al. 2014; Weinberg 1999), though it usually inhabits relatively arid habitats in most of its range and may depend upon water sources there (Korshunov 1994, Morovati <em>et al</em>. 2014, Shams <em>et al</em>. 2010). Choice of topography, steepness and exposure of the slopes depend upon season, threats and peculiarities of climate and vegetation, but all sources underline principal importance of ruggedness and steepness of slopes at all elevations (Korshunov 1986; Magomedov <em>et al</em>. 2014; Shams <em>et al</em>. 2010; Weinberg 1999). However, in the Greater Caucasus, males tend to choose higher elevations than females outside the rut (Magomedov <em>et al.</em> 2014; Weinberg 1999). South slopes are avoided only in summer and preferred in winter and spring, even in Iran (Shams <em>et al</em>. 2010). In general, distinctive seasonal migrations are not typical for the animals in the Caucasus, except maybe males who can dwell rather far away from females outside the rut in the Caucasus Minor (Magomedov <em>et al. </em>2014; Weinberg 1999; Weinberg and Malkhasyan 2011, 2017). <br/><br/>It is herbivorous, feeding on grasses, herbaceous plants and shrubs, and can climb not very tall trees like junipers and oaks and certainly surpass tur in this respect (Weinberg 1984, 1999). Diet varies geographically and seasonally, being greatly affected by precipitation and availability of green vegetation. In Turkmenistan, grasses and herbs dominate in the spring diet, but later significance of maple <em>Acer turcomanicum</em> increases and in winter juniper may dominate (Korshunov 1994).<br/><br/>In Turkmenistan, females reach maturity at the age of one year (more precisely 1.5 year) but most females mate only at the age of 2 years (Korshunov 1994), while in Daghestan most of yearling females mate (Magomedov <em>et al.</em> 2014). Yearling males may court females during the rut and at two-year age almost invariably leave female groups (Weinberg and Malkhasyan 2011). Rut lasts from early November to mid-December in Turkmenistan (Korshunov 1994), from mid-November to the second decade of December in Daghestan in the Greater Caucasus and is some two weeks late compared to that of sympatric tur (Magomedov <em>et al. </em>2014, Weinberg 1999). First newborns have been observed in the beginning of June there (Magomedov et al. 2014). However, due to huge species range, reproductive periods vary in different areas. Thus in Karchat Mountains in southern Pakistan, rut may take place, in different years, from August until mid-October, and newborns appear from mid-January to April.&#160; Such variations in timing may depend upon precipitation influencing nutritional condition of the animals, primarily females (Edge and Olson-Edge 1990; Schaller 1977). Fecundity is high, twinning being frequent and triplets have been observed all over the range (Gunoglu and Ogurlu 2009, Magomedov <em>et al.</em> 2014, Roberts 1977, Weinberg and Malkhasyan 2011). Post-parturition period kid/female index varies from 0.46 in Pakistan (Edge and Olson-Edge 1990) to 0.5 in Turkmenistan (Korshunov 1994), to 1.0 in Armenia (Weinberg and Malkhasyan 2011) and to 1.26 in one year in Daghestan (Magomedov <em>et al. </em>2014). Yearlings make 9.8% to17.1% during the rut in different areas in Armenia (Weinberg and Malkhasyan 2011), and 16-18% in Daghestan (Magomedov <em>et al.</em> 2014), but probably the lower figure is more typical to the rest of the species range.<br/><br/>Wild goat is a principal prey for leopard <em>Panthera pardus</em> in Iran (Farhadinia <em>et al</em>. 2018) but also an important prey for Cheetah <em>Acinonyx jubatus</em> in central Iran (Farhadinia and Hemami 2010), while wolf <em>Canis lupus</em> rarely hunts wild goat in Iran (Hosseini-Zavarei <em>et al.</em> 2013). In the Greater Caucasus, impact of predators upon wild goat is generally considered non-significant (Magomadov <em>et al.</em> 2014, Weinberg 1999), though Eurasian lynx <em>Lynx lynx</em>, wolf and even brown bear <em>Ursus arctos</em> can catch, at least, juveniles (Weinberg, 2013) and golden eagles <em>Aquila chrysaetos</em> scan cliffs intermittently in summer and try to hunt kids (Weinberg 1999). Mortality caused by snow avalanches has not been recorded, even in the Greater Caucasus, unlike tur <em>Capra caucasica</em> and <em>Capra cylindricornis</em>&#160; (Magomedov <em>et al</em>. 2014). In Daghestan in the North Greater Caucasus, females may live up to 18 years but usually less, while males can reach the age of 14 (Magomedov <em>et al</em>. 2014). In Turkmenistan, males live up to 11 years (Korshunov 1994). Mortality among juveniles varies from 40% to 75% in different areas and years in Armenia (Weinberg and Malkhasyan 2011). In Daghestan, this index is about 35%, while among adults it is about 3-6%, higher in males (Magomedov <em>et al</em>. 2014).<br/><br/>In the Greater Caucasus in Daghestan and Chechnya, wild goat is sympatric with the Eastern tur <em>Capra cylindricornis</em> that dominates above timberline but may be less numerous than wild goat in the forest (Weinberg 1999). In Chechnya, wild goat is sympatric, but much less numerous, with Caucasian chamois <em>Rupicapra r. caucasica</em>, particularly on the limestone Rocky Range (Lukarevsky 2018). However, main wild goat distribution on the northern slope of the Eastern Greater Caucasus is on the Side Range, where chamois is very rare (Weinberg 1999). Where wild goat does occur on the north slope of the Main Range, it is a forest dweller as usual in the Greater Caucasus, while chamois mostly stays above timberline (Babaev <em>et al</em>. 2016). Roe deer <em>Capreolus capreolus</em> also shares habitat with the wild goat, not only in the Greater Caucasus (Weinberg 1999), but also in several locations in South-East Armenia (Weinberg, 2011). In the Caucasus Minor and the rest of the vast range, it often is sympatric with various wild sheep: mouflon <em>Ovis gmelini, </em>urial <em>Ovis vignei</em> etc. (sheep preferring less precipitous terrain). Thus, though being sympatric with several other ungulate species, wild goat is usually ecologically more or less separated from them.</p>',
@@ -522,264 +500,191 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Wild_goat'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Bezoarziege.jpg/320px-Bezoarziege.jpg',
-    extinctionRisk: 'NT'
+    ]
   },
   {
     speciesId: 8489,
     speciesSlug: 'catharus-minimus',
     scientificName: 'Catharus minimus',
-    commonName: 'Grey-cheeked Thrush',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Grey-cheeked Thrush',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Catharus%20minimus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Grey-cheeked_thrush',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Graycheekedthrush36.jpg/320px-Graycheekedthrush36.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (extent of occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Catharus%20minimus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The grey-cheeked thrush is a medium-sized thrush. This species is 15–17 cm (5.9–6.7 in) in length, and has the white-dark-white underwing pattern characteristic of Catharus thrushes. It is a member of a close-knit group of migrant species together with the veery and Bicknell's thrush; it forms a cryptic species pair with the latter. The grey-cheeked thrush is all but indistinguishable from Bicknell's thrush except by its slightly larger size and different song. The two were formerly considered conspecific. Of all the American spotted thrushes, the grey-cheeked has the most northern breeding range.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Grey-cheeked_thrush'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Graycheekedthrush36.jpg/320px-Graycheekedthrush36.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1645,
     speciesSlug: 'charadrius-vociferus',
     scientificName: 'Charadrius vociferus',
-    commonName: 'Killdeer',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Killdeer',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Charadrius%20vociferus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Killdeer',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Killdeer_3.jpg/320px-Killdeer_3.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Charadrius%20vociferus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The killdeer is a large plover found in the Americas. It was described and given its current scientific name in 1758 by Carl Linnaeus in the 10th edition of his Systema Naturae. Three subspecies are described. The killdeer's common name comes from its often-heard call. Its upperparts are mostly brown with rufous fringes, the head has patches of white and black, and two black bands cross the breast. The belly and the rest of the breast are white. The nominate subspecies breeds from southeastern Alaska and southern Canada to Mexico. It is seen year-round in the southern half of its breeding range; the subspecies C. v. ternominatus is probably resident in the West Indies, and C. v. peruvianus inhabits Peru and areas of the surrounding countries throughout the year. North American breeders winter from their resident range south to Central America, the West Indies, and the northernmost portions of South America.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Killdeer'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Killdeer_3.jpg/320px-Killdeer_3.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 3097,
     speciesSlug: 'chordeiles-gundlachii',
     scientificName: 'Chordeiles gundlachii',
-    commonName: 'Antillean Nighthawk',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/WN9havhHl0Ax_t20210429T083500326Z.20210429T083501287Z_d512.512_fspec.png',
+      siteName: 'CR01',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-29T08:35:00.326Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Antillean Nighthawk',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Chordeiles%20gundlachii',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Antillean_nighthawk',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Antillean_Nighthawk_%28Chordeiles_gundlachii%29%3B_with_distinctive_white_patch%2C_resting_in_Cabo_Rojo_National_Wildlife_Refuge%2C_Puerto_Rico.JPG/320px-Antillean_Nighthawk_%28Chordeiles_gundlachii%29%3B_with_distinctive_white_patch%2C_resting_in_Cabo_Rojo_National_Wildlife_Refuge%2C_Puerto_Rico.JPG',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Chordeiles%20gundlachii',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Antillean nighthawk is a nightjar native to the Caribbean and Florida Keys.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Antillean_nighthawk'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Antillean_Nighthawk_%28Chordeiles_gundlachii%29%3B_with_distinctive_white_patch%2C_resting_in_Cabo_Rojo_National_Wildlife_Refuge%2C_Puerto_Rico.JPG/320px-Antillean_Nighthawk_%28Chordeiles_gundlachii%29%3B_with_distinctive_white_patch%2C_resting_in_Cabo_Rojo_National_Wildlife_Refuge%2C_Puerto_Rico.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2783,
     speciesSlug: 'coccyzus-minor',
     scientificName: 'Coccyzus minor',
-    commonName: 'Mangrove Cuckoo',
     taxonId: 1,
     taxon: 'Birds',
-    externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Coccyzus%20minor',
-        title: 'IUCN'
-      },
-      {
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Mangrove_cuckoo',
-        title: 'Wiki'
-      }
-    ],
-    information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Coccyzus%20minor',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
-      {
-        description: 'The mangrove cuckoo is a species of cuckoo that is native to the Neotropics.',
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Mangrove_cuckoo'
-      }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Mangrove_Cuckoo.jpg/320px-Mangrove_Cuckoo.jpg',
-    extinctionRisk: 'LC'
+    commonName: 'Mangrove Cuckoo',
+    extinctionRisk: 'LC',
+    externalLinks: [],
+    thumbnailImageUrl: '',
+    information: []
   },
   {
     speciesId: 2789,
     speciesSlug: 'coccyzus-vieilloti',
     scientificName: 'Coccyzus vieilloti',
-    commonName: 'Puerto Rican Lizard-cuckoo',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Puerto Rican Lizard-cuckoo',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Coccyzus%20vieilloti',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_lizard_cuckoo',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Coccyzus_vieilloti.jpg/320px-Coccyzus_vieilloti.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Coccyzus%20vieilloti',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican lizard cuckoo is a cuckoo endemic to the island of Puerto Rico, and is one of 4 species of lizard-cuckoos which occur only on Caribbean islands. These were formerly placed in the genus Saurothera of the family Cuculidae, but are now lumped with Coccyzus.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_lizard_cuckoo'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Coccyzus_vieilloti.jpg/320px-Coccyzus_vieilloti.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 18,
     speciesSlug: 'coereba-flaveola',
     scientificName: 'Coereba flaveola',
-    commonName: 'Bananaquit',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Bananaquit',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Coereba%20flaveola',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Bananaquit',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Bananaquits.jpg/320px-Bananaquits.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Coereba%20flaveola',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The bananaquit is a species of passerine bird in the tanager family Thraupidae. Before the development of molecular genetics in the 21st century, its relationship to other species was uncertain and it was either placed with the buntings and New World sparrows in the family Emberizidae, with New World warblers in the family Parulidae or in its own monotypic family Coerebidae. This small, active nectarivore is found in warmer parts of the Americas, and is generally common.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Bananaquit'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Bananaquits.jpg/320px-Bananaquits.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2082,
     speciesSlug: 'columbina-passerina',
     scientificName: 'Columbina passerina',
-    commonName: 'Common Ground-dove',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Common Ground-dove',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Columbina%20passerina',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Common_ground_dove',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Columbina_passerina_-near_Salton_Sea%2C_California%2C_USA-8.jpg/320px-Columbina_passerina_-near_Salton_Sea%2C_California%2C_USA-8.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, hence the species does not approach the threshold for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Columbina%20passerina',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The common ground dove is a small bird that inhabits the southern United States, parts of Central America, the Caribbean and northern South America. It is considered to be the smallest dove that inhabits the United States. As its name suggests, the bird spends the majority of its time on the ground walking but still has the ability to fly.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Common_ground_dove'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Columbina_passerina_-near_Salton_Sea%2C_California%2C_USA-8.jpg/320px-Columbina_passerina_-near_Salton_Sea%2C_California%2C_USA-8.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 28358,
     speciesSlug: 'contopus-latirostris-blancoi',
     scientificName: 'Contopus latirostris blancoi',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
-    externalLinks: [],
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_d512.512_fspec.png',
+      siteName: 'LU_48',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-05T12:35:05.908Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: '',
     extinctionRisk: 'NE',
+    externalLinks: [],
     thumbnailImageUrl: '',
     information: []
   },
@@ -787,79 +692,76 @@ export const rawSpeciesWithInfo = [
     speciesId: 51,
     speciesSlug: 'crotophaga-ani',
     scientificName: 'Crotophaga ani',
-    commonName: 'Smooth-billed Ani',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210317T202041882Z.20210317T202043199Z_d512.512_fspec.png',
+      siteName: 'CU38',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-03-17T20:20:41.882Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Smooth-billed Ani',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Crotophaga%20ani',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Smooth-billed_ani',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Smooth-billed_ani_%28Crotophaga_ani%29_GC.JPG/320px-Smooth-billed_ani_%28Crotophaga_ani%29_GC.JPG',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Crotophaga%20ani',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The smooth-billed ani is a large near passerine bird in the cuckoo family. It is a resident breeding species from southern Florida, the Caribbean, parts of Central America, south to western Ecuador, Brazil, northern Argentina and southern Chile. It was introduced to Galápagos around the 1960s and is potentially impacting native and endemic species across the archipelago.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Smooth-billed_ani'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Smooth-billed_ani_%28Crotophaga_ani%29_GC.JPG/320px-Smooth-billed_ani_%28Crotophaga_ani%29_GC.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 4580,
     speciesSlug: 'elaenia-martinica',
     scientificName: 'Elaenia martinica',
-    commonName: 'Caribbean Elaenia',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Caribbean Elaenia',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Elaenia%20martinica',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Caribbean_elaenia',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Caribbean_Elaenia.jpg/290px-Caribbean_Elaenia.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2 </sup>combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Elaenia%20martinica',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Caribbean elaenia is a species of bird in the family Tyrannidae found in the West Indies and parts of Central America. Its natural habitats are tropical and subtropical dry broadleaf forest, subtropical or tropical moist lowland forest, and heavily degraded former forest.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Caribbean_elaenia'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Caribbean_Elaenia.jpg/290px-Caribbean_Elaenia.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 12240,
     speciesSlug: 'eleutherodactylus-antillensis',
     scientificName: 'Eleutherodactylus antillensis',
-    commonName: 'Red-eyed Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0dq24zlwzx0p_t20210408T045012055Z.20210408T045012352Z_d512.512_fspec.png',
+      siteName: 'PA53',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-08T04:50:12.055Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Red-eyed Coqui',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -872,6 +774,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Eleutherodactylus_antillensis01.jpg/320px-Eleutherodactylus_antillensis01.jpg',
     information: [
       {
         description: 'This species inhabits xeric to mesic forest. Eggs are laid on the ground and it breeds by direct development. It is very common in disturbed habitats, pastures, and logged forests. It has also been commonly recorded in urban areas, in particular in residential gardens and vacant land.',
@@ -884,17 +787,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-eyed_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Eleutherodactylus_antillensis01.jpg/320px-Eleutherodactylus_antillensis01.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 5,
     speciesSlug: 'eleutherodactylus-brittoni',
     scientificName: 'Eleutherodactylus brittoni',
-    commonName: 'Grass Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jmi7nefeln7g_t20210331T082023922Z.20210331T082024665Z_d512.512_fspec.png',
+      siteName: 'LU_46',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-31T08:20:23.922Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Grass Coqui',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -907,6 +818,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Eleutherodactylus_brittoni_front_view.jpg/320px-Eleutherodactylus_brittoni_front_view.jpg',
     information: [
       {
         description: 'It is found in closed forest and open meadows. It also occurs in coastal grass-dominated wetlands in sympatry with <em>Eleutherodactylus juanariveroi </em>(N. Rios-López pers. comm. 2008). Eggs are laid on the ground, and they breed by direct development. It appears to be quite tolerant of habitat disturbance as demonstrated by its use of banana plantations, gardens, agricultural areas, and pastureland (Puerto Rico Red List Assessment Workshop 2020).',
@@ -919,17 +831,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Grass_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Eleutherodactylus_brittoni_front_view.jpg/320px-Eleutherodactylus_brittoni_front_view.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 9,
     speciesSlug: 'eleutherodactylus-cochranae',
     scientificName: 'Eleutherodactylus cochranae',
-    commonName: 'Whistling Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq9z8co6YL6I_t20210309T000030749Z.20210309T000031680Z_d512.512_fspec.png',
+      siteName: 'DO12',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-09T00:00:30.749Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Whistling Coqui',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -942,6 +862,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: '',
     information: [
       {
         description: 'This species is a habitat generalist occurring in herbaceous vegetation in lowland wetlands, in xeric to mesic forests, in terrestrial and arboreal bromeliads, and in anthropogenic habitats. It also occurs in both disturbed and natural coastal grass-dominated wetlands (N. Rios-López pers. comm. 2008). Males call from tall vegetation. Eggs are laid in bromeliads, banana axils and <em>Heliconia</em> and it breeds by direct development.',
@@ -954,17 +875,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Whistling_coqui'
       }
-    ],
-    extinctionRisk: 'LC',
-    thumbnailImageUrl: ''
+    ]
   },
   {
     speciesId: 12257,
     speciesSlug: 'eleutherodactylus-cooki',
     scientificName: 'Eleutherodactylus cooki',
-    commonName: 'Cave Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/xqowq452cl9n_t20210402T013027439Z.20210402T013029222Z_d512.512_fspec.png',
+      siteName: 'PA11_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-02T01:30:27.439Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Cave Coqui',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -977,6 +906,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Female_guajon_frog_on_tree.jpg/320px-Female_guajon_frog_on_tree.jpg',
     information: [
       {
         description: 'It&#160;has highly specialized habitat requirements, being found only in caves and rock grottos known as "guajonales" and&#160;in rocky stream banks covered with moss, ferns and other vegetation (Vega-Castillo 2000). Eggs are laid on damp boulder surfaces in grottoes, bamboo trunks and muddy substrates, and cared for by males and develop directly (Burrowes 2000, Longo <em>et al.</em> 2013).&#160;The area where this species occurs in the Icaco Valley is second-growth forest intermixed with line-planted timber trees, and few of the trees are over 30 years in age (Nelson&#160;<em>et al.</em>&#160;2010). The presence of this frog in this area demonstrates that properly managed second-growth forests may play a role in conservation efforts of this species (Greenhawk 2013),&#160;as long as they are associated with granodiorite rock formations and perennial or ephemeral streams (A. Longo pers. comm. 2020).',
@@ -989,17 +919,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_rock_frog'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Female_guajon_frog_on_tree.jpg/320px-Female_guajon_frog_on_tree.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 7,
     speciesSlug: 'eleutherodactylus-coqui',
     scientificName: 'Eleutherodactylus coqui',
-    commonName: 'Common Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/hi8M2OfKQRfV_t20210402T062536298Z.20210402T062536944Z_d512.512_fspec.png',
+      siteName: 'PA28',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-02T06:25:36.298Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Common Coqui',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1012,6 +950,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Common_Coqu%C3%AD.jpg',
     information: [
       {
         description: 'It is found in mesic forests. Males call from elevated exposed surfaces such as leaves and tree trunks.&#160;It is a habitat generalist and lives in both forest&#160;ecosystems, as well as,&#160;agricultural land including plantations and arable land, and urban settings. Nests are usually found on vegetation, and it develops directly.',
@@ -1024,17 +963,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Common_coqu%C3%AD'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Common_Coqu%C3%AD.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 12291,
     speciesSlug: 'eleutherodactylus-gryllus',
     scientificName: 'Eleutherodactylus gryllus',
-    commonName: 'Cricket Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: 'Cricket Coqui',
+    extinctionRisk: 'CR',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1047,6 +985,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Eleutherodactylus_gryllus.jpg/320px-Eleutherodactylus_gryllus.jpg',
     information: [
       {
         description: 'It occurs in forest and along forest edges or openings, retreating by day into bromeliads or under moss and rocks. It has not been recorded outside forest habitats. Eggs are laid in bromeliads, and it breeds by direct development.',
@@ -1059,17 +998,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Cricket_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Eleutherodactylus_gryllus.jpg/320px-Eleutherodactylus_gryllus.jpg',
-    extinctionRisk: 'CR'
+    ]
   },
   {
     speciesId: 12297,
     speciesSlug: 'eleutherodactylus-hedricki',
     scientificName: 'Eleutherodactylus hedricki',
-    commonName: "Hedrick's Coqui",
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: "Hedrick's Coqui",
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1082,6 +1020,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Eleutherodactylus_hedricki.jpg/320px-Eleutherodactylus_hedricki.jpg',
     information: [
       {
         description: 'It is an arboreal species inhabiting mesic broadleaf forests. Males call from tree trunks and the canopy, eggs are laid in tree trunk cavities, and breeding is by direct development.',
@@ -1094,17 +1033,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: "https://en.wikipedia.org/wiki/Hedrick's_coqui"
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Eleutherodactylus_hedricki.jpg/320px-Eleutherodactylus_hedricki.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 8,
     speciesSlug: 'eleutherodactylus-juanariveroi',
     scientificName: 'Eleutherodactylus juanariveroi',
-    commonName: 'Plains Coquí',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/pdMjTxlRIa6C_t20210308T080509440Z.20210308T080510528Z_d512.512_fspec.png',
+      siteName: 'DO16',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-08T08:05:09.440Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Plains Coquí',
+    extinctionRisk: 'CR',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1117,6 +1064,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/CoquiLlanero.jpg/320px-CoquiLlanero.jpg',
     information: [
       {
         description: "The species inhabits palustrine (freshwater) herbaceous wetland. The wetland is seasonally flooded with fresh water; the soil consists of swamp and marsh organic deposits. Herbaceous vegetation in this habitat includes the toothed midsorus fern (<span style=\"font-style: italic;\">Blechnum serrulatum</span>), willdenow's maiden fern (<span style=\"font-style: italic;\">Thelypteris interrupta</span>), bulltongue arrowhead (<span style=\"font-style: italic;\">Sagittaria lancifolia</span>), flatsedges (<span style=\"font-style: italic;\">Cyperus</span> sp.), spike rushes (<span style=\"font-style: italic;\">Eleocharis</span> sp.), and vines and grasses. The habitat at the type locality occupies ca 180 ha; the species was not found in other wetland sites in the northern coastal plain. Individuals are active between 19:00-22:00 hours, while perching, sitting, or calling on herbaceous vegetation, between 0.4 m and 1.2 m above water level. Calling sites for males were found to be between 0.6 and 1.2 m above ground level. Egg clutches vary between 1-5 eggs and are mostly deposited on leaf axils of <span style=\"font-style: italic;\">S. lancifolia</span>. Embryos hatch after approximately 19 days (Rios-López and Thomas 2007; N. Rios-López pers. comm. 2008).<br/><br/>This species is thought to have year-round reproduction given the frequency of juveniles found in any given month. However, most adult activity (including calling males) is greater during the warm and wet months (May to November), and diminishes during the cooler and drier months (particularly between the end of January and end of March). It is expected that recruitment rates reflect this seasonal pattern with a greater amount of clutches being produced during the warm and wet months. The seasonal breeding pattern in this frog is similar to that of other species of the genus in Puerto Rico, such as <span style=\"font-style: italic;\">E. antillensis</span>, <span style=\"font-style: italic;\">E. cochranae</span>,<span style=\"font-style: italic;\"> E. coqui</span>, <span style=\"font-style: italic;\">E. cooki</span>, <span style=\"font-style: italic;\">E. gryllus</span> and <span style=\"font-style: italic;\">E. portoricensis</span>. (N. Rios-López pers. comm. 2008).",
@@ -1129,17 +1077,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Eleutherodactylus_juanariveroi'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/CoquiLlanero.jpg/320px-CoquiLlanero.jpg',
-    extinctionRisk: 'CR'
+    ]
   },
   {
     speciesId: 12319,
     speciesSlug: 'eleutherodactylus-locustus',
     scientificName: 'Eleutherodactylus locustus',
-    commonName: 'Locust Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: 'Locust Coqui',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1152,6 +1099,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: '',
     information: [
       {
         description: 'It is a terrestrial species occurring in mesic broadleaf forest where the males call from low vegetation.&#160;It is restricted to closed-canopy forest and is not tolerant to anthropogenic disturbance (R.L. Joglar pers. comm. 2020). Eggs are laid on the ground, and it breeds by direct development.',
@@ -1164,17 +1112,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Locust_coqui'
       }
-    ],
-    extinctionRisk: 'EN',
-    thumbnailImageUrl: ''
+    ]
   },
   {
     speciesId: 12332,
     speciesSlug: 'eleutherodactylus-monensis',
     scientificName: 'Eleutherodactylus monensis',
-    commonName: 'Mona Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/e18055t8aeiq_t20210512T221009991Z.20210512T221010516Z_d512.512_fspec.png',
+      siteName: 'MO_MA',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-12T22:10:09.991Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Mona Coqui',
+    extinctionRisk: 'VU',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1187,6 +1143,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Eleutherodactylus_monensis.jpg/320px-Eleutherodactylus_monensis.jpg',
     information: [
       {
         description: 'It is found in crevices and holes in limestone and in caves in dry scrub forest. It is commonly recorded in bromeliads in trees and at the ground level, especially in the dry season (A. Puente and R. Joglar pers. comms. 2020). Eggs are laid on the ground and it breeds by direct development.',
@@ -1199,17 +1156,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Mona_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Eleutherodactylus_monensis.jpg/320px-Eleutherodactylus_monensis.jpg',
-    extinctionRisk: 'VU'
+    ]
   },
   {
     speciesId: 12356,
     speciesSlug: 'eleutherodactylus-portoricensis',
     scientificName: 'Eleutherodactylus portoricensis',
-    commonName: 'Mountain Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: 'Mountain Coqui',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1222,6 +1178,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Eleutherodactylus_portoricensis.jpg/320px-Eleutherodactylus_portoricensis.jpg',
     information: [
       {
         description: 'It is terrestrial in mesic, upland broadleaf forests, and has not been recorded outside forest habitat. It calls from bushes and tree trunks, eggs are laid in bromeliads, and it breeds by direct development.',
@@ -1234,17 +1191,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Eleutherodactylus_portoricensis'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Eleutherodactylus_portoricensis.jpg/320px-Eleutherodactylus_portoricensis.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 12360,
     speciesSlug: 'eleutherodactylus-richmondi',
     scientificName: 'Eleutherodactylus richmondi',
-    commonName: "Richmond's Coqui",
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: "Richmond's Coqui",
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1257,6 +1213,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Richmond_coqui.jpg/320px-Richmond_coqui.jpg',
     information: [
       {
         description: 'It is terrestrial in mesic forests. It has been heard calling from inside disturbed forest in El Yunque and Carite immediately following Hurricane Maria (2017). Males call from the ground or low vegetation. Eggs are laid in rotten logs, and develop directly.',
@@ -1265,21 +1222,20 @@ export const rawSpeciesWithInfo = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The bronze coqui, Richmond's coqui, coquí caoba, or coquí de Richmond is a species of frog in the family Eleutherodactylidae. The specific epithet, richmondi,",
+        description: "The bronze coqui, Richmond's coqui, coquí caoba, or coquí de Richmond is a species of frog in the family Eleutherodactylidae. The specific epithet, richmondi, is dedicated to Dr. Charles W. Richmond.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Bronze_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Richmond_coqui.jpg/320px-Richmond_coqui.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 12386,
     speciesSlug: 'eleutherodactylus-unicolor',
     scientificName: 'Eleutherodactylus unicolor',
-    commonName: 'Dwarf Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: 'Dwarf Coqui',
+    extinctionRisk: 'CR',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1292,6 +1248,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Coqui_frog.jpg/320px-Coqui_frog.jpg',
     information: [
       {
         description: 'It lives underground in elfin forest, and males call from root cavities of various trees. It has not been recorded outside of forest. Reproduction occurs by direct development.',
@@ -1304,17 +1261,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Dwarf_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Coqui_frog.jpg/320px-Coqui_frog.jpg',
-    extinctionRisk: 'CR'
+    ]
   },
   {
     speciesId: 12395,
     speciesSlug: 'eleutherodactylus-wightmanae',
     scientificName: 'Eleutherodactylus wightmanae',
-    commonName: 'Melodius Coqui',
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: 'Melodius Coqui',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1327,6 +1283,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/Eleutherodactylus_wightmanae.jpg/320px-Eleutherodactylus_wightmanae.jpg',
     information: [
       {
         description: 'It is a terrestrial species, occurring in mesic upland forest, and has not been recorded outside forest habitat. Males call from low vegetation and&#160;in the leaf litter of close-canopy forests. Breeding is by direct development,&#160;whereby&#160;tadpoles develop in the egg and hatch as tiny froglets (Joglar<em> et al. </em>2005,&#160;Ríos-López and Dávila-Casanova 2014).',
@@ -1339,17 +1296,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Melodius_coqui'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/Eleutherodactylus_wightmanae.jpg/320px-Eleutherodactylus_wightmanae.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 43907,
     speciesSlug: 'equus-caballus',
     scientificName: 'Equus caballus',
-    commonName: '',
     taxonId: 5,
     taxon: 'Mammals',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/oorl4j4101cd_t20210427T213025681Z.20210427T213027614Z_d512.512_fspec.png',
+      siteName: 'AR_eG',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-27T21:30:25.681Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Horse',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -1357,93 +1322,71 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/320px-Nokota_Horses_cropped.jpg',
     information: [
       {
         description: 'The horse is a domesticated one-toed hoofed mammal. It belongs to the taxonomic family Equidae and is one of two extant subspecies of Equus ferus. The horse evolved over the past 45 to 55 million years from Eohippus, a small multi-toed creature, into the large, single-toed animal of today. Humans began domesticating horses around 4000 BC, and their domestication is believed to have been widespread by 3000 BC. Specifically, horses in the subspecies caballus are domesticated, although some domesticated populations live in the wild as feral horses. However, these feral populations are not true wild horses, as this term is used to describe horses that have never been domesticated. There is an extensive, specialized vocabulary used to describe equine-related concepts, covering everything from anatomy to life stages, size, colors, markings, breeds, locomotion, and behavior.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Horse'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Nokota_Horses_cropped.jpg/320px-Nokota_Horses_cropped.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 10511,
     speciesSlug: 'euphonia-musica',
     scientificName: 'Euphonia musica',
-    commonName: 'Hispaniolan Euphonia',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Hispaniolan Euphonia',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Euphonia%20musica',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Antillean_euphonia',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Antillean_Euphonia.jpg/320px-Antillean_Euphonia.jpg',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Euphonia%20musica',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Antillean euphonia is a bird species in the finch family, Fringillidae .\nIt is found in all the main islands of the Lesser Antilles, as well as Hispaniola and Puerto Rico.\nIts natural habitats are subtropical or tropical dry forest, subtropical or tropical moist lowland forest, and heavily degraded former forest.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Antillean_euphonia'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Antillean_Euphonia.jpg/320px-Antillean_Euphonia.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1042,
     speciesSlug: 'falco-sparverius',
     scientificName: 'Falco sparverius',
-    commonName: 'American Kestrel',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'American Kestrel',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Falco%20sparverius',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_kestrel',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/AmericanKestrel02.jpg/256px-AmericanKestrel02.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Falco%20sparverius',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The American kestrel, also called the sparrow hawk, is the smallest and most common falcon in North America. It has a roughly two-to-one range in size over subspecies and sex, varying in size from about the weight of a blue jay to a mourning dove. It also ranges to South America and is a well-established species that has evolved into 17 subspecies adapted to different environments and habitats throughout the Americas. It exhibits sexual dimorphism in size and plumage, although both sexes have a rufous back with noticeable barring. Its plumage is colorful and attractive, and juveniles are similar in plumage to adults.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_kestrel'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/AmericanKestrel02.jpg/256px-AmericanKestrel02.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1527,
     speciesSlug: 'fulica-caribaea',
     scientificName: 'Fulica caribaea',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'American coot',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -1451,23 +1394,23 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/American-coot-casey-klebba.jpg/320px-American-coot-casey-klebba.jpg',
     information: [
       {
         description: 'The American coot, also known as a mud hen or pouldeau, is a bird of the family Rallidae. Though commonly mistaken for ducks, American coots are only distantly related to ducks, belonging to a separate order. Unlike the webbed feet of ducks, coots have broad, lobed scales on their lower legs and toes that fold back with each step in order to facilitate walking on dry land. Coots live near water, typically inhabiting wetlands and open water bodies in North America. Groups of coots are called covers or rafts. The oldest known coot lived to be 22 years old.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_coot'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/American-coot-casey-klebba.jpg/320px-American-coot-casey-klebba.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 21518,
     speciesSlug: 'gallinula-galeata',
     scientificName: 'Gallinula galeata',
-    commonName: 'Common Gallinule',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Common Gallinule',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1480,6 +1423,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Common-gallinule-galapagos-casey-klebba.jpg/228px-Common-gallinule-galapagos-casey-klebba.jpg',
     information: [
       {
         description: '<strong>Behaviour </strong>This species is predominantly sedentary or locally dispersive, but makes partially or fully migratory movements in the northern parts of its range due to its vulnerability to freezing conditions (Taylor and van Perlo 1998). Most northern populations move south from September to December, returning again from March to May (del Hoyo <em>et al</em>. 1996). The species breeds in solitary territorial pairs during the spring, especially during wet months (the exact timing varying geographically) (del Hoyo <em>et al</em>. 1996). It remains largely solitary throughout the year although juveniles and adults may form diurnal feeding groups of up to 30 individuals in the winter, especially during hard weather (Taylor and van Perlo 1998), often congregating on sheltered lakes and ponds (del Hoyo <em>et al</em>. 1996). <strong><br/><br/>Habitat </strong>The species inhabits freshwater wetlands, both still and moving, requiring easy access to open water (del Hoyo <em>et al</em>. 1996) and showing a preference for waters sheltered by woodland, bushes or tall emergent vegetation (del Hoyo <em>et al</em>. 1996, Taylor and van Perlo 1998). Suitable habitats include slow-flowing rivers (del Hoyo <em>et al</em>. 1996, Taylor and van Perlo 1998), oxbow lakes (Taylor and van Perlo 1998), streams, canals, ditches, lakes, reservoirs, sites with small open water surfaces such as pools and ponds only a few metres across, swamps, marshes (del Hoyo <em>et al</em>. 1996, Taylor and van Perlo 1998), seasonally flooded sites (del Hoyo <em>et al</em>. 1996) such as flood-plains (Taylor and van Perlo 1998), disused gravel pits, rice-fields (del Hoyo <em>et al</em>. 1996, Taylor and van Perlo 1998), sewage ponds (Taylor and van Perlo 1998), and occasionally mangroves (Puerto Rico)<strong></strong>. It generally avoids very open sites (especially those exposed to wind or wave action) (del Hoyo <em>et al</em>. 1996, Taylor and van Perlo 1998) and oligotrophic or saline habitats (although it may be found on brackish waters) (del Hoyo <em>et al</em>. 1996, Taylor and van Perlo 1998). When foraging the species may range onto drier grassland, agricultural land or meadows, and on migration and in the winter months it can often be observed on damp grassland away from water (Taylor and van Perlo 1998). <strong><br/><br/>Diet </strong>The species is omnivorous and opportunistic, its diet consisting of earthworms, crustaceans, molluscs, adult and larval insects (especially flies, mayflies, caddisflies, bugs, beetles and Lepidoptera), spiders, small fish, tadpoles and occasionally birds eggs, as well as plant matter such as filamentous algae, moss, the vegetative parts of reeds and aquatic plants, the seeds of reeds, rushes, sedges, water-lilies, waterside herbaceous vegetation, trees (<em>Ulmus</em> spp.) and cereal crops, flowers of <em>Eichhornia</em> spp., and the berries and fruits of yew, <em>Rubus</em>, <em>Sorbus</em>, <em>Rosa</em>, <em>Crataegus</em>, <em>Rhamnus</em>, <em>Hedera</em>, <em>Sambucus</em>, <em>Hippophae</em> spp. and various orchard trees (del Hoyo <em>et al</em>. 1996). <strong><br/><br/>Breeding site </strong>The nest varies between a shallow saucer and a deep cup constructed from twigs and waterside vegetation, and can be floating on or positioned up to 1 m above water in emergent vegetation, or positioned on a solid platform of branches in water. Less often the nest is placed in ground vegetation or in low bushes on the bank near water, or in bushes and trees up to 8 m from the ground (del Hoyo <em>et al</em>. 1996). <strong><br/><br/>Management information </strong>Early harvesting in rice-fields should be avoided as it harms nests and young broods of this species (Taylor and van Perlo 1998).',
@@ -1492,17 +1436,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Common_gallinule'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Common-gallinule-galapagos-casey-klebba.jpg/228px-Common-gallinule-galapagos-casey-klebba.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 16766,
     speciesSlug: 'gallus-gallus-domesticus',
     scientificName: 'Gallus gallus domesticus',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Chicken',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -1510,58 +1453,56 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Male_and_female_chicken_sitting_together.jpg/240px-Male_and_female_chicken_sitting_together.jpg',
     information: [
       {
         description: 'The chicken is a domesticated subspecies of the red junglefowl originally from Southeastern Asia. Rooster or cock is a term for an adult male bird, and a younger male may be called a cockerel. A male that has been castrated is a capon. An adult female bird is called a hen and a sexually immature female is called a pullet.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Chicken'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Male_and_female_chicken_sitting_together.jpg/240px-Male_and_female_chicken_sitting_together.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 2124,
     speciesSlug: 'geotrygon-montana',
     scientificName: 'Geotrygon montana',
-    commonName: 'Ruddy Quail-dove',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/BVhZeV3BetQY_t20210413T131013298Z.20210413T131018163Z_d512.512_fspec.png',
+      siteName: 'RA28',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-13T13:10:13.298Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Ruddy Quail-dove',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Geotrygon%20montana',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Ruddy_quail-dove',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Geotrygon_montana_-_Ruddy_Quail-Dove%2C_Trememb%C3%A9%2C_S%C3%A3o_Paulo%2C_Brazil.jpg/320px-Geotrygon_montana_-_Ruddy_Quail-Dove%2C_Trememb%C3%A9%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Geotrygon%20montana',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The ruddy quail-dove is a species of bird in the dove and pigeon family Columbidae. It breeds throughout the West Indies, Central America, and tropical South America. It has appeared as a vagrant in Florida and southern Texas. It lays two buff-colored eggs on a flimsy platform built on a shrub. Some nests are built on the ground.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Ruddy_quail-dove'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Geotrygon_montana_-_Ruddy_Quail-Dove%2C_Trememb%C3%A9%2C_S%C3%A3o_Paulo%2C_Brazil.jpg/320px-Geotrygon_montana_-_Ruddy_Quail-Dove%2C_Trememb%C3%A9%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1604,
     speciesSlug: 'himantopus-mexicanus',
     scientificName: 'Himantopus mexicanus',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Black-necked stilt',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -1569,93 +1510,89 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg/257px-Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg',
     information: [
       {
         description: 'The black-necked stilt is a locally abundant shorebird of American wetlands and coastlines. It is found from the coastal areas of California through much of the interior western United States and along the Gulf of Mexico as far east as Florida, then south through Central America and the Caribbean to Ecuador and the Galápagos Islands. The northernmost populations, particularly those from inland, are migratory, wintering from the extreme south of the United States to southern Mexico, rarely as far south as Costa Rica; on the Baja California peninsula it is only found regularly in winter.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Black-necked_stilt'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg/257px-Black-necked_Stilt_%28Himantopus_mexicanus%29%2C_Corte_Madera.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 9852,
     speciesSlug: 'icterus-icterus',
     scientificName: 'Icterus icterus',
-    commonName: 'Venezuelan Troupial',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SGpk3G4BuSK8_t20210502T130008841Z.20210502T130014640Z_d512.512_fspec.png',
+      siteName: 'CR18',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-02T13:00:08.841Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Venezuelan Troupial',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Icterus%20icterus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Venezuelan_troupial',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Curacao-Icterus-Icterus-2013.JPG/320px-Curacao-Icterus-Icterus-2013.JPG',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (extent of occurrence &lt;20,000 km<sup>2</sup>&#160;combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Icterus%20icterus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Venezuelan troupial is the national bird of Venezuela. It is found in Colombia, Venezuela, and the Caribbean islands of Aruba, Curaçao, Bonaire, Trinidad, and Puerto Rico. Previously part of a superspecies simply named the troupial, it was recently split together with the orange-backed troupial and Campo troupial.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Venezuelan_troupial'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Curacao-Icterus-Icterus-2013.JPG/320px-Curacao-Icterus-Icterus-2013.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40135,
     speciesSlug: 'icterus-portoricensis',
     scientificName: 'Icterus portoricensis',
-    commonName: 'Puerto Rican Oriole',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qGMHd3ukiyk5_t20210323T141522634Z.20210323T141525299Z_d512.512_fspec.png',
+      siteName: 'TO18',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-23T14:15:22.634Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Oriole',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Icterus%20portoricensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_oriole',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Icterus_portoricensis_imported_from_iNaturalist_photo_6037124_on_4_September_2019.jpg/320px-Icterus_portoricensis_imported_from_iNaturalist_photo_6037124_on_4_September_2019.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). For these reasons the species is evaluated as Least Concern.\r\n</P>',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Icterus%20portoricensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican oriole is a species of bird in the family Icteridae, and genus Icterus or New World blackbirds. This species is a part of a subgroup of orioles that includes the North American orchard oriole, Icterus spurius, and the hooded oriole, Icterus cucullatus.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_oriole'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Icterus_portoricensis_imported_from_iNaturalist_photo_6037124_on_4_September_2019.jpg/320px-Icterus_portoricensis_imported_from_iNaturalist_photo_6037124_on_4_September_2019.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1854,
     speciesSlug: 'larus-atricilla',
     scientificName: 'Larus atricilla',
-    commonName: 'Laughing Gull',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Laughing Gull',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1668,6 +1605,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Leucophaeus_atricilla_stare.jpg/320px-Leucophaeus_atricilla_stare.jpg',
     information: [
       {
         description: 'This species is strictly coastal when breeding, being found on vegetated sandy beaches, islands, salt-marshes, and on the tops of rocky islands. It lays from mid- to late May in the north, and in late April in Florida. Colonies form from dozens of individuals to 10,000 pairs. Its diet is comprised of aquatic invertebrates and insects, but also fish, scraps and refuse. It can be kleptoparasitic on Brown Pelicans (del Hoyo <span style="font-style: italic;">et al.</span> 1996)<strong><sup></sup></strong>. <p></p>',
@@ -1680,17 +1618,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Laughing_gull'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Leucophaeus_atricilla_stare.jpg/320px-Leucophaeus_atricilla_stare.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 6,
     speciesSlug: 'leptodactylus-albilabris-',
     scientificName: 'leptodactylus albilabris ',
-    commonName: 'Ranita de Labio Blanco',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d512.512_fspec.png',
+      siteName: 'RO10_repeated',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-05T18:55:51.443Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Ranita de Labio Blanco',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1703,6 +1649,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Leptodactylus_albilabris.jpg/320px-Leptodactylus_albilabris.jpg',
     information: [
       {
         description: 'It is a semi-aquatic frog, inhabiting streams, marshes, and irrigated fields, as well as, drainage ditches and gutters in both forested, open country and urban areas. Males call from ground or aquatic vegetation, eggs are laid in foam nests.',
@@ -1715,17 +1662,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Leptodactylus_albilabris'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Leptodactylus_albilabris.jpg/320px-Leptodactylus_albilabris.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 13725,
     speciesSlug: 'lithobates-catesbeianus',
     scientificName: 'Lithobates catesbeianus',
-    commonName: 'American Bullfrog',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/CH8KYPyrp7CS_t20210406T051536025Z.20210406T051537239Z_d512.512_fspec.png',
+      siteName: 'SA34',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-06T05:15:36.025Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'American Bullfrog',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -1738,6 +1693,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/North-American-bullfrog1.jpg/320px-North-American-bullfrog1.jpg',
     information: [
       {
         description: 'This species inhabits ponds, swamps, lakes, reservoirs, marshes, brackish ponds (in Hawaii), stream margins and irrigation ditches. It is sometimes found in temporary waters hundreds of metres from permanent water. It winters at the bottom of pools. It may disperse from water in wet weather. Eggs and larvae develop in permanent slow or non-flowing bodies of water.',
@@ -1750,17 +1706,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_bullfrog'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/North-American-bullfrog1.jpg/320px-North-American-bullfrog1.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 10153,
     speciesSlug: 'loxigilla-portoricensis',
     scientificName: 'Loxigilla portoricensis',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_d512.512_fspec.png',
+      siteName: 'GUI04',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-08T13:05:20.853Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican bullfinch',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -1768,338 +1732,284 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Come%C3%B1ame.jpg/320px-Come%C3%B1ame.jpg',
     information: [
       {
         description: "The Puerto Rican bullfinch or comeñame in Spanish, is a small bullfinch tanager endemic to the archipelago of Puerto Rico. These were previously considered Emberizidae.\nThe Puerto Rican bullfinch has black feathers with orange areas above the eyes, around its throat, and underneath the tail's base. The species measures from 17 to 19 cm and weighs approximately 32 grams.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_bullfinch'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Come%C3%B1ame.jpg/320px-Come%C3%B1ame.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 34,
     speciesSlug: 'margarops-fuscatus',
     scientificName: 'Margarops fuscatus',
-    commonName: 'Pearly-eyed Thrasher',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6Wu4rZss6mtE_t20210420T115553911Z.20210420T115554987Z_d512.512_fspec.png',
+      siteName: 'VI06',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-04-20T11:55:53.911Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Pearly-eyed Thrasher',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Margarops%20fuscatus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Pearly-eyed_thrasher',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Margarops_fuscatus_-Guana_Island%2C_British_Virgin_Islands-8.jpg/320px-Margarops_fuscatus_-Guana_Island%2C_British_Virgin_Islands-8.jpg',
     information: [
-      {
-        description: 'Although this species may have a restricted range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Margarops%20fuscatus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The pearly-eyed thrasher is a bird in the thrasher family Mimidae. It is found on many Caribbean islands, from the Bahamas in the north to the Grenadines in the south, with an isolated population on Bonaire. At least two subspecies can be distinguished genetically: Margarops fuscatus fuscatus which is found between the Greater Antilles and Antigua and Barbuda, M. f. densirostris, occurring from Montserrat and Guadeloupe southwards. Its main habitat is bushes and trees in mountain forests and coffee plantations.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Pearly-eyed_thrasher'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Margarops_fuscatus_-Guana_Island%2C_British_Virgin_Islands-8.jpg/320px-Margarops_fuscatus_-Guana_Island%2C_British_Virgin_Islands-8.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 3813,
     speciesSlug: 'megaceryle-alcyon',
     scientificName: 'Megaceryle alcyon',
-    commonName: 'Belted Kingfisher',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Belted Kingfisher',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Megaceryle%20alcyon',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Belted_kingfisher',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Belted_Kingfisher.jpg/320px-Belted_Kingfisher.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Megaceryle%20alcyon',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The belted kingfisher is a large, conspicuous water kingfisher. It is depicted on the 1986 series Canadian $5 note. All kingfishers were formerly placed in one family, Alcedinidae, but recent research suggests that this should be divided into three subfamilies.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Belted_kingfisher'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Belted_Kingfisher.jpg/320px-Belted_Kingfisher.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2887,
     speciesSlug: 'megascops-nudipes',
     scientificName: 'Megascops nudipes',
-    commonName: 'Puerto Rican Screech-owl',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/yqtor6h9o0vr_t20210408T035040768Z.20210408T035043915Z_d512.512_fspec.png',
+      siteName: 'PA24_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Alternative Song',
+      recordedAt: '2021-04-08T03:50:40.768Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Screech-owl',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Megascops%20nudipes',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_owl',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Megascops_nudipes-Mucarito-Screech_Owl_of_Puerto_Rico.jpeg/268px-Megascops_nudipes-Mucarito-Screech_Owl_of_Puerto_Rico.jpeg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Megascops%20nudipes',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican owl or múcaro, formerly known as the Puerto Rican screech owl, is a nocturnal endemic owl of the archipelago of Puerto Rico. It is the only species placed in the genus Gymnasio of the family Strigidae. The subspecies G. n. newtoni, which was endemic to the Virgin Islands, was locally referred to as the cuckoo bird.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_owl'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Megascops_nudipes-Mucarito-Screech_Owl_of_Puerto_Rico.jpeg/268px-Megascops_nudipes-Mucarito-Screech_Owl_of_Puerto_Rico.jpeg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 4111,
     speciesSlug: 'melanerpes-portoricensis',
     scientificName: 'Melanerpes portoricensis',
-    commonName: 'Puerto Rican Woodpecker',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Puerto Rican Woodpecker',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Melanerpes%20portoricensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_woodpecker',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Puerto_Rican_Woodpecker_%28Melanerpes_portoricensis%29.jpg/213px-Puerto_Rican_Woodpecker_%28Melanerpes_portoricensis%29.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Melanerpes%20portoricensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican woodpecker is the only woodpecker endemic to the archipelago of Puerto Rico and is one of the five species of the genus Melanerpes that occur in the Antilles. Furthermore, it is the only resident species of the family Picidae in Puerto Rico. The species is common on the main island of Puerto Rico and rare on the island of Vieques.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_woodpecker'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Puerto_Rican_Woodpecker_%28Melanerpes_portoricensis%29.jpg/213px-Puerto_Rican_Woodpecker_%28Melanerpes_portoricensis%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 8251,
     speciesSlug: 'mimus-polyglottos',
     scientificName: 'Mimus polyglottos',
-    commonName: 'Northern Mockingbird',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Northern Mockingbird',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Mimus%20polyglottos',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Northern_mockingbird',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Mockingbird_in_Bay_Ridge_%2885082%29.jpg/320px-Mockingbird_in_Bay_Ridge_%2885082%29.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Mimus%20polyglottos',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The northern mockingbird is a mockingbird commonly found in North America. This bird is mainly a permanent resident, but northern birds may move south during harsh weather. This species has rarely been observed in Europe. This species was first described by Carl Linnaeus in his 1758 10th edition of Systema Naturae as Turdus polyglottos. The northern mockingbird is known for its mimicking ability, as reflected by the meaning of its scientific name, "many-tongued thrush". The northern mockingbird has gray to brown upper feathers and a paler belly. Its tail and wings have white patches which are visible in flight.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Northern_mockingbird'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Mimus_polyglottos_adult_02_cropped.jpg/320px-Mimus_polyglottos_adult_02_cropped.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 9887,
     speciesSlug: 'molothrus-bonariensis',
     scientificName: 'Molothrus bonariensis',
-    commonName: 'Shiny Cowbird',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/7h7op2shntao_t20210309T163538456Z.20210309T163542747Z_d512.512_fspec.png',
+      siteName: 'POEXTRA13',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-09T16:35:38.456Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Shiny Cowbird',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Molothrus%20bonariensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Shiny_cowbird',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Shiny_cowbird_%28Molothrus_bonariensis%29_male.JPG/320px-Shiny_cowbird_%28Molothrus_bonariensis%29_male.JPG',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Molothrus%20bonariensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The shiny cowbird is a passerine bird in the New World family Icteridae. It breeds in most of South America except for dense forests and areas of high altitude such as mountains. Since 1900 the shiny cowbirds' range has shifted northward, and it was recorded in the Caribbean islands as well as the United States, where it is found breeding in southern Florida. It is a bird associated with open habitats, including disturbed land from agriculture and deforestation.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Shiny_cowbird'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Shiny_cowbird_%28Molothrus_bonariensis%29_male.JPG/320px-Shiny_cowbird_%28Molothrus_bonariensis%29_male.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 16,
     speciesSlug: 'myiarchus-antillarum',
     scientificName: 'Myiarchus antillarum',
-    commonName: 'Puerto Rican Flycatcher',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/lurBc90SO37V_t20210503T084052666Z.20210503T084054133Z_d512.512_fspec.png',
+      siteName: 'CR29',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-03T08:40:52.666Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Flycatcher',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Myiarchus%20antillarum',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_flycatcher',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Puerto_Rican_Flycatcher.jpg/256px-Puerto_Rican_Flycatcher.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Myiarchus%20antillarum',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican flycatcher is a tyrant flycatcher endemic to the Puerto Rican archipelago and one of the 22 species belonging to the genus Myiarchus of the family Tyrannidae.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_flycatcher'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Puerto_Rican_Flycatcher.jpg/256px-Puerto_Rican_Flycatcher.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2581,
     speciesSlug: 'myiopsitta-monachus',
     scientificName: 'Myiopsitta monachus',
-    commonName: 'Monk Parakeet',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Monk Parakeet',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Myiopsitta%20monachus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Monk_parakeet',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Monk_Parakeet_%28Myiopsitta_monachus%29_%2828420470712%29.jpg/320px-Monk_Parakeet_%28Myiopsitta_monachus%29_%2828420470712%29.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Myiopsitta%20monachus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The monk parakeet, also known as the Quaker parrot, is a species of true parrot in the family Psittacidae. It is a small, bright-green parrot with a greyish breast and greenish-yellow abdomen. Its average lifespan is 20–30 years. It originates from the temperate to subtropical areas of Argentina and the surrounding countries in South America. Self-sustaining feral populations occur in many places, mainly in North America and Europe.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Monk_parakeet'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Monk_Parakeet_%28Myiopsitta_monachus%29_%2828420470712%29.jpg/320px-Monk_Parakeet_%28Myiopsitta_monachus%29_%2828420470712%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 10487,
     speciesSlug: 'nesospingus-speculiferus',
     scientificName: 'Nesospingus speculiferus',
-    commonName: 'Puerto Rican Tanager',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/26bu9mc9lbct_t20210404T101514026Z.20210404T101515751Z_d512.512_fspec.png',
+      siteName: 'LU_50',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-04T10:15:14.026Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Tanager',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Nesospingus%20speculiferus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_tanager',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Puerto_Rican_Tanager.jpg/320px-Puerto_Rican_Tanager.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Nesospingus%20speculiferus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The Puerto Rican tanager is a small passerine bird endemic to the archipelago of Puerto Rico. It is the only member of the genus Nesospingus and has historically been placed in the tanager family, but recent studies indicate it as either belonging in its own family Nesospingidae or as being a member of Phaenicophilidae. Its closest relatives are likely the spindalises. The Puerto Rican tanager is known to locals as llorosa, which means 'cryer'.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_tanager'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Puerto_Rican_Tanager.jpg/320px-Puerto_Rican_Tanager.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 14536,
     speciesSlug: 'osteopilus-septentrionalis',
     scientificName: 'Osteopilus septentrionalis',
-    commonName: 'Cuban Treefrog',
     taxonId: 2,
     taxon: 'Amphibians',
+    commonName: 'Cuban Treefrog',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2112,6 +2022,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Cuban_tree_frog_%28Osteopilus_septentrionalis%29_6.jpg/320px-Cuban_tree_frog_%28Osteopilus_septentrionalis%29_6.jpg',
     information: [
       {
         description: "This species generally inhabits mesic habitats but may be found in xeric habitat in the Bahamas, living in all kinds of disturbed habitats, including towns and houses. It is also present in forests, mangroves and coastal areas. It can also tolerate brackish water. It is found on the ground and on tree trunks. Males call from vegetation near pooled rainwater. Eggs are laid in still water, including pools, marshes, flood pastures, and ditches.&#160;<span id=\"docs-internal-guid-3b2c51d8-7fff-ac19-92b8-320ce0e77b77\">Eggs and young have also been found in pooled rainwater along rocky tidal areas in the Bahamas (R.G. Reynolds pers. obs.). It is competing with other species, and preys upon native amphibians in the wild. It might also be a vector for pathogens. It is preyed upon by some snakes in the Bahamas, including <em>Cubophis</em>, <em>Chilabothrus</em>, and <em>Tropidophis</em> (R.G. Reynolds pers. obs.).&#160; <br/><br/>Breeding events have been found to last only one night and male mating behavior changes from acoustic competition to scramble searching over the breeding event. Most males have similar opportunities to mate with a female, and there doesn't appear to be a direct adaptive benefit for high mating selectivity by females, which can increase the invasive capacity of this species&#160;(Vargas Salinas 2006).",
@@ -2124,17 +2035,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Cuban_tree_frog'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Cuban_tree_frog_%28Osteopilus_septentrionalis%29_6.jpg/320px-Cuban_tree_frog_%28Osteopilus_septentrionalis%29_6.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1072,
     speciesSlug: 'pandion-haliaetus',
     scientificName: 'Pandion haliaetus',
-    commonName: 'Osprey',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Osprey',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2147,6 +2057,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/2010-kabini-osprey.jpg/217px-2010-kabini-osprey.jpg',
     information: [
       {
         description: '<p><strong>Behaviour</strong> Individuals in the tropics and subtropics are resident, but others migrate to the lower latitudes of the Amazon Basin, South America’s northern coast, or West Africa in the non-breeding season (del Hoyo <em>et al.</em> 1994). Migrants begin moving to lower latitudes in August and arrive by October, returning in March and April (Ferguson-Lees and Christie 2001). Birds are generally solitary and usually migrate alone, but may congregate in small groups at roosts or plentiful food sources (del Hoyo <em>et al.</em> 1994, Ferguson-Lees and Christie 2001). The species migrates on broad fronts and is not dependent on land bridges during migration (Snow and Perrins 1998, Ferguson-Lees and Christie 2001); birds readily cross bodies of water using flapping flight, but can soar easily over land. It is entirely diurnal (Brown <em>et al.</em> 1982). <strong>Habitat</strong> It inhabits the areas around shallow waters, being sufficiently tolerant of human settlement to persist in suburban and sometimes urban environments (del Hoyo <em>et al.</em> 1994). <strong>Diet</strong> Almost its entire diet consists of live fish (del Hoyo <em>et al.</em> 1994). <strong>Breeding site</strong> Birds usually build large nests high in exposed trees (del Hoyo <em>et al.</em> 1994). <strong>Management information</strong> Reintroduction has helped populations to recover across parts of its range (del Hoyo <em>et al.</em> 1994).</p>',
@@ -2159,52 +2070,40 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Osprey'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/2010-kabini-osprey.jpg/217px-2010-kabini-osprey.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40323,
     speciesSlug: 'parkesia-noveboracensis',
     scientificName: 'Parkesia noveboracensis',
-    commonName: 'Northern Waterthrush',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Northern Waterthrush',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Parkesia%20noveboracensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Northern_waterthrush',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Seiurus_noveboracensis_MP1_%28cropped%29.jpg/320px-Seiurus_noveboracensis_MP1_%28cropped%29.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (extent of occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Parkesia%20noveboracensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The northern waterthrush is one of the larger New World warblers and one of the Nearctic-Neotropical migratory songbirds. It breeds in the northern part of North America in Canada and the northern United States including Alaska. This bird is migratory, wintering in Central America, the West Indies and Florida, as well as in Venezuela, Colombia, and Ecuador. It is a very rare vagrant to other South American countries and to western Europe.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Northern_waterthrush'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Seiurus_noveboracensis_MP1_%28cropped%29.jpg/320px-Seiurus_noveboracensis_MP1_%28cropped%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 9100,
     speciesSlug: 'passer-domesticus',
     scientificName: 'Passer domesticus',
-    commonName: 'House Sparrow',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'House Sparrow',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2217,6 +2116,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Passer_domesticus_male_%2815%29.jpg/320px-Passer_domesticus_male_%2815%29.jpg',
     information: [
       {
         description: 'This species is often associated with man, living around buildings from  isolated farms to urban centres and showing a preference for suburbs. In  the south of its range it is more frequently found in open country, and  has been recorded as breeding in small isolated colonies away from  humans. In Central Asia and Afghanistan, the species is mainly a summer visitor, where it is confined to open country in the area of overlap with resident <em>P. montanus</em>; farther north, in Siberia, the two species live side by  side in built-up areas. It breeds from February to September, although timing varies  with latitude. It breeds in loose colonies and nests are constructed  mainly of plant stems, lined with feathers or other soft material. Its  preferred site is a hole in a building, cliff or tree. Clutches are two  to five eggs. The diet is mainly vegetable material, particularly seeds  of grasses, cultivated cereals and low herbs, but also buds, berries and  wide range of household scraps. It does take some animal matter (c. 10%  of the diet in summer months). The species is mostly resident with some limited withdrawal of populations breeding at high latitudes and altitudes to less cold areas in winter  (Summers-Smith <em>et al</em>. 2015).',
@@ -2229,17 +2129,25 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/House_sparrow'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Passer_domesticus_male_%2815%29.jpg/320px-Passer_domesticus_male_%2815%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1997,
     speciesSlug: 'patagioenas-leucocephala',
     scientificName: 'Patagioenas leucocephala',
-    commonName: 'White-crowned Pigeon',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/W7YLLek7TEuY_t20210303T142542823Z.20210303T142544566Z_d512.512_fspec.png',
+      siteName: 'DO33',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-03T14:25:42.823Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'White-crowned Pigeon',
+    extinctionRisk: 'NT',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2252,6 +2160,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/White-crowned_Pigeon_%28Patagioenas_leucocephala%29.jpg/256px-White-crowned_Pigeon_%28Patagioenas_leucocephala%29.jpg',
     information: [
       {
         description: 'In Florida, the Bahamas, the coastal Yucatan islets and the Lesser Antilles it primarily requires isolated offshore mangrove islets with limited disturbance for breeding although semi-deciduous and gallery forests may also be used (Acosta and Mugica 2019). For feeding it flies to humid evergreen or semi-deciduous hardwood forests on adjacent mainland areas (Bancroft and Bowman 2001, Gibbs <em>et al.</em> 2001). Elsewhere it generally occupies lower-lying forest habitats (Gibbs <em>et al.</em> 2001). It has also been recently noted to occur in suburban environments throughout Miami-Dade County, USA, suggesting an expansion in its typically occupied habitat in recent years (Diamond <em>et al</em>. 2016).<p></p>',
@@ -2264,52 +2173,58 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/White-crowned_pigeon'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/White-crowned_Pigeon_%28Patagioenas_leucocephala%29.jpg/256px-White-crowned_Pigeon_%28Patagioenas_leucocephala%29.jpg',
-    extinctionRisk: 'NT'
+    ]
   },
   {
     speciesId: 1999,
     speciesSlug: 'patagioenas-squamosa',
     scientificName: 'Patagioenas squamosa',
-    commonName: 'Scaly-naped Pigeon',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/mCW47hcb19kE_t20210503T104539604Z.20210503T104542252Z_d512.512_fspec.png',
+      siteName: 'CR09',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-05-03T10:45:39.604Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Scaly-naped Pigeon',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Patagioenas%20squamosa',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Scaly-naped_pigeon',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Patagioenas_squamosa_in_Barbados_a-01.jpg/206px-Patagioenas_squamosa_in_Barbados_a-01.jpg',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Patagioenas%20squamosa',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The scaly-naped pigeon, also known as the red-necked pigeon, is a bird belonging to the family Columbidae. The species occurs throughout the Caribbean.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Scaly-naped_pigeon'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Patagioenas_squamosa_in_Barbados_a-01.jpg/206px-Patagioenas_squamosa_in_Barbados_a-01.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1638,
     speciesSlug: 'pluvialis-squatarola',
     scientificName: 'Pluvialis squatarola',
-    commonName: 'Grey Plover',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/D7otJV26vYjL_t20210502T101043447Z.20210502T101044427Z_d512.512_fspec.png',
+      siteName: 'CR13',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Simple Call',
+      recordedAt: '2021-05-02T10:10:43.447Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Grey Plover',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2322,6 +2237,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Pluvialis_squatarola_%28summer_plumage%29.jpg/320px-Pluvialis_squatarola_%28summer_plumage%29.jpg',
     information: [
       {
         description: '<strong>Behaviour</strong> This species is fully migratory (del Hoyo <em>et al.</em> 1996). It departs its breeding grounds from late-July to September (southward movements continuing into November) and returns from late-May to June (Hayman <em>et al.</em> 1986, del Hoyo <em>et al.</em> 1996). It breeds from May to August in solitary well-dispersed pairs and forages alone or in small loose flocks of up to 30 individuals (Johnsgard 1981, Hayman <em>et al.</em> 1986, del Hoyo <em>et al.</em> 1996). It is gregarious during the winter however, often roosting in large flocks containing up to several thousand individuals (del Hoyo <em>et al.</em> 1996).&#160;<br/><br/><strong>Habitat</strong> <em>Breeding</em> The species nests in the high Arctic in both upland and valley locations between the treeline and the coast, utilising dry stony tundra with sedge, moss, lichen, grass or dwarf birch, peat ridges in tundra marshes, dry exposed ridges, riverbanks, raised sand or gravel beaches, and rocky slopes (Johnsgard 1981, del Hoyo <em>et al.</em> 1996, Snow and Perrins 1998). <em>Non-breeding</em> Outside of the breeding season the species frequents intertidal mudflats, saltmarshes, sandflats and beaches of oceanic coastlines, bays and estuaries (Johnsgard 1981, del Hoyo <em>et al.</em> 1996). During migration it may also be found inland on lakes, pools or grasslands (del Hoyo <em>et al.</em> 1996).&#160;<br/><br/><strong>Diet</strong> <em>Breeding</em> During the breeding season the diet of this species consists largely of adult and larval insects such as beetles and Diptera as well as some plant matter (e.g. grass seeds and stems) (del Hoyo <em>et al.</em> 1996). <em>Non-breeding</em> When on the coast in its wintering range the species takes marine polychaete worms, molluscs and crustaceans (e.g. crabs, sand shrimps), occasionally also taking insects (e.g. grasshoppers and beetles) or earthworms when in inland habitats on passage (Johnsgard 1981, del Hoyo <em>et al.</em> 1996).&#160;<br/><br/><strong>Breeding site</strong> The nest is a shallow scrape on dry ground in exposed, stony sites, neighbouring nests not less than 400 m apart (del Hoyo <em>et al.</em> 1996, Snow and Perrins 1998).&#160;<br/><br/><strong>Management information</strong> In the UK there is evidence that the removal of Common Cordgrass (<em>Spartina anglica</em>) from tidal mudflats using a herbicide is beneficial for the species (Evans 1986).',
@@ -2334,17 +2250,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Grey_plover'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Pluvialis_squatarola_%28summer_plumage%29.jpg/320px-Pluvialis_squatarola_%28summer_plumage%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1510,
     speciesSlug: 'porphyrio-martinica',
     scientificName: 'Porphyrio martinica',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'American purple gallinule',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -2352,128 +2267,113 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/PurpleGallinule.jpg/320px-PurpleGallinule.jpg',
     information: [
       {
         description: 'This article is on the New-World purple gallinule, not the Old-World purple gallinule, which is the western swamphen.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_purple_gallinule'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/PurpleGallinule.jpg/320px-PurpleGallinule.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 6908,
     speciesSlug: 'progne-dominicensis',
     scientificName: 'Progne dominicensis',
-    commonName: 'Caribbean Martin',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/G9orYITUbnQZ_t20210401T110508988Z.20210401T110509634Z_d512.512_fspec.png',
+      siteName: 'PA31',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-01T11:05:08.988Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Caribbean Martin',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Progne%20dominicensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Caribbean_martin',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Progne_dominicensis_1894.jpg/300px-Progne_dominicensis_1894.jpg',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Progne%20dominicensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Caribbean martin or white-bellied martin is a large swallow.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Caribbean_martin'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Progne_dominicensis_1894.jpg/300px-Progne_dominicensis_1894.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 55,
     speciesSlug: 'quiscalus-niger',
     scientificName: 'Quiscalus niger',
-    commonName: 'Greater Antillean Grackle',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Greater Antillean Grackle',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Quiscalus%20niger',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Greater_Antillean_grackle',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Greater_antillean_grackle_%28Quiscalus_niger_gundlachii%29.JPG/320px-Greater_antillean_grackle_%28Quiscalus_niger_gundlachii%29.JPG',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Quiscalus%20niger',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The Greater Antillean grackle is a grackle found throughout the Greater Antilles as well as smaller, nearby islands. Like all Quiscalus grackles, it is a rather large, gregarious bird. It lives largely in heavily settled areas. It is also known as the 'kling-kling' and 'chinchilín' in the Dominican Republic, as a 'Ching Ching' in the Cayman Island and as a ‘chango’ in Puerto Rico.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Greater_Antillean_grackle'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Greater_antillean_grackle_%28Quiscalus_niger_gundlachii%29.JPG/320px-Greater_antillean_grackle_%28Quiscalus_niger_gundlachii%29.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 21391,
     speciesSlug: 'rallus-crepitans',
     scientificName: 'Rallus crepitans',
-    commonName: 'Clapper Rail',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Clapper Rail',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Rallus%20crepitans',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Clapper_rail',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Rallus_crepitans.jpg/320px-Rallus_crepitans.jpg',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Rallus%20crepitans',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "The clapper rail is a member of the rail family, Rallidae. The taxonomy for this species is confusing and still being determined. The Ridgway's rail and the mangrove rail have been recently split. Furthermore, some taxonomists consider that the King rail and Aztec rail should be considered within this group, as those birds look similar and the birds are known to interbreed where they share territories.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Clapper_rail'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Rallus_crepitans.jpg/320px-Rallus_crepitans.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 16084,
     speciesSlug: 'rhinella-marina',
     scientificName: 'Rhinella marina',
-    commonName: 'Cane Toad',
     taxonId: 2,
     taxon: 'Amphibians',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/8pltfgqld1lp_t20210304T054023012Z.20210304T054024614Z_d512.512_fspec.png',
+      siteName: 'RO14',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-04T05:40:23.012Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Cane Toad',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2486,6 +2386,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Canetoadmale.jpg/320px-Canetoadmale.jpg',
     information: [
       {
         description: 'A nocturnal and terrestrial toad that inhabits humid areas with adequate cover, including cane fields, savannah, open forest, well watered yards and gardens. It also inhabits dry equatorial forests. It thrives in degraded habitats and man-made environments, and is occasionally found in pristine lowland and montane rainforests, but generally prefers open or disturbed habitat such as tracks, roads, low grassland and areas that are near human settlement, e.g. grazing land, suburban parks and gardens. It tends to avoid more densely vegetated areas (eg. wet sclerophyll and rainforest), which can then act as a barrier to their dispersal. It can be found by day beneath fallen trees, loose boards, matted coconut leaves, and similar cover (Lynn 1940). It feeds on arthropods (especially ants and termites) and small vertebrates. It is flexible regards breeding site (Evans <em>et al.</em> 1996); eggs and larvae develop in slow or still shallow waters of ponds, ditches, temporary pools, reservoirs, canals, and streams. Clutch size is between 8,000 and 17,000. Eggs and tadpoles are poisonous and displace native tadpoles. It may sometimes breed in slightly brackish water in Hawaii. Larvae are tolerant of high temperatures.',
@@ -2498,87 +2399,73 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Cane_toad'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Canetoadmale.jpg/320px-Canetoadmale.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40475,
     speciesSlug: 'setophaga-adelaidae',
     scientificName: 'Setophaga adelaidae',
-    commonName: "Adelaide's Warbler",
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_d512.512_fspec.png',
+      siteName: 'GU32',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-16T19:50:21.801Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: "Adelaide's Warbler",
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20adelaidae',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: "https://en.wikipedia.org/wiki/Adelaide's_warbler",
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Dendroica_adelaidae.jpg/320px-Dendroica_adelaidae.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (extent of occurrence &lt;20,000 km<sup>2</sup>&#160;combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20adelaidae',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: "Adelaide's warbler is a bird endemic to the archipelago of Puerto Rico belonging to the genus Setophaga of the family Parulidae. The species is named after Adelaide Swift, daughter of Robert Swift, the person who captured the first specimen.",
         sourceType: 'Wiki',
         sourceUrl: "https://en.wikipedia.org/wiki/Adelaide's_warbler"
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Dendroica_adelaidae.jpg/320px-Dendroica_adelaidae.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40391,
     speciesSlug: 'setophaga-americana',
     scientificName: 'Setophaga americana',
-    commonName: 'Northern Parula',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Northern Parula',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20americana',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Northern_parula',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Northernparalua20.jpg/320px-Northernparalua20.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20americana',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The northern parula is a small New World warbler. It breeds in eastern North America from southern Canada to Florida.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Northern_parula'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Northernparalua20.jpg/320px-Northernparalua20.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40385,
     speciesSlug: 'setophaga-angelae',
     scientificName: 'Setophaga angelae',
-    commonName: 'Elfin Woods Warbler',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Elfin Woods Warbler',
+    extinctionRisk: 'EN',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2591,6 +2478,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Elfin-woods_warbler_perched_on_a_tree_branch.jpg/320px-Elfin-woods_warbler_perched_on_a_tree_branch.jpg',
     information: [
       {
         description: 'Although         it inhabits elfin or <span class="SpellE">montane dwarf forest on         ridges and summits, <span class="SpellE">montane wet forest, and         sometimes ranges to lower-elevation wet forest, it reaches its highest         densities in <span class="SpellE"><em>Podocarpus</em><em> </em>dominated         forest (Cruz and <span class="SpellE">Delannoy 1984, <span class="SpellE">Raffaele <em>et al.</em> 1998, <span class="SpellE">Delannoy 2006). The species is considered most common between 600-900 m within the Palo Colorado forest (Anadón-Irizarry&#160;<em>et al</em>. 2017, Campos‐Cerqueira <em>et al</em>. 2017). Preferred areas         have a dense canopy with vines, high <span class="SpellE">subcanopy         and sparse understorey (<span class="SpellE">Curson <em>et al.</em> 1994, <span class="SpellE">Raffaele <em>et al.</em> 1998).         It shows a string preference for undisturbed forest, but has been         recorded in secondary habitats and plantations (Cruz and <span class="SpellE">Delannoy 1984).         Breeding takes place in March-August, and the nest is built in aerial         leaf-litter trapped in vegetation or vines, usually close to the trunk,         or in a tree cavity (<span class="SpellE">Curson <em>et al.</em> 1994, <span class="SpellE">Raffaele <em>et al.</em> 1998, Rodriguez-<span class="SpellE">Mojica 2004, V. Anadón-Irizarry&#160;<em>in litt.</em>&#160;2016).</span></span></span></span></span></span>',
@@ -2603,157 +2491,148 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Elfin_woods_warbler'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Elfin-woods_warbler_perched_on_a_tree_branch.jpg/320px-Elfin-woods_warbler_perched_on_a_tree_branch.jpg',
-    extinctionRisk: 'EN'
+    ]
   },
   {
     speciesId: 40445,
     speciesSlug: 'setophaga-caerulescens',
     scientificName: 'Setophaga caerulescens',
-    commonName: 'Black-throated Blue Warbler',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/atL5f7DiLTS2_t20210318T121534085Z.20210318T121535670Z_d512.512_fspec.png',
+      siteName: 'RI03',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-18T12:15:34.085Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Black-throated Blue Warbler',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20caerulescens',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Black-throated_blue_warbler',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Black-throated_Blue_Warbler%2C_Parc_%C3%89coforestier_de_Johnville%2C_Quebec%2C_Canada.jpg/320px-Black-throated_Blue_Warbler%2C_Parc_%C3%89coforestier_de_Johnville%2C_Quebec%2C_Canada.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20caerulescens',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The black-throated blue warbler is a small passerine bird of the New World warbler family. Its breeding ranges are located in the interior of deciduous and mixed coniferous forests in eastern North America. Over the cooler months, it migrates to islands in the Caribbean and Central America. It is very rarely found in western Europe, where it is considered to be a non-indigenous species. The black-throated blue warbler is sexually dimorphic; the adult male has a black face and cheeks, deep blue upperparts and white underparts, while the adult female is olive-brown above and light yellow below.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Black-throated_blue_warbler'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Black-throated_Blue_Warbler%2C_Parc_%C3%89coforestier_de_Johnville%2C_Quebec%2C_Canada.jpg/320px-Black-throated_Blue_Warbler%2C_Parc_%C3%89coforestier_de_Johnville%2C_Quebec%2C_Canada.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40472,
     speciesSlug: 'setophaga-discolor',
     scientificName: 'Setophaga discolor',
-    commonName: 'Prairie Warbler',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Z6OjGcRE2cQo_t20210324T115012952Z.20210324T115014329Z_d512.512_fspec.png',
+      siteName: 'GU09',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-24T11:50:12.952Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Prairie Warbler',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20discolor',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Prairie_warbler',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Prairie_warbler_%28Setophaga_discolor_paludicola%29_male_J.jpg/320px-Prairie_warbler_%28Setophaga_discolor_paludicola%29_male_J.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2 </sup>combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20discolor',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The prairie warbler is a small songbird of the New World warbler family.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Prairie_warbler'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Prairie_warbler_%28Setophaga_discolor_paludicola%29_male_J.jpg/320px-Prairie_warbler_%28Setophaga_discolor_paludicola%29_male_J.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 40405,
     speciesSlug: 'setophaga-petechia',
     scientificName: 'Setophaga petechia',
-    commonName: 'American Yellow Warbler',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Uz8Z3SJ5Twym_t20210428T143015572Z.20210428T143017582Z_d512.512_fspec.png',
+      siteName: 'CR30',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-28T14:30:15.572Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'American Yellow Warbler',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20petechia',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_yellow_warbler',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Dendroica-aestiva-001.jpg/320px-Dendroica-aestiva-001.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Setophaga%20petechia',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The yellow warbler is a New World warbler species. Yellow warblers are the most widespread species in the diverse genus Setophaga, breeding in almost the whole of North America, the Caribbean, and down to northern South America.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/American_yellow_warbler'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Dendroica-aestiva-001.jpg/320px-Dendroica-aestiva-001.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 10494,
     speciesSlug: 'spindalis-portoricensis',
     scientificName: 'Spindalis portoricensis',
-    commonName: 'Puerto Rican Spindalis',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/ltprw4fjvmyq_t20210412T140502490Z.20210412T140509162Z_d512.512_fspec.png',
+      siteName: 'PA40_NEW',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-12T14:05:02.490Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Spindalis',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Spindalis%20portoricensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_spindalis',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Spindalis_portoricensis_by_Mike%27s_Birds.jpg/320px-Spindalis_portoricensis_by_Mike%27s_Birds.jpg',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Spindalis%20portoricensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican spindalis is a bird endemic to the island of Puerto Rico, where it is commonly known as reina mora. The species is widely distributed throughout the island and is an important part of the Puerto Rican ecosystem because of its help in seed dispersal and plant reproduction. The Puerto Rican spindalis is the unofficial national bird of Puerto Rico.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_spindalis'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Spindalis_portoricensis_by_Mike%27s_Birds.jpg/320px-Spindalis_portoricensis_by_Mike%27s_Birds.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2026,
     speciesSlug: 'streptopelia-decaocto',
     scientificName: 'Streptopelia decaocto',
-    commonName: 'Eurasian Collared-dove',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Eurasian Collared-dove',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2766,6 +2645,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg/213px-Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg',
     information: [
       {
         description: 'In its original range, the species inhabits semi-desert and arid country with scattered trees such as <em>Acacia</em> (Baptista <em>et al</em>. 2015). Elsewhere, it is found in towns and cities, parks, orchards and gardens. It mainly feeds on the ground taking seed, cereal grain, fruits of herbs and grasses and some green parts of plants. It will also take some invertebrates. It is generally resident (Baptista <em>et al</em>. 2015).',
@@ -2778,17 +2658,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Eurasian_collared_dove'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg/213px-Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 953,
     speciesSlug: 'sula-sula',
     scientificName: 'Sula sula',
-    commonName: 'Red-footed Booby',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Red-footed Booby',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2801,6 +2680,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Sula_sula_by_Gregg_Yan_01.jpg/240px-Sula_sula_by_Gregg_Yan_01.jpg',
     information: [
       {
         description: 'This species is strictly marine and largely pelagic. It feeds mainly on flying-fish and squid with a mean prey length of 8.8 cm. Prey is caught by plunge-diving, but flying fish are also taken in flight, especially when chased by underwater predators. It often rests on boats using them as vantage points. Breeding is not seasonal in most of its range. Individuals form large colonies, nesting and roosting mainly in trees or on islets with abundant vegetation (del Hoyo <em>et al.</em> 1992).',
@@ -2813,17 +2693,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-footed_booby'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Sula_sula_by_Gregg_Yan_01.jpg/240px-Sula_sula_by_Gregg_Yan_01.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 22167,
     speciesSlug: 'thalasseus-maximus',
     scientificName: 'Thalasseus maximus',
-    commonName: 'Royal Tern',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Royal Tern',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -2836,6 +2715,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Royal_Tern.jpg/320px-Royal_Tern.jpg',
     information: [
       {
         description: '<strong>Behaviour</strong> This species undergoes post-breeding dispersive movements northwards before migrating southwards for the winter (del Hoyo <em>et al.</em> 1996). It breeds between April and June (Richards 1990) in dense colonies of 100-4,000 pairs often near colonies of Laughing Gull <em>Larus atricilla</em> and Sandwich Tern <em>Sterna sandvicensis</em> (del Hoyo <em>et al.</em> 1996). The species may also nest singly amidst colonies of other tern species (del Hoyo <em>et al.</em> 1996). It usually feeds singly or in small flocks and roosts gregariously even outside of the breeding season (del Hoyo <em>et al.</em> 1996).&#160;<strong><br/></strong><strong>Habitat</strong> <em>Breeding</em> For breeding the species shows a preference for inaccessible sites including barren sandy beaches, islands in saltmarsh, dredge spoil and coral islands surrounded by shallow water and with a high degree of visibility, no mammalian predators and little vegetation (del Hoyo <em>et al.</em> 1996). It also forages along estuaries, in lagoons and in mangroves during this season, mostly within 100 m of the shore but up to 40 km from the breeding colony (del Hoyo <em>et al.</em> 1996). <em>Non-breeding</em> Outside of the breeding season the species forages within 100 m of the land along sheltered coasts in estuaries, harbours and river mouths, sometimes also foraging a short distance inland along broad rivers (del Hoyo <em>et al.</em> 1996). <strong>Diet</strong> Its diet consists predominantly of small fish 3-18 cm long as well as squid, shrimps and crabs (del Hoyo <em>et al.</em> 1996).&#160;<strong>Breeding site</strong> The nest is a simple scrape (del Hoyo <em>et al.</em> 1996) in sand (Urban <em>et al.</em> 1986) in inaccessible sites surrounded by shallow water near the mouths of bays with a high degree of visibility, no mammalian predators and little vegetation (del Hoyo <em>et al.</em> 1996).&#160;<strong>Management information</strong> The preferred breeding sites of this species are often vulnerable to flooding (del Hoyo <em>et al.</em> 1996).',
@@ -2848,17 +2728,16 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Royal_tern'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Royal_Tern.jpg/320px-Royal_Tern.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 10150,
     speciesSlug: 'tiaris-bicolor',
     scientificName: 'Tiaris bicolor',
-    commonName: '',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Black-faced grassquit',
+    extinctionRisk: 'NE',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -2866,303 +2745,233 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg/320px-Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg',
     information: [
       {
         description: "The black-faced grassquit is a small bird. It is recognized as a tanager closely related to Darwin's finches. It breeds in the West Indies except Cuba, on Tobago but not Trinidad, and along the northern coasts of Colombia and Venezuela.",
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Black-faced_grassquit'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg/320px-Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg',
-    extinctionRisk: 'NE'
+    ]
   },
   {
     speciesId: 10149,
     speciesSlug: 'tiaris-olivaceus',
     scientificName: 'Tiaris olivaceus',
-    commonName: 'Yellow-faced Grassquit',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Yellow-faced Grassquit',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tiaris%20olivaceus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Yellow-faced_grassquit',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Yellow-faced-grassquit-eating-seeds.jpg/320px-Yellow-faced-grassquit-eating-seeds.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tiaris%20olivaceus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The yellow-faced grassquit is a passerine bird in the tanager family Thraupidae and is the only member of the genus Tiaris. It is native to the Central America, South America, and the Caribbean.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Yellow-faced_grassquit'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Yellow-faced-grassquit-eating-seeds.jpg/320px-Yellow-faced-grassquit-eating-seeds.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 3817,
     speciesSlug: 'todus-mexicanus',
     scientificName: 'Todus mexicanus',
-    commonName: 'Puerto Rican Tody',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Puerto Rican Tody',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Todus%20mexicanus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_tody',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/IMG_2932crop-puerto-rican-tody.JPG/320px-IMG_2932crop-puerto-rican-tody.JPG',
     information: [
-      {
-        description: 'Although this species may have a small range, it is not believed to approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). Despite the fact that the population trend appears to be decreasing, the decline is not believed to be sufficiently rapid to approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Todus%20mexicanus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The Puerto Rican tody is a bird endemic to Puerto Rico. It is locally known in Spanish as "San Pedrito" and "medio peso".',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_tody'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/IMG_2932crop-puerto-rican-tody.JPG/320px-IMG_2932crop-puerto-rican-tody.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 1742,
     speciesSlug: 'tringa-melanoleuca',
     scientificName: 'Tringa melanoleuca',
-    commonName: 'Greater Yellowlegs',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Greater Yellowlegs',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tringa%20melanoleuca',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Greater_yellowlegs',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Greater_Yellowlegs2.jpg/256px-Greater_Yellowlegs2.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tringa%20melanoleuca',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The greater yellowlegs is a large North American shorebird. The genus name Tringa is the New Latin name given to the green sandpiper by Aldrovandus in 1599 based on Ancient Greek trungas, a thrush-sized, white-rumped, tail-bobbing wading bird mentioned by Aristotle. The specific  melanoleuca is from Ancient Greek melas, "black", and leukos, "white".',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Greater_yellowlegs'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Greater_Yellowlegs2.jpg/256px-Greater_Yellowlegs2.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 21869,
     speciesSlug: 'tringa-semipalmata',
     scientificName: 'Tringa semipalmata',
-    commonName: 'Willet',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Willet',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tringa%20semipalmata',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Willet',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Catoptrophorus_semipalmatus_edit.jpg/320px-Catoptrophorus_semipalmatus_edit.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tringa%20semipalmata',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The willet, formerly in the monotypic genus Catoptrophorus as Catoptrophorus semipalmatus, is a large shorebird in the family Scolopacidae. It is a relatively large and robust sandpiper, and is the largest of the species called "shanks" in the genus Tringa. Its closest relative is the lesser yellowlegs, a much smaller bird with a very different appearance apart from the fine, clear, and dense pattern of the neck, which both species show in breeding plumage. It breeds in North America and the West Indies and winters in southern North America, Central America, the West Indies and South America.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Willet'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Catoptrophorus_semipalmatus_edit.jpg/320px-Catoptrophorus_semipalmatus_edit.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 8534,
     speciesSlug: 'turdus-plumbeus',
     scientificName: 'Turdus plumbeus',
-    commonName: 'Northern Red-legged Thrush',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6ybRiQE8HGmd_t20210406T100525854Z.20210406T100528261Z_d512.512_fspec.png',
+      siteName: 'LU04',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-04-06T10:05:25.854Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Northern Red-legged Thrush',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Turdus%20plumbeus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-legged_thrush',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Red-legged_thrush_%28Turdus_plumbeus_rubripes%29.JPG/320px-Red-legged_thrush_%28Turdus_plumbeus_rubripes%29.JPG',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Turdus%20plumbeus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The red-legged thrush is a species of bird in the family Turdidae. Native to the Caribbean, it is found in the Bahamas, Cayman Islands, Cuba, Dominica, Hispaniola and Puerto Rico. It formerly occurred on the Swan Islands, Honduras, but was extirpated there.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-legged_thrush'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Red-legged_thrush_%28Turdus_plumbeus_rubripes%29.JPG/320px-Red-legged_thrush_%28Turdus_plumbeus_rubripes%29.JPG',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 4939,
     speciesSlug: 'tyrannus-caudifasciatus',
     scientificName: 'Tyrannus caudifasciatus',
-    commonName: 'Loggerhead Kingbird',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Loggerhead Kingbird',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tyrannus%20caudifasciatus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Loggerhead_kingbird',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tyrannus_caudifasciatus_-Camaguey_Province%2C_Cuba-8_%282%29.jpg/320px-Tyrannus_caudifasciatus_-Camaguey_Province%2C_Cuba-8_%282%29.jpg',
     information: [
-      {
-        description: 'This species has a very large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size has not been quantified, but it is not believed to approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tyrannus%20caudifasciatus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The loggerhead kingbird is a species of bird in the family Tyrannidae.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Loggerhead_kingbird'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tyrannus_caudifasciatus_-Camaguey_Province%2C_Cuba-8_%282%29.jpg/320px-Tyrannus_caudifasciatus_-Camaguey_Province%2C_Cuba-8_%282%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 10,
     speciesSlug: 'tyrannus-dominicensis',
     scientificName: 'Tyrannus dominicensis',
-    commonName: 'Grey Kingbird',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Grey Kingbird',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tyrannus%20dominicensis',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Gray_kingbird',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Tyrannus_dominicensis_103778882_%28cropped%29.jpg/187px-Tyrannus_dominicensis_103778882_%28cropped%29.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Tyrannus%20dominicensis',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The gray kingbird or grey kingbird, also known as pitirre, petchary, or white-breasted kingbird is a passerine bird.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Gray_kingbird'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Tyrannus_dominicensis_103778882_%28cropped%29.jpg/187px-Tyrannus_dominicensis_103778882_%28cropped%29.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 6338,
     speciesSlug: 'vireo-altiloquus',
     scientificName: 'Vireo altiloquus',
-    commonName: 'Black-whiskered Vireo',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Black-whiskered Vireo',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Vireo%20altiloquus',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Black-whiskered_vireo',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Black-whiskered_Vireo.jpg/276px-Black-whiskered_Vireo.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend is not known, but the population is not believed to be decreasing sufficiently rapidly to approach the thresholds under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence the species does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Vireo%20altiloquus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The black-whiskered vireo is a small passerine bird, which breeds in southern Florida, USA, and the West Indies as far south as the offshore islands of Venezuela. It is a partial migrant, with northern birds wintering from the Greater Antilles to northern South America. This species has occurred as a rare vagrant to Costa Rica.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Black-whiskered_vireo'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Black-whiskered_Vireo.jpg/276px-Black-whiskered_Vireo.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 6327,
     speciesSlug: 'vireo-latimeri',
     scientificName: 'Vireo latimeri',
-    commonName: 'Puerto Rican Vireo',
     taxonId: 1,
     taxon: 'Birds',
+    speciesCall: {
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/kTLndDBWryEZ_t20210302T161501563Z.20210302T161502853Z_d512.512_fspec.png',
+      siteName: 'GUI08',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-02T16:15:01.563Z',
+      timezone: 'America/Puerto_Rico'
+    },
+    commonName: 'Puerto Rican Vireo',
+    extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'IUCN',
@@ -3175,6 +2984,7 @@ export const rawSpeciesWithInfo = [
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Vireo_latimeri_map.svg/320px-Vireo_latimeri_map.svg.png',
     information: [
       {
         description: 'The species occurs chiefly in forest and undergrowth on limestone hills, and also in coffee plantations (AOU 1983). It also occurs in mangroves at Torrecilla-Piñones, but rather strangely is not found in any other mangrove areas on the island (Raffaele 1983). Breeding takes place from March to June (Raffaele et al. 1998).',
@@ -3187,78 +2997,54 @@ export const rawSpeciesWithInfo = [
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_vireo'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Vireo_latimeri_map.svg/320px-Vireo_latimeri_map.svg.png',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 2077,
     speciesSlug: 'zenaida-asiatica',
     scientificName: 'Zenaida asiatica',
-    commonName: 'White-winged Dove',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'White-winged Dove',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Zenaida%20asiatica',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/White-winged_dove',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Zenaida_asiatica_-Tuscon_-Arizona_-USA_-8a.jpg/320px-Zenaida_asiatica_-Tuscon_-Arizona_-USA_-8a.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km2 combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be increasing, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is extremely large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Zenaida%20asiatica',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The white-winged dove is a dove whose native range extends from the Southwestern United States through Mexico, Central America, and the Caribbean. They are large for doves, and can be distinguished from similar doves by the distinctive white edge on their wings. They have a blue eyering, and red eyes. The plumage is brownish-gray to gray. Juveniles are duller in color, and have brown eyes. The call is likened to English phrase "who cooks for you". There are three subspecies. It was first described by George Edwards in 1743, and given its binomial name by Linnaeus in 1756. It was moved into the genus Zenaida in 1838.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/White-winged_dove'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Zenaida_asiatica_-Tuscon_-Arizona_-USA_-8a.jpg/320px-Zenaida_asiatica_-Tuscon_-Arizona_-USA_-8a.jpg',
-    extinctionRisk: 'LC'
+    ]
   },
   {
     speciesId: 57,
     speciesSlug: 'zenaida-aurita',
     scientificName: 'Zenaida aurita',
-    commonName: 'Zenaida Dove',
     taxonId: 1,
     taxon: 'Birds',
+    commonName: 'Zenaida Dove',
+    extinctionRisk: 'LC',
     externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Zenaida%20aurita',
-        title: 'IUCN'
-      },
       {
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Zenaida_dove',
         title: 'Wiki'
       }
     ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Zenaida_Dove%2C_St._Thomas.jpg/320px-Zenaida_Dove%2C_St._Thomas.jpg',
     information: [
-      {
-        description: 'This species has an extremely large range, and hence does not approach the thresholds for Vulnerable under the range size criterion (Extent of Occurrence &lt;20,000 km<sup>2</sup> combined with a declining or fluctuating range size, habitat extent/quality, or population size and a small number of locations or severe fragmentation). The population trend appears to be stable, and hence the species does not approach the thresholds for Vulnerable under the population trend criterion (&gt;30% decline over ten years or three generations). The population size is very large, and hence does not approach the thresholds for Vulnerable under the population size criterion (&lt;10,000 mature individuals with a continuing decline estimated to be &gt;10% in ten years or three generations, or with a specified population structure). For these reasons the species is evaluated as Least Concern.',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Zenaida%20aurita',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
       {
         description: 'The zenaida dove is a member of the bird family Columbidae, which includes doves and pigeons. It is the national bird of Anguilla, where it is locally referred to as "turtle dove".',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Zenaida_dove'
       }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Zenaida_Dove%2C_St._Thomas.jpg/320px-Zenaida_Dove%2C_St._Thomas.jpg',
-    extinctionRisk: 'LC'
+    ]
   }
 ]

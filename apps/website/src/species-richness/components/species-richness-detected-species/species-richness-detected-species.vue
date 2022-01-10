@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h2 class="text-white text-xl">
-      Species detected
-    </h2>
+    <section-title title="Species detected" />
     <no-data-panel
       v-if="!hasTableData"
       class="h-32 mt-2"

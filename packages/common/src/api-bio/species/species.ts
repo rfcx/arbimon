@@ -40,6 +40,7 @@ export interface Species {
   information: SpeciesInformation[]
   taxon: string
   taxonId: number
+  imageCaption: string
   thumbnailImageUrl?: string
   speciesCall?: SpeciesCall
 }

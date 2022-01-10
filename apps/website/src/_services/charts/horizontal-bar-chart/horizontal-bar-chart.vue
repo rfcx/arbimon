@@ -3,15 +3,6 @@
     :id="`wrapper-${domId}`"
     class="w-full"
   >
-    <div class="flex justify-between items-end">
-      <h2 class="text-white text-xl">
-        {{ chartTitle }}
-      </h2>
-      <export-button
-        v-if="hasData"
-        @click="downloadChart()"
-      />
-    </div>
     <no-data-panel
       v-if="!hasData"
       class="h-32 mt-2"
