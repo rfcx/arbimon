@@ -1,0 +1,19 @@
+<template>
+  <div class="flex justify-between items-center">
+    <slot name="title">
+      <h2 class="text-white text-xl">
+        {{ title }}
+      </h2>
+    </slot>
+    <slot name="controls" />
+  </div>
+</template>
+
+<script lang="ts">
+import { Vue } from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
+
+export default class SectionTitle extends Vue {
+  @Prop({ default: '' }) title!: string
+}
+</script>

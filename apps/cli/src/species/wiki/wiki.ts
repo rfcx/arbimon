@@ -12,6 +12,7 @@ export async function getWikiSpeciesInformation (scientificName: string): Promis
 
     const { data } = await axios.request<WikiSummaryResponse>(endpoint)
     return {
+      title: data.title,
       content: data.extract,
       contentUrls: {
         desktop: data.content_urls?.desktop?.page,

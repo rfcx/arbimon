@@ -5,10 +5,11 @@ import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
 
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
-import { GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, ComparisonFilter, ComparisonListComponent, filterToDataset, getExportGroupName } from '~/filters'
+import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
+import { ColoredFilter, ComparisonFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { TimeBucket } from '~/time-buckets'
+import SpeciesRichnessByClass from './components/species-richness-by-class/species-richness-by-class.vue'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessDetectedSpecies from './components/species-richness-detected-species/species-richness-detected-species.vue'
@@ -18,12 +19,10 @@ import { getSpeciesRichnessData, SpeciesRichnessData } from './repository'
 
 interface ColoredDataset {color: string, data: SpeciesRichnessData, startDate: Dayjs, endDate: Dayjs, sites: Site[]}
 
-const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
-
 @Options({
   components: {
     ComparisonListComponent,
-    HorizontalBarChartComponent,
+    SpeciesRichnessByClass,
     SpeciesRichnessByLocation,
     SpeciesRichnessByTime,
     SpeciesRichnessDetectedSpecies,
@@ -35,7 +34,6 @@ export default class SpeciesRichnessPage extends Vue {
   filters: ComparisonFilter[] = []
   detectionCounts: number[] = []
   chartData: GroupedBarChartItem[] = []
-  chartExportName = ''
   mapDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
   tableData: DetectedSpeciesItem[] = []
@@ -57,7 +55,6 @@ export default class SpeciesRichnessPage extends Vue {
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
-    this.chartExportName = getExportGroupName(DEFAULT_CHART_PREFIX)
     this.chartData = this.getBarChartDataset(datasets)
     this.mapDatasets = this.getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))

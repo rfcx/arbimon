@@ -17,6 +17,10 @@
                 >
                 <div class="font-semibold text-primary ml-2 <md:hidden">
                   Biodiversity
+                  <sup
+                    class="font-extralight"
+                    style="font-size: 10px"
+                  >BETA</sup>
                 </div>
               </div>
             </router-link>

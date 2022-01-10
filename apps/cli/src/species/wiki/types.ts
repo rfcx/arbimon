@@ -1,4 +1,5 @@
 export interface WikiSummary {
+  title: string
   content: string
   contentUrls: {
     desktop: string
