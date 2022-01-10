@@ -11,14 +11,14 @@
           class="max-h-60"
         >
         <div
-          v-if="species?.scientificName"
-          class="absolute px-2 py-1 bottom-0 w-full text-right bg-dark-300 bg-opacity-70"
+          v-if="species.thumbnailImageUrl"
+          class="absolute px-2 py-1 bottom-0 w-full text-center bg-dark-300 bg-opacity-70"
         >
           <a
-            :href="speciesImage()"
+            :href="imageRef"
             target="_blank"
             class="italic hover:underline"
-          >{{ species?.scientificName }}</a>
+          >Wiki: {{ species?.imageCaption }}</a>
         </div>
       </div>
     </div>

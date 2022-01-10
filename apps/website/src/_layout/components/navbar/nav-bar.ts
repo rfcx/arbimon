@@ -58,7 +58,7 @@ export default class NavbarComponent extends Vue {
   get arbimonLink (): string {
     const selectedProjectId = this.store.selectedProject?.id
     if (!selectedProjectId) return ''
-    else return `https://arbimon.rfcx.org/project/${selectedProjectId}` // TODO 17: change this to support staging / production
+    else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectId}`
   }
 
   toggleMobileMenu (): void {

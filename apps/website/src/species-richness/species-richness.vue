@@ -7,11 +7,9 @@
     class="mt-5"
     @emit-select="onFilterChange"
   />
-  <horizontal-bar-chart-component
+  <species-richness-by-class
     dom-id="species-by-class"
-    chart-title="Distinct species by taxonomic class"
     :chart-data="chartData"
-    :chart-export-name="chartExportName"
     class="mt-5"
   />
   <species-richness-by-location
