@@ -1,5 +1,5 @@
 <template>
-  <div class="float-right">
+  <div class="flex">
     <template
       v-for="(item, idx) in mapStyleOptions"
       :key="item.id"
@@ -13,19 +13,35 @@
         }"
         @click="emitMapStyle(item.style)"
       >
-        {{ item.name }}
+        <div class="<md:hidden">
+          {{ item.name }}
+        </div>
+        <div>
+          <img
+            class="md:hidden <md:visible"
+            :src="item.icon"
+            width="20"
+            height="20"
+          >
+        </div>
       </button>
     </template>
     <button
-      class="btn ml-2"
+      class="btn ml-2 flex"
+      :class="{ '<md:bg-brand-primary': isShowLabels }"
       @click="emitShowLabelsToggle()"
     >
-      <input
-        type="checkbox"
-        class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
-        :checked="isShowLabels"
-      >
-      Labels
+      <div class="<md:hidden">
+        <input
+          type="checkbox"
+          class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
+          :checked="isShowLabels"
+        >
+        Labels
+      </div>
+      <div class="md:hidden">
+        <icon-fas-tag />
+      </div>
     </button>
   </div>
 </template>
