@@ -3,11 +3,7 @@
     v-if="predictedOccupancyMaps.length > 0"
     class="w-full"
   >
-    <div class="flex justify-between items-end mb-1.5">
-      <h2 class="text-white text-xl">
-        Predicted Occupancy
-      </h2>
-    </div>
+    <section-title title="Predicted Occupancy" />
     <div
       class="mt-5 grid gap-4"
       :class="{ ['md:grid-cols-2']: predictedOccupancyMaps.length> 1 }"

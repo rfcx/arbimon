@@ -5,5 +5,6 @@ declare global {
     readonly VITE_CORE_API_HOST: string
     readonly VITE_BIO_API_HOST: string
     readonly VITE_PUERTO_RICO_PROJECT_SLUG: string
+    readonly VITE_ARBIMON_BASE_URL: string
   }
 }

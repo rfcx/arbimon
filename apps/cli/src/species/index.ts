@@ -5,7 +5,7 @@ import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/com
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 
 import { getSpeciesCommonInformation, getSpeciesInformation, getSpeciesRedirectLink } from './iucn/iucn'
-import { rawSpeciesWithCall } from './raw-species-with-call'
+import { rawSpeciesFromArbimon } from './raw-species-from-arbimon'
 import { getWikiSpeciesInformation } from './wiki/wiki'
 
 // TODO - Extract this
@@ -23,7 +23,7 @@ const delay = async (ms: number): Promise<void> => await new Promise(resolve => 
 
 async function main (): Promise<void> {
   // Read existing data
-  const speciesInput = (rawSpeciesWithCall as Species[])
+  const speciesInput = (rawSpeciesFromArbimon as Species[])
     .sort((s1, s2) => s1.scientificName.localeCompare(s2.scientificName))
 
   // Call APIs sequentially (to avoid spamming APIs)
@@ -62,6 +62,7 @@ async function updateSpeciesData (species: Species): Promise<Species> {
     extinctionRisk: iucnCommonData?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
     externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
     thumbnailImageUrl: wikiData?.thumbnailImage ?? '',
+    imageCaption: wikiData?.title ?? '',
     information
   }
 }
