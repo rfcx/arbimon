@@ -213,6 +213,7 @@ importers:
       unplugin-vue-components: ^0.17.8
       vue: ^3.2.21
       vue-class-component: ^8.0.0-rc.1
+      vue-gtag: ^2.0.1
       vue-property-decorator: ^10.0.0-rc.3
       vue-router: ^4.0.12
       vue3-markdown-it: ^1.0.9
@@ -235,6 +236,7 @@ importers:
       pinia: 2.0.2_typescript@4.4.4+vue@3.2.21
       vue: 3.2.21
       vue-class-component: 8.0.0-rc.1_vue@3.2.21
+      vue-gtag: 2.0.1_vue@3.2.21
       vue-property-decorator: 10.0.0-rc.3_6f5031032aabf5cb20c4b6677c34c6b6
       vue-router: 4.0.12_vue@3.2.21
       vue3-markdown-it: 1.0.9
@@ -10996,6 +10998,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /vue-gtag/2.0.1_vue@3.2.21:
+    resolution: {integrity: sha512-aM4A58FVL0wV2ptYi+xzAjeg+pQVRyUcfBc5UkXAwQrR4t3WBhor50Izp2I+3Oo7+l+vWJ7u78DGcNzReb8S/A==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.21
+    dev: false
 
   /vue-property-decorator/10.0.0-rc.3_6f5031032aabf5cb20c4b6677c34c6b6:
     resolution: {integrity: sha512-EGqjf8Lq+kTausZzfLB1ynWOcyay8ZLAc5p2VlKGEX2q+BjYw84oZxr6IcdwuxGIdNmriZqPUX6AlAluBdnbEg==}
