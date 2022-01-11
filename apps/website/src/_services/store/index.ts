@@ -29,26 +29,23 @@ export const useStore = defineStore('root', {
   getters: {},
   actions: {
     async updateUser (user: User | undefined = undefined) {
-      // Set user immediately (& clear old data)
+      // Set user & clear old data immediately
       this.user = user
       this.projects = []
-      this.selectedProject = undefined
-      this.sites = []
+      await this.updateSelectedProject(undefined)
 
-      // Load data asynchronously
+      // Load new data asynchronously
       if (user) {
-        // const realProjects = await getProjects()
-        // const projects = [FAKE_PUERTO_RICO_PROJECT, ...realProjects]
-        const projects = [FAKE_PUERTO_RICO_PROJECT]
-        const selectedProject = projects.length > 0 ? projects[0] : undefined
-        const sites = selectedProject ? await getSites(selectedProject) : []
-
+        const projects = [FAKE_PUERTO_RICO_PROJECT] // await getProjects()
         this.projects = projects
-        this.selectedProject = selectedProject
-        this.sites = sites
+        await this.updateSelectedProject(projects[0])
       }
     },
-    updateSelectedProject (project?: Project) { this.selectedProject = project }
+    async updateSelectedProject (project?: Project) {
+      this.selectedProject = project
+      const sites = project ? await getSites(project) : []
+      this.sites = sites
+    }
   }
 })
 
