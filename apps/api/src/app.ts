@@ -8,7 +8,6 @@ import { routesDashboard } from './dashboard'
 import { routesProjectSite } from './projects-and-sites'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
-import { routesIucn } from './species/iucn'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
 
@@ -29,7 +28,6 @@ const routePlugins = [
   routesSpecies,
   routesRichness,
   routesSpotlight,
-  routesIucn,
   routesDashboard
 ]
 await Promise.all(routePlugins.map(plugin => app.register(plugin)))
