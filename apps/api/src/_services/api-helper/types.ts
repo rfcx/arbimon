@@ -9,4 +9,4 @@ type FastifyController<Params, Response> = RouteHandlerMethod<any, any, any, {
 
 type FastifyControllerReq<Params, Response> = Parameters<FastifyController<Params, Response>>[0]
 
-export type Controller<Params, Response> = (req: FastifyControllerReq<Params, Response>) => Promise<NoExtraProperties<Response>>
+export type Controller<Params = unknown, Response = unknown> = (req: FastifyControllerReq<Params, Response>) => Promise<NoExtraProperties<Response>>
