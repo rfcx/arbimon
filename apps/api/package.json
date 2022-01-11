@@ -46,5 +46,8 @@
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "devDependencies": {
+    "pino-pretty": "^7.3.0"
+  }
 }
