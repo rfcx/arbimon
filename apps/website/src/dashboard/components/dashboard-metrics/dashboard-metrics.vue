@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="<sm:text-center">
     <numeric-metric
       :value="metrics.detectionCount"
       subtitle="detections"
