@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import { keyBy } from 'lodash-es'
 import { dirname, resolve } from 'path'
 
-import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/species'
+import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/common'
 import { objectToTs } from '@rfcx-bio/utils/file/json-to-ts'
 import { dateQueryParamify, urlify } from '@rfcx-bio/utils/url-helpers'
 

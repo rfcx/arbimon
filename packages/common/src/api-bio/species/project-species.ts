@@ -1,4 +1,4 @@
-import { Species } from './species'
+import { Species } from './common'
 
 export interface PredictedOccupancyMap {
   title: string

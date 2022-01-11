@@ -1,4 +1,4 @@
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 
 import { DatasetParameters } from '~/filters'
 import { MapSiteData } from '~/maps/map-bubble'
