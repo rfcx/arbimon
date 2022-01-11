@@ -1,9 +1,8 @@
+import { EXTINCTION_RISK_PROTECTED_CODES } from '../iucn'
 import { rawSpecies } from './raw-species'
-
-const criticallyEndangeredSpeciesCode = 'CR'
 
 export const criticallyEndangeredSpeciesIds = new Set(
   rawSpecies
-    .filter(s => s.extinctionRisk === criticallyEndangeredSpeciesCode)
+    .filter(s => EXTINCTION_RISK_PROTECTED_CODES.includes(s.extinctionRisk))
     .map(s => s.speciesId)
 )

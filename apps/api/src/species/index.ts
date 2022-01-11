@@ -4,6 +4,7 @@ import { resolve } from 'path'
 
 import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio/species/project-species'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
+import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 
 import { ApiClientError, ApiMissingParam, ApiNotFoundError } from '../_services/errors'
 
@@ -45,14 +46,19 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
     if (!speciesSlug) throw ApiMissingParam('speciesSlug')
 
     // Queries
-    const predictedOccupancyMaps: PredictedOccupancyMap[] = (await readdir(mockPredictionsFolderPath))
-      .filter(filename => filename.startsWith(speciesSlug))
-      .map(filename => filename.substr(0, filename.lastIndexOf('.')) || filename)
-      .sort()
-      .map(filename => ({
-        title: filename,
-        url: `/projects/${projectId}/predicted-occupancy/${filename}`
-      }))
+    const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
+    if (!species) throw ApiNotFoundError()
+
+    const predictedOccupancyMaps: PredictedOccupancyMap[] = criticallyEndangeredSpeciesIds.has(species.speciesId)
+      ? []
+      : (await readdir(mockPredictionsFolderPath))
+        .filter(filename => filename.startsWith(speciesSlug))
+        .map(filename => filename.substr(0, filename.lastIndexOf('.')) || filename)
+        .sort()
+        .map(filename => ({
+          title: filename,
+          url: `/projects/${projectId}/predicted-occupancy/${filename}`
+        }))
 
     // Respond
     const response: ProjectSpeciesRouteResponse = {
