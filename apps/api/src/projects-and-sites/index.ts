@@ -1,12 +1,11 @@
 import { FastifyPluginAsync } from 'fastify'
 
-// TODO ??? Authenticate the user & filter their results!!
-export const routesProjectSite: FastifyPluginAsync = async (app, options): Promise<void> => {
-  app.get('/projects', async (req, res) => {
-    return ['project1', 'project2']
-  })
+import { projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
+import { sitesRoute } from '@rfcx-bio/common/api-bio/common/sites'
 
-  app.get('/sites', async (req, res) => {
-    return ['site1', 'site2']
-  })
+import { projectsController, sitesController } from './controllers'
+
+export const routesProjectSite: FastifyPluginAsync = async (app, options): Promise<void> => {
+  app.get(projectsRoute, projectsController)
+  app.get(sitesRoute, sitesController)
 }

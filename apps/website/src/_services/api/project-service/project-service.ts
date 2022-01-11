@@ -1,43 +1,16 @@
-import { AxiosRequestConfig } from 'axios'
+import { Project, ProjectsResponse, projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
+import { Site, SitesResponse, sitesUrl } from '@rfcx-bio/common/api-bio/common/sites'
 
-import { Project } from '@rfcx-bio/common/api-bio/common/projects'
+import { apiClient } from '~/api'
 
-import { apiClient } from '..'
+export class ProjectService {
+  constructor (private readonly baseUrl: string) {}
 
-/* eslint-disable camelcase */
-interface CoreApiProject {
-  id: string
-  name: string
-  is_public: boolean
-  external_id: number
-}
-/* eslint-enable camelcase */
-
-const CORE_API_BASE_URL: string = import.meta.env.VITE_CORE_API_BASE_URL // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
-
-const toProject = (data: CoreApiProject): Project => {
-  return {
-    id: data.id,
-    name: data.name,
-    isPublic: data.is_public,
-    externalId: data.external_id,
-    geoBounds: [
-      { lon: -65.24505, lat: 18.51375 },
-      { lon: -67.94469784, lat: 17.93168 }
-    ]
+  async getProjects (): Promise<Project[] | undefined> {
+    return await apiClient.getOrUndefined<ProjectsResponse>(`${this.baseUrl}${projectsRoute}`)
   }
-}
 
-const endpointProjects: AxiosRequestConfig = {
-  method: 'GET',
-  url: `${CORE_API_BASE_URL}/projects`
-}
-
-export const getProjects = async (): Promise<Project[]> => {
-  try {
-    const resp = await apiClient.request<CoreApiProject[]>(endpointProjects)
-    return Array.isArray(resp) ? resp.map(toProject) : []
-  } catch (error) {
-    return await Promise.reject(error)
+  async getSites (projectId: string): Promise<Site[] | undefined> {
+    return await apiClient.getOrUndefined<SitesResponse>(`${this.baseUrl}${sitesUrl({ projectId })}`)
   }
 }
