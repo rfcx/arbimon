@@ -1,4 +1,4 @@
-import { HTTPMethods, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
+import { FastifyReply, HTTPMethods, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
 import { ReplyDefault } from 'fastify/types/utils'
 
 import { NoExtraProperties } from '@rfcx-bio/utils/utility-types'
@@ -14,7 +14,7 @@ type FastifyController<Response = ReplyDefault, Params = RequestParamsDefault, Q
 
 type FastifyControllerRequest<Response, Params, Querystring> = Parameters<FastifyController<Response, Params, Querystring>>[0]
 
-export type Controller<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = (req: FastifyControllerRequest<Response, Params, Querystring>) => Promise<NoExtraProperties<Response>>
+export type Controller<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = (req: FastifyControllerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProperties<Response>>
 
 // For exporting routes
 type Route = string
