@@ -7,8 +7,6 @@ import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDataset
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ActivityPatternsDataByExport, activityPatternsService } from '~/api/activity-patterns-service'
-import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
-import { getSpecies } from '~/api/species-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
@@ -20,6 +18,7 @@ import SpeciesImages from './components/species-images/species-images.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
+import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
@@ -104,14 +103,13 @@ export default class ActivityPatternsPage extends Vue {
     if (!species) return
 
     try {
-      const [occupancyMaps, speciesInformation] = await Promise.all([
-        getPredictedOccupancyMaps(species.speciesSlug),
-        getSpecies(species.scientificName)
-      ])
+      const data = await spotlightService.getSpeciesInformation(species.speciesSlug)
+      if (!data) return
 
       // Only update if received data matches current filters
       if (this.species?.scientificName === species.scientificName) {
-        this.predictedOccupancyMaps = occupancyMaps
+        const { speciesInformation, predictedOccupancyMaps } = data
+        this.predictedOccupancyMaps = predictedOccupancyMaps
         this.speciesInformation = speciesInformation ?? null
       }
     } catch (e) {
