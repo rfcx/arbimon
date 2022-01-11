@@ -31,6 +31,8 @@ export const useStore = defineStore('root', {
       }
     },
     async updateSelectedProject (project?: Project) {
+      if (this.selectedProject?.id === project?.id) return
+
       this.selectedProject = project
       this.sites = project ? await projectService.getSites(project.id) ?? [] : []
     }
