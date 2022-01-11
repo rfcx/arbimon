@@ -62,6 +62,7 @@ export const routesSpecies: FastifyPluginAsync = async (app, options): Promise<v
 
     // Respond
     const response: ProjectSpeciesRouteResponse = {
+      speciesInformation: species,
       predictedOccupancyMaps
     }
     return response
