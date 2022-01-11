@@ -4,7 +4,7 @@ import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/co
 
 import { useStore } from '~/store'
 
-const BIO_API_HOST: string = import.meta.env.VITE_BIO_API_HOST // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
+const BIO_API_BASE_URL: string = import.meta.env.VITE_BIO_API_BASE_URL // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
 
 export const getPredictedOccupancyMaps = async (speciesSlug: string): Promise<PredictedOccupancyMap[]> => {
   // Check slug exists
@@ -17,14 +17,14 @@ export const getPredictedOccupancyMaps = async (speciesSlug: string): Promise<Pr
 
   try {
     // Call API
-    const url = `${BIO_API_HOST}/projects/${projectId}/species/${speciesSlug}`
+    const url = `${BIO_API_BASE_URL}/projects/${projectId}/species/${speciesSlug}`
     const endpoint: AxiosRequestConfig = ({ method: 'GET', url })
     const { data } = await axios.request<ProjectSpeciesRouteResponse>(endpoint)
 
     // Prepend baseUrl
     return data.predictedOccupancyMaps.map(({ title, url }) => ({
       title,
-      url: `${BIO_API_HOST}${url}`
+      url: `${BIO_API_BASE_URL}${url}`
     }))
   } catch (e) {
     return []
