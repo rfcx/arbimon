@@ -1,4 +1,5 @@
-import { Species } from '@rfcx-bio/common/api-bio/species/common'
+import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { PredictedOccupancyMap, projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 
 import { apiClient } from '~/api'
@@ -12,7 +13,7 @@ export interface ProjectSpecies {
 export class SpotlightService {
   constructor (private readonly baseUrl: string) {}
 
-  async getSpeciesInformation (speciesSlug: string): Promise<ProjectSpecies | undefined> {
+  async getSpeciesOne (speciesSlug: string): Promise<ProjectSpecies | undefined> {
     if (!speciesSlug) return undefined
 
     const store = useStore()
@@ -28,5 +29,15 @@ export class SpotlightService {
         url: `${this.baseUrl}${url}`
       })) ?? []
     }
+  }
+
+  async getSpeciesAll (): Promise<SpeciesLight[] | undefined> {
+    const store = useStore()
+    const projectId = store.selectedProject?.id
+    if (!projectId) return undefined
+
+    const url = `${this.baseUrl}${projectSpeciesAllGeneratedUrl({ projectId })}`
+    const resp = await apiClient.getOrUndefined<ProjectSpeciesAllResponse>(url)
+    return resp?.species
   }
 }

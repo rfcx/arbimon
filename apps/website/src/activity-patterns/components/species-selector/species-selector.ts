@@ -3,7 +3,7 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 
-import { getAllSpecies } from '~/api/species-service'
+import { spotlightService } from '../../services'
 
 export default class SpeciesSelector extends Vue {
   @Prop() speciesSlug!: string
@@ -29,8 +29,8 @@ export default class SpeciesSelector extends Vue {
 
   override async created (): Promise<void> {
     this.selectedSpeciesSlug = this.speciesSlug
-    this.allSpecies = (await getAllSpecies())
-      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    this.allSpecies = await this.getAllSpecies()
+      .then(s => s.sort((a, b) => a.scientificName.localeCompare(b.scientificName)))
   }
 
   @Watch('speciesSlug')
@@ -57,5 +57,9 @@ export default class SpeciesSelector extends Vue {
 
   onFilterType (query: string): void {
     this.currentSpeciesQuery = query
+  }
+
+  async getAllSpecies (): Promise<SpeciesLight[]> {
+    return await spotlightService.getSpeciesAll() ?? []
   }
 }
