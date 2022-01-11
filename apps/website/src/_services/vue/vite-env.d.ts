@@ -2,9 +2,9 @@ import 'vite/client'
 
 declare global {
   interface ImportMetaEnv extends Readonly<Record<string, string>> {
-    readonly VITE_CORE_API_HOST: string
-    readonly VITE_BIO_API_HOST: string
-    readonly VITE_PUERTO_RICO_PROJECT_SLUG: string
+    readonly VITE_BIO_API_BASE_URL: string
+    readonly VITE_CORE_API_BASE_URL: string
     readonly VITE_ARBIMON_BASE_URL: string
+    readonly VITE_PUERTO_RICO_PROJECT_SLUG: string
   }
 }
