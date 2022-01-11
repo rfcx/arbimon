@@ -1,6 +1,4 @@
 import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
-import { SitesParams, SitesResponse } from '@rfcx-bio/common/api-bio/common/sites'
-import { rawSites, simulateDelay } from '@rfcx-bio/common/mock-data'
 
 import { Controller } from '~/api-helper/types'
 import { env } from '~/env'
@@ -16,10 +14,6 @@ const FAKE_PUERTO_RICO_PROJECT: Project = {
   ]
 }
 
-export const projectsController: Controller<unknown, ProjectsResponse> = async () => {
+export const controllerProjectsAll: Controller<ProjectsResponse> = async () => {
   return [FAKE_PUERTO_RICO_PROJECT]
-}
-
-export const sitesController: Controller<SitesParams, SitesResponse> = async () => {
-  return await simulateDelay(rawSites.sort((a, b) => a.name.localeCompare(b.name)))
 }

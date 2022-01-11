@@ -1,12 +1,35 @@
-import { RouteHandlerMethod } from 'fastify'
+import { HTTPMethods, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
+import { ReplyDefault } from 'fastify/types/utils'
 
 import { NoExtraProperties } from '@rfcx-bio/utils/utility-types'
 
-type FastifyController<Params, Response> = RouteHandlerMethod<any, any, any, {
-  Params: Partial<Params>
-  Reply: Response
-}, unknown>
+// For declaring controllers
+type FastifyController<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = RouteHandlerMethod<
+  RawServerDefault,
+  RawRequestDefaultExpression<RawServerDefault>,
+  RawReplyDefaultExpression<RawServerDefault>,
+  { Params: Params, Reply: Response, Querystring: Querystring },
+  unknown
+>
 
-type FastifyControllerReq<Params, Response> = Parameters<FastifyController<Params, Response>>[0]
+type FastifyControllerRequest<Response, Params, Querystring> = Parameters<FastifyController<Response, Params, Querystring>>[0]
 
-export type Controller<Params = unknown, Response = unknown> = (req: FastifyControllerReq<Params, Response>) => Promise<NoExtraProperties<Response>>
+export type Controller<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = (req: FastifyControllerRequest<Response, Params, Querystring>) => Promise<NoExtraProperties<Response>>
+
+// For exporting routes
+type Route = string
+
+export type RouteRegistration<Response = any, Params = any, Querystring = any> = [
+  HTTPMethods,
+  Route,
+  Controller<Response, Params, Querystring>
+]
+
+// Export convenient aliases
+export const DELETE: HTTPMethods = 'DELETE'
+export const GET: HTTPMethods = 'GET'
+export const HEAD: HTTPMethods = 'HEAD'
+export const OPTIONS: HTTPMethods = 'OPTIONS'
+export const PATCH: HTTPMethods = 'PATCH'
+export const POST: HTTPMethods = 'POST'
+export const PUT: HTTPMethods = 'PUT'
