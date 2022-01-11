@@ -13,7 +13,7 @@ interface CoreApiProject {
 }
 /* eslint-enable camelcase */
 
-const CORE_API_HOST: string = import.meta.env.VITE_CORE_API_HOST // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
+const CORE_API_BASE_URL: string = import.meta.env.VITE_CORE_API_BASE_URL // TODO ??? - Fix @typescript/eslint so it picks up vite-env.d.ts
 
 const toProject = (data: CoreApiProject): Project => {
   return {
@@ -30,7 +30,7 @@ const toProject = (data: CoreApiProject): Project => {
 
 const endpointProjects: AxiosRequestConfig = {
   method: 'GET',
-  url: `${CORE_API_HOST}/projects`
+  url: `${CORE_API_BASE_URL}/projects`
 }
 
 export const getProjects = async (): Promise<Project[]> => {
