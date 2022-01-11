@@ -1,6 +1,21 @@
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
+
+import { Controller } from '../_services/api-helper/types'
+import { assertParamsExist } from '../_services/validation'
+
+export const dashboardProfileController: Controller<DashboardProfileResponse, DashboardProfileParams> = async (req) => {
+  // Inputs & validation
+  const { projectId } = req.params
+  assertParamsExist({ projectId })
+
+  // Query
+  const response: DashboardProfileResponse = await getProfile()
+
+  // Response
+  return response
+}
 
 const HIGHLIGHTED_SPECIES_SLUGS = [
   'amazona-vittata',
@@ -10,7 +25,7 @@ const HIGHLIGHTED_SPECIES_SLUGS = [
   'antrostomus-noctitherus'
 ]
 
-export const getProfile = async (): Promise<DashboardProfileResponse> => ({
+const getProfile = async (): Promise<DashboardProfileResponse> => ({
     description: 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities',
     readme:
     '## Background\n\n' +

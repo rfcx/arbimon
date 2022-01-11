@@ -2,12 +2,27 @@ import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
-import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-export async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
+import { Controller } from '../_services/api-helper/types'
+import { assertParamsExist } from '../_services/validation'
+
+export const dashboardGeneratedController: Controller<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
+  // Inputs & validation
+  const { projectId } = req.params
+  assertParamsExist({ projectId })
+
+  // Query
+  const response: DashboardGeneratedResponse = await getGeneratedData()
+
+  // Response
+  return response
+}
+
+async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
   const speciesThreatened = await getSpeciesThreatened()
 
   return {
