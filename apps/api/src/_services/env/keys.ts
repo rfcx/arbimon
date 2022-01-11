@@ -13,7 +13,8 @@
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
   'IUCN_TOKEN',
-  'IUCN_BASE_URL'
+  'IUCN_BASE_URL',
+  'PUERTO_RICO_PROJECT_SLUG'
 ]
 
 // CAN be undefined or empty string
