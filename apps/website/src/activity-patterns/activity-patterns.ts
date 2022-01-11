@@ -66,7 +66,7 @@ export default class ActivityPatternsPage extends Vue {
     void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
 
     this.species = species ?? null
-    this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug ?? '')
+
     await Promise.all([
       this.onDatasetChange(),
       this.getSpeciesInformation()
@@ -100,11 +100,18 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async getSpeciesInformation (): Promise<void> {
-    const scientificName = this.species?.scientificName
-    if (!scientificName) return
+    const species = this.species
+    if (!species) return
+
     try {
-      const speciesInformation = await getSpecies(scientificName)
-      if (this.species?.scientificName === scientificName) {
+      const [occupancyMaps, speciesInformation] = await Promise.all([
+        getPredictedOccupancyMaps(species.speciesSlug),
+        getSpecies(species.scientificName)
+      ])
+
+      // Only update if received data matches current filters
+      if (this.species?.scientificName === species.scientificName) {
+        this.predictedOccupancyMaps = occupancyMaps
         this.speciesInformation = speciesInformation ?? null
       }
     } catch (e) {
