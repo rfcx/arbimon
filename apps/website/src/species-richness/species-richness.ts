@@ -2,7 +2,7 @@ import { Dayjs } from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 
 import { Site } from '@rfcx-bio/common/api-bio/common/sites'
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'

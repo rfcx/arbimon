@@ -1,5 +1,5 @@
+import { Species } from '@rfcx-bio/common/api-bio/species/common'
 import { PredictedOccupancyMap, ProjectSpeciesRouteResponse } from '@rfcx-bio/common/api-bio/species/project-species'
-import { Species } from '@rfcx-bio/common/api-bio/species/species'
 import { speciesInformationGeneratedUrl } from '@rfcx-bio/common/api-bio/spotlight/species-information'
 
 import { apiClient } from '~/api'

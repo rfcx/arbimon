@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 
+import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species'
-import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
