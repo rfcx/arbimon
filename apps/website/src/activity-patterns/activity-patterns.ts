@@ -104,13 +104,11 @@ export default class ActivityPatternsPage extends Vue {
 
     try {
       const data = await spotlightService.getSpeciesInformation(species.speciesSlug)
-      if (!data) return
 
       // Only update if received data matches current filters
       if (this.species?.scientificName === species.scientificName) {
-        const { speciesInformation, predictedOccupancyMaps } = data
-        this.predictedOccupancyMaps = predictedOccupancyMaps
-        this.speciesInformation = speciesInformation ?? null
+        this.predictedOccupancyMaps = data?.predictedOccupancyMaps ?? []
+        this.speciesInformation = data?.speciesInformation ?? null
       }
     } catch (e) {
       // TODO 167: Error handling
