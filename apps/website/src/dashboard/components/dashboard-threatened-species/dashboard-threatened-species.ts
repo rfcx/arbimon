@@ -1,3 +1,4 @@
+import { groupBy } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
@@ -22,5 +23,9 @@ export default class DashboardEndangeredSpecies extends Vue {
 
   get hasData (): boolean {
     return this.species.length > 0
+  }
+
+  get speciesByRating (): Array<[string, ThreatenedSpeciesRow[]]> {
+    return Object.entries(groupBy(this.species, row => row.extinctionRisk.label))
   }
 }
