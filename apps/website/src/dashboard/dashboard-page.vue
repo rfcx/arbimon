@@ -1,13 +1,51 @@
 <template>
   <div v-if="store.selectedProject">
-    <div class="grid gap-4 grid-cols-5 lg:grid-cols-3 xl:grid-cols-4">
-      <!-- Left content -->
-      <div class="col-span-3 lg:col-span-2 xl:col-span-3">
+    <div class="dashboard-wrapper">
+      <div class="dashboard-metric">
         <dashboard-metrics
           v-if="generated"
           :metrics="generated"
         />
-        <div class="flex flex-row flex-1 items-center mt-5">
+      </div>
+      <div class="dashboard-species">
+        <div class="dashboard-richness">
+          <dashboard-sidebar-title
+            title="Species highlights"
+            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
+          />
+          <horizontal-stacked-distribution
+            v-if="generated?.richnessByTaxon && generated?.speciesCount"
+            :dataset="generated?.richnessByTaxon ?? []"
+            :colors="taxonColors"
+            :known-total-count="generated?.speciesCount ?? 0"
+            class="mt-4"
+          />
+          <dashboard-highlighted-species
+            :species="speciesHighlighted"
+            class="mt-5"
+          />
+        </div>
+        <div class="threatened-species">
+          <dashboard-sidebar-title
+            title="Threatened species"
+            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
+            class="mt-5 sm:mt-0 lg:mt-5"
+          />
+          <horizontal-stacked-distribution
+            v-if="generated?.richnessByExtinction && generated?.speciesCount"
+            :dataset="generated?.richnessByExtinction ?? []"
+            :colors="extinctionColors"
+            :known-total-count="generated?.speciesCount ?? 0"
+            class="mt-4"
+          />
+          <dashboard-threatened-species
+            :species="speciesThreatened"
+            class="mt-5"
+          />
+        </div>
+      </div>
+      <div class="dashboard-graphic">
+        <div class="graphic-tabs">
           <p
             v-for="tab in tabs"
             :key="'dashboard-data-display-' + tab.value"
@@ -18,7 +56,7 @@
             {{ tab.label }}
           </p>
         </div>
-        <div class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
+        <div class="dashboard-graphic-content inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
           <map-bubble-component
             :dataset="mapDataset"
             data-key="refactorThis"
@@ -29,9 +67,9 @@
             :circle-formatter="circleFormatter"
             :map-height="tabHeight"
             :circle-style-non-zero="circleStyle"
-            class="w-full"
+            class="map-bubble w-full"
           />
-          <div class="relative">
+          <div class="line-chart relative">
             <line-chart-component
               dom-id="dashboard-line-chart"
               :config="lineChartConfig"
@@ -44,50 +82,16 @@
             />
           </div>
         </div>
+      </div>
+      <div class="dashboard-content">
         <page-title
-          class="mt-5"
+          class="dashboard-title mt-5"
           :page-title="store.selectedProject.name"
           :page-subtitle="profile?.description"
         />
         <dashboard-project-profile
           v-if="profile?.readme"
           :information="profile?.readme"
-          class="mt-5"
-        />
-      </div>
-      <!-- Right content -->
-      <div class="col-span-2 lg:col-span-1">
-        <dashboard-sidebar-title
-          v-if="generated?.richnessByTaxon && generated?.speciesCount"
-          title="Richness"
-          :subtitle="`${generated?.speciesCount ?? 0} species`"
-          :route="{ name: ROUTE_NAMES.speciesRichness, params: { id: store.selectedProject?.id } }"
-        />
-        <horizontal-stacked-distribution
-          v-if="generated?.richnessByTaxon && generated?.speciesCount"
-          :dataset="generated?.richnessByTaxon ?? []"
-          :colors="taxonColors"
-          :known-total-count="generated?.speciesCount ?? 0"
-        />
-        <dashboard-sidebar-title
-          title="Highlighted species"
-          :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
-        />
-        <dashboard-highlighted-species
-          :species="speciesHighlighted"
-        />
-        <dashboard-sidebar-title
-          title="Threatened species"
-          :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
-        />
-        <horizontal-stacked-distribution
-          v-if="generated?.richnessByExtinction && generated?.speciesCount"
-          :dataset="generated?.richnessByExtinction ?? []"
-          :colors="extinctionColors"
-          :known-total-count="generated?.speciesCount ?? 0"
-        />
-        <dashboard-threatened-species
-          :species="speciesThreatened"
           class="mt-5"
         />
       </div>
@@ -99,3 +103,6 @@
   </div>
 </template>
 <script src="./dashboard-page" lang="ts"></script>
+<style lang="scss">
+@import './dashboard.scss';
+</style>

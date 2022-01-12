@@ -1,6 +1,6 @@
 <template>
-  <div class="rounded-xl bg-steel-grey text-center p-4 min-w-32 inline-block">
-    <p class="font-bold text-4xl">
+  <div class="rounded-xl bg-steel-grey text-center p-4 min-w-32 inline-block <sm:min-w-24">
+    <p class="font-bold text-4xl <sm:text-2xl">
       {{ valueShortScale }}
       <span
         v-if="totalShortScale"
