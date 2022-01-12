@@ -13,17 +13,17 @@
       class="flex content-center mb-2"
     >
       <img
-        class="min-h-12 h-12 min-w-12 w-12 object-cover mr-2"
+        class="min-h-14 h-14 min-w-14 w-14 object-cover mr-2"
         :src="item.imageUrl"
       >
       <router-link
-        class="self-center hover:(text-subtle)"
+        class="mt-0.5 self-center hover:(text-subtle)"
         :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
       >
-        <div class="flex items-start">
+        <div class="flex items-center">
           <el-tag
             v-if="item.extinctionRisk"
-            class="border-none text-sm"
+            class="species-highlights border-none text-xs"
             effect="dark"
             size="mini"
             :color="item.extinctionRisk.color"
@@ -35,11 +35,16 @@
             {{ item.scientificName }}
           </p>
         </div>
-        <p class="text-xs text-subtle">
-          {{ item.commonName }}
+        <p class="text-xs text-subtle capitalize">
+          {{ item.commonName || 'unknown' }}
         </p>
       </router-link>
     </div>
   </div>
 </template>
 <script lang="ts" src="./dashboard-highlighted-species.ts"></script>
+<style lang="scss">
+.species-highlights {
+  height: 1rem;
+}
+</style>
