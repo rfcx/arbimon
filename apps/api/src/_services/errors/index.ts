@@ -5,8 +5,8 @@ class FastifyError extends Error {
 export const ApiServerError = (): FastifyError =>
   new FastifyError('Server error', 500)
 
-export const ApiClientError = (): FastifyError =>
-  new FastifyError('Invalid request', 400)
+export const ApiClientError = (queryName: string, queryValue: string | undefined): FastifyError =>
+  new FastifyError(`Invalid request '${queryName}' with value: '${String(queryValue)}'`, 400)
 
 export const ApiMissingParam = (paramName: string): FastifyError =>
   new FastifyError(`${paramName} is required`, 400)

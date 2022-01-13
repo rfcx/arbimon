@@ -1,4 +1,4 @@
-import { isDate, isNumber, sum } from 'lodash-es'
+import { sum } from 'lodash-es'
 
 import { FilterDataset } from '@rfcx-bio/common/api-bio/common/filter'
 import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
@@ -6,25 +6,32 @@ import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { Controller } from '~/api-helper/types'
-import { ApiClientError, ApiNotFoundError } from '~/errors'
+import { ApiNotFoundError } from '~/errors'
 import { filterMocksByParameters, filterMocksBySpecies } from '~/mock-helper'
-import { assertParamsExist } from '~/validation'
+import { assertInvalidQuery, assertParamsExist } from '~/validation'
+import { isValidDate } from '~/validation/query-validation'
 
 export const spotlightDatasetController: Controller<SpotlightDatasetResponse, spotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
 
-  const { speciesId, startDate, endDate, ...filter } = req.query
-  if (!isNumber(speciesId)) throw ApiClientError()
-  if (!isDate(startDate)) throw ApiClientError()
-  if (!isDate(endDate)) throw ApiClientError()
+  const { speciesId, startDate, endDate, siteIds, taxons } = req.query
+  if (isNaN(+speciesId)) assertInvalidQuery({ speciesId })
+  if (!isValidDate(startDate)) assertInvalidQuery({ startDate })
+  if (!isValidDate(endDate)) assertInvalidQuery({ endDate })
 
-  const species = rawSpecies.find(s => s.speciesId === speciesId)
+  const species = rawSpecies.find(s => s.speciesId === Number(speciesId))
   if (!species) throw ApiNotFoundError()
 
   // Query
-  const response = await getSpotligthDatasetInformation({ startDate: dayjs(startDate), endDate: dayjs(endDate), ...filter }, projectId, species.speciesId)
+  const convertedQuery: FilterDataset = {
+    startDate: dayjs.utc(startDate),
+    endDate: dayjs.utc(endDate),
+    siteIds: siteIds ?? [],
+    taxons: taxons ?? []
+  }
+  const response = await getSpotligthDatasetInformation({ ...convertedQuery }, projectId, species.speciesId)
 
   // Response
   return response
