@@ -16,10 +16,6 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   assertParamsExist({ projectId })
 
   const { speciesId, startDate, endDate, ...filter } = req.query
-  console.log('\n----------------------')
-  console.log(startDate, endDate)
-  console.log(dayjs.utc(startDate).isValid(), dayjs.utc(endDate).isValid())
-  console.log('\n----------------------')
   if (!isNumber(speciesId)) throw ApiClientError()
   if (!isDate(startDate)) throw ApiClientError()
   if (!isDate(endDate)) throw ApiClientError()
