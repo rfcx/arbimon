@@ -9,9 +9,18 @@ export interface FilterPropertyEquals {
   value: string
 }
 
-export interface FilterDatasetQuery {
+// For API internal use
+export interface FilterDataset {
   siteIds: Array<Site['siteId']>
   startDate: Dayjs
   endDate: Dayjs
-  filterBy: FilterPropertyEquals[]
+  taxons: string[]
+}
+
+// For API query use
+export interface FilterDatasetQuery {
+  siteIds: Array<Site['siteId']>
+  startDate: string
+  endDate: string
+  taxons: string[]
 }
