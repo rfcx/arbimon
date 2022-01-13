@@ -9,7 +9,8 @@
     "./*.ts",
     "./*.js",
     "../../packages/*/src/**/*.ts",
-    "../../packages/*/src/**/*.js"
+    "../../packages/*/src/**/*.js",
+    "node_modules/dayjs/plugin/utc.d.ts"
   ],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]
 }
