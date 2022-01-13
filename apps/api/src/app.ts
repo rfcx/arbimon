@@ -22,16 +22,16 @@ await app.register(fastifyStatic, { root: resolve('./public') })
 // Register routes (old version)
 const routePlugins = [
   routesStatus,
-  routesRichness,
-  routesSpotlight
+  routesRichness
 ]
 await Promise.all(routePlugins.map(plugin => app.register(plugin)))
 
 // Register routes
 const routesRegistrations = [
-  routesSpecies,
   routesDashboard,
-  routesProject
+  routesProject,
+  routesSpecies,
+  routesSpotlight
 ]
 
 routesRegistrations
