@@ -92,7 +92,14 @@ export default class ActivityPatternsPage extends Vue {
       })
     )
 
-    this.metrics = transformToMetricsDatasets(datasets)
+    const metricsDatasets = await Promise.all(
+      filters.map(async (filter) => {
+        const query = filterToDataset(filter)
+        return await spotlightService.getSpotlightDataset(query, speciesId)
+      })
+    )
+
+    this.metrics = transformToMetricsDatasets(metricsDatasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
     this.exportDatasets = datasets.map(({ activityByExport }) => activityByExport)

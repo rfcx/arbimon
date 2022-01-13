@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs'
 
+import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityPatternsData, ActivityPatternsDataByExport, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
@@ -16,7 +17,9 @@ export const ACTIVITY_PATTERN_MAP_KEYS = {
   occupancy: 'occupancy'
 }
 
-export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
+// Temporary Type
+export type MetricsDataset = SpotlightDatasetResponse
+export function transformToMetricsDatasets (datasets: Array<MetricsDataset | undefined>): Metrics[] {
   const metrics: Metrics[] = [
     {
       title: 'Detection Frequency',
@@ -30,7 +33,10 @@ export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): M
     }
   ]
 
-  datasets.forEach(({ totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }) => {
+  datasets.forEach(dataset => {
+    if (!dataset) return
+
+    const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset
     metrics[0].datasets.push({
       value: detectionFrequency.toFixed(3),
       description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`
