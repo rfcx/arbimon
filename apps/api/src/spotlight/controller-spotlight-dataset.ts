@@ -1,13 +1,11 @@
 import { sum } from 'lodash-es'
 
-import { FilterDataset } from '@rfcx-bio/common/api-bio/common/filter'
 import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { Controller } from '~/api-helper/types'
 import { ApiNotFoundError } from '~/errors'
-import { filterMocksByParameters, filterMocksBySpecies } from '~/mock-helper'
+import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '~/mock-helper'
 import { assertInvalidQuery, assertParamsExist } from '~/validation'
 import { isValidDate } from '~/validation/query-validation'
 
@@ -25,9 +23,9 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   if (!species) throw ApiNotFoundError()
 
   // Query
-  const convertedQuery: FilterDataset = {
-    startDate: dayjs.utc(startDate),
-    endDate: dayjs.utc(endDate),
+  const convertedQuery = {
+    startDateUtc: startDate,
+    endDateUtc: endDate,
     siteIds: siteIds ?? [],
     taxons: taxons ?? []
   }
