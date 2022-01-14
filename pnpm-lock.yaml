@@ -134,20 +134,20 @@ importers:
 
   apps/api:
     specifiers:
+      '@js-temporal/polyfill': ^0.3.0
       '@rfcx-bio/common': workspace:^0.0.1
       '@rfcx-bio/utils': workspace:^0.0.1
       axios: ^0.24.0
-      dayjs: ^1.10.7
       fastify: ^3.23.1
       fastify-cors: ^6.0.2
       fastify-static: ^4.5.0
       lodash-es: ^4.17.21
       pino-pretty: ^7.3.0
     dependencies:
+      '@js-temporal/polyfill': 0.3.0
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.24.0
-      dayjs: 1.10.7
       fastify: 3.23.1
       fastify-cors: 6.0.2
       fastify-static: 4.5.0
@@ -1872,6 +1872,14 @@ packages:
       chalk: 4.1.2
     dev: true
 
+  /@js-temporal/polyfill/0.3.0:
+    resolution: {integrity: sha512-cxxxis19j0WvK3+kUwKrXeXaDBaWxLeRfKqlVz7g50Cly6UgGs2p3wovH9zjtZ4TtjYHDR4De/880+aalduDZQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      big-integer: 1.6.51
+      tslib: 2.3.1
+    dev: false
+
   /@mapbox/geojson-rewind/0.5.1:
     resolution: {integrity: sha512-eL7fMmfTBKjrb+VFHXCGv9Ot0zc3C0U+CwXo1IrP+EPwDczLoXv34Tgq3y+2mPSFNVUXgU42ILWJTC7145KPTA==}
     hasBin: true
@@ -3512,6 +3520,11 @@ packages:
     dependencies:
       tweetnacl: 0.14.5
     dev: true
+
+  /big-integer/1.6.51:
+    resolution: {integrity: sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==}
+    engines: {node: '>=0.6'}
+    dev: false
 
   /bignumber.js/9.0.0:
     resolution: {integrity: sha512-t/OYhhJ2SD+YGBQcjY8GzzDHEk9f3nerxjtfa6tlMXfe7frs/WozhvCNoGvpM0P3bNf3Gq5ZRMlGr5f3r4/N8A==}
@@ -10377,7 +10390,6 @@ packages:
 
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
-    dev: true
 
   /tsutils/3.21.0_typescript@4.4.4:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
