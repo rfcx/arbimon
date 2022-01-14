@@ -1,16 +1,6 @@
-// import { request } from 'http'
+import { describe, expect, test } from 'vitest'
 
 import { isValidDate } from './query-validation'
-
-// import { spotlightDatasetRoute } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-
-// describe(`GET ${spotlightDatasetRoute}`, () => {
-//   test('Invalid speices', async () => {
-//     console.warn = jest.fn()
-
-//     const response = await request()
-//   })
-// })
 
 describe('ISO date format', () => {
   test('Empty date', () => {
@@ -43,6 +33,6 @@ describe('ISO date format', () => {
     const date = isValidDate(validDate)
 
     // Assert
-    expect(date).toBe(false)
+    expect(date).toBe(true)
   })
 })
