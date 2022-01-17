@@ -1,5 +1,6 @@
+import { Temporal } from '@js-temporal/polyfill'
+
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
-import { plainDate } from '@rfcx-bio/utils/datetime-temporal'
 
 export interface FilterDataset {
   startDateUtc: string
@@ -11,8 +12,8 @@ export interface FilterDataset {
 export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[], datasetParams: FilterDataset, speciesIds: number[] = []): MockHourlyDetectionSummary[] => {
   const { startDateUtc, endDateUtc, siteIds, taxons } = datasetParams
 
-  // Add 1 day to make it exclusive
-  const endDateUtcExclusive = plainDate(endDateUtc).add({ days: 1 }).toString()
+  // Add 1 day to make it exclusive (slice to remove "Z" which PlainDateTime doesn't support)
+  const endDateUtcExclusive = Temporal.PlainDate.from(endDateUtc.slice(0, -1)).add({ days: 1 }).toString()
 
   return detections.filter(r =>
     r.date >= startDateUtc &&
