@@ -1,10 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { ActivityOverviewData, ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '~/api/activity-overview-service'
-import { dayjs } from '~/dayjs-initialized'
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 
 export class ActivityOverviewService {

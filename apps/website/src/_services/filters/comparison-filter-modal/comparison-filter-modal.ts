@@ -3,8 +3,8 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { dayjs } from '~/dayjs-initialized'
 import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
 import { BiodiversityStore } from '~/store'
 import DateRangePicker from './date-range-picker/date-range-picker.vue'

@@ -2,9 +2,9 @@ import { groupBy, keyBy, mapValues } from 'lodash-es'
 
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { dayjs } from '~/dayjs-initialized'
 import { DatasetParameters, filterMocksByParameters } from '~/filters'
 import { MapSiteData } from '~/maps/map-bubble'
 import { TimeBucket } from '~/time-buckets'

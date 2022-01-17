@@ -1,8 +1,8 @@
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { dayjs } from '~/dayjs-initialized'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 

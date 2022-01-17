@@ -2,9 +2,10 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
-import { dayjs } from '~/dayjs-initialized'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
