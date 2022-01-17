@@ -20,12 +20,12 @@ export function transformToMetricsDatasets (datasets: ActivitySpotlightDataset[]
   const metrics: Metrics[] = [
     {
       title: 'Detection Frequency',
-      information: 'Number of detections ÷<br />Total number of recordings',
+      information: 'Number of detections ÷ \nTotal number of recordings',
       datasets: []
     },
     {
       title: 'Naive Occupancy',
-      information: 'Number of sites with detections ÷<br />Total number of sites',
+      information: 'Number of sites with detections ÷ \nTotal number of sites',
       datasets: []
     }
   ]
