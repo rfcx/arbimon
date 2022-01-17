@@ -12,10 +12,10 @@
 
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
-  'USERNAME', // TODO: More precise name
-  'PASSWORD', // TODO: More precise name
-  'DATABASE', // TODO: More precise name
-  'HOST', // TODO: More precise name
+  'ARBIMON_DB_DBNAME',
+  'ARBIMON_DB_HOSTNAME',
+  'ARBIMON_DB_PASSWORD',
+  'ARBIMON_DB_USER',
 
   'BIO_DB_DBNAME',
   'BIO_DB_HOSTNAME',
