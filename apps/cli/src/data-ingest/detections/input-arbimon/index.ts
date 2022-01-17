@@ -3,7 +3,8 @@ import { dirname, resolve } from 'path'
 
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
-import { queryArbimon } from '../../../_services/arbimon-helpers'
+import { mysqlSelect } from '../../../_services/mysql'
+import { ARBIMON_CONFIG } from '../../_connections/arbimon'
 import { ArbimonHourlyDetectionSummary } from './types'
 
 export const getArbimonDetectionSummaries = async (): Promise<MockHourlyDetectionSummary[]> => {
@@ -13,7 +14,7 @@ export const getArbimonDetectionSummaries = async (): Promise<MockHourlyDetectio
   const sql = fs.readFileSync(sqlPath, 'utf8')
 
   // Query Arbimon
-  const results = await queryArbimon<ArbimonHourlyDetectionSummary>(sql)
+  const results = await mysqlSelect<ArbimonHourlyDetectionSummary>(ARBIMON_CONFIG, sql)
 
   // Calculate detection frequency
   return results.map(summary => ({

@@ -5,7 +5,8 @@ import { dirname, resolve } from 'path'
 import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/common'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
-import { queryArbimon } from '../../../_services/arbimon-helpers'
+import { mysqlSelect } from '../../../_services/mysql'
+import { ARBIMON_CONFIG } from '../../_connections/arbimon'
 
 export type ArbimonSpeciesCall = SpeciesCall
 
@@ -28,7 +29,7 @@ export const getArbimonSpeciesCalls = async (): Promise<Record<string, ArbimonSp
   const sql = fs.readFileSync(sqlPath, 'utf8')
 
   // Query Arbimon
-  const results = await queryArbimon<ArbimonSpeciesCallRow>(sql)
+  const results = await mysqlSelect<ArbimonSpeciesCallRow>(ARBIMON_CONFIG, sql)
 
   // Calculate URLs & create keyed object
   return mapValues(
