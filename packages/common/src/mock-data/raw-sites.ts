@@ -4595,7 +4595,7 @@ export const rawSites: Site[] = [
   },
   {
     siteId: 'jzp7r6kd3ipv',
-    name: 'PO33 2',
+    name: "PO33 2",
     latitude: 18.05653,
     longitude: -66.68453,
     altitude: 209.0539935
