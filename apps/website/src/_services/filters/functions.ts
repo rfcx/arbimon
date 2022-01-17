@@ -2,8 +2,8 @@ import { Dayjs } from 'dayjs'
 import { groupBy, mapValues } from 'lodash-es'
 
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { dayjs } from '~/dayjs-initialized'
 import { SiteGroup } from '~/filters'
 import { useStore } from '~/store'
 import { ComparisonFilter, DatasetParameters } from './types'

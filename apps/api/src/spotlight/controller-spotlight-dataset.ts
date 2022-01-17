@@ -4,10 +4,10 @@ import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpo
 import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Controller } from '../_services/api-helper/types'
+import { dayjs } from '../_services/dayjs-initialized'
 import { ApiNotFoundError } from '../_services/errors'
 import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'

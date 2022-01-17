@@ -1,8 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-
+import { dayjs } from '~/dayjs-initialized'
 import { BiodiversityStore } from '~/store'
 import { ColoredFilter, ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'

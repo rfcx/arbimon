@@ -22,7 +22,6 @@
     "test-coverage": "vitest --run --coverage"
   },
   "dependencies": {
-    "dayjs": "^1.10.7",
     "jszip": "^3.7.1",
     "lodash-es": "^4.17.21",
     "xlsx": "^0.17.3"

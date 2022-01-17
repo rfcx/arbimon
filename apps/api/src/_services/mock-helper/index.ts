@@ -1,5 +1,6 @@
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
+import { dayjs } from '../dayjs-initialized'
 
 export interface FilterDataset {
   startDateUtcInclusive: string
