@@ -4,7 +4,7 @@ import duration from 'dayjs/plugin/duration'
 import isoWeek from 'dayjs/plugin/isoWeek'
 import minMax from 'dayjs/plugin/minMax'
 import pluralGetSet from 'dayjs/plugin/pluralGetSet'
-import utc from 'dayjs/plugin/utc.js'
+import utc from 'dayjs/plugin/utc'
 
 dayjsBase.extend(isoWeek)
 dayjsBase.extend(minMax)
