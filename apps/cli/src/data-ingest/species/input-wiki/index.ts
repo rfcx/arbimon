@@ -1,3 +1,5 @@
+import axios, { AxiosRequestConfig } from 'axios'
+
 export interface WikiSummary {
   title: string
   content: string
@@ -8,7 +10,7 @@ export interface WikiSummary {
   thumbnailImage: string
 }
 
-export interface WikiSummaryResponse {
+interface WikiSummaryResponse {
   type: string
   title: string
   displaytitle: string
@@ -56,4 +58,29 @@ export interface WikiSummaryResponse {
   }
   extract: string
   extract_html: string
+}
+
+const WIKI_BASE_URL = 'https://en.wikipedia.org'
+
+export async function getWikiSpecies (scientificName: string): Promise<WikiSummary | undefined> {
+  try {
+    const endpoint: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
+    }
+
+    const { data } = await axios.request<WikiSummaryResponse>(endpoint)
+    return {
+      title: data.title,
+      content: data.extract,
+      contentUrls: {
+        desktop: data.content_urls?.desktop?.page,
+        mobile: data.content_urls?.mobile?.page
+      },
+      thumbnailImage: data.thumbnail?.source
+    }
+  } catch (error) {
+    console.error('wiki/getWikiSpeciesInformation', error)
+    return undefined
+  }
 }
