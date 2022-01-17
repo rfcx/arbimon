@@ -1,10 +1,10 @@
-import { Temporal } from '@js-temporal/polyfill'
 import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { ActivityDatasetParams, ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '@rfcx-bio/common/api-bio/activity/common'
 import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
 import { MockHourlyDetectionSummary, rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Controller } from '../_services/api-helper/types'
@@ -124,9 +124,9 @@ const calculateOverviewDataByTime = (totalRecordingCount: number, speciesSummari
   const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
 
   const byHour = groupByNumber(speciesSummaries, d => d.hour)
-  const byDay = groupByNumber(speciesSummaries, d => Temporal.Instant.from(d.date).toZonedDateTimeISO('UTC').dayOfWeek - 1)
-  const byMonth = groupByNumber(speciesSummaries, d => Temporal.Instant.from(d.date).toZonedDateTimeISO('UTC').month)
-  const byDate = groupByNumber(speciesSummaries, d => Temporal.Instant.from(d.date).toZonedDateTimeISO('UTC').with({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toInstant().epochSeconds / SECONDS_PER_DAY) // each chart tick should be a day not a second
+  const byDay = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
+  const byMonth = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
+  const byDate = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).startOf('day').unix() / SECONDS_PER_DAY) // each chart tick should be a day not a second
 
   return {
     hourOfDay: {
