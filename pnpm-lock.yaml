@@ -274,13 +274,11 @@ importers:
 
   packages/utils:
     specifiers:
-      '@js-temporal/polyfill': ^0.3.0
       dayjs: ^1.10.7
       jszip: ^3.7.1
       lodash-es: ^4.17.21
       xlsx: ^0.17.3
     dependencies:
-      '@js-temporal/polyfill': 0.3.0
       dayjs: 1.10.7
       jszip: 3.7.1
       lodash-es: 4.17.21
