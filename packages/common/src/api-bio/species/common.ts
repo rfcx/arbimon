@@ -1,10 +1,11 @@
 import { ExtinctionRiskCode } from '../../iucn'
 
-const SPECIES_SOURCES = <const>['IUCN', 'Wiki']
+const SPECIES_SOURCES = <const>['IUCN', 'Wiki', 'Project']
 export type SpeciesSource = typeof SPECIES_SOURCES[number]
 
 export const SPECIES_SOURCE_IUCN: SpeciesSource = SPECIES_SOURCES[0]
 export const SPECIES_SOURCE_WIKI: SpeciesSource = SPECIES_SOURCES[1]
+export const SPECIES_SOURCE_PROJECT: SpeciesSource = SPECIES_SOURCES[2]
 
 export interface SpeciesInformation {
   description: string
@@ -20,7 +21,6 @@ export interface SpeciesExternalLink {
 }
 
 export interface SpeciesCall {
-  scientificName?: string
   mediaWavUrl: string
   mediaSpecUrl: string
   songType: string
