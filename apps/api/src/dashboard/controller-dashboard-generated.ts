@@ -15,11 +15,8 @@ export const dashboardGeneratedController: Controller<DashboardGeneratedResponse
   const { projectId } = req.params
   assertParamsExist({ projectId })
 
-  // Query
-  const response: DashboardGeneratedResponse = await getGeneratedData()
-
-  // Response
-  return response
+  // Query & Response
+  return await getGeneratedData()
 }
 
 async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
