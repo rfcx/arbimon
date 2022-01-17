@@ -138,6 +138,7 @@ importers:
       '@rfcx-bio/common': workspace:^0.0.1
       '@rfcx-bio/utils': workspace:^0.0.1
       axios: ^0.24.0
+      dayjs: ^1.10.7
       fastify: ^3.23.1
       fastify-cors: ^6.0.2
       fastify-static: ^4.5.0
@@ -148,6 +149,7 @@ importers:
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.24.0
+      dayjs: 1.10.7
       fastify: 3.23.1
       fastify-cors: 6.0.2
       fastify-static: 4.5.0
@@ -274,12 +276,10 @@ importers:
 
   packages/utils:
     specifiers:
-      dayjs: ^1.10.7
       jszip: ^3.7.1
       lodash-es: ^4.17.21
       xlsx: ^0.17.3
     dependencies:
-      dayjs: 1.10.7
       jszip: 3.7.1
       lodash-es: 4.17.21
       xlsx: 0.17.3

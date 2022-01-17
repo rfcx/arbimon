@@ -4,10 +4,10 @@ import { ActivityDatasetParams, ActivityDatasetResponse } from '@rfcx-bio/common
 import { ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '@rfcx-bio/common/api-bio/activity/common'
 import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
 import { MockHourlyDetectionSummary, rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Controller } from '../_services/api-helper/types'
+import { dayjs } from '../_services/dayjs-initialized'
 import { FilterDataset, filterMocksByParameters } from '../_services/mock-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'

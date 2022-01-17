@@ -2,7 +2,7 @@ import { IDatePickerType } from 'element-plus/es/components/date-picker/src/date
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { dayjs } from '~/dayjs-initialized'
 
 export interface DateRangeShortcut {
   text: string

@@ -14,8 +14,7 @@
   },
 
   "include": [
-    "src/**/*.ts",
-    "../../packages/utils/node_modules/dayjs/plugin/utc.d.ts"
+    "src/**/*.ts"
   ],
   "references": [
     { "path": "../../packages/utils/tsconfig.build.json" },
