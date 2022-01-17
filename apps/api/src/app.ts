@@ -4,6 +4,7 @@ import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { env } from './_services/env'
+import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
@@ -31,7 +32,8 @@ const routesRegistrations = [
   routesDashboard,
   routesProject,
   routesSpecies,
-  routesSpotlight
+  routesSpotlight,
+  routesActivity
 ]
 
 routesRegistrations
