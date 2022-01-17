@@ -2,11 +2,12 @@ import { Options, Vue } from 'vue-class-component'
 
 import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ActivityPatternsDataByExport, activityPatternsService } from '~/api/activity-patterns-service'
+import { ActivityPatternsDataByExport } from '~/api/activity-patterns-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
@@ -83,23 +84,16 @@ export default class ActivityPatternsPage extends Vue {
     if (!speciesId) return
 
     const filters = this.filters
-    const datasets = await Promise.all(
-      // TODO ??: Clean the dataset date type between `DatasetDefinition`, `MapDataSet`, and `ColoredFilter`
-      filters.map(async (filter) => {
-        const { color, startDate, endDate } = filter
-        const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
-        return { ...data, startDate, endDate, color }
-      })
-    )
 
-    const metricsDatasets = await Promise.all(
+    const datasets = (await Promise.all(
       filters.map(async (filter) => {
-        const query = filterToDataset(filter)
-        return await spotlightService.getSpotlightDataset(query, speciesId)
+        const { color, startDate, endDate, sites, otherFilters } = filter
+        const data = await spotlightService.getSpotlightDataset(filterToDataset(filter), speciesId)
+        return data ? { ...data, startDate, endDate, color, sites: sites.flatMap(({ value }) => value), otherFilters } : data
       })
-    )
+    )).filter(isDefined)
 
-    this.metrics = transformToMetricsDatasets(metricsDatasets)
+    this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
     this.exportDatasets = datasets.map(({ activityByExport }) => activityByExport)

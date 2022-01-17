@@ -1,6 +1,5 @@
 import { Dayjs } from 'dayjs'
 
-import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityPatternsData, ActivityPatternsDataByExport, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
@@ -9,7 +8,7 @@ import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterNam
 import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
 
-export type ActivityPatternsDataBySites = ActivityPatternsData & DatasetParameters
+export type ActivitySpotlightDataset = ActivityPatternsData & DatasetParameters
 
 export const ACTIVITY_PATTERN_MAP_KEYS = {
   detection: 'detection',
@@ -17,9 +16,7 @@ export const ACTIVITY_PATTERN_MAP_KEYS = {
   occupancy: 'occupancy'
 }
 
-// Temporary Type
-export type MetricsDataset = SpotlightDatasetResponse
-export function transformToMetricsDatasets (datasets: Array<MetricsDataset | undefined>): Metrics[] {
+export function transformToMetricsDatasets (datasets: ActivitySpotlightDataset[]): Metrics[] {
   const metrics: Metrics[] = [
     {
       title: 'Detection Frequency',
@@ -34,8 +31,6 @@ export function transformToMetricsDatasets (datasets: Array<MetricsDataset | und
   ]
 
   datasets.forEach(dataset => {
-    if (!dataset) return
-
     const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset
     metrics[0].datasets.push({
       value: detectionFrequency.toFixed(3),
@@ -54,7 +49,7 @@ function getPrettyMax (max: number): number {
   return max // TODO URGENT - Make this more pretty
 }
 
-export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): MapDataSet[] {
+export function transformToBySiteDataset (datasets: ActivitySpotlightDataset[]): MapDataSet[] {
   const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
     const activityBySiteValues = Object.values(activityBySite)
     const siteDetectionCounts = activityBySiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
