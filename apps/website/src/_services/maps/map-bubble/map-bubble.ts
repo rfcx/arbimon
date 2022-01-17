@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es'
-import { CirclePaint, GeoJSONSource, LngLatBounds, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, NavigationControl, Popup } from 'mapbox-gl'
+import { CircleLayer, CirclePaint, GeoJSONSource, LngLatBounds, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, NavigationControl, Popup } from 'mapbox-gl'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
@@ -144,8 +144,7 @@ export default class MapBubbleComponent extends Vue {
   updateDataSourcesAndLayers (): void {
     const [rawNonZero, rawZero] = partition(this.dataset.data, d => d.distinctSpecies[this.dataKey] === true || d.distinctSpecies[this.dataKey] > 0)
 
-    const radiusForZero = this.circleFormatter.getRadius(0)
-    this.updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint(this.circleStyleZero), 'circle-radius': radiusForZero })
+    this.updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint(this.circleStyleZero), 'circle-radius': ['get', 'radius'] })
     this.updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint(this.circleStyleNonZero), 'circle-radius': ['get', 'radius'] })
   }
 
@@ -158,7 +157,7 @@ export default class MapBubbleComponent extends Vue {
         geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
         properties: {
           title: datum.siteName,
-          radius: this.circleFormatter.getRadius(datum.distinctSpecies[this.dataKey] as number),
+          radius: this.circleFormatter.getRadius(Number(datum.distinctSpecies[this.dataKey])), // TODO Remove this once boolean is removed from type
           popup: this.getPopup(datum)
         }
       }))
@@ -173,7 +172,8 @@ export default class MapBubbleComponent extends Vue {
     }
 
     // Add layer
-    if (this.map.getLayer(id) === undefined) {
+    const layer = this.map.getLayer(id) as CircleLayer | undefined
+    if (layer === undefined) {
       this.map.addLayer({ id, type: 'circle', source: id, paint })
     }
   }
