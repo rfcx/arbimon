@@ -18,28 +18,27 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   const { projectId } = req.params
   assertParamsExist({ projectId })
 
-  const { speciesId, startDate, endDate, siteIds, taxons } = req.query
-  if (isNaN(+speciesId)) assertInvalidQuery({ speciesId })
-  if (!isValidDate(startDate)) assertInvalidQuery({ startDate })
-  if (!isValidDate(endDate)) assertInvalidQuery({ endDate })
+  const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  const speciesId = Number(speciesIdString)
+  if (isNaN(speciesId)) assertInvalidQuery({ speciesIdString })
+  if (!isValidDate(startDateUtcInclusive)) assertInvalidQuery({ startDateUtcInclusive })
+  if (!isValidDate(endDateUtcInclusive)) assertInvalidQuery({ endDateUtcInclusive })
 
-  const species = rawSpecies.find(s => s.speciesId === Number(speciesId))
+  const species = rawSpecies.find(s => s.speciesId === speciesId)
   if (!species) throw ApiNotFoundError()
 
   // Query
   const convertedQuery = {
-    startDateUtc: startDate,
-    endDateUtc: endDate,
+    startDateUtcInclusive,
+    endDateUtcInclusive,
     siteIds: siteIds ?? [],
     taxons: taxons ?? []
   }
-  const response = await getSpotligthDatasetInformation({ ...convertedQuery }, projectId, species.speciesId)
 
-  // Response
-  return response
+  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species.speciesId)
 }
 
-async function getSpotligthDatasetInformation (filter: FilterDataset, projectId: string, speciesId: number): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, speciesId: number): Promise<SpotlightDatasetResponse> {
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)

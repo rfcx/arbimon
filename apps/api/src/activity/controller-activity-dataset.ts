@@ -23,15 +23,14 @@ export const activityDatasetController: Controller<ActivityDatasetResponse, Acti
 
   // Query
   const convertedQuery: FilterDataset = {
-    startDateUtc: startDate,
-    endDateUtc: endDate,
+    startDateUtcInclusive: startDate,
+    endDateUtcInclusive: endDate,
     siteIds: siteIds ?? [],
     taxons: taxons ?? []
   }
-  const response = getActivityOverviewData({ ...convertedQuery })
 
   // Response
-  return await response
+  return await getActivityOverviewData({ ...convertedQuery })
 }
 
 const getActivityOverviewData = async (filter: FilterDataset): Promise<ActivityDatasetResponse> => {

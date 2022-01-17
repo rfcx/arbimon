@@ -2,20 +2,20 @@ import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 export interface FilterDataset {
-  startDateUtc: string
-  endDateUtc: string
+  startDateUtcInclusive: string
+  endDateUtcInclusive: string
   siteIds: string[]
   taxons: string[]
 }
 
 export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[], datasetParams: FilterDataset, speciesIds: number[] = []): MockHourlyDetectionSummary[] => {
-  const { startDateUtc, endDateUtc, siteIds, taxons } = datasetParams
+  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = datasetParams
 
   // Add 1 day to make it exclusive
-  const endDateUtcExclusive = dayjs.utc(endDateUtc).add(1, 'day').toISOString()
+  const endDateUtcExclusive = dayjs.utc(endDateUtcInclusive).add(1, 'day').toISOString()
 
   return detections.filter(r =>
-    r.date >= startDateUtc &&
+    r.date >= startDateUtcInclusive &&
     r.date < endDateUtcExclusive &&
     (siteIds.length === 0 || siteIds.includes(r.stream_id)) &&
     (taxons.length === 0 || taxons.includes(r.taxon)) &&
