@@ -4,8 +4,8 @@ import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneRespon
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 
-import { ApiNotFoundError } from '~/errors'
 import { Controller } from '../_services/api-helper/types'
+import { ApiNotFoundError } from '../_services/errors'
 import { assertParamsExist } from '../_services/validation'
 import { mockPredictionsFolderPath } from './index'
 
