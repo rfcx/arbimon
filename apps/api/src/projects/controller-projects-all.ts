@@ -1,7 +1,7 @@
 import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
 
-import { Controller } from '~/api-helper/types'
-import { env } from '~/env'
+import { Controller } from '../_services/api-helper/types'
+import { env } from '../_services/env'
 
 const FAKE_PUERTO_RICO_PROJECT: Project = {
   id: env.PUERTO_RICO_PROJECT_SLUG,

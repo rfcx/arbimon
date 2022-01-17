@@ -3,11 +3,11 @@ import { sum } from 'lodash-es'
 import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Controller } from '~/api-helper/types'
-import { ApiNotFoundError } from '~/errors'
-import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '~/mock-helper'
-import { assertInvalidQuery, assertParamsExist } from '~/validation'
-import { isValidDate } from '~/validation/query-validation'
+import { Controller } from '../_services/api-helper/types'
+import { ApiNotFoundError } from '../_services/errors'
+import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
+import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
+import { isValidDate } from '../_services/validation/query-validation'
 
 export const spotlightDatasetController: Controller<SpotlightDatasetResponse, spotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
   // Inputs & validation

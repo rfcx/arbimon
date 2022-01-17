@@ -7,9 +7,9 @@
     "outDir": "lib",
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
-      "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
-      "~/*": ["./_services/*"],
-      "@/*": ["./*"]
+      "@rfcx-bio/common/*": ["../../../packages/common/src/*"]
+      // "~/*": ["./_services/*"],
+      // "@/*": ["./*"]
     }
   },
 
