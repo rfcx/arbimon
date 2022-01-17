@@ -1,4 +1,4 @@
-import { MockHourlyDetectionSummary } from 'mock-data'
+import { MockHourlyDetectionSummary } from '../../mock-data'
 
 export interface DetectionGroupedBySite {
   [siteId: string]: MockHourlyDetectionSummary[]
