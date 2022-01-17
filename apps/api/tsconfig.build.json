@@ -13,9 +13,7 @@
     }
   },
 
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "references": [
     { "path": "../../packages/utils/tsconfig.build.json" },
     { "path": "../../packages/common/tsconfig.build.json" }
