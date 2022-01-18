@@ -168,15 +168,23 @@ jobs:
       - name: 'Deploy: Set image version'
         run: |
           find tools/deployment -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
+          find tools/deployment -name "migrate.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
 
-      - name: 'Deploy: Kubernetes run CLI migrations'
+      - name: 'Deploy: Kubernetes remove job for CLI migrations'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         env:
-          MIGRATIONS_OVERRIDES: '{ "apiVersion": "v1", "spec": { "containers": [{ "name": "biodiversity-cli-migrations", "image": "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}", "envFrom": [ { "configMapRef": { "name": "biodiversity-cli-config" } }, { "secretRef": { "name": "biodiversity-cli-secrets" } } ] } ] } }'
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: 'run -i --rm biodiversity-cli-migrations --image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }} --namespace=${{ env.NAMESPACE }} --restart=Never --overrides=''${{ env.MIGRATIONS_OVERRIDES }}'' --command -- node --experimental-specifier-resolution=node lib/db-migrations/index.js'
+          args: delete job biodiversity-cli-migrate --ignore-not-found
+      
+      - name: 'Deploy: Kubernetes apply CLI'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: 'apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}'
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
