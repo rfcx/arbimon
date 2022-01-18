@@ -36,8 +36,8 @@ export const getMergedSpecies = async (scientificNames: string[]): Promise<Speci
 
     return {
       ...arbimonSpecies,
-      commonName: rfcxSpecies.commonName ?? iucnSpecies?.main_common_name ?? '',
-      extinctionRisk: rfcxSpecies.extinctionRisk?.code ?? iucnSpecies?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
+      commonName: rfcxSpecies?.commonName ?? iucnSpecies?.main_common_name ?? '',
+      extinctionRisk: rfcxSpecies?.extinctionRisk?.code ?? iucnSpecies?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
       externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
       thumbnailImageUrl: wikiSpecies?.thumbnailImage ?? '',
       imageCaption: wikiSpecies?.title ?? '',

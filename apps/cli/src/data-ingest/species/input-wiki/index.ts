@@ -80,7 +80,7 @@ export async function getWikiSpecies (scientificName: string): Promise<WikiSumma
       thumbnailImage: data.thumbnail?.source
     }
   } catch (error) {
-    console.error('wiki/getWikiSpeciesInformation', error)
+    console.warn('wiki/getWikiSpeciesInformation: no data ', scientificName)
     return undefined
   }
 }
