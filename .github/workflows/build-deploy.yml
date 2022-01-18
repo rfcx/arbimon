@@ -105,25 +105,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
         # v1 (1.3.3) @ 03 Nov 2021 https://github.com/aws-actions/amazon-ecr-login/tags
 
-      - name: 'Build: Docker build WEB'
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
-        with:
-          build-args: |
-            mode=${{ env.NAMESPACE }}
-          target: website
-          file: tools/deployment/Dockerfile
-          context: .
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          # secrets: |
-          #   "EXAMPLE_SECRET=${{ secrets.EXAMPLE }}"
-          tags: |
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:latest
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ env.SHORT_SHA }}
-
       - name: 'Build: Docker build API'
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
         # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
@@ -143,17 +124,28 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ env.SHORT_SHA }}
 
+      - name: 'Build: Docker build WEB'
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+        with:
+          build-args: |
+            mode=${{ env.NAMESPACE }}
+          target: website
+          file: tools/deployment/Dockerfile
+          context: .
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # secrets: |
+          #   "EXAMPLE_SECRET=${{ secrets.EXAMPLE }}"
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ github.run_number }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_WEBSITE }}:${{ env.SHORT_SHA }}
+
       - name: 'Deploy: Set image version'
         run: |
           find tools/deployment -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
-
-      - name: 'Deploy: Kubernetes apply WEB'
-        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
-        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-        with:
-          args: apply -f ./tools/deployment/website/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
@@ -162,6 +154,14 @@ jobs:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
+
+      - name: 'Deploy: Kubernetes apply WEB'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f ./tools/deployment/website/${{ env.NAMESPACE }}
 
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
