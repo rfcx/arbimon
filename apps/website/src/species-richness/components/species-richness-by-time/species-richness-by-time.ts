@@ -4,6 +4,7 @@ import { Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { LAYOUT_BREAKPOINT } from '@/_layout/config'
 import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
@@ -20,6 +21,7 @@ export default class SpeciesRichnessByTime extends Vue {
 
   selectedBucket: TimeBucket = 'hourOfDay'
   buckets: Record<TimeBucket, string> = TIME_BUCKET_LABELS
+  chartHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 450 : 250
 
   get hasData (): boolean {
     return this.datasetsForSelectedBucket.some(ds => !isEmpty(ds.data))
@@ -27,7 +29,7 @@ export default class SpeciesRichnessByTime extends Vue {
 
   get config (): Omit<LineChartConfig, 'width'> {
     return {
-      height: 450,
+      height: this.chartHeight,
       margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       yTitle: 'Number of species',
@@ -40,6 +42,12 @@ export default class SpeciesRichnessByTime extends Vue {
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket] ?? [] }))
+  }
+
+  override created (): void {
+    window.addEventListener('resize', () => {
+      this.chartHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 450 : 250
+    })
   }
 
   async downloadChart (): Promise<void> {
