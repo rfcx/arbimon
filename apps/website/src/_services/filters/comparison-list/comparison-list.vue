@@ -1,10 +1,10 @@
 <template>
-  <div class="overflow-x-auto">
-    <div class="flex flex-row">
+  <div class="overflow-x-auto scrollbar-hide">
+    <div class="flex">
       <div
         v-for="(filter, idx) in filters"
         :key="'site-card' + idx"
-        class="flex flex-col justify-top w-48 min-w-48 mr-4 mt-2 cursor-pointer rounded-xl border-white text-white text-sm opacity-100 hover:opacity-90"
+        class="w-48 min-w-48 mr-4 cursor-pointer rounded-xl border-white text-white text-sm opacity-100 hover:opacity-90"
         :style="{ 'border': `solid 3px ${getFilterColor(idx)}`, 'background-color': `${getFilterColor(idx)}80` }"
         @click="popupOpen(idx)"
       >
@@ -54,7 +54,7 @@
       </div>
       <div
         v-if="showAddButton"
-        class="flex justify-center items-center w-48 min-w-32 px-4 mt-2 cursor-pointer rounded-xl bg-mirage-grey text-white border-2 border-dashed hover:bg-steel-grey"
+        class="flex justify-center items-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-mirage-grey text-white border-2 border-dashed hover:bg-steel-grey"
         @click="addFilterConfig"
       >
         <div class="uppercase">
