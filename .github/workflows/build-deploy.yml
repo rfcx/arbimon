@@ -124,6 +124,19 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ env.SHORT_SHA }}
 
+      # - name: 'Build: Docker build CLI'
+      #   uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+      #   # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+      #   with:
+      #     build-args: |
+      #       mode=${{ env.NAMESPACE }}
+      #     target: cli
+      #     file: tools/deployment/Dockerfile
+      #     context: .
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+
       - name: 'Build: Docker build WEB'
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
         # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
@@ -154,6 +167,14 @@ jobs:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
+
+      # - name: 'Deploy: Kubernetes apply CLI'
+      #   uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+      #   # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+      #   env:
+      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+      #   with:
+      #     args: run -i --rm ${APP}-migration --image=${ECR_HOST}/${ECR_REPO}:$BUILD_NUMBER --namespace=${K8S_NAMESPACE} --overrides='{ "spec": { "containers": [ { "name": "${APP}-migration", "image": "${ECR_HOST}/${ECR_REPO}:${BUILD_NUMBER}\", "imagePullPolicy": "IfNotPresent", "restartPolicy": "Never", "args": [ "pnpm", "--filter=cli serve src/db-migrations" ], "envFrom": [ { "configMapRef": { "name": "${APP}-config" } }, { "secretRef": { "name": "${APP}-secrets" } } ] } ] } }'
 
       - name: 'Deploy: Kubernetes apply WEB'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1

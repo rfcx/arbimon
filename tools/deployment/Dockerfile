@@ -42,6 +42,9 @@ ENV FASTIFY_ADDRESS=0.0.0.0
 EXPOSE 8080
 CMD ["node", "--experimental-specifier-resolution=node", "lib/index.js"]
 
+# CLI
+FROM build as cli
+
 # Website
 FROM nginx:1.21-alpine as website
 COPY --from=build /app/apps/website/dist /usr/share/nginx/html
