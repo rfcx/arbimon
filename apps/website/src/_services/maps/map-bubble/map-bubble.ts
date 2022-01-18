@@ -96,6 +96,11 @@ export default class MapBubbleComponent extends Vue {
     this.isSynchronizingMapPosition = false
   }
 
+  @Watch('mapHeight')
+  onHeightChange (): void {
+    this.generateChartNextTick()
+  }
+
   getPopup (datum: MapSiteData): string {
     const value = this.getPopupHtml(datum, this.dataKey)
     return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}`
