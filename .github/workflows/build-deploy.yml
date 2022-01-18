@@ -184,7 +184,7 @@ jobs:
           MIGRATIONS_OVERRIDES: '{ "spec": { "containers": [{ "name": "biodiversity-cli-migrations", "image": "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}", "imagePullPolicy": "IfNotPresent", "restartPolicy": "Never", "args": "node --experimental-specifier-resolution=node lib/db-migrations/index.js", "envFrom": [ { "configMapRef": { "name": "biodiversity-cli-config" } }, { "secretRef": { "name": "biodiversity-cli-secrets" } } ] } ] } }'
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: run -i --rm biodiversity-cli-migrations --image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }} --namespace=${{ env.NAMESPACE }} --overrides='${{ env.MIGRATIONS_OVERRIDES }}'
+          args: 'run -i --rm biodiversity-cli-migrations --image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }} --namespace=${{ env.NAMESPACE }} --overrides=''${{ env.MIGRATIONS_OVERRIDES }}'''
 
       - name: 'Deploy: Kubernetes apply WEB'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
