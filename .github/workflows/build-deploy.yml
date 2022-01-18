@@ -170,7 +170,7 @@ jobs:
           find tools/deployment -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
           find tools/deployment -name "migrate.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
 
-      - name: 'Deploy: Kubernetes remove job for CLI migrations'
+      - name: 'Deploy: Remove existing migrate job'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         env:
@@ -178,13 +178,21 @@ jobs:
         with:
           args: delete job biodiversity-cli-migrate --ignore-not-found
       
-      - name: 'Deploy: Kubernetes apply CLI'
+      - name: 'Deploy: Start migrate'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: 'apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}'
+          args: apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}
+
+      - name: 'Deploy: Wait for migrate to complete successfully'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: wait --for=condition=complete --timeout=10s job/biodiversity-cli-migrate
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
