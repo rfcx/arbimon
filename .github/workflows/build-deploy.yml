@@ -73,8 +73,9 @@ jobs:
             {
               "master": {
                 "NAMESPACE": "production",
-                "ECR_REPO_WEBSITE": "biodiversity-website",
                 "ECR_REPO_API": "biodiversity-api",
+                "ECR_REPO_CLI": "biodiversity-cli",
+                "ECR_REPO_WEBSITE": "biodiversity-website",
                 "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
                 "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "bio.rfcx.org",
@@ -82,8 +83,9 @@ jobs:
               },
               "staging": {
                 "NAMESPACE": "staging",
-                "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "ECR_REPO_API": "biodiversity-api/staging",
+                "ECR_REPO_CLI": "biodiversity-cli/staging",
+                "ECR_REPO_WEBSITE": "biodiversity-website/staging",
                 "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
                 "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "staging-bio.rfcx.org",
@@ -91,8 +93,9 @@ jobs:
               },
               ".*": {
                 "NAMESPACE": "testing",
-                "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "ECR_REPO_API": "biodiversity-api/testing",
+                "ECR_REPO_CLI": "biodiversity-cli/testing",
+                "ECR_REPO_WEBSITE": "biodiversity-website/testing",
                 "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "testing-bio.rfcx.org",
@@ -124,18 +127,24 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ env.SHORT_SHA }}
 
-      # - name: 'Build: Docker build CLI'
-      #   uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-      #   # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
-      #   with:
-      #     build-args: |
-      #       mode=${{ env.NAMESPACE }}
-      #     target: cli
-      #     file: tools/deployment/Dockerfile
-      #     context: .
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
+      - name: 'Build: Docker build CLI'
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+        with:
+          build-args: |
+            mode=${{ env.NAMESPACE }}
+          target: cli
+          file: tools/deployment/Dockerfile
+          context: .
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # secrets: |
+          #   "EXAMPLE_SECRET=${{ secrets.EXAMPLE }}"
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ github.run_number }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}
 
       - name: 'Build: Docker build WEB'
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
@@ -168,13 +177,14 @@ jobs:
         with:
           args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
 
-      # - name: 'Deploy: Kubernetes apply CLI'
-      #   uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
-      #   # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
-      #   env:
-      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-      #   with:
-      #     args: run -i --rm ${APP}-migration --image=${ECR_HOST}/${ECR_REPO}:$BUILD_NUMBER --namespace=${K8S_NAMESPACE} --overrides='{ "spec": { "containers": [ { "name": "${APP}-migration", "image": "${ECR_HOST}/${ECR_REPO}:${BUILD_NUMBER}\", "imagePullPolicy": "IfNotPresent", "restartPolicy": "Never", "args": [ "pnpm", "--filter=cli serve src/db-migrations" ], "envFrom": [ { "configMapRef": { "name": "${APP}-config" } }, { "secretRef": { "name": "${APP}-secrets" } } ] } ] } }'
+      - name: 'Deploy: Kubernetes apply CLI'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          MIGRATIONS_OVERRIDES: '{ "spec": { "containers": [{ "name": "biodiversity-cli-migrations", "image": "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}", "imagePullPolicy": "IfNotPresent", "restartPolicy": "Never", "args": [ "pnpm", "--filter=cli serve src/db-migrations" ], "envFrom": [ { "configMapRef": { "name": "biodiversity-cli-config" } }, { "secretRef": { "name": "biodiversity-cli-secrets" } } ] } ] } }'
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: run -i --rm biodiversity-cli-migrations --image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }} --namespace=${{ env.NAMESPACE }} --overrides='${{ MIGRATIONS_OVERRIDES }}'
 
       - name: 'Deploy: Kubernetes apply WEB'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
