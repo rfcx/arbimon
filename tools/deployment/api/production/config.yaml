@@ -16,5 +16,4 @@ metadata:
 data:
   ## Config
 
-  IUCN_BASE_URL: https://apiv3.iucnredlist.org/api/v3
   PUERTO_RICO_PROJECT_SLUG: puerto-rico-island-wide
