@@ -17,7 +17,7 @@
     />
     <div
       v-show="hasData"
-      class="grid gap-2 mt-2  <md:not-first:(mt-8)"
+      class="grid gap-2 mt-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
       <map-bubble-component
