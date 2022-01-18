@@ -27,7 +27,7 @@
       </button>
     </template>
     <button
-      class="btn ml-2 flex"
+      class="btn ml-2 flex items-center"
       :class="{ '<md:bg-brand-primary': isShowLabels }"
       @click="emitShowLabelsToggle()"
     >
