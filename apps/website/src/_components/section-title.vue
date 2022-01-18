@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between md:(items-center) <md:(items-start)">
     <slot name="title">
       <h2 class="text-white text-xl">
         {{ title }}
