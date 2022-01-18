@@ -7,6 +7,7 @@ const jsonToTs = (data: string, constName: string, type?: string, ...importLines
   const imports = importLines.length > 0 ? `${importLines.join(LINE_BREAK)}${LINE_BREAK}${LINE_BREAK}` : ''
   const declaration = `export const ${constName}${type ? ': ' + type : ''} = `
   const object = data
+    .replaceAll("'", "\\'")
     .replace(/^(\s*)"(\w*)":/gm, '$1$2:')
     .replace(/(:\s*)"([^"]*)"/gm, '$1\'$2\'')
 

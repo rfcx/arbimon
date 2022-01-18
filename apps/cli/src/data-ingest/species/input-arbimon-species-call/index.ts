@@ -13,8 +13,8 @@ export type ArbimonSpeciesCall = SpeciesCall
 interface ArbimonSpeciesCallRow {
   'scientific_name': string
   'songtype': string
-  'start': string
-  'end': string
+  'start': Date
+  'end': Date
   'stream_id': string
   'stream_name': string
   'project_id': string
@@ -38,9 +38,9 @@ export const getArbimonSpeciesCalls = async (): Promise<Record<string, ArbimonSp
       siteName,
       projectName,
       songType,
-      recordedAt,
+      recordedAt: recordedAt.toISOString(),
       timezone,
-      mediaWavUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_fwav.wav`,
-      mediaSpecUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt)}.${dateQueryParamify(end)}_d512.512_mtrue_fspec.png`
+      mediaWavUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt.toISOString())}.${dateQueryParamify(end.toISOString())}_fwav.wav`,
+      mediaSpecUrl: `https://media-api.rfcx.org/internal/assets/streams/${streamId}_t${dateQueryParamify(recordedAt.toISOString())}.${dateQueryParamify(end.toISOString())}_d512.512_mtrue_fspec.png`
   }))
 }

@@ -10,7 +10,7 @@ const outputPath = resolve(getJsonOutputDirectory(), './raw-species.json')
 
 const main = async (): Promise<void> => {
   const scientificNames = limitUnlessProduction(getScientificNamesFromMock())
-  const species = getMergedSpecies(scientificNames)
+  const species = await getMergedSpecies(scientificNames)
 
   const outputJson = JSON.stringify(species, undefined, 2)
   fs.writeFileSync(outputPath, outputJson, 'utf8')
