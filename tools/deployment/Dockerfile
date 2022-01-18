@@ -9,6 +9,7 @@ WORKDIR /app
 COPY pnpm-*.yaml ./
 COPY package.json ./
 COPY apps/api/package.json ./apps/api/
+COPY apps/cli/package.json ./apps/cli/
 COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
@@ -21,6 +22,7 @@ WORKDIR /app
 COPY tsconfig*.json ./
 COPY tools ./tools
 COPY apps/api ./apps/api
+COPY apps/cli ./apps/cli
 COPY apps/website ./apps/website
 COPY packages/common ./packages/common
 COPY packages/utils ./packages/utils
