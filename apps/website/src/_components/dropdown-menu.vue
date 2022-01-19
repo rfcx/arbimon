@@ -7,7 +7,7 @@
       class="btn btn-icon"
       @click="isDropdownOpen = !isDropdownOpen"
     >
-      <div class="flex items-center md:px-1">
+      <div class="flex items-center">
         <slot name="label">
           <icon-fas-ellipsis-v />
         </slot>

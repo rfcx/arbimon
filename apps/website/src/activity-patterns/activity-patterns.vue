@@ -5,17 +5,20 @@
       page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
       :topic="infoTopic"
     >
-      <dropdown-menu>
+      <export-button
+        :disabled="!hasExportData"
+        :title="hasExportData ? '' : 'No data selected'"
+        @click="exportDetectionsData()"
+      >
         <template #label>
-          <icon-fa-download class="mr-2" /> Download Data
+          <div class="ml-2 <md:hidden">
+            Download Source
+          </div>
+          <div class="ml-2 md:hidden">
+            Source
+          </div>
         </template>
-        <dropdown-menu-item
-          :disabled="!hasExportData"
-          @click="exportDetectionsData"
-        >
-          <icon-far-file-archive class="mr-2" /> Export CSV
-        </dropdown-menu-item>
-      </dropdown-menu>
+      </export-button>
     </page-title>
     <comparison-list-component
       class="mt-5"

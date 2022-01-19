@@ -4,24 +4,20 @@
     page-subtitle="Diversity of detected species"
     :topic="infoTopic"
   >
-    <dropdown-menu>
+    <export-button
+      :disabled="!haveData"
+      :title=" haveData ? '' : 'No data selected'"
+      @click="exportCsvReports()"
+    >
       <template #label>
-        <icon-fa-save />
         <div class="ml-2 <md:hidden">
-          Download Data
+          Download Source
+        </div>
+        <div class="ml-2 md:hidden">
+          Source
         </div>
       </template>
-      <dropdown-menu-item
-        :disabled="!haveData"
-        :title=" haveData ? '' : 'No data selected'"
-        @click="exportCsvReports()"
-      >
-        <icon-far-file-archive />
-        <div class="ml-2">
-          Export CSV
-        </div>
-      </dropdown-menu-item>
-    </dropdown-menu>
+    </export-button>
   </page-title>
 </template>
 <script lang="ts" src="./species-richness-introduction.ts"></script>
