@@ -2,12 +2,11 @@
  * !WARNING: MANUAL ACTION REQUIRED!
  *
  * You must keep these file in sync:
- * - `tools/deployment/api/production/config.yaml` -- CONFIG ONLY
- * - `tools/deployment/api/staging/config.yaml` -- CONFIG ONLY
- * - `tools/deployment/api/testing/config.yaml` -- CONFIG ONLY
- * - `tools/deployment/api/secrets.example.yaml` -- SECRETS ONLY
- * - `apps/api/.env.example` -- BOTH
- * - `apps/api/src/_services/env/keys.ts` -- BOTH
+ * - `tools/deployment/cli/production/config.yaml` -- CONFIG ONLY
+ * - `tools/deployment/cli/staging/config.yaml` -- CONFIG ONLY
+ * - `tools/deployment/cli/testing/config.yaml` -- CONFIG ONLY
+ * - `apps/cli/.env.example` -- CONFIG & SECRETS
+ * - `apps/cli/src/_services/env/keys.ts` -- CONFIG & SECRETS
  */
 
 // CANNOT be undefined or an empty string
