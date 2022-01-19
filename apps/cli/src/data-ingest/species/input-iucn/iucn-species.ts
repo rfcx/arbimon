@@ -1,7 +1,8 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
+import { logError } from '../../../_services/axios'
 import { env } from '../../../_services/env'
 import { getSpeciesRedirectLink } from './utils'
 
@@ -49,26 +50,27 @@ interface IucnSpeciesResponseResult {
 }
 
 export async function getIucnSpecies (scientificName: string): Promise<IucnSpecies | undefined> {
-  try {
-    const endpoint: AxiosRequestConfig = {
-      method: 'GET',
-      url: `${env.IUCN_BASE_URL}/species/${scientificName}?token=${env.IUCN_TOKEN}`
-    }
+  const endpoint: AxiosRequestConfig = {
+    method: 'GET',
+    url: `${env.IUCN_BASE_URL}/species/${scientificName}?token=${env.IUCN_TOKEN}`
+  }
 
-    const { data } = await axios.request<IucnSpeciesResponse>(endpoint)
-    const result = data?.result?.[0]
-    if (!result) {
-      console.warn('iucn/getSpeciesCommonInformation: no data', scientificName)
-      return undefined
-    }
+  return await axios.request<IucnSpeciesResponse>(endpoint)
+    .then(mapResult(scientificName))
+    .catch(logError('getIucnSpecies', scientificName, '(no data)'))
+}
 
-    return {
-      ...result,
-      sourceUrl: getSpeciesRedirectLink(scientificName),
-      sourceCitation: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-    }
-  } catch (error) {
-    console.error('iucn/getSpeciesCommonInformation: api error', error)
+const mapResult = (scientificName: string) => (response: AxiosResponse<IucnSpeciesResponse>): IucnSpecies | undefined => {
+  const result = response.data?.result?.[0]
+  if (!result) {
+    console.info(response.status, 'getIucnSpecies', scientificName, '(no data)')
     return undefined
+  }
+
+  console.info(response.status, 'getIucnSpecies', scientificName)
+  return {
+    ...result,
+    sourceUrl: getSpeciesRedirectLink(scientificName),
+    sourceCitation: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
   }
 }

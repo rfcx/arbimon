@@ -1,4 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+
+import { logError } from '../../../_services/axios'
+import { env } from '../../../_services/env'
 
 export interface WikiSummary {
   title: string
@@ -60,27 +63,28 @@ interface WikiSummaryResponse {
   extract_html: string
 }
 
-const WIKI_BASE_URL = 'https://en.wikipedia.org'
-
 export async function getWikiSpecies (scientificName: string): Promise<WikiSummary | undefined> {
-  try {
-    const endpoint: AxiosRequestConfig = {
-      method: 'GET',
-      url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
-    }
+  const endpoint: AxiosRequestConfig = {
+    method: 'GET',
+    url: `${env.WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
+  }
 
-    const { data } = await axios.request<WikiSummaryResponse>(endpoint)
-    return {
-      title: data.title,
-      content: data.extract,
-      contentUrls: {
-        desktop: data.content_urls?.desktop?.page,
-        mobile: data.content_urls?.mobile?.page
-      },
-      thumbnailImage: data.thumbnail?.source
-    }
-  } catch (error) {
-    console.warn('wiki/getWikiSpeciesInformation: no data ', scientificName)
-    return undefined
+  return await axios.request<WikiSummaryResponse>(endpoint)
+    .then(mapResult(scientificName))
+    .catch(logError('getWikiSpecies', scientificName, '(no data)'))
+}
+
+const mapResult = (scientificName: string) => (response: AxiosResponse<WikiSummaryResponse>): WikiSummary => {
+  const data = response.data
+  console.info(response.status, 'getWikiSpecies', scientificName)
+
+  return {
+    title: data.title,
+    content: data.extract,
+    contentUrls: {
+      desktop: data.content_urls?.desktop?.page,
+      mobile: data.content_urls?.mobile?.page
+    },
+    thumbnailImage: data.thumbnail?.source
   }
 }
