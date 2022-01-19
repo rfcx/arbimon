@@ -18,12 +18,12 @@ export const getRfcxSpecies = (): Record<string, RfcxSpeciesData> =>
     // Missing in IUCN (and override extinction risk)
     'Accipiter striatus venator': {
       commonName: 'Puerto Rican sharp-shinned hawk',
-      extinctionRisk: { code: 'CR', source: SPECIES_SOURCE_PROJECT }
+      extinctionRisk: { code: 'CR', source: SPECIES_SOURCE_PROJECT } // PRDNER 2016
     },
     // Missing in IUCN (and override extinction risk)
     'Buteo platypterus brunnescens': {
       commonName: 'Puerto Rican broad-winged hawk',
-      extinctionRisk: { code: 'CR', source: SPECIES_SOURCE_PROJECT }
+      extinctionRisk: { code: 'CR', source: SPECIES_SOURCE_PROJECT } // PRDNER 2015
     },
     // Missing in IUCN
     'Contopus latirostris blancoi': {
