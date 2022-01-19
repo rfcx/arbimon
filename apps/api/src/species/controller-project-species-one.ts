@@ -1,8 +1,8 @@
 import { readdir } from 'fs/promises'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
-import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 
 import { Controller } from '../_services/api-helper/types'
 import { ApiNotFoundError } from '../_services/errors'
@@ -30,7 +30,8 @@ export async function getProjectSpeciesOne (projectId: string, speciesSlug: stri
   const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
   if (!species) throw ApiNotFoundError()
 
-  const predictedOccupancyMaps: PredictedOccupancyMap[] = criticallyEndangeredSpeciesIds.has(species.speciesId)
+  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))
       .filter(filename => filename.startsWith(speciesSlug))
