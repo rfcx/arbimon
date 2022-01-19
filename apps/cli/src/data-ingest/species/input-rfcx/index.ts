@@ -6,40 +6,54 @@ export interface RfcxSpeciesData {
   extinctionRisk?: { code: ExtinctionRiskCode, source: SpeciesSource }
 }
 
+// TODO - Rename horse to `Equus ferus caballus` in Arbimon & remove `Equus caballus` here
+// TODO 412 - Consider getting common name from Wikipedia (if not in IUCN)
+// TODO 475 - Lookup species in IUCN using synonynms
 export const getRfcxSpecies = (): Record<string, RfcxSpeciesData> =>
   ({
+    // Incorrectly named in Arbimon => should be named `Equus ferus caballus`
+    'Equus caballus': {
+      commonName: 'Horse'
+    },
+    // Missing in IUCN (and override extinction risk)
     'Accipiter striatus venator': {
       commonName: 'Puerto Rican sharp-shinned hawk',
       extinctionRisk: { code: 'CR', source: SPECIES_SOURCE_PROJECT }
     },
+    // Missing in IUCN (and override extinction risk)
     'Buteo platypterus brunnescens': {
       commonName: 'Puerto Rican broad-winged hawk',
       extinctionRisk: { code: 'CR', source: SPECIES_SOURCE_PROJECT }
     },
-    'Butorides virescens': {
-      commonName: 'Green heron'
-    },
+    // Missing in IUCN
     'Contopus latirostris blancoi': {
       commonName: 'Puerto Rican pewee'
     },
-    'Equus caballus': {
-      commonName: 'Horse'
+    // Missing in IUCN (website redirect incorrectly to Butorides striata)
+    'Butorides virescens': {
+      commonName: 'Green heron'
     },
-    'Fulica caribaea': {
-      commonName: 'Caribbean coot'
-    },
+    // Missing in IUCN
     'Gallus gallus domesticus': {
       commonName: 'Chicken'
     },
+    // Missing in IUCN (website redirect incorrectly to Himantopus himantopus)
     'Himantopus mexicanus': {
       commonName: 'Black-necked stilt'
     },
+    // In IUCN under Fulica americana
+    'Fulica caribaea': {
+      commonName: 'American coot'
+    },
+    // In IUCN under Porphyrio martinicus
+    'Porphyrio martinica': {
+      commonName: 'Purple gallinule'
+    },
+    // In IUCN under Pyrrhulagra portoricensis
     'Loxigilla portoricensis': {
       commonName: 'Puerto Rican bullfinch'
     },
-    'Porphyrio martinica': {
-      commonName: 'American purple gallinule'
-    },
+    // In IUCN under Melanospiza bicolor
     'Tiaris bicolor': {
       commonName: 'Black-faced grassquit'
     }
