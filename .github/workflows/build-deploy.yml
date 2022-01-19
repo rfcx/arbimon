@@ -115,24 +115,24 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ github.run_number }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ env.SHORT_SHA }}
 
-      # - name: 'Build: Docker build CLI'
-      #   uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-      #   # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
-      #   with:
-      #     build-args: |
-      #       mode=${{ env.NAMESPACE }}
-      #     target: cli
-      #     file: tools/deployment/Dockerfile
-      #     context: .
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     # secrets: |
-      #     #   "EXAMPLE_SECRET=${{ secrets.EXAMPLE }}"
-      #     tags: |
-      #       ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:latest
-      #       ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ github.run_number }}
-      #       ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}
+      - name: 'Build: Docker build CLI'
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+        with:
+          build-args: |
+            mode=${{ env.NAMESPACE }}
+          target: cli
+          file: tools/deployment/Dockerfile
+          context: .
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # secrets: |
+          #   "EXAMPLE_SECRET=${{ secrets.EXAMPLE }}"
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ github.run_number }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}
 
       - name: 'Build: Docker build WEB'
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
