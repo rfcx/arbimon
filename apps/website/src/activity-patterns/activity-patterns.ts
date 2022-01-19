@@ -3,6 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
@@ -61,6 +62,10 @@ export default class ActivityPatternsPage extends Vue {
 
   get infoTopic (): string {
     return INFO_TOPICS.spotlight
+  }
+
+  get isLocationRedacted (): boolean {
+    return this.speciesInformation ? EXTINCTION_RISK_PROTECTED_CODES.includes(this.speciesInformation.extinctionRisk) : false
   }
 
   async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
