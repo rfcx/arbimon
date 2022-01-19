@@ -48,7 +48,14 @@ The Biodiversity app names are `biodiversity-api` and `biodiversity-website`. Ea
 - config.yaml - runtime non-secret environment variables ("configuration")
 - deployment.yaml - configure resources
 - ingress.yaml - configure sub-domain
-- secrets.yaml - runtime secret environment variables ("secrets") (**do not commit this file**);
-  - you can copy `secrets.example.yaml` from the parent directory into each namespace, and fill-in values as needed (value must encode to base64)
-  - please contact team to apply this, because it protected by kubernetes permissions
 - service.yaml - configure ports
+
+## Secrets
+
+Secrets must be defined in 4 locations:
+- `src/_services/env/keys.ts` -- list of keys (for type checking)
+- `.env.example` -- list of keys & fake values committed to GitHub
+- `.env` -- values to use locally
+- `1password vault` -- value to use on testing/staging/production
+
+**After updating secrets in 1password you must ask a team member with Kubernetes access to apply your update**
