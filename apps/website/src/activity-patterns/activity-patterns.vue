@@ -52,6 +52,7 @@
     />
     <activity-patterns-by-location
       :datasets="mapDatasets"
+      :species="species"
       class="mt-5"
     />
     <activity-patterns-predicted-occupancy
@@ -60,6 +61,7 @@
     />
     <activity-patterns-by-time
       dom-id="activity-by-time"
+      :species="species"
       :datasets="timeDatasets"
       class="my-5"
     />
