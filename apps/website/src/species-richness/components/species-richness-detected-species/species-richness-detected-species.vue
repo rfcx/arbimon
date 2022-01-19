@@ -49,7 +49,7 @@
           >
             <td class="pt-2 px-1">
               <router-link
-                :to="{ name: 'activity_patterns', params: { speciesSlug: row.speciesSlug }}"
+                :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: row.speciesSlug }}"
                 class="text-subtle hover:(underline text-white)"
               >
                 <span class="text-white italic">{{ row.scientificName }}</span>

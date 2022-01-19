@@ -18,7 +18,7 @@
     <div
       v-show="hasData"
       class="grid gap-2 mt-2"
-      :class="{ [`md:grid-cols-${columnCount}`]: true }"
+      :class="{ [`xl:grid-cols-${columnCount}`]: true }"
     >
       <map-bubble-component
         v-for="(dataset, idx) in datasets"
@@ -29,6 +29,7 @@
         :map-export-name="mapExportName(dataset, idx)"
         :map-id="`species-richness-by-location-${idx}`"
         :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+        :map-height="mapHeight"
         :circle-formatter="circleFormatter"
         :map-style="mapStyle"
         :is-show-labels="isShowLabels"

@@ -2,13 +2,14 @@ import { Dayjs } from 'dayjs'
 
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ActivityPatternsData, ActivityPatternsDataByExport, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
+import { ActivityPatternsData, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { SpotlightExportData } from './activity-patterns'
 import { Metrics } from './types'
 
-export type ActivityPatternsDataBySites = ActivityPatternsData & DatasetParameters
+export type ActivitySpotlightDataset = ActivityPatternsData & DatasetParameters
 
 export const ACTIVITY_PATTERN_MAP_KEYS = {
   detection: 'detection',
@@ -16,21 +17,22 @@ export const ACTIVITY_PATTERN_MAP_KEYS = {
   occupancy: 'occupancy'
 }
 
-export function transformToMetricsDatasets (datasets: ActivityPatternsData[]): Metrics[] {
+export function transformToMetricsDatasets (datasets: ActivitySpotlightDataset[]): Metrics[] {
   const metrics: Metrics[] = [
     {
       title: 'Detection Frequency',
-      information: 'Number of detections ÷<br />Total number of recordings',
+      information: 'Number of detections ÷ \nTotal number of recordings',
       datasets: []
     },
     {
       title: 'Naive Occupancy',
-      information: 'Number of sites with detections ÷<br />Total number of sites',
+      information: 'Number of sites with detections ÷ \nTotal number of sites',
       datasets: []
     }
   ]
 
-  datasets.forEach(({ totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency }) => {
+  datasets.forEach(dataset => {
+    const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset
     metrics[0].datasets.push({
       value: detectionFrequency.toFixed(3),
       description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`
@@ -48,7 +50,7 @@ function getPrettyMax (max: number): number {
   return max // TODO URGENT - Make this more pretty
 }
 
-export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[]): MapDataSet[] {
+export function transformToBySiteDataset (datasets: ActivitySpotlightDataset[]): MapDataSet[] {
   const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
     const activityBySiteValues = Object.values(activityBySite)
     const siteDetectionCounts = activityBySiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
@@ -78,7 +80,7 @@ export function transformToBySiteDataset (datasets: ActivityPatternsDataBySites[
   })
 }
 
-export async function exportDetectionCSV (filters: ColoredFilter[], datasets: ActivityPatternsDataByExport[], reportPrefix: string): Promise<void> {
+export async function exportDetectionCSV (filters: ColoredFilter[], datasets: SpotlightExportData[], reportPrefix: string): Promise<void> {
   const exportDateTime = getExportDateTime()
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 

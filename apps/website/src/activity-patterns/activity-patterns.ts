@@ -1,14 +1,14 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species'
-import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
+import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
+import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ActivityPatternsDataByExport, activityPatternsService } from '~/api/activity-patterns-service'
-import { getPredictedOccupancyMaps } from '~/api/predicted-occupancy-service'
-import { getSpecies } from '~/api/species-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
@@ -20,8 +20,11 @@ import SpeciesImages from './components/species-images/species-images.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
+import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
+
+export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: ActivitySpotlightDataBySite }
 
 @Options({
   components: {
@@ -46,7 +49,7 @@ export default class ActivityPatternsPage extends Vue {
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
-  exportDatasets: ActivityPatternsDataByExport[] = []
+  exportDatasets: SpotlightExportData[] = []
   speciesInformation: Species | null = null
 
   get hasExportData (): boolean {
@@ -61,12 +64,16 @@ export default class ActivityPatternsPage extends Vue {
     return INFO_TOPICS.spotlight
   }
 
+  get isLocationRedacted (): boolean {
+    return this.speciesInformation ? EXTINCTION_RISK_PROTECTED_CODES.includes(this.speciesInformation.extinctionRisk) : false
+  }
+
   async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
     const speciesSlug = species?.speciesSlug
     void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
 
     this.species = species ?? null
-    this.predictedOccupancyMaps = await getPredictedOccupancyMaps(species?.speciesSlug ?? '')
+
     await Promise.all([
       this.onDatasetChange(),
       this.getSpeciesInformation()
@@ -84,28 +91,32 @@ export default class ActivityPatternsPage extends Vue {
     if (!speciesId) return
 
     const filters = this.filters
-    const datasets = await Promise.all(
-      // TODO ??: Clean the dataset date type between `DatasetDefinition`, `MapDataSet`, and `ColoredFilter`
+
+    const datasets = (await Promise.all(
       filters.map(async (filter) => {
-        const { color, startDate, endDate } = filter
-        const data = await activityPatternsService.getActivityPatternsData(filterToDataset(filter), speciesId)
-        return { ...data, startDate, endDate, color }
+        const { color, startDate, endDate, sites, otherFilters } = filter
+        const data = await spotlightService.getSpotlightDataset(filterToDataset(filter), speciesId)
+        return data ? { ...data, startDate, endDate, color, sites: sites.flatMap(({ value }) => value), otherFilters } : data
       })
-    )
+    )).filter(isDefined)
 
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
-    this.exportDatasets = datasets.map(({ activityByExport }) => activityByExport)
+    this.exportDatasets = datasets.map(({ activityBySite, activityByExport }) => ({ sites: activityBySite, ...activityByExport }))
   }
 
   async getSpeciesInformation (): Promise<void> {
-    const scientificName = this.species?.scientificName
-    if (!scientificName) return
+    const species = this.species
+    if (!species) return
+
     try {
-      const speciesInformation = await getSpecies(scientificName)
-      if (this.species?.scientificName === scientificName) {
-        this.speciesInformation = speciesInformation ?? null
+      const data = await spotlightService.getSpeciesOne(species.speciesSlug)
+
+      // Only update if received data matches current filters
+      if (this.species?.scientificName === species.scientificName) {
+        this.predictedOccupancyMaps = data?.predictedOccupancyMaps ?? []
+        this.speciesInformation = data?.speciesInformation ?? null
       }
     } catch (e) {
       // TODO 167: Error handling

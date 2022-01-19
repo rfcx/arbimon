@@ -17,6 +17,7 @@ export function filterToDataset ({ startDate, endDate, sites, otherFilters }: Co
   }
 }
 
+// ! TO BE REMVOE AFTER MOVE ALL RELATED FUNCTIONS TO API
 export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[], datasetParams: DatasetParameters): MockHourlyDetectionSummary[] => {
   const { startDate, endDate, sites, otherFilters } = datasetParams
   const start = startDate.toISOString()
@@ -38,6 +39,7 @@ export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[]
   )
 }
 
+// ! TO BE REMVOE AFTER MOVE ALL RELATED FUNCTIONS TO API
 export const filterMocksBySpecies = (detections: MockHourlyDetectionSummary[], speciesId: number): MockHourlyDetectionSummary[] => {
   // TODO - Move to API
   return detections.filter(r => r.species_id === speciesId)

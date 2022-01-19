@@ -32,8 +32,8 @@ export default class ProjectSelectorComponent extends Vue {
 
   async confirmedSelectedProject (): Promise<void> {
     if (this.newSelectedProject) {
-      this.store.updateSelectedProject(this.newSelectedProject)
-      void this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectId: this.newSelectedProject.id } })
+      await this.store.updateSelectedProject(this.newSelectedProject)
+      await this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectId: this.newSelectedProject.id } })
     }
     this.emitCloseProjectSelector()
   }

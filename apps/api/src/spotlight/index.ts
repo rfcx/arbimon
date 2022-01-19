@@ -1,7 +1,8 @@
-import { FastifyPluginAsync } from 'fastify'
+import { spotlightDatasetRoute } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
-export const routesSpotlight: FastifyPluginAsync = async (app, options): Promise<void> => {
-  app.get('/spotlight', async (req, res) => {
-    return { 'todo:': 'build this' }
-  })
-}
+import { GET, RouteRegistration } from '../_services/api-helper/types'
+import { spotlightDatasetController } from './controller-spotlight-dataset'
+
+export const routesSpotlight: RouteRegistration[] = [
+  [GET, spotlightDatasetRoute, spotlightDatasetController]
+]

@@ -9,6 +9,7 @@ WORKDIR /app
 COPY pnpm-*.yaml ./
 COPY package.json ./
 COPY apps/api/package.json ./apps/api/
+COPY apps/cli/package.json ./apps/cli/
 COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
@@ -21,6 +22,7 @@ WORKDIR /app
 COPY tsconfig*.json ./
 COPY tools ./tools
 COPY apps/api ./apps/api
+COPY apps/cli ./apps/cli
 COPY apps/website ./apps/website
 COPY packages/common ./packages/common
 COPY packages/utils ./packages/utils
@@ -41,6 +43,9 @@ ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
 EXPOSE 8080
 CMD ["node", "--experimental-specifier-resolution=node", "lib/index.js"]
+
+# CLI
+FROM build as cli
 
 # Website
 FROM nginx:1.21-alpine as website

@@ -11,9 +11,6 @@ const { absoluteBaseUrl, paths } = tsConfigPaths.loadConfig()
 const matchPath = tsConfigPaths.createMatchPath(absoluteBaseUrl, paths)
 
 export function resolve (specifier, ctx, defaultResolve) {
-  // Bypass non-aliases
-  if (!specifier.startsWith('@rfcx-bio')) return resolveTs(specifier, ctx, defaultResolve)
-
   // Replace aliases
   const match = matchPath(specifier)
   return match

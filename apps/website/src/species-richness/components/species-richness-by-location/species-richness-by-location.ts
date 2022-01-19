@@ -1,6 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
+import { LAYOUT_BREAKPOINT } from '@/_layout/config'
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
 import { getExportFilterName } from '~/filters'
@@ -30,6 +31,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   getPopupHtml = generateHtmlPopup
 
   mapMoveEvent: MapMoveEvent | null = null
+  mapHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 576 : 288
 
   get hasData (): boolean {
     return this.datasets.length > 0
@@ -52,6 +54,12 @@ export default class SpeciesRichnessByLocation extends Vue {
 
   get circleStyles (): CircleStyle[] {
     return this.datasets.map((d, idx) => ({ ...DEFAULT_NON_ZERO_STYLE, color: this.store.datasetColors[idx] }))
+  }
+
+  override created (): void {
+    window.addEventListener('resize', () => {
+      this.mapHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 576 : 288
+    })
   }
 
   propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }

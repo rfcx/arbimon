@@ -6,32 +6,29 @@ CLI scripts (ex: to export data from Arbimon)
 
 1. Config .env file as describe in `example.env`
 
-2. To export data from Arbimon:
+## Modes
 
-   `pnpm serve src/abimon-export/export.ts`
+During local testing, some scripts automatically limit queries to reduce load on 3rd-party APIs -- you will see a banner:
 
-3. To tranform the Arbimon raw data to different formats:
+> Running in DEV mode
 
-   3.1 extract sites
+To run these scripts in production mode, you must set a flag:
 
-   `pnpm serve src/abimon-export/extract-sites.ts`
+```
+pnpm serve src/path/to/some/script -- --mode=production
+```
 
-   3.2 extract species
+## Examples
 
-   `pnpm serve src/abimon-export/extract-species.ts`
+### Data Ingest
 
-4. To export species information with IUCN / Wiki
+Get detections data from Arbimon and write it to a JSON file
 
-`pnpm serve src/species/index.ts`
+```
+pnpm serve src/data-ingest/detections/to-json.ts
+```
 
-5. To get completed species data (species information + species call)
-
-   5.1 Put `raw-species-from-arbimon.ts` from step 3.2 and `raw-species-with-info.ts` from step 4 under the `src/species` category
-   5.2 Run the following command to combine the data
-
-`pnpm serve src/species/combine-species-call-and-info.ts`
-
-## Database Migrations
+### Database Migrations
 
 Run migrations manually (note: the target database must be running)
 

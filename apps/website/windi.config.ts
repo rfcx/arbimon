@@ -4,6 +4,7 @@ import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
+import pluginScrollSnap from 'windicss/plugin/scroll-snap'
 
 const range = (size: number, startAt = 1): number[] => {
   return Array.from(Array(size).keys()).map(i => i + startAt)
@@ -25,10 +26,11 @@ export default defineConfig({
       }
       addComponents(navbarItems)
     }),
+    pluginInteractionVariants,
     pluginAspectRatio,
     pluginForms,
     pluginLineClamp,
-    pluginInteractionVariants
+    pluginScrollSnap
   ],
   theme: {
     extend: {
