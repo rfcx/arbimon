@@ -3,8 +3,8 @@ import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/criti
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '@/_services/filters'
 import { getCSVDatasetMetadata } from '~/export'
+import { ColoredFilter, DatasetParameters, filterMocksByParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 
 export interface ReportData {
   species: string

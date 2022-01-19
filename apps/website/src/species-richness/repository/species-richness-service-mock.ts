@@ -1,6 +1,6 @@
 import { groupBy, keyBy, mapValues } from 'lodash-es'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/species'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'

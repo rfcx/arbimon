@@ -46,7 +46,7 @@ const main = async (): Promise<void> => {
   // Setup umzug (migration runner)
   const umzug = new Umzug({
     migrations: {
-      glob: ['./migrations/*.{js,mjs,ts}', { cwd }],
+      glob: ['./migrations/!(*.d).{js,mjs,ts}', { cwd }],
       resolve: params => ({
         name: params.name,
         path: params.path,

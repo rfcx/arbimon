@@ -2,20 +2,19 @@
  * !WARNING: MANUAL ACTION REQUIRED!
  *
  * You must keep these file in sync:
- * - `tools/deployment/api/production/config.yaml` -- CONFIG ONLY
- * - `tools/deployment/api/staging/config.yaml` -- CONFIG ONLY
- * - `tools/deployment/api/testing/config.yaml` -- CONFIG ONLY
- * - `tools/deployment/api/secrets.example.yaml` -- SECRETS ONLY
- * - `apps/api/.env.example` -- BOTH
- * - `apps/api/src/_services/env/keys.ts` -- BOTH
+ * - `tools/deployment/cli/production/config.yaml` -- CONFIG ONLY
+ * - `tools/deployment/cli/staging/config.yaml` -- CONFIG ONLY
+ * - `tools/deployment/cli/testing/config.yaml` -- CONFIG ONLY
+ * - `apps/cli/.env.example` -- CONFIG & SECRETS
+ * - `apps/cli/src/_services/env/keys.ts` -- CONFIG & SECRETS
  */
 
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
-  'USERNAME', // TODO: More precise name
-  'PASSWORD', // TODO: More precise name
-  'DATABASE', // TODO: More precise name
-  'HOST', // TODO: More precise name
+  'ARBIMON_DB_DBNAME',
+  'ARBIMON_DB_HOSTNAME',
+  'ARBIMON_DB_PASSWORD',
+  'ARBIMON_DB_USER',
 
   'BIO_DB_DBNAME',
   'BIO_DB_HOSTNAME',
