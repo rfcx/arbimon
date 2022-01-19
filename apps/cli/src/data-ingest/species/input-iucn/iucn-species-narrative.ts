@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
+import { logError } from '../../../_services/axios'
 import { env } from '../../../_services/env'
 import { getSpeciesRedirectLink } from './utils'
 
@@ -27,26 +28,27 @@ interface IucnSpeciesNarrativeResponseResult {
 }
 
 export async function getIucnSpeciesNarrative (scientificName: string): Promise<IucnSpeciesNarrative | undefined> {
-  try {
-    const endpoint: AxiosRequestConfig = {
-      method: 'GET',
-      url: `${env.IUCN_BASE_URL}/species/narrative/${scientificName}?token=${env.IUCN_TOKEN}`
-    }
+  const endpoint: AxiosRequestConfig = {
+    method: 'GET',
+    url: `${env.IUCN_BASE_URL}/species/narrative/${scientificName}?token=${env.IUCN_TOKEN}`
+  }
 
-    const { data } = await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
-    const result = data?.result?.[0]
-    if (!result) {
-      console.warn('iucn/getSpeciesInformation: no data', scientificName)
-      return undefined
-    }
+  return await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
+    .then(mapResult(scientificName))
+    .catch(logError('getIucnSpeciesNarrative', scientificName, '(no data)'))
+}
 
-    return {
-      ...result,
-      sourceUrl: getSpeciesRedirectLink(scientificName),
-      sourceCitation: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-    }
-  } catch (error) {
-    console.error('iucn/getSpeciesInformation: api error', error)
+const mapResult = (scientificName: string) => (response: AxiosResponse<IucnSpeciesNarrativeResponse>): IucnSpeciesNarrative | undefined => {
+  const result = response.data?.result?.[0]
+  if (!result) {
+    console.info(response.status, 'getIucnSpeciesNarrative', scientificName, '(no data)')
     return undefined
+  }
+
+  console.info(response.status, 'getIucnSpeciesNarrative', scientificName)
+  return {
+    ...result,
+    sourceUrl: getSpeciesRedirectLink(scientificName),
+    sourceCitation: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
   }
 }
