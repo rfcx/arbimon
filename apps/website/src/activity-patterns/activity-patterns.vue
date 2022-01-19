@@ -50,7 +50,12 @@
       :metrics="metrics"
       class="mt-6"
     />
+    <location-redacted-banner
+      v-if="isLocationRedacted"
+      class="mt-5"
+    />
     <activity-patterns-by-location
+      v-else
       :datasets="mapDatasets"
       :species="species"
       class="mt-5"
