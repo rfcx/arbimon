@@ -5,6 +5,9 @@ metadata:
   namespace: testing
 spec:
   template:
+    metadata:
+      labels:
+        job_group: biodiversity-cli-migrate
     spec:
       containers:
       - name: biodiversity-cli-migrate-JOB_NUMBER
