@@ -157,7 +157,7 @@ jobs:
         run: |
           find tools/deployment -name "deployment.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
           find tools/deployment -name "migrate.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
-          find tools/deployment -name "migrate.yaml" -exec sed -i s/name: biodiversity-cli-migrate/name: biodiversity-cli-migrate-${{ github.run_number }}/g {} +
+          find tools/deployment -name "migrate.yaml" -exec sed -i s/JOB_NUMBER/${{ github.run_number }}/g {} +
 
       - name: 'Deploy: Start migrate'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
@@ -173,7 +173,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: wait --for=condition=complete --timeout=10s job/biodiversity-cli-migrate
+          args: wait --for=condition=complete --timeout=10s job/biodiversity-cli-migrate-${{ github.run_number }}
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
