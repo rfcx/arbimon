@@ -3,7 +3,7 @@
     :disabled="disabled"
     class="btn btn-icon flex flex-row"
   >
-    <icon-custom-download />
+    <icon-custom-download class="h-4 w-4" />
     <slot name="label" />
   </button>
 </template>
