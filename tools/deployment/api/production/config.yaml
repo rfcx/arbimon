@@ -4,9 +4,8 @@
 # - `tools/deployment/api/production/config.yaml` -- CONFIG ONLY
 # - `tools/deployment/api/staging/config.yaml` -- CONFIG ONLY
 # - `tools/deployment/api/testing/config.yaml` -- CONFIG ONLY
-# - `tools/deployment/api/secrets.example.yaml` -- SECRETS ONLY
-# - `apps/api/.env.example` -- BOTH
-# - `apps/api/src/_services/env/keys.ts` -- BOTH
+# - `apps/api/.env.example` -- CONFIG & SECRETS
+# - `apps/api/src/_services/env/keys.ts` -- CONFIG & SECRETS
 
 apiVersion: v1
 kind: ConfigMap
