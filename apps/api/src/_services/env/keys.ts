@@ -14,6 +14,14 @@ export const envKeysRequired = <const>[
 
 // CAN be undefined or empty string
 export const envKeysOptional = <const>[
+  // TODO - Move to required after db is live
+  'BIO_DB_DBNAME',
+  'BIO_DB_HOSTNAME',
+  'BIO_DB_PASSWORD',
+  'BIO_DB_PORT',
+  'BIO_DB_SSL_ENABLED',
+  'BIO_DB_USER',
+
   'NODE_ENV',
   'FASTIFY_PORT',
   'FASTIFY_ADDRESS'
