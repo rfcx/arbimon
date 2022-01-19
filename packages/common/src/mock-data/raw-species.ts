@@ -16,8 +16,8 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
-    extinctionRisk: 'NE',
+    commonName: 'Puerto Rican sharp-shinned hawk',
+    extinctionRisk: 'CR',
     externalLinks: [
       {
         sourceType: 'Wiki',
@@ -102,7 +102,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Yellow-shouldered blackbird',
     information: [
       {
-        description: "The Yellow-shouldered Blackbird occupies a variety of habitats, all typically along the coast where it is most common (Jaramillo and Burke 1999). Such habitats include: mud flats, salt flats, offshore red mangroves&#160;(<em>Rhizophora mangle</em>) cays, black mangrove (<em>Avicennia germinans</em>) forests, lowland dry coastal pastures, suburban areas (including buildings), coconut (<em>Cocos nucifera</em>) plantations, and coastal cliffs (Skutch 1996, Lewis <em>et al</em>. 1999, Falcon <em>et al</em>. 2000, USFWS 2018).&#160;The species was once common in coastal forests, however during the early 20th century, the majority of Puerto Rico's coastal forests were replaced by sugar cane plantations, and latterly housing or livestock pasture (USFWS 2011, 2018, J.&#160;Martínez <em>in litt</em>. 2020). Many birds now breed on offshore cays (Skutch 1996)<strong></strong>. Whilst non-migratory, some individuals of the main island population are known to move inland to inhabit subtropical wet forest during the non-breeding season to forage (USFWS 2011). Whilst typically an arboreal insectivore, the species also forages terrestrially, consuming arachnids, small molluscs, fruits, seeds and nectar from various plant species (Skutch 1996,&#160;Raffaele <em>et al</em>. 1998, Jaramillo and Burke 1999, USFWS 2011); it has also been evidenced to consume exposed or discarded human food and livestock feed (USFWS 2018). Birds gather at communal feeding-sites, with large flocks forming during the non-breeding season (Jaramillo and Burke 1999)<strong></strong><strong></strong>. Nests are often built low in mangrove trees, or in large deciduous trees in pastures near to mangroves (Skutch 1996)<strong></strong>, with several nests being built in close proximity (Jaramillo and Burke 1999)<strong></strong><strong></strong>. On Mona Island, nests are placed in crevices or on ledges on high, vertical sea-cliffs (Skutch 1996)<strong></strong>. Three clutches are usually laid per year (Skutch 1996)<strong></strong>, and the breeding season is May-September.<p></p>",
+        description: 'The Yellow-shouldered Blackbird occupies a variety of habitats, all typically along the coast where it is most common (Jaramillo and Burke 1999). Such habitats include: mud flats, salt flats, offshore red mangroves&#160;(<em>Rhizophora mangle</em>) cays, black mangrove (<em>Avicennia germinans</em>) forests, lowland dry coastal pastures, suburban areas (including buildings), coconut (<em>Cocos nucifera</em>) plantations, and coastal cliffs (Skutch 1996, Lewis <em>et al</em>. 1999, Falcon <em>et al</em>. 2000, USFWS 2018).&#160;The species was once common in coastal forests, however during the early 20th century, the majority of Puerto Rico\'s coastal forests were replaced by sugar cane plantations, and latterly housing or livestock pasture (USFWS 2011, 2018, J.&#160;Martínez <em>in litt</em>. 2020). Many birds now breed on offshore cays (Skutch 1996)<strong></strong>. Whilst non-migratory, some individuals of the main island population are known to move inland to inhabit subtropical wet forest during the non-breeding season to forage (USFWS 2011). Whilst typically an arboreal insectivore, the species also forages terrestrially, consuming arachnids, small molluscs, fruits, seeds and nectar from various plant species (Skutch 1996,&#160;Raffaele <em>et al</em>. 1998, Jaramillo and Burke 1999, USFWS 2011); it has also been evidenced to consume exposed or discarded human food and livestock feed (USFWS 2018). Birds gather at communal feeding-sites, with large flocks forming during the non-breeding season (Jaramillo and Burke 1999)<strong></strong><strong></strong>. Nests are often built low in mangrove trees, or in large deciduous trees in pastures near to mangroves (Skutch 1996)<strong></strong>, with several nests being built in close proximity (Jaramillo and Burke 1999)<strong></strong><strong></strong>. On Mona Island, nests are placed in crevices or on ledges on high, vertical sea-cliffs (Skutch 1996)<strong></strong>. Three clutches are usually laid per year (Skutch 1996)<strong></strong>, and the breeding season is May-September.<p></p>',
         sourceType: 'IUCN',
         sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Agelaius%20xanthomus',
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
@@ -187,7 +187,7 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The red-crowned amazon, also known as the red-crowned parrot, green-cheeked amazon or Mexican red-headed parrot, is an endangered amazon parrot native to northeastern Mexico and possibly southern Texas in the United States. A 1994 study estimated wild populations of between 2,000 and 4,300 mature individuals; the IUCN Red List considers it a globally endangered species with a decreasing population. The main threats to the native bird's survival are the illegal export of trapped birds from Mexico to the United States for the pet trade and the destruction of their natural habitat, the lowland forests of northeastern Mexico.",
+        description: 'The red-crowned amazon, also known as the red-crowned parrot, green-cheeked amazon or Mexican red-headed parrot, is an endangered amazon parrot native to northeastern Mexico and possibly southern Texas in the United States. A 1994 study estimated wild populations of between 2,000 and 4,300 mature individuals; the IUCN Red List considers it a globally endangered species with a decreasing population. The main threats to the native bird\'s survival are the illegal export of trapped birds from Mexico to the United States for the pet trade and the destruction of their natural habitat, the lowland forests of northeastern Mexico.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-crowned_amazon'
       }
@@ -379,7 +379,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'White-winged parakeet',
     information: [
       {
-        description: "The white-winged parakeet, or canary-winged parakeet is a small parrot native to the Amazon River basin from southeast Colombia to the river's mouth in Brazil. Caged birds have been released and the birds have established self-sustaining populations in Lima, Peru, Los Angeles and San Francisco, California, and Miami, Florida areas of the United States, and in Puerto Rico. Although feral birds are showing some recent declines as nesters in the United States, they seem to be doing well in their native habitat.",
+        description: 'The white-winged parakeet, or canary-winged parakeet is a small parrot native to the Amazon River basin from southeast Colombia to the river\'s mouth in Brazil. Caged birds have been released and the birds have established self-sustaining populations in Lima, Peru, Los Angeles and San Francisco, California, and Miami, Florida areas of the United States, and in Puerto Rico. Although feral birds are showing some recent declines as nesters in the United States, they seem to be doing well in their native habitat.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/White-winged_parakeet'
       }
@@ -492,43 +492,9 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Broad-winged hawk',
     information: [
       {
-        description: "The broad-winged hawk is a medium-sized hawk of the genus Buteo. During the summer, some subspecies are distributed over eastern North America, as far west as British Columbia and Texas; they then migrate south to winter in the Neotropics from Mexico south to southern Brazil. Other subspecies are all-year residents on Caribbean islands. As in most raptors, females are slightly larger than males. Broad-winged hawks' wings are relatively short and broad with a tapered, somewhat pointed appearance. The two types of coloration are a dark morph with fewer white areas and a light morph that is more pale overall. Although the broad-winged hawk's numbers are relatively stable, populations are declining in some parts of its breeding range because of forest fragmentation.",
+        description: 'The broad-winged hawk is a medium-sized hawk of the genus Buteo. During the summer, some subspecies are distributed over eastern North America, as far west as British Columbia and Texas; they then migrate south to winter in the Neotropics from Mexico south to southern Brazil. Other subspecies are all-year residents on Caribbean islands. As in most raptors, females are slightly larger than males. Broad-winged hawks\' wings are relatively short and broad with a tapered, somewhat pointed appearance. The two types of coloration are a dark morph with fewer white areas and a light morph that is more pale overall. Although the broad-winged hawk\'s numbers are relatively stable, populations are declining in some parts of its breeding range because of forest fragmentation.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Broad-winged_hawk'
-      }
-    ]
-  },
-  {
-    speciesId: 22987,
-    speciesSlug: 'buteo-platypterus-brunnescens',
-    scientificName: 'Buteo platypterus brunnescens',
-    taxonId: 1,
-    taxon: 'Birds',
-    speciesCall: {
-      siteName: 'RA29',
-      projectName: 'Puerto Rico Island-Wide',
-      songType: 'Common Song',
-      recordedAt: '2021-04-15T13:45:39.496Z',
-      timezone: 'America/Puerto_Rico',
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/LPTFIfN8Mqg4_t20210415T134539496Z.20210415T134541386Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/LPTFIfN8Mqg4_t20210415T134539496Z.20210415T134541386Z_d512.512_mtrue_fspec.png'
-    },
-    commonName: '',
-    extinctionRisk: 'NE',
-    externalLinks: [
-      {
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_broad-winged_hawk',
-        title: 'Wiki'
-      }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg/320px-Guarag%C3%BCao_de_bosque%2C_Puerto_Rican_Broad-winged_Hawk%2C_Buteo_platypterus_brunnescens.jpg',
-    imageCaption: 'Puerto Rican broad-winged hawk',
-    information: [
-      {
-        description: 'The Puerto Rican broad-winged hawk is an endangered subspecies of the broad-winged hawk. It is a small hawk that occurs in Puerto Rico, inhabiting the Toro Negro State Forest. Its Spanish common name is guaragüao de bosque.',
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_broad-winged_hawk'
       }
     ]
   },
@@ -547,7 +513,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210324T021015152Z.20210324T021019603Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/tKZ8nb81JjQg_t20210324T021015152Z.20210324T021019603Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'Green heron',
     extinctionRisk: 'NE',
     externalLinks: [
       {
@@ -630,7 +596,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Grey-cheeked thrush',
     information: [
       {
-        description: "The grey-cheeked thrush is a medium-sized thrush. This species is 15–17 cm (5.9–6.7 in) in length, and has the white-dark-white underwing pattern characteristic of Catharus thrushes. It is a member of a close-knit group of migrant species together with the veery and Bicknell's thrush; it forms a cryptic species pair with the latter. The grey-cheeked thrush is all but indistinguishable from Bicknell's thrush except by its slightly larger size and different song. The two were formerly considered conspecific. Of all the American spotted thrushes, the grey-cheeked has the most northern breeding range.",
+        description: 'The grey-cheeked thrush is a medium-sized thrush. This species is 15–17 cm (5.9–6.7 in) in length, and has the white-dark-white underwing pattern characteristic of Catharus thrushes. It is a member of a close-knit group of migrant species together with the veery and Bicknell\'s thrush; it forms a cryptic species pair with the latter. The grey-cheeked thrush is all but indistinguishable from Bicknell\'s thrush except by its slightly larger size and different song. The two were formerly considered conspecific. Of all the American spotted thrushes, the grey-cheeked has the most northern breeding range.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Grey-cheeked_thrush'
       }
@@ -664,7 +630,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Killdeer',
     information: [
       {
-        description: "The killdeer is a large plover found in the Americas. It was described and given its current scientific name in 1758 by Carl Linnaeus in the 10th edition of his Systema Naturae. Three subspecies are described. The killdeer's common name comes from its often-heard call. Its upperparts are mostly brown with rufous fringes, the head has patches of white and black, and two black bands cross the breast. The belly and the rest of the breast are white. The nominate subspecies breeds from southeastern Alaska and southern Canada to Mexico. It is seen year-round in the southern half of its breeding range; the subspecies C. v. ternominatus is probably resident in the West Indies, and C. v. peruvianus inhabits Peru and areas of the surrounding countries throughout the year. North American breeders winter from their resident range south to Central America, the West Indies, and the northernmost portions of South America.",
+        description: 'The killdeer is a large plover found in the Americas. It was described and given its current scientific name in 1758 by Carl Linnaeus in the 10th edition of his Systema Naturae. Three subspecies are described. The killdeer\'s common name comes from its often-heard call. Its upperparts are mostly brown with rufous fringes, the head has patches of white and black, and two black bands cross the breast. The belly and the rest of the breast are white. The nominate subspecies breeds from southeastern Alaska and southern Canada to Mexico. It is seen year-round in the southern half of its breeding range; the subspecies C. v. ternominatus is probably resident in the West Indies, and C. v. peruvianus inhabits Peru and areas of the surrounding countries throughout the year. North American breeders winter from their resident range south to Central America, the West Indies, and the northernmost portions of South America.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Killdeer'
       }
@@ -855,7 +821,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/6by0dtvj349u_t20210405T123505908Z.20210405T123506973Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'Puerto Rican pewee',
     extinctionRisk: 'NE',
     externalLinks: [],
     thumbnailImageUrl: '',
@@ -969,7 +935,7 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The red-eyed coqui, churi, coqui churi, or coqui de las Antillas is a species of frog in the family Eleutherodactylidae that is found in Puerto Rico, the British and U.S. Virgin Islands, and introduced to Panama. Although there are many similar species that are endemic to these tropical locations, its unique physical, habitual, and behavioral characteristics distinguish it from other members of the genus Eleutherodactylus. This genus contains around 185 species that are located in the southern United States, Central America, South America, and the Caribbean, with 16 different species endemic to Puerto Rico. The red-eyed coqui was not brought into Panama City from its native habitats until the late 1960s. There it became established in urban parks before it began to colonize outside the city in the 1980s. In Puerto Rico, the largest island inhabited by the red-eyed coqui, it is found up to 1,200 meters above sea level. It is often compared to the common coqui, Puerto Rico's unofficial territorial symbol, but upon a closer ecological look, the red-eyed coqui has many differences.",
+        description: 'The red-eyed coqui, churi, coqui churi, or coqui de las Antillas is a species of frog in the family Eleutherodactylidae that is found in Puerto Rico, the British and U.S. Virgin Islands, and introduced to Panama. Although there are many similar species that are endemic to these tropical locations, its unique physical, habitual, and behavioral characteristics distinguish it from other members of the genus Eleutherodactylus. This genus contains around 185 species that are located in the southern United States, Central America, South America, and the Caribbean, with 16 different species endemic to Puerto Rico. The red-eyed coqui was not brought into Panama City from its native habitats until the late 1960s. There it became established in urban parks before it began to colonize outside the city in the 1980s. In Puerto Rico, the largest island inhabited by the red-eyed coqui, it is found up to 1,200 meters above sea level. It is often compared to the common coqui, Puerto Rico\'s unofficial territorial symbol, but upon a closer ecological look, the red-eyed coqui has many differences.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Red-eyed_coqui'
       }
@@ -1059,7 +1025,7 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The whistling coquí, Cochran's treefrog, or Cochran's robber frog is a species of frog native to Puerto Rico, the US Virgin Islands, and the British Virgin Islands. This nocturnal insectivore is also referred to as the coquí pitito in Puerto Rico. Their distinctive song is a single, rising whistle, which is repeated and followed by three clicking sounds.",
+        description: 'The whistling coquí, Cochran\'s treefrog, or Cochran\'s robber frog is a species of frog native to Puerto Rico, the US Virgin Islands, and the British Virgin Islands. This nocturnal insectivore is also referred to as the coquí pitito in Puerto Rico. Their distinctive song is a single, rising whistle, which is repeated and followed by three clicking sounds.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Whistling_coqui'
       }
@@ -1215,7 +1181,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/jusxxxp5fcmv_t20210331T000055379Z.20210331T000059769Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/jusxxxp5fcmv_t20210331T000055379Z.20210331T000059769Z_d512.512_mtrue_fspec.png'
     },
-    commonName: "Hedrick's Coqui",
+    commonName: 'Hedrick\'s Coqui',
     extinctionRisk: 'EN',
     externalLinks: [
       {
@@ -1225,12 +1191,12 @@ export const rawSpecies: Species[] = [
       },
       {
         sourceType: 'Wiki',
-        sourceUrl: "https://en.wikipedia.org/wiki/Hedrick's_coqui",
+        sourceUrl: 'https://en.wikipedia.org/wiki/Hedrick\'s_coqui',
         title: 'Wiki'
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Eleutherodactylus_hedricki.jpg/320px-Eleutherodactylus_hedricki.jpg',
-    imageCaption: "Hedrick's coqui",
+    imageCaption: 'Hedrick\'s coqui',
     information: [
       {
         description: 'It is an arboreal species inhabiting mesic broadleaf forests. Males call from tree trunks and the canopy, eggs are laid in tree trunk cavities, and breeding is by direct development.',
@@ -1239,9 +1205,9 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "Hedrick's coqui, the treehole coqui, or coqui de Hedrick is a species of frog in the family Eleutherodactylidae endemic to Puerto Rico.\nIts natural habitats are subtropical or tropical moist lowland forest and subtropical or tropical moist montane forest.",
+        description: 'Hedrick\'s coqui, the treehole coqui, or coqui de Hedrick is a species of frog in the family Eleutherodactylidae endemic to Puerto Rico.\nIts natural habitats are subtropical or tropical moist lowland forest and subtropical or tropical moist montane forest.',
         sourceType: 'Wiki',
-        sourceUrl: "https://en.wikipedia.org/wiki/Hedrick's_coqui"
+        sourceUrl: 'https://en.wikipedia.org/wiki/Hedrick\'s_coqui'
       }
     ]
   },
@@ -1278,7 +1244,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Eleutherodactylus juanariveroi',
     information: [
       {
-        description: "The species inhabits palustrine (freshwater) herbaceous wetland. The wetland is seasonally flooded with fresh water; the soil consists of swamp and marsh organic deposits. Herbaceous vegetation in this habitat includes the toothed midsorus fern (<span style=\"font-style: italic;\">Blechnum serrulatum</span>), willdenow's maiden fern (<span style=\"font-style: italic;\">Thelypteris interrupta</span>), bulltongue arrowhead (<span style=\"font-style: italic;\">Sagittaria lancifolia</span>), flatsedges (<span style=\"font-style: italic;\">Cyperus</span> sp.), spike rushes (<span style=\"font-style: italic;\">Eleocharis</span> sp.), and vines and grasses. The habitat at the type locality occupies ca 180 ha; the species was not found in other wetland sites in the northern coastal plain. Individuals are active between 19:00-22:00 hours, while perching, sitting, or calling on herbaceous vegetation, between 0.4 m and 1.2 m above water level. Calling sites for males were found to be between 0.6 and 1.2 m above ground level. Egg clutches vary between 1-5 eggs and are mostly deposited on leaf axils of <span style=\"font-style: italic;\">S. lancifolia</span>. Embryos hatch after approximately 19 days (Rios-López and Thomas 2007; N. Rios-López pers. comm. 2008).<br/><br/>This species is thought to have year-round reproduction given the frequency of juveniles found in any given month. However, most adult activity (including calling males) is greater during the warm and wet months (May to November), and diminishes during the cooler and drier months (particularly between the end of January and end of March). It is expected that recruitment rates reflect this seasonal pattern with a greater amount of clutches being produced during the warm and wet months. The seasonal breeding pattern in this frog is similar to that of other species of the genus in Puerto Rico, such as <span style=\"font-style: italic;\">E. antillensis</span>, <span style=\"font-style: italic;\">E. cochranae</span>,<span style=\"font-style: italic;\"> E. coqui</span>, <span style=\"font-style: italic;\">E. cooki</span>, <span style=\"font-style: italic;\">E. gryllus</span> and <span style=\"font-style: italic;\">E. portoricensis</span>. (N. Rios-López pers. comm. 2008).",
+        description: 'The species inhabits palustrine (freshwater) herbaceous wetland. The wetland is seasonally flooded with fresh water; the soil consists of swamp and marsh organic deposits. Herbaceous vegetation in this habitat includes the toothed midsorus fern (<span style="font-style: italic;">Blechnum serrulatum</span>), willdenow\'s maiden fern (<span style="font-style: italic;">Thelypteris interrupta</span>), bulltongue arrowhead (<span style="font-style: italic;">Sagittaria lancifolia</span>), flatsedges (<span style="font-style: italic;">Cyperus</span> sp.), spike rushes (<span style="font-style: italic;">Eleocharis</span> sp.), and vines and grasses. The habitat at the type locality occupies ca 180 ha; the species was not found in other wetland sites in the northern coastal plain. Individuals are active between 19:00-22:00 hours, while perching, sitting, or calling on herbaceous vegetation, between 0.4 m and 1.2 m above water level. Calling sites for males were found to be between 0.6 and 1.2 m above ground level. Egg clutches vary between 1-5 eggs and are mostly deposited on leaf axils of <span style="font-style: italic;">S. lancifolia</span>. Embryos hatch after approximately 19 days (Rios-López and Thomas 2007; N. Rios-López pers. comm. 2008).<br/><br/>This species is thought to have year-round reproduction given the frequency of juveniles found in any given month. However, most adult activity (including calling males) is greater during the warm and wet months (May to November), and diminishes during the cooler and drier months (particularly between the end of January and end of March). It is expected that recruitment rates reflect this seasonal pattern with a greater amount of clutches being produced during the warm and wet months. The seasonal breeding pattern in this frog is similar to that of other species of the genus in Puerto Rico, such as <span style="font-style: italic;">E. antillensis</span>, <span style="font-style: italic;">E. cochranae</span>,<span style="font-style: italic;"> E. coqui</span>, <span style="font-style: italic;">E. cooki</span>, <span style="font-style: italic;">E. gryllus</span> and <span style="font-style: italic;">E. portoricensis</span>. (N. Rios-López pers. comm. 2008).',
         sourceType: 'IUCN',
         sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Eleutherodactylus%20juanariveroi',
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
@@ -1440,7 +1406,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/18QZItvSQvri_t20210408T230531215Z.20210408T230531685Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/18QZItvSQvri_t20210408T230531215Z.20210408T230531685Z_d512.512_mtrue_fspec.png'
     },
-    commonName: "Richmond's Coqui",
+    commonName: 'Richmond\'s Coqui',
     extinctionRisk: 'EN',
     externalLinks: [
       {
@@ -1464,7 +1430,7 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The bronze coqui, Richmond's coqui, coquí caoba, or coquí de Richmond is a species of frog in the family Eleutherodactylidae. The specific epithet, richmondi, is dedicated to Dr. Charles W. Richmond.",
+        description: 'The bronze coqui, Richmond\'s coqui, coquí caoba, or coquí de Richmond is a species of frog in the family Eleutherodactylidae. The specific epithet, richmondi, is dedicated to Dr. Charles W. Richmond.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Bronze_coqui'
       }
@@ -1562,8 +1528,8 @@ export const rawSpecies: Species[] = [
   },
   {
     speciesId: 43907,
-    speciesSlug: 'equus-caballus',
-    scientificName: 'Equus caballus',
+    speciesSlug: 'equus-ferus-caballus',
+    scientificName: 'Equus ferus caballus',
     taxonId: 5,
     taxon: 'Mammals',
     speciesCall: {
@@ -1677,7 +1643,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/SentGrxBxPIs_t20210407T050022953Z.20210407T050026814Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/SentGrxBxPIs_t20210407T050022953Z.20210407T050026814Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'American coot',
     extinctionRisk: 'NE',
     externalLinks: [
       {
@@ -1735,7 +1701,7 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The common gallinule is a bird in the family Rallidae. It was split from the common moorhen by the American Ornithologists' Union in July 2011. It lives around well-vegetated marshes, ponds, canals, and other wetlands in the Americas. The species is not found in the polar regions or many tropical rainforests. Elsewhere, the common gallinule is likely the most commonly seen rail species in much of North America, except for the American coot in some regions.",
+        description: 'The common gallinule is a bird in the family Rallidae. It was split from the common moorhen by the American Ornithologists\' Union in July 2011. It lives around well-vegetated marshes, ponds, canals, and other wetlands in the Americas. The species is not found in the polar regions or many tropical rainforests. Elsewhere, the common gallinule is likely the most commonly seen rail species in much of North America, except for the American coot in some regions.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Common_gallinule'
       }
@@ -1756,7 +1722,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/2218q4o5zwpj_t20210416T085051048Z.20210416T085053038Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/2218q4o5zwpj_t20210416T085051048Z.20210416T085053038Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'Chicken',
     extinctionRisk: 'NE',
     externalLinks: [
       {
@@ -1824,7 +1790,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/Vq4L8FklmztV_t20210503T054536386Z.20210503T054545457Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/Vq4L8FklmztV_t20210503T054536386Z.20210503T054545457Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'Black-necked stilt',
     extinctionRisk: 'NE',
     externalLinks: [
       {
@@ -1950,7 +1916,7 @@ export const rawSpecies: Species[] = [
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
-        description: "The laughing gull is a medium-sized gull of North and South America. Named for its laugh-like call, it is an opportunistic omnivore and scavenger. It breeds in large colonies mostly along the Atlantic coast of North America, the Caribbean, and northern South America. The two subspecies are: L. a. megalopterus – which can be seen from southeast Canada down to Central America, and L. a. atricilla which appears from the West Indies to the Venezuelan islands. The laughing gull was long placed in the genus Larus until its present placement in Leucophaeus, which follows the American Ornithologists' Union.",
+        description: 'The laughing gull is a medium-sized gull of North and South America. Named for its laugh-like call, it is an opportunistic omnivore and scavenger. It breeds in large colonies mostly along the Atlantic coast of North America, the Caribbean, and northern South America. The two subspecies are: L. a. megalopterus – which can be seen from southeast Canada down to Central America, and L. a. atricilla which appears from the West Indies to the Venezuelan islands. The laughing gull was long placed in the genus Larus until its present placement in Leucophaeus, which follows the American Ornithologists\' Union.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Laughing_gull'
       }
@@ -1958,8 +1924,8 @@ export const rawSpecies: Species[] = [
   },
   {
     speciesId: 6,
-    speciesSlug: 'leptodactylus-albilabris-',
-    scientificName: 'leptodactylus albilabris ',
+    speciesSlug: 'leptodactylus-albilabris',
+    scientificName: 'Leptodactylus albilabris',
     taxonId: 2,
     taxon: 'Amphibians',
     speciesCall: {
@@ -1976,7 +1942,7 @@ export const rawSpecies: Species[] = [
     externalLinks: [
       {
         sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/leptodactylus%20albilabris%20',
+        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Leptodactylus%20albilabris',
         title: 'IUCN'
       },
       {
@@ -1991,7 +1957,7 @@ export const rawSpecies: Species[] = [
       {
         description: 'It is a semi-aquatic frog, inhabiting streams, marshes, and irrigated fields, as well as, drainage ditches and gutters in both forested, open country and urban areas. Males call from ground or aquatic vegetation, eggs are laid in foam nests.',
         sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/leptodactylus%20albilabris%20',
+        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Leptodactylus%20albilabris',
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
       },
       {
@@ -2061,7 +2027,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/VImn5gQhYBhb_t20210308T130520853Z.20210308T130523737Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'Puerto Rican bullfinch',
     extinctionRisk: 'NE',
     externalLinks: [
       {
@@ -2074,7 +2040,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Puerto Rican bullfinch',
     information: [
       {
-        description: "The Puerto Rican bullfinch or comeñame in Spanish, is a small bullfinch tanager endemic to the archipelago of Puerto Rico. These were previously considered Emberizidae.\nThe Puerto Rican bullfinch has black feathers with orange areas above the eyes, around its throat, and underneath the tail's base. The species measures from 17 to 19 cm and weighs approximately 32 grams.",
+        description: 'The Puerto Rican bullfinch or comeñame in Spanish, is a small bullfinch tanager endemic to the archipelago of Puerto Rico. These were previously considered Emberizidae.\nThe Puerto Rican bullfinch has black feathers with orange areas above the eyes, around its throat, and underneath the tail\'s base. The species measures from 17 to 19 cm and weighs approximately 32 grams.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_bullfinch'
       }
@@ -2217,6 +2183,40 @@ export const rawSpecies: Species[] = [
     ]
   },
   {
+    speciesId: 10150,
+    speciesSlug: 'melanospiza-bicolor',
+    scientificName: 'Melanospiza bicolor',
+    taxonId: 1,
+    taxon: 'Birds',
+    speciesCall: {
+      siteName: 'GUI05',
+      projectName: 'Puerto Rico Island-Wide',
+      songType: 'Common Song',
+      recordedAt: '2021-03-07T10:30:27.244Z',
+      timezone: 'America/Puerto_Rico',
+      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/a3ve3YStjM1x_t20210307T103027244Z.20210307T103029994Z_fwav.wav',
+      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/a3ve3YStjM1x_t20210307T103027244Z.20210307T103029994Z_d512.512_mtrue_fspec.png'
+    },
+    commonName: 'Black-faced Grassquit',
+    extinctionRisk: 'LC',
+    externalLinks: [
+      {
+        sourceType: 'Wiki',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Black-faced_grassquit',
+        title: 'Wiki'
+      }
+    ],
+    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg/320px-Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg',
+    imageCaption: 'Black-faced grassquit',
+    information: [
+      {
+        description: 'The black-faced grassquit is a small bird. It is recognized as a tanager closely related to Darwin\'s finches. It breeds in the West Indies except Cuba, on Tobago but not Trinidad, and along the northern coasts of Colombia and Venezuela.',
+        sourceType: 'Wiki',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Black-faced_grassquit'
+      }
+    ]
+  },
+  {
     speciesId: 8251,
     speciesSlug: 'mimus-polyglottos',
     scientificName: 'Mimus polyglottos',
@@ -2278,7 +2278,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Shiny cowbird',
     information: [
       {
-        description: "The shiny cowbird is a passerine bird in the New World family Icteridae. It breeds in most of South America except for dense forests and areas of high altitude such as mountains. Since 1900 the shiny cowbirds' range has shifted northward, and it was recorded in the Caribbean islands as well as the United States, where it is found breeding in southern Florida. It is a bird associated with open habitats, including disturbed land from agriculture and deforestation.",
+        description: 'The shiny cowbird is a passerine bird in the New World family Icteridae. It breeds in most of South America except for dense forests and areas of high altitude such as mountains. Since 1900 the shiny cowbirds\' range has shifted northward, and it was recorded in the Caribbean islands as well as the United States, where it is found breeding in southern Florida. It is a bird associated with open habitats, including disturbed land from agriculture and deforestation.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Shiny_cowbird'
       }
@@ -2380,7 +2380,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Puerto Rican tanager',
     information: [
       {
-        description: "The Puerto Rican tanager is a small passerine bird endemic to the archipelago of Puerto Rico. It is the only member of the genus Nesospingus and has historically been placed in the tanager family, but recent studies indicate it as either belonging in its own family Nesospingidae or as being a member of Phaenicophilidae. Its closest relatives are likely the spindalises. The Puerto Rican tanager is known to locals as llorosa, which means 'cryer'.",
+        description: 'The Puerto Rican tanager is a small passerine bird endemic to the archipelago of Puerto Rico. It is the only member of the genus Nesospingus and has historically been placed in the tanager family, but recent studies indicate it as either belonging in its own family Nesospingidae or as being a member of Phaenicophilidae. Its closest relatives are likely the spindalises. The Puerto Rican tanager is known to locals as llorosa, which means \'cryer\'.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_tanager'
       }
@@ -2419,7 +2419,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Cuban tree frog',
     information: [
       {
-        description: "This species generally inhabits mesic habitats but may be found in xeric habitat in the Bahamas, living in all kinds of disturbed habitats, including towns and houses. It is also present in forests, mangroves and coastal areas. It can also tolerate brackish water. It is found on the ground and on tree trunks. Males call from vegetation near pooled rainwater. Eggs are laid in still water, including pools, marshes, flood pastures, and ditches.&#160;<span id=\"docs-internal-guid-3b2c51d8-7fff-ac19-92b8-320ce0e77b77\">Eggs and young have also been found in pooled rainwater along rocky tidal areas in the Bahamas (R.G. Reynolds pers. obs.). It is competing with other species, and preys upon native amphibians in the wild. It might also be a vector for pathogens. It is preyed upon by some snakes in the Bahamas, including <em>Cubophis</em>, <em>Chilabothrus</em>, and <em>Tropidophis</em> (R.G. Reynolds pers. obs.).&#160; <br/><br/>Breeding events have been found to last only one night and male mating behavior changes from acoustic competition to scramble searching over the breeding event. Most males have similar opportunities to mate with a female, and there doesn't appear to be a direct adaptive benefit for high mating selectivity by females, which can increase the invasive capacity of this species&#160;(Vargas Salinas 2006).",
+        description: 'This species generally inhabits mesic habitats but may be found in xeric habitat in the Bahamas, living in all kinds of disturbed habitats, including towns and houses. It is also present in forests, mangroves and coastal areas. It can also tolerate brackish water. It is found on the ground and on tree trunks. Males call from vegetation near pooled rainwater. Eggs are laid in still water, including pools, marshes, flood pastures, and ditches.&#160;<span id="docs-internal-guid-3b2c51d8-7fff-ac19-92b8-320ce0e77b77">Eggs and young have also been found in pooled rainwater along rocky tidal areas in the Bahamas (R.G. Reynolds pers. obs.). It is competing with other species, and preys upon native amphibians in the wild. It might also be a vector for pathogens. It is preyed upon by some snakes in the Bahamas, including <em>Cubophis</em>, <em>Chilabothrus</em>, and <em>Tropidophis</em> (R.G. Reynolds pers. obs.).&#160; <br/><br/>Breeding events have been found to last only one night and male mating behavior changes from acoustic competition to scramble searching over the breeding event. Most males have similar opportunities to mate with a female, and there doesn\'t appear to be a direct adaptive benefit for high mating selectivity by females, which can increase the invasive capacity of this species&#160;(Vargas Salinas 2006).',
         sourceType: 'IUCN',
         sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Osteopilus%20septentrionalis',
         sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
@@ -2685,7 +2685,7 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/qur86alqdlpt_t20210302T112022543Z.20210302T112027984Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/qur86alqdlpt_t20210302T112022543Z.20210302T112027984Z_d512.512_mtrue_fspec.png'
     },
-    commonName: '',
+    commonName: 'Purple gallinule',
     extinctionRisk: 'NE',
     externalLinks: [
       {
@@ -2766,7 +2766,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Greater Antillean grackle',
     information: [
       {
-        description: "The Greater Antillean grackle is a grackle found throughout the Greater Antilles as well as smaller, nearby islands. Like all Quiscalus grackles, it is a rather large, gregarious bird. It lives largely in heavily settled areas. It is also known as the 'kling-kling' and 'chinchilín' in the Dominican Republic, as a 'Ching Ching' in the Cayman Island and as a ‘chango’ in Puerto Rico.",
+        description: 'The Greater Antillean grackle is a grackle found throughout the Greater Antilles as well as smaller, nearby islands. Like all Quiscalus grackles, it is a rather large, gregarious bird. It lives largely in heavily settled areas. It is also known as the \'kling-kling\' and \'chinchilín\' in the Dominican Republic, as a \'Ching Ching\' in the Cayman Island and as a ‘chango’ in Puerto Rico.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Greater_Antillean_grackle'
       }
@@ -2800,7 +2800,7 @@ export const rawSpecies: Species[] = [
     imageCaption: 'Clapper rail',
     information: [
       {
-        description: "The clapper rail is a member of the rail family, Rallidae. The taxonomy for this species is confusing and still being determined. The Ridgway's rail and the mangrove rail have been recently split. Furthermore, some taxonomists consider that the King rail and Aztec rail should be considered within this group, as those birds look similar and the birds are known to interbreed where they share territories.",
+        description: 'The clapper rail is a member of the rail family, Rallidae. The taxonomy for this species is confusing and still being determined. The Ridgway\'s rail and the mangrove rail have been recently split. Furthermore, some taxonomists consider that the King rail and Aztec rail should be considered within this group, as those birds look similar and the birds are known to interbreed where they share territories.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Clapper_rail'
       }
@@ -2866,22 +2866,22 @@ export const rawSpecies: Species[] = [
       mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_fwav.wav',
       mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/stJ0YMsXTP9v_t20210316T195021801Z.20210316T195025200Z_d512.512_mtrue_fspec.png'
     },
-    commonName: "Adelaide's Warbler",
+    commonName: 'Adelaide\'s Warbler',
     extinctionRisk: 'LC',
     externalLinks: [
       {
         sourceType: 'Wiki',
-        sourceUrl: "https://en.wikipedia.org/wiki/Adelaide's_warbler",
+        sourceUrl: 'https://en.wikipedia.org/wiki/Adelaide\'s_warbler',
         title: 'Wiki'
       }
     ],
     thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Dendroica_adelaidae.jpg/320px-Dendroica_adelaidae.jpg',
-    imageCaption: "Adelaide's warbler",
+    imageCaption: 'Adelaide\'s warbler',
     information: [
       {
-        description: "Adelaide's warbler is a bird endemic to the archipelago of Puerto Rico belonging to the genus Setophaga of the family Parulidae. The species is named after Adelaide Swift, daughter of Robert Swift, the person who captured the first specimen.",
+        description: 'Adelaide\'s warbler is a bird endemic to the archipelago of Puerto Rico belonging to the genus Setophaga of the family Parulidae. The species is named after Adelaide Swift, daughter of Robert Swift, the person who captured the first specimen.',
         sourceType: 'Wiki',
-        sourceUrl: "https://en.wikipedia.org/wiki/Adelaide's_warbler"
+        sourceUrl: 'https://en.wikipedia.org/wiki/Adelaide\'s_warbler'
       }
     ]
   },
@@ -3232,40 +3232,6 @@ export const rawSpecies: Species[] = [
         description: 'The royal tern is a tern in the family Laridae. The species is endemic to the Americas, though strays have been identified in Europe.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Royal_tern'
-      }
-    ]
-  },
-  {
-    speciesId: 10150,
-    speciesSlug: 'tiaris-bicolor',
-    scientificName: 'Tiaris bicolor',
-    taxonId: 1,
-    taxon: 'Birds',
-    speciesCall: {
-      siteName: 'GUI05',
-      projectName: 'Puerto Rico Island-Wide',
-      songType: 'Common Song',
-      recordedAt: '2021-03-07T10:30:27.244Z',
-      timezone: 'America/Puerto_Rico',
-      mediaWavUrl: 'https://media-api.rfcx.org/internal/assets/streams/a3ve3YStjM1x_t20210307T103027244Z.20210307T103029994Z_fwav.wav',
-      mediaSpecUrl: 'https://media-api.rfcx.org/internal/assets/streams/a3ve3YStjM1x_t20210307T103027244Z.20210307T103029994Z_d512.512_mtrue_fspec.png'
-    },
-    commonName: '',
-    extinctionRisk: 'NE',
-    externalLinks: [
-      {
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Black-faced_grassquit',
-        title: 'Wiki'
-      }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg/320px-Black-faced_grassquit_%28Tiaris_bicolor%29_male.jpg',
-    imageCaption: 'Black-faced grassquit',
-    information: [
-      {
-        description: "The black-faced grassquit is a small bird. It is recognized as a tanager closely related to Darwin's finches. It breeds in the West Indies except Cuba, on Tobago but not Trinidad, and along the northern coasts of Colombia and Venezuela.",
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Black-faced_grassquit'
       }
     ]
   },
