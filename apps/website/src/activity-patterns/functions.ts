@@ -2,10 +2,11 @@ import { Dayjs } from 'dayjs'
 
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ActivityPatternsData, ActivityPatternsDataByExport, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
+import { ActivityPatternsData, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { SpotlightExportData } from './activity-patterns'
 import { Metrics } from './types'
 
 export type ActivitySpotlightDataset = ActivityPatternsData & DatasetParameters
@@ -79,7 +80,7 @@ export function transformToBySiteDataset (datasets: ActivitySpotlightDataset[]):
   })
 }
 
-export async function exportDetectionCSV (filters: ColoredFilter[], datasets: ActivityPatternsDataByExport[], reportPrefix: string): Promise<void> {
+export async function exportDetectionCSV (filters: ColoredFilter[], datasets: SpotlightExportData[], reportPrefix: string): Promise<void> {
   const exportDateTime = getExportDateTime()
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 

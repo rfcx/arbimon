@@ -21,6 +21,7 @@ export interface SpotlightDatasetResponse {
   detectionFrequency: number
   occupiedSiteCount: number
   occupiedSiteFrequency: number
+  isLocationRedacted: boolean
   activityBySite: ActivitySpotlightDataBySite
   activityByTime: ActivitySpotlightDataByTime
   activityByExport: ActivitySpotlightDataByExport

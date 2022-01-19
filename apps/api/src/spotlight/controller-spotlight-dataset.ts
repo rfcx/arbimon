@@ -1,9 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
+import { Species } from '@rfcx-bio/common/api-bio/species/common'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
-import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Controller } from '../_services/api-helper/types'
@@ -35,10 +36,13 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
     taxons: taxons ?? []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species.speciesId)
+  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, speciesId: number): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species): Promise<SpotlightDatasetResponse> {
+  const speciesId = species.speciesId
+  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
@@ -53,9 +57,9 @@ async function getSpotlightDatasetInformation (filter: FilterDataset, projectId:
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
   // By site
-  const activityBySite = getActivityDataBySite(totalSummaries, speciesId)
+  const activityBySite = isLocationRedacted ? {} : getActivityDataBySite(totalSummaries, speciesId)
   const activityByTime = getActivityDataByTime(totalSummaries, speciesId)
-  const activityByExport = getActivityDataExport(totalSummaries, speciesId, activityBySite)
+  const activityByExport = getActivityDataExport(totalSummaries, speciesId)
 
   return {
     totalSiteCount,
@@ -64,6 +68,7 @@ async function getSpotlightDatasetInformation (filter: FilterDataset, projectId:
     detectionFrequency,
     occupiedSiteCount,
     occupiedSiteFrequency,
+    isLocationRedacted,
     activityBySite,
     activityByTime,
     activityByExport
@@ -84,21 +89,6 @@ function calculateDetectionFrequencyActivity (detections: MockHourlyDetectionSum
 }
 
 function getActivityDataBySite (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivitySpotlightDataBySite {
-  // Redact critically endangered species
-  if (criticallyEndangeredSpeciesIds.has(speciesId)) {
-    return {
-      1: {
-        siteId: '1',
-        siteName: 'location data redacted',
-        latitude: 0,
-        longitude: 0,
-        siteDetectionCount: 0,
-        siteDetectionFrequency: 0,
-        siteOccupied: false
-      }
-    }
-  }
-
   const summariesBySite: { [siteId: string]: MockHourlyDetectionSummary[] } = groupBy(totalSummaries, 'stream_id')
   return mapValues(summariesBySite, (siteSummaries, siteId) => {
     const siteTotalRecordingCount = getRecordingCount(siteSummaries)
@@ -152,7 +142,7 @@ function getActivityDataByTime (totalSummaries: MockHourlyDetectionSummary[], sp
   }
 }
 
-function getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], speciesId: number, sites: ActivitySpotlightDataBySite): ActivitySpotlightDataByExport {
+function getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivitySpotlightDataByExport {
   const totalRecordingCount = getRecordingCount(totalSummaries)
   const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
@@ -172,7 +162,6 @@ function getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], sp
     year: {
       detection: mapValues(yearGrouped, calculateDetectionActivity),
       detectionFrequency: mapValues(yearGrouped, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    },
-    sites
+    }
   }
 }
