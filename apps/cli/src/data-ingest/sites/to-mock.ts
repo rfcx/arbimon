@@ -14,6 +14,7 @@ const main = async (): Promise<void> => {
   const outputTs = objectToTs(sites, outputTsConstName, 'Site[]', 'import { Site } from \'../api-bio/common/sites\'')
   fs.writeFileSync(outputPath, outputTs, 'utf8')
   console.info(`Finished writing to ${outputPath}`)
+  process.exit(0)
 }
 
 await main()

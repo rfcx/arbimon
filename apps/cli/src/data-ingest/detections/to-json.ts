@@ -11,6 +11,7 @@ const main = async (): Promise<void> => {
   const outputJson = JSON.stringify(detections, undefined, 2)
   fs.writeFileSync(outputPath, outputJson, 'utf8')
   console.info(`Finished writing to ${outputPath}`)
+  process.exit(0)
 }
 
 await main()
