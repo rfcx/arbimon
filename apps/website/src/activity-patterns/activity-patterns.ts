@@ -2,12 +2,12 @@ import { Options, Vue } from 'vue-class-component'
 
 import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics, TimeDataset } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ActivityPatternsDataByExport } from '~/api/activity-patterns-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
@@ -22,6 +22,8 @@ import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
 import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
+
+export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: ActivitySpotlightDataBySite }
 
 @Options({
   components: {
@@ -46,7 +48,7 @@ export default class ActivityPatternsPage extends Vue {
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
-  exportDatasets: ActivityPatternsDataByExport[] = []
+  exportDatasets: SpotlightExportData[] = []
   speciesInformation: Species | null = null
 
   get hasExportData (): boolean {
@@ -96,7 +98,7 @@ export default class ActivityPatternsPage extends Vue {
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
-    this.exportDatasets = datasets.map(({ activityByExport }) => activityByExport)
+    this.exportDatasets = datasets.map(({ activityBySite, activityByExport }) => ({ sites: activityBySite, ...activityByExport }))
   }
 
   async getSpeciesInformation (): Promise<void> {

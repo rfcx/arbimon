@@ -23,7 +23,6 @@ export interface ActivitySpotlightDataByExport {
   hour: ActivitySpotlightDataByExportBucket
   month: ActivitySpotlightDataByExportBucket
   year: ActivitySpotlightDataByExportBucket
-  sites: ActivitySpotlightDataBySite
 }
 
 export interface ActivitySpotlightDataByExportBucket {
