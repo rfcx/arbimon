@@ -18,6 +18,7 @@ const main = async (): Promise<void> => {
   const outputTs = objectToTs(species, outputTsConstName, 'Species[]', 'import { Species } from \'../api-bio/species/common\'')
   fs.writeFileSync(outputPath, outputTs, 'utf8')
   console.info(`Finished writing to ${outputPath}`)
+  process.exit(0)
 }
 
 await main()
