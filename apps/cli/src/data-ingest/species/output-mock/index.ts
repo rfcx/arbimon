@@ -28,21 +28,20 @@ export const getMergedSpecies = async (scientificNames: string[]): Promise<Speci
     const rfcxSpecies = rfcxSpeciesKeyed[scientificName]
     const wikiSpecies = wikiSpeciesKeyed[scientificName]
 
-    const informationIucn = iucnSpeciesNarrative?.habitat
     const information = [
-      ...(informationIucn ? [{ description: informationIucn, sourceType: SPECIES_SOURCE_IUCN, sourceUrl: iucnSpeciesNarrative.sourceUrl, sourceCite: iucnSpeciesNarrative.sourceCitation }] : []),
+      ...(iucnSpeciesNarrative?.habitat ? [{ description: iucnSpeciesNarrative.habitat, sourceType: SPECIES_SOURCE_IUCN, sourceUrl: iucnSpeciesNarrative.sourceUrl, sourceCite: iucnSpeciesNarrative.sourceCitation }] : []),
       ...(wikiSpecies?.content ? [{ description: wikiSpecies.content, sourceType: SPECIES_SOURCE_WIKI, sourceUrl: wikiSpecies.contentUrls.desktop }] : [])
     ]
 
     return {
       ...arbimonSpecies,
+      speciesCall: arbimonSpeciesCall,
       commonName: rfcxSpecies?.commonName ?? iucnSpecies?.main_common_name ?? '',
       extinctionRisk: rfcxSpecies?.extinctionRisk?.code ?? iucnSpecies?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
       externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
       thumbnailImageUrl: wikiSpecies?.thumbnailImage ?? '',
       imageCaption: wikiSpecies?.title ?? '',
-      information,
-      speciesCall: arbimonSpeciesCall
+      information
     }
   })
 
