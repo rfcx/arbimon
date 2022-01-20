@@ -86,7 +86,7 @@ export default class DashboardPage extends Vue {
   get lineChartData (): Record<number, number> | null {
     return this.selectedTab === TAB_VALUES.richness
       ? this.generated?.richnessByHour ?? null
-      : this.generated?.detectionFrequencyByHour ?? null
+      : this.generated?.detectionByHour ?? null
   }
 
   get lineChartSeries (): LineChartSeries[] {
