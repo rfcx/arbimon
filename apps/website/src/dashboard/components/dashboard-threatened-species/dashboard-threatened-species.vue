@@ -34,6 +34,8 @@
             <img
               class="min-h-14 h-14 min-w-14 w-14 object-cover mr-2"
               :src="item.imageUrl"
+              :title="item.scientificName"
+              :alt="item.scientificName"
             >
           </router-link>
         </div>
