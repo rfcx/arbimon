@@ -32,8 +32,8 @@ async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     richnessByHour: await getRichnessByHour(),
     richnessBySite: await getRichnessBySite(),
     richnessByTaxon: await getRichnessByTaxon(),
-    detectionFrequencyByHour: await getDetectionFrequencyByHour(),
-    detectionFrequencyBySite: await getDetectionFrequencyBySite()
+    detectionFrequencyByHour: await getDetectionByHour(),
+    detectionFrequencyBySite: await getDetectionBySite()
   }
 }
 
@@ -78,26 +78,23 @@ const getRichnessByTaxon = async (): Promise<Array<[string, number]>> =>
     .map(([taxon, species]) => [taxon, species.length] as [string, number])
     .sort((a, b) => b[1] - a[1])
 
-const getDetectionFrequencyByHour = async (): Promise<Record<number, number>> => {
-  const totalRecordingCount = new Set(rawDetections.map(d => `${d.date}-${d.hour}`)).size * 12
+const getDetectionByHour = async (): Promise<Record<number, number>> => {
   return mapValues(groupByNumber(rawDetections, d => d.hour), detections => {
-    const detectionCount = sum(detections.map(d => d.num_of_recordings))
-    return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+    return sum(detections.map(d => d.num_of_recordings))
   })
 }
 
-const getDetectionFrequencyBySite = async (): Promise<ApiMap> =>
+const getDetectionBySite = async (): Promise<ApiMap> =>
 Object.values(
   mapValues(
     groupBy(rawDetections, 'stream_id'),
     (detections) => {
-      const totalRecordingCount = new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
       const detectionCount = sum(detections.map(d => d.num_of_recordings))
       return {
         name: detections[0].name,
         longitude: detections[0].lon,
         latitude: detections[0].lat,
-        value: totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
+        value: detectionCount
       }
     }
   )

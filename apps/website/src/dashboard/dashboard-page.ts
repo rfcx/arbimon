@@ -36,12 +36,12 @@ interface Tab {
 
 const TAB_VALUES = {
   richness: 'speciesRichness',
-  frequency: 'detectionFrequency'
+  detections: 'detection'
 }
 
 const tabs: Tab[] = [
   { label: 'Species Richness', value: TAB_VALUES.richness },
-  { label: 'Detection Frequency', value: TAB_VALUES.frequency }
+  { label: 'Detections (raw)', value: TAB_VALUES.detections }
 ]
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
@@ -69,9 +69,7 @@ export default class DashboardPage extends Vue {
   tabs = tabs
   selectedTab = tabs[0].value
 
-  getPopupHtml = (data: MapSiteData, dataKey: string) => this.selectedTab === TAB_VALUES.richness
-    ? data.distinctSpecies[dataKey]
-    : (data.distinctSpecies[dataKey] as number).toFixed(3)
+  getPopupHtml = (data: MapSiteData, dataKey: string) => data.distinctSpecies[dataKey]
 
   get color (): string {
     return this.store.datasetColors[0] ?? '#EFEFEF'
@@ -102,7 +100,7 @@ export default class DashboardPage extends Vue {
       height: this.tabHeight,
       margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS.hourOfDay,
-      yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detection frequency',
+      yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detections (Raw)',
       xBounds: [0, 23]
     }
   }
