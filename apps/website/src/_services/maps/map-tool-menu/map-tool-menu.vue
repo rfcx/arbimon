@@ -5,7 +5,7 @@
       :key="item.id"
     >
       <button
-        class="btn"
+        class="btn <md:(btn-icon)"
         :class="{
           'bg-brand-primary': mapStyle === item.style,
           'rounded-r-none': idx !== mapStyleOptions.length - 1,
@@ -20,18 +20,18 @@
           <img
             class="md:hidden <md:visible"
             :src="item.icon"
-            width="20"
-            height="20"
+            width="16"
+            height="16"
           >
         </div>
       </button>
     </template>
     <button
-      class="btn ml-2 flex"
-      :class="{ '<md:bg-brand-primary': isShowLabels }"
+      class="btn ml-2"
+      :class="{ '<md:(bg-brand-primary btn-icon)': isShowLabels }"
       @click="emitShowLabelsToggle()"
     >
-      <div class="<md:hidden">
+      <div class="flex items-center <md:hidden">
         <input
           type="checkbox"
           class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
@@ -40,7 +40,7 @@
         Labels
       </div>
       <div class="md:hidden">
-        <icon-fas-tag />
+        <icon-fas-tag class="text-xs" />
       </div>
     </button>
   </div>

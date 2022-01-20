@@ -8,6 +8,8 @@
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
       "@rfcx-bio/common/*": ["../../../packages/common/src/*"]
+      // "~/*": ["./_services/*"],
+      // "@/*": ["./*"]
     }
   },
 

@@ -4,17 +4,20 @@
     page-subtitle="Temporal and spatial activity trends for all species"
     :topic="infoTopic"
   >
-    <dropdown-menu>
+    <export-button
+      :disabled="!hasData"
+      :title="hasData ? '' : 'No data selected'"
+      @click="exportSpeciesData()"
+    >
       <template #label>
-        <icon-fa-download class="mr-2" /> Download Data
+        <div class="ml-2 <md:hidden">
+          Download Source
+        </div>
+        <div class="ml-2 md:hidden">
+          Source
+        </div>
       </template>
-      <dropdown-menu-item
-        :disabled="!hasData"
-        @click="exportSpeciesData"
-      >
-        <icon-far-file-archive class="mr-2" /> Export CSV
-      </dropdown-menu-item>
-    </dropdown-menu>
+    </export-button>
   </page-title>
   <comparison-list-component
     class="mt-5"

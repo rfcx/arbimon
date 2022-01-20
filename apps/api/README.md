@@ -1,7 +1,6 @@
 # Biodiversity > API
 
-Biodiversity backend code built with Fastify, Typescript, and pnpm.  
-**Beware:** The project is a TypeScript ESM. Imports must end with `.js` (even if the file is `.ts`)
+Biodiversity backend code built with Fastify, Typescript, and pnpm.
 
 ## Setup
 

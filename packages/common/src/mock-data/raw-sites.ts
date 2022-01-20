@@ -3441,9 +3441,9 @@ export const rawSites: Site[] = [
   {
     siteId: 'qDGNH1j5sogs',
     name: 'SU02',
-    latitude: 18.08148,
-    longitude: -66.88775,
-    altitude: 329.5825821
+    latitude: 18.0814762115479,
+    longitude: -66.8877487182617,
+    altitude: 291.301849625768
   },
   {
     siteId: 'wjwziQydBqsu',
@@ -6061,7 +6061,7 @@ export const rawSites: Site[] = [
     name: 'DE_01e',
     latitude: 18.3836909,
     longitude: -67.4855444,
-    altitude: 30.936445635775918
+    altitude: 30.93644563577592
   },
   {
     siteId: 'weqmdoqfzb2x',
@@ -6111,5 +6111,33 @@ export const rawSites: Site[] = [
     latitude: 18.11234,
     longitude: -67.93109,
     altitude: 67.34916284
+  },
+  {
+    siteId: 'wfk6i2iijenx',
+    name: 'RAG5',
+    latitude: 18.3465099,
+    longitude: -66.7307358,
+    altitude: 305.253105001078
+  },
+  {
+    siteId: '6hzecdqgy82l',
+    name: 'MAG3',
+    latitude: 18.1571667,
+    longitude: -67.0033667,
+    altitude: 693.484698655829
+  },
+  {
+    siteId: 'jyh0qj4rtlvg',
+    name: 'MAG2',
+    latitude: 18.1631745,
+    longitude: -66.9954944,
+    altitude: 573.824968544572
+  },
+  {
+    siteId: 'fg2p32nf7sm8',
+    name: 'RAG2',
+    latitude: 18.32984,
+    longitude: -66.6877667,
+    altitude: 302.8
   }
 ]
