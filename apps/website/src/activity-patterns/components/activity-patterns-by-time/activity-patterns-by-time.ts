@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { TimeDataset } from '@/activity-patterns/types'
@@ -33,6 +34,7 @@ const DATASET_LABELS = {
 })
 export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
+  @Prop() species!: SpeciesLight
   @Prop() datasets!: TimeDataset[]
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
@@ -71,6 +73,6 @@ export default class ActivityPatternsByTime extends Vue {
     const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
-    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}`))
+    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}--${this.species.speciesSlug}`))
   }
 }

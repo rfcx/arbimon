@@ -9,9 +9,10 @@
     >
       <icon-fa-info-circle />
       <p
-        class="absolute min-w-70 -left-24 -top-20 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md"
-        v-html="information"
-      />
+        class="absolute min-w-70 -left-24 -top-20 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible whitespace-pre-wrap group-hover:visible rounded-md"
+      >
+        {{ information }}
+      </p>
     </div>
   </div>
 </template>

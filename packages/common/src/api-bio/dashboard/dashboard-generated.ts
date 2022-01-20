@@ -6,10 +6,10 @@ export interface DashboardGeneratedParams {
   projectId: string
 }
 
-export const dashboardGeneratedRoute = '/:projectId/dashboard-generated'
+export const dashboardGeneratedRoute = '/projects/:projectId/dashboard-generated'
 
 export const dashboardGeneratedUrl = (params: DashboardGeneratedParams): string =>
-  `/${params.projectId}/dashboard-generated` // TODO: Generate automatically from dashboardGeneratedRoute
+  `/projects/${params.projectId}/dashboard-generated` // TODO: Generate automatically from dashboardGeneratedRoute
 
 // Response
 export interface DashboardGeneratedResponse {

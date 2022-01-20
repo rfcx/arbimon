@@ -5,17 +5,20 @@
       page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
       :topic="infoTopic"
     >
-      <dropdown-menu>
+      <export-button
+        :disabled="!hasExportData"
+        :title="hasExportData ? '' : 'No data selected'"
+        @click="exportDetectionsData()"
+      >
         <template #label>
-          <icon-fa-download class="mr-2" /> Download Data
+          <div class="ml-2 <md:hidden">
+            Download Source
+          </div>
+          <div class="ml-2 md:hidden">
+            Source
+          </div>
         </template>
-        <dropdown-menu-item
-          :disabled="!hasExportData"
-          @click="exportDetectionsData"
-        >
-          <icon-far-file-archive class="mr-2" /> Export CSV
-        </dropdown-menu-item>
-      </dropdown-menu>
+      </export-button>
     </page-title>
     <comparison-list-component
       class="mt-5"
@@ -50,8 +53,14 @@
       :metrics="metrics"
       class="mt-6"
     />
+    <location-redacted-banner
+      v-if="isLocationRedacted"
+      class="mt-5"
+    />
     <activity-patterns-by-location
+      v-else
       :datasets="mapDatasets"
+      :species="species"
       class="mt-5"
     />
     <activity-patterns-predicted-occupancy
@@ -60,6 +69,7 @@
     />
     <activity-patterns-by-time
       dom-id="activity-by-time"
+      :species="species"
       :datasets="timeDatasets"
       class="my-5"
     />

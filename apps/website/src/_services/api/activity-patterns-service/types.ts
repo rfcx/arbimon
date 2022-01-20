@@ -41,7 +41,6 @@ export interface ActivityPatternsDataByExport {
   hour: ActivityPatternsDataByExportBucket
   month: ActivityPatternsDataByExportBucket
   year: ActivityPatternsDataByExportBucket
-  sites: ActivityPatternsDataBySite
 }
 
 export interface ActivityPatternsDataByExportBucket {

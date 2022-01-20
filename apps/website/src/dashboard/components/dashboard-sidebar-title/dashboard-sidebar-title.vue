@@ -1,6 +1,6 @@
 <template>
   <router-link
-    class="w-full rounded-2xl bg-steel-grey my-4 p-4 flex justify-between"
+    class="w-full rounded-2xl bg-steel-grey p-4 flex justify-between"
     :to="route"
   >
     <div class="font-semibold">

@@ -111,6 +111,7 @@ export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, 
     .attr('x', ((width - margins.left) / 2) + margins.left)
     .attr('y', mostBottom)
     .attr('fill', 'currentColor')
+    .style('font-size', '14px')
     .style('text-anchor', 'middle')
     .text(xTitle)
 
@@ -122,6 +123,7 @@ export function generateAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, 
     .attr('x', 0 - ((height - margins.bottom) / 2))
     .attr('y', 0)
     .attr('fill', 'currentColor')
+    .style('font-size', '14px')
     .style('text-anchor', 'middle')
     .text(yTitle)
 }
