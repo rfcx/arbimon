@@ -32,8 +32,8 @@ async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     richnessByHour: await getRichnessByHour(),
     richnessBySite: await getRichnessBySite(),
     richnessByTaxon: await getRichnessByTaxon(),
-    detectionFrequencyByHour: await getDetectionByHour(),
-    detectionFrequencyBySite: await getDetectionBySite()
+    detectionByHour: await getDetectionByHour(),
+    detectionBySite: await getDetectionBySite()
   }
 }
 

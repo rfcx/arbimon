@@ -110,7 +110,7 @@ export default class DashboardPage extends Vue {
       startDate: dayjs(),
       endDate: dayjs(),
       sites: this.store.sites,
-      data: ((this.selectedTab === TAB_VALUES.richness ? this.generated?.richnessBySite : this.generated?.detectionFrequencyBySite) ?? [])
+      data: ((this.selectedTab === TAB_VALUES.richness ? this.generated?.richnessBySite : this.generated?.detectionBySite) ?? [])
         .map(({ name: siteName, latitude, longitude, value }) => ({
           siteName,
           latitude,
@@ -122,7 +122,7 @@ export default class DashboardPage extends Vue {
       maxValues: {
         [MAP_KEY_THAT_SHOULD_NOT_EXIST]: max(this.selectedTab === TAB_VALUES.richness
           ? this.generated?.richnessBySite.map(d => d.value)
-          : this.generated?.detectionFrequencyBySite.map(d => d.value)
+          : this.generated?.detectionBySite.map(d => d.value)
         ) ?? 0
       }
     }
