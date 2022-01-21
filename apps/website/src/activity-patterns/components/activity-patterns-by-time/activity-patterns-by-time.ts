@@ -58,7 +58,7 @@ export default class ActivityPatternsByTime extends Vue {
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
         : TIME_LABEL_FORMATTERS[this.selectedBucket],
       yLabelFormatter: this.displayWholeNumber
-        ? (n) => numeral(n).format('0,0')
+        ? (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
         : DEFAULT_YAXIS_LINE_FORMAT
     }
   }

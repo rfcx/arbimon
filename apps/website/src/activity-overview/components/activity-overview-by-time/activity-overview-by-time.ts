@@ -55,8 +55,8 @@ export default class ActivityOverviewByTime extends Vue {
       xLabelFormatter: this.selectedBucket === 'dateSeries'
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
         : TIME_LABEL_FORMATTERS[this.selectedBucket],
-        yLabelFormatter: this.displayWholeNumber
-        ? (n) => numeral(n).format('0,0')
+      yLabelFormatter: this.displayWholeNumber
+        ? (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
         : DEFAULT_YAXIS_LINE_FORMAT
     }
   }
