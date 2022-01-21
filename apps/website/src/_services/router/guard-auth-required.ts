@@ -7,10 +7,7 @@ export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to, 
   const authClient = useAuthClient()
   if (authClient.isAuthenticated) return next()
 
-  // ! Not require login for public access
-  next()
-
   // Redirect to login
-  // next(false)
-  // await authClient.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
+  next(false)
+  await authClient.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
 }
