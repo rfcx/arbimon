@@ -1,4 +1,5 @@
 import { max } from 'lodash-es'
+import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
@@ -101,7 +102,8 @@ export default class DashboardPage extends Vue {
       margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS.hourOfDay,
       yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detections (Raw)',
-      xBounds: [0, 23]
+      xBounds: [0, 23],
+      yLabelFormatter: (n) => numeral(n).format('0,0')
     }
   }
 
