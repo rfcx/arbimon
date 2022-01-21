@@ -38,7 +38,7 @@ export default class SpeciesRichnessByTime extends Vue {
       xLabelFormatter: this.selectedBucket === 'dateSeries'
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
         : TIME_LABEL_FORMATTERS[this.selectedBucket],
-      yLabelFormatter: (n) => numeral(n).format('0,0')
+      yLabelFormatter: (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
     }
   }
 
