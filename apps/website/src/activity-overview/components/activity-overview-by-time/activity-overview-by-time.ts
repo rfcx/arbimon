@@ -57,7 +57,7 @@ export default class ActivityOverviewByTime extends Vue {
         : TIME_LABEL_FORMATTERS[this.selectedBucket],
         yLabelFormatter: this.displayWholeNumber
         ? (n) => numeral(n).format('0,0')
-        : (n) => DEFAULT_YAXIS_LINE_FORMAT(n)
+        : DEFAULT_YAXIS_LINE_FORMAT
     }
   }
 
