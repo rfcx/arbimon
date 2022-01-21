@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash-es'
+import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
@@ -8,7 +9,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { downloadSvgAsPng } from '~/charts'
-import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
@@ -55,8 +56,15 @@ export default class ActivityPatternsByTime extends Vue {
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabelFormatter: this.selectedBucket === 'dateSeries'
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
-        : TIME_LABEL_FORMATTERS[this.selectedBucket]
+        : TIME_LABEL_FORMATTERS[this.selectedBucket],
+      yLabelFormatter: this.displayWholeNumber
+        ? (n) => numeral(n).format('0,0')
+        : (n) => DEFAULT_YAXIS_LINE_FORMAT(n)
     }
+  }
+
+  get displayWholeNumber (): boolean {
+    return this.selectedType === this.datasetType[1].value
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {

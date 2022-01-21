@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash-es'
+import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
@@ -36,7 +37,8 @@ export default class SpeciesRichnessByTime extends Vue {
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabelFormatter: this.selectedBucket === 'dateSeries'
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
-        : TIME_LABEL_FORMATTERS[this.selectedBucket]
+        : TIME_LABEL_FORMATTERS[this.selectedBucket],
+      yLabelFormatter: (n) => numeral(n).format('0,0')
     }
   }
 
