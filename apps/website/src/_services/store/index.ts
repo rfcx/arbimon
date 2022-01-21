@@ -20,15 +20,15 @@ export const useStore = defineStore('root', {
     async updateUser (user: User | undefined = undefined) {
       // Set user & clear old data immediately
       this.user = user
-      this.projects = []
-      await this.updateSelectedProject(undefined)
+      await this.updateProjects([])
 
       // Load new data asynchronously
       const projects = await projectService.getProjects() ?? []
+      await this.updateProjects(projects)
+    },
+    async updateProjects (projects: Project[]) {
       this.projects = projects
-      if (projects.length > 0) {
-        await this.updateSelectedProject(projects[0])
-      }
+      await this.updateSelectedProject(projects?.[0])
     },
     async updateSelectedProject (project?: Project) {
       if (this.selectedProject?.id === project?.id) return
