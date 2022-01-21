@@ -45,9 +45,11 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
     .domain(yBounds).nice()
     .range([config.height - config.margins.bottom - xTitleDistance, config.margins.top])
 
+  const yTickValues = yScale.ticks().filter(d => yTickFormatter(d))
+
   const yAxis = (g: any): unknown => g
     .attr('transform', `translate(${config.margins.left + yTitleDistance}, 0)`)
-    .call(d3.axisLeft(yScale).tickFormat(yTickFormatter))
+    .call(d3.axisLeft(yScale).tickValues(yTickValues).tickFormat(yTickFormatter))
 
   // Render chart
   const svg = d3.create('svg')
