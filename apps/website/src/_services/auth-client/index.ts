@@ -50,8 +50,10 @@ class AuthClientClass implements AuthClient {
   }
 
   async logout (): Promise<void> {
+    // Auth0 logout forces a full refresh
     await this.clientAuth0.logout({ returnTo: window.location.origin })
-    await this.updateUser(this.clientAuth0)
+    // ...if we could avoid the refresh, we would need to update the user:
+    // await this.updateUser(this.clientAuth0)
   }
 
   async getAccessToken (): Promise<string | undefined> {
