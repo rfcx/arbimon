@@ -21,29 +21,28 @@ class AuthClientClass implements AuthClient {
   isAuthenticated = false
 
   async init (redirectUri: string): Promise<RouteLocationRaw | undefined> {
+    // Init Auth0 client
     const { domain, clientId, audience } = config
+    const client = await createAuth0Client({ audience, client_id: clientId, domain, redirect_uri: redirectUri, theme: 'dark' })
+    this.clientAuth0 = client
 
-    try {
-      // Init
-      this.clientAuth0 = await createAuth0Client({ audience, client_id: clientId, domain, redirect_uri: redirectUri, theme: 'dark' })
-
+    if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
       // Handle callbacks
-      if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
-        const redirectLoginResult = await this.clientAuth0.handleRedirectCallback()
-        const redirectAfterAuth = redirectLoginResult.appState?.redirectPath
+      const redirectLoginResult = await this.clientAuth0.handleRedirectCallback()
+      const redirectAfterAuth = redirectLoginResult.appState?.redirectPath
 
-        // Init auth state & store user
-        await this.initAuthState()
+      // Set user
+      await this.updateUser(client)
 
-        // Redirects
-        if (redirectAfterAuth !== undefined && redirectAfterAuth !== '/') return redirectAfterAuth
-        if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectId: this.store.selectedProject.id } }
-        return '/'
-      } else {
-        await this.initAuthState()
-      }
-    } catch (e: any) {}
-    return undefined
+      // Calculate redirect
+      if (redirectAfterAuth !== undefined && redirectAfterAuth !== '/') return redirectAfterAuth
+      if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectId: this.store.selectedProject.id } }
+      return '/'
+    } else {
+      // Set user
+      await this.updateUser(client)
+      return undefined
+    }
   }
 
   async loginWithRedirect (options: RedirectLoginOptions): Promise<void> {
@@ -52,6 +51,7 @@ class AuthClientClass implements AuthClient {
 
   async logout (): Promise<void> {
     await this.clientAuth0.logout({ returnTo: window.location.origin })
+    await this.updateUser(this.clientAuth0)
   }
 
   async getAccessToken (): Promise<string | undefined> {
@@ -62,8 +62,8 @@ class AuthClientClass implements AuthClient {
     return (await this.clientAuth0.getIdTokenClaims())?.__raw
   }
 
-  async initAuthState (): Promise<void> {
-    const user = await this.clientAuth0.getUser()
+  private async updateUser (client: Auth0Client): Promise<void> {
+    const user = await client.getUser()
     this.isAuthenticated = user !== undefined
     await this.store.updateUser(user)
   }
