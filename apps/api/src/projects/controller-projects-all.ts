@@ -14,6 +14,12 @@ const FAKE_PUERTO_RICO_PROJECT: Project = {
   ]
 }
 
-export const controllerProjectsAll: Controller<ProjectsResponse> = async () => {
+export const controllerProjectsAll: Controller<ProjectsResponse> = async (req) => {
+  // TODO: Remove auth logic here to be better strategy
+  const isAuthorized = req.headers.authorization?.replace('Bearer ', '')
+  if (!isAuthorized) {
+    return [FAKE_PUERTO_RICO_PROJECT].filter(p => p.isPublic)
+  }
+
   return [FAKE_PUERTO_RICO_PROJECT]
 }
