@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import numeral from 'numeral'
 
 import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
@@ -13,7 +12,7 @@ export const skipTickFormatter = <T>(interval: number, innerFormatter: Formatter
     ? (val: T, idx: number) => (idx % interval) === 0 ? innerFormatter(val, idx) : ''
     : innerFormatter
 
-export const DEFAULT_YAXIS_LINE_FORMAT = (val: d3.NumberValue): string => Number.isInteger(val) ? numeral(val).format('0,0') : d3.format('.1e')(val)
+export const DEFAULT_YAXIS_LINE_FORMAT = (val: d3.NumberValue): string => d3.format('.1e')(val)
 
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig, xTitleDistance = 25, yTitleDistance = 25): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data
@@ -36,7 +35,7 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
   const xTickFormatter = xLabelFormatter ? (val: d3.NumberValue): string => xLabelFormatter(val.valueOf()) : d3.format('d')
   const yTickFormatter = yLabelFormatter
     ? (val: d3.NumberValue): string => yLabelFormatter(val.valueOf())
-    : (val: d3.NumberValue): string => DEFAULT_YAXIS_LINE_FORMAT(val)
+    : DEFAULT_YAXIS_LINE_FORMAT
 
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(${yTitleDistance}, ${config.height - config.margins.bottom - xTitleDistance})`)
