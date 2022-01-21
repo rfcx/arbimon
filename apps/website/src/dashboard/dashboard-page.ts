@@ -103,7 +103,7 @@ export default class DashboardPage extends Vue {
       xTitle: TIME_BUCKET_LABELS.hourOfDay,
       yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detections (Raw)',
       xBounds: [0, 23],
-      yLabelFormatter: Number.isInteger(n) ? numeral(n).format('0,0') : ''
+      yLabelFormatter: (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
     }
   }
 
