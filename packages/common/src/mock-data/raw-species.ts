@@ -578,31 +578,6 @@ export const rawSpecies: Species[] = [
     ]
   },
   {
-    speciesId: 8489,
-    speciesSlug: 'catharus-minimus',
-    scientificName: 'Catharus minimus',
-    taxonId: 1,
-    taxon: 'Birds',
-    commonName: 'Grey-cheeked Thrush',
-    extinctionRisk: 'LC',
-    externalLinks: [
-      {
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Grey-cheeked_thrush',
-        title: 'Wiki'
-      }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Graycheekedthrush36.jpg/320px-Graycheekedthrush36.jpg',
-    imageCaption: 'Grey-cheeked thrush',
-    information: [
-      {
-        description: 'The grey-cheeked thrush is a medium-sized thrush. This species is 15–17 cm (5.9–6.7 in) in length, and has the white-dark-white underwing pattern characteristic of Catharus thrushes. It is a member of a close-knit group of migrant species together with the veery and Bicknell\'s thrush; it forms a cryptic species pair with the latter. The grey-cheeked thrush is all but indistinguishable from Bicknell\'s thrush except by its slightly larger size and different song. The two were formerly considered conspecific. Of all the American spotted thrushes, the grey-cheeked has the most northern breeding range.',
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Grey-cheeked_thrush'
-      }
-    ]
-  },
-  {
     speciesId: 1645,
     speciesSlug: 'charadrius-vociferus',
     scientificName: 'Charadrius vociferus',
@@ -2428,42 +2403,6 @@ export const rawSpecies: Species[] = [
         description: 'The Cuban tree frog is a large species of tree frog that is native to Cuba, the Bahamas, and the Cayman Islands; but has become invasive in several other places around the Americas. Its wide diet and ability to thrive in urban areas has made it a highly invasive species with established colonies in places such as Florida, the Hawaiian island of Oahu, and the Caribbean Islands. These tree frogs can vary in size from 2 to 5.5 inches in length. Due to their large size, Cuban tree frogs can eat a wide variety of things, particularly native tree frogs, and their removal has shown to result in an increase in the amount of native tree frogs in an area. The tadpoles of Cuban tree frogs also heavily compete with native frog tadpoles, which can cause negative effects in body mass, size at metamorphosis, and growth rates for the native tadpoles.',
         sourceType: 'Wiki',
         sourceUrl: 'https://en.wikipedia.org/wiki/Cuban_tree_frog'
-      }
-    ]
-  },
-  {
-    speciesId: 1072,
-    speciesSlug: 'pandion-haliaetus',
-    scientificName: 'Pandion haliaetus',
-    taxonId: 1,
-    taxon: 'Birds',
-    commonName: 'Osprey',
-    extinctionRisk: 'LC',
-    externalLinks: [
-      {
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Pandion%20haliaetus',
-        title: 'IUCN'
-      },
-      {
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Osprey',
-        title: 'Wiki'
-      }
-    ],
-    thumbnailImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/2010-kabini-osprey.jpg/217px-2010-kabini-osprey.jpg',
-    imageCaption: 'Osprey',
-    information: [
-      {
-        description: '<p><strong>Behaviour</strong> Individuals in the tropics and subtropics are resident, but others migrate to the lower latitudes of the Amazon Basin, South America’s northern coast, or West Africa in the non-breeding season (del Hoyo <em>et al.</em> 1994). Migrants begin moving to lower latitudes in August and arrive by October, returning in March and April (Ferguson-Lees and Christie 2001). Birds are generally solitary and usually migrate alone, but may congregate in small groups at roosts or plentiful food sources (del Hoyo <em>et al.</em> 1994, Ferguson-Lees and Christie 2001). The species migrates on broad fronts and is not dependent on land bridges during migration (Snow and Perrins 1998, Ferguson-Lees and Christie 2001); birds readily cross bodies of water using flapping flight, but can soar easily over land. It is entirely diurnal (Brown <em>et al.</em> 1982). <strong>Habitat</strong> It inhabits the areas around shallow waters, being sufficiently tolerant of human settlement to persist in suburban and sometimes urban environments (del Hoyo <em>et al.</em> 1994). <strong>Diet</strong> Almost its entire diet consists of live fish (del Hoyo <em>et al.</em> 1994). <strong>Breeding site</strong> Birds usually build large nests high in exposed trees (del Hoyo <em>et al.</em> 1994). <strong>Management information</strong> Reintroduction has helped populations to recover across parts of its range (del Hoyo <em>et al.</em> 1994).</p>',
-        sourceType: 'IUCN',
-        sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Pandion%20haliaetus',
-        sourceCite: 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
-      },
-      {
-        description: 'The osprey or more specifically the western osprey — also called sea hawk, river hawk, and fish hawk — is a diurnal, fish-eating bird of prey with a cosmopolitan range. It is a large raptor, reaching more than 60 cm (24 in) in length and 180 cm (71 in) across the wings. It is brown on the upperparts and predominantly greyish on the head and underparts.',
-        sourceType: 'Wiki',
-        sourceUrl: 'https://en.wikipedia.org/wiki/Osprey'
       }
     ]
   },
