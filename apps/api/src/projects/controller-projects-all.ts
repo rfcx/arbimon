@@ -9,8 +9,8 @@ const FAKE_PUERTO_RICO_PROJECT: Project = {
   isPublic: true,
   externalId: 123456,
   geoBounds: [
-    { lon: -65.24505, lat: 18.51375 },
-    { lon: -67.94469784, lat: 17.93168 }
+    { lon: -65.24505, lat: 18.51375 }, // North-East
+    { lon: -67.94469784, lat: 17.93168 } // South-West
   ]
 }
 
