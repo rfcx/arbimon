@@ -19,10 +19,9 @@
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "s:api": "pnpm --filter=api serve",
+    "s:db": "pnpm --filter=db serve && pnpm --filter=cli serve lib/db-migrations",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
-    "sb:db": "pnpm --filter=db serve && pnpm --filter=cli serve src/db-migrations",
-    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\"",
-    "serve-beta": "concurrently --kill-others-on-fail \"pnpm:s:*\" \"pnpm:sb:*\""
+    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\""
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
