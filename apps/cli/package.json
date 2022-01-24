@@ -12,7 +12,8 @@
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
-    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --experimental-specifier-resolution=node --loader ./loader.js",
+    "migrate": "pnpm clean && pnpm serve lib/db-migrations",
+    "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test": "vitest --run --passWithNoTests",
     "test-coverage": "vitest --run --coverage --passWithNoTests"
   },
