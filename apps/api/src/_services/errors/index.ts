@@ -11,5 +11,8 @@ export const ApiClientError = (queryName: string, queryValue: string | undefined
 export const ApiMissingParam = (paramName: string): FastifyError =>
   new FastifyError(`${paramName} is required`, 400)
 
+export const ApiUnautorized = (): FastifyError =>
+  new FastifyError('Unauthorized', 401)
+
 export const ApiNotFoundError = (): FastifyError =>
   new FastifyError('Data not found', 404)
