@@ -16,9 +16,6 @@
     "test": "vitest --run --passWithNoTests",
     "test-coverage": "vitest --run --coverage --passWithNoTests"
   },
-  "active-issues": {
-    "sequelize": "6.12.0 breaks build - https://github.com/sequelize/sequelize/issues/13791"
-  },
   "dependencies": {
     "@rfcx-bio/common": "workspace:*",
     "axios": "^0.24.0",
@@ -28,7 +25,7 @@
     "mysql2": "^2.3.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "6.12.0-beta.3",
+    "sequelize": "7.0.0-alpha.5",
     "umzug": "^3.0.0"
   },
   "devDependencies": {
