@@ -41,6 +41,9 @@ class AuthClientClass implements AuthClient {
     } else {
       // Set user
       await this.updateUser(client)
+
+      // Redirect to selected public project (setting in store)
+      if (this.store.selectedProject?.id) return { name: ROUTE_NAMES.dashboard, params: { projectId: this.store.selectedProject.id } }
       return undefined
     }
   }
