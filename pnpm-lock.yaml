@@ -159,7 +159,8 @@ importers:
 
   apps/cli:
     specifiers:
-      '@rfcx-bio/common': workspace:*
+      '@rfcx-bio/common': file:rfcx-bio-common-0.0.1.tgz
+      '@rfcx-bio/utils': file:rfcx-bio-utils-0.0.1.tgz
       '@types/mysql': ^2.15.19
       '@types/validator': ^13.7.0
       axios: ^0.24.0
@@ -172,7 +173,8 @@ importers:
       sequelize: 7.0.0-alpha.5
       umzug: ^3.0.0
     dependencies:
-      '@rfcx-bio/common': link:../../packages/common
+      '@rfcx-bio/common': file:apps/cli/rfcx-bio-common-0.0.1.tgz_@rfcx-bio+utils@0.0.1
+      '@rfcx-bio/utils': file:apps/cli/rfcx-bio-utils-0.0.1.tgz
       axios: 0.24.0
       dayjs: 1.10.7
       dotenv: 10.0.0
@@ -11536,3 +11538,27 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  file:apps/cli/rfcx-bio-common-0.0.1.tgz_@rfcx-bio+utils@0.0.1:
+    resolution: {integrity: sha512-qA6bbPyc2h8x6PFqjJ9d+ocM99WcvfyIL6lYWkDmbg1zKKZv91f69h04LLu9kEN4FI2yImqRPCLw/+eRboPriw==, tarball: file:apps/cli/rfcx-bio-common-0.0.1.tgz}
+    id: file:apps/cli/rfcx-bio-common-0.0.1.tgz
+    name: '@rfcx-bio/common'
+    version: 0.0.1
+    peerDependencies:
+      '@rfcx-bio/utils': '*'
+    dependencies:
+      '@rfcx-bio/utils': file:apps/cli/rfcx-bio-utils-0.0.1.tgz
+      dayjs: 1.10.7
+      lodash-es: 4.17.21
+    dev: false
+
+  file:apps/cli/rfcx-bio-utils-0.0.1.tgz:
+    resolution: {integrity: sha512-AJOXGf/9biwz1G39Qi4SHOmQf2DSISbDR5ETwHnw8r6wQ3vozsq0sdpb9SX5RonNk1GJUhlYNnpU2BTB0upRrA==, tarball: file:apps/cli/rfcx-bio-utils-0.0.1.tgz}
+    name: '@rfcx-bio/utils'
+    version: 0.0.1
+    dependencies:
+      dayjs: 1.10.7
+      jszip: 3.7.1
+      lodash-es: 4.17.21
+      xlsx: 0.17.3
+    dev: false

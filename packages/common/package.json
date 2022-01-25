@@ -17,6 +17,7 @@
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
+    "pack-cli": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/cli",
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "test": "vitest --run --passWithNoTests",
     "test-coverage": "vitest --run --coverage --passWithNoTests"

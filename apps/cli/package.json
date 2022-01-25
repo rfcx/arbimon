@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json && pnpm -r pack-cli && pnpm use-packed",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
@@ -15,10 +15,13 @@
     "migrate": "pnpm clean && pnpm serve lib/db-migrations",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test": "vitest --run --passWithNoTests",
-    "test-coverage": "vitest --run --coverage --passWithNoTests"
+    "test-coverage": "vitest --run --coverage --passWithNoTests",
+    "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
+    "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"
   },
   "dependencies": {
-    "@rfcx-bio/common": "workspace:*",
+    "@rfcx-bio/common": "file:rfcx-bio-common-0.0.1.tgz",
+    "@rfcx-bio/utils": "file:rfcx-bio-utils-0.0.1.tgz",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
