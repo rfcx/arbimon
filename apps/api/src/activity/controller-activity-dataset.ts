@@ -25,8 +25,8 @@ export const activityDatasetController: Controller<ActivityDatasetResponse, Acti
   const convertedQuery: FilterDataset = {
     startDateUtcInclusive: startDate,
     endDateUtcInclusive: endDate,
-    siteIds: siteIds.map(Number) ?? [],
-    taxons: taxons ?? []
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : [],
+    taxons: Array.isArray(taxons) ? taxons : []
   }
 
   // Response

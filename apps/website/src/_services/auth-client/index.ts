@@ -36,14 +36,14 @@ class AuthClientClass implements AuthClient {
 
       // Calculate redirect
       if (redirectAfterAuth !== undefined && redirectAfterAuth !== '/') return redirectAfterAuth
-      if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectId: this.store.selectedProject.id } }
+      if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectSlug: this.store.selectedProject.slug } }
       return '/'
     } else {
       // Set user
       await this.updateUser(client)
 
       // Redirect to selected public project (setting in store)
-      if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectId: this.store.selectedProject.id } }
+      if (this.store.selectedProject) return { name: ROUTE_NAMES.dashboard, params: { projectSlug: this.store.selectedProject.slug } }
       return undefined
     }
   }

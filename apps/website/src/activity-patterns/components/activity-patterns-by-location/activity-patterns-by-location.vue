@@ -47,7 +47,7 @@
         :get-popup-html="getPopupHtml"
         :map-export-name="mapExportName(dataset, selectedType, idx)"
         :map-id="`activity-patterns-by-location-${idx}`"
-        :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+        :map-initial-bounds="mapInitialBounds"
         :circle-formatter="circleFormatter"
         :map-style="mapStyle"
         :is-show-labels="isShowLabels"
