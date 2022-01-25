@@ -4,5 +4,9 @@ import { GET, RouteRegistration } from '../_services/api-helper/types'
 import { spotlightDatasetController } from './controller-spotlight-dataset'
 
 export const routesSpotlight: RouteRegistration[] = [
-  [GET, spotlightDatasetRoute, spotlightDatasetController]
+  {
+    method: GET,
+    route: spotlightDatasetRoute,
+    controller: spotlightDatasetController
+  }
 ]

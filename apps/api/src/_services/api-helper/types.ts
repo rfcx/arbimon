@@ -1,4 +1,4 @@
-import { FastifyReply, HTTPMethods, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
+import { FastifyReply, HTTPMethods, preHandlerHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
 import { ReplyDefault } from 'fastify/types/utils'
 
 import { NoExtraProperties } from '@rfcx-bio/utils/utility-types'
@@ -19,11 +19,21 @@ export type Controller<Response = ReplyDefault, Params = RequestParamsDefault, Q
 // For exporting routes
 type Route = string
 
-export type RouteRegistration<Response = any, Params = any, Querystring = any> = [
-  HTTPMethods,
-  Route,
-  Controller<Response, Params, Querystring>
-]
+type PreHandler = preHandlerHookHandler
+
+export interface RouteRegistration<Response = any, Params = any, Querystring = any> {
+  method: HTTPMethods
+  route: Route
+  controller: Controller<Response, Params, Querystring>
+  preHandler?: PreHandler
+}
+
+export interface RouteRegistrationOptions {
+  method: HTTPMethods
+  url: Route
+  handler: Controller<any, any, any>
+  preHandler?: PreHandler
+}
 
 // Export convenient aliases
 export const DELETE: HTTPMethods = 'DELETE'

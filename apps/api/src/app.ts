@@ -1,8 +1,9 @@
-import fastify, { HTTPMethods } from 'fastify'
+import fastify from 'fastify'
 import fastifyCors from 'fastify-cors'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
+import { RouteRegistrationOptions } from './_services/api-helper/types'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
@@ -38,4 +39,12 @@ const routesRegistrations = [
 
 routesRegistrations
   .flat()
-  .forEach(([method, route, controller]) => app[method.toLowerCase() as Lowercase<HTTPMethods>](route, controller))
+  .forEach(({ method, route: url, controller: handler, preHandler }) => {
+    const routeOpts: RouteRegistrationOptions = { method, url, handler }
+
+    if (preHandler !== undefined) {
+      routeOpts.preHandler = preHandler
+    }
+
+    return app.route(routeOpts)
+  })
