@@ -1,10 +1,13 @@
 import fastify from 'fastify'
+import fastifyAuth0Verify from 'fastify-auth0-verify'
 import fastifyCors from 'fastify-cors'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { RouteRegistrationOptions } from './_services/api-helper/types'
+import { config } from './_services/auth-client/env'
 import { env } from './_services/env'
+// import { ApiUnautorized } from './_services/errors'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
 import { routesProject } from './projects'
@@ -20,6 +23,9 @@ export const app = fastify({
 // Register plugins
 await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
+await app.register(fastifyAuth0Verify, {
+  domain: config.domain
+})
 
 // Register routes (old version)
 const routePlugins = [
@@ -47,6 +53,12 @@ routesRegistrations
     }
 
     if (preValidation !== undefined) {
+      /**
+       * Idea for this is move `app.authenticate` to each router which need authenticate token by Auth0
+       * Use `req.user` to use the information in Auth0
+       * More information here: https://github.com/nearform/fastify-auth0-verify
+       */
+      // routeOpts.preValidation = [app.authenticate]
       routeOpts.preValidation = preValidation
     }
 
