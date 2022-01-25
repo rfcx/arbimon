@@ -1,51 +1,30 @@
+import { mapValues } from 'lodash-es'
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'location_projects'
+const TABLE_NAME = 'location_projects' // Do not import constants! Migrations are immutable
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
-  await params.context.createTable(TABLE_NAME, {
-    id: {
-      type: DataTypes.INTEGER, // 1
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    /** EXTERNAL **/
-    id_core: {
-      type: DataTypes.STRING(12), // ???
-      allowNull: false
-    },
-    id_arbimon: {
-      type: DataTypes.INTEGER, // ???
-      allowNull: false
-    },
-    /** FACTS **/
-    slug: {
-      type: DataTypes.STRING(255), // puerto-rico-island-wide
-      allowNull: false
-    },
-    name: {
-      type: DataTypes.STRING(255), // Puerto Rico Island-Wide
-      allowNull: false
-    },
-    latitude_north: {
-      type: DataTypes.FLOAT, // 18.51375
-      allowNull: false
-    },
-    latitude_south: {
-      type: DataTypes.FLOAT, // 17.93168
-      allowNull: false
-    },
-    longitude_east: {
-      type: DataTypes.FLOAT, // -65.24505
-      allowNull: false
-    },
-    longitude_west: {
-      type: DataTypes.FLOAT, // -67.94469784
-      allowNull: false
-    }
-  })
+  await params.context.createTable(
+    TABLE_NAME,
+    mapValues({
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      /** EXTERNAL **/
+      id_core: { type: DataTypes.STRING(12) },
+      id_arbimon: { type: DataTypes.INTEGER },
+      /** FACTS **/
+      slug: { type: DataTypes.STRING(255) },
+      name: { type: DataTypes.STRING(255) },
+      latitude_north: { type: DataTypes.FLOAT },
+      latitude_south: { type: DataTypes.FLOAT },
+      longitude_east: { type: DataTypes.FLOAT },
+      longitude_west: { type: DataTypes.FLOAT }
+    }, col => ({ allowNull: false, ...col })) // TODO: Extract this (can't work out the right type!)
+  )
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
   await params.context.dropTable(TABLE_NAME)

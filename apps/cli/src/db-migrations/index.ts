@@ -8,7 +8,6 @@ const main = async (): Promise<void> => {
 
   // Run migrations
   await umzug.up().then(res => {
-    console.info()
     console.info(`Executed ${res.length} needed migrations`)
     res.forEach(r => console.info(`- ${r.name}`))
   })
