@@ -10,21 +10,22 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
   await params.context.createTable(
     TABLE_NAME,
     mapValues({
+      // PK
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      /** EXTERNAL **/
-      id_core: { type: DataTypes.STRING(12) },
-      id_arbimon: { type: DataTypes.INTEGER },
-      /** FACTS **/
+      // External
+      idCore: { type: DataTypes.STRING(12) },
+      idArbimon: { type: DataTypes.INTEGER },
+      // Facts
       slug: { type: DataTypes.STRING(255) },
       name: { type: DataTypes.STRING(255) },
-      latitude_north: { type: DataTypes.FLOAT },
-      latitude_south: { type: DataTypes.FLOAT },
-      longitude_east: { type: DataTypes.FLOAT },
-      longitude_west: { type: DataTypes.FLOAT }
+      latitudeNorth: { type: DataTypes.FLOAT },
+      latitudeSouth: { type: DataTypes.FLOAT },
+      longitudeEast: { type: DataTypes.FLOAT },
+      longitudeWest: { type: DataTypes.FLOAT }
     }, defaultDisallowNull)
   )
 
