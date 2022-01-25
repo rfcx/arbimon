@@ -1,17 +1,17 @@
-import { mapValues } from 'lodash-es'
 import { DataTypes } from 'sequelize'
 
 import { Site } from '@rfcx-bio/common/api-bio/common/sites'
 import { TABLE_SITES } from '@rfcx-bio/common/dao'
 
 import { getSequelize } from '../connections'
-import { defaultDisallowNull, ModelForInterface } from '../helpers'
+import { defineWithDefaults } from '../helpers'
 
 const sequelize = getSequelize()
 
-export const SiteDao = sequelize.define<ModelForInterface<Site>>(
+export const SiteDao = defineWithDefaults<Site>(
+  sequelize,
   'Site',
-  mapValues({
+  {
     // PK
     id: { // 1
       type: DataTypes.INTEGER,
@@ -28,7 +28,7 @@ export const SiteDao = sequelize.define<ModelForInterface<Site>>(
     latitude: { type: DataTypes.FLOAT }, // 18.31307
     longitude: { type: DataTypes.FLOAT }, // -65.24878
     altitude: { type: DataTypes.FLOAT } // 30.85246588
-  }, defaultDisallowNull),
+  },
   {
     tableName: TABLE_SITES
   }

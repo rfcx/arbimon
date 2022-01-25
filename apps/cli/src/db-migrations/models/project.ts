@@ -1,17 +1,17 @@
-import { mapValues } from 'lodash-es'
 import { DataTypes } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/api-bio/common/projects'
 import { TABLE_PROJECTS } from '@rfcx-bio/common/dao'
 
 import { getSequelize } from '../connections'
-import { defaultDisallowNull, ModelForInterface } from '../helpers'
+import { defineWithDefaults } from '../helpers'
 
 const sequelize = getSequelize()
 
-export const ProjectDao = sequelize.define<ModelForInterface<Project>>(
+export const ProjectDao = defineWithDefaults<Project>(
+  sequelize,
   'Project',
-  mapValues({
+  {
     // PK
     id: { // 1
       type: DataTypes.INTEGER,
@@ -28,7 +28,7 @@ export const ProjectDao = sequelize.define<ModelForInterface<Project>>(
     latitudeSouth: { type: DataTypes.FLOAT }, // 17.93168
     longitudeEast: { type: DataTypes.FLOAT }, // -65.24505
     longitudeWest: { type: DataTypes.FLOAT } // -67.94469784
-  }, defaultDisallowNull),
+  },
   {
     tableName: TABLE_PROJECTS
   }
