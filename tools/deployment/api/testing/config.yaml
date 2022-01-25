@@ -15,4 +15,6 @@ metadata:
 data:
   ## Config
 
+  CORE_API_BASE_URL: https://staging-api.rfcx.org
   PUERTO_RICO_PROJECT_SLUG: puerto-rico
+  PUERTO_RICO_PROJECT_CORE_ID: zy5jbxx4cs9f
