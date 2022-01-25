@@ -33,7 +33,7 @@ export default class NavbarComponent extends Vue {
 
   get navMenus (): NavMenu[] {
     const selectedProjectId = this.store.selectedProject?.id
-    return selectedProjectId
+    return selectedProjectId !== undefined
       ? [
           {
             label: 'Dashboard',
@@ -57,7 +57,7 @@ export default class NavbarComponent extends Vue {
 
   get arbimonLink (): string {
     const selectedProjectId = this.store.selectedProject?.id
-    if (!selectedProjectId) return ''
+    if (selectedProjectId === undefined) return ''
     else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectId}`
   }
 
