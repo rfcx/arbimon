@@ -1,4 +1,4 @@
-import { getSequelize, getUmzug } from './helpers'
+import { getSequelize, getUmzug } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
 
