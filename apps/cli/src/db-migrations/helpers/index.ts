@@ -7,12 +7,12 @@ import { env } from '../../_services/env'
 
 // Paths & resolve
 const cwd = dirname(new URL(import.meta.url).pathname)
-const pathToMigrations = '../'
+const pathToMigrations = '../migrations'
 
 export const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
   (await import(`file:///${(path ?? '').replace(/\\/g, '/')}`))
 
-export const getSequelize = (verbose = false): Sequelize => {
+  export const getSequelize = (verbose = false): Sequelize => {
   // Setup sequelize (ORM)
   const sequelizeOptions: Options = {
     host: env.BIO_DB_HOSTNAME,
@@ -34,7 +34,6 @@ export const getSequelize = (verbose = false): Sequelize => {
     },
     logging: verbose,
     schema: 'sequelize'
-    // models: [path.join(currentDir, '../../**/*.model.*')],
   }
 
   return new Sequelize(
@@ -48,7 +47,7 @@ export const getSequelize = (verbose = false): Sequelize => {
 export const getUmzug = (sequelize: Sequelize, verbose = false): Umzug<QueryInterface> => {
     return new Umzug({
       migrations: {
-        glob: ['./migrations/!(*.d).{js,mjs,ts}', { cwd: resolve(cwd, pathToMigrations) }],
+        glob: ['./!(*.d).{js,mjs,ts}', { cwd: resolve(cwd, pathToMigrations) }],
         resolve: params => ({
           name: params.name,
           path: params.path,
