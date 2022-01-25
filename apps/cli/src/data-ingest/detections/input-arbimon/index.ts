@@ -19,6 +19,7 @@ export const getArbimonDetectionSummaries = async (): Promise<MockHourlyDetectio
   // Calculate detection frequency
   return results.map(summary => ({
       ...summary,
+      site_id: summary.arbimon_site_id, // use Arbimon IDs in mock data (we will make our own later)
       detection_frequency: summary.num_of_recordings / 12
   }))
 }
