@@ -1,32 +1,55 @@
-import { mapValues } from 'lodash-es'
+/**
+ * WARNING: MIGRATIONS ARE IMMUTABLE
+ * Do not depend on imported code which may change
+ */
+
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { defaultDisallowNull } from '../helpers'
-
-const TABLE_NAME = 'location_sites' // Do not import constants! Migrations are immutable
+const TABLE_NAME = 'location_sites'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
-    mapValues({
+    {
       // PK
       id: {
-        type: DataTypes.INTEGER, // 1
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
       // External
-      idCore: { type: DataTypes.STRING(12) },
-      idArbimon: { type: DataTypes.INTEGER },
+      idCore: {
+        type: DataTypes.STRING(12),
+        allowNull: false
+      },
+      idArbimon: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       // Dimensions
-      locationProjectId: { type: DataTypes.INTEGER },
+      locationProjectId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       // Facts
-      name: { type: DataTypes.STRING(255) },
-      latitude: { type: DataTypes.FLOAT },
-      longitude: { type: DataTypes.FLOAT },
-      altitude: { type: DataTypes.FLOAT }
-    }, defaultDisallowNull)
+      name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      latitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      longitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      altitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      }
+    }
   )
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

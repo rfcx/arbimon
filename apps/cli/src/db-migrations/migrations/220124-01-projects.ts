@@ -1,15 +1,17 @@
-import { mapValues } from 'lodash-es'
+/**
+ * WARNING: MIGRATIONS ARE IMMUTABLE
+ * Do not depend on imported code which may change
+ */
+
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { defaultDisallowNull } from '../helpers'
-
-const TABLE_NAME = 'location_projects' // Do not import constants! Migrations are immutable
+const TABLE_NAME = 'location_projects'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
-    mapValues({
+    {
       // PK
       id: {
         type: DataTypes.INTEGER,
@@ -17,16 +19,40 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         autoIncrement: true
       },
       // External
-      idCore: { type: DataTypes.STRING(12) },
-      idArbimon: { type: DataTypes.INTEGER },
+      id_core: {
+        type: DataTypes.STRING(12),
+        allowNull: false
+      },
+      id_arbimon: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       // Facts
-      slug: { type: DataTypes.STRING(255) },
-      name: { type: DataTypes.STRING(255) },
-      latitudeNorth: { type: DataTypes.FLOAT },
-      latitudeSouth: { type: DataTypes.FLOAT },
-      longitudeEast: { type: DataTypes.FLOAT },
-      longitudeWest: { type: DataTypes.FLOAT }
-    }, defaultDisallowNull)
+      slug: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      latitude_north: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      latitude_south: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      longitude_east: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      longitude_west: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      }
+    }
   )
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
