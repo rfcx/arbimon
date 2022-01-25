@@ -34,6 +34,8 @@ RUN pnpm --filter=website build -- --mode ${mode}
 ENV NODE_ENV=development
 RUN pnpm -r pack-api
 RUN pnpm --filter=api use-packed
+RUN pnpm -r pack-cli
+RUN pnpm --filter=cli use-packed
 ENV NODE_ENV=production
 
 # API
