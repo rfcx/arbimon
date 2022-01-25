@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize'
 
 import { TABLE_SITES } from '@rfcx-bio/common/dao'
 
-import { getSequelize } from '../helpers'
+import { defaultDisallowNull, getSequelize } from '../helpers'
 
 const sequelize = getSequelize()
 
@@ -25,7 +25,7 @@ export const Site = sequelize.define(
     latitude: { type: DataTypes.FLOAT }, // 18.31307
     longitude: { type: DataTypes.FLOAT }, // -65.24878
     altitude: { type: DataTypes.FLOAT } // 30.85246588
-  }, col => ({ allowNull: false, ...col })), // TODO: Extract this (can't work out the right type!)
+  }, defaultDisallowNull),
   {
     tableName: TABLE_SITES
   }
