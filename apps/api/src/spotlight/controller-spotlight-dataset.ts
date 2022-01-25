@@ -36,10 +36,10 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
     taxons: taxons ?? []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species)
+  return await getSpotlightDatasetInformation({ ...convertedQuery }, Number(projectId), species)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: number, species: Species): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
   const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 

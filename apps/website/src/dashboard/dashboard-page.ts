@@ -166,7 +166,7 @@ export default class DashboardPage extends Vue {
 
   override async created (): Promise<void> {
     const projectId = this.store.selectedProject?.id
-    if (!projectId) return
+    if (projectId === undefined) return
 
     const [generated, profile] = await Promise.all([
       dashboardService.getDashboardGeneratedData(projectId),

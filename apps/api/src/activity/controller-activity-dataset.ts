@@ -30,10 +30,10 @@ export const activityDatasetController: Controller<ActivityDatasetResponse, Acti
   }
 
   // Response
-  return await getActivityOverviewData({ ...convertedQuery })
+  return await getActivityOverviewData({ ...convertedQuery }, Number(projectId))
 }
 
-const getActivityOverviewData = async (filter: FilterDataset): Promise<ActivityDatasetResponse> => {
+const getActivityOverviewData = async (filter: FilterDataset, projectId: number): Promise<ActivityDatasetResponse> => {
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const detectionsBySites = groupBy(totalSummaries, 'stream_id')
 
@@ -42,8 +42,6 @@ const getActivityOverviewData = async (filter: FilterDataset): Promise<ActivityD
   const overviewByTime = await getOverviewDataByTime(totalSummaries)
   const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries)
 
-    return filter.siteIds.indexOf(site.siteId) !== 1
-  })
   return {
     sites,
     overviewBySite,

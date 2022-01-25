@@ -10,13 +10,13 @@ export const projectSpeciesAllController: Controller<ProjectSpeciesAllResponse, 
   assertParamsExist({ projectId })
 
   // Query
-  const response: ProjectSpeciesAllResponse = await getProjectSpeciesAll()
+  const response: ProjectSpeciesAllResponse = await getProjectSpeciesAll(Number(projectId))
 
   // Response
   return response
 }
 
-export async function getProjectSpeciesAll (): Promise<ProjectSpeciesAllResponse> {
+export async function getProjectSpeciesAll (projectId: number): Promise<ProjectSpeciesAllResponse> {
   return {
     species: rawSpecies.map(({ speciesId, speciesSlug, scientificName, commonName, taxon }) =>
       ({ speciesId, speciesSlug, scientificName, commonName, taxon }))

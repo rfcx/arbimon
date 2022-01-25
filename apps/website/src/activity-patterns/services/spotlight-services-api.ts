@@ -20,9 +20,9 @@ export class SpotlightService {
 
     const store = useStore()
     const projectId = store.selectedProject?.id
-    if (!projectId) return undefined
+    if (projectId === undefined) return undefined
 
-    const url = `${this.baseUrl}${projectSpeciesOneGeneratedUrl({ projectId, speciesSlug })}`
+    const url = `${this.baseUrl}${projectSpeciesOneGeneratedUrl({ projectId: projectId.toString(), speciesSlug })}`
     const data = await apiClient.getOrUndefined<ProjectSpeciesOneResponse>(url)
     return {
       speciesInformation: data?.speciesInformation,
@@ -36,9 +36,9 @@ export class SpotlightService {
   async getSpeciesAll (): Promise<SpeciesLight[] | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
-    if (!projectId) return undefined
+    if (projectId === undefined) return undefined
 
-    const url = `${this.baseUrl}${projectSpeciesAllGeneratedUrl({ projectId })}`
+    const url = `${this.baseUrl}${projectSpeciesAllGeneratedUrl({ projectId: projectId.toString() })}`
     const resp = await apiClient.getOrUndefined<ProjectSpeciesAllResponse>(url)
     return resp?.species
   }
@@ -46,7 +46,7 @@ export class SpotlightService {
   async getSpotlightDataset (rawFilter: DatasetParameters, speciesId: number): Promise<SpotlightDatasetResponse | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
-    if (!projectId) return undefined
+    if (projectId === undefined) return undefined
 
     const filter = {
       speciesId,
@@ -56,7 +56,7 @@ export class SpotlightService {
       taxons: rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
     }
     const query = Object.entries(filter).map(([key, value]) => `${key}=${value.toString()}`).join('&')
-    const url = `${this.baseUrl}${spotlightDatasetUrl({ projectId })}?${query}`
+    const url = `${this.baseUrl}${spotlightDatasetUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<SpotlightDatasetResponse>(url)
 
     return resp
