@@ -32,8 +32,8 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   const convertedQuery = {
     startDateUtcInclusive,
     endDateUtcInclusive,
-    siteIds: siteIds.map(Number) ?? [],
-    taxons: taxons ?? []
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : [],
+    taxons: Array.isArray(taxons) ? taxons : []
   }
 
   return await getSpotlightDatasetInformation({ ...convertedQuery }, Number(projectId), species)

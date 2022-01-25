@@ -6,8 +6,8 @@ export interface FilterPropertyEquals {
 }
 
 export interface FilterDatasetQuery {
-  siteIds: string[]
   startDate: string
   endDate: string
-  taxons: string[]
+  siteIds: string[] | string // empty arrays get serialized as ''
+  taxons: string[] | string // empty arrays get serialized as ''
 }

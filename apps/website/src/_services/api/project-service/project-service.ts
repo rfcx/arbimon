@@ -10,7 +10,7 @@ export class ProjectService {
     return await apiClient.getOrUndefined<ProjectsResponse>(`${this.baseUrl}${projectsRoute}`)
   }
 
-  async getSites (projectId: string): Promise<Site[] | undefined> {
-    return await apiClient.getOrUndefined<SitesResponse>(`${this.baseUrl}${sitesUrl({ projectId })}`)
+  async getSites (projectId: number): Promise<Site[] | undefined> {
+    return await apiClient.getOrUndefined<SitesResponse>(`${this.baseUrl}${sitesUrl({ projectId: projectId.toString() })}`)
   }
 }

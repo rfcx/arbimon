@@ -29,7 +29,7 @@
         >
           <router-link
             class="self-center hover:(text-subtle)"
-            :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
+            :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.speciesSlug } }"
           >
             <img
               class="min-h-14 h-14 min-w-14 w-14 object-cover mr-2"
