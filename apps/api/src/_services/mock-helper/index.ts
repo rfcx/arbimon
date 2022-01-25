@@ -5,7 +5,7 @@ import { dayjs } from '../dayjs-initialized'
 export interface FilterDataset {
   startDateUtcInclusive: string
   endDateUtcInclusive: string
-  siteIds: string[]
+  siteIds: number[]
   taxons: string[]
 }
 
@@ -18,7 +18,7 @@ export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[]
   return detections.filter(r =>
     r.date >= startDateUtcInclusive &&
     r.date < endDateUtcExclusive &&
-    (siteIds.length === 0 || siteIds.includes(r.stream_id)) &&
+    (siteIds.length === 0 || siteIds.includes(r.site_id)) &&
     (taxons.length === 0 || taxons.includes(r.taxon)) &&
     (speciesIds.length === 0 || speciesIds.includes(r.species_id))
   )

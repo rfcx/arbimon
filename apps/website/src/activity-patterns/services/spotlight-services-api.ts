@@ -52,7 +52,7 @@ export class SpotlightService {
       speciesId,
       startDate: rawFilter.startDate.toISOString(),
       endDate: rawFilter.endDate.toISOString(),
-      siteIds: rawFilter.sites.map(({ siteId }) => siteId),
+      siteIds: rawFilter.sites.map(({ id }) => id),
       taxons: rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
     }
     const query = Object.entries(filter).map(([key, value]) => `${key}=${value.toString()}`).join('&')

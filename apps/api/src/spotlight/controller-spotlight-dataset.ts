@@ -32,7 +32,7 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   const convertedQuery = {
     startDateUtcInclusive,
     endDateUtcInclusive,
-    siteIds: siteIds ?? [],
+    siteIds: siteIds.map(Number) ?? [],
     taxons: taxons ?? []
   }
 

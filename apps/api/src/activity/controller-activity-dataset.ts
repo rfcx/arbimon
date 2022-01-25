@@ -25,7 +25,7 @@ export const activityDatasetController: Controller<ActivityDatasetResponse, Acti
   const convertedQuery: FilterDataset = {
     startDateUtcInclusive: startDate,
     endDateUtcInclusive: endDate,
-    siteIds: siteIds ?? [],
+    siteIds: siteIds.map(Number) ?? [],
     taxons: taxons ?? []
   }
 
@@ -36,10 +36,12 @@ export const activityDatasetController: Controller<ActivityDatasetResponse, Acti
 const getActivityOverviewData = async (filter: FilterDataset): Promise<ActivityDatasetResponse> => {
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const detectionsBySites = groupBy(totalSummaries, 'stream_id')
+
+  const sites = rawSites.filter(site => filter.siteIds.includes(site.id))
   const overviewBySite = await getOverviewDataBySite(detectionsBySites)
   const overviewByTime = await getOverviewDataByTime(totalSummaries)
   const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries)
-  const sites = rawSites.filter(site => {
+
     return filter.siteIds.indexOf(site.siteId) !== 1
   })
   return {
