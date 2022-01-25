@@ -27,8 +27,8 @@ export interface RouteRegistration<Response = any, Params = any, Querystring = a
   route: Route
   controller: Controller<Response, Params, Querystring>
   schema?: Schema
-  preValidation?: PreValidation
-  preHandler?: PreHandler
+  preValidation?: PreValidation[]
+  preHandler?: PreHandler[]
 }
 
 export interface RouteRegistrationOptions {
@@ -36,8 +36,8 @@ export interface RouteRegistrationOptions {
   url: Route
   handler: Controller<any, any, any>
   schema?: Schema
-  preValidation?: PreValidation
-  preHandler?: PreHandler
+  preValidation?: PreValidation[]
+  preHandler?: PreHandler[]
 }
 
 // Export convenient aliases
