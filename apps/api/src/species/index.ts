@@ -17,9 +17,29 @@ export const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
 export const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
 
 export const routesSpecies: RouteRegistration[] = [
-  [GET, speciesOneRoute, speciesOneController],
-  [GET, speciesAllRoute, speciesAllController],
-  [GET, projectSpeciesOneRoute, projectSpeciesOneController],
-  [GET, projectSpeciesAllRoute, projectSpeciesAllController],
-  [GET, speciesPredictionOccupancyRoute, speciesPredictionOccupancyController]
+  {
+    method: GET,
+    route: speciesOneRoute,
+    controller: speciesOneController
+  },
+  {
+    method: GET,
+    route: speciesAllRoute,
+    controller: speciesAllController
+  },
+  {
+    method: GET,
+    route: projectSpeciesOneRoute,
+    controller: projectSpeciesOneController
+  },
+  {
+    method: GET,
+    route: projectSpeciesAllRoute,
+    controller: projectSpeciesAllController
+  },
+  {
+    method: GET,
+    route: speciesPredictionOccupancyRoute,
+    controller: speciesPredictionOccupancyController
+  }
 ]
