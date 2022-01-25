@@ -6,12 +6,13 @@ export type ProjectsResponse = Project[]
 
 // Models
 export interface Project {
-  id: string
+  id: number
+  idCore: string
+  idArbimon: number
+  slug: string
   name: string
-  isPublic: boolean
-  externalId: number
-  geoBounds: [
-    { lon: number, lat: number },
-    { lon: number, lat: number }
-  ]
+  latitudeNorth: number
+  latitudeSouth: number
+  longitudeEast: number
+  longitudeWest: number
 }
