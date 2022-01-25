@@ -2,6 +2,8 @@ import { mapValues } from 'lodash-es'
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { defaultDisallowNull } from '../helpers'
+
 const TABLE_NAME = 'location_sites' // Do not import constants! Migrations are immutable
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -23,7 +25,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       latitude: { type: DataTypes.FLOAT },
       longitude: { type: DataTypes.FLOAT },
       altitude: { type: DataTypes.FLOAT }
-    }, col => ({ allowNull: false, ...col })) // TODO: Extract this (can't work out the right type!)
+    }, defaultDisallowNull)
   )
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

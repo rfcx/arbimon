@@ -12,7 +12,10 @@ const pathToMigrations = '../migrations'
 export const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
   (await import(`file:///${(path ?? '').replace(/\\/g, '/')}`))
 
-  export const getSequelize = (verbose = false): Sequelize => {
+export const defaultDisallowNull = <T> (attr: T): T & { allowNull: boolean } =>
+  ({ allowNull: false, ...attr })
+
+export const getSequelize = (verbose = false): Sequelize => {
   // Setup sequelize (ORM)
   const sequelizeOptions: Options = {
     host: env.BIO_DB_HOSTNAME,
