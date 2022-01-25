@@ -39,8 +39,16 @@ const routesRegistrations = [
 
 routesRegistrations
   .flat()
-  .forEach(({ method, route: url, controller: handler, preHandler }) => {
+  .forEach(({ method, route: url, controller: handler, schema, preValidation, preHandler }) => {
     const routeOpts: RouteRegistrationOptions = { method, url, handler }
+
+    if (schema !== undefined) {
+      routeOpts.schema = schema
+    }
+
+    if (preValidation !== undefined) {
+      routeOpts.preValidation = preValidation
+    }
 
     if (preHandler !== undefined) {
       routeOpts.preHandler = preHandler
