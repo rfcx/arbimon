@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize'
 
 import { TABLE_PROJECTS } from '@rfcx-bio/common/dao'
 
-import { defaultDisallowNull, getSequelize } from '../helpers'
+import { getSequelize } from '../connections'
 
 const sequelize = getSequelize()
 

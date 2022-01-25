@@ -1,6 +1,6 @@
 import { QueryTypes } from 'sequelize'
 
-import { getSequelize } from './helpers'
+import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
 
