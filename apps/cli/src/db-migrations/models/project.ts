@@ -19,15 +19,15 @@ export const ProjectDao = defineWithDefaults<Project>(
       autoIncrement: true
     },
     // External
-    idCore: { type: DataTypes.STRING(12) }, // ???
-    idArbimon: { type: DataTypes.INTEGER }, // ???
+    idCore: DataTypes.STRING(12), // ???
+    idArbimon: DataTypes.INTEGER, // ???
     // Facts
-    slug: { type: DataTypes.STRING(255) }, // puerto-rico-island-wide
-    name: { type: DataTypes.STRING(255) }, // Puerto Rico Island-Wide
-    latitudeNorth: { type: DataTypes.FLOAT }, // 18.51375
-    latitudeSouth: { type: DataTypes.FLOAT }, // 17.93168
-    longitudeEast: { type: DataTypes.FLOAT }, // -65.24505
-    longitudeWest: { type: DataTypes.FLOAT } // -67.94469784
+    slug: DataTypes.STRING(255), // puerto-rico-island-wide
+    name: DataTypes.STRING(255), // Puerto Rico Island-Wide
+    latitudeNorth: DataTypes.FLOAT, // 18.51375
+    latitudeSouth: DataTypes.FLOAT, // 17.93168
+    longitudeEast: DataTypes.FLOAT, // -65.24505
+    longitudeWest: DataTypes.FLOAT // -67.94469784
   },
   {
     tableName: TABLE_PROJECTS
