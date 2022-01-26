@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --build tsconfig.build.json",
+    "build": "ttsc --build tsconfig.build.json",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
@@ -13,11 +13,9 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "migrate": "pnpm clean && pnpm serve lib/db-migrations",
-    "serve": "pnpm build && pnpm -r pack-cli && pnpm use-packed && node --experimental-specifier-resolution=node",
+    "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test": "vitest --run --passWithNoTests",
-    "test-coverage": "vitest --run --coverage --passWithNoTests",
-    "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
-    "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"
+    "test-coverage": "vitest --run --coverage --passWithNoTests"
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:^0.0.1",
