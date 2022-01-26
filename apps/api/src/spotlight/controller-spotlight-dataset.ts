@@ -44,7 +44,7 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
 
 async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species, hasPermission: boolean): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
-  const isLocationRedacted = hasPermission ? [] : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const isLocationRedacted = hasPermission ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)

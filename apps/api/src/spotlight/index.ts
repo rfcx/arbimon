@@ -1,3 +1,5 @@
+import { verifyProjectUser } from '_services/decorators'
+
 import { spotlightDatasetRoute } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
 import { GET, RouteRegistration } from '../_services/api-helper/types'
@@ -7,6 +9,9 @@ export const routesSpotlight: RouteRegistration[] = [
   {
     method: GET,
     route: spotlightDatasetRoute,
-    controller: spotlightDatasetController
+    controller: spotlightDatasetController,
+    preHandler: [
+      verifyProjectUser
+    ]
   }
 ]
