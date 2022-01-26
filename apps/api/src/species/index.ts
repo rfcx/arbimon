@@ -7,6 +7,7 @@ import { speciesOneRoute } from '@rfcx-bio/common/api-bio/species/species-one'
 import { speciesPredictionOccupancyRoute } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 
 import { GET, RouteRegistration } from '../_services/api-helper/types'
+import { verifyProjectUser } from '../_services/decorators'
 import { projectSpeciesAllController } from './controller-project-species-all'
 import { projectSpeciesOneController } from './controller-project-species-one'
 import { speciesAllController } from './controller-species-all'
@@ -30,7 +31,10 @@ export const routesSpecies: RouteRegistration[] = [
   {
     method: GET,
     route: projectSpeciesOneRoute,
-    controller: projectSpeciesOneController
+    controller: projectSpeciesOneController,
+    preHandler: [
+      verifyProjectUser
+    ]
   },
   {
     method: GET,
@@ -40,6 +44,9 @@ export const routesSpecies: RouteRegistration[] = [
   {
     method: GET,
     route: speciesPredictionOccupancyRoute,
-    controller: speciesPredictionOccupancyController
+    controller: speciesPredictionOccupancyController,
+    preHandler: [
+      verifyProjectUser
+    ]
   }
 ]

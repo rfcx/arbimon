@@ -14,5 +14,8 @@ export const ApiMissingParam = (paramName: string): FastifyError =>
 export const ApiUnautorized = (): FastifyError =>
   new FastifyError('Unauthorized', 401)
 
+export const ApiPermissionDenied = (): FastifyError =>
+  new FastifyError('Permission denied', 403)
+
 export const ApiNotFoundError = (): FastifyError =>
   new FastifyError('Data not found', 404)
