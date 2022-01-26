@@ -1,3 +1,4 @@
+import { ApiPermissionDenied } from '_services/errors'
 import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
@@ -14,6 +15,9 @@ export const speciesPredictionOccupancyController: Controller<FastifyReply, Spec
 
   const { filenameWithoutExtension } = req.params
   assertParamsExist({ filenameWithoutExtension })
+
+  const noPermission = req.requestContext.get('projectPermission') === undefined
+  if (noPermission) throw ApiPermissionDenied()
 
   // Query
   const resolvedFilename = resolve(mockPredictionsFolderPath, filenameWithoutExtension)
