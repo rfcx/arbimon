@@ -1,6 +1,6 @@
 import { ConnectionOptions } from 'mysql2/promise'
 
-import { env } from '../../_services/env'
+import { env } from '~/env'
 
 export const ARBIMON_CONFIG: ConnectionOptions = {
   user: env.ARBIMON_DB_USER,
