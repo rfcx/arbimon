@@ -6,10 +6,9 @@ import { CoreProjectWithPermissionLite } from '@rfcx-bio/common/api-bio/common/p
 
 import { getUserProjects } from '../rfcx-core-api/rfcx-core-api'
 
-type FastifyRequestParamsWithProjectId = FastifyRequest & { params: { projectId: string } }
-
-export async function verifyProjectUser (req: FastifyRequestParamsWithProjectId, res: FastifyReply): Promise<void> {
+export async function verifyProjectUser (req: FastifyRequest, res: FastifyReply): Promise<void> {
   const token = req.headers.authorization
+  // @ts-expect-error
   const bioProjectId = req.params.projectId
 
   // TODO: Update it to be real project list query from db
