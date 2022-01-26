@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
 import fastifyCors from 'fastify-cors'
+import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
@@ -25,8 +26,11 @@ await app.register(fastifyStatic, { root: resolve('./public') })
 await app.register(fastifyAuth0Verify, {
   domain: config.domain
 })
-
-app.decorateRequest('projectPermission', undefined)
+await app.register(fastifyRequestContextPlugin, {
+  defaultStoreValues: {
+    projectPermission: undefined
+  }
+})
 
 // Register routes (old version)
 const routePlugins = [
