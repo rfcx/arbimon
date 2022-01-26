@@ -28,6 +28,9 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   const species = rawSpecies.find(s => s.speciesId === speciesId)
   if (!species) throw ApiNotFoundError()
 
+  // @ts-expect-error
+  const hasPermission = req.projectPermission !== undefined
+
   // Query
   const convertedQuery = {
     startDateUtcInclusive,
@@ -36,12 +39,12 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
     taxons: taxons ?? []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species)
+  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species, hasPermission)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species, hasPermission: boolean): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
-  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const isLocationRedacted = hasPermission ? [] : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)

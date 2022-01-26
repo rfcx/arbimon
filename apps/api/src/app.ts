@@ -6,6 +6,7 @@ import { resolve } from 'path'
 
 import { RouteRegistrationOptions } from './_services/api-helper/types'
 import { config } from './_services/auth-client/env'
+import { verifyProjectUser } from './_services/decorators'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
@@ -25,6 +26,9 @@ await app.register(fastifyStatic, { root: resolve('./public') })
 await app.register(fastifyAuth0Verify, {
   domain: config.domain
 })
+
+app.decorateRequest('projectPermission', undefined)
+app.addHook('preHandler', verifyProjectUser)
 
 // Register routes (old version)
 const routePlugins = [

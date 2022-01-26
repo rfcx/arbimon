@@ -3,7 +3,7 @@ import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/proje
 import { Controller } from '../_services/api-helper/types'
 import { env } from '../_services/env'
 
-const FAKE_PUERTO_RICO_PROJECT: Project = {
+export const FAKE_PUERTO_RICO_PROJECT: Project = {
   id: env.PUERTO_RICO_PROJECT_SLUG,
   idOnCore: env.PUERTO_RICO_PROJECT_CORE_ID,
   name: 'Puerto Rico Island-Wide',
