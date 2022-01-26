@@ -2,7 +2,7 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { Species } from '@rfcx-bio/common/api-bio/species/common'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
-import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
@@ -14,7 +14,7 @@ import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '..
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
-export const spotlightDatasetController: Controller<SpotlightDatasetResponse, spotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
+export const spotlightDatasetController: Controller<SpotlightDatasetResponse, SpotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
@@ -28,8 +28,7 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   const species = rawSpecies.find(s => s.speciesId === speciesId)
   if (!species) throw ApiNotFoundError()
 
-  // @ts-expect-error
-  const hasPermission = req.projectPermission !== undefined
+  const hasPermission = req.requestContext.get('projectPermission') !== undefined
 
   // Query
   const convertedQuery = {
