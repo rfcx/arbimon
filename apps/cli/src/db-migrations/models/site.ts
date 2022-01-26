@@ -19,15 +19,15 @@ export const SiteDao = defineWithDefaults<Site>(
       autoIncrement: true
     },
     // External
-    idCore: { type: DataTypes.STRING(12) }, // MoLQA8aNulGb
-    idArbimon: { type: DataTypes.INTEGER }, // 8412
+    idCore: DataTypes.STRING(12), // MoLQA8aNulGb
+    idArbimon: DataTypes.INTEGER, // 8412
     // Dimensions
-    locationProjectId: { type: DataTypes.INTEGER }, // 1
+    locationProjectId: DataTypes.INTEGER, // 1
     // Facts
-    name: { type: DataTypes.STRING(255) }, // 'CU26'
-    latitude: { type: DataTypes.FLOAT }, // 18.31307
-    longitude: { type: DataTypes.FLOAT }, // -65.24878
-    altitude: { type: DataTypes.FLOAT } // 30.85246588
+    name: DataTypes.STRING(255), // 'CU26'
+    latitude: DataTypes.FLOAT, // 18.31307
+    longitude: DataTypes.FLOAT, // -65.24878
+    altitude: DataTypes.FLOAT // 30.85246588
   },
   {
     tableName: TABLE_SITES
