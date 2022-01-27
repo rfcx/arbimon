@@ -7,7 +7,7 @@ export type ProjectsResponse = Project[]
 // Models
 export interface Project {
   id: string
-  idOnCore: string
+  idCore: string
   name: string
   isPublic: boolean
   externalId: number
