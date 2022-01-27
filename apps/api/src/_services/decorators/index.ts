@@ -12,7 +12,7 @@ export async function verifyProjectUserPermission (req: FastifyRequest, res: Fas
   const bioProjectId = req.params.projectId
 
   // TODO: Update it to be real project list query from db
-  const coreProjectId = [FAKE_PUERTO_RICO_PROJECT].find(p => p.id === bioProjectId)?.idOnCore
+  const coreProjectId = [FAKE_PUERTO_RICO_PROJECT].find(p => p.id === bioProjectId)?.idCore
 
   if (token === undefined || bioProjectId === undefined || coreProjectId === undefined) return
 
