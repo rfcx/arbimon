@@ -196,7 +196,8 @@ importers:
       '@iconify-json/fa': ^1.0.1
       '@iconify-json/fa-regular': ^1.0.2
       '@iconify-json/fa-solid': ^1.0.2
-      '@rfcx-bio/common': workspace:*
+      '@rfcx-bio/common': workspace:^0.0.1
+      '@rfcx-bio/utils': workspace:^0.0.1
       '@types/color-string': ^1.5.0
       '@types/d3': ^7.1.0
       '@types/howler': ^2.2.4
@@ -231,6 +232,7 @@ importers:
     dependencies:
       '@auth0/auth0-spa-js': 1.19.2
       '@rfcx-bio/common': link:../../packages/common
+      '@rfcx-bio/utils': link:../../packages/utils
       '@vueuse/components': 6.7.6_vue@3.2.21
       '@vueuse/core': 6.7.6_vue@3.2.21
       axios: 0.24.0
