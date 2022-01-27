@@ -3,9 +3,9 @@ import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/proje
 import { Controller } from '../_services/api-helper/types'
 import { env } from '../_services/env'
 
-const FAKE_PUERTO_RICO_PROJECT: Project = {
+export const FAKE_PUERTO_RICO_PROJECT: Project = {
   id: 1,
-  idCore: 'zy5jbxx4cs9f',
+  idCore: env.PUERTO_RICO_PROJECT_CORE_ID,
   idArbimon: 0,
   slug: env.PUERTO_RICO_PROJECT_SLUG,
   name: 'Puerto Rico Island-Wide',

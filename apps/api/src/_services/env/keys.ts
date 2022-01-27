@@ -9,7 +9,9 @@
 
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
-  'PUERTO_RICO_PROJECT_SLUG'
+  'CORE_API_BASE_URL',
+  'PUERTO_RICO_PROJECT_SLUG',
+  'PUERTO_RICO_PROJECT_CORE_ID'
 ]
 
 // CAN be undefined or empty string
