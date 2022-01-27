@@ -1,7 +1,16 @@
-import { FastifyPluginAsync } from 'fastify'
+import { richnessDatasetRoute } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
-export const routesRichness: FastifyPluginAsync = async (app, options): Promise<void> => {
-  app.get('/richness', async (req, res) => {
-    return { 'todo:': 'build this' }
-  })
-}
+import { GET, RouteRegistration } from '../_services/api-helper/types'
+import { verifyProjectUserPermission } from '../_services/decorators'
+import { RichnessHandler } from './controller-richness-dataset'
+
+export const routesRichness: RouteRegistration[] = [
+  {
+    method: GET,
+    url: richnessDatasetRoute,
+    handler: RichnessHandler,
+    preHandler: [
+      verifyProjectUserPermission
+    ]
+  }
+]

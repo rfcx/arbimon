@@ -2,18 +2,18 @@ import { dashboardGeneratedRoute } from '@rfcx-bio/common/api-bio/dashboard/dash
 import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 
 import { GET, RouteRegistration } from '../_services/api-helper/types'
-import { dashboardGeneratedController } from './controller-dashboard-generated'
-import { dashboardProfileController } from './controller-dashboard-profile'
+import { dashboardGeneratedHandler } from './controller-dashboard-generated'
+import { dashboardProfileHandler } from './controller-dashboard-profile'
 
 export const routesDashboard: RouteRegistration[] = [
   {
     method: GET,
-    route: dashboardGeneratedRoute,
-    controller: dashboardGeneratedController
+    url: dashboardGeneratedRoute,
+    handler: dashboardGeneratedHandler
   },
   {
     method: GET,
-    route: dashboardProfileRoute,
-    controller: dashboardProfileController
+    url: dashboardProfileRoute,
+    handler: dashboardProfileHandler
   }
 ]
