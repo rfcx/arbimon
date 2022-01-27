@@ -19,18 +19,20 @@ export const projectSpeciesOneController: Controller<ProjectSpeciesOneResponse, 
   if (!projectId) assertParamsExist({ projectId })
   if (!speciesSlug) assertParamsExist({ speciesSlug })
 
+  const hasPermission = req.requestContext.get('projectPermission') !== undefined
+
   // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug)
+  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, hasPermission)
 
   // Respond
   return response
 }
 
-export async function getProjectSpeciesOne (projectId: string, speciesSlug: string): Promise<ProjectSpeciesOneResponse> {
+export async function getProjectSpeciesOne (projectId: string, speciesSlug: string, hasPermission: boolean): Promise<ProjectSpeciesOneResponse> {
   const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
   if (!species) throw ApiNotFoundError()
 
-  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const isLocationRedacted = hasPermission ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))

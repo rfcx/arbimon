@@ -6,6 +6,14 @@ import { controllerProjectsAll } from './controller-projects-all'
 import { controllerSitesAll } from './controller-sites-all'
 
 export const routesProject: RouteRegistration[] = [
-  [GET, projectsRoute, controllerProjectsAll],
-  [GET, sitesRoute, controllerSitesAll]
+  {
+    method: GET,
+    route: projectsRoute,
+    controller: controllerProjectsAll
+  },
+  {
+    method: GET,
+    route: sitesRoute,
+    controller: controllerSitesAll
+  }
 ]

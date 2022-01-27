@@ -6,6 +6,14 @@ import { dashboardGeneratedController } from './controller-dashboard-generated'
 import { dashboardProfileController } from './controller-dashboard-profile'
 
 export const routesDashboard: RouteRegistration[] = [
-  [GET, dashboardGeneratedRoute, dashboardGeneratedController],
-  [GET, dashboardProfileRoute, dashboardProfileController]
+  {
+    method: GET,
+    route: dashboardGeneratedRoute,
+    controller: dashboardGeneratedController
+  },
+  {
+    method: GET,
+    route: dashboardProfileRoute,
+    controller: dashboardProfileController
+  }
 ]
