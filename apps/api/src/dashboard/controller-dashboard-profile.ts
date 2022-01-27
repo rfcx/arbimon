@@ -2,10 +2,10 @@ import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helper/types'
 import { assertParamsExist } from '../_services/validation'
 
-export const dashboardProfileController: Controller<DashboardProfileResponse, DashboardProfileParams> = async (req) => {
+export const dashboardProfileHandler: Handler<DashboardProfileResponse, DashboardProfileParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })

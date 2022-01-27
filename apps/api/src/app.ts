@@ -5,7 +5,7 @@ import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
-import { RouteRegistrationOptions } from './_services/api-helper/types'
+import { RouteRegistration } from './_services/api-helper/types'
 import { config } from './_services/auth-client/env'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
@@ -34,8 +34,7 @@ await app.register(fastifyRequestContextPlugin, {
 
 // Register routes (old version)
 const routePlugins = [
-  routesStatus,
-  routesRichness
+  routesStatus
 ]
 await Promise.all(routePlugins.map(plugin => app.register(plugin)))
 
@@ -44,14 +43,15 @@ const routesRegistrations = [
   routesDashboard,
   routesProject,
   routesSpecies,
+  routesRichness,
   routesSpotlight,
   routesActivity
 ]
 
 routesRegistrations
   .flat()
-  .forEach(({ method, route: url, controller: handler, schema, preValidation, preHandler }) => {
-    const routeOpts: RouteRegistrationOptions = { method, url, handler }
+  .forEach(({ method, url, handler, schema, preValidation, preHandler }) => {
+    const routeOpts: RouteRegistration = { method, url, handler }
 
     if (schema !== undefined) {
       routeOpts.schema = schema

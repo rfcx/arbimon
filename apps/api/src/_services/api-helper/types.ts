@@ -3,8 +3,8 @@ import { ReplyDefault } from 'fastify/types/utils'
 
 import { NoExtraProperties } from '@rfcx-bio/utils/utility-types'
 
-// For declaring controllers
-type FastifyController<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = RouteHandlerMethod<
+// For declaring handlers
+type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = RouteHandlerMethod<
   RawServerDefault,
   RawRequestDefaultExpression<RawServerDefault>,
   RawReplyDefaultExpression<RawServerDefault>,
@@ -12,9 +12,9 @@ type FastifyController<Response = ReplyDefault, Params = RequestParamsDefault, Q
   unknown
 >
 
-type FastifyControllerRequest<Response, Params, Querystring> = Parameters<FastifyController<Response, Params, Querystring>>[0]
+type FastifyHandlerRequest<Response, Params, Querystring> = Parameters<FastifyHandler<Response, Params, Querystring>>[0]
 
-export type Controller<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = (req: FastifyControllerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProperties<Response>>
+export type Handler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = (req: FastifyHandlerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProperties<Response>>
 
 // For exporting routes
 type Route = string
@@ -24,17 +24,8 @@ type PreHandler = preHandlerHookHandler
 
 export interface RouteRegistration<Response = any, Params = any, Querystring = any> {
   method: HTTPMethods
-  route: Route
-  controller: Controller<Response, Params, Querystring>
-  schema?: Schema
-  preValidation?: PreValidation[]
-  preHandler?: PreHandler[]
-}
-
-export interface RouteRegistrationOptions {
-  method: HTTPMethods
   url: Route
-  handler: Controller<any, any, any>
+  handler: Handler<Response, Params, Querystring>
   schema?: Schema
   preValidation?: PreValidation[]
   preHandler?: PreHandler[]

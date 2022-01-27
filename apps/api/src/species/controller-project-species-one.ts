@@ -4,7 +4,7 @@ import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneRespon
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helper/types'
 import { ApiNotFoundError } from '../_services/errors'
 import { assertParamsExist } from '../_services/validation'
 import { mockPredictionsFolderPath } from './index'
@@ -13,7 +13,7 @@ import { mockPredictionsFolderPath } from './index'
 // const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
 // const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
 
-export const projectSpeciesOneController: Controller<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
+export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
   const { projectId, speciesSlug } = req.params
   if (!projectId) assertParamsExist({ projectId })
