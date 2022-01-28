@@ -15,5 +15,6 @@ export const richnessByExportUrl = (params: RichnessByExportParams): string =>
 
 // Response
 export interface RichnessByExportResponse {
+  isLocationRedacted: boolean
   speciesByExport: MockHourlyDetectionSummary[]
 }

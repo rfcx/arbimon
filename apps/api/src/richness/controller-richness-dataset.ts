@@ -5,10 +5,12 @@ import { groupBy, keyBy, mapValues } from 'lodash-es'
 import { MapSiteData, TimeBucket } from '@rfcx-bio/common/api-bio/richness/common'
 import { RichnessDatasetParams, RichnessDatasetQuery, RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Handler } from '../_services/api-helper/types'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -30,17 +32,19 @@ export const RichnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
   }
 
   const detections = filterMocksByParameters(rawDetections, { ...convertedQuery })
+  const noPermission = !isProjectMember(req)
 
-  return await getRichnessDatasetInformation(detections)
+  return await getRichnessDatasetInformation(detections, noPermission)
 }
 
-async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[]): Promise<RichnessDatasetResponse> {
+async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[], noPermission: boolean): Promise<RichnessDatasetResponse> {
   return {
+    isLocationRedacted: noPermission,
     detectionCount: detections.length,
     speciesByTaxon: getSpeciesByTaxon(detections),
     speciesBySite: getSpeciesBySite(detections),
     speciesByTime: getSpeciesByTime(detections),
-    speciesPresence: getSpeciesPresence(detections)
+    speciesPresence: getSpeciesPresence(detections, noPermission)
   }
 }
 
@@ -74,11 +78,11 @@ const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<Time
   }
 }
 
-const getSpeciesPresence = (detections: MockHourlyDetectionSummary[]): { [speciesId: string]: SpeciesLight } => {
+const getSpeciesPresence = (detections: MockHourlyDetectionSummary[], noPermission: boolean): { [speciesId: string]: SpeciesLight } => {
   const speciesIds = new Set(detections.map(d => d.species_id))
 
   const species = rawSpecies
-    .filter(s => speciesIds.has(s.speciesId))
+    .filter(({ speciesId, extinctionRisk }) => noPermission ? speciesIds.has(speciesId) && !EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk) : speciesIds.has(speciesId))
     .map(({ speciesId, speciesSlug, scientificName, commonName, taxon }) =>
       ({ speciesId, speciesSlug, scientificName, commonName, taxon }))
     return keyBy(species, 'speciesId')

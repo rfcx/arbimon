@@ -16,6 +16,7 @@ export const richnessDatasetUrl = (params: RichnessDatasetParams): string =>
 
 // Response
 export interface RichnessDatasetResponse {
+  isLocationRedacted: boolean
   detectionCount: number
   speciesByTaxon: { [taxon: string]: number }
   speciesBySite: MapSiteData[]
