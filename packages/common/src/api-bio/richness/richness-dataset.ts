@@ -12,7 +12,7 @@ export type RichnessDatasetQuery = FilterDatasetQuery
 export const richnessDatasetRoute = '/projects/:projectId/richness'
 
 export const richnessDatasetUrl = (params: RichnessDatasetParams): string =>
-  `/projects/${params.projectId}/spotlight`
+  `/projects/${params.projectId}/richness`
 
 // Response
 export interface RichnessDatasetResponse {

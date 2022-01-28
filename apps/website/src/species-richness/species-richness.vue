@@ -9,11 +9,11 @@
   />
   <species-richness-by-class
     dom-id="species-by-class"
-    :chart-data="chartData"
+    :chart-data="speciesByClassDatasets"
     class="mt-5"
   />
   <species-richness-by-location
-    :datasets="mapDatasets"
+    :datasets="speciesByLocationDatasets"
     class="mt-5"
   />
   <species-richness-by-time
@@ -22,7 +22,7 @@
     class="mt-5"
   />
   <species-richness-detected-species
-    :table-data="tableData"
+    :table-data="detectedSpecies"
     :colors="colors"
     class="mt-5"
   />
