@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { FAKE_PUERTO_RICO_PROJECT } from 'projects/controller-projects-all'
 
-import { CoreProjectWithPermissionLite } from '@rfcx-bio/common/api-bio/common/permission'
+import { CoreProjectPermissions } from '@rfcx-bio/common/api-bio/common/permission'
 
 import { getUserProjects } from '../rfcx-core-api/rfcx-core-api'
 
@@ -24,7 +24,7 @@ export async function verifyProjectUserPermission (req: FastifyRequest, res: Fas
   }
 
   try {
-    const resp = await axios.request<CoreProjectWithPermissionLite[]>(endpoint)
+    const resp = await axios.request<CoreProjectPermissions[]>(endpoint)
     const project = resp.data.find(p => p.id === coreProjectId)
     req.requestContext.set('projectPermission', project)
   } catch {
