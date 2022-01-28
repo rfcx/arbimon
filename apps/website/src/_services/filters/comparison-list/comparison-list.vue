@@ -30,8 +30,7 @@
           </div>
         </div>
         <div
-          class="flex items-center mt-2 px-4"
-          :class="{'mb-2': filter.otherFilters.length === 0}"
+          class="flex items-center my-2 px-4"
         >
           <div class="min-w-4">
             <icon-fas-clock />
