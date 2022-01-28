@@ -1,12 +1,10 @@
 import fastify from 'fastify'
-import fastifyAuth0Verify from 'fastify-auth0-verify'
 import fastifyCors from 'fastify-cors'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { RouteRegistration } from './_services/api-helper/types'
-import { config } from './_services/auth-client/env'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
@@ -23,9 +21,6 @@ export const app = fastify({
 // Register plugins
 await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
-await app.register(fastifyAuth0Verify, {
-  domain: config.domain
-})
 await app.register(fastifyRequestContextPlugin, {
   defaultStoreValues: {
     projectPermission: undefined
