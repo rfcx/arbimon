@@ -11,6 +11,7 @@ import { Handler } from '../_services/api-helper/types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { ApiNotFoundError } from '../_services/errors'
 import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -28,7 +29,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   const species = rawSpecies.find(s => s.speciesId === speciesId)
   if (!species) throw ApiNotFoundError()
 
-  const hasPermission = req.requestContext.get('projectPermission') !== undefined
+  const isLocationRedacted = isProjectMember(req) ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Query
   const convertedQuery = {
@@ -38,12 +39,11 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
     taxons: taxons ?? []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species, hasPermission)
+  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species, isLocationRedacted)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species, hasPermission: boolean): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species, isLocationRedacted: boolean): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
-  const isLocationRedacted = hasPermission ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
