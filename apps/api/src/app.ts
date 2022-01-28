@@ -8,7 +8,7 @@ import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
 import { routesProject } from './projects'
-// import { routesRichness } from './richness'
+import { routesRichness } from './richness'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
@@ -37,7 +37,7 @@ const routesRegistrations = [
   routesDashboard,
   routesProject,
   routesSpecies,
-  // routesRichness,
+  routesRichness,
   routesSpotlight,
   routesActivity
 ]
