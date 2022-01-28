@@ -11,7 +11,10 @@ export const routesRichness: RouteRegistration[] = [
   {
     method: GET,
     url: richnessDatasetRoute,
-    handler: RichnessDatasetHandler
+    handler: RichnessDatasetHandler,
+    preHandler: [
+      verifyProjectUserPermission
+    ]
   },
   {
     method: GET,
