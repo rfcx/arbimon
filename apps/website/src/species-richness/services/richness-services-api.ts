@@ -1,4 +1,6 @@
 import { RichnessDatasetResponse, richnessDatasetUrl } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { RichnessByExportResponse, richnessByExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
 import { apiClient } from '~/api'
 import { DatasetParameters } from '~/filters'
@@ -12,6 +14,26 @@ export class RichnessService {
     const projectId = store.selectedProject?.id
     if (!projectId) return undefined
 
+    const query = this.getFilterQuery(rawFilter)
+    const url = `${this.baseUrl}${richnessDatasetUrl({ projectId })}?${query}`
+    const resp = await apiClient.getOrUndefined<RichnessDatasetResponse>(url)
+
+    return resp
+  }
+
+  async getRichnessBuExport (rawFilter: DatasetParameters): Promise<MockHourlyDetectionSummary[] | undefined> {
+    const store = useStore()
+    const projectId = store.selectedProject?.id
+    if (!projectId) return undefined
+
+    const query = this.getFilterQuery(rawFilter)
+    const url = `${this.baseUrl}${richnessByExportUrl({ projectId })}?${query}`
+    const resp = await apiClient.getOrUndefined<RichnessByExportResponse>(url)
+
+    return resp?.speciesByExport
+  }
+
+  getFilterQuery (rawFilter: DatasetParameters): string {
     const filter = {
       startDate: rawFilter.startDate.toISOString(),
       endDate: rawFilter.endDate.toISOString(),
@@ -19,10 +41,6 @@ export class RichnessService {
       taxons: rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
     }
 
-    const query = Object.entries(filter).map(([key, value]) => `${key}=${value.toString()}`).join('&')
-    const url = `${this.baseUrl}${richnessDatasetUrl({ projectId })}?${query}`
-    const resp = await apiClient.getOrUndefined<RichnessDatasetResponse>(url)
-
-    return resp
+    return Object.entries(filter).map(([key, value]) => `${key}=${value.toString()}`).join('&')
   }
 }
