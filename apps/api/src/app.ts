@@ -4,12 +4,11 @@ import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
-import { RouteRegistration } from './_services/api-helper/types'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
 import { routesProject } from './projects'
-import { routesRichness } from './richness'
+// import { routesRichness } from './richness'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
@@ -38,33 +37,11 @@ const routesRegistrations = [
   routesDashboard,
   routesProject,
   routesSpecies,
-  routesRichness,
+  // routesRichness,
   routesSpotlight,
   routesActivity
 ]
 
 routesRegistrations
   .flat()
-  .forEach(({ method, url, handler, schema, preValidation, preHandler }) => {
-    const routeOpts: RouteRegistration = { method, url, handler }
-
-    if (schema !== undefined) {
-      routeOpts.schema = schema
-    }
-
-    if (preValidation !== undefined) {
-      /**
-       * Idea for this is move `app.authenticate` to each router which need authenticate token by Auth0
-       * Use `req.user` to use the information in Auth0
-       * More information here: https://github.com/nearform/fastify-auth0-verify
-       */
-      // routeOpts.preValidation = [app.authenticate]
-      routeOpts.preValidation = preValidation
-    }
-
-    if (preHandler !== undefined) {
-      routeOpts.preHandler = preHandler
-    }
-
-    return app.route(routeOpts)
-  })
+  .forEach(({ method, url, handler, schema, preValidation, preHandler }) => app.route({ method, url, handler, schema, preValidation, preHandler }))
