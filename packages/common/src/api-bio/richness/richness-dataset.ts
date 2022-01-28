@@ -1,4 +1,6 @@
 import { FilterDatasetQuery } from '../common/filter'
+import { SpeciesLight } from '../species/common'
+import { MapSiteData, TimeBucket } from './common'
 
 // Request
 export interface RichnessDatasetParams {
@@ -16,7 +18,7 @@ export const richnessDatasetUrl = (params: RichnessDatasetParams): string =>
 export interface RichnessDatasetResponse {
   detectionCount: number
   speciesByTaxon: { [taxon: string]: number }
-  // speciesBySite: MapSiteData[]
-  // speciesByTime: Record<TimeBucket, Record<number, number>>
-  // speciesPresence: { [speciesId: string]: SpeciesLight }
+  speciesBySite: MapSiteData[]
+  speciesByTime: Record<TimeBucket, Record<number, number>>
+  speciesPresence: { [speciesId: string]: SpeciesLight }
 }
