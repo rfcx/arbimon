@@ -35,4 +35,4 @@ const routesRegistrations = [
 
 routesRegistrations
   .flat()
-  .forEach(app.route)
+  .forEach(route => app.route({ ...route }))
