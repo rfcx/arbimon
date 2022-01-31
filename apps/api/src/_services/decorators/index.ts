@@ -1,14 +1,13 @@
-import axios, { AxiosRequestConfig } from 'axios'
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { FAKE_PUERTO_RICO_PROJECT } from 'projects/controller-projects-all'
+import { FAKE_PUERTO_RICO_PROJECT } from '../../projects/controller-projects-all'
+import { hasAccessToProject } from '../api-core/api-core'
+import { Middleware } from '../api-helper/types'
 
-import { CoreProjectWithPermissionLite } from '@rfcx-bio/common/api-bio/common/permission'
+interface ProjectRouteParams {
+  projectId: string
+}
 
-import { getUserProjects } from '../rfcx-core-api/rfcx-core-api'
-
-export async function verifyProjectUserPermission (req: FastifyRequest, res: FastifyReply): Promise<void> {
+export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
-  // @ts-expect-error
   const bioProjectId = req.params.projectId
 
   // TODO: Update it to be real project list query from db
@@ -16,18 +15,6 @@ export async function verifyProjectUserPermission (req: FastifyRequest, res: Fas
 
   if (token === undefined || bioProjectId === undefined || coreProjectId === undefined) return
 
-  const { method, url } = getUserProjects
-  const endpoint: AxiosRequestConfig = {
-    method,
-    url: `${url}?fields=id&fields=name&fields=permissions`,
-    headers: { authorization: token }
-  }
-
-  try {
-    const resp = await axios.request<CoreProjectWithPermissionLite[]>(endpoint)
-    const project = resp.data.find(p => p.id === coreProjectId)
-    req.requestContext.set('projectPermission', project)
-  } catch {
-    console.error('Failed to get user project permission with token:', token)
-  }
+  const hasAccess = await hasAccessToProject(coreProjectId, token)
+  if (hasAccess) { req.requestContext.set('projectPermission', hasAccess) }
 }

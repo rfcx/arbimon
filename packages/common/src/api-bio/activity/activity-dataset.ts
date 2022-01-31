@@ -12,6 +12,7 @@ export const activityDatasetGeneratedUrl = (params: ActivityDatasetParams): stri
 
 // Response
 export interface ActivityDatasetResponse {
+  isLocationRedacted: boolean
   overviewBySite: ActivityOverviewDataBySite
   overviewByTime: ActivityOverviewDataByTime
   overviewBySpecies: ActivityOverviewDataBySpecies[]

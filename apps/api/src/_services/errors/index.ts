@@ -11,7 +11,7 @@ export const ApiClientError = (queryName: string, queryValue: string | undefined
 export const ApiMissingParam = (paramName: string): FastifyError =>
   new FastifyError(`${paramName} is required`, 400)
 
-export const ApiUnautorized = (): FastifyError =>
+export const ApiUnauthorized = (): FastifyError =>
   new FastifyError('Unauthorized', 401)
 
 export const ApiPermissionDenied = (): FastifyError =>
