@@ -1,6 +1,6 @@
 # Biodiversity > CLI
 
-CLI scripts (ex: to export data from Arbimon)
+CLI scripts to be run locally or as CRON jobs
 
 ## Getting started
 
@@ -12,7 +12,7 @@ During local testing, some scripts automatically limit queries to reduce load on
 
 > Running in DEV mode
 
-To run these scripts in production mode, you must set a flag:
+To run these scripts in "production" mode, you must set a flag:
 
 ```
 pnpm serve lib/path/to/some/script.js -- --mode=production

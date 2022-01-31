@@ -18,7 +18,7 @@ Stop database container
 pnpm stop
 ```
 
-If you change the scripts in `init.d`, you must delete the volume to force them to execute again:
+If you change the scripts in `init.d`, you must delete the volume to force them to execute again (this will also delete all tables & data in your database):
 
 ```
 pnpm reset
