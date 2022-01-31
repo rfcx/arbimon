@@ -1,23 +1,41 @@
+import dayjs from 'dayjs'
 import { FastifyRequest } from 'fastify'
 
-import { RichnessByExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
-import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
-import { rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
+import { RichnessByExportReport, RichnessByExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { MockHourlyDetectionSummary, rawDetections } from '@rfcx-bio/common/mock-data'
+import { criticallyEndangeredSpeciesIds } from '@rfcx-bio/common/mock-data/critically-endangered-species'
 
 import { FilterDataset, filterMocksByParameters } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 
 export async function getRichnessDatasetInformation (req: FastifyRequest, query: FilterDataset): Promise<RichnessByExportResponse> {
-  const noPermission = !isProjectMember(req)
+  const isLocationRedacted = !isProjectMember(req)
   const detections = filterMocksByParameters(rawDetections, { ...query })
 
-  if (noPermission) {
-    const protectedSpeciesIds = rawSpecies.filter(({ extinctionRisk }) => EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk)).map(({ speciesId }) => speciesId)
+  if (isLocationRedacted) {
     return {
-      speciesByExport: detections.filter(({ species_id: speciesId }) => !protectedSpeciesIds.includes(speciesId)),
-      isLocationRedacted: noPermission
+      speciesByExport: mapRichnessReportData(detections.filter(({ species_id: speciesId }) => !criticallyEndangeredSpeciesIds.has(speciesId))),
+      isLocationRedacted
     }
   }
 
-  return { speciesByExport: detections, isLocationRedacted: noPermission }
+  return { speciesByExport: mapRichnessReportData(detections), isLocationRedacted }
+}
+
+function mapRichnessReportData (detections: MockHourlyDetectionSummary[]): RichnessByExportReport[] {
+  return detections.map(({ species_id: speciesId, scientific_name: species, name: site, lat: latitude, lon: longitude, alt: altitude, date, hour }) => {
+    const newDate = dayjs.utc(date)
+    return {
+      species,
+      site,
+      latitude,
+      longitude,
+      altitude,
+      day: newDate.format('D'),
+      month: newDate.format('M'),
+      year: newDate.format('YYYY'),
+      date: newDate.format('M/DD/YYYY'),
+      hour
+    }
+  })
 }
