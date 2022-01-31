@@ -1,20 +1,20 @@
 export class Unauthorized extends Error {
-  constructor (message: string = '') {
-    super(message)
+  constructor () {
+    super('unauthorized')
     this.name = 'UnauthorizedError'
   }
 }
 
 export class Forbidden extends Error {
-  constructor (message: string = '') {
-    super(message)
+  constructor () {
+    super('forbidden')
     this.name = 'ForbiddenError'
   }
 }
 
 export class NotFound extends Error {
-  constructor (message: string = '') {
-    super(message)
+  constructor () {
+    super('notfound')
     this.name = 'NotFoundError'
   }
 }
