@@ -8,7 +8,7 @@ interface ProjectRouteParams {
 
 export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
-  const bioProjectId = req.params.projectId
+  const bioProjectId = Number(req.params.projectId)
 
   // TODO: Update it to be real project list query from db
   const coreProjectId = [FAKE_PUERTO_RICO_PROJECT].find(p => p.id === bioProjectId)?.idCore

@@ -12,10 +12,10 @@ export class RichnessService {
   async getRichnessDataset (rawFilter: DatasetParameters): Promise<RichnessDatasetResponse | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
-    if (!projectId) return undefined
+    if (projectId === undefined) return undefined
 
     const query = this.getFilterQuery(rawFilter)
-    const url = `${this.baseUrl}${richnessDatasetUrl({ projectId })}?${query}`
+    const url = `${this.baseUrl}${richnessDatasetUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<RichnessDatasetResponse>(url)
 
     return resp
@@ -24,10 +24,10 @@ export class RichnessService {
   async getRichnessBuExport (rawFilter: DatasetParameters): Promise<MockHourlyDetectionSummary[] | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
-    if (!projectId) return undefined
+    if (projectId === undefined) return undefined
 
     const query = this.getFilterQuery(rawFilter)
-    const url = `${this.baseUrl}${richnessByExportUrl({ projectId })}?${query}`
+    const url = `${this.baseUrl}${richnessByExportUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<RichnessByExportResponse>(url)
 
     return resp?.speciesByExport
@@ -37,7 +37,7 @@ export class RichnessService {
     const filter = {
       startDate: rawFilter.startDate.toISOString(),
       endDate: rawFilter.endDate.toISOString(),
-      siteIds: rawFilter.sites.map(({ siteId }) => siteId),
+      siteIds: rawFilter.sites.map(({ id }) => id),
       taxons: rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
     }
 
