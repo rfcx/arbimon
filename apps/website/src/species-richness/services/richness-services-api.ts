@@ -21,7 +21,7 @@ export class RichnessService {
     return resp
   }
 
-  async getRichnessBuExport (rawFilter: DatasetParameters): Promise<MockHourlyDetectionSummary[] | undefined> {
+  async getRichnessByExport (rawFilter: DatasetParameters): Promise<MockHourlyDetectionSummary[] | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (!projectId) return undefined
