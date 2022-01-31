@@ -39,5 +39,5 @@ pnpm migrate -- --verbose
 Completely reset the database (deletes all tables & wipes migration log):
 
 ```
-pnpm serve lib/db-migrations/reset
+pnpm serve lib/db/reset
 ```
