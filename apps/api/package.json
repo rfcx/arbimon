@@ -29,6 +29,8 @@
     "dayjs": "^1.10.7",
     "fastify": "^3.23.1",
     "fastify-cors": "^6.0.2",
+    "fastify-plugin": "^3.0.0",
+    "fastify-request-context": "^2.2.0",
     "fastify-static": "^4.5.0",
     "lodash-es": "^4.17.21"
   },

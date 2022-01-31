@@ -1,19 +1,24 @@
+import { ApiPermissionDenied } from '_services/errors'
 import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
 import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 
-export const speciesPredictionOccupancyController: Controller<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
+export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
 
   const { filenameWithoutExtension } = req.params
   assertParamsExist({ filenameWithoutExtension })
+
+  const isLocationRedacted = !isProjectMember(req)
+  if (isLocationRedacted) throw ApiPermissionDenied()
 
   // Query
   const resolvedFilename = resolve(mockPredictionsFolderPath, filenameWithoutExtension)

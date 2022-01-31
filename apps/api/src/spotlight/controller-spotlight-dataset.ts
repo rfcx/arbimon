@@ -2,19 +2,20 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { Species } from '@rfcx-bio/common/api-bio/species/common'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
-import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { ApiNotFoundError } from '../_services/errors'
 import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
-export const spotlightDatasetController: Controller<SpotlightDatasetResponse, spotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
+export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, SpotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
@@ -28,6 +29,8 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
   const species = rawSpecies.find(s => s.speciesId === speciesId)
   if (!species) throw ApiNotFoundError()
 
+  const isLocationRedacted = isProjectMember(req) ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+
   // Query
   const convertedQuery = {
     startDateUtcInclusive,
@@ -36,12 +39,11 @@ export const spotlightDatasetController: Controller<SpotlightDatasetResponse, sp
     taxons: taxons ?? []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species)
+  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species, isLocationRedacted)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species, isLocationRedacted: boolean): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
-  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
