@@ -25,7 +25,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
     this.loading = true
     const datasets = (await Promise.all(
       this.filters.map(async (filter) => {
-        return await richnessService.getRichnessBuExport(filterToDataset(filter))
+        return await richnessService.getRichnessByExport(filterToDataset(filter))
       })
     )).filter(isDefined)
     await downloadCsvReports(this.filters, datasets, DEFAULT_PREFIX)
