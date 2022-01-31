@@ -1,11 +1,13 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-
 import { FAKE_PUERTO_RICO_PROJECT } from '../../projects/controller-projects-all'
 import { hasAccessToProject } from '../api-core/api-core'
+import { Middleware } from '../api-helper/types'
 
-export async function verifyProjectUserPermission (req: FastifyRequest, res: FastifyReply): Promise<void> {
+interface ProjectRouteParams {
+  projectId: string
+}
+
+export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
-  // @ts-expect-error
   const bioProjectId = req.params.projectId
 
   // TODO: Update it to be real project list query from db
