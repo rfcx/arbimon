@@ -5,7 +5,7 @@ import { Project } from '../../api-bio/common/projects'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_PROJECTS } from '../table-names'
 
-export const ProjectDao: ModelFactory<Project> = sequelize => defineWithDefaults(
+export const ProjectModel: ModelFactory<Project> = sequelize => defineWithDefaults(
   sequelize,
   'Project',
   {

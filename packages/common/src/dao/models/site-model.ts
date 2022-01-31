@@ -5,7 +5,7 @@ import { Site } from '../../api-bio/common/sites'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_SITES } from '../table-names'
 
-export const SiteDao: ModelFactory<Site> = sequelize => defineWithDefaults(
+export const SiteModel: ModelFactory<Site> = sequelize => defineWithDefaults(
   sequelize,
   'Site',
   {

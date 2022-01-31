@@ -2,7 +2,7 @@ import { Optional, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { Project } from '@rfcx-bio/common/api-bio/common/projects'
-import { ProjectDao } from '@rfcx-bio/common/dao/models/project'
+import { ProjectModel } from '@rfcx-bio/common/dao/models/project-model'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const projects: Array<Optional<Project, 'id'>> = [{
@@ -16,5 +16,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     longitudeWest: -67.94469784
   }]
 
-  await ProjectDao(params.context.sequelize).bulkCreate(projects)
+  await ProjectModel(params.context.sequelize).bulkCreate(projects)
 }
