@@ -1,5 +1,6 @@
-import fastify, { HTTPMethods } from 'fastify'
+import fastify from 'fastify'
 import fastifyCors from 'fastify-cors'
+import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
@@ -19,23 +20,19 @@ export const app = fastify({
 // Register plugins
 await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
-
-// Register routes (old version)
-const routePlugins = [
-  routesStatus,
-  routesRichness
-]
-await Promise.all(routePlugins.map(plugin => app.register(plugin)))
+await app.register(fastifyRequestContextPlugin)
 
 // Register routes
 const routesRegistrations = [
   routesDashboard,
   routesProject,
   routesSpecies,
+  routesRichness,
   routesSpotlight,
-  routesActivity
+  routesActivity,
+  routesStatus
 ]
 
 routesRegistrations
   .flat()
-  .forEach(([method, route, controller]) => app[method.toLowerCase() as Lowercase<HTTPMethods>](route, controller))
+  .forEach(route => app.route({ ...route }))

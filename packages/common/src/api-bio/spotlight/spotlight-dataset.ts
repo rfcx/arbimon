@@ -2,7 +2,7 @@ import { FilterDatasetQuery } from '../common/filter'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from './common'
 
 // Request
-export interface spotlightDatasetParams {
+export interface SpotlightDatasetParams {
   projectId: string
 }
 
@@ -10,7 +10,7 @@ export type SpotlightDatasetQuery = FilterDatasetQuery & { speciesId: string }
 
 export const spotlightDatasetRoute = '/projects/:projectId/spotlight'
 
-export const spotlightDatasetUrl = (params: spotlightDatasetParams): string =>
+export const spotlightDatasetUrl = (params: SpotlightDatasetParams): string =>
   `/projects/${params.projectId}/spotlight`
 
 // Response
