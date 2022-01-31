@@ -282,9 +282,11 @@ importers:
       '@rfcx-bio/utils': workspace:*
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
+      sequelize: ^7.0.0-alpha.5
     dependencies:
       dayjs: 1.10.7
       lodash-es: 4.17.21
+      sequelize: 7.0.0-alpha.5
     devDependencies:
       '@rfcx-bio/utils': link:../utils
 
@@ -9703,6 +9705,55 @@ packages:
   /sequelize-pool/7.1.0:
     resolution: {integrity: sha512-G9c0qlIWQSK29pR/5U2JF5dDQeqqHRragoyahj/Nx4KOOQ3CPPfzxnfqFPCSB7x5UgjOgnZ61nSxz+fjDpRlJg==}
     engines: {node: '>= 10.0.0'}
+    dev: false
+
+  /sequelize/7.0.0-alpha.5:
+    resolution: {integrity: sha512-CvbX/FCZgt4RMXsF5GoaBpSP/X60MODTO3POvJmLLpu3NLTq6bNuFBpJQMGIEKBZuRj10dj+M72REDQ+XXkzug==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      ibm_db: '*'
+      mariadb: '*'
+      mysql2: '*'
+      pg: '*'
+      pg-hstore: '*'
+      snowflake-sdk: '*'
+      sqlite3: '*'
+      tedious: '*'
+    peerDependenciesMeta:
+      ibm_db:
+        optional: true
+      mariadb:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      pg-hstore:
+        optional: true
+      snowflake-sdk:
+        optional: true
+      sqlite3:
+        optional: true
+      tedious:
+        optional: true
+    dependencies:
+      '@types/debug': 4.1.7
+      debug: 4.3.3
+      dottie: 2.0.2
+      inflection: 1.13.1
+      lodash: 4.17.21
+      moment: 2.29.1
+      moment-timezone: 0.5.34
+      pg-connection-string: 2.5.0
+      retry-as-promised: 5.0.0
+      semver: 7.3.5
+      sequelize-pool: 7.1.0
+      toposort-class: 1.0.1
+      uuid: 8.3.2
+      validator: 13.7.0
+      wkx: 0.5.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /sequelize/7.0.0-alpha.5_47c1b715f3fef52e0004adf8e81847ff:

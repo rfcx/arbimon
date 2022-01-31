@@ -1,9 +1,8 @@
 import { DataTypes, ModelCtor, Sequelize } from 'sequelize'
 
-import { Project } from '@rfcx-bio/common/api-bio/common/projects'
-import { TABLE_PROJECTS } from '@rfcx-bio/common/dao'
-
+import { Project } from '../../api-bio/common/projects'
 import { defineWithDefaults, ModelForInterfacePk } from '../helpers'
+import { TABLE_PROJECTS } from '../table-names'
 
 export const ProjectDao = (sequelize: Sequelize): ModelCtor<ModelForInterfacePk<Project>> => defineWithDefaults<Project>(
   sequelize,

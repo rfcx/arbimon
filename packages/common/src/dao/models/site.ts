@@ -1,9 +1,8 @@
 import { DataTypes, ModelCtor, Sequelize } from 'sequelize'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
-import { TABLE_SITES } from '@rfcx-bio/common/dao'
-
+import { Site } from '../../api-bio/common/sites'
 import { defineWithDefaults, ModelForInterfacePk } from '../helpers'
+import { TABLE_SITES } from '../table-names'
 
 export const SiteDao = (sequelize: Sequelize): ModelCtor<ModelForInterfacePk<Site>> => defineWithDefaults<Site>(
   sequelize,

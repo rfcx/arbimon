@@ -2,8 +2,7 @@ import { Optional, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { Project } from '@rfcx-bio/common/api-bio/common/projects'
-
-import { ProjectDao } from '../models/project'
+import { ProjectDao } from '@rfcx-bio/common/dao/models/project'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const projects: Array<Optional<Project, 'id'>> = [{
