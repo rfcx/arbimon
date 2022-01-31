@@ -1,7 +1,3 @@
-import { FastifyPluginAsync } from 'fastify'
+import { RouteRegistration } from '../_services/api-helpers/types'
 
-export const routesStatus: FastifyPluginAsync = async (app, options): Promise<void> => {
-  app.get('/', async (req, res) => {
-    return { hello: 'world' }
-  })
-}
+export const routesStatus: RouteRegistration[] = []

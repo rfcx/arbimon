@@ -1,6 +1,6 @@
 import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
 
-import { Handler } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { env } from '../_services/env'
 
 export const FAKE_PUERTO_RICO_PROJECT: Project = {

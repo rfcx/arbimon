@@ -1,16 +1,16 @@
 import { richnessDatasetRoute } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { richnessByExportRoute } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
-import { GET, RouteRegistration } from '../_services/api-helper/types'
+import { GET, RouteRegistration } from '../_services/api-helpers/types'
 import { verifyProjectUserPermission } from '../_services/decorators'
-import { RichnessDatasetHandler } from './controller-richness-dataset'
-import { RichnessExportHandler } from './controller-richness-export'
+import { richnessDatasetHandler } from './controller-richness-dataset'
+import { richnessExportHandler } from './controller-richness-export'
 
 export const routesRichness: RouteRegistration[] = [
   {
     method: GET,
     url: richnessDatasetRoute,
-    handler: RichnessDatasetHandler,
+    handler: richnessDatasetHandler,
     preHandler: [
       verifyProjectUserPermission
     ]
@@ -18,7 +18,7 @@ export const routesRichness: RouteRegistration[] = [
   {
     method: GET,
     url: richnessByExportRoute,
-    handler: RichnessExportHandler,
+    handler: richnessExportHandler,
     preHandler: [
       verifyProjectUserPermission
     ]

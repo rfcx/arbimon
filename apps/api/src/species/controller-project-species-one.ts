@@ -4,7 +4,7 @@ import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneRespon
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Handler } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { ApiNotFoundError } from '../_services/errors'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertParamsExist } from '../_services/validation'
@@ -20,10 +20,10 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   if (!projectId) assertParamsExist({ projectId })
   if (!speciesSlug) assertParamsExist({ speciesSlug })
 
-  const noPermission = !isProjectMember(req)
+  const isLocationRedacted = !isProjectMember(req)
 
   // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, noPermission)
+  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, isLocationRedacted)
 
   // Respond
   return response
@@ -33,7 +33,7 @@ export async function getProjectSpeciesOne (projectId: string, speciesSlug: stri
   const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
   if (!species) throw ApiNotFoundError()
 
-  const isLocationRedacted = noPermission ? EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk) : false
+  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk) && noPermission
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))
