@@ -20,11 +20,7 @@ export const app = fastify({
 // Register plugins
 await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
-await app.register(fastifyRequestContextPlugin, {
-  defaultStoreValues: {
-    projectPermission: undefined
-  }
-})
+await app.register(fastifyRequestContextPlugin)
 
 // Register routes (old version)
 const routePlugins = [
