@@ -18,17 +18,26 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         autoIncrement: true
       },
+      // Logging
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
       // External
-      idCore: {
+      id_core: {
         type: DataTypes.STRING(12),
         allowNull: false
       },
-      idArbimon: {
+      id_arbimon: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
       // Dimensions
-      locationProjectId: {
+      location_project_id: {
         type: DataTypes.INTEGER,
         allowNull: false
       },

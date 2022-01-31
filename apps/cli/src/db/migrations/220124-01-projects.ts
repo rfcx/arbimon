@@ -18,6 +18,15 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         autoIncrement: true
       },
+      // Logging
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
       // External
       id_core: {
         type: DataTypes.STRING(12),
