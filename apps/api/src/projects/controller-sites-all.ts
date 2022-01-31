@@ -1,7 +1,7 @@
 import { SitesParams, SitesResponse } from '@rfcx-bio/common/api-bio/common/sites'
 import { rawSites, simulateDelay } from '@rfcx-bio/common/mock-data'
 
-import { Handler } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 
 export const sitesAllHandler: Handler<SitesResponse, SitesParams> = async () => {
   return await simulateDelay(rawSites.sort((a, b) => a.name.localeCompare(b.name)))

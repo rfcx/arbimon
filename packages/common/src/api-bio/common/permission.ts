@@ -1,11 +1,3 @@
-export type ProjectPermission = 'C' | 'R' | 'U' | 'D'
-
-export interface CoreProjectPermissions {
-  id: string
-  name: string
-  permissions: ProjectPermission[]
-}
-
 export interface ProjectCreator {
   firstname: string
   lastname: string
