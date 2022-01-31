@@ -63,3 +63,22 @@ export const getUmzug = (sequelize: Sequelize, verbose = false): Umzug<QueryInte
     storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: 'migrations' }),
     logger: verbose ? console : undefined
   })
+
+export const getUmzugSeeder = (sequelize: Sequelize, verbose = false, seedFilename?: string): Umzug<QueryInterface> =>
+  new Umzug({
+    migrations: {
+      glob: [
+        seedFilename ? `./${seedFilename}.{js,mjs,ts}` : './!(*.d).{js,mjs,ts}',
+        { cwd: resolve(currentDir, pathToSrc, pathToSeeders) }
+      ],
+      resolve: params => ({
+        name: params.name,
+        path: params.path,
+        up: async upParams => await importMigration(params.path).then(async m => await m.up(upParams)),
+        down: async downParams => await importMigration(params.path).then(async m => await m.down?.(downParams))
+      })
+    },
+    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: 'seeders' }),
+    context: sequelize.getQueryInterface(),
+    logger: verbose ? console : undefined
+  })
