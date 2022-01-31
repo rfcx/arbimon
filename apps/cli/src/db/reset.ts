@@ -14,9 +14,12 @@ const main = async (): Promise<void> => {
     await sequelize.query(`DROP TABLE IF EXISTS public.${table.tablename} CASCADE`)
   }
 
-  // Drop sequelize_meta
-  console.info('Drop if exists: sequelize.sequelize_meta')
-  await sequelize.query('DROP TABLE IF EXISTS sequelize.sequelize_meta CASCADE')
+  // Drop "sequelize_meta"
+  console.info('Drop if exists: sequelize.migrations')
+  await sequelize.query('DROP TABLE IF EXISTS sequelize.migrations CASCADE')
+
+  console.info('Drop if exists: sequelize.seeders')
+  await sequelize.query('DROP TABLE IF EXISTS sequelize.seeders CASCADE')
 
   await sequelize.close()
 }
