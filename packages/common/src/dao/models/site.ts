@@ -1,10 +1,11 @@
-import { DataTypes, ModelCtor, Sequelize } from 'sequelize'
+import { ModelFactory } from 'dao/helpers/types'
+import { DataTypes } from 'sequelize'
 
 import { Site } from '../../api-bio/common/sites'
-import { defineWithDefaults, ModelForInterfacePk } from '../helpers'
+import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_SITES } from '../table-names'
 
-export const SiteDao = (sequelize: Sequelize): ModelCtor<ModelForInterfacePk<Site>> => defineWithDefaults<Site>(
+export const SiteDao: ModelFactory<Site> = sequelize => defineWithDefaults(
   sequelize,
   'Site',
   {
