@@ -1,4 +1,3 @@
-import { MockHourlyDetectionSummary } from '../../mock-data'
 import { FilterDatasetQuery } from '../common/filter'
 
 // Request
@@ -16,5 +15,17 @@ export const richnessByExportUrl = (params: RichnessByExportParams): string =>
 // Response
 export interface RichnessByExportResponse {
   isLocationRedacted: boolean
-  speciesByExport: MockHourlyDetectionSummary[]
+  speciesByExport: RichnessByExportReport[]
+}
+
+export interface RichnessByExportReport {
+  species: string
+  site: string
+  latitude: number
+  longitude: number
+  day: string
+  month: string
+  year: string
+  date: string
+  hour: number
 }
