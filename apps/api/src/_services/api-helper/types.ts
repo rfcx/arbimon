@@ -1,4 +1,4 @@
-import { FastifyReply, FastifySchema, HTTPMethods, preHandlerHookHandler, preValidationHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
+import { FastifyReply, FastifySchema, HTTPMethods, preValidationHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
 import { ReplyDefault } from 'fastify/types/utils'
 
 import { NoExtraProperties } from '@rfcx-bio/utils/utility-types'
@@ -14,13 +14,16 @@ type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Quer
 
 type FastifyHandlerRequest<Response, Params, Querystring> = Parameters<FastifyHandler<Response, Params, Querystring>>[0]
 
-export type Handler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = (req: FastifyHandlerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProperties<Response>>
+export type Handler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> =
+  (req: FastifyHandlerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProperties<Response>>
+
+export type Middleware<Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> =
+  (req: FastifyHandlerRequest<void, Params, Querystring>, res: FastifyReply) => Promise<void>
 
 // For exporting routes
 type Route = string
 type Schema = FastifySchema
 type PreValidation = preValidationHookHandler
-type PreHandler = preHandlerHookHandler
 
 export interface RouteRegistration<Response = any, Params = any, Querystring = any> {
   method: HTTPMethods
@@ -28,7 +31,7 @@ export interface RouteRegistration<Response = any, Params = any, Querystring = a
   handler: Handler<Response, Params, Querystring>
   schema?: Schema
   preValidation?: PreValidation[]
-  preHandler?: PreHandler[]
+  preHandler?: Array<Middleware<Params, Querystring>>
 }
 
 // Export convenient aliases
