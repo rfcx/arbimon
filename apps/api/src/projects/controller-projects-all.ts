@@ -1,6 +1,6 @@
 import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helper/types'
 import { env } from '../_services/env'
 
 export const FAKE_PUERTO_RICO_PROJECT: Project = {
@@ -15,7 +15,7 @@ export const FAKE_PUERTO_RICO_PROJECT: Project = {
   longitudeWest: -67.94469784
 }
 
-export const controllerProjectsAll: Controller<ProjectsResponse> = async (req) => {
+export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
   // TODO: Remove auth logic here to be better strategy
   const isAuthorized = req.headers.authorization?.replace('Bearer ', '')
   if (!isAuthorized) {

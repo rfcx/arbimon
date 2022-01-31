@@ -1,7 +1,7 @@
-import { CoreProjectWithPermissionLite } from '@rfcx-bio/common/api-bio/common/permission'
+import 'fastify-request-context'
 
 declare module 'fastify-request-context' {
   interface RequestContextData {
-    projectPermission: CoreProjectWithPermissionLite | undefined
+    projectPermission: boolean
   }
 }

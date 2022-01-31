@@ -4,11 +4,12 @@ import { resolve } from 'path'
 
 import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helper/types'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 
-export const speciesPredictionOccupancyController: Controller<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
+export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
@@ -16,7 +17,7 @@ export const speciesPredictionOccupancyController: Controller<FastifyReply, Spec
   const { filenameWithoutExtension } = req.params
   assertParamsExist({ filenameWithoutExtension })
 
-  const noPermission = req.requestContext.get('projectPermission') === undefined
+  const noPermission = !isProjectMember(req)
   if (noPermission) throw ApiPermissionDenied()
 
   // Query

@@ -4,8 +4,9 @@ import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneRespon
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helper/types'
 import { ApiNotFoundError } from '../_services/errors'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertParamsExist } from '../_services/validation'
 import { mockPredictionsFolderPath } from './index'
 
@@ -13,26 +14,26 @@ import { mockPredictionsFolderPath } from './index'
 // const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
 // const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
 
-export const projectSpeciesOneController: Controller<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
+export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
   const { projectId, speciesSlug } = req.params
   if (!projectId) assertParamsExist({ projectId })
   if (!speciesSlug) assertParamsExist({ speciesSlug })
 
-  const hasPermission = req.requestContext.get('projectPermission') !== undefined
+  const noPermission = !isProjectMember(req)
 
   // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, hasPermission)
+  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, noPermission)
 
   // Respond
   return response
 }
 
-export async function getProjectSpeciesOne (projectId: string, speciesSlug: string, hasPermission: boolean): Promise<ProjectSpeciesOneResponse> {
+export async function getProjectSpeciesOne (projectId: string, speciesSlug: string, noPermission: boolean): Promise<ProjectSpeciesOneResponse> {
   const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
   if (!species) throw ApiNotFoundError()
 
-  const isLocationRedacted = hasPermission ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const isLocationRedacted = noPermission ? EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk) : false
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))
