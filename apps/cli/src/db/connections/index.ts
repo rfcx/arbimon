@@ -29,10 +29,10 @@ export const getSequelize = (verbose = false): Sequelize => {
         : false
     },
     define: {
-      underscored: true,
       charset: 'utf8',
       collate: 'utf8_general_ci',
-      timestamps: true
+      timestamps: true,
+      underscored: true
     },
     logging: verbose
   }

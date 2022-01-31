@@ -1,4 +1,3 @@
-import { snakeCase } from 'lodash-es'
 import { DataType, Model, ModelAttributeColumnOptions, ModelAttributes, ModelCtor, ModelOptions, Sequelize } from 'sequelize'
 
 import { ValueOf } from '@rfcx-bio/utils/utility-types'
@@ -29,18 +28,11 @@ export const attributesWithDefaults = <
           key,
           {
             allowNull: false, // disallow nulls by default
-            field: snakeCase(key.toString()), // use snake_case for columns
             ...valueAsColumn
           }
         ]
       })
   ) as SequelizeModelAttributes
-
-export const optionsWithDefaults = (options?: ModelOptions): ModelOptions =>
-  ({
-    underscored: true, // use snake_case for auto columns
-    ...options
-  })
 
 export const defineWithDefaults = <
   DomainModel extends AutoPk,
@@ -50,5 +42,5 @@ export const defineWithDefaults = <
   sequelize.define<SequelizeModel>(
     modelName,
     attributesWithDefaults(attributes),
-    optionsWithDefaults(options)
+    options
   )
