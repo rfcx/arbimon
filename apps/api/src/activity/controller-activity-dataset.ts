@@ -31,23 +31,23 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
     taxons: taxons ?? []
   }
 
-  const noPermission = !isProjectMember(req)
+  const isLocationRedacted = !isProjectMember(req)
 
   // Response
-  return await getActivityOverviewData({ ...convertedQuery }, noPermission)
+  return await getActivityOverviewData({ ...convertedQuery }, isLocationRedacted)
 }
 
-const getActivityOverviewData = async (filter: FilterDataset, noPermission: boolean): Promise<ActivityDatasetResponse> => {
+const getActivityOverviewData = async (filter: FilterDataset, isLocationRedacted: boolean): Promise<ActivityDatasetResponse> => {
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const detectionsBySites = groupBy(totalSummaries, 'stream_id')
   const overviewBySite = await getOverviewDataBySite(detectionsBySites)
   const overviewByTime = await getOverviewDataByTime(totalSummaries)
-  const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries, noPermission)
+  const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries, isLocationRedacted)
   const sites = rawSites.filter(site => {
     return filter.siteIds.indexOf(site.siteId) !== 1
   })
   return {
-    isLocationRedacted: noPermission,
+    isLocationRedacted,
     sites,
     overviewBySite,
     overviewByTime,
@@ -75,9 +75,9 @@ const getOverviewDataBySite = async (detectionsBySites: DetectionGroupedBySite):
   return summariesBySites
 }
 
-const getOverviewDataBySpecies = async (totalSummaries: MockHourlyDetectionSummary[], noPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> => {
+const getOverviewDataBySpecies = async (totalSummaries: MockHourlyDetectionSummary[], isLocationRedacted: boolean): Promise<ActivityOverviewDataBySpecies[]> => {
     let detections = totalSummaries
-    if (noPermission) {
+    if (isLocationRedacted) {
       const protectedSpeciesIds = rawSpecies.filter(({ extinctionRisk }) => EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk)).map(({ speciesId }) => speciesId)
       detections = totalSummaries.filter(({ species_id: speciesId }) => !protectedSpeciesIds.includes(speciesId))
     }

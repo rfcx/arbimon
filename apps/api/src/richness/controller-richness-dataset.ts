@@ -32,19 +32,19 @@ export const RichnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
   }
 
   const detections = filterMocksByParameters(rawDetections, { ...convertedQuery })
-  const noPermission = !isProjectMember(req)
+  const isLocationRedacted = !isProjectMember(req)
 
-  return await getRichnessDatasetInformation(detections, noPermission)
+  return await getRichnessDatasetInformation(detections, isLocationRedacted)
 }
 
-async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[], noPermission: boolean): Promise<RichnessDatasetResponse> {
+async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[], isLocationRedacted: boolean): Promise<RichnessDatasetResponse> {
   return {
-    isLocationRedacted: noPermission,
+    isLocationRedacted,
     detectionCount: detections.length,
     speciesByTaxon: getSpeciesByTaxon(detections),
     speciesBySite: getSpeciesBySite(detections),
     speciesByTime: getSpeciesByTime(detections),
-    speciesPresence: getSpeciesPresence(detections, noPermission)
+    speciesPresence: getSpeciesPresence(detections, isLocationRedacted)
   }
 }
 
@@ -78,11 +78,11 @@ const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<Time
   }
 }
 
-const getSpeciesPresence = (detections: MockHourlyDetectionSummary[], noPermission: boolean): { [speciesId: string]: SpeciesLight } => {
+const getSpeciesPresence = (detections: MockHourlyDetectionSummary[], isLocationRedacted: boolean): { [speciesId: string]: SpeciesLight } => {
   const speciesIds = new Set(detections.map(d => d.species_id))
 
   const species = rawSpecies
-    .filter(({ speciesId, extinctionRisk }) => noPermission ? speciesIds.has(speciesId) && !EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk) : speciesIds.has(speciesId))
+    .filter(({ speciesId, extinctionRisk }) => isLocationRedacted ? speciesIds.has(speciesId) && !EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk) : speciesIds.has(speciesId))
     .map(({ speciesId, speciesSlug, scientificName, commonName, taxon }) =>
       ({ speciesId, speciesSlug, scientificName, commonName, taxon }))
     return keyBy(species, 'speciesId')

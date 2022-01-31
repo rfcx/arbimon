@@ -17,8 +17,8 @@ export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPre
   const { filenameWithoutExtension } = req.params
   assertParamsExist({ filenameWithoutExtension })
 
-  const noPermission = !isProjectMember(req)
-  if (noPermission) throw ApiPermissionDenied()
+  const isLocationRedacted = !isProjectMember(req)
+  if (isLocationRedacted) throw ApiPermissionDenied()
 
   // Query
   const resolvedFilename = resolve(mockPredictionsFolderPath, filenameWithoutExtension)
