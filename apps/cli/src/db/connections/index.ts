@@ -6,8 +6,10 @@ import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
 import { env } from '../../_services/env'
 
 // Paths & resolve
-const cwd = dirname(new URL(import.meta.url).pathname)
-const pathToMigrations = '../migrations'
+const currentDir = dirname(new URL(import.meta.url).pathname)
+const pathToSrc = '../../'
+const pathToMigrations = 'db/migrations'
+const pathToSeeders = 'db/seeders'
 
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
   (await import(`file:///${(path ?? '').replace(/\\/g, '/')}`))
@@ -32,8 +34,7 @@ export const getSequelize = (verbose = false): Sequelize => {
       collate: 'utf8_general_ci',
       timestamps: true
     },
-    logging: verbose,
-    schema: 'sequelize'
+    logging: verbose
   }
 
   return new Sequelize(
@@ -44,19 +45,21 @@ export const getSequelize = (verbose = false): Sequelize => {
   )
 }
 
-export const getUmzug = (sequelize: Sequelize, verbose = false): Umzug<QueryInterface> => {
-    return new Umzug({
-      migrations: {
-        glob: ['./!(*.d).{js,mjs,ts}', { cwd: resolve(cwd, pathToMigrations) }],
-        resolve: params => ({
-          name: params.name,
-          path: params.path,
-          up: async upParams => await importMigration(params.path).then(async m => await m.up(upParams)),
-          down: async downParams => await importMigration(params.path).then(async m => await m.down?.(downParams))
-        })
-      },
-      context: sequelize.getQueryInterface(),
-      storage: new SequelizeStorage({ sequelize }),
-      logger: verbose ? console : undefined
-    })
-}
+export const getUmzug = (sequelize: Sequelize, verbose = false): Umzug<QueryInterface> =>
+  new Umzug({
+    migrations: {
+      glob: [
+        './!(*.d).{js,mjs,ts}',
+        { cwd: resolve(currentDir, pathToSrc, pathToMigrations) }
+      ],
+      resolve: params => ({
+        name: params.name,
+        path: params.path,
+        up: async upParams => await importMigration(params.path).then(async m => await m.up(upParams)),
+        down: async downParams => await importMigration(params.path).then(async m => await m.down?.(downParams))
+      })
+    },
+    context: sequelize.getQueryInterface(),
+    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: 'migrations' }),
+    logger: verbose ? console : undefined
+  })
