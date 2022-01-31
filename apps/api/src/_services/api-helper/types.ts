@@ -21,16 +21,12 @@ export type Middleware<Params = RequestParamsDefault, Querystring = RequestQuery
   (req: FastifyHandlerRequest<void, Params, Querystring>, res: FastifyReply) => Promise<void>
 
 // For exporting routes
-type Route = string
-type Schema = FastifySchema
-type PreValidation = preValidationHookHandler
-
 export interface RouteRegistration<Response = any, Params = any, Querystring = any> {
   method: HTTPMethods
-  url: Route
+  url: string
   handler: Handler<Response, Params, Querystring>
-  schema?: Schema
-  preValidation?: PreValidation[]
+  schema?: FastifySchema
+  preValidation?: preValidationHookHandler[]
   preHandler?: Array<Middleware<Params, Querystring>>
 }
 
