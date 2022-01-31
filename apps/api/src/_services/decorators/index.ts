@@ -6,6 +6,8 @@ interface ProjectRouteParams {
   projectId: string
 }
 
+export const IS_PROJECT_MEMBER = 'isProjectMember'
+
 export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
   const bioProjectId = req.params.projectId
@@ -16,5 +18,5 @@ export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async
   if (token === undefined || bioProjectId === undefined || coreProjectId === undefined) return
 
   const hasAccess = await hasAccessToProject(coreProjectId, token)
-  if (hasAccess) { req.requestContext.set('projectPermission', hasAccess) }
+  if (hasAccess) { req.requestContext.set(IS_PROJECT_MEMBER, hasAccess) }
 }

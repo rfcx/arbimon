@@ -26,14 +26,14 @@ export const RichnessExportHandler: Handler<RichnessByExportResponse, RichnessBy
   }
 
   const detections = filterMocksByParameters(rawDetections, { ...convertedQuery })
-  const noPermission = !isProjectMember(req)
-  const speciesByExport = await getRichnessDatasetInformation(detections, noPermission)
+  const isLocationRedacted = !isProjectMember(req)
+  const speciesByExport = await getRichnessDatasetInformation(detections, isLocationRedacted)
 
-  return { speciesByExport, isLocationRedacted: noPermission }
+  return { speciesByExport, isLocationRedacted }
 }
 
-async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[], noPermission: boolean): Promise<MockHourlyDetectionSummary[]> {
-  if (noPermission) {
+async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[], isLocationRedacted: boolean): Promise<MockHourlyDetectionSummary[]> {
+  if (isLocationRedacted) {
     const protectedSpeciesIds = rawSpecies.filter(({ extinctionRisk }) => EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk)).map(({ speciesId }) => speciesId)
     return detections.filter(({ species_id: speciesId }) => !protectedSpeciesIds.includes(speciesId))
   }
