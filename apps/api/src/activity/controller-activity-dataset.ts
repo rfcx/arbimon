@@ -7,7 +7,7 @@ import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { Handler } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { FilterDataset, filterMocksByParameters } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'

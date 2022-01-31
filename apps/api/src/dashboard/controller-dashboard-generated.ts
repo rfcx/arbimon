@@ -7,7 +7,7 @@ import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, g
 import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { Handler } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { assertParamsExist } from '../_services/validation'
 
 export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
