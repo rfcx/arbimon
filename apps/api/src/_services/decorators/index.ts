@@ -1,6 +1,6 @@
 import { FAKE_PUERTO_RICO_PROJECT } from '../../projects/controller-projects-all'
-import { hasAccessToProject } from '../api-core/api-core'
 import { Middleware } from '../api-helper/types'
+import { hasAccessToProject } from '../security/project-access'
 
 interface ProjectRouteParams {
   projectId: string
