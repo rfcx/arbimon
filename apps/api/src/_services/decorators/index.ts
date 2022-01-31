@@ -1,5 +1,5 @@
 import { FAKE_PUERTO_RICO_PROJECT } from '../../projects/controller-projects-all'
-import { Middleware } from '../api-helper/types'
+import { Middleware } from '../api-helpers/types'
 import { hasAccessToProject } from '../security/project-access'
 
 interface ProjectRouteParams {
