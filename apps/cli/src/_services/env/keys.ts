@@ -9,8 +9,13 @@
  * - `apps/cli/src/_services/env/keys.ts` -- CONFIG & SECRETS
  */
 
+export type Protection = 'off' | 'warn'
+export const OFF: Protection = 'off'
+ 
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
+  'PROTECTION',
+
   'ARBIMON_DB_DBNAME',
   'ARBIMON_DB_HOSTNAME',
   'ARBIMON_DB_PASSWORD',
