@@ -1,7 +1,7 @@
 import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 
-import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
