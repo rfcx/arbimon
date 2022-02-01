@@ -3,7 +3,7 @@ import { resolve } from 'path'
 
 import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts'
 
-import { limitUnlessProduction } from '../../_services/modes'
+import { limitUnlessProtected } from '../../_services/env'
 import { getJsonOutputDirectory, getMockDataDirectory } from '../../_services/output'
 import { getScientificNamesFromMock } from './input-from-mock-detections'
 import { getMergedSpecies } from './output-mock'
@@ -13,7 +13,7 @@ const outputTsPath = resolve(getMockDataDirectory(), './raw-species.ts')
 const outputTsConstName = 'rawSpecies'
 
 const main = async (): Promise<void> => {
-  const scientificNames = limitUnlessProduction(getScientificNamesFromMock())
+  const scientificNames = limitUnlessProtected(getScientificNamesFromMock())
   const species = await getMergedSpecies(scientificNames)
 
   const outputJson = JSON.stringify(species, undefined, 2)
