@@ -1,12 +1,10 @@
-import { ModelFactory } from 'dao/helpers/types'
 import { DataTypes } from 'sequelize'
 
 import { TaxonClass } from '../../domain'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_TAXON_CLASSES } from '../table-names'
 
-export const TaxonClassModel: ModelFactory<TaxonClass> = sequelize => defineWithDefaults(
-  sequelize,
+export const TaxonClassModel = defineWithDefaults<TaxonClass>(
   'TaxonClass',
   {
     // PK

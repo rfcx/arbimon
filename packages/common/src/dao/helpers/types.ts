@@ -1,4 +1,4 @@
-import { Model, ModelCtor, Optional, Sequelize } from 'sequelize'
+import { Model, Optional } from 'sequelize'
 
 export interface AutoPk { id: number }
 
@@ -11,5 +11,3 @@ export type ModelForInterfacePk<Props extends AutoPk, PropsCreate = Optional<Pro
 export type ModelForInterface<Props> = Props extends AutoPk
   ? ModelForInterfacePk<Props>
   : ModelForInterfaceNoPk<Props>
-
-export type ModelFactory<T> = (sequelize: Sequelize) => ModelCtor<ModelForInterface<T>>
