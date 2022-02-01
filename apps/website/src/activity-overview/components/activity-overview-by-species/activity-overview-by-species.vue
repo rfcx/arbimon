@@ -19,10 +19,9 @@
               :class="{
                 'text-left': idx < 2,
                 'w-52 lg:w-66': idx < 1,
-                'w-24': idx === 1,
-                'w-48': idx > 1,
+                'w-20': idx === 1,
+                'w-36': idx > 1,
                 'sticky left-0': idx === 0,
-                'sticky left-52 lg:left-66': idx === 1,
                 'cursor-pointer': item.key
               }"
               @click="sort(item.key)"
@@ -83,7 +82,7 @@
                 </router-link>
               </div>
             </td>
-            <td class="p-2 sticky left-52 lg:left-66 bg-mirage-grey z-10">
+            <td class="p-2">
               {{ row.taxon }}
             </td>
             <td class="p-2 text-center">
