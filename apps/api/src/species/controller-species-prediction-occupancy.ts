@@ -1,10 +1,10 @@
-import { ApiPermissionDenied } from '_services/errors'
 import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
 import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 
 import { Handler } from '../_services/api-helpers/types'
+import { ApiPermissionDenied } from '../_services/errors'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
