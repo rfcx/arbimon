@@ -10,19 +10,19 @@ There is no reason to keep historical versions of seeders.
 
 Seeders in `auto` will be automatically run as part of `serve`. You can also run them manually:
 
-   `pnpm serve lib/db/seed -- --path=auto`
-   OR
-   `pnpm db-seed`
+`pnpm serve lib/db/seed -- --path=auto`
+OR
+`pnpm db-seed`
 
 Seeders in `optional` can be individually run using:
 
-   `pnpm serve lib/db/seed -- --path=optional/name-of-seeder.ts`
+`pnpm serve lib/db/seed -- --path=optional/name-of-seeder.ts`
 
 ## Testing/Staging
 
 You can run any seeder in `auto` or `optional` on `testing`/`staging` using:
 
-   `TODO`
+`TODO`
 
 ## Production
 
