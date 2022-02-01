@@ -22,15 +22,10 @@
     "test-coverage": "vitest --run --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@rfcx-bio/utils": "workspace:^0.0.1",
     "dayjs": "^1.10.7",
     "lodash-es": "^4.17.21",
     "sequelize": "^7.0.0-alpha.5"
-  },
-  "peerDependencies": {
-    "@rfcx-bio/utils": "*"
-  },
-  "devDependencies": {
-    "@rfcx-bio/utils": "workspace:*"
   },
   "description": "Biodiversity shared code",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
