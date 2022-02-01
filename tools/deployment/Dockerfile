@@ -46,6 +46,8 @@ CMD ["node", "--experimental-specifier-resolution=node", "lib/index.js"]
 
 # CLI
 FROM build as cli
+WORKDIR /app/apps/cli
+RUN rm .env*
 
 # Website
 FROM nginx:1.21-alpine as website
