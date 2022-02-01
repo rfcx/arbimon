@@ -27,20 +27,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
-      // External
+      // SKs
       id_core: {
         type: DataTypes.STRING(12),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       id_arbimon: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
-      // Facts
       slug: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
+      // Facts
       name: {
         type: DataTypes.STRING(255),
         allowNull: false
