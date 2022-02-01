@@ -16,7 +16,7 @@ export const SiteModel: ModelFactory<Site> = sequelize => defineWithDefaults(
       autoIncrement: true
     },
 
-    // External
+    // SKs
     idCore: DataTypes.STRING(12), // MoLQA8aNulGb
     idArbimon: DataTypes.INTEGER, // 8412
 
