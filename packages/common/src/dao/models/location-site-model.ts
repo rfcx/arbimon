@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize'
 
 import { Site } from '../../domain'
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_LOCATION_SITES } from '../table-names'
 
-export const SiteModel = defineWithDefaults<Site>(
+export const SiteModel = defineWithDefaultsAutoPk<Site>(
   'LocationSite',
   {
     // PK
