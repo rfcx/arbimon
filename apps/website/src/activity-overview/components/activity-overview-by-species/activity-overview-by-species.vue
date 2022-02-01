@@ -27,7 +27,7 @@
               @click="sort(item.key)"
             >
               <div
-                class="flex flex-row"
+                class="flex items-center"
                 :class="{ 'justify-center': idx >= 2 }"
               >
                 {{ item.title }}
