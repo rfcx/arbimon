@@ -277,16 +277,15 @@ importers:
 
   packages/common:
     specifiers:
-      '@rfcx-bio/utils': workspace:*
+      '@rfcx-bio/utils': workspace:^0.0.1
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
       sequelize: ^7.0.0-alpha.5
     dependencies:
+      '@rfcx-bio/utils': link:../utils
       dayjs: 1.10.7
       lodash-es: 4.17.21
       sequelize: 7.0.0-alpha.5
-    devDependencies:
-      '@rfcx-bio/utils': link:../utils
 
   packages/utils:
     specifiers:
