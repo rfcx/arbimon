@@ -2,7 +2,7 @@ import { getProject } from '../api-core/api-core'
 import { Forbidden } from '../errors/data-access-errors'
 
 export async function hasAccessToProject (id: string, token: string): Promise<boolean> {
-  if (!token) return false
+  if (!(/Bearer/i.test(token)) || token.split(' ').length <= 1) return false
 
   return await getProject(id, token)
     .then(() => true)
