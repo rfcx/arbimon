@@ -20,7 +20,7 @@
     "prepare": "ts-patch install -s",
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "s:api": "pnpm --filter=api serve",
-    "s:db": "pnpm --filter=db serve && pnpm --filter=cli db-migrate",
+    "s:db": "pnpm --filter=db serve && pnpm --filter=cli db-migrate && pnpm --filter=cli db-seed",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
     "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\""
   },
