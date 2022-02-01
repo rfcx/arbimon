@@ -3,11 +3,11 @@ import { DataTypes } from 'sequelize'
 
 import { Site } from '../../api-bio/common/sites'
 import { defineWithDefaults } from '../helpers/defaults'
-import { TABLE_SITES } from '../table-names'
+import { TABLE_LOCATION_SITES } from '../table-names'
 
 export const SiteModel: ModelFactory<Site> = sequelize => defineWithDefaults(
   sequelize,
-  'Site',
+  'LocationSite',
   {
     // PK
     id: { // 1
@@ -15,11 +15,14 @@ export const SiteModel: ModelFactory<Site> = sequelize => defineWithDefaults(
       primaryKey: true,
       autoIncrement: true
     },
+
     // External
     idCore: DataTypes.STRING(12), // MoLQA8aNulGb
     idArbimon: DataTypes.INTEGER, // 8412
+
     // Dimensions
     locationProjectId: DataTypes.INTEGER, // 1
+
     // Facts
     name: DataTypes.STRING(255), // 'CU26'
     latitude: DataTypes.FLOAT, // 18.31307
@@ -27,6 +30,6 @@ export const SiteModel: ModelFactory<Site> = sequelize => defineWithDefaults(
     altitude: DataTypes.FLOAT // 30.85246588
   },
   {
-    tableName: TABLE_SITES
+    tableName: TABLE_LOCATION_SITES
   }
 )
