@@ -53,33 +53,34 @@
             v-for="(row) in pageData"
             :key="'species-table-row-' + row.scientificName + row.datasetIdx"
           >
-            <td class="pt-2 px-1 flex sticky left-0 bg-mirage-grey z-10">
-              <div v-if="tableData.length > 1">
-                <span
-                  class="border-l-4 pl-1"
-                  :style="`border-color:${row.color}`"
+            <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
+              <div class="flex items-center">
+                <div
+                  v-if="tableData.length > 1"
+                  class="rounded-full w-1.5 h-1.5"
+                  :style="`background-color:${row.color}`"
                 />
-              </div>
-              <div>
-                <router-link
-                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
-                  class="text-subtle hover:(underline text-white)"
-                >
-                  <span class="text-white italic">{{ row.scientificName }}</span>
-                  <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
-                  <p
-                    v-if="row.commonName"
-                    class="text-xs"
+                <div :class="{'ml-2': tableData.length > 1}">
+                  <router-link
+                    :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
+                    class="text-subtle hover:(underline text-white)"
                   >
-                    {{ row.commonName }}
-                  </p>
-                  <p
-                    v-else
-                    class="invisible text-xs"
-                  >
-                    Unknown
-                  </p>
-                </router-link>
+                    <span class="text-white italic">{{ row.scientificName }}</span>
+                    <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
+                    <p
+                      v-if="row.commonName"
+                      class="text-xs"
+                    >
+                      {{ row.commonName }}
+                    </p>
+                    <p
+                      v-else
+                      class="invisible text-xs"
+                    >
+                      Unknown
+                    </p>
+                  </router-link>
+                </div>
               </div>
             </td>
             <td class="p-2">
