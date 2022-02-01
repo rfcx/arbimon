@@ -1,4 +1,4 @@
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio/species/common'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/domain'
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 import { getSequentially } from '@rfcx-bio/utils/async'
 

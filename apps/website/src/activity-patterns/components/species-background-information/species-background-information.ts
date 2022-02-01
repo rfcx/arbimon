@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio/species/common'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/domain'
 import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 
 import SpeciesInformationContentComponent from './species-information-content.vue'

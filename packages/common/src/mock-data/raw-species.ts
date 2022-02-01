@@ -1,4 +1,4 @@
-import { Species } from '../api-bio/species/common'
+import { Species } from '../domain'
 
 export const rawSpecies: Species[] = [
   {

@@ -1,6 +1,6 @@
 import { keyBy } from 'lodash-es'
 
-import { Species } from '@rfcx-bio/common/api-bio/species/common'
+import { Species } from '@rfcx-bio/common/domain'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 import { urlify } from '@rfcx-bio/utils/url-helpers'
 

@@ -1,4 +1,5 @@
-import { ExtinctionRiskCode } from '../../iucn'
+// TODO: Define a "standard" risk rating & map IUCN ratings to it
+import { ExtinctionRiskCode } from '../iucn'
 
 const SPECIES_SOURCES = <const>['IUCN', 'Wiki', 'Project']
 export type SpeciesSource = typeof SPECIES_SOURCES[number]
@@ -30,6 +31,7 @@ export interface SpeciesCall {
   siteName: string
 }
 
+// TODO: Flatten this type & migrate all references
 export interface Species {
   speciesId: number
   speciesSlug: string
