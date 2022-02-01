@@ -1,3 +1,5 @@
+import { Site } from '../../domain'
+
 // Request
 export interface SitesParams {
   projectId: string
@@ -10,15 +12,3 @@ export const sitesUrl = (params: SitesParams): string =>
 
 // Response
 export type SitesResponse = Site[]
-
-// Models
-export interface Site {
-  id: number
-  idCore: string
-  idArbimon: number
-  locationProjectId: number
-  name: string
-  latitude: number
-  longitude: number
-  altitude: number
-}

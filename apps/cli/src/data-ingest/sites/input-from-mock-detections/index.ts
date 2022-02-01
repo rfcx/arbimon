@@ -1,4 +1,4 @@
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { Site } from '@rfcx-bio/common/domain'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 export const getMockSites = (detections = rawDetections): Site[] => {

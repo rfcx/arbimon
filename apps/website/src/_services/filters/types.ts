@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { Site } from '@rfcx-bio/common/domain'
 
 export type FilterableProperty = 'taxon' | 'species'
 

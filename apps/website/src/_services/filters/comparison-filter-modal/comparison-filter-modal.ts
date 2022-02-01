@@ -2,7 +2,7 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { Site } from '@rfcx-bio/common/domain'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
