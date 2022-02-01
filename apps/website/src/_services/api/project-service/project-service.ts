@@ -1,5 +1,6 @@
-import { Project, ProjectsResponse, projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
-import { Site, SitesResponse, sitesUrl } from '@rfcx-bio/common/api-bio/common/sites'
+import { ProjectsResponse, projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
+import { SitesResponse, sitesUrl } from '@rfcx-bio/common/api-bio/common/sites'
+import { Project, Site } from '@rfcx-bio/common/domain'
 
 import { apiClient } from '~/api'
 
