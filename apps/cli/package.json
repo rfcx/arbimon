@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "ttsc --build tsconfig.build.json",
+    "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
