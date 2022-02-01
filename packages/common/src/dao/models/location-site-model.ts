@@ -1,12 +1,10 @@
-import { ModelFactory } from 'dao/helpers/types'
 import { DataTypes } from 'sequelize'
 
 import { Site } from '../../domain'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_LOCATION_SITES } from '../table-names'
 
-export const SiteModel: ModelFactory<Site> = sequelize => defineWithDefaults(
-  sequelize,
+export const SiteModel = defineWithDefaults<Site>(
   'LocationSite',
   {
     // PK

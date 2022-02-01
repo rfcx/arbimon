@@ -5,16 +5,15 @@ import { ValueOf } from '@rfcx-bio/utils/utility-types'
 import { AutoPk, ModelForInterfacePk } from './types'
 import { modelAttributeToColumn } from './utils'
 
+// TODO: Update return type when they fix `sequelize.define`
+type ModelFactory<T extends Model> = (sequelize: Sequelize) => ModelCtor<T>
+
 export const defineWithDefaults = <
   DomainModel extends AutoPk,
   SequelizeModel extends Model = ModelForInterfacePk<DomainModel>, // TODO: Why doesn't this work with ModelForInterface<DomainModel>?!
   SequelizeAttributes = SequelizeModel['_attributes']
-> (sequelize: Sequelize, modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelCtor<SequelizeModel> => // TODO: Update return type when they fix `sequelize.define`
-  sequelize.define<SequelizeModel>(
-    modelName,
-    attributesWithDefaults(attributes),
-    options
-  )
+> (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
+  sequelize => sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), options)
 
 export const attributesWithDefaults = <
   SequelizeModel extends Model,
