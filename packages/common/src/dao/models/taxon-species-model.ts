@@ -4,7 +4,7 @@ import { TaxonSpecies } from '../../domain'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_TAXON_SPECIES } from '../table-names'
 
-export const ProjectModel = defineWithDefaultsAutoPk<TaxonSpecies>(
+export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
   'TaxonSpecies',
   {
     // PK
@@ -31,11 +31,13 @@ export const ProjectModel = defineWithDefaultsAutoPk<TaxonSpecies>(
     extinctionRiskRatingSource: DataTypes.STRING(255), // PRDNER 2016
 
     // Facts - Description
-    description: DataTypes.STRING(255), // ???
+    // TODO: Split as a separate table
+    description: DataTypes.TEXT, // ???
     descriptionSource: DataTypes.STRING(255), // ???
     descriptionSourceUrl: DataTypes.STRING(255), // ???
 
     // Facts - Call
+    // TODO: Split as a separate table
     callProjectId: DataTypes.INTEGER, // ???
     callSiteId: DataTypes.INTEGER, // ???
     callType: DataTypes.STRING(255), // Common Song
@@ -45,7 +47,8 @@ export const ProjectModel = defineWithDefaultsAutoPk<TaxonSpecies>(
     callMediaSpecUrl: DataTypes.STRING(255), // https://media-api.rfcx.org/internal/assets/streams/Rq48bGCkR0NG_t20210418T112502517Z.20210418T112506208Z_d512.512_mtrue_fspec.png
 
     // Facts - Photo
-    photoUrl: DataTypes.STRING(255), // https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg
+    // TODO: Split as a separate table
+    photoUrl: DataTypes.STRING(511), // https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg
     photoCaption: DataTypes.STRING(255), // Puerto Rican sharp-shinned hawk
     photoAuthor: DataTypes.STRING(255), // Mike Morel/U. S. Fish and Wildlife Service
     photoLicense: DataTypes.STRING(255), // Public domain
