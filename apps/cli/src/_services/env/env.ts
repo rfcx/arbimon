@@ -29,7 +29,7 @@ const loadDotEnv = async (): Promise<void> => {
   )
 
   const envMerged = Object.assign({}, ...envs.map(e => dotenv.parse(e)))
-  Object.assign(process.env, envMerged)
+  Object.assign(process.env, envMerged, process.env) // existing process.env variables take precedence
 }
 
 const warnIfProtected = async (env: Env): Promise<void> => {
