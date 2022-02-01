@@ -1,6 +1,33 @@
 // TODO: Define a "standard" risk rating & map IUCN ratings to it
 import { ExtinctionRiskCode } from '../iucn'
 
+// TODO: Migrate frontend code to TaxonSpecies & eliminate Species, etc.
+export interface TaxonSpecies {
+  id: number
+  idArbimon: number
+  slug: string
+  taxonClassId: number
+  scientificName: string
+  commonName: string
+  extinctionRiskRating: string
+  extinctionRiskRatingSource: string
+  description: string
+  descriptionSource: string
+  descriptionSourceUrl: string
+  callProjectId: number
+  callSiteId: number
+  callType: string
+  callRecordedAt: Date
+  callTimezone: string
+  callMediaWavUrl: string
+  callMediaSpecUrl: string
+  photoUrl: string
+  photoCaption: string
+  photoAuthor: string
+  photoLicense: string
+  photoLicenseUrl: string
+}
+
 const SPECIES_SOURCES = <const>['IUCN', 'Wiki', 'Project']
 export type SpeciesSource = typeof SPECIES_SOURCES[number]
 
@@ -31,7 +58,6 @@ export interface SpeciesCall {
   siteName: string
 }
 
-// TODO: Flatten this type & migrate all references
 export interface Species {
   speciesId: number
   speciesSlug: string
