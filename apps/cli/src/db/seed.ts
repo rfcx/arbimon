@@ -1,23 +1,34 @@
-import { dirname } from 'path'
+import { dirname, resolve } from 'path'
 
-import { getSequelize, getUmzugSeeder } from './connections'
+import { getSequelize, getUmzug } from './connections'
+
+const verbose = process.argv.some(arg => arg === '--verbose')
+const seederPath = process.argv.find(arg => arg.startsWith('--path='))?.split('=')[1]
 
 const currentDir = dirname(new URL(import.meta.url).pathname)
-const verbose = process.argv.some(arg => arg === '--verbose')
-const filename = process.argv[process.argv.length - 1]
 
 const main = async (): Promise<void> => {
-  if (filename.startsWith(currentDir)) {
-    console.info('Usage: pnpm serve lib/db/seed name-of-seed-script')
+  // Validate inputs
+  if (!seederPath) {
+    console.info('Usage: pnpm serve lib/db/seed -- --path=auto')
+    console.info('Usage: pnpm serve lib/db/seed -- --path=optional/name-of-seed.ts')
     return
   }
 
+  // Extract CWD & filename
+  const fullPath = resolve(currentDir, 'seeders', seederPath ?? 'auto')
+  const isSingleSeed = fullPath.endsWith('.ts') || fullPath.endsWith('.js')
+  const filename = isSingleSeed ? fullPath.slice(0, fullPath.length - 3).split('/').pop() : undefined
+  const cwd = isSingleSeed ? fullPath.slice(0, fullPath.lastIndexOf('/')) : fullPath
+
+  // Init sequelize & umzug
   const sequelize = getSequelize(verbose)
-  const umzug = getUmzugSeeder(sequelize, verbose, filename)
+  const umzug = getUmzug(sequelize, verbose, cwd, filename)
 
   // Run migrations
+  const previouslyExecuted = await umzug.executed().then(ems => ems.length)
   await umzug.up().then(res => {
-    console.info(`Executed ${res.length} needed migrations`)
+    console.info(`Executed ${res.length} needed seeders (${previouslyExecuted} previously executed)`)
     res.forEach(r => console.info(`- ${r.name}`))
   })
   await sequelize.close()

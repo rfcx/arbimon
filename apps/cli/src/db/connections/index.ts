@@ -7,9 +7,7 @@ import { env } from '../../_services/env'
 
 // Paths & resolve
 const currentDir = dirname(new URL(import.meta.url).pathname)
-const pathToSrc = '../../'
-const pathToMigrations = 'db/migrations'
-const pathToSeeders = 'db/seeders'
+const migrationsDir = resolve(currentDir, '../../db/migrations')
 
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
   (await import(`file:///${(path ?? '').replace(/\\/g, '/')}`))
@@ -45,12 +43,12 @@ export const getSequelize = (verbose = false): Sequelize => {
   )
 }
 
-export const getUmzug = (sequelize: Sequelize, verbose = false): Umzug<QueryInterface> =>
+export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
   new Umzug({
     migrations: {
       glob: [
-        './!(*.d).{js,mjs,ts}',
-        { cwd: resolve(currentDir, pathToSrc, pathToMigrations) }
+        filename ? `./${filename}.{js,mjs,ts}` : './!(*.d).{js,mjs,ts}',
+        { cwd }
       ],
       resolve: params => ({
         name: params.name,
@@ -60,25 +58,6 @@ export const getUmzug = (sequelize: Sequelize, verbose = false): Umzug<QueryInte
       })
     },
     context: sequelize.getQueryInterface(),
-    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: 'migrations' }),
-    logger: verbose ? console : undefined
-  })
-
-export const getUmzugSeeder = (sequelize: Sequelize, verbose = false, seedFilename?: string): Umzug<QueryInterface> =>
-  new Umzug({
-    migrations: {
-      glob: [
-        seedFilename ? `./${seedFilename}.{js,mjs,ts}` : './!(*.d).{js,mjs,ts}',
-        { cwd: resolve(currentDir, pathToSrc, pathToSeeders) }
-      ],
-      resolve: params => ({
-        name: params.name,
-        path: params.path,
-        up: async upParams => await importMigration(params.path).then(async m => await m.up(upParams)),
-        down: async downParams => await importMigration(params.path).then(async m => await m.down?.(downParams))
-      })
-    },
-    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: 'seeders' }),
-    context: sequelize.getQueryInterface(),
+    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: cwd === migrationsDir ? 'migrations' : 'seeders' }),
     logger: verbose ? console : undefined
   })
