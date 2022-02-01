@@ -41,7 +41,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // Dimensions
       location_project_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: { tableName: 'location_projects' },
+          key: 'id'
+        }
       },
       // Facts
       name: {

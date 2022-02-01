@@ -41,15 +41,27 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // Dimensions
       taxon_class_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: { tableName: 'taxon_classes' },
+          key: 'id'
+        }
       },
       call_project_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: { tableName: 'location_projects' },
+          key: 'id'
+        }
       },
       call_site_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: { tableName: 'location_sites' },
+          key: 'id'
+        }
       },
       // Facts
       scientific_name: {
