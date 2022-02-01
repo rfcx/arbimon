@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize'
 
 import { TaxonClass } from '../../domain'
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_TAXON_CLASSES } from '../table-names'
 
-export const TaxonClassModel = defineWithDefaults<TaxonClass>(
+export const TaxonClassModel = defineWithDefaultsAutoPk<TaxonClass>(
   'TaxonClass',
   {
     // PK

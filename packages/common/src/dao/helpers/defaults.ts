@@ -1,19 +1,35 @@
-import { Model, ModelAttributes, ModelCtor, ModelOptions, Sequelize } from 'sequelize'
+import { Model, ModelAttributes, ModelCtor, ModelOptions, Optional, Sequelize } from 'sequelize'
 
 import { ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { AutoPk, ModelForInterfacePk } from './types'
 import { modelAttributeToColumn } from './utils'
 
 // TODO: Update return type when they fix `sequelize.define`
 type ModelFactory<T extends Model> = (sequelize: Sequelize) => ModelCtor<T>
 
+interface AutoPk { id: number }
+
+type ModelForInterface<Props, PropsCreate = Props> =
+  Model<Props, PropsCreate> & Props
+
+// Model with optional PK during creation
+type ModelForInterfaceWithPk<Props extends AutoPk, PropsCreate = Optional<Props, 'id'>> =
+  Model<Props, PropsCreate> & Props
+
 export const defineWithDefaults = <
-  DomainModel extends AutoPk,
-  SequelizeModel extends Model = ModelForInterfacePk<DomainModel>, // TODO: Why doesn't this work with ModelForInterface<DomainModel>?!
+  DomainModel,
+  SequelizeModel extends Model = ModelForInterface<DomainModel>,
   SequelizeAttributes = SequelizeModel['_attributes']
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
   sequelize => sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), options)
+
+// TODO: Can probably add the PK to attributes automatically
+export const defineWithDefaultsAutoPk = <
+  DomainModel extends AutoPk,
+  SequelizeModel extends Model = ModelForInterfaceWithPk<DomainModel>,
+  SequelizeAttributes = SequelizeModel['_attributes']
+> (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
+  defineWithDefaults<DomainModel, SequelizeModel>(modelName, attributes, options)
 
 export const attributesWithDefaults = <
   SequelizeModel extends Model,
