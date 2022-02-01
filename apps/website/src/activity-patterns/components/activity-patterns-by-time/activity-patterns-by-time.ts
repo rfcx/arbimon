@@ -3,7 +3,7 @@ import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesLight } from '@rfcx-bio/common/domain'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { TimeDataset } from '@/activity-patterns/types'

@@ -1,5 +1,5 @@
 import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesLight } from '@rfcx-bio/common/domain'
 import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
