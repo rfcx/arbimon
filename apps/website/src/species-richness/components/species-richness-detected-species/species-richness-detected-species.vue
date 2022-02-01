@@ -19,10 +19,10 @@
                 class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
                 :class="{
                   'text-left': idx < 2,
-                  'w-48 lg:w-66': idx < 1,
+                  'w-52 lg:w-66': idx < 1,
                   'w-20': tableHeader.length > 2 && idx >= 1,
                   'sticky left-0': idx === 0,
-                  'sticky left-48 lg:left-66': idx === 1,
+                  'sticky left-52 lg:left-66': idx === 1,
                   'cursor-pointer': item.key
                 }"
                 :style="{ 'box-shadow': `inset 0 -3px 0 ${item.color}` }"
@@ -76,7 +76,7 @@
                   </p>
                 </router-link>
               </td>
-              <td class="p-2 sticky left-48 lg:left-66 bg-mirage-grey z-10">
+              <td class="p-2 sticky left-52 lg:left-66 bg-mirage-grey z-10">
                 {{ row.taxon }}
               </td>
               <template
