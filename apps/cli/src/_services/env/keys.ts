@@ -11,7 +11,7 @@
 
 export type Protection = 'off' | 'warn'
 export const OFF: Protection = 'off'
- 
+
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
   'PROTECTION',
