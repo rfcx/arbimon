@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import { keyBy, mapValues } from 'lodash-es'
 import { dirname, resolve } from 'path'
 
-import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesCall } from '@rfcx-bio/common/domain'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 import { mysqlSelect } from '../../../_services/mysql'

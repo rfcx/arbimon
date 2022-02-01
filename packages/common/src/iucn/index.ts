@@ -1,5 +1,6 @@
 import { keyBy, mapValues } from 'lodash-es'
 
+// TODO: Extract colors to RFCx risk rating type
 /**
  * Source data
  * The order of this array defines the `level` property
