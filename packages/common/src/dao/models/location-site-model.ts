@@ -1,7 +1,7 @@
 import { ModelFactory } from 'dao/helpers/types'
 import { DataTypes } from 'sequelize'
 
-import { Site } from '../../api-bio/common/sites'
+import { Site } from '../../domain'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_LOCATION_SITES } from '../table-names'
 

@@ -1,4 +1,4 @@
-import { Site } from '../api-bio/common/sites'
+import { Site } from '../domain'
 
 export const rawSites: Site[] = [
   {

@@ -1,4 +1,4 @@
-import { Site } from '../common/sites'
+import { Site } from '../../domain'
 
 export type ApiLine = Record<number, number>
 export type ApiMap = Array<Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }>
