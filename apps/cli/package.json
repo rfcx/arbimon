@@ -7,12 +7,14 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
+    "db-migrate": "pnpm serve lib/db/migrate",
+    "db-reset": "pnpm serve lib/db/reset",
+    "db-seed": "pnpm serve lib/db/seed",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
-    "migrate": "pnpm clean && pnpm serve lib/db/migrate",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test": "vitest --run --passWithNoTests",
     "test-coverage": "vitest --run --coverage --passWithNoTests"
