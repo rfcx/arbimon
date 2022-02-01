@@ -1,14 +1,11 @@
 import { RichnessByExportParams, RichnessByExportQuery, RichnessByExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
-import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
-import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Handler } from '../_services/api-helper/types'
-import { filterMocksByParameters } from '../_services/mock-helper'
-import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { Handler } from '../_services/api-helpers/types'
 import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
+import { getRichnessDatasetInformation } from './bll-richness-export'
 
-export const RichnessExportHandler: Handler<RichnessByExportResponse, RichnessByExportParams, RichnessByExportQuery> = async (req) => {
+export const richnessExportHandler: Handler<RichnessByExportResponse, RichnessByExportParams, RichnessByExportQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertParamsExist({ projectId })
@@ -25,18 +22,5 @@ export const RichnessExportHandler: Handler<RichnessByExportResponse, RichnessBy
     taxons: Array.isArray(taxons) ? taxons : []
   }
 
-  const detections = filterMocksByParameters(rawDetections, { ...convertedQuery })
-  const noPermission = !isProjectMember(req)
-  const speciesByExport = await getRichnessDatasetInformation(detections, noPermission)
-
-  return { speciesByExport, isLocationRedacted: noPermission }
-}
-
-async function getRichnessDatasetInformation (detections: MockHourlyDetectionSummary[], noPermission: boolean): Promise<MockHourlyDetectionSummary[]> {
-  if (noPermission) {
-    const protectedSpeciesIds = rawSpecies.filter(({ extinctionRisk }) => EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk)).map(({ speciesId }) => speciesId)
-    return detections.filter(({ species_id: speciesId }) => !protectedSpeciesIds.includes(speciesId))
-  }
-
-  return detections
+  return await getRichnessDatasetInformation(req, convertedQuery)
 }

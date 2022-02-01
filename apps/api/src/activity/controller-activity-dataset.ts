@@ -7,7 +7,7 @@ import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { Handler } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { FilterDataset, filterMocksByParameters } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
@@ -31,23 +31,23 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
     taxons: Array.isArray(taxons) ? taxons : []
   }
 
-  const noPermission = !isProjectMember(req)
+  const isLocationRedacted = !isProjectMember(req)
 
   // Response
-  return await getActivityOverviewData(Number(projectId), { ...convertedQuery }, noPermission)
+  return await getActivityOverviewData(Number(projectId), { ...convertedQuery }, isLocationRedacted)
 }
 
-const getActivityOverviewData = async (projectId: number, filter: FilterDataset, noPermission: boolean): Promise<ActivityDatasetResponse> => {
+const getActivityOverviewData = async (projectId: number, filter: FilterDataset, isLocationRedacted: boolean): Promise<ActivityDatasetResponse> => {
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const detectionsBySites = groupBy(totalSummaries, 'stream_id')
 
   const sites = rawSites.filter(site => filter.siteIds.includes(site.id))
   const overviewBySite = await getOverviewDataBySite(detectionsBySites)
   const overviewByTime = await getOverviewDataByTime(totalSummaries)
-  const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries, noPermission)
+  const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries, isLocationRedacted)
 
   return {
-    isLocationRedacted: noPermission,
+    isLocationRedacted,
     sites,
     overviewBySite,
     overviewByTime,
@@ -75,9 +75,9 @@ const getOverviewDataBySite = async (detectionsBySites: DetectionGroupedBySite):
   return summariesBySites
 }
 
-const getOverviewDataBySpecies = async (totalSummaries: MockHourlyDetectionSummary[], noPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> => {
+const getOverviewDataBySpecies = async (totalSummaries: MockHourlyDetectionSummary[], isLocationRedacted: boolean): Promise<ActivityOverviewDataBySpecies[]> => {
     let detections = totalSummaries
-    if (noPermission) {
+    if (isLocationRedacted) {
       const protectedSpeciesIds = rawSpecies.filter(({ extinctionRisk }) => EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk)).map(({ speciesId }) => speciesId)
       detections = totalSummaries.filter(({ species_id: speciesId }) => !protectedSpeciesIds.includes(speciesId))
     }

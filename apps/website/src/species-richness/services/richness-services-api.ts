@@ -1,6 +1,5 @@
 import { RichnessDatasetResponse, richnessDatasetUrl } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { RichnessByExportResponse, richnessByExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
-import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
+import { RichnessByExportReport, RichnessByExportResponse, richnessByExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { apiClient } from '~/api'
 import { DatasetParameters } from '~/filters'
@@ -21,7 +20,7 @@ export class RichnessService {
     return resp
   }
 
-  async getRichnessBuExport (rawFilter: DatasetParameters): Promise<MockHourlyDetectionSummary[] | undefined> {
+  async getRichnessByExport (rawFilter: DatasetParameters): Promise<RichnessByExportReport[] | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined
