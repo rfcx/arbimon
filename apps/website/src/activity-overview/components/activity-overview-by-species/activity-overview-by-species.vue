@@ -53,7 +53,7 @@
             v-for="(row) in pageData"
             :key="'species-table-row-' + row.scientificName + row.datasetIdx"
           >
-            <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
+            <td class="pt-2 px-1 flex sticky left-0 bg-mirage-grey z-10">
               <div v-if="tableData.length > 1">
                 <span
                   class="border-l-4 pl-1"
