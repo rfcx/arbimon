@@ -55,8 +55,8 @@ importers:
       stylelint-config-standard-scss: ^3.0.0
       ts-jest: ^27.1.1
       ts-node: ^10.4.0
+      ts-patch: ^2.0.1
       tsconfig-paths: ^3.12.0
-      ttypescript: ^1.5.13
       typescript: ^4.4.4
       typescript-transform-paths: ^3.3.1
       vite: ^2.7.7
@@ -121,8 +121,8 @@ importers:
       stylelint-config-standard-scss: 3.0.0_postcss@8.3.11+stylelint@14.0.1
       ts-jest: 27.1.1_94f8ccbac0e4fe1085aef0feb2526070
       ts-node: 10.4.0_0cb88d80cb04d25b21fa3ec194608c65
+      ts-patch: 2.0.1_typescript@4.4.4
       tsconfig-paths: 3.12.0
-      ttypescript: 1.5.13_ts-node@10.4.0+typescript@4.4.4
       typescript: 4.4.4
       typescript-transform-paths: 3.3.1_typescript@4.4.4
       vite: 2.7.7_sass@1.43.4
@@ -9193,6 +9193,13 @@ packages:
       picomatch: 2.3.0
     dev: true
 
+  /rechoir/0.6.2:
+    resolution: {integrity: sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      resolve: 1.20.0
+    dev: true
+
   /recrawl-sync/2.2.1:
     resolution: {integrity: sha512-A2yLDgeXNaduJJMlqyUdIN7fewopnNm/mVeeGytS1d2HLXKpS5EthQ0j8tWeX+as9UXiiwQRwfoslKC+/gjqxg==}
     dependencies:
@@ -9697,6 +9704,16 @@ packages:
   /shebang-regex/3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+    dev: true
+
+  /shelljs/0.8.5:
+    resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dependencies:
+      glob: 7.2.0
+      interpret: 1.4.0
+      rechoir: 0.6.2
     dev: true
 
   /shimmer/1.2.1:
@@ -10510,6 +10527,22 @@ packages:
       yn: 3.1.1
     dev: true
 
+  /ts-patch/2.0.1_typescript@4.4.4:
+    resolution: {integrity: sha512-mP7beU1QkmyDs1+SzXYVaSTD6Xo7ZCibOJ3sZkb/xsQjoAQXvn4oPjk0keC2LfCNAgilqtqgjiWp3pQri1uz4w==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=4.0.0'
+    dependencies:
+      chalk: 4.1.2
+      glob: 7.2.0
+      global-prefix: 3.0.0
+      minimist: 1.2.5
+      resolve: 1.20.0
+      shelljs: 0.8.5
+      strip-ansi: 6.0.1
+      typescript: 4.4.4
+    dev: true
+
   /tsconfig-paths/3.12.0:
     resolution: {integrity: sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==}
     dependencies:
@@ -10546,18 +10579,6 @@ packages:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
     dependencies:
       tslib: 1.14.1
-      typescript: 4.4.4
-    dev: true
-
-  /ttypescript/1.5.13_ts-node@10.4.0+typescript@4.4.4:
-    resolution: {integrity: sha512-KT/RBfGGlVJFqEI8cVvI3nMsmYcFvPSZh8bU0qX+pAwbi7/ABmYkzn7l/K8skw0xmYjVCoyaV6WLsBQxdadybQ==}
-    hasBin: true
-    peerDependencies:
-      ts-node: '>=8.0.2'
-      typescript: '>=3.2.2'
-    dependencies:
-      resolve: 1.20.0
-      ts-node: 10.4.0_0cb88d80cb04d25b21fa3ec194608c65
       typescript: 4.4.4
     dev: true
 
