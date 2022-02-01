@@ -1,6 +1,9 @@
 <template>
   <div class="overflow-x-auto scrollbar-hide">
-    <div class="flex">
+    <h2 class="text-white">
+      Click "Add comparison" below to compare between date ranges, sites, or taxonomies
+    </h2>
+    <div class="flex mt-5">
       <div
         v-for="(filter, idx) in filters"
         :key="'site-card' + idx"
@@ -57,7 +60,7 @@
         @click="addFilterConfig"
       >
         <div class="uppercase">
-          + Add
+          Add comparison
         </div>
       </div>
     </div>
