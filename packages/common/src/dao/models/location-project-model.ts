@@ -15,14 +15,14 @@ export const ProjectModel: ModelFactory<Project> = sequelize => defineWithDefaul
       primaryKey: true,
       autoIncrement: true
     },
+
+    // SKs
+    idCore: DataTypes.STRING(12), // ???
+    idArbimon: DataTypes.INTEGER, // ???
     slug: { // puerto-rico-island-wide
       type: DataTypes.STRING(255),
       unique: true
     },
-
-    // External
-    idCore: DataTypes.STRING(12), // ???
-    idArbimon: DataTypes.INTEGER, // ???
 
     // Facts
     name: DataTypes.STRING(255), // Puerto Rico Island-Wide
