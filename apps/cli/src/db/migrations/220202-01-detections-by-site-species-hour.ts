@@ -7,13 +7,14 @@ import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 const TABLE_NAME = 'detections_by_site_species_hour'
+const COLUMN_TIME_HOUR_LOCAL = 'time_hour_local'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      timeHourLocal: {
+      [COLUMN_TIME_HOUR_LOCAL]: {
         type: DataTypes.DATE(3), // hypertable key
         primaryKey: true,
         allowNull: false
@@ -52,14 +53,14 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      durationMinutes: {
+      duration_minutes: {
         type: DataTypes.INTEGER,
         allowNull: false
       }
     }
   )
   .then(async () => await params.context.sequelize.query(
-    `SELECT create_hypertable('${TABLE_NAME}', 'timeHourLocal')`,
+    `SELECT create_hypertable('${TABLE_NAME}', '${COLUMN_TIME_HOUR_LOCAL}');`,
     { type: QueryTypes.RAW }
   ))
 

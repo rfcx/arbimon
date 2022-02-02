@@ -1,11 +1,12 @@
 import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
 import { getSequelize, getUmzug } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
 const seederPath = process.argv.find(arg => arg.startsWith('--path='))?.split('=')[1]
 
-const currentDir = dirname(new URL(import.meta.url).pathname)
+const currentDir = dirname(fileURLToPath(import.meta.url))
 
 const main = async (): Promise<void> => {
   // Validate inputs
