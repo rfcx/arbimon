@@ -16,7 +16,8 @@ export interface ActivityOverviewBySpeciesDetail {
 }
 
 export function getFormatSpeciesDataset (rawSpeciesDataset: SpeciesDataset[]): ActivityOverviewBySpeciesDataset[] {
-  if (rawSpeciesDataset.length === 0) return []
+  const numberOfDatasets = rawSpeciesDataset.length
+  if (numberOfDatasets === 0) return []
 
   const formattedDataset: ActivityOverviewBySpeciesDataset[] = []
 
@@ -26,22 +27,27 @@ export function getFormatSpeciesDataset (rawSpeciesDataset: SpeciesDataset[]): A
       const { scientificName, commonName, taxon, ...statistics } = speciesInformation
       const matchedSpecies = formattedDataset.find(({ scientificName: sc }) => sc === scientificName)
       const details = { datasetIdx, ...statistics }
-      console.log(datasetIdx > 0, Array.from(Array(datasetIdx).keys()))
-      const emptyDetails = datasetIdx > 0
-        ? Array.from(Array(datasetIdx).keys()).map(datasetIdx => ({ datasetIdx, detectionCount: 0, detectionFrequency: 0, occupiedSites: 0, occupancyNaive: 0 }))
-        : []
       if (!matchedSpecies) {
         formattedDataset.push({
           scientificName,
           commonName,
           taxon,
-          details: [...emptyDetails, details]
+          details: [details]
         })
-        console.log(emptyDetails, [...emptyDetails, details])
       } else {
         matchedSpecies.details.push(details)
       }
     }
+  }
+
+  for (const dataset of formattedDataset) {
+    const { details } = dataset
+    if (details.length < numberOfDatasets) {
+      const addedIdxs = details.map(({ datasetIdx }) => datasetIdx)
+      const missingIdxs = Array.from(Array(numberOfDatasets).keys()).filter(n => !addedIdxs.includes(n))
+      missingIdxs.forEach(datasetIdx => details.push({ datasetIdx, detectionCount: 0, detectionFrequency: 0, occupiedSites: 0, occupancyNaive: 0 }))
+    }
+    details.sort((a, b) => a.datasetIdx - b.datasetIdx)
   }
 
   return formattedDataset
