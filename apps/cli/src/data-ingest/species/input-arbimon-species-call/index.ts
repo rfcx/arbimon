@@ -1,13 +1,13 @@
 import * as fs from 'fs'
 import { keyBy, mapValues } from 'lodash-es'
 import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
 import { SpeciesCall } from '@rfcx-bio/common/domain'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 import { mysqlSelect } from '../../../_services/mysql'
 import { ARBIMON_CONFIG } from '../../_connections/arbimon'
-import { fileURLToPath } from 'url'
 
 export type ArbimonSpeciesCall = SpeciesCall
 
