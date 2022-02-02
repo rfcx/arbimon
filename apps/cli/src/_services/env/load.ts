@@ -3,7 +3,8 @@ import fs from 'fs/promises'
 import { dirname, resolve } from 'path'
 import readline from 'readline'
 
-import { envKeysOptional, envKeysRequired, OFF } from './keys'
+import { envGetters } from './keys'
+import { PROTECTION_VALUES } from './types'
 
 const loadDotEnv = async (): Promise<void> => {
   const currentDir = dirname(new URL(import.meta.url).pathname)
@@ -32,8 +33,34 @@ const loadDotEnv = async (): Promise<void> => {
   Object.assign(process.env, envMerged, process.env) // existing process.env variables take precedence
 }
 
-const warnIfProtected = async (env: Env): Promise<void> => {
-  if (env.PROTECTION !== OFF) {
+type EnvGetter = typeof envGetters
+type EnvKey = keyof EnvGetter
+type EnvOptional <Keys extends EnvKey> = { [K in Keys]: ReturnType<EnvGetter[K]> }
+type EnvRequired <Keys extends EnvKey> = { [K in Keys]: Exclude<ReturnType<EnvGetter[K]>, undefined> }
+
+export const optionalEnv = <T extends EnvKey> (...keys: T[]): EnvOptional<T> => {
+  return Object.fromEntries(
+    Object.entries(envGetters)
+      .filter(([key]) => keys.includes(key as T))
+      .map(([key, getter]) => [key, getter(key)])
+  ) as EnvOptional<T>
+}
+
+export const requireEnv = <T extends EnvKey> (...keys: T[]): EnvRequired<T> => {
+  return Object.fromEntries(
+    Object.entries(envGetters)
+      .filter(([key]) => keys.includes(key as T))
+      .map(([key, getter]) => {
+        const value = getter(key)
+        if (value === undefined) throw new Error(`Missing required environment variable: ${key}`)
+        return [key, value]
+      })
+  ) as EnvRequired<T>
+}
+
+const warnIfProtected = async (): Promise<void> => {
+  const { PROTECTION } = requireEnv('PROTECTION')
+  if (PROTECTION !== PROTECTION_VALUES.OFF) {
     // Request confirmation to proceed
     const ui = readline.createInterface({ input: process.stdin, output: process.stdout })
     const result = await new Promise<string>(resolve => ui.question('This is a protected mode - are you sure you want to continue? (y|N)', answer => resolve(answer)))
@@ -50,8 +77,4 @@ const warnIfProtected = async (env: Env): Promise<void> => {
 }
 
 await loadDotEnv()
-
-export const env = process.env as Env
-export type Env = Record<typeof envKeysRequired[number], string> & Record<typeof envKeysOptional[number], string | undefined>
-
-await warnIfProtected(env)
+await warnIfProtected()

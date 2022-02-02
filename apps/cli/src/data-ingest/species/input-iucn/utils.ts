@@ -1,4 +1,7 @@
-import { env } from '../../../_services/env'
+import { requireEnv } from '~/env'
+
+// TODO: This should be injected by the script controller
+const { IUCN_BASE_URL } = requireEnv('IUCN_BASE_URL')
 
 export const getSpeciesRedirectLink = (scientificName: string): string =>
-  `${env.IUCN_BASE_URL}/website/${encodeURIComponent(scientificName)}`
+  `${IUCN_BASE_URL}/website/${encodeURIComponent(scientificName)}`
