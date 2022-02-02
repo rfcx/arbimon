@@ -2,12 +2,13 @@ import * as dotenv from 'dotenv'
 import fs from 'fs/promises'
 import { dirname, resolve } from 'path'
 import readline from 'readline'
+import { fileURLToPath } from 'url'
 
 import { envGetters } from './keys'
 import { PROTECTION_VALUES } from './types'
 
 const loadDotEnv = async (): Promise<void> => {
-  const currentDir = dirname(new URL(import.meta.url).pathname)
+  const currentDir = dirname(fileURLToPath(import.meta.url))
   const pathToRoot = '../../../'
 
   // Detect mode
