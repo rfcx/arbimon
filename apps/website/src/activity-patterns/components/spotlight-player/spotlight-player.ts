@@ -1,11 +1,12 @@
 import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { SpeciesCall } from '@rfcx-bio/common/domain'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { assetsService } from '@/activity-patterns/services'
+import { BiodiversityStore } from '~/store'
 import AudioController from './audio-controller.vue'
 
 @Options({
@@ -14,6 +15,7 @@ import AudioController from './audio-controller.vue'
   }
 })
 export default class SpotlightPlayer extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop() speciesCall!: SpeciesCall
 
   loading = false
@@ -23,6 +25,10 @@ export default class SpotlightPlayer extends Vue {
   playing = false
   playedTime = 0
   playedProgressPercentage = 0
+
+  get isPublicUser (): boolean {
+    return this.store.user === undefined
+  }
 
   get displayPlayedTime (): string {
     return `${dayjs.duration(this.playedTime, 'seconds').format('m:ss')}`
