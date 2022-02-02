@@ -16,7 +16,7 @@ type Getter<T> = (key: string) => T | undefined
 
 const stringGetter: Getter<string> = (key: string): string | undefined => process.env[key]
 const numberGetter: Getter<number> = (key: string): number | undefined => Number(process.env[key])
-const booleanGetter: Getter<boolean> = (key: string): boolean | undefined => Boolean(process.env[key])
+const booleanGetter: Getter<boolean> = (key: string): boolean | undefined => process.env[key] === 'true'
 const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (key: string) => {
   const raw = process.env[key] as T
   return allowed.includes(raw) ? raw : undefined
