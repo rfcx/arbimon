@@ -1,6 +1,7 @@
 import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
-const currentDir = dirname(new URL(import.meta.url).pathname)
+const currentDir = dirname(fileURLToPath(import.meta.url))
 const pathToMockData = '../../../../../packages/common/src/mock-data'
 const pathToJsonOutput = '../../../out'
 

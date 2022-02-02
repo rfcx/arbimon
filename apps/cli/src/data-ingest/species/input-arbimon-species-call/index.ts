@@ -7,6 +7,7 @@ import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 import { mysqlSelect } from '../../../_services/mysql'
 import { ARBIMON_CONFIG } from '../../_connections/arbimon'
+import { fileURLToPath } from 'url'
 
 export type ArbimonSpeciesCall = SpeciesCall
 
@@ -24,7 +25,7 @@ interface ArbimonSpeciesCallRow {
 
 export const getArbimonSpeciesCalls = async (): Promise<Record<string, ArbimonSpeciesCall>> => {
   // Read SQL
-  const currentDir = dirname(new URL(import.meta.url).pathname)
+  const currentDir = dirname(fileURLToPath(import.meta.url))
   const sqlPath = resolve(currentDir, './get-example-of-species-call.sql') // TODO - Update query to support other projects
   const sql = fs.readFileSync(sqlPath, 'utf8')
 
