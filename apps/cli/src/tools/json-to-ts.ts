@@ -15,7 +15,7 @@ const main = async (): Promise<void> => {
   // Validate inputs
   const filepath = process.argv[process.argv.length - 1]
   if (!filepath) {
-    console.info('Usage: pnpm serve src/tools/json-to-ts.ts -- out/raw-sites.json')
+    console.info('Usage: pnpm serve lib/tools/json-to-ts.ts -- out/raw-sites.json')
     return
   }
 
