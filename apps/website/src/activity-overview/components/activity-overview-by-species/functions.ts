@@ -8,7 +8,7 @@ export interface ActivityOverviewBySpeciesDataset {
 }
 
 export interface ActivityOverviewBySpeciesDetail {
-  datasetNo: number
+  datasetIdx: number
   detectionCount: number
   detectionFrequency: number
   occupiedSites: number
@@ -20,7 +20,7 @@ export function getFormatSpeciesDataset (rawSpeciesDataset: SpeciesDataset[]): A
 
   const formattedDataset: ActivityOverviewBySpeciesDataset[] = []
 
-  for (const [datasetNo, value] of rawSpeciesDataset.entries()) {
+  for (const [datasetIdx, value] of rawSpeciesDataset.entries()) {
     const bySpeciesData = value.data
     for (const speciesInformation of bySpeciesData) {
       const { scientificName, commonName, taxon, ...statistics } = speciesInformation
@@ -30,10 +30,10 @@ export function getFormatSpeciesDataset (rawSpeciesDataset: SpeciesDataset[]): A
           scientificName,
           commonName,
           taxon,
-          details: [{ datasetNo, ...statistics }]
+          details: [{ datasetIdx, ...statistics }]
         })
       } else {
-        matchedSpecies.details.push({ datasetNo, ...statistics })
+        matchedSpecies.details.push({ datasetIdx, ...statistics })
       }
     }
   }

@@ -49,7 +49,66 @@
           </tr>
         </thead>
         <tbody>
-          <tr
+          <template
+            v-for="(row, idx) in formattedDatasets"
+            :key="'species-table-row-' + row.scientificName + idx"
+          >
+            <tr>
+              <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
+                <router-link
+                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
+                  class="text-subtle hover:(underline text-white)"
+                >
+                  <span class="text-white italic">{{ row.scientificName }}</span>
+                  <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
+                  <p
+                    v-if="row.commonName"
+                    class="text-xs"
+                  >
+                    {{ row.commonName }}
+                  </p>
+                  <p
+                    v-else
+                    class="invisible text-xs"
+                  >
+                    Unknown
+                  </p>
+                </router-link>
+              </td>
+            </tr>
+            <tr
+              v-for="speciesData in row.details"
+              :key="'species-details-row-' + row.scientificName + speciesData.datasetIdx"
+            >
+              <td class="px-1 sticky left-0 bg-mirage-grey z-10">
+                <div class="flex items-center">
+                  <div
+                    class="rounded-full w-1.5 h-1.5"
+                    :style="`background-color:${datasets[speciesData.datasetIdx].color}`"
+                  />
+                  <div class="ml-2">
+                    Dataset {{ speciesData.datasetIdx + 1 }}
+                  </div>
+                </div>
+              </td>
+              <td>
+                {{ row.taxon }}
+              </td>
+              <td class="p-2 text-center">
+                {{ getFormattedNumber(speciesData.detectionCount) }}
+              </td>
+              <td class="p-2 text-center">
+                {{ getThreeDecimalNumber(speciesData.detectionFrequency) }}
+              </td>
+              <td class="p-2 text-center">
+                {{ getFormattedNumber(speciesData.occupiedSites) }}
+              </td>
+              <td class="p-2 text-center">
+                {{ getThreeDecimalNumber(speciesData.occupancyNaive) }}
+              </td>
+            </tr>
+          </template>
+          <!-- <tr
             v-for="(row) in pageData"
             :key="'species-table-row-' + row.scientificName + row.datasetIdx"
           >
@@ -111,7 +170,7 @@
             class="h-2 border-b-1 border-subtle"
           >
             <td :colspan="tableHeader.length" />
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </div>

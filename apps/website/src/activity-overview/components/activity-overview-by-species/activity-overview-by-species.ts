@@ -5,6 +5,7 @@ import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { RouteNames } from '~/router'
+import { ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from './functions'
 
 interface Header {
   title: string
@@ -52,12 +53,13 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
 
 export default class ActivityOverviewBySpecies extends Vue {
   @Inject() readonly ROUTE_NAMES!: RouteNames
-  @Prop() tableData!: SpeciesDataset[]
+  @Prop() datasets!: SpeciesDataset[]
 
   pageIndex = 1 // 1-based for humans
   pageSize = 10
   sortColumn: SortableColumn = 'detectionCount'
   sortDirection: SortDirection = SORTABLE_COLUMNS.detectionCount.defaultDirection
+  formattedDatasets: ActivityOverviewBySpeciesDataset[] = []
 
   get tableHeader (): Header[] {
     return [
@@ -71,7 +73,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   }
 
   get hasTableData (): boolean {
-    return this.tableData.length > 0
+    return this.datasets.length > 0
   }
 
   get maxPage (): number {
@@ -82,7 +84,7 @@ export default class ActivityOverviewBySpecies extends Vue {
    * Sort by user choice then our default
    */
   get sortedTableData (): SpeciesDataWithColorAndDatasetIndex[] {
-    return this.tableData.flatMap(({ color, data }, datasetIdx) => data.map(d => ({ color, datasetIdx, ...d }))).sort((a, b) =>
+    return this.datasets.flatMap(({ color, data }, datasetIdx) => data.map(d => ({ color, datasetIdx, ...d }))).sort((a, b) =>
       SORTABLE_COLUMNS[this.sortColumn].sortFunction(a, b) * this.sortDirection
     )
   }
@@ -93,12 +95,13 @@ export default class ActivityOverviewBySpecies extends Vue {
   }
 
   get totalSpecies (): number {
-    return Math.max(0, ...this.tableData.map(d => d.data.length))
+    return Math.max(0, this.formattedDatasets.length)
   }
 
-  @Watch('tableData')
+  @Watch('datasets')
   onDataChange (): void {
     if (this.pageIndex > this.maxPage) this.pageIndex = 1
+    this.formattedDatasets = getFormatSpeciesDataset(this.datasets)
   }
 
   getSpeciesSlug (scientificName: string): string {
