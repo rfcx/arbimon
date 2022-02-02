@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import { keyBy, mapValues } from 'lodash-es'
 import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
 import { SpeciesCall } from '@rfcx-bio/common/domain'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
@@ -24,7 +25,7 @@ interface ArbimonSpeciesCallRow {
 
 export const getArbimonSpeciesCalls = async (): Promise<Record<string, ArbimonSpeciesCall>> => {
   // Read SQL
-  const currentDir = dirname(new URL(import.meta.url).pathname)
+  const currentDir = dirname(fileURLToPath(import.meta.url))
   const sqlPath = resolve(currentDir, './get-example-of-species-call.sql') // TODO - Update query to support other projects
   const sql = fs.readFileSync(sqlPath, 'utf8')
 

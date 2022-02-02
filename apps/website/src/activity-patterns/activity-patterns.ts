@@ -3,7 +3,6 @@ import { Options, Vue } from 'vue-class-component'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/domain'
-import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
@@ -51,6 +50,7 @@ export default class ActivityPatternsPage extends Vue {
   timeDatasets: TimeDataset[] = []
   exportDatasets: SpotlightExportData[] = []
   speciesInformation: Species | null = null
+  isLocationRedacted = false
 
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0
@@ -62,10 +62,6 @@ export default class ActivityPatternsPage extends Vue {
 
   get infoTopic (): string {
     return INFO_TOPICS.spotlight
-  }
-
-  get isLocationRedacted (): boolean {
-    return this.speciesInformation ? EXTINCTION_RISK_PROTECTED_CODES.includes(this.speciesInformation.extinctionRisk) : false
   }
 
   async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
@@ -100,6 +96,7 @@ export default class ActivityPatternsPage extends Vue {
       })
     )).filter(isDefined)
 
+    this.isLocationRedacted = datasets[0].isLocationRedacted
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))

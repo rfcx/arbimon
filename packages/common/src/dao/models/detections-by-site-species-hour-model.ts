@@ -8,9 +8,18 @@ export const DetectionsBySiteSpeciesHourModel = defineWithDefaults<DetectionsByS
   'DetectionsBySiteSpeciesHour',
   {
     // PK
-    timeHourLocal: DataTypes.DATE(3), // '2021-03-18T11:00:00.000Z' (as date)
-    locationSiteId: DataTypes.INTEGER, // 123
-    taxonSpeciesId: DataTypes.INTEGER, // 456
+    timeHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
+      type: DataTypes.DATE(3),
+      primaryKey: true
+    },
+    locationSiteId: { // 123
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    taxonSpeciesId: { // 456
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
 
     // Facts
     count: DataTypes.INTEGER, // 1
