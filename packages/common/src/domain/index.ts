@@ -1,3 +1,4 @@
+export * from './detection-summary'
 export * from './location-project'
 export * from './location-site'
 export * from './taxon-class'
