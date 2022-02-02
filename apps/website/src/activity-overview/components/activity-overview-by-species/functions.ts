@@ -25,15 +25,21 @@ export function getFormatSpeciesDataset (rawSpeciesDataset: SpeciesDataset[]): A
     for (const speciesInformation of bySpeciesData) {
       const { scientificName, commonName, taxon, ...statistics } = speciesInformation
       const matchedSpecies = formattedDataset.find(({ scientificName: sc }) => sc === scientificName)
+      const details = { datasetIdx, ...statistics }
+      console.log(datasetIdx > 0, Array.from(Array(datasetIdx).keys()))
+      const emptyDetails = datasetIdx > 0
+        ? Array.from(Array(datasetIdx).keys()).map(datasetIdx => ({ datasetIdx, detectionCount: 0, detectionFrequency: 0, occupiedSites: 0, occupancyNaive: 0 }))
+        : []
       if (!matchedSpecies) {
         formattedDataset.push({
           scientificName,
           commonName,
           taxon,
-          details: [{ datasetIdx, ...statistics }]
+          details: [...emptyDetails, details]
         })
+        console.log(emptyDetails, [...emptyDetails, details])
       } else {
-        matchedSpecies.details.push({ datasetIdx, ...statistics })
+        matchedSpecies.details.push(details)
       }
     }
   }

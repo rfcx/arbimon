@@ -8,7 +8,7 @@
     v-else
     class="mt-2"
   >
-    <div class="w-full overflow-x-auto">
+    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-grey scrollbar-track-box-grey-300">
       <table class="w-full table-fixed">
         <thead class="h-10">
           <tr>
