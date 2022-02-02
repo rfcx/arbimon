@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loading">
+  <div v-if="!loading && !isPublicUser">
     <h3 class="text-lg capitalize">
       Species call
     </h3>
