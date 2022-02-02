@@ -1,6 +1,8 @@
 import { urlify } from '@rfcx-bio/utils/url-helpers'
 
-import { env } from './_services/env'
+import { requireEnv } from '~/env'
+
+const { PROTECTION } = requireEnv('PROTECTION')
 
 console.info(urlify('This is an example script'))
-console.info(`Protection for current env is ${env.PROTECTION}`)
+console.info(`Protection for current env is ${PROTECTION}`)

@@ -1,7 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
+import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'
-import { env } from '../../../_services/env'
+
+// TODO: This should be injected by the script controller
+const { WIKI_BASE_URL } = requireEnv('WIKI_BASE_URL')
 
 export interface WikiSummary {
   title: string
@@ -66,7 +69,7 @@ interface WikiSummaryResponse {
 export async function getWikiSpecies (scientificName: string): Promise<WikiSummary | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${env.WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
+    url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
   }
 
   return await axios.request<WikiSummaryResponse>(endpoint)
