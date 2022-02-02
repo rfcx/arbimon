@@ -28,7 +28,7 @@
         :get-popup-html="getPopupHtml"
         :map-export-name="mapExportName(dataset, idx)"
         :map-id="`species-richness-by-location-${idx}`"
-        :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+        :map-initial-bounds="mapInitialBounds"
         :map-height="mapHeight"
         :circle-formatter="circleFormatter"
         :map-style="mapStyle"

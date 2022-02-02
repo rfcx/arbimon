@@ -17,12 +17,12 @@
     "lint-diff:eslint": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
     "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
+    "prepare": "ts-patch install -s",
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "s:api": "pnpm --filter=api serve",
+    "s:db": "pnpm --filter=db serve && pnpm --filter=cli db-migrate && pnpm --filter=cli db-seed",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
-    "sb:db": "pnpm --filter=db serve && pnpm --filter=cli serve src/db-migrations",
-    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\"",
-    "serve-beta": "concurrently --kill-others-on-fail \"pnpm:s:*\" \"pnpm:sb:*\""
+    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\""
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -76,8 +76,10 @@
     "stylelint-config-standard-scss": "^3.0.0",
     "ts-jest": "^27.1.1",
     "ts-node": "^10.4.0",
-    "tsconfig-paths": "^3.11.0",
+    "ts-patch": "^2.0.1",
+    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.4.4",
+    "typescript-transform-paths": "^3.3.1",
     "vite": "^2.7.7",
     "vite-plugin-style-import": "^1.3.0",
     "vite-plugin-windicss": "^1.5.1",

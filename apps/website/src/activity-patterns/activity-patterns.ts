@@ -1,8 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/domain'
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 

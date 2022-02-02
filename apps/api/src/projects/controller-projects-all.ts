@@ -1,25 +1,26 @@
-import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
+import { Project } from '@rfcx-bio/common/domain'
 
 import { Handler } from '../_services/api-helpers/types'
 import { env } from '../_services/env'
 
 export const FAKE_PUERTO_RICO_PROJECT: Project = {
-  id: env.PUERTO_RICO_PROJECT_SLUG,
+  id: 1,
   idCore: env.PUERTO_RICO_PROJECT_CORE_ID,
+  idArbimon: 0,
+  slug: env.PUERTO_RICO_PROJECT_SLUG,
   name: 'Puerto Rico Island-Wide',
-  isPublic: true,
-  externalId: 123456,
-  geoBounds: [
-    { lon: -65.24505, lat: 18.51375 },
-    { lon: -67.94469784, lat: 17.93168 }
-  ]
+  latitudeNorth: 18.51375,
+  latitudeSouth: 17.93168,
+  longitudeEast: -65.24505,
+  longitudeWest: -67.94469784
 }
 
 export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
   // TODO: Remove auth logic here to be better strategy
   const isAuthorized = req.headers.authorization?.replace('Bearer ', '')
   if (!isAuthorized) {
-    return [FAKE_PUERTO_RICO_PROJECT].filter(p => p.isPublic)
+    return [FAKE_PUERTO_RICO_PROJECT]
   }
 
   return [FAKE_PUERTO_RICO_PROJECT]

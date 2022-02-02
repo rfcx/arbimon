@@ -1,4 +1,5 @@
-import { TAXONOMY_CLASS_ALL } from '~/api/taxonomy-service'
+import { TAXONOMY_CLASS_ALL } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
+
 import { MapSiteData } from '~/maps/map-bubble'
 
 export const generateHtmlPopup = (datum: MapSiteData, _?: string): string => {

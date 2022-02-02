@@ -1,17 +1,18 @@
 import { dirname } from 'path'
+import { resolve } from 'path/posix'
 import { Options, QueryInterface, Sequelize } from 'sequelize'
 import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
 
-import { env } from '../_services/env'
-
-// Inputs
-const verbose = process.argv.some(arg => arg === '--verbose')
+import { env } from '../../_services/env'
 
 // Paths & resolve
-const cwd = dirname(new URL(import.meta.url).pathname)
-const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> => (await import(`file:///${(path ?? '').replace(/\\/g, '/')}`))
+const currentDir = dirname(new URL(import.meta.url).pathname)
+const migrationsDir = resolve(currentDir, '../../db/migrations')
 
-const main = async (): Promise<void> => {
+const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
+  (await import(`file:///${(path ?? '').replace(/\\/g, '/')}`))
+
+export const getSequelize = (verbose = false): Sequelize => {
   // Setup sequelize (ORM)
   const sequelizeOptions: Options = {
     host: env.BIO_DB_HOSTNAME,
@@ -26,27 +27,29 @@ const main = async (): Promise<void> => {
         : false
     },
     define: {
-      underscored: true,
       charset: 'utf8',
       collate: 'utf8_general_ci',
-      timestamps: true
+      timestamps: true,
+      underscored: true
     },
-    logging: verbose,
-    schema: 'sequelize'
-    // models: [path.join(currentDir, '../../**/*.model.*')],
+    logging: verbose
   }
 
-  const sequelize = new Sequelize(
+  return new Sequelize(
     env.BIO_DB_DBNAME,
     env.BIO_DB_USER,
     env.BIO_DB_PASSWORD,
     sequelizeOptions
   )
+}
 
-  // Setup umzug (migration runner)
-  const umzug = new Umzug({
+export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
+  new Umzug({
     migrations: {
-      glob: ['./migrations/!(*.d).{js,mjs,ts}', { cwd }],
+      glob: [
+        filename ? `./${filename}.{js,mjs,ts}` : './!(*.d).{js,mjs,ts}',
+        { cwd }
+      ],
       resolve: params => ({
         name: params.name,
         path: params.path,
@@ -55,18 +58,6 @@ const main = async (): Promise<void> => {
       })
     },
     context: sequelize.getQueryInterface(),
-    storage: new SequelizeStorage({ sequelize }),
+    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: cwd === migrationsDir ? 'migrations' : 'seeders' }),
     logger: verbose ? console : undefined
   })
-
-  // Run migrations
-  await umzug.up().then(res => {
-    console.info()
-    console.info(`Executed ${res.length} needed migrations`)
-    res.forEach(r => console.info(`- ${r.name}`))
-  })
-  await sequelize.close()
-}
-
-await main()
-  .catch(e => console.error(e))
