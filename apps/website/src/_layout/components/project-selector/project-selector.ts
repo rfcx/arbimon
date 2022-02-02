@@ -2,7 +2,7 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
 
-import { Project } from '@rfcx-bio/common/api-bio/common/projects'
+import { Project } from '@rfcx-bio/common/domain'
 
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -33,7 +33,7 @@ export default class ProjectSelectorComponent extends Vue {
   async confirmedSelectedProject (): Promise<void> {
     if (this.newSelectedProject) {
       await this.store.updateSelectedProject(this.newSelectedProject)
-      await this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectId: this.newSelectedProject.id } })
+      await this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectId: this.newSelectedProject.slug } })
     }
     this.emitCloseProjectSelector()
   }

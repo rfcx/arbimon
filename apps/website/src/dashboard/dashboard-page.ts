@@ -1,4 +1,5 @@
 import { max } from 'lodash-es'
+import { LngLatBoundsLike } from 'mapbox-gl'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
@@ -6,9 +7,9 @@ import { Inject } from 'vue-property-decorator'
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { TAXONOMY_COLORS } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import { downloadSvgAsPng } from '~/charts'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
@@ -74,6 +75,12 @@ export default class DashboardPage extends Vue {
 
   get color (): string {
     return this.store.datasetColors[0] ?? '#EFEFEF'
+  }
+
+  get mapInitialBounds (): LngLatBoundsLike | null {
+    const project = this.store.selectedProject
+    if (!project) return null
+    return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }
 
   get circleFormatter (): CircleFormatter {
@@ -166,7 +173,7 @@ export default class DashboardPage extends Vue {
 
   override async created (): Promise<void> {
     const projectId = this.store.selectedProject?.id
-    if (!projectId) return
+    if (projectId === undefined) return
 
     const [generated, profile] = await Promise.all([
       dashboardService.getDashboardGeneratedData(projectId),

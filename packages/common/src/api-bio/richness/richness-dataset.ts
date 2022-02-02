@@ -1,5 +1,5 @@
+import { SpeciesLight } from '../../domain'
 import { FilterDatasetQuery } from '../common/filter'
-import { SpeciesLight } from '../species/common'
 import { MapSiteData, TimeBucket } from './common'
 
 // Request

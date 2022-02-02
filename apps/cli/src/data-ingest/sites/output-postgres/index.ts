@@ -1,4 +1,4 @@
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { Site } from '@rfcx-bio/common/domain'
 
 export const writeSitesToPostgres = async (detections: Site[]): Promise<void> => {
   // TODO - Write data to Bio DB

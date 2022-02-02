@@ -55,8 +55,10 @@ importers:
       stylelint-config-standard-scss: ^3.0.0
       ts-jest: ^27.1.1
       ts-node: ^10.4.0
-      tsconfig-paths: ^3.11.0
+      ts-patch: ^2.0.1
+      tsconfig-paths: ^3.12.0
       typescript: ^4.4.4
+      typescript-transform-paths: ^3.3.1
       vite: ^2.7.7
       vite-plugin-style-import: ^1.3.0
       vite-plugin-windicss: ^1.5.1
@@ -119,8 +121,10 @@ importers:
       stylelint-config-standard-scss: 3.0.0_postcss@8.3.11+stylelint@14.0.1
       ts-jest: 27.1.1_94f8ccbac0e4fe1085aef0feb2526070
       ts-node: 10.4.0_0cb88d80cb04d25b21fa3ec194608c65
-      tsconfig-paths: 3.11.0
+      ts-patch: 2.0.1_typescript@4.4.4
+      tsconfig-paths: 3.12.0
       typescript: 4.4.4
+      typescript-transform-paths: 3.3.1_typescript@4.4.4
       vite: 2.7.7_sass@1.43.4
       vite-plugin-style-import: 1.3.0_vite@2.7.7
       vite-plugin-windicss: 1.5.1_vite@2.7.7
@@ -163,7 +167,8 @@ importers:
 
   apps/cli:
     specifiers:
-      '@rfcx-bio/common': workspace:*
+      '@rfcx-bio/common': workspace:^0.0.1
+      '@rfcx-bio/utils': workspace:^0.0.1
       '@types/mysql': ^2.15.19
       '@types/validator': ^13.7.0
       axios: ^0.24.0
@@ -173,10 +178,11 @@ importers:
       mysql2: ^2.3.3
       pg: ^8.7.1
       pg-hstore: ^2.3.4
-      sequelize: 6.12.0-beta.3
+      sequelize: 7.0.0-alpha.5
       umzug: ^3.0.0
     dependencies:
       '@rfcx-bio/common': link:../../packages/common
+      '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.24.0
       dayjs: 1.10.7
       dotenv: 10.0.0
@@ -184,7 +190,7 @@ importers:
       mysql2: 2.3.3
       pg: 8.7.1
       pg-hstore: 2.3.4
-      sequelize: 6.12.0-beta.3_47c1b715f3fef52e0004adf8e81847ff
+      sequelize: 7.0.0-alpha.5_47c1b715f3fef52e0004adf8e81847ff
       umzug: 3.0.0
     devDependencies:
       '@types/mysql': 2.15.19
@@ -196,7 +202,8 @@ importers:
       '@iconify-json/fa': ^1.0.1
       '@iconify-json/fa-regular': ^1.0.2
       '@iconify-json/fa-solid': ^1.0.2
-      '@rfcx-bio/common': workspace:*
+      '@rfcx-bio/common': workspace:^0.0.1
+      '@rfcx-bio/utils': workspace:^0.0.1
       '@types/color-string': ^1.5.0
       '@types/d3': ^7.1.0
       '@types/howler': ^2.2.4
@@ -231,6 +238,7 @@ importers:
     dependencies:
       '@auth0/auth0-spa-js': 1.19.2
       '@rfcx-bio/common': link:../../packages/common
+      '@rfcx-bio/utils': link:../../packages/utils
       '@vueuse/components': 6.7.6_vue@3.2.21
       '@vueuse/core': 6.7.6_vue@3.2.21
       axios: 0.24.0
@@ -269,14 +277,15 @@ importers:
 
   packages/common:
     specifiers:
-      '@rfcx-bio/utils': workspace:*
+      '@rfcx-bio/utils': workspace:^0.0.1
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
+      sequelize: ^7.0.0-alpha.5
     dependencies:
+      '@rfcx-bio/utils': link:../utils
       dayjs: 1.10.7
       lodash-es: 4.17.21
-    devDependencies:
-      '@rfcx-bio/utils': link:../utils
+      sequelize: 7.0.0-alpha.5
 
   packages/utils:
     specifiers:
@@ -3231,10 +3240,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /any-promise/1.3.0:
-    resolution: {integrity: sha1-q8av7tzqUugJzcA3au0845Y10X8=}
-    dev: false
-
   /anymatch/3.1.2:
     resolution: {integrity: sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==}
     engines: {node: '>= 8'}
@@ -5340,7 +5345,7 @@ packages:
       minimatch: 3.0.4
       object.values: 1.1.5
       resolve: 1.20.0
-      tsconfig-paths: 3.11.0
+      tsconfig-paths: 3.12.0
     dev: true
 
   /eslint-plugin-jest/25.2.3_23bf8e679a477eab917d39f4e9be0c87:
@@ -9187,6 +9192,13 @@ packages:
       picomatch: 2.3.0
     dev: true
 
+  /rechoir/0.6.2:
+    resolution: {integrity: sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      resolve: 1.20.0
+    dev: true
+
   /recrawl-sync/2.2.1:
     resolution: {integrity: sha512-A2yLDgeXNaduJJMlqyUdIN7fewopnNm/mVeeGytS1d2HLXKpS5EthQ0j8tWeX+as9UXiiwQRwfoslKC+/gjqxg==}
     dependencies:
@@ -9362,10 +9374,8 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /retry-as-promised/4.0.0:
-    resolution: {integrity: sha512-zuqltYoBckZPoqLjC0eyvGpmM/psgpcreq0PLYVzBSb0Xq382XJrKNgu+fgHDy9U3R66adgFe5Viyx3D+gRvXA==}
-    dependencies:
-      any-promise: 1.3.0
+  /retry-as-promised/5.0.0:
+    resolution: {integrity: sha512-6S+5LvtTl2ggBumk04hBo/4Uf6fRJUwIgunGZ7CYEBCeufGFW1Pu6ucUf/UskHeWOIsUcLOGLFXPig5tR5V1nA==}
     dev: false
 
   /reusify/1.0.4:
@@ -9563,9 +9573,58 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: false
 
-  /sequelize/6.12.0-beta.3_47c1b715f3fef52e0004adf8e81847ff:
-    resolution: {integrity: sha512-umauMlf/7TcfDPGKHV7VWdfqagLKCj6XicgYBf/teQKnBrDmximbL02zP/yomOE4FtCUGlBy+JV8O6XgHWy+Fg==}
-    engines: {node: '>=10.0.0'}
+  /sequelize/7.0.0-alpha.5:
+    resolution: {integrity: sha512-CvbX/FCZgt4RMXsF5GoaBpSP/X60MODTO3POvJmLLpu3NLTq6bNuFBpJQMGIEKBZuRj10dj+M72REDQ+XXkzug==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      ibm_db: '*'
+      mariadb: '*'
+      mysql2: '*'
+      pg: '*'
+      pg-hstore: '*'
+      snowflake-sdk: '*'
+      sqlite3: '*'
+      tedious: '*'
+    peerDependenciesMeta:
+      ibm_db:
+        optional: true
+      mariadb:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      pg-hstore:
+        optional: true
+      snowflake-sdk:
+        optional: true
+      sqlite3:
+        optional: true
+      tedious:
+        optional: true
+    dependencies:
+      '@types/debug': 4.1.7
+      debug: 4.3.3
+      dottie: 2.0.2
+      inflection: 1.13.1
+      lodash: 4.17.21
+      moment: 2.29.1
+      moment-timezone: 0.5.34
+      pg-connection-string: 2.5.0
+      retry-as-promised: 5.0.0
+      semver: 7.3.5
+      sequelize-pool: 7.1.0
+      toposort-class: 1.0.1
+      uuid: 8.3.2
+      validator: 13.7.0
+      wkx: 0.5.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /sequelize/7.0.0-alpha.5_47c1b715f3fef52e0004adf8e81847ff:
+    resolution: {integrity: sha512-CvbX/FCZgt4RMXsF5GoaBpSP/X60MODTO3POvJmLLpu3NLTq6bNuFBpJQMGIEKBZuRj10dj+M72REDQ+XXkzug==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       ibm_db: '*'
       mariadb: '*'
@@ -9604,7 +9663,7 @@ packages:
       pg: 8.7.1
       pg-connection-string: 2.5.0
       pg-hstore: 2.3.4
-      retry-as-promised: 4.0.0
+      retry-as-promised: 5.0.0
       semver: 7.3.5
       sequelize-pool: 7.1.0
       toposort-class: 1.0.1
@@ -9644,6 +9703,16 @@ packages:
   /shebang-regex/3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+    dev: true
+
+  /shelljs/0.8.5:
+    resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dependencies:
+      glob: 7.2.0
+      interpret: 1.4.0
+      rechoir: 0.6.2
     dev: true
 
   /shimmer/1.2.1:
@@ -10457,8 +10526,24 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /tsconfig-paths/3.11.0:
-    resolution: {integrity: sha512-7ecdYDnIdmv639mmDwslG6KQg1Z9STTz1j7Gcz0xa+nshh/gKDAHcPxRbWOsA3SPp0tXP2leTcY9Kw+NAkfZzA==}
+  /ts-patch/2.0.1_typescript@4.4.4:
+    resolution: {integrity: sha512-mP7beU1QkmyDs1+SzXYVaSTD6Xo7ZCibOJ3sZkb/xsQjoAQXvn4oPjk0keC2LfCNAgilqtqgjiWp3pQri1uz4w==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=4.0.0'
+    dependencies:
+      chalk: 4.1.2
+      glob: 7.2.0
+      global-prefix: 3.0.0
+      minimist: 1.2.5
+      resolve: 1.20.0
+      shelljs: 0.8.5
+      strip-ansi: 6.0.1
+      typescript: 4.4.4
+    dev: true
+
+  /tsconfig-paths/3.12.0:
+    resolution: {integrity: sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==}
     dependencies:
       '@types/json5': 0.0.29
       json5: 1.0.1
@@ -10569,6 +10654,15 @@ packages:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
     dependencies:
       is-typedarray: 1.0.0
+    dev: true
+
+  /typescript-transform-paths/3.3.1_typescript@4.4.4:
+    resolution: {integrity: sha512-c+8Cqd2rsRtTU68rJI0NX/OtqgBDddNs1fIxm1nCNyhn0WpoyqtpUxc1w9Ke5c5kgE4/OT5xYbKf2cf694RYEg==}
+    peerDependencies:
+      typescript: '>=3.6.5'
+    dependencies:
+      minimatch: 3.0.4
+      typescript: 4.4.4
     dev: true
 
   /typescript/4.4.4:
@@ -10919,7 +11013,7 @@ packages:
       debug: 4.3.2
       globrex: 0.1.2
       recrawl-sync: 2.2.1
-      tsconfig-paths: 3.11.0
+      tsconfig-paths: 3.12.0
       vite: 2.7.7_sass@1.43.4
     transitivePeerDependencies:
       - supports-color

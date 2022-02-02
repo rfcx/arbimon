@@ -18,7 +18,7 @@
       >
       <router-link
         class="mt-0.5 self-center hover:(text-subtle)"
-        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
+        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.speciesSlug } }"
       >
         <div class="flex items-center">
           <el-tag

@@ -1,5 +1,5 @@
 import { ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime } from '../../api-bio/activity/common'
-import { Site } from '../common/sites'
+import { Site } from '../../domain'
 
 // Request
 export interface ActivityDatasetParams {

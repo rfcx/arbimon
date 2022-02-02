@@ -18,8 +18,8 @@ export const richnessExportHandler: Handler<RichnessByExportResponse, RichnessBy
   const convertedQuery = {
     startDateUtcInclusive,
     endDateUtcInclusive,
-    siteIds: siteIds ?? [],
-    taxons: taxons ?? []
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : [],
+    taxons: Array.isArray(taxons) ? taxons : []
   }
 
   return await getRichnessDatasetInformation(req, convertedQuery)

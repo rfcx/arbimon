@@ -27,25 +27,25 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
   const convertedQuery: FilterDataset = {
     startDateUtcInclusive: startDate,
     endDateUtcInclusive: endDate,
-    siteIds: siteIds ?? [],
-    taxons: taxons ?? []
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : [],
+    taxons: Array.isArray(taxons) ? taxons : []
   }
 
   const isLocationRedacted = !isProjectMember(req)
 
   // Response
-  return await getActivityOverviewData({ ...convertedQuery }, isLocationRedacted)
+  return await getActivityOverviewData(Number(projectId), { ...convertedQuery }, isLocationRedacted)
 }
 
-const getActivityOverviewData = async (filter: FilterDataset, isLocationRedacted: boolean): Promise<ActivityDatasetResponse> => {
+const getActivityOverviewData = async (projectId: number, filter: FilterDataset, isLocationRedacted: boolean): Promise<ActivityDatasetResponse> => {
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const detectionsBySites = groupBy(totalSummaries, 'stream_id')
+
+  const sites = rawSites.filter(site => filter.siteIds.includes(site.id))
   const overviewBySite = await getOverviewDataBySite(detectionsBySites)
   const overviewByTime = await getOverviewDataByTime(totalSummaries)
   const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries, isLocationRedacted)
-  const sites = rawSites.filter(site => {
-    return filter.siteIds.indexOf(site.siteId) !== 1
-  })
+
   return {
     isLocationRedacted,
     sites,

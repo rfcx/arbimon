@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Preferences
   },
   {
-    path: '/:projectId',
+    path: '/:projectSlug',
     component: PAGES.ProjectRoot,
     beforeEnter: [storeProjectGuard],
     children: [

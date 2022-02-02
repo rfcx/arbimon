@@ -2,7 +2,7 @@ import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesCall } from '@rfcx-bio/common/domain'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { assetsService } from '@/activity-patterns/services'

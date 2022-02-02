@@ -13,7 +13,7 @@ const outputTsConstName = 'rawSites'
 const main = async (): Promise<void> => {
   const sites = getMockSites()
   const outputJson = JSON.stringify(sites, undefined, 2)
-  const outputTs = jsonToTs(outputJson, outputTsConstName, 'Site[]', 'import { Site } from \'../api-bio/common/sites\'')
+  const outputTs = jsonToTs(outputJson, outputTsConstName, 'Site[]', 'import { Site } from \'../domain\'')
   fs.writeFileSync(outputJsonPath, outputJson, 'utf8')
   fs.writeFileSync(outputTsPath, outputTs, 'utf8')
   console.info(`Finished writing to\n- ${outputJsonPath}\n- ${outputTsPath}`)

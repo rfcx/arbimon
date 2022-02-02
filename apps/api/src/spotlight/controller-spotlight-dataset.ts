@@ -1,8 +1,8 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
-import { Species } from '@rfcx-bio/common/api-bio/species/common'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { Species } from '@rfcx-bio/common/domain'
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
@@ -35,14 +35,14 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   const convertedQuery = {
     startDateUtcInclusive,
     endDateUtcInclusive,
-    siteIds: siteIds ?? [],
-    taxons: taxons ?? []
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : [],
+    taxons: Array.isArray(taxons) ? taxons : []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species, isLocationRedacted)
+  return await getSpotlightDatasetInformation(Number(projectId), { ...convertedQuery }, species, isLocationRedacted)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species, isLocationRedacted: boolean): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (projectId: number, filter: FilterDataset, species: Species, isLocationRedacted: boolean): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
 
   // Filtering
