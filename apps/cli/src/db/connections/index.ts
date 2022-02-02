@@ -2,11 +2,12 @@ import { dirname } from 'path'
 import { resolve } from 'path/posix'
 import { Options, QueryInterface, Sequelize } from 'sequelize'
 import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
+import { fileURLToPath } from 'url'
 
 import { requireEnv } from '~/env'
 
 // Paths & resolve
-const currentDir = dirname(new URL(import.meta.url).pathname)
+const currentDir = dirname(fileURLToPath(import.meta.url))
 const migrationsDir = resolve(currentDir, '../../db/migrations')
 
 // TODO: This should be injected by the script controller
