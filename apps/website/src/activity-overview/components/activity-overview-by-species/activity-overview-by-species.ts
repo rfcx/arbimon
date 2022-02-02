@@ -56,7 +56,6 @@ export default class ActivityOverviewBySpecies extends Vue {
   @Prop() datasets!: SpeciesDataset[]
 
   pageIndex = 1 // 1-based for humans
-  pageSize = 10
   sortColumn: SortableColumn = 'detectionCount'
   sortDirection: SortDirection = SORTABLE_COLUMNS.detectionCount.defaultDirection
   formattedDatasets: ActivityOverviewBySpeciesDataset[] = []
@@ -72,12 +71,16 @@ export default class ActivityOverviewBySpecies extends Vue {
     ]
   }
 
-  get hasTableData (): boolean {
+  get notEmpty (): boolean {
     return this.datasets.length > 0
   }
 
+  get hasMoreThanOneDatasets (): boolean {
+    return this.datasets.length > 1
+  }
+
   get maxPage (): number {
-    return Math.ceil(this.sortedTableData.length / this.pageSize)
+    return Math.ceil(this.formattedDatasets.length / this.pageSize)
   }
 
   /**
@@ -89,9 +92,22 @@ export default class ActivityOverviewBySpecies extends Vue {
     )
   }
 
-  get pageData (): SpeciesDataWithColorAndDatasetIndex[] {
+  get pageData (): ActivityOverviewBySpeciesDataset[] {
     const start = (this.pageIndex - 1) * this.pageSize
-    return this.sortedTableData.slice(start, start + this.pageSize)
+    return this.formattedDatasets.slice(start, start + this.pageSize)
+  }
+
+  get pageSize (): number {
+    const numberOfDatasets = this.datasets.length
+    switch (numberOfDatasets) {
+      case 2:
+      case 3:
+        return 5
+      case 4:
+      case 5:
+        return 3
+      default: return 10
+    }
   }
 
   get totalSpecies (): number {

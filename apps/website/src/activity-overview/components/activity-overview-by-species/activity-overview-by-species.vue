@@ -1,7 +1,7 @@
 <template>
   <section-title title="Species detected" />
   <no-data-panel
-    v-if="!hasTableData"
+    v-if="!notEmpty"
     class="h-32 mt-2"
   />
   <div
@@ -50,7 +50,7 @@
         </thead>
         <tbody>
           <template
-            v-for="(row, idx) in formattedDatasets"
+            v-for="(row, idx) in pageData"
             :key="'species-table-row-' + row.scientificName + idx"
           >
             <tr>
@@ -75,92 +75,61 @@
                   </p>
                 </router-link>
               </td>
+              <template v-if="!hasMoreThanOneDatasets">
+                <td class="p-2">
+                  {{ row.taxon }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(row.details[0].detectionCount) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(row.details[0].detectionFrequency) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(row.details[0].occupiedSites) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(row.details[0].occupancyNaive) }}
+                </td>
+              </template>
             </tr>
-            <tr
-              v-for="speciesData in row.details"
-              :key="'species-details-row-' + row.scientificName + speciesData.datasetIdx"
-            >
-              <td class="px-1 sticky left-0 bg-mirage-grey z-10">
-                <div class="flex items-center">
-                  <div
-                    class="rounded-full w-1.5 h-1.5"
-                    :style="`background-color:${datasets[speciesData.datasetIdx].color}`"
-                  />
-                  <div class="ml-2">
-                    Dataset {{ speciesData.datasetIdx + 1 }}
+            <template v-if="hasMoreThanOneDatasets">
+              <tr
+                v-for="speciesData in row.details"
+                :key="'species-details-row-' + row.scientificName + speciesData.datasetIdx"
+              >
+                <td class="px-1 sticky left-0 bg-mirage-grey z-10">
+                  <div class="flex items-center">
+                    <div
+                      class="rounded-full w-1.5 h-1.5"
+                      :style="`background-color:${datasets[speciesData.datasetIdx].color}`"
+                    />
+                    <div class="ml-2">
+                      Dataset {{ speciesData.datasetIdx + 1 }}
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>
-                {{ row.taxon }}
-              </td>
-              <td class="p-2 text-center">
-                {{ getFormattedNumber(speciesData.detectionCount) }}
-              </td>
-              <td class="p-2 text-center">
-                {{ getThreeDecimalNumber(speciesData.detectionFrequency) }}
-              </td>
-              <td class="p-2 text-center">
-                {{ getFormattedNumber(speciesData.occupiedSites) }}
-              </td>
-              <td class="p-2 text-center">
-                {{ getThreeDecimalNumber(speciesData.occupancyNaive) }}
-              </td>
-            </tr>
+                </td>
+                <td>
+                  {{ row.taxon }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(speciesData.detectionCount) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(speciesData.detectionFrequency) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(speciesData.occupiedSites) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(speciesData.occupancyNaive) }}
+                </td>
+              </tr>
+            </template>
           </template>
-          <!-- <tr
-            v-for="(row) in pageData"
-            :key="'species-table-row-' + row.scientificName + row.datasetIdx"
-          >
-            <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
-              <div class="flex items-center">
-                <div
-                  v-if="tableData.length > 1"
-                  class="rounded-full w-1.5 h-1.5"
-                  :style="`background-color:${row.color}`"
-                />
-                <div :class="{'ml-2': tableData.length > 1}">
-                  <router-link
-                    :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
-                    class="text-subtle hover:(underline text-white)"
-                  >
-                    <span class="text-white italic">{{ row.scientificName }}</span>
-                    <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
-                    <p
-                      v-if="row.commonName"
-                      class="text-xs"
-                    >
-                      {{ row.commonName }}
-                    </p>
-                    <p
-                      v-else
-                      class="invisible text-xs"
-                    >
-                      Unknown
-                    </p>
-                  </router-link>
-                </div>
-              </div>
-            </td>
-            <td class="p-2">
-              {{ row.taxon }}
-            </td>
-            <td class="p-2 text-center">
-              {{ getFormattedNumber(row.detectionCount) }}
-            </td>
-            <td class="p-2 text-center">
-              {{ getThreeDecimalNumber(row.detectionFrequency) }}
-            </td>
-            <td class="p-2 text-center">
-              {{ getFormattedNumber(row.occupiedSites) }}
-            </td>
-            <td class="p-2 text-center">
-              {{ getThreeDecimalNumber(row.occupancyNaive) }}
-            </td>
-          </tr>
           <tr
             v-for="blankIndex in pageSize - pageData.length"
-            :key="'blank-row' + blankIndex"
+            :key="'blank-row-' + blankIndex"
           >
             <td class="p-2">
               <span>&nbsp;</span>
@@ -170,7 +139,7 @@
             class="h-2 border-b-1 border-subtle"
           >
             <td :colspan="tableHeader.length" />
-          </tr> -->
+          </tr>
         </tbody>
       </table>
     </div>
