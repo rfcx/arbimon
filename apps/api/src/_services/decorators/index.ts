@@ -1,6 +1,6 @@
 import { FAKE_PUERTO_RICO_PROJECT } from '../../projects/controller-projects-all'
 import { Middleware } from '../api-helpers/types'
-import { hasAccessToProject } from '../security/project-access'
+import { isProjectMember } from '../security/project-access'
 
 interface ProjectRouteParams {
   projectId: string
@@ -17,6 +17,6 @@ export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async
 
   if (token === undefined || bioProjectId === undefined || coreProjectId === undefined) return
 
-  const hasAccess = await hasAccessToProject(coreProjectId, token)
-  if (hasAccess) { req.requestContext.set(IS_PROJECT_MEMBER, hasAccess) }
+  const isMember = await isProjectMember(coreProjectId, token)
+  if (isMember) { req.requestContext.set(IS_PROJECT_MEMBER, isMember) }
 }
