@@ -3,7 +3,7 @@ import { Forbidden } from '../errors/data-access-errors'
 
 export const isValidToken = (token: string): boolean => /^Bearer ./i.test(token) // at least 1 character after space
 
-export async function hasAccessToProject (id: string, token: string): Promise<boolean> {
+export async function isProjectMember (id: string, token: string): Promise<boolean> {
   if (!isValidToken(token)) return false
 
   return await getProjectPermission(id, token)
