@@ -110,3 +110,20 @@ function getTaxonFilterName (taxonFilter: string[]): string {
     default: return `Taxon=${taxonFilter?.[0]}+ ${taxonFilter.length - 1} other taxons--`
   }
 }
+
+export function generateFilterQuery (rawFilter: DatasetParameters): string {
+  const siteIdsStringArray = (new URLSearchParams(rawFilter.sites.map(({ id }) => ['siteIds', id.toString()]))).toString()
+  const taxonsStringArray = (new URLSearchParams(rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => ['taxons', value]))).toString()
+
+  let params = Object.entries({ startDate: rawFilter.startDate.toISOString(), endDate: rawFilter.endDate.toISOString() }).map(([key, value]) => `${key}=${value}`).join('&')
+
+  if (siteIdsStringArray) {
+    params = `${params}&${siteIdsStringArray}`
+  }
+
+  if (taxonsStringArray) {
+    params = `${params}&${taxonsStringArray}`
+  }
+
+  return params
+}

@@ -4,7 +4,7 @@ import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/
 import { Species, SpeciesLight } from '@rfcx-bio/common/domain'
 
 import { apiClient } from '~/api'
-import { DatasetParameters } from '~/filters'
+import { DatasetParameters, generateFilterQuery } from '~/filters'
 import { useStore } from '~/store'
 
 export interface ProjectSpecies {
@@ -48,14 +48,7 @@ export class SpotlightService {
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined
 
-    const filter = {
-      speciesId,
-      startDate: rawFilter.startDate.toISOString(),
-      endDate: rawFilter.endDate.toISOString(),
-      siteIds: rawFilter.sites.map(({ id }) => id),
-      taxons: rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
-    }
-    const query = Object.entries(filter).map(([key, value]) => `${key}=${value.toString()}`).join('&')
+    const query = `${generateFilterQuery(rawFilter)}&speciesId=${speciesId}`
     const url = `${this.baseUrl}${spotlightDatasetUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<SpotlightDatasetResponse>(url)
 
