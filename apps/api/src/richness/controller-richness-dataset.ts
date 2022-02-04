@@ -27,8 +27,9 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
   const convertedQuery = {
     startDateUtcInclusive,
     endDateUtcInclusive,
-    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : [],
-    taxons: Array.isArray(taxons) ? taxons : []
+    // TODO ???: Better way to check query type!
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
+    taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
   }
 
   const detections = filterMocksByParameters(rawDetections, { ...convertedQuery })
