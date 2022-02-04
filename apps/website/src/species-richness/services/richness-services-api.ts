@@ -2,7 +2,7 @@ import { RichnessDatasetResponse, richnessDatasetUrl } from '@rfcx-bio/common/ap
 import { RichnessByExportReport, RichnessByExportResponse, richnessByExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { apiClient } from '~/api'
-import { DatasetParameters } from '~/filters'
+import { DatasetParameters, generateFilterQuery } from '~/filters'
 import { useStore } from '~/store'
 
 export class RichnessService {
@@ -13,8 +13,7 @@ export class RichnessService {
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined
 
-    const query = this.getFilterQuery(rawFilter)
-    console.log({ query })
+    const query = generateFilterQuery(rawFilter)
     const url = `${this.baseUrl}${richnessDatasetUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<RichnessDatasetResponse>(url)
 
@@ -26,27 +25,10 @@ export class RichnessService {
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined
 
-    const query = this.getFilterQuery(rawFilter)
+    const query = generateFilterQuery(rawFilter)
     const url = `${this.baseUrl}${richnessByExportUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<RichnessByExportResponse>(url)
 
     return resp?.speciesByExport
-  }
-
-  getFilterQuery (rawFilter: DatasetParameters): string {
-    const siteIdsStringArray = (new URLSearchParams(rawFilter.sites.map(({ id }) => ['siteIds', id.toString()]))).toString()
-    const taxonsStringArray = (new URLSearchParams(rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => ['taxons', value]))).toString()
-
-    let params = Object.entries({ startDate: rawFilter.startDate.toISOString(), endDate: rawFilter.endDate.toISOString() }).map(([key, value]) => `${key}=${value}`).join('&')
-
-    if (siteIdsStringArray) {
-      params = `${params}&${siteIdsStringArray}`
-    }
-
-    if (taxonsStringArray) {
-      params = `${params}&${taxonsStringArray}`
-    }
-
-    return params
   }
 }
