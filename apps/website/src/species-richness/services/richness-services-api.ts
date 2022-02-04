@@ -14,6 +14,7 @@ export class RichnessService {
     if (projectId === undefined) return undefined
 
     const query = this.getFilterQuery(rawFilter)
+    console.log({ query })
     const url = `${this.baseUrl}${richnessDatasetUrl({ projectId: projectId.toString() })}?${query}`
     const resp = await apiClient.getOrUndefined<RichnessDatasetResponse>(url)
 
@@ -33,13 +34,19 @@ export class RichnessService {
   }
 
   getFilterQuery (rawFilter: DatasetParameters): string {
-    const filter = {
-      startDate: rawFilter.startDate.toISOString(),
-      endDate: rawFilter.endDate.toISOString(),
-      siteIds: rawFilter.sites.map(({ id }) => id),
-      taxons: rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
+    const siteIdsStringArray = (new URLSearchParams(rawFilter.sites.map(({ id }) => ['siteIds', id.toString()]))).toString()
+    const taxonsStringArray = (new URLSearchParams(rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => ['taxons', value]))).toString()
+
+    let params = Object.entries({ startDate: rawFilter.startDate.toISOString(), endDate: rawFilter.endDate.toISOString() }).map(([key, value]) => `${key}=${value}`).join('&')
+
+    if (siteIdsStringArray) {
+      params = `${params}&${siteIdsStringArray}`
     }
 
-    return Object.entries(filter).map(([key, value]) => `${key}=${value.toString()}`).join('&')
+    if (taxonsStringArray) {
+      params = `${params}&${taxonsStringArray}`
+    }
+
+    return params
   }
 }
