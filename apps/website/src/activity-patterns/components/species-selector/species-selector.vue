@@ -5,6 +5,7 @@
     :filter-method="onFilterType"
     :loading="loadingSpecies"
     class="species-input bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    @change="onReset"
   >
     <el-option
       v-for="species in filteredSpecies"
