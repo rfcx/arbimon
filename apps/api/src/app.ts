@@ -7,6 +7,7 @@ import { resolve } from 'path'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
+import { routesMedia } from './media'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
@@ -25,6 +26,7 @@ await app.register(fastifyRequestContextPlugin)
 // Register routes
 const routesRegistrations = [
   routesDashboard,
+  routesMedia,
   routesProject,
   routesSpecies,
   routesRichness,

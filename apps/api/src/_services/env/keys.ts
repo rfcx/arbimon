@@ -23,6 +23,7 @@ export const envKeysOptional = <const>[
   'BIO_DB_PORT',
   'BIO_DB_SSL_ENABLED',
   'BIO_DB_USER',
+  'BIO_SERVICE_SECRET',
 
   'NODE_ENV',
   'FASTIFY_PORT',
