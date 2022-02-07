@@ -19,6 +19,7 @@ export async function getProjectPermission (projectId: string, token: string): P
     .catch(unpackAxiosError)
   }
 
-export async function getMedia (url: string): Promise<Blob | undefined> {
-  return await apiClient.getOrUndefined<Blob>(url, { responseType: 'blob' })
+export async function getMedia (url: string): Promise<ArrayBuffer | undefined> {
+  // ! `blob` is a "browser only" option. read more here: https://stackoverflow.com/a/60461828
+  return await apiClient.getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }

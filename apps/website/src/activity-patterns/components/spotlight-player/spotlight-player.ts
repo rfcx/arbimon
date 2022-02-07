@@ -26,12 +26,12 @@ export default class SpotlightPlayer extends Vue {
   playedTime = 0
   playedProgressPercentage = 0
 
-  get isPublicUser (): boolean {
-    return this.store.user === undefined
-  }
-
   get displayPlayedTime (): string {
     return `${dayjs.duration(this.playedTime, 'seconds').format('m:ss')}`
+  }
+
+  get emptyMedia (): boolean {
+    return this.spectrogram === '' || this.audio === null
   }
 
   override async created (): Promise<void> {
@@ -46,26 +46,32 @@ export default class SpotlightPlayer extends Vue {
   async getSpeciesCallAssets (): Promise<void> {
     this.loading = true
     await Promise.all([
-      await this.getSpectrogramImage(),
-      await this.getAudio()
+      this.getSpectrogramImage(),
+      this.getAudio()
     ])
     this.loading = false
   }
 
   async getSpectrogramImage (): Promise<void> {
-    const data = await assetsService.getSpectrogramImage(this.speciesCall.mediaSpecUrl)
-    this.spectrogram = data ? window.URL.createObjectURL(data) : ''
+    const data = await assetsService.getMedia(this.speciesCall.mediaSpecUrl)
+    if (!data) {
+      this.spectrogram = ''
+      return
+    }
+    const extension = this.speciesCall.mediaSpecUrl.split('.').at(-1) ?? 'png'
+    this.spectrogram = `data:image/${extension};base64,${data}`
   }
 
   async getAudio (): Promise<void> {
-    const data = await assetsService.getAudio(this.speciesCall.mediaWavUrl)
+    const data = await assetsService.getMedia(this.speciesCall.mediaWavUrl)
     if (!data) {
       this.audio = null
       return
     }
 
+    const extension = this.speciesCall.mediaWavUrl.split('.').at(-1) ?? 'wav'
     this.audio = new Howl({
-      src: [window.URL.createObjectURL(data)],
+      src: `data:audio/${extension};base64,${data}`,
       html5: true,
       onend: () => {
         this.playing = false
