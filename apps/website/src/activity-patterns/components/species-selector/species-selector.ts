@@ -59,6 +59,10 @@ export default class SpeciesSelector extends Vue {
     this.currentSpeciesQuery = query
   }
 
+  onReset (): void {
+    this.onFilterType('')
+  }
+
   async getAllSpecies (): Promise<SpeciesLight[]> {
     return await spotlightService.getSpeciesAll() ?? []
   }
