@@ -14,7 +14,6 @@ import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
   // Inputs & validation
   const { projectId, speciesSlug, filenameWithoutExtension } = req.params
-  console.log({ params: req.params })
   assertParamsExist({ projectId, speciesSlug, filenameWithoutExtension })
 
   const species = rawSpecies.find(({ speciesSlug: sp }) => sp === speciesSlug)

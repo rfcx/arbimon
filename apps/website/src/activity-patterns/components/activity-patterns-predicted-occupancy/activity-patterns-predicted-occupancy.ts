@@ -26,7 +26,6 @@ export default class ActivityPatternsPredictedOccupancy extends Vue {
         url: window.URL.createObjectURL(image)
       }
     }))
-    console.log(this.predictedOccupancyMapImages)
   }
 
   downloadImage (predictedOccupancyMapImage: PredictedOccupancyMap): void {
