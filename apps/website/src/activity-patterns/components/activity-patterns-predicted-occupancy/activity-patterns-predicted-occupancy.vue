@@ -5,20 +5,15 @@
   >
     <section-title title="Predicted Occupancy" />
     <div
-      class="mt-5 grid gap-4"
+      class="mt-5 grid gap-4 relative"
       :class="{ ['md:grid-cols-2']: predictedOccupancyMaps.length> 1 }"
     >
-      <a
-        v-for="predictedOccupancyMap in predictedOccupancyMaps"
+      <img
+        v-for="predictedOccupancyMap in predictedOccupancyMapImages"
         :key="predictedOccupancyMap.title"
-        :href="predictedOccupancyMap.url"
-        target="_blank"
+        :src="predictedOccupancyMap.url"
+        :alt="predictedOccupancyMap.title"
       >
-        <img
-          :src="predictedOccupancyMap.url"
-          :alt="predictedOccupancyMap.title"
-        >
-      </a>
     </div>
   </div>
 </template>
