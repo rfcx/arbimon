@@ -6,7 +6,8 @@ import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-
 import { assetsService } from '@/activity-patterns/services'
 
 export default class ActivityPatternsPredictedOccupancy extends Vue {
-  @Prop() predictedOccupancyMaps!: PredictedOccupancyMap[]
+  @Prop() predictedOccupancyMaps!: string[]
+  @Prop() speciesSlug!: string
 
   predictedOccupancyMapImages: PredictedOccupancyMap[] = []
 
@@ -16,13 +17,11 @@ export default class ActivityPatternsPredictedOccupancy extends Vue {
   }
 
   async getPredictedOccupancyMaps (): Promise<void> {
-    this.predictedOccupancyMapImages = await Promise.all(this.predictedOccupancyMaps.map(async ({ title }) => {
-      console.log({ title })
-      const image = await assetsService.getPredictedOccupancyMapImage(title)
-      console.log({ image })
-      if (image === undefined) return { title, url: '' }
+    this.predictedOccupancyMapImages = await Promise.all(this.predictedOccupancyMaps.map(async (filenameEithoutExtension) => {
+      const image = await assetsService.getPredictedOccupancyMapImage(this.speciesSlug, filenameEithoutExtension)
+      if (image === undefined) return { title: filenameEithoutExtension, url: '' }
       return {
-        title,
+        title: filenameEithoutExtension,
         url: window.URL.createObjectURL(image)
       }
     }))

@@ -64,6 +64,7 @@
       class="mt-5"
     />
     <activity-patterns-predicted-occupancy
+      :species-slug="$route.params.speciesSlug"
       :predicted-occupancy-maps="predictedOccupancyMaps"
       class="mt-5"
     />

@@ -12,12 +12,12 @@ export class AssetsService {
     return await apiClient.getOrUndefined<Blob>(url, { responseType: 'blob' })
   }
 
-  async getPredictedOccupancyMapImage (filenameWithoutExtension: string): Promise<Blob | undefined> {
+  async getPredictedOccupancyMapImage (speciesSlug: string, filenameWithoutExtension: string): Promise<Blob | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined
 
-    const url = `${this.baseUrl}${speciesPredictionOccupancyGeneratedUrl({ projectId: projectId.toString(), filenameWithoutExtension })}`
+    const url = `${this.baseUrl}${speciesPredictionOccupancyGeneratedUrl({ projectId: projectId.toString(), speciesSlug, filenameWithoutExtension })}`
     return await apiClient.getOrUndefined<Blob>(url, { responseType: 'blob' })
   }
 }

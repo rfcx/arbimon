@@ -1,5 +1,5 @@
 import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { PredictedOccupancyMap, projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { Species, SpeciesLight } from '@rfcx-bio/common/domain'
 
@@ -9,7 +9,7 @@ import { useStore } from '~/store'
 
 export interface ProjectSpecies {
   speciesInformation: Species | undefined
-  predictedOccupancyMaps: PredictedOccupancyMap[]
+  predictedOccupancyMaps: string[]
 }
 
 export class SpotlightService {
@@ -26,10 +26,7 @@ export class SpotlightService {
     const data = await apiClient.getOrUndefined<ProjectSpeciesOneResponse>(url)
     return {
       speciesInformation: data?.speciesInformation,
-      predictedOccupancyMaps: data?.predictedOccupancyMaps.map(({ title, url }) => ({
-        title,
-        url: `${this.baseUrl}${url}`
-      })) ?? []
+      predictedOccupancyMaps: data?.predictedOccupancyMaps.map(({ title }) => title) ?? []
     }
   }
 
