@@ -2,10 +2,6 @@
 
 CLI scripts to be run locally or as CRON jobs
 
-## Getting started
-
-1. Config .env file as describe in `example.env`
-
 ## Modes
 
 During local testing, some scripts automatically limit queries to reduce load on 3rd-party APIs -- you will see a banner:
@@ -25,7 +21,7 @@ pnpm serve lib/path/to/some/script.js -- --mode=production
 Get detections data from Arbimon and write it to a JSON file
 
 ```
-pnpm serve lib/data-ingest/detections/to-json.js
+pnpm serve lib/data-ingest/detections/to-mock.js
 ```
 
 ### Database Migrations

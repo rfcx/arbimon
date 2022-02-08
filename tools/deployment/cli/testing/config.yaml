@@ -17,3 +17,4 @@ data:
 
   IUCN_BASE_URL: https://apiv3.iucnredlist.org/api/v3
   WIKI_BASE_URL: https://en.wikipedia.org
+  WIKI_MEDIA_BASE_URL: https://www.mediawiki.org

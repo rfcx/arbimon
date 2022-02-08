@@ -37,5 +37,6 @@ export const envGetters = <const>{
   BIO_DB_USER: stringGetter,
   IUCN_BASE_URL: stringGetter,
   IUCN_TOKEN: stringGetter,
-  WIKI_BASE_URL: stringGetter
+  WIKI_BASE_URL: stringGetter,
+  WIKI_MEDIA_BASE_URL: stringGetter
 }
