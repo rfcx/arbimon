@@ -12,13 +12,7 @@ export const coreMediaHandler: Handler<FastifyReply, {}, CoreMediaQuery> = async
   if (!url) assertInvalidQuery({ url })
 
   const media = await getMedia(url)
-  if (!media) return await res.send(media)
 
   // Query
-  return await res.send(convertToBase64(media))
-}
-
-const convertToBase64 = (arrayBuffer: ArrayBuffer): string => {
-  const buffer = Buffer.from(arrayBuffer)
-  return buffer.toString('base64')
+  return await res.send(media)
 }
