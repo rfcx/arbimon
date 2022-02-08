@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
+import { useStoreOutsideSetup } from '~/store'
 import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
@@ -10,7 +11,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: ROUTE_NAMES.home,
-    component: PAGES.Home
+    component: PAGES.Home,
+    beforeEnter: (to, from, next) => {
+      const store = useStoreOutsideSetup()
+      if (store.selectedProject) return next({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } })
+      next()
+    }
   },
   {
     path: '/preferences',
