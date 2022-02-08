@@ -58,8 +58,8 @@ export default class SpotlightPlayer extends Vue {
       this.spectrogram = ''
       return
     }
-    const extension = this.speciesCall.mediaSpecUrl.split('.').at(-1) ?? 'png'
-    this.spectrogram = `data:image/${extension};base64,${data}`
+
+    this.spectrogram = window.URL.createObjectURL(data)
   }
 
   async getAudio (): Promise<void> {
@@ -69,9 +69,8 @@ export default class SpotlightPlayer extends Vue {
       return
     }
 
-    const extension = this.speciesCall.mediaWavUrl.split('.').at(-1) ?? 'wav'
     this.audio = new Howl({
-      src: `data:audio/${extension};base64,${data}`,
+      src: [window.URL.createObjectURL(data)],
       html5: true,
       onend: () => {
         this.playing = false
