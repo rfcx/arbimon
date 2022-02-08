@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { CoreProject } from '@rfcx-bio/common/api-bio/common/permission'
 
-import { apiClient } from '~/api-helpers/api-client'
+import { apiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 
