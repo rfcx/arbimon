@@ -10,7 +10,7 @@ import { getArbimonSpeciesCalls } from './input-arbimon-species-call'
 import { getArbimonSpeciesFromMock, getScientificNamesFromMock } from './input-from-mock-detections'
 import { getIucnSpecies, getIucnSpeciesNarrative } from './input-iucn'
 import { getRfcxSpecies } from './input-rfcx'
-import { getWikiSpecies } from './input-wiki'
+import { getWikiSummary } from './input-wiki'
 import { getMergedSpecies } from './output-mock'
 
 const outputJsonPath = resolve(getJsonOutputDirectory(), './raw-species.json')
@@ -26,7 +26,7 @@ const main = async (): Promise<void> => {
     getSequentially(scientificNames, getIucnSpecies),
     getSequentially(scientificNames, getIucnSpeciesNarrative),
     getRfcxSpecies(),
-    getSequentially(scientificNames, getWikiSpecies)
+    getSequentially(scientificNames, getWikiSummary)
   ])
   const species = await getMergedSpecies(scientificNames, arbimonSpeciesKeyed, arbimonSpeciesCallsKeyed, iucnSpeciesKeyed, iucnSpeciesNarrativesKeyed, rfcxSpeciesKeyed, wikiSpeciesKeyed)
 

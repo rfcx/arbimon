@@ -4,7 +4,7 @@ import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 import { ArbimonSpeciesData } from '../input-from-mock-detections'
 import { IucnSpecies, IucnSpeciesNarrative } from '../input-iucn'
 import { RfcxSpeciesData } from '../input-rfcx'
-import { WikiSummary } from '../input-wiki'
+import { WikiSummary } from '../input-wiki/wiki-info-type'
 
 export const getMergedSpecies = async (
   scientificNames: string[],
