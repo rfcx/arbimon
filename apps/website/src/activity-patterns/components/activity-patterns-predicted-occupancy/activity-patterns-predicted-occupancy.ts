@@ -2,6 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { assetsService } from '@/activity-patterns/services'
 
@@ -26,5 +27,9 @@ export default class ActivityPatternsPredictedOccupancy extends Vue {
       }
     }))
     console.log(this.predictedOccupancyMapImages)
+  }
+
+  downloadImage (predictedOccupancyMapImage: PredictedOccupancyMap): void {
+    downloadPng(predictedOccupancyMapImage.url, predictedOccupancyMapImage.title)
   }
 }
