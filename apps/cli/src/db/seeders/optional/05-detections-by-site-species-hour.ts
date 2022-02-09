@@ -25,7 +25,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   const data: DetectionsBySiteSpeciesHour[] =
     rawDetections.map(d => ({
-      timeHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
+      timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: classArbimonToBio[d.taxon_id] ?? -1,
       taxonSpeciesId: speciesArbimonToBio[d.species_id] ?? -1,
       locationProjectId: 1,

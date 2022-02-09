@@ -8,7 +8,7 @@ export const DetectionsBySiteSpeciesHourModel = defineWithDefaults<DetectionsByS
   'DetectionsBySiteSpeciesHour',
   {
     // PK
-    timeHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
+    timePrecisionHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
       type: DataTypes.DATE(3),
       primaryKey: true
     },
