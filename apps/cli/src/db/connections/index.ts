@@ -1,5 +1,4 @@
-import { dirname } from 'path'
-import { resolve } from 'path/posix'
+import { dirname, resolve } from 'path'
 import { QueryInterface, Sequelize } from 'sequelize'
 import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
 import { fileURLToPath } from 'url'
@@ -26,7 +25,7 @@ export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrations
   new Umzug({
     migrations: {
       glob: [
-        filename ? `./${filename}.{js,mjs,ts}` : './!(*.d).{js,mjs,ts}',
+        filename ? `${filename}.{js,mjs,ts}` : '!(*.d).{js,mjs,ts}',
         { cwd }
       ],
       resolve: params => ({
