@@ -9,23 +9,25 @@
 
 // CANNOT be undefined or an empty string
 export const envKeysRequired = <const>[
-  'CORE_API_BASE_URL',
-
-  'PUERTO_RICO_PROJECT_SLUG',
-  'PUERTO_RICO_PROJECT_CORE_ID',
-
+  // Secrets
   'BIO_DB_DBNAME',
   'BIO_DB_HOSTNAME',
   'BIO_DB_PASSWORD',
   'BIO_DB_PORT',
   'BIO_DB_SSL_ENABLED',
-  'BIO_DB_USER'
+  'BIO_DB_USER',
+
+  'AUTHO_ANONYMOUS_CLIENT_SECRET',
+
+  // Config
+  'CORE_API_BASE_URL',
+
+  'PUERTO_RICO_PROJECT_SLUG',
+  'PUERTO_RICO_PROJECT_CORE_ID'
 ]
 
 // CAN be undefined or empty string
 export const envKeysOptional = <const>[
-  'BIO_SERVICE_SECRET',
-
   'NODE_ENV',
   'FASTIFY_PORT',
   'FASTIFY_ADDRESS'

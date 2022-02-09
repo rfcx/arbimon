@@ -20,7 +20,7 @@ class ApiClient {
         data: {
           grant_type: 'client_credentials',
           client_id: 'LS9wYkLVSJtKMhPvRy0kWTxgyXhc6Ht8',
-          client_secret: env.BIO_SERVICE_SECRET,
+          client_secret: env.AUTHO_ANONYMOUS_CLIENT_SECRET,
           audience: 'https://rfcx.org/api/v2/'
         }
       })
