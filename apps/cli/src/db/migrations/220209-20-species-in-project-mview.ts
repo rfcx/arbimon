@@ -1,0 +1,23 @@
+/**
+ * WARNING: MIGRATIONS ARE IMMUTABLE
+ * Do not depend on imported code which may change
+ */
+
+import { QueryInterface } from 'sequelize'
+import { MigrationFn } from 'umzug'
+
+const VIEW_NAME = 'species_in_project'
+
+export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
+  await params.context.sequelize.query(
+    `
+    create materialized view ${VIEW_NAME} as
+    SELECT d.location_project_id, ts.taxon_class_id, ts.id AS taxon_species_id, ts.scientific_name, ts.common_name, ts.extinction_risk_rating, ts.photo_url
+    FROM detection_by_site_species_hour d
+    INNER JOIN taxon_species ts ON d.taxon_species_id = ts.id
+    GROUP BY d.location_project_id, ts.id;
+    `
+  )
+
+export const down: MigrationFn<QueryInterface> = async (params) =>
+  await params.context.sequelize.query(`DROP VIEW IF EXISTS ${VIEW_NAME};`)
