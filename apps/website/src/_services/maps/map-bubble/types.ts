@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs'
 import { LngLatLike } from 'mapbox-gl'
 
-import { Site } from '@rfcx-bio/common/domain'
+import { Site } from '@rfcx-bio/common/dao/types'
 
 export interface MapMoveEvent {
   sourceMapId: string

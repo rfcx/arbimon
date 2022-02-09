@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 
+import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
-import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/domain'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'

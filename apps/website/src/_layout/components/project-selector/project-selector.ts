@@ -2,7 +2,7 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
 
-import { Project } from '@rfcx-bio/common/domain'
+import { Project } from '@rfcx-bio/common/dao/types'
 
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'

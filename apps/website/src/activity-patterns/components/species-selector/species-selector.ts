@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/domain'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 
 import { spotlightService } from '../../services'
 

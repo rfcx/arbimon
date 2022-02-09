@@ -1,7 +1,7 @@
 import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { Species, SpeciesLight } from '@rfcx-bio/common/domain'
 
 import { apiClient } from '~/api'
 import { DatasetParameters, generateFilterQuery } from '~/filters'

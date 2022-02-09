@@ -2,7 +2,7 @@ import { Optional, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { TaxonSpecies } from '@rfcx-bio/common/domain'
+import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { rawSpecies, TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {

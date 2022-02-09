@@ -1,5 +1,5 @@
 import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
-import { Project } from '@rfcx-bio/common/domain'
+import { Project } from '@rfcx-bio/common/dao/types'
 
 import { Handler } from '../_services/api-helpers/types'
 import { env } from '../_services/env'
