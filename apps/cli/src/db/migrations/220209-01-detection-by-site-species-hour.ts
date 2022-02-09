@@ -6,8 +6,8 @@
 import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'detections_by_site_species_hour'
-const COLUMN_TIME_HOUR_LOCAL = 'time_hour_local'
+const TABLE_NAME = 'detection_by_site_species_hour'
+const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -24,7 +24,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         allowNull: false,
         references: {
-          model: { tableName: 'location_sites' },
+          model: { tableName: 'location_site' },
           key: 'id'
         }
       },
@@ -53,7 +53,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'location_projects' },
+          model: { tableName: 'location_project' },
           key: 'id'
         }
       },
@@ -61,7 +61,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'taxon_classes' },
+          model: { tableName: 'taxon_class' },
           key: 'id'
         }
       },

@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'location_sites'
+const TABLE_NAME = 'location_project'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -38,29 +38,29 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
-      // Dimensions
-      location_project_id: {
-        type: DataTypes.INTEGER,
+      slug: {
+        type: DataTypes.STRING(255),
         allowNull: false,
-        references: {
-          model: { tableName: 'location_projects' },
-          key: 'id'
-        }
+        unique: true
       },
       // Facts
       name: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      latitude: {
+      latitude_north: {
         type: DataTypes.FLOAT,
         allowNull: false
       },
-      longitude: {
+      latitude_south: {
         type: DataTypes.FLOAT,
         allowNull: false
       },
-      altitude: {
+      longitude_east: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      longitude_west: {
         type: DataTypes.FLOAT,
         allowNull: false
       }

@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_classes'
+const TABLE_NAME = 'taxon_class'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
