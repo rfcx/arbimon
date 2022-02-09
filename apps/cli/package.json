@@ -10,6 +10,7 @@
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm serve lib/db/reset",
     "db-seed": "pnpm serve lib/db/seed -- --path=auto",
+    "db-sync": "pnpm clean && pnpm db-reset && pnpm db-migrate && pnpm db-seed",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
