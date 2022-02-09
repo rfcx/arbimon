@@ -1,5 +1,6 @@
 export const TABLE_DETECTIONS_BY_SITE_SPECIES_HOUR = 'detection_by_site_species_hour'
 export const TABLE_LOCATION_PROJECTS = 'location_project'
+export const TABLE_LOCATION_PROJECTS_PROFILE = 'location_project_profile'
 export const TABLE_LOCATION_SITES = 'location_site'
 export const TABLE_TAXON_CLASSES = 'taxon_class'
 export const TABLE_TAXON_SPECIES = 'taxon_species'
