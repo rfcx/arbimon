@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'path'
+import { QueryTypes } from 'sequelize'
 import { fileURLToPath } from 'url'
 
 import { getSequelize, getUmzug } from './connections'
@@ -26,12 +27,19 @@ const main = async (): Promise<void> => {
   const sequelize = getSequelize(verbose)
   const umzug = getUmzug(sequelize, verbose, cwd, filename)
 
-  // Run migrations
+  // Run seeders
   const previouslyExecuted = await umzug.executed().then(ems => ems.length)
   await umzug.up().then(res => {
     console.info(`Executed ${res.length} needed seeders (${previouslyExecuted} previously executed)`)
     res.forEach(r => console.info(`- ${r.name}`))
   })
+
+  // Refresh materialized views
+  const materializedViews = await sequelize.query<{ viewName: string }>('SELECT matviewname AS viewName FROM pg_matviews', { type: QueryTypes.SELECT })
+  for (const view of materializedViews) {
+    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.viewName}`)
+  }
+
   await sequelize.close()
 }
 
