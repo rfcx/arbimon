@@ -21,6 +21,10 @@ export const DetectionsBySiteSpeciesHourModel = defineWithDefaults<DetectionsByS
       primaryKey: true
     },
 
+    // Dimensions
+    locationProjectId: DataTypes.INTEGER,
+    taxonClassId: DataTypes.INTEGER,
+
     // Facts
     count: DataTypes.INTEGER, // 1
     durationMinutes: DataTypes.INTEGER // 12
