@@ -1,9 +1,9 @@
 export interface DetectionsBySiteSpeciesHour {
-  timeHourLocal: Date
-  locationProjectId: number
+  timePrecisionHourLocal: Date
   locationSiteId: number
-  taxonClassId: number
   taxonSpeciesId: number
+  locationProjectId: number
+  taxonClassId: number
   count: number
   durationMinutes: number
 }
