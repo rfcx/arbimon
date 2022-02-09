@@ -4,4 +4,6 @@ import { Project } from '../../dao/types'
 export const projectsRoute = '/projects'
 
 // Response
-export type ProjectsResponse = Project[]
+type ApiProjectLight = Pick<Project, 'id'| 'slug'| 'name'| 'latitudeNorth'| 'latitudeSouth'| 'longitudeEast'| 'longitudeWest'>
+
+export type ProjectsResponse = ApiProjectLight[]

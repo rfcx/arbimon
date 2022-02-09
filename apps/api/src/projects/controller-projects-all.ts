@@ -1,27 +1,12 @@
 import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
-import { Project } from '@rfcx-bio/common/dao/types'
+import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
 import { Handler } from '../_services/api-helpers/types'
-import { env } from '../_services/env'
+import { getSequelize } from '../_services/db'
 
-export const FAKE_PUERTO_RICO_PROJECT: Project = {
-  id: 1,
-  idCore: env.PUERTO_RICO_PROJECT_CORE_ID,
-  idArbimon: 0,
-  slug: env.PUERTO_RICO_PROJECT_SLUG,
-  name: 'Puerto Rico Island-Wide',
-  latitudeNorth: 18.51375,
-  latitudeSouth: 17.93168,
-  longitudeEast: -65.24505,
-  longitudeWest: -67.94469784
-}
-
-export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
-  // TODO: Remove auth logic here to be better strategy
-  const isAuthorized = req.headers.authorization?.replace('Bearer ', '')
-  if (!isAuthorized) {
-    return [FAKE_PUERTO_RICO_PROJECT]
-  }
-
-  return [FAKE_PUERTO_RICO_PROJECT]
+export const projectsAllHandler: Handler<ProjectsResponse> = async () => {
+  const projects = await ProjectModel(getSequelize()).findAll({
+    attributes: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+  })
+  return projects
 }
