@@ -3,7 +3,7 @@ import { keyBy, mapValues } from 'lodash-es'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 
-import { SpeciesCall } from '@rfcx-bio/common/domain'
+import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 import { mysqlSelect } from '../../../_services/mysql'

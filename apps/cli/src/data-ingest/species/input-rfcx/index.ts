@@ -1,4 +1,4 @@
-import { SPECIES_SOURCE_PROJECT, SpeciesSource } from '@rfcx-bio/common/domain'
+import { SPECIES_SOURCE_PROJECT, SpeciesSource } from '@rfcx-bio/common/api-bio/species/types'
 import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
 export interface RfcxSpeciesData {

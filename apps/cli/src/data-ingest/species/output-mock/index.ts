@@ -1,4 +1,4 @@
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesCall } from '@rfcx-bio/common/domain'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 
 import { ArbimonSpeciesData } from '../input-from-mock-detections'

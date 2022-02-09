@@ -3,7 +3,7 @@ import { groupBy, keyBy, mapValues } from 'lodash-es'
 
 import { MapSiteData, TimeBucket } from '@rfcx-bio/common/api-bio/richness/common'
 import { RichnessDatasetParams, RichnessDatasetQuery, RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { SpeciesLight } from '@rfcx-bio/common/domain'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'

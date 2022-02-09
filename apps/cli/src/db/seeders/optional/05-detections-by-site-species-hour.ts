@@ -5,7 +5,7 @@ import { DetectionsBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/de
 import { SiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { DetectionsBySiteSpeciesHour } from '@rfcx-bio/common/domain'
+import { DetectionsBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
