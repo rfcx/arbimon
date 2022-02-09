@@ -3,7 +3,6 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
 
 import { ApiProjectLight } from '@rfcx-bio/common/api-bio/common/projects'
-import { Project } from '@rfcx-bio/common/dao/types'
 
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -23,11 +22,11 @@ export default class ProjectSelectorComponent extends Vue {
       : null
   }
 
-  isSelectedProject (project: Project): boolean {
+  isSelectedProject (project: ApiProjectLight): boolean {
     return project.id === this.newSelectedProject?.id
   }
 
-  setSelectedProject (project: Project): void {
+  setSelectedProject (project: ApiProjectLight): void {
     this.newSelectedProject = project
   }
 
