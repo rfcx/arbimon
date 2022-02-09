@@ -39,16 +39,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         unique: true
       },
       // Facts
-      name: {
+      common_name: {
         type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      symbol: {
-        type: DataTypes.STRING(1),
-        allowNull: false
-      },
-      color: {
-        type: DataTypes.STRING(10),
         allowNull: false
       }
     }
