@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { Site } from '../../domain'
+import { Site } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_LOCATION_SITES } from '../table-names'
 

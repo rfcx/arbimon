@@ -1,4 +1,4 @@
-import { SpeciesLight } from '../../domain'
+import { SpeciesLight } from './types'
 
 // Request
 export interface ProjectSpeciesAllParams {

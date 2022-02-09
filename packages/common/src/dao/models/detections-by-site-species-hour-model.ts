@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { DetectionsBySiteSpeciesHour } from '../../domain'
+import { DetectionsBySiteSpeciesHour } from '../../dao/types'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_DETECTIONS_BY_SITE_SPECIES_HOUR } from '../table-names'
 

@@ -1,4 +1,4 @@
-import { Species } from '../../domain'
+import { Species } from './types'
 
 // Request
 export interface ProjectSpeciesOneParams {

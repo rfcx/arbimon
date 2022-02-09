@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { Project } from '../../domain'
+import { Project } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_LOCATION_PROJECTS } from '../table-names'
 
