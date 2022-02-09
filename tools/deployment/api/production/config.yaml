@@ -16,5 +16,4 @@ data:
   ## Config
 
   CORE_API_BASE_URL: https://api.rfcx.org
-  PUERTO_RICO_PROJECT_SLUG: puerto-rico-island-wide
-  PUERTO_RICO_PROJECT_CORE_ID: n9nrlg45vyf0
+ 
