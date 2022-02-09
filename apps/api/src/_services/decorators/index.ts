@@ -1,4 +1,6 @@
-import { FAKE_PUERTO_RICO_PROJECT } from '../../projects/controller-projects-all'
+import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+
+import { getSequelize } from '~/db'
 import { Middleware } from '../api-helpers/types'
 import { isProjectMember } from '../security/project-access'
 
@@ -12,10 +14,13 @@ export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async
   const token = req.headers.authorization
   const bioProjectId = Number(req.params.projectId)
 
-  // TODO: Update it to be real project list query from db
-  const coreProjectId = [FAKE_PUERTO_RICO_PROJECT].find(p => p.id === bioProjectId)?.idCore
+  if (token === undefined || bioProjectId === undefined) return
 
-  if (token === undefined || bioProjectId === undefined || coreProjectId === undefined) return
+  const coreProjectId = await ProjectModel(getSequelize())
+    .findByPk(bioProjectId, { attributes: ['idCore'] })
+    .then(proj => proj?.idCore)
+
+  if (coreProjectId === undefined) return
 
   const isMember = await isProjectMember(coreProjectId, token)
   if (isMember) { req.requestContext.set(IS_PROJECT_MEMBER, isMember) }
