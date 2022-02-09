@@ -8,8 +8,10 @@ import { rawSites } from '@rfcx-bio/common/mock-data'
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const siteDao = SiteModel(params.context.sequelize)
 
+  const mockProjectId = 1
+
   const sites: Array<Optional<Site, 'id'>> =
-    rawSites.map(({ id, ...rest }) => rest)
+    rawSites.map(({ id, locationProjectId, ...rest }) => ({ ...rest, locationProjectId: mockProjectId }))
 
   await siteDao.bulkCreate(sites)
 }
