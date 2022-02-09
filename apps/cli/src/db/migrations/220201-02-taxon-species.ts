@@ -43,7 +43,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'taxon_classes' },
+          model: { tableName: 'taxon_class' },
           key: 'id'
         }
       },
@@ -51,7 +51,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'location_projects' },
+          model: { tableName: 'location_project' },
           key: 'id'
         }
       },
@@ -59,7 +59,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'location_sites' },
+          model: { tableName: 'location_site' },
           key: 'id'
         }
       },
