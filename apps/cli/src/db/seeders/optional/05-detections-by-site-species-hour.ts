@@ -9,8 +9,6 @@ import { DetectionsBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const model = DetectionsBySiteSpeciesHourModel(params.context.sequelize)
-
   const sequelize = params.context.sequelize
 
   const [classes, species, sites] = await Promise.all([
@@ -34,5 +32,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       durationMinutes: 12
     }))
 
-  await model.bulkCreate(data)
+  await DetectionsBySiteSpeciesHourModel(sequelize).bulkCreate(data)
 }
