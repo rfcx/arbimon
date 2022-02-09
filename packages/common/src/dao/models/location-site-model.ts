@@ -4,6 +4,9 @@ import { Site } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_LOCATION_SITES } from '../table-names'
 
+export const SITE_MODEL_ATTRIBUTES: Record<string, Array<keyof Site>> = {
+  light: ['id', 'name', 'latitude', 'longitude', 'altitude']
+}
 export const SiteModel = defineWithDefaultsAutoPk<Site>(
   'LocationSite',
   {
