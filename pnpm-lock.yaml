@@ -150,6 +150,7 @@ importers:
       fastify-static: ^4.5.0
       lodash-es: ^4.17.21
       pino-pretty: ^7.3.0
+      sequelize: 7.0.0-alpha.5
     dependencies:
       '@js-temporal/polyfill': 0.3.0
       '@rfcx-bio/common': link:../../packages/common
@@ -162,6 +163,7 @@ importers:
       fastify-request-context: 2.2.0_fastify@3.23.1
       fastify-static: 4.5.0
       lodash-es: 4.17.21
+      sequelize: 7.0.0-alpha.5
     devDependencies:
       pino-pretty: 7.3.0
 
@@ -280,7 +282,7 @@ importers:
       '@rfcx-bio/utils': workspace:^0.0.1
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
-      sequelize: ^7.0.0-alpha.5
+      sequelize: 7.0.0-alpha.5
     dependencies:
       '@rfcx-bio/utils': link:../utils
       dayjs: 1.10.7
