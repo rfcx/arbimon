@@ -32,7 +32,8 @@
     "fastify-plugin": "^3.0.0",
     "fastify-request-context": "^2.2.0",
     "fastify-static": "^4.5.0",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "sequelize": "7.0.0-alpha.5"
   },
   "description": "Biodiversity API",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
