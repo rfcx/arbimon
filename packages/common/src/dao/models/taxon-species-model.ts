@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { TaxonSpecies } from '../../domain'
+import { TaxonSpecies } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_TAXON_SPECIES } from '../table-names'
 

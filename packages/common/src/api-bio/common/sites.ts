@@ -1,4 +1,4 @@
-import { Site } from '../../domain'
+import { Site } from '../../dao/types'
 
 // Request
 export interface SitesParams {

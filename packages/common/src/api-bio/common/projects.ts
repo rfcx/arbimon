@@ -1,4 +1,4 @@
-import { Project } from '../../domain'
+import { Project } from '../../dao/types'
 
 // Request
 export const projectsRoute = '/projects'
