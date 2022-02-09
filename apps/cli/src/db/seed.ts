@@ -35,9 +35,9 @@ const main = async (): Promise<void> => {
   })
 
   // Refresh materialized views
-  const materializedViews = await sequelize.query<{ viewName: string }>('SELECT matviewname AS viewName FROM pg_matviews', { type: QueryTypes.SELECT })
+  const materializedViews = await sequelize.query<{ view_name: string }>('SELECT matviewname AS view_name FROM pg_matviews', { type: QueryTypes.SELECT })
   for (const view of materializedViews) {
-    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.viewName}`)
+    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.view_name}`)
   }
 
   await sequelize.close()
