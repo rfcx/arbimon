@@ -15,9 +15,12 @@ export const ProjectModel = defineWithDefaultsAutoPk<Project>(
     },
 
     // SKs
-    idCore: DataTypes.STRING(12), // ???
-    idArbimon: DataTypes.INTEGER, // ???
+    idCore: DataTypes.STRING(12), // rbj7k70v4na7
     slug: { // puerto-rico-island-wide
+      type: DataTypes.STRING(255),
+      unique: true
+    },
+    slugArbimon: { // fake-arbimon-project-for-bio
       type: DataTypes.STRING(255),
       unique: true
     },

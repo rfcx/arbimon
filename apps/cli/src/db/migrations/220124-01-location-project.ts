@@ -33,12 +33,12 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
-      id_arbimon: {
-        type: DataTypes.INTEGER,
+      slug: {
+        type: DataTypes.STRING(255),
         allowNull: false,
         unique: true
       },
-      slug: {
+      slug_arbimon: {
         type: DataTypes.STRING(255),
         allowNull: false,
         unique: true

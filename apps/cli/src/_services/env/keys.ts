@@ -25,18 +25,26 @@ const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (key: string
 // Env keys/types
 export const envGetters = <const>{
   PROTECTION: unionGetter<Protection>(Object.values(PROTECTION_VALUES)),
+
   ARBIMON_DB_DBNAME: stringGetter,
   ARBIMON_DB_HOSTNAME: stringGetter,
   ARBIMON_DB_PASSWORD: stringGetter,
   ARBIMON_DB_USER: stringGetter,
+
   BIO_DB_DBNAME: stringGetter,
   BIO_DB_HOSTNAME: stringGetter,
   BIO_DB_PASSWORD: stringGetter,
   BIO_DB_PORT: numberGetter,
   BIO_DB_SSL_ENABLED: booleanGetter,
   BIO_DB_USER: stringGetter,
+
   IUCN_BASE_URL: stringGetter,
   IUCN_TOKEN: stringGetter,
+
   WIKI_BASE_URL: stringGetter,
-  WIKI_MEDIA_BASE_URL: stringGetter
+  WIKI_MEDIA_BASE_URL: stringGetter,
+
+  MOCK_PROJECT_NAME: stringGetter,
+  MOCK_PROJECT_ID_CORE: stringGetter,
+  MOCK_PROJECT_SLUG_ARBIMON: stringGetter
 }

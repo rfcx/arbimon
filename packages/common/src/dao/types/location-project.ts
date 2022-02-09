@@ -1,8 +1,8 @@
 export interface Project {
   id: number
   idCore: string
-  idArbimon: number
   slug: string
+  slugArbimon: string
   name: string
   latitudeNorth: number
   latitudeSouth: number
