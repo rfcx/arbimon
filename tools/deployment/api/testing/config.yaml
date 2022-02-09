@@ -16,5 +16,3 @@ data:
   ## Config
 
   CORE_API_BASE_URL: https://staging-api.rfcx.org
-  PUERTO_RICO_PROJECT_SLUG: fake-arbimon-project-for-bio
-  PUERTO_RICO_PROJECT_CORE_ID: rbj7k70v4na7
