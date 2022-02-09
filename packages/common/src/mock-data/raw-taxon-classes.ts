@@ -1,6 +1,14 @@
 import { keyBy, mapValues } from 'lodash-es'
 
-import { TaxonClass } from '../dao/types'
+// TODO : Delete this file and use database instead
+export interface TaxonClass {
+  id: number
+  idArbimon: number
+  slug: string
+  name: string
+  symbol: string
+  color: string
+}
 
 export const TAXONOMY_CLASS_ALL: TaxonClass = { id: 0, idArbimon: 0, name: 'All', slug: 'all', symbol: 'Σ', color: '#000000' }
 export const TAXONOMY_UNKNOWN_CLASS: TaxonClass = { id: -1, idArbimon: -1, name: 'unknown', slug: 'unknown', symbol: '❓', color: '#000000' }

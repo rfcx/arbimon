@@ -22,9 +22,7 @@ export const TaxonClassModel = defineWithDefaultsAutoPk<TaxonClass>(
     },
 
     // Facts
-    name: DataTypes.STRING(255), // Birds
-    symbol: DataTypes.STRING(1), // 🐦
-    color: DataTypes.STRING(10) // #E043A9
+    commonName: DataTypes.STRING(255) // Birds
   },
   {
     tableName: TABLE_TAXON_CLASSES

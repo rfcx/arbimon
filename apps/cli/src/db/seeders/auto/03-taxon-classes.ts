@@ -9,7 +9,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const model = TaxonClassModel(params.context.sequelize)
 
   const data: Array<Optional<TaxonClass, 'id'>> =
-    TAXONOMY_CLASSES.map(({ id, ...rest }) => rest)
+    TAXONOMY_CLASSES.map(({ idArbimon, slug, name: commonName }) => ({
+      idArbimon,
+      slug,
+      commonName
+    }))
 
   await model.bulkCreate(data)
 }
