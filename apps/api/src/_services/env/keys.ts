@@ -20,10 +20,7 @@ export const envKeysRequired = <const>[
   'AUTHO_ANONYMOUS_CLIENT_SECRET',
 
   // Config
-  'CORE_API_BASE_URL',
-
-  'PUERTO_RICO_PROJECT_SLUG',
-  'PUERTO_RICO_PROJECT_CORE_ID'
+  'CORE_API_BASE_URL'
 ]
 
 // CAN be undefined or empty string
