@@ -8,7 +8,10 @@ const main = async (): Promise<void> => {
     // Get data from other sources
   const scientificNames = limitUnlessProtected(getScientificNamesFromMock())
   const wikiSpeciesKeyed = await getSequentially(scientificNames, getWikiSummary)
-  console.log(wikiSpeciesKeyed)
+
+  // For now, just print the results
+  // TODO: Push to DB
+  console.info(wikiSpeciesKeyed)
 }
 
 await main()
