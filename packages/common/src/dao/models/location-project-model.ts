@@ -4,6 +4,10 @@ import { Project } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_LOCATION_PROJECTS } from '../table-names'
 
+export const PROJECT_MODEL_ATTRIBUTES: Record<string, Array<keyof Project>> = {
+  light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+}
+
 export const ProjectModel = defineWithDefaultsAutoPk<Project>(
   'LocationProject',
   {
