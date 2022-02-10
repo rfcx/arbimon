@@ -18,25 +18,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       idArbimon: s.speciesId,
       slug: s.speciesSlug,
       taxonClassId: taxonClassArbimonToBio[s.taxonId],
-      scientificName: s.scientificName,
-      commonName: s.commonName,
-      extinctionRiskRating: s.extinctionRisk,
-      extinctionRiskRatingSource: '', // WRONG
-      description: s.information[0]?.description ?? '', // WRONG
-      descriptionSource: s.information[0]?.sourceType ?? '', // WRONG
-      descriptionSourceUrl: s.information[0]?.sourceUrl ?? '', // WRONG
-      callProjectId: 1,
-      callSiteId: 1, // WRONG
-      callType: s.speciesCall?.songType ?? '', // WRONG
-      callRecordedAt: new Date(), // WRONG
-      callTimezone: s.speciesCall?.timezone ?? '', // WRONG
-      callMediaWavUrl: s.speciesCall?.mediaWavUrl ?? '', // WRONG
-      callMediaSpecUrl: s.speciesCall?.mediaSpecUrl ?? '', // WRONG
-      photoUrl: s.thumbnailImageUrl ?? '', // WRONG
-      photoCaption: s.imageCaption,
-      photoAuthor: '', // Doesn't exist yet
-      photoLicense: '', // Doesn't exist yet
-      photoLicenseUrl: '' // Doesn't exist yet
+      scientificName: s.scientificName
     }))
 
   await model.bulkCreate(data)
