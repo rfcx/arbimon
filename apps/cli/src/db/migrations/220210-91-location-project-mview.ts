@@ -14,14 +14,16 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
     create materialized view ${VIEW_NAME} as
     SELECT d.location_project_id,
-          Count(1) AS detection_count,
-          Count(distinct d.location_site_id) as site_count,
-          Count(distinct d.taxon_species_id) as species_count,
-          Count(distinct
-              CASE WHEN s.extinction_risk_rating IN ('CR', 'EN', 'VU') THEN d.taxon_species_id END
-          ) as species_threatened_count
+       Count(1)                           AS detection_count,
+       Count(distinct d.location_site_id) as site_count,
+       Count(distinct d.taxon_species_id) as species_count,
+       Count(distinct
+             CASE WHEN rri.is_threatened THEN d.taxon_species_id END
+           )                              as species_threatened_count
     FROM detection_by_site_species_hour d
-    INNER JOIN taxon_species s ON d.taxon_species_id = s.id
+            INNER JOIN taxon_species s ON d.taxon_species_id = s.id
+            LEFT OUTER JOIN taxon_species_iucn si ON s.id = si.taxon_species_id
+            LEFT OUTER JOIN risk_rating_iucn rri ON si.risk_rating_iucn_id = rri.id
     GROUP BY d.location_project_id
     ;
     `

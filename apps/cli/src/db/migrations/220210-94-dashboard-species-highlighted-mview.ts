@@ -13,9 +13,14 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await params.context.sequelize.query(
     `
     create materialized view ${VIEW_NAME} as
-    SELECT ps.location_project_id, ps.highlighted_order, sip.scientific_name, sip.common_name, sip.extinction_risk_rating, sip.photo_url
+    SELECT ps.location_project_id,
+           ps.highlighted_order,
+           sip.scientific_name,
+           sip.common_name,
+           sip.risk_rating_iucn_id,
+           sip.photo_url
     FROM species_in_project sip
-    INNER JOIN location_project_species ps on sip.taxon_species_id = ps.taxon_species_id
+            INNER JOIN location_project_species ps on sip.taxon_species_id = ps.taxon_species_id
     WHERE ps.highlighted_order IS NOT NULL
     ;
     `

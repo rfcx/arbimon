@@ -35,7 +35,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      riskRatingIucnId: {
+      risk_rating_iucn_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
