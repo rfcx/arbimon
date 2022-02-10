@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species'
+const TABLE_NAME = 'taxon_species_call'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -27,28 +27,49 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
-      // SKs
-      id_arbimon: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
-      },
-      slug: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
-      },
       // Dimensions
-      taxon_class_id: {
+      taxon_species_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'taxon_class' },
+          model: { tableName: 'taxon_species' },
+          key: 'id'
+        }
+      },
+      call_project_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: { tableName: 'location_project' },
+          key: 'id'
+        }
+      },
+      call_site_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: { tableName: 'location_site' },
           key: 'id'
         }
       },
       // Facts
-      scientific_name: {
+      call_type: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      call_recorded_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      call_timezone: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      call_media_wav_url: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      call_media_spec_url: {
         type: DataTypes.STRING(255),
         allowNull: false
       }
