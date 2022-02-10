@@ -6,17 +6,20 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species'
+const TABLE_NAME = 'taxon_species_iucn'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      id: {
+      taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        references: {
+          model: { tableName: 'taxon_species' },
+          key: 'id'
+        }
       },
       // Logging
       created_at: {
@@ -27,28 +30,24 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
-      // SKs
-      id_arbimon: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
-      },
-      slug: {
+      // Facts
+      common_name: {
         type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
-      // Dimensions
-      taxon_class_id: {
+      riskRatingIucnId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'taxon_class' },
+          model: { tableName: 'risk_rating_iucn' },
           key: 'id'
         }
       },
-      // Facts
-      scientific_name: {
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      description_source_url: {
         type: DataTypes.STRING(255),
         allowNull: false
       }
