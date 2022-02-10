@@ -6,23 +6,17 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const VIEW_NAME = 'location_project_metric'
-const INDEX_COLS = ['location_project_id']
+const VIEW_NAME = 'dashboard_species_highlighted'
+const INDEX_COLS = ['location_project_id', 'highlighted_order']
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
     create materialized view ${VIEW_NAME} as
-    SELECT d.location_project_id,
-          Count(1) AS detection_count,
-          Count(distinct d.location_site_id) as site_count,
-          Count(distinct d.taxon_species_id) as species_count,
-          Count(distinct
-              CASE WHEN s.extinction_risk_rating IN ('CR', 'EN', 'VU') THEN d.taxon_species_id END
-          ) as species_threatened_count
-    FROM detection_by_site_species_hour d
-    INNER JOIN taxon_species s ON d.taxon_species_id = s.id
-    GROUP BY d.location_project_id
+    SELECT ps.location_project_id, ps.highlighted_order, sip.scientific_name, sip.common_name, sip.extinction_risk_rating, sip.photo_url
+    FROM species_in_project sip
+    INNER JOIN location_project_species ps on sip.taxon_species_id = ps.taxon_species_id
+    WHERE ps.highlighted_order IS NOT NULL
     ;
     `
   )

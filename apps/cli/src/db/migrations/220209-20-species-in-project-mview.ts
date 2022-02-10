@@ -22,7 +22,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   for (const indexCol of INDEX_COLS) {
     await params.context.sequelize.query(
-      `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME}(${indexCol});`
+      `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
     )
   }
 }
