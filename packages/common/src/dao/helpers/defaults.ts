@@ -21,7 +21,7 @@ export const defineWithDefaults = <
   SequelizeModel extends Model = ModelForInterface<DomainModel>,
   SequelizeAttributes = SequelizeModel['_attributes']
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
-  sequelize => sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), options)
+  sequelize => sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), optionsWithDefaults(modelName, options))
 
 // TODO: Can probably add the PK to attributes automatically
 export const defineWithDefaultsAutoPk = <
@@ -52,3 +52,12 @@ export const attributesWithDefaults = <
         ]
       })
   ) as SequelizeModelAttributes
+
+export const optionsWithDefaults = (modelName: string, options?: ModelOptions): ModelOptions =>
+  ({
+    ...options,
+    name: {
+      singular: modelName,
+      plural: modelName
+    }
+  })
