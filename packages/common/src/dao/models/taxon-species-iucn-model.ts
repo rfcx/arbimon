@@ -1,8 +1,8 @@
 import { DataTypes, INTEGER } from 'sequelize'
 
-import { defineWithDefaults } from '@/dao/helpers/defaults'
-import { TABLE_TAXON_SPECIES_IUCN } from '@/dao/table-names'
-import { TaxonSpeciesIucn } from '@/dao/types/taxon-species-iucn'
+import { defineWithDefaults } from '../../dao/helpers/defaults'
+import { TABLE_TAXON_SPECIES_IUCN } from '../../dao/table-names'
+import { TaxonSpeciesIucn } from '../../dao/types/taxon-species-iucn'
 
 export const TaxonSpeciesIucnModel = defineWithDefaults<TaxonSpeciesIucn>(
   'TaxonSpeciesIucn',

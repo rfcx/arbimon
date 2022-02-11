@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { ProjectSpecies } from '@/dao/types/location-project-species'
+import { ProjectSpecies } from '../../dao/types/location-project-species'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_LOCATION_PROJECTS_SPECIES } from '../table-names'
 
