@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { TABLE_TAXON_SPECIES_CALL } from '@/dao/table-names'
-import { TaxonSpeciesCall } from '@/dao/types/taxon-species-call'
+import { TABLE_TAXON_SPECIES_CALL } from '../../dao/table-names'
+import { TaxonSpeciesCall } from '../../dao/types/taxon-species-call'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 
 export const TaxonSpeciesCallModel = defineWithDefaultsAutoPk<TaxonSpeciesCall>(
