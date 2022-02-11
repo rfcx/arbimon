@@ -1,7 +1,7 @@
 import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
-import { getSequelize } from '~/db'
 import { Middleware } from '../api-helpers/types'
+import { getSequelize } from '../db'
 import { isProjectMember } from '../security/project-access'
 
 interface ProjectRouteParams {
