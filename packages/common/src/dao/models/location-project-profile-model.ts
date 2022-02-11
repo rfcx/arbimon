@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { ProjectProfile } from '@/dao/types/location-project-profile'
+import { ProjectProfile } from '../../dao/types/location-project-profile'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_LOCATION_PROJECTS_PROFILE } from '../table-names'
 
