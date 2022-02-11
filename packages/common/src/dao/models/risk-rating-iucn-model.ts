@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { RiskRatingIucn } from '@/dao/types/risk-rating-iucn'
+import { RiskRatingIucn } from '../../dao/types/risk-rating-iucn'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
 import { TABLE_RISK_RATING_IUCN } from '../table-names'
 
