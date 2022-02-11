@@ -37,6 +37,10 @@ export const getMergedSpecies = async (
       externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
       thumbnailImageUrl: wikiSpecies?.thumbnailImage ?? '',
       imageCaption: wikiSpecies?.title ?? '',
+      credit: wikiSpecies?.credit ?? '',
+      imageInfoUrl: wikiSpecies?.imageInfoUrl ?? '',
+      license: wikiSpecies?.license ?? '',
+      licenseUrl: wikiSpecies?.licenseUrl ?? '',
       information
     }
   })

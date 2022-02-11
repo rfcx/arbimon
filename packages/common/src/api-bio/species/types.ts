@@ -45,6 +45,10 @@ export interface Species {
   imageCaption: string
   thumbnailImageUrl?: string
   speciesCall?: SpeciesCall
+  credit: string
+  imageInfoUrl: string
+  license: string
+  licenseUrl: string
 }
 
 export type SpeciesLight = Pick<Species, 'speciesId' | 'speciesSlug' | 'scientificName' | 'commonName' | 'taxon'>
