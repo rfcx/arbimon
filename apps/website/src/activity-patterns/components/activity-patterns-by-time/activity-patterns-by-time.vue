@@ -2,7 +2,7 @@
   <div class="w-full">
     <section-title>
       <template #title>
-        <div class="flex flex-row items-center text-subtle">
+        <div class="lg:(flex flex-row items-center) text-subtle">
           <select
             v-model="selectedType"
             class="text-xl py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-2 border-dashed cursor-pointer focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-2 ring-0 outline-none)"
@@ -15,9 +15,9 @@
               {{ item.label }}
             </option>
           </select>
-          <h2 class="text-xl ml-2">
+          <span class="text-xl ml-2">
             by
-          </h2>
+          </span>
           <select
             v-model="selectedBucket"
             class="text-xl lowercase ml-2 py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-2 border-dashed cursor-pointer focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-2 ring-0 outline-none)"
