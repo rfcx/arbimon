@@ -1,11 +1,10 @@
 import { ExtinctionRiskCode } from '../../iucn'
 
 export interface DashboardSpecies {
-  speciesId: number
-  speciesSlug: string
-  scientificName: string
-  commonName: string
+  slug: string
+  taxonSlug: string
   extinctionRisk: ExtinctionRiskCode
-  taxon: string
-  thumbnailImageUrl?: string
+  scientificName: string
+  commonName?: string
+  photoUrl?: string
 }
