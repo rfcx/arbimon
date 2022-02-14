@@ -12,8 +12,13 @@ async function getWikiSpecies (scientificName: string): Promise<WikiSummaryRespo
     url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
   }
 
-  const res = await axios.request<WikiSummaryResponse>(endpoint)
-  return res.data
+  return await axios.request<WikiSummaryResponse>(endpoint)
+    .then(res => {
+      return res.data
+    })
+    .catch(() => {
+      return undefined
+    })
 }
 
 async function getWikiImageInfo (fileName: string | undefined): Promise<WikiMediaImageInfo | undefined> {
@@ -25,10 +30,13 @@ async function getWikiImageInfo (fileName: string | undefined): Promise<WikiMedi
 
   return await axios.request<WikiMediaResponse>(endpoint)
     .then(res => {
+    const data = res.data.query.pages['-1']?.imageinfo[0]
     return {
-      descriptionurl: res.data.query.pages['-1']?.imageinfo[0].descriptionurl,
-      extmetadata: res.data.query.pages['-1']?.imageinfo[0].extmetadata
+      descriptionurl: data.descriptionurl,
+      extmetadata: data.extmetadata
     }
+  }).catch(() => {
+    return undefined
   })
 }
 
@@ -36,6 +44,24 @@ export const getWikiSummary = async (scientificName: string): Promise<WikiSummar
   const wikiSpecies = await getWikiSpecies(scientificName)
   const fileName = wikiSpecies?.originalimage?.source.split('/').at(-1)
   const wikiImageInfo = await getWikiImageInfo(fileName)
+  const hasCopyRighted = (info: string | undefined): string => {
+    if (!info) return ''
+    return wikiImageInfo?.extmetadata.Copyrighted ? info : ''
+  }
+
+  console.log({
+    title: wikiSpecies?.title ?? '',
+    content: wikiSpecies?.extract ?? '',
+    contentUrls: {
+      desktop: wikiSpecies?.content_urls?.desktop?.page ?? '',
+      mobile: wikiSpecies?.content_urls?.mobile?.page ?? ''
+    },
+    thumbnailImage: wikiSpecies?.thumbnail?.source ?? '',
+    credit: wikiImageInfo?.extmetadata.Artist.value ?? '',
+    imageInfoUrl: hasCopyRighted(wikiImageInfo?.descriptionurl),
+    license: hasCopyRighted(wikiImageInfo?.extmetadata.LicenseShortName.value),
+    licenseUrl: hasCopyRighted(wikiImageInfo?.extmetadata.LicenseUrl?.value)
+  })
 
   return {
     title: wikiSpecies?.title ?? '',
@@ -46,8 +72,8 @@ export const getWikiSummary = async (scientificName: string): Promise<WikiSummar
     },
     thumbnailImage: wikiSpecies?.thumbnail?.source ?? '',
     credit: wikiImageInfo?.extmetadata.Artist.value ?? '',
-    imageInfoUrl: wikiImageInfo?.descriptionurl ?? '',
-    license: wikiImageInfo?.extmetadata.LicenseShortName.value ?? '',
-    licenseUrl: wikiImageInfo?.extmetadata.Copyrighted ? (wikiImageInfo?.extmetadata.LicenseUrl?.value ?? '') : ''
+    imageInfoUrl: hasCopyRighted(wikiImageInfo?.descriptionurl),
+    license: hasCopyRighted(wikiImageInfo?.extmetadata.LicenseShortName.value),
+    licenseUrl: hasCopyRighted(wikiImageInfo?.extmetadata.LicenseUrl?.value)
   }
 }
