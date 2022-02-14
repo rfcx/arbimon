@@ -49,20 +49,6 @@ export const getWikiSummary = async (scientificName: string): Promise<WikiSummar
     return wikiImageInfo?.extmetadata.Copyrighted ? info : ''
   }
 
-  console.log({
-    title: wikiSpecies?.title ?? '',
-    content: wikiSpecies?.extract ?? '',
-    contentUrls: {
-      desktop: wikiSpecies?.content_urls?.desktop?.page ?? '',
-      mobile: wikiSpecies?.content_urls?.mobile?.page ?? ''
-    },
-    thumbnailImage: wikiSpecies?.thumbnail?.source ?? '',
-    credit: wikiImageInfo?.extmetadata.Artist.value ?? '',
-    imageInfoUrl: hasCopyRighted(wikiImageInfo?.descriptionurl),
-    license: hasCopyRighted(wikiImageInfo?.extmetadata.LicenseShortName.value),
-    licenseUrl: hasCopyRighted(wikiImageInfo?.extmetadata.LicenseUrl?.value)
-  })
-
   return {
     title: wikiSpecies?.title ?? '',
     content: wikiSpecies?.extract ?? '',
