@@ -1,22 +1,9 @@
 <template>
   <!-- TODO #188 #189 Handle loading and error case -->
-  <div v-if="iucnSpeciesInformation || wikiSpeciesInformation">
-    <div class="flex items-center mb-4">
-      <h3
-        v-if="species?.commonName"
-        class="text-lg mr-2"
-      >
-        {{ species?.commonName }}
-      </h3>
-      <el-tag
-        v-if="riskInformation"
-        class="border-none"
-        effect="dark"
-        :color="riskInformation.color"
-      >
-        {{ riskInformation.label }} ({{ riskInformation.code }})
-      </el-tag>
-    </div>
+  <h3 class="text-lg text-subtle border-b-2 border-subtle">
+    Description
+  </h3>
+  <div class="mt-4">
     <species-information-content-component
       :content="speciesIUCNCleanContent"
       :redirect-url="iucnSpeciesInformation?.sourceUrl"

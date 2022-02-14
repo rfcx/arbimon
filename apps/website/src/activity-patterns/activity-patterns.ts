@@ -16,6 +16,7 @@ import ActivityPatternsPredictedOccupancy from './components/activity-patterns-p
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
 import SpeciesImages from './components/species-images/species-images.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
+import SpeciesTitle from './components/species-title/species-title.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
 import { spotlightService } from './services'
@@ -33,6 +34,7 @@ export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: Activ
     ComparisonListComponent,
     SpeciesBackgroundInformation,
     SpeciesImages,
+    SpeciesTitle,
     SpeciesSelector,
     SpotlightPlayer
   }
