@@ -34,7 +34,7 @@ async function getWikiImageInfo (fileName: string | undefined): Promise<WikiMedi
 
 export const getWikiSummary = async (scientificName: string): Promise<WikiSummary> => {
   const wikiSpecies = await getWikiSpecies(scientificName)
-  const fileName = wikiSpecies?.originalimage.source.split('/').at(-1)
+  const fileName = wikiSpecies?.originalimage?.source.split('/').at(-1)
   const wikiImageInfo = await getWikiImageInfo(fileName)
 
   return {
