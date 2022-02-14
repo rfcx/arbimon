@@ -56,7 +56,7 @@ const getProfile = async (projectId: string): Promise<DashboardProfileResponse> 
         include: [
           {
             model: taxonClassModel,
-            attributes: [['slug', 'taxonSlug']]
+            attributes: ['slug']
           },
           {
             model: taxonSpeciesIucnModel,
@@ -64,7 +64,7 @@ const getProfile = async (projectId: string): Promise<DashboardProfileResponse> 
             include: [
               {
                 model: riskRatingIucnModel,
-                attributes: [['code', 'extinctionRisk']]
+                attributes: ['code']
               }
             ]
           },
@@ -88,8 +88,8 @@ const getProfile = async (projectId: string): Promise<DashboardProfileResponse> 
       slug,
       scientificName,
       commonName,
-      taxonSlug: TaxonClass.taxonSlug,
-      extinctionRisk: RiskRatingIucn.extinctionRisk,
+      taxonSlug: TaxonClass.slug,
+      extinctionRisk: RiskRatingIucn.code,
       photoUrl: TaxonSpeciesWiki.photoUrl
     }
   })
@@ -115,13 +115,13 @@ interface ProfileRawQueryResult {
     slug: string
     scientificName: string
     TaxonClass: {
-      taxonSlug: string
+      slug: string
     }
     TaxonSpeciesIucn: {
       commonName: string
       riskRatingIucnId: number
       RiskRatingIucn: {
-        extinctionRisk: ExtinctionRiskCode
+        code: ExtinctionRiskCode
       }
     }
     TaxonSpeciesWiki: {
