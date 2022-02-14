@@ -140,12 +140,12 @@ export default class DashboardPage extends Vue {
   get speciesHighlighted (): HighlightedSpeciesRow[] {
     if (!this.profile) return []
 
-    return this.profile.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
-      speciesId,
+    return this.profile.speciesHighlighted.map(({ slug, taxonSlug, scientificName, commonName, extinctionRisk, photoUrl }) => ({
+      slug,
+      taxonSlug,
       scientificName,
-      commonName,
-      speciesSlug,
-      imageUrl: (thumbnailImageUrl && thumbnailImageUrl.length > 0) ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
+      commonName: commonName,
+      photoUrl: (photoUrl && photoUrl.length > 0) ? photoUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
       extinctionRisk: getExtinctionRisk(extinctionRisk)
     }))
   }
@@ -153,12 +153,12 @@ export default class DashboardPage extends Vue {
   get speciesThreatened (): ThreatenedSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.speciesThreatened.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
-      speciesId,
+    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, extinctionRisk, photoUrl }) => ({
+      slug,
+      taxonSlug,
       scientificName,
-      commonName,
-      speciesSlug,
-      imageUrl: (thumbnailImageUrl && thumbnailImageUrl.length > 0) ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
+      commonName: commonName,
+      photoUrl: (photoUrl && photoUrl.length > 0) ? photoUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
       extinctionRisk: getExtinctionRisk(extinctionRisk)
     }))
   }

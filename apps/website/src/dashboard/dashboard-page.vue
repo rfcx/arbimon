@@ -87,7 +87,7 @@
         <page-title
           class="dashboard-title mt-5"
           :page-title="store.selectedProject.name"
-          :page-subtitle="profile?.description"
+          :page-subtitle="profile?.summary"
         />
         <dashboard-project-profile
           v-if="profile?.readme"

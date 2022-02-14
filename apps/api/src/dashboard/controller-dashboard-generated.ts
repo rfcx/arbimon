@@ -46,7 +46,7 @@ const getSpeciesThreatened = async (): Promise<DashboardSpecies[]> =>
     .sort((a, b) =>
       EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
       a.scientificName.localeCompare(b.scientificName)
-    )
+    ).map(({ speciesSlug: slug, taxon, extinctionRisk, scientificName, commonName, thumbnailImageUrl: photoUrl }) => ({ slug, taxonSlug: taxon.toLowerCase(), extinctionRisk, scientificName, commonName, photoUrl }))
 
 const getRichnessByExtinction = async (): Promise<Array<[string, number]>> =>
   Object.entries(groupBy(rawSpecies, 'extinctionRisk'))
