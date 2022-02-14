@@ -1,8 +1,5 @@
 <template>
   <div>
-    <h3 class="text-lg">
-      Photo
-    </h3>
     <div class="max-h-60 max-w-full my-4 flex justify-left">
       <div class="relative">
         <img

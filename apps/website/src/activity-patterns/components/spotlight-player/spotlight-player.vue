@@ -1,7 +1,7 @@
 <template>
   <div v-if="!loading">
-    <h3 class="text-lg capitalize">
-      Species call
+    <h3 class="text-lg text-subtle border-b-2 border-subtle">
+      Detected audio
     </h3>
     <div
       class="my-4 flex justify-left"

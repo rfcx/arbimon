@@ -104,5 +104,5 @@
 </template>
 <script src="./dashboard-page" lang="ts"></script>
 <style lang="scss">
-@import './dashboard.scss';
+@import './dashboard-page.scss';
 </style>
