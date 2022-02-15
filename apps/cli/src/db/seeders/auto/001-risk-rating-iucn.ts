@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
-import { RiskRatingIucn } from '@rfcx-bio/common/dao/types/risk-rating-iucn'
+import { RiskRatingIucn } from '@rfcx-bio/common/dao/types'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize

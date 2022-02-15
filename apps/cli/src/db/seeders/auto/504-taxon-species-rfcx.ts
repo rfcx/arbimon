@@ -3,7 +3,7 @@ import { MigrationFn } from 'umzug'
 
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { TaxonSpeciesRfcxModel } from '@rfcx-bio/common/dao/models/taxon-species-rfcx-model'
-import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types/taxon-species-rfcx'
+import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { taxonSpeciesRfcx } from '../_data/taxon-species-rfcx'

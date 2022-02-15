@@ -3,7 +3,7 @@ import { MigrationFn } from 'umzug'
 
 import { LocationProjectSpeciesModel } from '@rfcx-bio/common/dao/models/location-project-species-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { LocationProjectSpecies } from '@rfcx-bio/common/dao/types/location-project-species'
+import { LocationProjectSpecies } from '@rfcx-bio/common/dao/types'
 
 import { projectSpeciesPuertoRico } from '../_data/location-project-species-puerto-rico'
 
