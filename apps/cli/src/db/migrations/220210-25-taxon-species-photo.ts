@@ -46,7 +46,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
       photo_author: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(1023),
         allowNull: false
       },
       photo_license: {
@@ -55,7 +55,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
       photo_license_url: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        allowNull: true
       }
     }
   )

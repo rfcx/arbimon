@@ -5,5 +5,5 @@ export interface TaxonSpeciesPhoto {
   photoCaption: string
   photoAuthor: string
   photoLicense: string
-  photoLicenseUrl: string
+  photoLicenseUrl?: string
 }
