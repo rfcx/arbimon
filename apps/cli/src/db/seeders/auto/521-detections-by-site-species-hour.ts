@@ -5,7 +5,7 @@ import { DetectionsBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/de
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { DetectionsBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -21,7 +21,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const speciesArbimonToBio: Record<number, number> = Object.fromEntries(species.map(s => [s.idArbimon, s.id]))
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
-  const data: DetectionsBySiteSpeciesHour[] =
+  const data: DetectionBySiteSpeciesHour[] =
     rawDetections.map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: classArbimonToBio[d.taxon_id] ?? -1,
