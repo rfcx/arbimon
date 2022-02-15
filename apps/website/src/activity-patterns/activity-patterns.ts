@@ -57,8 +57,9 @@ export default class ActivityPatternsPage extends Vue {
     return this.timeDatasets.length > 0
   }
 
-  get speciesCall (): SpeciesCall | null {
-    return this.speciesInformation?.speciesCall ?? null
+  get speciesCalls (): SpeciesCall[] {
+    const speciesCall = this.speciesInformation?.speciesCall
+    return speciesCall ? [speciesCall] : []
   }
 
   get infoTopic (): string {
