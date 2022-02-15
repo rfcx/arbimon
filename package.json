@@ -19,8 +19,7 @@
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
     "prepare": "ts-patch install -s",
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
-    "s:api": "pnpm --filter=api serve",
-    "s:db": "pnpm --filter=db serve && pnpm --filter=cli db-reset && pnpm --filter=cli db-migrate && pnpm --filter=cli db-seed",
+    "s:api": "pnpm --filter=db serve && pnpm --filter=cli db-reset && pnpm --filter=cli db-migrate && pnpm --filter=cli db-seed && pnpm --filter=api serve",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
     "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\""
   },
@@ -75,7 +74,6 @@
     "stylelint-config-property-sort-order-smacss": "^8.0.0",
     "stylelint-config-standard-scss": "^3.0.0",
     "ts-jest": "^27.1.1",
-    "ts-node": "^10.4.0",
     "ts-patch": "^2.0.1",
     "tsconfig-paths": "^3.12.0",
     "typescript": "^4.4.4",
