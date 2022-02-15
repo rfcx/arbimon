@@ -4,7 +4,7 @@ import { ProjectProfile } from '../../dao/types/location-project-profile'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_LOCATION_PROJECTS_PROFILE } from '../table-names'
 
-export const ProjectProfileModel = defineWithDefaults<ProjectProfile>(
+export const LocationProjectProfileModel = defineWithDefaults<ProjectProfile>(
   'LocationProjectProfile',
   {
     // PK

@@ -1,5 +1,5 @@
 import { SitesParams, SitesResponse } from '@rfcx-bio/common/api-bio/common/sites'
-import { SITE_MODEL_ATTRIBUTES, SiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { LocationSiteModel, SITE_MODEL_ATTRIBUTES } from '@rfcx-bio/common/dao/models/location-site-model'
 
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
@@ -11,7 +11,7 @@ export const sitesAllHandler: Handler<SitesResponse, SitesParams> = async (req) 
   assertParamsExist({ projectId })
 
   // Query
-  const sites = await SiteModel(getSequelize()).findAll({
+  const sites = await LocationSiteModel(getSequelize()).findAll({
     where: { locationProjectId: projectId },
     attributes: SITE_MODEL_ATTRIBUTES.light,
     order: [
