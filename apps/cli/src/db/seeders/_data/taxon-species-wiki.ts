@@ -360,8 +360,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Cricket_coqui',
       mobile: 'https://en.m.wikipedia.org/wiki/Cricket_coqui'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Eleutherodactylus_gryllus.jpg/320px-Eleutherodactylus_gryllus.jpg'
+    }
   },
   'Eleutherodactylus hedricki': {
     title: 'Hedrick\'s coqui',
@@ -369,8 +368,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Hedrick\'s_coqui',
       mobile: 'https://en.m.wikipedia.org/wiki/Hedrick\'s_coqui'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Eleutherodactylus_hedricki.jpg/320px-Eleutherodactylus_hedricki.jpg'
+    }
   },
   'Eleutherodactylus juanariveroi': {
     title: 'Eleutherodactylus juanariveroi',
@@ -398,8 +396,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Mona_coqui',
       mobile: 'https://en.m.wikipedia.org/wiki/Mona_coqui'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Eleutherodactylus_monensis.jpg/320px-Eleutherodactylus_monensis.jpg'
+    }
   },
   'Eleutherodactylus portoricensis': {
     title: 'Eleutherodactylus portoricensis',
@@ -407,8 +404,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Eleutherodactylus_portoricensis',
       mobile: 'https://en.m.wikipedia.org/wiki/Eleutherodactylus_portoricensis'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Eleutherodactylus_portoricensis.jpg/320px-Eleutherodactylus_portoricensis.jpg'
+    }
   },
   'Eleutherodactylus richmondi': {
     title: 'Bronze coqui',
@@ -416,8 +412,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Bronze_coqui',
       mobile: 'https://en.m.wikipedia.org/wiki/Bronze_coqui'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Richmond_coqui.jpg/320px-Richmond_coqui.jpg'
+    }
   },
   'Eleutherodactylus unicolor': {
     title: 'Dwarf coqui',
@@ -438,8 +433,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Melodius_coqui',
       mobile: 'https://en.m.wikipedia.org/wiki/Melodius_coqui'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a1/Eleutherodactylus_wightmanae.jpg/320px-Eleutherodactylus_wightmanae.jpg'
+    }
   },
   'Equus ferus caballus': {
     title: 'Horse',
@@ -885,12 +879,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Cane_toad',
       mobile: 'https://en.m.wikipedia.org/wiki/Cane_toad'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Canetoadmale.jpg/320px-Canetoadmale.jpg',
-    credit: '<a href="//commons.wikimedia.org/wiki/User:Benjamint444" title="User:Benjamint444">Benjamint444</a>',
-    imageInfoUrl: 'https://commons.wikimedia.org/wiki/File:Canetoadmale.jpg',
-    license: 'GFDL 1.2',
-    licenseUrl: 'http://www.gnu.org/licenses/old-licenses/fdl-1.2.html'
+    }
   },
   'Setophaga adelaidae': {
     title: 'Adelaide\'s warbler',
@@ -1130,8 +1119,7 @@ export const rawWikiData: Record<string, WikiSummary> = {
     contentUrls: {
       desktop: 'https://en.wikipedia.org/wiki/Puerto_Rican_vireo',
       mobile: 'https://en.m.wikipedia.org/wiki/Puerto_Rican_vireo'
-    },
-    thumbnailImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Vireo_latimeri_map.svg/320px-Vireo_latimeri_map.svg.png'
+    }
   },
   'Zenaida asiatica': {
     title: 'White-winged dove',
