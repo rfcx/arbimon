@@ -2,10 +2,12 @@ import { DataTypes } from 'sequelize'
 
 import { RiskRatingIucn } from '../../dao/types/risk-rating-iucn'
 import { defineWithDefaults } from '../helpers/defaults'
-import { TABLE_RISK_RATING_IUCN } from '../table-names'
+
+export const MODEL_RISK_RATING_IUCN = 'RiskRatingIucn'
+export const TABLE_RISK_RATING_IUCN = 'risk_rating_iucn'
 
 export const RiskRatingIucnModel = defineWithDefaults<RiskRatingIucn>(
-  'RiskRatingIucn',
+  MODEL_RISK_RATING_IUCN,
   {
     // PK
     idOrdered: { // 1

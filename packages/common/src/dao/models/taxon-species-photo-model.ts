@@ -1,11 +1,13 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
-import { TABLE_TAXON_SPECIES_PHOTO } from '../table-names'
 import { TaxonSpeciesPhoto } from '../types/taxon-species-photo'
 
+export const MODEL_TAXON_SPECIES_PHOTO = 'TaxonSpeciesPhoto'
+export const TABLE_TAXON_SPECIES_PHOTO = 'taxon_species_photo'
+
 export const TaxonSpeciesPhotoModel = defineWithDefaultsAutoPk<TaxonSpeciesPhoto>(
-  'TaxonSpeciesPhoto',
+  MODEL_TAXON_SPECIES_PHOTO,
   {
     // PK
     id: { // 1
