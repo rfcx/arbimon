@@ -9,6 +9,7 @@ import { MigrationFn } from 'umzug'
 const VIEW_NAME = 'species_in_project'
 const INDEX_COLS = ['location_project_id', 'taxon_class_id', 'taxon_species_id']
 
+// TODO: Add some logic for picking which photo to show
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
@@ -19,11 +20,12 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            ts.scientific_name,
            MAX(tsi.common_name) AS common_name,
            COALESCE(MAX(tsi.risk_rating_iucn_id), -1) AS risk_rating_iucn_id,
-           MAX(tsw.photo_url) AS photo_url
+           MAX(tsp.photo_url) AS photo_url
     FROM detection_by_site_species_hour d
           INNER JOIN taxon_species ts ON d.taxon_species_id = ts.id
           LEFT OUTER JOIN taxon_species_iucn tsi ON ts.id = tsi.taxon_species_id
-          LEFT OUTER JOIN taxon_species_wiki tsw on ts.id = tsw.taxon_species_id
+          LEFT OUTER JOIN taxon_species_wiki tsw ON ts.id = tsw.taxon_species_id
+          LEFT OUTER JOIN taxon_species_photo tsp ON ts.id = tsp.taxon_species_id
     GROUP BY d.location_project_id, ts.id
     ;
     `
