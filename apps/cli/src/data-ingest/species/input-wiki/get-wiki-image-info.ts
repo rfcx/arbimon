@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+import { logError } from '~/axios'
 import { requireEnv } from '~/env'
 
 export interface WikiMediaImageInfo {
@@ -13,7 +14,7 @@ interface WikiMediaResponse {
   batchcomplete: string
   query: {
     pages: Record<string, {
-      imageinfo: WikiMediaImageInfo[]
+      imageinfo?: WikiMediaImageInfo[]
     }>
   }
 }
@@ -30,12 +31,17 @@ export async function getWikiImageInfo (fileName: string | undefined): Promise<W
 
   return await axios.request<WikiMediaResponse>(endpoint)
     .then(res => {
-    const data = res.data.query.pages['-1']?.imageinfo[0]
-    return {
-      descriptionurl: data.descriptionurl,
-      extmetadata: data.extmetadata
-    }
-  }).catch(() => {
-    return undefined
-  })
+      const data = res.data.query.pages['-1']?.imageinfo?.[0]
+      if (!data) {
+        console.info(res.status, 'getWikiImageInfo', fileName, '(no data)')
+        return undefined
+      }
+
+      console.info(res.status, 'getWikiImageInfo', fileName)
+      return {
+        descriptionurl: data.descriptionurl,
+        extmetadata: data.extmetadata
+      }
+    })
+    .catch(logError('getWikiImageInfo', fileName))
 }
