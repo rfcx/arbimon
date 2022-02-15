@@ -1,4 +1,4 @@
-export interface DetectionsBySiteSpeciesHour {
+export interface DetectionBySiteSpeciesHour {
   timePrecisionHourLocal: Date
   locationSiteId: number
   taxonSpeciesId: number
