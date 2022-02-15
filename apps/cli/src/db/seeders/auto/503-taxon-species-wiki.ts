@@ -23,12 +23,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       return {
         taxonSpeciesId: speciesSlugToId[speciesSlug],
         description: info?.description ?? 'Blah blah blah',
-        descriptionSourceUrl: info?.sourceUrl ?? '',
-        photoUrl: thumbnailImageUrl ?? '',
-        photoCaption: imageCaption,
-        photoAuthor: '',
-        photoLicense: '',
-        photoLicenseUrl: ''
+        descriptionSourceUrl: info?.sourceUrl ?? ''
       }
     })
     .filter(isDefined)
