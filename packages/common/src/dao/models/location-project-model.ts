@@ -2,14 +2,16 @@ import { DataTypes } from 'sequelize'
 
 import { Project } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
-import { TABLE_LOCATION_PROJECTS } from '../table-names'
+
+export const MODEL_LOCATION_PROJECT = 'LocationProject'
+export const TABLE_LOCATION_PROJECT = 'location_project'
 
 export const PROJECT_MODEL_ATTRIBUTES: Record<string, Array<keyof Project>> = {
   light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 }
 
 export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
-  'LocationProject',
+  MODEL_LOCATION_PROJECT,
   {
     // PK
     id: { // 1
@@ -37,6 +39,6 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
     longitudeWest: DataTypes.FLOAT // -67.94469784
   },
   {
-    tableName: TABLE_LOCATION_PROJECTS
+    tableName: TABLE_LOCATION_PROJECT
   }
 )

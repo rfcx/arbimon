@@ -2,10 +2,12 @@ import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../../dao/helpers/defaults'
 import { TaxonSpeciesWiki } from '../../dao/types/taxon-species-wiki'
-import { TABLE_TAXON_SPECIES_WIKI } from '../table-names'
+
+export const MODEL_TAXON_SPECIES_WIKI = 'TaxonSpeciesWiki'
+export const TABLE_TAXON_SPECIES_WIKI = 'taxon_species_wiki'
 
 export const TaxonSpeciesWikiModel = defineWithDefaults<TaxonSpeciesWiki>(
-  'TaxonSpeciesWiki',
+  MODEL_TAXON_SPECIES_WIKI,
   {
     // PK
     taxonSpeciesId: { // 1

@@ -1,11 +1,13 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../helpers/defaults'
-import { TABLE_TAXON_SPECIES_RFCX } from '../table-names'
 import { TaxonSpeciesRfcx } from '../types/taxon-species-rfcx'
 
+export const MODEL_TAXON_SPECIES_RFCX = 'TaxonSpeciesRfcx'
+export const TABLE_TAXON_SPECIES_RFCX = 'taxon_species_rfcx'
+
 export const TaxonSpeciesRfcxModel = defineWithDefaults<TaxonSpeciesRfcx>(
-  'TaxonSpeciesRfcx',
+  MODEL_TAXON_SPECIES_RFCX,
   {
     // PK
     taxonSpeciesId: { // 1

@@ -2,10 +2,12 @@ import { DataTypes } from 'sequelize'
 
 import { LocationProjectProfile } from '../../dao/types/location-project-profile'
 import { defineWithDefaults } from '../helpers/defaults'
-import { TABLE_LOCATION_PROJECTS_PROFILE } from '../table-names'
+
+export const MODEL_LOCATION_PROJECT_PROFILE = 'LocationProjectProfile'
+export const TABLE_LOCATION_PROJECTS_PROFILE = 'location_project_profile'
 
 export const LocationProjectProfileModel = defineWithDefaults<LocationProjectProfile>(
-  'LocationProjectProfile',
+  MODEL_LOCATION_PROJECT_PROFILE,
   {
     // PK
     locationProjectId: { // 1

@@ -2,13 +2,16 @@ import { DataTypes } from 'sequelize'
 
 import { Site } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
-import { TABLE_LOCATION_SITES } from '../table-names'
+
+export const MODEL_LOCATION_SITE = 'LocationSite'
+export const TABLE_LOCATION_SITE = 'location_site'
 
 export const SITE_MODEL_ATTRIBUTES: Record<string, Array<keyof Site>> = {
   light: ['id', 'name', 'latitude', 'longitude', 'altitude']
 }
+
 export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
-  'LocationSite',
+  MODEL_LOCATION_SITE,
   {
     // PK
     id: { // 1
@@ -31,6 +34,6 @@ export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
     altitude: DataTypes.FLOAT // 30.85246588
   },
   {
-    tableName: TABLE_LOCATION_SITES
+    tableName: TABLE_LOCATION_SITE
   }
 )

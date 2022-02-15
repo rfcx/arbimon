@@ -2,10 +2,12 @@ import { DataTypes } from 'sequelize'
 
 import { TaxonClass } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
-import { TABLE_TAXON_CLASSES } from '../table-names'
+
+export const MODEL_TAXON_CLASS = 'TaxonClass'
+export const TABLE_TAXON_CLASS = 'taxon_class'
 
 export const TaxonClassModel = defineWithDefaultsAutoPk<TaxonClass>(
-  'TaxonClass',
+  MODEL_TAXON_CLASS,
   {
     // PK
     id: { // 1
@@ -25,6 +27,6 @@ export const TaxonClassModel = defineWithDefaultsAutoPk<TaxonClass>(
     commonName: DataTypes.STRING(255) // Birds
   },
   {
-    tableName: TABLE_TAXON_CLASSES
+    tableName: TABLE_TAXON_CLASS
   }
 )
