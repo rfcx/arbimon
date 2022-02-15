@@ -7,7 +7,8 @@
         </h1>
       </div>
       <p class="text-sm">
-        {{ pageSubtitle }} ·
+        {{ pageSubtitle }}
+        <span v-if="topic">&nbsp;·&nbsp;</span>
         <router-link
           v-if="topic"
           :to="learnmoreRoute"
