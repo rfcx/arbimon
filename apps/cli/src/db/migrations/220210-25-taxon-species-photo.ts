@@ -6,16 +6,22 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_wiki'
+const TABLE_NAME = 'taxon_species_photo'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      taxon_species_id: {
+      id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true
+      },
+      // Dimensions
+      taxon_species_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
           model: { tableName: 'taxon_species' },
           key: 'id'
@@ -31,11 +37,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
       // Facts
-      description: {
-        type: DataTypes.TEXT,
+      photo_url: {
+        type: DataTypes.STRING(511),
         allowNull: false
       },
-      description_source_url: {
+      photo_caption: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      photo_author: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      photo_license: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      photo_license_url: {
         type: DataTypes.STRING(255),
         allowNull: false
       }
