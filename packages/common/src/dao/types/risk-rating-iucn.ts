@@ -1,5 +1,7 @@
+import { ExtinctionRiskCode } from '../../iucn'
+
 export interface RiskRatingIucn {
   idOrdered: number
-  code: string
+  code: ExtinctionRiskCode
   isThreatened: boolean
 }
