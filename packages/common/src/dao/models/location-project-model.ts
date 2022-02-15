@@ -8,7 +8,7 @@ export const PROJECT_MODEL_ATTRIBUTES: Record<string, Array<keyof Project>> = {
   light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 }
 
-export const ProjectModel = defineWithDefaultsAutoPk<Project>(
+export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
   'LocationProject',
   {
     // PK

@@ -7,7 +7,7 @@ import { TABLE_LOCATION_SITES } from '../table-names'
 export const SITE_MODEL_ATTRIBUTES: Record<string, Array<keyof Site>> = {
   light: ['id', 'name', 'latitude', 'longitude', 'altitude']
 }
-export const SiteModel = defineWithDefaultsAutoPk<Site>(
+export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
   'LocationSite',
   {
     // PK

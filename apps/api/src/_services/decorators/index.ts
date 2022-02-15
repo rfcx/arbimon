@@ -1,4 +1,4 @@
-import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
 import { Middleware } from '../api-helpers/types'
 import { getSequelize } from '../db'
@@ -16,7 +16,7 @@ export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async
 
   if (token === undefined || bioProjectId === undefined) return
 
-  const coreProjectId = await ProjectModel(getSequelize())
+  const coreProjectId = await LocationProjectModel(getSequelize())
     .findByPk(bioProjectId, { attributes: ['idCore'] })
     .then(proj => proj?.idCore)
 

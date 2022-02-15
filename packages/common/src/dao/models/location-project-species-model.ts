@@ -4,7 +4,7 @@ import { ProjectSpecies } from '../../dao/types/location-project-species'
 import { defineWithDefaults } from '../helpers/defaults'
 import { TABLE_LOCATION_PROJECTS_SPECIES } from '../table-names'
 
-export const ProjectSpeciesModel = defineWithDefaults<ProjectSpecies>(
+export const LocationProjectSpeciesModel = defineWithDefaults<ProjectSpecies>(
   'LocationProjectSpecies',
   {
     // PK
