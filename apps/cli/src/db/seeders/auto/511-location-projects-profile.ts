@@ -1,11 +1,11 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { ProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
-import { ProjectProfile } from '@rfcx-bio/common/dao/types/location-project-profile'
+import { LocationProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
+import { LocationProjectProfile } from '@rfcx-bio/common/dao/types/location-project-profile'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const projectsProfile: ProjectProfile = {
+  const projectsProfile: LocationProjectProfile = {
     locationProjectId: 1,
     summary: 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities',
     readme: '## Background\n\n' +
@@ -26,5 +26,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     '- [Rainforest Connection (marconi@rfcx.org)](https://rfcx.org/)\n'
   }
 
-  await ProjectProfileModel(params.context.sequelize).create(projectsProfile)
+  await LocationProjectProfileModel(params.context.sequelize).create(projectsProfile)
 }
