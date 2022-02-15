@@ -5,13 +5,7 @@ import { ProjectSpeciesModel } from '@rfcx-bio/common/dao/models/location-projec
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { ProjectSpecies } from '@rfcx-bio/common/dao/types/location-project-species'
 
-const HIGHLIGHTED_SPECIES_SLUGS = [
-  'amazona-vittata',
-  'accipiter-striatus-venator',
-  'agelaius-xanthomus',
-  'setophaga-angelae',
-  'antrostomus-noctitherus'
-]
+import { projectSpeciesPuertoRico } from '../_data/location-project-species-puerto-rico'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
@@ -19,11 +13,15 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const species = await TaxonSpeciesModel(sequelize).findAll()
   const speciesSlugToId: Record<string, number> = Object.fromEntries(species.map(s => [s.slug, s.id]))
 
-  const projectsSpeciesList: ProjectSpecies[] = HIGHLIGHTED_SPECIES_SLUGS.map((slug, idx) => ({
-    locationProjectId: 1,
-    taxonSpeciesId: speciesSlugToId[slug],
-    highlightedOrder: idx
-  }))
+  const projectsSpeciesList: ProjectSpecies[] = projectSpeciesPuertoRico
+    .map(({ slug, highlightedOrder, riskRatingLocalCode, riskRatingLocalLevel, riskRatingLocalSource }) => ({
+      locationProjectId: 1,
+      taxonSpeciesId: speciesSlugToId[slug],
+      highlightedOrder,
+      riskRatingLocalCode,
+      riskRatingLocalLevel,
+      riskRatingLocalSource
+    }))
 
   await ProjectSpeciesModel(params.context.sequelize).bulkCreate(projectsSpeciesList)
 }
