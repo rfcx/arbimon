@@ -4,7 +4,7 @@
       <el-carousel
         class="w-full h-75"
         indicator-position="none"
-        autoplay="false"
+        :autoplay="false"
       >
         <el-carousel-item
           v-for="(image, idx) in images"
