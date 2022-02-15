@@ -1,7 +1,7 @@
 import { Optional, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { SiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types/taxon-species-call'
@@ -15,7 +15,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const speciesSlugToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.slug, s.id])))
 
-  const siteNameToId: Record<string, number> = await SiteModel(sequelize).findAll()
+  const siteNameToId: Record<string, number> = await LocationSiteModel(sequelize).findAll()
     .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
 
   // Convert data

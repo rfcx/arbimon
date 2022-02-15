@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { DetectionsBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detections-by-site-species-hour-model'
-import { SiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { DetectionsBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -14,7 +14,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const [classes, species, sites] = await Promise.all([
     TaxonClassModel(sequelize).findAll(),
     TaxonSpeciesModel(sequelize).findAll(),
-    SiteModel(sequelize).findAll()
+    LocationSiteModel(sequelize).findAll()
   ])
 
   const classArbimonToBio: Record<number, number> = Object.fromEntries(classes.map(c => [c.idArbimon, c.id]))

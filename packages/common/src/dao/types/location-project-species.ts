@@ -1,4 +1,4 @@
-export interface ProjectSpecies {
+export interface LocationProjectSpecies {
   locationProjectId: number
   taxonSpeciesId: number
   highlightedOrder?: number
