@@ -1,3 +1,4 @@
+// TODO: Rename this to LocationSite & update references
 export interface Site {
   id: number
   idCore: string

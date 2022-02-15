@@ -1,3 +1,4 @@
+// TODO: Rename this to LocationProject & update references
 export interface Project {
   id: number
   idCore: string
