@@ -64,7 +64,14 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (!to.hash) return { top: 0 }
+    return {
+      el: to.hash,
+      behavior: 'smooth'
+    }
+  }
 })
 
 export default router
