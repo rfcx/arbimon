@@ -37,8 +37,8 @@
           :species="speciesInformation"
         />
         <spotlight-player
-          v-if="speciesCall"
-          :species-call="speciesCall"
+          v-if="speciesCalls"
+          :species-calls="speciesCalls"
         />
         <species-background-information
           :species="speciesInformation"
