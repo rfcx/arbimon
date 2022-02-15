@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+import { logError } from '~/axios'
 import { requireEnv } from '~/env'
 
 export interface WikiSummaryResponse {
@@ -63,9 +64,8 @@ export async function getWikiSpecies (scientificName: string): Promise<WikiSumma
 
   return await axios.request<WikiSummaryResponse>(endpoint)
     .then(res => {
+      console.info(res.status, 'getWikiSpecies', scientificName)
       return res.data
     })
-    .catch(() => {
-      return undefined
-    })
+    .catch(logError('getWikiSpecies', scientificName))
 }
