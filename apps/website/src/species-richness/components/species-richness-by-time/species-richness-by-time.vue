@@ -8,7 +8,7 @@
           </h2>
           <select
             v-model="selectedBucket"
-            class="text-xl lowercase py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-2 md:(ml-2) focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-2 ring-0 outline-none)"
+            class="text-xl lowercase py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-1 md:(ml-2) focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
           >
             <option
               v-for="bucket in Object.entries(buckets)"
