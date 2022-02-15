@@ -23,22 +23,22 @@ export const dashboardProfileHandler: Handler<DashboardProfileResponse, Dashboar
 
 const getProfile = async (projectId: string): Promise<DashboardProfileResponse> => {
   const sequelize = getSequelize()
-  const modelRepository = ModelRepositoryFactory.getInstance(sequelize)
+  const models = ModelRepositoryFactory.getInstance(sequelize)
 
-  const projectInformation = await modelRepository.LocationProjectProfile.findOne({
+  const projectInformation = await models.LocationProjectProfile.findOne({
     where: { locationProjectId: projectId }
   })
 
-  const speciesHighlightedResult = await modelRepository.LocationProjectSpecies.findAll({
+  const speciesHighlightedResult = await models.LocationProjectSpecies.findAll({
     where: { locationProjectId: projectId, highlightedOrder: { [Op.not]: null } },
     include: [
       {
-        model: modelRepository.TaxonSpecies,
+        model: models.TaxonSpecies,
         attributes: ['slug', 'scientificName'],
         include: [
-          { model: modelRepository.TaxonClass, attributes: ['slug'] },
-          { model: modelRepository.TaxonSpeciesIucn, attributes: ['commonName', 'riskRatingIucnId'], include: [{ model: modelRepository.RiskRatingIucn, attributes: ['code'] }] },
-          { model: modelRepository.TaxonSpeciesPhoto, attributes: ['photoUrl'] }
+          { model: models.TaxonClass, attributes: ['slug'] },
+          { model: models.TaxonSpeciesIucn, attributes: ['commonName', 'riskRatingIucnId'], include: [{ model: models.RiskRatingIucn, attributes: ['code'] }] },
+          { model: models.TaxonSpeciesPhoto, attributes: ['photoUrl'] }
         ]
       }
     ],
