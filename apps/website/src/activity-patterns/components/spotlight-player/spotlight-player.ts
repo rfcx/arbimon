@@ -2,12 +2,18 @@ import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
+import { coreMediaUrl } from '@rfcx-bio/common/api-bio/media/core-media'
 import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { assetsService } from '@/activity-patterns/services'
 import { BiodiversityStore } from '~/store'
 import AudioController from './audio-controller.vue'
+
+type ScrollDirection = 'left' | 'right'
+
+const SCROLL_STEP = 150
 
 @Options({
   components: {
@@ -16,29 +22,31 @@ import AudioController from './audio-controller.vue'
 })
 export default class SpotlightPlayer extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop() speciesCall!: SpeciesCall
+  @Prop() speciesCalls!: SpeciesCall[]
 
   loading = false
 
-  spectrogram = ''
+  spectrograms: string[] = []
+  audioList: Howl[] = []
   audio: Howl | null = null
   playing = false
+  playingAudioIndex = -1
   playedTime = 0
   playedProgressPercentage = 0
 
-  get displayPlayedTime (): string {
-    return `${dayjs.duration(this.playedTime, 'seconds').format('m:ss')}`
+  get isEmpty (): boolean {
+    return this.speciesCalls.length === 0
   }
 
-  get emptyMedia (): boolean {
-    return this.spectrogram === '' || this.audio === null
+  get displayPlayedTime (): string {
+    return `${dayjs.duration(this.playedTime, 'seconds').format('m:ss')}`
   }
 
   override async created (): Promise<void> {
     await this.getSpeciesCallAssets()
   }
 
-  @Watch('speciesCall')
+  @Watch('speciesCalls')
   async onSpeciesCallChange (): Promise<void> {
     await this.getSpeciesCallAssets()
   }
@@ -46,44 +54,40 @@ export default class SpotlightPlayer extends Vue {
   async getSpeciesCallAssets (): Promise<void> {
     this.loading = true
     await Promise.all([
-      this.getSpectrogramImage(),
-      this.getAudio()
+      this.getSpectrogramImage()
     ])
+    this.getAudio()
     this.loading = false
   }
 
   async getSpectrogramImage (): Promise<void> {
-    const data = await assetsService.getMedia(this.speciesCall.mediaSpecUrl)
-    if (!data) {
-      this.spectrogram = ''
-      return
-    }
-
-    this.spectrogram = window.URL.createObjectURL(data)
+    const spectrogramList = (await Promise.all(this.speciesCalls.map(async ({ mediaSpecUrl }) => await assetsService.getMedia(mediaSpecUrl)))).filter(isDefined)
+    this.spectrograms = spectrogramList.map(data => window.URL.createObjectURL(data))
   }
 
-  async getAudio (): Promise<void> {
-    const data = await assetsService.getMedia(this.speciesCall.mediaWavUrl)
-    if (!data) {
-      this.audio = null
-      return
-    }
-
-    this.audio = new Howl({
-      src: [window.URL.createObjectURL(data)],
-      html5: true,
-      onend: () => {
-        this.playing = false
-      },
-      onpause: () => {
-        this.playing = false
-        this.audio?.stop()
-      },
-      onplay: () => {
-        this.playing = true
-        requestAnimationFrame(this.step)
-      }
+  getAudio (): void {
+    this.audioList = this.speciesCalls.map(({ mediaWavUrl }) => {
+      return new Howl({
+        src: [`${import.meta.env.VITE_BIO_API_BASE_URL}${coreMediaUrl()}?url=${mediaWavUrl}`],
+        html5: true,
+        xhr: {
+          method: 'POST'
+        },
+        onend: () => {
+          this.playing = false
+          this.playingAudioIndex = -1
+        },
+        onpause: () => {
+          this.playing = false
+          this.audio?.stop()
+        },
+        onplay: () => {
+          this.playing = true
+          requestAnimationFrame(this.step)
+        }
+      })
     })
+    this.audio = this.audioList.length > 0 ? this.audioList[0] : null
   }
 
   step (): void {
@@ -113,11 +117,32 @@ export default class SpotlightPlayer extends Vue {
     audio?.play()
   }
 
+  async setAudioIndex (idx: number): Promise<void> {
+    this.playingAudioIndex = idx
+    this.audio = this.audioList[idx]
+    if (this.playing) {
+      await this.pause()
+    } else {
+      await this.play()
+    }
+  }
+
   async play (): Promise<void> {
     this.audio?.play()
   }
 
   async pause (): Promise<void> {
     this.audio?.pause()
+  }
+
+  scrollContent (direction: ScrollDirection = 'left'): void {
+    const content = document.querySelector('#spectrogram-container')
+    if (!content) return
+
+    if (direction === 'left') {
+      content.scrollLeft -= SCROLL_STEP
+    } else {
+      content.scrollLeft += SCROLL_STEP
+    }
   }
 }
