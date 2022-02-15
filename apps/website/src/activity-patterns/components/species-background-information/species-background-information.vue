@@ -4,12 +4,12 @@
     Description
   </h3>
   <div class="mt-4">
-    <species-information-content-component
+    <species-information-content
       :content="speciesIUCNCleanContent"
       :redirect-url="iucnSpeciesInformation?.sourceUrl"
       :source="iucnSpeciesInformation?.sourceCite ?? 'IUCN Red List'"
     />
-    <species-information-content-component
+    <species-information-content
       v-if="!speciesIUCNCleanContent"
       class="mt-2"
       :content="wikiSpeciesInformation?.description"

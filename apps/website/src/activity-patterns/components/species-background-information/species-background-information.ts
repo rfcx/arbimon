@@ -3,11 +3,11 @@ import { Prop } from 'vue-property-decorator'
 
 import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio/species/types'
 
-import SpeciesInformationContentComponent from './species-information-content.vue'
+import SpeciesInformationContent from './species-information-content.vue'
 
 @Options({
   components: {
-    SpeciesInformationContentComponent
+    SpeciesInformationContent
   }
 })
 export default class SpeciesBackgroundInformation extends Vue {
