@@ -1,7 +1,7 @@
 import { getWikiImageInfo } from './get-wiki-image-info'
 import { getWikiSpecies } from './get-wiki-species'
 
-interface WikiSummary {
+export interface WikiSummary {
   title: string
   content: string
   contentUrls: {
