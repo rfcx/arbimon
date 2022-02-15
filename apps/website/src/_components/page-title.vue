@@ -33,7 +33,8 @@ export default class PageTitle extends Vue {
       name: this.ROUTE_NAMES.info,
       params: {
         topic: this.topic
-      }
+      },
+      hash: `#${this.topic}`
     }
   }
 
