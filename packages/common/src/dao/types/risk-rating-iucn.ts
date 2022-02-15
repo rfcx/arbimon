@@ -1,5 +1,5 @@
 export interface RiskRatingIucn {
-  id: number
+  idOrdered: number
   code: string
   isThreatened: boolean
 }
