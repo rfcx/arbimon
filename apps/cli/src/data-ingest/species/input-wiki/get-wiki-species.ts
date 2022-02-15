@@ -1,16 +1,6 @@
-export interface WikiSummary {
-  title: string
-  content: string
-  contentUrls: {
-    desktop: string
-    mobile: string
-  }
-  thumbnailImage: string
-  credit: string
-  imageInfoUrl: string
-  license: string
-  licenseUrl: string
-}
+import axios, { AxiosRequestConfig } from 'axios'
+
+import { requireEnv } from '~/env'
 
 export interface WikiSummaryResponse {
   type: string
@@ -62,18 +52,20 @@ export interface WikiSummaryResponse {
   extract_html: string
 }
 
-export interface WikiMediaResponse {
-  batchcomplete: string
-  query: {
-    pages: Record<string, {
-      imageinfo: WikiMediaImageInfo[]
-    }>
-  }
-}
+// TODO: This should be injected by the script controller
+const { WIKI_BASE_URL } = requireEnv('WIKI_BASE_URL')
 
-export interface WikiMediaImageInfo {
-  descriptionurl: string
-  extmetadata: Record<'LicenseShortName' | 'Artist' | 'Copyrighted', {value: string, source: string, hidden?: string}> & { LicenseUrl?:
-    {value: string, source: string, hidden?: string}
+export async function getWikiSpecies (scientificName: string): Promise<WikiSummaryResponse| undefined> {
+  const endpoint: AxiosRequestConfig = {
+    method: 'GET',
+    url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
   }
+
+  return await axios.request<WikiSummaryResponse>(endpoint)
+    .then(res => {
+      return res.data
+    })
+    .catch(() => {
+      return undefined
+    })
 }

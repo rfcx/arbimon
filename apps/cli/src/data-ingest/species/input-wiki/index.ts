@@ -1,43 +1,18 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import { getWikiImageInfo } from './get-wiki-image-info'
+import { getWikiSpecies } from './get-wiki-species'
 
-import { requireEnv } from '~/env'
-import { WikiMediaImageInfo, WikiMediaResponse, WikiSummary, WikiSummaryResponse } from './wiki-info-type'
-
-// TODO: This should be injected by the script controller
-const { WIKI_BASE_URL, WIKI_MEDIA_BASE_URL } = requireEnv('WIKI_BASE_URL', 'WIKI_MEDIA_BASE_URL')
-
-async function getWikiSpecies (scientificName: string): Promise<WikiSummaryResponse| undefined> {
-  const endpoint: AxiosRequestConfig = {
-    method: 'GET',
-    url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
+interface WikiSummary {
+  title: string
+  content: string
+  contentUrls: {
+    desktop: string
+    mobile: string
   }
-
-  return await axios.request<WikiSummaryResponse>(endpoint)
-    .then(res => {
-      return res.data
-    })
-    .catch(() => {
-      return undefined
-    })
-}
-
-async function getWikiImageInfo (fileName: string | undefined): Promise<WikiMediaImageInfo | undefined> {
-  if (!fileName) return undefined
-  const endpoint: AxiosRequestConfig = {
-    method: 'GET',
-    url: `${WIKI_MEDIA_BASE_URL}/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata|url&format=json&titles=File:${fileName}`
-  }
-
-  return await axios.request<WikiMediaResponse>(endpoint)
-    .then(res => {
-    const data = res.data.query.pages['-1']?.imageinfo[0]
-    return {
-      descriptionurl: data.descriptionurl,
-      extmetadata: data.extmetadata
-    }
-  }).catch(() => {
-    return undefined
-  })
+  thumbnailImage: string
+  credit: string
+  imageInfoUrl: string
+  license: string
+  licenseUrl: string
 }
 
 export const getWikiSummary = async (scientificName: string): Promise<WikiSummary> => {
