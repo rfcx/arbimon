@@ -57,7 +57,7 @@ export const optionsWithDefaults = (modelName: string, options?: ModelOptions): 
   ({
     ...options,
     name: {
-      singular: modelName,
-      plural: modelName
+      singular: modelName, // disable automatic singularization
+      plural: modelName // disable automatic pluralization
     }
   })
