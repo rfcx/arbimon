@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { LocationProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
-import { LocationProjectProfile } from '@rfcx-bio/common/dao/types/location-project-profile'
+import { LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const projectsProfile: LocationProjectProfile = {

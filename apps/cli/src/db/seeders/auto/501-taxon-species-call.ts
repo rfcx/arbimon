@@ -4,7 +4,7 @@ import { MigrationFn } from 'umzug'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types/taxon-species-call'
+import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 

@@ -5,7 +5,7 @@ import { SPECIES_SOURCE_IUCN } from '@rfcx-bio/common/api-bio/species/types'
 import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
 import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types/taxon-species-iucn'
+import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 

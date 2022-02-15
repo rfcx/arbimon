@@ -1,4 +1,4 @@
-import { LocationProjectSpecies } from '@rfcx-bio/common/dao/types/location-project-species'
+import { LocationProjectSpecies } from '@rfcx-bio/common/dao/types'
 
 export const projectSpeciesPuertoRico: Array<Partial<LocationProjectSpecies> & { slug: string }> = [
   { slug: 'amazona-vittata', highlightedOrder: 0 },

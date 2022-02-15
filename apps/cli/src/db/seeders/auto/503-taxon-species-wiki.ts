@@ -4,7 +4,7 @@ import { MigrationFn } from 'umzug'
 import { SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio/species/types'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { TaxonSpeciesWikiModel } from '@rfcx-bio/common/dao/models/taxon-species-wiki-model'
-import { TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types/taxon-species-wiki'
+import { TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 

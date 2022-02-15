@@ -1,4 +1,4 @@
-import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types/taxon-species-rfcx'
+import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types'
 
 export const taxonSpeciesRfcx: Record<string, Partial<TaxonSpeciesRfcx>> =
   ({
