@@ -22,7 +22,10 @@ export const TaxonSpeciesPhotoModel = defineWithDefaultsAutoPk<TaxonSpeciesPhoto
     photoCaption: DataTypes.STRING(255), // Puerto Rican sharp-shinned hawk
     photoAuthor: DataTypes.STRING(255), // Mike Morel/U. S. Fish and Wildlife Service
     photoLicense: DataTypes.STRING(255), // Public domain
-    photoLicenseUrl: DataTypes.STRING(255) // https://www.fws.gov/faq/imagefaq.html
+    photoLicenseUrl: { // https://www.fws.gov/faq/imagefaq.html
+      type: DataTypes.STRING(255),
+      allowNull: true
+    }
   },
   {
     tableName: TABLE_TAXON_SPECIES_PHOTO
