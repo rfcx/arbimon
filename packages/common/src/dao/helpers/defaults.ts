@@ -5,7 +5,7 @@ import { ValueOf } from '@rfcx-bio/utils/utility-types'
 import { modelAttributeToColumn } from './utils'
 
 // TODO: Update return type when they fix `sequelize.define`
-type ModelFactory<T extends Model> = (sequelize: Sequelize) => ModelCtor<T>
+export type ModelFactory<T extends Model> = (sequelize: Sequelize) => ModelCtor<T>
 
 interface AutoPk { id: number }
 

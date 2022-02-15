@@ -2,13 +2,7 @@ import { Op } from 'sequelize'
 
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
-import { ProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
-import { ProjectSpeciesModel } from '@rfcx-bio/common/dao/models/location-project-species-model'
-import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
-import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
-import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { TaxonSpeciesWikiModel } from '@rfcx-bio/common/dao/models/taxon-species-wiki-model'
+import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
 import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
 import { Handler } from '../_services/api-helpers/types'
@@ -29,47 +23,36 @@ export const dashboardProfileHandler: Handler<DashboardProfileResponse, Dashboar
 
 const getProfile = async (projectId: string): Promise<DashboardProfileResponse> => {
   const sequelize = getSequelize()
+  const modelRepository = ModelRepositoryFactory.getInstance(sequelize)
 
-  const projectInformation = await ProjectProfileModel(sequelize).findOne({
+  const projectInformation = await modelRepository.LocationProjectProfileModel.findOne({
     where: { locationProjectId: projectId }
   })
 
-  const projectSpeciesModel = ProjectSpeciesModel(sequelize)
-  const taxonSpeciesModel = TaxonSpeciesModel(sequelize)
-  const taxonSpeciesIucnModel = TaxonSpeciesIucnModel(sequelize)
-  const taxonSpeciesWikiModel = TaxonSpeciesWikiModel(sequelize)
-  const riskRatingIucnModel = RiskRatingIucnModel(sequelize)
-  const taxonClassModel = TaxonClassModel(sequelize)
-
-  taxonSpeciesModel.belongsTo(taxonClassModel, { foreignKey: 'taxonClassId' })
-  taxonSpeciesModel.belongsTo(taxonSpeciesIucnModel, { foreignKey: 'id' })
-  taxonSpeciesModel.belongsTo(taxonSpeciesWikiModel, { foreignKey: 'id' })
-  taxonSpeciesIucnModel.belongsTo(riskRatingIucnModel, { foreignKey: 'riskRatingIucnId' })
-  projectSpeciesModel.belongsTo(taxonSpeciesModel, { foreignKey: 'taxonSpeciesId' })
-
-  const speciesHighlightedResult = await projectSpeciesModel.findAll({
+  const speciesHighlightedResult = await modelRepository.LocationProjectSpeciesModel.findAll({
     where: { locationProjectId: projectId, highlightedOrder: { [Op.not]: null } },
+    // TODO: Inline most of these
     include: [
       {
-        model: taxonSpeciesModel,
+        model: modelRepository.TaxonSpeciesModel,
         attributes: ['slug', 'scientificName'],
         include: [
           {
-            model: taxonClassModel,
+            model: modelRepository.TaxonClassModel,
             attributes: ['slug']
           },
           {
-            model: taxonSpeciesIucnModel,
+            model: modelRepository.TaxonSpeciesIucnModel,
             attributes: ['commonName', 'riskRatingIucnId'],
             include: [
               {
-                model: riskRatingIucnModel,
+                model: modelRepository.RiskRatingIucnModel,
                 attributes: ['code']
               }
             ]
           },
           {
-            model: taxonSpeciesWikiModel,
+            model: modelRepository.TaxonSpeciesWikiModel,
             attributes: ['photoUrl']
           }
         ]
