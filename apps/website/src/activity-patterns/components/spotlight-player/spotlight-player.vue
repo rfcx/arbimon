@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loading">
-    <h3 class="text-lg text-subtle border-b-2 border-subtle pb-1">
+    <h3 class="text-lg text-subtle border-b-1 border-subtle pb-1">
       Detected audio
     </h3>
     <div
