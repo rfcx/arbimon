@@ -1,56 +1,52 @@
 import { mapValues } from 'lodash-es'
-import { Sequelize } from 'sequelize'
+import { Model, ModelCtor, Sequelize } from 'sequelize'
 
-import { DetectionsBySiteSpeciesHourModel } from './models/detections-by-site-species-hour-model'
-import { LocationProjectModel } from './models/location-project-model'
-import { LocationProjectProfileModel } from './models/location-project-profile-model'
-import { LocationProjectSpeciesModel } from './models/location-project-species-model'
-import { LocationSiteModel } from './models/location-site-model'
-import { RiskRatingIucnModel } from './models/risk-rating-iucn-model'
-import { TaxonClassModel } from './models/taxon-class-model'
-import { TaxonSpeciesCallModel } from './models/taxon-species-call-model'
-import { TaxonSpeciesIucnModel } from './models/taxon-species-iucn-model'
-import { TaxonSpeciesModel } from './models/taxon-species-model'
-import { TaxonSpeciesPhotoModel } from './models/taxon-species-photo-model'
-import { TaxonSpeciesRfcxModel } from './models/taxon-species-rfcx-model'
-import { TaxonSpeciesWikiModel } from './models/taxon-species-wiki-model'
+import { ModelRegistrations, modelRegistrations } from './model-registrations'
 
-const allFactories = <const>{
-  DetectionsBySiteSpeciesHourModel,
-  LocationProjectModel,
-  LocationProjectProfileModel,
-  LocationProjectSpeciesModel,
-  LocationSiteModel,
-  RiskRatingIucnModel,
-  TaxonClassModel,
-  TaxonSpeciesCallModel,
-  TaxonSpeciesIucnModel,
-  TaxonSpeciesModel,
-  TaxonSpeciesPhotoModel,
-  TaxonSpeciesRfcxModel,
-  TaxonSpeciesWikiModel
-}
-
-type FactoryList = typeof allFactories
-type ModelRepository = { [K in keyof FactoryList]: ReturnType<FactoryList[K]> }
+export type ModelRepository = { [K in keyof ModelRegistrations]: ReturnType<ModelRegistrations[K][0]> }
+type UnknownModel = ModelCtor<Model<any, any>> | undefined
 
 export class ModelRepositoryFactory {
   static instance: ModelRepositoryFactory | undefined
-  static getInstance (sequelize: Sequelize, factories: Partial<FactoryList> = allFactories): ModelRepository {
-    if (!ModelRepositoryFactory.instance) { ModelRepositoryFactory.instance = new ModelRepositoryFactory(sequelize, factories) }
+  static getInstance (sequelize: Sequelize, registrations: Partial<ModelRegistrations> = modelRegistrations): ModelRepository {
+    if (!ModelRepositoryFactory.instance) { ModelRepositoryFactory.instance = new ModelRepositoryFactory(sequelize, registrations) }
     return ModelRepositoryFactory.instance.repo
   }
 
   readonly repo: ModelRepository
 
-  constructor (sequelize: Sequelize, factories: Partial<FactoryList> = allFactories) {
-    this.repo = mapValues(factories, f => f?.(sequelize)) as ModelRepository
+  constructor (sequelize: Sequelize, registrations: Partial<ModelRegistrations> = modelRegistrations) {
+    const repo = mapValues(registrations, registration => registration?.[0](sequelize)) as ModelRepository
 
-    // TODO: Extract this
-    this.repo.TaxonSpeciesModel.belongsTo(this.repo.TaxonClassModel, { foreignKey: 'taxonClassId' })
-    this.repo.TaxonSpeciesModel.belongsTo(this.repo.TaxonSpeciesIucnModel, { foreignKey: 'id' })
-    this.repo.TaxonSpeciesModel.belongsTo(this.repo.TaxonSpeciesWikiModel, { foreignKey: 'id' })
-    this.repo.TaxonSpeciesIucnModel.belongsTo(this.repo.RiskRatingIucnModel, { foreignKey: 'riskRatingIucnId' })
-    this.repo.LocationProjectSpeciesModel.belongsTo(this.repo.TaxonSpeciesModel, { foreignKey: 'taxonSpeciesId' })
+    Object.entries(registrations)
+      .forEach(([modelName, registration]) => {
+      const associations = registration[1]
+      const source = repo[modelName as keyof ModelRepository] as UnknownModel
+      if (!source) throw new Error('Models must be constructed & registered before associations can be added')
+
+      if ('oneToOne' in associations) {
+        associations.oneToOne?.forEach(targetName => {
+          const target = repo[targetName] as UnknownModel
+          if (!target) return
+
+          const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
+          source.belongsTo(target, { foreignKey })
+          target.hasOne(source, { foreignKey })
+        })
+      }
+
+      if ('manyToOne' in associations) {
+        associations.manyToOne?.forEach(targetName => {
+          const target = repo[targetName] as UnknownModel
+          if (!target) return
+
+          const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
+          source.belongsTo(target, { foreignKey })
+          target.hasMany(source, { foreignKey })
+        })
+      }
+    })
+
+    this.repo = repo
   }
 }

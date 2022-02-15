@@ -15,9 +15,11 @@ export const TaxonSpeciesIucnModel = defineWithDefaults<TaxonSpeciesIucn>(
       primaryKey: true
     },
 
+    // Dimensions
+    riskRatingIucnId: INTEGER, // 700 (= CR)
+
     // Facts
     commonName: DataTypes.STRING(255), // Puerto Rican sharp-shinned hawk
-    riskRatingIucnId: INTEGER, // 700 (= CR)
     description: DataTypes.TEXT, // ???
     descriptionSourceUrl: DataTypes.STRING(255) // ???
   },
