@@ -13,7 +13,7 @@
         >
           <div class="relative overflow-hidden rounded-md">
             <div
-              class="flex justify-center bg-cover bg-center h-60 w-90"
+              class="flex justify-center bg-cover bg-center bg-dark-500 opacity-80 h-60 w-90"
               style="filter: blur(2px)"
               :style="{ backgroundImage: 'url(' + image + ')'}"
             />
