@@ -17,6 +17,7 @@ COPY packages/utils/package.json ./packages/utils/
 
 ENV NODE_ENV=development
 RUN pnpm i --frozen-lockfile --reporter=silent
+RUN pnpm prepare
 
 # Build
 FROM with-deps as build
