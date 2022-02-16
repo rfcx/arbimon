@@ -31,10 +31,7 @@ const loadDotEnv = async (): Promise<void> => {
   )
 
   const envMerged = Object.assign({}, ...envs.map(e => dotenv.parse(e)))
-  console.info({ envMerged })
-  console.info({ 'process.env before': process.env })
   Object.assign(process.env, envMerged, { ...process.env }) // existing process.env variables take precedence
-  console.info({ 'process.env after': process.env })
 }
 
 type EnvGetter = typeof envGetters
