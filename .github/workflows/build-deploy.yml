@@ -159,21 +159,21 @@ jobs:
           find tools/deployment -name "migrate.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
           find tools/deployment -name "migrate.yaml" -exec sed -i s/JOB_NUMBER/${{ github.run_number }}/g {} +
 
-      # - name: 'Deploy: Start migrate'
-      #   uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
-      #   # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
-      #   env:
-      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-      #   with:
-      #     args: apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}
+      - name: 'Deploy: Start migrate'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}
 
-      # - name: 'Deploy: Wait for migrate to complete successfully'
-      #   uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
-      #   # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
-      #   env:
-      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-      #   with:
-      #     args: wait --for=condition=complete --timeout=300s -n ${{ env.NAMESPACE }} job/biodiversity-cli-migrate-${{ github.run_number }}
+      - name: 'Deploy: Wait for migrate to complete successfully'
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: wait --for=condition=complete --timeout=300s -n ${{ env.NAMESPACE }} job/biodiversity-cli-migrate-${{ github.run_number }}
 
       - name: 'Deploy: Kubernetes apply API'
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
