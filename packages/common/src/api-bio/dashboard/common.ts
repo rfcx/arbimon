@@ -5,7 +5,7 @@ export interface DashboardSpecies {
   taxonSlug: string
   scientificName: string
   commonName?: string
-  extinctionRisk?: ExtinctionRiskCode // TODO: Delete this
+  extinctionRisk: ExtinctionRiskCode // TODO: Delete this
   riskId?: number // TODO: Make this required
   photoUrl?: string
 }
