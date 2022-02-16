@@ -79,15 +79,18 @@ export default class SpotlightPlayer extends Vue {
         },
         onpause: () => {
           this.playing = false
-          this.audio?.stop()
         },
         onplay: () => {
           this.playing = true
           requestAnimationFrame(this.step)
+        },
+        onstop: () => {
+          this.playing = false
         }
       })
     })
     this.audio = this.audioList.length > 0 ? this.audioList[0] : null
+    this.audio?.load()
   }
 
   step (): void {
@@ -118,12 +121,20 @@ export default class SpotlightPlayer extends Vue {
   }
 
   async setAudioIndex (idx: number): Promise<void> {
-    this.playingAudioIndex = idx
-    this.audio = this.audioList[idx]
-    if (this.playing) {
-      await this.pause()
-    } else {
+    if (this.playingAudioIndex !== idx) {
+      if (this.playing) {
+        await this.stop()
+      }
+      this.playingAudioIndex = idx
+      this.audio = this.audioList[idx]
       await this.play()
+      this.playing = true
+    } else {
+      if (this.playing) {
+        await this.pause()
+      } else {
+        await this.play()
+      }
     }
   }
 
@@ -133,6 +144,10 @@ export default class SpotlightPlayer extends Vue {
 
   async pause (): Promise<void> {
     this.audio?.pause()
+  }
+
+  async stop (): Promise<void> {
+    this.audio?.stop()
   }
 
   scrollContent (direction: ScrollDirection = 'left'): void {
