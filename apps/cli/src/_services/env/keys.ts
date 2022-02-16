@@ -12,13 +12,13 @@
 import { Protection, PROTECTION_VALUES } from './types'
 
 // Getters
-type Getter<T> = (key: string) => T | undefined
+type Getter<T> = (env: Record<string, string>, key: string) => T | undefined
 
-const stringGetter: Getter<string> = (key: string): string | undefined => process.env[key]
-const numberGetter: Getter<number> = (key: string): number | undefined => Number(process.env[key])
-const booleanGetter: Getter<boolean> = (key: string): boolean | undefined => process.env[key] === 'true'
-const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (key: string) => {
-  const raw = process.env[key] as T
+const stringGetter: Getter<string> = (env, key): string | undefined => env[key]
+const numberGetter: Getter<number> = (env, key): number | undefined => Number(env[key])
+const booleanGetter: Getter<boolean> = (env, key): boolean | undefined => env[key] === 'true'
+const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (env, key) => {
+  const raw = env[key] as T
   return allowed.includes(raw) ? raw : undefined
 }
 
