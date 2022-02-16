@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 import { envGetters } from './keys'
 import { PROTECTION_VALUES } from './types'
 
-const loadDotEnv = async (): Promise<void> => {
+const loadDotEnv = async (): Promise<Record<string, string>> => {
   const currentDir = dirname(fileURLToPath(import.meta.url))
   const pathToRoot = '../../../'
 
@@ -31,8 +31,15 @@ const loadDotEnv = async (): Promise<void> => {
   )
 
   const envMerged = Object.assign({}, ...envs.map(e => dotenv.parse(e)))
-  Object.assign(process.env, envMerged, { ...process.env }) // existing process.env variables take precedence
+  const envExisting = Object.fromEntries(
+    Object.entries(process.env)
+      .filter(([key]) => Object.keys(envGetters).includes(key))
+  )
+
+  return Object.assign(envMerged, envExisting) // existing process.env variables take precedence
 }
+
+const env = await loadDotEnv()
 
 type EnvGetter = typeof envGetters
 type EnvKey = keyof EnvGetter
@@ -43,7 +50,7 @@ export const optionalEnv = <T extends EnvKey> (...keys: T[]): EnvOptional<T> => 
   return Object.fromEntries(
     Object.entries(envGetters)
       .filter(([key]) => keys.includes(key as T))
-      .map(([key, getter]) => [key, getter(key)])
+      .map(([key, getter]) => [key, getter(env, key)])
   ) as EnvOptional<T>
 }
 
@@ -52,7 +59,7 @@ export const requireEnv = <T extends EnvKey> (...keys: T[]): EnvRequired<T> => {
     Object.entries(envGetters)
       .filter(([key]) => keys.includes(key as T))
       .map(([key, getter]) => {
-        const value = getter(key)
+        const value = getter(env, key)
         if (value === undefined) throw new Error(`Missing required environment variable: ${key}`)
         return [key, value]
       })
@@ -77,5 +84,4 @@ const warnIfProtected = async (): Promise<void> => {
   }
 }
 
-await loadDotEnv()
 await warnIfProtected()
