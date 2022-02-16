@@ -1,13 +1,8 @@
-import { dirname, resolve } from 'path'
-import { QueryTypes } from 'sequelize'
-import { fileURLToPath } from 'url'
-
-import { getSequelize, getUmzug } from './connections'
+import { execSeeders } from '@/db/actions/exec-seeders'
+import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
 const seederPath = process.argv.find(arg => arg.startsWith('--path='))?.split('=')[1]
-
-const currentDir = dirname(fileURLToPath(import.meta.url))
 
 const main = async (): Promise<void> => {
   // Validate inputs
@@ -17,29 +12,9 @@ const main = async (): Promise<void> => {
     return
   }
 
-  // Extract CWD & filename
-  const fullPath = resolve(currentDir, 'seeders', seederPath ?? 'auto')
-  const isSingleSeed = fullPath.endsWith('.ts') || fullPath.endsWith('.js')
-  const filename = isSingleSeed ? fullPath.slice(0, fullPath.length - 3).split('/').pop() : undefined
-  const cwd = isSingleSeed ? fullPath.slice(0, fullPath.lastIndexOf('/')) : fullPath
-
-  // Init sequelize & umzug
+  // Init sequelize
   const sequelize = getSequelize(verbose)
-  const umzug = getUmzug(sequelize, verbose, cwd, filename)
-
-  // Run seeders
-  const previouslyExecuted = await umzug.executed().then(ems => ems.length)
-  await umzug.up().then(res => {
-    console.info(`Executed ${res.length} needed seeders (${previouslyExecuted} previously executed)`)
-    res.forEach(r => console.info(`- ${r.name}`))
-  })
-
-  // Refresh materialized views
-  const materializedViews = await sequelize.query<{ view_name: string }>('SELECT matviewname AS view_name FROM pg_matviews', { type: QueryTypes.SELECT })
-  for (const view of materializedViews) {
-    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.view_name}`)
-  }
-
+  await execSeeders(sequelize, seederPath, verbose)
   await sequelize.close()
 }
 
