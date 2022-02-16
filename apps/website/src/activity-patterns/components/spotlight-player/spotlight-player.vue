@@ -14,7 +14,7 @@
       class="absolute left-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-grey bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
       @click="scrollContent('left')"
     >
-      <icon-fas-chevron-left class="text-xs m-auto" />
+      <icon-custom-chevron-left class="text-xxs m-auto" />
     </button>
     <div
       id="spectrogram-container"
@@ -43,7 +43,7 @@
       class="absolute right-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-grey bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
       @click="scrollContent('right')"
     >
-      <icon-fas-chevron-right class="text-xs m-auto" />
+      <icon-custom-chevron-right class="text-xxs m-auto" />
     </button>
     <div
       class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-grey-light rounded-md transition-all duration-500"
