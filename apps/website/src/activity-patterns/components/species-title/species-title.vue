@@ -2,7 +2,7 @@
   <div class="flex items-center mb-4">
     <div>
       <h3
-        class="text-lg mr-2"
+        class="text-lg"
       >
         {{ species?.commonName }}
       </h3>
@@ -12,7 +12,7 @@
     </div>
     <el-tag
       v-if="riskInformation"
-      class="border-none"
+      class="border-none ml-2"
       effect="dark"
       :color="riskInformation.color"
       :title="riskInformation.label"

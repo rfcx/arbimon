@@ -30,4 +30,17 @@ export default class SpeciesBackgroundInformation extends Vue {
   get wikiSpeciesInformation (): SpeciesInformation | null {
     return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
   }
+
+  get speciesInformation (): SpeciesInformation | null {
+    const info = this.iucnSpeciesInformation ?? this.wikiSpeciesInformation ?? null
+    if (!info) return null
+
+    const hasIUCNInfo = this.iucnSpeciesInformation !== null
+    const { description, sourceCite, ...data } = info
+    return {
+      description: hasIUCNInfo ? this.speciesIUCNCleanContent : description,
+      sourceCite: hasIUCNInfo ? (sourceCite ?? 'IUCN Red List') : 'Wikipedia',
+      ...data
+    }
+  }
 }
