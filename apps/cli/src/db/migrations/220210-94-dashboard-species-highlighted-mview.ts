@@ -15,6 +15,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     create materialized view ${VIEW_NAME} as
     SELECT ps.location_project_id,
            ps.highlighted_order,
+           sip.taxon_class_slug,
+           sip.taxon_species_slug,
            sip.scientific_name,
            sip.common_name,
            sip.risk_rating_iucn_id,
