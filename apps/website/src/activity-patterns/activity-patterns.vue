@@ -35,6 +35,7 @@
         <species-images
           v-if="speciesInformation"
           :species="speciesInformation"
+          class="my-4"
         />
         <spotlight-player
           v-if="speciesCalls"
