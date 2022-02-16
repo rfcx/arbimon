@@ -1,93 +1,87 @@
 <template>
-  <div class="col-span-3 pr-6">
-    <p
-      ref="paragraph"
-      class="informaion-content"
-      :class="isExpanded ? 'expanded' : 'collapse'"
+  <div
+    v-if="!content"
+    class="italic"
+  >
+    No information found.
+  </div>
+  <div v-else>
+    <span
+      id="species-info-content"
+      class="mr-1"
+      :class="{ [`line-clamp-${MAX_LINES}`]: !isExpanded }"
     >
-      <span
-        v-if="!content"
-        class="italic"
-      >
-        No information found.
-      </span>
       {{ props.content }}
-      <span
-        class="mt-2 text-right text-subtle"
-      >
-        &mdash; <a
-          :href="redirectUrl"
-          target="_blank"
-          class="opacity-80 hover:(underline opacity-70)"
-          :class="{ 'pointer-events-none': !props.redirectUrl }"
-        >
-          Source: {{ props.source }}
-        </a>
-      </span>
-    </p>
-    <div
-      v-if="hasReadMore"
-      class="readmore"
-      @click="onReadmore"
+    </span>
+    <span
+      v-if="hasMoreThanMaxLine"
+      class="mr-1 px-3 py-1 bg-box-grey cursor-pointer rounded-sm underline inline hover:() text-sm"
+      @click="expandInformation()"
+    >{{ isExpanded ? 'Read less' : 'Read more' }}</span>
+    <span
+      class="mr-1 text-right text-subtle inline"
     >
-      {{ !isExpanded ? 'read me' : 'read less' }}
-    </div>
+      &mdash; <a
+        :href="redirectUrl"
+        target="_blank"
+        class="opacity-80 hover:(underline opacity-70)"
+        :class="{ 'pointer-events-none': !props.redirectUrl }"
+      >
+        Source: {{ props.source }}
+      </a>
+    </span>
   </div>
 </template>
-
 <script setup lang="ts">
-import { defineProps, ref, withDefaults } from 'vue'
+import { defineProps, onMounted, ref, watch, withDefaults } from 'vue'
+
+const MAX_LINES = 5
 
 interface Props {
   content: string
   redirectUrl: string
   source: string
 }
+
 const props = withDefaults(defineProps<Props>(), {
   content: '',
   redirectUrl: '',
   source: ''
 })
-const paragraph = ref<HTMLParagraphElement>()
+
 const isExpanded = ref(false)
-const hasReadMore = ref(true)
-const onReadmore = () => {
+const hasMoreThanMaxLine = ref(false)
+
+onMounted(() => {
+  window.addEventListener('resize', onWindowSizeChange)
+})
+
+watch(props, () => {
+  isExpanded.value = false
+  calculateMaxLine()
+})
+
+const onWindowSizeChange = () => {
+  isExpanded.value = false
+  hasMoreThanMaxLine.value = true
+  calculateMaxLine()
+}
+
+const calculateMaxLine = () => {
+  const element = document.getElementById('species-info-content')
+  if (!element) return
+
+  const hasMoreThanMaxLineInternal = element.scrollHeight > element.clientHeight
+  hasMoreThanMaxLine.value = hasMoreThanMaxLineInternal
+}
+
+const expandInformation = () => {
   isExpanded.value = !isExpanded.value
 }
-
-</script >
-
-<script lang="ts">
-  export default {
-    name: 'SpeciesInformationContent' // Name to support class component
-  }
 </script>
 
-<style lang="scss">
-$base-color: #141525;
-.informaion-content {
-  &.collapse {
-    max-height: 110px;
-    overflow: hidden;
-  }
-  &.expanded {
-    max-height: unset;
-    &+.readmore {
-      box-shadow: unset;
-      &:hover {
-        box-shadow: 0 -14px 13px 0 $base-color;
-      }
-    }
-  }
+<script lang="ts">
+export default {
+  name: 'SpeciesInformationContent' // Name to support class component
 }
-.readmore {
-  text-align: center;
-  min-height: 25px;
-  cursor: pointer;
-  filter: opacity(1);
-  box-shadow: 0 -14px 13px 0 $base-color;
-  &:hover {
-    opacity: .7;
-  }
-}
-</style>
+</script>
