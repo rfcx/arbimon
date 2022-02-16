@@ -1,9 +1,6 @@
-import { Op } from 'sequelize'
-
-import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
-import { LocationProjectSpecies, RiskRatingIucn, TaxonClass, TaxonSpecies, TaxonSpeciesIucn, TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
+import { DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboard-species-highlighted'
 
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
@@ -29,51 +26,15 @@ const getProfile = async (projectId: string): Promise<DashboardProfileResponse> 
     where: { locationProjectId: projectId }
   })
 
-  const speciesHighlightedResult = await models.LocationProjectSpecies.findAll({
-    where: { locationProjectId: projectId, highlightedOrder: { [Op.not]: null } },
-    include: [
-      {
-        model: models.TaxonSpecies,
-        attributes: ['slug', 'scientificName'],
-        include: [
-          { model: models.TaxonClass, attributes: ['slug'] },
-          { model: models.TaxonSpeciesIucn, attributes: ['commonName', 'riskRatingIucnId'], include: [{ model: models.RiskRatingIucn, attributes: ['code'] }] },
-          { model: models.TaxonSpeciesPhoto, attributes: ['photoUrl'] }
-        ]
-      }
-    ],
-    order: [['highlightedOrder', 'ASC']]
-  }) as unknown as ProfileRawQueryResult[]
-
-  const speciesHighlighted: DashboardSpecies[] = speciesHighlightedResult
-    .map(({ TaxonSpecies }) => {
-      const { slug, scientificName, TaxonClass, TaxonSpeciesIucn, TaxonSpeciesPhoto } = TaxonSpecies
-      const { commonName, RiskRatingIucn } = TaxonSpeciesIucn
-
-      return {
-        slug,
-        scientificName,
-        commonName,
-        taxonSlug: TaxonClass.slug,
-        extinctionRisk: RiskRatingIucn.code,
-        photoUrl: TaxonSpeciesPhoto.photoUrl
-      }
-    })
+  const speciesHighlightedRaw = await models.DashboardSpeciesHighlighted.findAll({
+    where: { locationProjectId: projectId },
+    order: [['highlightedOrder', 'ASC']],
+    raw: true
+  }) as DashboardSpeciesHighlighted[]
 
   return {
     summary: projectInformation?.summary ?? '',
     readme: projectInformation?.readme ?? '',
-    speciesHighlighted
-  }
-}
-
-// TODO: Can we make an `Include<TaxonSpecies, 'slug' | 'scientificName'>` type? Can sequelize be patched to return this type?!
-type ProfileRawQueryResult = LocationProjectSpecies & {
-  TaxonSpecies: Pick<TaxonSpecies, 'slug' | 'scientificName'> & {
-    TaxonClass: Pick<TaxonClass, 'slug'>
-    TaxonSpeciesIucn: Pick<TaxonSpeciesIucn, 'commonName' | 'riskRatingIucnId'> & {
-      RiskRatingIucn: Pick<RiskRatingIucn, 'code'>
-    }
-    TaxonSpeciesPhoto: Pick<TaxonSpeciesPhoto, 'photoUrl'>
+    speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug: taxonSlug, taxonSpeciesSlug: slug, ...rest }) => ({ ...rest, taxonSlug, slug }))
   }
 }
