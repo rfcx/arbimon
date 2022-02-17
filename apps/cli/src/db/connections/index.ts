@@ -1,7 +1,7 @@
 import { dirname, resolve } from 'path'
 import { QueryInterface, Sequelize } from 'sequelize'
 import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 
 import { getSequelize as getSequelizeBase } from '@rfcx-bio/common/dao/connections'
 
@@ -19,9 +19,7 @@ export const getSequelize = (verbose = false): Sequelize =>
   getSequelizeBase({ host, port, databaseName, user, password, isSsl, verbose })
 
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
-  process.platform === 'win32'
-    ? await import(`file:///${(path ?? '').replace(/\\/g, '/')}`)
-    : await import(path ?? '')
+    await import(pathToFileURL(path ?? '').href)
 
 export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
   new Umzug({
