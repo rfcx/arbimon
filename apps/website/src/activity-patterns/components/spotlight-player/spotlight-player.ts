@@ -2,7 +2,6 @@ import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
-import { coreMediaUrl } from '@rfcx-bio/common/api-bio/media/core-media'
 import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -54,9 +53,9 @@ export default class SpotlightPlayer extends Vue {
   async getSpeciesCallAssets (): Promise<void> {
     this.loading = true
     await Promise.all([
-      this.getSpectrogramImage()
+      this.getSpectrogramImage(),
+      this.getAudio()
     ])
-    this.getAudio()
     this.loading = false
   }
 
@@ -65,14 +64,13 @@ export default class SpotlightPlayer extends Vue {
     this.spectrograms = spectrogramList.map(data => window.URL.createObjectURL(data))
   }
 
-  getAudio (): void {
-    this.audioList = this.speciesCalls.map(({ mediaWavUrl }) => {
+  async getAudio (): Promise<void> {
+    const audioList = (await Promise.all(this.speciesCalls.map(async ({ mediaWavUrl }) => await assetsService.getMedia(mediaWavUrl)))).filter(isDefined)
+
+    this.audioList = audioList.map(data => {
       return new Howl({
-        src: [`${import.meta.env.VITE_BIO_API_BASE_URL}${coreMediaUrl()}?url=${mediaWavUrl}`],
+        src: [window.URL.createObjectURL(data)],
         html5: true,
-        xhr: {
-          method: 'POST'
-        },
         onend: () => {
           this.playing = false
           this.playingAudioIndex = -1
@@ -90,7 +88,6 @@ export default class SpotlightPlayer extends Vue {
       })
     })
     this.audio = this.audioList.length > 0 ? this.audioList[0] : null
-    this.audio?.load()
   }
 
   step (): void {
