@@ -19,7 +19,9 @@ export const getSequelize = (verbose = false): Sequelize =>
   getSequelizeBase({ host, port, databaseName, user, password, isSsl, verbose })
 
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
-  await import(path ?? '')
+  process.platform === 'win32'
+    ? await import(`file:///${(path ?? '').replace(/\\/g, '/')}`)
+    : await import(path ?? '')
 
 export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
   new Umzug({
