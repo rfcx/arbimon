@@ -17,8 +17,7 @@ import { mockPredictionsFolderPath } from './index'
 export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
   const { projectId, speciesSlug } = req.params
-  if (!projectId) assertParamsExist({ projectId })
-  if (!speciesSlug) assertParamsExist({ speciesSlug })
+  assertParamsExist({ projectId, speciesSlug })
 
   const isLocationRedacted = !isProjectMember(req)
 
