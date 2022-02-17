@@ -8,12 +8,12 @@ import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Handler } from '../_services/api-helpers/types'
-import { assertParamsExist } from '../_services/validation'
+import { assertPathParamsExist } from '../_services/validation'
 
 export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   // Query & Response
   return await getGeneratedData()

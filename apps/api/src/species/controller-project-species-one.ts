@@ -5,9 +5,9 @@ import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
 import { Handler } from '../_services/api-helpers/types'
-import { ApiNotFoundError } from '../_services/errors'
+import { BioNotFoundError } from '../_services/errors'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
-import { assertParamsExist } from '../_services/validation'
+import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderPath } from './index'
 
 // TODO ??? - Move files to S3 & index them in the database
@@ -17,8 +17,7 @@ import { mockPredictionsFolderPath } from './index'
 export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
   const { projectId, speciesSlug } = req.params
-  if (!projectId) assertParamsExist({ projectId })
-  if (!speciesSlug) assertParamsExist({ speciesSlug })
+  assertPathParamsExist({ projectId, speciesSlug })
 
   const isLocationRedacted = !isProjectMember(req)
 
@@ -31,7 +30,7 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
 
 export async function getProjectSpeciesOne (projectId: string, speciesSlug: string, noPermission: boolean): Promise<ProjectSpeciesOneResponse> {
   const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
-  if (!species) throw ApiNotFoundError()
+  if (!species) throw BioNotFoundError()
 
   const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk) && noPermission
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted

@@ -4,12 +4,12 @@ import { SPECIES_IN_PROJECT_ATTRIBUTES } from '@rfcx-bio/common/dao/models/speci
 
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
-import { assertParamsExist } from '../_services/validation'
+import { assertPathParamsExist } from '../_services/validation'
 
 export const projectSpeciesAllHandler: Handler<ProjectSpeciesAllResponse, ProjectSpeciesAllParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   // Query
   const response: ProjectSpeciesAllResponse = await getProjectSpeciesAll(Number(projectId))

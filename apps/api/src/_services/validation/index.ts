@@ -1,4 +1,4 @@
-import { ApiClientError, ApiMissingParam } from '../errors'
+import { BioMissingPathParamError, BioMissingQueryParamError } from '../errors'
 
 /**
  * Validates multiple parameters at once, throwing an error if any of them are undefined.
@@ -6,18 +6,18 @@ import { ApiClientError, ApiMissingParam } from '../errors'
  * @throws ```ApiMissingParam(key)```
  * @example assertParamsExist({ projectId })
  */
-export const assertParamsExist = (params: Record<string, string | undefined>): void =>
+export const assertPathParamsExist = (params: Record<string, string | undefined>): void =>
   Object.entries(params).forEach(
-    ([key, value]) => { if (!value) throw ApiMissingParam(key) }
+    ([key, value]) => { if (!value) throw BioMissingPathParamError(key) }
   )
 
 /**
- * Validates multiple parameters at once
+ * Validates multiple parameters at once, throwing an error if any of them are undefined.
  * @param params - Pass params as an object, to support shortform properties (simultaneously pass param name and value)
- * @throws ```ApiClientError(key, value)```
- * @example assertInvalidQuery({ startDate })
+ * @throws ```ApiMissingParam(key)```
+ * @example assertParamsExist({ projectId })
  */
-export const assertInvalidQuery = (params: Record<string, string | undefined>): void =>
+export const assertQueryParamsExist = (params: Record<string, string | undefined>): void =>
   Object.entries(params).forEach(
-    ([key, value]) => { throw ApiClientError(key, value) }
+    ([key, value]) => { if (!value) throw BioMissingQueryParamError(key) }
   )
