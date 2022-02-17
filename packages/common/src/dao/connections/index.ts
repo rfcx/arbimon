@@ -10,7 +10,7 @@ interface BioDbOptions {
   verbose: boolean
 }
 
-export const getSequelize = ({ host, port, databaseName, user, password, isSsl, verbose }: BioDbOptions): Sequelize => {
+export const getSequelizeBase = ({ host, port, databaseName, user, password, isSsl, verbose }: BioDbOptions): Sequelize => {
   // Setup sequelize (ORM)
   const sequelizeOptions: Options = {
     host,

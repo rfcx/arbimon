@@ -3,7 +3,7 @@ import { QueryInterface, Sequelize } from 'sequelize'
 import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
 import { fileURLToPath } from 'url'
 
-import { getSequelize as getSequelizeBase } from '@rfcx-bio/common/dao/connections'
+import { getSequelizeBase } from '@rfcx-bio/common/dao/connections'
 
 import { requireEnv } from '~/env'
 
