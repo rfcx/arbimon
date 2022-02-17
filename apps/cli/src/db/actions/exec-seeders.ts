@@ -14,7 +14,7 @@ export const execSeeders = async (sequelize: Sequelize, seederPath: string, verb
     const cwd = isSingleSeed ? fullPath.slice(0, fullPath.lastIndexOf('/')) : fullPath
 
     // Init umzug
-    const umzug = getUmzug(sequelize, verbose, cwd, filename)
+    const umzug = getUmzug(sequelize, verbose, 'seeders', cwd, filename)
 
     // Run seeders
     const previouslyExecuted = await umzug.executed().then(previousSeeders => previousSeeders.length)

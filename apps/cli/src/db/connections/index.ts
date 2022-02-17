@@ -21,7 +21,7 @@ export const getSequelize = (verbose = false): Sequelize =>
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
     await import(pathToFileURL(path ?? '').href)
 
-export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
+export const getUmzug = (sequelize: Sequelize, verbose = false, storageTableName: string = 'migrations', cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
   new Umzug({
     migrations: {
       glob: [
@@ -36,6 +36,6 @@ export const getUmzug = (sequelize: Sequelize, verbose = false, cwd = migrations
       })
     },
     context: sequelize.getQueryInterface(),
-    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: cwd === migrationsDir ? 'migrations' : 'seeders' }),
+    storage: new SequelizeStorage({ sequelize, schema: 'sequelize', tableName: storageTableName }),
     logger: verbose ? console : undefined
   })
