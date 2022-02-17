@@ -1,6 +1,6 @@
 # Secrets
 *.local
-secrets.yaml
+*secrets.yaml
 
 # Deps
 node_modules
