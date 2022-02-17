@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { getSequelize as getSequelizeBase } from '@rfcx-bio/common/dao/connections'
+import { getSequelizeBase } from '@rfcx-bio/common/dao/connections'
 
 import { env } from '../env'
 
