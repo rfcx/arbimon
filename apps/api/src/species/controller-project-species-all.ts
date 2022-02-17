@@ -2,12 +2,12 @@ import { ProjectSpeciesAllParams, ProjectSpeciesAllResponse } from '@rfcx-bio/co
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
 import { Handler } from '../_services/api-helpers/types'
-import { assertParamsExist } from '../_services/validation'
+import { assertPathParamsExist } from '../_services/validation'
 
 export const projectSpeciesAllHandler: Handler<ProjectSpeciesAllResponse, ProjectSpeciesAllParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   // Query
   const response: ProjectSpeciesAllResponse = await getProjectSpeciesAll(Number(projectId))

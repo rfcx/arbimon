@@ -4,12 +4,12 @@ import { DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboar
 
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
-import { assertParamsExist } from '../_services/validation'
+import { assertPathParamsExist } from '../_services/validation'
 
 export const dashboardProfileHandler: Handler<DashboardProfileResponse, DashboardProfileParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   // Query
   const response: DashboardProfileResponse = await getProfile(projectId)
