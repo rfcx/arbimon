@@ -6,6 +6,10 @@ import { defineWithDefaults } from '../helpers/defaults'
 export const MODEL_SPECIES_IN_PROJECT = 'SpeciesInProject'
 export const TABLE_SPECIES_IN_PROJECT = 'species_in_project'
 
+export const SPECIES_IN_PROJECT_ATTRIBUTES: Record<string, Array<keyof SpeciesInProject & string>> = {
+  light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug']
+}
+
 export const SpeciesInProjectModel = defineWithDefaults<SpeciesInProject>(
   MODEL_SPECIES_IN_PROJECT,
   {

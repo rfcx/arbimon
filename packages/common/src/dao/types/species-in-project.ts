@@ -9,3 +9,11 @@ export interface SpeciesInProject {
   riskRatingIucnId: number
   photoUrl: string
 }
+
+export type SpeciesInProjectLight = Pick<SpeciesInProject,
+  'taxonSpeciesId' |
+  'taxonSpeciesSlug' |
+  'scientificName' |
+  'commonName' |
+  'taxonClassSlug'
+>
