@@ -1,5 +1,5 @@
+import { BioForbiddenError } from '~/errors'
 import { getProjectPermission } from '../api-core/api-core'
-import { Forbidden } from '../errors/data-access-errors'
 
 export const isValidToken = (token: string): boolean => /^Bearer ./i.test(token) // at least 1 character after space
 
@@ -10,7 +10,7 @@ export async function isProjectMember (id: string, token: string): Promise<boole
     .then(() => true)
     .catch(err => {
       // Forbidden is expected (it means the user is not a project member)
-      if (err instanceof Forbidden) return false
+      if (err instanceof BioForbiddenError) return false
 
       // Log unexpected errors
       console.error(err)
