@@ -17,7 +17,7 @@ import { isValidDate } from '../_services/validation/query-validation'
 export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDatasetParams, FilterDatasetQuery> = async (req) => {
   // Input & validation
   const { projectId } = req.params
-  if (!projectId) assertParamsExist({ projectId })
+  assertParamsExist({ projectId })
 
   const { startDate, endDate, siteIds, taxons } = req.query
   if (!isValidDate(startDate)) assertInvalidQuery({ startDate })

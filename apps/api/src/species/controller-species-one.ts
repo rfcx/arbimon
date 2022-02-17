@@ -8,7 +8,7 @@ import { assertParamsExist } from '../_services/validation'
 export const speciesOneHandler: Handler<SpeciesOneResponse, SpeciesOneParams> = async (req) => {
   // Inputs & validation
   const { speciesSlug } = req.params
-  if (!speciesSlug) assertParamsExist({ speciesSlug })
+  assertParamsExist({ speciesSlug })
 
   // Query
   const matchesSpecies = rawSpecies.find(s => s.speciesSlug === speciesSlug)
