@@ -35,7 +35,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, onUpdated, ref, withDefaults } from 'vue'
+import { defineProps, onMounted, onUpdated, ref, watch, withDefaults } from 'vue'
 
 interface Props {
   content: string
@@ -63,6 +63,11 @@ onMounted(() => {
 onUpdated(() => {
   calculateMaxLine()
   firstRender.value = false
+})
+
+watch(() => props.content, () => {
+  isExpanded.value = false
+  calculateMaxLine()
 })
 
 const onWindowSizeChange = () => {
