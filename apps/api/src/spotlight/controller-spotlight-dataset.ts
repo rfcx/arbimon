@@ -9,25 +9,25 @@ import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
-import { ApiNotFoundError } from '../_services/errors'
+import { BioInvalidQueryParamError, BioNotFoundError } from '../_services/errors'
 import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
-import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
+import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
 export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, SpotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
   const speciesId = Number(speciesIdString)
-  if (isNaN(speciesId)) assertInvalidQuery({ speciesIdString })
-  if (!isValidDate(startDateUtcInclusive)) assertInvalidQuery({ startDateUtcInclusive })
-  if (!isValidDate(endDateUtcInclusive)) assertInvalidQuery({ endDateUtcInclusive })
+  if (isNaN(speciesId)) throw BioInvalidQueryParamError({ speciesIdString })
+  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
+  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
 
   const species = rawSpecies.find(s => s.speciesId === speciesId)
-  if (!species) throw ApiNotFoundError()
+  if (!species) throw BioNotFoundError()
 
   const isLocationRedacted = isProjectMember(req) ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
