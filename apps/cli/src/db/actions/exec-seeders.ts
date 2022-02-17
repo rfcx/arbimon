@@ -14,13 +14,13 @@ export const execSeeders = async (sequelize: Sequelize, seederPath: string, verb
     const cwd = isSingleSeed ? fullPath.slice(0, fullPath.lastIndexOf('/')) : fullPath
 
     // Init umzug
-    const umzug = getUmzug(sequelize, verbose, cwd, filename)
+    const umzug = getUmzug(sequelize, verbose, 'seeders', cwd, filename)
 
     // Run seeders
-    const previouslyExecuted = await umzug.executed().then(ems => ems.length)
-    await umzug.up().then(res => {
-      console.info(`Executed ${res.length} needed seeders (${previouslyExecuted} previously executed)`)
-      res.forEach(r => console.info(`- ${r.name}`))
+    const previouslyExecuted = await umzug.executed().then(previousSeeders => previousSeeders.length)
+    await umzug.up().then(newSeeders => {
+      console.info(`Executed ${newSeeders.length} needed seeders (${previouslyExecuted} previously executed)`)
+      newSeeders.forEach(r => console.info(`- ${r.name}`))
     })
 
     // Refresh materialized views

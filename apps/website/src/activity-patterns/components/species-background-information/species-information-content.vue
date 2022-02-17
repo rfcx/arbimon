@@ -7,7 +7,7 @@
   </div>
   <div v-else>
     <span
-      id="species-info-content"
+      ref="speciesInfoContent"
       class="mr-1"
       :class="{ [`line-clamp-${MAX_LINES}`]: !isExpanded }"
     >
@@ -17,7 +17,9 @@
       v-if="hasMoreThanMaxLine"
       class="mr-1 px-3 py-1 bg-box-grey cursor-pointer rounded-sm underline inline hover:() text-sm"
       @click="expandInformation()"
-    >{{ isExpanded ? 'Read less' : 'Read more' }}</span>
+    >
+      {{ isExpanded ? 'Read less' : 'Read more' }}
+    </span>
     <span
       class="mr-1 text-right text-subtle inline"
     >
@@ -51,6 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isExpanded = ref(false)
 const hasMoreThanMaxLine = ref(false)
+const speciesInfoContent = ref<HTMLSpanElement | null>(null)
 
 onMounted(() => {
   window.addEventListener('resize', onWindowSizeChange)
@@ -68,11 +71,8 @@ const onWindowSizeChange = () => {
 }
 
 const calculateMaxLine = () => {
-  const element = document.getElementById('species-info-content')
-  if (!element) return
-
-  const hasMoreThanMaxLineInternal = element.scrollHeight > element.clientHeight
-  hasMoreThanMaxLine.value = hasMoreThanMaxLineInternal
+  if (!speciesInfoContent.value) return
+  hasMoreThanMaxLine.value = speciesInfoContent.value.scrollHeight > speciesInfoContent.value.clientHeight
 }
 
 const expandInformation = () => {

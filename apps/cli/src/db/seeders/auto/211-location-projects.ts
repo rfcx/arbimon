@@ -18,6 +18,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     slug: MOCK_PROJECT_SLUG_ARBIMON,
     slugArbimon: MOCK_PROJECT_SLUG_ARBIMON,
     name: MOCK_PROJECT_NAME,
+    isPublished: true,
     latitudeNorth: 18.51375,
     latitudeSouth: 17.93168,
     longitudeEast: -65.24505,
