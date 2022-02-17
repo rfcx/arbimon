@@ -1,7 +1,8 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { Species, SpeciesCall, SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
+import { Species, SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
@@ -41,7 +42,7 @@ export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: Activ
 })
 export default class ActivityPatternsPage extends Vue {
   // Dataset definitions
-  species: SpeciesLight | null = null
+  species: SpeciesInProjectLight | null = null
   filters: ColoredFilter[] = []
 
   // Data for children
@@ -66,8 +67,8 @@ export default class ActivityPatternsPage extends Vue {
     return INFO_TOPICS.spotlight
   }
 
-  async onSelectedSpeciesChange (species: SpeciesLight | undefined): Promise<void> {
-    const speciesSlug = species?.speciesSlug
+  async onSelectedSpeciesChange (species: SpeciesInProjectLight | undefined): Promise<void> {
+    const speciesSlug = species?.taxonSpeciesSlug
     void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
 
     this.species = species ?? null
@@ -85,7 +86,7 @@ export default class ActivityPatternsPage extends Vue {
 
   async onDatasetChange (): Promise<void> {
     // TODO 117 - Only update the changed dataset
-    const speciesId = this.species?.speciesId ?? NaN
+    const speciesId = this.species?.taxonSpeciesId ?? NaN
     if (!speciesId) return
 
     const filters = this.filters
@@ -110,7 +111,7 @@ export default class ActivityPatternsPage extends Vue {
     if (!species) return
 
     try {
-      const data = await spotlightService.getSpeciesOne(species.speciesSlug)
+      const data = await spotlightService.getSpeciesOne(species.taxonSpeciesSlug)
 
       // Only update if received data matches current filters
       if (this.species?.scientificName === species.scientificName) {
@@ -123,7 +124,7 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async exportDetectionsData (): Promise<void> {
-    const prefix = this.species ? `${DEFAULT_PREFIX}-${this.species?.speciesSlug}` : DEFAULT_PREFIX
+    const prefix = this.species ? `${DEFAULT_PREFIX}-${this.species?.taxonSpeciesSlug}` : DEFAULT_PREFIX
     await exportDetectionCSV(this.filters, this.exportDatasets, prefix)
   }
 }

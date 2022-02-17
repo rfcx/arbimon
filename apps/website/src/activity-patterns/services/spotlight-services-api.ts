@@ -1,7 +1,8 @@
 import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
+import { Species } from '@rfcx-bio/common/api-bio/species/types'
 import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClient } from '~/api'
 import { DatasetParameters, generateFilterQuery } from '~/filters'
@@ -30,7 +31,7 @@ export class SpotlightService {
     }
   }
 
-  async getSpeciesAll (): Promise<SpeciesLight[] | undefined> {
+  async getSpeciesAll (): Promise<SpeciesInProjectLight[] | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined

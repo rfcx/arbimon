@@ -2,7 +2,7 @@ import { LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
@@ -32,7 +32,7 @@ const DEFAULT_PREFIX = 'Spotlight-By-Site'
 })
 export default class ActivityPatternsByLocation extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop() species!: SpeciesLight
+  @Prop() species!: SpeciesInProjectLight
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
@@ -83,6 +83,6 @@ export default class ActivityPatternsByLocation extends Vue {
     const { startDate, endDate, sites } = dataset
     const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
 
-    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}--${this.species.speciesSlug}`, datasetIndex, undefined, siteGroup)
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}--${this.species.taxonSpeciesSlug}`, datasetIndex, undefined, siteGroup)
   }
 }
