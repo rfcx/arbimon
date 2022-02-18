@@ -7,9 +7,9 @@
   </div>
   <div v-else>
     <span
-      ref="speciesInfoContent"
-      class="mr-1"
-      :class="{ [`line-clamp-${MAX_LINES}`]: !isExpanded }"
+      ref="speciesInfoContentRef"
+      class="mr-1 inline-block"
+      :class="{ [`line-clamp-5`]: !isExpanded }"
     >
       {{ props.content }}
     </span>
@@ -35,9 +35,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, ref, watch, withDefaults } from 'vue'
-
-const MAX_LINES = 5
+import { defineProps, onMounted, onUpdated, ref, watch, withDefaults } from 'vue'
 
 interface Props {
   content: string
@@ -53,13 +51,21 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isExpanded = ref(false)
 const hasMoreThanMaxLine = ref(false)
-const speciesInfoContent = ref<HTMLSpanElement | null>(null)
+const firstRender = ref(false)
+const speciesInfoContentRef = ref<HTMLSpanElement | null>(null)
 
 onMounted(() => {
+  calculateMaxLine()
+  firstRender.value = true
   window.addEventListener('resize', onWindowSizeChange)
 })
 
-watch(props, () => {
+onUpdated(() => {
+  calculateMaxLine()
+  firstRender.value = false
+})
+
+watch(() => props.content, () => {
   isExpanded.value = false
   calculateMaxLine()
 })
@@ -71,8 +77,12 @@ const onWindowSizeChange = () => {
 }
 
 const calculateMaxLine = () => {
-  if (!speciesInfoContent.value) return
-  hasMoreThanMaxLine.value = speciesInfoContent.value.scrollHeight > speciesInfoContent.value.clientHeight
+  if (!speciesInfoContentRef.value) return
+  if (isExpanded.value && speciesInfoContentRef.value.clientHeight > 109) {
+    hasMoreThanMaxLine.value = true
+    return
+  }
+  hasMoreThanMaxLine.value = speciesInfoContentRef.value.scrollHeight > speciesInfoContentRef.value.clientHeight
 }
 
 const expandInformation = () => {

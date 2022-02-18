@@ -21,6 +21,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            ts.slug as taxon_species_slug,
            ts.scientific_name,
            MAX(tsi.common_name) AS common_name,
+           COALESCE(max(tsi.description), max(tsw.description))  AS description,
            COALESCE(MAX(tsi.risk_rating_iucn_id), -1) AS risk_rating_iucn_id,
            MAX(tsp.photo_url) AS photo_url
     FROM detection_by_site_species_hour d
