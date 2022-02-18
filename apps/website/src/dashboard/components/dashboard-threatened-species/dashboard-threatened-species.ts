@@ -8,11 +8,11 @@ import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 
 export interface ThreatenedSpeciesRow {
-  speciesId: number
+  slug: string
+  taxonSlug: string
   scientificName: string
-  commonName: string
-  speciesSlug: string
-  imageUrl: string
+  commonName?: string
+  photoUrl: string
   extinctionRisk: ExtinctionRisk
 }
 

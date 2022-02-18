@@ -2,9 +2,12 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
+import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'
-import { env } from '../../../_services/env'
 import { getSpeciesRedirectLink } from './utils'
+
+// TODO: This should be injected by the script controller
+const { IUCN_BASE_URL, IUCN_TOKEN } = requireEnv('IUCN_BASE_URL', 'IUCN_TOKEN')
 
 export type IucnSpecies = IucnSpeciesResponseResult & {
   sourceUrl: string
@@ -52,7 +55,7 @@ interface IucnSpeciesResponseResult {
 export async function getIucnSpecies (scientificName: string): Promise<IucnSpecies | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${env.IUCN_BASE_URL}/species/${scientificName}?token=${env.IUCN_TOKEN}`
+    url: `${IUCN_BASE_URL}/species/${scientificName}?token=${IUCN_TOKEN}`
   }
 
   return await axios.request<IucnSpeciesResponse>(endpoint)

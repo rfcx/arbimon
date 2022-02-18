@@ -4,33 +4,35 @@ import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneRespon
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
-import { Controller } from '../_services/api-helper/types'
-import { ApiNotFoundError } from '../_services/errors'
-import { assertParamsExist } from '../_services/validation'
+import { Handler } from '../_services/api-helpers/types'
+import { BioNotFoundError } from '../_services/errors'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderPath } from './index'
 
 // TODO ??? - Move files to S3 & index them in the database
 // const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
 // const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
 
-export const projectSpeciesOneController: Controller<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
+export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
   const { projectId, speciesSlug } = req.params
-  if (!projectId) assertParamsExist({ projectId })
-  if (!speciesSlug) assertParamsExist({ speciesSlug })
+  assertPathParamsExist({ projectId, speciesSlug })
+
+  const isLocationRedacted = !isProjectMember(req)
 
   // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug)
+  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, isLocationRedacted)
 
   // Respond
   return response
 }
 
-export async function getProjectSpeciesOne (projectId: string, speciesSlug: string): Promise<ProjectSpeciesOneResponse> {
+export async function getProjectSpeciesOne (projectId: string, speciesSlug: string, noPermission: boolean): Promise<ProjectSpeciesOneResponse> {
   const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
-  if (!species) throw ApiNotFoundError()
+  if (!species) throw BioNotFoundError()
 
-  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk) && noPermission
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))

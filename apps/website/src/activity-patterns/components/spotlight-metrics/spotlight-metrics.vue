@@ -4,7 +4,7 @@
       v-for="(item, idx) in metrics"
       :key="'metrics-info-' + idx"
     >
-      <div class="<sm:(first:mb-4) px-8 py-6 bg-steel-grey rounded-4xl">
+      <div class="<sm:(first:mb-4)">
         <metrics-title
           :title="item.title"
           :information="item.information"

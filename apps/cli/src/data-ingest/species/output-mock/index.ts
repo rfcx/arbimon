@@ -1,24 +1,20 @@
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI } from '@rfcx-bio/common/api-bio/species/common'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
-import { getSequentially } from '@rfcx-bio/utils/async'
 
-import { getArbimonSpeciesCalls } from '../input-arbimon-species-call'
-import { getArbimonSpeciesFromMock } from '../input-from-mock-detections'
-import { getIucnSpecies, getIucnSpeciesNarrative } from '../input-iucn'
-import { getRfcxSpecies } from '../input-rfcx'
-import { getWikiSpecies } from '../input-wiki'
+import { ArbimonSpeciesData } from '../input-from-mock-detections'
+import { IucnSpecies, IucnSpeciesNarrative } from '../input-iucn'
+import { RfcxSpeciesData } from '../input-rfcx'
+import { WikiSummary } from '../input-wiki'
 
-export const getMergedSpecies = async (scientificNames: string[]): Promise<Species[]> => {
-  // Get data from other sources
-  const [arbimonSpeciesKeyed, arbimonSpeciesCallsKeyed, iucnSpeciesKeyed, iucnSpeciesNarrativesKeyed, rfcxSpeciesKeyed, wikiSpeciesKeyed] = await Promise.all([
-    getArbimonSpeciesFromMock(),
-    getArbimonSpeciesCalls(),
-    getSequentially(scientificNames, getIucnSpecies),
-    getSequentially(scientificNames, getIucnSpeciesNarrative),
-    getRfcxSpecies(),
-    getSequentially(scientificNames, getWikiSpecies)
-  ])
-
+export const getMergedSpecies = async (
+  scientificNames: string[],
+  arbimonSpeciesKeyed: Record<string, ArbimonSpeciesData>,
+  arbimonSpeciesCallsKeyed: Record<string, SpeciesCall>,
+  iucnSpeciesKeyed: Record<string, IucnSpecies>,
+  iucnSpeciesNarrativesKeyed: Record<string, IucnSpeciesNarrative>,
+  rfcxSpeciesKeyed: Record<string, RfcxSpeciesData>,
+  wikiSpeciesKeyed: Record<string, WikiSummary>
+): Promise<Species[]> => {
   // Merge data
   const species = scientificNames.map(scientificName => {
     const arbimonSpecies = arbimonSpeciesKeyed[scientificName]

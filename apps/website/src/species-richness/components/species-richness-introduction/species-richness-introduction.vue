@@ -5,7 +5,8 @@
     :topic="infoTopic"
   >
     <export-button
-      :disabled="!haveData"
+      :disabled="!haveData || loading"
+      :loading="loading"
       :title=" haveData ? '' : 'No data selected'"
       @click="exportCsvReports()"
     >

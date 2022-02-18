@@ -12,7 +12,7 @@ export const dashboardProfileUrl = (params: DashboardProfileParams): string =>
 
 // Response
 export interface DashboardProfileResponse {
-  description: string
+  summary: string
   readme: string // markdown string
   speciesHighlighted: DashboardSpecies[]
 }

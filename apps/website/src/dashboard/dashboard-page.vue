@@ -11,7 +11,7 @@
         <div class="dashboard-richness">
           <dashboard-sidebar-title
             title="Species highlights"
-            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
+            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug } }"
           />
           <horizontal-stacked-distribution
             v-if="generated?.richnessByTaxon && generated?.speciesCount"
@@ -28,7 +28,7 @@
         <div class="threatened-species">
           <dashboard-sidebar-title
             title="Threatened species"
-            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id } }"
+            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug } }"
             class="mt-5 sm:mt-0 lg:mt-5"
           />
           <horizontal-stacked-distribution
@@ -63,7 +63,7 @@
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
             :map-id="`dashboard-by-site`"
-            :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+            :map-initial-bounds="mapInitialBounds"
             :circle-formatter="circleFormatter"
             :map-height="tabHeight"
             :circle-style-non-zero="circleStyle"
@@ -87,7 +87,7 @@
         <page-title
           class="dashboard-title mt-5"
           :page-title="store.selectedProject.name"
-          :page-subtitle="profile?.description"
+          :page-subtitle="profile?.summary"
         />
         <dashboard-project-profile
           v-if="profile?.readme"
@@ -104,5 +104,5 @@
 </template>
 <script src="./dashboard-page" lang="ts"></script>
 <style lang="scss">
-@import './dashboard.scss';
+@import './dashboard-page.scss';
 </style>

@@ -1,3 +1,5 @@
+import { Site } from '../../dao/types'
+
 // Request
 export interface SitesParams {
   projectId: string
@@ -10,12 +12,3 @@ export const sitesUrl = (params: SitesParams): string =>
 
 // Response
 export type SitesResponse = Site[]
-
-// Models
-export interface Site {
-  siteId: string
-  name: string
-  latitude: number
-  longitude: number
-  altitude: number
-}

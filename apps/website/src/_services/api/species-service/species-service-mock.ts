@@ -1,4 +1,4 @@
-import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { Species, SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 import { rawSpecies, simulateDelay } from '@rfcx-bio/common/mock-data'
 
 export const getAllSpecies = async (): Promise<SpeciesLight[]> => await simulateDelay(

@@ -1,5 +1,8 @@
 <template>
-  <modal-popup name="projectSelectorModal">
+  <modal-popup
+    name="projectSelectorModal"
+    @emit-close="emitCloseProjectSelector"
+  >
     <div class="p-4">
       <!-- TODO: implement search box -->
       <div class="text-white text-xl pb-2">

@@ -7,13 +7,13 @@ import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, g
 import { rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { Controller } from '../_services/api-helper/types'
-import { assertParamsExist } from '../_services/validation'
+import { Handler } from '../_services/api-helpers/types'
+import { assertPathParamsExist } from '../_services/validation'
 
-export const dashboardGeneratedController: Controller<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
+export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   // Query & Response
   return await getGeneratedData()
@@ -32,8 +32,8 @@ async function getGeneratedData (): Promise<DashboardGeneratedResponse> {
     richnessByHour: await getRichnessByHour(),
     richnessBySite: await getRichnessBySite(),
     richnessByTaxon: await getRichnessByTaxon(),
-    detectionFrequencyByHour: await getDetectionFrequencyByHour(),
-    detectionFrequencyBySite: await getDetectionFrequencyBySite()
+    detectionByHour: await getDetectionByHour(),
+    detectionBySite: await getDetectionBySite()
   }
 }
 
@@ -46,7 +46,7 @@ const getSpeciesThreatened = async (): Promise<DashboardSpecies[]> =>
     .sort((a, b) =>
       EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
       a.scientificName.localeCompare(b.scientificName)
-    )
+    ).map(({ speciesSlug: slug, taxon, extinctionRisk, scientificName, commonName, thumbnailImageUrl: photoUrl }) => ({ slug, taxonSlug: taxon.toLowerCase(), extinctionRisk, scientificName, commonName, photoUrl }))
 
 const getRichnessByExtinction = async (): Promise<Array<[string, number]>> =>
   Object.entries(groupBy(rawSpecies, 'extinctionRisk'))
@@ -78,26 +78,23 @@ const getRichnessByTaxon = async (): Promise<Array<[string, number]>> =>
     .map(([taxon, species]) => [taxon, species.length] as [string, number])
     .sort((a, b) => b[1] - a[1])
 
-const getDetectionFrequencyByHour = async (): Promise<Record<number, number>> => {
-  const totalRecordingCount = new Set(rawDetections.map(d => `${d.date}-${d.hour}`)).size * 12
+const getDetectionByHour = async (): Promise<Record<number, number>> => {
   return mapValues(groupByNumber(rawDetections, d => d.hour), detections => {
-    const detectionCount = sum(detections.map(d => d.num_of_recordings))
-    return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+    return sum(detections.map(d => d.num_of_recordings))
   })
 }
 
-const getDetectionFrequencyBySite = async (): Promise<ApiMap> =>
+const getDetectionBySite = async (): Promise<ApiMap> =>
 Object.values(
   mapValues(
     groupBy(rawDetections, 'stream_id'),
     (detections) => {
-      const totalRecordingCount = new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
       const detectionCount = sum(detections.map(d => d.num_of_recordings))
       return {
         name: detections[0].name,
         longitude: detections[0].lon,
         latitude: detections[0].lat,
-        value: totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
+        value: detectionCount
       }
     }
   )

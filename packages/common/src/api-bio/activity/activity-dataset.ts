@@ -1,5 +1,5 @@
 import { ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime } from '../../api-bio/activity/common'
-import { Site } from '../common/sites'
+import { Site } from '../../dao/types'
 
 // Request
 export interface ActivityDatasetParams {
@@ -12,6 +12,7 @@ export const activityDatasetGeneratedUrl = (params: ActivityDatasetParams): stri
 
 // Response
 export interface ActivityDatasetResponse {
+  isLocationRedacted: boolean
   overviewBySite: ActivityOverviewDataBySite
   overviewByTime: ActivityOverviewDataByTime
   overviewBySpecies: ActivityOverviewDataBySpecies[]

@@ -4,10 +4,10 @@
   >
     <section-title>
       <template #title>
-        <div class="flex flex-row items-center">
+        <div class="flex flex-row items-center text-subtle">
           <select
             v-model="selectedType"
-            class="text-xl py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-2 focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-2 ring-0 outline-none)"
+            class="text-xl py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-1 border-dashed cursor-pointer focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
           >
             <option
               v-for="item in datasetTypes"
@@ -17,8 +17,8 @@
               {{ item.label }}
             </option>
           </select>
-          <h2 class="text-white text-xl ml-1">
-            by site
+          <h2 class="text-xl ml-1">
+            by location
           </h2>
         </div>
       </template>
@@ -47,7 +47,7 @@
         :get-popup-html="getPopupHtml"
         :map-export-name="mapExportName(dataset, selectedType, idx)"
         :map-id="`activity-patterns-by-location-${idx}`"
-        :map-initial-bounds="store.selectedProject?.geoBounds ?? null"
+        :map-initial-bounds="mapInitialBounds"
         :circle-formatter="circleFormatter"
         :map-style="mapStyle"
         :is-show-labels="isShowLabels"

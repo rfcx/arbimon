@@ -1,4 +1,4 @@
-import { Species } from './common'
+import { Species } from './types'
 
 // Request
 // export interface SpeciesAllParams {}

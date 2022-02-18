@@ -1,19 +1,22 @@
-import { Project, ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
+import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { PROJECT_MODEL_ATTRIBUTES } from '@rfcx-bio/common/dao/models/location-project-model'
 
-import { Controller } from '../_services/api-helper/types'
-import { env } from '../_services/env'
+import { ApiServerError } from '~/errors'
+import { Handler } from '../_services/api-helpers/types'
+import { getSequelize } from '../_services/db'
 
-const FAKE_PUERTO_RICO_PROJECT: Project = {
-  id: env.PUERTO_RICO_PROJECT_SLUG,
-  name: 'Puerto Rico Island-Wide',
-  isPublic: true,
-  externalId: 123456,
-  geoBounds: [
-    { lon: -65.24505, lat: 18.51375 },
-    { lon: -67.94469784, lat: 17.93168 }
-  ]
-}
+export const projectsAllHandler: Handler<ProjectsResponse> = async () => {
+  const models = ModelRepositoryFactory.getInstance(getSequelize())
 
-export const controllerProjectsAll: Controller<ProjectsResponse> = async () => {
-  return [FAKE_PUERTO_RICO_PROJECT]
+  const projects = await models.LocationProject
+    .findAll({
+      attributes: PROJECT_MODEL_ATTRIBUTES.light
+    })
+    .catch(err => {
+      console.error(err)
+      throw ApiServerError()
+    })
+
+  return projects
 }

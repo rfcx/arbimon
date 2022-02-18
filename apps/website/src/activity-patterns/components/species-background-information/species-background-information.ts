@@ -1,14 +1,13 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio/species/common'
-import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio/species/types'
 
-import SpeciesInformationContentComponent from './species-information-content.vue'
+import SpeciesInformationContent from './species-information-content.vue'
 
 @Options({
   components: {
-    SpeciesInformationContentComponent
+    SpeciesInformationContent
   }
 })
 export default class SpeciesBackgroundInformation extends Vue {
@@ -32,7 +31,16 @@ export default class SpeciesBackgroundInformation extends Vue {
     return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
   }
 
-  get riskInformation (): ExtinctionRisk | null {
-    return this.species?.extinctionRisk ? getExtinctionRisk(this.species.extinctionRisk) : null
+  get speciesInformation (): SpeciesInformation | null {
+    const info = this.iucnSpeciesInformation ?? this.wikiSpeciesInformation ?? null
+    if (!info) return null
+
+    const hasIUCNInfo = this.iucnSpeciesInformation !== null
+    const { description, sourceCite, ...data } = info
+    return {
+      description: hasIUCNInfo ? this.speciesIUCNCleanContent : description,
+      sourceCite: hasIUCNInfo ? (sourceCite ?? 'IUCN Red List') : 'Wikipedia',
+      ...data
+    }
   }
 }

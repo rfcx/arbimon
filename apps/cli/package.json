@@ -7,20 +7,21 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
+    "db-migrate": "pnpm serve lib/db/migrate",
+    "db-reset": "pnpm clean && pnpm serve lib/db/reset",
+    "db-seed": "pnpm serve lib/db/seed -- --path=auto",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
-    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --experimental-specifier-resolution=node --loader ./loader.js",
+    "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test": "vitest --run --passWithNoTests",
     "test-coverage": "vitest --run --coverage --passWithNoTests"
   },
-  "active-issues": {
-    "sequelize": "6.12.0 breaks build - https://github.com/sequelize/sequelize/issues/13791"
-  },
   "dependencies": {
-    "@rfcx-bio/common": "workspace:*",
+    "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
@@ -28,7 +29,7 @@
     "mysql2": "^2.3.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "6.12.0-beta.3",
+    "sequelize": "7.0.0-alpha.5",
     "umzug": "^3.0.0"
   },
   "devDependencies": {

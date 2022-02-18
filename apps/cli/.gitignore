@@ -1,5 +1,5 @@
 # Secrets
-.env
+*.local
 
 # Generated JSON files
 src/**/*.json
