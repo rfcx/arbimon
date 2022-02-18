@@ -8,4 +8,5 @@ export interface TaxonSpeciesCall {
   callTimezone: string
   callMediaWavUrl: string
   callMediaSpecUrl: string
+  // TODO: @nui add more field -- callRedirectURL
 }

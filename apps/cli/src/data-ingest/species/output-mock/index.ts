@@ -9,13 +9,14 @@ import { WikiSummary } from '../input-wiki'
 export const getMergedSpecies = async (
   scientificNames: string[],
   arbimonSpeciesKeyed: Record<string, ArbimonSpeciesData>,
-  arbimonSpeciesCallsKeyed: Record<string, SpeciesCall>,
+  arbimonSpeciesCallsKeyed: Record<string, SpeciesCall[]>,
   iucnSpeciesKeyed: Record<string, IucnSpecies>,
   iucnSpeciesNarrativesKeyed: Record<string, IucnSpeciesNarrative>,
   rfcxSpeciesKeyed: Record<string, RfcxSpeciesData>,
   wikiSpeciesKeyed: Record<string, WikiSummary>
 ): Promise<Species[]> => {
   // Merge data
+  // TODO: @nui fix this - when there is no species call data, the species call field isn't included in the object
   const species = scientificNames.map(scientificName => {
     const arbimonSpecies = arbimonSpeciesKeyed[scientificName]
     const arbimonSpeciesCall = arbimonSpeciesCallsKeyed[scientificName]
@@ -31,7 +32,7 @@ export const getMergedSpecies = async (
 
     return {
       ...arbimonSpecies,
-      speciesCall: arbimonSpeciesCall,
+      speciesCalls: arbimonSpeciesCall,
       commonName: rfcxSpecies?.commonName ?? iucnSpecies?.main_common_name ?? '',
       extinctionRisk: rfcxSpecies?.extinctionRisk?.code ?? iucnSpecies?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
       externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
