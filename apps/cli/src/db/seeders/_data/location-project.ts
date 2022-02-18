@@ -68,15 +68,15 @@ export const rawProjects: Record<string, Project[]> = {
     },
     {
       id: 2,
-      idCore: '???',
+      idCore: 'xle0i1t9uea4',
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
       name: 'BCI-Panama_2018',
-      latitudeNorth: 0,
-      latitudeSouth: 0,
-      longitudeEast: 0,
-      longitudeWest: 0
+      latitudeNorth: -79.81971,
+      latitudeSouth: -79.86858,
+      longitudeEast: 9.14041,
+      longitudeWest: 9.17229
     },
     {
       id: 3,
