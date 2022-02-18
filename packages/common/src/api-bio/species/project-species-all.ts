@@ -1,4 +1,4 @@
-import { SpeciesInProjectLight } from '@/dao/types/species-in-project'
+import { SpeciesInProjectLight } from '../../dao/types/species-in-project'
 
 // Request
 export interface ProjectSpeciesAllParams {
