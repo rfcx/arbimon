@@ -80,13 +80,13 @@ export const rawProjects: Record<string, Project[]> = {
     },
     {
       id: 3,
-      idCore: '???',
+      idCore: 'kwsda03lllt4',
       slug: 'rfcx-guardians-madre-de-dios-peru',
       slugArbimon: 'rfcx-guardians-madre-de-dios-peru',
       isPublished: true,
       name: 'RFCx-Guardians in Madre de Dios Peru',
-      latitudeNorth: 0,
-      latitudeSouth: 0,
+      latitudeNorth: -70.25357092,
+      latitudeSouth: -12.93793901,
       longitudeEast: 0,
       longitudeWest: 0
     }
