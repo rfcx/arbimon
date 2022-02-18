@@ -22,6 +22,7 @@ export interface SpeciesExternalLink {
 }
 
 export interface SpeciesCall {
+  redirectUrl: string
   mediaWavUrl: string
   mediaSpecUrl: string
   songType: string
@@ -44,7 +45,7 @@ export interface Species {
   taxonId: number
   imageCaption: string
   thumbnailImageUrl?: string
-  speciesCall?: SpeciesCall
+  speciesCalls: SpeciesCall[]
 }
 
 export type SpeciesLight = Pick<Species, 'speciesId' | 'speciesSlug' | 'scientificName' | 'commonName' | 'taxon'>
