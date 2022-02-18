@@ -59,8 +59,7 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   get speciesCalls (): SpeciesCall[] {
-    const speciesCall = this.speciesInformation?.speciesCall
-    return speciesCall ? [speciesCall] : []
+    return this.speciesInformation?.speciesCalls ?? []
   }
 
   get infoTopic (): string {

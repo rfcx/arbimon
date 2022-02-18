@@ -31,7 +31,7 @@ const main = async (): Promise<void> => {
   const species = await getMergedSpecies(scientificNames, arbimonSpeciesKeyed, arbimonSpeciesCallsKeyed, iucnSpeciesKeyed, iucnSpeciesNarrativesKeyed, rfcxSpeciesKeyed, wikiSpeciesKeyed)
 
   const outputJson = JSON.stringify(species, undefined, 2)
-  const outputTs = jsonToTs(outputJson, outputTsConstName, 'Species[]', 'import { Species } from \'../api-bio/species/common\'')
+  const outputTs = jsonToTs(outputJson, outputTsConstName, 'Species[]', 'import { Species } from \'../api-bio/species/types\'')
   fs.writeFileSync(outputJsonPath, outputJson, 'utf8')
   fs.writeFileSync(outputTsPath, outputTs, 'utf8')
   console.info(`Finished writing to\n- ${outputJsonPath}\n- ${outputTsPath}`)
