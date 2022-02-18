@@ -1,8 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { ExtinctionRisk } from '@rfcx-bio/common/iucn'
-
+import { RiskRatingUi } from '~/risk-ratings'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 
@@ -12,7 +11,7 @@ export interface HighlightedSpeciesRow {
   scientificName: string
   commonName?: string
   photoUrl: string
-  extinctionRisk: ExtinctionRisk
+  riskRating: RiskRatingUi
 }
 
 export default class DashboardHighlightedSpecies extends Vue {
