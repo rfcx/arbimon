@@ -20,6 +20,4 @@ data:
   WIKI_BASE_URL: https://en.wikipedia.org
   WIKI_MEDIA_BASE_URL: https://www.mediawiki.org
 
-  MOCK_PROJECT_NAME: Puerto Rico
-  MOCK_PROJECT_ID_CORE: zy5jbxx4cs9f
-  MOCK_PROJECT_SLUG_ARBIMON: puerto-rico
+  BIO_ENVIRONMENT: staging

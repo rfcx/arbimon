@@ -20,6 +20,4 @@ data:
   WIKI_BASE_URL: https://en.wikipedia.org
   WIKI_MEDIA_BASE_URL: https://www.mediawiki.org
 
-  MOCK_PROJECT_NAME: Puerto Rico Island-Wide
-  MOCK_PROJECT_ID_CORE: n9nrlg45vyf0
-  MOCK_PROJECT_SLUG_ARBIMON: puerto-rico-island-wide
+  BIO_ENVIRONMENT: production
