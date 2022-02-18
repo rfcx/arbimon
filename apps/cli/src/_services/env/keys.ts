@@ -14,9 +14,18 @@ import { BIO_ENVIRONMENT_VALUES, BioEnvironment, Protection, PROTECTION_VALUES }
 // Getters
 type Getter<T> = (env: Record<string, string>, key: string) => T | undefined
 
-const stringGetter: Getter<string> = (env, key): string | undefined => env[key]
-const numberGetter: Getter<number> = (env, key): number | undefined => Number(env[key])
+const stringGetter: Getter<string> = (env, key): string | undefined => {
+  const raw = env[key]
+  return raw.length > 0 ? raw : undefined
+}
+
+const numberGetter: Getter<number> = (env, key): number | undefined => {
+  const raw = env[key]
+  return raw.length > 0 ? Number(raw) : undefined
+}
+
 const booleanGetter: Getter<boolean> = (env, key): boolean | undefined => env[key] === 'true'
+
 const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (env, key) => {
   const raw = env[key] as T
   return allowed.includes(raw) ? raw : undefined
@@ -25,6 +34,7 @@ const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (env, key) =
 // Env keys/types
 export const envGetters = <const>{
   PROTECTION: unionGetter<Protection>(Object.values(PROTECTION_VALUES)),
+  BIO_ENVIRONMENT: unionGetter<BioEnvironment>(Object.values(BIO_ENVIRONMENT_VALUES)),
 
   ARBIMON_DB_DBNAME: stringGetter,
   ARBIMON_DB_HOSTNAME: stringGetter,
@@ -42,7 +52,5 @@ export const envGetters = <const>{
   IUCN_TOKEN: stringGetter,
 
   WIKI_BASE_URL: stringGetter,
-  WIKI_MEDIA_BASE_URL: stringGetter,
-
-  BIO_ENVIRONMENT: unionGetter<BioEnvironment>(Object.values(BIO_ENVIRONMENT_VALUES))
+  WIKI_MEDIA_BASE_URL: stringGetter
 }
