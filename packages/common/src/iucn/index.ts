@@ -34,7 +34,7 @@ export const getExtinctionRisk = (code: ExtinctionRiskCode): ExtinctionRisk =>
 // Constants
 export const EXTINCTION_RISK_NOT_EVALUATED = EXTINCTION_RISKS_KEYED.NE
 export const EXTINCTION_RISK_THREATENED_CODES: ExtinctionRiskCode[] = ['VU', 'EN', 'CR']
-export const EXTINCTION_RISK_PROTECTED_CODES: ExtinctionRiskCode[] = [] // ['CR']
+export const EXTINCTION_RISK_PROTECTED_CODES: ExtinctionRiskCode[] = ['CR']
 
 export const EXTINCTION_CODES_AND_COLORS = mapValues(keyBy(EXTINCTION_RISKS, 'code'), 'color')
 export const EXTINCTION_LABELS_AND_COLORS = mapValues(keyBy(EXTINCTION_RISKS, 'label'), 'color')
