@@ -32,6 +32,7 @@ export const SpeciesInProjectModel = defineWithDefaults<SpeciesInProject>(
     // Facts
     scientificName: DataTypes.STRING(255),
     commonName: DataTypes.STRING(255),
+    description: DataTypes.TEXT,
     riskRatingIucnId: DataTypes.INTEGER,
     photoUrl: DataTypes.STRING(511)
   },
