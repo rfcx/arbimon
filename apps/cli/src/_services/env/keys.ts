@@ -9,7 +9,7 @@
  * - `apps/cli/src/_services/env/keys.ts` -- CONFIG & SECRETS
  */
 
-import { Protection, PROTECTION_VALUES } from './types'
+import { BIO_ENVIRONMENT_VALUES, BioEnvironment, Protection, PROTECTION_VALUES } from './types'
 
 // Getters
 type Getter<T> = (env: Record<string, string>, key: string) => T | undefined
@@ -44,7 +44,5 @@ export const envGetters = <const>{
   WIKI_BASE_URL: stringGetter,
   WIKI_MEDIA_BASE_URL: stringGetter,
 
-  MOCK_PROJECT_NAME: stringGetter,
-  MOCK_PROJECT_ID_CORE: stringGetter,
-  MOCK_PROJECT_SLUG_ARBIMON: stringGetter
+  BIO_ENVIRONMENT: unionGetter<BioEnvironment>(Object.values(BIO_ENVIRONMENT_VALUES))
 }
