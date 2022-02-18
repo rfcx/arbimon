@@ -20,10 +20,10 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   // Convert data
   const data: Array<Optional<TaxonSpeciesCall, 'id'>> =
-    rawSpecies.map(s => {
-      if (!s.speciesCall) return undefined
-
-      const { mediaWavUrl, mediaSpecUrl, songType, recordedAt, timezone, siteName } = s.speciesCall
+  rawSpecies.map(s => {
+      if (s.speciesCalls.length === 0) return undefined
+      // TODO: @nui fix this
+      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName } = s.speciesCalls[0]
 
       return {
         taxonSpeciesId: speciesSlugToId[s.speciesSlug],
@@ -33,7 +33,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         callRecordedAt: new Date(recordedAt),
         callTimezone: timezone,
         callMediaWavUrl: mediaWavUrl,
-        callMediaSpecUrl: mediaSpecUrl
+        callMediaSpecUrl: mediaSpecUrl,
+        callMediaRedirectUrl: redirectUrl
       }
     })
     .filter(isDefined)

@@ -72,6 +72,10 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       call_media_spec_url: {
         type: DataTypes.STRING(255),
         allowNull: false
+      },
+      call_media_redirect_url: {
+        type: DataTypes.STRING(255),
+        allowNull: false
       }
     }
   )
