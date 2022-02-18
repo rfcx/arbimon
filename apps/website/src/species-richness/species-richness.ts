@@ -1,10 +1,7 @@
-import { Dayjs } from 'dayjs'
 import { Options, Vue } from 'vue-class-component'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '~/api/taxonomy-service'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, ComparisonFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -15,9 +12,8 @@ import SpeciesRichnessByTime from './components/species-richness-by-time/species
 import SpeciesRichnessDetectedSpecies from './components/species-richness-detected-species/species-richness-detected-species.vue'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
-import { getSpeciesRichnessData, SpeciesRichnessData } from './repository'
-
-interface ColoredDataset {color: string, data: SpeciesRichnessData, startDate: Dayjs, endDate: Dayjs, sites: Site[]}
+import { getBarChartDataset, getMapDataset, getTableData } from './functions'
+import { richnessService } from './services'
 
 @Options({
   components: {
@@ -33,10 +29,10 @@ export default class SpeciesRichnessPage extends Vue {
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ComparisonFilter[] = []
   detectionCounts: number[] = []
-  chartData: GroupedBarChartItem[] = []
-  mapDatasets: MapDataSet[] = []
+  speciesByClassDatasets: GroupedBarChartItem[] = []
+  speciesByLocationDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
-  tableData: DetectedSpeciesItem[] = []
+  detectedSpecies: DetectedSpeciesItem[] = []
 
   get haveData (): boolean {
     return this.detectionCounts.length > 0 && this.detectionCounts.some(count => count > 0)
@@ -44,65 +40,20 @@ export default class SpeciesRichnessPage extends Vue {
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
     // TODO 117 - Only update the changed dataset
-    const datasets = await Promise.all(
+    const datasets = await (await Promise.all(
       filters.map(async (filter) => {
-        const { startDate, endDate, sites, color } = filter
-        const data = await getSpeciesRichnessData(filterToDataset(filter))
-        return { startDate, endDate, sites: sites.flatMap(sg => sg.value), color, data }
+        const { startDate, endDate, sites, color, otherFilters } = filter
+        const data = await richnessService.getRichnessDataset(filterToDataset(filter))
+        return data ? { startDate, endDate, sites, color, otherFilters, data } : data
       })
-    )
+    )).filter(isDefined)
 
     this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
-    this.chartData = this.getBarChartDataset(datasets)
-    this.mapDatasets = this.getMapDataset(datasets)
+    this.speciesByClassDatasets = getBarChartDataset(datasets)
+    this.speciesByLocationDatasets = getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
-    this.tableData = this.getTableData(datasets)
-  }
-
-  getBarChartDataset (datasets: ColoredDataset[]): GroupedBarChartItem[] {
-    return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
-      .map(group => ({
-        group,
-        series: datasets.map(ds => ({
-          category: '', // TODO - Maybe add the dataset name here
-          frequency: ds.data.speciesByTaxon[group] ?? 0,
-          color: ds.color
-        }))
-      }))
-      .sort((a, b) => a.group.localeCompare(b.group))
-  }
-
-  getMapDataset (datasets: ColoredDataset[]): MapDataSet[] {
-    const intermediate = datasets.map(({ color, data: srData, ...filter }) => {
-      const data = srData.speciesBySite.map(s => ({
-        ...s,
-        distinctSpecies: {
-          ...s.distinctSpecies,
-          [TAXONOMY_CLASS_ALL.name]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0)
-        }
-      }))
-      return { color, data, ...filter, maxValues: {} }
-    })
-    // TODO 209 - Do this natively in the API instead of after the fact
-    const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[TAXONOMY_CLASS_ALL.name] as number))))
-    return intermediate.map(ds => ({
-      ...ds,
-      maxValues: Object.fromEntries([...TAXONOMY_CLASSES, TAXONOMY_CLASS_ALL].map(c => [c.name, maxAll]))
-    }))
-  }
-
-  getTableData (datasets: ColoredDataset[]): DetectedSpeciesItem[] {
-    const speciesPresences = datasets.map(ds => ds.data.speciesPresence)
-    const allSpecies: { [speciesId: string]: SpeciesLight } = Object.assign({}, ...speciesPresences)
-
-    return Object.entries(allSpecies)
-      .map(([key, value]) => ({
-        ...value,
-        data: speciesPresences.map(sp => key in sp),
-        total: speciesPresences.filter(sp => key in sp).length
-      }))
-      .sort((a, b) => b.total - a.total || a.scientificName.localeCompare(b.scientificName))
+    this.detectedSpecies = getTableData(datasets)
   }
 }

@@ -1,7 +1,8 @@
+import { LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
@@ -56,6 +57,12 @@ export default class ActivityPatternsByLocation extends Vue {
       case 1: return 1
       default: return 2
     }
+  }
+
+  get mapInitialBounds (): LngLatBoundsLike | null {
+    const project = this.store.selectedProject
+    if (!project) return null
+    return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }
 
   get circleFormatter (): CircleFormatter {

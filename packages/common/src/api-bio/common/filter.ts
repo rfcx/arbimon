@@ -1,5 +1,3 @@
-import { Site } from '../../api-bio/common/sites'
-
 export type FilterableProperty = 'taxon' | 'species'
 
 export interface FilterPropertyEquals {
@@ -8,8 +6,8 @@ export interface FilterPropertyEquals {
 }
 
 export interface FilterDatasetQuery {
-  siteIds: Array<Site['siteId']>
   startDate: string
   endDate: string
-  taxons: string[]
+  siteIds: string[] | string // empty arrays get serialized as ''
+  taxons: string[] | string // empty arrays get serialized as ''
 }

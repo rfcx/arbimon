@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 
 import { spotlightService } from '../../services'
 
@@ -57,6 +57,10 @@ export default class SpeciesSelector extends Vue {
 
   onFilterType (query: string): void {
     this.currentSpeciesQuery = query
+  }
+
+  onReset (): void {
+    this.onFilterType('')
   }
 
   async getAllSpecies (): Promise<SpeciesLight[]> {

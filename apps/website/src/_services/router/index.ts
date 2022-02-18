@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import { authRequiredGuard } from './guard-auth-required'
+import { useStoreOutsideSetup } from '~/store'
 import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
@@ -11,7 +11,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: ROUTE_NAMES.home,
-    component: PAGES.Home
+    component: PAGES.Home,
+    beforeEnter: (to, from, next) => {
+      const store = useStoreOutsideSetup()
+      if (store.selectedProject) return next({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } })
+      next()
+    }
   },
   {
     path: '/preferences',
@@ -19,9 +24,9 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Preferences
   },
   {
-    path: '/:projectId',
+    path: '/:projectSlug',
     component: PAGES.ProjectRoot,
-    beforeEnter: [authRequiredGuard, storeProjectGuard],
+    beforeEnter: [storeProjectGuard],
     children: [
       {
         path: '',
@@ -59,7 +64,14 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (!to.hash) return { top: 0 }
+    return {
+      el: to.hash,
+      behavior: 'smooth'
+    }
+  }
 })
 
 export default router

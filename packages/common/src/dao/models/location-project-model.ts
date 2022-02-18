@@ -1,0 +1,45 @@
+import { DataTypes } from 'sequelize'
+
+import { Project } from '../../dao/types'
+import { defineWithDefaultsAutoPk } from '../helpers/defaults'
+
+export const MODEL_LOCATION_PROJECT = 'LocationProject'
+export const TABLE_LOCATION_PROJECT = 'location_project'
+
+export const PROJECT_MODEL_ATTRIBUTES: Record<string, Array<keyof Project>> = {
+  light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+}
+
+export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
+  MODEL_LOCATION_PROJECT,
+  {
+    // PK
+    id: { // 1
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+
+    // SKs
+    idCore: DataTypes.STRING(12), // rbj7k70v4na7
+    slug: { // puerto-rico-island-wide
+      type: DataTypes.STRING(255),
+      unique: true
+    },
+    slugArbimon: { // fake-arbimon-project-for-bio
+      type: DataTypes.STRING(255),
+      unique: true
+    },
+
+    // Facts
+    isPublished: DataTypes.BOOLEAN, // true
+    name: DataTypes.STRING(255), // Puerto Rico Island-Wide
+    latitudeNorth: DataTypes.FLOAT, // 18.51375
+    latitudeSouth: DataTypes.FLOAT, // 17.93168
+    longitudeEast: DataTypes.FLOAT, // -65.24505
+    longitudeWest: DataTypes.FLOAT // -67.94469784
+  },
+  {
+    tableName: TABLE_LOCATION_PROJECT
+  }
+)

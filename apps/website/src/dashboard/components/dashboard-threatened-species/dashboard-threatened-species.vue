@@ -25,15 +25,17 @@
       >
         <div
           v-for="item in ratingAndSpecies[1]"
-          :key="'dashboard-threatened-' + item.speciesId"
+          :key="'dashboard-threatened-' + item.slug"
         >
           <router-link
             class="self-center hover:(text-subtle)"
-            :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
+            :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }"
           >
             <img
               class="min-h-14 h-14 min-w-14 w-14 object-cover mr-2"
-              :src="item.imageUrl"
+              :src="item.photoUrl"
+              :title="item.scientificName"
+              :alt="item.scientificName"
             >
           </router-link>
         </div>

@@ -1,7 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-
-import { logError } from '../../../_services/axios'
-import { env } from '../../../_services/env'
+import { getWikiImageInfo } from './get-wiki-image-info'
+import { getWikiSpecies } from './get-wiki-species'
 
 export interface WikiSummary {
   title: string
@@ -10,81 +8,65 @@ export interface WikiSummary {
     desktop: string
     mobile: string
   }
-  thumbnailImage: string
+  thumbnailImage?: string
+  credit?: string
+  imageInfoUrl?: string
+  license?: string
+  licenseUrl?: string
 }
 
-interface WikiSummaryResponse {
-  type: string
-  title: string
-  displaytitle: string
-  namespace: {
-    id: number
-    text: string
-  }
-  wikibase_item: string
-  titles: {
-    canonical: string
-    normalized: string
-    display: string
-  }
-  pageid: number
-  thumbnail: {
-    source: string
-    width: number
-    height: number
-  }
-  originalimage: {
-    source: string
-    width: number
-    height: number
-  }
-  lang: string
-  dir: string
-  revision: string
-  tid: string
-  timestamp: string
-  description: string
-  description_source: string
-  content_urls: {
-    desktop: {
-      page: string
-      revisions: string
-      edit: string
-      talk: string
-    }
-    mobile: {
-      page: string
-      revisions: string
-      edit: string
-      talk: string
+const PHOTO_LICENSES_ALLOWED = new Set([
+  'CC BY 2.0',
+  'CC BY 2.0 de',
+  'CC BY 2.5',
+  'CC BY 3.0',
+  'CC BY 4.0',
+  'CC BY-SA 2.0',
+  'CC BY-SA 2.5',
+  'CC BY-SA 3.0',
+  'CC BY-SA 4.0',
+  'CC-BY-SA-3.0',
+  'CC0',
+  'Copyrighted free use',
+  'Public domain'
+])
+
+const PHOTO_LICENSES_DISALLOWED = new Set<string>([])
+
+export const getWikiSummary = async (scientificName: string): Promise<WikiSummary | undefined> => {
+  // Call Wiki API
+  const wikiSpecies = await getWikiSpecies(scientificName)
+  if (!wikiSpecies) return undefined
+
+  const wikiSpeciesData: WikiSummary = {
+    title: wikiSpecies?.title ?? '',
+    content: wikiSpecies?.extract ?? '',
+    contentUrls: {
+      desktop: wikiSpecies?.content_urls?.desktop?.page ?? '',
+      mobile: wikiSpecies?.content_urls?.mobile?.page ?? ''
     }
   }
-  extract: string
-  extract_html: string
-}
 
-export async function getWikiSpecies (scientificName: string): Promise<WikiSummary | undefined> {
-  const endpoint: AxiosRequestConfig = {
-    method: 'GET',
-    url: `${env.WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
+  // Call Wiki image API
+  const fileName = wikiSpecies?.originalimage?.source.split('/').at(-1)
+  if (!fileName) return wikiSpeciesData
+
+  const wikiImageInfo = await getWikiImageInfo(fileName)
+
+  // Check license
+  const photoLicense = wikiImageInfo?.extmetadata?.LicenseShortName?.value ?? ''
+  const isPhotoLicenseOk = PHOTO_LICENSES_ALLOWED.has(photoLicense)
+  if (photoLicense && !isPhotoLicenseOk && !PHOTO_LICENSES_DISALLOWED.has(photoLicense)) {
+    console.warn(`Rejected new license: ${photoLicense} for ${scientificName} (${fileName ?? ''})`)
   }
-
-  return await axios.request<WikiSummaryResponse>(endpoint)
-    .then(mapResult(scientificName))
-    .catch(logError('getWikiSpecies', scientificName, '(no data)'))
-}
-
-const mapResult = (scientificName: string) => (response: AxiosResponse<WikiSummaryResponse>): WikiSummary => {
-  const data = response.data
-  console.info(response.status, 'getWikiSpecies', scientificName)
+  if (!isPhotoLicenseOk) return wikiSpeciesData
 
   return {
-    title: data.title,
-    content: data.extract,
-    contentUrls: {
-      desktop: data.content_urls?.desktop?.page,
-      mobile: data.content_urls?.mobile?.page
-    },
-    thumbnailImage: data.thumbnail?.source
+    ...wikiSpeciesData,
+    thumbnailImage: wikiSpecies?.thumbnail?.source,
+    credit: wikiImageInfo?.extmetadata.Artist?.value,
+    imageInfoUrl: wikiImageInfo?.descriptionurl,
+    license: wikiImageInfo?.extmetadata.LicenseShortName.value,
+    licenseUrl: wikiImageInfo?.extmetadata.LicenseUrl?.value
   }
 }

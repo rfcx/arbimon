@@ -1,41 +1,41 @@
-import fastify, { HTTPMethods } from 'fastify'
+import fastify from 'fastify'
 import fastifyCors from 'fastify-cors'
+import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesDashboard } from './dashboard'
+import { routesMedia } from './media'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
 
+// Logging
 export const app = fastify({
-  logger: env.NODE_ENV === 'production' ? false : { prettyPrint: true }
+  logger: env.NODE_ENV === 'production' ? true : { prettyPrint: true }
 })
 
 // Register plugins
 await app.register(fastifyCors)
 await app.register(fastifyStatic, { root: resolve('./public') })
-
-// Register routes (old version)
-const routePlugins = [
-  routesStatus,
-  routesRichness
-]
-await Promise.all(routePlugins.map(plugin => app.register(plugin)))
+await app.register(fastifyRequestContextPlugin)
 
 // Register routes
 const routesRegistrations = [
   routesDashboard,
+  routesMedia,
   routesProject,
   routesSpecies,
+  routesRichness,
   routesSpotlight,
-  routesActivity
+  routesActivity,
+  routesStatus
 ]
 
 routesRegistrations
   .flat()
-  .forEach(([method, route, controller]) => app[method.toLowerCase() as Lowercase<HTTPMethods>](route, controller))
+  .forEach(route => app.route({ ...route }))

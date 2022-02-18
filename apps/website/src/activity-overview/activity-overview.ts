@@ -44,14 +44,6 @@ export default class ActivityOverviewPage extends Vue {
     return INFO_TOPICS.activity
   }
 
-  // override async created (): Promise<void> {
-  //   const projectId = this.store.selectedProject?.id
-  //   if (!projectId) return
-
-  //   const dataset = await activityService.getActivityDataset()
-  //   console.log('look here', dataset)
-  // }
-
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
     this.filters = filters
     await this.onDatasetChange()

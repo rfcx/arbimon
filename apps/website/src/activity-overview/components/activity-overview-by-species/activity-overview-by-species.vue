@@ -1,110 +1,148 @@
 <template>
   <section-title title="Species detected" />
   <no-data-panel
-    v-if="!hasTableData"
+    v-if="!notEmpty"
     class="h-32 mt-2"
   />
   <div
     v-else
     class="mt-2"
   >
-    <table class="w-full table-fixed">
-      <thead class="h-10">
-        <tr class="sticky top-0 z-10">
-          <th
-            v-for="(item, idx) in tableHeader"
-            :key="'species-table-header-' + item.title"
-            class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
-            :class="{ 'text-left': idx < 2, 'w-66': idx < 1, 'cursor-pointer': item.key }"
-            @click="sort(item.key)"
-          >
-            <div
-              class="flex flex-row"
-              :class="{ 'justify-center': idx >= 2 }"
+    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-grey scrollbar-track-box-grey-300">
+      <table class="w-full table-fixed">
+        <thead class="h-10">
+          <tr>
+            <th
+              v-for="(item, idx) in tableHeader"
+              :key="'species-table-header-' + item.title"
+              class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
+              :class="{
+                'text-left': idx < 2,
+                'w-52 lg:w-66': idx < 1,
+                'w-20': idx === 1,
+                'w-36': idx > 1,
+                'sticky left-0': idx === 0,
+                'cursor-pointer': item.key
+              }"
+              @click="sort(item.key)"
             >
-              {{ item.title }}
               <div
-                v-if="item.key"
-                class="ml-2 text-faded"
+                class="flex items-center"
+                :class="{ 'justify-center': idx >= 2 }"
               >
-                <icon-fa-chevron-up
-                  class="text-xxs"
-                  :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
-                />
-                <icon-fa-chevron-down
-                  class="text-xxs"
-                  :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
-                />
+                {{ item.title }}
+                <div
+                  v-if="item.key"
+                  class="ml-2 text-faded"
+                >
+                  <icon-fa-chevron-up
+                    class="text-xxs"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
+                  />
+                  <icon-fa-chevron-down
+                    class="text-xxs"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
+                  />
+                </div>
               </div>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(row) in pageData"
-          :key="'species-table-row-' + row.scientificName + row.datasetIdx"
-        >
-          <td class="pt-2 px-1 flex">
-            <div v-if="tableData.length > 1">
-              <span
-                class="border-l-4 pl-1"
-                :style="`border-color:${row.color}`"
-              />
-            </div>
-            <div>
-              <router-link
-                :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
-                class="text-subtle hover:(underline text-white)"
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <template
+            v-for="(row, idx) in pageData"
+            :key="'species-table-row-' + row.scientificName + idx"
+          >
+            <tr>
+              <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
+                <router-link
+                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
+                  class="text-subtle hover:(underline text-white)"
+                >
+                  <span class="text-white italic">{{ row.scientificName }}</span>
+                  <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
+                  <p
+                    v-if="row.commonName"
+                    class="text-xs"
+                  >
+                    {{ row.commonName }}
+                  </p>
+                  <p
+                    v-else
+                    class="invisible text-xs"
+                  >
+                    Unknown
+                  </p>
+                </router-link>
+              </td>
+              <template v-if="!hasMoreThanOneDatasets">
+                <td class="p-2">
+                  {{ row.taxon }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(row.details[0].detectionCount) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(row.details[0].detectionFrequency) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(row.details[0].occupiedSites) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(row.details[0].occupancyNaive) }}
+                </td>
+              </template>
+            </tr>
+            <template v-if="hasMoreThanOneDatasets">
+              <tr
+                v-for="speciesData in row.details"
+                :key="'species-details-row-' + row.scientificName + speciesData.datasetIdx"
               >
-                <span class="text-white italic">{{ row.scientificName }}</span>
-                <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
-                <p
-                  v-if="row.commonName"
-                  class="text-xs"
-                >
-                  {{ row.commonName }}
-                </p>
-                <p
-                  v-else
-                  class="invisible text-xs"
-                >
-                  Unknown
-                </p>
-              </router-link>
-            </div>
-          </td>
-          <td class="p-2">
-            {{ row.taxon }}
-          </td>
-          <td class="p-2 text-center">
-            {{ getFormattedNumber(row.detectionCount) }}
-          </td>
-          <td class="p-2 text-center">
-            {{ getThreeDecimalNumber(row.detectionFrequency) }}
-          </td>
-          <td class="p-2 text-center">
-            {{ getFormattedNumber(row.occupiedSites) }}
-          </td>
-          <td class="p-2 text-center">
-            {{ getThreeDecimalNumber(row.occupancyNaive) }}
-          </td>
-        </tr>
-        <tr
-          v-for="blankIndex in pageSize - pageData.length"
-          :key="'blank-row' + blankIndex"
-        >
-          <td class="p-2">
-            <span>&nbsp;</span>
-          </td>
-        </tr>
-        <tr
-          class="h-2 border-b-1 border-subtle"
-        >
-          <td :colspan="tableHeader.length" />
-        </tr>
-      </tbody>
-    </table>
+                <td class="px-1 sticky left-0 bg-mirage-grey z-10">
+                  <div class="flex items-center">
+                    <div
+                      class="rounded-full w-1.5 h-1.5"
+                      :style="`background-color:${datasets[speciesData.datasetIdx].color}`"
+                    />
+                    <div class="ml-2">
+                      Dataset {{ speciesData.datasetIdx + 1 }}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{ row.taxon }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(speciesData.detectionCount) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(speciesData.detectionFrequency) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getFormattedNumber(speciesData.occupiedSites) }}
+                </td>
+                <td class="p-2 text-center">
+                  {{ getThreeDecimalNumber(speciesData.occupancyNaive) }}
+                </td>
+              </tr>
+            </template>
+          </template>
+          <tr
+            v-for="blankIndex in pageSize - pageData.length"
+            :key="'blank-row-' + blankIndex"
+          >
+            <td class="p-2">
+              <span>&nbsp;</span>
+            </td>
+          </tr>
+          <tr
+            class="h-2 border-b-1 border-subtle"
+          >
+            <td :colspan="tableHeader.length" />
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="flex justify-between items-center mt-3">
       <div class="text-subtle px-2">
         Total: {{ totalSpecies }} species

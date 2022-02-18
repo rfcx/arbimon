@@ -1,8 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
+import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'
-import { env } from '../../../_services/env'
 import { getSpeciesRedirectLink } from './utils'
+
+const { IUCN_BASE_URL, IUCN_TOKEN } = requireEnv('IUCN_BASE_URL', 'IUCN_TOKEN')
 
 export type IucnSpeciesNarrative = IucnSpeciesNarrativeResponseResult & {
   sourceUrl: string
@@ -30,7 +32,7 @@ interface IucnSpeciesNarrativeResponseResult {
 export async function getIucnSpeciesNarrative (scientificName: string): Promise<IucnSpeciesNarrative | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${env.IUCN_BASE_URL}/species/narrative/${scientificName}?token=${env.IUCN_TOKEN}`
+    url: `${IUCN_BASE_URL}/species/narrative/${scientificName}?token=${IUCN_TOKEN}`
   }
 
   return await axios.request<IucnSpeciesNarrativeResponse>(endpoint)

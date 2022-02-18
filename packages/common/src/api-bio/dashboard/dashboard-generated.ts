@@ -27,6 +27,6 @@ export interface DashboardGeneratedResponse {
   richnessByHour: ApiLine
   richnessBySite: ApiMap
   richnessByTaxon: ApiStack
-  detectionFrequencyByHour: ApiLine
-  detectionFrequencyBySite: ApiMap
+  detectionByHour: ApiLine
+  detectionBySite: ApiMap
 }

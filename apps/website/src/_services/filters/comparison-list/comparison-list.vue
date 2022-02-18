@@ -1,6 +1,9 @@
 <template>
   <div class="overflow-x-auto scrollbar-hide">
-    <div class="flex">
+    <h2 class="text-white">
+      Click "Add comparison" below to compare between date ranges, sites, or taxonomies
+    </h2>
+    <div class="flex mt-5">
       <div
         v-for="(filter, idx) in filters"
         :key="'site-card' + idx"
@@ -30,8 +33,7 @@
           </div>
         </div>
         <div
-          class="flex items-center mt-2 px-4"
-          :class="{'mb-2': filter.otherFilters.length === 0}"
+          class="flex items-center my-2 px-4"
         >
           <div class="min-w-4">
             <icon-fas-clock />
@@ -58,7 +60,7 @@
         @click="addFilterConfig"
       >
         <div class="uppercase">
-          + Add
+          Add comparison
         </div>
       </div>
     </div>

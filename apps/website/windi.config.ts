@@ -2,6 +2,7 @@ import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 import { defineConfig } from 'windicss/helpers'
 import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
+import pluginFilter from 'windicss/plugin/filters'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
 import pluginScrollSnap from 'windicss/plugin/scroll-snap'
@@ -28,6 +29,7 @@ export default defineConfig({
     }),
     pluginInteractionVariants,
     pluginAspectRatio,
+    pluginFilter,
     pluginForms,
     pluginLineClamp,
     pluginScrollSnap

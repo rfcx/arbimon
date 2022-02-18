@@ -1,7 +1,8 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
+
 import { FilterPropertyEquals } from '~/filters'
 
 export default class FilterTaxon extends Vue {

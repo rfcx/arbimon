@@ -1,47 +1,50 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
-import { Species } from '@rfcx-bio/common/api-bio/species/common'
+import { Species } from '@rfcx-bio/common/api-bio/species/types'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
-import { spotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
 import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { Controller } from '../_services/api-helper/types'
+import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
-import { ApiNotFoundError } from '../_services/errors'
+import { BioInvalidQueryParamError, BioNotFoundError } from '../_services/errors'
 import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
-import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
-export const spotlightDatasetController: Controller<SpotlightDatasetResponse, spotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
+export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, SpotlightDatasetParams, SpotlightDatasetQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
   const speciesId = Number(speciesIdString)
-  if (isNaN(speciesId)) assertInvalidQuery({ speciesIdString })
-  if (!isValidDate(startDateUtcInclusive)) assertInvalidQuery({ startDateUtcInclusive })
-  if (!isValidDate(endDateUtcInclusive)) assertInvalidQuery({ endDateUtcInclusive })
+  if (isNaN(speciesId)) throw BioInvalidQueryParamError({ speciesIdString })
+  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
+  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
 
   const species = rawSpecies.find(s => s.speciesId === speciesId)
-  if (!species) throw ApiNotFoundError()
+  if (!species) throw BioNotFoundError()
+
+  const isLocationRedacted = isProjectMember(req) ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Query
   const convertedQuery = {
     startDateUtcInclusive,
     endDateUtcInclusive,
-    siteIds: siteIds ?? [],
-    taxons: taxons ?? []
+    // TODO ???: Better way to check query type!
+    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
+    taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
   }
 
-  return await getSpotlightDatasetInformation({ ...convertedQuery }, projectId, species)
+  return await getSpotlightDatasetInformation(Number(projectId), { ...convertedQuery }, species, isLocationRedacted)
 }
 
-async function getSpotlightDatasetInformation (filter: FilterDataset, projectId: string, species: Species): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (projectId: number, filter: FilterDataset, species: Species, isLocationRedacted: boolean): Promise<SpotlightDatasetResponse> {
   const speciesId = species.speciesId
-  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
 
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)

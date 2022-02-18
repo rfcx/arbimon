@@ -7,6 +7,7 @@
     :key="'info-' + info.slug"
   >
     <div
+      :id="info.slug"
       class="text-xl"
       :class="idx > 0 ? 'mt-16' : 'mt-5' "
     >
