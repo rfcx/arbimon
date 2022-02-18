@@ -19,6 +19,7 @@ import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
+import { RISKS_BY_ID } from '~/risk-ratings'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
@@ -140,13 +141,13 @@ export default class DashboardPage extends Vue {
   get speciesHighlighted (): HighlightedSpeciesRow[] {
     if (!this.profile) return []
 
-    return this.profile.speciesHighlighted.map(({ slug, taxonSlug, scientificName, commonName, extinctionRisk, photoUrl }) => ({
+    return this.profile.speciesHighlighted.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
       slug,
       taxonSlug,
       scientificName,
       commonName: commonName,
       photoUrl: (photoUrl && photoUrl.length > 0) ? photoUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
-      extinctionRisk: getExtinctionRisk(extinctionRisk)
+      riskRating: RISKS_BY_ID[riskId ?? -1]
     }))
   }
 

@@ -16,7 +16,7 @@ import { routesStatus } from './status'
 
 // Logging
 export const app = fastify({
-  logger: env.NODE_ENV === 'production' ? false : { prettyPrint: true }
+  logger: env.NODE_ENV === 'production' ? true : { prettyPrint: true }
 })
 
 // Register plugins

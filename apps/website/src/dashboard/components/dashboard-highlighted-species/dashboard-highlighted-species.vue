@@ -22,14 +22,13 @@
       >
         <div class="flex items-center">
           <el-tag
-            v-if="item.extinctionRisk"
             class="species-highlights border-none text-xs"
             effect="dark"
             size="mini"
-            :color="item.extinctionRisk.color"
-            :title="item.extinctionRisk.label"
+            :color="item.riskRating.color"
+            :title="item.riskRating.label"
           >
-            {{ item.extinctionRisk.code }}
+            {{ item.riskRating.code }}
           </el-tag>
           <p class="ml-1 italic">
             {{ item.scientificName }}
