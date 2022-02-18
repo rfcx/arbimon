@@ -12,7 +12,7 @@ const main = async (): Promise<void> => {
     return
   }
 
-  // Init sequelize
+  // Execute
   const sequelize = getSequelize(verbose)
   await execSeeders(sequelize, seederPath, verbose)
   await sequelize.close()

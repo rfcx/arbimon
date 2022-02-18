@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'url'
 
 import { getSequelize as getSequelizeBase } from '@rfcx-bio/common/dao/connections'
 
+import { TABLE_SEQUELIZE_MIGRATIONS } from '@/db/connections/table-names'
 import { requireEnv } from '~/env'
 
 // Paths & resolve
@@ -21,7 +22,7 @@ export const getSequelize = (verbose = false): Sequelize =>
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
     await import(pathToFileURL(path ?? '').href)
 
-export const getUmzug = (sequelize: Sequelize, verbose = false, storageTableName: string = 'migrations', cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
+export const getUmzug = (sequelize: Sequelize, verbose = false, storageTableName: string = TABLE_SEQUELIZE_MIGRATIONS, cwd = migrationsDir, filename?: string): Umzug<QueryInterface> =>
   new Umzug({
     migrations: {
       glob: [

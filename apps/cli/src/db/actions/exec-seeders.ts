@@ -2,6 +2,7 @@ import { dirname, resolve } from 'path'
 import { QueryTypes, Sequelize } from 'sequelize'
 import { fileURLToPath } from 'url'
 
+import { TABLE_SEQUELIZE_SEEDERS } from '@/db/connections/table-names'
 import { getUmzug } from '../connections'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
@@ -14,7 +15,7 @@ export const execSeeders = async (sequelize: Sequelize, seederPath: string, verb
     const cwd = isSingleSeed ? fullPath.slice(0, fullPath.lastIndexOf('/')) : fullPath
 
     // Init umzug
-    const umzug = getUmzug(sequelize, verbose, 'seeders', cwd, filename)
+    const umzug = getUmzug(sequelize, verbose, TABLE_SEQUELIZE_SEEDERS, cwd, filename)
 
     // Run seeders
     const previouslyExecuted = await umzug.executed().then(previousSeeders => previousSeeders.length)
