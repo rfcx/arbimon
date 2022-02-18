@@ -35,6 +35,14 @@ const getProfile = async (projectId: string): Promise<DashboardProfileResponse> 
   return {
     summary: projectInformation?.summary ?? '',
     readme: projectInformation?.readme ?? '',
-    speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug: taxonSlug, taxonSpeciesSlug: slug, ...rest }) => ({ ...rest, taxonSlug, slug, extinctionRisk: 'NE' }))
+    speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug, taxonSpeciesSlug, riskRatingIucnId, ...rest }) =>
+      ({
+        ...rest,
+        taxonSlug: taxonClassSlug,
+        slug: taxonSpeciesSlug,
+        riskId: riskRatingIucnId,
+        extinctionRisk: 'NE'
+      })
+    )
   }
 }
