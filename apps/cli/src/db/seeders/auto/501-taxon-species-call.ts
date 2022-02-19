@@ -5,28 +5,29 @@ import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-mod
 import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
-import { rawSpecies } from '@rfcx-bio/common/mock-data'
 import { isDefined } from '@rfcx-bio/utils/predicates'
+
+import { rawSpeciesCallData } from '../_data/taxon-species-call'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
 
   // PK Lookups
-  const speciesSlugToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.slug, s.id])))
+  const speciesScientificToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
+    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
   const siteNameToId: Record<string, number> = await LocationSiteModel(sequelize).findAll()
     .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
 
   // Convert data
+  const calls = Object.entries(rawSpeciesCallData).flatMap(([scientificName, calls]) => {
+    return calls.map(call => ({ scientificName, ...call }))
+  })
   const data: Array<Optional<TaxonSpeciesCall, 'id'>> =
-  rawSpecies.map(s => {
-      if (s.speciesCalls.length === 0) return undefined
-      // TODO: @nui fix this
-      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName } = s.speciesCalls[0]
-
+    calls.map(call => {
+      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, scientificName } = call
       return {
-        taxonSpeciesId: speciesSlugToId[s.speciesSlug],
+        taxonSpeciesId: speciesScientificToId[scientificName],
         callProjectId: 1,
         callSiteId: siteNameToId[siteName],
         callType: songType,

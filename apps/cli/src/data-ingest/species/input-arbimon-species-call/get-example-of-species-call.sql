@@ -5,4 +5,4 @@ from templates t
 	join songtypes st on t.songtype_id = st.songtype_id 
 	join sites s on r.site_id = s.site_id 
 	join projects p on s.project_id = p.project_id 
-where t.project_id = 1989 and r.datetime_utc is not null;
+where t.project_id = 1989 and t.deleted != 1 and r.datetime_utc is not null;
