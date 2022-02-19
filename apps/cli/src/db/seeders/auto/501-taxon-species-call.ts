@@ -21,13 +21,15 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   // Convert data
   const calls = Object.entries(rawSpeciesCallData).flatMap(([scientificName, calls]) => {
-    return calls.map(call => ({ scientificName, ...call }))
-  })
+    const taxonSpeciesId = speciesScientificToId[scientificName]
+    return calls.map(call => ({ taxonSpeciesId, ...call }))
+  }).filter(c => c.taxonSpeciesId !== undefined)
+
   const data: Array<Optional<TaxonSpeciesCall, 'id'>> =
     calls.map(call => {
-      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, scientificName } = call
+      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, taxonSpeciesId } = call
       return {
-        taxonSpeciesId: speciesScientificToId[scientificName],
+        taxonSpeciesId: taxonSpeciesId,
         callProjectId: 1,
         callSiteId: siteNameToId[siteName],
         callType: songType,
