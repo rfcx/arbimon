@@ -5,6 +5,7 @@ export interface ArbimonProject {
   'name': string
   'description': string | null
   'is_private': boolean
+  'reports_enabled': boolean
   'north': number
   'south': number
   'west': number

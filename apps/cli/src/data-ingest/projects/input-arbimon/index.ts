@@ -21,7 +21,7 @@ export const getArbimonProjects = async (): Promise<Array<Omit<Project, 'id'>>> 
       idCore: i.core_project_id,
       slug: i.slug,
       slugArbimon: i.slug,
-      isPublished: true, // TODO: pass this value
+      isPublished: i.reports_enabled,
       name: i.name,
       latitudeNorth: i.north,
       latitudeSouth: i.south,
