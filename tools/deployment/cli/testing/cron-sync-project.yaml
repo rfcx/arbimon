@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: biodiversity-cli-sync-projects
 spec:
-  schedule: "0 16 * * *"
+  schedule: "10 16 * * *"
   jobTemplate:
     spec:
       template:
