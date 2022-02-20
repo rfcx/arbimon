@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: biodiversity-cli-sync-projects
 spec:
-  schedule: "10 16 * * *"
+  schedule: "10 17 * * *"
   jobTemplate:
     spec:
       template:
@@ -15,7 +15,7 @@ spec:
             imagePullPolicy: IfNotPresent
             envFrom:
               - secretRef:
-                name: biodiversity-cli-secrets
+                  name: biodiversity-cli-secrets
               - configMapRef:
-                name: biodiversity-cli-config
+                  name: biodiversity-cli-config
           restartPolicy: Never
