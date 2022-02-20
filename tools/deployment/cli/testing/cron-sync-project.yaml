@@ -11,11 +11,11 @@ spec:
           containers:
           - name: biodiversity-cli-sync-projects
             command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/projects.js"]
-        image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/testing:latest
-        imagePullPolicy: IfNotPresent
+            image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/testing:latest
+            imagePullPolicy: IfNotPresent
             envFrom:
-          - secretRef:
-              name: biodiversity-cli-secrets
-          - configMapRef:
-              name: biodiversity-cli-config
+              - secretRef:
+                name: biodiversity-cli-secrets
+              - configMapRef:
+                name: biodiversity-cli-config
           restartPolicy: Never
