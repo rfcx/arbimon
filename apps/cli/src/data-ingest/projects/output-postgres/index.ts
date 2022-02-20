@@ -9,14 +9,26 @@ const { Op } = pkg
 
 export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'>>): Promise<void> => {
   const model = LocationProjectModel(getSequelize())
+  // TODO: check id with mock for each environment
   // update items
-  await model.bulkCreate(projects, { updateOnDuplicate: ['name', 'isPublished', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'] })
+  const updatedRows = await model.bulkCreate(projects, {
+    updateOnDuplicate: [
+      'name',
+      'isPublished',
+      'latitudeNorth',
+      'latitudeSouth',
+      'longitudeEast',
+      'longitudeWest'
+    ]
+  })
   // delete non exist items
-  await model.destroy({
+  const deletedRows = await model.destroy({
     where: {
       idCore: {
         [Op.notIn]: projects.map(p => p.idCore)
       }
     }
   })
+  console.info(`- writeProjectsToPostgres: bulk upsert ${updatedRows.length} projects`)
+  console.info(`- writeProjectsToPostgres: deleted ${deletedRows} projects`)
 }
