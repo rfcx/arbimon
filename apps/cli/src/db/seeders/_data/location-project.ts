@@ -16,7 +16,7 @@ export const rawProjects: Record<string, Project[]> = {
     },
     {
       id: 2,
-      idCore: '???',
+      idCore: 'bci392pan298',
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
