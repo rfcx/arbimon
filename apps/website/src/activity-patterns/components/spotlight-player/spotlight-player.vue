@@ -4,7 +4,8 @@
   </h3>
   <no-data-panel
     v-if="loading || isEmpty"
-    class="h-44 my-4"
+    :empty-text="loading ? 'loading...' : 'no data'"
+    class="h-40 my-4"
   />
   <div
     v-else

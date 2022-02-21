@@ -1,7 +1,8 @@
 <template>
   <div>
+    <no-data-panel v-if="speciesPhotos.length === 0" />
     <el-carousel
-      v-if="speciesPhotos.length > 0"
+      v-else
       indicator-position="none"
       :autoplay="false"
     >
