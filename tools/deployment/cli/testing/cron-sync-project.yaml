@@ -4,7 +4,7 @@ metadata:
   name: biodiversity-cli-sync-projects
   namespace: testing
 spec:
-  schedule: "10 17 * * *"
+  schedule: '10 17 * * *'
   jobTemplate:
     spec:
       template:
