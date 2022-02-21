@@ -1,13 +1,14 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species } from '@rfcx-bio/common/api-bio/species/types'
-import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
+
+import { RiskRatingUi, RISKS_BY_ID } from '~/risk-ratings'
 
 export default class SpeciesTitle extends Vue {
-  @Prop() species!: Species | null
+  @Prop() species!: SpeciesInProject | null
 
-  get riskInformation (): ExtinctionRisk | null {
-    return this.species?.extinctionRisk ? getExtinctionRisk(this.species.extinctionRisk) : null
+  get riskInformation (): RiskRatingUi | null {
+    return this.species === null ? null : RISKS_BY_ID[this.species?.riskRatingIucnId ?? -1]
   }
 }
