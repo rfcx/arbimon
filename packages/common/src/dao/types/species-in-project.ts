@@ -7,6 +7,8 @@ export interface SpeciesInProject {
   scientificName: string
   commonName: string
   description: string
+  sourceUrl: string
+  sourceCite: string
   riskRatingIucnId: number
   photoUrl: string
 }

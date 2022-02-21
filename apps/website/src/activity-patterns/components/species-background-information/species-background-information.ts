@@ -34,9 +34,8 @@ export default class SpeciesBackgroundInformation extends Vue {
 
     return {
       description,
-      sourceUrl: '',
-      sourceCite: 'to be update'
-      // sourceCite: hasIUCNInfo ? (sourceCite ?? 'IUCN Red List') : 'Wikipedia',
+      sourceUrl: this.speciesInformation?.sourceUrl ?? '',
+      sourceCite: this.speciesInformation?.sourceCite ?? ''
     }
   }
 }

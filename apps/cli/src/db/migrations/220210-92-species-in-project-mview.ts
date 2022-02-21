@@ -21,9 +21,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            ts.slug as taxon_species_slug,
            ts.scientific_name,
            MAX(tsi.common_name) AS common_name,
-           COALESCE(max(tsi.description), max(tsw.description))  AS description,
            COALESCE(MAX(tsi.risk_rating_iucn_id), -1) AS risk_rating_iucn_id,
-           MAX(tsp.photo_url) AS photo_url
+           MAX(tsp.photo_url) AS photo_url,
+           CASE
+              WHEN MAX(tsi.description) <> '' THEN MAX(tsi.description)
+              WHEN MAX(tsw.description) <> '' THEN MAX(tsw.description)
+              ELSE ''
+              END AS description,
+           CASE
+              WHEN MAX(tsi.description) <> '' THEN MAX(tsi.description_source_url)
+              WHEN MAX(tsw.description) <> '' THEN MAX(tsw.description_source_url)
+              ELSE ''
+              END AS source_url,
+           CASE
+              WHEN MAX(tsi.description) <> '' THEN 'IUCN Red List'
+              WHEN MAX(tsw.description) <> '' THEN 'Wikipedia'
+              ELSE ''
+           END AS source_cite
     FROM detection_by_site_species_hour d
       INNER JOIN taxon_species ts ON d.taxon_species_id = ts.id
       INNER JOIN taxon_class tc ON ts.taxon_class_id = tc.id
