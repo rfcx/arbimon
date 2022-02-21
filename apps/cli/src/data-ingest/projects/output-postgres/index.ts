@@ -3,15 +3,25 @@ import pkg from 'sequelize/dist'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 import { Project } from '@rfcx-bio/common/dao/types'
 
+import { requireEnv } from '~/env'
 import { getSequelize } from '../../../db/connections'
+import { rawProjects } from '../../../db/seeders/_data/location-project'
 
 const { Op } = pkg
 
+const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
+
 export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'>>): Promise<void> => {
   const model = LocationProjectModel(getSequelize())
-  // TODO: check id with mock for each environment
+  const mockProjects = rawProjects[BIO_ENVIRONMENT]
+  const updatedProjects = projects.map(p => {
+    return {
+      ...p,
+      isPublished: mockProjects.filter(mp => mp.idCore === p.idCore).length > 0 // force publishing projects in the mock project list
+    }
+  })
   // update items
-  const updatedRows = await model.bulkCreate(projects, {
+  const updatedRows = await model.bulkCreate(updatedProjects, {
     updateOnDuplicate: [
       'name',
       'isPublished',
@@ -25,7 +35,7 @@ export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'
   const deletedRows = await model.destroy({
     where: {
       idCore: {
-        [Op.notIn]: projects.map(p => p.idCore)
+        [Op.notIn]: updatedProjects.map(p => p.idCore)
       }
     }
   })
