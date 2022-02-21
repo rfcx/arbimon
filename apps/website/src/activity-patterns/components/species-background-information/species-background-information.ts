@@ -1,9 +1,15 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio/species/types'
+import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import SpeciesInformationContent from './species-information-content.vue'
+
+interface SpeciesInformation {
+  description: string
+  sourceUrl: string
+  sourceCite?: string
+}
 
 @Options({
   components: {
@@ -11,36 +17,26 @@ import SpeciesInformationContent from './species-information-content.vue'
   }
 })
 export default class SpeciesBackgroundInformation extends Vue {
-  @Prop() species!: Species | null
+  @Prop() speciesInformation!: SpeciesInProject | null
 
   /**
-   * Clean up html tag from raw content from iucn api
+   * Clean up html tag from raw content
    */
-  get speciesIUCNCleanContent (): string {
-    const rawContent = this.iucnSpeciesInformation?.description ?? ''
+  get speciesCleanContent (): string {
+    const rawContent = this.speciesInformation?.description ?? ''
     const div = document.createElement('div')
     div.innerHTML = rawContent
     return div.innerText
   }
 
-  get iucnSpeciesInformation (): SpeciesInformation | null {
-    return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_IUCN) ?? null
-  }
+  get information (): SpeciesInformation | null {
+    const description = this.speciesCleanContent
 
-  get wikiSpeciesInformation (): SpeciesInformation | null {
-    return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
-  }
-
-  get speciesInformation (): SpeciesInformation | null {
-    const info = this.iucnSpeciesInformation ?? this.wikiSpeciesInformation ?? null
-    if (!info) return null
-
-    const hasIUCNInfo = this.iucnSpeciesInformation !== null
-    const { description, sourceCite, ...data } = info
     return {
-      description: hasIUCNInfo ? this.speciesIUCNCleanContent : description,
-      sourceCite: hasIUCNInfo ? (sourceCite ?? 'IUCN Red List') : 'Wikipedia',
-      ...data
+      description,
+      sourceUrl: '',
+      sourceCite: 'to be update'
+      // sourceCite: hasIUCNInfo ? (sourceCite ?? 'IUCN Red List') : 'Wikipedia',
     }
   }
 }

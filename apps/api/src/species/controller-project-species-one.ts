@@ -18,6 +18,7 @@ import { mockPredictionsFolderPath } from './index'
 
 export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
+  // TODO: Use species id instead of species slug
   const { projectId, speciesSlug } = req.params
   assertPathParamsExist({ projectId, speciesSlug })
 
@@ -50,7 +51,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
       taxonSpeciesId: taxonSpeciesId
     },
     raw: true
-  }) as unknown as SpeciesPhotoLight
+  }) as unknown as SpeciesPhotoLight[]
 
   const speciesCalls = await models.TaxonSpeciesCall.findAll({
     attributes: CALL_MODEL_ATTRIBUTES.light,
@@ -61,7 +62,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
       }
     },
     raw: true
-  }) as unknown as SpeciesCallLight
+  }) as unknown as SpeciesCallLight[]
 
   const isProtectedCodes = await models.RiskRatingIucn.findAll({
     where: {

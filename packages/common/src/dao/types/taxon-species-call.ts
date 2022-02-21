@@ -14,6 +14,6 @@ export interface TaxonSpeciesCall {
 export type SpeciesCallLight = Pick<TaxonSpeciesCall,
   'callType' |
   'callMediaSpecUrl' |
-  'callMediaSpecUrl' |
+  'callMediaWavUrl' |
   'callMediaRedirectUrl'
 >

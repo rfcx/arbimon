@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { Species, SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -51,15 +51,13 @@ export default class ActivityPatternsPage extends Vue {
   mapDatasets: MapDataSet[] = []
   timeDatasets: TimeDataset[] = []
   exportDatasets: SpotlightExportData[] = []
-  speciesInformation: Species | null = null
+  speciesInformation: SpeciesInProjectLight | null = null
+  speciesCalls: SpeciesCallLight[] = []
+  speciesPhotos: SpeciesPhotoLight[] = []
   isLocationRedacted = false
 
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0
-  }
-
-  get speciesCalls (): SpeciesCall[] {
-    return this.speciesInformation?.speciesCalls ?? []
   }
 
   get infoTopic (): string {
@@ -114,8 +112,10 @@ export default class ActivityPatternsPage extends Vue {
 
       // Only update if received data matches current filters
       if (this.species?.scientificName === species.scientificName) {
-        this.predictedOccupancyMaps = data?.predictedOccupancyMaps ?? []
         this.speciesInformation = data?.speciesInformation ?? null
+        this.speciesCalls = data?.speciesCalls ?? []
+        this.speciesPhotos = data?.speciesPhotos ?? []
+        this.predictedOccupancyMaps = data?.predictedOccupancyMaps ?? []
       }
     } catch (e) {
       // TODO 167: Error handling

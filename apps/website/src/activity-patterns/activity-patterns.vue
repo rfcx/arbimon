@@ -33,8 +33,8 @@
     <div class="grid grid-cols-5 gap-x-2rem">
       <div class="col-span-full sm:col-span-2">
         <species-images
-          v-if="speciesInformation"
-          :species="speciesInformation"
+          v-if="speciesPhotos.length > 0"
+          :species-photos="speciesPhotos"
           class="my-4"
         />
         <spotlight-player
@@ -42,7 +42,7 @@
           :species-calls="speciesCalls"
         />
         <species-background-information
-          :species="speciesInformation"
+          :species-information="speciesInformation"
         />
       </div>
       <div class="col-span-full sm:col-span-3">
