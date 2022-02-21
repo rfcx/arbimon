@@ -1,15 +1,17 @@
 import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { Species } from '@rfcx-bio/common/api-bio/species/types'
 import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
+import { SpeciesInProject, SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClient } from '~/api'
 import { DatasetParameters, generateFilterQuery } from '~/filters'
 import { useStore } from '~/store'
 
 export interface ProjectSpecies {
-  speciesInformation: Species | undefined
+  speciesInformation: SpeciesInProject | undefined
+  speciesPhotos: SpeciesPhotoLight[]
+  speciesCalls: SpeciesCallLight[]
   predictedOccupancyMaps: string[]
 }
 
@@ -25,8 +27,11 @@ export class SpotlightService {
 
     const url = `${this.baseUrl}${projectSpeciesOneGeneratedUrl({ projectId: projectId.toString(), speciesSlug })}`
     const data = await apiClient.getOrUndefined<ProjectSpeciesOneResponse>(url)
+
     return {
       speciesInformation: data?.speciesInformation,
+      speciesPhotos: data?.speciesPhotos ?? [],
+      speciesCalls: data?.speciesCalls ?? [],
       predictedOccupancyMaps: data?.predictedOccupancyMaps.map(({ title }) => title) ?? []
     }
   }

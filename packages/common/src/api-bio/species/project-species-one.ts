@@ -20,7 +20,7 @@ export interface PredictedOccupancyMap {
 
 export interface ProjectSpeciesOneResponse {
   speciesInformation: SpeciesInProject
-  speciesPhotos: SpeciesPhotoLight
-  speciesCalls: SpeciesCallLight
+  speciesPhotos: SpeciesPhotoLight[]
+  speciesCalls: SpeciesCallLight[]
   predictedOccupancyMaps: PredictedOccupancyMap[]
 }

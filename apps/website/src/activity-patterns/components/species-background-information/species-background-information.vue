@@ -5,9 +5,9 @@
   </h3>
   <div class="mt-4">
     <species-information-content
-      :content="speciesInformation?.description"
-      :redirect-url="speciesInformation?.sourceUrl"
-      :source="speciesInformation?.sourceCite"
+      :content="information?.description"
+      :redirect-url="information?.sourceUrl"
+      :source="information?.sourceCite"
     />
   </div>
 </template>

@@ -2,7 +2,7 @@ import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
-import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
+import { SpeciesCallLight } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -21,7 +21,7 @@ const SCROLL_STEP = 150
 })
 export default class SpotlightPlayer extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop() speciesCalls!: SpeciesCall[]
+  @Prop() speciesCalls!: SpeciesCallLight[]
 
   loading = false
 
@@ -60,12 +60,12 @@ export default class SpotlightPlayer extends Vue {
   }
 
   async getSpectrogramImage (): Promise<void> {
-    const spectrogramList = (await Promise.all(this.speciesCalls.map(async ({ mediaSpecUrl }) => await assetsService.getMedia(mediaSpecUrl)))).filter(isDefined)
+    const spectrogramList = (await Promise.all(this.speciesCalls.map(async ({ callMediaSpecUrl }) => await assetsService.getMedia(callMediaSpecUrl)))).filter(isDefined)
     this.spectrograms = spectrogramList.map(data => window.URL.createObjectURL(data))
   }
 
   async getAudio (): Promise<void> {
-    const audioList = (await Promise.all(this.speciesCalls.map(async ({ mediaWavUrl }) => await assetsService.getMedia(mediaWavUrl)))).filter(isDefined)
+    const audioList = (await Promise.all(this.speciesCalls.map(async ({ callMediaWavUrl }) => await assetsService.getMedia(callMediaWavUrl)))).filter(isDefined)
 
     this.audioList = audioList.map(data => {
       return new Howl({
