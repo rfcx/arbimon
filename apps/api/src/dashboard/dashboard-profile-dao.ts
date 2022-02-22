@@ -8,7 +8,8 @@ export const getProjectProfile = async (projectId: number): Promise<LocationProj
   await ModelRepositoryFactory.getInstance(getSequelize())
     .LocationProjectProfile
     .findOne({
-      where: { locationProjectId: projectId }
+      where: { locationProjectId: projectId },
+      raw: true
     }) ?? undefined
 
 export const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>

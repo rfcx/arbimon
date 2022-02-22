@@ -1,14 +1,24 @@
-import { groupBy, mapValues, sum, sumBy } from 'lodash-es'
+import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
+import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { LocationProjectMetric } from '@rfcx-bio/common/dao/types/location-project-metric'
 import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-export const getDetectionCount = async (): Promise<number> =>
-  sumBy(rawDetections, 'num_of_recordings')
+import { getSequelize } from '../_services/db'
 
+export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetric | undefined> =>
+  await ModelRepositoryFactory.getInstance(getSequelize())
+    .LocationProjectMetric
+    .findOne({
+      where: { locationProjectId },
+      raw: true
+     }) ?? undefined
+
+// OLD, not GOLD (gonna delete this)
 export const getSpeciesThreatened = async (): Promise<DashboardSpecies[]> =>
   rawSpecies
     .filter(species => EXTINCTION_RISK_THREATENED_CODES.includes(species.extinctionRisk))
