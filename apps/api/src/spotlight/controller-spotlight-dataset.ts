@@ -1,17 +1,18 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
-import { Species } from '@rfcx-bio/common/api-bio/species/types'
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
-import { MockHourlyDetectionSummary, rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
+import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { MockHourlyDetectionSummary, rawDetections } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
+import { getSequelize } from '../_services/db'
 import { BioInvalidQueryParamError, BioNotFoundError } from '../_services/errors'
 import { FilterDataset, filterMocksByParameters, filterMocksBySpecies } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { isProtectedSpecies } from '../_services/security/location-redacted'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -26,10 +27,10 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
 
-  const species = rawSpecies.find(s => s.speciesId === speciesId)
-  if (!species) throw BioNotFoundError()
+  // const species = rawSpecies.find(s => s.speciesId === speciesId)
+  // if (!species) throw BioNotFoundError()
 
-  const isLocationRedacted = isProjectMember(req) ? false : EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
+  const hasProjectPermission = await isProjectMember(req)
 
   // Query
   const convertedQuery = {
@@ -40,11 +41,22 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
     taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
   }
 
-  return await getSpotlightDatasetInformation(Number(projectId), { ...convertedQuery }, species, isLocationRedacted)
+  return await getSpotlightDatasetInformation(Number(projectId), { ...convertedQuery }, speciesId, hasProjectPermission)
 }
 
-async function getSpotlightDatasetInformation (projectId: number, filter: FilterDataset, species: Species, isLocationRedacted: boolean): Promise<SpotlightDatasetResponse> {
-  const speciesId = species.speciesId
+async function getSpotlightDatasetInformation (projectId: number, filter: FilterDataset, speciesId: number, hasProjectPermission: boolean): Promise<SpotlightDatasetResponse> {
+  const sequelize = getSequelize()
+  const models = ModelRepositoryFactory.getInstance(sequelize)
+
+  const species = await models.TaxonSpecies.findOne({
+    where: {
+      id: speciesId
+    },
+    raw: true
+  })
+
+  if (!species) throw BioNotFoundError()
+  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(species.id)
 
   // Filtering
   const totalSummaries = filterMocksByParameters(rawDetections, filter)
