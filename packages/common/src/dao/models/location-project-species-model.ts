@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { LocationProjectSpecies } from '../../dao/types/location-project-species'
 import { defineWithDefaults } from '../helpers/defaults'
+import { LocationProjectSpecies } from '../types/location-project-species'
 
 export const MODEL_LOCATION_PROJECT_SPECIES = 'LocationProjectSpecies'
 export const TABLE_LOCATION_PROJECT_SPECIES = 'location_project_species'
