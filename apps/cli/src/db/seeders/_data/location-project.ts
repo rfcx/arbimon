@@ -5,6 +5,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 1,
       idCore: 'rbj7k70v4na7',
+      idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       slugArbimon: 'fake-arbimon-project-for-bio',
       isPublished: true,
@@ -17,6 +18,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 2,
       idCore: 'bci392pan298',
+      idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
@@ -31,6 +33,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 1,
       idCore: 'zy5jbxx4cs9f',
+      idArbimon: 1556,
       slug: 'puerto-rico',
       slugArbimon: 'puerto-rico',
       isPublished: true,
@@ -43,6 +46,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 2,
       idCore: 'bci392pan298',
+      idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
@@ -57,6 +61,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 1,
       idCore: 'n9nrlg45vyf0',
+      idArbimon: 1989,
       slug: 'puerto-rico-island-wide',
       slugArbimon: 'puerto-rico-island-wide',
       isPublished: true,
@@ -69,6 +74,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 2,
       idCore: 'xle0i1t9uea4',
+      idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
@@ -81,6 +87,7 @@ export const rawProjects: Record<string, Project[]> = {
     {
       id: 3,
       idCore: 'kwsda03lllt4',
+      idArbimon: 1429,
       slug: 'rfcx-guardians-madre-de-dios-peru',
       slugArbimon: 'rfcx-guardians-madre-de-dios-peru',
       isPublished: true,

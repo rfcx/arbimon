@@ -10,5 +10,9 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const projects = rawProjects[BIO_ENVIRONMENT]
-  await LocationProjectModel(params.context.sequelize).bulkCreate(projects)
+
+  await LocationProjectModel(params.context.sequelize).bulkCreate(projects).then(async () => {
+    // fix auto increment key break - https://github.com/sequelize/sequelize/issues/9295
+    await params.context.sequelize.query('select setval(\'location_project_id_seq\', (select max(id) from location_project), true);')
+  })
 }
