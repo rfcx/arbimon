@@ -36,8 +36,7 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
       scientificName,
       commonName,
       riskId: riskRatingIucnId,
-      photoUrl,
-      extinctionRisk: 'NE' // TODO: Delete this
+      photoUrl
     })),
     richnessByExtinction,
     richnessByHour,

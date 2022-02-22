@@ -31,8 +31,7 @@ export const dashboardProfileHandler: Handler<DashboardProfileResponse, Dashboar
         ...rest,
         taxonSlug: taxonClassSlug,
         slug: taxonSpeciesSlug,
-        riskId: riskRatingIucnId,
-        extinctionRisk: 'NE' // TODO: Deprecate & remove this
+        riskId: riskRatingIucnId
       })
     )
   }
