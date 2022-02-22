@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { FastifyLoggerInstance } from 'fastify'
 
 import { CoreProject } from '@rfcx-bio/common/api-bio/common/permission'
 
-import { apiClient } from '../api-helpers/api-client'
+import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 
@@ -19,7 +20,7 @@ export async function getProjectPermission (projectId: string, token: string): P
     .catch(unpackAxiosError)
   }
 
-export async function getMedia (url: string): Promise<ArrayBuffer | undefined> {
+export async function getMedia (logger: FastifyLoggerInstance, url: string): Promise<ArrayBuffer | undefined> {
   // ! `blob` is a "browser only" option. read more here: https://stackoverflow.com/a/60461828
-  return await apiClient.getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
+  return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }

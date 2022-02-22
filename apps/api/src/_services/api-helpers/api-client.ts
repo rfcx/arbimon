@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { FastifyLoggerInstance } from 'fastify'
 
 import { env } from '../env'
 
@@ -8,7 +9,15 @@ const axiosClient = axios.create({
 
 interface AuthHeader { Authorization: string }
 
-class ApiClient {
+export class ApiClient {
+  static instance: ApiClient | undefined
+  static getInstance (logger: FastifyLoggerInstance): ApiClient {
+    if (!ApiClient.instance) { ApiClient.instance = new ApiClient(logger) }
+    return ApiClient.instance
+  }
+
+  constructor (private readonly logger: FastifyLoggerInstance) {}
+
   async getAccessToken (): Promise<string> {
     try {
       const auth = await axios.request({
@@ -26,7 +35,7 @@ class ApiClient {
       })
       return auth.data.access_token
     } catch (err) {
-      console.error('RFCx authentication error:', err)
+      this.logger.error('RFCx authentication error:', err)
       return ''
     }
   }
@@ -57,5 +66,3 @@ class ApiClient {
     return await this.requestOrUndefined<ResponseBody>({ url, ...config })
   }
 }
-
-export const apiClient = new ApiClient()
