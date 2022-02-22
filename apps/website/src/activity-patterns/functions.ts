@@ -1,23 +1,24 @@
 import { Dayjs } from 'dayjs'
 
+import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ActivityPatternsData, ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
+import { ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { SpotlightExportData } from './activity-patterns'
 import { Metrics } from './types'
 
-export type ActivitySpotlightDataset = ActivityPatternsData & DatasetParameters
+export type SpotlightDataset = SpotlightDatasetResponse & DatasetParameters
 
-export const ACTIVITY_PATTERN_MAP_KEYS = {
+export const SPOTLIGHT_MAP_KEYS = {
   detection: 'detection',
   detectionFrequency: 'detectionFrequency',
   occupancy: 'occupancy'
 }
 
-export function transformToMetricsDatasets (datasets: ActivitySpotlightDataset[]): Metrics[] {
+export function transformToMetricsDatasets (datasets: SpotlightDataset[]): Metrics[] {
   const metrics: Metrics[] = [
     {
       title: 'Detection Frequency',
@@ -50,11 +51,11 @@ function getPrettyMax (max: number): number {
   return max // TODO URGENT - Make this more pretty
 }
 
-export function transformToBySiteDataset (datasets: ActivitySpotlightDataset[]): MapDataSet[] {
-  const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
-    const activityBySiteValues = Object.values(activityBySite)
-    const siteDetectionCounts = activityBySiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
-    const siteDetectionFrequencies = activityBySiteValues.map(({ siteDetectionFrequency }) => siteDetectionFrequency)
+export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapDataSet[] {
+  const maximumNumbers: Array<[number, number]> = datasets.map(({ detectionsByLocationSite }) => {
+    const detectionsByLocationSiteValues = Object.values(detectionsByLocationSite)
+    const siteDetectionCounts = detectionsByLocationSiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
+    const siteDetectionFrequencies = detectionsByLocationSiteValues.map(({ siteDetectionFrequency }) => siteDetectionFrequency)
     return [Math.max(0, ...siteDetectionCounts), Math.max(0, ...siteDetectionFrequencies)]
   })
 
@@ -63,16 +64,16 @@ export function transformToBySiteDataset (datasets: ActivitySpotlightDataset[]):
     detectionFrequency: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
-    const activityBySiteValues = Object.values(activityBySite)
-    const data = activityBySiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
+  return datasets.map(({ startDate, endDate, sites, detectionsByLocationSite }) => {
+    const detectionsByLocationSiteValues = Object.values(detectionsByLocationSite)
+    const data = detectionsByLocationSiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
       siteName,
       latitude,
       longitude,
       distinctSpecies: {
-        [ACTIVITY_PATTERN_MAP_KEYS.detection]: siteDetectionCount,
-        [ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency]: siteDetectionFrequency,
-        [ACTIVITY_PATTERN_MAP_KEYS.occupancy]: siteOccupied
+        [SPOTLIGHT_MAP_KEYS.detection]: siteDetectionCount,
+        [SPOTLIGHT_MAP_KEYS.detectionFrequency]: siteDetectionFrequency,
+        [SPOTLIGHT_MAP_KEYS.occupancy]: siteOccupied
       }
     }))
 
