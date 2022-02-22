@@ -2,7 +2,7 @@ import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/
 
 import { getDetectionByHour, getDetectionBySite, getProjectMetrics, getRichnessByExtinction, getRichnessByHour, getRichnessBySite, getRichnessByTaxon, getSpeciesThreatened } from '@/dashboard/dashboard-generated-dao'
 import { Handler } from '../_services/api-helpers/types'
-import { BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'
+import { BioInvalidPathParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 
 export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
@@ -25,11 +25,9 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
     getDetectionBySite()
   ])
 
-  if (!projectMetrics) throw BioNotFoundError()
-
   // Response
   return {
-    ...projectMetrics,
+    ...projectMetrics ?? { detectionCount: 0, siteCount: 0, speciesCount: 0, speciesThreatenedCount: 0 },
     speciesThreatened: speciesThreatened.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingIucnId, photoUrl }) => ({
       slug: taxonSpeciesSlug,
       taxonSlug: taxonClassSlug,
