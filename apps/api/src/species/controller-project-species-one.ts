@@ -23,10 +23,10 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   const { projectId, speciesSlug } = req.params
   assertPathParamsExist({ projectId, speciesSlug })
 
-  const isLocationRedacted = !isProjectMember(req)
+  const noPermission = !isProjectMember(req)
 
   // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, isLocationRedacted)
+  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, noPermission)
 
   // Respond
   return response
@@ -65,7 +65,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
     raw: true
   }) as unknown as SpeciesCallLight[]
 
-  const isLocationRedacted = (await isProtectedSpecies(speciesInformation.riskRatingIucnId)) && noPermission
+  const isLocationRedacted = noPermission && (await isProtectedSpecies(speciesInformation.riskRatingIucnId))
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))
