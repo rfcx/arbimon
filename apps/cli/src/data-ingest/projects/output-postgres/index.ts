@@ -13,13 +13,15 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
 export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'>>): Promise<void> => {
   const model = LocationProjectModel(getSequelize())
-  const mockProjects = rawProjects[BIO_ENVIRONMENT]
+  const mockProjectCoreIds = rawProjects[BIO_ENVIRONMENT].map(mp => mp.idCore)
+
   const updatedProjects = projects.map(p => {
     return {
       ...p,
-      isPublished: mockProjects.filter(mp => mp.idCore === p.idCore).length > 0 // force publishing projects in the mock project list
+      isPublished: mockProjectCoreIds.includes(p.idCore) // force publishing projects in the mock project list
     }
   })
+
   // update items
   const updatedRows = await model.bulkCreate(updatedProjects, {
     updateOnDuplicate: [
@@ -31,6 +33,7 @@ export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'
       'longitudeWest'
     ]
   })
+
   // delete non exist items
   const deletedRows = await model.destroy({
     where: {
@@ -39,6 +42,7 @@ export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'
       }
     }
   })
+
   console.info(`- writeProjectsToPostgres: bulk upsert ${updatedRows.length} projects`)
   console.info(`- writeProjectsToPostgres: deleted ${deletedRows} projects`)
 }
