@@ -13,21 +13,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const sequelize = params.context.sequelize
 
   // PK Lookups
-  const speciesScientificToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
+  const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
-  const siteNameToId: Record<string, number> = await LocationSiteModel(sequelize).findAll()
+  const siteNameToId = await LocationSiteModel(sequelize).findAll()
     .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
 
   // Convert data
-  const calls = Object.entries(rawSpeciesCallData).flatMap(([scientificName, calls]) => {
-    const taxonSpeciesId = speciesScientificToId[scientificName]
-    return calls.map(call => ({ taxonSpeciesId, ...call }))
-  }).filter(c => c.taxonSpeciesId !== undefined)
+  const calls = Object.entries(rawSpeciesCallData)
+    .flatMap(([scientificName, calls]) => calls.map(call => ({ scientificName, ...call })))
 
-  const data: Array<Optional<TaxonSpeciesCall, 'id'>> =
-    calls.map(call => {
-      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, taxonSpeciesId } = call
+  const data: Array<Optional<TaxonSpeciesCall, 'id'>> = calls
+    .map(call => {
+      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, scientificName } = call
+
+      const taxonSpeciesId = speciesScientificToId[scientificName]
+      if (!taxonSpeciesId) return undefined
+
       return {
         taxonSpeciesId: taxonSpeciesId,
         callProjectId: 1,
