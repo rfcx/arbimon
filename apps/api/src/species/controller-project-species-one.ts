@@ -9,6 +9,7 @@ import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { getSequelize } from '@/_services/db'
+import { isProtectedSpecies } from '@/_services/security/location-redacted'
 import { Handler } from '../_services/api-helpers/types'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
@@ -64,14 +65,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
     raw: true
   }) as unknown as SpeciesCallLight[]
 
-  const isProtectedCodes = await models.RiskRatingIucn.findAll({
-    where: {
-      isThreatened: true
-    },
-    raw: true
-  })
-  const isLocationRedacted = isProtectedCodes.map(({ idOrdered }) => idOrdered)
-    .includes(speciesInformation.riskRatingIucnId) && noPermission
+  const isLocationRedacted = (await isProtectedSpecies(speciesInformation.riskRatingIucnId)) && noPermission
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
     ? []
     : (await readdir(mockPredictionsFolderPath))

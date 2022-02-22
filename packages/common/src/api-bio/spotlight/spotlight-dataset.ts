@@ -6,7 +6,7 @@ export interface SpotlightDatasetParams {
   projectId: string
 }
 
-export type SpotlightDatasetQuery = FilterDatasetQuery & { speciesId: string }
+export type SpotlightDatasetQuery = FilterDatasetQuery & { speciesId: number }
 
 export const spotlightDatasetRoute = '/projects/:projectId/spotlight'
 
