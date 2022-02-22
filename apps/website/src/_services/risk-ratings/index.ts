@@ -4,8 +4,12 @@ export interface RiskRatingUi {
   color: string
 }
 
+/**
+ * WARNING: Risk rating IDs must match the Bio Database IDs
+ */
+export const DEFAULT_RISK_RATING_ID = -1
 export const RISKS_BY_ID: Record<number, RiskRatingUi> = {
-  [-1]: { code: 'NE', label: 'Not Evaluated', color: '#AAAAAA' },
+  [DEFAULT_RISK_RATING_ID]: { code: 'NE', label: 'Not Evaluated', color: '#AAAAAA' },
   0: { code: 'NA', label: 'Not Applicable', color: '#888888' },
   100: { code: 'DD', label: 'Data Deficient', color: '#755F85' },
   200: { code: 'LC', label: 'Least Concern', color: '#2F6E61' },
