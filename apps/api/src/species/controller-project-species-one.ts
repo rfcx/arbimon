@@ -32,8 +32,8 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
 }
 
 const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
-  const sequalize = getSequelize()
-  const models = ModelRepositoryFactory.getInstance(sequalize)
+  const sequelize = getSequelize()
+  const models = ModelRepositoryFactory.getInstance(sequelize)
 
   const speciesInformation = await models.SpeciesInProject.findOne({
     where: {
