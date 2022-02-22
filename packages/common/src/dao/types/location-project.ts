@@ -2,6 +2,7 @@
 export interface Project {
   id: number
   idCore: string
+  idArbimon: number
   slug: string
   slugArbimon: string
   isPublished: boolean

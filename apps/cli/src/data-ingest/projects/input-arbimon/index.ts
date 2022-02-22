@@ -23,6 +23,7 @@ export const getArbimonProjects = async (): Promise<Array<Omit<Project, 'id'>>> 
   return results.map(i => {
     return {
       idCore: i.core_project_id,
+      idArbimon: i.project_id,
       slug: i.slug,
       slugArbimon: i.slug,
       isPublished: i.reports_enabled,
