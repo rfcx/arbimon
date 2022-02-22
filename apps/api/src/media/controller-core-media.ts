@@ -11,7 +11,7 @@ export const coreMediaHandler: Handler<FastifyReply, {}, CoreMediaQuery> = async
   const { url } = req.query
   assertQueryParamsExist({ url })
 
-  const media = await getMedia(url)
+  const media = await getMedia(req.log, url)
 
   // Query
   return await res.send(media)

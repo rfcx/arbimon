@@ -1,20 +1,20 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../helpers/defaults'
-import { DashboardSpeciesHighlighted } from '../types/dashboard-species-highlighted'
+import { DashboardSpeciesThreatened } from '../types/dashboard-species-threatened'
 
-export const MODEL_DASHBOARD_SPECIES_HIGHLIGHTED = 'DashboardSpeciesHighlighted'
-export const TABLE_DASHBOARD_SPECIES_HIGHLIGHTED = 'dashboard_species_highlighted'
+export const MODEL_DASHBOARD_SPECIES_THREATENED = 'DashboardSpeciesThreatened'
+export const TABLE_DASHBOARD_SPECIES_THREATENED = 'dashboard_species_threatened'
 
-export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpeciesHighlighted>(
-  MODEL_DASHBOARD_SPECIES_HIGHLIGHTED,
+export const DashboardSpeciesThreatenedModel = defineWithDefaults<DashboardSpeciesThreatened>(
+  MODEL_DASHBOARD_SPECIES_THREATENED,
   {
     // PK
     locationProjectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    highlightedOrder: {
+    taxonSpeciesId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },
@@ -22,10 +22,7 @@ export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpec
     // Dimensions
     taxonClassSlug: DataTypes.STRING(255),
     taxonSpeciesSlug: DataTypes.STRING(255),
-    riskRatingIucnId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
+    riskRatingIucnId: DataTypes.INTEGER,
 
     // Facts
     scientificName: DataTypes.STRING(255),
@@ -39,7 +36,7 @@ export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpec
     }
   },
   {
-    tableName: TABLE_DASHBOARD_SPECIES_HIGHLIGHTED,
+    tableName: TABLE_DASHBOARD_SPECIES_THREATENED,
     timestamps: false
   }
 )

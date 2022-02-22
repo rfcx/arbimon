@@ -1,9 +1,9 @@
-export interface DashboardSpeciesHighlighted {
+export interface DashboardSpeciesThreatened {
   locationProjectId: number
-  highlightedOrder: number
+  taxonSpeciesId: number
   taxonClassSlug: string
   taxonSpeciesSlug: string
-  riskRatingIucnId?: number
+  riskRatingIucnId: number
   scientificName: string
   commonName?: string
   photoUrl?: string

@@ -6,7 +6,7 @@ import { Inject } from 'vue-property-decorator'
 
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
-import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { EXTINCTION_LABELS_AND_COLORS } from '@rfcx-bio/common/iucn'
 import { TAXONOMY_COLORS } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -19,7 +19,7 @@ import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
-import { RISKS_BY_ID } from '~/risk-ratings'
+import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
@@ -48,6 +48,10 @@ const tabs: Tab[] = [
 ]
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
+
+// TODO: Different default photos per taxon
+const getDefaultPhoto = (taxonSlug: string): string =>
+  new URL('../_assets/default-species-image.jpg', import.meta.url).toString()
 
 @Options({
   components: {
@@ -146,21 +150,21 @@ export default class DashboardPage extends Vue {
       taxonSlug,
       scientificName,
       commonName: commonName,
-      photoUrl: (photoUrl && photoUrl.length > 0) ? photoUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
-      riskRating: RISKS_BY_ID[riskId ?? -1]
+      photoUrl: photoUrl ?? getDefaultPhoto(taxonSlug),
+      riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }))
   }
 
   get speciesThreatened (): ThreatenedSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, extinctionRisk, photoUrl }) => ({
+    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
       slug,
       taxonSlug,
       scientificName,
       commonName: commonName,
-      photoUrl: (photoUrl && photoUrl.length > 0) ? photoUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
-      extinctionRisk: getExtinctionRisk(extinctionRisk)
+      photoUrl: photoUrl ?? getDefaultPhoto(taxonSlug),
+      riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }))
   }
 

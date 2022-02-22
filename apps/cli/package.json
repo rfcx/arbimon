@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
     "db-seed": "pnpm serve lib/db/seed -- --path=auto",

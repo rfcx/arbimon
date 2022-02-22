@@ -13,10 +13,10 @@
         class="threatened-tag border-none text-xs"
         effect="dark"
         size="mini"
-        :color="ratingAndSpecies[1][0].extinctionRisk.color"
-        :title="ratingAndSpecies[1][0].extinctionRisk.label"
+        :color="ratingAndSpecies[1][0].riskRating.color"
+        :title="ratingAndSpecies[1][0].riskRating.label"
       >
-        {{ ratingAndSpecies[1][0].extinctionRisk.code }}
+        {{ ratingAndSpecies[1][0].riskRating.code }}
       </el-tag>
       <span class="ml-1.5 text-sm">{{ ratingAndSpecies[0] }} ({{ ratingAndSpecies[1].length }})</span>
       <div

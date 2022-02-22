@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { DetectionBySiteSpeciesHour } from '../../dao/types'
 import { defineWithDefaults } from '../helpers/defaults'
+import { DetectionBySiteSpeciesHour } from '../types'
 
 export const MODEL_DETECTIONS_BY_SITE_SPECIES_HOUR = <const>'DetectionsBySiteSpeciesHour'
 export const TABLE_DETECTIONS_BY_SITE_SPECIES_HOUR = <const>'detection_by_site_species_hour'
