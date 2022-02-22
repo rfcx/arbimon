@@ -24,5 +24,15 @@ module.exports = [
     regex: 'sequalize',
     message: 'Spelling',
     replacement: 'sequelize'
+  },
+  {
+    regex: 'from \'path/posix\'',
+    message: 'Did you mean to import from OS-neutral \'path\'?',
+    replacement: 'from \'path\''
+  },
+  {
+    regex: 'from \'path/win32\'',
+    message: 'Did you mean to import from OS-neutral \'path\'?',
+    replacement: 'from \'path\''
   }
 ]
