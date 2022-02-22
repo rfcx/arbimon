@@ -59,9 +59,9 @@ module.exports = {
           replacement: { function: 'return "createMap(" + captured[0] + ")"' }
         },
         {
-          regex: 'const sequalize',
+          regex: 'sequalize',
           message: 'Spelling',
-          replacement: 'const sequelize'
+          replacement: 'sequelize'
         }
       ]
     ]
