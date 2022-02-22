@@ -1,8 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
+import { Op } from 'sequelize'
 
 import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository, ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { MockHourlyDetectionSummary, rawDetections } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
@@ -27,10 +29,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
 
-  // const species = rawSpecies.find(s => s.speciesId === speciesId)
-  // if (!species) throw BioNotFoundError()
-
-  const hasProjectPermission = await isProjectMember(req)
+  const hasProjectPermission = isProjectMember(req)
 
   // Query
   const convertedQuery = {
@@ -59,19 +58,21 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(species.id)
 
   // Filtering
-  const totalSummaries = filterMocksByParameters(rawDetections, filter)
-  const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
+  const totalDetections = await filterDetecions(models, filter)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, filter, speciesId)
 
   // Metrics
-  const totalRecordingCount = getRecordingCount(totalSummaries)
-  const detectionCount = sum(speciesSummaries.map(d => d.num_of_recordings)) // 1 recording = 1 detection
+  const totalRecordingCount = getRecordingCount(totalDetections)
+  const detectionCount = sum(specificSpeciesDetections.map(({ count }) => count)) // 1 recording = 1 detection
   const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
 
-  const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
-  const occupiedSiteCount = new Set(speciesSummaries.map(d => d.stream_id)).size
+  const totalSiteCount = new Set(totalDetections.map(({ locationSiteId }) => locationSiteId)).size
+  const occupiedSiteCount = new Set(specificSpeciesDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
   // By site
+  // ! to be remove
+  const totalSummaries = filterMocksByParameters(rawDetections, filter)
   const activityBySite = isLocationRedacted ? {} : getActivityDataBySite(totalSummaries, speciesId)
   const activityByTime = getActivityDataByTime(totalSummaries, speciesId)
   const activityByExport = getActivityDataExport(totalSummaries, speciesId)
@@ -90,7 +91,63 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   }
 }
 
-function getRecordingCount (detections: MockHourlyDetectionSummary[]): number {
+async function filterDetecions (models: ModelRepository, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+  const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
+
+  const where = {
+    timePrecisionHourLocal: {
+      [Op.and]: {
+        [Op.gte]: startDateUtcInclusive,
+        [Op.lt]: endDateUtcInclusive
+      }
+    }
+  }
+
+  if (siteIds.length > 0) {
+    // TODO: Update the type
+    // @ts-expect-error
+    where.locationSiteId = siteIds
+  }
+
+  return await models.DetectionsBySiteSpeciesHour.findAll({
+    where,
+    raw: true
+  })
+}
+
+async function filterSpeciesDetection (models: ModelRepository, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
+  const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
+
+  const where = {
+    timePrecisionHourLocal: {
+      [Op.and]: {
+        [Op.gte]: startDateUtcInclusive,
+        [Op.lt]: endDateUtcInclusive
+      }
+    },
+    taxonSpeciesId: speciesId
+  }
+
+  if (siteIds.length > 0) {
+    // TODO: Update the type
+    // @ts-expect-error
+    where.locationSiteId = siteIds
+  }
+
+  return await models.DetectionsBySiteSpeciesHour.findAll({
+    where,
+    raw: true
+  })
+}
+
+function getRecordingCount (detections: DetectionBySiteSpeciesHour[]): number {
+  // TODO: Better way to handle case where `durationMinutes` is not stable
+  const durationMinutes = detections.length > 0 ? detections[0].durationMinutes : 0
+  return new Set(detections.map(d => d.timePrecisionHourLocal)).size * durationMinutes
+}
+
+// @deprecated
+function getMockRecordingCount (detections: MockHourlyDetectionSummary[]): number {
   return new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
 }
 
@@ -106,7 +163,7 @@ function calculateDetectionFrequencyActivity (detections: MockHourlyDetectionSum
 function getActivityDataBySite (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivitySpotlightDataBySite {
   const summariesBySite: { [siteId: string]: MockHourlyDetectionSummary[] } = groupBy(totalSummaries, 'stream_id')
   return mapValues(summariesBySite, (siteSummaries, siteId) => {
-    const siteTotalRecordingCount = getRecordingCount(siteSummaries)
+    const siteTotalRecordingCount = getMockRecordingCount(siteSummaries)
 
     const siteSpeciesSummaries = filterMocksBySpecies(siteSummaries, speciesId)
     const siteDetectionCount = sum(siteSpeciesSummaries.map(d => d.num_of_recordings))
@@ -127,7 +184,7 @@ function getActivityDataBySite (totalSummaries: MockHourlyDetectionSummary[], sp
 }
 
 function getActivityDataByTime (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivitySpotlightDataByTime {
-  const totalRecordingCount = getRecordingCount(totalSummaries)
+  const totalRecordingCount = getMockRecordingCount(totalSummaries)
   const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
   const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
@@ -158,7 +215,7 @@ function getActivityDataByTime (totalSummaries: MockHourlyDetectionSummary[], sp
 }
 
 function getActivityDataExport (totalSummaries: MockHourlyDetectionSummary[], speciesId: number): ActivitySpotlightDataByExport {
-  const totalRecordingCount = getRecordingCount(totalSummaries)
+  const totalRecordingCount = getMockRecordingCount(totalSummaries)
   const speciesSummaries = filterMocksBySpecies(totalSummaries, speciesId)
 
   const hourGrouped = groupByNumber(speciesSummaries, d => d.hour)
