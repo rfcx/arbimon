@@ -3,7 +3,7 @@ import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashbo
 
 import { GET, RouteRegistration } from '../_services/api-helpers/types'
 import { dashboardGeneratedHandler } from './controller-dashboard-generated'
-import { dashboardProfileHandler } from './controller-dashboard-profile'
+import { dashboardProfileHandler } from './dashboard-profile-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
