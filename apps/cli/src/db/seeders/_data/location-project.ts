@@ -23,10 +23,10 @@ export const rawProjects: Record<string, Project[]> = {
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
       name: 'BCI-Panama_2018',
-      latitudeNorth: 0,
-      latitudeSouth: 0,
-      longitudeEast: 0,
-      longitudeWest: 0
+      latitudeNorth: 9.17229,
+      latitudeSouth: 9.14041,
+      longitudeEast: -79.81971,
+      longitudeWest: -79.86858
     }
   ],
   staging: [
@@ -51,10 +51,10 @@ export const rawProjects: Record<string, Project[]> = {
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
       name: 'BCI-Panama_2018',
-      latitudeNorth: 0,
-      latitudeSouth: 0,
-      longitudeEast: 0,
-      longitudeWest: 0
+      latitudeNorth: 9.17229,
+      latitudeSouth: 9.14041,
+      longitudeEast: -79.81971,
+      longitudeWest: -79.86858
     }
   ],
   production: [
@@ -79,10 +79,10 @@ export const rawProjects: Record<string, Project[]> = {
       slugArbimon: 'bci-panama-2018',
       isPublished: true,
       name: 'BCI-Panama_2018',
-      latitudeNorth: -79.81971,
-      latitudeSouth: -79.86858,
-      longitudeEast: 9.14041,
-      longitudeWest: 9.17229
+      latitudeNorth: 9.17229,
+      latitudeSouth: 9.14041,
+      longitudeEast: -79.81971,
+      longitudeWest: -79.86858
     },
     {
       id: 3,
@@ -92,10 +92,10 @@ export const rawProjects: Record<string, Project[]> = {
       slugArbimon: 'rfcx-guardians-madre-de-dios-peru',
       isPublished: true,
       name: 'RFCx-Guardians in Madre de Dios Peru',
-      latitudeNorth: -70.25357092,
+      latitudeNorth: -12.560,
       latitudeSouth: -12.93793901,
-      longitudeEast: 0,
-      longitudeWest: 0
+      longitudeEast: -69.337,
+      longitudeWest: -70.25357092
     }
   ]
 }
