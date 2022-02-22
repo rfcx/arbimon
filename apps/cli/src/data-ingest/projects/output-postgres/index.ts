@@ -5,7 +5,7 @@ import { Project } from '@rfcx-bio/common/dao/types'
 
 import { requireEnv } from '~/env'
 import { getSequelize } from '../../../db/connections'
-import { rawProjects } from '../../../db/seeders/_data/location-project'
+import { rawEnvToProjectAndProfile } from '../../../db/seeders/_data/location-project-and-profile'
 
 const { Op } = pkg
 
@@ -13,7 +13,7 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
 export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'>>): Promise<void> => {
   const model = LocationProjectModel(getSequelize())
-  const mockProjectCoreIds = rawProjects[BIO_ENVIRONMENT].map(mp => mp.idCore)
+  const mockProjectCoreIds = rawEnvToProjectAndProfile[BIO_ENVIRONMENT].map(mp => mp.idCore)
 
   const updatedProjects = projects.map(p => {
     return {
