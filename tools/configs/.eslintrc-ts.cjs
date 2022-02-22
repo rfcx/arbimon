@@ -45,6 +45,11 @@ module.exports = {
           regex: 'new mapboxgl.Map\\(([^\\)]*)\\)',
           message: 'Use the createMap(...) function',
           replacement: { function: 'return "createMap(" + captured[0] + ")"' }
+        },
+        {
+          regex: 'const sequalize',
+          message: 'Spelling',
+          replacement: 'const sequelize'
         }
       ]
     ],
