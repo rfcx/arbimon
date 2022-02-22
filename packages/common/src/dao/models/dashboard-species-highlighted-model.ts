@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { DashboardSpeciesHighlighted } from '@/dao/types/dashboard-species-highlighted'
 import { defineWithDefaults } from '../helpers/defaults'
+import { DashboardSpeciesHighlighted } from '../types/dashboard-species-highlighted'
 
 export const MODEL_DASHBOARD_SPECIES_HIGHLIGHTED = 'DashboardSpeciesHighlighted'
 export const TABLE_DASHBOARD_SPECIES_HIGHLIGHTED = 'dashboard_species_highlighted'

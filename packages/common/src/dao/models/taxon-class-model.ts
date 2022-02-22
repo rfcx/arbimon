@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { TaxonClass } from '../../dao/types'
 import { defineWithDefaultsAutoPk } from '../helpers/defaults'
+import { TaxonClass } from '../types'
 
 export const MODEL_TAXON_CLASS = 'TaxonClass'
 export const TABLE_TAXON_CLASS = 'taxon_class'
