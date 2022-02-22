@@ -20,14 +20,23 @@ export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpec
     },
 
     // Dimensions
-    riskRatingIucnId: DataTypes.INTEGER,
     taxonClassSlug: DataTypes.STRING(255),
     taxonSpeciesSlug: DataTypes.STRING(255),
+    riskRatingIucnId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
 
     // Facts
     scientificName: DataTypes.STRING(255),
-    commonName: DataTypes.STRING(255),
-    photoUrl: DataTypes.STRING(511)
+    commonName: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    photoUrl: {
+      type: DataTypes.STRING(511),
+       allowNull: true
+    }
   },
   {
     tableName: TABLE_DASHBOARD_SPECIES_HIGHLIGHTED,

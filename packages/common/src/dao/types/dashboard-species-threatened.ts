@@ -5,6 +5,6 @@ export interface DashboardSpeciesThreatened {
   taxonSpeciesSlug: string
   riskRatingIucnId: number
   scientificName: string
-  commonName: string
-  photoUrl: string
+  commonName?: string
+  photoUrl?: string
 }
