@@ -11,6 +11,8 @@ export const projectsAllHandler: Handler<ProjectsResponse> = async () => {
 
   const projects = await models.LocationProject
     .findAll({
+      where: { isPublished: true },
+      order: ['name'],
       attributes: PROJECT_MODEL_ATTRIBUTES.light
     })
     .catch(err => {
