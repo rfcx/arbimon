@@ -1,5 +1,5 @@
 import { FilterDatasetQuery } from '../common/filter'
-import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from './common'
+import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from './common'
 
 // Request
 export interface SpotlightDatasetParams {
@@ -22,7 +22,11 @@ export interface SpotlightDatasetResponse {
   occupiedSiteCount: number
   occupiedSiteFrequency: number
   isLocationRedacted: boolean
-  activityBySite: ActivitySpotlightDataBySite
-  activityByTime: ActivitySpotlightDataByTime
-  activityByExport: ActivitySpotlightDataByExport
+  detectionsByLocationSite: SpotlightDetectionDataBySite
+  detectionsByTimeHour: SpotlightDetectionDataByTime
+  detectionsByTimeDay: SpotlightDetectionDataByTime
+  detectionsByTimeMonth: SpotlightDetectionDataByTime
+  detectionsByTimeYear: SpotlightDetectionDataByTime
+  detectionsByTimeDate: SpotlightDetectionDataByTime
+  detectionsByTimeMonthYear: SpotlightDetectionDataByTime
 }

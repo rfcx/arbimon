@@ -7,9 +7,9 @@ export interface ActivitySpotlightDataByTimeBucket {
   detectionFrequency: Record<number, number>
 }
 
-export interface ActivitySpotlightDataBySite {
+export interface SpotlightDetectionDataBySite {
   [siteId: string]: {
-    siteId: string
+    siteId: number
     siteName: string
     latitude: number
     longitude: number
@@ -17,6 +17,11 @@ export interface ActivitySpotlightDataBySite {
     siteDetectionFrequency: number
     siteOccupied: boolean
   }
+}
+
+export interface SpotlightDetectionDataByTime {
+  detection: Record<number|string, number>
+  detectionFrequency: Record<number|string, number>
 }
 
 export interface ActivitySpotlightDataByExport {
@@ -29,3 +34,4 @@ export interface ActivitySpotlightDataByExportBucket {
   detection: Record<number|string, number>
   detectionFrequency: Record<number|string, number>
 }
+

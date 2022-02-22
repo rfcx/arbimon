@@ -1,6 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { ActivitySpotlightDataByExport, SpotlightDetectionDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -24,7 +24,7 @@ import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
-export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: ActivitySpotlightDataBySite }
+export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: SpotlightDetectionDataBySite }
 
 @Options({
   components: {
@@ -100,7 +100,7 @@ export default class ActivityPatternsPage extends Vue {
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
-    this.exportDatasets = datasets.map(({ activityBySite, activityByExport }) => ({ sites: activityBySite, ...activityByExport }))
+    this.exportDatasets = datasets.map(({ detectionsByLocationSite, activityByExport }) => ({ sites: detectionsByLocationSite, ...activityByExport }))
   }
 
   async getSpeciesInformation (): Promise<void> {
