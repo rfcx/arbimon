@@ -1,10 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { DashboardSpeciesThreatened } from '@rfcx-bio/common/dao/types/dashboard-species-threatened'
 import { LocationProjectMetric } from '@rfcx-bio/common/dao/types/location-project-metric'
-import { EXTINCTION_RISK_THREATENED_CODES, ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { rawDetections, rawSpecies } from '@rfcx-bio/common/mock-data'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
@@ -18,15 +18,15 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Loca
       raw: true
      }) ?? undefined
 
-// OLD, not GOLD (gonna delete this)
-export const getSpeciesThreatened = async (): Promise<DashboardSpecies[]> =>
-  rawSpecies
-    .filter(species => EXTINCTION_RISK_THREATENED_CODES.includes(species.extinctionRisk))
-    .sort((a, b) =>
-      EXTINCTION_RISK_THREATENED_CODES.indexOf(b.extinctionRisk) - EXTINCTION_RISK_THREATENED_CODES.indexOf(a.extinctionRisk) ||
-      a.scientificName.localeCompare(b.scientificName)
-    ).map(({ speciesSlug: slug, taxon, extinctionRisk, scientificName, commonName, thumbnailImageUrl: photoUrl }) => ({ slug, taxonSlug: taxon.toLowerCase(), extinctionRisk, scientificName, commonName, photoUrl }))
+export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpeciesThreatened[]> =>
+  await ModelRepositoryFactory.getInstance(getSequelize())
+    .DashboardSpeciesThreatened
+    .findAll({
+      where: { locationProjectId },
+      raw: true
+    })
 
+// OLD, not GOLD (gonna delete this)
 export const getRichnessByExtinction = async (): Promise<Array<[string, number]>> =>
   Object.entries(groupBy(rawSpecies, 'extinctionRisk'))
     .map(([extinctionCode, speciesList]) => [

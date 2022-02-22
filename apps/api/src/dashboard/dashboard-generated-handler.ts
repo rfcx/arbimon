@@ -16,7 +16,7 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
   // Queries
   const [projectMetrics, speciesThreatened, richnessByExtinction, richnessByHour, richnessBySite, richnessByTaxon, detectionByHour, detectionBySite] = await Promise.all([
     getProjectMetrics(projectIdInteger),
-    getSpeciesThreatened(),
+    getSpeciesThreatened(projectIdInteger),
     getRichnessByExtinction(),
     getRichnessByHour(),
     getRichnessBySite(),
@@ -30,7 +30,15 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
   // Response
   return {
     ...projectMetrics,
-    speciesThreatened,
+    speciesThreatened: speciesThreatened.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingIucnId, photoUrl }) => ({
+      slug: taxonSpeciesSlug,
+      taxonSlug: taxonClassSlug,
+      scientificName,
+      commonName,
+      riskId: riskRatingIucnId,
+      photoUrl,
+      extinctionRisk: 'NE' // TODO: Delete this
+    })),
     richnessByExtinction,
     richnessByHour,
     richnessBySite,
