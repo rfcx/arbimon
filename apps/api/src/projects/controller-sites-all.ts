@@ -24,7 +24,7 @@ export const sitesAllHandler: Handler<SitesResponse, SitesParams> = async (req) 
       ]
     })
     .catch(err => {
-      console.error(err)
+      req.log.error(err)
       throw ApiServerError()
     })
 

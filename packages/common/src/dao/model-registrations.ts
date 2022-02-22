@@ -1,5 +1,6 @@
 import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/dashboard-richness-by-taxon-model'
 import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED } from './models/dashboard-species-highlighted-model'
+import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
 import { DetectionsBySiteSpeciesHourModel, MODEL_DETECTIONS_BY_SITE_SPECIES_HOUR } from './models/detections-by-site-species-hour-model'
 import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
 import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
@@ -35,6 +36,7 @@ export const modelRegistrations = <const>{
   // Views
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel, {}],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel, {}],
+  [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel, {}],
   [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel, {}],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel, {}]
 }
