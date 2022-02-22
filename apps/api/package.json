@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./*.tgz\"",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./*.tgz\" \"./.eslintcache\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",

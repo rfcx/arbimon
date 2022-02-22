@@ -5,9 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "clean": "rimraf \"./dist\"",
-    "lint:types": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck",
+    "build": "vue-tsc --project \"tsconfig.json\" --noEmit --skipLibCheck && vite build",
+    "clean": "rimraf \"./dist\" \"./.eslintcache\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint . --cache",
