@@ -1,0 +1,21 @@
+import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { LocationProjectProfile } from '@rfcx-bio/common/dao/types'
+import { DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboard-species-highlighted'
+
+import { getSequelize } from '../_services/db'
+
+export const getProjectProfile = async (projectId: number): Promise<LocationProjectProfile | undefined> =>
+  await ModelRepositoryFactory.getInstance(getSequelize())
+    .LocationProjectProfile
+    .findOne({
+      where: { locationProjectId: projectId }
+    }) ?? undefined
+
+export const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>
+  await ModelRepositoryFactory.getInstance(getSequelize())
+    .DashboardSpeciesHighlighted
+    .findAll({
+      where: { locationProjectId: projectId },
+      order: [['highlightedOrder', 'ASC']],
+      raw: true
+    })
