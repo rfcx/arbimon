@@ -22,6 +22,6 @@ export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async
 
   if (coreProjectId === undefined) return
 
-  const isMember = await isProjectMember(coreProjectId, token)
+  const isMember = await isProjectMember(req.log, coreProjectId, token)
   if (isMember) { req.requestContext.set(IS_PROJECT_MEMBER, isMember) }
 }

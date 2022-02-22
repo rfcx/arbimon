@@ -6,7 +6,7 @@ import { ApiServerError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
 
-export const projectsAllHandler: Handler<ProjectsResponse> = async () => {
+export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
   const models = ModelRepositoryFactory.getInstance(getSequelize())
 
   const projects = await models.LocationProject
@@ -16,7 +16,7 @@ export const projectsAllHandler: Handler<ProjectsResponse> = async () => {
       attributes: PROJECT_MODEL_ATTRIBUTES.light
     })
     .catch(err => {
-      console.error(err)
+      req.log.error(err)
       throw ApiServerError()
     })
 

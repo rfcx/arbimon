@@ -1,9 +1,11 @@
+import { FastifyLoggerInstance } from 'fastify'
+
 import { BioForbiddenError } from '~/errors'
 import { getProjectPermission } from '../api-core/api-core'
 
 export const isValidToken = (token: string): boolean => /^Bearer ./i.test(token) // at least 1 character after space
 
-export async function isProjectMember (id: string, token: string): Promise<boolean> {
+export async function isProjectMember (logger: FastifyLoggerInstance, id: string, token: string): Promise<boolean> {
   if (!isValidToken(token)) return false
 
   return await getProjectPermission(id, token)
@@ -13,7 +15,7 @@ export async function isProjectMember (id: string, token: string): Promise<boole
       if (err instanceof BioForbiddenError) return false
 
       // Log unexpected errors
-      console.error(err)
+      logger.error(err)
       return false
     })
 }
