@@ -154,13 +154,13 @@ export default class DashboardPage extends Vue {
   get speciesThreatened (): ThreatenedSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, extinctionRisk, photoUrl }) => ({
+    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
       slug,
       taxonSlug,
       scientificName,
       commonName: commonName,
       photoUrl: (photoUrl && photoUrl.length > 0) ? photoUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
-      extinctionRisk: getExtinctionRisk(extinctionRisk)
+      riskRating: RISKS_BY_ID[riskId ?? -1]
     }))
   }
 
