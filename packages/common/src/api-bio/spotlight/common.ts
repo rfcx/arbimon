@@ -34,4 +34,3 @@ export interface ActivitySpotlightDataByExportBucket {
   detection: Record<number|string, number>
   detectionFrequency: Record<number|string, number>
 }
-
