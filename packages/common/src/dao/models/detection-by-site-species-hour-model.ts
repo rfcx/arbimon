@@ -3,11 +3,11 @@ import { DataTypes } from 'sequelize'
 import { defineWithDefaults } from '../helpers/defaults'
 import { DetectionBySiteSpeciesHour } from '../types'
 
-export const MODEL_DETECTIONS_BY_SITE_SPECIES_HOUR = <const>'DetectionsBySiteSpeciesHour'
-export const TABLE_DETECTIONS_BY_SITE_SPECIES_HOUR = <const>'detection_by_site_species_hour'
+export const MODEL_DETECTION_BY_SITE_SPECIES_HOUR = <const>'DetectionBySiteSpeciesHour'
+export const TABLE_DETECTION_BY_SITE_SPECIES_HOUR = <const>'detection_by_site_species_hour'
 
-export const DetectionsBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteSpeciesHour>(
-  MODEL_DETECTIONS_BY_SITE_SPECIES_HOUR,
+export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteSpeciesHour>(
+  MODEL_DETECTION_BY_SITE_SPECIES_HOUR,
   {
     // PK
     timePrecisionHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
@@ -32,6 +32,6 @@ export const DetectionsBySiteSpeciesHourModel = defineWithDefaults<DetectionBySi
     durationMinutes: DataTypes.INTEGER // 12
   },
   {
-    tableName: TABLE_DETECTIONS_BY_SITE_SPECIES_HOUR
+    tableName: TABLE_DETECTION_BY_SITE_SPECIES_HOUR
   }
 )
