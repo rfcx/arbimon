@@ -20,32 +20,34 @@ export class ModelRepository {
 
     Object.entries(registrations)
       .forEach(([modelName, registration]) => {
-      const associations = registration[1]
-      const source = repo[modelName as keyof AllModels] as UnknownModel
-      if (!source) throw new Error('Models must be constructed & registered before associations can be added')
+        const associations = registration[1]
+        if (!associations) return
 
-      if ('oneToOne' in associations) {
-        associations.oneToOne?.forEach(targetName => {
-          const target = repo[targetName] as UnknownModel
-          if (!target) return
+        const source = repo[modelName as keyof AllModels] as UnknownModel
+        if (!source) throw new Error('Models must be constructed & registered before associations can be added')
 
-          const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
-          source.belongsTo(target, { foreignKey })
-          target.hasOne(source, { foreignKey })
-        })
-      }
+        if ('oneToOne' in associations) {
+          associations.oneToOne?.forEach(targetName => {
+            const target = repo[targetName] as UnknownModel
+            if (!target) return
 
-      if ('manyToOne' in associations) {
-        associations.manyToOne?.forEach(targetName => {
-          const target = repo[targetName] as UnknownModel
-          if (!target) return
+            const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
+            source.belongsTo(target, { foreignKey })
+            target.hasOne(source, { foreignKey })
+          })
+        }
 
-          const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
-          source.belongsTo(target, { foreignKey })
-          target.hasMany(source, { foreignKey })
-        })
-      }
-    })
+        if ('manyToOne' in associations) {
+          associations.manyToOne?.forEach(targetName => {
+            const target = repo[targetName] as UnknownModel
+            if (!target) return
+
+            const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
+            source.belongsTo(target, { foreignKey })
+            target.hasMany(source, { foreignKey })
+          })
+        }
+      })
 
     this.repo = repo
   }
