@@ -7,7 +7,6 @@ import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { downloadSvgAsPng } from '~/charts'
 import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
@@ -42,7 +41,7 @@ const DATASET_LABELS = {
 export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
   @Prop() species!: SpeciesInProjectLight
-  @Prop() datasets!: TimeDataset[]
+  @Prop() datasets!: SpotlightTimeDataset[]
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
