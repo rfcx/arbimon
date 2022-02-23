@@ -1,4 +1,4 @@
-import { getSequelize } from '@/db/connections'
+import { getSequelize } from '../db/connections'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 import { syncDetectionsForProject } from './detections'
 
