@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -14,6 +15,11 @@ import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
+
+export interface SpotlightTimeDataset {
+  color: string
+  data: SpotlightDataByTime
+}
 
 // TODO ???: Reduce and move to somewhere for center use
 interface DropDownOption {

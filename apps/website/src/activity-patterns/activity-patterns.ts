@@ -1,17 +1,18 @@
 import { Options, Vue } from 'vue-class-component'
 
-import { ActivitySpotlightDataByExport, SpotlightDetectionDataBySite } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
-import { Metrics, TimeDataset } from '@/activity-patterns/types'
+import { Metrics } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
+import { SpotlightTimeDataset } from './components/activity-patterns-by-time/activity-patterns-by-time'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
 import ActivityPatternsPredictedOccupancy from './components/activity-patterns-predicted-occupancy/activity-patterns-predicted-occupancy.vue'
 import SpeciesBackgroundInformation from './components/species-background-information/species-background-information.vue'
@@ -23,8 +24,6 @@ import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
 import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
-
-export type SpotlightExportData = ActivitySpotlightDataByExport & { sites: SpotlightDetectionDataBySite }
 
 @Options({
   components: {
@@ -49,7 +48,7 @@ export default class ActivityPatternsPage extends Vue {
   predictedOccupancyMaps: string[] = []
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
-  timeDatasets: TimeDataset[] = []
+  timeDatasets: SpotlightTimeDataset[] = []
   exportDatasets: SpotlightExportData[] = []
   speciesInformation: SpeciesInProjectLight | null = null
   speciesCalls: SpeciesCallLight[] = []
@@ -99,8 +98,18 @@ export default class ActivityPatternsPage extends Vue {
     this.isLocationRedacted = datasets[0].isLocationRedacted
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
-    this.timeDatasets = datasets.map(({ color, activityByTime }) => ({ color, data: activityByTime }))
-    this.exportDatasets = datasets.map(({ detectionsByLocationSite, activityByExport }) => ({ sites: detectionsByLocationSite, ...activityByExport }))
+    this.timeDatasets = datasets.map(({ color, detectionsByTimeHour, detectionsByTimeDay, detectionsByTimeMonth, detectionsByTimeDate }) => {
+      const data = {
+        hourOfDay: detectionsByTimeHour,
+        dayOfWeek: detectionsByTimeDay,
+        monthOfYear: detectionsByTimeMonth,
+        dateSeries: detectionsByTimeDate
+      }
+      return { color, data }
+    })
+    this.exportDatasets = datasets
+      .map(({ detectionsByLocationSite, detectionsByTimeHour, detectionsByTimeMonthYear, detectionsByTimeYear }) =>
+        ({ sites: detectionsByLocationSite, hour: detectionsByTimeHour, month: detectionsByTimeMonthYear, year: detectionsByTimeYear }))
   }
 
   async getSpeciesInformation (): Promise<void> {
