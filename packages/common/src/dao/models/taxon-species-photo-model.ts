@@ -15,10 +15,14 @@ export const TaxonSpeciesPhotoModel = defineWithDefaults<TaxonSpeciesPhoto>(
   MODEL_TAXON_SPECIES_PHOTO,
   {
     // PK
-    taxonSpeciesId: {
+    taxonSpeciesId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
-    }, // 1
+    },
+    source: { // Wiki
+      type: DataTypes.STRING(255),
+      primaryKey: true
+    },
 
     // Facts
     photoUrl: DataTypes.STRING(511), // https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg
