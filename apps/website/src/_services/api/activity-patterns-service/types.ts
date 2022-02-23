@@ -1,17 +1,4 @@
-import { DatasetParameters } from '~/filters'
 import { TimeBucket } from '~/time-buckets'
-
-export interface ActivityPatternsData extends DatasetParameters {
-  totalRecordingCount: number
-  totalSiteCount: number
-  detectionCount: number
-  detectionFrequency: number
-  occupiedSiteCount: number
-  occupiedSiteFrequency: number
-  activityBySite: ActivityPatternsDataBySite
-  activityByTime: ActivityPatternsDataByTime
-  activityByExport: ActivityPatternsDataByExport
-}
 
 export interface ActivityPatternsDataBySite {
   [siteId: string]: {
