@@ -19,7 +19,6 @@ jobs:
       - name: 'Setup: ENV from job'
         run: |
           echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
-          echo "COMMIT_TITLE=`git show -s --format=%s head`" >> $GITHUB_ENV
   
       - name: 'Setup: Get ID of previous run' # Need to execute this early (before another run starts)
         id: latest_run
@@ -37,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Setup: Log ID of previous run'
+      - name: 'Setup: Print ID of previous run'
         if: always()
         run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].id }}'
 
@@ -48,6 +47,7 @@ jobs:
       - name: 'Setup: ENV from Git'
         run: |
           echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+          echo "COMMIT_TITLE=`git show -s --format=%s head`" >> $GITHUB_ENV
 
       - name: 'Cache: Dependencies'
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
@@ -134,24 +134,12 @@ jobs:
           key: '${{ github.event.sender.login }}'
           map: |
             {
-              "charles-allen": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS"
-              },
-              "Nutto55": {
-                "SLACK_MENTION_USERS": "UC2NVRCAY"
-              },
-              "naluinui": {
-                "SLACK_MENTION_USERS": "U19GA1FT2"
-              },
-              "antonyharfield": {
-                "SLACK_MENTION_USERS": "U09HZUDUY"
-              },
-              "Crave-dev": {
-                "SLACK_MENTION_USERS": "U02NUJCUV99"
-              },
-              ".*": {
-                "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99"
-              }
+              "charles-allen": { "SLACK_MENTION_USERS": "U6LT2N3SS" },
+              "Nutto55": { "SLACK_MENTION_USERS": "UC2NVRCAY" },
+              "naluinui": { "SLACK_MENTION_USERS": "U19GA1FT2" },
+              "antonyharfield": { "SLACK_MENTION_USERS": "U09HZUDUY" },
+              "Crave-dev": { "SLACK_MENTION_USERS": "U02NUJCUV99" },
+              ".*": { "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99" }
             }
 
       - name: 'Notify: Slack Failed'
@@ -180,6 +168,6 @@ jobs:
           status: ${{ job.status }}
           notification_title: '{emoji} CI: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
           message_format: '*SUCCESS* @ <{run_url}|${{ env.COMMIT_TITLE }}> - ${{ github.event.head_commit.author.name }} fixed the build!!'
-          footer: 'Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | Build: ${{ steps.build.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
+          footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'

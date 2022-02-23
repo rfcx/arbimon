@@ -19,21 +19,6 @@ jobs:
         uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
         # v1 (1.6.0) @ 12 Nov 2021 https://github.com/docker/setup-buildx-action/tags
 
-      - name: 'Setup: ENV from workflow'
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
-        with:
-          key: '${{ github.event.sender.login }}'
-          map: |
-            {
-              "charles-allen": { "SLACK_MENTION_USERS": "U6LT2N3SS" },
-              "Nutto55": { "SLACK_MENTION_USERS": "UC2NVRCAY" },
-              "naluinui": { "SLACK_MENTION_USERS": "U19GA1FT2" },
-              "antonyharfield": { "SLACK_MENTION_USERS": "U09HZUDUY" },
-              "Crave-dev": { "SLACK_MENTION_USERS": "U02NUJCUV99" },
-              ".*": { "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99" }
-            }
-
       - name: 'Setup: Configure AWS credentials'
         uses: aws-actions/configure-aws-credentials@0d9a5be0dceea74e09396820e1e522ba4a110d2f
         # v1 (1.5.11) @ 03 Nov 2021 https://github.com/aws-actions/configure-aws-credentials/tags
@@ -194,19 +179,21 @@ jobs:
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
 
-      - name: 'Notify: Slack Success'
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+      - name: 'Notify: Get Slack User'
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         if: always()
         with:
-          notify_when: 'success'
-          status: ${{ job.status }}
-          notification_title: '{emoji} CD: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
-          message_format: '*SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
-          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }})'
-        env:
-          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_SUCCESS }}
-          SENDER: ${{ github.event.sender.login || 'CRON' }}
+          key: '${{ github.event.sender.login }}'
+          map: |
+            {
+              "charles-allen": { "SLACK_MENTION_USERS": "U6LT2N3SS" },
+              "Nutto55": { "SLACK_MENTION_USERS": "UC2NVRCAY" },
+              "naluinui": { "SLACK_MENTION_USERS": "U19GA1FT2" },
+              "antonyharfield": { "SLACK_MENTION_USERS": "U09HZUDUY" },
+              "Crave-dev": { "SLACK_MENTION_USERS": "U02NUJCUV99" },
+              ".*": { "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99" }
+            }
 
       - name: 'Notify: Slack Failed'
         uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
@@ -222,4 +209,18 @@ jobs:
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
           SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_FAILURE }}
+          SENDER: ${{ github.event.sender.login || 'CRON' }}
+
+      - name: 'Notify: Slack Success'
+        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+        if: always()
+        with:
+          notify_when: 'success'
+          status: ${{ job.status }}
+          notification_title: '{emoji} CD: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
+          message_format: '*SUCCESS:* <https://${{ env.URL_WEB }}|${{ env.URL_WEB }}> & <https://${{ env.URL_API }}|${{ env.URL_API }}>'
+          footer: '<{run_url}|{status_message}> at <{commit_url}|{commit_sha}> (triggered by ${{ env.SENDER }})'
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_SUCCESS }}
           SENDER: ${{ github.event.sender.login || 'CRON' }}
