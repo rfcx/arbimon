@@ -5,6 +5,8 @@ import { Handler } from '../_services/api-helpers/types'
 import { BioInvalidPathParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 
+BREAK THE BUILD
+
 export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, DashboardGeneratedParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
