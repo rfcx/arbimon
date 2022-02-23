@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs'
 
+import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
@@ -7,7 +8,6 @@ import { ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
-import { SpotlightExportData } from './activity-patterns'
 import { Metrics } from './types'
 
 export type SpotlightDataset = SpotlightDatasetResponse & DatasetParameters
