@@ -6,6 +6,11 @@ import { TaxonSpeciesPhoto } from '../types/taxon-species-photo'
 export const MODEL_TAXON_SPECIES_PHOTO = 'TaxonSpeciesPhoto'
 export const TABLE_TAXON_SPECIES_PHOTO = 'taxon_species_photo'
 
+export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
+   pks: ['taxonSpeciesId'],
+   full: ['taxonSpeciesId', 'photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
+}
+
 export const TaxonSpeciesPhotoModel = defineWithDefaults<TaxonSpeciesPhoto>(
   MODEL_TAXON_SPECIES_PHOTO,
   {
