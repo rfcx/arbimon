@@ -22,6 +22,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         return data.thumbnailImage
           ? {
             taxonSpeciesId: speciesNameToId[scientificName],
+            source: 'WIKI',
             photoUrl: data.thumbnailImage,
             photoCaption: data.title,
             photoAuthor: data.credit ?? '', // TODO: Review if it allowed in 546

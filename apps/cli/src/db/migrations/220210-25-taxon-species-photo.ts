@@ -22,6 +22,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+      source: {
+        type: DataTypes.STRING(255),
+        primaryKey: true,
+        allowNull: false
+      },
       // Logging
       created_at: {
         type: DataTypes.DATE,
