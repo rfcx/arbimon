@@ -1,4 +1,4 @@
-import { Optional, QueryInterface } from 'sequelize'
+import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
@@ -16,7 +16,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
   // Convert data
-  const data: Array<Optional<TaxonSpeciesPhoto, 'id'>> =
+  const data: TaxonSpeciesPhoto[] =
     Object.entries(rawWikiData)
       .map(([scientificName, data]) => {
         return data.thumbnailImage

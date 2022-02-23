@@ -1,5 +1,4 @@
 export interface TaxonSpeciesPhoto {
-  id: number
   taxonSpeciesId: number
   photoUrl: string
   photoCaption: string
