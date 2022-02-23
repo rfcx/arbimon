@@ -1,27 +1,29 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '../helpers/defaults'
+import { defineWithDefaults } from '../helpers/defaults'
 import { TaxonSpeciesPhoto } from '../types/taxon-species-photo'
 
 export const MODEL_TAXON_SPECIES_PHOTO = 'TaxonSpeciesPhoto'
 export const TABLE_TAXON_SPECIES_PHOTO = 'taxon_species_photo'
 
 export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
-  light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
+  pks: ['taxonSpeciesId'],
+  light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
+  full: ['taxonSpeciesId', 'photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
 }
 
-export const TaxonSpeciesPhotoModel = defineWithDefaultsAutoPk<TaxonSpeciesPhoto>(
+export const TaxonSpeciesPhotoModel = defineWithDefaults<TaxonSpeciesPhoto>(
   MODEL_TAXON_SPECIES_PHOTO,
   {
     // PK
-    id: { // 1
+    taxonSpeciesId: { // 1
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
-
-    // Dimensions
-    taxonSpeciesId: DataTypes.INTEGER, // 1
+    source: { // Wiki
+      type: DataTypes.STRING(255),
+      primaryKey: true
+    },
 
     // Facts
     photoUrl: DataTypes.STRING(511), // https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg
