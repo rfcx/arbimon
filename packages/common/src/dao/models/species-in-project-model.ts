@@ -6,7 +6,7 @@ import { SpeciesInProject } from '../types/species-in-project'
 export const MODEL_SPECIES_IN_PROJECT = 'SpeciesInProject'
 export const TABLE_SPECIES_IN_PROJECT = 'species_in_project'
 
-export const SPECIES_IN_PROJECT_ATTRIBUTES: Record<string, Array<keyof SpeciesInProject & string>> = {
+export const ATTRIBUTES_SPECIES_IN_PROJECT: Record<string, Array<keyof SpeciesInProject & string>> = {
   light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug']
 }
 
