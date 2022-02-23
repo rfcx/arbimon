@@ -34,11 +34,11 @@ export const modelRegistrations = <const>{
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
 
   // Views
-  [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel, {}],
-  [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel, {}],
-  [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel, {}],
-  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel, {}],
-  [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel, {}]
+  [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
+  [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
+  [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
+  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel],
+  [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
 }
 
 export type ModelRegistrations = typeof modelRegistrations
