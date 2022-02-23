@@ -6,7 +6,7 @@ import { TaxonSpeciesCall } from '../types/taxon-species-call'
 export const MODEL_TAXON_SPECIES_CALL = 'TaxonSpeciesCall'
 export const TABLE_TAXON_SPECIES_CALL = 'taxon_species_call'
 
-export const CALL_MODEL_ATTRIBUTES: Record<string, Array<keyof TaxonSpeciesCall>> = {
+export const ATTRIBUTES_TAXON_SPECIES_CALL: Record<string, Array<keyof TaxonSpeciesCall>> = {
   light: ['callType', 'callMediaSpecUrl', 'callMediaWavUrl', 'callMediaRedirectUrl']
 }
 

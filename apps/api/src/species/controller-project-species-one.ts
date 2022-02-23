@@ -3,8 +3,8 @@ import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { CALL_MODEL_ATTRIBUTES } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
-import { PHOTO_MODEL_ATTRIBUTES } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
+import { ATTRIBUTES_TAXON_SPECIES_CALL } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
+import { ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
 import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
@@ -47,7 +47,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
   const { taxonSpeciesId } = speciesInformation
 
   const speciesPhotos = await models.TaxonSpeciesPhoto.findAll({
-    attributes: PHOTO_MODEL_ATTRIBUTES.light,
+    attributes: ATTRIBUTES_TAXON_SPECIES_PHOTO.light,
     where: {
       taxonSpeciesId: taxonSpeciesId
     },
@@ -55,7 +55,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
   }) as unknown as SpeciesPhotoLight[]
 
   const speciesCalls = await models.TaxonSpeciesCall.findAll({
-    attributes: CALL_MODEL_ATTRIBUTES.light,
+    attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
     where: {
       [Op.and]: {
         callProjectId: projectId,

@@ -6,7 +6,7 @@ import { TaxonSpeciesPhoto } from '../types/taxon-species-photo'
 export const MODEL_TAXON_SPECIES_PHOTO = 'TaxonSpeciesPhoto'
 export const TABLE_TAXON_SPECIES_PHOTO = 'taxon_species_photo'
 
-export const PHOTO_MODEL_ATTRIBUTES: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
+export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
   light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
 }
 
