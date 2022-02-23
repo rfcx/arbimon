@@ -38,6 +38,7 @@ export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'
   const deletedRows = await model.destroy({
     where: {
       idCore: {
+        [Op.ne]: null,
         [Op.notIn]: updatedProjects.map(p => p.idCore)
       }
     }

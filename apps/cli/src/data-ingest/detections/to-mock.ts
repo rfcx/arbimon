@@ -11,7 +11,7 @@ const outputTsPath = resolve(getMockDataDirectory(), './raw-detections-by-hour.t
 const outputTsConstName = 'rawDetections'
 
 const main = async (): Promise<void> => {
-  const detections = await getArbimonDetectionSummaries()
+  const detections = await getArbimonDetectionSummaries(1989)
   const outputJson = JSON.stringify(detections, undefined, 2)
   const outputTs = jsonToTs(outputJson, outputTsConstName, 'MockHourlyDetectionSummary[]', 'import { MockHourlyDetectionSummary } from \'./types\'')
   fs.writeFileSync(outputJsonPath, outputJson, 'utf8')
