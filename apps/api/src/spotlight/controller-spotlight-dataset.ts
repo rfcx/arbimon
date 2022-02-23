@@ -3,7 +3,7 @@ import { Op } from 'sequelize'
 
 import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { ModelRepository, ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
@@ -44,7 +44,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
 
 async function getSpotlightDatasetInformation (projectId: number, filter: FilterDataset, speciesId: number, hasProjectPermission: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
-  const models = ModelRepositoryFactory.getInstance(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
 
   const species = await models.TaxonSpecies.findOne({
     where: {
@@ -96,7 +96,7 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   }
 }
 
-async function filterDetecions (models: ModelRepository, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+async function filterDetecions (models: AllModels, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
 
   const where = {
@@ -120,7 +120,7 @@ async function filterDetecions (models: ModelRepository, filter: FilterDataset):
   })
 }
 
-async function filterSpeciesDetection (models: ModelRepository, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
+async function filterSpeciesDetection (models: AllModels, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
 
   const where = {

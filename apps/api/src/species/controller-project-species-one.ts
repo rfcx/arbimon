@@ -2,7 +2,7 @@ import { readdir } from 'fs/promises'
 import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { CALL_MODEL_ATTRIBUTES } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
 import { PHOTO_MODEL_ATTRIBUTES } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
 import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
@@ -34,7 +34,7 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
 
 const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
   const sequelize = getSequelize()
-  const models = ModelRepositoryFactory.getInstance(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
 
   const speciesInformation = await models.SpeciesInProject.findOne({
     where: {
