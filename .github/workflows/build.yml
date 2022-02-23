@@ -46,9 +46,8 @@ jobs:
 
       - name: 'Setup: ENV from Git'
         run: |
-          echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
           echo "COMMIT_TITLE=`git show -s --format='%s'`" >> $GITHUB_ENV
-          echo "COMMIT_TITLE2=`git log -1 --pretty='%s'`" >> $GITHUB_ENV
+          echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
 
       - name: 'Cache: Dependencies'
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
@@ -173,7 +172,7 @@ jobs:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
           notification_title: '❌ CI: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
-          message_format: '*FAILED* @ <{run_url}|${{ env.COMMIT_TITLE }}> ${{ env.COMMIT_TITLE2 }}'
+          message_format: '*FAILED* @ <{run_url}|${{ env.COMMIT_TITLE }}>'
           footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }}'
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
@@ -189,7 +188,7 @@ jobs:
           notify_when: 'success'
           status: ${{ job.status }}
           notification_title: '✅ CI: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
-          message_format: '*SUCCESS* @ <{run_url}|${{ env.COMMIT_TITLE }}> ${{ env.COMMIT_TITLE2 }} - ${{ github.event.head_commit.author.name }} fixed the build!! (broken since ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }})'
+          message_format: '*SUCCESS* @ <{run_url}|${{ env.COMMIT_TITLE }}> - ${{ github.event.head_commit.author.name }} fixed the build!! (broken since ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }})'
           footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }}'
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
