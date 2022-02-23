@@ -1,5 +1,6 @@
-import { getSequelize } from '../db/connections'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+
+import { getSequelize } from '../db/connections'
 import { syncDetectionsForProject } from './detections'
 
 const main = async (): Promise<void> => {
