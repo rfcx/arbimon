@@ -19,9 +19,9 @@ export interface SpotlightDetectionDataBySite {
   }
 }
 
-export interface SpotlightDetectionDataByTime {
-  detection: Record<number|string, number>
-  detectionFrequency: Record<number|string, number>
+export interface SpotlightDetectionDataByTime<T extends string | number = number> {
+  detection: Record<T, number>
+  detectionFrequency: Record<T, number>
 }
 
 export interface ActivitySpotlightDataByExport {

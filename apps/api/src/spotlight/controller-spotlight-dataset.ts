@@ -3,6 +3,7 @@ import { Op } from 'sequelize'
 
 import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
@@ -75,7 +76,7 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, totalRecordingCount)
   const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, totalRecordingCount)
   const detectionsByTimeYear = getDetectionsByTimeYear(specificSpeciesDetections, totalRecordingCount)
-  const detectionsByTimeDate = getDdetectionsByTimeDate(specificSpeciesDetections, totalRecordingCount)
+  const detectionsByTimeDate = getDetectionsByTimeDateUnix(specificSpeciesDetections, totalRecordingCount)
   const detectionsByTimeMonthYear = getDetectionsByTimeMonthYear(specificSpeciesDetections, totalRecordingCount)
 
   return {
@@ -99,7 +100,7 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
 async function filterDetecions (models: AllModels, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
 
-  const where = {
+  const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
         [Op.gte]: startDateUtcInclusive,
@@ -109,12 +110,10 @@ async function filterDetecions (models: AllModels, filter: FilterDataset): Promi
   }
 
   if (siteIds.length > 0) {
-    // TODO: Update the type
-    // @ts-expect-error
     where.locationSiteId = siteIds
   }
 
-  return await models.DetectionsBySiteSpeciesHour.findAll({
+  return await models.DetectionBySiteSpeciesHour.findAll({
     where,
     raw: true
   })
@@ -123,7 +122,7 @@ async function filterDetecions (models: AllModels, filter: FilterDataset): Promi
 async function filterSpeciesDetection (models: AllModels, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
 
-  const where = {
+  const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
         [Op.gte]: startDateUtcInclusive,
@@ -134,12 +133,10 @@ async function filterSpeciesDetection (models: AllModels, filter: FilterDataset,
   }
 
   if (siteIds.length > 0) {
-    // TODO: Update the type
-    // @ts-expect-error
     where.locationSiteId = siteIds
   }
 
-  return await models.DetectionsBySiteSpeciesHour.findAll({
+  return await models.DetectionBySiteSpeciesHour.findAll({
     where,
     raw: true
   })
@@ -160,13 +157,14 @@ function calculateDetectionFrequencyActivity (detections: DetectionBySiteSpecies
   return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
 }
 
-async function getDetectionsByLocationSite (models: ModelRepository, totalDetections: DetectionBySiteSpeciesHour[], speciesId: number): Promise<SpotlightDetectionDataBySite> {
+async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], speciesId: number): Promise<SpotlightDetectionDataBySite> {
   const summariesBySite: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(totalDetections, 'locationSiteId')
+  const siteIds = Object.keys(summariesBySite)
 
   // TODO ???: Move query to somewhere more global
   const sites = await models.LocationSite.findAll({
     where: {
-      id: Object.keys(summariesBySite)
+      id: siteIds
     },
     raw: true
   })
@@ -226,16 +224,17 @@ function getDetectionsByTimeYear (specificSpeciesDetections: DetectionBySiteSpec
   }
 }
 
-function getDdetectionsByTimeDate (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
-  const byDate = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).date())
+function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
+  const SECONDS_PER_DAY = 24 * 60 * 60
+  const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
   return {
-    detection: mapValues(byDate, calculateDetectionActivity),
-    detectionFrequency: mapValues(byDate, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detection: mapValues(byDateUnix, calculateDetectionActivity),
+    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
   }
 }
 
-function getDetectionsByTimeMonthYear (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
-  const byMonthYear = groupBy(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).format('MM/YYYY'))
+function getDetectionsByTimeMonthYear (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime<string> {
+  const byMonthYear = groupBy(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('month').format('MM/YYYY'))
   return {
     detection: mapValues(byMonthYear, calculateDetectionActivity),
     detectionFrequency: mapValues(byMonthYear, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
