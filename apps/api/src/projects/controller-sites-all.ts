@@ -1,5 +1,5 @@
 import { SitesParams, SitesResponse } from '@rfcx-bio/common/api-bio/common/sites'
-import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_LOCATION_SITE } from '@rfcx-bio/common/dao/models/location-site-model'
 
 import { ApiServerError } from '~/errors'
@@ -13,7 +13,7 @@ export const sitesAllHandler: Handler<SitesResponse, SitesParams> = async (req) 
   assertPathParamsExist({ projectId })
 
   // Query
-  const models = ModelRepositoryFactory.getInstance(getSequelize())
+  const models = ModelRepository.getInstance(getSequelize())
 
   const sites = await models.LocationSite
     .findAll({

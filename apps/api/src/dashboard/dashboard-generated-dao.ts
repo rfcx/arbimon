@@ -1,7 +1,7 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DashboardSpeciesThreatened } from '@rfcx-bio/common/dao/types/dashboard-species-threatened'
 import { LocationProjectMetric } from '@rfcx-bio/common/dao/types/location-project-metric'
 import { ExtinctionRisk, ExtinctionRiskCode, getExtinctionRisk } from '@rfcx-bio/common/iucn'
@@ -11,7 +11,7 @@ import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 import { getSequelize } from '../_services/db'
 
 export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetric | undefined> =>
-  await ModelRepositoryFactory.getInstance(getSequelize())
+  await ModelRepository.getInstance(getSequelize())
     .LocationProjectMetric
     .findOne({
       where: { locationProjectId },
@@ -19,7 +19,7 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Loca
      }) ?? undefined
 
 export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpeciesThreatened[]> =>
-  await ModelRepositoryFactory.getInstance(getSequelize())
+  await ModelRepository.getInstance(getSequelize())
     .DashboardSpeciesThreatened
     .findAll({
       where: { locationProjectId },
