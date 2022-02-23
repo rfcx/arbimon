@@ -1,5 +1,5 @@
 import { ProjectSpeciesAllParams, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { ModelRepositoryFactory } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SPECIES_IN_PROJECT_ATTRIBUTES } from '@rfcx-bio/common/dao/models/species-in-project-model'
 
 import { Handler } from '../_services/api-helpers/types'
@@ -20,7 +20,7 @@ export const projectSpeciesAllHandler: Handler<ProjectSpeciesAllResponse, Projec
 
 export async function getProjectSpeciesAll (projectId: number): Promise<ProjectSpeciesAllResponse> {
   const sequelize = getSequelize()
-  const models = ModelRepositoryFactory.getInstance(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
 
   const species = await models.SpeciesInProject.findAll({
     where: { locationProjectId: projectId },
