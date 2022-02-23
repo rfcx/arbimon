@@ -28,6 +28,7 @@ const main = async (): Promise<void> => {
     if (!data.thumbnailImage || !data.license) return undefined
     return {
       taxonSpeciesId: speciesNameToId[name],
+      source: 'WIKI',
       photoUrl: data.thumbnailImage,
       photoCaption: data.title,
       photoAuthor: data.credit ?? '',
