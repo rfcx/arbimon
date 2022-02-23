@@ -53,13 +53,19 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
     },
     raw: true
   })
-
   if (!species) throw BioNotFoundError()
-  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(species.id)
+
+  const speciesIucn = await models.TaxonSpeciesIucn.findOne({
+    where: {
+      taxonSpeciesId: speciesId
+    },
+    raw: true
+  })
+  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesIucn?.riskRatingIucnId ?? -1)
 
   // Filtering
-  const totalDetections = await filterDetecions(models, filter)
-  const specificSpeciesDetections = await filterSpeciesDetection(models, filter, speciesId)
+  const totalDetections = await filterDetecions(models, projectId, filter)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, projectId, filter, speciesId)
 
   // Metrics
   const totalRecordingCount = getRecordingCount(totalDetections)
@@ -97,7 +103,7 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   }
 }
 
-async function filterDetecions (models: AllModels, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
@@ -106,7 +112,8 @@ async function filterDetecions (models: AllModels, filter: FilterDataset): Promi
         [Op.gte]: startDateUtcInclusive,
         [Op.lt]: endDateUtcInclusive
       }
-    }
+    },
+    locationProjectId: projectId
   }
 
   if (siteIds.length > 0) {
@@ -119,7 +126,7 @@ async function filterDetecions (models: AllModels, filter: FilterDataset): Promi
   })
 }
 
-async function filterSpeciesDetection (models: AllModels, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
+async function filterSpeciesDetection (models: AllModels, projectId: number, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
@@ -129,6 +136,7 @@ async function filterSpeciesDetection (models: AllModels, filter: FilterDataset,
         [Op.lt]: endDateUtcInclusive
       }
     },
+    locationProjectId: projectId,
     taxonSpeciesId: speciesId
   }
 
