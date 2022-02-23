@@ -1,10 +1,9 @@
 import { Dayjs } from 'dayjs'
 
-import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ActivityPatternsDataByExportBucket, ActivityPatternsDataBySite } from '~/api/activity-patterns-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -122,7 +121,7 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Sp
   await zipAndDownload(files, groupName)
 }
 
-export async function getHourCSVData (dataset: ActivityPatternsDataByExportBucket): Promise<string> {
+export async function getHourCSVData (dataset: SpotlightDetectionDataByTime): Promise<string> {
   const { detection, detectionFrequency } = dataset
   const dataAsJson = Array.from(Array(23).keys()).map(n => ({
     hour: n,
@@ -142,34 +141,40 @@ export function getDateRange (startRange: Dayjs, endRange: Dayjs, unit: 'month'|
   return ranges
 }
 
-export async function getMonthCSVData (startDate: Dayjs, endDate: Dayjs, dataset: ActivityPatternsDataByExportBucket): Promise<string> {
+export async function getMonthCSVData (startDate: Dayjs, endDate: Dayjs, dataset: SpotlightDetectionDataByTime): Promise<string> {
   const { detection, detectionFrequency } = dataset
   const monthRanges = getDateRange(startDate.startOf('month'), endDate.endOf('month'), 'month', 'MM/YYYY')
-  const dataAsJson = monthRanges.map(month => ({
-    month,
-    detections: detection[month] ?? 0,
-    detection_frequency: detectionFrequency[month] ?? 0
-  }))
+  const dataAsJson = monthRanges.map(monthString => {
+    const month = Number(monthString)
+    return {
+      month,
+      detections: detection[month] ?? 0,
+      detection_frequency: detectionFrequency[month] ?? 0
+    }
+  })
   return await toCsv(dataAsJson)
 }
 
-export async function getYearCSVData (startDate: Dayjs, endDate: Dayjs, dataset: ActivityPatternsDataByExportBucket): Promise<string> {
+export async function getYearCSVData (startDate: Dayjs, endDate: Dayjs, dataset: SpotlightDetectionDataByTime): Promise<string> {
   const { detection, detectionFrequency } = dataset
   const yearRanges = getDateRange(startDate.startOf('year'), endDate.endOf('year'), 'year', 'YYYY')
-  const dataAsJson = yearRanges.map(year => ({
-    year,
-    detections: detection[year] ?? 0,
-    detection_frequency: detectionFrequency[year] ?? 0
-  }))
+  const dataAsJson = yearRanges.map(yearString => {
+    const year = Number(yearString)
+    return {
+      year,
+      detections: detection[year] ?? 0,
+      detection_frequency: detectionFrequency[year] ?? 0
+    }
+  })
   return await toCsv(dataAsJson)
 }
 
-export async function getSiteCSVData (dataset: ActivityPatternsDataBySite): Promise<string> {
+export async function getSiteCSVData (dataset: SpotlightDetectionDataBySite): Promise<string> {
   const dataAsJson = Object.keys(dataset)
     .sort((a, b) => {
       const site1 = dataset[a]
       const site2 = dataset[b]
-      return site1.siteName.localeCompare(site2.siteName) || site1.siteId.localeCompare(site2.siteId)
+      return site1.siteName.localeCompare(site2.siteName) || site1.siteId - site2.siteId
     })
     .map(siteId => {
       const site = dataset[siteId]

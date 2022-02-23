@@ -21,7 +21,7 @@ export interface SpotlightDetectionDataByTime<T extends string | number = number
 
 export interface SpotlightExportData {
   hour: SpotlightDetectionDataByTime
-  month: SpotlightDetectionDataByTime
+  month: SpotlightDetectionDataByTime<string>
   year: SpotlightDetectionDataByTime
   sites: SpotlightDetectionDataBySite
 }
