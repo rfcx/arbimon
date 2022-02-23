@@ -126,6 +126,27 @@ jobs:
         if: always()
         run: 'echo ${{ fromJson(steps.latest_run_conclusion.outputs.data).conclusion }}'
 
+      - name: 'Notify: Get data of latest successful run'
+        id: latest_success
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        with:
+          # https://docs.github.com/en/rest/reference/actions#list-workflow-runs
+          route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
+          owner: rfcx
+          repo: biodiversity-analytics
+          workflow_id: build.yml
+          per_page: 1
+          branch: ${{ env.BRANCH_NAME }}
+          status: success
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Notify: Log date of latest successful run'
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        run: 'echo ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }}'
+
       - name: 'Notify: Get Slack User'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
@@ -167,7 +188,7 @@ jobs:
           notify_when: 'success'
           status: ${{ job.status }}
           notification_title: '{emoji} CI: Bio-Web <{repo_url}/tree/${{ env.BRANCH_NAME }}|${{ env.BRANCH_NAME }}>'
-          message_format: '*SUCCESS* @ <{run_url}|${{ env.COMMIT_TITLE }}> - ${{ github.event.head_commit.author.name }} fixed the build!!'
+          message_format: '*SUCCESS* @ <{run_url}|${{ env.COMMIT_TITLE }}> - ${{ github.event.head_commit.author.name }} fixed the build!! (broken since ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }})'
           footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }} | <{commit_url}|Last commit: {commit_sha}> '
         env:
           SLACK_WEBHOOK_URL: '${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}'
