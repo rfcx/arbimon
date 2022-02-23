@@ -1,7 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detections-by-site-species-hour-model'
+import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
