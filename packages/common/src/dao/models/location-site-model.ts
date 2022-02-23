@@ -6,7 +6,7 @@ import { Site } from '../types'
 export const MODEL_LOCATION_SITE = 'LocationSite'
 export const TABLE_LOCATION_SITE = 'location_site'
 
-export const SITE_MODEL_ATTRIBUTES: Record<string, Array<keyof Site>> = {
+export const ATTRIBUTES_LOCATION_SITE: Record<string, Array<keyof Site>> = {
   light: ['id', 'name', 'latitude', 'longitude', 'altitude']
 }
 

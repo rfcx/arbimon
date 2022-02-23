@@ -1,7 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { DetectionsBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detections-by-site-species-hour-model'
+import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detections-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
@@ -32,5 +32,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       durationMinutes: 12
     }))
 
-  await DetectionsBySiteSpeciesHourModel(sequelize).bulkCreate(data)
+  await DetectionBySiteSpeciesHourModel(sequelize).bulkCreate(data)
 }
