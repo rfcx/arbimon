@@ -1,5 +1,7 @@
 import { LocationProjectProfile, Project } from '@rfcx-bio/common/dao/types'
 
+import { BioEnvironment } from '~/env/types'
+
 const summaryPr = 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities'
 const summaryBci = 'This is a project of Marconi Campos-Cerqueira. The objective is to record anurans, birds, and bats during the transition between the dry and wet seasons.'
 const summaryMadre = 'In this project, we will use recordings from the Guardians to create training data for a western Amazon CNN'
@@ -64,7 +66,29 @@ const dataMadre = {
 
 type ProjectAndProfile = Project & Omit<LocationProjectProfile, 'locationProjectId'>
 
-export const rawEnvToProjectAndProfile: Record<string, ProjectAndProfile[]> = {
+export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
+  local: [
+    {
+      id: 1,
+      idCore: 'rbj7k70v4na7',
+      idArbimon: 1918,
+      slug: 'fake-arbimon-project-for-bio',
+      slugArbimon: 'fake-arbimon-project-for-bio',
+      isPublished: true,
+      name: 'Fake Project',
+      ...dataPr
+    },
+    {
+      id: 2,
+      idCore: 'bci392pan298',
+      idArbimon: 1209,
+      slug: 'bci-panama-2018',
+      slugArbimon: 'bci-panama-2018',
+      isPublished: true,
+      name: 'BCI-Panama_2018',
+      ...dataBci
+    }
+  ],
   testing: [
     {
       id: 1,
