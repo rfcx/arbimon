@@ -16,13 +16,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // PK
       [COLUMN_TIME_HOUR_LOCAL]: {
         type: DataTypes.DATE(3), // hypertable key
-        primaryKey: true,
-        allowNull: false
+        primaryKey: true
       },
       location_site_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
         references: {
           model: { tableName: 'location_site' },
           key: 'id'
@@ -31,7 +29,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
         references: {
           model: { tableName: 'taxon_species' },
           key: 'id'
