@@ -28,15 +28,12 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   return await getProjectSpeciesOne(projectId, speciesSlug, hasProjectPermission)
 }
 
-const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, hasProjectPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
+const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, hasProjectPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
   const speciesInformation = await models.SpeciesInProject.findOne({
-    where: {
-      locationProjectId: projectId,
-      taxonSpeciesSlug: speciesSlug
-    },
+    where: { locationProjectId, taxonSpeciesSlug },
     raw: true
   }) as unknown as SpeciesInProject
 
@@ -44,9 +41,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, hasP
 
   const speciesPhotos = await models.TaxonSpeciesPhoto.findAll({
     attributes: ATTRIBUTES_TAXON_SPECIES_PHOTO.light,
-    where: {
-      taxonSpeciesId: taxonSpeciesId
-    },
+    where: { taxonSpeciesId },
     raw: true
   }) as unknown as TaxonSpeciesPhotoLight[]
 
@@ -54,8 +49,8 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, hasP
     attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
     where: {
       [Op.and]: {
-        callProjectId: projectId,
-        taxonSpeciesId: taxonSpeciesId
+        callProjectId: locationProjectId,
+        taxonSpeciesId
       }
     },
     raw: true
@@ -64,13 +59,10 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, hasP
   const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesInformation.riskRatingIucnId ?? -1)
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
   if (!isLocationRedacted) {
-    const matchFiles = (await LocationProjectSpeciesFileModel(sequelize).findAll({
-      where: {
-        locationProjectId: projectId,
-        taxonSpeciesId
-      },
+    const matchFiles = await LocationProjectSpeciesFileModel(sequelize).findAll({
+      where: { locationProjectId, taxonSpeciesId },
       raw: true
-    })).map(({ filename, url }) => ({ title: filename, url }))
+    }).then(results => results.map(({ filename, url }) => ({ title: filename, url })))
     predictedOccupancyMaps.push(...matchFiles)
   }
 
