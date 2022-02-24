@@ -16,7 +16,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        allowNull: false,
         references: {
           model: { tableName: 'taxon_species' },
           key: 'id'
@@ -24,8 +23,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
       source: {
         type: DataTypes.STRING(255),
-        primaryKey: true,
-        allowNull: false
+        primaryKey: true
       },
       // Logging
       created_at: {
