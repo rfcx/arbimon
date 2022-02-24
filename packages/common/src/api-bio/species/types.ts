@@ -1,4 +1,4 @@
-// TODO: Define a "standard" risk rating & map IUCN ratings to it
+// TODO: Migrate frontend code to DAO TaxonSpecies & delete this file
 import { ExtinctionRiskCode } from '../../iucn'
 
 const SPECIES_SOURCES = <const>['IUCN', 'Wiki', 'Project']
@@ -32,7 +32,6 @@ export interface SpeciesCall {
   siteName: string
 }
 
-// TODO: Migrate frontend code to DAO TaxonSpecies & eliminate API Species, etc.
 export interface Species {
   speciesId: number
   speciesSlug: string

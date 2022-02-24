@@ -11,7 +11,7 @@ export interface TaxonSpeciesCall {
   callMediaRedirectUrl: string
 }
 
-export type SpeciesCallLight = Pick<TaxonSpeciesCall,
+export type TaxonSpeciesCallLight = Pick<TaxonSpeciesCall,
   'callType' |
   'callMediaSpecUrl' |
   'callMediaWavUrl' |
