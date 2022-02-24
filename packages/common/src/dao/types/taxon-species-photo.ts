@@ -10,7 +10,7 @@ export interface TaxonSpeciesPhoto {
   photoLicenseUrl?: string
 }
 
-export type SpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
+export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
   'photoUrl' |
   'photoCaption' |
   'photoAuthor' |
