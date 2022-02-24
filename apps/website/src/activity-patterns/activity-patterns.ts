@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 
 import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
-import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -51,8 +51,8 @@ export default class ActivityPatternsPage extends Vue {
   timeDatasets: SpotlightTimeDataset[] = []
   exportDatasets: SpotlightExportData[] = []
   speciesInformation: SpeciesInProjectLight | null = null
-  speciesCalls: SpeciesCallLight[] = []
-  speciesPhotos: SpeciesPhotoLight[] = []
+  speciesCalls: TaxonSpeciesCallLight[] = []
+  speciesPhotos: TaxonSpeciesPhotoLight[] = []
   isLocationRedacted = false
 
   get hasExportData (): boolean {

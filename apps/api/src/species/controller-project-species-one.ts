@@ -5,7 +5,7 @@ import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneRespon
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_TAXON_SPECIES_CALL } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
 import { ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
-import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { getSequelize } from '@/_services/db'
@@ -52,7 +52,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
       taxonSpeciesId: taxonSpeciesId
     },
     raw: true
-  }) as unknown as SpeciesPhotoLight[]
+  }) as unknown as TaxonSpeciesPhotoLight[]
 
   const speciesCalls = await models.TaxonSpeciesCall.findAll({
     attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
@@ -63,7 +63,7 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
       }
     },
     raw: true
-  }) as unknown as SpeciesCallLight[]
+  }) as unknown as TaxonSpeciesCallLight[]
 
   const isLocationRedacted = noPermission && (await isProtectedSpecies(speciesInformation.riskRatingIucnId))
   const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted

@@ -1,10 +1,10 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 
 export default class SpeciesImage extends Vue {
-  @Prop() speciesPhotos!: SpeciesPhotoLight[]
+  @Prop() speciesPhotos!: TaxonSpeciesPhotoLight[]
 
   handleImageUrl (url: string): string {
     const isValidUrl = /^https:\/\/./i.test(url)

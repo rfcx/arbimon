@@ -1,7 +1,7 @@
 import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { SpeciesCallLight, SpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProject, SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClient } from '~/api'
@@ -10,8 +10,8 @@ import { useStore } from '~/store'
 
 export interface ProjectSpecies {
   speciesInformation: SpeciesInProject | undefined
-  speciesPhotos: SpeciesPhotoLight[]
-  speciesCalls: SpeciesCallLight[]
+  speciesPhotos: TaxonSpeciesPhotoLight[]
+  speciesCalls: TaxonSpeciesCallLight[]
   predictedOccupancyMaps: string[]
 }
 
