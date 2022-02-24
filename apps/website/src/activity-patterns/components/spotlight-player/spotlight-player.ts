@@ -2,7 +2,7 @@ import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
-import { SpeciesCallLight } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesCallLight } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -21,7 +21,7 @@ const SCROLL_STEP = 150
 })
 export default class SpotlightPlayer extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop() speciesCalls!: SpeciesCallLight[]
+  @Prop() speciesCalls!: TaxonSpeciesCallLight[]
 
   loading = false
 
