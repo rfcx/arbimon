@@ -4,6 +4,7 @@ import { MigrationFn } from 'umzug'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { TaxonSpeciesPhotoModel } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
 import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
+import { SOURCES } from '@rfcx-bio/common/dao/types/source'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { rawWikiData } from '@/db/seeders/_data/taxon-species-wiki'
@@ -22,7 +23,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         return data.thumbnailImage
           ? {
             taxonSpeciesId: speciesNameToId[scientificName],
-            source: 'WIKI',
+            source: SOURCES.wiki,
             photoUrl: data.thumbnailImage,
             photoCaption: data.title,
             photoAuthor: data.credit ?? '', // TODO: Review if it allowed in 546
