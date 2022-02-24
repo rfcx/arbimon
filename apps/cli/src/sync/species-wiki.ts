@@ -1,4 +1,5 @@
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+import { SOURCES } from '@rfcx-bio/common/dao/types/source'
 import { getSequentially } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -9,15 +10,14 @@ import { getSequelize } from '../db/connections'
 const main = async (): Promise<void> => {
   const sequelize = getSequelize()
 
-  // get scientificName from bioDB
-
+  // Lookups
   const speciesNameToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
-  // get new data from wiki
+  // Get new data from Wiki API
   const newData = Object.entries(await getSequentially(Object.keys(speciesNameToId), getWikiSummary))
 
-  // save new data to DB
+  // Save new data to Bio DB
   await writeWikiSpeciesDataToPostgres(sequelize, newData.map(([name, data]) => ({
     taxonSpeciesId: speciesNameToId[name],
     description: data.content,
@@ -28,7 +28,7 @@ const main = async (): Promise<void> => {
     if (!data.thumbnailImage || !data.license) return undefined
     return {
       taxonSpeciesId: speciesNameToId[name],
-      source: 'WIKI',
+      source: SOURCES.wiki,
       photoUrl: data.thumbnailImage,
       photoCaption: data.title,
       photoAuthor: data.credit ?? '',
