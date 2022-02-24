@@ -1,5 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 
+import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
@@ -45,7 +46,7 @@ export default class ActivityPatternsPage extends Vue {
   filters: ColoredFilter[] = []
 
   // Data for children
-  predictedOccupancyMaps: string[] = []
+  predictedOccupancyMaps: PredictedOccupancyMap[] = []
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
   timeDatasets: SpotlightTimeDataset[] = []

@@ -15,12 +15,12 @@
       :class="{ ['md:grid-cols-2']: predictedOccupancyMaps.length> 1 }"
     >
       <div
-        v-for="predictedOccupancyMap in predictedOccupancyMapImages"
+        v-for="(predictedOccupancyMap, idx) in predictedOccupancyMaps"
         :key="predictedOccupancyMap.title"
         class="relative"
       >
         <a
-          :href="predictedOccupancyMap.url"
+          :href="blobUrls[idx]"
           target="_blank"
         >
           <img
