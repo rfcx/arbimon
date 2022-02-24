@@ -24,7 +24,7 @@ export default class ActivityPatternsPredictedOccupancy extends Vue {
     }))
   }
 
-  downloadImage (predictedOccupancyMapImage: PredictedOccupancyMap): void {
-    downloadPng(predictedOccupancyMapImage.url, predictedOccupancyMapImage.title)
+  downloadImage (filename: string, blobData: string): void {
+    downloadPng(blobData, filename.slice(0, filename.lastIndexOf('.')) ?? filename)
   }
 }
