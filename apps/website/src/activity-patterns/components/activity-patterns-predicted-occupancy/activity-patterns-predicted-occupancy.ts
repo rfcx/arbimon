@@ -7,24 +7,20 @@ import { downloadPng } from '@rfcx-bio/utils/file'
 import { assetsService } from '@/activity-patterns/services'
 
 export default class ActivityPatternsPredictedOccupancy extends Vue {
-  @Prop() predictedOccupancyMaps!: string[]
+  @Prop() predictedOccupancyMaps!: PredictedOccupancyMap[]
   @Prop() speciesSlug!: string
 
-  predictedOccupancyMapImages: PredictedOccupancyMap[] = []
+  blobUrls: string[] = []
 
   @Watch('predictedOccupancyMaps')
-  async onPredictedOccupancyMaps (): Promise<void> {
-    await this.getPredictedOccupancyMaps()
+  async onPredictedOccupancyMapsChange (): Promise<void> {
+    await this.getBlobImageUrls()
   }
 
-  async getPredictedOccupancyMaps (): Promise<void> {
-    this.predictedOccupancyMapImages = await Promise.all(this.predictedOccupancyMaps.map(async (filenameEithoutExtension) => {
-      const image = await assetsService.getPredictedOccupancyMapImage(this.speciesSlug, filenameEithoutExtension)
-      if (image === undefined) return { title: filenameEithoutExtension, url: '' }
-      return {
-        title: filenameEithoutExtension,
-        url: window.URL.createObjectURL(image)
-      }
+  async getBlobImageUrls (): Promise<void> {
+    this.blobUrls = await Promise.all(this.predictedOccupancyMaps.map(async ({ url }) => {
+      const blob = await assetsService.getPredictedOccupancyMapImage(url)
+      return blob ? window.URL.createObjectURL(blob) : ''
     }))
   }
 
