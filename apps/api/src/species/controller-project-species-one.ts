@@ -1,8 +1,8 @@
-import { readdir } from 'fs/promises'
 import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { ATTRIBUTES_TAXON_SPECIES_CALL } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
 import { ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
@@ -13,7 +13,6 @@ import { isProtectedSpecies } from '@/_services/security/location-redacted'
 import { Handler } from '../_services/api-helpers/types'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
-import { mockPredictionsFolderPath } from './index'
 
 // TODO ??? - Move files to S3 & index them in the database
 
@@ -66,16 +65,17 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
   }) as unknown as TaxonSpeciesCallLight[]
 
   const isLocationRedacted = noPermission && (await isProtectedSpecies(speciesInformation.riskRatingIucnId))
-  const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
-    ? []
-    : (await readdir(mockPredictionsFolderPath))
-      .filter(filename => filename.startsWith(speciesSlug))
-      .map(filename => filename.substring(0, filename.lastIndexOf('.')) || filename)
-      .sort()
-      .map(filename => ({
-        title: filename,
-        url: `/projects/${projectId}/predicted-occupancy/${filename}`
-      }))
+  const predictedOccupancyMaps: PredictedOccupancyMap[] = []
+  if (isLocationRedacted) {
+    const matchFiles = (await LocationProjectSpeciesFileModel(sequelize).findAll({
+      where: {
+        locationProjectId: projectId,
+        taxonSpeciesId
+      },
+      raw: true
+    })).map(({ filename, url }) => ({ title: filename, url }))
+    predictedOccupancyMaps.push(...matchFiles)
+  }
 
   return {
     speciesInformation,

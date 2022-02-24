@@ -6,6 +6,10 @@ import { LocationProjectSpeciesFile } from '../types'
 export const MODEL_LOCATION_PROJECT_SPECIES_FILE = 'LocationProjectSpeciesFile'
 export const TABLE_LOCATION_PROJECT_SPECIES_FILE = 'location_project_species_file'
 
+export const ATTRIBUTES_LOCATION_PROJECT_SPECIES_FILE: Record<string, Array<keyof LocationProjectSpeciesFile>> = {
+  light: ['description', 'filename', 'mimeType', 'url']
+}
+
 export const LocationProjectSpeciesFileModel = defineWithDefaults<LocationProjectSpeciesFile>(
   MODEL_LOCATION_PROJECT_SPECIES_FILE,
   {
