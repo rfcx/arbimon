@@ -22,16 +22,13 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   const { projectId, speciesSlug } = req.params
   assertPathParamsExist({ projectId, speciesSlug })
 
-  const noPermission = !isProjectMember(req)
-
-  // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug, noPermission)
+  const hasProjectPermission = isProjectMember(req)
 
   // Respond
-  return response
+  return await getProjectSpeciesOne(projectId, speciesSlug, hasProjectPermission)
 }
 
-const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
+const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, hasProjectPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -64,9 +61,9 @@ const getProjectSpeciesOne = async (projectId: string, speciesSlug: string, noPe
     raw: true
   }) as unknown as TaxonSpeciesCallLight[]
 
-  const isLocationRedacted = noPermission && (await isProtectedSpecies(speciesInformation.riskRatingIucnId))
+  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesInformation.riskRatingIucnId ?? -1)
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
-  if (isLocationRedacted) {
+  if (!isLocationRedacted) {
     const matchFiles = (await LocationProjectSpeciesFileModel(sequelize).findAll({
       where: {
         locationProjectId: projectId,
