@@ -30,7 +30,7 @@
         </a>
         <export-button
           class="absolute top-2 right-2"
-          @click="downloadImage(predictedOccupancyMap)"
+          @click="downloadImage(predictedOccupancyMap.title, blobUrls[idx])"
         />
       </div>
     </div>
