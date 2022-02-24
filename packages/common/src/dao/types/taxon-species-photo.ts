@@ -1,4 +1,4 @@
-import { Source } from '@/dao/types/source'
+import { Source } from './source'
 
 export interface TaxonSpeciesPhoto {
   taxonSpeciesId: number
