@@ -170,7 +170,8 @@ export async function getYearCSVData (startDate: Dayjs, endDate: Dayjs, dataset:
 }
 
 export async function getSiteCSVData (dataset: SpotlightDetectionDataBySite): Promise<string> {
-  const dataAsJson = Object.keys(dataset)
+  const datasetSiteIdsNumber = Object.keys(dataset).map(key => parseInt(key))
+  const dataAsJson = datasetSiteIdsNumber
     .sort((a, b) => {
       const site1 = dataset[a]
       const site2 = dataset[b]
