@@ -15,13 +15,13 @@ export const spotlightDatasetUrl = (params: SpotlightDatasetParams): string =>
 
 // Response
 export interface SpotlightDatasetResponse {
+  isLocationRedacted: boolean
   totalSiteCount: number
   totalRecordingCount: number
   detectionCount: number
   detectionFrequency: number
   occupiedSiteCount: number
   occupiedSiteFrequency: number
-  isLocationRedacted: boolean
   detectionsByLocationSite: SpotlightDetectionDataBySite
   detectionsByTimeHour: SpotlightDetectionDataByTime
   detectionsByTimeDay: SpotlightDetectionDataByTime

@@ -48,17 +48,13 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   const models = ModelRepository.getInstance(sequelize)
 
   const species = await models.TaxonSpecies.findOne({
-    where: {
-      id: speciesId
-    },
+    where: { id: speciesId },
     raw: true
   })
   if (!species) throw BioNotFoundError()
 
   const speciesIucn = await models.TaxonSpeciesIucn.findOne({
-    where: {
-      taxonSpeciesId: speciesId
-    },
+    where: { taxonSpeciesId: speciesId },
     raw: true
   })
   const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesIucn?.riskRatingIucnId ?? -1)
@@ -171,9 +167,7 @@ async function getDetectionsByLocationSite (models: AllModels, totalDetections: 
 
   // TODO ???: Move query to somewhere more global
   const sites = await models.LocationSite.findAll({
-    where: {
-      id: siteIds
-    },
+    where: { id: siteIds },
     raw: true
   })
 

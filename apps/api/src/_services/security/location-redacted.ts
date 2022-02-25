@@ -7,9 +7,7 @@ export async function isProtectedSpecies (riskRatingIucnId: number): Promise<boo
   const models = ModelRepository.getInstance(sequelize)
 
   const protectedCodes = await models.RiskRatingIucn.findAll({
-    where: {
-      isThreatened: true
-    },
+    where: { isThreatened: true },
     raw: true
   })
 
