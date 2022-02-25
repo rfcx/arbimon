@@ -1,9 +1,7 @@
-export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear' | 'dateSeries'
-
-export type SpotlightDataByTime = Record<TimeBucket, SpotlightDetectionDataByTime>
+import { DataByTime } from '../common/time-bucket'
 
 export interface SpotlightDetectionDataBySite {
-  [siteId: string]: {
+  [siteId: number]: {
     siteId: number
     siteName: string
     latitude: number
@@ -19,9 +17,14 @@ export interface SpotlightDetectionDataByTime<T extends string | number = number
   detectionFrequency: Record<T, number>
 }
 
+// ----- Not related to api return item ----
+// ? Moving to somewhere
 export interface SpotlightExportData {
   hour: SpotlightDetectionDataByTime
   month: SpotlightDetectionDataByTime<string>
   year: SpotlightDetectionDataByTime
   sites: SpotlightDetectionDataBySite
 }
+
+// ? Moving to somewhere
+export type SpotlightDataByTime = DataByTime<SpotlightDetectionDataByTime>
