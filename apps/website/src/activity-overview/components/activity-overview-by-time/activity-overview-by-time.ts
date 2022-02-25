@@ -5,14 +5,18 @@ import { Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { TimeDataset } from '@/activity-overview/types'
-import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
+import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTime, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
 import { downloadSvgAsPng } from '~/charts'
 import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
+
+export interface ActivityOverviewTimeDataset {
+  color: string
+  data: ActivityOverviewDataByTime
+}
 
 // TODO ???: Reduce and move to somewhere for center use
 interface DropDownOption {
@@ -34,7 +38,7 @@ const DATASET_LABELS = {
 })
 export default class ActivityOverviewByTime extends Vue {
   @Prop() domId!: string
-  @Prop() datasets!: TimeDataset[]
+  @Prop() datasets!: ActivityOverviewTimeDataset[]
 
   selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
