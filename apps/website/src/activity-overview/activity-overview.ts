@@ -8,13 +8,13 @@ import ActivityOverviewBySpecies from '@/activity-overview/components/activity-o
 import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { activityService } from '@/activity-overview/services'
-import { TimeDataset } from '@/activity-overview/types'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
+import { ActivityOverviewTimeDataset } from './components/activity-overview-by-time/activity-overview-by-time'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
@@ -32,7 +32,7 @@ export default class ActivityOverviewPage extends Vue {
   filters!: ColoredFilter[]
 
   mapDatasets: MapDataSet[] = []
-  timeDatasets: TimeDataset[] = []
+  timeDatasets: ActivityOverviewTimeDataset[] = []
   tableDatasets: SpeciesDataset[] = []
   exportDatasets: ActivityOverviewDataBySpecies[][] = []
 
@@ -58,14 +58,22 @@ export default class ActivityOverviewPage extends Vue {
         const data = await activityService.getActivityDataset(filterToDataset(filter))
         if (!data) return undefined
 
-        return { ...data, otherFilters, startDate, endDate, color, sites }
+        return { ...data, otherFilters, startDate, endDate, color, sites: sites.flatMap(({ value }) => value) }
       })
     )).filter(isDefined)
 
     this.mapDatasets = transformToBySiteDatasets(datasets)
-    this.timeDatasets = datasets.map(({ color, overviewByTime }) => ({ color, data: overviewByTime }))
-    this.tableDatasets = datasets.map(({ color, overviewBySpecies }) => ({ color, data: overviewBySpecies }))
-    this.exportDatasets = datasets.map(({ overviewBySpecies }) => overviewBySpecies)
+    this.timeDatasets = datasets.map(({ color, detectionsByTimeDay, detectionsByTimeHour, detectionsByTimeMonth, detectionsByTimeDate }) => {
+      const data = {
+        hourOfDay: detectionsByTimeHour,
+        dayOfWeek: detectionsByTimeDay,
+        monthOfYear: detectionsByTimeMonth,
+        dateSeries: detectionsByTimeDate
+      }
+      return { color, data }
+    })
+    this.tableDatasets = datasets.map(({ color, detectionsBySpecies }) => ({ color, data: detectionsBySpecies }))
+    this.exportDatasets = datasets.map(({ detectionsBySpecies }) => detectionsBySpecies)
   }
 
   async exportSpeciesData (): Promise<void> {
