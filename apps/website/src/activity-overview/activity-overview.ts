@@ -54,11 +54,11 @@ export default class ActivityOverviewPage extends Vue {
 
     const datasets = (await Promise.all(
       filters.map(async (filter) => {
-        const { color, startDate, endDate, otherFilters } = filter
+        const { color, startDate, endDate, otherFilters, sites } = filter
         const data = await activityService.getActivityDataset(filterToDataset(filter))
         if (!data) return undefined
 
-        return { ...data, otherFilters, startDate, endDate, color }
+        return { ...data, otherFilters, startDate, endDate, color, sites }
       })
     )).filter(isDefined)
 

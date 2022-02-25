@@ -1,16 +1,19 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
+import { Op } from 'sequelize'
 
 import { ActivityDatasetParams, ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
-import { ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime, DetectionGroupedBySite } from '@rfcx-bio/common/api-bio/activity/common'
+import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/common'
 import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
-import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
-import { MockHourlyDetectionSummary, rawDetections, rawSites, rawSpecies } from '@rfcx-bio/common/mock-data'
+import { Where } from '@rfcx-bio/common/dao/helpers/query'
+import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { BioInvalidQueryParamError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
-import { FilterDataset, filterMocksByParameters } from '../_services/mock-helper'
+import { getSequelize } from '../_services/db'
+import { FilterDataset } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
@@ -33,42 +36,110 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
     taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
   }
 
-  const isLocationRedacted = !isProjectMember(req)
+  const hasProjectPermission = isProjectMember(req)
 
   // Response
-  return await getActivityOverviewData(Number(projectId), { ...convertedQuery }, isLocationRedacted)
+  return await getActivityOverviewData(Number(projectId), { ...convertedQuery }, hasProjectPermission)
 }
 
-const getActivityOverviewData = async (projectId: number, filter: FilterDataset, isLocationRedacted: boolean): Promise<ActivityDatasetResponse> => {
-  const totalSummaries = filterMocksByParameters(rawDetections, filter)
-  const detectionsBySites = groupBy(totalSummaries, 'stream_id')
+const getActivityOverviewData = async (projectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<ActivityDatasetResponse> => {
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
 
-  const sites = rawSites.filter(site => filter.siteIds.includes(site.id))
-  const overviewBySite = await getOverviewDataBySite(detectionsBySites)
-  const overviewByTime = await getOverviewDataByTime(totalSummaries)
-  const overviewBySpecies = await getOverviewDataBySpecies(totalSummaries, isLocationRedacted)
+  // Filtering
+  const totalDetections = await filterDetecions(models, projectId, filter)
+  const totalRecordingCount = getRecordingCount(totalDetections)
+
+  const detectionsBySite = await getDetectionDataBySite(models, totalDetections)
+  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission)
+  const detectionsByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingCount)
+  const detectionsByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingCount)
+  const detectionsByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingCount)
+  const detectionsByTimeDate = getDetectionsByTimeDateUnix(totalDetections, totalRecordingCount)
 
   return {
-    isLocationRedacted,
-    sites,
-    overviewBySite,
-    overviewByTime,
-    overviewBySpecies
+    isLocationRedacted: !hasProjectPermission,
+    detectionsBySite,
+    detectionsBySpecies,
+    detectionsByTimeHour,
+    detectionsByTimeDay,
+    detectionsByTimeMonth,
+    detectionsByTimeDate
   }
 }
 
-const getOverviewDataBySite = async (detectionsBySites: DetectionGroupedBySite): Promise<ActivityOverviewDataBySite> => {
-  const summariesBySites = mapValues(detectionsBySites, (detections, siteId) => {
-    const totalRecordingCount = getRecordingCount(detections)
-    const detectionCount = sum(detections.map(d => d.num_of_recordings))
+// Similar logic with filterDetection in `controller-spotlight-dataset.ts`. Moving to common?
+async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
+
+  const where: Where<DetectionBySiteSpeciesHour> = {
+    timePrecisionHourLocal: {
+      [Op.and]: {
+        [Op.gte]: startDateUtcInclusive,
+        [Op.lt]: endDateUtcInclusive
+      }
+    },
+    locationProjectId: projectId
+  }
+
+  if (siteIds.length > 0) {
+    where.locationSiteId = siteIds
+  }
+
+  if (taxons.length > 0) {
+    where.taxonClassId = taxons
+  }
+
+  return await models.DetectionBySiteSpeciesHour.findAll({
+    where,
+    raw: true
+  })
+}
+
+function getRecordingCount (detections: DetectionBySiteSpeciesHour[]): number {
+  // TODO: Better way to handle case where `durationMinutes` is not stable
+  const durationMinutes = detections.length > 0 ? detections[0].durationMinutes : 0
+  return new Set(detections.map(d => d.timePrecisionHourLocal)).size * durationMinutes
+}
+
+function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
+  return sum(detections.map(({ count }) => count))
+}
+
+function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): number {
+  const detectionCount = calculateDetectionCount(detections)
+  return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+}
+
+function calculateOccupancy (totalSiteCount: number, occupiedSites: number): number {
+  return occupiedSites === 0 ? 0 : occupiedSites / totalSiteCount
+}
+
+const getDetectionDataBySite = async (models: AllModels, detections: DetectionBySiteSpeciesHour[]): Promise<ActivityOverviewDetectionDataBySite> => {
+  const detectionsBySites: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(detections, 'locationSiteId')
+  const siteIds = Object.keys(detectionsBySites)
+
+  // TODO ???: Move query to somewhere more global
+  const sites = await models.LocationSite.findAll({
+    where: { id: siteIds },
+    raw: true
+  })
+
+  const summariesBySites = mapValues(detectionsBySites, (detectionsSummaries, siteIdString) => {
+    const totalRecordingCount = getRecordingCount(detectionsSummaries)
+
+    const detectionCount = sum(detectionsSummaries.map(({ count }) => count))
     const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
-    const siteOccupiedFrequency = detections.length > 0
+    const siteOccupiedFrequency = detectionsSummaries.length > 0
+
+    const siteId = Number(siteIdString)
+    const matchedSite = sites.find(s => s.id === siteId)
 
     return {
       siteId,
-      siteName: detections[0].name,
-      latitude: detections[0].lat,
-      longitude: detections[0].lon,
+      siteName: matchedSite?.name ?? '',
+      latitude: matchedSite?.latitude ?? 0,
+      longitude: matchedSite?.longitude ?? 0,
       detection: detectionCount,
       detectionFrequency: detectionFrequency,
       occupancy: siteOccupiedFrequency
@@ -77,84 +148,88 @@ const getOverviewDataBySite = async (detectionsBySites: DetectionGroupedBySite):
   return summariesBySites
 }
 
-const getOverviewDataBySpecies = async (totalSummaries: MockHourlyDetectionSummary[], isLocationRedacted: boolean): Promise<ActivityOverviewDataBySpecies[]> => {
-    let detections = totalSummaries
-    if (isLocationRedacted) {
-      const protectedSpeciesIds = rawSpecies.filter(({ extinctionRisk }) => EXTINCTION_RISK_PROTECTED_CODES.includes(extinctionRisk)).map(({ speciesId }) => speciesId)
-      detections = totalSummaries.filter(({ species_id: speciesId }) => !protectedSpeciesIds.includes(speciesId))
-    }
-    const detectionsBySpecies = groupBy(detections, 'scientific_name')
-    const totalSiteCount = new Set(totalSummaries.map(d => d.stream_id)).size
-    const totalRecordingCount = getRecordingCount(totalSummaries)
+async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> {
+  let filteredDetections = detections
+  if (!hasProjectPermission) {
+    const protectedCodes = await models.RiskRatingIucn.findAll({
+      where: { isThreatened: true },
+      raw: true
+    })
 
-    const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
-    for (const [scientificName, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
-      const detectionCount = calculateDetectionActivity(speciesDetectedDetections)
-      const detectionFrequency = calculateDetectionFrequencyActivity(speciesDetectedDetections, totalRecordingCount)
-      const occupiedSites = new Set(speciesDetectedDetections.map(d => d.stream_id)).size
-      const occupancyNaive = calculateOccupancyActivity(speciesDetectedDetections, totalSiteCount)
+    const protectedCodeIds = protectedCodes.map(c => c.idOrdered)
+    const protectedSpecies = await models.TaxonSpeciesIucn.findAll({
+      where: { riskRatingIucnId: protectedCodeIds },
+      raw: true
+    })
 
-      activityOverviewDataBySpecies.push({
-        scientificName,
-        commonName: rawSpecies.find((raw) => raw?.scientificName === scientificName)?.commonName ?? '',
-        taxon: speciesDetectedDetections[0].taxon,
-        detectionCount,
-        detectionFrequency,
-        occupiedSites,
-        occupancyNaive
-      })
-    }
-
-    return activityOverviewDataBySpecies
+    filteredDetections = detections.filter(({ taxonSpeciesId }) => !protectedSpecies.find(s => s.taxonSpeciesId === taxonSpeciesId))
   }
 
-const getRecordingCount = (detections: MockHourlyDetectionSummary[]): number => {
-  return new Set(detections.map(d => `${d.date}-${d.hour}`)).size * 12
+  if (filterDetecions.length === 0) return []
+
+  const detectionsBySpecies = groupBy(filteredDetections, 'taxonSpeciesId')
+  const totalSiteCount = new Set(filteredDetections.map(({ locationSiteId }) => locationSiteId)).size
+  const totalRecordingCount = getRecordingCount(filteredDetections)
+
+  // TODO ???: Move query to somewhere more global
+  const speciesIds = Object.keys(detectionsBySpecies)
+  const species = await models.SpeciesInProject.findAll({
+    where: { taxonSpeciesId: speciesIds },
+    raw: true
+  })
+
+  const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
+  for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
+    const detectionCount = calculateDetectionCount(speciesDetectedDetections)
+    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingCount)
+    const occupiedSites = new Set(detections.map(({ locationSiteId }) => locationSiteId)).size
+    const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
+
+    const matchedSpecies = species.find(({ taxonSpeciesId }) => taxonSpeciesId === Number(speciesId))
+
+    activityOverviewDataBySpecies.push({
+      commonName: matchedSpecies?.commonName ?? '',
+      scientificName: matchedSpecies?.scientificName ?? '',
+      taxon: matchedSpecies?.taxonClassSlug ?? '',
+      detectionCount,
+      detectionFrequency,
+      occupiedSites,
+      occupancyNaive
+    })
+  }
+
+  return activityOverviewDataBySpecies
 }
 
-const calculateDetectionActivity = (detections: MockHourlyDetectionSummary[]): number => {
-  return sum(detections.map(d => d.num_of_recordings))
-}
-
-const calculateDetectionFrequencyActivity = (detections: MockHourlyDetectionSummary[], totalRecordingCount: number): number => {
-  const detectionCount = sum(detections.map(d => d.num_of_recordings))
-  return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
-}
-
-const calculateOccupancyActivity = (detections: MockHourlyDetectionSummary[], totalSiteCount: number): number => {
-  const occupiedCount = new Set(detections.map(d => d.stream_id)).size
-  return occupiedCount === 0 ? 0 : occupiedCount / totalSiteCount
-}
-
-const getOverviewDataByTime = async (totalSummaries: MockHourlyDetectionSummary[]): Promise<ActivityOverviewDataByTime> => {
-  const totalRecordingCount = getRecordingCount(totalSummaries)
-  return calculateOverviewDataByTime(totalRecordingCount, totalSummaries)
-}
-
-const calculateOverviewDataByTime = (totalRecordingCount: number, speciesSummaries: MockHourlyDetectionSummary[]): ActivityOverviewDataByTime => {
-  const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
-
-  const byHour = groupByNumber(speciesSummaries, d => d.hour)
-  const byDay = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).isoWeekday() - 1)
-  const byMonth = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).month())
-  const byDate = groupByNumber(speciesSummaries, d => dayjs.utc(d.date).startOf('day').unix() / SECONDS_PER_DAY) // each chart tick should be a day not a second
-
+function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+  const byHour = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).hour())
   return {
-    hourOfDay: {
-      detection: mapValues(byHour, calculateDetectionActivity),
-      detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    },
-    dayOfWeek: {
-      detection: mapValues(byDay, calculateDetectionActivity),
-      detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    },
-    monthOfYear: {
-      detection: mapValues(byMonth, calculateDetectionActivity),
-      detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    },
-    dateSeries: {
-      detection: mapValues(byDate, calculateDetectionActivity),
-      detectionFrequency: mapValues(byDate, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
-    }
+    detection: mapValues(byHour, calculateDetectionCount),
+    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+  }
+}
+
+function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+  const byDay = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1)
+  return {
+    detection: mapValues(byDay, calculateDetectionCount),
+    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+  }
+}
+
+function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+  const byMonth = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).month())
+  return {
+    detection: mapValues(byMonth, calculateDetectionCount),
+    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+  }
+}
+
+function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+  const SECONDS_PER_DAY = 24 * 60 * 60
+  const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
+  return {
+    detection: mapValues(byDateUnix, calculateDetectionCount),
+    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
