@@ -1,8 +1,7 @@
+import { Sequelize } from 'sequelize'
+
 import { ATTRIBUTES_LOCATION_SITE, LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { Site } from '@rfcx-bio/common/dao/types'
-import { Sequelize } from 'sequelize/dist'
-
-import { getSequelize } from '../../../db/connections'
 
 export const writeSitesToPostgres = async (sequelize: Sequelize, sites: Site[]): Promise<void> => {
   await LocationSiteModel(sequelize).bulkCreate(sites, {

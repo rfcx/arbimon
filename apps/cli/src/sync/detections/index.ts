@@ -1,8 +1,9 @@
-import { Sequelize } from 'sequelize/dist'
+import { QueryTypes, Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { getArbimonDetectionSummaries } from '@/data-ingest/detections/input-arbimon'
+import { writeDetectionsToPostgres } from '@/data-ingest/detections/output-postgres'
 import { getSitesFromDetections } from '@/data-ingest/sites/input-from-mock-detections'
 import { writeSitesToPostgres } from '@/data-ingest/sites/output-postgres'
 import { getArbimonSpeciesFromMock } from '@/data-ingest/species/input-from-mock-detections'
@@ -19,7 +20,7 @@ export const syncDetectionsForProject = async (sequelize: Sequelize, project: Pr
   }
 
   const sites = await getSitesFromDetections(project.id, summaries)
-  const species = await getArbimonSpeciesFromMock(summaries) // TODO: @nui change this method
+  const species = await getArbimonSpeciesFromMock(summaries)
 
   console.info(`summaries for ${project.idArbimon} = ${summaries.length}`)
   console.info(`sites for ${project.idArbimon} = ${sites.length}`)
@@ -34,6 +35,12 @@ export const syncDetectionsForProject = async (sequelize: Sequelize, project: Pr
   await writeArbimonSpeciesDataToPostgres(sequelize, Object.values(species))
 
   // TODO: BIO WRITE: write detection data
+  await writeDetectionsToPostgres(sequelize, summaries, project)
 
-  // TODO: update materialized view
+  // TODO: @nui refactor this as it get use in several place
+  // Refresh materialized views
+  const materializedViews = await sequelize.query<{ view_name: string }>('SELECT matviewname AS view_name FROM pg_matviews', { type: QueryTypes.SELECT })
+  for (const view of materializedViews) {
+    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.view_name}`)
+  }
 }
