@@ -22,7 +22,7 @@ const main = async (): Promise<void> => {
   const scientificNames = limitUnlessProtected(getScientificNamesFromMock())
   const [arbimonSpeciesKeyed, arbimonSpeciesCallsKeyed, iucnSpeciesKeyed, iucnSpeciesNarrativesKeyed, rfcxSpeciesKeyed, wikiSpeciesKeyed] = await Promise.all([
     getArbimonSpeciesFromMock(),
-    getArbimonSpeciesCalls(),
+    getArbimonSpeciesCalls(1989),
     getSequentially(scientificNames, getIucnSpecies),
     getSequentially(scientificNames, getIucnSpeciesNarrative),
     getRfcxSpecies(),

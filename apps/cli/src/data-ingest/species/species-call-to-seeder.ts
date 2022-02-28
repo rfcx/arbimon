@@ -11,7 +11,7 @@ const outputTsConstName = 'rawSpeciesCallData'
 
 const main = async (): Promise<void> => {
   // Get data from wiki
-  const arbimonSpeciesCallsKeyed = await getArbimonSpeciesCalls()
+  const arbimonSpeciesCallsKeyed = await getArbimonSpeciesCalls(1989)
   // Write seeder data
   const outputTs = objectToTs(arbimonSpeciesCallsKeyed, outputTsConstName, 'Record<string, ArbimonSpeciesCall[]>', 'import { ArbimonSpeciesCall } from \'../../../data-ingest/species/input-arbimon-species-call\'')
   fs.writeFileSync(outputTsPath, outputTs, 'utf8')
