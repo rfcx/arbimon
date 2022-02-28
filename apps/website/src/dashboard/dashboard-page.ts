@@ -2,7 +2,8 @@ import { max } from 'lodash-es'
 import { LngLatBoundsLike } from 'mapbox-gl'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
-import { Inject } from 'vue-property-decorator'
+import { Inject, Watch } from 'vue-property-decorator'
+import { RouteLocationNormalized } from 'vue-router'
 
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
@@ -177,6 +178,17 @@ export default class DashboardPage extends Vue {
   }
 
   override async created (): Promise<void> {
+    await this.updatePage()
+  }
+
+  @Watch('$route')
+  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
+    if (to.params.projectSlug !== from.params.projectSlug) {
+      await this.updatePage()
+    }
+  }
+
+  async updatePage (): Promise<void> {
     const projectId = this.store.selectedProject?.id
     if (projectId === undefined) return
 
