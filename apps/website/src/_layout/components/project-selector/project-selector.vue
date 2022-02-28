@@ -12,15 +12,13 @@
         <div
           v-for="(project, idx) in store.projects"
           :key="'project-list-' + idx"
-          class="flex justify-between text-white cursor-pointer hover:bg-steel-grey-dark py-2"
+          class="flex justify-between text-white cursor-pointer hover:bg-steel-grey-dark py-2 px-1"
+          :class="{ 'bg-steel-grey-dark': newSelectedProject?.id === project.id }"
           @click="setSelectedProject(project)"
         >
           {{ project.name }}
           <!-- TODO ??? - Replace old icons -->
-          <i
-            v-if="isSelectedProject(project)"
-            class="icon-check"
-          />
+          <icon-fa-check v-if="newSelectedProject?.id === project.id" />
         </div>
       </div>
       <div class="flex justify-end mt-2">
