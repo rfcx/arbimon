@@ -10,5 +10,4 @@ export const writeSitesToPostgres = async (sequelize: Sequelize, sites: Site[]):
     // fix auto increment key break - https://github.com/sequelize/sequelize/issues/9295
     await sequelize.query('select setval(\'location_site_id_seq\', (select max(id) from location_site), true);')
   })
-  console.info('writeSitesToPostgres: success')
 }
