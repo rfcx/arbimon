@@ -1,4 +1,4 @@
-import pkg from 'sequelize/dist'
+import pkg from 'sequelize'
 
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 import { Project } from '@rfcx-bio/common/dao/types'
@@ -38,6 +38,7 @@ export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'
   const deletedRows = await model.destroy({
     where: {
       idCore: {
+        [Op.ne]: null,
         [Op.notIn]: updatedProjects.map(p => p.idCore)
       }
     }
