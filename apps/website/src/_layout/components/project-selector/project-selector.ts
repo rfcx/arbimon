@@ -16,9 +16,13 @@ export default class ProjectSelectorComponent extends Vue {
 
   newSelectedProject: ApiProjectLight | null = null
 
+  get selectedProject (): ApiProjectLight | null {
+    return this.store.selectedProject ?? null
+  }
+
   override created (): void {
-    this.newSelectedProject = this.store.selectedProject
-      ? { ...this.store.selectedProject }
+    this.newSelectedProject = this.selectedProject
+      ? { ...this.selectedProject }
       : null
   }
 
@@ -33,7 +37,7 @@ export default class ProjectSelectorComponent extends Vue {
   async confirmedSelectedProject (): Promise<void> {
     if (this.newSelectedProject) {
       await this.store.updateSelectedProject(this.newSelectedProject)
-      await this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectId: this.newSelectedProject.slug } })
+      await this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectSlug: this.newSelectedProject.slug } })
     }
     this.emitCloseProjectSelector()
   }
