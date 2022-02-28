@@ -21,5 +21,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       scientificName: s.scientificName
     }))
 
-  await model.bulkCreate(data)
+  await model.bulkCreate(data).then(async () => {
+    // fix auto increment key break - https://github.com/sequelize/sequelize/issues/9295
+    await params.context.sequelize.query('select setval(\'taxon_species_id_seq\', (select max(id) from taxon_species), true);')
+  })
 }

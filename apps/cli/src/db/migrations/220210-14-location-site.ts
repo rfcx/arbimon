@@ -31,7 +31,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       id_core: {
         type: DataTypes.STRING(12),
         allowNull: false,
-        unique: true
+        unique: false
       },
       id_arbimon: {
         type: DataTypes.INTEGER,
