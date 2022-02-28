@@ -28,7 +28,7 @@
               :href="photo.photoLicenseUrl"
               target="_blank"
               class="italic hover:(underline cursor-pointer)"
-            >{{ photo.photoCaption }}</a>
+            >{{ imageDescription(photo) }}</a>
           </div>
         </div>
       </el-carousel-item>
