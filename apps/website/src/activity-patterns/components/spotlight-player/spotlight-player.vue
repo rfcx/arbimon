@@ -31,6 +31,14 @@
             :src="spectrogram"
             class="rounded-md"
           >
+          <action-controller
+            class="absolute bottom-3 left-3"
+            action-name="Visualizer"
+          >
+            <a :href="speciesCalls[idx].callMediaRedirectUrl">
+              <icon-fa-cubes class="text-sm" />
+            </a>
+          </action-controller>
           <div class="absolute bottom-3 right-3">
             <audio-controller
               :playing="playing && (playingAudioIndex === idx)"

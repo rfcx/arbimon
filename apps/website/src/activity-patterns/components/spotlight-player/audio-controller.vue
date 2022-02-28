@@ -1,18 +1,16 @@
 <template>
-  <div
+  <action-controller
     v-if="!playing"
-    class="hover:(opacity-80 cursor-pointer)"
-    title="Play"
+    action-name="Play"
   >
     <icon-fa-play />
-  </div>
-  <div
+  </action-controller>
+  <action-controller
     v-else
-    class="hover:(opacity-80 cursor-pointer)"
-    title="Pause"
+    action-name="Pause"
   >
     <icon-fa-pause />
-  </div>
+  </action-controller>
 </template>
 <script lang="ts">
 import { Vue } from 'vue-class-component'
