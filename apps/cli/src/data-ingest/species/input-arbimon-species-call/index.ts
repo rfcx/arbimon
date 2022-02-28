@@ -1,7 +1,4 @@
-import * as fs from 'fs'
 import { groupBy, mapValues } from 'lodash-es'
-import { dirname, resolve } from 'path'
-import { fileURLToPath } from 'url'
 
 import { SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
@@ -25,11 +22,18 @@ interface ArbimonSpeciesCallRow {
   'timezone': string
 }
 
-export const getArbimonSpeciesCalls = async (): Promise<Record<string, ArbimonSpeciesCall[]>> => {
+export const getArbimonSpeciesCalls = async (idArbimon: number): Promise<Record<string, ArbimonSpeciesCall[]>> => {
   // Read SQL
-  const currentDir = dirname(fileURLToPath(import.meta.url))
-  const sqlPath = resolve(currentDir, './get-example-of-species-call.sql') // TODO - Update query to support other projects
-  const sql = fs.readFileSync(sqlPath, 'utf8')
+  const sql = `
+  select sp.scientific_name, st.songtype, DATE_ADD(r.datetime_utc, interval t.x1 second) start, DATE_ADD(r.datetime_utc, interval t.x2 second) "end", t.recording_id, s.external_id stream_id, s.name stream_name, s.timezone, p.external_id project_id, p.name project_name, p.url project_slug
+  from templates t 
+    join recordings r on t.recording_id = r.recording_id 
+    join species sp on t.species_id = sp.species_id 
+    join songtypes st on t.songtype_id = st.songtype_id 
+    join sites s on r.site_id = s.site_id 
+    join projects p on s.project_id = p.project_id 
+  where t.project_id = ${idArbimon} and t.deleted != 1 and r.datetime_utc is not null;
+  `
 
   // Query Arbimon
   const results = await mysqlSelect<ArbimonSpeciesCallRow>(ARBIMON_CONFIG, sql)
