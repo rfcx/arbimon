@@ -1,4 +1,4 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
 
@@ -16,15 +16,16 @@ export const syncDetectionsForProject = async (sequelize: Sequelize, project: Pr
 
   if (summaries.length === 0) {
     // TODO: remove existing data from the database (if needed)
+    console.info(`| no summaries for ${project.idArbimon}`)
     return
   }
 
   const sites = await getSitesFromDetections(project.id, summaries)
   const species = await getArbimonSpeciesFromMock(summaries)
 
-  console.info(`summaries for ${project.idArbimon} = ${summaries.length}`)
-  console.info(`sites for ${project.idArbimon} = ${sites.length}`)
-  console.info(`species for ${project.idArbimon} = ${Object.entries(species).length}`)
+  console.info(`| summaries for ${project.idArbimon} = ${summaries.length}`)
+  console.info(`| sites for ${project.idArbimon} = ${sites.length}`)
+  console.info(`| species for ${project.idArbimon} = ${Object.entries(species).length}`)
 
   // TODO: save snapshot data, to compare with next sync if there is any changes then only write the changes to the db
 
@@ -34,13 +35,6 @@ export const syncDetectionsForProject = async (sequelize: Sequelize, project: Pr
   // BIO WRITE: write species data
   await writeArbimonSpeciesDataToPostgres(sequelize, Object.values(species))
 
-  // TODO: BIO WRITE: write detection data
+  // BIO WRITE: write detection data
   await writeDetectionsToPostgres(sequelize, summaries, project)
-
-  // TODO: @nui refactor this as it get use in several place
-  // Refresh materialized views
-  const materializedViews = await sequelize.query<{ view_name: string }>('SELECT matviewname AS view_name FROM pg_matviews', { type: QueryTypes.SELECT })
-  for (const view of materializedViews) {
-    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.view_name}`)
-  }
 }

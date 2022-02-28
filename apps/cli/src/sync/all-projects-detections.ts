@@ -1,4 +1,5 @@
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { wait } from '@rfcx-bio/utils/async'
 
 import { getSequelize } from '../db/connections'
 import { syncDetectionsForProject } from './detections'
@@ -11,9 +12,9 @@ const main = async (): Promise<void> => {
         where: { isPublished: true }
       })
     // ARB QUERY: sync detections + sites + species of each projects
-    await Promise.all(publishProjects.map(async project => {
-      await syncDetectionsForProject(sequelize, project)
-    }))
+    for (const project of publishProjects) {
+      await Promise.all([syncDetectionsForProject(sequelize, project), wait(500)])
+    }
   } catch (error) {
     console.error(error)
   }
