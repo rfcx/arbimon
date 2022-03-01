@@ -6,7 +6,7 @@ export type FilterableProperty = 'taxon' | 'species'
 
 export interface FilterPropertyEquals {
   propertyName: FilterableProperty
-  value: string
+  value: string | number
 }
 
 export interface SiteGroup {
