@@ -1,5 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
-import { Inject } from 'vue-property-decorator'
+import { Inject, Watch } from 'vue-property-decorator'
+import { RouteLocationNormalized } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -42,6 +43,13 @@ export default class ActivityOverviewPage extends Vue {
 
   get infoTopic (): string {
     return INFO_TOPICS.activity
+  }
+
+  @Watch('$route')
+  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
+    if (to.params.projectSlug !== from.params.projectSlug) {
+      await this.onDatasetChange()
+    }
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
