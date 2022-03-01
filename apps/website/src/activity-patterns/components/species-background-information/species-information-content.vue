@@ -15,7 +15,7 @@
     </span>
     <span
       v-if="hasMoreThanMaxLine"
-      class="mr-1 px-3 py-1 bg-box-grey cursor-pointer rounded-sm underline inline hover:() text-sm"
+      class="cursor-pointer rounded-sm underline inline hover:() text-sm"
       @click="expandInformation()"
     >
       {{ isExpanded ? 'Read less' : 'Read more' }}
