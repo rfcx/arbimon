@@ -26,14 +26,14 @@ export default class FilterTaxon extends Vue {
     }
   }
 
-  isSelectedTaxon (taxon: string): boolean {
-    return this.selectedTaxons.includes(taxon)
+  isSelectedTaxon (taxonSlug: string): boolean {
+    return this.selectedTaxons.includes(taxonSlug)
   }
 
-  updateSelectedTaxons (taxon: string): void {
-    const taxonIdx = this.selectedTaxons.findIndex(t => t === taxon)
+  updateSelectedTaxons (taxonSlug: string): void {
+    const taxonIdx = this.selectedTaxons.findIndex(t => t === taxonSlug)
     if (taxonIdx === -1) {
-      this.selectedTaxons.push(taxon)
+      this.selectedTaxons.push(taxonSlug)
     } else {
       this.selectedTaxons.splice(taxonIdx, 1)
     }
