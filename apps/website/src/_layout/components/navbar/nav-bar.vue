@@ -11,7 +11,7 @@
             <router-link to="/">
               <div class="flex-shrink-0 flex items-center ml-4 <sm:(mx-2)">
                 <img
-                  class="h-9 <sm:(h-7)"
+                  class="h-9 w-9 <sm:(h-7 w-7)"
                   src="/src/_services/assets/rfcx-logo.svg"
                   alt="Rainforest connection logo"
                 >
