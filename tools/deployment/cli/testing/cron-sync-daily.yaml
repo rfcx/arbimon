@@ -13,9 +13,6 @@ spec:
           containers:
           - name: biodiversity-cli-sync-db-daily
             command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/daily.js"]
-            # command: ["/bin/sh", "-c"]
-            # args:
-            #   - node --experimental-specifier-resolution=node apps/cli/lib/sync/all-project-species-call.js;
             image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/testing:latest
             imagePullPolicy: IfNotPresent
             envFrom:
