@@ -1,23 +1,15 @@
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+import { Sequelize } from 'sequelize'
+
 import { SOURCES } from '@rfcx-bio/common/dao/types/source'
 import { getSequentially } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { getWikiSummary } from '../data-ingest/species/input-wiki'
-import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '../data-ingest/species/output-wiki-postgres'
-import { getSequelize } from '../db/connections'
+import { getWikiSummary } from '../../data-ingest/species/input-wiki'
+import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '../../data-ingest/species/output-wiki-postgres'
 
-const main = async (): Promise<void> => {
-  const sequelize = getSequelize()
+export const syncWikiSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>): Promise<void> => {
+    const newData = Object.entries(await getSequentially(Object.keys(speciesNameToId), getWikiSummary))
 
-  // Lookups
-  const speciesNameToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
-
-  // Get new data from Wiki API
-  const newData = Object.entries(await getSequentially(Object.keys(speciesNameToId), getWikiSummary))
-
-  // Save new data to Bio DB
   await writeWikiSpeciesDataToPostgres(sequelize, newData.map(([name, data]) => ({
     taxonSpeciesId: speciesNameToId[name],
     description: data.content,
@@ -36,8 +28,4 @@ const main = async (): Promise<void> => {
       photoLicenseUrl: data.licenseUrl
     }
   }).filter(isDefined))
-
-  process.exit(0)
 }
-
-await main()
