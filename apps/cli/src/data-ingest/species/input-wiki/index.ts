@@ -64,9 +64,12 @@ export const getWikiSummary = async (scientificName: string): Promise<WikiSummar
   return {
     ...wikiSpeciesData,
     thumbnailImage: wikiSpecies?.thumbnail?.source,
-    credit: wikiImageInfo?.extmetadata.Artist?.value,
+    credit: wikiImageInfo?.extmetadata.Artist?.value
+      .replace(/<[^>]*>?/gm, '') // Remove HTML tags
+      .replace(/\s+/, ' ') // Remove linebreak
+      .trim(), // Remove trailing whitespace
     imageInfoUrl: wikiImageInfo?.descriptionurl,
     license: wikiImageInfo?.extmetadata.LicenseShortName.value,
-    licenseUrl: wikiImageInfo?.extmetadata.LicenseUrl?.value
+    licenseUrl: `${wikiSpecies?.content_urls?.desktop?.page}#/media/File:${fileName}`
   }
 }
