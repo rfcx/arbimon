@@ -31,7 +31,7 @@
             :src="spectrogram"
             class="rounded-md"
           >
-          <div class="absolute bottom-3 left-2 right-2">
+          <div class="absolute bottom-2 left-2 right-2">
             <div class="flex justify-between">
               <action-controller action-name="Visualizer">
                 <a :href="speciesCalls[idx].callMediaRedirectUrl">
