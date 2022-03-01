@@ -1,5 +1,6 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
+import { RouteLocationNormalized } from 'vue-router'
 
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
@@ -29,6 +30,14 @@ export default class SpeciesSelector extends Vue {
   override async created (): Promise<void> {
     this.selectedSpeciesSlug = this.speciesSlug
     this.allSpecies = await this.getAllSpecies()
+  }
+
+  @Watch('$route')
+  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
+    if (to.params.projectSlug !== from.params.projectSlug) {
+      this.selectedSpeciesSlug = ''
+      this.allSpecies = await this.getAllSpecies()
+    }
   }
 
   @Watch('speciesSlug')

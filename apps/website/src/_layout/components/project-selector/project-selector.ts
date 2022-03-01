@@ -1,6 +1,7 @@
 import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
+import { RouteParamsRaw } from 'vue-router'
 
 import { ApiProjectLight } from '@rfcx-bio/common/api-bio/common/projects'
 
@@ -37,7 +38,12 @@ export default class ProjectSelectorComponent extends Vue {
   async confirmedSelectedProject (): Promise<void> {
     if (this.newSelectedProject) {
       await this.store.updateSelectedProject(this.newSelectedProject)
-      await this.$router.push({ name: ROUTE_NAMES.dashboard, params: { projectSlug: this.newSelectedProject.slug } })
+      const params: RouteParamsRaw = { projectSlug: this.newSelectedProject.slug }
+      if (this.$route.name === ROUTE_NAMES.activityPatterns) {
+        await this.$router.push({ params: { ...params, speciesSlug: undefined } })
+      } else {
+        await this.$router.push({ params })
+      }
     }
     this.emitCloseProjectSelector()
   }

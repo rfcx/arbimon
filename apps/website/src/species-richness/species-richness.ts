@@ -1,9 +1,11 @@
 import { Options, Vue } from 'vue-class-component'
+import { Watch } from 'vue-property-decorator'
+import { RouteLocationNormalized } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, ComparisonFilter, ComparisonListComponent, filterToDataset } from '~/filters'
+import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { TimeBucket } from '~/time-buckets'
 import SpeciesRichnessByClass from './components/species-richness-by-class/species-richness-by-class.vue'
@@ -27,7 +29,7 @@ import { richnessService } from './services'
 })
 export default class SpeciesRichnessPage extends Vue {
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
-  filters: ComparisonFilter[] = []
+  filters: ColoredFilter[] = []
   detectionCounts: number[] = []
   speciesByClassDatasets: GroupedBarChartItem[] = []
   speciesByLocationDatasets: MapDataSet[] = []
@@ -38,17 +40,28 @@ export default class SpeciesRichnessPage extends Vue {
     return this.detectionCounts.length > 0 && this.detectionCounts.some(count => count > 0)
   }
 
+  @Watch('$route')
+  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
+    if (to.params.projectSlug !== from.params.projectSlug) {
+      await this.onDatasetChange()
+    }
+  }
+
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
+    this.filters = filters
+    await this.onDatasetChange()
+  }
+
+  async onDatasetChange (): Promise<void> {
     // TODO 117 - Only update the changed dataset
     const datasets = await (await Promise.all(
-      filters.map(async (filter) => {
+      this.filters.map(async (filter) => {
         const { startDate, endDate, sites, color, otherFilters } = filter
         const data = await richnessService.getRichnessDataset(filterToDataset(filter))
         return data ? { startDate, endDate, sites, color, otherFilters, data } : data
       })
     )).filter(isDefined)
 
-    this.filters = filters
     this.colors = datasets.map(ds => ds.color)
     this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.speciesByClassDatasets = getBarChartDataset(datasets)
