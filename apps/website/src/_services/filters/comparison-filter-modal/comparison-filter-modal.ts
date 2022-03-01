@@ -68,8 +68,8 @@ export default class ComparisonFilterModalComponent extends Vue {
     return this.selectedSiteGroups.length === 0
   }
 
-  get selectedTaxons (): string[] {
-    return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
+  get selectedTaxons (): number[] {
+    return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value) as number[]
   }
 
   get optionAllMatchingFilter (): SiteGroup | undefined {
