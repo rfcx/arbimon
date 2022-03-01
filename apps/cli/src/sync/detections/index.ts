@@ -10,22 +10,22 @@ import { getArbimonSpeciesFromMock } from '@/data-ingest/species/input-from-mock
 import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/output-arbimon-postgres'
 
 export const syncDetectionsForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
-  console.info('==> START SYNCING: project ', project.idArbimon)
+  console.info(`==> START SYNCING: project ${project.slug} (ID: ${project.idArbimon})`)
   // ABR QUERY: get detections from arbimon, then sites and species based on the detections
   const summaries = await getArbimonDetectionSummaries(project.idArbimon)
 
   if (summaries.length === 0) {
     // TODO: remove existing data from the database (if needed)
-    console.info(`| no summaries for ${project.idArbimon}`)
+    console.info(`| no summaries for ${project.slug} (ID: ${project.idArbimon})`)
     return
   }
 
-  const sites = await getSitesFromDetections(project.id, summaries)
-  const species = await getArbimonSpeciesFromMock(summaries)
+  const sites = getSitesFromDetections(project.id, summaries)
+  const species = getArbimonSpeciesFromMock(summaries)
 
-  console.info(`| summaries for ${project.idArbimon} = ${summaries.length}`)
-  console.info(`| sites for ${project.idArbimon} = ${sites.length}`)
-  console.info(`| species for ${project.idArbimon} = ${Object.entries(species).length}`)
+  console.info(`| summaries for ${project.slug} (ID: ${project.idArbimon}) = ${summaries.length}`)
+  console.info(`| sites for ${project.slug} (ID: ${project.idArbimon}) = ${sites.length}`)
+  console.info(`| species for ${project.slug} (ID: ${project.idArbimon}) = ${Object.entries(species).length}`)
 
   // TODO: save snapshot data, to compare with next sync if there is any changes then only write the changes to the db
 
