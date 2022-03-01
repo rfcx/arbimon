@@ -19,8 +19,8 @@
       <input
         type="checkbox"
         class="rounded"
-        :checked="isSelectedTaxon(taxon.name)"
-        @click="updateSelectedTaxons(taxon.name)"
+        :checked="isSelectedTaxon(taxon.slug)"
+        @click="updateSelectedTaxons(taxon.slug)"
       >
       <span class="text-white ml-2">{{ taxon.name }}</span>
     </label>
