@@ -6,7 +6,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const VIEW_NAME = 'dashboard_detections_by_site'
+const VIEW_NAME = 'dashboard_richness_by_site'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
@@ -16,12 +16,12 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            ls.name,
            ls.latitude,
            ls.longitude,
-           data.count
+           data.richness
     FROM (
         SELECT location_project_id,
                location_site_id,
-               sum(count) AS count
-        FROM detection_by_site_hour
+               count(1) AS richness
+        FROM detection_by_site_species_hour
         GROUP BY location_project_id, location_site_id
     ) data
     INNER JOIN location_site ls ON data.location_site_id = ls.id

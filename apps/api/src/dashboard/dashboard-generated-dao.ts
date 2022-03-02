@@ -15,8 +15,8 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Loca
     .findOne({
       where: { locationProjectId },
       raw: true
-     })
-     .then(res => res ?? { detectionCount: 0, siteCount: 0, speciesCount: 0 })
+    })
+    .then(res => res ?? { detectionCount: 0, siteCount: 0, speciesCount: 0 })
 
 export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpecies[]> =>
   await ModelRepository.getInstance(getSequelize())
@@ -52,6 +52,15 @@ export const getRichnessByRisk = async (locationProjectId: number): Promise<ApiS
     })
     .then(res => res.map(r => [r.riskRatingIucnId, r.count]))
 
+export const getRichnessBySite = async (locationProjectId: number): Promise<ApiMap> =>
+  await ModelRepository.getInstance(getSequelize())
+    .DashboardRichnessBySite
+    .findAll({
+      where: { locationProjectId },
+      attributes: ['name', 'latitude', 'longitude', ['richness', 'value']],
+      raw: true
+    }) as unknown as ApiMap
+
 export const getDetectionBySite = async (locationProjectId: number): Promise<ApiMap> =>
   await ModelRepository.getInstance(getSequelize())
     .DashboardDetectionsBySite
@@ -64,19 +73,6 @@ export const getDetectionBySite = async (locationProjectId: number): Promise<Api
 // OLD, not GOLD (gonna delete this)
 export const getRichnessByHour = async (): Promise<Record<number, number>> =>
   mapValues(groupByNumber(rawDetections, d => d.hour), detections => new Set(detections.map(d => d.species_id)).size)
-
-export const getRichnessBySite = async (): Promise<ApiMap> =>
-  Object.values(
-    mapValues(
-      groupBy(rawDetections, 'stream_id'),
-      (detections) => ({
-        name: detections[0].name,
-        longitude: detections[0].lon,
-        latitude: detections[0].lat,
-        value: new Set(detections.map(d => d.species_id)).size
-      })
-    )
-  )
 
 export const getDetectionByHour = async (): Promise<Record<number, number>> => {
   return mapValues(groupByNumber(rawDetections, d => d.hour), detections => {
