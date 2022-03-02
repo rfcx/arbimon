@@ -96,7 +96,7 @@ export default class ActivityPatternsPage extends Vue {
       })
     )).filter(isDefined)
 
-    this.isLocationRedacted = datasets[0].isLocationRedacted
+    this.isLocationRedacted = datasets[0]?.isLocationRedacted ?? true
     this.metrics = transformToMetricsDatasets(datasets)
     this.mapDatasets = transformToBySiteDataset(datasets)
     this.timeDatasets = datasets.map(({ color, detectionsByTimeHour, detectionsByTimeDay, detectionsByTimeMonth, detectionsByTimeDate }) => {
