@@ -79,16 +79,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataPr
     },
     {
-      id: 3,
-      idCore: 'rbj7k70v4na7',
-      idArbimon: 1918,
-      slug: 'fake-arbimon-project-for-bio',
-      slugArbimon: 'fake-arbimon-project-for-bio',
-      isPublished: true,
-      name: 'Fake Project',
-      ...dataPr
-    },
-    {
       id: 2,
       idCore: 'bci392pan298',
       idArbimon: 1209,
@@ -97,6 +87,16 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       isPublished: true,
       name: 'BCI-Panama_2018',
       ...dataBci
+    },
+    {
+      id: 3,
+      idCore: 'rbj7k70v4na7',
+      idArbimon: 1918,
+      slug: 'fake-arbimon-project-for-bio',
+      slugArbimon: 'fake-arbimon-project-for-bio',
+      isPublished: true,
+      name: 'Fake Project',
+      ...dataPr
     }
   ],
   testing: [
@@ -111,16 +111,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataPr
     },
     {
-      id: 3,
-      idCore: 'rbj7k70v4na7',
-      idArbimon: 1918,
-      slug: 'fake-arbimon-project-for-bio',
-      slugArbimon: 'fake-arbimon-project-for-bio',
-      isPublished: true,
-      name: 'Fake Project',
-      ...dataPr
-    },
-    {
       id: 2,
       idCore: 'bci392pan298',
       idArbimon: 1209,
@@ -129,6 +119,16 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       isPublished: true,
       name: 'BCI-Panama_2018',
       ...dataBci
+    },
+    {
+      id: 3,
+      idCore: 'rbj7k70v4na7',
+      idArbimon: 1918,
+      slug: 'fake-arbimon-project-for-bio',
+      slugArbimon: 'fake-arbimon-project-for-bio',
+      isPublished: true,
+      name: 'Fake Project',
+      ...dataPr
     }
   ],
   staging: [
