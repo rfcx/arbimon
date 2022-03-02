@@ -6,7 +6,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const VIEW_NAME = 'dashboard_detections_by_site'
+const VIEW_NAME = 'dashboard_detection_by_site'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(

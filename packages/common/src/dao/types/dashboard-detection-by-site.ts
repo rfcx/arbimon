@@ -1,4 +1,4 @@
-export interface DashboardDetectionsBySite {
+export interface DashboardDetectionBySite {
   locationProjectId: number
   name: string
   latitude: number

@@ -1,11 +1,7 @@
-import { groupBy, mapValues, sum } from 'lodash-es'
-
-import { ApiMap, ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
+import { ApiLine, ApiMap, ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectMetricLight } from '@rfcx-bio/common/dao/types/location-project-metric'
-import { rawDetections } from '@rfcx-bio/common/mock-data'
-import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { getSequelize } from '../_services/db'
 
@@ -63,7 +59,7 @@ export const getRichnessBySite = async (locationProjectId: number): Promise<ApiM
 
 export const getDetectionBySite = async (locationProjectId: number): Promise<ApiMap> =>
   await ModelRepository.getInstance(getSequelize())
-    .DashboardDetectionsBySite
+    .DashboardDetectionBySite
     .findAll({
       where: { locationProjectId },
       attributes: ['name', 'latitude', 'longitude', ['count', 'value']],

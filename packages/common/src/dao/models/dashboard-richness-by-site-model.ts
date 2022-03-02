@@ -9,13 +9,17 @@ export const TABLE_DASHBOARD_RICHNESS_BY_SITE = 'dashboard_richness_by_site'
 export const DashboardRichnessBySiteModel = defineWithDefaults<DashboardRichnessBySite>(
   MODEL_DASHBOARD_RICHNESS_BY_SITE,
   {
-    // Dimensions
+    // PK
     locationProjectId: { // 1
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING(255),
+      primaryKey: true
     },
 
     // Facts
-    name: DataTypes.STRING(255),
     latitude: DataTypes.INTEGER,
     longitude: DataTypes.INTEGER,
     richness: DataTypes.INTEGER
