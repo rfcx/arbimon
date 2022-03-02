@@ -1,3 +1,4 @@
+import { DashboardDetectionsBySiteModel, MODEL_DASHBOARD_DETECTIONS_BY_SITE } from './models/dashboard-detections-by-site-model'
 import { DashboardRichnessByRiskModel, MODEL_DASHBOARD_RICHNESS_BY_RISK } from './models/dashboard-richness-by-risk-model'
 import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/dashboard-richness-by-taxon-model'
 import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED } from './models/dashboard-species-highlighted-model'
@@ -35,6 +36,7 @@ export const modelRegistrations = <const>{
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
 
   // Views
+  [MODEL_DASHBOARD_DETECTIONS_BY_SITE]: [DashboardDetectionsBySiteModel],
   [MODEL_DASHBOARD_RICHNESS_BY_RISK]: [DashboardRichnessByRiskModel],
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
