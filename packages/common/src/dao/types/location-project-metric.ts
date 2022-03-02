@@ -4,3 +4,9 @@ export interface LocationProjectMetric {
   siteCount: number
   speciesCount: number
 }
+
+export type LocationProjectMetricLight = Pick<LocationProjectMetric,
+  'detectionCount' |
+  'siteCount' |
+  'speciesCount'
+>
