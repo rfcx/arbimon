@@ -39,8 +39,8 @@ export const modelRegistrations = <const>{
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
 
   // Views
-  [MODEL_DASHBOARD_DETECTIONS_BY_SITE]: [DashboardDetectionsBySiteModel],
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
+  [MODEL_DASHBOARD_DETECTION_BY_SITE]: [DashboardDetectionBySiteModel],
   [MODEL_DASHBOARD_RICHNESS_BY_HOUR]: [DashboardRichnessByHourModel],
   [MODEL_DASHBOARD_RICHNESS_BY_SITE]: [DashboardRichnessBySiteModel],
   [MODEL_DASHBOARD_RICHNESS_BY_RISK]: [DashboardRichnessByRiskModel],
