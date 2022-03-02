@@ -21,8 +21,8 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
     getRichnessByRisk(projectIdInteger),
     getRichnessBySite(projectIdInteger),
     getDetectionBySite(projectIdInteger),
-    getRichnessByHour(),
-    getDetectionByHour()
+    getRichnessByHour(projectIdInteger),
+    getDetectionByHour(projectIdInteger)
   ])
 
   // Response

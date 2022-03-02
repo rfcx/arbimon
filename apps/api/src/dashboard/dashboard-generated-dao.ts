@@ -70,12 +70,24 @@ export const getDetectionBySite = async (locationProjectId: number): Promise<Api
       raw: true
     }) as unknown as ApiMap
 
-// OLD, not GOLD (gonna delete this)
-export const getRichnessByHour = async (): Promise<Record<number, number>> =>
-  mapValues(groupByNumber(rawDetections, d => d.hour), detections => new Set(detections.map(d => d.species_id)).size)
+export const getRichnessByHour = async (locationProjectId: number): Promise<ApiLine> =>
+  Object.fromEntries(
+    await ModelRepository.getInstance(getSequelize())
+      .DashboardRichnessByHour
+      .findAll({
+        where: { locationProjectId },
+        raw: true
+      })
+      .then(res => res.map(r => [r.hour, r.richness]))
+  )
 
-export const getDetectionByHour = async (): Promise<Record<number, number>> => {
-  return mapValues(groupByNumber(rawDetections, d => d.hour), detections => {
-    return sum(detections.map(d => d.num_of_recordings))
-  })
-}
+export const getDetectionByHour = async (locationProjectId: number): Promise<ApiLine> =>
+  Object.fromEntries(
+    await ModelRepository.getInstance(getSequelize())
+      .DashboardDetectionByHour
+      .findAll({
+        where: { locationProjectId },
+        raw: true
+      })
+      .then(res => res.map(r => [r.hour, r.count]))
+  )
