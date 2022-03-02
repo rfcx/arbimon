@@ -27,7 +27,8 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
 
   // Response
   return {
-    ...projectMetrics ?? { detectionCount: 0, siteCount: 0, speciesCount: 0, speciesThreatenedCount: 0 },
+    ...projectMetrics ?? { detectionCount: 0, siteCount: 0, speciesCount: 0 },
+    speciesThreatenedCount: speciesThreatened.length,
     speciesThreatened: speciesThreatened.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingIucnId, photoUrl }) => ({
       slug: taxonSpeciesSlug,
       taxonSlug: taxonClassSlug,
