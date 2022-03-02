@@ -6,28 +6,20 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const VIEW_NAME = 'dashboard_richness_by_taxon'
-const INDEX_COLS = ['location_project_id', 'count']
+const VIEW_NAME = 'dashboard_richness_by_risk'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
-    create materialized view ${VIEW_NAME} as
+    create view ${VIEW_NAME} as
     SELECT sip.location_project_id,
-           sip.taxon_class_id,
-           COUNT(1) AS count
+           sip.risk_rating_iucn_id,
+           Count(1) AS count
     FROM species_in_project sip
-    GROUP BY sip.location_project_id, sip.taxon_class_id
-    ORDER BY sip.location_project_id, sip.taxon_class_id ASC
-    ;
+    GROUP BY sip.location_project_id, sip.risk_rating_iucn_id
+    ORDER BY sip.location_project_id, sip.risk_rating_iucn_id DESC
     `
   )
-
-  for (const indexCol of INDEX_COLS) {
-    await params.context.sequelize.query(
-      `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
-    )
-  }
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

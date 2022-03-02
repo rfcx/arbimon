@@ -14,9 +14,7 @@
             :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug } }"
           />
           <horizontal-stacked-distribution
-            v-if="generated?.richnessByTaxon && generated?.speciesCount"
-            :dataset="generated?.richnessByTaxon ?? []"
-            :colors="taxonColors"
+            :dataset="richnessByTaxon"
             :known-total-count="generated?.speciesCount ?? 0"
             class="mt-4"
           />
@@ -32,9 +30,7 @@
             class="mt-5 sm:mt-0 lg:mt-5"
           />
           <horizontal-stacked-distribution
-            v-if="generated?.richnessByExtinction && generated?.speciesCount"
-            :dataset="generated?.richnessByExtinction ?? []"
-            :colors="extinctionColors"
+            :dataset="richnessByRisk"
             :known-total-count="generated?.speciesCount ?? 0"
             class="mt-4"
           />

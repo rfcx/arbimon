@@ -7,11 +7,10 @@ import { RouteLocationNormalized } from 'vue-router'
 
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
-import { EXTINCTION_LABELS_AND_COLORS } from '@rfcx-bio/common/iucn'
-import { TAXONOMY_COLORS } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { downloadSvgAsPng } from '~/charts'
+import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
@@ -23,6 +22,7 @@ import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
+import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
 import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
@@ -169,12 +169,20 @@ export default class DashboardPage extends Vue {
     }))
   }
 
-  get taxonColors (): Record<string, string> {
-    return TAXONOMY_COLORS
+  get richnessByTaxon (): HorizontalStack[] {
+    return (this.generated?.richnessByTaxon ?? [])
+      .map(([taxonId, count]) => {
+        const taxonClass = TAXON_CLASSES_BY_ID[taxonId]
+        return { name: taxonClass.commonName, color: taxonClass.color, count }
+      })
   }
 
-  get extinctionColors (): Record<string, string> {
-    return EXTINCTION_LABELS_AND_COLORS
+  get richnessByRisk (): HorizontalStack[] {
+    return (this.generated?.richnessByRisk ?? [])
+      .map(([taxonId, count]) => {
+        const taxonClass = RISKS_BY_ID[taxonId]
+        return { name: taxonClass.label, color: taxonClass.color, count }
+      })
   }
 
   override async created (): Promise<void> {

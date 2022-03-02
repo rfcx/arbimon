@@ -1,6 +1,6 @@
 import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 
-import { getDetectionByHour, getDetectionBySite, getProjectMetrics, getRichnessByExtinction, getRichnessByHour, getRichnessBySite, getRichnessByTaxon, getSpeciesThreatened } from '@/dashboard/dashboard-generated-dao'
+import { getDetectionByHour, getDetectionBySite, getProjectMetrics, getRichnessByHour, getRichnessByRisk, getRichnessBySite, getRichnessByTaxon, getSpeciesThreatened } from '@/dashboard/dashboard-generated-dao'
 import { Handler } from '../_services/api-helpers/types'
 import { BioInvalidPathParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
@@ -14,13 +14,13 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
   // Queries
-  const [projectMetrics, speciesThreatened, richnessByExtinction, richnessByHour, richnessBySite, richnessByTaxon, detectionByHour, detectionBySite] = await Promise.all([
+  const [projectMetrics, speciesThreatened, richnessByTaxon, richnessByRisk, richnessByHour, richnessBySite, detectionByHour, detectionBySite] = await Promise.all([
     getProjectMetrics(projectIdInteger),
     getSpeciesThreatened(projectIdInteger),
-    getRichnessByExtinction(),
+    getRichnessByTaxon(projectIdInteger),
+    getRichnessByRisk(projectIdInteger),
     getRichnessByHour(),
     getRichnessBySite(),
-    getRichnessByTaxon(),
     getDetectionByHour(),
     getDetectionBySite()
   ])
@@ -37,10 +37,10 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
       riskId: riskRatingIucnId,
       photoUrl
     })),
-    richnessByExtinction,
+    richnessByTaxon: richnessByTaxon.map(r => [r.taxonClassId, r.count]),
+    richnessByRisk: richnessByRisk.map(r => [r.riskRatingIucnId, r.count]),
     richnessByHour,
     richnessBySite,
-    richnessByTaxon,
     detectionByHour,
     detectionBySite
   }

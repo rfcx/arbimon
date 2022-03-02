@@ -14,8 +14,8 @@ export const DashboardRichnessByTaxonModel = defineWithDefaults<DashboardRichnes
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    commonName: {
-      type: DataTypes.STRING(255),
+    taxonClassId: {
+      type: DataTypes.INTEGER,
       primaryKey: true
     },
 

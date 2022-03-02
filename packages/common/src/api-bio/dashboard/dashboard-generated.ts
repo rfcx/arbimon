@@ -23,10 +23,10 @@ export interface DashboardGeneratedResponse {
   speciesThreatened: DashboardSpecies[]
 
   // Charts & maps
-  richnessByExtinction: ApiStack
-  richnessByHour: ApiLine
-  richnessBySite: ApiMap
   richnessByTaxon: ApiStack
-  detectionByHour: ApiLine
+  richnessByRisk: ApiStack
+  richnessBySite: ApiMap
   detectionBySite: ApiMap
+  richnessByHour: ApiLine
+  detectionByHour: ApiLine
 }
