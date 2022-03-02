@@ -3,5 +3,4 @@ export interface LocationProjectMetric {
   detectionCount: number
   siteCount: number
   speciesCount: number
-  speciesThreatenedCount: number
 }
