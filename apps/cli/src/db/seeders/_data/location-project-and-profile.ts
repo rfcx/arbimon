@@ -70,6 +70,16 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
   local: [
     {
       id: 1,
+      idCore: 'zy5jbxx4cs9f',
+      idArbimon: 1556,
+      slug: 'puerto-rico',
+      slugArbimon: 'puerto-rico',
+      isPublished: true,
+      name: 'Puerto Rico',
+      ...dataPr
+    },
+    {
+      id: 3,
       idCore: 'rbj7k70v4na7',
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
@@ -92,6 +102,16 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
   testing: [
     {
       id: 1,
+      idCore: 'zy5jbxx4cs9f',
+      idArbimon: 1556,
+      slug: 'puerto-rico',
+      slugArbimon: 'puerto-rico',
+      isPublished: true,
+      name: 'Puerto Rico',
+      ...dataPr
+    },
+    {
+      id: 3,
       idCore: 'rbj7k70v4na7',
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
