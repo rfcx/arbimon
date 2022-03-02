@@ -14,34 +14,27 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
   // Queries
-  const [projectMetrics, speciesThreatened, richnessByTaxon, richnessByRisk, richnessByHour, richnessBySite, detectionByHour, detectionBySite] = await Promise.all([
+  const [projectMetrics, speciesThreatened, richnessByTaxon, richnessByRisk, richnessBySite, detectionBySite, richnessByHour, detectionByHour] = await Promise.all([
     getProjectMetrics(projectIdInteger),
     getSpeciesThreatened(projectIdInteger),
     getRichnessByTaxon(projectIdInteger),
     getRichnessByRisk(projectIdInteger),
-    getRichnessByHour(),
     getRichnessBySite(),
-    getDetectionByHour(),
-    getDetectionBySite()
+    getDetectionBySite(projectIdInteger),
+    getRichnessByHour(),
+    getDetectionByHour()
   ])
 
   // Response
   return {
-    ...projectMetrics ?? { detectionCount: 0, siteCount: 0, speciesCount: 0 },
+    ...projectMetrics,
     speciesThreatenedCount: speciesThreatened.length,
-    speciesThreatened: speciesThreatened.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingIucnId, photoUrl }) => ({
-      slug: taxonSpeciesSlug,
-      taxonSlug: taxonClassSlug,
-      scientificName,
-      commonName,
-      riskId: riskRatingIucnId,
-      photoUrl
-    })),
-    richnessByTaxon: richnessByTaxon.map(r => [r.taxonClassId, r.count]),
-    richnessByRisk: richnessByRisk.map(r => [r.riskRatingIucnId, r.count]),
-    richnessByHour,
+    speciesThreatened,
+    richnessByTaxon,
+    richnessByRisk,
     richnessBySite,
-    detectionByHour,
-    detectionBySite
+    detectionBySite,
+    richnessByHour,
+    detectionByHour
   }
 }
