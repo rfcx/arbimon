@@ -152,7 +152,7 @@ const getDetectionDataBySite = async (models: AllModels, detections: DetectionBy
 async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> {
   const totalRecordingCount = getRecordingDurationMinutes(detections)
   let filteredDetections = detections
-  // Filter the protected species out if the user don't have permission
+  // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
   if (!hasProjectPermission) {
     const protectedSpecies = await models.TaxonSpeciesIucn.findAll({
       where: { riskRatingIucnId: PROTECTED_RISK_RATING_IDS },
@@ -168,6 +168,8 @@ async function getDetectionDataBySpecies (models: AllModels, detections: Detecti
   const totalSiteCount = new Set(filteredDetections.map(({ locationSiteId }) => locationSiteId)).size
 
   // TODO ???: Move query to somewhere more global
+  const taxonClasses = await models.TaxonClass.findAll({ raw: true })
+
   const speciesIds = Object.keys(detectionsBySpecies)
   const species = await models.SpeciesInProject.findAll({
     where: { taxonSpeciesId: speciesIds },
@@ -186,7 +188,7 @@ async function getDetectionDataBySpecies (models: AllModels, detections: Detecti
     activityOverviewDataBySpecies.push({
       commonName: matchedSpecies?.commonName ?? '',
       scientificName: matchedSpecies?.scientificName ?? '',
-      taxon: matchedSpecies?.taxonClassSlug ?? '',
+      taxon: taxonClasses.find(({ slug }) => matchedSpecies?.taxonClassSlug === slug)?.commonName ?? '',
       detectionCount,
       detectionFrequency,
       occupiedSites,
