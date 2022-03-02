@@ -146,9 +146,9 @@ async function filterSpeciesDetection (models: AllModels, projectId: number, fil
   })
 }
 
-function getRecordingCount (detections: DetectionBySiteSpeciesHour[]): number {
-  const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.locationSiteId}`))
-  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
+function getRecordingCount (summaries: DetectionBySiteSpeciesHour[]): number {
+  const summariesBySiteHour = Object.values(groupBy(summaries, s => `${s.timePrecisionHourLocal.getTime()}-${s.locationSiteId}`))
+  return sum(summariesBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
 }
 
 function calculateDetectionActivity (detections: DetectionBySiteSpeciesHour[]): number {
