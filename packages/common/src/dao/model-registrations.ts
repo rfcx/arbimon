@@ -1,4 +1,6 @@
-import { DashboardDetectionsBySiteModel, MODEL_DASHBOARD_DETECTIONS_BY_SITE } from './models/dashboard-detections-by-site-model'
+import { DashboardDetectionByHourModel, MODEL_DASHBOARD_DETECTION_BY_HOUR } from './models/dashboard-detection-by-hour-model'
+import { DashboardDetectionBySiteModel, MODEL_DASHBOARD_DETECTION_BY_SITE } from './models/dashboard-detection-by-site-model'
+import { DashboardRichnessByHourModel, MODEL_DASHBOARD_RICHNESS_BY_HOUR } from './models/dashboard-richness-by-hour-model'
 import { DashboardRichnessByRiskModel, MODEL_DASHBOARD_RICHNESS_BY_RISK } from './models/dashboard-richness-by-risk-model'
 import { DashboardRichnessBySiteModel, MODEL_DASHBOARD_RICHNESS_BY_SITE } from './models/dashboard-richness-by-site-model'
 import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/dashboard-richness-by-taxon-model'
@@ -38,6 +40,8 @@ export const modelRegistrations = <const>{
 
   // Views
   [MODEL_DASHBOARD_DETECTIONS_BY_SITE]: [DashboardDetectionsBySiteModel],
+  [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
+  [MODEL_DASHBOARD_RICHNESS_BY_HOUR]: [DashboardRichnessByHourModel],
   [MODEL_DASHBOARD_RICHNESS_BY_SITE]: [DashboardRichnessBySiteModel],
   [MODEL_DASHBOARD_RICHNESS_BY_RISK]: [DashboardRichnessByRiskModel],
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
