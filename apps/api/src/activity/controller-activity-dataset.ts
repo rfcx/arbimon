@@ -10,6 +10,7 @@ import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { BioInvalidQueryParamError } from '~/errors'
+import { PROTECTED_RISK_RATING_IDS } from '~/security/location-redacted'
 import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
@@ -48,7 +49,7 @@ const getActivityOverviewData = async (projectId: number, filter: FilterDataset,
 
   // Filtering
   const totalDetections = await filterDetecions(models, projectId, filter)
-  const totalRecordingCount = getRecordingCount(totalDetections)
+  const totalRecordingCount = getRecordingDurationMinutes(totalDetections)
 
   const detectionsBySite = await getDetectionDataBySite(models, totalDetections)
   const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission)
@@ -86,6 +87,7 @@ async function filterDetecions (models: AllModels, projectId: number, filter: Fi
     where.locationSiteId = siteIds
   }
 
+  // ! Be careful
   if (taxons.length > 0) {
     where.taxonClassId = taxons
   }
@@ -96,10 +98,9 @@ async function filterDetecions (models: AllModels, projectId: number, filter: Fi
   })
 }
 
-function getRecordingCount (detections: DetectionBySiteSpeciesHour[]): number {
-  // TODO: Better way to handle case where `durationMinutes` is not stable
-  const durationMinutes = detections.length > 0 ? detections[0].durationMinutes : 0
-  return new Set(detections.map(d => d.timePrecisionHourLocal)).size * durationMinutes
+function getRecordingDurationMinutes (detections: DetectionBySiteSpeciesHour[]): number {
+  const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.locationSiteId}`))
+  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
 }
 
 function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
@@ -126,7 +127,7 @@ const getDetectionDataBySite = async (models: AllModels, detections: DetectionBy
   })
 
   const summariesBySites = mapValues(detectionsBySites, (detectionsSummaries, siteIdString) => {
-    const totalRecordingCount = getRecordingCount(detectionsSummaries)
+    const totalRecordingCount = getRecordingDurationMinutes(detectionsSummaries)
 
     const detectionCount = sum(detectionsSummaries.map(({ count }) => count))
     const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
@@ -149,16 +150,12 @@ const getDetectionDataBySite = async (models: AllModels, detections: DetectionBy
 }
 
 async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> {
+  const totalRecordingCount = getRecordingDurationMinutes(detections)
   let filteredDetections = detections
+  // Filter the protected species out if the user don't have permission
   if (!hasProjectPermission) {
-    const protectedCodes = await models.RiskRatingIucn.findAll({
-      where: { isThreatened: true },
-      raw: true
-    })
-
-    const protectedCodeIds = protectedCodes.map(c => c.idOrdered)
     const protectedSpecies = await models.TaxonSpeciesIucn.findAll({
-      where: { riskRatingIucnId: protectedCodeIds },
+      where: { riskRatingIucnId: PROTECTED_RISK_RATING_IDS },
       raw: true
     })
 
@@ -169,7 +166,6 @@ async function getDetectionDataBySpecies (models: AllModels, detections: Detecti
 
   const detectionsBySpecies = groupBy(filteredDetections, 'taxonSpeciesId')
   const totalSiteCount = new Set(filteredDetections.map(({ locationSiteId }) => locationSiteId)).size
-  const totalRecordingCount = getRecordingCount(filteredDetections)
 
   // TODO ???: Move query to somewhere more global
   const speciesIds = Object.keys(detectionsBySpecies)
@@ -182,7 +178,7 @@ async function getDetectionDataBySpecies (models: AllModels, detections: Detecti
   for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
     const detectionCount = calculateDetectionCount(speciesDetectedDetections)
     const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingCount)
-    const occupiedSites = new Set(detections.map(({ locationSiteId }) => locationSiteId)).size
+    const occupiedSites = new Set(speciesDetectedDetections.map(({ locationSiteId }) => locationSiteId)).size
     const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
 
     const matchedSpecies = species.find(({ taxonSpeciesId }) => taxonSpeciesId === Number(speciesId))
