@@ -1,6 +1,5 @@
 import { FastifyLoggerInstance } from 'fastify'
 
-import { BioForbiddenError } from '~/errors'
 import { getProjectPermission } from '../api-core/api-core'
 
 export const isValidToken = (token: string): boolean => /^Bearer ./i.test(token) // at least 1 character after space
@@ -12,7 +11,7 @@ export async function isProjectMember (logger: FastifyLoggerInstance, id: string
     .then(() => true)
     .catch(err => {
       // Forbidden is expected (it means the user is not a project member)
-      if (err instanceof BioForbiddenError) return false
+      if (err?.statusCode === 403) return false
 
       // Log unexpected errors
       logger.error(err)
