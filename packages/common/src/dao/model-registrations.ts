@@ -1,5 +1,6 @@
 import { DashboardDetectionsBySiteModel, MODEL_DASHBOARD_DETECTIONS_BY_SITE } from './models/dashboard-detections-by-site-model'
 import { DashboardRichnessByRiskModel, MODEL_DASHBOARD_RICHNESS_BY_RISK } from './models/dashboard-richness-by-risk-model'
+import { DashboardRichnessBySiteModel, MODEL_DASHBOARD_RICHNESS_BY_SITE } from './models/dashboard-richness-by-site-model'
 import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/dashboard-richness-by-taxon-model'
 import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED } from './models/dashboard-species-highlighted-model'
 import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
@@ -28,15 +29,16 @@ export const modelRegistrations = <const>{
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
   [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
+  [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
   [MODEL_TAXON_SPECIES_CALL]: [TaxonSpeciesCallModel, { manyToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_IUCN]: [TaxonSpeciesIucnModel, { oneToOne: [MODEL_TAXON_SPECIES], manyToOne: [MODEL_RISK_RATING_IUCN] }],
-  [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
   [MODEL_TAXON_SPECIES_PHOTO]: [TaxonSpeciesPhotoModel, { manyToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_RFCX]: [TaxonSpeciesRfcxModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
 
   // Views
   [MODEL_DASHBOARD_DETECTIONS_BY_SITE]: [DashboardDetectionsBySiteModel],
+  [MODEL_DASHBOARD_RICHNESS_BY_SITE]: [DashboardRichnessBySiteModel],
   [MODEL_DASHBOARD_RICHNESS_BY_RISK]: [DashboardRichnessByRiskModel],
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],

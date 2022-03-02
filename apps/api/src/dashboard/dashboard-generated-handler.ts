@@ -19,7 +19,7 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
     getSpeciesThreatened(projectIdInteger),
     getRichnessByTaxon(projectIdInteger),
     getRichnessByRisk(projectIdInteger),
-    getRichnessBySite(),
+    getRichnessBySite(projectIdInteger),
     getDetectionBySite(projectIdInteger),
     getRichnessByHour(),
     getDetectionByHour()
