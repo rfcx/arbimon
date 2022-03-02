@@ -5,7 +5,7 @@
         <div class="sm:(flex flex-row items-center)">
           <select
             v-model="selectedType"
-            class="text-xl py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-1 focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
+            class="text-xl text-subtle py-1 bg-mirage-grey border-t-0 border-l-0 border-r-0 border-b-1 border-dotted focus:(border-box-grey border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
           >
             <option
               v-for="item in datasetTypes"
@@ -15,7 +15,7 @@
               {{ item.label }}
             </option>
           </select>
-          <h2 class="text-white text-xl sm:(ml-1)">
+          <h2 class="text-subtle text-xl sm:(ml-1)">
             by location
           </h2>
         </div>
