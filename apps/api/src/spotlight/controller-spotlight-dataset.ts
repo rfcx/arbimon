@@ -147,9 +147,8 @@ async function filterSpeciesDetection (models: AllModels, projectId: number, fil
 }
 
 function getRecordingCount (detections: DetectionBySiteSpeciesHour[]): number {
-  // TODO: Better way to handle case where `durationMinutes` is not stable
-  const durationMinutes = detections.length > 0 ? detections[0].durationMinutes : 0
-  return new Set(detections.map(d => d.timePrecisionHourLocal)).size * durationMinutes
+  const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.locationSiteId}`))
+  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
 }
 
 function calculateDetectionActivity (detections: DetectionBySiteSpeciesHour[]): number {
