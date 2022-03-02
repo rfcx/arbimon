@@ -14,9 +14,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
     create materialized view ${VIEW_NAME} AS
     SELECT d.location_project_id,
-       Count(1)                           AS detection_count,
-       Count(distinct d.location_site_id) as site_count,
-       Count(distinct d.taxon_species_id) as species_count,
+           Sum(d.count)                       AS detection_count,
+           Count(distinct d.location_site_id) AS site_count,
+           Count(distinct d.taxon_species_id) AS species_count
     FROM detection_by_site_species_hour d
     GROUP BY d.location_project_id
     ;
