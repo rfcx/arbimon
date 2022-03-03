@@ -1,3 +1,5 @@
+import { SpeciesLight } from '../species/types'
+
 export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear' | 'dateSeries'
 
 export type SpeciesCountByTaxonName = Record<string, number>
@@ -12,4 +14,8 @@ export interface MapSiteData {
 // TODO 266 - Decouple maps
 export interface DistinctSpecies {
   [key: string]: number | boolean
+}
+
+export interface SpeciesPresence {
+  [speciesId: number]: SpeciesLight
 }
