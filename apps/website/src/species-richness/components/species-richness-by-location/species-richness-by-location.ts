@@ -57,7 +57,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   }
 
   get circleFormatter (): CircleFormatter {
-    // ! After connect to the api, there is a case where `maxPixels` = -Infinity
+    // ! After connect to the api, there is a case where `maxValueRaw` = -Infinity
     // ! Have to investigate more
     return new CircleFormatterNormalizedWithMin({ maxValueRaw: Math.max(0, this.datasets[0].maxValues[this.mapDataKey]) })
   }
