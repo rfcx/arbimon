@@ -1,5 +1,5 @@
 import { FilterDatasetQuery } from '../common/filter'
-import { SpeciesCountByTaxonName } from './common'
+import { MapSiteData, SpeciesCountByTaxonName } from './common'
 
 // Request
 export interface RichnessDatasetParams {
@@ -18,7 +18,7 @@ export interface RichnessDatasetResponse {
   isLocationRedacted: boolean
   detectionCount: number
   speciesByTaxon: SpeciesCountByTaxonName
-  // speciesBySite: MapSiteData[]
+  speciesBySite: MapSiteData[]
   // speciesByTime: Record<TimeBucket, Record<number, number>>
   // speciesPresence: { [speciesId: string]: SpeciesLight }
 }
