@@ -1,14 +1,16 @@
-import { groupBy, keyBy } from 'lodash-es'
+import { groupBy, keyBy, mapValues } from 'lodash-es'
 import { Op, QueryTypes, Sequelize } from 'sequelize'
 
-import { DistinctSpecies, MapSiteData, SpeciesCountByTaxonName, SpeciesPresence } from '@rfcx-bio/common/api-bio/richness/common'
+import { DistinctSpecies, MapSiteData, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from '@rfcx-bio/common/api-bio/richness/common'
 import { RichnessDatasetParams, RichnessDatasetQuery, RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHour, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { BioInvalidQueryParamError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'
+import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
 import { FilterDataset } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
@@ -57,14 +59,15 @@ const getRichnessDatasetInformation = async (projectId: number, filter: FilterDa
 
   const speciesByTaxon = await getSpeciesByTaxon(models, sequelize, projectId, filter, taxonClassByKeys)
   const speciesBySite = await getSpeciesBySite(sequelize, projectId, filter, taxonClassByKeys, siteByKeys)
-  const speciesPresence = await getSpeciesPresence(models, sequelize, projectId, filter, taxonClassByKeys)
+  const speciesByTime = await getSpeciesByTime(detections)
+  const speciesPresence = await getSpeciesPresence(models, projectId, filter, taxonClassByKeys)
 
   return {
     isLocationRedacted,
     detectionCount: detections.length,
     speciesByTaxon,
     speciesBySite,
-    // speciesByTime: getSpeciesByTime(detections),
+    speciesByTime,
     speciesPresence
   }
 }
@@ -204,20 +207,21 @@ const getSpeciesBySite = async (sequelize: Sequelize, projectId: number, filter:
     })
 }
 
-// const calculateSpeciesRichness = (detections: MockHourlyDetectionSummary[]): number => new Set(detections.map(d => d.species_id)).size
+const calculateSpeciesRichness = (detections: DetectionBySiteSpeciesHour[]): number => new Set(detections.map(d => d.taxonSpeciesId)).size
 
-// const getSpeciesByTime = (detections: MockHourlyDetectionSummary[]): Record<TimeBucket, Record<number, number>> => {
-//   const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
+// TODO 640: Change to query from db instead of by js function
+const getSpeciesByTime = async (detections: DetectionBySiteSpeciesHour[]): Promise<Record<TimeBucket, Record<number, number>>> => {
+  const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
 
-//   return {
-//     hourOfDay: mapValues(groupByNumber(detections, d => d.hour), calculateSpeciesRichness),
-//     dayOfWeek: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).isoWeekday() - 1), calculateSpeciesRichness),
-//     monthOfYear: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).month()), calculateSpeciesRichness),
-//     dateSeries: mapValues(groupByNumber(detections, d => dayjs.utc(d.date).startOf('day').unix() / SECONDS_PER_DAY), calculateSpeciesRichness)
-//   }
-// }
+  return {
+    hourOfDay: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).hour()), calculateSpeciesRichness),
+    dayOfWeek: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1), calculateSpeciesRichness),
+    monthOfYear: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).month()), calculateSpeciesRichness),
+    dateSeries: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY), calculateSpeciesRichness)
+  }
+}
 
-const getSpeciesPresence = async (models: AllModels, sequelize: Sequelize, projectId: number, filter: FilterDataset, taxonClassByKeys: Dictionary<TaxonClass>): Promise<SpeciesPresence> => {
+const getSpeciesPresence = async (models: AllModels, projectId: number, filter: FilterDataset, taxonClassByKeys: Dictionary<TaxonClass>): Promise<SpeciesPresence> => {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
