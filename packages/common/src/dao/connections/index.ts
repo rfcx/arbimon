@@ -1,3 +1,4 @@
+import pg from 'pg'
 import { Options, Sequelize } from 'sequelize'
 
 interface BioDbOptions {
@@ -16,6 +17,7 @@ export const getSequelizeBase = ({ host, port, databaseName, user, password, isS
     host,
     port,
     dialect: 'postgres',
+    dialectModule: pg,
     dialectOptions: {
       ssl: isSsl
         ? {
