@@ -1,6 +1,11 @@
 import pg from 'pg'
 import { Options, Sequelize } from 'sequelize'
 
+/**
+ * Another way to support sequelize `COUNT` fn to return number: https://github.com/sequelize/sequelize/issues/2383
+ * pg.defaults.parseInt8 = true
+ */
+
 interface BioDbOptions {
   host: string
   port: number
