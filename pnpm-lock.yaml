@@ -280,14 +280,20 @@ importers:
   packages/common:
     specifiers:
       '@rfcx-bio/utils': workspace:^0.0.1
+      '@types/pg': ^8.6.4
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
+      pg: ^8.7.1
+      pg-hstore: ^2.3.4
       sequelize: 7.0.0-alpha.5
     dependencies:
       '@rfcx-bio/utils': link:../utils
+      '@types/pg': 8.6.4
       dayjs: 1.10.7
       lodash-es: 4.17.21
-      sequelize: 7.0.0-alpha.5
+      pg: 8.7.1
+      pg-hstore: 2.3.4
+      sequelize: 7.0.0-alpha.5_pg-hstore@2.3.4+pg@8.7.1
 
   packages/utils:
     specifiers:
@@ -2410,6 +2416,14 @@ packages:
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
     dev: true
+
+  /@types/pg/8.6.4:
+    resolution: {integrity: sha512-uYA7UMVzDFpJobCrqwW/iWkFmvizy6knIUgr0Quaw7K1Le3ZnF7hI3bKqFoxPZ+fju1Sc7zdTvOl9YfFZPcmeA==}
+    dependencies:
+      '@types/node': 16.11.6
+      pg-protocol: 1.5.0
+      pg-types: 2.2.0
+    dev: false
 
   /@types/prettier/2.4.1:
     resolution: {integrity: sha512-Fo79ojj3vdEZOHg3wR9ksAMRz4P3S5fDB5e/YWZiFnyFQI1WY2Vftu9XoXVVtJfxB7Bpce/QTqWSSntkz2Znrw==}
@@ -9662,6 +9676,57 @@ packages:
       moment: 2.29.1
       moment-timezone: 0.5.34
       mysql2: 2.3.3
+      pg: 8.7.1
+      pg-connection-string: 2.5.0
+      pg-hstore: 2.3.4
+      retry-as-promised: 5.0.0
+      semver: 7.3.5
+      sequelize-pool: 7.1.0
+      toposort-class: 1.0.1
+      uuid: 8.3.2
+      validator: 13.7.0
+      wkx: 0.5.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /sequelize/7.0.0-alpha.5_pg-hstore@2.3.4+pg@8.7.1:
+    resolution: {integrity: sha512-CvbX/FCZgt4RMXsF5GoaBpSP/X60MODTO3POvJmLLpu3NLTq6bNuFBpJQMGIEKBZuRj10dj+M72REDQ+XXkzug==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      ibm_db: '*'
+      mariadb: '*'
+      mysql2: '*'
+      pg: '*'
+      pg-hstore: '*'
+      snowflake-sdk: '*'
+      sqlite3: '*'
+      tedious: '*'
+    peerDependenciesMeta:
+      ibm_db:
+        optional: true
+      mariadb:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      pg-hstore:
+        optional: true
+      snowflake-sdk:
+        optional: true
+      sqlite3:
+        optional: true
+      tedious:
+        optional: true
+    dependencies:
+      '@types/debug': 4.1.7
+      debug: 4.3.3
+      dottie: 2.0.2
+      inflection: 1.13.1
+      lodash: 4.17.21
+      moment: 2.29.1
+      moment-timezone: 0.5.34
       pg: 8.7.1
       pg-connection-string: 2.5.0
       pg-hstore: 2.3.4
