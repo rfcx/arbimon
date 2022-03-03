@@ -1,11 +1,12 @@
 import { groupBy, keyBy, mapValues } from 'lodash-es'
 import { Op, QueryTypes, Sequelize } from 'sequelize'
 
-import { DistinctSpecies, MapSiteData, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from '@rfcx-bio/common/api-bio/richness/common'
+import { DistinctSpecies, MapSiteData, SpeciesByExportReportRow, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from '@rfcx-bio/common/api-bio/richness/common'
 import { RichnessDatasetParams, RichnessDatasetQuery, RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHour, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { BioInvalidQueryParamError } from '~/errors'
@@ -14,6 +15,7 @@ import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
 import { FilterDataset } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { PROTECTED_RISK_RATING_IDS } from '../_services/security/location-redacted'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -35,9 +37,9 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
     taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
   }
 
-  const isLocationRedacted = !isProjectMember(req)
+  const hasProjectPermission = isProjectMember(req)
 
-  return await getRichnessDatasetInformation(Number(projectId), { ...convertedQuery }, isLocationRedacted)
+  return await getRichnessDatasetInformation(Number(projectId), { ...convertedQuery }, hasProjectPermission)
 }
 
 // TODO 640: move the Dictionary type to more generic place https://stackoverflow.com/a/68800471
@@ -45,7 +47,7 @@ export interface Dictionary<T> {
   [index: string]: T
 }
 
-const getRichnessDatasetInformation = async (projectId: number, filter: FilterDataset, isLocationRedacted: boolean): Promise<RichnessDatasetResponse> => {
+const getRichnessDatasetInformation = async (projectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -61,14 +63,16 @@ const getRichnessDatasetInformation = async (projectId: number, filter: FilterDa
   const speciesBySite = await getSpeciesBySite(sequelize, projectId, filter, taxonClassByKeys, siteByKeys)
   const speciesByTime = await getSpeciesByTime(detections)
   const speciesPresence = await getSpeciesPresence(models, projectId, filter, taxonClassByKeys)
+  const speciesByExport = await getSpeciesByExport(models, projectId, siteByKeys, detections, hasProjectPermission)
 
   return {
-    isLocationRedacted,
+    isLocationRedacted: !hasProjectPermission,
     detectionCount: detections.length,
     speciesByTaxon,
     speciesBySite,
     speciesByTime,
-    speciesPresence
+    speciesPresence,
+    speciesByExport
   }
 }
 
@@ -272,4 +276,54 @@ const getSpeciesPresence = async (models: AllModels, projectId: number, filter: 
   }
 
   return presenceSpecies
+}
+
+// TODO 640: Move project species query to utilities and clean up?
+const getSpeciesByExport = async (models: AllModels, projectId: number, siteByKeys: Dictionary<Site>, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<SpeciesByExportReportRow[]> => {
+  const where: Where<SpeciesInProject> = {
+    locationProjectId: projectId
+  }
+
+  if (!hasProjectPermission) {
+    where.riskRatingIucnId = {
+      [Op.notIn]: PROTECTED_RISK_RATING_IDS
+    }
+  }
+
+  const species = await models.SpeciesInProject.findAll({
+    where,
+    raw: true
+  })
+
+  let filteredDetections = detections
+  if (!hasProjectPermission) {
+    const speciesIds = species.map(({ taxonSpeciesId }) => taxonSpeciesId)
+    filteredDetections = detections.filter(({ taxonSpeciesId }) => speciesIds.includes(taxonSpeciesId))
+  }
+
+  const speciesByKeys = keyBy(species, 'taxonSpeciesId')
+  return filteredDetections.map(({ taxonSpeciesId, locationSiteId, timePrecisionHourLocal }) => {
+    const matchedSpecies = speciesByKeys[taxonSpeciesId]
+    const { name: siteName, latitude, longitude, altitude } = siteByKeys[locationSiteId]
+
+    const newDate = dayjs.utc(timePrecisionHourLocal)
+
+    return {
+      species: matchedSpecies.scientificName,
+      site: siteName,
+      latitude,
+      longitude,
+      altitude,
+      day: newDate.format('D'),
+      month: newDate.format('M'),
+      year: newDate.format('YYYY'),
+      date: newDate.format('M/DD/YYYY'),
+      hour: newDate.format('H')
+    }
+  }).sort((a, b) =>
+    a.species.localeCompare(b.species) ||
+    a.site.localeCompare(b.site) ||
+    a.date.localeCompare(b.date) ||
+    Number(a.hour) - Number(b.hour)
+  )
 }
