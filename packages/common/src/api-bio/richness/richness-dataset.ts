@@ -1,5 +1,5 @@
 import { FilterDatasetQuery } from '../common/filter'
-import { MapSiteData, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from './common'
+import { MapSiteData, SpeciesByExportReportRow, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from './common'
 
 // Request
 export interface RichnessDatasetParams {
@@ -21,4 +21,5 @@ export interface RichnessDatasetResponse {
   speciesBySite: MapSiteData[]
   speciesByTime: Record<TimeBucket, Record<number, number>>
   speciesPresence: SpeciesPresence
+  speciesByExport: SpeciesByExportReportRow[]
 }

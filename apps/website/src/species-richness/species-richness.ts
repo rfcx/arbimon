@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
+import { SpeciesByExportReportRow } from '@rfcx-bio/common/api-bio/richness/common'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
@@ -34,6 +35,7 @@ export default class SpeciesRichnessPage extends Vue {
   speciesByClassDatasets: GroupedBarChartItem[] = []
   speciesByLocationDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
+  speciesByExports: SpeciesByExportReportRow[][] = []
   detectedSpecies: DetectedSpeciesItem[] = []
 
   get haveData (): boolean {
@@ -67,6 +69,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.speciesByClassDatasets = getBarChartDataset(datasets)
     this.speciesByLocationDatasets = getMapDataset(datasets)
     this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
+    this.speciesByExports = datasets.map(({ data }) => data.speciesByExport)
     this.detectedSpecies = getTableData(datasets)
   }
 }
