@@ -54,10 +54,10 @@ const getRichnessDatasetInformation = async (projectId: number, filter: FilterDa
   return {
     isLocationRedacted,
     detectionCount: detections.length,
-    speciesByTaxon: await getSpeciesByTaxon(models, sequelize, projectId, filter, taxonClasses),
-    speciesBySite: getSpeciesBySite(detections),
-    speciesByTime: getSpeciesByTime(detections),
-    speciesPresence: getSpeciesPresence(detections, isLocationRedacted)
+    speciesByTaxon: await getSpeciesByTaxon(models, sequelize, projectId, filter, taxonClasses)
+    // speciesBySite: getSpeciesBySite(detections),
+    // speciesByTime: getSpeciesByTime(detections),
+    // speciesPresence: getSpeciesPresence(detections, isLocationRedacted)
   }
 }
 
@@ -95,8 +95,8 @@ export interface DetectionsGroupByTaxonClass {
   speciesCount: number
 }
 
+// TODO 640: Extract where cause logic to utils
 const getSpeciesByTaxon = async (models: AllModels, sequelize: Sequelize, projectId: number, filter: FilterDataset, taxonClasses: TaxonClass[]): Promise<SpeciesCountByTaxonName> => {
-  // TODO 640: Extract where cause logic to utils
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
@@ -118,20 +118,22 @@ const getSpeciesByTaxon = async (models: AllModels, sequelize: Sequelize, projec
   }
 
   const detectionsGroupByTaxonClass = await models.DetectionBySiteSpeciesHour.findAll({
-    attributes: {
-      include: ['taxon_class_id', [sequelize.literal('COUNT(DISTINCT(taxon_species_id))'), 'species_count']]
-    },
+    attributes: ['taxonClassId', [sequelize.literal('COUNT(DISTINCT(taxon_species_id))::integer'), 'speciesCount']],
     where,
-    group: 'taxon_class_id',
+    group: 'taxonClassId',
     raw: true
   }) as unknown as DetectionsGroupByTaxonClass[]
 
   const speciesCountByTaxonName: { [taxon: string]: number } = {}
-
-  for (const { taxonClassId, speciesCount } of detectionsGroupByTaxonClass) {
-    const taxonCommonName = taxonClasses.find(({ id }) => id === taxonClassId)?.commonName ?? ''
-    speciesCountByTaxonName[taxonCommonName] = speciesCount
+  for (const taxonCountInfo of detectionsGroupByTaxonClass) {
+    console.info({ taxonCountInfo })
+    const taxonCommonName = taxonClasses.find(({ id }) => id === taxonCountInfo.taxonClassId)?.commonName ?? ''
+    speciesCountByTaxonName[taxonCommonName] = taxonCountInfo.speciesCount
+    console.info({ name: taxonCommonName })
   }
+
+  console.info({ speciesCountByTaxonName })
+
   return speciesCountByTaxonName
 }
 
