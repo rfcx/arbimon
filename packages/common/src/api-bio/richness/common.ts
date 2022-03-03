@@ -7,3 +7,5 @@ export interface MapSiteData {
   // TODO 266 - Decouple maps
   distinctSpecies: { [key: string]: number | boolean }
 }
+
+export type SpeciesCountByTaxonName = Record<string, number>
