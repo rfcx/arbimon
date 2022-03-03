@@ -126,13 +126,9 @@ const getSpeciesByTaxon = async (models: AllModels, sequelize: Sequelize, projec
 
   const speciesCountByTaxonName: { [taxon: string]: number } = {}
   for (const taxonCountInfo of detectionsGroupByTaxonClass) {
-    console.info({ taxonCountInfo })
     const taxonCommonName = taxonClasses.find(({ id }) => id === taxonCountInfo.taxonClassId)?.commonName ?? ''
     speciesCountByTaxonName[taxonCommonName] = taxonCountInfo.speciesCount
-    console.info({ name: taxonCommonName })
   }
-
-  console.info({ speciesCountByTaxonName })
 
   return speciesCountByTaxonName
 }
