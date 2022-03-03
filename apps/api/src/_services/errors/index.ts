@@ -2,19 +2,25 @@
  * WARNING: Public (client-facing) errors must not expose internals
  */
 
+export const ERROR_STATUS_CODE = {
+  unauthorized: 401,
+  forbidden: 403,
+  notfound: 404
+}
+
 export class BioPublicError extends Error {
   constructor (message: string, public statusCode = 500) { super(message) }
 }
 
 // Data access
 export const BioUnauthorizedError = (): BioPublicError =>
-  new BioPublicError('Unauthorized', 401)
+  new BioPublicError('Unauthorized', ERROR_STATUS_CODE.unauthorized)
 
 export const BioForbiddenError = (): BioPublicError =>
-  new BioPublicError('Forbidden', 403)
+  new BioPublicError('Forbidden', ERROR_STATUS_CODE.forbidden)
 
 export const BioNotFoundError = (): BioPublicError =>
-  new BioPublicError('Data not found', 404)
+  new BioPublicError('Data not found', ERROR_STATUS_CODE.notfound)
 
 // Malformed requests
 export const BioMissingPathParamError = (...pathParamNames: string[]): BioPublicError =>
