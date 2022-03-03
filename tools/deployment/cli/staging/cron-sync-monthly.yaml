@@ -2,7 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: biodiversity-cli-sync-monthly
-  namespace: testing
+  namespace: staging
 spec:
   # First Tuesday of each month at 04:37 UTC
   # (2 = Tuesday; 1st-7th covers exactly 1 Tuesday)
@@ -14,7 +14,7 @@ spec:
           containers:
           - name: biodiversity-cli-sync-db-monthly
             command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/monthly.js"]
-            image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/testing:latest
+            image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/staging:latest
             imagePullPolicy: IfNotPresent
             envFrom:
               - secretRef:
