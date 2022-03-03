@@ -25,6 +25,6 @@ export const DashboardDetectionBySiteModel = defineWithDefaults<DashboardDetecti
     count: DataTypes.INTEGER
   },
   {
-    tableName: TABLE_DASHBOARD_DETECTION_BY_SITE,
+    tableName: TABLE_DASHBOARD_DETECTION_BY_SITE
   }
 )
