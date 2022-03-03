@@ -19,3 +19,15 @@ export interface DistinctSpecies {
 export interface SpeciesPresence {
   [speciesId: number]: SpeciesLight
 }
+
+export interface SpeciesByExportReportRow {
+  species: string
+  site: string
+  latitude: number
+  longitude: number
+  day: string
+  month: string
+  year: string
+  date: string
+  hour: string
+}
