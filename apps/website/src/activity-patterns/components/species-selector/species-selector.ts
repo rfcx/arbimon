@@ -1,14 +1,16 @@
 import { Vue } from 'vue-class-component'
-import { Emit, Prop, Watch } from 'vue-property-decorator'
+import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
+import { RouteNames } from '~/router'
 import { spotlightService } from '../../services'
 
 export default class SpeciesSelector extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
   @Prop() speciesSlug!: string
-  @Emit() emitSelectedSpeciesChanged (species: SpeciesInProjectLight): SpeciesInProjectLight {
+  @Emit() emitSelectedSpeciesChanged (species: SpeciesInProjectLight | undefined): SpeciesInProjectLight | undefined {
     return species
   }
 
@@ -28,7 +30,6 @@ export default class SpeciesSelector extends Vue {
   }
 
   override async created (): Promise<void> {
-    this.selectedSpeciesSlug = this.speciesSlug
     this.allSpecies = await this.getAllSpecies()
   }
 
@@ -47,7 +48,14 @@ export default class SpeciesSelector extends Vue {
 
   @Watch('allSpecies')
   onAllSpeciesChange (allSpecies: SpeciesInProjectLight[]): void {
-    if (allSpecies.length > 0 && !this.selectedSpeciesSlug) this.selectedSpeciesSlug = allSpecies[0].taxonSpeciesSlug
+    if (allSpecies.length > 0) {
+      if (this.speciesSlug) {
+        const matchedSlug = allSpecies.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === this.speciesSlug)
+        this.selectedSpeciesSlug = matchedSlug ? this.speciesSlug : ''
+      } else {
+        this.selectedSpeciesSlug = allSpecies[0].taxonSpeciesSlug
+      }
+    }
     if (this.selectedSpecies) this.emitSelectedSpeciesChanged(this.selectedSpecies)
   }
 
@@ -60,7 +68,7 @@ export default class SpeciesSelector extends Vue {
     this.currentSpeciesQuery = query
   }
 
-  onReset (): void {
+  onResetQuery (): void {
     this.onFilterType('')
   }
 
