@@ -4,10 +4,13 @@
       <h3
         class="text-lg"
       >
-        {{ species?.commonName }}
+        {{ species.commonName }}
       </h3>
-      <div class="text-subtle italic">
-        ({{ species?.scientificName }})
+      <div
+        v-if="species.scientificName"
+        class="text-subtle italic"
+      >
+        ({{ species.scientificName }})
       </div>
     </div>
     <el-tag
