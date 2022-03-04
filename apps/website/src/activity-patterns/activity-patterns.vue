@@ -29,7 +29,10 @@
       :species-slug="$route.params.speciesSlug"
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
-    <species-title :species="speciesInformation" />
+    <species-title
+      v-if="speciesInformation"
+      :species="speciesInformation"
+    />
     <div class="grid grid-cols-5 gap-x-2rem">
       <div class="col-span-full sm:col-span-2">
         <species-images
