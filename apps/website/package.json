@@ -18,6 +18,7 @@
     "serve": "concurrently -r \"vite\" \"pnpm open\"",
     "test": "vitest --run",
     "test-coverage": "vitest --run --coverage",
+    "test-ui": "cypress run",
     "test-ui:explorer": "cypress open"
   },
   "dependencies": {
