@@ -104,14 +104,6 @@ jobs:
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
 
-      - name: 'Verify: Cypress'
-        uses: cypress-io/github-action@v2
-        with:
-          build: pnpm ci-build
-          start: pnpm serve
-        env:
-          NODE_OPTIONS: '--max_old_space_size=6656'
-
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
