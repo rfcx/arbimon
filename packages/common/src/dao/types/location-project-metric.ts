@@ -3,10 +3,14 @@ export interface LocationProjectMetric {
   detectionCount: number
   siteCount: number
   speciesCount: number
+  maxDate: Date | string
+  minDate: Date | string
 }
 
 export type LocationProjectMetricLight = Pick<LocationProjectMetric,
   'detectionCount' |
   'siteCount' |
-  'speciesCount'
+  'speciesCount' |
+  'maxDate' |
+  'minDate'
 >

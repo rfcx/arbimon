@@ -12,7 +12,7 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Loca
       where: { locationProjectId },
       raw: true
     })
-    .then(res => res ?? { detectionCount: 0, siteCount: 0, speciesCount: 0 })
+    .then(res => res ?? { detectionCount: 0, siteCount: 0, speciesCount: 0, maxDate: '', minDate: '' })
 
 export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpecies[]> =>
   await ModelRepository.getInstance(getSequelize())
