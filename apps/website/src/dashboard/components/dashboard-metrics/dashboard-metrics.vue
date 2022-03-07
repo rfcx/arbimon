@@ -1,30 +1,50 @@
 <template>
   <div class="metric_wrapper <sm:text-center">
     <numeric-metric
-      :value="metrics.detectionCount"
+      :value="detectionCount"
       subtitle="detections"
       class="detections_metric"
     />
     <numeric-metric
       class="sites_metric"
-      :value="metrics.siteCount"
+      :value="siteCount"
       subtitle="sites"
     />
     <numeric-metric
       class="threatened_metric"
-      :value="metrics.speciesThreatenedCount"
-      :total-value="metrics.speciesCount"
+      :value="speciesThreatenedCount"
+      :total-value="speciesCount"
       subtitle="threatened"
     />
     <div class="dataset_range mr-3">
       <span class="text-gray-400">Dataset Date Range</span>
       <p class="text-subtle">
-        April 27, 2020 - June 26, 2020
+        {{ formateDate(minDate) }} - {{ formateDate(maxDate) }}
       </p>
     </div>
   </div>
 </template>
-<script lang="ts" src="./dashboard-metrics.ts"></script>
+
+<script setup lang="ts">
+import { defineProps, toRefs } from 'vue'
+
+import useDateformat from '../../../_services/hooks/useDateformat'
+
+// Props
+interface Metrics {
+  detectionCount: number
+  siteCount: number
+  speciesCount: number
+  speciesThreatenedCount: number
+  maxDate: Date | string
+  minDate: Date | string
+}
+const props = defineProps<{ metrics: Metrics}>()
+const { detectionCount, siteCount, speciesCount, speciesThreatenedCount, maxDate, minDate } = toRefs(props.metrics)
+
+const { formateDate } = useDateformat()
+
+</script>
 
 <style lang="scss">
 .metric_wrapper {
