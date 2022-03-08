@@ -6,10 +6,6 @@ import { Project } from '../types'
 export const MODEL_LOCATION_PROJECT = 'LocationProject'
 export const TABLE_LOCATION_PROJECT = 'location_project'
 
-export const ATTRIBUTES_LOCATION_PROJECT: Record<string, Array<keyof Project>> = {
-  light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
-}
-
 export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
   MODEL_LOCATION_PROJECT,
   {
