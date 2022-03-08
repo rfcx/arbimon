@@ -107,7 +107,6 @@ jobs:
       - name: 'Verify: Cypress'
         uses: cypress-io/github-action@v2
         with:
-          working-directory: apps/website
           install: false
           start: pnpm serve
         env:
