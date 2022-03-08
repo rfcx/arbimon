@@ -1,7 +1,7 @@
 import pkg from 'sequelize'
 
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
-import { Project } from '@rfcx-bio/common/dao/types'
+import { ATTRIBUTES_LOCATION_PROJECT, Project } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '../../../db/connections'
 
@@ -12,13 +12,7 @@ export const writeProjectsToPostgres = async (projects: Array<Omit<Project, 'id'
 
   // update items
   const updatedRows = await model.bulkCreate(projects, {
-    updateOnDuplicate: [
-      'name',
-      'latitudeNorth',
-      'latitudeSouth',
-      'longitudeEast',
-      'longitudeWest'
-    ]
+    updateOnDuplicate: ATTRIBUTES_LOCATION_PROJECT.updateOnDuplicate
   })
 
   // delete non exist items
