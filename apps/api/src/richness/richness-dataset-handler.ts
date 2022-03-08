@@ -256,7 +256,8 @@ const getSpeciesPresence = async (models: AllModels, projectId: number, filter: 
   const species = await models.SpeciesInProject.findAll({
     where: {
       locationProjectId: projectId,
-      taxonSpeciesId: presenceSpeciesIds
+      taxonSpeciesId: presenceSpeciesIds,
+      riskRatingId: { [Op.notIn]: RISK_RATING_PROTECTED_IDS }
     },
     raw: true
   })
