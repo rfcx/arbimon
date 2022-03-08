@@ -8,7 +8,6 @@ import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour, 
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
 export const writeDetectionsToPostgres = async (sequelize: Sequelize, detections: MockHourlyDetectionSummary[], project: Project | undefined = undefined): Promise<void> => {
-  // TODO - Write data to Bio DB
   const [classes, species, sites] = await Promise.all([
     TaxonClassModel(sequelize).findAll(),
     TaxonSpeciesModel(sequelize).findAll(),
@@ -22,10 +21,10 @@ export const writeDetectionsToPostgres = async (sequelize: Sequelize, detections
   const data: DetectionBySiteSpeciesHour[] =
     detections.map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
-      taxonClassId: classArbimonToBio[d.taxon_id] ?? -1,
-      taxonSpeciesId: speciesArbimonToBio[d.species_id] ?? -1,
+      taxonClassId: classArbimonToBio[d.taxon_id] ?? -1, // TODO: Throw error
+      taxonSpeciesId: speciesArbimonToBio[d.species_id] ?? -1, // TODO: Throw error
       locationProjectId: project?.id ?? 1,
-      locationSiteId: siteArbimonToBio[d.arbimon_site_id] ?? -1,
+      locationSiteId: siteArbimonToBio[d.arbimon_site_id] ?? -1, // TODO: Throw error
       count: d.num_of_recordings,
       durationMinutes: 12
     }))

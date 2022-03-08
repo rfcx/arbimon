@@ -13,11 +13,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
     create view ${VIEW_NAME} as
     SELECT sip.location_project_id,
-           sip.risk_rating_iucn_id,
+           sip.risk_rating_id,
            Count(1) AS count
     FROM species_in_project sip
-    GROUP BY sip.location_project_id, sip.risk_rating_iucn_id
-    ORDER BY sip.location_project_id, sip.risk_rating_iucn_id DESC
+    GROUP BY sip.location_project_id, sip.risk_rating_id
+    ORDER BY sip.location_project_id, sip.risk_rating_id DESC
     `
   )
 }
