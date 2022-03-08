@@ -18,8 +18,8 @@ export interface DashboardGeneratedResponse {
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number
-  maxDate: Date | string
-  minDate: Date | string
+  maxDate?: Date
+  minDate?: Date
 
   // Species
   speciesThreatened: DashboardSpecies[]
