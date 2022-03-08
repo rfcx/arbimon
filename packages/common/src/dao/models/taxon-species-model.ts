@@ -6,12 +6,6 @@ import { TaxonSpecies } from '../types'
 export const MODEL_TAXON_SPECIES = 'TaxonSpecies'
 export const TABLE_TAXON_SPECIES = 'taxon_species'
 
-export const ATTRIBUTES_TAXON_SPECIES: Record<string, Array<keyof TaxonSpecies>> = {
-  pks: ['id'],
-  light: ['scientificName'],
-  full: ['idArbimon', 'slug', 'taxonClassId', 'scientificName']
-}
-
 export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
   MODEL_TAXON_SPECIES,
   {

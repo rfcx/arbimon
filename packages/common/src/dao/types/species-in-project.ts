@@ -20,3 +20,7 @@ export type SpeciesInProjectLight = Pick<SpeciesInProject,
   'commonName' |
   'taxonClassSlug'
 >
+
+export const ATTRIBUTES_SPECIES_IN_PROJECT: Record<string, Array<keyof SpeciesInProject>> = {
+  light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug']
+}

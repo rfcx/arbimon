@@ -1,6 +1,6 @@
 import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
+import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { ApiServerError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'

@@ -1,10 +1,10 @@
 import { Sequelize } from 'sequelize'
 
-import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
+import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { DetectionBySiteSpeciesHour, Project } from '@rfcx-bio/common/dao/types'
+import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour, Project } from '@rfcx-bio/common/dao/types'
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
 export const writeDetectionsToPostgres = async (sequelize: Sequelize, detections: MockHourlyDetectionSummary[], project: Project | undefined = undefined): Promise<void> => {
@@ -31,6 +31,6 @@ export const writeDetectionsToPostgres = async (sequelize: Sequelize, detections
     }))
 
   await DetectionBySiteSpeciesHourModel(sequelize).bulkCreate(data, {
-    updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.light
+    updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
   })
 }
