@@ -24,12 +24,12 @@ export const getSpeciesThreatened = async (locationProjectId: number): Promise<D
       raw: true
     })
 
-  return result.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingIucnId, photoUrl }) => ({
+  return result.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingId, photoUrl }) => ({
     slug: taxonSpeciesSlug,
     taxonSlug: taxonClassSlug,
     scientificName,
     commonName,
-    riskId: riskRatingIucnId,
+    riskId: riskRatingId,
     photoUrl
   }))
 }
@@ -53,7 +53,7 @@ export const getRichnessByRisk = async (locationProjectId: number): Promise<ApiS
       raw: true
     })
 
-  return result.map(r => [r.riskRatingIucnId, r.count])
+  return result.map(r => [r.riskRatingId, r.count])
 }
 
 export const getRichnessBySite = async (locationProjectId: number): Promise<ApiMap> =>

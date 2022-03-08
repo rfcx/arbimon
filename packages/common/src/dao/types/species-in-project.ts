@@ -9,7 +9,9 @@ export interface SpeciesInProject {
   description: string
   sourceUrl: string
   sourceCite: string
-  riskRatingIucnId: number
+  riskRatingId: number
+  riskRatingGlobalId: number
+  riskRatingLocalId: number
   photoUrl: string
 }
 

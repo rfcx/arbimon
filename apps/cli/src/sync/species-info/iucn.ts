@@ -7,6 +7,8 @@ import { getIucnSpecies } from '../../data-ingest/species/input-iucn/iucn-specie
 import { getIucnSpeciesNarrative } from '../../data-ingest/species/input-iucn/iucn-species-narrative'
 import { writeIucnSpeciesDataToPostgres } from '../../data-ingest/species/output-iucn-postgres'
 
+const DEFAULT_RISK_RATING = -1
+
 export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>, iucnCodeToId: Record<string, number>): Promise<void> => {
   const speciesNames = Object.keys(speciesNameToId)
   const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
@@ -18,7 +20,7 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
     return {
       taxonSpeciesId: speciesNameToId[speciesName],
       commonName: iucnSpeciesData?.main_common_name ?? '',
-      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? -1,
+      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? DEFAULT_RISK_RATING,
       description: iucnSpeciesNarrativeData?.habitat ?? '',
       descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
     }

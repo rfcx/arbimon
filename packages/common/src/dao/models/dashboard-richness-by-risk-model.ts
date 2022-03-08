@@ -14,7 +14,7 @@ export const DashboardRichnessByRiskModel = defineWithDefaults<DashboardRichness
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    riskRatingIucnId: { // 600
+    riskRatingId: { // 600
       type: DataTypes.INTEGER,
       primaryKey: true
     },

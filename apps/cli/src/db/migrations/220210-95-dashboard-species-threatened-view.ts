@@ -12,24 +12,21 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await params.context.sequelize.query(
     `
     create view ${VIEW_NAME} as
-    SELECT ps.location_project_id,
-           ps.taxon_species_id,
-           ps.taxon_class_slug,
-           ps.taxon_species_slug,
-           ps.scientific_name,
+    SELECT sip.location_project_id,
+           sip.taxon_species_id,
+           sip.taxon_class_slug,
+           sip.taxon_species_slug,
+           sip.scientific_name,
+           sip.risk_rating_id,
            tsi.common_name,
-           rri.id_ordered AS risk_rating_iucn_id,
            tsp.photo_url
-    FROM species_in_project ps
-          INNER JOIN taxon_species ts ON ps.taxon_species_id = ts.id
-          LEFT JOIN location_project_species lps ON ts.id = lps.taxon_species_id
-          LEFT JOIN risk_rating_iucn rril ON lps.risk_rating_local_level = rril.id_ordered
-          LEFT JOIN taxon_species_iucn tsi ON ts.id = tsi.taxon_species_id
-          LEFT JOIN risk_rating_iucn rri ON tsi.risk_rating_iucn_id = rri.id_ordered
-          LEFT JOIN taxon_species_photo tsp on ts.id = tsp.taxon_species_id
+    FROM species_in_project sip
+          INNER JOIN taxon_species ts ON sip.taxon_species_id = ts.id
+          LEFT JOIN risk_rating_iucn rri ON sip.risk_rating_id = rri.id_ordered
+          LEFT JOIN taxon_species_iucn tsi ON sip.taxon_species_id = tsi.taxon_species_id
+          LEFT JOIN taxon_species_photo tsp on sip.taxon_species_id = tsp.taxon_species_id
     WHERE rri.is_threatened
-    OR rril.is_threatened
-    ORDER BY COALESCE(rril.id_ordered, rri.id_ordered) DESC, ps.scientific_name
+    ORDER BY sip.risk_rating_id DESC, sip.scientific_name
     ;
     `
   )

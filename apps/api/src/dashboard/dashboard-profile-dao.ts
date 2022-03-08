@@ -13,12 +13,12 @@ export const getDashboardProfile = async (projectId: number): Promise<DashboardP
 
   return {
     ...projectProfile,
-    speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug, taxonSpeciesSlug, riskRatingIucnId, ...rest }) =>
+    speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug, taxonSpeciesSlug, riskRatingId, ...rest }) =>
       ({
         ...rest,
         taxonSlug: taxonClassSlug,
         slug: taxonSpeciesSlug,
-        riskId: riskRatingIucnId
+        riskId: riskRatingId
       })
     )
   }
