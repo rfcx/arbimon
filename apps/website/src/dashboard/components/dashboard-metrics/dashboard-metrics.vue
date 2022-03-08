@@ -19,7 +19,7 @@
     <div class="dataset_range mr-3">
       <span class="text-gray-400">Dataset Date Range</span>
       <p class="text-subtle">
-        {{ formateDate(minDate) }} - {{ formateDate(maxDate) }}
+        {{ startToEndDate(minDate, maxDate) }}
       </p>
     </div>
   </div>
@@ -36,13 +36,13 @@ interface Metrics {
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number
-  maxDate: Date | string
-  minDate: Date | string
+  maxDate?: Date
+  minDate?: Date
 }
 const props = defineProps<{ metrics: Metrics}>()
 const { detectionCount, siteCount, speciesCount, speciesThreatenedCount, maxDate, minDate } = toRefs(props.metrics)
 
-const { formateDate } = useDateformat()
+const { startToEndDate } = useDateformat()
 
 </script>
 
