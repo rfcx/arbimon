@@ -1,32 +1,32 @@
 <template>
   <div class="metric_wrapper <sm:text-center">
     <numeric-metric
-      :value="detectionCount"
+      :value="props.metrics.detectionCount"
       subtitle="detections"
       class="detections_metric"
     />
     <numeric-metric
       class="sites_metric"
-      :value="siteCount"
+      :value="props.metrics.siteCount"
       subtitle="sites"
     />
     <numeric-metric
       class="threatened_metric"
-      :value="speciesThreatenedCount"
-      :total-value="speciesCount"
+      :value="props.metrics.speciesThreatenedCount"
+      :total-value="props.metrics.speciesCount"
       subtitle="threatened"
     />
     <div class="dataset_range mr-3">
       <span class="text-gray-400">Dataset Date Range</span>
       <p class="text-subtle">
-        {{ formateDate(minDate) }} - {{ formateDate(maxDate) }}
+        {{ startToEndDate(props.metrics.minDate, props.metrics.maxDate) }}
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, toRefs } from 'vue'
+import { defineProps } from 'vue'
 
 import useDateformat from '../../../_services/hooks/useDateformat'
 
@@ -36,13 +36,12 @@ interface Metrics {
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number
-  maxDate: Date | string
-  minDate: Date | string
+  maxDate?: Date
+  minDate?: Date
 }
 const props = defineProps<{ metrics: Metrics}>()
-const { detectionCount, siteCount, speciesCount, speciesThreatenedCount, maxDate, minDate } = toRefs(props.metrics)
 
-const { formateDate } = useDateformat()
+const { startToEndDate } = useDateformat()
 
 </script>
 
