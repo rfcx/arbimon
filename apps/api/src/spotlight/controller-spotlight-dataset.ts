@@ -14,7 +14,7 @@ import { getSequelize } from '../_services/db'
 import { BioInvalidQueryParamError, BioNotFoundError } from '../_services/errors'
 import { FilterDataset } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
-import { isProtectedSpecies } from '../_services/security/location-redacted'
+import { isProtectedSpecies } from '../_services/security/protected-species'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -53,11 +53,14 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   })
   if (!species) throw BioNotFoundError()
 
-  const speciesIucn = await models.TaxonSpeciesIucn.findOne({
-    where: { taxonSpeciesId: speciesId },
-    raw: true
-  })
-  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesIucn?.riskRatingIucnId ?? -1)
+  const speciesIucn = await models.SpeciesInProject
+    .findOne({
+      where: { locationProjectId: projectId, taxonSpeciesId: speciesId },
+      attributes: ['riskRatingId'],
+      raw: true
+    })
+
+  const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !hasProjectPermission
 
   // Filtering
   const totalDetections = await filterDetecions(models, projectId, filter)

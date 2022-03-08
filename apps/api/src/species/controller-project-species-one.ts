@@ -3,11 +3,11 @@ import { Op } from 'sequelize'
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
-import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO, TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
-import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
+import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/_services/db'
-import { isProtectedSpecies } from '@/_services/security/location-redacted'
+import { BioNotFoundError } from '~/errors'
+import { isProtectedSpecies } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
@@ -33,7 +33,9 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
   const speciesInformation = await models.SpeciesInProject.findOne({
     where: { locationProjectId, taxonSpeciesSlug },
     raw: true
-  }) as unknown as SpeciesInProject
+  })
+
+  if (!speciesInformation) throw BioNotFoundError()
 
   const { taxonSpeciesId } = speciesInformation
 
@@ -41,7 +43,7 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
     attributes: ATTRIBUTES_TAXON_SPECIES_PHOTO.light,
     where: { taxonSpeciesId },
     raw: true
-  }) as unknown as TaxonSpeciesPhotoLight[]
+  })
 
   const speciesCalls = await models.TaxonSpeciesCall.findAll({
     attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
@@ -52,10 +54,11 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
       }
     },
     raw: true
-  }) as unknown as TaxonSpeciesCallLight[]
+  })
 
-  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesInformation.riskRatingIucnId ?? -1)
+  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !hasProjectPermission
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
+
   if (!isLocationRedacted) {
     const matchFiles = await LocationProjectSpeciesFileModel(sequelize).findAll({
       where: { locationProjectId, taxonSpeciesId },
