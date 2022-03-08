@@ -1,14 +1,16 @@
 import { SPECIES_SOURCE_PROJECT, SpeciesSource } from '@rfcx-bio/common/api-bio/species/types'
-import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
 
 export interface RfcxSpeciesData {
   commonName?: string
-  extinctionRisk?: { code: ExtinctionRiskCode, source: SpeciesSource }
+  extinctionRisk?: { code: string, source: SpeciesSource }
 }
 
 // TODO - Rename horse to `Equus ferus caballus` in Arbimon & remove `Equus caballus` here
 // TODO 412 - Consider getting common name from Wikipedia (if not in IUCN)
 // TODO 475 - Lookup species in IUCN using synonynms
+/**
+ * @deprecated - Replace to-mock with an implementation that is db-driven
+ */
 export const getRfcxSpecies = (): Record<string, RfcxSpeciesData> =>
   ({
     // Incorrectly named in Arbimon => should be named `Equus ferus caballus`
