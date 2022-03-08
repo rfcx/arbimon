@@ -15,7 +15,7 @@ import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
 import { FilterDataset } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
-import { PROTECTED_RISK_RATING_IDS } from '../_services/security/location-redacted'
+import { RISK_RATING_PROTECTED_IDS } from '../_services/security/protected-species'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -285,8 +285,8 @@ const getSpeciesByExport = async (models: AllModels, projectId: number, siteByKe
   }
 
   if (!hasProjectPermission) {
-    where.riskRatingIucnId = {
-      [Op.notIn]: PROTECTED_RISK_RATING_IDS
+    where.riskRatingId = {
+      [Op.notIn]: RISK_RATING_PROTECTED_IDS
     }
   }
 

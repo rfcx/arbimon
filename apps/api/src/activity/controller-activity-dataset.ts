@@ -10,7 +10,7 @@ import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { BioInvalidQueryParamError } from '~/errors'
-import { PROTECTED_RISK_RATING_IDS } from '~/security/location-redacted'
+import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
@@ -52,7 +52,7 @@ const getActivityOverviewData = async (projectId: number, filter: FilterDataset,
   const totalRecordingCount = getRecordingDurationMinutes(totalDetections)
 
   const detectionsBySite = await getDetectionDataBySite(models, totalDetections)
-  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission)
+  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission, projectId)
   const detectionsByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingCount)
   const detectionsByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingCount)
   const detectionsByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingCount)
@@ -149,13 +149,14 @@ const getDetectionDataBySite = async (models: AllModels, detections: DetectionBy
   return summariesBySites
 }
 
-async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> {
+async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
   const totalRecordingCount = getRecordingDurationMinutes(detections)
   let filteredDetections = detections
+
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
   if (!hasProjectPermission) {
-    const protectedSpecies = await models.TaxonSpeciesIucn.findAll({
-      where: { riskRatingIucnId: PROTECTED_RISK_RATING_IDS },
+    const protectedSpecies = await models.SpeciesInProject.findAll({
+      where: { locationProjectId, riskRatingId: RISK_RATING_PROTECTED_IDS }, // TODO: Add `is_protected` column in the DB
       raw: true
     })
 
