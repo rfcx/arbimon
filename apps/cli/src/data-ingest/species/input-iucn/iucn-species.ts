@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-import { ExtinctionRiskCode } from '@rfcx-bio/common/iucn'
-
 import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'
 import { getSpeciesRedirectLink } from './utils'
@@ -32,7 +30,7 @@ interface IucnSpeciesResponseResult {
   authority: string | null
   published_year: null | null
   assessment_date: string | null
-  category: ExtinctionRiskCode | undefined
+  category: string | undefined
   criteria: string | null
   population_trend: string | null
   marine_system: boolean | null

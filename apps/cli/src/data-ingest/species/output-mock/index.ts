@@ -1,5 +1,4 @@
 import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesCall } from '@rfcx-bio/common/api-bio/species/types'
-import { EXTINCTION_RISK_NOT_EVALUATED } from '@rfcx-bio/common/iucn'
 
 import { ArbimonSpeciesData } from '../input-from-mock-detections'
 import { IucnSpecies, IucnSpeciesNarrative } from '../input-iucn'
@@ -34,7 +33,7 @@ export const getMergedSpecies = async (
       ...arbimonSpecies,
       speciesCalls: arbimonSpeciesCall,
       commonName: rfcxSpecies?.commonName ?? iucnSpecies?.main_common_name ?? '',
-      extinctionRisk: rfcxSpecies?.extinctionRisk?.code ?? iucnSpecies?.category ?? EXTINCTION_RISK_NOT_EVALUATED.code,
+      extinctionRisk: rfcxSpecies?.extinctionRisk?.code ?? iucnSpecies?.category ?? 'NE',
       externalLinks: information.map(({ sourceType, sourceUrl }) => ({ sourceType, sourceUrl, title: sourceType })),
       thumbnailImageUrl: wikiSpecies?.thumbnailImage ?? '',
       imageCaption: wikiSpecies?.title ?? '',
