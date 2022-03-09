@@ -1,5 +1,5 @@
 import { FilterDatasetQuery } from '../common/filter'
-import { MapSiteData, SpeciesByExportReportRow, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from './common'
+import { SpeciesLight } from '../species/types'
 
 // Request
 export interface RichnessDatasetParams {
@@ -16,10 +16,30 @@ export const richnessDatasetUrl = (params: RichnessDatasetParams): string =>
 // Response
 export interface RichnessDatasetResponse {
   isLocationRedacted: boolean
-  detectionCount: number
-  speciesByTaxon: SpeciesCountByTaxonName
-  speciesBySite: MapSiteData[]
-  speciesByTime: Record<TimeBucket, Record<number, number>>
-  speciesPresence: SpeciesPresence
+  richnessByTaxon: Record<number, number> // taxonClassId -> richness
+  richnessBySite: RichnessSiteData[]
+  speciesByTimeHourOfDay: Record<number, number> // hourOfDay -> richness
+  speciesByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
+  speciesByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
+  speciesByTimeUnixSeconds: Record<number, number> // unixSeconds -> richness
+  speciesPresence: Record<number, SpeciesLight>
   speciesByExport: SpeciesByExportReportRow[]
+}
+
+export interface RichnessSiteData {
+  locationSiteId: number
+  taxonClassId: number
+  richness: number
+}
+
+export interface SpeciesByExportReportRow {
+  species: string
+  site: string
+  latitude: number
+  longitude: number
+  day: string
+  month: string
+  year: string
+  date: string
+  hour: string
 }

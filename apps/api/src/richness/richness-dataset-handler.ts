@@ -19,9 +19,7 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
 
-  // Query
-  const hasProjectPermission = isProjectMember(req)
-  const convertedQuery = {
+  const datasetFilter = {
     startDateUtcInclusive,
     endDateUtcInclusive,
     // TODO ???: Better way to check query type!
@@ -29,5 +27,7 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
     taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
   }
 
-  return await getRichnessDataset(projectIdInteger, { ...convertedQuery }, hasProjectPermission)
+  const hasProjectPermission = isProjectMember(req)
+
+  return await getRichnessDataset(projectIdInteger, datasetFilter, hasProjectPermission)
 }

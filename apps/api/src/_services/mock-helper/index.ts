@@ -1,13 +1,7 @@
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
+import { FilterDataset } from '../datasets/dataset-types'
 import { dayjs } from '../dayjs-initialized'
-
-export interface FilterDataset {
-  startDateUtcInclusive: string
-  endDateUtcInclusive: string
-  siteIds: number[]
-  taxons: string[]
-}
 
 export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[], datasetParams: FilterDataset, speciesIds: number[] = []): MockHourlyDetectionSummary[] => {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = datasetParams
