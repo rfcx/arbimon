@@ -1,90 +1,53 @@
-import { groupBy, keyBy, mapValues } from 'lodash-es'
-import { Sequelize } from 'sequelize'
+import { keyBy, mapValues } from 'lodash-es'
 
-import { DistinctSpecies, MapSiteData, SpeciesByExportReportRow, SpeciesCountByTaxonName, SpeciesPresence, TimeBucket } from '@rfcx-bio/common/api-bio/richness/common'
-import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { RichnessDatasetResponse, SpeciesByExportReportRow, SpeciesPresence, TimeBucket } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySiteSpeciesHour, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour, Site } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
+import { FilterDataset } from '~/datasets/dataset-types'
+import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
-import { FilterDataset } from '../_services/mock-helper'
-import { getDetectionGroupByTaxonClass, getDetectionGroupByTaxonSpeciesIds, getDetections, getSitesByProjectId, getSpeciesCountBySite, getSpeciesInProject, getTaxonClasses } from './richness-dataset-dao'
+import { getDetectionGroupByTaxonSpeciesIds, getRichnessBySite, getRichnessByTaxonClass, getSitesByProjectId, getSpeciesByTimeHourOfDay, getSpeciesInProject } from './richness-dataset-dao'
 
-export const getRichnessDataset = async (projectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
+export const getRichnessDataset = async (locationProjectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
+  const filterForSql = toFilterDatasetForSql(filter)
+
   // Filter data
-  const sites = await getSitesByProjectId(models, projectId)
-  const taxonClasses = await getTaxonClasses(models)
-  const detections = await getDetections(models, projectId, filter)
+  const sites = await getSitesByProjectId(models, locationProjectId)
+  const detections = await getDetections(models, locationProjectId, filter)
 
   const siteByKeys = keyBy(sites, 'id')
-  const taxonClassByKeys = keyBy(taxonClasses, 'id')
 
-  const [speciesByTaxon, speciesBySite, speciesByTime, speciesPresence, speciesByExport] = await Promise.all([
-    await getSpeciesByTaxon(models, sequelize, projectId, filter, taxonClassByKeys),
-    await getSpeciesBySite(sequelize, projectId, filter, taxonClassByKeys, siteByKeys),
+  const [richnessByTaxon, richnessBySite, speciesByTimeHourOfDay, speciesByTime, speciesPresence, speciesByExport] = await Promise.all([
+    await getRichnessByTaxonClass(models, sequelize, filterForSql),
+    await getRichnessBySite(sequelize, filterForSql),
+    await getSpeciesByTimeHourOfDay(sequelize, filterForSql),
     await getSpeciesByTime(detections),
-    await getSpeciesPresence(models, projectId, filter, taxonClassByKeys, hasProjectPermission),
-    await getSpeciesByExport(models, projectId, siteByKeys, detections, hasProjectPermission)
+    await getSpeciesPresence(models, locationProjectId, filter, hasProjectPermission),
+    await getSpeciesByExport(models, locationProjectId, siteByKeys, detections, hasProjectPermission)
   ])
 
   return {
     isLocationRedacted: !hasProjectPermission,
-    detectionCount: detections.length,
-    speciesByTaxon,
-    speciesBySite,
-    speciesByTime,
+    richnessByTaxon,
+    richnessBySite,
+    speciesByTimeHourOfDay,
+    speciesByTimeDayOfWeek,
+    speciesByTimeMonthOfYear,
+    speciesByTimeUnixSeconds,
     speciesPresence,
     speciesByExport
   }
 }
 
-// TODO 640: move the Dictionary type to more generic place https://stackoverflow.com/a/68800471
-export interface Dictionary<T> {
-  [index: string]: T
-}
-
-const getSpeciesByTaxon = async (models: AllModels, sequelize: Sequelize, locationProjectId: number, filter: FilterDataset, taxonClassByKeys: Dictionary<TaxonClass>): Promise<SpeciesCountByTaxonName> => {
-  const detectionsGroupByTaxonClass = await getDetectionGroupByTaxonClass(models, sequelize, locationProjectId, filter)
-
-  const speciesCountByTaxonName: { [taxon: string]: number } = {}
-  for (const { taxonClassId, speciesCount } of detectionsGroupByTaxonClass) {
-    const taxonCommonName = taxonClassByKeys[taxonClassId].commonName
-    speciesCountByTaxonName[taxonCommonName] = speciesCount
-  }
-
-  return speciesCountByTaxonName
-}
-
-const getSpeciesBySite = async (sequelize: Sequelize, projectId: number, filter: FilterDataset, taxonClassByKeys: Dictionary<TaxonClass>, siteByKeys: Dictionary<Site>): Promise<MapSiteData[]> => {
-  const speciesCountBySite = await getSpeciesCountBySite(sequelize, projectId, filter)
-
-  return Object.entries(groupBy(speciesCountBySite, 'locationSiteId'))
-    .map(([_, uniqueTaxonClassInSite]) => {
-      const matchedSite = siteByKeys[uniqueTaxonClassInSite[0].locationSiteId]
-
-      const distinctSpecies: DistinctSpecies = {}
-      for (const data of uniqueTaxonClassInSite) {
-        const matchedTaxon = taxonClassByKeys[data.taxonClassId]
-        distinctSpecies[matchedTaxon.commonName] = data.speciesCount
-      }
-
-      return {
-        siteName: matchedSite.name,
-        longitude: matchedSite.longitude,
-        latitude: matchedSite.latitude,
-        distinctSpecies: distinctSpecies
-      }
-    })
-}
-
 const calculateSpeciesRichness = (detections: DetectionBySiteSpeciesHour[]): number => new Set(detections.map(d => d.taxonSpeciesId)).size
 
-// TODO 640: Change to query from db instead of by js function
+// TODO 640: Change to query from db instead of by js function?
 const getSpeciesByTime = async (detections: DetectionBySiteSpeciesHour[]): Promise<Record<TimeBucket, Record<number, number>>> => {
   const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
 
@@ -96,25 +59,18 @@ const getSpeciesByTime = async (detections: DetectionBySiteSpeciesHour[]): Promi
   }
 }
 
-const getSpeciesPresence = async (models: AllModels, locationProjectId: number, filter: FilterDataset, taxonClassByKeys: Dictionary<TaxonClass>, hasProjectPermission: boolean): Promise<SpeciesPresence> => {
+const getSpeciesPresence = async (models: AllModels, locationProjectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<SpeciesPresence> => {
+  // TODO: Get this as 1 JOIN
   const presenceSpeciesIds = (await getDetectionGroupByTaxonSpeciesIds(models, locationProjectId, filter)).flatMap(({ taxonSpeciesId }) => taxonSpeciesId)
   const species = await getSpeciesInProject(models, locationProjectId, hasProjectPermission, presenceSpeciesIds)
 
-  const presenceSpecies: SpeciesPresence = {}
-
-  // TODO 640: Clean up species type both api and frontend
-  for (const s of species) {
-    const { taxonSpeciesId, taxonSpeciesSlug, scientificName, commonName, taxonClassId } = s
-    presenceSpecies[taxonSpeciesId] = {
-      speciesId: taxonSpeciesId,
-      speciesSlug: taxonSpeciesSlug,
-      scientificName,
-      commonName,
-      taxon: taxonClassByKeys[taxonClassId].commonName
-    }
-  }
-
-  return presenceSpecies
+  return mapValues(keyBy(species, 'taxonSpeciesId'), ({ taxonSpeciesId, taxonSpeciesSlug, scientificName, commonName, taxonClassId }) => ({
+    speciesId: taxonSpeciesId,
+    speciesSlug: taxonSpeciesSlug,
+    scientificName,
+    commonName,
+    taxon: taxonClassId
+  }))
 }
 
 const getSpeciesByExport = async (models: AllModels, locationProjectId: number, siteByKeys: Dictionary<Site>, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<SpeciesByExportReportRow[]> => {

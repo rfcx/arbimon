@@ -12,12 +12,12 @@ interface RichnessDataset extends ColoredFilter {
 }
 
 export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
-  return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.speciesByTaxon)))]
+  return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.richnessByTaxon)))]
     .map(group => ({
       group,
       series: datasets.map(ds => ({
         category: '', // TODO - Maybe add the dataset name here
-        frequency: ds.data.speciesByTaxon[group] ?? 0,
+        frequency: ds.data.richnessByTaxon[group] ?? 0,
         color: ds.color
       }))
     }))
@@ -26,17 +26,17 @@ export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChar
 
 export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
   const intermediate = datasets.map(({ color, data: srData, sites, ...filter }) => {
-    const data = srData.speciesBySite.map(s => ({
+    const data = srData.richnessBySite.map(s => ({
       ...s,
       distinctSpecies: {
-        ...s.distinctSpecies,
-        [TAXONOMY_CLASS_ALL.name]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0)
+        ...s.byTaxon,
+        [TAXONOMY_CLASS_ALL.name]: Object.values(s.byTaxon).reduce((sum, val) => (sum as number) + (val as number), 0)
       }
     }))
     return { color, data, sites: sites.flatMap(sg => sg.value), ...filter, maxValues: {} }
   })
   // TODO 209 - Do this natively in the API instead of after the fact
-  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[TAXONOMY_CLASS_ALL.name] as number))))
+  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.byTaxon[TAXONOMY_CLASS_ALL.name] as number))))
   return intermediate.map(ds => ({
     ...ds,
     maxValues: Object.fromEntries([...TAXONOMY_CLASSES, TAXONOMY_CLASS_ALL].map(c => [c.name, maxAll]))

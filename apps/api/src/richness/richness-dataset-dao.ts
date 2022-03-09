@@ -1,35 +1,70 @@
+import { fromPairs, keyBy, mapValues } from 'lodash-es'
 import { Op, QueryTypes, Sequelize } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySiteSpeciesHour, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { Site, TaxonClass } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import { FilterDataset } from '~/mock-helper'
+import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '../_services/security/protected-species'
 
-const detectionConditions = (locationProjectId: number, filter: FilterDataset): Where<DetectionBySiteSpeciesHour> => {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
+export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  const result = await models
+    .DetectionBySiteSpeciesHour
+    .findAll({
+      attributes: ['taxonClassId', [sequelize.literal('COUNT(DISTINCT(taxon_species_id))::integer'), 'richness']],
+      where: whereInDataset(filter),
+      group: 'taxonClassId',
+      raw: true
+    }) as unknown as Array<{ taxonClassId: number, richness: number }>
 
-  const where: Where<DetectionBySiteSpeciesHour> = {
-    timePrecisionHourLocal: {
-      [Op.and]: {
-        [Op.gte]: startDateUtcInclusive,
-        [Op.lt]: endDateUtcInclusive
-      }
-    },
-    locationProjectId
-  }
+  return Object.fromEntries(result.map(r => [r.taxonClassId, r.richness]))
+}
 
-  if (siteIds.length > 0) {
-    where.locationSiteId = siteIds
-  }
+export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<SpeciesCountBySite[]> => {
+  const sql = `
+    SELECT 
+      species_group.location_site_id as "locationSiteId",
+      species_group.taxon_class_id as "taxonClassId",
+      COUNT(DISTINCT species_group.taxon_species_id)::integer as "richness"
+    FROM (
+      SELECT location_site_id, taxon_class_id, taxon_species_id
+      FROM detection_by_site_species_hour
+      WHERE ${datasetFilterWhereRaw}
+      GROUP BY location_site_id, taxon_class_id, taxon_species_id
+    ) species_group
+    GROUP BY species_group.location_site_id, species_group.taxon_class_id
+  `
 
-  if (taxons.length > 0) {
-    where.taxonClassId = taxons
-  }
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, replacements: filter, raw: true }) as unknown as SpeciesCountBySite[]
+}
 
-  return where
+export const getSpeciesByTimeHourOfDay = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  const sql = `
+    SELECT extract(hour FROM time_precision_hour_local) as hour_of_day,
+          Count(distinct taxon_species_id)              as richness
+    FROM detection_by_site_species_hour dbssh
+    WHERE ${datasetFilterWhereRaw}
+    GROUP BY 1
+    ORDER BY 1
+  `
+
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, replacements: filter, raw: true })
+
+  const allHours = fromPairs(Array.from({ length: 24 }, (_, idx) => [idx, 0] as [number, number]))
+  return { ...allHours, ...mapValues(keyBy(result, 'hour_of_day'), 'richness') }
+}
+
+export const getSpeciesByTimeDayOfWeek = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  const sql = `
+    SELECT extract(dow FROM time_precision_hour_local) as day_of_week,
+          Count(distinct taxon_species_id)             as richness
+    FROM detection_by_site_species_hour dbssh
+    WHERE ${datasetFilterWhereRaw}
+    GROUP BY 1
+    ORDER BY 1
+  `
 }
 
 export const getSitesByProjectId = async (models: AllModels, locationProjectId: number): Promise<Site[]> => {
@@ -40,76 +75,21 @@ export const getTaxonClasses = async (models: AllModels): Promise<TaxonClass[]> 
   return await models.TaxonClass.findAll({ raw: true })
 }
 
-export const getDetections = async (models: AllModels, locationProjectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> => {
-  const where = detectionConditions(locationProjectId, filter)
-  return await models.DetectionBySiteSpeciesHour.findAll({ where, raw: true })
-}
-
-// TODO 640: Move with `getSpeciesByTaxon()`
-export interface DetectionsGroupByTaxonClass {
-  taxonClassId: number
-  speciesCount: number
-}
-
-export const getDetectionGroupByTaxonClass = async (models: AllModels, sequelize: Sequelize, locationProjectId: number, filter: FilterDataset): Promise<DetectionsGroupByTaxonClass[]> => {
-  const where = detectionConditions(locationProjectId, filter)
-
-  return await models.DetectionBySiteSpeciesHour.findAll({
-    attributes: ['taxonClassId', [sequelize.literal('COUNT(DISTINCT(taxon_species_id))::integer'), 'speciesCount']],
-    where,
-    group: 'taxonClassId',
-    raw: true
-  }) as unknown as DetectionsGroupByTaxonClass[]
-}
-
 // TODO 640: Move with `getSpeciesBySite()`
 export interface SpeciesCountBySite {
   locationSiteId: number
   taxonClassId: number
-  speciesCount: number
-}
-
-// TODO 640: Maybe a better way to query by sequelize
-export const getSpeciesCountBySite = async (sequelize: Sequelize, projectId: number, filter: FilterDataset): Promise<SpeciesCountBySite[]> => {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
-
-  const where = [`time_precision_hour_local >= '${startDateUtcInclusive}' AND time_precision_hour_local < '${endDateUtcInclusive}'`]
-
-  if (siteIds.length > 0) {
-    where.push(`location_site_id = ${JSON.stringify(siteIds)}`)
-  }
-
-  if (taxons.length > 0) {
-    where.push(`taxon_class_id = ${JSON.stringify(taxons)}`)
-  }
-
-  const speciesCountBySitesSql = `
-    SELECT 
-      species_group.location_site_id as "locationSiteId",
-      species_group.taxon_class_id as "taxonClassId",
-      COUNT(DISTINCT species_group.taxon_species_id)::integer as "speciesCount"
-    FROM (
-      SELECT location_site_id, taxon_class_id, taxon_species_id
-      FROM detection_by_site_species_hour
-      WHERE location_project_id = ${projectId} AND ${where.join(' AND ')}
-      GROUP BY location_site_id, taxon_class_id, taxon_species_id
-    ) species_group
-    GROUP BY species_group.location_site_id, species_group.taxon_class_id
-  `
-
-  return await sequelize.query(speciesCountBySitesSql, { type: QueryTypes.SELECT, raw: true }) as unknown as SpeciesCountBySite[]
+  richness: number
 }
 
 export interface DetectionGroupByTaxonSpeciesId {
   taxonSpeciesId: number
 }
 
-export const getDetectionGroupByTaxonSpeciesIds = async (models: AllModels, locationProjectId: number, filter: FilterDataset): Promise<DetectionGroupByTaxonSpeciesId[]> => {
-  const where = detectionConditions(locationProjectId, filter)
-
+export const getDetectionGroupByTaxonSpeciesIds = async (models: AllModels, locationProjectId: number, filter: FilterDatasetForSql): Promise<DetectionGroupByTaxonSpeciesId[]> => {
   return await models.DetectionBySiteSpeciesHour.findAll({
     attributes: ['taxonSpeciesId'],
-    where,
+    where: whereInDataset(filter),
     group: 'taxonSpeciesId',
     raw: true
   })
