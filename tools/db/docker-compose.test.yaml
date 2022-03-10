@@ -1,0 +1,14 @@
+version: "3.2"
+services:
+  timescaledb-test:
+    image: "timescale/timescaledb:latest-pg12"
+    ports:
+      - "5433:5432"
+    volumes:
+      - data-timescaledb-test:/var/lib/postgresql/data
+      - ./init.d:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+volumes:
+  data-timescaledb-test:
