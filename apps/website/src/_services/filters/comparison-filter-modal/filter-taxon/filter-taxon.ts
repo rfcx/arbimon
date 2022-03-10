@@ -1,11 +1,13 @@
 import { Vue } from 'vue-class-component'
-import { Emit, Prop } from 'vue-property-decorator'
+import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
+import { TaxonClass } from '@rfcx-bio/common/dao/types'
 
 import { FilterPropertyEquals } from '~/filters'
+import { BiodiversityStore } from '~/store'
 
 export default class FilterTaxon extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop({ default: [] }) initialTaxonClasses!: number[]
 
   @Emit() emitSelectedTaxons (): FilterPropertyEquals[] {
@@ -14,7 +16,10 @@ export default class FilterTaxon extends Vue {
   }
 
   selectedTaxons: number[] = []
-  taxons = TAXONOMY_CLASSES
+
+  get taxons (): TaxonClass[] {
+    return this.store.projectFilters?.taxonClasses ?? []
+  }
 
   get isSelectedAllTaxons (): boolean {
     return this.selectedTaxons.length === 0 || this.selectedTaxons.length === this.taxons.length
