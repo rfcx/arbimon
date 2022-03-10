@@ -16,7 +16,7 @@ const main = async (): Promise<void> => {
       .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
     const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
-      .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.idOrdered])))
+      .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
 
     console.info('STEP: Sync IUCN')
     await syncIucnSpeciesInfo(sequelize, speciesNameToId, iucnCodeToId)
