@@ -1,4 +1,4 @@
-import { fromPairs, keyBy, mapValues } from 'lodash-es'
+import { keyBy, mapValues } from 'lodash-es'
 import { Op, QueryTypes, Sequelize } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/helpers/query'
@@ -23,6 +23,8 @@ export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequ
 }
 
 export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<SpeciesCountBySite[]> => {
+  const { conditions, bind } = datasetFilterWhereRaw(filter)
+
   const sql = `
     SELECT 
       species_group.location_site_id as "locationSiteId",
@@ -31,40 +33,74 @@ export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterData
     FROM (
       SELECT location_site_id, taxon_class_id, taxon_species_id
       FROM detection_by_site_species_hour
-      WHERE ${datasetFilterWhereRaw}
+      WHERE ${conditions}
       GROUP BY location_site_id, taxon_class_id, taxon_species_id
     ) species_group
     GROUP BY species_group.location_site_id, species_group.taxon_class_id
   `
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, replacements: filter, raw: true }) as unknown as SpeciesCountBySite[]
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as SpeciesCountBySite[]
+}
+
+type TimeSeries = 'hour' | 'dow' | 'month'
+
+export const getSpeciesByTimeSeries = async (sequelize: Sequelize, filter: FilterDatasetForSql, timeSeries: TimeSeries): Promise<Record<number, number>> => {
+  const { conditions, bind } = datasetFilterWhereRaw(filter)
+
+  const seriesEnd = (t: TimeSeries): number => {
+    switch (t) {
+      case 'dow': return 6
+      case 'month': return 11
+      default: return 23
+    }
+  }
+
+  const sql = `
+    SELECT gs.gs as grouped_time_bucket, COALESCE(data.richness, 0) as richness
+    FROM generate_series(0, ${seriesEnd(timeSeries)}) gs
+      LEFT JOIN (
+      SELECT extract(${timeSeries} FROM time_precision_hour_local) as grouped_time_bucket,
+             Count(distinct taxon_species_id)                      as richness
+      FROM detection_by_site_species_hour dbssh
+      WHERE ${conditions}
+      GROUP BY grouped_time_bucket
+    ) as data
+    ON gs.gs = data.grouped_time_bucket
+    ORDER BY gs.gs
+  `
+
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  return mapValues(keyBy(result, 'grouped_time_bucket'), 'richness')
 }
 
 export const getSpeciesByTimeHourOfDay = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
-  const sql = `
-    SELECT extract(hour FROM time_precision_hour_local) as hour_of_day,
-          Count(distinct taxon_species_id)              as richness
-    FROM detection_by_site_species_hour dbssh
-    WHERE ${datasetFilterWhereRaw}
-    GROUP BY 1
-    ORDER BY 1
-  `
-
-  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, replacements: filter, raw: true })
-
-  const allHours = fromPairs(Array.from({ length: 24 }, (_, idx) => [idx, 0] as [number, number]))
-  return { ...allHours, ...mapValues(keyBy(result, 'hour_of_day'), 'richness') }
+  return await getSpeciesByTimeSeries(sequelize, filter, 'hour')
 }
 
 export const getSpeciesByTimeDayOfWeek = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  return await getSpeciesByTimeSeries(sequelize, filter, 'dow')
+}
+
+export const getSpeciesByTimeMonthOfYear = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  return await getSpeciesByTimeSeries(sequelize, filter, 'month')
+}
+
+export const getSpeciesByTimeUnix = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  const { conditions, bind } = datasetFilterWhereRaw(filter)
+
   const sql = `
-    SELECT extract(dow FROM time_precision_hour_local) as day_of_week,
-          Count(distinct taxon_species_id)             as richness
-    FROM detection_by_site_species_hour dbssh
-    WHERE ${datasetFilterWhereRaw}
-    GROUP BY 1
-    ORDER BY 1
+    SELECT extract(epoch FROM date_group.date) as date_unix, date_group.richness
+    FROM (
+      SELECT DATE(time_precision_hour_local)  as date,
+             Count(distinct taxon_species_id) as richness
+      FROM detection_by_site_species_hour dbssh
+      WHERE ${conditions}
+      GROUP BY DATE(time_precision_hour_local)
+    ) as date_group
   `
+
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
 export const getSitesByProjectId = async (models: AllModels, locationProjectId: number): Promise<Site[]> => {

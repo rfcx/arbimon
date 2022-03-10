@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { BindOrReplacements, Op } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -6,7 +6,12 @@ import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '../dayjs-initialized'
 import { FilterDataset } from './dataset-types'
 
-export interface FilterDatasetForSql extends Record<string, unknown> { // to be compatible with Sequelize `replacements` (query params)
+export interface Condition {
+  conditions: string
+  bind: BindOrReplacements
+}
+
+export interface FilterDatasetForSql extends Record<string, unknown> {
   locationProjectId: number
   startDateUtcInclusive: string
   endDateUtcExclusive: string
@@ -20,14 +25,27 @@ export const toFilterDatasetForSql = ({ endDateUtcInclusive, ...rest }: FilterDa
     endDateUtcExclusive: dayjs.utc(endDateUtcInclusive).add(1, 'day').toISOString()
   })
 
-// TODO: 640 Fix IN of `array` values
-export const datasetFilterWhereRaw = `
-  location_project_id = :locationProjectId
-  AND time_precision_hour_local >= :startDateUtcInclusive
-  AND time_precision_hour_local < :endDateUtcExclusive
-  AND ( :siteIds IS NULL OR location_site_id IN :siteIds ) -- WRONG
-  AND ( :taxons IS NULL OR taxon_class_id IN :taxons ) -- WRONG
-`
+export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition => {
+  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
+  const conditions = ['location_project_id = $locationProjectId', 'time_precision_hour_local >= $startDateUtcInclusive', 'time_precision_hour_local < $endDateUtcExclusive']
+  const bind: BindOrReplacements = {
+    locationProjectId,
+    startDateUtcInclusive,
+    endDateUtcExclusive
+  }
+
+  if (siteIds.length > 0) {
+    conditions.push('location_site_id = ANY($siteIds)')
+    bind.siteIds = siteIds
+  }
+
+  if (taxons.length > 0) {
+    conditions.push('taxon_class_id = ANY($taxons)')
+    bind.taxons = taxons
+  }
+
+  return { conditions: conditions.join(' AND '), bind }
+}
 
 export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
   const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
