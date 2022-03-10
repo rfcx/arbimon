@@ -1,7 +1,8 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { LocationProjectLight, Site } from '@rfcx-bio/common/dao/types'
+import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
+import { LocationProjectLight } from '@rfcx-bio/common/dao/types'
 
 import { projectService } from '~/api/project-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
@@ -12,7 +13,7 @@ export const useStore = defineStore('root', {
     datasetColors: COLORS_BIO_INCLUSIVE,
     projects: [] as LocationProjectLight[],
     selectedProject: undefined as LocationProjectLight | undefined,
-    sites: [] as Site[]
+    projectFilters: undefined as ProjectFiltersResponse | undefined
   }),
   getters: {},
   actions: {
@@ -33,7 +34,9 @@ export const useStore = defineStore('root', {
       if (this.selectedProject?.id === project?.id) return
 
       this.selectedProject = project
-      this.sites = project ? await projectService.getSites(project.id) ?? [] : []
+      this.projectFilters = project
+        ? await projectService.getProjectFilters(project.id)
+        : undefined
     }
   }
 })
