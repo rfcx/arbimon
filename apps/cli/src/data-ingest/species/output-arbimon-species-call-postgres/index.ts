@@ -1,16 +1,24 @@
-import { Optional, Sequelize } from 'sequelize'
+import { Optional, QueryTypes, Sequelize } from 'sequelize'
 
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { ArbimonSpeciesCall } from '../../../data-ingest/species/input-arbimon-species-call'
 
 export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, speciesCalls: Record<string, ArbimonSpeciesCall[]>): Promise<void> {
-  const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
+    const sql = `
+    SELECT DISTINCT ts.id, ts.scientific_name
+    FROM taxon_species ts
+    LEFT JOIN taxon_species_call tsc ON ts.id = tsc.taxon_species_id
+    WHERE tsc.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, ts.updated_at)) >= 1 
+    ORDER BY ts.id
+  `
+
+  const speciesScientificToId = await sequelize
+    .query<{ id: number, scientific_name: string }>(sql, { type: QueryTypes.SELECT, raw: true })
+    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, s.id])))
 
   const siteNameToId = await LocationSiteModel(sequelize).findAll()
     .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
