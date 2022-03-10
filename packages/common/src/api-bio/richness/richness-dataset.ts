@@ -21,9 +21,8 @@ export interface RichnessDatasetResponse {
   speciesByTimeHourOfDay: Record<number, number> // hourOfDay -> richness
   speciesByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
   speciesByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
-  speciesByTimeUnixSeconds: Record<number, number> // unixSeconds -> richness
+  speciesByTimeUnix: Record<number, number> // unix -> richness
   speciesPresence: Record<number, SpeciesLight>
-  speciesByExport: SpeciesByExportReportRow[]
 }
 
 export interface RichnessSiteData {

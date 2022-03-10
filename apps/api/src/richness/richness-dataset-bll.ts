@@ -1,15 +1,14 @@
 import { keyBy, mapValues } from 'lodash-es'
 
-import { RichnessDatasetResponse, SpeciesByExportReportRow, SpeciesPresence, TimeBucket } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { RichnessDatasetResponse, SpeciesByExportReportRow, SpeciesPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHour, Site } from '@rfcx-bio/common/dao/types'
-import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { FilterDataset } from '~/datasets/dataset-types'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
-import { getDetectionGroupByTaxonSpeciesIds, getRichnessBySite, getRichnessByTaxonClass, getSitesByProjectId, getSpeciesByTimeHourOfDay, getSpeciesInProject } from './richness-dataset-dao'
+import { getDetectionGroupByTaxonSpeciesIds, getRichnessBySite, getRichnessByTaxonClass, getSpeciesByTimeDayOfWeek, getSpeciesByTimeHourOfDay, getSpeciesByTimeMonthOfYear, getSpeciesByTimeUnix, getSpeciesInProject } from './richness-dataset-dao'
 
 export const getRichnessDataset = async (locationProjectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
   const sequelize = getSequelize()
@@ -17,19 +16,14 @@ export const getRichnessDataset = async (locationProjectId: number, filter: Filt
 
   const filterForSql = toFilterDatasetForSql(filter)
 
-  // Filter data
-  const sites = await getSitesByProjectId(models, locationProjectId)
-  const detections = await getDetections(models, locationProjectId, filter)
-
-  const siteByKeys = keyBy(sites, 'id')
-
-  const [richnessByTaxon, richnessBySite, speciesByTimeHourOfDay, speciesByTime, speciesPresence, speciesByExport] = await Promise.all([
+  const [richnessByTaxon, richnessBySite, speciesByTimeHourOfDay, speciesByTimeDayOfWeek, speciesByTimeMonthOfYear, speciesByTimeUnix, speciesPresence] = await Promise.all([
     await getRichnessByTaxonClass(models, sequelize, filterForSql),
     await getRichnessBySite(sequelize, filterForSql),
     await getSpeciesByTimeHourOfDay(sequelize, filterForSql),
-    await getSpeciesByTime(detections),
-    await getSpeciesPresence(models, locationProjectId, filter, hasProjectPermission),
-    await getSpeciesByExport(models, locationProjectId, siteByKeys, detections, hasProjectPermission)
+    await getSpeciesByTimeDayOfWeek(sequelize, filterForSql),
+    await getSpeciesByTimeMonthOfYear(sequelize, filterForSql),
+    await getSpeciesByTimeUnix(sequelize, filterForSql),
+    await getSpeciesPresence(models, locationProjectId, filter, hasProjectPermission)
   ])
 
   return {
@@ -39,23 +33,8 @@ export const getRichnessDataset = async (locationProjectId: number, filter: Filt
     speciesByTimeHourOfDay,
     speciesByTimeDayOfWeek,
     speciesByTimeMonthOfYear,
-    speciesByTimeUnixSeconds,
-    speciesPresence,
-    speciesByExport
-  }
-}
-
-const calculateSpeciesRichness = (detections: DetectionBySiteSpeciesHour[]): number => new Set(detections.map(d => d.taxonSpeciesId)).size
-
-// TODO 640: Change to query from db instead of by js function?
-const getSpeciesByTime = async (detections: DetectionBySiteSpeciesHour[]): Promise<Record<TimeBucket, Record<number, number>>> => {
-  const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
-
-  return {
-    hourOfDay: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).hour()), calculateSpeciesRichness),
-    dayOfWeek: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1), calculateSpeciesRichness),
-    monthOfYear: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).month()), calculateSpeciesRichness),
-    dateSeries: mapValues(groupByNumber(detections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY), calculateSpeciesRichness)
+    speciesByTimeUnix,
+    speciesPresence
   }
 }
 
