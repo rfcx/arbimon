@@ -1,8 +1,11 @@
+import fastify from 'fastify'
 import { expect, test } from 'vitest'
-import fastify, { FastifyInstance } from 'fastify'
-import { routesProject } from '.'
+
 import { projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
+
 import { GET } from '~/api-helpers/types'
+// eslint-disable-next-line no-restricted-imports -- Allowed in tests
+import { routesProject } from '.'
 
 test('Example', async () => {
   const app = await fastify({ logger: true })
@@ -19,4 +22,3 @@ test('Example', async () => {
   // Assert
   expect(response.statusCode).toBe(200)
 })
-
