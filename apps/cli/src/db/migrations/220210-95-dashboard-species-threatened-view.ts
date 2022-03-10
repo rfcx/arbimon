@@ -22,7 +22,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            tsp.photo_url
     FROM species_in_project sip
           INNER JOIN taxon_species ts ON sip.taxon_species_id = ts.id
-          LEFT JOIN risk_rating_iucn rri ON sip.risk_rating_id = rri.id_ordered
+          LEFT JOIN risk_rating_iucn rri ON sip.risk_rating_id = rri.id
           LEFT JOIN taxon_species_iucn tsi ON sip.taxon_species_id = tsi.taxon_species_id
           LEFT JOIN taxon_species_photo tsp on sip.taxon_species_id = tsp.taxon_species_id
     WHERE rri.is_threatened

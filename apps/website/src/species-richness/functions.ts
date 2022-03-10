@@ -1,6 +1,5 @@
 import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
-import { TAXONOMY_CLASS_ALL, TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
@@ -10,6 +9,8 @@ import { DetectedSpeciesItem } from './components/species-richness-detected-spec
 interface RichnessDataset extends ColoredFilter {
   data: RichnessDatasetResponse
 }
+
+export const MAP_KEY_RICHNESS_TOTAL = 'All'
 
 export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
   return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.richnessByTaxon)))]
@@ -25,21 +26,26 @@ export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChar
 }
 
 export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
+  // TODO: Delete this
   const intermediate = datasets.map(({ color, data: srData, sites, ...filter }) => {
     const data = srData.richnessBySite.map(s => ({
       ...s,
       distinctSpecies: {
-        ...s.byTaxon,
-        [TAXONOMY_CLASS_ALL.name]: Object.values(s.byTaxon).reduce((sum, val) => (sum as number) + (val as number), 0)
+        ...s.distinctSpecies,
+        [MAP_KEY_RICHNESS_TOTAL]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0)
       }
     }))
     return { color, data, sites: sites.flatMap(sg => sg.value), ...filter, maxValues: {} }
   })
-  // TODO 209 - Do this natively in the API instead of after the fact
-  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.byTaxon[TAXONOMY_CLASS_ALL.name] as number))))
+
+  // TODO: Do this natively in the API instead of after the fact
+  const taxonClasses = new Set(intermediate.flatMap(i => Object.keys(i.data.map(d => d.distinctSpecies))))
+  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[MAP_KEY_RICHNESS_TOTAL] as number))))
+  const maxValues = Object.fromEntries([...taxonClasses, MAP_KEY_RICHNESS_TOTAL].map(name => [name, maxAll]))
+
   return intermediate.map(ds => ({
     ...ds,
-    maxValues: Object.fromEntries([...TAXONOMY_CLASSES, TAXONOMY_CLASS_ALL].map(c => [c.name, maxAll]))
+    maxValues
   }))
 }
 

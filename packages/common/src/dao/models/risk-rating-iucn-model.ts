@@ -10,7 +10,7 @@ export const RiskRatingIucnModel = defineWithDefaults<RiskRatingIucn>(
   MODEL_RISK_RATING_IUCN,
   {
     // PK
-    idOrdered: { // 1
+    id: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true

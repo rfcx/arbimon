@@ -17,7 +17,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.slug, s.id])))
 
   const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
-    .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.idOrdered])))
+    .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
 
   // Convert data
   const data: TaxonSpeciesIucn[] =
