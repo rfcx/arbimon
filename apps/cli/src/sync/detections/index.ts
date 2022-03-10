@@ -17,7 +17,7 @@ export const compareDiff = (summaries: ArbimonHourlyDetectionSummary[], project:
   // TODO: save snapshot data, to compare with next sync if there is any changes then only write the changes to the db
 }
 
-// export const syncDetectionsForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
+export const syncDetectionsForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
 //   console.info(`==> START SYNCING: project ${project.slug} (ID: ${project.idArbimon})`)
 //   // ABR QUERY: get detections from arbimon, then sites and species based on the detections
 //   const summaries = await getArbimonDetectionSummaries(project.idArbimon)
@@ -45,4 +45,4 @@ export const compareDiff = (summaries: ArbimonHourlyDetectionSummary[], project:
 
 //   // BIO WRITE: write detection data
 //   await writeDetectionsToPostgres(sequelize, summaries, project)
-// }
+}

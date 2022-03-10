@@ -4,14 +4,14 @@ import { resolve } from 'path'
 import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts'
 
 import { getJsonOutputDirectory, getMockDataDirectory } from '../../_services/output'
-import { getArbimonHourlyDetectionsForProjects } from './input-arbimon'
+import { getArbimonHourlyDetectionsForProject } from './input-arbimon'
 
 const outputJsonPath = resolve(getJsonOutputDirectory(), './raw-detections-by-hour.json')
 const outputTsPath = resolve(getMockDataDirectory(), './raw-detections-by-hour.ts')
 const outputTsConstName = 'rawDetections'
 
 const main = async (): Promise<void> => {
-  const detections = await getArbimonHourlyDetectionsForProjects(1989)
+  const detections = await getArbimonHourlyDetectionsForProject(1989)
   const outputJson = JSON.stringify(detections, undefined, 2)
   const outputTs = jsonToTs(outputJson, outputTsConstName, 'MockHourlyDetectionSummary[]', 'import { MockHourlyDetectionSummary } from \'./types\'')
   fs.writeFileSync(outputJsonPath, outputJson, 'utf8')
