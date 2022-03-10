@@ -18,11 +18,11 @@ export interface RichnessDatasetResponse {
   isLocationRedacted: boolean
   richnessByTaxon: Record<number, number> // taxonClassId -> richness
   richnessBySite: RichnessSiteData[]
-  speciesByTimeHourOfDay: Record<number, number> // hourOfDay -> richness
-  speciesByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
-  speciesByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
-  speciesByTimeUnix: Record<number, number> // unix -> richness
-  speciesPresence: Record<number, SpeciesLight>
+  richnessByTimeHourOfDay: Record<number, number> // hourOfDay -> richness
+  richnessByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
+  richnessByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
+  richnessByTimeUnix: Record<number, number> // unix -> richness
+  richnessPresence: Record<number, SpeciesLight>
 }
 
 export interface RichnessSiteData {
