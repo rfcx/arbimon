@@ -1,19 +1,20 @@
 import { Sequelize } from 'sequelize'
 
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_TAXON_SPECIES } from '@rfcx-bio/common/dao/types'
-import { TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 
 import { ArbimonSpeciesData } from '../input-from-mock-detections'
 
 export const writeArbimonSpeciesDataToPostgres = async (sequelize: Sequelize, species: ArbimonSpeciesData[]): Promise<void> => {
-  const model = TaxonSpeciesModel(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
 
-  // get class id
-  const taxonClassArbimonToBio = Object.fromEntries(
-    TAXONOMY_CLASSES.map(t => [t.idArbimon, t.id])
-  )
+  // Lookups
+  const taxonClassArbimonToBio = await models
+    .TaxonClass
+    .findAll()
+    .then(res => Object.fromEntries(res.map(t => [t.idArbimon, t.id])))
 
+  // Save data
   const newData = species.map(s => ({
     idArbimon: s.speciesId,
     slug: s.speciesSlug,
@@ -21,7 +22,8 @@ export const writeArbimonSpeciesDataToPostgres = async (sequelize: Sequelize, sp
     scientificName: s.scientificName
   }))
 
-  await model
+  await models
+    .TaxonSpecies
     .bulkCreate(newData, {
       updateOnDuplicate: ATTRIBUTES_TAXON_SPECIES.updateOnDuplicate
     })
