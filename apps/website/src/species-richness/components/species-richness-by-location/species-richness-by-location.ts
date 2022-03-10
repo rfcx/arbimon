@@ -2,10 +2,9 @@ import { LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASS_ALL } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
-
 import { LAYOUT_BREAKPOINT } from '@/_layout/config'
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
+import { MAP_KEY_RICHNESS_TOTAL } from '@/species-richness/functions'
 import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
@@ -47,7 +46,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   }
 
   get mapDataKey (): string {
-    return TAXONOMY_CLASS_ALL.name
+    return MAP_KEY_RICHNESS_TOTAL
   }
 
   get mapInitialBounds (): LngLatBoundsLike | null {
