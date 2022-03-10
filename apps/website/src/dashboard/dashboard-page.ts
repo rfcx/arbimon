@@ -124,7 +124,7 @@ export default class DashboardPage extends Vue {
     return {
       startDate: dayjs(),
       endDate: dayjs(),
-      sites: this.store.sites,
+      sites: this.store.projectFilters?.locationSites ?? [],
       data: ((this.selectedTab === TAB_VALUES.richness ? this.generated?.richnessBySite : this.generated?.detectionBySite) ?? [])
         .map(({ name: siteName, latitude, longitude, value }) => ({
           siteName,
@@ -172,8 +172,9 @@ export default class DashboardPage extends Vue {
   get richnessByTaxon (): HorizontalStack[] {
     return (this.generated?.richnessByTaxon ?? [])
       .map(([taxonId, count]) => {
-        const taxonClass = TAXON_CLASSES_BY_ID[taxonId]
-        return { name: taxonClass.commonName, color: taxonClass.color, count }
+        const name = this.store.projectFilters?.taxonClasses.find(tc => tc.id === taxonId)?.commonName ?? '-'
+        const color = TAXON_CLASSES_BY_ID[taxonId].color
+        return { name, color, count }
       })
   }
 

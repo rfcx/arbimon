@@ -1,19 +1,18 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '../helpers/defaults'
+import { defineWithDefaults } from '../helpers/defaults'
 import { TaxonClass } from '../types'
 
 export const MODEL_TAXON_CLASS = 'TaxonClass'
 export const TABLE_TAXON_CLASS = 'taxon_class'
 
-export const TaxonClassModel = defineWithDefaultsAutoPk<TaxonClass>(
+export const TaxonClassModel = defineWithDefaults<TaxonClass>(
   MODEL_TAXON_CLASS,
   {
     // PK
     id: { // 1
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
 
     // SKs

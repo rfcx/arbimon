@@ -40,7 +40,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         references: {
           model: { tableName: 'risk_rating_iucn' },
-          key: 'id_ordered'
+          key: 'id'
         }
       },
       description: {
