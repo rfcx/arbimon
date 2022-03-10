@@ -7,10 +7,11 @@ const main = async (): Promise<void> => {
   const sequelize = getSequelize()
 
   const sql = `
-    SELECT ts.id, ts.scientific_name
+    SELECT DISTINCT ts.id, ts.scientific_name
     FROM taxon_species ts
     LEFT JOIN taxon_species_wiki tsw ON ts.id = tsw.taxon_species_id
-    WHERE tsw.taxon_species_id IS NULL
+    WHERE tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, ts.updated_at)) >= 1 
+    ORDER BY ts.id
   `
   // Lookups
   const speciesNameToId: Record<string, number> = await sequelize
