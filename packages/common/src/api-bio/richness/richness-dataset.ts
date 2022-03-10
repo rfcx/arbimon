@@ -1,5 +1,4 @@
 import { FilterDatasetQuery } from '../common/filter'
-import { SpeciesLight } from '../species/types'
 
 // Request
 export interface RichnessDatasetParams {
@@ -22,7 +21,8 @@ export interface RichnessDatasetResponse {
   richnessByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
   richnessByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
   richnessByTimeUnix: Record<number, number> // unix -> richness
-  richnessPresence: Record<number, SpeciesLight>
+  richnessPresence: Record<number, RichnessPresence>
+  richnessExport: RichnessByExportReportRow[]
 }
 
 export interface RichnessSiteData {
@@ -31,8 +31,8 @@ export interface RichnessSiteData {
   richness: number
 }
 
-export interface SpeciesByExportReportRow {
-  species: string
+export interface RichnessByExportReportRow {
+  name: string
   site: string
   latitude: number
   longitude: number
@@ -41,4 +41,12 @@ export interface SpeciesByExportReportRow {
   year: string
   date: string
   hour: string
+}
+
+export interface RichnessPresence {
+  taxonClassId: number
+  taxonSpeciesId: number
+  taxonSpeciesSlug: string
+  commonName: string
+  sciencetificName: string
 }
