@@ -1,13 +1,10 @@
 import { keyBy, mapValues } from 'lodash-es'
-import { Op, QueryTypes, Sequelize } from 'sequelize'
+import { QueryTypes, Sequelize } from 'sequelize'
 
-import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { Site, TaxonClass } from '@rfcx-bio/common/dao/types'
-import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
-import { RISK_RATING_PROTECTED_IDS } from '../_services/security/protected-species'
+import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 
 export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
   const result = await models
@@ -20,6 +17,13 @@ export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequ
     }) as unknown as Array<{ taxonClassId: number, richness: number }>
 
   return Object.fromEntries(result.map(r => [r.taxonClassId, r.richness]))
+}
+
+// TODO 640: Move with `getRichnessBySite()`
+export interface SpeciesCountBySite {
+  locationSiteId: number
+  taxonClassId: number
+  richness: number
 }
 
 export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<SpeciesCountBySite[]> => {
@@ -44,7 +48,7 @@ export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterData
 
 type TimeSeries = 'hour' | 'dow' | 'month'
 
-export const getSpeciesByTimeSeries = async (sequelize: Sequelize, filter: FilterDatasetForSql, timeSeries: TimeSeries): Promise<Record<number, number>> => {
+export const getRichnessByTimeSeries = async (sequelize: Sequelize, filter: FilterDatasetForSql, timeSeries: TimeSeries): Promise<Record<number, number>> => {
   const { conditions, bind } = datasetFilterWhereRaw(filter)
 
   const seriesEnd = (t: TimeSeries): number => {
@@ -73,19 +77,19 @@ export const getSpeciesByTimeSeries = async (sequelize: Sequelize, filter: Filte
   return mapValues(keyBy(result, 'grouped_time_bucket'), 'richness')
 }
 
-export const getSpeciesByTimeHourOfDay = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
-  return await getSpeciesByTimeSeries(sequelize, filter, 'hour')
+export const getRichnessByTimeHourOfDay = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  return await getRichnessByTimeSeries(sequelize, filter, 'hour')
 }
 
-export const getSpeciesByTimeDayOfWeek = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
-  return await getSpeciesByTimeSeries(sequelize, filter, 'dow')
+export const getRichnessByTimeDayOfWeek = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  return await getRichnessByTimeSeries(sequelize, filter, 'dow')
 }
 
-export const getSpeciesByTimeMonthOfYear = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
-  return await getSpeciesByTimeSeries(sequelize, filter, 'month')
+export const getRichnessByTimeMonthOfYear = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+  return await getRichnessByTimeSeries(sequelize, filter, 'month')
 }
 
-export const getSpeciesByTimeUnix = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
+export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
   const { conditions, bind } = datasetFilterWhereRaw(filter)
 
   const sql = `
@@ -103,23 +107,36 @@ export const getSpeciesByTimeUnix = async (sequelize: Sequelize, filter: FilterD
   return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
-export const getSitesByProjectId = async (models: AllModels, locationProjectId: number): Promise<Site[]> => {
-  return await models.LocationSite.findAll({ where: { locationProjectId }, raw: true })
-}
-
-export const getTaxonClasses = async (models: AllModels): Promise<TaxonClass[]> => {
-  return await models.TaxonClass.findAll({ raw: true })
-}
-
-// TODO 640: Move with `getSpeciesBySite()`
-export interface SpeciesCountBySite {
-  locationSiteId: number
-  taxonClassId: number
-  richness: number
-}
-
 export interface DetectionGroupByTaxonSpeciesId {
   taxonSpeciesId: number
+}
+
+export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, hasProjectPermission: boolean): Promise<SpeciesPresence> => {
+  const filterBase = datasetFilterWhereRaw(filter)
+
+  const conditions = !hasProjectPermission ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
+  const bind = !hasProjectPermission ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+
+  const sql = `
+    SELECT sip.taxon_species_slug as slug,
+      sip.common_name as common_name,
+      sip.scientific_name as scientific_name,
+      sip.taxon_class_id as taxon_class_id,
+      sip.risk_rating_global_id as risk_id,
+      ls.latitude as latitude,
+      ls.longitude as longitude,
+      ls.altitude as altitude
+    FROM
+      detection_by_site_species_hour dbssh
+      LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
+      LEFT JOIN location_site ls ON dbssh.location_site_id = ls.id
+    WHERE ${conditions} 
+    GROUP BY
+      ls.id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
+  `
+
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
 export const getDetectionGroupByTaxonSpeciesIds = async (models: AllModels, locationProjectId: number, filter: FilterDatasetForSql): Promise<DetectionGroupByTaxonSpeciesId[]> => {
@@ -131,23 +148,23 @@ export const getDetectionGroupByTaxonSpeciesIds = async (models: AllModels, loca
   })
 }
 
-export const getSpeciesInProject = async (models: AllModels, locationProjectId: number, hasProjectPermission: boolean, presenceSpeciesIds?: number[]): Promise<SpeciesInProject[]> => {
-  const where: Where<SpeciesInProject> = {
-    locationProjectId: locationProjectId
-  }
+// export const getSpeciesInProject = async (models: AllModels, locationProjectId: number, hasProjectPermission: boolean, presenceSpeciesIds?: number[]): Promise<SpeciesInProject[]> => {
+//   const where: Where<SpeciesInProject> = {
+//     locationProjectId: locationProjectId
+//   }
 
-  if (presenceSpeciesIds && presenceSpeciesIds.length > 0) {
-    where.taxonSpeciesId = presenceSpeciesIds
-  }
+//   if (presenceSpeciesIds && presenceSpeciesIds.length > 0) {
+//     where.taxonSpeciesId = presenceSpeciesIds
+//   }
 
-  if (!hasProjectPermission) {
-    where.riskRatingId = {
-      [Op.notIn]: RISK_RATING_PROTECTED_IDS
-    }
-  }
+//   if (!hasProjectPermission) {
+//     where.riskRatingId = {
+//       [Op.notIn]: RISK_RATING_PROTECTED_IDS
+//     }
+//   }
 
-  return await models.SpeciesInProject.findAll({
-    where,
-    raw: true
-  })
-}
+//   return await models.SpeciesInProject.findAll({
+//     where,
+//     raw: true
+//   })
+// }
