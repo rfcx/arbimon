@@ -1,3 +1,4 @@
+import * as hash from 'object-hash'
 import { Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
@@ -8,10 +9,10 @@ export const syncOnlyDetectionsForProject = async (sequelize: Sequelize, project
   const detectionSummaries = await getArbimonHourlyDetectionsForProject(project.idArbimon)
   console.info('| summaries = ', project.idArbimon, detectionSummaries.length)
   // compare if anything changes
-  const objectMD5 = hash.MD5(detectionSummaries)
-  console.info('hash', objectMD5)
+  const summariesMD5 = hash.MD5(detectionSummaries)
+  console.info('hash', summariesMD5)
+  // TODO: save this hash into datasource log
   compareDiff(detectionSummaries, project)
-  // save datasource log
 }
 
 export const compareDiff = (summaries: ArbimonHourlyDetectionSummary[], project: Project): void => {
