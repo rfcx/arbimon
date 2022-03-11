@@ -8,6 +8,8 @@ export const syncOnlyDetectionsForProject = async (sequelize: Sequelize, project
   const detectionSummaries = await getArbimonHourlyDetectionsForProject(project.idArbimon)
   console.info('| summaries = ', project.idArbimon, detectionSummaries.length)
   // compare if anything changes
+  const objectMD5 = hash.MD5(detectionSummaries)
+  console.info('hash', objectMD5)
   compareDiff(detectionSummaries, project)
   // save datasource log
 }
