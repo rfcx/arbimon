@@ -7,10 +7,9 @@ const main = async (): Promise<void> => {
   console.info('Hourly sync start')
   try {
     const sequelize = getSequelize()
+    const model = ModelRepository.getInstance(sequelize)
 
-    const projects = await ModelRepository.getInstance(sequelize)
-    .LocationProject
-    .findAll()
+    const projects = await model.LocationProject.findAll()
 
     for (const project of projects) {
       console.info(`- site, species, detections: ${project.slug}`)

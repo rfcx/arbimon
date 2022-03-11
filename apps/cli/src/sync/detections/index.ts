@@ -1,6 +1,7 @@
 import * as hash from 'object-hash'
 import { Sequelize } from 'sequelize'
 
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary, getArbimonHourlyDetectionsForProject } from '@/data-ingest/detections/input'
@@ -11,6 +12,12 @@ export const syncOnlyDetectionsForProject = async (sequelize: Sequelize, project
   // compare if anything changes
   const summariesMD5 = hash.MD5(detectionSummaries)
   console.info('hash', summariesMD5)
+  const model = ModelRepository.getInstance(sequelize)
+  const existingDatasource = await model.Datasource.findOne({
+    where: { locationProjectId: project.id },
+    order: [['updatedAt', 'DESC']]
+  })
+  console.info('existingDatasource', existingDatasource)
   // TODO: save this hash into datasource log
   compareDiff(detectionSummaries, project)
 }
