@@ -5,7 +5,7 @@ import { ATTRIBUTES_TAXON_SPECIES } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonSpeciesData } from '../input-from-mock-detections'
 
-export const writeArbimonSpeciesDataToPostgres = async (sequelize: Sequelize, species: ArbimonSpeciesData[]): Promise<void> => {
+export const writeArbimonSpeciesDataToPostgres = async (sequelize: Sequelize, species: Array<Omit<ArbimonSpeciesData, 'taxon'>>): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
   // Lookups

@@ -4,6 +4,8 @@ import { ARBIMON_CONFIG } from '../_connections/arbimon'
 export interface ArbimonHourlyDetectionSummary {
   project_id: number
   datetime: Date
+  date: string // ex: "2021-04-01T00:00:00.000Z"
+  hour: number
   site_id: number
   species_id: number
   detection_count: number
@@ -25,6 +27,8 @@ export const getArbimonHourlyDetectionsForProjects = async (idArbimons: number[]
   `
   SELECT  s.project_id,
           r.datetime,
+          date(r.datetime) date,
+          hour(r.datetime) hour,
           r.site_id,
           rv.species_id,
           count(1) detection_count,
@@ -34,7 +38,7 @@ export const getArbimonHourlyDetectionsForProjects = async (idArbimons: number[]
     ON r.recording_id = rv.recording_id AND (rv.present = 1 or rv.present_review > 0)
   JOIN sites s ON r.site_id = s.site_id
   WHERE s.project_id in (?)
-  GROUP BY s.project_id, r.site_id, r.datetime, rv.species_id
+  GROUP BY s.project_id, r.site_id, date(r.datetime), hour(r.datetime), rv.species_id
   ;
   `
 
