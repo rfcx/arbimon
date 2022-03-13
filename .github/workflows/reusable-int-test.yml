@@ -10,9 +10,9 @@ on:
     outputs:
       test-outcome:
         description: Test outcome
-        value: ${{ jobs.build.outputs.test-outcome }}
+        value: ${{ jobs.test.outputs.test-outcome }}
 jobs:
-  build:
+  test:
     runs-on: ${{ inputs.runs-on }}
     outputs:
       test-outcome: ${{ steps.test.outputs.outcome }}
