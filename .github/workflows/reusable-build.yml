@@ -1,0 +1,53 @@
+on:
+  workflow_call:
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  Main:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Setup: Git checkout'
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+
+      - name: 'Cache: Dependencies'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-${{ runner.os }}
+
+      - name: 'Cache: ESLint'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .eslintcache
+            */*/.eslintcache
+          key: eslint-${{ runner.os }}-${{ github.sha }}
+          restore-keys: eslint-${{ runner.os }}
+
+      - name: 'Cache: Stylelint'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .stylelintcache
+            */*/.stylelintcache
+          key: stylelint-${{ runner.os }}-${{ github.sha }}
+          restore-keys: stylelint-${{ runner.os }}
+
+      - name: 'Verify: pnpm install'
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        with:
+          version: 6.20.1
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+
+      - name: 'Verify: Build'
+        id: build
+        run: pnpm ci-build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
