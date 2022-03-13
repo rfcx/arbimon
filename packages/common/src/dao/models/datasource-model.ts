@@ -14,13 +14,12 @@ export const DatasourceModel = defineWithDefaults<Omit<Datasource, 'createdAt' |
       type: DataTypes.STRING(255),
       primaryKey: true
     },
-
-    // Dimensions
-    locationProjectId: DataTypes.INTEGER, // 1
-
-    summaryText: {
-      type: DataTypes.JSON
-    }
+    locationProjectId: {
+      type: DataTypes.INTEGER, // 1
+      primaryKey: true
+    },
+    // Facts
+    summaryText: DataTypes.JSON
   },
   {
     tableName: TABLE_MODEL_DATASOURCE
