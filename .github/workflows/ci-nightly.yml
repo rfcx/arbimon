@@ -21,7 +21,13 @@ jobs:
     with:
       runs-on: ubuntu-20.04
       lint: false
-      test-command: ci-int-test
+      test: false
+
+  test:
+    name: 'Test'
+    uses: ./.github/workflows/reusable-int-test.yml
+    with:
+      runs-on: ubuntu-20.04
 
   notify:
     name: 'Notify'
