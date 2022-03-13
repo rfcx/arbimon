@@ -6,6 +6,10 @@ on:
         description: Branch name
         type: string
         required: true
+      workflow-id:
+        description: Workflow ID (e.g. build.yml)
+        type: string
+        required: true
       previous-run-id:
         description: Previous workflow run ID
         type: string
@@ -53,7 +57,7 @@ jobs:
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
           owner: rfcx
           repo: biodiversity-analytics
-          workflow_id: build.yml
+          workflow_id: ${{ inputs.workflow-id }}
           per_page: 1
           branch: ${{ inputs.branch-name }}
           status: success
