@@ -10,6 +10,11 @@ export interface ArbimonHourlyDetectionSummary {
   duration_in_minutes: number
 }
 
+export interface ArbimonNewData {
+  siteIds: number[]
+  speciesIds: number[]
+}
+
 export const getArbimonHourlyDetectionsForProject = async (idArbimon: number): Promise<ArbimonHourlyDetectionSummary[]> => {
   return await getArbimonHourlyDetectionsForProjects([idArbimon])
 }

@@ -17,6 +17,14 @@
         type: DataTypes.STRING(255),
         primaryKey: true
       },
+      location_project_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'location_project' },
+          key: 'id'
+        }
+      },
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -25,15 +33,6 @@
       updated_at: {
         type: DataTypes.DATE,
         allowNull: false
-      },
-      // Dimensions
-      location_project_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'location_project' },
-          key: 'id'
-        }
       },
       // Facts
       summary_text: { // species +3 -2
