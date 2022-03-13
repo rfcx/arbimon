@@ -5,10 +5,6 @@ jobs:
   Main:
     runs-on: ubuntu-20.04
     steps:
-      - name: 'Setup: Git checkout'
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
-        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
-
       - name: 'Cache: Dependencies'
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
         # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags

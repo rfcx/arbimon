@@ -40,6 +40,10 @@ jobs:
         if: always()
         run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].id }}'
 
+      - name: 'Setup: Git checkout'
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+
       - uses: ./.github/workflows/reusable-build.yml
 
       - name: 'Verify: Lint'
