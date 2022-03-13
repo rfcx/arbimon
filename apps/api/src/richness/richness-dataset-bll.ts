@@ -6,7 +6,7 @@ import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '../_services/db'
 import { getRichnessBySite, getRichnessByTaxonClass, getRichnessByTimeDayOfWeek, getRichnessByTimeHourOfDay, getRichnessByTimeMonthOfYear, getRichnessByTimeUnix, getRichnessExport, getRichnessPresence } from './richness-dataset-dao'
 
-export const getRichnessDataset = async (locationProjectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
+export const getRichnessDataset = async (filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
