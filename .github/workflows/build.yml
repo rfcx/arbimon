@@ -31,7 +31,7 @@ jobs:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: build.yml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
-      footer: 'Build: ${{ needs.build.build-outcome }} | Lint: ${{ needs.build.lint-outcome }} | Test: ${{ needs.build.test-outcome }}'
+      notification-footer: 'Build: ${{ needs.build.build-outcome }} | Lint: ${{ needs.build.lint-outcome }} | Test: ${{ needs.build.test-outcome }}'
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
