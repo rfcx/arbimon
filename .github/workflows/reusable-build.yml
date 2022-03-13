@@ -17,11 +17,6 @@ on:
         type: boolean
         default: true
         required: false
-      test-command:
-        description: Command for pnpm to run tests
-        type: string
-        default: ci-unit-test
-        required: false
     outputs:
       build-outcome:
         description: Build outcome
@@ -118,3 +113,10 @@ jobs:
       #     start: pnpm serve
       #   env:
       #     NODE_OPTIONS: '--max_old_space_size=6656'
+
+      - name: 'Artifact: Upload'
+        uses: actions/upload-artifact@v3
+        with:
+          name: libs
+          path: |
+            **/lib
