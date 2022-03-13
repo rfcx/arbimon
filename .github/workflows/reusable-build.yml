@@ -1,9 +1,9 @@
-name: 'Reusable Build'
+name: 'reusable-build'
 on:
   workflow_call:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  Main:
+  reusable-build:
     runs-on: ubuntu-20.04
     steps:
       - name: 'Cache: Dependencies'
