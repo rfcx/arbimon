@@ -36,6 +36,15 @@ jobs:
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-${{ runner.os }}
 
+      - name: 'Verify: pnpm install'
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        with:
+          version: 6.20.1
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+
       - name: 'Cache: Download built artifacts'
         uses: actions/download-artifact@v3
         with:
@@ -48,7 +57,7 @@ jobs:
       
       - name: 'Verify: Test'
         id: test
-        run: pnpm ci-int-test
+        run: pnpm -r int-test
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
 
