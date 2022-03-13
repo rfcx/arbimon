@@ -1,0 +1,78 @@
+name: 'Integration Test'
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+        required: false
+    outputs:
+      test-outcome:
+        description: Test outcome
+        value: ${{ jobs.test.outputs.test-outcome }}
+jobs:
+  test:
+    runs-on: ${{ inputs.runs-on }}
+    outputs:
+      test-outcome: ${{ steps.test.outputs.outcome }}
+
+    steps:
+      - name: 'Setup: Node'
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
+        # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
+        with:
+          node-version: '16'
+
+      - name: 'Setup: Git checkout'
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+
+      - name: 'Cache: Dependencies'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-${{ runner.os }}
+
+      - name: 'Verify: pnpm install'
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        with:
+          version: 6.20.1
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+
+      - name: 'Cache: Download built artifacts'
+        uses: actions/download-artifact@v3
+        with:
+          name: libs
+
+      - name: 'Cache: Unpack built artifacts'
+        run: |
+          tar -xzvf libs.tar.gz
+          ls -R
+      
+      - name: 'Verify: Test'
+        id: test
+        run: pnpm -r int-test
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: timescale/timescaledb:latest-pg12
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
