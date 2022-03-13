@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
 
-      - uses: ./.github/workflows/reusable-build.yml
+      - uses: ./.github/workflows/reusable-build
 
       - name: 'Verify: Lint'
         id: lint
