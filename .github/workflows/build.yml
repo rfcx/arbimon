@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/reusable-notify-prepare.yml
     with:
       workflow-id: ${{ needs.prepare.outputs.previous-workflow-id }}
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      # github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     name: 'Build'
@@ -30,5 +30,5 @@ jobs:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      # github-token: ${{ secrets.GITHUB_TOKEN }}
     
