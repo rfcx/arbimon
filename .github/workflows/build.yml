@@ -18,7 +18,7 @@ jobs:
 
       - name: 'Setup: ENV from job'
         run: |
-          echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" = "pull_request" ]]; then echo "BRANCH_NAME=`echo ${GITHUB_HEAD_REF}`"; else echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`"; fi >> $GITHUB_ENV
   
       - name: 'Setup: Get ID of previous run' # Need to execute this early (before another run starts)
         id: latest_run
