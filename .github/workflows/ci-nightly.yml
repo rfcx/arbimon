@@ -25,6 +25,7 @@ jobs:
 
   test:
     name: 'Test'
+    needs: [prepare, build]
     uses: ./.github/workflows/reusable-int-test.yml
     with:
       runs-on: ubuntu-20.04
@@ -32,7 +33,7 @@ jobs:
   notify:
     name: 'Notify'
     if: ${{ always() }}
-    needs: [prepare, build]
+    needs: test
     uses: ./.github/workflows/reusable-notify-send.yml
     with:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
