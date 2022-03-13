@@ -114,9 +114,12 @@ jobs:
       #   env:
       #     NODE_OPTIONS: '--max_old_space_size=6656'
 
+      - name: 'Archive: Tar files'
+        run: shopt -s globstar; tar -czvf libs.tar.gz **/lib
+
       - name: 'Artifact: Upload'
         uses: actions/upload-artifact@v3
         with:
           name: libs
-          path: |
-            **/lib
+          retention-days: 1
+          path: libs.tar.gz

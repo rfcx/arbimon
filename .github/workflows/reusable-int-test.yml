@@ -40,6 +40,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: libs
+
+      - name: 'Cache: Unpack built artifacts'
+        run: |
+          tar -xzvf libs.tar.gz
+          ls -R
       
       - name: 'Verify: Test'
         id: test
