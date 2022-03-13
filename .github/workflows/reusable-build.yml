@@ -6,10 +6,12 @@ on:
         description: Platform to execute on
         type: string
         default: ubuntu-latest
+        required: false
       run-tests:
         description: Run tests
         type: boolean
         default: true
+        required: false
 jobs:
   build:
     runs-on: ${{ inputs.runs-on }}
@@ -33,6 +35,7 @@ jobs:
           restore-keys: pnpm-${{ runner.os }}
 
       - name: 'Cache: ESLint'
+        if: ${{ inputs.run-tests }}
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
         # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
         with:
@@ -43,6 +46,7 @@ jobs:
           restore-keys: eslint-${{ runner.os }}
 
       - name: 'Cache: Stylelint'
+        if: ${{ inputs.run-tests }}
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
         # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
         with:
@@ -68,12 +72,14 @@ jobs:
           NODE_OPTIONS: '--max_old_space_size=6656'
 
       - name: 'Verify: Lint'
+        if: ${{ inputs.run-tests }}
         id: lint
         run: pnpm ci-lint
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
 
       - name: 'Verify: Unit Test'
+        if: ${{ inputs.run-tests }}
         id: test
         run: pnpm ci-unit-test
         env:
