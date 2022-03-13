@@ -1,10 +1,19 @@
-name: 'reusable-build'
+name: 'Build'
 on:
   workflow_call:
+    inputs:
+      runs-on:
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+      run-tests:
+        description: Run tests
+        type: boolean
+        default: true
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  reusable-build:
-    runs-on: ubuntu-20.04
+  build:
+    runs-on: ${{ inputs.runs-on }}
     steps:
       - name: 'Setup: Node'
         uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
@@ -58,3 +67,24 @@ jobs:
         run: pnpm ci-build
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
+
+      - name: 'Verify: Lint'
+        id: lint
+        run: pnpm ci-lint
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+
+      - name: 'Verify: Unit Test'
+        id: test
+        run: pnpm ci-unit-test
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+      
+      # skip this step until the issue about cypress.json not found is resolved
+      # - name: 'Verify: Cypress'
+      #   uses: cypress-io/github-action@v2
+      #   with:
+      #     install: false
+      #     start: pnpm serve
+      #   env:
+      #     NODE_OPTIONS: '--max_old_space_size=6656'
