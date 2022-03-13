@@ -7,9 +7,7 @@ on:
       - staging
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  Build:
-    uses: ./.github/workflows/reusable-build.yml
-  Main:
+  Prepare:
     runs-on: ubuntu-20.04
     steps:
       - name: 'Setup: ENV from job'
@@ -36,27 +34,15 @@ jobs:
         if: always()
         run: 'echo ${{ fromJson(steps.latest_run.outputs.data).workflow_runs[1].id }}'
 
-      - name: 'Verify: Lint'
-        id: lint
-        run: pnpm ci-lint
-        env:
-          NODE_OPTIONS: '--max_old_space_size=6656'
+  Build:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      runs-on: ubuntu-20.04
 
-      - name: 'Verify: Unit Test'
-        id: test
-        run: pnpm ci-unit-test
-        env:
-          NODE_OPTIONS: '--max_old_space_size=6656'
-
-      # skip this step until the issue about cypress.json not found is resolved
-      # - name: 'Verify: Cypress'
-      #   uses: cypress-io/github-action@v2
-      #   with:
-      #     install: false
-      #     start: pnpm serve
-      #   env:
-      #     NODE_OPTIONS: '--max_old_space_size=6656'
-
+  Notify:
+    needs: [Build, Prepare]
+    runs-on: ubuntu-20.04
+    steps:
       # -------------------------------------------------- #
       # ALWAYS RUNS                                        #
       # -------------------------------------------------- #
