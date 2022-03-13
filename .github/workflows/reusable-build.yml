@@ -12,9 +12,24 @@ on:
         type: boolean
         default: true
         required: false
+    outputs:
+      build-outcome:
+        description: Build outcome
+        value: ${{ jobs.build.outputs.build-outcome }}
+      lint-outcome:
+        description: Lint outcome
+        value: ${{ jobs.build.outputs.lint-outcome }}
+      test-outcome:
+        description: Test outcome
+        value: ${{ jobs.build.outputs.test-outcome }}
 jobs:
   build:
     runs-on: ${{ inputs.runs-on }}
+    outputs:
+      build-outcome: ${{ steps.build.outputs.outcome }}
+      lint-outcome: ${{ steps.lint.outputs.outcome }}
+      test-outcome: ${{ steps.test.outputs.outcome }}
+      
     steps:
       - name: 'Setup: Node'
         uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
