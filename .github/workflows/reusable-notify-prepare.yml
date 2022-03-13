@@ -16,12 +16,12 @@ on:
         value: ${{ steps.branch.outputs.branch-name }}
       previous-run-id: 
         description: Previous Run ID
-        value: ${{ fromJson(steps.workflow-runs.outputs.data).workflow_runs[1].id }}
+        value: ${{ steps.previous-run.outputs.id }}
 jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - name: 'Setup: Get branch name'
+      - name: 'Setup: Output branch name'
         id: branch
         run: |
           if [[ "${{ github.event_name }}" = "pull_request" ]]; then echo "::set-output name=branch-name::`echo ${GITHUB_HEAD_REF}`"; else echo "::set-output name=branch-name::`echo ${GITHUB_REF#refs/heads/}`"; fi
@@ -40,3 +40,8 @@ jobs:
           branch: ${{ steps.branch.outputs.branch-name }}
         env:
           GITHUB_TOKEN: ${{ secrets.github-token }}
+
+      - name: 'Setup: Output run ID'
+        id: previous-run
+        run: |
+          echo "::set-output name=id::${{ fromJson(steps.workflow-runs.outputs.data).workflow_runs[1].id }}"
