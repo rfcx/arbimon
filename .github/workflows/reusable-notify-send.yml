@@ -18,7 +18,7 @@ on:
         description: GitHub Token
         required: true
 jobs:
-  build:
+  send:
     runs-on: ubuntu-20.04
     steps:
       # -------------------------------------------------- #
