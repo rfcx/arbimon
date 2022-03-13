@@ -13,13 +13,16 @@ on:
     outputs:
       branch-name: 
         description: Branch Name
-        value: ${{ steps.branch.outputs.branch-name }}
+        value: ${{ jobs.prepare.outputs.branch-name }}
       previous-run-id: 
         description: Previous Run ID
-        value: ${{ steps.previous-run.outputs.id }}
+        value: ${{ jobs.prepare.outputs.previous-run-id }}
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-20.04
+    outputs:
+      branch-name: ${{ steps.branch.outputs.branch-name }}
+      previous-run-id: ${{ steps.branch.outputs.branch-name }}
     steps:
       - name: 'Setup: Output branch name'
         id: branch
