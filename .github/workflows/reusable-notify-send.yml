@@ -10,13 +10,13 @@ on:
         description: Previous workflow run ID
         type: string
         required: true
+    secrets:
       slack-webhook:
         description: Slack Webhook URL
-        type: string
         required: true
-      # github-token:
-      #   description: GitHub Token
-      #   required: true
+      github-token:
+        description: GitHub Token
+        required: true
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -37,7 +37,7 @@ jobs:
           repo: biodiversity-analytics
           run_id: ${{ inputs.previous-run-id }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
 
       - name: 'Notify: Log conclusion of previous run'
         if: always()
@@ -58,7 +58,7 @@ jobs:
           branch: ${{ inputs.branch-name }}
           status: success
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
 
       - name: 'Notify: Log date of latest successful run'
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
