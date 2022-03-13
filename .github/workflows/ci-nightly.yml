@@ -1,10 +1,9 @@
-name: 'CI On Push'
+name: 'CI Nightly'
 on:
   workflow_dispatch:
-  push:
-    branches-ignore: # ignore branches using the CD workflow
-      - master
-      - staging
+  schedule:
+    # Every weekday at 01:37 UTC (08:37 in Thailand) https://crontab.guru
+    - cron:  '37 1 * * 1-5'
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
 
@@ -12,7 +11,7 @@ jobs:
     name: 'Prepare'
     uses: ./.github/workflows/reusable-notify-prepare.yml
     with:
-      workflow-id: ci-on-push.yml
+      workflow-id: ci-nightly.yml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -21,6 +20,8 @@ jobs:
     uses: ./.github/workflows/reusable-build.yml
     with:
       runs-on: ubuntu-20.04
+      lint: false
+      test-command: ci-int-test
 
   notify:
     name: 'Notify'
@@ -29,11 +30,11 @@ jobs:
     uses: ./.github/workflows/reusable-notify-send.yml
     with:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
-      workflow-id: ci-on-push.yml
+      workflow-id: ci-nightly.yml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
-      notification-title: 'CI: Bio Build-Lint-Test'
-      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Lint: ${{ needs.build.outputs.lint-outcome }} | Unit Test: ${{ needs.build.outputs.test-outcome }}'
+      notification-title: 'CI: Bio Integration Test'
+      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Integration Test: ${{ needs.build.outputs.test-outcome }}'
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
-    
+
