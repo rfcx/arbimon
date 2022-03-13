@@ -10,7 +10,6 @@ on:
         description: Run tests
         type: boolean
         default: true
-concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   build:
     runs-on: ${{ inputs.runs-on }}
