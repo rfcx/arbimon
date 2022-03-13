@@ -11,8 +11,12 @@ on:
         description: GitHub Token
         required: true
     outputs:
-      branch-name: ${{ steps.branch.outputs.branch-name }}
-      previous-run-id: ${{ fromJson(steps.workflow-runs.outputs.data).workflow_runs[1].id }}
+      branch-name: 
+        description: Branch Name
+        value: ${{ steps.branch.outputs.branch-name }}
+      previous-run-id: 
+        description: Previous Run ID
+        value: ${{ fromJson(steps.workflow-runs.outputs.data).workflow_runs[1].id }}
 jobs:
   build:
     runs-on: ubuntu-20.04
