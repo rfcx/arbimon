@@ -4,6 +4,8 @@ import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { useStore } from '~/store'
+
 export interface DateRangeShortcut {
   text: string
   value: () => [Date, Date]
@@ -29,7 +31,7 @@ export default class DateRangePicker extends Vue {
   @Emit()
   emitDateChange (): Date[] {
     // TODO: TODO: Update to the date range for the whole project when API ready
-    this.dateValues = this.dateValues ?? MOCK_WHOLE_PROJECT_DATE_RANGE
+    this.dateValues = this.dateValues ?? [this.dateStartAtLatestUpdated, this.dateEndAtLatestUpdated]
     return this.dateValues
   }
 
@@ -74,10 +76,20 @@ export default class DateRangePicker extends Vue {
     ]
   }
 
+  get dateStartAtLatestUpdated (): Date {
+    const store = useStore()
+    return dayjs(store.projectFilters?.dateStartInclusiveUtc).toDate()
+  }
+
+  get dateEndAtLatestUpdated (): Date {
+    const store = useStore()
+    return dayjs(store.projectFilters?.dateEndInclusiveUtc).toDate()
+  }
+
   override created (): void {
     this.dateValues = [
-      this.defaultStartDate ? dayjs(this.defaultStartDate).toDate() : MOCK_WHOLE_PROJECT_DATE_RANGE[0],
-      this.defaultEndDate ? dayjs(this.defaultEndDate).toDate() : MOCK_WHOLE_PROJECT_DATE_RANGE[1]
+      this.defaultStartDate ? dayjs(this.defaultStartDate).toDate() : this.dateStartAtLatestUpdated,
+      this.defaultEndDate ? dayjs(this.defaultEndDate).toDate() : this.dateEndAtLatestUpdated
     ]
   }
 
