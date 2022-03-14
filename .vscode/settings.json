@@ -20,7 +20,7 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "yaml.schemas": {
       "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
-  }
+  },
 
   // Formatter: Stylelint
   "[css]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
