@@ -43,6 +43,12 @@ export default class ComparisonListComponent extends Vue {
 
   override mounted (): void {
     this.emitSelect()
+    if (this.store.projectFilters?.dateStartInclusiveUtc && this.store.projectFilters?.dateEndInclusiveUtc) {
+      this.filters = [new FilterImpl(
+        dayjs(this.store.projectFilters?.dateStartInclusiveUtc),
+        dayjs(this.store.projectFilters?.dateEndInclusiveUtc)
+      )]
+    }
   }
 
   addFilterConfig (): void {
