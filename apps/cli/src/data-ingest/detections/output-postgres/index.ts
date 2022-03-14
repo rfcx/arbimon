@@ -20,12 +20,13 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
   const speciesArbimonToBio: Record<number, TaxonSpecies> = Object.fromEntries(species.map(s => [s.idArbimon, s]))
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
+  const projectId = project?.id ?? 1
   const data: DetectionBySiteSpeciesHour[] =
     detections.map(d => ({
       timePrecisionHourLocal: d.datetime,
       taxonClassId: speciesArbimonToBio[d.species_id].taxonClassId ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id].id ?? -1, // TODO: Throw error
-      locationProjectId: project?.id ?? 1,
+      locationProjectId: projectId,
       locationSiteId: siteArbimonToBio[d.site_id] ?? -1, // TODO: Throw error
       count: d.detection_count,
       durationMinutes: d.duration_in_minutes
@@ -41,7 +42,8 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
       timePrecisionHourLocal: {
         [Op.ne]: null,
         [Op.notIn]: data.map(i => i.timePrecisionHourLocal.toISOString())
-      }
+      },
+      locationProjectId: projectId
     }
   }).then(numberOfDeletedRows => {
     console.info('| - deleted %d detections summaries', numberOfDeletedRows)

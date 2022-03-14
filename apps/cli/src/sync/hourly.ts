@@ -10,8 +10,11 @@ import { getArbimonSites } from '@/data-ingest/sites/input-arbimon'
 import { writeSitesToPostgres } from '@/data-ingest/sites/output-postgres'
 import { getArbimonSpecies } from '@/data-ingest/species/input-arbimon'
 import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/output-arbimon-postgres'
+import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { getSequelize } from '@/db/connections'
 import { syncOnlyDetectionsForProject } from '@/sync/detections'
+import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
+import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 
 const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
   // build up new datasource object
@@ -36,19 +39,22 @@ const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
 
   // find out what's new
   const newData = await extractNewData(sequelize, summaries, project, previousDatasource)
-  console.info('| new data to pull from Arbimon => %d sites + %d species', newData.siteIds.length, newData.speciesIds.length)
   newDatasource.summaryText = JSON.stringify(summaries)
 
   // pull new site and species data from Arbimon
   if (newData.siteIds.length > 0) {
+    console.info('| fetching %d sites', newData.siteIds.length)
     const sites = await getArbimonSites(newData.siteIds, project.id)
     await writeSitesToPostgres(sequelize, sites)
   }
 
   if (newData.speciesIds.length > 0) {
+    console.info('| fetching %d species', newData.speciesIds.length)
     const species = await getArbimonSpecies(newData.speciesIds)
     await writeArbimonSpeciesDataToPostgres(sequelize, species)
-    // TODO: get IUCN & Wiki data (if needed)
+    await syncOnlyMissingWikiSpeciesInfo(sequelize)
+    await syncOnlyMissingIUCNSpeciesInfo(sequelize)
+    // TODO: sync species call
   }
 
   // insert new detection data
@@ -102,6 +108,9 @@ const main = async (): Promise<void> => {
       const summaries = await syncOnlyDetectionsForProject(sequelize, project)
       await updateDatasource(sequelize, summaries, project)
     }
+
+    console.info('STEP: Refresh mviews')
+    await refreshMviews(sequelize)
   } catch (e) {
     console.error(e)
     process.exitCode = 1
