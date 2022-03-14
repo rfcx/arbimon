@@ -59,7 +59,12 @@ jobs:
         id: test
         run: pnpm ci-test-int
         env:
+          BIO_DB_DBNAME: postgres
           BIO_DB_HOSTNAME: postgres
+          BIO_DB_PASSWORD: test
+          BIO_DB_PORT: 5432
+          BIO_DB_SSL_ENABLED: false
+          BIO_DB_USER: postgres
           NODE_OPTIONS: '--max_old_space_size=6656'
 
     services:
