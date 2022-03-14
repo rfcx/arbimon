@@ -48,5 +48,5 @@ export interface RichnessPresence {
   taxonSpeciesId: number
   taxonSpeciesSlug: string
   commonName: string
-  sciencetificName: string
+  scientificName: string
 }

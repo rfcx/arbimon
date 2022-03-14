@@ -108,8 +108,12 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
   return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
-export interface DetectionGroupByTaxonSpeciesId {
-  taxonSpeciesId: number
+export interface RichnessPresenceQuery {
+  taxon_class_id: number
+  taxon_species_id: number
+  taxon_species_slug: string
+  common_name: string
+  scientific_name: string
 }
 
 export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, hasProjectPermission: boolean): Promise<Record<number, RichnessPresence>> => {
@@ -120,12 +124,11 @@ export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDa
 
   const sql = `
     SELECT 
-      sip.taxon_class_id as taxon_class_id,
-      sip.taxon_species_id as taxon_species_id,
-      sip.taxon_species_slug as taxon_species_slug,
-      sip.common_name as common_name,
-      sip.scientific_name as scientific_name,
-      sip.risk_rating_global_id as risk_id
+      sip.taxon_class_id        as taxon_class_id,
+      sip.taxon_species_id      as taxon_species_id,
+      sip.taxon_species_slug    as taxon_species_slug,
+      sip.common_name           as common_name,
+      sip.scientific_name       as scientific_name
     FROM
       detection_by_site_species_hour dbssh
       LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
@@ -134,7 +137,10 @@ export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDa
       sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
   `
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as RichnessPresenceQuery[]
+
+  return result.map(({ taxon_class_id: taxonClassId, taxon_species_id: taxonSpeciesId, taxon_species_slug: taxonSpeciesSlug, common_name: commonName, scientific_name: scientificName }) =>
+    ({ taxonClassId, taxonSpeciesId, taxonSpeciesSlug, commonName, scientificName }))
 }
 
 export const getRichnessExport = async (sequelize: Sequelize, filter: FilterDatasetForSql, hasProjectPermission: boolean): Promise<RichnessByExportReportRow[]> => {
