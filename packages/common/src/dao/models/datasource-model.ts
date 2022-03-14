@@ -6,7 +6,7 @@ import { Datasource } from '../types/datasource'
 export const MODEL_DATASOURCE = 'Datasource'
 export const TABLE_MODEL_DATASOURCE = 'datasource'
 
-export const DatasourceModel = defineWithDefaults<Omit<Datasource, 'createdAt' | 'updatedAt'>>(
+export const DatasourceModel = defineWithDefaults<Datasource>(
   MODEL_DATASOURCE,
   {
     // PK
