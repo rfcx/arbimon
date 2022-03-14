@@ -5,9 +5,7 @@ on:
     branches-ignore: # ignore branches using the CD workflow
       - master
       - staging
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
 
   prepare:

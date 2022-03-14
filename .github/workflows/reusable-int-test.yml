@@ -11,11 +11,15 @@ on:
       test-outcome:
         description: Test outcome
         value: ${{ jobs.test.outputs.test-outcome }}
+      migrate-seed-outcome:
+        description: Migrate + Seed outcome
+        value: ${{ jobs.test.outputs.migrate-seed-outcome }}
 jobs:
   test:
     runs-on: ${{ inputs.runs-on }}
     outputs:
-      test-outcome: ${{ steps.test.outputs.outcome }}
+      test-outcome: ${{ steps.test.outcome }}
+      migrate-seed-outcome: ${{ steps.migrate-seed.outcome }}
 
     steps:
       - name: 'Setup: Node'
@@ -56,6 +60,7 @@ jobs:
           ls -R
 
       - name: 'Verify: Migrate + Seed'
+        id: migrate-seed
         run: pnpm --filter=cli db-rms
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
