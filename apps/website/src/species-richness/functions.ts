@@ -4,6 +4,7 @@ import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { useStoreOutsideSetup } from '~/store'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 
 interface RichnessDataset extends ColoredFilter {
@@ -13,16 +14,23 @@ interface RichnessDataset extends ColoredFilter {
 export const MAP_KEY_RICHNESS_TOTAL = 'All'
 
 export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
-  return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.richnessByTaxon)))]
-    .map(group => ({
-      group,
-      series: datasets.map(ds => ({
-        category: '', // TODO - Maybe add the dataset name here
-        frequency: ds.data.richnessByTaxon[group] ?? 0,
-        color: ds.color
-      }))
-    }))
-    .sort((a, b) => a.group.localeCompare(b.group))
+  const store = useStoreOutsideSetup()
+
+  const taxonClasses = store.projectFilters?.taxonClasses
+
+  return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.richnessByTaxon).map(Number)))]
+    .map(taxonClassId => {
+      const taxonClassName = taxonClasses?.find(tc => tc.id === taxonClassId)?.commonName ?? 'Unknown'
+      return {
+        group: taxonClassName,
+        series: datasets.map(ds => ({
+            category: '', // TODO - Maybe add the dataset name here
+            frequency: ds.data.richnessByTaxon[taxonClassId] ?? 0,
+            color: ds.color
+          }
+        ))
+      }
+  })
 }
 
 export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
