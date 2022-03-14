@@ -54,6 +54,11 @@ jobs:
         run: |
           tar -xzvf libs.tar.gz
           ls -R
+
+      - name: 'Verify: Migrate + Seed'
+        run: pnpm --filter=cli db-rms
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
       
       - name: 'Verify: Test'
         id: test
