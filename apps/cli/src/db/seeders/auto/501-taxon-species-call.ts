@@ -1,48 +1,50 @@
-import { Optional, QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+// TODO: fix species call seeder data into new type format
 
-import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
-import { isDefined } from '@rfcx-bio/utils/predicates'
+// import { Optional, QueryInterface } from 'sequelize'
+// import { MigrationFn } from 'umzug'
 
-import { rawSpeciesCallData } from '../_data/taxon-species-call'
+// import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+// import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
+// import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+// import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
+// import { isDefined } from '@rfcx-bio/utils/predicates'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+// import { rawSpeciesCallData } from '../_data/taxon-species-call'
 
-  // PK Lookups
-  const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
+// export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+//   const sequelize = params.context.sequelize
 
-  const siteNameToId = await LocationSiteModel(sequelize).findAll()
-    .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
+//   // PK Lookups
+//   const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()
+//     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
-  // Convert data
-  const calls = Object.entries(rawSpeciesCallData)
-    .flatMap(([scientificName, calls]) => calls.map(call => ({ scientificName, ...call })))
+//   const siteNameToId = await LocationSiteModel(sequelize).findAll()
+//     .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
 
-  const data: Array<Optional<TaxonSpeciesCall, 'id'>> = calls
-    .map(call => {
-      const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, scientificName } = call
+//   // Convert data
+//   const calls = Object.entries(rawSpeciesCallData)
+//     .flatMap(([scientificName, calls]) => calls.map(call => ({ scientificName, ...call })))
 
-      const taxonSpeciesId = speciesScientificToId[scientificName]
-      if (!taxonSpeciesId) return undefined
+//   const data: Array<Optional<TaxonSpeciesCall, 'id'>> = calls
+//     .map(call => {
+//       const { mediaWavUrl, mediaSpecUrl, redirectUrl, songType, recordedAt, timezone, siteName, scientificName } = call
 
-      return {
-        taxonSpeciesId: taxonSpeciesId,
-        callProjectId: 1,
-        callSiteId: siteNameToId[siteName],
-        callType: songType,
-        callRecordedAt: new Date(recordedAt),
-        callTimezone: timezone,
-        callMediaWavUrl: mediaWavUrl,
-        callMediaSpecUrl: mediaSpecUrl,
-        callMediaRedirectUrl: redirectUrl
-      }
-    })
-    .filter(isDefined)
+//       const taxonSpeciesId = speciesScientificToId[scientificName]
+//       if (!taxonSpeciesId) return undefined
 
-  await TaxonSpeciesCallModel(sequelize).bulkCreate(data)
-}
+//       return {
+//         taxonSpeciesId: taxonSpeciesId,
+//         callProjectId: 1,
+//         callSiteId: siteNameToId[siteName],
+//         callType: songType,
+//         callRecordedAt: new Date(recordedAt),
+//         callTimezone: timezone,
+//         callMediaWavUrl: mediaWavUrl,
+//         callMediaSpecUrl: mediaSpecUrl,
+//         callMediaRedirectUrl: redirectUrl
+//       }
+//     })
+//     .filter(isDefined)
+
+//   await TaxonSpeciesCallModel(sequelize).bulkCreate(data)
+// }
