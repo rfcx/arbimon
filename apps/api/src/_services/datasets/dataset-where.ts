@@ -27,7 +27,11 @@ export const toFilterDatasetForSql = ({ endDateUtcInclusive, ...rest }: FilterDa
 
 export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition => {
   const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
-  const conditions = ['location_project_id = $locationProjectId', 'time_precision_hour_local >= $startDateUtcInclusive', 'time_precision_hour_local < $endDateUtcExclusive']
+  const conditions = [
+    'dbssh.location_project_id = $locationProjectId', // dbssh is from detection_by_site_species_hour
+    'dbssh.time_precision_hour_local >= $startDateUtcInclusive',
+    'dbssh.time_precision_hour_local < $endDateUtcExclusive'
+  ]
   const bind: BindOrReplacements = {
     locationProjectId,
     startDateUtcInclusive,
@@ -35,12 +39,12 @@ export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition =>
   }
 
   if (siteIds.length > 0) {
-    conditions.push('location_site_id = ANY($siteIds)')
+    conditions.push('dbssh.location_site_id = ANY($siteIds)')
     bind.siteIds = siteIds
   }
 
   if (taxons.length > 0) {
-    conditions.push('taxon_class_id = ANY($taxons)')
+    conditions.push('dbssh.taxon_class_id = ANY($taxons)')
     bind.taxons = taxons
   }
 
