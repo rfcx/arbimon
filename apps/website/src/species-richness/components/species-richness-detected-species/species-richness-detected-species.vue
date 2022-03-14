@@ -57,7 +57,7 @@
             >
               <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
                 <router-link
-                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: row.speciesSlug }}"
+                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: row.taxonSpeciesSlug }}"
                   class="text-subtle hover:(underline text-white)"
                 >
                   <span class="text-white italic">{{ row.scientificName }}</span>
@@ -77,7 +77,7 @@
                 </router-link>
               </td>
               <td class="p-2 sticky left-52 lg:left-66 bg-mirage-grey z-10">
-                {{ row.taxon }}
+                {{ row.taxonClassName }}
               </td>
               <template
                 v-for="(dataset, idx) in datasetCount"

@@ -1,7 +1,6 @@
 import { groupBy } from 'lodash-es'
 
-import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
+import { RichnessDatasetResponse, RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
@@ -62,7 +61,6 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
     })
     return { color, data, sites: sites.flatMap(sg => sg.value), ...filter, maxValues: {} }
   })
-  console.info({ intermediate })
 
   // TODO: Do this natively in the API instead of after the fact
   const classes = new Set(intermediate.flatMap(i => Object.keys(i.data.map(d => d.distinctSpecies))))
@@ -76,14 +74,25 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
 }
 
 export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[] {
-  const speciesPresences = datasets.map(ds => ds.data.speciesPresence)
-  const allSpecies: { [speciesId: string]: SpeciesLight } = Object.assign({}, ...speciesPresences)
+  const store = useStoreOutsideSetup()
+  const taxonClasses = store.projectFilters?.taxonClasses
+
+  const richnessPresences = datasets.map(ds => ds.data.richnessPresence)
+  const allSpecies: { [speciesId: number]: RichnessPresence } = Object.assign({}, ...richnessPresences)
 
   return Object.entries(allSpecies)
-    .map(([key, value]) => ({
-      ...value,
-      data: speciesPresences.map(sp => key in sp),
-      total: speciesPresences.filter(sp => key in sp).length
-    }))
+    .map(([key, value]) => {
+      const { taxonClassId, taxonSpeciesId, taxonSpeciesSlug, commonName, scientificName } = value
+      const matchedClass = taxonClasses?.find(({ id }) => id === taxonClassId)
+      return {
+        taxonClassName: matchedClass?.commonName ?? 'Unknown',
+        taxonSpeciesId,
+        taxonSpeciesSlug,
+        commonName,
+        scientificName,
+        data: richnessPresences.map(sp => key in sp),
+        total: richnessPresences.filter(sp => key in sp).length
+      }
+    })
     .sort((a, b) => b.total - a.total || a.scientificName.localeCompare(b.scientificName))
 }
