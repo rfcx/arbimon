@@ -2,8 +2,8 @@ import { Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
 
-import { getArbimonSpeciesCalls } from '@/data-ingest/species/input-arbimon-species-call'
-import { writeSpeciesCallsToPostgres } from '@/data-ingest/species/output-arbimon-species-call-postgres'
+import { getArbimonSpeciesCalls } from '@/data-ingest/species/arbimon-call'
+import { writeSpeciesCallsToPostgres } from '@/data-ingest/species/db/taxon-species-calls'
 
 export const syncProjectSpeciesCall = async (sequelize: Sequelize, project: Project): Promise<void> => {
   console.info(`==> START SYNCING: species call ${project.slug} (ID: ${project.idArbimon})`)

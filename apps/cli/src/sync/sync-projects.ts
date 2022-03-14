@@ -1,5 +1,5 @@
-import { getArbimonProjects } from '../data-ingest/projects/input-arbimon'
-import { writeProjectsToPostgres } from '../data-ingest/projects/output-postgres'
+import { getArbimonProjects } from '@//data-ingest/projects/arbimon'
+import { writeProjectsToPostgres } from '@/data-ingest/projects/db'
 
 const main = async (): Promise<void> => {
   const projects = await getArbimonProjects()

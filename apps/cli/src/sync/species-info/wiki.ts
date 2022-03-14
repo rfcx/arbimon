@@ -4,8 +4,8 @@ import { SOURCES } from '@rfcx-bio/common/dao/types/source'
 import { getSequentially } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { getWikiSummary } from '../../data-ingest/species/input-wiki'
-import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '../../data-ingest/species/output-wiki-postgres'
+import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/data-ingest/species/db/taxon-wiki'
+import { getWikiSummary } from '@/data-ingest/species/wiki'
 
 export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
   const sql = `
