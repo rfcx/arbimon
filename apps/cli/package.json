@@ -11,15 +11,14 @@
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
     "db-rms": "pnpm serve lib/db/reset-migrate-seed",
     "db-seed": "pnpm serve lib/db/seed -- --path=01-master-data,auto",
-    "db-migrate-seed-test": "BIO_DB_PORT=5433 pnpm db-migrate && pnpm db-seed",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
-    "test": "vitest --run --passWithNoTests",
-    "test-coverage": "vitest --run --coverage --passWithNoTests"
+    "test-unit": "vitest --run --passWithNoTests .unit.test.",
+    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:^0.0.1",
