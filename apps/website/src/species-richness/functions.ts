@@ -1,3 +1,5 @@
+import { groupBy } from 'lodash-es'
+
 import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/types'
 
@@ -34,22 +36,38 @@ export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChar
 }
 
 export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
-  // TODO: Delete this
-  const intermediate = datasets.map(({ color, data: srData, sites, ...filter }) => {
-    const data = srData.richnessBySite.map(s => ({
-      ...s,
-      distinctSpecies: {
-        ...s.distinctSpecies,
-        [MAP_KEY_RICHNESS_TOTAL]: Object.values(s.distinctSpecies).reduce((sum, val) => (sum as number) + (val as number), 0)
+  const store = useStoreOutsideSetup()
+
+  const locationSites = store.projectFilters?.locationSites
+  const taxonClasses = store.projectFilters?.taxonClasses
+  const intermediate = datasets.map(({ color, data: richnessData, sites, ...filter }) => {
+    const groupedBySite = groupBy(richnessData.richnessBySite, 'locationSiteId')
+    const locationSiteIds = Object.keys(groupedBySite).map(Number)
+    const data = locationSiteIds.map(locationSiteId => {
+      const matchedSite = locationSites?.find(s => s.id === locationSiteId)
+      const classWithRichness = groupedBySite[locationSiteId].map(s => {
+        const taxonClassName = taxonClasses?.find(tc => tc.id === s.taxonClassId)?.commonName ?? 'Unknown'
+        return { [taxonClassName]: s.richness }
+      })
+      const toRichnessTaxonObject = Object.assign({}, ...classWithRichness)
+      return {
+        siteName: matchedSite?.name ?? '',
+        latitude: matchedSite?.latitude ?? 0,
+        longitude: matchedSite?.longitude ?? 0,
+        distinctSpecies: {
+          ...toRichnessTaxonObject,
+          [MAP_KEY_RICHNESS_TOTAL]: Object.values<number>(toRichnessTaxonObject).reduce((sum, val) => sum + val, 0)
+        }
       }
-    }))
+    })
     return { color, data, sites: sites.flatMap(sg => sg.value), ...filter, maxValues: {} }
   })
+  console.info({ intermediate })
 
   // TODO: Do this natively in the API instead of after the fact
-  const taxonClasses = new Set(intermediate.flatMap(i => Object.keys(i.data.map(d => d.distinctSpecies))))
-  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[MAP_KEY_RICHNESS_TOTAL] as number))))
-  const maxValues = Object.fromEntries([...taxonClasses, MAP_KEY_RICHNESS_TOTAL].map(name => [name, maxAll]))
+  const classes = new Set(intermediate.flatMap(i => Object.keys(i.data.map(d => d.distinctSpecies))))
+  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[MAP_KEY_RICHNESS_TOTAL]))))
+  const maxValues = Object.fromEntries([...classes, MAP_KEY_RICHNESS_TOTAL].map(name => [name, maxAll]))
 
   return intermediate.map(ds => ({
     ...ds,
