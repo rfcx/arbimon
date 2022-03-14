@@ -9,7 +9,7 @@
     "reset": "docker compose down && docker volume rm db_data-timescaledb",
     "serve": "docker compose up -d",
     "stop": "docker compose down",
-    "serve-test": "docker compose -f docker-compose.test.yaml up -d --quiet-pull && docker-compose exec -T timescaledb-test sh -c 'PGPASSWORD=test pg_isready'",
+    "serve-test": "docker compose -f docker-compose.test.yaml up -d --quiet-pull && docker compose exec -T -e PGPASSWORD=test timescaledb-test pg_isready",
     "stop-test": "docker compose -f docker-compose.test.yaml down"
   },
   "description": "Biodiversity DB",
