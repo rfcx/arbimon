@@ -37,7 +37,7 @@ export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterData
       COUNT(DISTINCT species_group.taxon_species_id)::integer as "richness"
     FROM (
       SELECT location_site_id, taxon_class_id, taxon_species_id
-      FROM detection_by_site_species_hour
+      FROM detection_by_site_species_hour dbssh
       WHERE ${conditions}
       GROUP BY location_site_id, taxon_class_id, taxon_species_id
     ) species_group
