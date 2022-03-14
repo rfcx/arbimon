@@ -4,9 +4,7 @@ on:
   schedule:
     # Every weekday at 01:37 UTC (08:37 in Thailand) https://crontab.guru
     - cron:  '37 1 * * 1-5'
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
 
   prepare:
