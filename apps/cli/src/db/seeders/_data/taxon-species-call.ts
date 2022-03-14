@@ -1,4 +1,4 @@
-import { ArbimonSpeciesCall } from '../../../data-ingest/species/input-arbimon-species-call'
+import { ArbimonSpeciesCall } from '../../../data-ingest/species/arbimon-call'
 
 export const rawSpeciesCallData: Record<string, ArbimonSpeciesCall[]> = {
   'Accipiter striatus venator': [

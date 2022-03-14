@@ -1,8 +1,10 @@
+import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { urlify } from '@rfcx-bio/utils/url-helpers'
 
-import { ArbimonSpeciesData } from '@/data-ingest/species/input-from-mock-detections'
 import { mysqlSelect } from '../../../_services/mysql'
 import { ARBIMON_CONFIG } from '../../_connections/arbimon'
+
+export type ArbimonSpeciesData = Pick<TaxonSpecies, 'idArbimon' | 'slug' | 'scientificName' | 'taxonClassId'>
 
 export interface ArbimonSpecies {
   'species_id': number
@@ -21,9 +23,9 @@ export const getArbimonSpecies = async (speciesIds: number[]): Promise<Array<Omi
   // Query Arbimon
   const results = await mysqlSelect<ArbimonSpecies>(ARBIMON_CONFIG, sql)
   return results.map(i => ({
-    speciesId: i.species_id,
-    speciesSlug: urlify(i.scientific_name),
+    idArbimon: i.species_id,
+    slug: urlify(i.scientific_name),
     scientificName: i.scientific_name,
-    taxonId: i.taxon_id
+    taxonClassId: i.taxon_id
   }))
 }

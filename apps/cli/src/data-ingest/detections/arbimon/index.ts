@@ -1,5 +1,5 @@
-import { mysqlSelect } from '../../_services/mysql'
-import { ARBIMON_CONFIG } from '../_connections/arbimon'
+import { mysqlSelect } from '../../../_services/mysql'
+import { ARBIMON_CONFIG } from '../../_connections/arbimon'
 
 export interface ArbimonHourlyDetectionSummary {
   project_id: number

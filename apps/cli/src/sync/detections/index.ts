@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
 
-import { ArbimonHourlyDetectionSummary, getArbimonHourlyDetectionsForProject } from '@/data-ingest/detections/input'
+import { ArbimonHourlyDetectionSummary, getArbimonHourlyDetectionsForProject } from '@/data-ingest/detections/arbimon'
 
 export const syncOnlyDetectionsForProject = async (sequelize: Sequelize, project: Project): Promise<ArbimonHourlyDetectionSummary[]> => {
   const detectionSummaries = await getArbimonHourlyDetectionsForProject(project.idArbimon)
