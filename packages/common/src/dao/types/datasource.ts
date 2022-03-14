@@ -2,8 +2,6 @@ export interface Datasource {
   id: string
   locationProjectId: number
   summaryText?: string
-  createdAt: Date
-  updatedAt: Date
 }
 
 export type DatasourceLight = Omit<Datasource, 'createdAt' | 'updatedAt'>
