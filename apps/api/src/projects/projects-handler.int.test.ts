@@ -1,16 +1,13 @@
-import fastify from 'fastify'
 import { expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
 
+import { testApp } from '@/_testing/app-routes'
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
 
 test('GET /projects contains valid project', async () => {
-  const app = await fastify({ logger: true })
-  const route = routesProject.find(r => r.url === projectsRoute)
-  if (!route) { assert(false); return }
-  app.route(route)
+  const app = await testApp(routesProject)
 
   // Act
   const response = await app.inject({
