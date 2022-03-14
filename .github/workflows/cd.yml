@@ -1,4 +1,4 @@
-name: 'Build-Deploy'
+name: 'CD'
 on:
   workflow_dispatch:
   schedule:
