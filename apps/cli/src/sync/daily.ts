@@ -14,7 +14,7 @@ const main = async (): Promise<void> => {
 
     console.info('STEP: Sync projects')
     const projects = await getArbimonProjects()
-    await writeProjectsToPostgres(projects)
+    await writeProjectsToPostgres(sequelize, projects)
 
     console.info('STEP: Get project lookups')
     const publishProjects = await LocationProjectModel(sequelize).findAll({
