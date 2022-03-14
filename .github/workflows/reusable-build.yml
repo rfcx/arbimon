@@ -31,9 +31,9 @@ jobs:
   build:
     runs-on: ${{ inputs.runs-on }}
     outputs:
-      build-outcome: ${{ steps.build.outputs.outcome }}
-      lint-outcome: ${{ steps.lint.outputs.outcome }}
-      test-outcome: ${{ steps.test.outputs.outcome }}
+      build-outcome: ${{ steps.build.outcome }}
+      lint-outcome: ${{ steps.lint.outcome }}
+      test-outcome: ${{ steps.test.outcome }}
 
     steps:
       - name: 'Setup: Node'

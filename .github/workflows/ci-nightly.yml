@@ -35,14 +35,14 @@ jobs:
   notify:
     name: 'Notify'
     if: ${{ always() }}
-    needs: test
+    needs: [prepare, build, test]
     uses: ./.github/workflows/reusable-notify-send.yml
     with:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-nightly.yml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       notification-title: 'CI: Bio Integration Test'
-      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Integration Test: ${{ needs.build.outputs.test-outcome }}'
+      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Migrate+Seed: ${{ needs.test.outputs.migrate-seed-outcome }} | Test: ${{ needs.test.outputs.test-outcome }}'
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
