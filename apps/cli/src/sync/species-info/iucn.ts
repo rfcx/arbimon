@@ -1,5 +1,6 @@
-import { Sequelize } from 'sequelize'
+import { QueryTypes, Sequelize } from 'sequelize'
 
+import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
 import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 import { getSequentially } from '@rfcx-bio/utils/async'
 
@@ -8,6 +9,24 @@ import { getIucnSpeciesNarrative } from '../../data-ingest/species/input-iucn/iu
 import { writeIucnSpeciesDataToPostgres } from '../../data-ingest/species/output-iucn-postgres'
 
 const DEFAULT_RISK_RATING = -1
+
+export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
+  const sql = `
+    SELECT DISTINCT ts.id, ts.scientific_name
+    FROM taxon_species ts
+    LEFT JOIN taxon_species_iucn tsi ON ts.id = tsi.taxon_species_id
+    WHERE tsi.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, ts.updated_at)) >= 1 
+    ORDER BY ts.id
+  `
+  const speciesNameToId = await sequelize
+    .query<{ id: number, scientific_name: string }>(sql, { type: QueryTypes.SELECT, raw: true })
+    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, s.id])))
+
+  const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
+    .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
+  console.info('| syncOnlyMissingIUCNSpeciesInfo =', Object.entries(speciesNameToId).length)
+  await syncIucnSpeciesInfo(sequelize, speciesNameToId, iucnCodeToId)
+}
 
 export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>, iucnCodeToId: Record<string, number>): Promise<void> => {
   const speciesNames = Object.keys(speciesNameToId)
