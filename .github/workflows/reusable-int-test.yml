@@ -59,16 +59,14 @@ jobs:
         id: test
         run: pnpm ci-test-int
         env:
+          BIO_DB_HOSTNAME: postgres
           NODE_OPTIONS: '--max_old_space_size=6656'
 
     services:
-      # Label used to access the service container
       postgres:
-        # Docker Hub image
         image: timescale/timescaledb:latest-pg12
-        # Provide the password for postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: test
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
