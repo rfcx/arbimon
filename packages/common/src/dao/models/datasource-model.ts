@@ -22,7 +22,8 @@ export const DataSourceModel = defineWithDefaults<DataSource, ModelForInterface<
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     // Facts
-    summaryText: DataTypes.JSON
+    summaryText: DataTypes.JSON,
+    rawData: DataTypes.JSON
   },
   {
     tableName: TABLE_MODEL_DATASOURCE

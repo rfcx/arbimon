@@ -22,7 +22,9 @@ const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
   // build up new datasource object
   const newDataSource: Optional<DataSource, 'updatedAt' | 'createdAt'> = {
     id: hash.MD5(summaries),
-    locationProjectId: project.id
+    locationProjectId: project.id,
+    rawData: JSON.stringify(summaries),
+    summaryText: ''
   }
 
   // pull the latest datasource from DB
@@ -43,7 +45,8 @@ const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
   // find out what's new
   console.info(`- finding out what's new: ${project.slug}`)
   const newData = await extractNewData(sequelize, summaries, project, previousDataSource)
-  newDataSource.summaryText = JSON.stringify(summaries)
+  newDataSource.rawData = JSON.stringify(summaries)
+  newDataSource.summaryText = JSON.stringify({ sites: newData.siteIds.length, species: newData.speciesIds.length })
 
   // pull new site and species data from Arbimon
   if (newData.siteIds.length > 0) {
