@@ -2,19 +2,17 @@ import { Model, ModelAttributes, ModelCtor, ModelOptions, Optional, Sequelize } 
 
 import { ValueOf } from '@rfcx-bio/utils/utility-types'
 
+import { WithAutoPk } from '@/dao/types/_common'
 import { modelAttributeToColumn } from './utils'
 
 // TODO: Update return type when they fix `sequelize.define`
 export type ModelFactory<T extends Model> = (sequelize: Sequelize) => ModelCtor<T>
 
-interface BaseType { updatedAt: Date, createdAt: Date }
-interface AutoPk extends BaseType { id: number }
-
-type ModelForInterface<Props extends BaseType, PropsCreate = Optional<Props, 'updatedAt'| 'createdAt'>> =
+export type ModelForInterface<Props, PropsCreate = Props> =
   Model<Props, PropsCreate> & Props
 
 // Model with optional PK during creation
-type ModelForInterfaceWithPk<Props extends AutoPk, PropsCreate = Optional<Props, 'id' | 'updatedAt'| 'createdAt'>> =
+export type ModelForInterfaceWithPk<Props extends WithAutoPk, PropsCreate = Optional<Props, 'id'>> =
   Model<Props, PropsCreate> & Props
 
 export const defineWithDefaults = <
@@ -26,7 +24,7 @@ export const defineWithDefaults = <
 
 // TODO: Can probably add the PK to attributes automatically
 export const defineWithDefaultsAutoPk = <
-  DomainType extends AutoPk,
+  DomainType extends WithAutoPk,
   SequelizeModel extends Model = ModelForInterfaceWithPk<DomainType>,
   SequelizeAttributes = SequelizeModel['_attributes']
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>

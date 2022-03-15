@@ -1,4 +1,6 @@
-export interface Datasource {
+import { WithDates } from './_common'
+
+export interface DataSource extends WithDates {
   id: string
   locationProjectId: number
   summaryText?: string
