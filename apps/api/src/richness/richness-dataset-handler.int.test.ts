@@ -31,6 +31,48 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
 
 const mockedApp = await getMockedApp()
 
+test(`GET ${richnessDatasetRoute} missing query`, async () => {
+  // Act
+  const response = await mockedApp.inject({
+    method: GET,
+    url: '/projects/1/richness'
+  })
+
+  // Assert
+  expect(response.statusCode).toBe(400)
+})
+
+test(`GET ${richnessDatasetRoute} invalid project id`, async () => {
+  // Act
+  const response = await mockedApp.inject({
+    method: GET,
+    url: '/projects/x/richness'
+  })
+
+  // Assert
+  expect(response.statusCode).toBe(400)
+
+  const result = JSON.parse(response.body)
+  const errorMessage = result.message
+  expect(errorMessage).toContain('Invalid path params')
+})
+
+test(`GET ${richnessDatasetRoute} date is not valid`, async () => {
+  // Act
+  const response = await mockedApp.inject({
+    method: GET,
+    url: '/projects/1/richness',
+    query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+  })
+
+  // Assert
+  expect(response.statusCode).toBe(400)
+
+  const result = JSON.parse(response.body)
+  const errorMessage = result.message
+  expect(errorMessage).toContain('Invalid query params')
+})
+
 test(`GET ${richnessDatasetRoute} to return successfully`, async () => {
   // Act
   const response = await mockedApp.inject({
