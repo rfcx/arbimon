@@ -39,6 +39,7 @@ jobs:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-nightly.yml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
+      status: ${{ needs.build.status == 'success' && needs.test.status == 'success' && 'success' || 'failure' }}
       notification-title: 'CI: Bio Integration Test'
       notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Migrate+Seed: ${{ needs.test.outputs.migrate-seed-outcome }} | Test: ${{ needs.test.outputs.test-outcome }}'
     secrets:
