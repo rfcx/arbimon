@@ -1,5 +1,5 @@
 <template>
-  <p class="text-left py-2 mt-4 border-t-1 border-l-0 border-r-0 border-b-0 border-solid opacity-50">
+  <p class="text-xs text-left py-2 mt-5 border-t-1 border-l-0 border-r-0 border-b-0 border-solid opacity-50">
     Last generated based on validated analysis data from Arbimon at: {{ latestUpdateDate }}
   </p>
 </template>
