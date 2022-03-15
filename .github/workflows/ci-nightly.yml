@@ -41,7 +41,7 @@ jobs:
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.build.result == 'success' && needs.test.result == 'success' && 'success' || 'failure' }}
       notification-title: 'CI: Bio Integration Test'
-      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome || "n/a" }} | Migrate+Seed: ${{ needs.test.outputs.migrate-seed-outcome || "n/a" }} | Test: ${{ needs.test.outputs.test-outcome || "n/a" }}'
+      notification-footer: "Build: ${{ needs.build.outputs.build-outcome || 'n/a' }} | Migrate+Seed: ${{ needs.test.outputs.migrate-seed-outcome || 'n/a' }} | Test: ${{ needs.test.outputs.test-outcome || 'n/a' }}"
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
