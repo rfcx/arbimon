@@ -14,6 +14,10 @@ on:
         description: Previous workflow run ID
         type: string
         required: true
+      status:
+        description: Current workflow status
+        type: string
+        required: true
       notification-title:
         description: Title in the notification
         type: string
@@ -104,7 +108,7 @@ jobs:
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'failure'
         with:
           notify_when: 'failure,warning'
-          status: ${{ job.status }}
+          status: ${{ inputs.status }}
           notification_title: '❌ ${{ inputs.notification-title }} <{repo_url}/tree/${{ inputs.branch-name }}|${{ inputs.branch-name }}>'
           message_format: '*FAILED* @ <{run_url}|${{ steps.git-meta.outputs.commit-title }}>'
           footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }}'
@@ -120,7 +124,7 @@ jobs:
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
         with:
           notify_when: 'success'
-          status: ${{ job.status }}
+          status: ${{ inputs.status }}
           notification_title: '✅ ${{ inputs.notification-title }} <{repo_url}/tree/${{ inputs.branch-name }}|${{ inputs.branch-name }}>'
           message_format: '*SUCCESS* @ <{run_url}|${{ steps.git-meta.outputs.commit-title }}> - ${{ github.event.head_commit.author.name }} fixed the build!! (broken since ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }})'
           footer: ${{ inputs.notification-footer }}

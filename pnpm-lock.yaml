@@ -172,12 +172,14 @@ importers:
       '@rfcx-bio/common': workspace:^0.0.1
       '@rfcx-bio/utils': workspace:^0.0.1
       '@types/mysql': ^2.15.19
+      '@types/object-hash': ^2.2.1
       '@types/validator': ^13.7.0
       axios: ^0.24.0
       dayjs: ^1.10.7
       dotenv: ^10.0.0
       lodash-es: ^4.17.21
       mysql2: ^2.3.3
+      object-hash: ^3.0.0
       pg: ^8.7.1
       pg-hstore: ^2.3.4
       sequelize: 7.0.0-alpha.5
@@ -196,7 +198,9 @@ importers:
       umzug: 3.0.0
     devDependencies:
       '@types/mysql': 2.15.19
+      '@types/object-hash': 2.2.1
       '@types/validator': 13.7.0
+      object-hash: 3.0.0
 
   apps/website:
     specifiers:
@@ -2411,6 +2415,10 @@ packages:
 
   /@types/numeral/2.0.2:
     resolution: {integrity: sha512-A8F30k2gYJ/6e07spSCPpkuZu79LCnkPTvqmIWQzNGcrzwFKpVOydG41lNt5wZXjSI149qjyzC2L1+F2PD/NUA==}
+    dev: true
+
+  /@types/object-hash/2.2.1:
+    resolution: {integrity: sha512-i/rtaJFCsPljrZvP/akBqEwUP2y5cZLOmvO+JaYnz01aPknrQ+hB5MRcO7iqCUsFaYfTG8kGfKUyboA07xeDHQ==}
     dev: true
 
   /@types/parse-json/4.0.0:
@@ -8303,6 +8311,11 @@ packages:
   /object-assign/4.1.1:
     resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /object-hash/3.0.0:
+    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
+    engines: {node: '>= 6'}
     dev: true
 
   /object-inspect/1.11.0:
