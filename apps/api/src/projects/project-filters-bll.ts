@@ -6,18 +6,18 @@ import { getSequelize } from '~/db'
 
 export const getProjectFilters = async (locationProjectId: number): Promise<ProjectFiltersResponse> => {
   const sequelize = getSequelize()
-    const models = ModelRepository.getInstance(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
 
-    const [locationSites, taxonClasses, [dateStartInclusiveUtc, dateEndInclusiveUtc]] = await Promise.all([
-      getSites(models, locationProjectId),
-      getTaxonClasses(models, locationProjectId),
-      getTimeBounds(models, locationProjectId)
-    ])
+  const [locationSites, taxonClasses, [dateStartInclusiveUtc, dateEndInclusiveUtc]] = await Promise.all([
+    getSites(models, locationProjectId),
+    getTaxonClasses(models, locationProjectId),
+    getTimeBounds(models, locationProjectId)
+  ])
 
-    return {
-      locationSites,
-      taxonClasses,
-      dateStartInclusiveUtc,
-      dateEndInclusiveUtc
-    }
+  return {
+    locationSites,
+    taxonClasses,
+    dateStartInclusiveUtc,
+    dateEndInclusiveUtc
+  }
 }
