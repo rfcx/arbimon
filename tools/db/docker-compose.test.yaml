@@ -3,7 +3,7 @@ services:
   timescaledb-test:
     image: "timescale/timescaledb:latest-pg12"
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - data-timescaledb-test:/var/lib/postgresql/data
       - ./init.d:/docker-entrypoint-initdb.d
