@@ -1,5 +1,5 @@
 import * as hash from 'object-hash'
-import { Sequelize } from 'sequelize/dist'
+import { Optional, Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DataSource, Project } from '@rfcx-bio/common/dao/types'
@@ -20,7 +20,7 @@ export const syncAllForProject = async (sequelize: Sequelize, project: Project):
 
 const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
   // build up new datasource object
-  const newDatasource: Datasource = {
+  const newDataSource: Optional<DataSource, 'updatedAt' | 'createdAt'> = {
     id: hash.MD5(summaries),
     locationProjectId: project.id
   }

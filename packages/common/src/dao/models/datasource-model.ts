@@ -1,12 +1,12 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Optional } from 'sequelize'
 
 import { DataSource } from '@/dao/types'
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults, ModelForInterface } from '../helpers/defaults'
 
 export const MODEL_DATASOURCE = 'DataSource'
 export const TABLE_MODEL_DATASOURCE = 'data_source'
 
-export const DatasourceModel = defineWithDefaults<Datasource>(
+export const DataSourceModel = defineWithDefaults<DataSource, ModelForInterface<DataSource, Optional<DataSource, 'createdAt' | 'updatedAt'>>>(
   MODEL_DATASOURCE,
   {
     // PK
@@ -18,6 +18,8 @@ export const DatasourceModel = defineWithDefaults<Datasource>(
       type: DataTypes.INTEGER, // 1
       primaryKey: true
     },
+    // Logging
+    createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
     // Facts
     summaryText: DataTypes.JSON
