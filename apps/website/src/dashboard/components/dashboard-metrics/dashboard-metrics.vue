@@ -19,7 +19,7 @@
     <div class="dataset_range mr-3">
       <span class="text-subtle">Dataset Date Range</span>
       <p class="text-subtle">
-        {{ startToEndDate(props.metrics.minDate, props.metrics.maxDate) }}
+        {{ formatDateRange(props.metrics.minDate, props.metrics.maxDate) }}
       </p>
     </div>
   </div>
@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import useDateformat from '../../../_services/hooks/useDateFormat'
+import useDateFormat from '../../../_services/hooks/useDateFormat'
 
 // Props
 interface Metrics {
@@ -41,7 +41,7 @@ interface Metrics {
 }
 const props = defineProps<{ metrics: Metrics}>()
 
-const { startToEndDate } = useDateformat()
+const { formatDateRange } = useDateFormat()
 
 </script>
 
