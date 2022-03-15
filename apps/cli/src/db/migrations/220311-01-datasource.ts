@@ -37,6 +37,9 @@
       // Facts
       summary_text: { // species +3 -2
         type: DataTypes.JSON
+      },
+      raw_data: { // species +3 -2
+        type: DataTypes.JSON
       }
     }
    )
