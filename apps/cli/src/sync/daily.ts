@@ -1,7 +1,7 @@
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
-import { getArbimonProjects } from '../data-ingest/projects/input-arbimon'
-import { writeProjectsToPostgres } from '../data-ingest/projects/output-postgres'
+import { getArbimonProjects } from '@/data-ingest/projects/arbimon'
+import { writeProjectsToPostgres } from '@/data-ingest/projects/db'
 import { refreshMviews } from '../db/actions/refresh-mviews'
 import { getSequelize } from '../db/connections'
 import { syncDetectionsForProject } from './detections'
@@ -14,7 +14,7 @@ const main = async (): Promise<void> => {
 
     console.info('STEP: Sync projects')
     const projects = await getArbimonProjects()
-    await writeProjectsToPostgres(projects)
+    await writeProjectsToPostgres(sequelize, projects)
 
     console.info('STEP: Get project lookups')
     const publishProjects = await LocationProjectModel(sequelize).findAll({

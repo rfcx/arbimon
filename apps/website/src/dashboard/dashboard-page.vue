@@ -92,10 +92,7 @@
         />
       </div>
     </div>
-    <p class="text-center opacity-50">
-      <!-- TODO: Update after have api -->
-      Last generated/synced at: December 28, 2021 03:00PM (UTC)
-    </p>
+    <last-sync :sync-updated="store.projectFilters?.latestUpdated[0].updatedAt" />
   </div>
 </template>
 <script src="./dashboard-page" lang="ts"></script>

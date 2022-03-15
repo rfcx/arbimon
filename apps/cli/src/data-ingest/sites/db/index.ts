@@ -1,12 +1,12 @@
 import { Sequelize } from 'sequelize'
 
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-import { ATTRIBUTES_LOCATION_SITE, Site } from '@rfcx-bio/common/dao/types'
+import { Site } from '@rfcx-bio/common/dao/types'
 
-export const writeSitesToPostgres = async (sequelize: Sequelize, sites: Site[]): Promise<void> => {
+export const writeSitesToPostgres = async (sequelize: Sequelize, sites: Array<Omit<Site, 'id'>>): Promise<void> => {
   await LocationSiteModel(sequelize)
     .bulkCreate(sites, {
-       updateOnDuplicate: ATTRIBUTES_LOCATION_SITE.updateOnDuplicate
+       ignoreDuplicates: true
     })
     .then(async () => {
       // fix auto increment key break - https://github.com/sequelize/sequelize/issues/9295

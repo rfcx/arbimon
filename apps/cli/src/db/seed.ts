@@ -13,16 +13,19 @@ const main = async (): Promise<void> => {
     return
   }
 
-  // Execute
+  // Setup
   const sequelize = getSequelize(verbose)
+
+  // Execute seeders
   for (const seederPath of seederPaths.split(',')) {
     await execSeeders(sequelize, seederPath, verbose)
   }
-  await sequelize.close()
 
   // Refresh mviews
   await refreshMviews(sequelize)
+
+  // Teardown
+  await sequelize.close()
 }
 
 await main()
-  .catch(e => console.error(e))
