@@ -69,12 +69,12 @@ const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
   await models.DataSource.upsert(newDataSource)
 }
 
-const extractNewData = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDataSource: DataSource | null): Promise<ArbimonNewData> => {
-  const projectSummaries = summaries.filter(s => s.project_id === project.idArbimon)
+const extractNewData = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDatasource: DataSource | null): Promise<ArbimonNewData> => {
   const siteIdsInArbimon = new Set(summaries.map(s => s.site_id))
-  const speciesIdsInArbimon = new Set(projectSummaries.map(s => s.species_id))
+  const speciesIdsInArbimon = new Set(summaries.map(s => s.species_id))
 
-  if (!previousDataSource) return { siteIds: [...siteIdsInArbimon], speciesIds: [...speciesIdsInArbimon] }
+  // no previous datasource, this is completely fresh new data
+  if (previousDatasource === null) return { siteIds: [...siteIdsInArbimon], speciesIds: [...speciesIdsInArbimon] }
 
   const models = ModelRepository.getInstance(sequelize)
 

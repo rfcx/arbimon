@@ -22,11 +22,12 @@ export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, species
   const data: Array<Optional<TaxonSpeciesCall, 'id'>> = speciesCalls
     .map(call => {
       const taxonSpeciesId = speciesIdArbimonToBio[call.species_id]
-      if (!taxonSpeciesId) return undefined
+      const siteId = siteIdArbimonToBio[call.site_idArbimon]
+      if (!taxonSpeciesId || !siteId) return undefined
       return {
         taxonSpeciesId: taxonSpeciesId,
         callProjectId: projectIdArbimonToBio[call.project_idArbimon],
-        callSiteId: siteIdArbimonToBio[call.site_idArbimon],
+        callSiteId: siteId,
         callType: call.songtype,
         callRecordedAt: new Date(call.start),
         callTimezone: call.timezone,
