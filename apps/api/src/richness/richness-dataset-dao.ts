@@ -65,7 +65,7 @@ export const getRichnessByTimeSeries = async (sequelize: Sequelize, filter: Filt
     FROM generate_series(0, ${seriesEnd(timeSeries)}) gs
       LEFT JOIN (
       SELECT extract(${timeSeries} FROM time_precision_hour_local) as grouped_time_bucket,
-             Count(distinct taxon_species_id)                      as richness
+             Count(distinct taxon_species_id) as richness
       FROM detection_by_site_species_hour dbssh
       WHERE ${conditions}
       GROUP BY grouped_time_bucket
@@ -96,7 +96,7 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
   const sql = `
     SELECT extract(epoch FROM date_group.date) as date_unix, date_group.richness
     FROM (
-      SELECT DATE(time_precision_hour_local)  as date,
+      SELECT DATE(time_precision_hour_local) as date,
              Count(distinct taxon_species_id) as richness
       FROM detection_by_site_species_hour dbssh
       WHERE ${conditions}
@@ -124,11 +124,11 @@ export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDa
 
   const sql = `
     SELECT 
-      sip.taxon_class_id        as taxon_class_id,
-      sip.taxon_species_id      as taxon_species_id,
-      sip.taxon_species_slug    as taxon_species_slug,
-      sip.common_name           as common_name,
-      sip.scientific_name       as scientific_name
+      sip.taxon_class_id as taxon_class_id,
+      sip.taxon_species_id as taxon_species_id,
+      sip.taxon_species_slug as taxon_species_slug,
+      sip.common_name as common_name,
+      sip.scientific_name as scientific_name
     FROM
       detection_by_site_species_hour dbssh
       LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
