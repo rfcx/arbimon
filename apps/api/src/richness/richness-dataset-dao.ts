@@ -61,7 +61,7 @@ export const getRichnessByTimeSeries = async (sequelize: Sequelize, filter: Filt
   }
 
   const sql = `
-    SELECT gs.gs as grouped_time_bucket, COALESCE(data.richness, 0) as richness
+    SELECT gs.gs as grouped_time_bucket, COALESCE(data.richness, 0)::integer as richness
     FROM generate_series(0, ${seriesEnd(timeSeries)}) gs
       LEFT JOIN (
       SELECT extract(${timeSeries} FROM time_precision_hour_local) as grouped_time_bucket,
