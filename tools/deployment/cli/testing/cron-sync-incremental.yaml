@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-sync-incremental
   namespace: testing
 spec:
-  # 2 time every day
-  schedule: '0 3,15 * * *'
+  # every hour
+  schedule: '0 * * * *'
   jobTemplate:
     spec:
       template:
