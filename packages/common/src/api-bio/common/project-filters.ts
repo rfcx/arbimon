@@ -16,5 +16,5 @@ export interface ProjectFiltersResponse {
   taxonClasses: TaxonClass[]
   dateStartInclusiveUtc?: string
   dateEndInclusiveUtc?: string
-  latestUpdated: DataSource[]
+  updatedList: DataSource[]
 }
