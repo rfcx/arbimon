@@ -34,9 +34,9 @@ export const getLatestUpdatedProject = async (models: AllModels, locationProject
   await models
     .Datasource
     .findAll({
-      attributes: ['id', 'location_project_id', 'updated_at', 'summary_text'],
+      attributes: ['id', ['updated_at', 'updatedAt'], 'summary_text'],
       where: {
         locationProjectId: locationProjectId
       },
-      order: [['updated_at', 'ASC']]
+      order: [['updatedAt', 'ASC']]
     })

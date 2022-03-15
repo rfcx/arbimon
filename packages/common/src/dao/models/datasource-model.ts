@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
+import { Datasource } from '@/dao/types'
 import { defineWithDefaults } from '../helpers/defaults'
-import { Datasource } from '../types/datasource'
 
 export const MODEL_DATASOURCE = 'Datasource'
 export const TABLE_MODEL_DATASOURCE = 'datasource'
@@ -18,6 +18,7 @@ export const DatasourceModel = defineWithDefaults<Datasource>(
       type: DataTypes.INTEGER, // 1
       primaryKey: true
     },
+    updatedAt: DataTypes.DATE,
     // Facts
     summaryText: DataTypes.JSON
   },
