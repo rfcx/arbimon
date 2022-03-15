@@ -30,7 +30,7 @@ export const getTimeBounds = async (models: AllModels, id: number): Promise<[str
       metric?.maxDate ? dayjs(metric.maxDate).toISOString() : undefined
     ])
 
-export const getLatestUpdatedProject = async (models: AllModels, locationProjectId: number): Promise<DataSource[]> =>
+export const getUpdatedProject = async (models: AllModels, locationProjectId: number): Promise<DataSource[]> =>
   await models
     .DataSource
     .findAll({
