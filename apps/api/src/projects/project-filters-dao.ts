@@ -1,5 +1,5 @@
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS, Datasource, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS, DataSource, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 
@@ -30,9 +30,9 @@ export const getTimeBounds = async (models: AllModels, id: number): Promise<[str
       metric?.maxDate ? dayjs(metric.maxDate).toISOString() : undefined
     ])
 
-export const getLatestUpdatedProject = async (models: AllModels, locationProjectId: number): Promise<Datasource[]> =>
+export const getLatestUpdatedProject = async (models: AllModels, locationProjectId: number): Promise<DataSource[]> =>
   await models
-    .Datasource
+    .DataSource
     .findAll({
       attributes: ['id', ['updated_at', 'updatedAt'], 'summary_text'],
       where: {
