@@ -1,7 +1,8 @@
 // TODO: fix species call seeder data into new type format
 
 // import { Optional, QueryInterface } from 'sequelize'
-// import { MigrationFn } from 'umzug'
+import { QueryInterface } from 'sequelize'
+import { MigrationFn } from 'umzug'
 
 // import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 // import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
@@ -11,7 +12,7 @@
 
 // import { rawSpeciesCallData } from '../_data/taxon-species-call'
 
-// export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
 //   const sequelize = params.context.sequelize
 
 //   // PK Lookups
@@ -47,4 +48,4 @@
 //     .filter(isDefined)
 
 //   await TaxonSpeciesCallModel(sequelize).bulkCreate(data)
-// }
+}
