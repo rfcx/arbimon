@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize'
 
-import { Datasource } from '@/dao/types'
+import { DataSource } from '@/dao/types'
 import { defineWithDefaults } from '../helpers/defaults'
 
-export const MODEL_DATASOURCE = 'Datasource'
-export const TABLE_MODEL_DATASOURCE = 'datasource'
+export const MODEL_DATASOURCE = 'DataSource'
+export const TABLE_MODEL_DATASOURCE = 'data_source'
 
 export const DatasourceModel = defineWithDefaults<Datasource>(
   MODEL_DATASOURCE,

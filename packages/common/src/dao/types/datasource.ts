@@ -4,6 +4,6 @@ export interface Datasource {
   summaryText?: string
 }
 
-export const ATTRIBUTES_DATASOURCE: Record<string, Array<keyof Datasource>> = {
+export const ATTRIBUTES_DATASOURCE: Record<string, Array<keyof DataSource>> = {
   light: ['id', 'locationProjectId', 'summaryText']
 }

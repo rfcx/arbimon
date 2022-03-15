@@ -2,7 +2,7 @@ import * as hash from 'object-hash'
 import { Sequelize } from 'sequelize/dist'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Datasource, Project } from '@rfcx-bio/common/dao/types'
+import { DataSource, Project } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary, ArbimonNewData, getArbimonHourlyDetectionsForProject } from '@/data-ingest/detections/arbimon'
 import { writeDetections } from '@/data-ingest/detections/db'
@@ -15,10 +15,10 @@ import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call/index'
 export const syncAllForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
   console.info(`- site, species, detections: ${project.slug}`)
   const detectionSummaries = await getArbimonHourlyDetectionsForProject(project.idArbimon)
-  await updateDatasource(sequelize, detectionSummaries, project)
+  await updateDataSource(sequelize, detectionSummaries, project)
 }
 
-const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
+const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
   // build up new datasource object
   const newDatasource: Datasource = {
     id: hash.MD5(summaries),
@@ -28,22 +28,22 @@ const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
   // pull the latest datasource from DB
   console.info(`- checking datasource: ${project.slug}`)
   const models = ModelRepository.getInstance(sequelize)
-  const previousDatasource = await models.Datasource.findOne({
+  const previousDataSource = await models.DataSource.findOne({
     where: { locationProjectId: project.id },
     order: [['updatedAt', 'DESC']],
     raw: true
   })
 
-  if (previousDatasource !== null && previousDatasource.id === newDatasource.id) {
-    console.info('| nothing changed from last sync -', newDatasource.id)
-    await models.Datasource.upsert(newDatasource)
+  if (previousDataSource !== null && previousDataSource.id === newDataSource.id) {
+    console.info('| nothing changed from last sync -', newDataSource.id)
+    await models.DataSource.upsert(newDataSource)
     return
   }
 
   // find out what's new
   console.info(`- finding out what's new: ${project.slug}`)
-  const newData = await extractNewData(sequelize, summaries, project, previousDatasource)
-  newDatasource.summaryText = JSON.stringify(summaries)
+  const newData = await extractNewData(sequelize, summaries, project, previousDataSource)
+  newDataSource.summaryText = JSON.stringify(summaries)
 
   // pull new site and species data from Arbimon
   if (newData.siteIds.length > 0) {
@@ -66,15 +66,15 @@ const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
   console.info('- insert or update detection summaries')
   await writeDetections(sequelize, summaries, project)
 
-  await models.Datasource.upsert(newDatasource)
+  await models.DataSource.upsert(newDataSource)
 }
 
-const extractNewData = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDatasource: DatasourceLight | null): Promise<ArbimonNewData> => {
+const extractNewData = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDataSource: DataSource | null): Promise<ArbimonNewData> => {
   const projectSummaries = summaries.filter(s => s.project_id === project.idArbimon)
   const siteIdsInArbimon = new Set(summaries.map(s => s.site_id))
   const speciesIdsInArbimon = new Set(projectSummaries.map(s => s.species_id))
 
-  if (!previousDatasource) return { siteIds: [...siteIdsInArbimon], speciesIds: [...speciesIdsInArbimon] }
+  if (!previousDataSource) return { siteIds: [...siteIdsInArbimon], speciesIds: [...speciesIdsInArbimon] }
 
   const models = ModelRepository.getInstance(sequelize)
 
