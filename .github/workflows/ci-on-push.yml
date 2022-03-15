@@ -33,7 +33,7 @@ jobs:
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.build.result }}
       notification-title: 'CI: Bio Build-Lint-Test'
-      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome || "n/a" }} | Lint: ${{ needs.build.outputs.lint-outcome || "n/a" }} | Unit Test: ${{ needs.build.outputs.test-outcome || "n/a" }}'
+      notification-footer: "Build: ${{ needs.build.outputs.build-outcome || 'n/a' }} | Lint: ${{ needs.build.outputs.lint-outcome || 'n/a' }} | Unit Test: ${{ needs.build.outputs.test-outcome || 'n/a' }}"
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
