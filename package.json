@@ -7,8 +7,9 @@
   "scripts": {
     "ci-build": "pnpm -r build",
     "ci-lint": "pnpm -r lint --stream --workspace-concurrency 1",
-    "ci-unit-test": "pnpm -r unit-test",
-    "ci-int-test": "pnpm --filter=db serve-test && pnpm --filter=cli db-migrate-seed-test && pnpm -r int-test ; pnpm --filter=db stop-test",
+    "ci-test-unit": "pnpm -r test-unit",
+    "ci-test-int": "pnpm -r test-int",
+    "ci-serve-test-int": "pnpm --filter=db serve-test && cross-env BIO_DB_PORT=5433 pnpm --filter=cli db-rms && cross-env BIO_DB_PORT=5433 pnpm -r test-int ; pnpm --filter=db stop-test",
     "clean-sheet": "pnpm clean-slate",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
     "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension johnsoncodehk.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer && code --force --install-extension kavod-io.vscode-jest-test-adapter",

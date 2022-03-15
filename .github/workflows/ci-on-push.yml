@@ -1,0 +1,39 @@
+name: 'CI On Push'
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore: # ignore branches using the CD workflow
+      - master
+      - staging
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+
+  prepare:
+    name: 'Prepare'
+    uses: ./.github/workflows/reusable-notify-prepare.yml
+    with:
+      workflow-id: ci-on-push.yml
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: 'Build'
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      runs-on: ubuntu-20.04
+
+  notify:
+    name: 'Notify'
+    if: ${{ always() }}
+    needs: [prepare, build]
+    uses: ./.github/workflows/reusable-notify-send.yml
+    with:
+      branch-name: ${{ needs.prepare.outputs.branch-name }}
+      workflow-id: ci-on-push.yml
+      previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
+      notification-title: 'CI: Bio Build-Lint-Test'
+      notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Lint: ${{ needs.build.outputs.lint-outcome }} | Unit Test: ${{ needs.build.outputs.test-outcome }}'
+    secrets:
+      slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+    
