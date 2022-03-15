@@ -17,7 +17,7 @@
       subtitle="threatened"
     />
     <div class="dataset_range mr-3">
-      <span class="text-gray-400">Dataset Date Range</span>
+      <span class="text-subtle">Dataset Date Range</span>
       <p class="text-subtle">
         {{ startToEndDate(props.metrics.minDate, props.metrics.maxDate) }}
       </p>
