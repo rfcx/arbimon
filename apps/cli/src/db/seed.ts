@@ -25,4 +25,3 @@ const main = async (): Promise<void> => {
 }
 
 await main()
-  .catch(e => console.error(e))
