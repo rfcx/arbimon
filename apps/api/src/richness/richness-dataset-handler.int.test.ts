@@ -54,7 +54,7 @@ test(`GET ${richnessDatasetRoute} invalid project id`, async () => {
 
   const result = JSON.parse(response.body)
   const errorMessage = result.message
-  expect(errorMessage).toContain('Invalid path params')
+  expect(errorMessage).toContain('Invalid path params: projectId')
 })
 
 test(`GET ${richnessDatasetRoute} date is not valid`, async () => {
@@ -70,7 +70,7 @@ test(`GET ${richnessDatasetRoute} date is not valid`, async () => {
 
   const result = JSON.parse(response.body)
   const errorMessage = result.message
-  expect(errorMessage).toContain('Invalid query params')
+  expect(errorMessage).toContain('Invalid query params: startDateUtcInclusive')
 })
 
 test(`GET ${richnessDatasetRoute} to return successfully`, async () => {
@@ -107,10 +107,30 @@ test(`GET ${richnessDatasetRoute} does not contain any additional props`, async 
   const response = await mockedApp.inject({
     method: GET,
     url: richnessDatasetUrl({ projectId: '1' }),
-    query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+    query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
   })
 
   // Assert
   const result = JSON.parse(response.body)
   Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+})
+
+test(`GET ${richnessDatasetRoute} does not have any data on given date`, async () => {
+  // Act
+  const response = await mockedApp.inject({
+    method: GET,
+    url: richnessDatasetUrl({ projectId: '1' }),
+    query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
+  })
+
+  // Assert
+  const result = JSON.parse(response.body)
+  Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+
+  expect(result.richnessBySite).toEqual([])
+  expect(result.richnessByTaxon).toEqual({})
+  expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
+  expect(result.richnessByTimeUnix).toEqual({})
+  expect(result.richnessExport).toEqual([])
+  expect(result.richnessPresence).toEqual([])
 })
