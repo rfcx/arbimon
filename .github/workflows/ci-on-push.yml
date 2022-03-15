@@ -31,6 +31,7 @@ jobs:
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-on-push.yml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
+      status: ${{ needs.build.status }}
       notification-title: 'CI: Bio Build-Lint-Test'
       notification-footer: 'Build: ${{ needs.build.outputs.build-outcome }} | Lint: ${{ needs.build.outputs.lint-outcome }} | Unit Test: ${{ needs.build.outputs.test-outcome }}'
     secrets:
