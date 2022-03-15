@@ -11,8 +11,6 @@ import { writeSitesToPostgres } from '@/data-ingest/sites/db'
 import { getArbimonSpecies } from '@/data-ingest/species/arbimon'
 import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/db/taxon-species'
 import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call/index'
-import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
-import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 
 export const syncAllForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
   console.info(`- site, species, detections: ${project.slug}`)
@@ -61,8 +59,7 @@ const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
     console.info('| fetching species calls')
     await syncOnlyMissingSpeciesCalls(sequelize, project)
     console.info('| fetching species information')
-    await syncOnlyMissingWikiSpeciesInfo(sequelize)
-    await syncOnlyMissingIUCNSpeciesInfo(sequelize)
+    // TODO: sync only missing data for project
   }
 
   // insert new detection data
