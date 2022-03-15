@@ -2,7 +2,20 @@ import { Project } from '@rfcx-bio/common/dao/types'
 
 import { mysqlSelect } from '../../../_services/mysql'
 import { ARBIMON_CONFIG } from '../../_connections/arbimon'
-import { ArbimonProject } from './type'
+
+export interface ArbimonProject {
+  'project_id': number
+  'core_project_id': string
+  'slug': string
+  'name': string
+  'description': string | null
+  'is_private': boolean
+  'reports_enabled': boolean
+  'north': number
+  'south': number
+  'west': number
+  'east': number
+}
 
 export const getArbimonProjects = async (): Promise<Array<Omit<Project, 'id'>>> => {
   const sql =

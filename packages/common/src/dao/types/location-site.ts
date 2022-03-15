@@ -12,5 +12,5 @@ export interface Site {
 
 export const ATTRIBUTES_LOCATION_SITE: Record<string, Array<keyof Site>> = {
   light: ['id', 'name', 'latitude', 'longitude', 'altitude'],
-  updateOnDuplicate: ['name', 'latitude', 'longitude', 'altitude']
+  updateOnDuplicate: ['idCore', 'name', 'latitude', 'longitude', 'altitude']
 }
