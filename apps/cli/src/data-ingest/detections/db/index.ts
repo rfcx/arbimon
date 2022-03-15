@@ -21,7 +21,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
 
   const data: DetectionBySiteSpeciesHour[] =
     detections.map(d => ({
-      timePrecisionHourLocal: d.datetime,
+      timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: speciesArbimonToBio[d.species_id].taxonClassId ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id].id ?? -1, // TODO: Throw error
       locationProjectId: project.id,
