@@ -1,4 +1,4 @@
-import { DatasourceLight, Site, TaxonClass } from '../../dao/types'
+import { Datasource, Site, TaxonClass } from '../../dao/types'
 
 // Request
 export interface ProjectFiltersParams {
@@ -16,5 +16,5 @@ export interface ProjectFiltersResponse {
   taxonClasses: TaxonClass[]
   dateStartInclusiveUtc?: string
   dateEndInclusiveUtc?: string
-  latestUpdated: DatasourceLight[]
+  latestUpdated: Datasource[]
 }
