@@ -5,13 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, withDefaults } from 'vue'
+import { computed, defineProps } from 'vue'
 
 import useDateFormat from '../_services/hooks/useDateFormat'
 
-const props = withDefaults(defineProps<{syncUpdated: Date | string}>(), {
-  syncUpdated: () => 'December 28, 2021 03:00PM (UTC)'
-})
+const props = defineProps<{syncUpdated: Date | string}>()
 
 const { formatFullDate } = useDateFormat()
 const latestUpdateDate = computed(() => formatFullDate(props.syncUpdated))
