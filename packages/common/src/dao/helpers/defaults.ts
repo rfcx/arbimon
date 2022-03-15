@@ -7,29 +7,30 @@ import { modelAttributeToColumn } from './utils'
 // TODO: Update return type when they fix `sequelize.define`
 export type ModelFactory<T extends Model> = (sequelize: Sequelize) => ModelCtor<T>
 
-interface AutoPk { id: number }
+interface BaseType { updatedAt: Date, createdAt: Date }
+interface AutoPk extends BaseType { id: number }
 
-type ModelForInterface<Props, PropsCreate = Props> =
+type ModelForInterface<Props extends BaseType, PropsCreate = Optional<Props, 'updatedAt'| 'createdAt'>> =
   Model<Props, PropsCreate> & Props
 
 // Model with optional PK during creation
-type ModelForInterfaceWithPk<Props extends AutoPk, PropsCreate = Optional<Props, 'id'>> =
+type ModelForInterfaceWithPk<Props extends AutoPk, PropsCreate = Optional<Props, 'id' | 'updatedAt'| 'createdAt'>> =
   Model<Props, PropsCreate> & Props
 
 export const defineWithDefaults = <
-  DomainModel,
-  SequelizeModel extends Model = ModelForInterface<DomainModel>,
+  DomainType,
+  SequelizeModel extends Model = ModelForInterface<DomainType>,
   SequelizeAttributes = SequelizeModel['_attributes']
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
   sequelize => sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), optionsWithDefaults(modelName, options))
 
 // TODO: Can probably add the PK to attributes automatically
 export const defineWithDefaultsAutoPk = <
-  DomainModel extends AutoPk,
-  SequelizeModel extends Model = ModelForInterfaceWithPk<DomainModel>,
+  DomainType extends AutoPk,
+  SequelizeModel extends Model = ModelForInterfaceWithPk<DomainType>,
   SequelizeAttributes = SequelizeModel['_attributes']
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
-  defineWithDefaults<DomainModel, SequelizeModel>(modelName, attributes, options)
+  defineWithDefaults<DomainType, SequelizeModel>(modelName, attributes, options)
 
 export const attributesWithDefaults = <
   SequelizeModel extends Model,

@@ -2,7 +2,7 @@ import * as hash from 'object-hash'
 import { Sequelize } from 'sequelize/dist'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DatasourceLight, Project } from '@rfcx-bio/common/dao/types'
+import { Datasource, Project } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary, ArbimonNewData, getArbimonHourlyDetectionsForProject } from '@/data-ingest/detections/arbimon'
 import { writeDetections } from '@/data-ingest/detections/db'
@@ -20,7 +20,7 @@ export const syncAllForProject = async (sequelize: Sequelize, project: Project):
 
 const updateDatasource = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
   // build up new datasource object
-  const newDatasource: DatasourceLight = {
+  const newDatasource: Datasource = {
     id: hash.MD5(summaries),
     locationProjectId: project.id
   }
