@@ -1,45 +1,44 @@
 import { ref } from 'vue'
 
-import dayjs from '@rfcx-bio/common/node_modules/dayjs'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 type DateParam = string | Date | undefined
 
-const dayjsDateWithFormat = (date: Date, pattern: string): string => {
-  return dayjs(date).format(pattern)
-}
+// const dayjsDateWithFormat = (date: Date | string, pattern: string): string => {
+//   return dayjs(date).format(pattern)
+// }
 
 export default function useDateFormat (): {
-  formateDate: (dateInput: DateParam, pattern: string) => string
-  formatFullDate: (dateInput: DateParam) => string
-  startToEndDate: (start: DateParam, end: DateParam) => string
+  formatDate: (dateInput: DateParam, pattern: string) => string
+  formatFullDate: (dateInput: DateParam, pattern?: string) => string
+  formatDateRange: (start: DateParam, end: DateParam) => string
 } {
-  const formateDate = (dateInput: DateParam, pattern: string = 'MMMM D, YYYY'): string => {
+  const formatDate = (dateInput: DateParam, pattern: string = 'MMMM D, YYYY'): string => {
     const dateInputRef = ref(dateInput)
     if (dateInputRef.value === undefined) return ''
     if (typeof dateInputRef.value === 'string') {
       if (dateInputRef.value?.length === 0) return ''
-      const date = new Date(dateInputRef.value)
 
-      return dayjsDateWithFormat(date, pattern)
+      return dayjs(dateInputRef.value).format(pattern)
     }
-    return formateDate(dateInputRef.value.toISOString())
+    return formatDate(dateInputRef.value.toISOString())
   }
 
-  const startToEndDate = (start: DateParam, end: DateParam): string => {
+  const formatDateRange = (start: DateParam, end: DateParam): string => {
     if (start === undefined || end === undefined) return ''
-    if (typeof start === 'string' && typeof end === 'string') {
-      if (start.length === 0 || end.length === 0) return ''
-    }
-    return `${formateDate(start)} - ${formateDate(end)}`
+    if (typeof start === 'string' && start.length === 0) return ''
+    if (typeof end === 'string' && end.length === 0) return ''
+
+    return `${formatDate(start)} - ${formatDate(end)}`
   }
 
   const formatFullDate = (dateInput: DateParam): string => {
-    return formateDate(dateInput, 'LLL [(]zzz[)]')
+    return formatDate(dateInput, 'LLL (z)')
   }
 
   return {
-    formateDate,
+    formatDate,
     formatFullDate,
-    startToEndDate
+    formatDateRange
   }
 }
