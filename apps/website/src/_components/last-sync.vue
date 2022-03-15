@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
 
-import useDateFormat from '../_services/hooks/useDateFormat'
+import useDateFormat from '../_services/hooks/use-date-format'
 
 const props = defineProps<{syncUpdated: Date | string}>()
 

@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-import useDateFormat from '../../../_services/hooks/useDateFormat'
+import useDateFormat from '../../../_services/hooks/use-date-format'
 
 // Props
 interface Metrics {
