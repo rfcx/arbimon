@@ -33,7 +33,7 @@ const main = async (): Promise<void> => {
     await sequelize1.close()
     await sequelize2.close()
   } catch (err: any) {
-    console.error(err.message)
+    console.error(err)
     process.exitCode = 1
   }
 }
