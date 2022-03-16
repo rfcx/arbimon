@@ -2,7 +2,7 @@ import * as hash from 'object-hash'
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { DataSourceModel } from '@rfcx-bio/common/dao/models/datasource-model'
+import { DataSourceModel } from '@rfcx-bio/common/dao/models/data-source-model'
 import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { ProjectVersionModel } from '@rfcx-bio/common/dao/models/project-version-model'
@@ -32,7 +32,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   // Save data
   await ProjectVersionModel(sequelize)
     .create({
-      locationProjectId: puertoRicoId,
+      locationProjectId: puertoRicoProjectId,
       isPublished: false,
       isPublic: false
     })
@@ -51,7 +51,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await DataSourceModel(sequelize)
     .create({
       id: hash.MD5([{ 123: 456 }]),
-      locationProjectId: puertoRicoId,
+      locationProjectId: puertoRicoProjectId,
       summaryText: JSON.stringify({
         species: 500,
         sites: 90
