@@ -1,10 +1,9 @@
-import { getArbimonProjects, writeProjectsToPostgres } from '@/data-ingest/projects'
 import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { getSequelize } from '@/db/connections'
-import { getNeedSyncingProjects } from '@/sync/datasource'
+import { syncAllForProject } from '@/sync/all'
+import { getNeedSyncingProjects } from '@/sync/data-source'
 import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
-import { syncAllForProject } from '@/sync/sync-all'
 
 const main = async (): Promise<void> => {
   console.info('Hourly sync start')
