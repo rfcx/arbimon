@@ -1,0 +1,15 @@
+export type Protection = 'off' | 'warn'
+
+export const PROTECTION_VALUES: Record<string, Protection> = {
+  OFF: 'off',
+  WARN: 'warn'
+}
+
+export type BioEnvironment = 'local' | 'testing' | 'staging' | 'production'
+
+export const BIO_ENVIRONMENT_VALUES: Record<string, BioEnvironment> = {
+  LOCAL: 'local',
+  TESTING: 'testing',
+  STAGING: 'staging',
+  PRODUCTION: 'production'
+}

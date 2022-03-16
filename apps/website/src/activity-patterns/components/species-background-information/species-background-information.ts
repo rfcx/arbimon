@@ -1,38 +1,41 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species, SPECIES_SOURCE_IUCN, SPECIES_SOURCE_WIKI, SpeciesInformation } from '@rfcx-bio/common/api-bio/species/common'
-import { ExtinctionRisk, getExtinctionRisk } from '@rfcx-bio/common/iucn'
+import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import SpeciesInformationContentComponent from './species-information-content.vue'
+import SpeciesInformationContent from './species-information-content.vue'
+
+interface SpeciesInformation {
+  description: string
+  sourceUrl: string
+  sourceCite?: string
+}
 
 @Options({
   components: {
-    SpeciesInformationContentComponent
+    SpeciesInformationContent
   }
 })
 export default class SpeciesBackgroundInformation extends Vue {
-  @Prop() species!: Species | null
+  @Prop() speciesInformation!: SpeciesInProject | null
 
   /**
-   * Clean up html tag from raw content from iucn api
+   * Clean up html tag from raw content
    */
-  get speciesIUCNCleanContent (): string {
-    const rawContent = this.iucnSpeciesInformation?.description ?? ''
+  get speciesCleanContent (): string {
+    const rawContent = this.speciesInformation?.description ?? ''
     const div = document.createElement('div')
     div.innerHTML = rawContent
     return div.innerText
   }
 
-  get iucnSpeciesInformation (): SpeciesInformation | null {
-    return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_IUCN) ?? null
-  }
+  get information (): SpeciesInformation | null {
+    const description = this.speciesCleanContent
 
-  get wikiSpeciesInformation (): SpeciesInformation | null {
-    return this.species?.information.find(({ sourceType }) => sourceType === SPECIES_SOURCE_WIKI) ?? null
-  }
-
-  get riskInformation (): ExtinctionRisk | null {
-    return this.species?.extinctionRisk ? getExtinctionRisk(this.species.extinctionRisk) : null
+    return {
+      description,
+      sourceUrl: this.speciesInformation?.sourceUrl ?? '',
+      sourceCite: this.speciesInformation?.sourceCite ?? ''
+    }
   }
 }

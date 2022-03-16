@@ -13,10 +13,10 @@
         class="threatened-tag border-none text-xs"
         effect="dark"
         size="mini"
-        :color="ratingAndSpecies[1][0].extinctionRisk.color"
-        :title="ratingAndSpecies[1][0].extinctionRisk.label"
+        :color="ratingAndSpecies[1][0].riskRating.color"
+        :title="ratingAndSpecies[1][0].riskRating.label"
       >
-        {{ ratingAndSpecies[1][0].extinctionRisk.code }}
+        {{ ratingAndSpecies[1][0].riskRating.code }}
       </el-tag>
       <span class="ml-1.5 text-sm">{{ ratingAndSpecies[0] }} ({{ ratingAndSpecies[1].length }})</span>
       <div
@@ -25,15 +25,17 @@
       >
         <div
           v-for="item in ratingAndSpecies[1]"
-          :key="'dashboard-threatened-' + item.speciesId"
+          :key="'dashboard-threatened-' + item.slug"
         >
           <router-link
             class="self-center hover:(text-subtle)"
-            :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
+            :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }"
           >
             <img
               class="min-h-14 h-14 min-w-14 w-14 object-cover mr-2"
-              :src="item.imageUrl"
+              :src="item.photoUrl"
+              :title="item.scientificName"
+              :alt="item.scientificName"
             >
           </router-link>
         </div>

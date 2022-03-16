@@ -9,7 +9,7 @@
     "jsx": "preserve",
     "types": [
       "vite/client",
-      "vitest/global",
+      "vitest/globals",
       "element-plus/global",
       "unplugin-icons/types/vue"
     ],

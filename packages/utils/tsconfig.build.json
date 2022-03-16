@@ -4,7 +4,16 @@
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": "src",
-    "outDir": "lib"
+    "outDir": "lib",
+    "types": ["vitest/globals"],
+    "paths": {
+      "~/*": ["./_services/*"],
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
   },
 
   "include": ["src/**/*.ts"]

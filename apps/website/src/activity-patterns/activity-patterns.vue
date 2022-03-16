@@ -29,50 +29,53 @@
       :species-slug="$route.params.speciesSlug"
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
-    <div class="grid grid-cols-6 py-2">
-      <div class="col-span-6 md:col-span-4">
+    <species-title
+      v-if="speciesInformation"
+      :species="speciesInformation"
+    />
+    <div class="grid grid-cols-5 gap-x-2rem">
+      <div class="col-span-full sm:col-span-2">
+        <species-images
+          v-if="speciesPhotos.length > 0"
+          :species-photos="speciesPhotos"
+          class="my-4"
+        />
+        <spotlight-player
+          v-if="speciesCalls"
+          :species-calls="speciesCalls"
+        />
         <species-background-information
-          :species="speciesInformation"
+          :species-information="speciesInformation"
         />
       </div>
-      <div class="col-span-6 px-0 mt-6 md:(col-span-2 border-l-2 border-faded mt-0 px-4)">
-        <!-- TODO ?? : Add tab to swap between photo / species call -->
-        <div class="grid grid-cols-2 gap-4">
-          <species-images
-            v-if="speciesInformation"
-            :species="speciesInformation"
-          />
-          <spotlight-player
-            v-if="speciesCall"
-            :species-call="speciesCall"
-          />
-        </div>
+      <div class="col-span-full sm:col-span-3">
+        <activity-patterns-metrics
+          :metrics="metrics"
+          class="mt-6"
+        />
+        <location-redacted-banner
+          v-if="isLocationRedacted"
+          class="mt-5"
+        />
+        <activity-patterns-by-location
+          v-else
+          :datasets="mapDatasets"
+          :species="species"
+          class="mt-5"
+        />
+        <activity-patterns-predicted-occupancy
+          :species-slug="$route.params.speciesSlug"
+          :predicted-occupancy-maps="predictedOccupancyMaps"
+          class="mt-5"
+        />
+        <activity-patterns-by-time
+          dom-id="activity-by-time"
+          :species="species"
+          :datasets="timeDatasets"
+          class="my-5"
+        />
       </div>
     </div>
-    <activity-patterns-metrics
-      :metrics="metrics"
-      class="mt-6"
-    />
-    <location-redacted-banner
-      v-if="isLocationRedacted"
-      class="mt-5"
-    />
-    <activity-patterns-by-location
-      v-else
-      :datasets="mapDatasets"
-      :species="species"
-      class="mt-5"
-    />
-    <activity-patterns-predicted-occupancy
-      :predicted-occupancy-maps="predictedOccupancyMaps"
-      class="mt-5"
-    />
-    <activity-patterns-by-time
-      dom-id="activity-by-time"
-      :species="species"
-      :datasets="timeDatasets"
-      class="my-5"
-    />
   </div>
 </template>
 <script src="./activity-patterns.ts" lang="ts"></script>

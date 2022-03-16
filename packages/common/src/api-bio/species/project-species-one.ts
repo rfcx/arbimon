@@ -1,4 +1,5 @@
-import { Species } from './common'
+import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types'
+import { SpeciesInProject } from '../../dao/types/species-in-project'
 
 // Request
 export interface ProjectSpeciesOneParams {
@@ -18,6 +19,8 @@ export interface PredictedOccupancyMap {
 }
 
 export interface ProjectSpeciesOneResponse {
-  speciesInformation: Species
+  speciesInformation: SpeciesInProject
+  speciesPhotos: TaxonSpeciesPhotoLight[]
+  speciesCalls: TaxonSpeciesCallLight[]
   predictedOccupancyMaps: PredictedOccupancyMap[]
 }

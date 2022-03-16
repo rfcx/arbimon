@@ -1,15 +1,22 @@
 import { Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
+
+import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { INFO_TOPICS } from '@/info/info-page'
 import { downloadCsvReports } from '@/species-richness/csv'
 import { ColoredFilter } from '~/filters'
+import { BiodiversityStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 
 export default class SpeciesRichnessIntroduction extends Vue {
+  @Inject() store!: BiodiversityStore
+  @Prop() richnessByExports!: RichnessByExportReportRow[][]
   @Prop() filters!: ColoredFilter[]
   @Prop() haveData!: boolean
+
+  loading = false
 
   get infoTopic (): string {
     return INFO_TOPICS.richness
@@ -17,6 +24,8 @@ export default class SpeciesRichnessIntroduction extends Vue {
 
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)
   async exportCsvReports (): Promise<void> {
-    await downloadCsvReports(this.filters, DEFAULT_PREFIX)
+    this.loading = true
+    await downloadCsvReports(this.filters, this.richnessByExports, DEFAULT_PREFIX, this.store.projectFilters?.taxonClasses ?? [])
+    this.loading = false
   }
 }

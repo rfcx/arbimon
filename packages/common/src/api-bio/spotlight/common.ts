@@ -1,15 +1,8 @@
-export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear' | 'dateSeries'
+import { DataByTime } from '../common/time-bucket'
 
-export type ActivitySpotlightDataByTime = Record<TimeBucket, ActivitySpotlightDataByTimeBucket>
-
-export interface ActivitySpotlightDataByTimeBucket {
-  detection: Record<number, number>
-  detectionFrequency: Record<number, number>
-}
-
-export interface ActivitySpotlightDataBySite {
-  [siteId: string]: {
-    siteId: string
+export interface SpotlightDetectionDataBySite {
+  [siteId: number]: {
+    siteId: number
     siteName: string
     latitude: number
     longitude: number
@@ -19,13 +12,19 @@ export interface ActivitySpotlightDataBySite {
   }
 }
 
-export interface ActivitySpotlightDataByExport {
-  hour: ActivitySpotlightDataByExportBucket
-  month: ActivitySpotlightDataByExportBucket
-  year: ActivitySpotlightDataByExportBucket
+export interface SpotlightDetectionDataByTime<T extends string | number = number> {
+  detection: Record<T, number>
+  detectionFrequency: Record<T, number>
 }
 
-export interface ActivitySpotlightDataByExportBucket {
-  detection: Record<number|string, number>
-  detectionFrequency: Record<number|string, number>
+// ----- Not related to api return item ----
+// ? Moving to somewhere
+export interface SpotlightExportData {
+  hour: SpotlightDetectionDataByTime
+  month: SpotlightDetectionDataByTime<string>
+  year: SpotlightDetectionDataByTime
+  sites: SpotlightDetectionDataBySite
 }
+
+// ? Moving to somewhere
+export type SpotlightDataByTime = DataByTime<SpotlightDetectionDataByTime>

@@ -1,10 +1,11 @@
 import * as fs from 'fs'
 import { camelCase } from 'lodash-es'
 import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
 import { jsonToTs } from '@rfcx-bio/utils/file/json-to-ts'
 
-const currentDir = dirname(new URL(import.meta.url).pathname)
+const currentDir = dirname(fileURLToPath(import.meta.url))
 const pathToRoot = '../../'
 
 const EXT_JSON = '.json'
@@ -14,7 +15,7 @@ const main = async (): Promise<void> => {
   // Validate inputs
   const filepath = process.argv[process.argv.length - 1]
   if (!filepath) {
-    console.info('Usage: pnpm serve src/tools/json-to-ts.ts -- out/raw-sites.json')
+    console.info('Usage: pnpm serve lib/tools/json-to-ts.ts -- out/raw-sites.json')
     return
   }
 

@@ -18,15 +18,17 @@ export interface DashboardGeneratedResponse {
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number
+  maxDate?: Date
+  minDate?: Date
 
   // Species
   speciesThreatened: DashboardSpecies[]
 
   // Charts & maps
-  richnessByExtinction: ApiStack
-  richnessByHour: ApiLine
-  richnessBySite: ApiMap
   richnessByTaxon: ApiStack
-  detectionFrequencyByHour: ApiLine
-  detectionFrequencyBySite: ApiMap
+  richnessByRisk: ApiStack
+  richnessBySite: ApiMap
+  detectionBySite: ApiMap
+  richnessByHour: ApiLine
+  detectionByHour: ApiLine
 }

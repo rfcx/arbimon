@@ -1,8 +1,8 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { Project } from '@rfcx-bio/common/api-bio/common/projects'
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
+import { LocationProjectLight } from '@rfcx-bio/common/dao/types'
 
 import { projectService } from '~/api/project-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
@@ -11,30 +11,32 @@ export const useStore = defineStore('root', {
   state: () => ({
     user: undefined as User | undefined,
     datasetColors: COLORS_BIO_INCLUSIVE,
-    projects: [] as Project[],
-    selectedProject: undefined as Project | undefined,
-    sites: [] as Site[]
+    projects: [] as LocationProjectLight[],
+    selectedProject: undefined as LocationProjectLight | undefined,
+    projectFilters: undefined as ProjectFiltersResponse | undefined
   }),
   getters: {},
   actions: {
     async updateUser (user: User | undefined = undefined) {
       // Set user & clear old data immediately
       this.user = user
-      this.projects = []
-      await this.updateSelectedProject(undefined)
+      await this.updateProjects([])
 
       // Load new data asynchronously
-      if (user) {
-        const projects = await projectService.getProjects() ?? []
-        this.projects = projects
-        await this.updateSelectedProject(projects[0])
-      }
+      const projects = await projectService.getProjects() ?? []
+      await this.updateProjects(projects)
     },
-    async updateSelectedProject (project?: Project) {
+    async updateProjects (projects: LocationProjectLight[]) {
+      this.projects = projects
+      await this.updateSelectedProject(projects?.[0])
+    },
+    async updateSelectedProject (project?: LocationProjectLight) {
       if (this.selectedProject?.id === project?.id) return
 
       this.selectedProject = project
-      this.sites = project ? await projectService.getSites(project.id) ?? [] : []
+      this.projectFilters = project
+        ? await projectService.getProjectFilters(project.id)
+        : undefined
     }
   }
 })

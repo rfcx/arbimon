@@ -1,14 +1,16 @@
 import { max } from 'lodash-es'
+import { LngLatBoundsLike } from 'mapbox-gl'
+import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
-import { Inject } from 'vue-property-decorator'
+import { Inject, Watch } from 'vue-property-decorator'
+import { RouteLocationNormalized } from 'vue-router'
 
 import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
-import { EXTINCTION_LABELS_AND_COLORS, getExtinctionRisk } from '@rfcx-bio/common/iucn'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { TAXONOMY_COLORS } from '~/api/taxonomy-service'
 import { downloadSvgAsPng } from '~/charts'
+import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
@@ -17,8 +19,10 @@ import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
+import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
+import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
 import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
@@ -36,15 +40,19 @@ interface Tab {
 
 const TAB_VALUES = {
   richness: 'speciesRichness',
-  frequency: 'detectionFrequency'
+  detections: 'detection'
 }
 
 const tabs: Tab[] = [
   { label: 'Species Richness', value: TAB_VALUES.richness },
-  { label: 'Detection Frequency', value: TAB_VALUES.frequency }
+  { label: 'Detections (raw)', value: TAB_VALUES.detections }
 ]
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
+
+// TODO: Different default photos per taxon
+const getDefaultPhoto = (taxonSlug: string): string =>
+  new URL('../_assets/default-species-image.jpg', import.meta.url).toString()
 
 @Options({
   components: {
@@ -69,12 +77,16 @@ export default class DashboardPage extends Vue {
   tabs = tabs
   selectedTab = tabs[0].value
 
-  getPopupHtml = (data: MapSiteData, dataKey: string) => this.selectedTab === TAB_VALUES.richness
-    ? data.distinctSpecies[dataKey]
-    : (data.distinctSpecies[dataKey] as number).toFixed(3)
+  getPopupHtml = (data: MapSiteData, dataKey: string) => data.distinctSpecies[dataKey]
 
   get color (): string {
     return this.store.datasetColors[0] ?? '#EFEFEF'
+  }
+
+  get mapInitialBounds (): LngLatBoundsLike | null {
+    const project = this.store.selectedProject
+    if (!project) return null
+    return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }
 
   get circleFormatter (): CircleFormatter {
@@ -88,7 +100,7 @@ export default class DashboardPage extends Vue {
   get lineChartData (): Record<number, number> | null {
     return this.selectedTab === TAB_VALUES.richness
       ? this.generated?.richnessByHour ?? null
-      : this.generated?.detectionFrequencyByHour ?? null
+      : this.generated?.detectionByHour ?? null
   }
 
   get lineChartSeries (): LineChartSeries[] {
@@ -102,8 +114,9 @@ export default class DashboardPage extends Vue {
       height: this.tabHeight,
       margins: { top: 20, right: 10, bottom: 30, left: 40 },
       xTitle: TIME_BUCKET_LABELS.hourOfDay,
-      yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detection frequency',
-      xBounds: [0, 23]
+      yTitle: this.selectedTab === TAB_VALUES.richness ? 'Number of species' : 'Detections (Raw)',
+      xBounds: [0, 23],
+      yLabelFormatter: (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
     }
   }
 
@@ -111,8 +124,8 @@ export default class DashboardPage extends Vue {
     return {
       startDate: dayjs(),
       endDate: dayjs(),
-      sites: this.store.sites,
-      data: ((this.selectedTab === TAB_VALUES.richness ? this.generated?.richnessBySite : this.generated?.detectionFrequencyBySite) ?? [])
+      sites: this.store.projectFilters?.locationSites ?? [],
+      data: ((this.selectedTab === TAB_VALUES.richness ? this.generated?.richnessBySite : this.generated?.detectionBySite) ?? [])
         .map(({ name: siteName, latitude, longitude, value }) => ({
           siteName,
           latitude,
@@ -124,7 +137,7 @@ export default class DashboardPage extends Vue {
       maxValues: {
         [MAP_KEY_THAT_SHOULD_NOT_EXIST]: max(this.selectedTab === TAB_VALUES.richness
           ? this.generated?.richnessBySite.map(d => d.value)
-          : this.generated?.detectionFrequencyBySite.map(d => d.value)
+          : this.generated?.detectionBySite.map(d => d.value)
         ) ?? 0
       }
     }
@@ -133,40 +146,60 @@ export default class DashboardPage extends Vue {
   get speciesHighlighted (): HighlightedSpeciesRow[] {
     if (!this.profile) return []
 
-    return this.profile.speciesHighlighted.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
-      speciesId,
+    return this.profile.speciesHighlighted.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
+      slug,
+      taxonSlug,
       scientificName,
-      commonName,
-      speciesSlug,
-      imageUrl: (thumbnailImageUrl && thumbnailImageUrl.length > 0) ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
-      extinctionRisk: getExtinctionRisk(extinctionRisk)
+      commonName: commonName,
+      photoUrl: photoUrl ?? getDefaultPhoto(taxonSlug),
+      riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }))
   }
 
   get speciesThreatened (): ThreatenedSpeciesRow[] {
     if (!this.generated) return []
 
-    return this.generated.speciesThreatened.map(({ speciesId, scientificName, commonName, speciesSlug, thumbnailImageUrl, extinctionRisk }) => ({
-      speciesId,
+    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
+      slug,
+      taxonSlug,
       scientificName,
-      commonName,
-      speciesSlug,
-      imageUrl: (thumbnailImageUrl && thumbnailImageUrl.length > 0) ? thumbnailImageUrl : new URL('../_assets/default-species-image.jpg', import.meta.url).toString(),
-      extinctionRisk: getExtinctionRisk(extinctionRisk)
+      commonName: commonName,
+      photoUrl: photoUrl ?? getDefaultPhoto(taxonSlug),
+      riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }))
   }
 
-  get taxonColors (): Record<string, string> {
-    return TAXONOMY_COLORS
+  get richnessByTaxon (): HorizontalStack[] {
+    return (this.generated?.richnessByTaxon ?? [])
+      .map(([taxonId, count]) => {
+        const name = this.store.projectFilters?.taxonClasses.find(tc => tc.id === taxonId)?.commonName ?? '-'
+        const color = TAXON_CLASSES_BY_ID[taxonId].color
+        return { name, color, count }
+      })
   }
 
-  get extinctionColors (): Record<string, string> {
-    return EXTINCTION_LABELS_AND_COLORS
+  get richnessByRisk (): HorizontalStack[] {
+    return (this.generated?.richnessByRisk ?? [])
+      .map(([taxonId, count]) => {
+        const taxonClass = RISKS_BY_ID[taxonId]
+        return { name: taxonClass.label, color: taxonClass.color, count }
+      })
   }
 
   override async created (): Promise<void> {
+    await this.updatePage()
+  }
+
+  @Watch('$route')
+  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
+    if (to.params.projectSlug !== from.params.projectSlug) {
+      await this.updatePage()
+    }
+  }
+
+  async updatePage (): Promise<void> {
     const projectId = this.store.selectedProject?.id
-    if (!projectId) return
+    if (projectId === undefined) return
 
     const [generated, profile] = await Promise.all([
       dashboardService.getDashboardGeneratedData(projectId),

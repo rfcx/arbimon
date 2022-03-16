@@ -1,24 +1,32 @@
 import { ProjectSpeciesAllParams, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { rawSpecies } from '@rfcx-bio/common/mock-data'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import { Controller } from '../_services/api-helper/types'
-import { assertParamsExist } from '../_services/validation'
+import { Handler } from '../_services/api-helpers/types'
+import { getSequelize } from '../_services/db'
+import { assertPathParamsExist } from '../_services/validation'
 
-export const projectSpeciesAllController: Controller<ProjectSpeciesAllResponse, ProjectSpeciesAllParams> = async (req) => {
+export const projectSpeciesAllHandler: Handler<ProjectSpeciesAllResponse, ProjectSpeciesAllParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  assertParamsExist({ projectId })
+  assertPathParamsExist({ projectId })
 
   // Query
-  const response: ProjectSpeciesAllResponse = await getProjectSpeciesAll()
+  const response: ProjectSpeciesAllResponse = await getProjectSpeciesAll(Number(projectId))
 
   // Response
   return response
 }
 
-export async function getProjectSpeciesAll (): Promise<ProjectSpeciesAllResponse> {
-  return {
-    species: rawSpecies.map(({ speciesId, speciesSlug, scientificName, commonName, taxon }) =>
-      ({ speciesId, speciesSlug, scientificName, commonName, taxon }))
-  }
+export async function getProjectSpeciesAll (projectId: number): Promise<ProjectSpeciesAllResponse> {
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
+
+  const species = await models.SpeciesInProject.findAll({
+    where: { locationProjectId: projectId },
+    attributes: ATTRIBUTES_SPECIES_IN_PROJECT.light,
+    order: [['scientificName', 'ASC']]
+  })
+
+  return { species }
 }

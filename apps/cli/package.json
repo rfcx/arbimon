@@ -6,21 +6,24 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\"",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
+    "db-migrate": "pnpm serve lib/db/migrate",
+    "db-reset": "pnpm clean && pnpm serve lib/db/reset",
+    "db-rms": "pnpm serve lib/db/reset-migrate-seed",
+    "db-rms-integration": "pnpm serve lib/db/reset-migrate-seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock",
+    "db-seed": "pnpm serve lib/db/seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock,05-user-data-mock",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
-    "serve": "cross-env TS_NODE_PROJECT=\"tsconfig.build.json\" node --experimental-specifier-resolution=node --loader ./loader.js",
-    "test": "vitest --run --passWithNoTests",
-    "test-coverage": "vitest --run --coverage --passWithNoTests"
-  },
-  "active-issues": {
-    "sequelize": "6.12.0 breaks build - https://github.com/sequelize/sequelize/issues/13791"
+    "serve": "pnpm build && node --experimental-specifier-resolution=node",
+    "test-unit": "vitest --run --passWithNoTests .unit.test.",
+    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
-    "@rfcx-bio/common": "workspace:*",
+    "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
@@ -28,12 +31,14 @@
     "mysql2": "^2.3.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "6.12.0-beta.3",
+    "sequelize": "7.0.0-alpha.5",
     "umzug": "^3.0.0"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.19",
-    "@types/validator": "^13.7.0"
+    "@types/object-hash": "^2.2.1",
+    "@types/validator": "^13.7.0",
+    "object-hash": "^3.0.0"
   },
   "description": "Biodiversity CLI",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",

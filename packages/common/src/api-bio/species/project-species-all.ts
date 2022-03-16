@@ -1,4 +1,4 @@
-import { SpeciesLight } from './common'
+import { SpeciesInProjectLight } from '../../dao/types/species-in-project'
 
 // Request
 export interface ProjectSpeciesAllParams {
@@ -11,6 +11,7 @@ export const projectSpeciesAllGeneratedUrl = (params: ProjectSpeciesAllParams): 
   `/projects/${params.projectId}/species`
 
 // Response
+
 export interface ProjectSpeciesAllResponse {
-  species: SpeciesLight[]
+  species: SpeciesInProjectLight[]
 }

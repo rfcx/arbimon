@@ -1,5 +1,4 @@
-import { ActivityOverviewDataBySite, ActivityOverviewDataBySpecies, ActivityOverviewDataByTime } from '../../api-bio/activity/common'
-import { Site } from '../common/sites'
+import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '../../api-bio/activity/common'
 
 // Request
 export interface ActivityDatasetParams {
@@ -12,8 +11,11 @@ export const activityDatasetGeneratedUrl = (params: ActivityDatasetParams): stri
 
 // Response
 export interface ActivityDatasetResponse {
-  overviewBySite: ActivityOverviewDataBySite
-  overviewByTime: ActivityOverviewDataByTime
-  overviewBySpecies: ActivityOverviewDataBySpecies[]
-  sites: Site[]
+  isLocationRedacted: boolean
+  detectionsBySite: ActivityOverviewDetectionDataBySite
+  detectionsBySpecies: ActivityOverviewDataBySpecies[]
+  detectionsByTimeHour: ActivityOverviewDetectionDataByTime
+  detectionsByTimeDay: ActivityOverviewDetectionDataByTime
+  detectionsByTimeMonth: ActivityOverviewDetectionDataByTime
+  detectionsByTimeDate: ActivityOverviewDetectionDataByTime
 }

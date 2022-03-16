@@ -1,0 +1,132 @@
+name: 'Notify: Send'
+on:
+  workflow_call:
+    inputs:
+      branch-name:
+        description: Branch name
+        type: string
+        required: true
+      workflow-id:
+        description: Workflow ID (e.g. build.yml)
+        type: string
+        required: true
+      previous-run-id:
+        description: Previous workflow run ID
+        type: string
+        required: true
+      status:
+        description: Current workflow status
+        type: string
+        required: true
+      notification-title:
+        description: Title in the notification
+        type: string
+        required: true
+      notification-footer:
+        description: Footer in the notification
+        type: string
+        required: false
+    secrets:
+      slack-webhook:
+        description: Slack Webhook URL
+        required: true
+      github-token:
+        description: GitHub Token
+        required: true
+jobs:
+  send:
+    runs-on: ubuntu-20.04
+    steps:
+      # -------------------------------------------------- #
+      # ALWAYS RUNS                                        #
+      # -------------------------------------------------- #
+
+      - name: 'Notify: Get conclusion of previous run'
+        id: latest_run_conclusion
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        if: always()
+        with:
+          # https://docs.github.com/en/rest/reference/actions#get-a-workflow-run
+          route: GET /repos/{owner}/{repo}/actions/runs/{run_id}
+          owner: rfcx
+          repo: biodiversity-analytics
+          run_id: ${{ inputs.previous-run-id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+
+      - name: 'Notify: Log conclusion of previous run'
+        if: always()
+        run: 'echo ${{ fromJson(steps.latest_run_conclusion.outputs.data).conclusion }}'
+
+      - name: 'Notify: Get data of latest successful run'
+        id: latest_success
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        with:
+          # https://docs.github.com/en/rest/reference/actions#list-workflow-runs
+          route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
+          owner: rfcx
+          repo: biodiversity-analytics
+          workflow_id: ${{ inputs.workflow-id }}
+          per_page: 1
+          branch: ${{ inputs.branch-name }}
+          status: success
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+
+      - name: 'Notify: Log date of latest successful run'
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        run: 'echo ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }}'
+
+      - name: 'Notify: Get Slack User'
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        if: always()
+        with:
+          key: '${{ github.event.sender.login }}'
+          map: |
+            {
+              "charles-allen": { "SLACK_MENTION_USERS": "U6LT2N3SS" },
+              "Nutto55": { "SLACK_MENTION_USERS": "UC2NVRCAY" },
+              "naluinui": { "SLACK_MENTION_USERS": "U19GA1FT2" },
+              "antonyharfield": { "SLACK_MENTION_USERS": "U09HZUDUY" },
+              "Crave-dev": { "SLACK_MENTION_USERS": "U02NUJCUV99" },
+              ".*": { "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99" }
+            }
+
+      - name: 'Notify: Get Commit Title'
+        id: git-meta
+        run: |
+          echo "::set-output name=commit-title::`git show -s --format='%s'`"
+
+      - name: 'Notify: Slack Failed'
+        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+        # Notify failure if previous run was not also a failure
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'failure'
+        with:
+          notify_when: 'failure,warning'
+          status: ${{ inputs.status }}
+          notification_title: '❌ ${{ inputs.notification-title }} <{repo_url}/tree/${{ inputs.branch-name }}|${{ inputs.branch-name }}>'
+          message_format: '*FAILED* @ <{run_url}|${{ steps.git-meta.outputs.commit-title }}>'
+          footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }}'
+          mention_users_when: 'failure,warnings'
+          mention_users: ${{ env.SLACK_MENTION_USERS }}
+        env:
+          SLACK_WEBHOOK_URL: '${{ secrets.slack-webhook }}'
+
+      - name: 'Notify: Slack Success'
+        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
+        # Notify success if previous run was not also a success
+        if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        with:
+          notify_when: 'success'
+          status: ${{ inputs.status }}
+          notification_title: '✅ ${{ inputs.notification-title }} <{repo_url}/tree/${{ inputs.branch-name }}|${{ inputs.branch-name }}>'
+          message_format: '*SUCCESS* @ <{run_url}|${{ steps.git-meta.outputs.commit-title }}> - ${{ github.event.head_commit.author.name }} fixed the build!! (broken since ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }})'
+          footer: ${{ inputs.notification-footer }}
+        env:
+          SLACK_WEBHOOK_URL: '${{ secrets.slack-webhook }}'

@@ -3,7 +3,7 @@ import VueGtag from 'vue-gtag'
 
 import appComponent from '@/_layout'
 import { ANALYTICS_CONFIGS } from '~/analytics'
-import { useAuthClient } from '~/auth'
+import { useAuthClient } from '~/auth-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
 import router, { ROUTE_NAMES } from '~/router'
 import { pinia, useStore } from '~/store'

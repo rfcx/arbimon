@@ -1,19 +1,25 @@
 import { Vue } from 'vue-class-component'
-import { Emit, Prop } from 'vue-property-decorator'
+import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '~/api/taxonomy-service'
+import { TaxonClass } from '@rfcx-bio/common/dao/types'
+
 import { FilterPropertyEquals } from '~/filters'
+import { BiodiversityStore } from '~/store'
 
 export default class FilterTaxon extends Vue {
-  @Prop({ default: [] }) initialTaxonClasses!: string[]
+  @Inject() readonly store!: BiodiversityStore
+  @Prop({ default: [] }) initialTaxonClasses!: number[]
 
   @Emit() emitSelectedTaxons (): FilterPropertyEquals[] {
     if (this.selectedTaxons.length === this.taxons.length) return [] // select all === no filter
     return this.selectedTaxons.map(i => { return { propertyName: 'taxon', value: i } })
   }
 
-  selectedTaxons: string[] = []
-  taxons = TAXONOMY_CLASSES
+  selectedTaxons: number[] = []
+
+  get taxons (): TaxonClass[] {
+    return this.store.projectFilters?.taxonClasses ?? []
+  }
 
   get isSelectedAllTaxons (): boolean {
     return this.selectedTaxons.length === 0 || this.selectedTaxons.length === this.taxons.length
@@ -25,14 +31,14 @@ export default class FilterTaxon extends Vue {
     }
   }
 
-  isSelectedTaxon (taxon: string): boolean {
-    return this.selectedTaxons.includes(taxon)
+  isSelectedTaxon (taxonId: number): boolean {
+    return this.selectedTaxons.includes(taxonId)
   }
 
-  updateSelectedTaxons (taxon: string): void {
-    const taxonIdx = this.selectedTaxons.findIndex(t => t === taxon)
+  updateSelectedTaxons (taxonId: number): void {
+    const taxonIdx = this.selectedTaxons.findIndex(t => t === taxonId)
     if (taxonIdx === -1) {
-      this.selectedTaxons.push(taxon)
+      this.selectedTaxons.push(taxonId)
     } else {
       this.selectedTaxons.splice(taxonIdx, 1)
     }

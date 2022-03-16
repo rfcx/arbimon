@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-import { useAuthClient } from '~/auth'
+import { useAuthClient } from '~/auth-client'
 
 const axiosClient = axios.create({
   timeout: 30 * 1000 // 30 secs

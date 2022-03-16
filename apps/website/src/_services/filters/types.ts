@@ -1,12 +1,12 @@
 import { Dayjs } from 'dayjs'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { Site } from '@rfcx-bio/common/dao/types'
 
 export type FilterableProperty = 'taxon' | 'species'
 
 export interface FilterPropertyEquals {
   propertyName: FilterableProperty
-  value: string
+  value: string | number
 }
 
 export interface SiteGroup {
