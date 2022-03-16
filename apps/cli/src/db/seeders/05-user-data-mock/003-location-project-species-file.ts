@@ -6,6 +6,7 @@ import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/loc
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { LocationProjectSpeciesFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
 
+import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 import { requireEnv } from '~/env'
 import { BioEnvironment } from '~/env/types'
 import { rawFilenames } from '../_data/location-project-species-file'
@@ -25,22 +26,24 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const sequelize = params.context.sequelize
 
   // Lookups
+  const puertoRicoProjectId = await getPuertoRicoProjectId(sequelize)
+  if (Number.isNaN(puertoRicoProjectId)) return
+
   const species = await TaxonSpeciesModel(sequelize).findAll({ raw: true })
 
   // Convert data
-  const locationProjectId = 1
   const files: LocationProjectSpeciesFile[] = species
     .flatMap(s => rawFilenames
       .filter(filename => filename.startsWith(s.slug))
       .map((filename, order) => ({
-        locationProjectId,
+        locationProjectId: puertoRicoProjectId,
         taxonSpeciesId: s.id,
         description: `Predicted Occupancy Map for ${s.scientificName}`,
         order,
         filename,
         mimeType: 'image/png',
         url: `${baseUrl}${speciesPredictionOccupancyGeneratedUrl({
-          projectId: locationProjectId.toString(),
+          projectId: puertoRicoProjectId.toString(),
           speciesSlug: s.slug,
           filenameWithoutExtension: filename.slice(0, filename.lastIndexOf('.')) ?? filename
         })}`

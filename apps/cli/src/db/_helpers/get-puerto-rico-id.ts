@@ -13,16 +13,16 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
  */
 export const getPuertoRicoProjectId = async (sequelize: Sequelize): Promise<number> => {
   // Find PR project slug
-  const prSlug = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
+  const puertoRicoSlug = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
     .find(p => p.slug.startsWith('puerto'))
     ?.slug ?? 'puerto-rico'
 
   // Lookup PR project ID
-  const prProject = await LocationProjectModel(sequelize)
+  const puertoRicoProject = await LocationProjectModel(sequelize)
     .findOne({
-      where: { slug: prSlug },
+      where: { slug: puertoRicoSlug },
       attributes: ['id']
     })
 
-  return prProject?.id ?? NaN
+  return puertoRicoProject?.id ?? NaN
 }
