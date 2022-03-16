@@ -3,7 +3,17 @@ import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { dropTables, execMigrations } from './actions'
 import { getSequelize } from './connections'
 
+const DEFAULT_LOCAL_SEEDER_PATHS = [
+  '01-master-data',
+  '02-integration-test-data',
+  '03-external-data-mock',
+  '05-user-data-mock'
+].join(',')
+
 const verbose = process.argv.some(arg => arg === '--verbose')
+const seederPaths = process.argv
+  .find(arg => arg.startsWith('--path='))
+  ?.split('=')[1] ?? DEFAULT_LOCAL_SEEDER_PATHS
 
 const main = async (): Promise<void> => {
   // Setup
@@ -13,10 +23,9 @@ const main = async (): Promise<void> => {
   // Reset, migrate, seed, refresh mviews
   await dropTables(sequelize1)
   await execMigrations(sequelize1, verbose)
-  await execSeeders(sequelize2, '01-master-data', verbose)
-  await execSeeders(sequelize2, '02-integration-test-data', verbose)
-  await execSeeders(sequelize2, '03-external-data-mock', verbose)
-  await execSeeders(sequelize2, '05-user-data-mock', verbose)
+  for (const seederPath of seederPaths.split(',')) {
+    await execSeeders(sequelize2, seederPath, verbose)
+  }
   await refreshMviews(sequelize2)
 
   // Teardown
