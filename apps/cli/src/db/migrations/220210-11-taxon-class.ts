@@ -15,8 +15,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // PK
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+        primaryKey: true
       },
       // Logging
       created_at: {

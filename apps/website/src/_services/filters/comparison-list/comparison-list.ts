@@ -1,7 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { TAXONOMY_CLASSES } from '@rfcx-bio/common/mock-data/raw-taxon-classes'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { BiodiversityStore } from '~/store'
@@ -44,6 +43,12 @@ export default class ComparisonListComponent extends Vue {
 
   override mounted (): void {
     this.emitSelect()
+    if (this.store.projectFilters?.dateStartInclusiveUtc && this.store.projectFilters?.dateEndInclusiveUtc) {
+      this.filters = [new FilterImpl(
+        dayjs(this.store.projectFilters?.dateStartInclusiveUtc),
+        dayjs(this.store.projectFilters?.dateEndInclusiveUtc)
+      )]
+    }
   }
 
   addFilterConfig (): void {
@@ -69,7 +74,7 @@ export default class ComparisonListComponent extends Vue {
   getOptionalFilterText (idx: number): string {
     const otherFilters = this.filters[idx].otherFilters
     if (otherFilters.length === 0) return 'All taxon'
-    if (otherFilters.length === 1) return `${otherFilters[0].propertyName}: ${TAXONOMY_CLASSES.find(({ id }) => id === otherFilters[0].value)?.name ?? ''}`
+    if (otherFilters.length === 1) return `${otherFilters[0].propertyName}: ${this.store.projectFilters?.taxonClasses?.find(tc => tc.id === otherFilters[0].value)?.commonName ?? ''}`
     return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
 
     // TODO: 268 Show full information of filter when the user hovers over the comparison box

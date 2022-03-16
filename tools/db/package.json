@@ -8,7 +8,9 @@
     "logs": "docker compose logs timescaledb",
     "reset": "docker compose down && docker volume rm db_data-timescaledb",
     "serve": "docker compose up -d",
-    "stop": "docker compose down"
+    "stop": "docker compose down",
+    "serve-test": "docker compose -f docker-compose.test.yaml up -d --quiet-pull && docker compose exec -T -e PGPASSWORD=test timescaledb-test pg_isready",
+    "stop-test": "docker compose -f docker-compose.test.yaml down"
   },
   "description": "Biodiversity DB",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",

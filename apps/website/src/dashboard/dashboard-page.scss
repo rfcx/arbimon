@@ -8,7 +8,7 @@ $sc-xl: 1280px;
   grid-auto-rows: auto;
   grid-gap: 1rem;
   grid-template-areas:
-    "metric  metric  metric  ....... species"
+    "metric  metric  metric  metric species"
     "graphic graphic graphic graphic species"
     "content content content content species";
   grid-template-columns: 1fr 1fr 1fr 1fr minmax(300px, 1fr);

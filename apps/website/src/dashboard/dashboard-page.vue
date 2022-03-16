@@ -92,10 +92,6 @@
         />
       </div>
     </div>
-    <p class="text-center opacity-50">
-      <!-- TODO: Update after have api -->
-      Last generated/synced at: December 28, 2021 03:00PM (UTC)
-    </p>
   </div>
 </template>
 <script src="./dashboard-page" lang="ts"></script>

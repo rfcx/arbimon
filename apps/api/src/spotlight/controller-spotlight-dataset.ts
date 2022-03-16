@@ -9,12 +9,12 @@ import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { Handler } from '../_services/api-helpers/types'
+import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
-import { BioInvalidQueryParamError, BioNotFoundError } from '../_services/errors'
-import { FilterDataset } from '../_services/mock-helper'
+import { BioInvalidPathParamError, BioInvalidQueryParamError, BioNotFoundError } from '../_services/errors'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
-import { isProtectedSpecies } from '../_services/security/location-redacted'
+import { isProtectedSpecies } from '../_services/security/protected-species'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 
@@ -22,6 +22,9 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   // Inputs & validation
   const { projectId } = req.params
   assertPathParamsExist({ projectId })
+
+  const projectIdInteger = parseInt(projectId)
+  if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
   const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
   const speciesId = Number(speciesIdString)
@@ -32,18 +35,19 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   const hasProjectPermission = isProjectMember(req)
 
   // Query
-  const convertedQuery = {
+  const datasetFilter: FilterDataset = {
+    locationProjectId: projectIdInteger,
     startDateUtcInclusive,
     endDateUtcInclusive,
     // TODO ???: Better way to check query type!
     siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
-    taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
+    taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
   }
 
-  return await getSpotlightDatasetInformation(Number(projectId), { ...convertedQuery }, speciesId, hasProjectPermission)
+  return await getSpotlightDatasetInformation(datasetFilter, speciesId, hasProjectPermission)
 }
 
-async function getSpotlightDatasetInformation (projectId: number, filter: FilterDataset, speciesId: number, hasProjectPermission: boolean): Promise<SpotlightDatasetResponse> {
+async function getSpotlightDatasetInformation (filter: FilterDataset, speciesId: number, hasProjectPermission: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -53,15 +57,20 @@ async function getSpotlightDatasetInformation (projectId: number, filter: Filter
   })
   if (!species) throw BioNotFoundError()
 
-  const speciesIucn = await models.TaxonSpeciesIucn.findOne({
-    where: { taxonSpeciesId: speciesId },
-    raw: true
-  })
-  const isLocationRedacted = hasProjectPermission ? false : await isProtectedSpecies(speciesIucn?.riskRatingIucnId ?? -1)
+  const { locationProjectId } = filter
+
+  const speciesIucn = await models.SpeciesInProject
+    .findOne({
+      where: { locationProjectId, taxonSpeciesId: speciesId },
+      attributes: ['riskRatingId'],
+      raw: true
+    })
+
+  const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !hasProjectPermission
 
   // Filtering
-  const totalDetections = await filterDetecions(models, projectId, filter)
-  const specificSpeciesDetections = await filterSpeciesDetection(models, projectId, filter, speciesId)
+  const totalDetections = await filterDetecions(models, locationProjectId, filter)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, locationProjectId, filter, speciesId)
 
   // Metrics
   const totalRecordingCount = getRecordingCount(totalDetections)

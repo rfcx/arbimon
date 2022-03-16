@@ -9,12 +9,12 @@ import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repositor
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { BioInvalidQueryParamError } from '~/errors'
-import { PROTECTED_RISK_RATING_IDS } from '~/security/location-redacted'
+import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
+import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
+import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 import { getSequelize } from '../_services/db'
-import { FilterDataset } from '../_services/mock-helper'
 import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
@@ -24,35 +24,41 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
   const { projectId } = req.params
   assertPathParamsExist({ projectId })
 
+  const projectIdInteger = parseInt(projectId)
+  if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
+
   const { startDate, endDate, siteIds, taxons } = req.query
   if (!isValidDate(startDate)) throw BioInvalidQueryParamError({ startDate })
   if (!isValidDate(endDate)) throw BioInvalidQueryParamError({ endDate })
 
   // Query
-  const convertedQuery: FilterDataset = {
+  const datasetFilter: FilterDataset = {
+    locationProjectId: projectIdInteger,
     startDateUtcInclusive: startDate,
     endDateUtcInclusive: endDate,
     // TODO ???: Better way to check query type!
     siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
-    taxons: Array.isArray(taxons) ? taxons : typeof taxons === 'string' ? [taxons] : []
+    taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
   }
 
   const hasProjectPermission = isProjectMember(req)
 
   // Response
-  return await getActivityOverviewData(Number(projectId), { ...convertedQuery }, hasProjectPermission)
+  return await getActivityOverviewData(datasetFilter, hasProjectPermission)
 }
 
-const getActivityOverviewData = async (projectId: number, filter: FilterDataset, hasProjectPermission: boolean): Promise<ActivityDatasetResponse> => {
+const getActivityOverviewData = async (filter: FilterDataset, hasProjectPermission: boolean): Promise<ActivityDatasetResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
+  const { locationProjectId } = filter
+
   // Filtering
-  const totalDetections = await filterDetecions(models, projectId, filter)
+  const totalDetections = await filterDetecions(models, locationProjectId, filter)
   const totalRecordingCount = getRecordingDurationMinutes(totalDetections)
 
   const detectionsBySite = await getDetectionDataBySite(models, totalDetections)
-  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission)
+  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission, locationProjectId)
   const detectionsByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingCount)
   const detectionsByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingCount)
   const detectionsByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingCount)
@@ -149,13 +155,14 @@ const getDetectionDataBySite = async (models: AllModels, detections: DetectionBy
   return summariesBySites
 }
 
-async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean): Promise<ActivityOverviewDataBySpecies[]> {
+async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
   const totalRecordingCount = getRecordingDurationMinutes(detections)
   let filteredDetections = detections
+
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
   if (!hasProjectPermission) {
-    const protectedSpecies = await models.TaxonSpeciesIucn.findAll({
-      where: { riskRatingIucnId: PROTECTED_RISK_RATING_IDS },
+    const protectedSpecies = await models.SpeciesInProject.findAll({
+      where: { locationProjectId, riskRatingId: RISK_RATING_PROTECTED_IDS }, // TODO: Add `is_protected` column in the DB
       raw: true
     })
 

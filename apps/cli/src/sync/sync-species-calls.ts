@@ -4,7 +4,7 @@ import { wait } from '@rfcx-bio/utils/async'
 import { getSequelize } from '@/db/connections'
 import { syncProjectSpeciesCall } from './species-call'
 
-async function main (): Promise<void> {
+const main = async (): Promise<void> => {
   const sequelize = getSequelize()
   console.info('SYNCING: all project detections')
   try {

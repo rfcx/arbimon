@@ -2,6 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
+import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
@@ -30,14 +31,14 @@ import { richnessService } from './services'
 export default class SpeciesRichnessPage extends Vue {
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ColoredFilter[] = []
-  detectionCounts: number[] = []
   speciesByClassDatasets: GroupedBarChartItem[] = []
   speciesByLocationDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
+  speciesByExports: RichnessByExportReportRow[][] = []
   detectedSpecies: DetectedSpeciesItem[] = []
 
   get haveData (): boolean {
-    return this.detectionCounts.length > 0 && this.detectionCounts.some(count => count > 0)
+    return this.speciesByClassDatasets.length > 0
   }
 
   @Watch('$route')
@@ -63,10 +64,22 @@ export default class SpeciesRichnessPage extends Vue {
     )).filter(isDefined)
 
     this.colors = datasets.map(ds => ds.color)
-    this.detectionCounts = datasets.map(ds => ds.data.detectionCount)
     this.speciesByClassDatasets = getBarChartDataset(datasets)
     this.speciesByLocationDatasets = getMapDataset(datasets)
-    this.speciesByTimeDatasets = datasets.map(({ color, data }) => ({ color, data: data.speciesByTime }))
+    this.speciesByTimeDatasets = datasets
+      .map(({ color, data }) => {
+        const { richnessByTimeHourOfDay, richnessByTimeDayOfWeek, richnessByTimeMonthOfYear, richnessByTimeUnix } = data
+        return {
+          color,
+          data: {
+            hourOfDay: richnessByTimeHourOfDay,
+            dayOfWeek: richnessByTimeDayOfWeek,
+            monthOfYear: richnessByTimeMonthOfYear,
+            dateSeries: richnessByTimeUnix
+          }
+        }
+      })
     this.detectedSpecies = getTableData(datasets)
+    this.speciesByExports = datasets.map(({ data }) => data.richnessExport)
   }
 }
