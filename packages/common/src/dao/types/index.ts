@@ -1,4 +1,4 @@
-export * from './datasource'
+export * from './data-source'
 export * from './detection-by-site-species-hour'
 export * from './location-project'
 export * from './location-project-profile'
