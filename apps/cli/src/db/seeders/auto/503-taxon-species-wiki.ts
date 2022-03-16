@@ -11,7 +11,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
 
-  // PK Lookups
+  // Lookups
   const speciesSlugToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.slug, s.id])))
 
