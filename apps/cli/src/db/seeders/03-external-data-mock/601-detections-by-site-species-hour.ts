@@ -17,13 +17,13 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const sequelize = params.context.sequelize
 
   // Lookups
-  const [puertoRicoId, classes, species, sites] = await Promise.all([
+  const [puertoRicoProjectId, classes, species, sites] = await Promise.all([
     getPuertoRicoProjectId(sequelize),
     TaxonClassModel(sequelize).findAll(),
     TaxonSpeciesModel(sequelize).findAll(),
     LocationSiteModel(sequelize).findAll()
   ])
-  if (Number.isNaN(puertoRicoId)) return
+  if (Number.isNaN(puertoRicoProjectId)) return
 
   const classArbimonToBio: Record<number, number> = Object.fromEntries(classes.map(c => [c.idArbimon, c.id]))
   const speciesArbimonToBio: Record<number, number> = Object.fromEntries(species.map(s => [s.idArbimon, s.id]))
@@ -42,7 +42,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: classArbimonToBio[d.taxon_id] ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id] ?? -1, // TODO: Throw error
-      locationProjectId: puertoRicoId,
+      locationProjectId: puertoRicoProjectId,
       locationSiteId: siteArbimonToBio[d.arbimon_site_id] ?? -1, // TODO: Throw error
       count: d.num_of_recordings,
       durationMinutes: 12

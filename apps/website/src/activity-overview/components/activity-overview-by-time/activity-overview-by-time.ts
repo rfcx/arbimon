@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash-es'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
@@ -70,7 +69,8 @@ export default class ActivityOverviewByTime extends Vue {
   }
 
   get hasData (): boolean {
-    return this.datasetsForSelectedBucket.some(({ data }) => !isEmpty(data))
+    return this.datasetsForSelectedBucket
+      .some(ds => Object.values(ds.data).some(val => val > 0))
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {

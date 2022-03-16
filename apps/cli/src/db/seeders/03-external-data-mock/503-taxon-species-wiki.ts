@@ -17,7 +17,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   // Convert data
   const data: TaxonSpeciesWiki[] =
-    rawSpecies.map(({ speciesSlug, thumbnailImageUrl, imageCaption, information }) => {
+    rawSpecies.map(({ speciesSlug, information }) => {
       const info = information.find(i => i.sourceType === SPECIES_SOURCE_WIKI)
 
       return {

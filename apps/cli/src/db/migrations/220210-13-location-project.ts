@@ -30,23 +30,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // SKs
       id_core: {
         type: DataTypes.STRING(12),
-        allowNull: false,
-        unique: true
+        allowNull: false
+        // unique: true
       },
       id_arbimon: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
+        allowNull: false
+        // unique: true
       },
       slug: {
         type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
+        allowNull: false
+        // unique: true
       },
       slug_arbimon: {
         type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
+        allowNull: false
+        // unique: true
       },
       // Facts
       is_published: {
