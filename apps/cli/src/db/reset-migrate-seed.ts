@@ -14,7 +14,9 @@ const main = async (): Promise<void> => {
   await dropTables(sequelize1)
   await execMigrations(sequelize1, verbose)
   await execSeeders(sequelize2, '01-master-data', verbose)
-  await execSeeders(sequelize2, 'auto', verbose)
+  await execSeeders(sequelize2, '02-integration-test-data', verbose)
+  await execSeeders(sequelize2, '03-external-data-mock', verbose)
+  await execSeeders(sequelize2, '05-user-data-mock', verbose)
   await refreshMviews(sequelize2)
 
   // Teardown
