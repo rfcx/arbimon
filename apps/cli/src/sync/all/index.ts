@@ -10,7 +10,26 @@ import { getArbimonSites } from '@/data-ingest/sites/arbimon'
 import { writeSitesToPostgres } from '@/data-ingest/sites/db'
 import { getArbimonSpecies } from '@/data-ingest/species/arbimon'
 import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/db/taxon-species'
+import { getNeedSyncingProjects } from '@/sync/data-source'
 import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call/index'
+import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
+import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
+
+export const incrementalSync = async (sequelize: Sequelize): Promise<void> => {
+  console.info('STEP: Get project lookups')
+  const syncingProjects = await getNeedSyncingProjects(sequelize)
+
+  console.info('STEP: Sync site, species, and detections')
+  for (const project of syncingProjects) {
+    await syncAllForProject(sequelize, project)
+  }
+
+  console.info('STEP: Sync missing Wiki species')
+  await syncOnlyMissingWikiSpeciesInfo(sequelize)
+
+  console.info('STEP: Sync missing IUCN species')
+  await syncOnlyMissingIUCNSpeciesInfo(sequelize)
+}
 
 export const syncAllForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
   console.info(`- site, species, detections: ${project.slug}`)

@@ -16,21 +16,26 @@ const seederPaths = process.argv
   ?.split('=')[1] ?? DEFAULT_LOCAL_SEEDER_PATHS
 
 const main = async (): Promise<void> => {
-  // Setup
-  const sequelize1 = getSequelize(verbose)
-  const sequelize2 = getSequelize(verbose) // Seeders uses a different Umzug (which seems to require a fresh Sequelize instance)
+  try {
+    // Setup
+    const sequelize1 = getSequelize(verbose)
+    const sequelize2 = getSequelize(verbose) // Seeders uses a different Umzug (which seems to require a fresh Sequelize instance)
 
-  // Reset, migrate, seed, refresh mviews
-  await dropTables(sequelize1)
-  await execMigrations(sequelize1, verbose)
-  for (const seederPath of seederPaths.split(',')) {
-    await execSeeders(sequelize2, seederPath, verbose)
+    // Reset, migrate, seed, refresh mviews
+    await dropTables(sequelize1)
+    await execMigrations(sequelize1, verbose)
+    for (const seederPath of seederPaths.split(',')) {
+      await execSeeders(sequelize2, seederPath, verbose)
+    }
+    await refreshMviews(sequelize2)
+
+    // Teardown
+    await sequelize1.close()
+    await sequelize2.close()
+  } catch (err: any) {
+    console.error(err.message)
+    process.exitCode = 1
   }
-  await refreshMviews(sequelize2)
-
-  // Teardown
-  await sequelize1.close()
-  await sequelize2.close()
 }
 
 await main()
