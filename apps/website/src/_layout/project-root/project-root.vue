@@ -7,6 +7,7 @@
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
       <router-view v-if="store.selectedProject" />
       <invalid-project-component v-else />
+      <last-sync :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null" />
     </div>
   </div>
 </template>
