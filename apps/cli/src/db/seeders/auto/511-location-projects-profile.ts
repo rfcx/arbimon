@@ -1,6 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 import { LocationProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
 import { LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
@@ -12,9 +13,14 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
 
+  // Lookups
+  const projectSlugToId: Record<string, number> = await LocationProjectModel(sequelize)
+    .findAll()
+    .then(allProjects => Object.fromEntries(allProjects.map(s => [s.slug, s.id])))
+
   const projectsProfile: LocationProjectProfile[] = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
-    .map(({ id, summary, readme }) => ({
-      locationProjectId: id,
+    .map(({ slug, summary, readme }) => ({
+      locationProjectId: projectSlugToId[slug],
       summary,
       readme
     }))
