@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-sync-daily
   namespace: testing
 spec:
-  # Daily at 03:37 UTC
-  schedule: '37 3 * * *'
+  # Daily at 03:17 UTC
+  schedule: '17 3 * * *'
   jobTemplate:
     spec:
       template:
