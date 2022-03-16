@@ -22,7 +22,7 @@ export const DashboardSpeciesThreatenedModel = defineWithDefaults<DashboardSpeci
     // Dimensions
     taxonClassSlug: DataTypes.STRING(255),
     taxonSpeciesSlug: DataTypes.STRING(255),
-    riskRatingIucnId: DataTypes.INTEGER,
+    riskRatingId: DataTypes.INTEGER,
 
     // Facts
     scientificName: DataTypes.STRING(255),

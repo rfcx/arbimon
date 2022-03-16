@@ -19,7 +19,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            sip.taxon_species_slug,
            sip.scientific_name,
            sip.common_name,
-           sip.risk_rating_iucn_id,
+           sip.risk_rating_id,
            sip.photo_url
     FROM species_in_project sip
             INNER JOIN location_project_species ps on sip.taxon_species_id = ps.taxon_species_id

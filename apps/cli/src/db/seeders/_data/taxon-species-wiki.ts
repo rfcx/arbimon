@@ -1,4 +1,4 @@
-import { WikiSummary } from '../../../data-ingest/species/input-wiki'
+import { WikiSummary } from '@/data-ingest/species/wiki'
 
 export const rawWikiData: Record<string, WikiSummary> = {
   'Accipiter striatus venator': {

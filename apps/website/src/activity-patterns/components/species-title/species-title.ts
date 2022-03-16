@@ -3,12 +3,12 @@ import { Prop } from 'vue-property-decorator'
 
 import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import { RiskRatingUi, RISKS_BY_ID } from '~/risk-ratings'
+import { DEFAULT_RISK_RATING_ID, RiskRatingUi, RISKS_BY_ID } from '~/risk-ratings'
 
 export default class SpeciesTitle extends Vue {
-  @Prop() species!: SpeciesInProject | null
+  @Prop() species!: SpeciesInProject
 
-  get riskInformation (): RiskRatingUi | null {
-    return this.species === null ? null : RISKS_BY_ID[this.species?.riskRatingIucnId ?? -1]
+  get riskInformation (): RiskRatingUi {
+    return RISKS_BY_ID[this.species?.riskRatingId ?? DEFAULT_RISK_RATING_ID]
   }
 }

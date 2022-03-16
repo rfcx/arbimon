@@ -1,5 +1,5 @@
 export interface DashboardRichnessByRisk {
   locationProjectId: number
-  riskRatingIucnId: number
+  riskRatingId: number
   count: number
 }

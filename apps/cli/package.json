@@ -9,15 +9,17 @@
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
-    "db-seed": "pnpm serve lib/db/seed -- --path=auto",
+    "db-rms": "pnpm serve lib/db/reset-migrate-seed",
+    "db-rms-integration": "pnpm serve lib/db/reset-migrate-seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock",
+    "db-seed": "pnpm serve lib/db/seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock,05-user-data-mock",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
-    "test": "vitest --run --passWithNoTests",
-    "test-coverage": "vitest --run --coverage --passWithNoTests"
+    "test-unit": "vitest --run --passWithNoTests .unit.test.",
+    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:^0.0.1",
@@ -34,7 +36,9 @@
   },
   "devDependencies": {
     "@types/mysql": "^2.15.19",
-    "@types/validator": "^13.7.0"
+    "@types/object-hash": "^2.2.1",
+    "@types/validator": "^13.7.0",
+    "object-hash": "^3.0.0"
   },
   "description": "Biodiversity CLI",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
