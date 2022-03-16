@@ -15,7 +15,7 @@ import { MigrationFn } from 'umzug'
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
 //   const sequelize = params.context.sequelize
 
-//   // PK Lookups
+//   // Lookups
 //   const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()
 //     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 

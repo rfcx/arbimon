@@ -12,7 +12,7 @@ import { rawWikiData } from '@/db/seeders/_data/taxon-species-wiki'
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
 
-  // PK Lookups
+  // Lookups
   const speciesNameToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
