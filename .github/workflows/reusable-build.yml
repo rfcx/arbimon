@@ -1,0 +1,124 @@
+name: 'Build'
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: Platform to execute on
+        type: string
+        default: ubuntu-latest
+        required: false
+      lint:
+        description: Run linting
+        type: boolean
+        default: true
+        required: false
+      test:
+        description: Run tests
+        type: boolean
+        default: true
+        required: false
+    outputs:
+      build-outcome:
+        description: Build outcome
+        value: ${{ jobs.build.outputs.build-outcome }}
+      lint-outcome:
+        description: Lint outcome
+        value: ${{ jobs.build.outputs.lint-outcome }}
+      test-outcome:
+        description: Test outcome
+        value: ${{ jobs.build.outputs.test-outcome }}
+jobs:
+  build:
+    runs-on: ${{ inputs.runs-on }}
+    outputs:
+      build-outcome: ${{ steps.build.outcome }}
+      lint-outcome: ${{ steps.lint.outcome }}
+      test-outcome: ${{ steps.test.outcome }}
+
+    steps:
+      - name: 'Setup: Node'
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
+        # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
+        with:
+          node-version: '16'
+
+      - name: 'Setup: Git checkout'
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
+        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+
+      - name: 'Cache: Dependencies'
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-${{ runner.os }}
+
+      - name: 'Cache: ESLint'
+        if: ${{ inputs.lint }}
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .eslintcache
+            */*/.eslintcache
+          key: eslint-${{ runner.os }}-${{ github.sha }}
+          restore-keys: eslint-${{ runner.os }}
+
+      - name: 'Cache: Stylelint'
+        if: ${{ inputs.lint }}
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
+        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        with:
+          path: |
+            .stylelintcache
+            */*/.stylelintcache
+          key: stylelint-${{ runner.os }}-${{ github.sha }}
+          restore-keys: stylelint-${{ runner.os }}
+
+      - name: 'Verify: pnpm install'
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        with:
+          version: 6.20.1
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
+
+      - name: 'Verify: Build'
+        id: build
+        run: pnpm ci-build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+
+      - name: 'Verify: Lint'
+        if: ${{ inputs.lint }}
+        id: lint
+        run: pnpm ci-lint
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+
+      - name: 'Verify: Test'
+        if: ${{ inputs.test }}
+        id: test
+        run: pnpm ci-test-unit
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+      
+      - name: 'Verify: Cypress'
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          start: pnpm serve
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+
+      - name: 'Archive: Tar files'
+        run: shopt -s globstar; tar -czvf libs.tar.gz **/lib
+
+      - name: 'Artifact: Upload'
+        uses: actions/upload-artifact@v3
+        with:
+          name: libs
+          retention-days: 1
+          path: libs.tar.gz

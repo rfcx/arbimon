@@ -1,22 +1,31 @@
 import { execSeeders } from '@/db/actions/exec-seeders'
+import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
-const seederPath = process.argv.find(arg => arg.startsWith('--path='))?.split('=')[1]
+const seederPaths = process.argv.find(arg => arg.startsWith('--path='))?.split('=')[1]
 
 const main = async (): Promise<void> => {
   // Validate inputs
-  if (!seederPath) {
+  if (!seederPaths) {
     console.info('Usage: pnpm serve lib/db/seed -- --path=auto')
     console.info('Usage: pnpm serve lib/db/seed -- --path=optional/name-of-seed.ts')
     return
   }
 
-  // Execute
+  // Setup
   const sequelize = getSequelize(verbose)
-  await execSeeders(sequelize, seederPath, verbose)
+
+  // Execute seeders
+  for (const seederPath of seederPaths.split(',')) {
+    await execSeeders(sequelize, seederPath, verbose)
+  }
+
+  // Refresh mviews
+  await refreshMviews(sequelize)
+
+  // Teardown
   await sequelize.close()
 }
 
 await main()
-  .catch(e => console.error(e))

@@ -13,7 +13,7 @@
      TABLE_NAME,
      {
        // PK
-       id_ordered: {
+       id: {
          type: DataTypes.INTEGER,
          primaryKey: true
        },

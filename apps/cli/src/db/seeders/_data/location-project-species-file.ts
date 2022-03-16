@@ -1,4 +1,4 @@
-export const rawFilenames = [
+export const rawFilenames: string[] = [
   'agelaius-xanthomus.png',
   'amazona-vittata.png',
   'antrostomus-noctitherus.png',

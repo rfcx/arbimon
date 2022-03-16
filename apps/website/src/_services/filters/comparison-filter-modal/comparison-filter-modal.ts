@@ -83,7 +83,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   get filtered (): Site[] {
     const prefix = this.inputFilter.toLocaleLowerCase()
-    return this.store.sites
+    return (this.store.projectFilters?.locationSites ?? [])
       .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
   }
 

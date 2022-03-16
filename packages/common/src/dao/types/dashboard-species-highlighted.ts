@@ -3,7 +3,7 @@ export interface DashboardSpeciesHighlighted {
   highlightedOrder: number
   taxonClassSlug: string
   taxonSpeciesSlug: string
-  riskRatingIucnId?: number
+  riskRatingId: number
   scientificName: string
   commonName?: string
   photoUrl?: string
