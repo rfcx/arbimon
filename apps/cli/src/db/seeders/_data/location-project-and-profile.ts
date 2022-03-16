@@ -64,12 +64,20 @@ const dataMadre = {
   readme: ''
 }
 
-type ProjectAndProfile = Project & Omit<LocationProjectProfile, 'locationProjectId'>
+const dataFakeProject = {
+  latitudeNorth: 12,
+  latitudeSouth: 11.9,
+  longitudeEast: -55,
+  longitudeWest: -55.1,
+  summary: 'This is a test project!',
+  readme: 'This is the readme for our test project'
+}
+
+type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
 
 export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
   local: [
     {
-      id: 1,
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,
       slug: 'puerto-rico',
@@ -79,7 +87,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataPr
     },
     {
-      id: 2,
       idCore: 'bci392pan298',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
@@ -89,19 +96,17 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataBci
     },
     {
-      id: 3,
       idCore: 'rbj7k70v4na7',
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       slugArbimon: 'fake-arbimon-project-for-bio',
       isPublished: true,
       name: 'Fake Project',
-      ...dataPr
+      ...dataFakeProject
     }
   ],
   testing: [
     {
-      id: 1,
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,
       slug: 'puerto-rico',
@@ -111,7 +116,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataPr
     },
     {
-      id: 2,
       idCore: 'bci392pan298',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
@@ -121,19 +125,17 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataBci
     },
     {
-      id: 3,
       idCore: 'rbj7k70v4na7',
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       slugArbimon: 'fake-arbimon-project-for-bio',
       isPublished: true,
       name: 'Fake Project',
-      ...dataPr
+      ...dataFakeProject
     }
   ],
   staging: [
     {
-      id: 1,
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,
       slug: 'puerto-rico',
@@ -143,7 +145,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataPr
     },
     {
-      id: 2,
       idCore: 'bci392pan298',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
@@ -155,7 +156,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
   ],
   production: [
     {
-      id: 1,
       idCore: 'n9nrlg45vyf0',
       idArbimon: 1989,
       slug: 'puerto-rico-island-wide',
@@ -165,7 +165,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataPr
     },
     {
-      id: 2,
       idCore: 'xle0i1t9uea4',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
@@ -175,7 +174,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       ...dataBci
     },
     {
-      id: 3,
       idCore: 'kwsda03lllt4',
       idArbimon: 1429,
       slug: 'rfcx-guardians-madre-de-dios-peru',

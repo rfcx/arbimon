@@ -28,6 +28,8 @@ export const dashboardGeneratedHandler: Handler<DashboardGeneratedResponse, Dash
   // Response
   return {
     ...projectMetrics,
+    minDate: projectMetrics.minDate ?? undefined,
+    maxDate: projectMetrics.maxDate ?? undefined,
     speciesThreatenedCount: speciesThreatened.length,
     speciesThreatened,
     richnessByTaxon,

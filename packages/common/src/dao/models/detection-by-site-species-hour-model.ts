@@ -6,11 +6,6 @@ import { DetectionBySiteSpeciesHour } from '../types'
 export const MODEL_DETECTION_BY_SITE_SPECIES_HOUR = <const>'DetectionBySiteSpeciesHour'
 export const TABLE_DETECTION_BY_SITE_SPECIES_HOUR = <const>'detection_by_site_species_hour'
 
-export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR: Record<string, Array<keyof DetectionBySiteSpeciesHour>> = {
-  pks: ['timePrecisionHourLocal', 'locationSiteId', 'taxonSpeciesId'],
-  light: ['locationProjectId', 'taxonClassId', 'count', 'durationMinutes']
-}
-
 export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteSpeciesHour>(
   MODEL_DETECTION_BY_SITE_SPECIES_HOUR,
   {

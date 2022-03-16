@@ -1,0 +1,23 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: biodiversity-cli-sync-incremental
+  namespace: testing
+spec:
+  # every hour
+  schedule: '0 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: biodiversity-cli-sync-db-incremental
+            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/incrementally.js"]
+            image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/testing:latest
+            imagePullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: biodiversity-cli-secrets
+              - configMapRef:
+                  name: biodiversity-cli-config
+          restartPolicy: Never

@@ -22,10 +22,7 @@ export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpec
     // Dimensions
     taxonClassSlug: DataTypes.STRING(255),
     taxonSpeciesSlug: DataTypes.STRING(255),
-    riskRatingIucnId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
+    riskRatingId: DataTypes.INTEGER,
 
     // Facts
     scientificName: DataTypes.STRING(255),

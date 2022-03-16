@@ -17,3 +17,7 @@ export type TaxonSpeciesCallLight = Pick<TaxonSpeciesCall,
   'callMediaWavUrl' |
   'callMediaRedirectUrl'
 >
+
+export const ATTRIBUTES_TAXON_SPECIES_CALL: Record<string, Array<keyof TaxonSpeciesCall>> = {
+  light: ['callType', 'callMediaSpecUrl', 'callMediaWavUrl', 'callMediaRedirectUrl']
+}

@@ -5,6 +5,7 @@
     "rootDir": "src",
     "baseUrl": "src",
     "outDir": "lib",
+    "types": ["vitest/globals"],
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
       "~/*": ["./_services/*"],

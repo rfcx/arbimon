@@ -5,6 +5,7 @@
     "rootDir": "src",
     "baseUrl": "src",
     "outDir": "lib",
+    "types": ["vitest/globals"],
     "paths": {
       "~/*": ["./_services/*"],
       "@/*": ["./*"]
