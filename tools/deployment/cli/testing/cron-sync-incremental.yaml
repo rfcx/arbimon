@@ -5,7 +5,7 @@ metadata:
   namespace: testing
 spec:
   # every hour
-  schedule: '0 * * * *'
+  schedule: '48 * * * *'
   jobTemplate:
     spec:
       template:
