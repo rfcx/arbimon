@@ -10,14 +10,15 @@ import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
 
-  const prId = await getPuertoRicoProjectId(sequelize)
-  if (Number.isNaN(prId)) return
+  // Lookups
+  const puertoRicoProjectId = await getPuertoRicoProjectId(sequelize)
+  if (Number.isNaN(puertoRicoProjectId)) return
 
   // Save mock sites under PR project
   const sites: Array<Optional<Site, 'id'>> = rawSites
     .map(({ id, locationProjectId, ...rest }) => ({
       ...rest,
-      locationProjectId: prId
+      locationProjectId: puertoRicoProjectId
     }))
 
   await LocationSiteModel(sequelize).bulkCreate(sites)

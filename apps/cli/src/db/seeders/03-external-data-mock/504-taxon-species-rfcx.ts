@@ -18,11 +18,15 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   // Convert data
   const data: TaxonSpeciesRfcx[] = Object.entries(taxonSpeciesRfcx)
     .map(([scientificName, data]) => {
-        const taxonSpeciesId = speciesScientificToId[scientificName]
-        return taxonSpeciesId
-          ? { taxonSpeciesId, ...data }
-          : undefined
-      })
+      // Try to find species ID
+      const taxonSpeciesId = speciesScientificToId[scientificName]
+      if (!taxonSpeciesId) return undefined
+
+      return {
+        taxonSpeciesId,
+        ...data
+      }
+    })
     .filter(isDefined)
 
   await TaxonSpeciesRfcxModel(sequelize).bulkCreate(data)

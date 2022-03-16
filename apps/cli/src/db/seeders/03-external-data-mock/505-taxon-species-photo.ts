@@ -17,22 +17,21 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
   // Convert data
-  const data: TaxonSpeciesPhoto[] =
-    Object.entries(rawWikiData)
-      .map(([scientificName, data]) => {
-        return data.thumbnailImage
-          ? {
-            taxonSpeciesId: speciesNameToId[scientificName],
-            source: SOURCES.wiki,
-            photoUrl: data.thumbnailImage,
-            photoCaption: data.title,
-            photoAuthor: data.credit ?? '', // TODO: Review if it allowed in 546
-            photoLicense: data.license ?? '', // TODO: Review if it allowed in 546
-            photoLicenseUrl: data.licenseUrl
-          }
-          : undefined
-        })
-        .filter(isDefined)
+  const data: TaxonSpeciesPhoto[] = Object.entries(rawWikiData)
+    .map(([scientificName, data]) => {
+      if (!data.thumbnailImage) return undefined
+
+      return {
+        taxonSpeciesId: speciesNameToId[scientificName],
+        source: SOURCES.wiki,
+        photoUrl: data.thumbnailImage,
+        photoCaption: data.title,
+        photoAuthor: data.credit ?? '', // TODO: Review if it allowed in 546
+        photoLicense: data.license ?? '', // TODO: Review if it allowed in 546
+        photoLicenseUrl: data.licenseUrl
+      }
+    })
+    .filter(isDefined)
 
   await TaxonSpeciesPhotoModel(sequelize).bulkCreate(data)
 }

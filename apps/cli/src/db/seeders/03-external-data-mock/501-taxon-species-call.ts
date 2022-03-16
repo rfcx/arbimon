@@ -35,7 +35,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
 //       return {
 //         taxonSpeciesId: taxonSpeciesId,
-//         callProjectId: 1,
+//         callProjectId: 1, // TODO: Get the correct Bio Project ID
 //         callSiteId: siteNameToId[siteName],
 //         callType: songType,
 //         callRecordedAt: new Date(recordedAt),
