@@ -1,12 +1,8 @@
-import { MockHourlyDetectionSummary } from '../../mock-data'
+import { DataByTime } from '../common/time-bucket'
 
-export interface DetectionGroupedBySite {
-  [siteId: string]: MockHourlyDetectionSummary[]
-}
-
-export interface ActivityOverviewDataBySite {
-  [siteId: string]: {
-    siteId: string
+export interface ActivityOverviewDetectionDataBySite {
+  [siteId: number]: {
+    siteId: number
     siteName: string
     latitude: number
     longitude: number
@@ -16,11 +12,7 @@ export interface ActivityOverviewDataBySite {
   }
 }
 
-export type ActivityOverviewDataByTime = Record<TimeBucket, ActivityOverviewDataByTimeBucket>
-
-export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear' | 'dateSeries'
-
-export interface ActivityOverviewDataByTimeBucket {
+export interface ActivityOverviewDetectionDataByTime {
   detection: Record<number, number>
   detectionFrequency: Record<number, number>
 }
@@ -34,3 +26,7 @@ export interface ActivityOverviewDataBySpecies {
   occupiedSites: number
   occupancyNaive: number
 }
+
+// ----- Not related to api return item ----
+// ? Moving to somewhere
+export type ActivityOverviewDataByTime = DataByTime<ActivityOverviewDetectionDataByTime>

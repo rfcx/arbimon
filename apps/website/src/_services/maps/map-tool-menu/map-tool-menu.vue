@@ -13,12 +13,12 @@
         }"
         @click="emitMapStyle(item.style)"
       >
-        <div class="<md:hidden">
+        <div class="<lg:hidden">
           {{ item.name }}
         </div>
         <div>
           <img
-            class="md:hidden <md:visible"
+            class="lg:hidden <lg:visible"
             :src="item.icon"
             width="16"
             height="16"
@@ -28,10 +28,10 @@
     </template>
     <button
       class="btn ml-2"
-      :class="{ '<md:(bg-brand-primary btn-icon)': isShowLabels }"
+      :class="{ '<lg:(bg-brand-primary btn-icon)': isShowLabels }"
       @click="emitShowLabelsToggle()"
     >
-      <div class="flex items-center <md:hidden">
+      <div class="flex items-center <lg:hidden">
         <input
           type="checkbox"
           class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
@@ -39,7 +39,7 @@
         >
         Labels
       </div>
-      <div class="md:hidden">
+      <div class="lg:hidden">
         <icon-fas-tag class="text-xs" />
       </div>
     </button>

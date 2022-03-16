@@ -2,13 +2,20 @@
   "extends": "../../tools/configs/tsconfig.base.json",
 
   "compilerOptions": {
+    "rootDir": "src",
     "baseUrl": "src",
     "outDir": "lib",
-    "composite": false,
+    "types": ["vitest/globals"],
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
-      "@rfcx-bio/common/*": ["../../../packages/common/src/*"]
-    }
+      "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
+      "~/*": ["./_services/*"],
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
   },
 
   "include": ["src/**/*.ts"],

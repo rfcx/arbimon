@@ -15,14 +15,16 @@ export async function getCSVDatasetMetadata (filters: ColoredFilter[]): Promise<
 
 export function getDatasetMetadata (filters: ColoredFilter[]): DatasetMetadata[] {
   return filters.map(({ sites, startDate, endDate, otherFilters }, datasetIdx) => {
-    const sitesIds = sites.flatMap(({ value }) => value.flatMap(({ siteId }) => siteId))
-    const taxons = otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
+    const sitesNames = [...new Set(sites.flatMap(group => group.value.map(({ name }) => name)))]
+      .sort((a, b) => a.localeCompare(b))
+    const taxonNames = otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => value)
+
     return {
       name: `Dataset ${datasetIdx + 1}`,
       start: startDate.format(META_DATE_FORMAT),
       end: endDate.format(META_DATE_FORMAT),
-      sites: sitesIds.length > 0 ? sitesIds.join(',') : 'All sites',
-      taxons: taxons.length > 0 ? taxons.join(',') : 'All taxons'
+      sites: sitesNames.length > 0 ? sitesNames.join(',') : 'All sites',
+      taxons: taxonNames.length > 0 ? taxonNames.join(',') : 'All taxons'
     }
   })
 }

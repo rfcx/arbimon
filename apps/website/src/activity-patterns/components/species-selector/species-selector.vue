@@ -3,13 +3,13 @@
     v-model="selectedSpeciesSlug"
     filterable
     :filter-method="onFilterType"
-    :loading="loadingSpecies"
     class="species-input bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    @change="onResetQuery"
   >
     <el-option
       v-for="species in filteredSpecies"
-      :key="'species-selector-' + species.speciesId"
-      :value="species.speciesSlug"
+      :key="'species-selector-' + species.taxonSpeciesId"
+      :value="species.taxonSpeciesSlug"
       class="min-h-12 h-12"
       :label="species.scientificName"
     >

@@ -9,27 +9,26 @@
   >
     <div
       v-for="item in species"
-      :key="'dashboard-highlighted-' + item.speciesId"
+      :key="'dashboard-highlighted-' + item.slug"
       class="flex content-center mb-2"
     >
       <img
         class="min-h-14 h-14 min-w-14 w-14 object-cover mr-2"
-        :src="item.imageUrl"
+        :src="item.photoUrl"
       >
       <router-link
         class="mt-0.5 self-center hover:(text-subtle)"
-        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectId: store.selectedProject?.id, speciesSlug: item.speciesSlug } }"
+        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }"
       >
         <div class="flex items-center">
           <el-tag
-            v-if="item.extinctionRisk"
             class="species-highlights border-none text-xs"
             effect="dark"
             size="mini"
-            :color="item.extinctionRisk.color"
-            :title="item.extinctionRisk.label"
+            :color="item.riskRating.color"
+            :title="item.riskRating.label"
           >
-            {{ item.extinctionRisk.code }}
+            {{ item.riskRating.code }}
           </el-tag>
           <p class="ml-1 italic">
             {{ item.scientificName }}

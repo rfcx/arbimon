@@ -1,6 +1,6 @@
 import { NavigationGuardWithThis } from 'vue-router'
 
-import { useAuthClient } from '~/auth'
+import { useAuthClient } from '~/auth-client'
 
 export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to, from, next) => {
   // Already authenticated

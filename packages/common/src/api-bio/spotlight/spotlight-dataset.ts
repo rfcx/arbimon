@@ -1,28 +1,32 @@
 import { FilterDatasetQuery } from '../common/filter'
-import { ActivitySpotlightDataByExport, ActivitySpotlightDataBySite, ActivitySpotlightDataByTime } from './common'
+import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from './common'
 
 // Request
-export interface spotlightDatasetParams {
+export interface SpotlightDatasetParams {
   projectId: string
 }
 
-export type SpotlightDatasetQuery = FilterDatasetQuery & { speciesId: string }
+export type SpotlightDatasetQuery = FilterDatasetQuery & { speciesId: number }
 
 export const spotlightDatasetRoute = '/projects/:projectId/spotlight'
 
-export const spotlightDatasetUrl = (params: spotlightDatasetParams): string =>
+export const spotlightDatasetUrl = (params: SpotlightDatasetParams): string =>
   `/projects/${params.projectId}/spotlight`
 
 // Response
 export interface SpotlightDatasetResponse {
+  isLocationRedacted: boolean
   totalSiteCount: number
   totalRecordingCount: number
   detectionCount: number
   detectionFrequency: number
   occupiedSiteCount: number
   occupiedSiteFrequency: number
-  isLocationRedacted: boolean
-  activityBySite: ActivitySpotlightDataBySite
-  activityByTime: ActivitySpotlightDataByTime
-  activityByExport: ActivitySpotlightDataByExport
+  detectionsByLocationSite: SpotlightDetectionDataBySite
+  detectionsByTimeHour: SpotlightDetectionDataByTime
+  detectionsByTimeDay: SpotlightDetectionDataByTime
+  detectionsByTimeMonth: SpotlightDetectionDataByTime
+  detectionsByTimeYear: SpotlightDetectionDataByTime
+  detectionsByTimeDate: SpotlightDetectionDataByTime
+  detectionsByTimeMonthYear: SpotlightDetectionDataByTime
 }

@@ -1,18 +1,23 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { Species } from '@rfcx-bio/common/api-bio/species/common'
+import { TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 
 export default class SpeciesImage extends Vue {
-  @Prop() species!: Species
+  @Prop() speciesPhotos!: TaxonSpeciesPhotoLight[]
 
-  get imageRef (): string {
-    return this.species.information.find(({ sourceType }) => sourceType === 'Wiki')?.sourceUrl ?? ''
+  handleImageUrl (url: string): string {
+    const isValidUrl = /^https:\/\/./i.test(url)
+    return isValidUrl ? url : new URL('../../../_assets/default-species-image.jpg', import.meta.url).toString()
   }
 
-  // TODO 190: Improve image handler
-  speciesImage (): string {
-    const url = this.species.thumbnailImageUrl
-    return url && url.length > 0 ? url : new URL('../../../_assets/default-species-image.jpg', import.meta.url).toString()
+  imageDescription (image: TaxonSpeciesPhotoLight): string {
+    return `${image.photoAuthor} - ${this.licenseCatagory(image.photoLicense)}`
+  }
+
+  licenseCatagory (imageLicense: TaxonSpeciesPhotoLight['photoLicense']): string {
+    const freeLicenses = ['CC0', 'Copyrighted free use', 'Public domain']
+    if (freeLicenses.includes(imageLicense)) return `no rights reserved (${imageLicense})`
+    return `some rights reserved (${imageLicense})`
   }
 }

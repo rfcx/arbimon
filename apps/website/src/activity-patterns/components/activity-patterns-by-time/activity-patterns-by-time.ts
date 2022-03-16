@@ -1,18 +1,23 @@
-import { isEmpty } from 'lodash-es'
+import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { TimeDataset } from '@/activity-patterns/types'
 import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/api/activity-patterns-service'
 import { downloadSvgAsPng } from '~/charts'
-import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
+
+export interface SpotlightTimeDataset {
+  color: string
+  data: SpotlightDataByTime
+}
 
 // TODO ???: Reduce and move to somewhere for center use
 interface DropDownOption {
@@ -34,8 +39,8 @@ const DATASET_LABELS = {
 })
 export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
-  @Prop() species!: SpeciesLight
-  @Prop() datasets!: TimeDataset[]
+  @Prop() species!: SpeciesInProjectLight
+  @Prop() datasets!: SpotlightTimeDataset[]
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
@@ -55,8 +60,15 @@ export default class ActivityPatternsByTime extends Vue {
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabelFormatter: this.selectedBucket === 'dateSeries'
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
-        : TIME_LABEL_FORMATTERS[this.selectedBucket]
+        : TIME_LABEL_FORMATTERS[this.selectedBucket],
+      yLabelFormatter: this.displayWholeNumber
+        ? (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
+        : DEFAULT_YAXIS_LINE_FORMAT
     }
+  }
+
+  get displayWholeNumber (): boolean {
+    return this.selectedType === this.datasetType[1].value
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
@@ -64,7 +76,8 @@ export default class ActivityPatternsByTime extends Vue {
   }
 
   get hasData (): boolean {
-    return this.datasetsForSelectedBucket.some(({ data }) => !isEmpty(data))
+    return this.datasetsForSelectedBucket
+      .some(ds => Object.values(ds.data).some(val => val > 0))
   }
 
   async downloadChart (): Promise<void> {
@@ -73,6 +86,6 @@ export default class ActivityPatternsByTime extends Vue {
     const svg = generateChartExport(this.datasetsForSelectedBucket, exportConfig)
     if (!svg) return
 
-    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}--${this.species.speciesSlug}`))
+    await downloadSvgAsPng(svg, getExportGroupName(`${this.domId}-${this.selectedBucket}--${this.species.taxonSpeciesSlug}`))
   }
 }

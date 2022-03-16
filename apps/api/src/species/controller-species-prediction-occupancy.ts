@@ -2,22 +2,36 @@ import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
 import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { Controller } from '../_services/api-helper/types'
-import { assertInvalidQuery, assertParamsExist } from '../_services/validation'
+import { getSequelize } from '~/db'
+import { isProtectedSpecies } from '~/security/protected-species'
+import { Handler } from '../_services/api-helpers/types'
+import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 
-export const speciesPredictionOccupancyController: Controller<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
+export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
   // Inputs & validation
-  const { projectId } = req.params
-  assertParamsExist({ projectId })
+  const { projectId, speciesSlug, filenameWithoutExtension } = req.params
+  assertPathParamsExist({ projectId, speciesSlug, filenameWithoutExtension })
 
-  const { filenameWithoutExtension } = req.params
-  assertParamsExist({ filenameWithoutExtension })
+  // Query species
+  const species = await ModelRepository.getInstance(getSequelize())
+    .SpeciesInProject
+    .findOne({
+      where: { taxonSpeciesSlug: speciesSlug }
+    })
 
-  // Query
+  if (!species) throw BioNotFoundError()
+
+  const isLocationRedacted = isProtectedSpecies(species.riskRatingId) && !isProjectMember(req)
+  if (isLocationRedacted) throw BioForbiddenError()
+
+  // Query file
   const resolvedFilename = resolve(mockPredictionsFolderPath, filenameWithoutExtension)
-  if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) { assertInvalidQuery({ filenameWithoutExtension }) }
+  if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw BioInvalidPathParamError({ filenameWithoutExtension })
 
   // Response
   return await res.sendFile(mockPredictionsFolderName + '/' + filenameWithoutExtension + '.png')

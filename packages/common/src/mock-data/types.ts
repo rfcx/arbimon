@@ -1,6 +1,7 @@
 export interface MockHourlyDetectionSummary {
-  'arbimon_site_id': number
-  'stream_id': string
+  'site_id': number // siteId
+  'stream_id': string // siteIdCore
+  'arbimon_site_id': number // siteIdArbimon
   'name': string
   'lat': number
   'lon': number

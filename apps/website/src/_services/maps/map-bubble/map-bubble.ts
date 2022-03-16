@@ -196,7 +196,7 @@ export default class MapBubbleComponent extends Vue {
     const coordinates: Array<[number, number]> = this.dataset.data.map(datum => [datum.longitude, datum.latitude] as [number, number])
     if (coordinates.length === 0) return
     const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new LngLatBounds(coordinates[0], coordinates[0]))
-    this.map.fitBounds(bounds, { padding: 40, maxZoom: 10 })
+    this.map.fitBounds(bounds, { padding: 40, maxZoom: 15 })
   }
 
   async downloadMapPng (): Promise<void> {

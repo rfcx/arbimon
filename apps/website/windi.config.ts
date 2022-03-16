@@ -2,6 +2,7 @@ import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 import { defineConfig } from 'windicss/helpers'
 import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
+import pluginFilter from 'windicss/plugin/filters'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
 import pluginScrollSnap from 'windicss/plugin/scroll-snap'
@@ -28,6 +29,7 @@ export default defineConfig({
     }),
     pluginInteractionVariants,
     pluginAspectRatio,
+    pluginFilter,
     pluginForms,
     pluginLineClamp,
     pluginScrollSnap
@@ -94,7 +96,7 @@ export default defineConfig({
     'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark',
-    'btn-icon': 'p-2',
+    'btn-icon': 'py-2 px-3',
     // nav;
     'navbar-container': 'box-content text-primary flex items-center justify-center h-13',
     'navbar-item': 'box-content text-primary flex items-center justify-center h-13',

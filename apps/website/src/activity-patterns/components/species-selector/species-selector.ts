@@ -1,36 +1,44 @@
 import { Vue } from 'vue-class-component'
-import { Emit, Prop, Watch } from 'vue-property-decorator'
+import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
+import { RouteLocationNormalized } from 'vue-router'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
+import { RouteNames } from '~/router'
 import { spotlightService } from '../../services'
 
 export default class SpeciesSelector extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
   @Prop() speciesSlug!: string
-  @Emit() emitSelectedSpeciesChanged (species: SpeciesLight): SpeciesLight {
+  @Emit() emitSelectedSpeciesChanged (species: SpeciesInProjectLight | undefined): SpeciesInProjectLight | undefined {
     return species
   }
 
   selectedSpeciesSlug = ''
-  allSpecies: SpeciesLight[] = []
-  loadingSpecies = false
+  allSpecies: SpeciesInProjectLight[] = []
   currentSpeciesQuery = ''
 
-  get selectedSpecies (): SpeciesLight | undefined {
+  get selectedSpecies (): SpeciesInProjectLight | undefined {
     if (!this.selectedSpeciesSlug) return undefined
-    return this.allSpecies.find(s => s.speciesSlug === this.selectedSpeciesSlug)
+    return this.allSpecies.find(s => s.taxonSpeciesSlug === this.selectedSpeciesSlug)
   }
 
-  get filteredSpecies (): SpeciesLight[] {
+  get filteredSpecies (): SpeciesInProjectLight[] {
     if (!this.currentSpeciesQuery) return this.allSpecies
     const query = this.currentSpeciesQuery.trim().toLowerCase()
     return this.allSpecies.filter(s => s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) || s.commonName.toLowerCase().split(' ').some(w => w.startsWith(query)))
   }
 
   override async created (): Promise<void> {
-    this.selectedSpeciesSlug = this.speciesSlug
     this.allSpecies = await this.getAllSpecies()
-      .then(s => s.sort((a, b) => a.scientificName.localeCompare(b.scientificName)))
+  }
+
+  @Watch('$route')
+  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
+    if (to.params.projectSlug !== from.params.projectSlug) {
+      this.selectedSpeciesSlug = ''
+      this.allSpecies = await this.getAllSpecies()
+    }
   }
 
   @Watch('speciesSlug')
@@ -39,8 +47,15 @@ export default class SpeciesSelector extends Vue {
   }
 
   @Watch('allSpecies')
-  onAllSpeciesChange (allSpecies: SpeciesLight[]): void {
-    if (allSpecies.length > 0 && !this.selectedSpeciesSlug) this.selectedSpeciesSlug = allSpecies[0].speciesSlug
+  onAllSpeciesChange (allSpecies: SpeciesInProjectLight[]): void {
+    if (allSpecies.length > 0) {
+      if (this.speciesSlug) {
+        const matchedSlug = allSpecies.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === this.speciesSlug)
+        this.selectedSpeciesSlug = matchedSlug ? this.speciesSlug : ''
+      } else {
+        this.selectedSpeciesSlug = allSpecies[0].taxonSpeciesSlug
+      }
+    }
     if (this.selectedSpecies) this.emitSelectedSpeciesChanged(this.selectedSpecies)
   }
 
@@ -49,17 +64,15 @@ export default class SpeciesSelector extends Vue {
     if (this.selectedSpecies) this.emitSelectedSpeciesChanged(this.selectedSpecies)
   }
 
-  async onType (query: string): Promise<void> {
-    this.loadingSpecies = true
-    // TODO: Call species API
-    setTimeout(() => { this.loadingSpecies = false }, 1000)
-  }
-
   onFilterType (query: string): void {
     this.currentSpeciesQuery = query
   }
 
-  async getAllSpecies (): Promise<SpeciesLight[]> {
+  onResetQuery (): void {
+    this.onFilterType('')
+  }
+
+  async getAllSpecies (): Promise<SpeciesInProjectLight[]> {
     return await spotlightService.getSpeciesAll() ?? []
   }
 }

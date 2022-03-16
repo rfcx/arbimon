@@ -43,6 +43,12 @@ export default class ComparisonListComponent extends Vue {
 
   override mounted (): void {
     this.emitSelect()
+    if (this.store.projectFilters?.dateStartInclusiveUtc && this.store.projectFilters?.dateEndInclusiveUtc) {
+      this.filters = [new FilterImpl(
+        dayjs(this.store.projectFilters?.dateStartInclusiveUtc),
+        dayjs(this.store.projectFilters?.dateEndInclusiveUtc)
+      )]
+    }
   }
 
   addFilterConfig (): void {
@@ -67,11 +73,10 @@ export default class ComparisonListComponent extends Vue {
 
   getOptionalFilterText (idx: number): string {
     const otherFilters = this.filters[idx].otherFilters
-    if (otherFilters.length === 1) {
-      return `${otherFilters[0].propertyName}: ${otherFilters[0].value}`
-    } else {
-      return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
-    }
+    if (otherFilters.length === 0) return 'All taxon'
+    if (otherFilters.length === 1) return `${otherFilters[0].propertyName}: ${this.store.projectFilters?.taxonClasses?.find(tc => tc.id === otherFilters[0].value)?.commonName ?? ''}`
+    return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
+
     // TODO: 268 Show full information of filter when the user hovers over the comparison box
     /*
     const optionalFilters = groupBy(this.filters[idx].otherFilters, 'title')

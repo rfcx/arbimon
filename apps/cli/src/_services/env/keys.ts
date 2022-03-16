@@ -9,25 +9,48 @@
  * - `apps/cli/src/_services/env/keys.ts` -- CONFIG & SECRETS
  */
 
-// CANNOT be undefined or an empty string
-export const envKeysRequired = <const>[
-  'ARBIMON_DB_DBNAME',
-  'ARBIMON_DB_HOSTNAME',
-  'ARBIMON_DB_PASSWORD',
-  'ARBIMON_DB_USER',
+import { BIO_ENVIRONMENT_VALUES, BioEnvironment, Protection, PROTECTION_VALUES } from './types'
 
-  'BIO_DB_DBNAME',
-  'BIO_DB_HOSTNAME',
-  'BIO_DB_PASSWORD',
-  'BIO_DB_PORT',
-  'BIO_DB_SSL_ENABLED',
-  'BIO_DB_USER',
+// Getters
+type Getter<T> = (env: Record<string, string>, key: string) => T | undefined
 
-  'IUCN_BASE_URL',
-  'IUCN_TOKEN',
+const stringGetter: Getter<string> = (env, key): string | undefined => {
+  const raw = env[key]
+  return raw.length > 0 ? raw : undefined
+}
 
-  'WIKI_BASE_URL'
-]
+const numberGetter: Getter<number> = (env, key): number | undefined => {
+  const raw = env[key]
+  return raw.length > 0 ? Number(raw) : undefined
+}
 
-// CAN be undefined or empty string
-export const envKeysOptional = <const>[]
+const booleanGetter: Getter<boolean> = (env, key): boolean | undefined => env[key] === 'true'
+
+const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (env, key) => {
+  const raw = env[key] as T
+  return allowed.includes(raw) ? raw : undefined
+}
+
+// Env keys/types
+export const envGetters = <const>{
+  PROTECTION: unionGetter<Protection>(Object.values(PROTECTION_VALUES)),
+  BIO_ENVIRONMENT: unionGetter<BioEnvironment>(Object.values(BIO_ENVIRONMENT_VALUES)),
+
+  ARBIMON_DB_DBNAME: stringGetter,
+  ARBIMON_DB_HOSTNAME: stringGetter,
+  ARBIMON_DB_PASSWORD: stringGetter,
+  ARBIMON_DB_USER: stringGetter,
+
+  BIO_DB_DBNAME: stringGetter,
+  BIO_DB_HOSTNAME: stringGetter,
+  BIO_DB_PASSWORD: stringGetter,
+  BIO_DB_PORT: numberGetter,
+  BIO_DB_SSL_ENABLED: booleanGetter,
+  BIO_DB_USER: stringGetter,
+
+  IUCN_BASE_URL: stringGetter,
+  IUCN_TOKEN: stringGetter,
+
+  WIKI_BASE_URL: stringGetter,
+  WIKI_MEDIA_BASE_URL: stringGetter
+}

@@ -6,6 +6,7 @@ RUN npm i -g pnpm@6.20.4
 FROM node-pnpm as with-deps
 RUN mkdir -p /app
 WORKDIR /app
+
 COPY pnpm-*.yaml ./
 COPY package.json ./
 COPY apps/api/package.json ./apps/api/
@@ -13,19 +14,20 @@ COPY apps/cli/package.json ./apps/cli/
 COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
+
 ENV NODE_ENV=development
 RUN pnpm i --frozen-lockfile --reporter=silent
+RUN pnpm prepare
 
 # Build
 FROM with-deps as build
 WORKDIR /app
+
 COPY tsconfig*.json ./
 COPY tools ./tools
-COPY apps/api ./apps/api
-COPY apps/cli ./apps/cli
-COPY apps/website ./apps/website
-COPY packages/common ./packages/common
-COPY packages/utils ./packages/utils
+COPY apps ./apps
+COPY packages ./packages
+
 ARG mode=production
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096

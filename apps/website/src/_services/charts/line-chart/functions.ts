@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import numeral from 'numeral'
 
 import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
@@ -13,12 +12,15 @@ export const skipTickFormatter = <T>(interval: number, innerFormatter: Formatter
     ? (val: T, idx: number) => (idx % interval) === 0 ? innerFormatter(val, idx) : ''
     : innerFormatter
 
+export const DEFAULT_YAXIS_LINE_FORMAT = (val: d3.NumberValue): string => d3.format('.1e')(val)
+
 export const generateChart = (datasets: LineChartSeries[], config: LineChartConfig, xTitleDistance = 25, yTitleDistance = 25): d3.Selection<SVGSVGElement, undefined, null, undefined> => {
   // Prepare data
   const yBounds = [0, datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)]
   const xBounds = config.xBounds ?? getXBoundsFromDatasets(datasets)
   const xValues = Array.from({ length: xBounds[1] - xBounds[0] + 1 }, (_, i) => i + xBounds[0])
   const xLabelFormatter = config.xLabelFormatter
+  const yLabelFormatter = config.yLabelFormatter
 
   // Calculate how many ticks will fit
   const xTickCount = xBounds[1] - xBounds[0]
@@ -31,7 +33,9 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
     .range([config.margins.left, config.width - config.margins.left - config.margins.right])
 
   const xTickFormatter = xLabelFormatter ? (val: d3.NumberValue): string => xLabelFormatter(val.valueOf()) : d3.format('d')
-  const yTickFormatter = (val: d3.NumberValue): string => Number.isInteger(val) ? numeral(val).format('0,0') : d3.format('.1e')(val)
+  const yTickFormatter = yLabelFormatter
+    ? (val: d3.NumberValue): string => yLabelFormatter(val.valueOf())
+    : DEFAULT_YAXIS_LINE_FORMAT
 
   const xAxis = (g: any): unknown => g
     .attr('transform', `translate(${yTitleDistance}, ${config.height - config.margins.bottom - xTitleDistance})`)
@@ -41,9 +45,11 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
     .domain(yBounds).nice()
     .range([config.height - config.margins.bottom - xTitleDistance, config.margins.top])
 
+  const yTickValues = yScale.ticks().filter(d => yTickFormatter(d))
+
   const yAxis = (g: any): unknown => g
     .attr('transform', `translate(${config.margins.left + yTitleDistance}, 0)`)
-    .call(d3.axisLeft(yScale).tickFormat(yTickFormatter))
+    .call(d3.axisLeft(yScale).tickValues(yTickValues).tickFormat(yTickFormatter))
 
   // Render chart
   const svg = d3.create('svg')

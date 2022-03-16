@@ -25,7 +25,7 @@ export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[]
 
   // TODO - Extract this to UI filter package
   const propertyEqualFilters = mapValues(groupBy(otherFilters, 'propertyName'), f => f.map(v => v.value))
-  const siteIds = sites.map(s => s.siteId)
+  const siteIds = sites.map(s => s.id)
   const taxons = propertyEqualFilters.taxon ?? []
   const species = propertyEqualFilters.species ?? []
 
@@ -33,7 +33,7 @@ export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[]
   return detections.filter(r =>
     r.date >= start &&
     r.date < end &&
-    (sites.length === 0 || siteIds.includes(r.stream_id)) &&
+    (sites.length === 0 || siteIds.includes(r.site_id)) &&
     (taxons.length === 0 || taxons.includes(r.taxon)) &&
     (species.length === 0 || species.includes(r.species_id.toString()))
   )
@@ -109,4 +109,21 @@ function getTaxonFilterName (taxonFilter: string[]): string {
     case 2: return `Taxon=${taxonFilter[0]}&${taxonFilter[1]}--`
     default: return `Taxon=${taxonFilter?.[0]}+ ${taxonFilter.length - 1} other taxons--`
   }
+}
+
+export function generateFilterQuery (rawFilter: DatasetParameters): string {
+  const siteIdsStringArray = (new URLSearchParams(rawFilter.sites.map(({ id }) => ['siteIds', id.toString()]))).toString()
+  const taxonsStringArray = (new URLSearchParams(rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => ['taxons', value.toString()]))).toString()
+
+  let params = Object.entries({ startDate: rawFilter.startDate.toISOString(), endDate: rawFilter.endDate.toISOString() }).map(([key, value]) => `${key}=${value}`).join('&')
+
+  if (siteIdsStringArray) {
+    params = `${params}&${siteIdsStringArray}`
+  }
+
+  if (taxonsStringArray) {
+    params = `${params}&${taxonsStringArray}`
+  }
+
+  return params
 }

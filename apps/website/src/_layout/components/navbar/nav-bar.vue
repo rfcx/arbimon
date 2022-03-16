@@ -11,7 +11,7 @@
             <router-link to="/">
               <div class="flex-shrink-0 flex items-center ml-4 <sm:(mx-2)">
                 <img
-                  class="h-9 <sm:(h-7)"
+                  class="h-9 w-9 <sm:(h-7 w-7)"
                   src="/src/_services/assets/rfcx-logo.svg"
                   alt="Rainforest connection logo"
                 >
@@ -25,7 +25,7 @@
               </div>
             </router-link>
             <div
-              v-if="store.user"
+              v-if="store.projects.length > 0"
               class="navbar-item text-sm h-9 mx-2 sm:(px-2 hover:bg-box-grey rounded-md cursor-pointer)"
               @click="toggleProjectSelector(true)"
             >

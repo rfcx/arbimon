@@ -2,7 +2,7 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { Site } from '@rfcx-bio/common/api-bio/common/sites'
+import { Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
@@ -68,8 +68,8 @@ export default class ComparisonFilterModalComponent extends Vue {
     return this.selectedSiteGroups.length === 0
   }
 
-  get selectedTaxons (): string[] {
-    return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value)
+  get selectedTaxons (): number[] {
+    return this.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value) as number[]
   }
 
   get optionAllMatchingFilter (): SiteGroup | undefined {
@@ -83,7 +83,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   get filtered (): Site[] {
     const prefix = this.inputFilter.toLocaleLowerCase()
-    return this.store.sites
+    return (this.store.projectFilters?.locationSites ?? [])
       .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
   }
 

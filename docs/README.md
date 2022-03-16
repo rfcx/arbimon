@@ -29,7 +29,8 @@ The following must be true to consider the Sprint "DONE":
    - node 16: [https://nodejs.org](https://nodejs.org)
    - pnpm 6: `npm i -g pnpm`
    - VSCode & extensions: `pnpm init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
-   - If you have Vetur installed, disable it for this workspace
+     - If you have Vetur installed, disable it for this workspace
+   - Docker Desktop: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 
 2. Install/update dependencies:
 
@@ -37,15 +38,20 @@ The following must be true to consider the Sprint "DONE":
 
 3. Setup local environment:
    - Copy `apps/api/.env.example` to `.env` (and fill missing variables)
+   - Copy `apps/cli/.env.example` to `.env` (and fill missing variables)
    - Copy `apps/website/.env` to `.env.local` (and fill missing variables)
 
 ## Run the App!
 
-1. Start **Website** and **API** in dev-mode:
+1. Start **DB**, **API**, and **Website** in dev-mode:
 
    `pnpm serve` (from the monorepo root)  
    _or_  
    `pnpm -w serve` (from anywhere in the project)
+
+2. After you finish, you might want to stop your db:
+
+   `pnpm --filter=db stop`
 
 ## More Commands
 
@@ -75,10 +81,10 @@ The following must be true to consider the Sprint "DONE":
 
 - `pnpm -w blah` => run in monorepo-root
 - `pnpm -r blah` => run in all packages
-- `pnpm --filter=!rfcx-bio blah` => run in all packages, except root  
-  (or `pnpm --filter=\!rfcx-bio blah` in zsh)
 - `pnpm -r --filter=./apps blah` => run in some packages
 - `pnpm --filter=website blah` => run in one package
+- `pnpm --filter=!rfcx-bio blah` => run in all packages, except root  
+  (or `pnpm --filter=\!rfcx-bio blah` in zsh)
 
 ## Deployment
 
@@ -96,13 +102,13 @@ There are 3 shared deployments:
 
 ### _Testing_
 
-// TODO: Auto-deploy from `develop` branch once per day?
-
 Any branch can be deployed to the `testing` cluster:
 
 - Open the "Actions" tab on GitHub
 - Select the "Build-Deploy" action
 - Click "Run workflow" and select the branch you wish to deploy
+
+Note: `develop` branch is auto-deployed to `testing` daily.
 
 ### _Staging & Production_
 

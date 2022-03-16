@@ -32,33 +32,33 @@ export default class NavbarComponent extends Vue {
   }
 
   get navMenus (): NavMenu[] {
-    const selectedProjectId = this.store.selectedProject?.id
-    return selectedProjectId
+    const projectSlug = this.store.selectedProject?.slug
+    return projectSlug !== undefined
       ? [
           {
             label: 'Dashboard',
-            destination: { name: ROUTE_NAMES.dashboard, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } }
           },
           {
             label: 'Richness',
-            destination: { name: ROUTE_NAMES.speciesRichness, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.speciesRichness, params: { projectSlug } }
           },
           {
             label: 'Activity',
-            destination: { name: ROUTE_NAMES.activityOverview, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.activityOverview, params: { projectSlug } }
           },
           {
             label: 'Spotlight',
-            destination: { name: ROUTE_NAMES.activityPatterns, params: { projectId: selectedProjectId } }
+            destination: { name: ROUTE_NAMES.activityPatterns, params: { projectSlug } }
           }
         ]
       : []
   }
 
   get arbimonLink (): string {
-    const selectedProjectId = this.store.selectedProject?.id
-    if (!selectedProjectId) return ''
-    else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectId}`
+    const selectedProjectSlug = this.store.selectedProject?.slug
+    if (selectedProjectSlug === undefined) return ''
+    else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectSlug}`
   }
 
   toggleMobileMenu (): void {

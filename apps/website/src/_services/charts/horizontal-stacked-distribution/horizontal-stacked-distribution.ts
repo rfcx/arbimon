@@ -2,6 +2,12 @@ import { sum } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+export interface HorizontalStack {
+  name: string
+  count: number
+  color: string
+}
+
 interface Bar {
   name: string
   percentage: number
@@ -9,11 +15,8 @@ interface Bar {
   color: string
 }
 
-const DEFAULT_COLOR = '#FFFFFF'
-
-export default class DashboardTopTaxons extends Vue {
-  @Prop() dataset!: Array<[string, number]>
-  @Prop() colors!: Record<string, string>
+export default class HorizontalStackedDistribution extends Vue {
+  @Prop() dataset!: HorizontalStack[]
   @Prop({ default: undefined }) knownTotalCount!: number | undefined
 
   get hasData (): boolean {
@@ -21,7 +24,7 @@ export default class DashboardTopTaxons extends Vue {
   }
 
   get totalCount (): number {
-    return this.knownTotalCount ?? sum(this.dataset.map(([_, count]) => count))
+    return this.knownTotalCount ?? sum(this.dataset.map(({ count }) => count))
   }
 
   get bars (): Bar[] {
@@ -29,15 +32,15 @@ export default class DashboardTopTaxons extends Vue {
     const totalCount = this.totalCount
     if (totalCount === 0) return []
 
-    // Remove empty bars & sort
+    // Remove empty bars
     const inputs = this.dataset
-      .filter(([, count]) => count > 0)
+      .filter(({ count }) => count > 0)
 
     // Calculate percentages & bar-widths (width is cumulative percentage)
     let width = 0
     const outputs: Bar[] = []
 
-    inputs.forEach(([name, count]) => {
+    inputs.forEach(({ name, count, color }) => {
       const percentage = count / totalCount * 100
       width += percentage
 
@@ -45,7 +48,7 @@ export default class DashboardTopTaxons extends Vue {
         name,
         percentage,
         width: Math.round(width),
-        color: this.colors[name] ?? DEFAULT_COLOR
+        color
       })
     })
 

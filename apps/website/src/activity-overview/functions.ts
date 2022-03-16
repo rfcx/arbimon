@@ -1,11 +1,12 @@
+import { ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ActivityOverviewData, ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
+import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
-export type ActivityOverviewDataBySite = ActivityOverviewData & DatasetParameters
+export type ActivityOverviewDataBySite = ActivityDatasetResponse & DatasetParameters
 
 export const ACTIVITY_OVERVIEW_MAP_KEYS = {
   detection: 'detection',
@@ -27,8 +28,8 @@ export interface CsvData {
 }
 
 export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[]): MapDataSet[] {
-  const maximumNumbers: Array<[number, number]> = datasets.map(({ overviewBySite }) => {
-    const overviewBySiteValues = Object.values(overviewBySite)
+  const maximumNumbers: Array<[number, number]> = datasets.map(({ detectionsBySite }) => {
+    const overviewBySiteValues = Object.values(detectionsBySite)
     const detectionCounts = overviewBySiteValues.map(({ detection }) => detection)
     const detectionFrequencies = overviewBySiteValues.map(({ detectionFrequency }) => detectionFrequency)
     return [Math.max(0, ...detectionCounts), Math.max(0, ...detectionFrequencies)]
@@ -39,8 +40,8 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
     [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, overviewBySite }) => {
-    const overviewBySiteValues = Object.values(overviewBySite)
+  return datasets.map(({ startDate, endDate, sites, detectionsBySite }) => {
+    const overviewBySiteValues = Object.values(detectionsBySite)
     const data = overviewBySiteValues.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,

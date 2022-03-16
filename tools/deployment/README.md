@@ -15,7 +15,7 @@ Requires:
 - Docker
 - Allocate at least 4GB memory to Docker (preferences > resources)
 
-Steps (from the root directory):
+Steps:
 
 1. If you have previously built your code, you should run clean:
 
@@ -23,21 +23,29 @@ Steps (from the root directory):
     pnpm -r clean
     ```
 
-2.  Build & run API image
+2.  Build & run API image (from monorepo root)
 
     ```
     docker build -f tools/deployment/Dockerfile --target api -t bio-api .
     docker run --rm -it -p 3000:8080 bio-api
     ```
 
-3.  Build & run Website image
+3.  Build & run Website image (from monorepo root)
 
     ```
     docker build -f tools/deployment/Dockerfile --target website -t bio-website .
     docker run --rm -it -p 8080:8080 bio-website
     ```
 
-_If your local port 8080 is in use, then you can select another port e.g. `-p 7373:8080` to map Docker to http://localhost:7373/_
+4.  Build & run CLI image (from monorepo root)
+
+    ```
+    docker build -f tools/deployment/Dockerfile --target cli -t bio-cli .
+    docker run --rm -it bio-cli node --experimental-specifier-resolution=node apps/cli/lib/path/to/some-script.js
+    ```
+
+_Use `-p 7373:8080` to map Docker to another port (ex: `http://localhost:7373`), if your local port 8080 is already in use_
+_Use `--network="host"` if you want access to other local services, ex: to run CLI scripts against your local DB_
 
 ## Kubernetes configuration
 

@@ -69,7 +69,7 @@
             />
             <el-option
               v-for="item in filtered"
-              :key="'site-list-' + item.siteId"
+              :key="'site-list-' + item.id"
               :label="item.name"
               :value="{ label: item.name, value: [item] }"
             />

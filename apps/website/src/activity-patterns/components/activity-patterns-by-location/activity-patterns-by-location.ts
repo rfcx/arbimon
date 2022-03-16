@@ -1,10 +1,11 @@
+import { LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { SpeciesLight } from '@rfcx-bio/common/api-bio/species/common'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
-import { ACTIVITY_PATTERN_MAP_KEYS } from '@/activity-patterns/functions'
+import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
 import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
@@ -31,14 +32,14 @@ const DEFAULT_PREFIX = 'Spotlight-By-Site'
 })
 export default class ActivityPatternsByLocation extends Vue {
   @Inject() readonly store!: BiodiversityStore
-  @Prop() species!: SpeciesLight
+  @Prop() species!: SpeciesInProjectLight
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
-  selectedType = ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency
+  selectedType = SPOTLIGHT_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [
-    { label: 'Detection Frequency', value: ACTIVITY_PATTERN_MAP_KEYS.detectionFrequency },
-    { label: 'Detections (raw)', value: ACTIVITY_PATTERN_MAP_KEYS.detection },
-    { label: 'Naive Occupancy', value: ACTIVITY_PATTERN_MAP_KEYS.occupancy }
+    { label: 'Detection Frequency', value: SPOTLIGHT_MAP_KEYS.detectionFrequency },
+    { label: 'Detections (raw)', value: SPOTLIGHT_MAP_KEYS.detection },
+    { label: 'Naive Occupancy', value: SPOTLIGHT_MAP_KEYS.occupancy }
   ]
 
   isShowLabels = true
@@ -58,8 +59,14 @@ export default class ActivityPatternsByLocation extends Vue {
     }
   }
 
+  get mapInitialBounds (): LngLatBoundsLike | null {
+    const project = this.store.selectedProject
+    if (!project) return null
+    return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
+  }
+
   get circleFormatter (): CircleFormatter {
-    return this.selectedType === ACTIVITY_PATTERN_MAP_KEYS.occupancy
+    return this.selectedType === SPOTLIGHT_MAP_KEYS.occupancy
       ? new CircleFormatterBinary()
       : new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })
   }
@@ -76,6 +83,6 @@ export default class ActivityPatternsByLocation extends Vue {
     const { startDate, endDate, sites } = dataset
     const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
 
-    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}--${this.species.speciesSlug}`, datasetIndex, undefined, siteGroup)
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}--${this.species.taxonSpeciesSlug}`, datasetIndex, undefined, siteGroup)
   }
 }

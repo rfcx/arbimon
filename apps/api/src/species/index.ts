@@ -6,20 +6,47 @@ import { speciesAllRoute } from '@rfcx-bio/common/api-bio/species/species-all'
 import { speciesOneRoute } from '@rfcx-bio/common/api-bio/species/species-one'
 import { speciesPredictionOccupancyRoute } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 
-import { GET, RouteRegistration } from '../_services/api-helper/types'
-import { projectSpeciesAllController } from './controller-project-species-all'
-import { projectSpeciesOneController } from './controller-project-species-one'
-import { speciesAllController } from './controller-species-all'
-import { speciesOneController } from './controller-species-one'
-import { speciesPredictionOccupancyController } from './controller-species-prediction-occupancy'
+import { GET, RouteRegistration } from '../_services/api-helpers/types'
+import { verifyProjectUserPermission } from '../_services/decorators'
+import { projectSpeciesAllHandler } from './controller-project-species-all'
+import { projectSpeciesOneHandler } from './controller-project-species-one'
+import { speciesAllHandler } from './controller-species-all'
+import { speciesOneHandler } from './controller-species-one'
+import { speciesPredictionOccupancyHandler } from './controller-species-prediction-occupancy'
 
 export const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
 export const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
 
 export const routesSpecies: RouteRegistration[] = [
-  [GET, speciesOneRoute, speciesOneController],
-  [GET, speciesAllRoute, speciesAllController],
-  [GET, projectSpeciesOneRoute, projectSpeciesOneController],
-  [GET, projectSpeciesAllRoute, projectSpeciesAllController],
-  [GET, speciesPredictionOccupancyRoute, speciesPredictionOccupancyController]
+  {
+    method: GET,
+    url: speciesOneRoute,
+    handler: speciesOneHandler
+  },
+  {
+    method: GET,
+    url: speciesAllRoute,
+    handler: speciesAllHandler
+  },
+  {
+    method: GET,
+    url: projectSpeciesOneRoute,
+    handler: projectSpeciesOneHandler,
+    preHandler: [
+      verifyProjectUserPermission
+    ]
+  },
+  {
+    method: GET,
+    url: projectSpeciesAllRoute,
+    handler: projectSpeciesAllHandler
+  },
+  {
+    method: GET,
+    url: speciesPredictionOccupancyRoute,
+    handler: speciesPredictionOccupancyHandler,
+    preHandler: [
+      verifyProjectUserPermission
+    ]
+  }
 ]

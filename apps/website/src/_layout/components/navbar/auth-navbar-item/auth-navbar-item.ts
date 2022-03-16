@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { AuthClient } from '~/auth'
+import { AuthClient } from '~/auth-client'
 import { BiodiversityStore } from '~/store'
 
 export default class AuthNavbarItemComponent extends Vue {

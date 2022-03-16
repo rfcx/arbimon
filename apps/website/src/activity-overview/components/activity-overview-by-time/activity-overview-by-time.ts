@@ -1,17 +1,21 @@
-import { isEmpty } from 'lodash-es'
+import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { TimeDataset } from '@/activity-overview/types'
-import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
+import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTime, ActivityOverviewDataByTimeBucket } from '~/api/activity-overview-service'
 import { downloadSvgAsPng } from '~/charts'
-import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
+
+export interface ActivityOverviewTimeDataset {
+  color: string
+  data: ActivityOverviewDataByTime
+}
 
 // TODO ???: Reduce and move to somewhere for center use
 interface DropDownOption {
@@ -33,7 +37,7 @@ const DATASET_LABELS = {
 })
 export default class ActivityOverviewByTime extends Vue {
   @Prop() domId!: string
-  @Prop() datasets!: TimeDataset[]
+  @Prop() datasets!: ActivityOverviewTimeDataset[]
 
   selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
@@ -53,12 +57,20 @@ export default class ActivityOverviewByTime extends Vue {
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
       xLabelFormatter: this.selectedBucket === 'dateSeries'
         ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
-        : TIME_LABEL_FORMATTERS[this.selectedBucket]
+        : TIME_LABEL_FORMATTERS[this.selectedBucket],
+      yLabelFormatter: this.displayWholeNumber
+        ? (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
+        : DEFAULT_YAXIS_LINE_FORMAT
     }
   }
 
+  get displayWholeNumber (): boolean {
+    return this.selectedType === this.datasetType[1].value
+  }
+
   get hasData (): boolean {
-    return this.datasetsForSelectedBucket.some(({ data }) => !isEmpty(data))
+    return this.datasetsForSelectedBucket
+      .some(ds => Object.values(ds.data).some(val => val > 0))
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {

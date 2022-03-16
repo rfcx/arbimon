@@ -5,12 +5,17 @@
     "rootDir": "src",
     "baseUrl": "src",
     "outDir": "lib",
+    "types": ["vitest/globals"],
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
-      "@rfcx-bio/common/*": ["../../../packages/common/src/*"]
-      // "~/*": ["./_services/*"],
-      // "@/*": ["./*"]
-    }
+      "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
+      "~/*": ["./_services/*"],
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      { "transform": "typescript-transform-paths" },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
+    ]
   },
 
   "include": ["src/**/*.ts"],

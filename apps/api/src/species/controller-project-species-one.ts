@@ -1,49 +1,76 @@
-import { readdir } from 'fs/promises'
+import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { EXTINCTION_RISK_PROTECTED_CODES } from '@rfcx-bio/common/iucn'
-import { rawSpecies } from '@rfcx-bio/common/mock-data'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
+import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
-import { Controller } from '../_services/api-helper/types'
-import { ApiNotFoundError } from '../_services/errors'
-import { assertParamsExist } from '../_services/validation'
-import { mockPredictionsFolderPath } from './index'
+import { getSequelize } from '@/_services/db'
+import { BioNotFoundError } from '~/errors'
+import { isProtectedSpecies } from '~/security/protected-species'
+import { Handler } from '../_services/api-helpers/types'
+import { isProjectMember } from '../_services/permission-helper/permission-helper'
+import { assertPathParamsExist } from '../_services/validation'
 
 // TODO ??? - Move files to S3 & index them in the database
-// const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
-// const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
 
-export const projectSpeciesOneController: Controller<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
+export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
   // Inputs & validation
+  // TODO: Use species id instead of species slug
   const { projectId, speciesSlug } = req.params
-  if (!projectId) assertParamsExist({ projectId })
-  if (!speciesSlug) assertParamsExist({ speciesSlug })
+  assertPathParamsExist({ projectId, speciesSlug })
 
-  // Queries
-  const response: ProjectSpeciesOneResponse = await getProjectSpeciesOne(projectId, speciesSlug)
+  const hasProjectPermission = isProjectMember(req)
 
   // Respond
-  return response
+  return await getProjectSpeciesOne(projectId, speciesSlug, hasProjectPermission)
 }
 
-export async function getProjectSpeciesOne (projectId: string, speciesSlug: string): Promise<ProjectSpeciesOneResponse> {
-  const species = rawSpecies.find(s => s.speciesSlug === speciesSlug)
-  if (!species) throw ApiNotFoundError()
+const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, hasProjectPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
 
-  const isLocationRedacted = EXTINCTION_RISK_PROTECTED_CODES.includes(species.extinctionRisk)
-  const predictedOccupancyMaps: PredictedOccupancyMap[] = isLocationRedacted
-    ? []
-    : (await readdir(mockPredictionsFolderPath))
-      .filter(filename => filename.startsWith(speciesSlug))
-      .map(filename => filename.substring(0, filename.lastIndexOf('.')) || filename)
-      .sort()
-      .map(filename => ({
-        title: filename,
-        url: `/projects/${projectId}/predicted-occupancy/${filename}`
-      }))
+  const speciesInformation = await models.SpeciesInProject.findOne({
+    where: { locationProjectId, taxonSpeciesSlug },
+    raw: true
+  })
+
+  if (!speciesInformation) throw BioNotFoundError()
+
+  const { taxonSpeciesId } = speciesInformation
+
+  const speciesPhotos = await models.TaxonSpeciesPhoto.findAll({
+    attributes: ATTRIBUTES_TAXON_SPECIES_PHOTO.light,
+    where: { taxonSpeciesId },
+    raw: true
+  })
+
+  const speciesCalls = await models.TaxonSpeciesCall.findAll({
+    attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
+    where: {
+      [Op.and]: {
+        callProjectId: locationProjectId,
+        taxonSpeciesId
+      }
+    },
+    raw: true
+  })
+
+  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !hasProjectPermission
+  const predictedOccupancyMaps: PredictedOccupancyMap[] = []
+
+  if (!isLocationRedacted) {
+    const matchFiles = await LocationProjectSpeciesFileModel(sequelize).findAll({
+      where: { locationProjectId, taxonSpeciesId },
+      raw: true
+    }).then(results => results.map(({ filename, url }) => ({ title: filename, url })))
+    predictedOccupancyMaps.push(...matchFiles)
+  }
 
   return {
-    speciesInformation: species,
+    speciesInformation,
+    speciesPhotos,
+    speciesCalls,
     predictedOccupancyMaps
   }
 }

@@ -3,22 +3,36 @@
     v-if="predictedOccupancyMaps.length > 0"
     class="w-full"
   >
-    <section-title title="Predicted Occupancy" />
+    <section-title>
+      <template #title>
+        <div class="text-xl text-subtle">
+          Predicted Occupancy
+        </div>
+      </template>
+    </section-title>
     <div
       class="mt-5 grid gap-4"
       :class="{ ['md:grid-cols-2']: predictedOccupancyMaps.length> 1 }"
     >
-      <a
-        v-for="predictedOccupancyMap in predictedOccupancyMaps"
+      <div
+        v-for="(predictedOccupancyMap, idx) in predictedOccupancyMaps"
         :key="predictedOccupancyMap.title"
-        :href="predictedOccupancyMap.url"
-        target="_blank"
+        class="relative"
       >
-        <img
-          :src="predictedOccupancyMap.url"
-          :alt="predictedOccupancyMap.title"
+        <a
+          :href="blobUrls[idx]"
+          target="_blank"
         >
-      </a>
+          <img
+            :src="predictedOccupancyMap.url"
+            :alt="predictedOccupancyMap.title"
+          >
+        </a>
+        <export-button
+          class="absolute top-2 right-2"
+          @click="downloadImage(predictedOccupancyMap.title, blobUrls[idx])"
+        />
+      </div>
     </div>
   </div>
 </template>
