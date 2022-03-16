@@ -27,7 +27,10 @@ const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDe
     summaryText: ''
   }
 
-  // pull the latest datasource from DB
+  // TODO: Get ProjectVersion
+  // TODO: create new project version row if needed, make its first data source, store the detections data, and return
+
+  // TODO: pull the latest datasource from DB for the latest project version
   console.info(`- checking datasource: ${project.slug}`)
   const models = ModelRepository.getInstance(sequelize)
   const previousDataSource = await models.DataSource.findOne({
