@@ -13,7 +13,7 @@ const props = defineProps<{syncUpdated: Date | string}>()
 
 const { formatFullDate } = useDateFormat()
 const latestUpdateDate = computed(() => {
-  if (props.syncUpdated === undefined) return 'Data not synced'
+  if (props.syncUpdated === undefined) return 'Detections data not synced'
   return formatFullDate(props.syncUpdated)
 })
 </script>
