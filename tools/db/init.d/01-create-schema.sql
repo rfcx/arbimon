@@ -1,1 +1,1 @@
-create schema sequelize;
+CREATE SCHEMA sequelize;
