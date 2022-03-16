@@ -16,7 +16,10 @@
       :total-value="props.metrics.speciesCount"
       subtitle="threatened"
     />
-    <div class="dataset_range mr-3">
+    <div
+      v-if="!noDateRangeValue"
+      class="dataset_range mr-3"
+    >
       <span class="text-subtle">Dataset Date Range</span>
       <p class="text-subtle">
         {{ formatDateRange(props.metrics.minDate, props.metrics.maxDate) }}
@@ -26,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { computed, defineProps } from 'vue'
 
 import useDateFormat from '../../../_services/hooks/use-date-format'
 
@@ -40,6 +43,8 @@ interface Metrics {
   minDate?: Date
 }
 const props = defineProps<{ metrics: Metrics}>()
+
+const noDateRangeValue = computed(() => !props.metrics?.minDate || !props.metrics?.maxDate)
 
 const { formatDateRange } = useDateFormat()
 
