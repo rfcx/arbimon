@@ -92,7 +92,6 @@
         />
       </div>
     </div>
-    <last-sync :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null" />
   </div>
 </template>
 <script src="./dashboard-page" lang="ts"></script>

@@ -18,7 +18,10 @@ const main = async (): Promise<void> => {
       await syncAllForProject(sequelize, project)
     }
 
+    console.info('STEP: Sync missing Wiki species')
     await syncOnlyMissingWikiSpeciesInfo(sequelize)
+
+    console.info('STEP: Sync missing IUCN species')
     await syncOnlyMissingIUCNSpeciesInfo(sequelize)
 
     console.info('STEP: Refresh mviews')

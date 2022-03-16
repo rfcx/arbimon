@@ -25,9 +25,10 @@ export default function useDateFormat (): {
   }
 
   const formatDateRange = (start: DateParam, end: DateParam): string => {
-    if (start === undefined || end === undefined) return ''
-    if (typeof start === 'string' && start.length === 0) return ''
-    if (typeof end === 'string' && end.length === 0) return ''
+    const newStartDate = dayjs(start).isValid()
+    const newEndDate = dayjs(end).isValid()
+
+    if (!newStartDate || !newEndDate) return ''
 
     return `${formatDate(start)} - ${formatDate(end)}`
   }

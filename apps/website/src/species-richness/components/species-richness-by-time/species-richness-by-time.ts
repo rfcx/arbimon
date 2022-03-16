@@ -1,4 +1,4 @@
-import { isEmpty, mapKeys } from 'lodash-es'
+import { mapKeys } from 'lodash-es'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
@@ -25,7 +25,8 @@ export default class SpeciesRichnessByTime extends Vue {
   chartHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 450 : 250
 
   get hasData (): boolean {
-    return this.datasetsForSelectedBucket.some(ds => !isEmpty(ds.data))
+    return this.datasetsForSelectedBucket
+      .some(ds => Object.values(ds.data).some(val => val > 0))
   }
 
   get config (): Omit<LineChartConfig, 'width'> {
