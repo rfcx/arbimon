@@ -9,11 +9,11 @@ import { computed, defineProps } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
 
-const props = defineProps<{syncUpdated: Date | string}>()
+const props = defineProps<{syncUpdated: Date | string | null}>()
 
 const { formatFullDate } = useDateFormat()
 const latestUpdateDate = computed(() => {
-  if (props.syncUpdated === undefined) return 'Detections data not synced'
+  if (props.syncUpdated === null) return 'Detections data not synced'
   return formatFullDate(props.syncUpdated)
 })
 </script>
