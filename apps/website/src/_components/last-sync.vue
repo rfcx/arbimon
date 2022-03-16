@@ -12,5 +12,8 @@ import useDateFormat from '../_services/hooks/use-date-format'
 const props = defineProps<{syncUpdated: Date | string}>()
 
 const { formatFullDate } = useDateFormat()
-const latestUpdateDate = computed(() => formatFullDate(props.syncUpdated))
+const latestUpdateDate = computed(() => {
+  if (props.syncUpdated === undefined) return 'Data not synced'
+  return formatFullDate(props.syncUpdated)
+})
 </script>
