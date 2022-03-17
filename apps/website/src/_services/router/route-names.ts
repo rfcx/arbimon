@@ -6,7 +6,8 @@ export const ROUTE_NAMES = <const>{
   activityPatterns: 'activity_patterns',
   info: 'info',
   preferences: 'preferences',
-  error: 'error'
+  error: 'error',
+  syncHistory: 'sync_history'
 }
 
 export type RouteNames = typeof ROUTE_NAMES
