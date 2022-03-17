@@ -97,6 +97,10 @@ export default class DashboardPage extends Vue {
     return { ...DEFAULT_NON_ZERO_STYLE, color: this.color }
   }
 
+  get hasLineChartData (): boolean {
+    return !this.lineChartData || Object.keys(this.lineChartData).length > 0
+  }
+
   get lineChartData (): Record<number, number> | null {
     return this.selectedTab === TAB_VALUES.richness
       ? this.generated?.richnessByHour ?? null
