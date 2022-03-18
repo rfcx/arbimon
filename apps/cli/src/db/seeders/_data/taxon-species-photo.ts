@@ -1,6 +1,6 @@
 import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
 
-export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
+export const rawTaxonSpeciesPhoto: Array<TaxonSpeciesPhoto & { 'TaxonSpecies.slug': string }> = [
   {
     taxonSpeciesId: 1,
     source: 'WIKI',
@@ -8,7 +8,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Bright-rumped attila',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Bright-rumped_attila#/media/File:Attila_spadiceus.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Bright-rumped_attila#/media/File:Attila_spadiceus.jpg',
+    'TaxonSpecies.slug': 'attila-spadiceus'
   },
   {
     taxonSpeciesId: 2,
@@ -17,7 +18,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Great tinamou',
     photoAuthor: 'Patrick Coin (Patrick Coin)',
     photoLicense: 'CC BY-SA 2.5',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Great_tinamou#/media/File:Tinamus_majorPCSL00504B.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Great_tinamou#/media/File:Tinamus_majorPCSL00504B.jpg',
+    'TaxonSpecies.slug': 'tinamus-major'
   },
   {
     taxonSpeciesId: 3,
@@ -26,7 +28,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Chestnut-mandibled toucan',
     photoAuthor: 'chuck624 from Upstate NY, USA',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Chestnut-mandibled_toucan#/media/File:Ramphastos_ambiguus_-Costa_Rica-8a_%281%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Chestnut-mandibled_toucan#/media/File:Ramphastos_ambiguus_-Costa_Rica-8a_%281%29.jpg',
+    'TaxonSpecies.slug': 'ramphastos-swainsonii'
   },
   {
     taxonSpeciesId: 4,
@@ -35,7 +38,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Mantled howler',
     photoAuthor: 'Dr. Ariel Rodriguez-Vargas',
     photoLicense: 'CC BY 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Mantled_howler#/media/File:Panamanian_Male_Adult_Howler_Monkey.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Mantled_howler#/media/File:Panamanian_Male_Adult_Howler_Monkey.jpg',
+    'TaxonSpecies.slug': 'alouatta-palliata'
   },
   {
     taxonSpeciesId: 5,
@@ -44,7 +48,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Broad-billed motmot',
     photoAuthor: 'Chris Jimenez from CR',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Broad-billed_motmot#/media/File:Broad-billed_Motmot.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Broad-billed_motmot#/media/File:Broad-billed_Motmot.jpg',
+    'TaxonSpecies.slug': 'electron-platyrhynchum'
   },
   {
     taxonSpeciesId: 6,
@@ -53,7 +58,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-crowned antshrike',
     photoAuthor: 'Mike\'s Birds from Riverside, CA, US',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-crowned_antshrike#/media/File:Black-crowned_Antshrike_%2840880837972%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-crowned_antshrike#/media/File:Black-crowned_Antshrike_%2840880837972%29.jpg',
+    'TaxonSpecies.slug': 'thamnophilus-atrinucha'
   },
   {
     taxonSpeciesId: 7,
@@ -62,7 +68,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Keel-billed toucan',
     photoAuthor: 'derivative work: Snowmanradio (talk)\n\nRamphastos_sulfuratus_-Belize_Zoo-6a.jpg: Pearl Vas',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Keel-billed_toucan#/media/File:Ramphastos_sulfuratus_-Belize_Zoo-6a-2c.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Keel-billed_toucan#/media/File:Ramphastos_sulfuratus_-Belize_Zoo-6a-2c.jpg',
+    'TaxonSpecies.slug': 'ramphastos-sulfuratus'
   },
   {
     taxonSpeciesId: 8,
@@ -71,7 +78,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Crested guan',
     photoAuthor: '"Autosafari"',
     photoLicense: 'CC-BY-SA-3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Crested_guan#/media/File:Penelope_purpurascens.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Crested_guan#/media/File:Penelope_purpurascens.jpg',
+    'TaxonSpecies.slug': 'penelope-purpurascens'
   },
   {
     taxonSpeciesId: 9,
@@ -80,7 +88,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Mottled owl',
     photoAuthor: 'dominic sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Mottled_owl#/media/File:Mottled_Owl.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Mottled_owl#/media/File:Mottled_Owl.jpg',
+    'TaxonSpecies.slug': 'ciccaba-virgata'
   },
   {
     taxonSpeciesId: 10,
@@ -89,7 +98,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Great kiskadee',
     photoAuthor: 'Mike &amp; Chris',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Great_kiskadee#/media/File:Pitangus_sulphuratus_3.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Great_kiskadee#/media/File:Pitangus_sulphuratus_3.jpg',
+    'TaxonSpecies.slug': 'pitangus-sulphuratus'
   },
   {
     taxonSpeciesId: 11,
@@ -98,7 +108,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Collared forest falcon',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Collared_forest_falcon#/media/File:Micrastur_semitorquatus.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Collared_forest_falcon#/media/File:Micrastur_semitorquatus.jpg',
+    'TaxonSpecies.slug': 'micrastur-semitorquatus'
   },
   {
     taxonSpeciesId: 12,
@@ -107,7 +118,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Snail kite',
     photoAuthor: 'Andreas Trepte',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Snail_kite#/media/File:Schneckenweih-Snail-Kite.JPG'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Snail_kite#/media/File:Schneckenweih-Snail-Kite.JPG',
+    'TaxonSpecies.slug': 'rostrhamus-sociabilis'
   },
   {
     taxonSpeciesId: 13,
@@ -116,7 +128,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Double-toothed kite',
     photoAuthor: 'Francesco Veronesi from Italy',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Double-toothed_kite#/media/File:Double-tooth_Kite_-_Choco_-_Ecuador.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Double-toothed_kite#/media/File:Double-tooth_Kite_-_Choco_-_Ecuador.jpg',
+    'TaxonSpecies.slug': 'harpagus-bidentatus'
   },
   {
     taxonSpeciesId: 14,
@@ -125,7 +138,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'White hawk',
     photoAuthor: 'White_Hawk_1_2496239182.jpg: dominic sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White_hawk#/media/File:White_Hawk_1_2496239182_cropped.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White_hawk#/media/File:White_Hawk_1_2496239182_cropped.jpg',
+    'TaxonSpecies.slug': 'leucopternis-albicollis'
   },
   {
     taxonSpeciesId: 15,
@@ -134,7 +148,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black hawk-eagle',
     photoAuthor: 'Nortondefeis',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black_hawk-eagle#/media/File:Gavi%C3%A3o-pega-macaco_%28Spizaetus_tyrannus%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black_hawk-eagle#/media/File:Gavi%C3%A3o-pega-macaco_%28Spizaetus_tyrannus%29.jpg',
+    'TaxonSpecies.slug': 'spizaetus-tyrannus'
   },
   {
     taxonSpeciesId: 16,
@@ -143,7 +158,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Sunbittern',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Sunbittern#/media/File:Sunbittern_%28Eurypyga_helias%29.JPG'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Sunbittern#/media/File:Sunbittern_%28Eurypyga_helias%29.JPG',
+    'TaxonSpecies.slug': 'eurypyga-helias'
   },
   {
     taxonSpeciesId: 17,
@@ -152,7 +168,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Grey-cowled wood rail',
     photoAuthor: 'Alejandro Bayer Tamayo from Armenia, Colombia',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-cowled_wood_rail#/media/File:Aramides_cajanea_%28Chilacoa_colinegra%29_%2814636758294%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-cowled_wood_rail#/media/File:Aramides_cajanea_%28Chilacoa_colinegra%29_%2814636758294%29.jpg',
+    'TaxonSpecies.slug': 'aramides-cajanea'
   },
   {
     taxonSpeciesId: 18,
@@ -161,7 +178,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Limpkin',
     photoAuthor: 'VJAnderson',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Limpkin#/media/File:Limpkin%2C_Florida_05.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Limpkin#/media/File:Limpkin%2C_Florida_05.jpg',
+    'TaxonSpecies.slug': 'aramus-guarauna'
   },
   {
     taxonSpeciesId: 19,
@@ -170,7 +188,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Scaled pigeon',
     photoAuthor: 'Thiago Valença',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Scaled_pigeon#/media/File:Patagioenas_speciosa_-Zooparque_Itatiba%2C_Sao_Paulo_State%2C_Brazil_-adult-8a.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Scaled_pigeon#/media/File:Patagioenas_speciosa_-Zooparque_Itatiba%2C_Sao_Paulo_State%2C_Brazil_-adult-8a.jpg',
+    'TaxonSpecies.slug': 'patagioenas-speciosa'
   },
   {
     taxonSpeciesId: 20,
@@ -179,7 +198,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Pale-vented pigeon',
     photoAuthor: 'Joao Quental',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Pale-vented_pigeon#/media/File:Patagioenas_cayennensis%2C_Pale-vented_Pigeon.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Pale-vented_pigeon#/media/File:Patagioenas_cayennensis%2C_Pale-vented_Pigeon.jpg',
+    'TaxonSpecies.slug': 'patagioenas-cayennensis'
   },
   {
     taxonSpeciesId: 21,
@@ -188,7 +208,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Short-billed pigeon',
     photoAuthor: 'Telegro',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Short-billed_pigeon#/media/File:Short-billed_Pigeon.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Short-billed_pigeon#/media/File:Short-billed_Pigeon.jpg',
+    'TaxonSpecies.slug': 'patagioenas-nigrirostris'
   },
   {
     taxonSpeciesId: 22,
@@ -197,7 +218,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Grey-chested dove',
     photoAuthor: 'Jerry Oldenettel',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-chested_dove#/media/File:Gray-chested_Dove.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-chested_dove#/media/File:Gray-chested_Dove.jpg',
+    'TaxonSpecies.slug': 'leptotila-cassini'
   },
   {
     taxonSpeciesId: 23,
@@ -206,7 +228,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Blue-headed parrot',
     photoAuthor: 'The original uploader was Yve5 at French Wikipedia.',
     photoLicense: 'CC BY-SA 2.5',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Blue-headed_parrot#/media/File:Pionus_menstruus_-in_captivity.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Blue-headed_parrot#/media/File:Pionus_menstruus_-in_captivity.jpg',
+    'TaxonSpecies.slug': 'pionus-menstruus'
   },
   {
     taxonSpeciesId: 24,
@@ -215,7 +238,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Red-lored amazon',
     photoAuthor: 'Tomasz Wagner from Burnaby, BC, Canada',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-lored_amazon#/media/File:Amazona_autumnalis_-Xcaret_theme_park_-Riviera_Maya-8a.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-lored_amazon#/media/File:Amazona_autumnalis_-Xcaret_theme_park_-Riviera_Maya-8a.jpg',
+    'TaxonSpecies.slug': 'amazona-autumnalis'
   },
   {
     taxonSpeciesId: 25,
@@ -224,7 +248,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Southern mealy amazon',
     photoAuthor: 'D. Gordon E. Robertson',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Southern_mealy_amazon#/media/File:Mealy_Parrot%2C_Peru.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Southern_mealy_amazon#/media/File:Mealy_Parrot%2C_Peru.jpg',
+    'TaxonSpecies.slug': 'amazona-farinosa'
   },
   {
     taxonSpeciesId: 26,
@@ -233,7 +258,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Squirrel cuckoo',
     photoAuthor: 'Dario Sanches from SÃO PAULO, BRASIL',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Squirrel_cuckoo#/media/File:Flickr_-_Dario_Sanches_-_ALMA-DE-GATO_%28Piaya_cayana%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Squirrel_cuckoo#/media/File:Flickr_-_Dario_Sanches_-_ALMA-DE-GATO_%28Piaya_cayana%29.jpg',
+    'TaxonSpecies.slug': 'piaya-cayana'
   },
   {
     taxonSpeciesId: 27,
@@ -242,7 +268,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Greater ani',
     photoAuthor: 'Arthur Chapman',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Greater_ani#/media/File:Crotophaga_major_%28Greater_Ani%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Greater_ani#/media/File:Crotophaga_major_%28Greater_Ani%29.jpg',
+    'TaxonSpecies.slug': 'crotophaga-major'
   },
   {
     taxonSpeciesId: 28,
@@ -251,7 +278,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Mottled owl',
     photoAuthor: 'dominic sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Mottled_owl#/media/File:Mottled_Owl.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Mottled_owl#/media/File:Mottled_Owl.jpg',
+    'TaxonSpecies.slug': 'strix-virgata'
   },
   {
     taxonSpeciesId: 29,
@@ -260,7 +288,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-and-white owl',
     photoAuthor: 'Chris Jimenez from CR',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-and-white_owl#/media/File:Black_and_White_owl.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-and-white_owl#/media/File:Black_and_White_owl.jpg',
+    'TaxonSpecies.slug': 'strix-nigrolineata'
   },
   {
     taxonSpeciesId: 30,
@@ -269,7 +298,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Spectacled owl',
     photoAuthor: 'Hans Hillewaert',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Spectacled_owl#/media/File:Pulsatrix_perspicillata_chapmani_%28Costa_Rica%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Spectacled_owl#/media/File:Pulsatrix_perspicillata_chapmani_%28Costa_Rica%29.jpg',
+    'TaxonSpecies.slug': 'pulsatrix-perspicillata'
   },
   {
     taxonSpeciesId: 31,
@@ -278,7 +308,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Short-tailed nighthawk',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Short-tailed_nighthawk#/media/File:Lurocalis_semitorquatus_-_Short-tailed_Nighthawk%3B_Botanic_Garden%2C_S%C3%A3o_Paulo%2C_Brazil.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Short-tailed_nighthawk#/media/File:Lurocalis_semitorquatus_-_Short-tailed_Nighthawk%3B_Botanic_Garden%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
+    'TaxonSpecies.slug': 'lurocalis-semitorquatus'
   },
   {
     taxonSpeciesId: 32,
@@ -287,7 +318,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Violet-bellied hummingbird',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Violet-bellied_hummingbird#/media/File:Violet-bellied_Hummingbird.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Violet-bellied_hummingbird#/media/File:Violet-bellied_Hummingbird.jpg',
+    'TaxonSpecies.slug': 'damophila-julie'
   },
   {
     taxonSpeciesId: 33,
@@ -296,7 +328,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Slaty-tailed trogon',
     photoAuthor: 'john norton from Salt Lake City, USA',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Slaty-tailed_trogon#/media/File:Trogon_massena_-Belize_-male-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Slaty-tailed_trogon#/media/File:Trogon_massena_-Belize_-male-8.jpg',
+    'TaxonSpecies.slug': 'trogon-massena'
   },
   {
     taxonSpeciesId: 34,
@@ -305,7 +338,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Green-backed trogon',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Green-backed_trogon#/media/File:Trogon_viridis_%28Green-backed_Trogon%29%2C_male%2C_Restinga_de_Bertioga_-_SP_-_Brasil.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Green-backed_trogon#/media/File:Trogon_viridis_%28Green-backed_Trogon%29%2C_male%2C_Restinga_de_Bertioga_-_SP_-_Brasil.jpg',
+    'TaxonSpecies.slug': 'trogon-viridis'
   },
   {
     taxonSpeciesId: 35,
@@ -314,7 +348,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-throated trogon',
     photoAuthor: 'Jerry Oldenettel',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-throated_trogon#/media/File:Black-throated_Trogon.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-throated_trogon#/media/File:Black-throated_Trogon.jpg',
+    'TaxonSpecies.slug': 'trogon-rufus'
   },
   {
     taxonSpeciesId: 36,
@@ -323,7 +358,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Guianan trogon',
     photoAuthor: 'Mike &amp; Chris',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Guianan_trogon#/media/File:Trogon_violaceus_3.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Guianan_trogon#/media/File:Trogon_violaceus_3.jpg',
+    'TaxonSpecies.slug': 'trogon-violaceus'
   },
   {
     taxonSpeciesId: 37,
@@ -332,7 +368,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Ringed kingfisher',
     photoAuthor: 'Dario Sanches',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Ringed_kingfisher#/media/File:MARTIM-PESCADOR-GRANDE_%28Megaceryle_torquata%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Ringed_kingfisher#/media/File:MARTIM-PESCADOR-GRANDE_%28Megaceryle_torquata%29.jpg',
+    'TaxonSpecies.slug': 'megaceryle-torquata'
   },
   {
     taxonSpeciesId: 38,
@@ -341,7 +378,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Rufous motmot',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Rufous_motmot#/media/File:Baryphthengus_martii_-Panama-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Rufous_motmot#/media/File:Baryphthengus_martii_-Panama-8.jpg',
+    'TaxonSpecies.slug': 'baryphthengus-martii'
   },
   {
     taxonSpeciesId: 39,
@@ -350,7 +388,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Collared aracari',
     photoAuthor: 'Dennis Jarvis from Halifax, Canada',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Collared_aracari#/media/File:Flickr_-_archer10_%28Dennis%29_-_Belize-0924_-_Toucan.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Collared_aracari#/media/File:Flickr_-_archer10_%28Dennis%29_-_Belize-0924_-_Toucan.jpg',
+    'TaxonSpecies.slug': 'pteroglossus-torquatus'
   },
   {
     taxonSpeciesId: 40,
@@ -359,7 +398,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-cheeked woodpecker',
     photoAuthor: 'Jerry Oldenettel',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-cheeked_woodpecker#/media/File:Black-cheeked_Woodpecker.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-cheeked_woodpecker#/media/File:Black-cheeked_Woodpecker.jpg',
+    'TaxonSpecies.slug': 'melanerpes-pucherani'
   },
   {
     taxonSpeciesId: 41,
@@ -368,7 +408,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Lineated woodpecker',
     photoAuthor: 'Dario Sanches',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Lineated_woodpecker#/media/File:PICA-PAU-DE-BANDA-BRANCA_%28Dryocopus_lineatus%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Lineated_woodpecker#/media/File:PICA-PAU-DE-BANDA-BRANCA_%28Dryocopus_lineatus%29.jpg',
+    'TaxonSpecies.slug': 'dryocopus-lineatus'
   },
   {
     taxonSpeciesId: 42,
@@ -377,7 +418,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Crimson-crested woodpecker',
     photoAuthor: 'http://www.birdphotos.com',
     photoLicense: 'CC BY 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Crimson-crested_woodpecker#/media/File:Crimson-crestewoodpecker.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Crimson-crested_woodpecker#/media/File:Crimson-crestewoodpecker.jpg',
+    'TaxonSpecies.slug': 'campephilus-melanoleucos'
   },
   {
     taxonSpeciesId: 43,
@@ -386,7 +428,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-breasted puffbird',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-breasted_puffbird#/media/File:Black-breasted_puffbird_%28Notharchus_pectoralis%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-breasted_puffbird#/media/File:Black-breasted_puffbird_%28Notharchus_pectoralis%29.jpg',
+    'TaxonSpecies.slug': 'notharchus-pectoralis'
   },
   {
     taxonSpeciesId: 44,
@@ -395,7 +438,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'White-whiskered puffbird',
     photoAuthor: 'Len Blumin',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-whiskered_puffbird#/media/File:White_whiskered_puffbird.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-whiskered_puffbird#/media/File:White_whiskered_puffbird.jpg',
+    'TaxonSpecies.slug': 'malacoptila-panamensis'
   },
   {
     taxonSpeciesId: 45,
@@ -404,7 +448,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Red-capped manakin',
     photoAuthor: 'Ben Keen',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-capped_manakin#/media/File:Red-capped-manakin.png'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-capped_manakin#/media/File:Red-capped-manakin.png',
+    'TaxonSpecies.slug': 'pipra-mentalis'
   },
   {
     taxonSpeciesId: 46,
@@ -413,7 +458,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Masked tityra',
     photoAuthor: 'Z emlinki',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Masked_tityra#/media/File:Tityra_semifasciata_-Brazil-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Masked_tityra#/media/File:Tityra_semifasciata_-Brazil-8.jpg',
+    'TaxonSpecies.slug': 'tityra-semifasciata'
   },
   {
     taxonSpeciesId: 47,
@@ -422,7 +468,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Speckled mourner',
     photoAuthor: 'Joseph Smit',
     photoLicense: 'Public domain',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Speckled_mourner#/media/File:LipaugusRufescensSmit.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Speckled_mourner#/media/File:LipaugusRufescensSmit.jpg',
+    'TaxonSpecies.slug': 'laniocera-rufescens'
   },
   {
     taxonSpeciesId: 48,
@@ -431,7 +478,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Purple-throated fruitcrow',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Purple-throated_fruitcrow#/media/File:Querula_purpurata_-_Purple-throated_Fruitcrow_%28male%29%3B_Parauapebas%2C_Par%C3%A1%2C_Brazil.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Purple-throated_fruitcrow#/media/File:Querula_purpurata_-_Purple-throated_Fruitcrow_%28male%29%3B_Parauapebas%2C_Par%C3%A1%2C_Brazil.jpg',
+    'TaxonSpecies.slug': 'querula-purpurata'
   },
   {
     taxonSpeciesId: 49,
@@ -440,7 +488,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Yellow-crowned tyrannulet',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-crowned_tyrannulet#/media/File:Yellow-crowned_Tyrannulet_%28Tyrannulus_elatus%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-crowned_tyrannulet#/media/File:Yellow-crowned_Tyrannulet_%28Tyrannulus_elatus%29.jpg',
+    'TaxonSpecies.slug': 'tyrannulus-elatus'
   },
   {
     taxonSpeciesId: 50,
@@ -449,7 +498,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Forest elaenia',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Forest_elaenia#/media/File:Myiopagis_gaimardii_-_Forest_Elaenia%3B_Manacapuru%2C_Amazonas%2C_Brazil.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Forest_elaenia#/media/File:Myiopagis_gaimardii_-_Forest_Elaenia%3B_Manacapuru%2C_Amazonas%2C_Brazil.jpg',
+    'TaxonSpecies.slug': 'myiopagis-gaimardii'
   },
   {
     taxonSpeciesId: 51,
@@ -458,7 +508,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Brown-capped tyrannulet',
     photoAuthor: 'Ron Knight from Seaford, East Sussex, United Kingdom',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Brown-capped_tyrannulet#/media/File:Brown-capped_Tyrannulet_%28Ornithion_brunneicapillus%29_%288079747729%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Brown-capped_tyrannulet#/media/File:Brown-capped_Tyrannulet_%28Ornithion_brunneicapillus%29_%288079747729%29.jpg',
+    'TaxonSpecies.slug': 'ornithion-brunneicapillus'
   },
   {
     taxonSpeciesId: 52,
@@ -467,7 +518,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Southern beardless tyrannulet',
     photoAuthor: 'Lip Kee',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Southern_beardless_tyrannulet#/media/File:Southern_Beardless_Tyrannulet.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Southern_beardless_tyrannulet#/media/File:Southern_Beardless_Tyrannulet.jpg',
+    'TaxonSpecies.slug': 'camptostoma-obsoletum'
   },
   {
     taxonSpeciesId: 53,
@@ -476,7 +528,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Guatemalan tyrannulet',
     photoAuthor: 'Jerry Oldenettel',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Guatemalan_tyrannulet#/media/File:Paltry_Tyrannulet.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Guatemalan_tyrannulet#/media/File:Paltry_Tyrannulet.jpg',
+    'TaxonSpecies.slug': 'zimmerius-vilissimus'
   },
   {
     taxonSpeciesId: 54,
@@ -485,7 +538,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Ochre-bellied flycatcher',
     photoAuthor: 'Mike &amp; Chris',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Ochre-bellied_flycatcher#/media/File:Mionectes_oleagineus_2.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Ochre-bellied_flycatcher#/media/File:Mionectes_oleagineus_2.jpg',
+    'TaxonSpecies.slug': 'mionectes-oleagineus'
   },
   {
     taxonSpeciesId: 55,
@@ -494,7 +548,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-capped pygmy tyrant',
     photoAuthor: 'Myiornis_atricapillus_2.jpg: Shawnna from Harrogate, UK\nderivative work: Berichard (talk)',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-capped_pygmy_tyrant#/media/File:Myiornis_atricapillus_1.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-capped_pygmy_tyrant#/media/File:Myiornis_atricapillus_1.jpg',
+    'TaxonSpecies.slug': 'myiornis-atricapillus'
   },
   {
     taxonSpeciesId: 56,
@@ -503,7 +558,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Southern bentbill',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Southern_bentbill#/media/File:Southern_Bentbill.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Southern_bentbill#/media/File:Southern_Bentbill.jpg',
+    'TaxonSpecies.slug': 'oncostoma-olivaceum'
   },
   {
     taxonSpeciesId: 57,
@@ -512,7 +568,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Common tody-flycatcher',
     photoAuthor: 'Joseph C Boone',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Common_tody-flycatcher#/media/File:Common_Tody-Flycatcher.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Common_tody-flycatcher#/media/File:Common_Tody-Flycatcher.jpg',
+    'TaxonSpecies.slug': 'todirostrum-cinereum'
   },
   {
     taxonSpeciesId: 59,
@@ -521,7 +578,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Yellow-margined flatbill',
     photoAuthor: 'Francesco Veronesi from Italy',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-margined_flatbill#/media/File:Yellow-margined_Flycatcher_-_Panama_H8O8168_%2816687241769%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-margined_flatbill#/media/File:Yellow-margined_Flycatcher_-_Panama_H8O8168_%2816687241769%29.jpg',
+    'TaxonSpecies.slug': 'tolmomyias-flavotectus'
   },
   {
     taxonSpeciesId: 60,
@@ -530,7 +588,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Golden-crowned spadebill',
     photoAuthor: 'Francesco Veronesi from Italy',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Golden-crowned_spadebill#/media/File:Golden-crowned_Spadebill_-_Rio_Tigre_-_Costa_Rica_MG_7766_%2826669722376%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Golden-crowned_spadebill#/media/File:Golden-crowned_Spadebill_-_Rio_Tigre_-_Costa_Rica_MG_7766_%2826669722376%29.jpg',
+    'TaxonSpecies.slug': 'platyrinchus-coronatus'
   },
   {
     taxonSpeciesId: 61,
@@ -539,7 +598,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Ruddy-tailed flycatcher',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Ruddy-tailed_flycatcher#/media/File:Terenotriccus_erythrurus_-_Ruddy-tailed_flycatcher%3B_Rio_Branco%2C_Acre%2C_Brazil.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Ruddy-tailed_flycatcher#/media/File:Terenotriccus_erythrurus_-_Ruddy-tailed_flycatcher%3B_Rio_Branco%2C_Acre%2C_Brazil.jpg',
+    'TaxonSpecies.slug': 'terenotriccus-erythrurus'
   },
   {
     taxonSpeciesId: 62,
@@ -548,7 +608,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Eastern wood pewee',
     photoAuthor: 'Jim Conrad',
     photoLicense: 'Public domain',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Eastern_wood_pewee#/media/File:Eastern_Peewee-Yucat%C3%A1n.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Eastern_wood_pewee#/media/File:Eastern_Peewee-Yucat%C3%A1n.jpg',
+    'TaxonSpecies.slug': 'contopus-virens'
   },
   {
     taxonSpeciesId: 63,
@@ -557,7 +618,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Rusty-margined flycatcher',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Rusty-margined_flycatcher#/media/File:Rusty-margined_flycatcher_%28Myiozetetes_cayanensis_hellmayri%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Rusty-margined_flycatcher#/media/File:Rusty-margined_flycatcher_%28Myiozetetes_cayanensis_hellmayri%29.jpg',
+    'TaxonSpecies.slug': 'myiozetetes-cayanensis'
   },
   {
     taxonSpeciesId: 64,
@@ -566,7 +628,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Social flycatcher',
     photoAuthor: 'Mdf',
     photoLicense: 'CC-BY-SA-3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Social_flycatcher#/media/File:Myiozetetes-similis-001.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Social_flycatcher#/media/File:Myiozetetes-similis-001.jpg',
+    'TaxonSpecies.slug': 'myiozetetes-similis'
   },
   {
     taxonSpeciesId: 65,
@@ -575,7 +638,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Lesser kiskadee',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Lesser_kiskadee#/media/File:Lesser_kiskadee_%28Pitangus_lictor_panamense%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Lesser_kiskadee#/media/File:Lesser_kiskadee_%28Pitangus_lictor_panamense%29.jpg',
+    'TaxonSpecies.slug': 'pitangus-lictor'
   },
   {
     taxonSpeciesId: 66,
@@ -584,7 +648,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Streaked flycatcher',
     photoAuthor: 'Dario Sanches',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Streaked_flycatcher#/media/File:BEM-TE-VI-RAJADO_%28_Myiodynastes_maculatus%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Streaked_flycatcher#/media/File:BEM-TE-VI-RAJADO_%28_Myiodynastes_maculatus%29.jpg',
+    'TaxonSpecies.slug': 'myiodynastes-maculatus'
   },
   {
     taxonSpeciesId: 67,
@@ -593,7 +658,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Tropical kingbird',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Tropical_kingbird#/media/File:Tropical_kingbird_%28Tyrannus_melancholicus%29.JPG'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Tropical_kingbird#/media/File:Tropical_kingbird_%28Tyrannus_melancholicus%29.JPG',
+    'TaxonSpecies.slug': 'tyrannus-melancholicus'
   },
   {
     taxonSpeciesId: 68,
@@ -602,7 +668,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Rufous mourner',
     photoAuthor: 'Francesco Veronesi from Italy',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Rufous_mourner#/media/File:Rufous_Mourner_-_Panama_H8O0032.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Rufous_mourner#/media/File:Rufous_Mourner_-_Panama_H8O0032.jpg',
+    'TaxonSpecies.slug': 'rhytipterna-holerythra'
   },
   {
     taxonSpeciesId: 69,
@@ -611,7 +678,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Dusky-capped flycatcher',
     photoAuthor: 'Mdf',
     photoLicense: 'CC-BY-SA-3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Dusky-capped_flycatcher#/media/File:Myiarchus-tuberculifer-001.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Dusky-capped_flycatcher#/media/File:Myiarchus-tuberculifer-001.jpg',
+    'TaxonSpecies.slug': 'myiarchus-tuberculifer'
   },
   {
     taxonSpeciesId: 70,
@@ -620,7 +688,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Great crested flycatcher',
     photoAuthor: 'DickDaniels (http://theworldbirds.org/)',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Great_crested_flycatcher#/media/File:Great_Crested_Flycatcher_RWD2.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Great_crested_flycatcher#/media/File:Great_Crested_Flycatcher_RWD2.jpg',
+    'TaxonSpecies.slug': 'myiarchus-crinitus'
   },
   {
     taxonSpeciesId: 72,
@@ -629,7 +698,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Checker-throated stipplethroat',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Checker-throated_stipplethroat#/media/File:Epinecrophylla_fulviventris.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Checker-throated_stipplethroat#/media/File:Epinecrophylla_fulviventris.jpg',
+    'TaxonSpecies.slug': 'epinecrophylla-fulviventris'
   },
   {
     taxonSpeciesId: 73,
@@ -638,7 +708,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'White-flanked antwren',
     photoAuthor: 'Michael Woodruff',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-flanked_antwren#/media/File:Myrmotherula_axillaris_-NW_Ecuador-4.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-flanked_antwren#/media/File:Myrmotherula_axillaris_-NW_Ecuador-4.jpg',
+    'TaxonSpecies.slug': 'myrmotherula-axillaris'
   },
   {
     taxonSpeciesId: 74,
@@ -647,7 +718,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Dot-winged antwren',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Dot-winged_antwren#/media/File:Microrhopias_quixensis_-_Dot-winged_Antwren_%28male%29.JPG'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Dot-winged_antwren#/media/File:Microrhopias_quixensis_-_Dot-winged_Antwren_%28male%29.JPG',
+    'TaxonSpecies.slug': 'microrhopias-quixensis'
   },
   {
     taxonSpeciesId: 75,
@@ -656,7 +728,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Chestnut-backed antbird',
     photoAuthor: 'Nigel Voaden from UK',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Chestnut-backed_antbird#/media/File:Chestnut-backed_Antbird%2C_El_Paujil%2C_Cololmbia_%285746230497%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Chestnut-backed_antbird#/media/File:Chestnut-backed_Antbird%2C_El_Paujil%2C_Cololmbia_%285746230497%29.jpg',
+    'TaxonSpecies.slug': 'myrmeciza-exsul'
   },
   {
     taxonSpeciesId: 76,
@@ -665,7 +738,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'White-cheeked antbird',
     photoAuthor: 'Mdf',
     photoLicense: 'CC-BY-SA-3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-cheeked_antbird#/media/File:Gymnopithys-leucaspis-002.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-cheeked_antbird#/media/File:Gymnopithys-leucaspis-002.jpg',
+    'TaxonSpecies.slug': 'gymnopithys-leucaspis'
   },
   {
     taxonSpeciesId: 77,
@@ -674,7 +748,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Spotted antbird',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Spotted_antbird#/media/File:Spotted_Antbird.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Spotted_antbird#/media/File:Spotted_Antbird.jpg',
+    'TaxonSpecies.slug': 'hylophylax-naevioides'
   },
   {
     taxonSpeciesId: 78,
@@ -683,7 +758,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Scaly-throated leaftosser',
     photoAuthor: 'John Gerrard Keulemans',
     photoLicense: 'Public domain',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Scaly-throated_leaftosser#/media/File:Sclerurus_guatemalensis_1902.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Scaly-throated_leaftosser#/media/File:Sclerurus_guatemalensis_1902.jpg',
+    'TaxonSpecies.slug': 'sclerurus-guatemalensis'
   },
   {
     taxonSpeciesId: 79,
@@ -692,7 +768,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Plain xenops',
     photoAuthor: 'Hector Bottai',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Plain_xenops#/media/File:Xenops_minutus_-_Plain_xenops%3B_Restinga_de_Bertioga_State_Park%2C_S%C3%A3o_Paulo%2C_Brazil.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Plain_xenops#/media/File:Xenops_minutus_-_Plain_xenops%3B_Restinga_de_Bertioga_State_Park%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
+    'TaxonSpecies.slug': 'xenops-minutus'
   },
   {
     taxonSpeciesId: 80,
@@ -701,7 +778,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Plain-brown woodcreeper',
     photoAuthor: 'Michael Woodruff',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Plain-brown_woodcreeper#/media/File:Dendrocincla_fuliginosa_-NW_Ecuador-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Plain-brown_woodcreeper#/media/File:Dendrocincla_fuliginosa_-NW_Ecuador-8.jpg',
+    'TaxonSpecies.slug': 'dendrocincla-fuliginosa'
   },
   {
     taxonSpeciesId: 81,
@@ -710,7 +788,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Wedge-billed woodcreeper',
     photoAuthor: 'Michael Woodruff',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Wedge-billed_woodcreeper#/media/File:Glyphorynchus_spirurus_-NW_Ecuador-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Wedge-billed_woodcreeper#/media/File:Glyphorynchus_spirurus_-NW_Ecuador-8.jpg',
+    'TaxonSpecies.slug': 'glyphorynchus-spirurus'
   },
   {
     taxonSpeciesId: 82,
@@ -719,7 +798,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Cocoa woodcreeper',
     photoAuthor: 'Jerry Oldenettel',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Cocoa_woodcreeper#/media/File:Cocoa_Woodcreeper.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Cocoa_woodcreeper#/media/File:Cocoa_Woodcreeper.jpg',
+    'TaxonSpecies.slug': 'xiphorhynchus-susurrans'
   },
   {
     taxonSpeciesId: 83,
@@ -728,7 +808,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Black-striped woodcreeper',
     photoAuthor: 'Julian Tysoe',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-striped_woodcreeper#/media/File:Xiphorhynchus_lachrymosus.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Black-striped_woodcreeper#/media/File:Xiphorhynchus_lachrymosus.jpg',
+    'TaxonSpecies.slug': 'xiphorhynchus-lachrymosus'
   },
   {
     taxonSpeciesId: 84,
@@ -737,7 +818,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Lesser greenlet',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Lesser_greenlet#/media/File:Lesser_Greenlet_%28Hylophilus_decurtatus%29_%287222933432%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Lesser_greenlet#/media/File:Lesser_Greenlet_%28Hylophilus_decurtatus%29_%287222933432%29.jpg',
+    'TaxonSpecies.slug': 'hylophilus-decurtatus'
   },
   {
     taxonSpeciesId: 85,
@@ -746,7 +828,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Grey-breasted martin',
     photoAuthor: 'Daniel Pineda Vera',
     photoLicense: 'CC BY 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-breasted_martin#/media/File:Progne_chalybea_-_2021.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-breasted_martin#/media/File:Progne_chalybea_-_2021.jpg',
+    'TaxonSpecies.slug': 'progne-chalybea'
   },
   {
     taxonSpeciesId: 86,
@@ -755,7 +838,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Tropical gnatcatcher',
     photoAuthor: 'Dominic Sherony',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Tropical_gnatcatcher#/media/File:Tropical_Gnatcatcher_%28Polioptila_plumbea%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Tropical_gnatcatcher#/media/File:Tropical_Gnatcatcher_%28Polioptila_plumbea%29.jpg',
+    'TaxonSpecies.slug': 'polioptila-plumbea'
   },
   {
     taxonSpeciesId: 87,
@@ -764,7 +848,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Chestnut-headed oropendola',
     photoAuthor: 'Kathy &amp; sam from Beaverton OR, USA',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Chestnut-headed_oropendola#/media/File:Psarocolius_wagleri_-near_Rancho_Naturalista%2C_Cordillera_de_Talamanca%2C_Costa_Rica-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Chestnut-headed_oropendola#/media/File:Psarocolius_wagleri_-near_Rancho_Naturalista%2C_Cordillera_de_Talamanca%2C_Costa_Rica-8.jpg',
+    'TaxonSpecies.slug': 'psarocolius-wagleri'
   },
   {
     taxonSpeciesId: 88,
@@ -773,7 +858,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Yellow-rumped cacique',
     photoAuthor: 'Francesco Veronesi from Italy',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-rumped_cacique#/media/File:Yellow-rumped_Cacique_-_Pantanal_-_Brazil_H8O2199_%2823593614830%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-rumped_cacique#/media/File:Yellow-rumped_Cacique_-_Pantanal_-_Brazil_H8O2199_%2823593614830%29.jpg',
+    'TaxonSpecies.slug': 'cacicus-cela'
   },
   {
     taxonSpeciesId: 89,
@@ -782,7 +868,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Yellow-backed oriole',
     photoAuthor: 'WebmasterRioblanco',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-backed_oriole#/media/File:Toche_Pareja.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Yellow-backed_oriole#/media/File:Toche_Pareja.jpg',
+    'TaxonSpecies.slug': 'icterus-chrysater'
   },
   {
     taxonSpeciesId: 90,
@@ -791,7 +878,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Grey-headed tanager',
     photoAuthor: 'Julian Londono from Manizales, Colombia',
     photoLicense: 'CC BY-SA 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-headed_tanager#/media/File:Eucometis_penicillata_-Manizales%2C_Caldas%2C_Colombia-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Grey-headed_tanager#/media/File:Eucometis_penicillata_-Manizales%2C_Caldas%2C_Colombia-8.jpg',
+    'TaxonSpecies.slug': 'eucometis-penicillata'
   },
   {
     taxonSpeciesId: 91,
@@ -800,7 +888,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'White-shouldered tanager',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-shouldered_tanager#/media/File:White-shouldered_tanager_%28Tachyphonus_luctuosus_panamensis%29_male.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/White-shouldered_tanager#/media/File:White-shouldered_tanager_%28Tachyphonus_luctuosus_panamensis%29_male.jpg',
+    'TaxonSpecies.slug': 'tachyphonus-luctuosus'
   },
   {
     taxonSpeciesId: 92,
@@ -809,7 +898,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Blue-gray tanager',
     photoAuthor: 'Mdf',
     photoLicense: 'CC-BY-SA-3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Blue-gray_tanager#/media/File:Thraupis-episcopus-001.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Blue-gray_tanager#/media/File:Thraupis-episcopus-001.jpg',
+    'TaxonSpecies.slug': 'thraupis-episcopus'
   },
   {
     taxonSpeciesId: 93,
@@ -818,7 +908,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Summer tanager',
     photoAuthor: 'tcantrell52',
     photoLicense: 'CC BY 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Summer_tanager#/media/File:Summer_Tanager_Male_Corpus_Christi_%28cropped%29.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Summer_tanager#/media/File:Summer_Tanager_Male_Corpus_Christi_%28cropped%29.jpg',
+    'TaxonSpecies.slug': 'piranga-rubra'
   },
   {
     taxonSpeciesId: 94,
@@ -827,7 +918,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Red-throated ant tanager',
     photoAuthor: 'john norton from Salt Lake City, USA',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-throated_ant_tanager#/media/File:Habia_fuscicauda_-Belize-8.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-throated_ant_tanager#/media/File:Habia_fuscicauda_-Belize-8.jpg',
+    'TaxonSpecies.slug': 'habia-fuscicauda'
   },
   {
     taxonSpeciesId: 95,
@@ -836,7 +928,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Fulvous-vented euphonia',
     photoAuthor: 'John Gerrard Keulemans',
     photoLicense: 'Public domain',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Fulvous-vented_euphonia#/media/File:Euphonia_fulvicrissa_1902.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Fulvous-vented_euphonia#/media/File:Euphonia_fulvicrissa_1902.jpg',
+    'TaxonSpecies.slug': 'euphonia-fulvicrissa'
   },
   {
     taxonSpeciesId: 96,
@@ -845,7 +938,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Slate-coloured grosbeak',
     photoAuthor: 'José Loaiza, Aves y Conservación',
     photoLicense: 'Public domain',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Slate-coloured_grosbeak#/media/File:Saltator_grossus.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Slate-coloured_grosbeak#/media/File:Saltator_grossus.jpg',
+    'TaxonSpecies.slug': 'saltator-grossus'
   },
   {
     taxonSpeciesId: 97,
@@ -854,7 +948,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Blue-black grosbeak',
     photoAuthor: 'José Loiza, Aves y Conservación',
     photoLicense: 'Public domain',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Blue-black_grosbeak#/media/File:Cyanocompsa_cyanoides.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Blue-black_grosbeak#/media/File:Cyanocompsa_cyanoides.jpg',
+    'TaxonSpecies.slug': 'cyanocompsa-cyanoides'
   },
   {
     taxonSpeciesId: 98,
@@ -863,7 +958,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Green and black poison dart frog',
     photoAuthor: 'Brian Gratwicke',
     photoLicense: 'CC BY 2.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Green_and_black_poison_dart_frog#/media/File:Dendrobates_auratus%2C_poison_dart_frog.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Green_and_black_poison_dart_frog#/media/File:Dendrobates_auratus%2C_poison_dart_frog.jpg',
+    'TaxonSpecies.slug': 'dendrobates-auratus'
   },
   {
     taxonSpeciesId: 99,
@@ -872,7 +968,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Red-faced spider monkey',
     photoAuthor: 'Hans Hillewaert',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-faced_spider_monkey#/media/File:Ateles_paniscus.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Red-faced_spider_monkey#/media/File:Ateles_paniscus.jpg',
+    'TaxonSpecies.slug': 'ateles-paniscus'
   },
   {
     taxonSpeciesId: 100,
@@ -881,7 +978,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Tufted capuchin',
     photoAuthor: 'Basile Morin',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Tufted_capuchin#/media/File:Tufted_capuchin_on_a_branch_in_Singapore.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Tufted_capuchin#/media/File:Tufted_capuchin_on_a_branch_in_Singapore.jpg',
+    'TaxonSpecies.slug': 'cebus-apella'
   },
   {
     taxonSpeciesId: 101,
@@ -890,7 +988,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Puerto Rican bullfinch',
     photoAuthor: 'Carlos David Hernández',
     photoLicense: 'CC BY 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_bullfinch#/media/File:Come%C3%B1ame.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Puerto_Rican_bullfinch#/media/File:Come%C3%B1ame.jpg',
+    'TaxonSpecies.slug': 'melopyrrha-portoricensis'
   },
   {
     taxonSpeciesId: 102,
@@ -899,7 +998,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Geoffroy\'s spider monkey',
     photoAuthor: 'Steven G. Johnson',
     photoLicense: 'CC BY-SA 3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Geoffroy\'s_spider_monkey#/media/File:Panama_spider_monkey%2C_Costa_Rica.JPG'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Geoffroy\'s_spider_monkey#/media/File:Panama_spider_monkey%2C_Costa_Rica.JPG',
+    'TaxonSpecies.slug': 'ateles-geoffroyi'
   },
   {
     taxonSpeciesId: 103,
@@ -908,7 +1008,8 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Colombian white-faced capuchin',
     photoAuthor: 'Postdlf',
     photoLicense: 'CC-BY-SA-3.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Colombian_white-faced_capuchin#/media/File:Cebus_capucinus_at_the_Bronx_Zoo_001.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Colombian_white-faced_capuchin#/media/File:Cebus_capucinus_at_the_Bronx_Zoo_001.jpg',
+    'TaxonSpecies.slug': 'cebus-capucinus'
   },
   {
     taxonSpeciesId: 104,
@@ -917,6 +1018,7 @@ export const rawTaxonSpeciesPhoto: TaxonSpeciesPhoto[] = [
     photoCaption: 'Geoffroy\'s tamarin',
     photoAuthor: 'Charles J. Sharp',
     photoLicense: 'CC BY-SA 4.0',
-    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Geoffroy\'s_tamarin#/media/File:Geoffroy%27s_tamarin_%28Saguinus_geoffroyi%29_2.jpg'
+    photoLicenseUrl: 'https://en.wikipedia.org/wiki/Geoffroy\'s_tamarin#/media/File:Geoffroy%27s_tamarin_%28Saguinus_geoffroyi%29_2.jpg',
+    'TaxonSpecies.slug': 'saguinus-geoffroyi'
   }
 ]

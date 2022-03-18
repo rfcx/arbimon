@@ -10,6 +10,6 @@ export const toTaxonSpeciesWikiSeed = (data: TaxonSpeciesWiki[]): void =>
     resolve(getSeederDataDirectory(), './taxon-species-wiki.ts'),
     data,
     'rawTaxonSpeciesWiki',
-    'TaxonSpeciesWiki[]',
+    'Array<TaxonSpeciesWiki & { \'TaxonSpecies.slug\': string }>',
     'import { TaxonSpeciesWiki } from \'@rfcx-bio/common/dao/types\''
   )

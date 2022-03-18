@@ -10,6 +10,6 @@ export const toTaxonSpeciesIucnSeed = (data: TaxonSpeciesIucn[]): void =>
     resolve(getSeederDataDirectory(), './taxon-species-iucn.ts'),
     data,
     'rawTaxonSpeciesIucn',
-    'TaxonSpeciesIucn[]',
+    'Array<TaxonSpeciesIucn & { \'TaxonSpecies.slug\': string }>',
     'import { TaxonSpeciesIucn } from \'@rfcx-bio/common/dao/types\''
   )
