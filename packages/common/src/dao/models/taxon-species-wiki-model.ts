@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { TaxonSpeciesWiki } from '../types/taxon-species-wiki'
 
 export const MODEL_TAXON_SPECIES_WIKI = 'TaxonSpeciesWiki'

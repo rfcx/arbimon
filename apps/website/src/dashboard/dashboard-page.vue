@@ -72,7 +72,7 @@
               :datasets="lineChartSeries"
             />
             <export-button
-              v-if="lineChartSeries.length > 0"
+              v-if="hasLineChartData"
               class="absolute top-2 right-2"
               @click="downloadLineChart"
             />

@@ -6,7 +6,7 @@ import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 
 const main = async (): Promise<void> => {
-  console.info('Hourly sync start')
+  console.info('Incremental sync start')
   try {
     const sequelize = getSequelize()
 
@@ -26,10 +26,12 @@ const main = async (): Promise<void> => {
 
     console.info('STEP: Refresh mviews')
     await refreshMviews(sequelize)
+
+    console.info('Incremental sync end: successful')
   } catch (e) {
     console.error(e)
     process.exitCode = 1
-    console.info('Hourly sync end: failed')
+    console.info('Incremental sync end: failed')
   }
 }
 
