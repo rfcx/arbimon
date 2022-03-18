@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '../helpers/defaults'
+import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
 import { ProjectVersion } from '../types'
 
 export const MODEL_PROJECT_VERSION = 'ProjectVersion'
