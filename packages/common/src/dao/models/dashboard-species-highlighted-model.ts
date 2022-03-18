@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { DashboardSpeciesHighlighted } from '../types/dashboard-species-highlighted'
 
 export const MODEL_DASHBOARD_SPECIES_HIGHLIGHTED = 'DashboardSpeciesHighlighted'

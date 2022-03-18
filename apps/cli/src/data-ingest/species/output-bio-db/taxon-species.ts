@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_TAXON_SPECIES } from '@rfcx-bio/common/dao/types'
 
-import { ArbimonSpeciesData } from '@/data-ingest/species/arbimon'
+import { ArbimonSpeciesData } from '@/data-ingest/species/input-arbimon'
 
 export const writeArbimonSpeciesDataToPostgres = async (sequelize: Sequelize, species: Array<Omit<ArbimonSpeciesData, 'taxon'>>): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)

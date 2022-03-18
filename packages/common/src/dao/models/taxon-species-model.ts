@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '../helpers/defaults'
+import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
 import { TaxonSpecies } from '../types'
 
 export const MODEL_TAXON_SPECIES = 'TaxonSpecies'
