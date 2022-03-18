@@ -1,6 +1,6 @@
 import { BindOrReplacements, Op } from 'sequelize'
 
-import { Where } from '@rfcx-bio/common/dao/helpers/query'
+import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
