@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { TaxonSpeciesPhoto } from '../types/taxon-species-photo'
 
 export const MODEL_TAXON_SPECIES_PHOTO = 'TaxonSpeciesPhoto'

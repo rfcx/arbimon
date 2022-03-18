@@ -2,8 +2,8 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 import { Op } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/common'
-import { Where } from '@rfcx-bio/common/dao/helpers/query'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
