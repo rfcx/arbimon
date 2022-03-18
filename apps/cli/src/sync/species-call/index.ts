@@ -2,8 +2,8 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
 
-import { getArbimonSpeciesCallsForProjectSpecies } from '@/data-ingest/species/arbimon-call'
-import { writeSpeciesCallsToPostgres } from '@/data-ingest/species/db/taxon-species-calls'
+import { getArbimonSpeciesCallsForProjectSpecies } from '@/data-ingest/species/input-arbimon-call'
+import { writeSpeciesCallsToPostgres } from '@/data-ingest/species/output-bio-db/taxon-species-calls'
 
 export const syncOnlyMissingSpeciesCalls = async (sequelize: Sequelize, project: Project): Promise<void> => {
   const sql = `
