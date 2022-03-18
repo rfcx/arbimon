@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { RiskRatingIucn } from '../types/risk-rating-iucn'
 
 export const MODEL_RISK_RATING_IUCN = 'RiskRatingIucn'

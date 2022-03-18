@@ -52,6 +52,11 @@ const routes: RouteRecordRaw[] = [
         path: 'info/:topic',
         name: ROUTE_NAMES.info,
         component: PAGES.Info
+      },
+      {
+        path: 'sync-history',
+        name: ROUTE_NAMES.syncHistory,
+        component: PAGES.SyncHistory
       }
     ]
   },
