@@ -11,7 +11,8 @@ export const jsonToTs = (data: string, constName: string, type?: string, ...impo
   const declaration = `export const ${constName}${type ? ': ' + type : ''} = `
   const object = data
     .replace(/'/gm, "\\'") // escape single quotes
-    .replace(/^(\s*)"(\w*)":/gm, '$1$2:') // remove quotes around keys
+    .replace(/^(\s*)"(\w*)":/gm, '$1$2:') // remove quotes around bare keys
+    .replace(/^(\s*)"([\w\\.]*)":/gm, '$1\'$2\':') // replace quotes around deep keys
     .replace(/(:\s*)"(.*)"(,)?$/gm, '$1\'$2\'$3') // convert double quotes to single around values
     .replace(/\\"/gm, '"') // unescape double quotes
 
