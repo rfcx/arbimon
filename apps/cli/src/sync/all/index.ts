@@ -8,8 +8,8 @@ import { ArbimonHourlyDetectionSummary, ArbimonNewData, getArbimonHourlyDetectio
 import { writeDetections } from '@/data-ingest/detections/db'
 import { getArbimonSites } from '@/data-ingest/sites/arbimon'
 import { writeSitesToPostgres } from '@/data-ingest/sites/db'
-import { getArbimonSpecies } from '@/data-ingest/species/arbimon'
-import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/db/taxon-species'
+import { getArbimonSpecies } from '@/data-ingest/species/input-arbimon'
+import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/output-bio-db/taxon-species'
 import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call/index'
 
 export const syncAllForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {

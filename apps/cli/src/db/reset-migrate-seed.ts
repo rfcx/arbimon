@@ -7,7 +7,8 @@ const DEFAULT_LOCAL_SEEDER_PATHS = [
   '01-master-data',
   '02-integration-test-data',
   '03-external-data-mock',
-  '05-user-data-mock'
+  '05-preload',
+  '06-user-data-mock'
 ].join(',')
 
 const verbose = process.argv.some(arg => arg === '--verbose')

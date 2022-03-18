@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { TaxonClass } from '../types'
 
 export const MODEL_TAXON_CLASS = 'TaxonClass'

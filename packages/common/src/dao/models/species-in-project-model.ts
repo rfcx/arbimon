@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { SpeciesInProject } from '../types/species-in-project'
 
 export const MODEL_SPECIES_IN_PROJECT = 'SpeciesInProject'

@@ -5,7 +5,7 @@ import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species
 import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { ArbimonSpeciesCall } from '../arbimon-call'
+import { ArbimonSpeciesCall } from '../input-arbimon-call'
 
 export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, speciesCalls: ArbimonSpeciesCall[]): Promise<void> {
   const models = ModelRepository.getInstance(sequelize)

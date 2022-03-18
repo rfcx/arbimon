@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../helpers/defaults'
+import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { DashboardRichnessByTaxon } from '../types/dashboard-richness-by-taxon'
 
 export const MODEL_DASHBOARD_RICHNESS_BY_TAXON = 'DashboardRichnessByTaxon'
