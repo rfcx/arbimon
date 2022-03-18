@@ -1,12 +1,17 @@
-import { TaxonSpeciesPhotoModel } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getDataFromBioDb } from '@/data-ingest/species/input-bio-db/from-bio-db'
 import { toTaxonSpeciesPhotoSeed } from '@/data-ingest/species/output-seed-data/to-taxon-species-photo-seed'
 import { getSequelize } from '@/db/connections'
 
 const main = async (): Promise<void> => {
-  const model = TaxonSpeciesPhotoModel(getSequelize())
-  const data = await getDataFromBioDb(model)
+  const models = ModelRepository.getInstance(getSequelize())
+
+  const data = await getDataFromBioDb(
+    models.TaxonSpeciesPhoto,
+    [{ model: models.TaxonSpecies, attributes: ['slug'], required: true }]
+  )
+
   toTaxonSpeciesPhotoSeed(data)
 }
 

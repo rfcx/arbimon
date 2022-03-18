@@ -10,6 +10,6 @@ export const toTaxonSpeciesPhotoSeed = (data: TaxonSpeciesPhoto[]): void =>
     resolve(getSeederDataDirectory(), './taxon-species-photo.ts'),
     data,
     'rawTaxonSpeciesPhoto',
-    'TaxonSpeciesPhoto[]',
+    'Array<TaxonSpeciesPhoto & { \'TaxonSpecies.slug\': string }>',
     'import { TaxonSpeciesPhoto } from \'@rfcx-bio/common/dao/types\''
   )
