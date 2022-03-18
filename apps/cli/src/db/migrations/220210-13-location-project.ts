@@ -49,10 +49,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         // unique: true
       },
       // Facts
-      is_published: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
-      },
       name: {
         type: DataTypes.STRING(255),
         allowNull: false

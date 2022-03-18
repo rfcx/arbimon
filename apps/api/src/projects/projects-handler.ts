@@ -3,14 +3,11 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { ApiServerError } from '~/errors'
-import { isProjectMember } from '~/permission-helper/permission-helper'
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
 
 export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
   const models = ModelRepository.getInstance(getSequelize())
-
-  const hasProjectPermission = isProjectMember(req)
 
   const projects = await models.LocationProject
     .findAll({
