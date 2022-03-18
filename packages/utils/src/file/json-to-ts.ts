@@ -1,3 +1,6 @@
+import * as fs from 'fs'
+import { size } from 'lodash-es'
+
 const LINE_BREAK = '\n'
 
 export const objectToTs = (data: any, constName: string, type?: string, ...importLines: string[]): string =>
@@ -13,4 +16,10 @@ export const jsonToTs = (data: string, constName: string, type?: string, ...impo
     .replace(/\\"/gm, '"') // unescape double quotes
 
   return `${imports}${declaration}${object}${LINE_BREAK}`
+}
+
+export const objectToTsFile = (filePath: string, data: any, constName: string, type?: string, ...importLines: string[]): void => {
+  const outputTs = objectToTs(data, constName, type, ...importLines)
+  fs.writeFileSync(filePath, outputTs, 'utf8')
+  console.info(`Wrote ${size(data)} values to ${filePath}`)
 }
