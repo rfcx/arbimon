@@ -22,6 +22,7 @@ import { MODEL_TAXON_SPECIES, TaxonSpeciesModel } from './models/taxon-species-m
 import { MODEL_TAXON_SPECIES_PHOTO, TaxonSpeciesPhotoModel } from './models/taxon-species-photo-model'
 import { MODEL_TAXON_SPECIES_RFCX, TaxonSpeciesRfcxModel } from './models/taxon-species-rfcx-model'
 import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-species-wiki-model'
+import { MODEL_USER_CORE_PROJECTS, UserCoreProjectsModel } from './models/user-core-projects-model'
 
 export const modelRegistrations = <const>{
   // Tables
@@ -39,6 +40,7 @@ export const modelRegistrations = <const>{
   [MODEL_TAXON_SPECIES_RFCX]: [TaxonSpeciesRfcxModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_DATASOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_USER_CORE_PROJECTS]: [UserCoreProjectsModel, {}],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],

@@ -25,12 +25,17 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getUserProjectIds (token: string): Promise<string[]> {
-  return await axios.request<CoreProjectLight[]>({
-    method: 'GET',
-    url: `${CORE_API_BASE_URL}/projects?fields=id`,
-    headers: { authorization: token }
-  })
-  .then(r => r.data.map(({ id }) => id))
-  .catch(unpackAxiosError)
+export async function getProjectIds (token: string): Promise<string[]> {
+  try {
+    const resp = await axios.request<CoreProjectLight[]>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/projects`,
+      headers: { authorization: token }
+    })
+
+    const coreProjects = resp.data
+    return coreProjects.map(({ id }) => id)
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
 }

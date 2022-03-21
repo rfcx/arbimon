@@ -1,6 +1,6 @@
 import { FastifyLoggerInstance } from 'fastify'
 
-import { getProjectPermission } from '../api-core/api-core'
+import { getProjectIds, getProjectPermission } from '../api-core/api-core'
 import { BioPublicError, ERROR_STATUS_CODE } from '../errors'
 
 export const isValidToken = (token: string): boolean => /^Bearer ./i.test(token) // at least 1 character after space
@@ -17,5 +17,18 @@ export async function isProjectMember (logger: FastifyLoggerInstance, id: string
       // Log unexpected errors
       logger.error(err)
       return false
+    })
+}
+
+// TODO: Update the function to support the user who have more than 1000 thousand project
+export async function getUserCoreProjectIds (logger: FastifyLoggerInstance, token: string): Promise<string[]> {
+  if (!isValidToken(token)) return []
+
+  return await getProjectIds(token)
+    .then(projectIds => projectIds)
+    .catch(err => {
+      // Log unexpected errors
+      logger.error(err)
+      return []
     })
 }
