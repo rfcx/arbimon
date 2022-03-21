@@ -1,4 +1,9 @@
 <template>
+  <draft-banner
+    current-mode="Draft"
+    :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+    :project-slug="store.selectedProject?.slug"
+  />
   <species-richness-introduction
     :filters="filters"
     :have-data="haveData"

@@ -1,5 +1,10 @@
 <template>
   <div v-if="store.selectedProject">
+    <draft-banner
+      current-mode="Draft"
+      :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+      :project-slug="store.selectedProject?.slug"
+    />
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
@@ -94,7 +99,8 @@
     </div>
   </div>
 </template>
-<script src="./dashboard-page" lang="ts"></script>
+<script src="./dashboard-page" lang="ts">
+ </script>
 <style lang="scss">
 @import './dashboard-page.scss';
 </style>
