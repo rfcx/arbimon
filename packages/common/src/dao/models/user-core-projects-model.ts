@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize'
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { UserCoreProjects } from '../types'
 
-export const MODEL_USER_CORE_PROJECTS = 'userCoreProjects'
+export const MODEL_USER_CORE_PROJECTS = 'UserCoreProjects'
 export const TABLE_USER_CORE_PROJECTS = 'user_core_projects'
 
 export const UserCoreProjectsModel = defineWithDefaults<UserCoreProjects>(
