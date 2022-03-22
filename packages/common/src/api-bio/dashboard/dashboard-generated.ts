@@ -1,10 +1,9 @@
+import { ProjectSpecificRouteParams } from '@/api-bio/common/project-specific-route'
 import { ApiLine, ApiMap, ApiStack } from '../_helpers'
 import { DashboardSpecies } from './common'
 
 // Request
-export interface DashboardGeneratedParams {
-  projectId: string
-}
+export type DashboardGeneratedParams = ProjectSpecificRouteParams
 
 export const dashboardGeneratedRoute = '/projects/:projectId/dashboard-generated'
 

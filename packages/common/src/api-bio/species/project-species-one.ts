@@ -1,9 +1,9 @@
+import { ProjectSpecificRouteParams } from '@/api-bio/common/project-specific-route'
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types'
 import { SpeciesInProject } from '../../dao/types/species-in-project'
 
 // Request
-export interface ProjectSpeciesOneParams {
-  projectId: string
+export type ProjectSpeciesOneParams = ProjectSpecificRouteParams & {
   speciesSlug: string
 }
 
