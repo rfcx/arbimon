@@ -13,6 +13,7 @@ export const getDashboardProfile = async (projectId: number): Promise<DashboardP
 
   return {
     ...projectProfile,
+    // TODO: Rename the return object to be same as what dao return & delete .map() here
     speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug, taxonSpeciesSlug, riskRatingId, ...rest }) =>
       ({
         ...rest,
