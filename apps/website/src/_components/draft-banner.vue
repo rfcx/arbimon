@@ -6,7 +6,7 @@
     <div class="draft_content">
       <div class="draft-title text-lg">
         <div
-          class="bullet rounded-full w-2.5 h-2.5 mx-2 mr-2"
+          class="bullet rounded-full w-2.5 h-2.5 mx-2 mr-2 self-center"
         />
         Latest Date ({{ props.currentMode }})
       </div>
