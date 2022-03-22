@@ -20,12 +20,11 @@ export async function isProjectMember (logger: FastifyLoggerInstance, id: string
     })
 }
 
-// TODO: Update the function to support the user who have more than 1000 thousand project
+// TODO 681: Update the function to support the user who have more than 1000 thousand project
 export async function getUserCoreProjectIds (logger: FastifyLoggerInstance, token: string): Promise<string[]> {
   if (!isValidToken(token)) return []
 
   return await getProjectIds(token)
-    .then(projectIds => projectIds)
     .catch(err => {
       // Log unexpected errors
       logger.error(err)
