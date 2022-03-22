@@ -1,3 +1,4 @@
+import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
@@ -6,10 +7,6 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { Middleware } from '../api-helpers/types'
 import { getSequelize } from '../db'
 import { getUserCoreProjectIds, isProjectMember } from '../security/project-access'
-
-interface ProjectRouteParams {
-  projectId: string
-}
 
 interface Auth0UserInfo {
   auth0_user_id: string
@@ -20,7 +17,7 @@ export const ACCESSIBLE_CORE_PROJECT_IDS = 'cacheUserProjectCoreIds'
 
 export const EXPIRED_DURATION_HOURS = 1
 
-export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async (req, res): Promise<void> => {
+export const verifyProjectUserPermission: Middleware<ProjectSpecificRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
   const bioProjectId = Number(req.params.projectId)
 

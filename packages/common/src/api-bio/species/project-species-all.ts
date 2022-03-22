@@ -1,9 +1,8 @@
+import { ProjectSpecificRouteParams } from '@/api-bio/common/project-specific-route'
 import { SpeciesInProjectLight } from '../../dao/types/species-in-project'
 
 // Request
-export interface ProjectSpeciesAllParams {
-  projectId: string
-}
+export type ProjectSpeciesAllParams = ProjectSpecificRouteParams
 
 export const projectSpeciesAllRoute = '/projects/:projectId/species'
 
