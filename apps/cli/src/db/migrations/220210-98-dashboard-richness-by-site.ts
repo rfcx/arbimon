@@ -20,7 +20,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     FROM (
         SELECT location_project_id,
                location_site_id,
-               count(1) AS richness
+               count(1)::integer AS richness
         FROM detection_by_site_species_hour
         GROUP BY location_project_id, location_site_id
     ) data
