@@ -7,6 +7,7 @@
     <ul
       v-for="update of allUpdate"
       :key="update.id"
+      class="mb-4"
     >
       <li>{{ formatFullDate(update.updatedAt) }}</li>
       <li>Species: +{{ update.summaryObject.species }}</li>

@@ -8,7 +8,12 @@
         <div
           class="bullet rounded-full w-2.5 h-2.5 mx-2 mr-2 self-center"
         />
-        Latest Date ({{ props.currentMode }})
+        <router-link
+          :to="syncHistoryRoute"
+          class="inline hover:(text-subtle cursor-pointer)"
+        >
+          Latest Date ({{ props.currentMode }})
+        </router-link>
       </div>
       <div class="draft-description">
         <p
@@ -19,7 +24,7 @@
         </p>
         <p>
           <router-link
-            :to="syncHistoryRoute"
+            to=""
             class="inline underline hover:(underline text-subtle cursor-pointer)"
           >
             Datasource Options
@@ -73,8 +78,8 @@ const publish = () => {}
   justify-content: space-between;
   padding: 1rem;
   margin-bottom: 1rem;
-  border: 3px solid rgb(255, 176, 0);
-  background-color: rgba(255, 176, 0, 0.5);
+  border: 3px solid #FFCD00;
+  background-color: rgba(255, 205, 0, 0.3);
   border-radius: 0.75rem;
 
   @media (max-width: 820px) {
@@ -92,7 +97,7 @@ const publish = () => {}
 
       .bullet {
         display: inline-block;
-        background-color: rgb(255, 176, 0);
+        background-color: #FFCD00;
       }
     }
   }
