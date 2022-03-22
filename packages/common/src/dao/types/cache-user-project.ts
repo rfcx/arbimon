@@ -1,4 +1,4 @@
-export interface UserCoreProjects {
+export interface CacheUserProject {
   userId: string
   projectCoreIds: string[]
   expiredAt: Date
