@@ -2,9 +2,10 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
+import { isValidToken } from '~/api-helpers/is-valid-token'
 import { Middleware } from '../api-helpers/types'
 import { getSequelize } from '../db'
-import { getUserCoreProjectIds, isProjectMember, isValidToken } from '../security/project-access'
+import { getUserCoreProjectIds, isProjectMember } from '../security/project-access'
 
 interface ProjectRouteParams {
   projectId: string
