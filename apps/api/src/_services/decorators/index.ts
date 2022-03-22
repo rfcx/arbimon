@@ -17,7 +17,7 @@ interface Auth0UserInfo {
 export const IS_PROJECT_MEMBER = 'isProjectMember'
 export const ACCESSIBLE_CORE_PROJECT_IDS = 'cacheUserProjectCoreIds'
 
-export const EXPIRED_DURATION_HOURS = 10
+export const EXPIRED_DURATION_HOURS = 1
 
 export const verifyProjectUserPermission: Middleware<ProjectRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
@@ -46,7 +46,7 @@ export const verifyUserAccessibleProjects: Middleware = async (req, res): Promis
   const models = ModelRepository.getInstance(getSequelize())
 
   // If user contain in cache and not expired
-  const matchedUserCache = await models.UserCoreProjects
+  const matchedUserCache = await models.CacheUserProject
     .findByPk(userId, { raw: true }) ?? undefined
   if (matchedUserCache && (dayjs(matchedUserCache.expiredAt).isAfter(dayjs()))) {
     req.requestContext.set(ACCESSIBLE_CORE_PROJECT_IDS, matchedUserCache.projectCoreIds)
@@ -56,11 +56,6 @@ export const verifyUserAccessibleProjects: Middleware = async (req, res): Promis
   // If user not contain in cache or expired
   const projectCoreIds = await getUserCoreProjectIds(req.log, token)
   const expiredAt = dayjs().add(EXPIRED_DURATION_HOURS, 'hours').toDate()
-  if (matchedUserCache !== undefined) {
-    await models.UserCoreProjects.update({ projectCoreIds, expiredAt }, { where: { userId } })
-  } else {
-    await models.UserCoreProjects.create({ userId, projectCoreIds, expiredAt })
-  }
-
+  await models.CacheUserProject.upsert({ userId, projectCoreIds, expiredAt })
   req.requestContext.set(ACCESSIBLE_CORE_PROJECT_IDS, projectCoreIds)
 }

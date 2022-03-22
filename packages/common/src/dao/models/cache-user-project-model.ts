@@ -1,16 +1,16 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { UserCoreProjects } from '../types'
+import { CacheUserProject } from '../types'
 
-export const MODEL_USER_CORE_PROJECTS = 'UserCoreProjects'
-export const TABLE_USER_CORE_PROJECTS = 'user_core_projects'
+export const MODEL_CACHE_USER_PROJECT = 'CacheUserProject'
+export const TABLE_CACHE_USER_PROJECT = 'cache_user_project'
 
-export const UserCoreProjectsModel = defineWithDefaults<UserCoreProjects>(
-  MODEL_USER_CORE_PROJECTS,
+export const CacheUserProjectModel = defineWithDefaults<CacheUserProject>(
+  MODEL_CACHE_USER_PROJECT,
   {
     // PK
-    userId: { // 1
+    userId: { // auth0|abc
       type: DataTypes.STRING,
       primaryKey: true
     },
@@ -25,6 +25,6 @@ export const UserCoreProjectsModel = defineWithDefaults<UserCoreProjects>(
     }
   },
   {
-    tableName: TABLE_USER_CORE_PROJECTS
+    tableName: TABLE_CACHE_USER_PROJECT
   }
 )

@@ -33,8 +33,7 @@ export async function getProjectIds (token: string): Promise<string[]> {
       headers: { authorization: token }
     })
 
-    const coreProjects = resp.data
-    return coreProjects.map(({ id }) => id)
+    return resp.data?.map(({ id }) => id) ?? []
   } catch (e) {
     return unpackAxiosError(e)
   }
