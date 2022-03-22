@@ -22,6 +22,17 @@ jobs:
     with:
       runs-on: ubuntu-20.04
 
+  echo:
+    runs-on: ubuntu-20.04
+    if: ${{ always() }}
+    needs: [build]
+    steps:
+      - run: |
+          echo "Build job result ${{ needs.build.result }}"
+          echo "Build step outcome ${{ needs.build.outputs.build-outcome }}"
+          echo "Lint step outcome ${{ needs.build.outputs.lint-outcome }}"
+          echo "Test step outcome ${{ needs.build.outputs.test-outcome }}"
+
   notify:
     name: 'Notify'
     if: ${{ always() }}
