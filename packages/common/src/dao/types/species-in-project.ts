@@ -5,14 +5,14 @@ export interface SpeciesInProject {
   taxonSpeciesId: number
   taxonSpeciesSlug: string
   scientificName: string
-  commonName: string
   description: string
   sourceUrl: string
   sourceCite: string
   riskRatingId: number
   riskRatingGlobalId: number
   riskRatingLocalId: number
-  photoUrl: string
+  commonName?: string
+  photoUrl?: string
 }
 
 export type SpeciesInProjectLight = Pick<SpeciesInProject,
