@@ -1,16 +1,16 @@
-import useDateFormat from '~/hooks/use-date-format';
 <template>
   <page-title
     page-title="Sync History"
     page-subtitle="TODO: Subtitle"
   />
-  <div class="mt-5">
+  <div class="lists-updated mt-5">
     <ul
       v-for="update of allUpdate"
       :key="update.id"
     >
-      <li>{{ formatDate(update.updatedAt) }}</li>
-      <li>{{ JSON.parse(update.summaryText) }}</li>
+      <li>{{ formatFullDate(update.updatedAt) }}</li>
+      <li>Species: +{{ update.summaryObject.species }}</li>
+      <li>Sites: +{{ update.summaryObject.sites }}</li>
     </ul>
   </div>
 </template>
@@ -21,10 +21,12 @@ import { computed } from 'vue'
 import useDateFormat from '../_services/hooks/use-date-format'
 import { useStore } from '../_services/store'
 
-const store = useStore()
-const { formatDate } = useDateFormat()
+type DataSourceSummary = Record<'species' | 'sites', number>
 
-const allUpdate = computed(() => store.projectFilters?.updatedList)
+const store = useStore()
+const { formatFullDate } = useDateFormat()
+
+const allUpdate = computed(() => store.projectFilters?.updatedList.map(({ summaryText, ...list }) => ({ ...list, summaryObject: (JSON.parse(summaryText) as DataSourceSummary) })))
 
 </script>
 
