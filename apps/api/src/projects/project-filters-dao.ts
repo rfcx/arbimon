@@ -34,7 +34,7 @@ export const getUpdatedProject = async (models: AllModels, locationProjectId: nu
   await models
     .DataSource
     .findAll({
-      attributes: ['id', ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
+      attributes: ['id', ['created_at', 'createdAt'], ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
       where: {
         locationProjectId: locationProjectId
       },

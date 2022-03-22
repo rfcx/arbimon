@@ -4,15 +4,21 @@
     page-subtitle="TODO: Subtitle"
   />
   <div class="lists-updated mt-5">
-    <ul
+    <div
       v-for="update of allUpdate"
       :key="update.id"
-      class="mb-4"
+      class="updated-list mb-4"
     >
-      <li>{{ formatFullDate(update.updatedAt) }}</li>
-      <li>Species: +{{ update.summaryObject.species }}</li>
-      <li>Sites: +{{ update.summaryObject.sites }}</li>
-    </ul>
+      <ul v-if="update.createdAt !== update.updatedAt">
+        <li>{{ formatFullDate(update.updatedAt) }}</li>
+        no new changes
+      </ul>
+      <ul v-else>
+        <li>{{ formatFullDate(update.createdAt) }}</li>
+        <li>Sites: +{{ update.summaryObject.sites }}</li>
+        <li>Species: +{{ update.summaryObject.species }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
