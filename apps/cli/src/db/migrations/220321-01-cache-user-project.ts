@@ -13,7 +13,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     TABLE_NAME,
     {
       // PK
-      user_id: {
+      user_id_auth_0: {
         type: DataTypes.STRING,
         primaryKey: true
       },
