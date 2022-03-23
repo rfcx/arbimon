@@ -6,6 +6,8 @@ import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-proje
 import { getIsProjectMember as getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { Middleware } from '~/api-helpers/types'
+import { Auth0UserInfo } from '~/auth0'
+import { getMemberProjectCoreIdsFromCache } from '~/cache/user-project-cache'
 import { getSequelize } from '~/db'
 import { BioPublicError, ERROR_STATUS_CODE } from '~/errors'
 
@@ -14,7 +16,7 @@ const IS_PROJECT_MEMBER = 'IS_PROJECT_MEMBER'
 export const getIsProjectMember = (req: FastifyRequest): boolean =>
   req.requestContext.get(IS_PROJECT_MEMBER) === true
 
-export const loadIsProjectMember: Middleware<ProjectSpecificRouteParams> = async (req, res): Promise<void> => {
+export const setIsProjectMember: Middleware<ProjectSpecificRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
   const projectIdBio = Number(req.params.projectId)
 
@@ -35,7 +37,18 @@ export const loadIsProjectMember: Middleware<ProjectSpecificRouteParams> = async
     return
   }
 
-  // Call Core API
+  // Get userId
+  const auth0UserInfo = await req.jwtDecode<Auth0UserInfo>()
+  const auth0UserId = auth0UserInfo.auth0_user_id
+
+  // If in cache => return
+  const projectCoreIdsFromCache = await getMemberProjectCoreIdsFromCache(auth0UserId)
+  if (projectCoreIdsFromCache) {
+    req.requestContext.set(IS_PROJECT_MEMBER, projectCoreIdsFromCache.includes(projectIdCore))
+    return
+  }
+
+  // Get from Core API (cannot update cache because it's currently not per-project)
   const isProjectMember = await getIsProjectMemberFromApi(projectIdCore, token)
     .then(() => true)
     .catch(err => {
@@ -47,5 +60,6 @@ export const loadIsProjectMember: Middleware<ProjectSpecificRouteParams> = async
       return false
     })
 
+  // Set & return
   req.requestContext.set(IS_PROJECT_MEMBER, isProjectMember)
 }
