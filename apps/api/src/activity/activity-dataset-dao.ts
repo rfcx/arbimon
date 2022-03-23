@@ -1,7 +1,7 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 import { Op } from 'sequelize'
 
-import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/common'
+import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -91,12 +91,12 @@ export const getDetectionDataBySite = async (models: AllModels, detections: Dete
   return summariesBySites
 }
 
-export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
+export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
   const totalRecordingCount = getRecordingDurationMinutes(detections)
   let filteredDetections = detections
 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
-  if (!hasProjectPermission) {
+  if (!isProjectMember) {
     const protectedSpecies = await models.SpeciesInProject.findAll({
       where: { locationProjectId, riskRatingId: RISK_RATING_PROTECTED_IDS }, // TODO: Add `is_protected` column in the DB
       raw: true

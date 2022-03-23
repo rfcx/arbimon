@@ -23,3 +23,5 @@ export interface CoreProject {
   created_by: ProjectCreator
   organization: string
 }
+
+export type CoreProjectLight = Pick<CoreProject, 'id' | 'name' | 'is_public' | 'external_id'>

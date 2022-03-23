@@ -1,6 +1,7 @@
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+
 // Request
-export interface SpeciesPredictionOccupancyParams {
-  projectId: string
+export type SpeciesPredictionOccupancyParams = ProjectSpecificRouteParams & {
   speciesSlug: string
   filenameWithoutExtension: string
 }
