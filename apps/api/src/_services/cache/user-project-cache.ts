@@ -5,7 +5,7 @@ import { getSequelize } from '~/db'
 
 export const EXPIRED_DURATION_HOURS = 1
 
-export const getMemberProjectCoreIds = async (userIdAuth0: string): Promise<string[] | undefined> =>
+export const getMemberProjectCoreIdsFromCache = async (userIdAuth0: string): Promise<string[] | undefined> =>
   await ModelRepository.getInstance(getSequelize())
     .CacheUserProject
     .findByPk(userIdAuth0, { raw: true })
