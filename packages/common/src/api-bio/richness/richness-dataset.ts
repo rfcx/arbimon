@@ -1,9 +1,8 @@
 import { FilterDatasetQuery } from '../common/filter'
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
-export interface RichnessDatasetParams {
-  projectId: string
-}
+export type RichnessDatasetParams = ProjectSpecificRouteParams
 
 export type RichnessDatasetQuery = FilterDatasetQuery
 
