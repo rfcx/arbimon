@@ -3,7 +3,7 @@ import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'

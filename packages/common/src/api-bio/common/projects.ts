@@ -4,4 +4,12 @@ import { LocationProjectLight } from '../../dao/types'
 export const projectsRoute = '/projects'
 
 // Response
-export type ProjectsResponse = LocationProjectLight[]
+export type LocationProjectForUser =
+  LocationProjectLight &
+  {
+    isMyProject: boolean
+    hasPublishedVersions: boolean
+    hasPublicVersions: boolean
+  }
+
+export type ProjectsResponse = LocationProjectForUser[]

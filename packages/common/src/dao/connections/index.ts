@@ -2,8 +2,10 @@ import pg from 'pg'
 import { Options, Sequelize } from 'sequelize'
 
 /**
- * Another way to support sequelize `COUNT` fn to return number: https://github.com/sequelize/sequelize/issues/2383
- * pg.defaults.parseInt8 = true
+ * PG return bigint value which will convert to string of number (Not pure number type)
+ * To return number: https://github.com/sequelize/sequelize/issues/2383
+ * Or by adding cast to the sql query e.g. COUNT(blah blah)::integer
+ * pg.defaults.parseInt8 = true // should make the whole db bigint query effect to integer number type
  */
 
 interface BioDbOptions {
