@@ -9,7 +9,7 @@ import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { filterDetecions, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordingCount } from './spotlight-dataset-dao'
 
-export async function getSpotlightDatasetData (filter: FilterDataset, speciesId: number, hasProjectPermission: boolean): Promise<SpotlightDatasetResponse> {
+export async function getSpotlightDatasetData (filter: FilterDataset, speciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -28,7 +28,7 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
       raw: true
     })
 
-  const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !hasProjectPermission
+  const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !isProjectMember
 
   // Filtering
   const totalDetections = await filterDetecions(models, locationProjectId, filter)

@@ -1,7 +1,7 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 import { Op } from 'sequelize'
 
-import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'

@@ -108,11 +108,11 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
   return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
-export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, hasProjectPermission: boolean): Promise<Record<number, RichnessPresence>> => {
+export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<Record<number, RichnessPresence>> => {
   const filterBase = datasetFilterWhereRaw(filter)
 
-  const conditions = !hasProjectPermission ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
-  const bind = !hasProjectPermission ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
+  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
 
   const sql = `
     SELECT 
@@ -132,11 +132,11 @@ export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDa
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
 }
 
-export const getRichnessExport = async (sequelize: Sequelize, filter: FilterDatasetForSql, hasProjectPermission: boolean): Promise<RichnessByExportReportRow[]> => {
+export const getRichnessExport = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessByExportReportRow[]> => {
   const filterBase = datasetFilterWhereRaw(filter)
 
-  const conditions = !hasProjectPermission ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
-  const bind = !hasProjectPermission ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
+  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
 
   const sql = `
     SELECT 
