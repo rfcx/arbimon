@@ -25,7 +25,7 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getProjectIds (token: string): Promise<string[]> {
+export async function getMemberProjectCoreIds (token: string): Promise<string[]> {
   try {
     const resp = await axios.request<CoreProjectLight[]>({
       method: 'GET',
