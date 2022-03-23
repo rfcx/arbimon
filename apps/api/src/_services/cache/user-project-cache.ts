@@ -1,3 +1,5 @@
+import { Op } from 'sequelize'
+
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { dayjs } from '~/dayjs-initialized'
@@ -8,11 +10,11 @@ export const EXPIRED_DURATION_HOURS = 1
 export const getMemberProjectCoreIdsFromCache = async (userIdAuth0: string): Promise<string[] | undefined> =>
   await ModelRepository.getInstance(getSequelize())
     .CacheUserProject
-    .findByPk(userIdAuth0, { raw: true })
-    .then(cache => {
-      if (!cache || dayjs(cache?.expiredAt).isAfter(dayjs())) return undefined
-      return cache?.projectCoreIds
+    .findOne({
+      where: { userIdAuth0, expiredAt: { [Op.gt]: dayjs().toISOString() } },
+      raw: true
     })
+    .then(cache => cache?.projectCoreIds)
 
 export const updateMemberProjectCoreIds = async (userIdAuth0: string, projectCoreIds: string[]): Promise<void> => {
   const expiredAt = dayjs().add(EXPIRED_DURATION_HOURS, 'hours').toDate()
