@@ -1,4 +1,5 @@
 import fastify, { FastifyInstance } from 'fastify'
+import fastifyAuth0Verify from 'fastify-auth0-verify'
 import fastifyCors from 'fastify-cors'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import fastifyStatic from 'fastify-static'
@@ -22,6 +23,10 @@ export const createApp = async (): Promise<FastifyInstance> => {
 
   // Register plugins
   await app.register(fastifyCors)
+  await app.register(fastifyAuth0Verify, {
+    domain: 'auth.rfcx.org',
+    audience: 'https://rfcx.eu.auth0.com/api/v2/'
+  })
   await app.register(fastifyStatic, { root: resolve('./public') })
   await app.register(fastifyRequestContextPlugin)
 
