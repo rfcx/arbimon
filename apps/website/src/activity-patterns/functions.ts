@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs'
 
-import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 

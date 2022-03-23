@@ -26,7 +26,12 @@ export default class SpeciesSelector extends Vue {
   get filteredSpecies (): SpeciesInProjectLight[] {
     if (!this.currentSpeciesQuery) return this.allSpecies
     const query = this.currentSpeciesQuery.trim().toLowerCase()
-    return this.allSpecies.filter(s => s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) || s.commonName.toLowerCase().split(' ').some(w => w.startsWith(query)))
+
+    return this.allSpecies
+      .filter(s =>
+        s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) ||
+        (s.commonName?.toLowerCase().split(' ').some(w => w.startsWith(query)) ?? false)
+      )
   }
 
   override async created (): Promise<void> {
