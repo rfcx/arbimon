@@ -32,7 +32,6 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
     },
 
     // Facts
-    isPublished: DataTypes.BOOLEAN, // true
     name: DataTypes.STRING(255), // Puerto Rico Island-Wide
     latitudeNorth: DataTypes.FLOAT, // 18.51375
     latitudeSouth: DataTypes.FLOAT, // 17.93168

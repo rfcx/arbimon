@@ -1,16 +1,14 @@
 import { richnessDatasetRoute } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
+import { loadIsProjectMember } from '@/_middleware/get-is-project-member'
 import { GET, RouteRegistration } from '../_services/api-helpers/types'
-import { verifyProjectUserPermission } from '../_services/decorators'
 import { richnessDatasetHandler } from './richness-dataset-handler'
 
 export const routesRichness: RouteRegistration[] = [
   {
     method: GET,
     url: richnessDatasetRoute,
-    handler: richnessDatasetHandler,
-    preHandler: [
-      verifyProjectUserPermission
-    ]
+    preHandler: [loadIsProjectMember],
+    handler: richnessDatasetHandler
   }
 ]

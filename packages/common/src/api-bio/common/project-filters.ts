@@ -1,9 +1,8 @@
 import { DataSource, Site, TaxonClass } from '../../dao/types'
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
-export interface ProjectFiltersParams {
-  projectId: string
-}
+export type ProjectFiltersParams = ProjectSpecificRouteParams
 
 export const projectFiltersRoute = '/projects/:projectId/filters'
 

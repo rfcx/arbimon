@@ -8,11 +8,9 @@ const main = async (): Promise<void> => {
   const sequelize = getSequelize()
   console.info('SYNCING: all project detections')
   try {
-    const publishProjects = await LocationProjectModel(sequelize).findAll({
-        where: { isPublished: true }
-      })
+    const projects = await LocationProjectModel(sequelize).findAll()
     // ARB QUERY: sync detections + sites + species of each projects
-    for (const project of publishProjects) {
+    for (const project of projects) {
       await Promise.all([syncDetectionsForProject(sequelize, project), wait(500)])
     }
   } catch (error) {

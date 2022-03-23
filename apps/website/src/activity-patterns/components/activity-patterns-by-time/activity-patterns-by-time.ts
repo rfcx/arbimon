@@ -2,7 +2,7 @@ import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/common'
+import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
