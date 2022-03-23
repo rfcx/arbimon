@@ -7,7 +7,7 @@ import { DashboardRichnessBySiteModel, MODEL_DASHBOARD_RICHNESS_BY_SITE } from '
 import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/dashboard-richness-by-taxon-model'
 import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED } from './models/dashboard-species-highlighted-model'
 import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
-import { DataSourceModel, MODEL_DATASOURCE } from './models/data-source-model'
+import { DataSourceModel, MODEL_DATA_SOURCE } from './models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/detection-by-site-species-hour-model'
 import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
 import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
@@ -28,7 +28,7 @@ import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-
 export const modelRegistrations = <const>{
   // Tables
   [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
-  [MODEL_DATASOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_PROJECT]: [LocationProjectModel, {}],
   [MODEL_LOCATION_PROJECT_PROFILE]: [LocationProjectProfileModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
