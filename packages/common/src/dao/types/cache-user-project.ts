@@ -1,5 +1,5 @@
 export interface CacheUserProject {
-  userId: string
+  userIdAuth0: string
   projectCoreIds: string[]
   expiredAt: Date
 }

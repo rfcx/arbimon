@@ -10,7 +10,7 @@ export const CacheUserProjectModel = defineWithDefaults<CacheUserProject>(
   MODEL_CACHE_USER_PROJECT,
   {
     // PK
-    userId: { // auth0|abc
+    userIdAuth0: { // auth0|abc
       type: DataTypes.STRING,
       primaryKey: true
     },
