@@ -3,7 +3,7 @@ import { FastifyRequest } from 'fastify'
 import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
-import { getProjectPermission } from '~/api-core/api-core'
+import { getIsProjectMember as getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { Middleware } from '~/api-helpers/types'
 import { getSequelize } from '~/db'
@@ -36,7 +36,7 @@ export const loadIsProjectMember: Middleware<ProjectSpecificRouteParams> = async
   }
 
   // Call Core API
-  const isMember = await getProjectPermission(projectIdCore, token)
+  const isProjectMember = await getIsProjectMemberFromApi(projectIdCore, token)
     .then(() => true)
     .catch(err => {
       // Forbidden is expected (it means the user is not a project member)
@@ -47,5 +47,5 @@ export const loadIsProjectMember: Middleware<ProjectSpecificRouteParams> = async
       return false
     })
 
-  req.requestContext.set(IS_PROJECT_MEMBER, isMember)
+  req.requestContext.set(IS_PROJECT_MEMBER, isProjectMember)
 }
