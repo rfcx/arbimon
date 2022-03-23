@@ -6,7 +6,7 @@ import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 
-export const getUserProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
+export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
   const models = ModelRepository.getInstance(getSequelize())
 
   const projects = memberProjectCoreIds.length === 0
