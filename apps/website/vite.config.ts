@@ -1,4 +1,5 @@
 import pluginVue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 import pluginAutoImport from 'unplugin-auto-import/vite'
 import pluginIconsResolver from 'unplugin-icons/resolver'
 import pluginIcons from 'unplugin-icons/vite'
@@ -11,6 +12,16 @@ import { UserConfig as UserConfigVitest } from 'vitest'
 
 // https://vitejs.dev/config/
 const config: UserConfigVite & { test: UserConfigVitest } = {
+  // Vite aliases are needed for imports in .vue files
+  // TODO: Find a way to reuse tsconfig aliases
+  resolve: {
+    alias: {
+      '@rfcx-bio/utils': resolve(__dirname, '../../packages/utils/src/'),
+      '@rfcx-bio/common': resolve(__dirname, '../../packages/common/src/'),
+      '~': resolve(__dirname, 'src/_services/'),
+      '@': resolve(__dirname, 'src/')
+    }
+  },
   css: {
     preprocessorOptions: {
       scss: {
