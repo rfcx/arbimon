@@ -1,5 +1,5 @@
-import { ProjectSpecificRouteParams } from '@/api-bio/common/project-specific-route'
 import { FilterDatasetQuery } from '../common/filter'
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 import { DataByTime } from '../common/time-bucket'
 
 // Request
