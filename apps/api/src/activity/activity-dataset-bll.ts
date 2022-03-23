@@ -5,7 +5,7 @@ import { FilterDataset } from '../_services/datasets/dataset-types'
 import { getSequelize } from '../_services/db'
 import { filterDetecions, getDetectionDataBySite, getDetectionDataBySpecies, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getRecordingDurationMinutes } from './activity-dataset-dao'
 
-export const getActivityOverviewData = async (filter: FilterDataset, hasProjectPermission: boolean): Promise<ActivityDatasetResponse> => {
+export const getActivityOverviewData = async (filter: FilterDataset, isProjectMember: boolean): Promise<ActivityDatasetResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -16,14 +16,14 @@ export const getActivityOverviewData = async (filter: FilterDataset, hasProjectP
   const totalRecordingCount = getRecordingDurationMinutes(totalDetections)
 
   const detectionsBySite = await getDetectionDataBySite(models, totalDetections)
-  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, hasProjectPermission, locationProjectId)
+  const detectionsBySpecies = await getDetectionDataBySpecies(models, totalDetections, isProjectMember, locationProjectId)
   const detectionsByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingCount)
   const detectionsByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingCount)
   const detectionsByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingCount)
   const detectionsByTimeDate = getDetectionsByTimeDateUnix(totalDetections, totalRecordingCount)
 
   return {
-    isLocationRedacted: !hasProjectPermission,
+    isLocationRedacted: !isProjectMember,
     detectionsBySite,
     detectionsBySpecies,
     detectionsByTimeHour,

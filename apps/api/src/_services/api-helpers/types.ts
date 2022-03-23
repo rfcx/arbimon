@@ -24,10 +24,10 @@ export type Middleware<Params = RequestParamsDefault, Querystring = RequestQuery
 export interface RouteRegistration<Response = any, Params = any, Querystring = any> {
   method: HTTPMethods
   url: string
-  handler: Handler<Response, Params, Querystring>
   schema?: FastifySchema
   preValidation?: preValidationHookHandler[]
   preHandler?: Array<Middleware<Params, Querystring>>
+  handler: Handler<Response, Params, Querystring>
 }
 
 // Export convenient aliases

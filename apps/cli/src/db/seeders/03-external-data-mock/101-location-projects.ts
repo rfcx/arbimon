@@ -13,12 +13,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const sequelize = params.context.sequelize
 
   const projects: Array<Omit<Project, 'id'>> = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
-    .map(({ idCore, idArbimon, slug, slugArbimon, isPublished, name, latitudeNorth, latitudeSouth, longitudeEast, longitudeWest }) => ({
+    .map(({ idCore, idArbimon, slug, slugArbimon, name, latitudeNorth, latitudeSouth, longitudeEast, longitudeWest }) => ({
       idCore,
       idArbimon,
       slug,
       slugArbimon,
-      isPublished,
       name,
       latitudeNorth,
       latitudeSouth,

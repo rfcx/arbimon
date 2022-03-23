@@ -1,3 +1,4 @@
+import { CacheUserProjectModel, MODEL_CACHE_USER_PROJECT } from './models/cache-user-project-model'
 import { DashboardDetectionByHourModel, MODEL_DASHBOARD_DETECTION_BY_HOUR } from './models/dashboard-detection-by-hour-model'
 import { DashboardDetectionBySiteModel, MODEL_DASHBOARD_DETECTION_BY_SITE } from './models/dashboard-detection-by-site-model'
 import { DashboardRichnessByHourModel, MODEL_DASHBOARD_RICHNESS_BY_HOUR } from './models/dashboard-richness-by-hour-model'
@@ -26,6 +27,7 @@ import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-
 
 export const modelRegistrations = <const>{
   // Tables
+  [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
   [MODEL_DATASOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_PROJECT]: [LocationProjectModel, {}],
