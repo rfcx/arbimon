@@ -6,7 +6,7 @@ import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '../_services/db'
 import { getRichnessBySite, getRichnessByTaxonClass, getRichnessByTimeDayOfWeek, getRichnessByTimeHourOfDay, getRichnessByTimeMonthOfYear, getRichnessByTimeUnix, getRichnessExport, getRichnessPresence } from './richness-dataset-dao'
 
-export const getRichnessDataset = async (filter: FilterDataset, hasProjectPermission: boolean): Promise<RichnessDatasetResponse> => {
+export const getRichnessDataset = async (filter: FilterDataset, isProjectMember: boolean): Promise<RichnessDatasetResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -19,12 +19,12 @@ export const getRichnessDataset = async (filter: FilterDataset, hasProjectPermis
     await getRichnessByTimeDayOfWeek(sequelize, filterForSql),
     await getRichnessByTimeMonthOfYear(sequelize, filterForSql),
     await getRichnessByTimeUnix(sequelize, filterForSql),
-    await getRichnessPresence(sequelize, filterForSql, hasProjectPermission),
-    await getRichnessExport(sequelize, filterForSql, hasProjectPermission)
+    await getRichnessPresence(sequelize, filterForSql, isProjectMember),
+    await getRichnessExport(sequelize, filterForSql, isProjectMember)
   ])
 
   return {
-    isLocationRedacted: !hasProjectPermission,
+    isLocationRedacted: !isProjectMember,
     richnessByTaxon,
     richnessBySite,
     richnessByTimeHourOfDay,
