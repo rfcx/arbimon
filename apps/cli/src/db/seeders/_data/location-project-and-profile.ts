@@ -17,7 +17,7 @@ Given the high number of endemic species in Puerto Rico and the high vulnerabili
 
 _Create a population baseline for bird and anuran species distributions across Puerto Rico_
 
-Puerto Rico has a diverse bird and anuran community, including many endemic, endangered and data deficient species. While species list sexist for these groups and the distributions of a few species have been studied, state and federal agencies do not have species distribution maps for most species and the population status of many species are unknown. These baseline maps are urgently needed given the rapidly changing environment in Puerto Rico, with urban expansion in some areas, forest recovery in others, and climate change affecting whole island.
+Puerto Rico has a diverse bird and anuran community, including many endemic, endangered and data deficient species. While species lists exist for these groups and the distributions of a few species have been studied, state and federal agencies do not have species distribution maps for most species and the population status of many species are unknown. These baseline maps are urgently needed given the rapidly changing environment in Puerto Rico, with urban expansion in some areas, forest recovery in others, and climate change affecting whole island.
 
 Puerto Rico has a long history of scientific research, but most of this research has been conducted in El Yunque and little is known about species distributions and population status in the many other habitats around the island. For example, as recently as 2005 a new species of coqui was discovered in Sabana Seca (Rios-López and Thomas, 2007). To conduct effective management and conservation plans, managers and scientists need a complete picture of the distributions of the species they are working with. Fortunately, technological advances (e.g., acoustic monitoring and cloud computing) have made it possible to do extensive and frequent monitoring of multiple species and provide results in near real-time at a easonable cost.
 
@@ -82,7 +82,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1556,
       slug: 'puerto-rico',
       slugArbimon: 'puerto-rico',
-      isPublished: true,
       name: 'Puerto Rico',
       ...dataPr
     },
@@ -91,7 +90,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
-      isPublished: true,
       name: 'BCI-Panama_2018',
       ...dataBci
     },
@@ -100,7 +98,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       slugArbimon: 'fake-arbimon-project-for-bio',
-      isPublished: true,
       name: 'Fake Project',
       ...dataFakeProject
     }
@@ -111,7 +108,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1556,
       slug: 'puerto-rico',
       slugArbimon: 'puerto-rico',
-      isPublished: true,
       name: 'Puerto Rico',
       ...dataPr
     },
@@ -120,7 +116,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
-      isPublished: true,
       name: 'BCI-Panama_2018',
       ...dataBci
     },
@@ -129,7 +124,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       slugArbimon: 'fake-arbimon-project-for-bio',
-      isPublished: true,
       name: 'Fake Project',
       ...dataFakeProject
     }
@@ -140,7 +134,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1556,
       slug: 'puerto-rico',
       slugArbimon: 'puerto-rico',
-      isPublished: true,
       name: 'Puerto Rico',
       ...dataPr
     },
@@ -149,7 +142,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
-      isPublished: true,
       name: 'BCI-Panama_2018',
       ...dataBci
     }
@@ -160,7 +152,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1989,
       slug: 'puerto-rico-island-wide',
       slugArbimon: 'puerto-rico-island-wide',
-      isPublished: true,
       name: 'Puerto Rico Island-Wide',
       ...dataPr
     },
@@ -169,7 +160,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       slugArbimon: 'bci-panama-2018',
-      isPublished: true,
       name: 'BCI-Panama_2018',
       ...dataBci
     },
@@ -178,7 +168,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1429,
       slug: 'rfcx-guardians-madre-de-dios-peru',
       slugArbimon: 'rfcx-guardians-madre-de-dios-peru',
-      isPublished: true,
       name: 'RFCx-Guardians in Madre de Dios Peru',
       ...dataMadre
     }

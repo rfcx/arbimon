@@ -1,9 +1,8 @@
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 import { DashboardSpecies } from './common'
 
 // Request
-export interface DashboardProfileParams {
-  projectId: string
-}
+export type DashboardProfileParams = ProjectSpecificRouteParams
 
 export const dashboardProfileRoute = '/projects/:projectId/dashboard-profile'
 

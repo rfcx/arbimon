@@ -20,7 +20,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     FROM (
         SELECT location_project_id,
                location_site_id,
-               sum(count) AS count
+               sum(count)::integer AS count
         FROM detection_by_site_hour
         GROUP BY location_project_id, location_site_id
     ) data

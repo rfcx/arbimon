@@ -1,24 +1,19 @@
 import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
+import { getMemberProjectCoreIds } from '@/_middleware/get-member-projects'
+import { getProjects } from '@/projects/projects-bll'
 import { ApiServerError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'
-import { getSequelize } from '../_services/db'
 
 export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
-  const models = ModelRepository.getInstance(getSequelize())
+  try {
+    // Inputs & validation
+    const memberProjectCoreIds = getMemberProjectCoreIds(req)
 
-  const projects = await models.LocationProject
-    .findAll({
-      where: { isPublished: true },
-      order: ['name'],
-      attributes: ATTRIBUTES_LOCATION_PROJECT.light
-    })
-    .catch(err => {
-      req.log.error(err)
-      throw ApiServerError()
-    })
-
-  return projects
+    // Response
+    return await getProjects(memberProjectCoreIds)
+  } catch (err) {
+    req.log.error(err)
+    throw ApiServerError()
+  }
 }

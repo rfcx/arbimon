@@ -1,4 +1,4 @@
-import { getArbimonProjects } from '@//data-ingest/projects/arbimon'
+import { getArbimonProjects } from '@/data-ingest/projects/arbimon'
 import { writeProjectsToPostgres } from '@/data-ingest/projects/db'
 import { getSequelize } from '@/db/connections'
 

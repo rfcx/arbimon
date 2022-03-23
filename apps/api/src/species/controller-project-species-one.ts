@@ -5,11 +5,11 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
+import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { getSequelize } from '@/_services/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
-import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
 
 // TODO ??? - Move files to S3 & index them in the database
@@ -20,13 +20,13 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   const { projectId, speciesSlug } = req.params
   assertPathParamsExist({ projectId, speciesSlug })
 
-  const hasProjectPermission = isProjectMember(req)
+  const isProjectMember = getIsProjectMember(req)
 
   // Respond
-  return await getProjectSpeciesOne(projectId, speciesSlug, hasProjectPermission)
+  return await getProjectSpeciesOne(projectId, speciesSlug, isProjectMember)
 }
 
-const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, hasProjectPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
+const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, isProjectMember: boolean): Promise<ProjectSpeciesOneResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -56,7 +56,7 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
     raw: true
   })
 
-  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !hasProjectPermission
+  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !isProjectMember
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
 
   if (!isLocationRedacted) {
