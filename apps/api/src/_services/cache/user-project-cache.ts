@@ -1,0 +1,1 @@
+export const EXPIRED_DURATION_HOURS = 1

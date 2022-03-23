@@ -1,10 +1,10 @@
 import { ActivityDatasetParams, ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
 
+import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'
 import { FilterDataset } from '../_services/datasets/dataset-types'
-import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 import { getActivityOverviewData } from './activity-dataset-bll'
@@ -31,8 +31,8 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
     taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
   }
 
-  const hasProjectPermission = isProjectMember(req)
+  const isProjectMember = getIsProjectMember(req)
 
   // Response
-  return await getActivityOverviewData(datasetFilter, hasProjectPermission)
+  return await getActivityOverviewData(datasetFilter, isProjectMember)
 }

@@ -4,11 +4,11 @@ import { resolve } from 'path'
 import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
+import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { getSequelize } from '~/db'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
 import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'
-import { isProjectMember } from '../_services/permission-helper/permission-helper'
 import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 
@@ -26,7 +26,7 @@ export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPre
 
   if (!species) throw BioNotFoundError()
 
-  const isLocationRedacted = isProtectedSpecies(species.riskRatingId) && !isProjectMember(req)
+  const isLocationRedacted = isProtectedSpecies(species.riskRatingId) && !getIsProjectMember(req)
   if (isLocationRedacted) throw BioForbiddenError()
 
   // Query file
