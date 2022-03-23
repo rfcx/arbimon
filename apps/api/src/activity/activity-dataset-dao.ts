@@ -91,12 +91,12 @@ export const getDetectionDataBySite = async (models: AllModels, detections: Dete
   return summariesBySites
 }
 
-export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], hasProjectPermission: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
+export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
   const totalRecordingCount = getRecordingDurationMinutes(detections)
   let filteredDetections = detections
 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
-  if (!hasProjectPermission) {
+  if (!isProjectMember) {
     const protectedSpecies = await models.SpeciesInProject.findAll({
       where: { locationProjectId, riskRatingId: RISK_RATING_PROTECTED_IDS }, // TODO: Add `is_protected` column in the DB
       raw: true

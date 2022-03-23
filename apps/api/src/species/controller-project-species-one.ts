@@ -26,7 +26,7 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   return await getProjectSpeciesOne(projectId, speciesSlug, isProjectMember)
 }
 
-const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, hasProjectPermission: boolean): Promise<ProjectSpeciesOneResponse> => {
+const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, isProjectMember: boolean): Promise<ProjectSpeciesOneResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -56,7 +56,7 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
     raw: true
   })
 
-  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !hasProjectPermission
+  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !isProjectMember
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
 
   if (!isLocationRedacted) {
