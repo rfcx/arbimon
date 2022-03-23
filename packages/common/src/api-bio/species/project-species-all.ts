@@ -1,5 +1,5 @@
-import { ProjectSpecificRouteParams } from '@/api-bio/common/project-specific-route'
 import { SpeciesInProjectLight } from '../../dao/types/species-in-project'
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
 export type ProjectSpeciesAllParams = ProjectSpecificRouteParams

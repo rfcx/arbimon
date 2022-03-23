@@ -1,4 +1,4 @@
-import { ProjectSpecificRouteParams } from '@/api-bio/common/project-specific-route'
+import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
 export type SpeciesPredictionOccupancyParams = ProjectSpecificRouteParams & {
