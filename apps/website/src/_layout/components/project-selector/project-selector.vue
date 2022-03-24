@@ -4,23 +4,39 @@
     @emit-close="emitCloseProjectSelector"
   >
     <div class="p-4">
-      <!-- TODO: implement search box -->
-      <div class="text-white text-xl pb-2">
-        Select Project
-      </div>
-      <div class="divide-y divide-gray-500">
-        <div
-          v-for="(project, idx) in store.projects"
-          :key="'project-list-' + idx"
-          class="flex justify-between text-white cursor-pointer hover:bg-steel-grey-dark py-2 px-1"
-          :class="{ 'bg-steel-grey-dark': newSelectedProject?.id === project.id }"
-          @click="setSelectedProject(project)"
-        >
-          {{ project.name }}
-          <!-- TODO ??? - Replace old icons -->
-          <icon-fa-check v-if="newSelectedProject?.id === project.id" />
+      <div class="flex justify-between items-center py-2 border-b-2">
+        <div class="text-white text-2xl">
+          Select Project
+        </div>
+        <div>
+          <el-input
+            v-model="searchKeyword"
+            placeholder="Search project"
+            size="small"
+          >
+            <template #suffix>
+              <div class="inline-flex items-center">
+                <icon-fas-search class="text-xs" />
+              </div>
+            </template>
+          </el-input>
         </div>
       </div>
+      <project-list
+        v-if="store.user"
+        class="mt-3"
+        title="My Projects"
+        :projects="userProjects"
+        :selected-project="newSelectedProject"
+        @emit-select-project="setSelectedProject"
+      />
+      <project-list
+        class="mt-3"
+        title="Public Projects"
+        :projects="publicProjects"
+        :selected-project="newSelectedProject"
+        @emit-select-project="setSelectedProject"
+      />
       <div class="flex justify-end mt-2">
         <button
           class="btn mr-2"

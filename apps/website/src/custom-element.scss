@@ -16,4 +16,12 @@
   border: none !important;
   background: $color-box-grey !important;
 }
+
+.el-input .el-input__inner {
+  border: none !important;
+  background: $color-box-grey !important;
+  &:focus {
+    box-shadow: none;
+  }
+}
 /* stylelint-enable selector-class-pattern */
