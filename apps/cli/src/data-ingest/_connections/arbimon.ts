@@ -24,7 +24,7 @@ interface ArbimonConnectionOptions {
   timezone: string
 }
 
-const getArbimonSequelizeBase = (co: ArbimonConnectionOptions): Sequelize => {
+export const getArbimonSequelize = (co: ArbimonConnectionOptions): Sequelize => {
   // Setup sequelize (ORM)
   const sequelizeOptions: Options = {
     host: co.host,
@@ -43,5 +43,3 @@ const getArbimonSequelizeBase = (co: ArbimonConnectionOptions): Sequelize => {
     sequelizeOptions
   )
 }
-
-export const getArbimonSequelize = (): Sequelize => getArbimonSequelizeBase(ARBIMON_CONFIG as ArbimonConnectionOptions)
