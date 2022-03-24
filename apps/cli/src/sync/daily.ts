@@ -1,4 +1,4 @@
-import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
+import { ARBIMON_CONFIG } from '@/data-ingest/_connections/arbimon'
 import { syncProjects } from '@/sync/arbimon'
 import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
@@ -9,10 +9,9 @@ const main = async (): Promise<void> => {
   console.info('Daily sync start')
   try {
     const sequelize = getSequelize()
-    const arbimonSequelize = getArbimonSequelize()
 
     console.info('STEP: Sync projects')
-    await syncProjects(arbimonSequelize, sequelize)
+    await syncProjects(ARBIMON_CONFIG, sequelize)
 
     console.info('STEP: Sync species description - only for missing or outdated')
     await syncOnlyMissingWikiSpeciesInfo(sequelize)
