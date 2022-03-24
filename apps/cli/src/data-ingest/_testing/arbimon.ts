@@ -7,21 +7,25 @@ function readAllFiles(folder: string, extension: string): string[] {
   return files.map(file => readFileSync(path.join(folder, file)).toString())
 }
 
-async function queryAll(sqlFolder: string, sequelize: Sequelize) {
+async function sequentialQueryAll(sqlFolder: string, sequelize: Sequelize) {
   const sqlFiles = readAllFiles(sqlFolder, 'sql')
   for (const sql of sqlFiles) {
-    console.log('Running...\n' + sql)
-    await sequelize.query(sql)
+    try {
+      await sequelize.query(sql)
+    } catch (err) {
+      console.error('Failed running SQL:\n' + sql)
+      throw err
+    }
   }
 }
 
 export const getPopulatedArbimonInMemorySequelize = async (): Promise<Sequelize> => {
-  const testingFolder = path.join(__dirname, '../../../src/data-ingest/_testing')
+  const testingFolder = path.join(__dirname, '../../../src/data-ingest/_testing') // TODO Find a better way of getting the path
   const ddlFolder = path.join(testingFolder, 'arbimon-ddl')
   const seedsFolder = path.join(testingFolder, 'arbimon-seeds')
   
-  const sequelize = new Sequelize('sqlite::memory:')
-  await queryAll(ddlFolder, sequelize)
-  await queryAll(seedsFolder, sequelize)
+  const sequelize = new Sequelize('sqlite::memory:', { logging: false })
+  await sequentialQueryAll(ddlFolder, sequelize)
+  await sequentialQueryAll(seedsFolder, sequelize)
   return sequelize
 }
