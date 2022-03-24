@@ -5,7 +5,7 @@
     </div>
     <div
       v-if="projects.length > 0"
-      class="divide-y divide-gray-500"
+      class="h-40 divide-y divide-gray-500"
     >
       <div
         v-for="(project, idx) in props.projects"
@@ -21,7 +21,7 @@
     </div>
     <div
       v-else
-      class="italic text-subtle py-2 px-1"
+      class="h-40 italic text-subtle py-2 px-1"
     >
       None
     </div>
