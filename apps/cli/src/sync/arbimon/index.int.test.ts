@@ -6,7 +6,8 @@ import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arb
 import { getSequelize } from '@/db/connections'
 import { syncProjects } from './index'
 
-test('Contains 1 project', async () => {
+const testProjectSlug = 'rfcx-th'
+test('New project created', async () => {
   // Arrange
   const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
   const biodiversitySequelize = getSequelize()
@@ -16,6 +17,22 @@ test('Contains 1 project', async () => {
 
   // Assert
   const models = ModelRepository.getInstance(biodiversitySequelize)
-  const projects = await models.LocationProject.findAll()
-  expect(projects.length).toBe(1)
+  const project = await models.LocationProject.findOne({ where: { slugArbimon: testProjectSlug } })
+  expect(project).toBeDefined()
+})
+
+test('Project name updated', async () => {
+  // Arrange
+  const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
+  const biodiversitySequelize = getSequelize()
+  await syncProjects(arbimonSequelize, biodiversitySequelize)
+  const projectName = 'Kitty at NU'
+  arbimonSequelize.query(`update projects set name = '${projectName}'`)
+
+  // Act
+  await syncProjects(arbimonSequelize, biodiversitySequelize)
+
+  // Assert
+  const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { slugArbimon: testProjectSlug } })
+  expect(project!.name).toBe(projectName)
 })
