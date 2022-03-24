@@ -1,24 +1,24 @@
-import { ConnectionOptions } from 'mysql2/promise'
 import { expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
 import { syncProjects } from './index'
+import { Sequelize } from 'sequelize'
 
-function arbimonTestDb (): ConnectionOptions {
-  const connection: ConnectionOptions = {}
-  // TODO create the in-memory db and populate it
-  return connection
+function arbimonTestDb (): Sequelize {
+  const sequelize = new Sequelize('sqlite::memory:')
+  // TODO Populate it
+  return sequelize
 }
 
 test('Contains 1 project', async () => {
   // Arrange
-  const connection = arbimonTestDb()
+  const arbimonSequelize = arbimonTestDb()
   const biodiversitySequelize = getSequelize()
 
   // Act
-  await syncProjects(connection, biodiversitySequelize)
+  await syncProjects(arbimonSequelize, biodiversitySequelize)
 
   // Assert
   const models = ModelRepository.getInstance(biodiversitySequelize)
