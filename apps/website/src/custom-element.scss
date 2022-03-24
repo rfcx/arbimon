@@ -3,6 +3,7 @@
 @import "./variables";
 
 /* stylelint-disable selector-class-pattern */
+
 .el-date-editor .el-range-input {
   background-color: $color-mirage-grey !important;
 }
@@ -20,8 +21,10 @@
 .el-input .el-input__inner {
   border: none !important;
   background: $color-box-grey !important;
+
   &:focus {
     box-shadow: none;
   }
 }
+
 /* stylelint-enable selector-class-pattern */
