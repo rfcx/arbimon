@@ -4,17 +4,12 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
 import { syncProjects } from './index'
-import { Sequelize } from 'sequelize'
+import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arbimon'
 
-function arbimonTestDb (): Sequelize {
-  const sequelize = new Sequelize('sqlite::memory:')
-  // TODO Populate it
-  return sequelize
-}
 
 test('Contains 1 project', async () => {
   // Arrange
-  const arbimonSequelize = arbimonTestDb()
+  const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
   const biodiversitySequelize = getSequelize()
 
   // Act

@@ -1,11 +1,11 @@
-CREATE TABLE species (
-  species_id int(11) NOT NULL,
-  scientific_name varchar(100) NOT NULL,
-  code_name varchar(10) DEFAULT NULL,
-  taxon_id int(11) NOT NULL,
-  family_id int(11) DEFAULT NULL,
-  image varchar(200) DEFAULT NULL,
+create table species (
+  species_id int(11) not null,
+  scientific_name varchar(100) not null,
+  code_name varchar(10) default null,
+  taxon_id int(11) not null,
+  family_id int(11) default null,
+  image varchar(200) default null,
   description text,
-  biotab_id int(11) DEFAULT NULL,
-  defined_by int(10) DEFAULT NUL
+  biotab_id int(11) default null,
+  defined_by int(10) default nul
 );
