@@ -11,7 +11,6 @@ async function sequentialQueryAll (sqlFolder: string, sequelize: Sequelize): Pro
   const sqlFiles = readAllFiles(sqlFolder, 'sql')
   for (const sql of sqlFiles) {
     try {
-      console.error('running SQL:\n' + sql)
       await sequelize.query(sql)
     } catch (err) {
       console.error('Failed running SQL:\n' + sql)
