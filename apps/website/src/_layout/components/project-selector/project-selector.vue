@@ -4,11 +4,11 @@
     @emit-close="emitCloseProjectSelector"
   >
     <div class="p-4">
-      <div class="flex justify-between items-center py-2 border-b-2">
+      <div class="py-2 border-b-2 lg:(flex justify-between items-center)">
         <div class="text-white text-2xl">
           Select Project
         </div>
-        <div>
+        <div class="<lg:(mt-2)">
           <el-input
             v-model="searchKeyword"
             placeholder="Search project"
@@ -30,6 +30,7 @@
         :selected-project="newSelectedProject"
         @emit-select-project="setSelectedProject"
       />
+      <hr class="border-dashed">
       <project-list
         class="mt-3"
         title="Public Projects"
@@ -37,7 +38,7 @@
         :selected-project="newSelectedProject"
         @emit-select-project="setSelectedProject"
       />
-      <div class="flex justify-end mt-2">
+      <div class="flex justify-end mt-3">
         <button
           class="btn mr-2"
           @click="emitCloseProjectSelector"
