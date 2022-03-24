@@ -2,10 +2,9 @@ import { expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
+import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arbimon'
 import { getSequelize } from '@/db/connections'
 import { syncProjects } from './index'
-import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arbimon'
-
 
 test('Contains 1 project', async () => {
   // Arrange
