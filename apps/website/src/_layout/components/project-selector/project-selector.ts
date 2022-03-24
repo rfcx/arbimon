@@ -57,7 +57,7 @@ export default class ProjectSelectorComponent extends Vue {
     const keyword = this.searchKeyword
     if (keyword !== null && keyword.length > 0) {
       const filteredProjects = projects
-        .filter(({ name }) => name.toLowerCase().includes(keyword.toLowerCase()))
+        .filter(({ name }) => name.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(keyword)))
         .sort((a, b) => a.name.localeCompare(b.name))
       return slice(filteredProjects, 0, MAX_DISPLAY_ITEMS)
     }
