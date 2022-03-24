@@ -1,0 +1,22 @@
+CREATE TABLE projects (
+  project_id int(10) NOT NULL,
+  name varchar(255) NOT NULL,
+  url varchar(255) NOT NULL,
+  description text,
+  project_type_id int(10) NOT NULL,
+  is_private tinyint(1) NOT NULL,
+  is_enabled tinyint(4) NOT NULL DEFAULT '1',
+  current_plan int(10) DEFAULT NULL,
+  storage_usage float DEFAULT NULL,
+  processing_usage float DEFAULT NULL,
+  pattern_matching_enabled tinyint(1) NOT NULL DEFAULT '0',
+  citizen_scientist_enabled tinyint(1) NOT NULL DEFAULT '0',
+  cnn_enabled tinyint(1) NOT NULL DEFAULT '0',
+  aed_enabled tinyint(1) NOT NULL DEFAULT '0',
+  clustering_enabled tinyint(1) NOT NULL DEFAULT '0',
+  external_id varchar(12) DEFAULT NULL,
+  featured tinyint(1) DEFAULT '0',
+  deleted_at datetime DEFAULT NULL,
+  image varchar(255) DEFAULT NULL,
+  reports_enabled tinyint(1) NOT NULL DEFAULT '0'
+);
