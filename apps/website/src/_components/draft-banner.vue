@@ -1,4 +1,57 @@
 <template>
+  <modal-popup
+    v-if="publishOptionModalOpen"
+    name="Publish Options"
+    @emit-close="onClosePublishModalOptions"
+  >
+    <div class="p-4 m-4">
+      <div class="text-white text-xl pb-2">
+        Publish Options
+      </div>
+      <div class="mt-4 mb-4 text-white text-lg">
+        Who can see the report?
+        <div>
+          <el-radio
+            v-model="accessbililyOption"
+            label="Any one with link"
+          />
+          <el-radio
+            v-model="accessbililyOption"
+            label="Only Project members"
+          />
+        </div>
+      </div>
+
+      <div class="mt-4 mb-4 text-white text-lg">
+        Protected Datasource
+        <div>
+          <el-checkbox
+            v-model="secureOption.allowDownload"
+            label="Allow Download Datasource"
+            size="large"
+          />
+          <el-checkbox
+            v-model="secureOption.linkArbimon"
+            label="Allow to link to Arbimon project"
+            size="large"
+          />
+        </div>
+      </div>
+      <div class="flex justify-end mt-2">
+        <button
+          class="btn mr-2"
+          @click="onClosePublishModalOptions"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn-primary ${updating ? 'opacity-50 cursor-not-allowed' : '' }"
+        >
+          Select
+        </button>
+      </div>
+    </div>
+  </modal-popup>
   <div
     v-if="isDraftMode"
     class="draft_banner"
@@ -34,7 +87,7 @@
     </div>
     <div
       class="draft_button btn btn-primary self-center"
-      @click="publish"
+      @click="onOpenPublishModalOptions"
     >
       PUBLISH
     </div>
@@ -42,9 +95,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, withDefaults } from 'vue'
+import { computed, defineProps, reactive, ref, withDefaults } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
+import ModalPopup from './modal-popup.vue'
 
 // How many mode do we have?
 enum currentMode {
@@ -61,14 +115,24 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   currentMode: 'Published'
 })
+
 const { formatFullDate } = useDateFormat()
+const publishOptionModalOpen = ref(false)
+const accessbililyOption = ref(true)
+const secureOption = reactive({ allowDownload: true, linkArbimon: true })
 
 // To display only in Draft mode
 const isDraftMode = computed(() => props.currentMode === currentMode.DRAFT)
 
 const syncHistoryRoute = computed(() => ({ name: 'sync_history', params: { projectSlug: props.projectSlug } }))
 
-const publish = () => {}
+const onOpenPublishModalOptions = () => {
+  publishOptionModalOpen.value = true
+}
+
+const onClosePublishModalOptions = () => {
+  publishOptionModalOpen.value = false
+}
 
 </script>
 
