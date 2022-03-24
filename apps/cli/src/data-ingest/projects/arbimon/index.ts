@@ -1,8 +1,7 @@
-import { ConnectionOptions } from 'mysql2/promise'
-
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { mysqlSelect } from '../../../_services/mysql'
+import { ARBIMON_CONFIG } from '../../_connections/arbimon'
 
 export interface ArbimonProject {
   'project_id': number
@@ -18,7 +17,7 @@ export interface ArbimonProject {
   'east': number
 }
 
-export const getArbimonProjects = async (arbimonConfig: ConnectionOptions): Promise<Array<Omit<Project, 'id'>>> => {
+export const getArbimonProjects = async (): Promise<Array<Omit<Project, 'id'>>> => {
   const sql =
     `
     select p.project_id, p.name, p.url slug, p.description, p.is_private, p.is_enabled, p.external_id core_project_id, p.reports_enabled, s.north, s.east, s.south, s.west
@@ -33,7 +32,7 @@ export const getArbimonProjects = async (arbimonConfig: ConnectionOptions): Prom
     `
 
   // Query Arbimon
-  const results = await mysqlSelect<ArbimonProject>(arbimonConfig, sql)
+  const results = await mysqlSelect<ArbimonProject>(ARBIMON_CONFIG, sql)
   return results.map(i => {
     return {
       idCore: i.core_project_id,

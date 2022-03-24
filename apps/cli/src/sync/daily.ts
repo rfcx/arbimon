@@ -1,5 +1,5 @@
-import { ARBIMON_CONFIG } from '@/data-ingest/_connections/arbimon'
-import { syncProjects } from '@/sync/arbimon'
+import { getArbimonProjects } from '@/data-ingest/projects/arbimon'
+import { writeProjectsToPostgres } from '@/data-ingest/projects/db'
 import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 import { refreshMviews } from '../db/actions/refresh-mviews'
@@ -11,7 +11,8 @@ const main = async (): Promise<void> => {
     const sequelize = getSequelize()
 
     console.info('STEP: Sync projects')
-    await syncProjects(ARBIMON_CONFIG, sequelize)
+    const projects = await getArbimonProjects()
+    await writeProjectsToPostgres(sequelize, projects)
 
     console.info('STEP: Sync species description - only for missing or outdated')
     await syncOnlyMissingWikiSpeciesInfo(sequelize)
