@@ -1,8 +1,6 @@
-import { ConnectionOptions } from 'mysql2/promise'
+import { Sequelize } from 'sequelize'
 
 import { Project } from '@rfcx-bio/common/dao/types'
-
-import { mysqlSelect } from '../../../_services/mysql'
 
 export interface ArbimonProject {
   'project_id': number
@@ -18,9 +16,8 @@ export interface ArbimonProject {
   'east': number
 }
 
-export const getArbimonProjects = async (arbimonConfig: ConnectionOptions): Promise<Array<Omit<Project, 'id'>>> => {
-  const sql =
-    `
+export const getArbimonProjects = async (arbimonSequelize: Sequelize): Promise<Array<Omit<Project, 'id'>>> => {
+  const sql = `
     select p.project_id, p.name, p.url slug, p.description, p.is_private, p.is_enabled, p.external_id core_project_id, p.reports_enabled, s.north, s.east, s.south, s.west
     from projects p right join
     (
@@ -32,8 +29,7 @@ export const getArbimonProjects = async (arbimonConfig: ConnectionOptions): Prom
     where p.external_id is not null and p.external_id != "undefined";
     `
 
-  // Query Arbimon
-  const results = await mysqlSelect<ArbimonProject>(arbimonConfig, sql)
+  const results = await arbimonSequelize.query(sql, { raw: true }) as ArbimonProject[]
   return results.map(i => {
     return {
       idCore: i.core_project_id,

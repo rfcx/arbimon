@@ -1,12 +1,11 @@
-import { getArbimonProjects } from '@/data-ingest/projects/arbimon'
-import { writeProjectsToPostgres } from '@/data-ingest/projects/db'
 import { getSequelize } from '@/db/connections'
+import { syncProjects } from '@/sync/arbimon'
+import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
 
 const main = async (): Promise<void> => {
   const sequelize = getSequelize()
-  const projects = await getArbimonProjects()
-  await writeProjectsToPostgres(sequelize, projects)
-  console.info(`Finished importing ${projects.length} projects`)
+  await syncProjects(getArbimonSequelize(), sequelize)
+  console.info(`Finished importing projects`)
   process.exit(0)
 }
 
