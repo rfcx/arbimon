@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['plugin:jest/recommended', 'standard-with-typescript'],
+  extends: ['standard-with-typescript'],
   parserOptions: {
     ecmaFeatures: { jsx: true },
     ecmaVersion: 'latest',

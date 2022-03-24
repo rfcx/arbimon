@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
 import { RouteParamsRaw } from 'vue-router'
 
-import { LocationProjectLight } from '@rfcx-bio/common/dao/types'
+import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -15,9 +15,9 @@ export default class ProjectSelectorComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Emit() emitCloseProjectSelector (): boolean { return false }
 
-  newSelectedProject: LocationProjectLight | null = null
+  newSelectedProject: LocationProjectForUser | null = null
 
-  get selectedProject (): LocationProjectLight | null {
+  get selectedProject (): LocationProjectForUser | null {
     return this.store.selectedProject ?? null
   }
 
@@ -27,11 +27,11 @@ export default class ProjectSelectorComponent extends Vue {
       : null
   }
 
-  isSelectedProject (project: LocationProjectLight): boolean {
+  isSelectedProject (project: LocationProjectForUser): boolean {
     return project.id === this.newSelectedProject?.id
   }
 
-  setSelectedProject (project: LocationProjectLight): void {
+  setSelectedProject (project: LocationProjectForUser): void {
     this.newSelectedProject = project
   }
 

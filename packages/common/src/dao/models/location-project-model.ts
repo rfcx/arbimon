@@ -17,18 +17,21 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
     },
 
     // SKs
-    idCore: DataTypes.STRING(12), // rbj7k70v4na7
+    idCore: {
+      type: DataTypes.STRING(12) // rbj7k70v4na7
+      // unique: true,
+    },
     idArbimon: { // 1989
-      type: DataTypes.INTEGER
-      // unique: true
+      type: DataTypes.INTEGER,
+      unique: true
     },
     slug: { // puerto-rico-island-wide
-      type: DataTypes.STRING(255)
-      // unique: true
+      type: DataTypes.STRING(255),
+      unique: true
     },
     slugArbimon: { // fake-arbimon-project-for-bio
-      type: DataTypes.STRING(255)
-      // unique: true
+      type: DataTypes.STRING(255),
+      unique: true
     },
 
     // Facts
