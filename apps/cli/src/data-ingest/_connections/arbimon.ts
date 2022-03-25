@@ -33,7 +33,7 @@ const getArbimonSequelizeBase = (co: ArbimonConnectionOptions): Sequelize => {
       charset: 'utf8',
       collate: 'utf8_general_ci'
     },
-    logging: true
+    logging: false
   }
 
   return new Sequelize(

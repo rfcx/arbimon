@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arbimon'
 import { getSequelize } from '@/db/connections'
-import { syncProjects } from './index'
+import { syncProjects } from '@/sync/arbimon'
 
 // Arrange
 const testProjectIdArbimon = 1920
@@ -55,7 +55,7 @@ test('Project slug updated', async () => {
 
 test('Project location updated', async () => {
   const updatedSite = {
-    id: 8526,
+    id: 88526,
     lattitude: 16.7
   }
   void arbimonSequelize.query(`

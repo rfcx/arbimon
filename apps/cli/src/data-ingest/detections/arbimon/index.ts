@@ -1,5 +1,4 @@
-import { mysqlSelect } from '../../../_services/mysql'
-import { ARBIMON_CONFIG } from '../../_connections/arbimon'
+import { QueryTypes, Sequelize } from 'sequelize'
 
 export interface ArbimonHourlyDetectionSummary {
   project_id: number
@@ -17,12 +16,13 @@ export interface ArbimonNewData {
   speciesIds: number[]
 }
 
-export const getArbimonHourlyDetectionsForProject = async (idArbimon: number): Promise<ArbimonHourlyDetectionSummary[]> => {
-  return await getArbimonHourlyDetectionsForProjects([idArbimon])
+export const getArbimonHourlyDetectionsForProject = async (arbimonSequelize: Sequelize, idArbimon: number): Promise<ArbimonHourlyDetectionSummary[]> => {
+  return await getArbimonHourlyDetectionsForProjects(arbimonSequelize, [idArbimon])
 }
 
-export const getArbimonHourlyDetectionsForProjects = async (idArbimons: number[]): Promise<ArbimonHourlyDetectionSummary[]> => {
-  const sql =
+export const getArbimonHourlyDetectionsForProjects = async (arbimonSequelize: Sequelize, idArbimons: number[]): Promise<ArbimonHourlyDetectionSummary[]> => {
+  const idsString = idArbimons.join(',')
+  const mysqlSQL =
   // TODO: update duration_in_minutes
   `
   SELECT  s.project_id,
@@ -37,13 +37,32 @@ export const getArbimonHourlyDetectionsForProjects = async (idArbimons: number[]
   JOIN recording_validations rv
     ON r.recording_id = rv.recording_id AND (rv.present = 1 or rv.present_review > 0)
   JOIN sites s ON r.site_id = s.site_id
-  WHERE s.project_id in (?)
+  WHERE s.project_id in (${idsString})
   GROUP BY s.project_id, r.site_id, date(r.datetime), hour(r.datetime), rv.species_id
   ;
   `
 
+  const sqliteSQL = `
+  SELECT  s.project_id,
+          r.datetime,
+          date(r.datetime) date,
+          strftime('%H',r.datetime) hour,
+          r.site_id,
+          rv.species_id,
+          count(1) detection_count,
+          12       duration_in_minutes
+  FROM recordings r
+  JOIN recording_validations rv
+    ON r.recording_id = rv.recording_id AND (rv.present = 1 or rv.present_review > 0)
+  JOIN sites s ON r.site_id = s.site_id
+  WHERE s.project_id in (${idsString})
+  GROUP BY s.project_id, r.site_id, date(r.datetime), strftime('%H',r.datetime), rv.species_id
+  ;
+  `
+
   // Query Arbimon
-  const results = await mysqlSelect<ArbimonHourlyDetectionSummary>(ARBIMON_CONFIG, sql, idArbimons)
+  const sql = arbimonSequelize.getDialect() === 'mysql' ? mysqlSQL : sqliteSQL
+  const results: ArbimonHourlyDetectionSummary[] = await arbimonSequelize.query(sql, { type: QueryTypes.SELECT, raw: true })
 
   // Calculate detection frequency
   return results
