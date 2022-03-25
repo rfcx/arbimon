@@ -28,8 +28,27 @@
   }
 }
 
+.el-input .el-input__prefix {
+  left: 12px;
+}
+
 .el-input .el-input__suffix {
   right: 12px;
+}
+
+.el-popper.is-light .el-popper__arrow::before {
+  background: #141525;
+}
+
+.el-select-dropdown__item {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.el-select-dropdown__item.is-disabled {
+  &:hover {
+    background-color: transparent !important;
+  }
 }
 
 /* stylelint-enable selector-class-pattern */
