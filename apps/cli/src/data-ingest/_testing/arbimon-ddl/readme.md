@@ -1,4 +1,5 @@
 To recreate the sql files in this folder:
+
 1. Export the DDL for each of the tables in Arbimon used in sync
 2. Remove backticks (`)
 3. Remove unused AUTO_INCREMENT and UNSIGNED

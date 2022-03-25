@@ -16,7 +16,7 @@ export interface ArbimonProject {
   'east': number
 }
 
-export const getArbimonProjects = async (arbimonSequelize: Sequelize): Promise<Array<Omit<Project, 'id'>>> => {
+export const getArbimonProjects = async (sequelize: Sequelize): Promise<Array<Omit<Project, 'id'>>> => {
   const sql = `
     SELECT p.project_id, p.name, p.url slug, p.description, p.is_private, p.is_enabled, p.external_id core_project_id, p.reports_enabled, s.north, s.east, s.south, s.west
     FROM projects p LEFT JOIN
@@ -29,7 +29,7 @@ export const getArbimonProjects = async (arbimonSequelize: Sequelize): Promise<A
     WHERE p.external_id is not null AND p.external_id != "undefined";
     `
 
-  const results: ArbimonProject[] = await arbimonSequelize.query(sql, { type: QueryTypes.SELECT, raw: true })
+  const results: ArbimonProject[] = await sequelize.query(sql, { type: QueryTypes.SELECT, raw: true })
   return results.map(i => {
     return {
       idCore: i.core_project_id || '',
