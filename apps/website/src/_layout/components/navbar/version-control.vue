@@ -1,24 +1,61 @@
 <template>
-  <select
+  <el-select
     v-model="selectedVersion"
-    class="bg-subtle px-3 py-1 w-40"
+    size="small"
+    round
   >
-    <option
-      value="draft"
-      class="bg-steel-grey border-none"
+    <template #prefix>
+      <div
+        class="rounded-1 w-2 h-2"
+        :class="selectedVersion.colorClass"
+      />
+    </template>
+    <el-option
+      v-for="version in versions"
+      :key="'version-selector-' + version.value"
+      :label="version.label"
+      :value="version"
+      :disabled="version.disabled"
     >
-      Draft
-    </option>
-    <option
-      value="publish"
-      class="bg-subtle border-none"
-    >
-      Publish
-    </option>
-  </select>
+      <div class="flex items-center ">
+        <div
+          class="rounded-1 w-2 h-2"
+          :class="version.colorClass"
+        />
+        <div
+          class="ml-2 text-white font-normal"
+          :class="version.disabled ? 'text-subtle' : '' "
+        >
+          {{ version.label }}
+        </div>
+        <div
+          v-if="selectedVersion.value === version.value"
+          class="ml-auto"
+        >
+          <icon-fa-check class="text-xxs text-white" />
+        </div>
+      </div>
+    </el-option>
+  </el-select>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const selectedVersion = ref('draft')
+const versions = [
+  {
+    label: 'draft',
+    value: 'draft',
+    colorClass: 'bg-warning',
+    disabled: false
+  },
+  {
+    label: 'publish',
+    value: 'publish',
+    colorClass: 'bg-brand-primary',
+    disabled: true
+  }
+]
+
+const selectedVersion = ref(versions[0])
+
 </script>
