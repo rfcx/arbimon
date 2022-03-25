@@ -4,7 +4,7 @@
     @emit-close="emitCloseProjectSelector"
   >
     <div class="p-4">
-      <div class="py-2 border-b-2 sm:(flex justify-between items-center)">
+      <div class="py-2 border-b-1 sm:(flex justify-between items-center)">
         <div class="text-white text-2xl">
           Select Project
         </div>
