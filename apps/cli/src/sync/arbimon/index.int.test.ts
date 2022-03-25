@@ -7,7 +7,7 @@ import { getSequelize } from '@/db/connections'
 import { syncProjects } from './index'
 
 // Arrange
-const testProjectSlug = 'rfcx-th'
+const testProjectIdArbimon = 1920
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = getSequelize()
 
@@ -17,7 +17,7 @@ beforeAll(async () => {
 test('New project created', async () => {
   // Assert
   const models = ModelRepository.getInstance(biodiversitySequelize)
-  const project = await models.LocationProject.findOne({ where: { slugArbimon: testProjectSlug } })
+  const project = await models.LocationProject.findOne({ where: { idArbimon: testProjectIdArbimon } })
   expect(project).toBeDefined()
 })
 
@@ -31,6 +31,45 @@ test('Project name updated', async () => {
   // Assert
   const project = await ModelRepository.getInstance(biodiversitySequelize)
     .LocationProject
-    .findOne({ where: { slugArbimon: testProjectSlug } })
+    .findOne({ where: { idArbimon: testProjectIdArbimon } })
     expect(project?.name).toBe(projectName)
+})
+
+test('Project slug updated', async () => {
+  const projectSlug = 'rfcx-phits'
+  void arbimonSequelize.query(`
+    UPDATE projects
+    SET url = '${projectSlug}'
+    WHERE project_id = '${testProjectIdArbimon}';
+  `)
+
+  // Act
+  await syncProjects(arbimonSequelize, biodiversitySequelize)
+
+  // Assert
+  const project = await ModelRepository.getInstance(biodiversitySequelize)
+    .LocationProject
+    .findOne({ where: { idArbimon: testProjectIdArbimon } })
+    expect(project?.slugArbimon).toBe(projectSlug)
+})
+
+test('Project location updated', async () => {
+  const updatedSite = {
+    id: 8526,
+    lattitude: 16.7
+  }
+  void arbimonSequelize.query(`
+    UPDATE sites
+    SET lat = ${updatedSite.lattitude}
+    WHERE site_id = '${updatedSite.id}';
+  `)
+
+  // Act
+  await syncProjects(arbimonSequelize, biodiversitySequelize)
+
+  // Assert
+  const project = await ModelRepository.getInstance(biodiversitySequelize)
+    .LocationProject
+    .findOne({ where: { idArbimon: testProjectIdArbimon } })
+    expect(project?.latitudeNorth).toBe(updatedSite.lattitude)
 })

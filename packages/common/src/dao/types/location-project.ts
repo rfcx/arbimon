@@ -17,6 +17,6 @@ export type LocationProjectLight = Pick<Project,
 >
 
 export const ATTRIBUTES_LOCATION_PROJECT: Record<string, Array<keyof Project>> = {
-  updateOnDuplicate: ['name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
+  updateOnDuplicate: ['name', 'slug', 'slugArbimon', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
   light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 }
