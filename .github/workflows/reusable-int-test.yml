@@ -47,7 +47,7 @@ jobs:
 
       - name: 'Setup: Database init scripts'
         run: |
-          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U postgres -f %
+          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U postgres -h localhost -f %
 
       - name: 'Cache: Dependencies'
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
