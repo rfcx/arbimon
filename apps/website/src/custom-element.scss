@@ -20,11 +20,16 @@
 
 .el-input .el-input__inner {
   border: none !important;
+  border-radius: 0.125rem; /* Same to windi css size `sm` */
   background: $color-box-grey !important;
 
   &:focus {
     box-shadow: none;
   }
+}
+
+.el-input .el-input__suffix {
+  right: 12px;
 }
 
 /* stylelint-enable selector-class-pattern */
