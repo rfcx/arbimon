@@ -1,10 +1,9 @@
-import { FastifyInstance } from 'fastify'
+import fastify, { FastifyInstance } from 'fastify'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { expect, test } from 'vitest'
 
 import { richnessDatasetRoute, richnessDatasetUrl } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
-import { testApp } from '@/_testing/app-routes'
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
 
@@ -21,11 +20,13 @@ const EXPECTED_PROPS = [
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
-  // Replace preHandlers that call external APIs
-  // TODO: Think about mocking!
-  routesRichness.forEach(r => { r.preHandler = [] })
-  const app = await testApp(routesRichness)
+  const app = await fastify()
   await app.register(fastifyRequestContextPlugin)
+
+  routesRichness
+    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
+    .forEach(route => app.route(route))
+
   return app
 }
 
