@@ -4,8 +4,8 @@
     @emit-close="emitCloseProjectSelector"
   >
     <div class="p-4">
-      <div class="py-2 border-b-1 sm:(flex justify-between items-center)">
-        <div class="text-white text-2xl">
+      <div class="py-2 border-b-2 sm:(flex justify-between items-center)">
+        <div class="text-white text-lg">
           Select Project
         </div>
         <div class="<sm:(mt-2)">
@@ -30,7 +30,10 @@
         :selected-project="newSelectedProject"
         @emit-select-project="setSelectedProject"
       />
-      <hr class="border-dashed">
+      <hr
+        v-if="userProjects.length > 0"
+        class="border-dashed"
+      >
       <project-list
         class="mt-3"
         title="Public Projects"

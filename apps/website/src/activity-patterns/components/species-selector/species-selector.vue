@@ -25,7 +25,7 @@
   </el-select>
 </template>
 <script src="./species-selector.ts" lang="ts"></script>
-<style lang="scss">
+<style lang="scss" scoped>
 .species-input * > .el-input {
   &__inner {
     font-style: italic;
@@ -43,8 +43,5 @@
   & .el-input * > .el-icon.el-select__caret {
       display: flex;
     }
-}
-.el-popper.is-light .el-popper__arrow::before {
-  background: #141525;
 }
 </style>
