@@ -14,7 +14,7 @@ import { BioPublicError, ERROR_STATUS_CODE } from '~/errors'
 const IS_PROJECT_MEMBER = 'IS_PROJECT_MEMBER'
 
 export const getIsProjectMember = (req: FastifyRequest): boolean =>
-  req.requestContext.get(IS_PROJECT_MEMBER) === true
+  req.requestContext.get(IS_PROJECT_MEMBER) ?? false
 
 export const setIsProjectMember: Middleware<ProjectSpecificRouteParams> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
