@@ -1,11 +1,17 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 
 export const refreshMviews = async (sequelize: Sequelize): Promise<void> => {
-  const materializedViews = await sequelize.query<{ view_name: string }>('SELECT matviewname AS view_name FROM pg_matviews', { type: QueryTypes.SELECT })
+  const materializedViewsDependencyOrdered = [
+    'detection_by_site_hour',
+    'location_project_metric',
+    'species_in_project',
+    'dashboard_richness_by_taxon', // needs species_in_project
+    'dashboard_species_highlighted' // needs species_in_project
+  ]
 
   console.info('Refreshing materialized views:')
-  for (const view of materializedViews) {
-    console.info(`- public.${view.view_name}`)
-    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view.view_name}`)
+  for (const view of materializedViewsDependencyOrdered) {
+    console.info(`- public.${view}`)
+    await sequelize.query(`REFRESH MATERIALIZED VIEW ${view}`)
   }
 }
