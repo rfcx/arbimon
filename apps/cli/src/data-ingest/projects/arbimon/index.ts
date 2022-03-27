@@ -37,10 +37,10 @@ export const getArbimonProjects = async (sequelize: Sequelize): Promise<Array<Om
       slug: i.slug,
       slugArbimon: i.slug,
       name: i.name,
-      latitudeNorth: i.north,
-      latitudeSouth: i.south,
-      longitudeEast: i.east,
-      longitudeWest: i.west
+      latitudeNorth: i.north || 0,
+      latitudeSouth: i.south || 0,
+      longitudeEast: i.east || 0,
+      longitudeWest: i.west || 0
     }
   })
 }
