@@ -59,3 +59,10 @@
   </modal-popup>
 </template>
 <script src="./project-selector.ts" lang="ts"></script>
+<style lang="scss" scoped>
+::v-deep .el-input__inner {
+  &:focus {
+    border-color: #e5e7eb;
+  }
+}
+</style>

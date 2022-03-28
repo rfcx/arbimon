@@ -19,11 +19,10 @@
 }
 
 .el-input .el-input__inner {
-  border: none !important;
-  border-radius: 0.125rem; /* Same to windi css size `sm` */
-  background: $color-box-grey !important;
+  border-radius: 0.25rem;
+  background: $color-mirage-grey !important;
 
-  &:focus {
+  &:focus-visible {
     box-shadow: none;
   }
 }
