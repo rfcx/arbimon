@@ -12,11 +12,11 @@
     aria-expanded="true"
     aria-haspopup="true"
   >
-    <version-control v-if="isProjectMember" />
+    <!-- <version-control v-if="isProjectMember" class="mr-2" /> -->
     <div
       :id="domId"
       type="button"
-      class="ml-2 hover:cursor-pointer focus:cursor-pointer group"
+      class="hover:cursor-pointer focus:cursor-pointer group"
     >
       <img
         class="h-8 w-8 rounded-full"
