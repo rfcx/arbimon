@@ -1,44 +1,52 @@
 <template>
-  <el-select
-    v-model="selectedVersion"
-    size="small"
-    round
-  >
-    <template #prefix>
+  <on-click-outside @trigger="isOpenDropdown = false">
+    <div class="relative">
       <div
-        class="rounded-1 w-2 h-2"
-        :class="selectedVersion.colorClass"
-      />
-    </template>
-    <el-option
-      v-for="version in versions"
-      :key="'version-selector-' + version.value"
-      :label="version.label"
-      :value="version"
-      :disabled="version.disabled"
-    >
-      <div class="flex items-center ">
+        class="flex items-center bg-box-grey px-4 py-1 rounded-full min-w-28 cursor-pointer select-none"
+        @click="openDropdown()"
+      >
         <div
           class="rounded-1 w-2 h-2"
-          :class="version.colorClass"
+          :class="selectedVersion.colorClass"
         />
-        <div
-          class="ml-2 text-white font-normal"
-          :class="version.disabled ? 'text-subtle' : '' "
-        >
-          {{ version.label }}
+        <div class="ml-2 capitalize">
+          {{ selectedVersion.label }}
         </div>
+        <icon-custom-angle-down class="text-xs ml-auto" />
+      </div>
+      <div
+        v-if="isOpenDropdown"
+        class="absolute right-0 top-0 mt-12 bg-box-grey rounded-lg w-48"
+      >
         <div
-          v-if="selectedVersion.value === version.value"
-          class="ml-auto"
+          v-for="version in versions"
+          :key="'version-selector-' + version.value"
+          class="flex items-center px-4 py-2 select-none first:(rounded-t-lg) last:(rounded-b-lg)"
+          :class="version.disabled ? 'text-subtle cursor-not-allowed hover:(bg-box-grey)' : 'cursor-pointer hover:(bg-steel-grey)' "
+          @click="selectedVersion = version"
         >
-          <icon-fa-check class="text-xxs text-white" />
+          <div
+            class="rounded-1 w-2 h-2"
+            :class="version.colorClass"
+          />
+          <div
+            class="ml-2 text-white capitalize font-normal"
+            :class="version.disabled ? 'text-subtle' : '' "
+          >
+            {{ version.label }}
+          </div>
+          <icon-fa-check
+            v-if="selectedVersion.value === version.value"
+            class="text-xxs ml-auto"
+            :class="version.disabled ? 'text-subtle' : 'text-white' "
+          />
         </div>
       </div>
-    </el-option>
-  </el-select>
+    </div>
+  </on-click-outside>
 </template>
 <script lang="ts" setup>
+import { OnClickOutside } from '@vueuse/components'
 import { ref } from 'vue'
 
 const versions = [
@@ -57,5 +65,10 @@ const versions = [
 ]
 
 const selectedVersion = ref(versions[0])
+const isOpenDropdown = ref(false)
+
+const openDropdown = () => {
+  isOpenDropdown.value = !isOpenDropdown.value
+}
 
 </script>
