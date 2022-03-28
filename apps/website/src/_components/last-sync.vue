@@ -10,13 +10,17 @@
     class="text-xs text-left py-2 mt-5 border-t-1 border-l-0 border-r-0 border-b-0 border-solid opacity-50"
   >
     Last generated based on validated analysis data from Arbimon at: {{ formatFullDate(props.syncUpdated) }}
-    <router-link
+    <span
       v-if="isProjectMember"
-      :to="syncHistoryRoute"
-      class="text-subtle inline hover:(underline text-white cursor-pointer)"
+      class="text-subtle inline"
     >
-      &#8226; Sync-History
-    </router-link>
+      ・ <router-link
+        :to="syncHistoryRoute"
+        class="hover:(underline text-white cursor-pointer)"
+      >
+        Sync History
+      </router-link>
+    </span>
   </p>
 </template>
 
