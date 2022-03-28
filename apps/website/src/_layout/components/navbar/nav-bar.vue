@@ -59,8 +59,7 @@
             <icon-custom-linkout class="text-xs ml-1" />
           </a>
         </div>
-        <!-- <version-control /> -->
-        <div class="flex items-center mx-4 <sm:hidden">
+        <div class="flex items-center mx-2 <sm:hidden">
           <auth-navbar-item-component dom-id="navbar-auth-desktop" />
         </div>
       </div>

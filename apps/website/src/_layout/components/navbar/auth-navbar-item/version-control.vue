@@ -16,7 +16,7 @@
       </div>
       <div
         v-if="isOpenDropdown"
-        class="absolute right-0 top-0 mt-12 bg-box-grey rounded-lg w-48"
+        class="absolute right-0 top-0 mt-12 bg-box-grey rounded-lg min-w-48"
       >
         <div
           v-for="version in versions"
