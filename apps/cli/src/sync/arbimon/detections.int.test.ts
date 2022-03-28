@@ -46,21 +46,34 @@ test('Species: Test project has 10 species - based on validated data', async () 
   expect(numberOfSpecies).toBe(10)
 })
 
-test('Detections: Test project has 15 row of detection summaries', async () => {
+test('Detections: Test project has 14 row of detection summaries', async () => {
   const numberOfDetectionSummariesRows = await ModelRepository.getInstance(biodiversitySequelize)
     .DetectionBySiteSpeciesHour
     .count({ where: { locationProjectId: testProjectId } })
-  expect(numberOfDetectionSummariesRows).toBe(15)
+  expect(numberOfDetectionSummariesRows).toBe(14)
 })
 
-test('Detections: Test site (NU - Eng) has 14 row of detection summaries', async () => {
+test('Detections: Test project summaries counts match with manual calculation', async () => {
+  // manual calculation: https://docs.google.com/spreadsheets/d/1poi_Ir_Di77kDY_h69-MdQy2Yi7dpxJTy5WOumxEQ-g/
+  const detectionSummariesCountRows = await ModelRepository.getInstance(biodiversitySequelize)
+    .DetectionBySiteSpeciesHour
+    .findAll({
+      where: { locationProjectId: testProjectId },
+      order: [['timePrecisionHourLocal', 'ASC'], ['locationSiteId', 'ASC'], ['taxonSpeciesId', 'ASC']]
+    }).then(result => {
+      return result.map(r => r.count)
+    })
+  expect(detectionSummariesCountRows).toEqual([3, 1, 3, 2, 2, 4, 1, 1, 1, 1, 2, 1, 2, 2])
+})
+
+test('Detections: Test site (NU - Eng) has 13 row of detection summaries', async () => {
   const locationSiteId = await getSiteIdFromIdArbimon(88526)
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const numberOfDetectionSummariesRows = await ModelRepository.getInstance(biodiversitySequelize)
     .DetectionBySiteSpeciesHour
     .count({ where: { locationSiteId } })
-  expect(numberOfDetectionSummariesRows).toBe(14)
+  expect(numberOfDetectionSummariesRows).toBe(13)
 })
 
 test('Detections: detected hemidactylium-scutatum 4 times at NU - Eng between 10am (Local time) on 06/12/2020', async () => {
