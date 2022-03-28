@@ -23,7 +23,7 @@
           :key="'version-selector-' + version.value"
           class="flex items-center px-4 py-2 select-none first:(rounded-t-lg) last:(rounded-b-lg)"
           :class="version.disabled ? 'text-subtle cursor-not-allowed hover:(bg-box-grey)' : 'cursor-pointer hover:(bg-steel-grey)' "
-          @click="selectedVersion = version"
+          @click="setCurrentVersion(version)"
         >
           <div
             class="rounded-1 w-2 h-2"
@@ -47,9 +47,18 @@
 </template>
 <script lang="ts" setup>
 import { OnClickOutside } from '@vueuse/components'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 
-const versions = [
+import { BiodiversityStore } from '../../../../_services/store'
+
+interface ProjectVersion {
+    label: string
+    value: string
+    colorClass: string
+    disabled: boolean
+  }
+
+const versions: ProjectVersion[] = [
   {
     label: 'draft',
     value: 'draft',
@@ -64,11 +73,18 @@ const versions = [
   }
 ]
 
+const store = inject<BiodiversityStore>('store')
+
 const selectedVersion = ref(versions[0])
 const isOpenDropdown = ref(false)
 
 const openDropdown = () => {
   isOpenDropdown.value = !isOpenDropdown.value
+}
+
+const setCurrentVersion = async (version: ProjectVersion) => {
+  selectedVersion.value = version
+  await store?.setCurrentVersion(version.value)
 }
 
 </script>

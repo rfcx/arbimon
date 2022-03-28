@@ -13,7 +13,8 @@ export const useStore = defineStore('root', {
     datasetColors: COLORS_BIO_INCLUSIVE,
     projects: [] as LocationProjectForUser[],
     selectedProject: undefined as LocationProjectForUser | undefined,
-    projectFilters: undefined as ProjectFiltersResponse | undefined
+    projectFilters: undefined as ProjectFiltersResponse | undefined,
+    currentVersion: ''
   }),
   getters: {},
   actions: {
@@ -37,6 +38,9 @@ export const useStore = defineStore('root', {
       this.projectFilters = project
         ? await projectService.getProjectFilters(project.id)
         : undefined
+    },
+    async setCurrentVersion (version: string) {
+      this.currentVersion = version
     }
   }
 })
