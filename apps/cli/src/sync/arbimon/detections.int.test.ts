@@ -1,6 +1,7 @@
 import { beforeAll, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arbimon'
 import { getSequelize } from '@/db/connections'
@@ -45,21 +46,71 @@ test('Species: Test project has 10 species - based on validated data', async () 
   expect(numberOfSpecies).toBe(10)
 })
 
-test('Detections: detected hemidactylium-scutatum 4 times at NU - Eng between 10am', async () => {
-  const speciesId = await ModelRepository.getInstance(biodiversitySequelize)
-    .TaxonSpecies
-    .findOne({
-      where: { slug: 'hemidactylium-scutatum' },
-      raw: true
-    }).then(v => {
-      return v?.id
-    })
+test('Detections: Test project has 15 row of detection summaries', async () => {
+  const numberOfDetectionSummariesRows = await ModelRepository.getInstance(biodiversitySequelize)
+    .DetectionBySiteSpeciesHour
+    .count({ where: { locationProjectId: testProjectId } })
+  expect(numberOfDetectionSummariesRows).toBe(15)
+})
 
-  expect(speciesId).toBeDefined()
+test('Detections: Test site (NU - Eng) has 14 row of detection summaries', async () => {
+  const locationSiteId = await getSiteIdFromIdArbimon(88526)
 
-  // TODO: continue on this
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const numberOfDetectionSummariesRows = await ModelRepository.getInstance(biodiversitySequelize)
+    .DetectionBySiteSpeciesHour
+    .count({ where: { locationSiteId } })
+  expect(numberOfDetectionSummariesRows).toBe(14)
+})
+
+test('Detections: detected hemidactylium-scutatum 4 times at NU - Eng between 10am (Local time) on 06/12/2020', async () => {
+  const speciesId = await getSpeciesIdFromSlug('hemidactylium-scutatum')
+  const siteId = await getSiteIdFromIdArbimon(88526)
+  const date = '2020-12-06 10:00:00'
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const detection = await getDetectionBySiteSpeciesHour(speciesId!, siteId!, date)
+  const detectionCount = detection?.count ?? 0
+  expect(detectionCount).toBe(4)
 })
 
 test('Create new datasource', async () => {})
 
 test('Update existing datasource', async () => {})
+
+// Helper
+
+const getSpeciesIdFromSlug = async (slug: string): Promise<number | undefined> => {
+  return await ModelRepository.getInstance(biodiversitySequelize)
+    .TaxonSpecies
+    .findOne({
+      where: { slug },
+      raw: true
+    }).then(v => {
+      return v?.id
+    })
+}
+
+const getSiteIdFromIdArbimon = async (idArbimon: number): Promise<number | undefined> => {
+  return await ModelRepository.getInstance(biodiversitySequelize)
+    .LocationSite
+    .findOne({
+      where: { idArbimon: idArbimon },
+      raw: true
+    }).then(v => {
+      return v?.id
+    })
+}
+
+const getDetectionBySiteSpeciesHour = async (taxonSpeciesId: number, locationSiteId: number, time: string): Promise<DetectionBySiteSpeciesHour | null> => {
+  return await ModelRepository.getInstance(biodiversitySequelize)
+    .DetectionBySiteSpeciesHour
+    .findOne({
+      where: {
+        taxonSpeciesId,
+        locationSiteId,
+        timePrecisionHourLocal: time
+      },
+      raw: true
+    })
+}
