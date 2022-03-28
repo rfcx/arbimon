@@ -32,15 +32,15 @@ export const getArbimonProjects = async (sequelize: Sequelize): Promise<Array<Om
   const results: ArbimonProject[] = await sequelize.query(sql, { type: QueryTypes.SELECT, raw: true })
   return results.map(i => {
     return {
-      idCore: i.core_project_id || '',
+      idCore: i.core_project_id ?? '',
       idArbimon: i.project_id,
       slug: i.slug,
       slugArbimon: i.slug,
       name: i.name,
-      latitudeNorth: i.north || 0,
-      latitudeSouth: i.south || 0,
-      longitudeEast: i.east || 0,
-      longitudeWest: i.west || 0
+      latitudeNorth: i.north ?? 0,
+      latitudeSouth: i.south ?? 0,
+      longitudeEast: i.east ?? 0,
+      longitudeWest: i.west ?? 0
     }
   })
 }
