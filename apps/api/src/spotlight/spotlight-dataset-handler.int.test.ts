@@ -2,28 +2,35 @@ import fastify, { FastifyInstance } from 'fastify'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { describe, expect, test } from 'vitest'
 
-import { activityDatasetGeneratedUrl } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
 import { GET } from '~/api-helpers/types'
-import { routesActivity } from './index'
+import { routesSpotlight } from './index'
 
-const ROUTE = '/projects/:projectId/activity'
+const ROUTE = '/projects/:projectId/spotlight'
 
 const EXPECTED_PROPS = [
   'isLocationRedacted',
-  'detectionsBySite',
-  'detectionsBySpecies',
+  'totalSiteCount',
+  'totalRecordingCount',
+  'detectionCount',
+  'detectionFrequency',
+  'occupiedSiteCount',
+  'occupiedSiteFrequency',
+  'detectionsByLocationSite',
   'detectionsByTimeHour',
   'detectionsByTimeDay',
   'detectionsByTimeMonth',
-  'detectionsByTimeDate'
+  'detectionsByTimeYear',
+  'detectionsByTimeDate',
+  'detectionsByTimeMonthYear'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
   await app.register(fastifyRequestContextPlugin)
 
-  routesActivity
+  routesSpotlight
     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
     .forEach(route => app.route(route))
 
@@ -49,8 +56,8 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
     // Assert
@@ -68,8 +75,8 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
     // Assert
@@ -84,8 +91,8 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -93,7 +100,29 @@ describe('happy path', () => {
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
   })
 
-  // ! All the happy case below should have another set to check for `isLocationRedacted` data
+  test(`GET ${ROUTE} calcurate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+    })
+
+    // Assert
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const totalSiteCount = result.totalSiteCount
+    // const totalRecordingCount = result.totalRecordingCount
+    // const detectionCount = result.detectionCount
+    // const detectionFrequency = result.detectionFrequency
+    // const occupiedSiteCount = result.occupiedSiteCount
+    // const occupiedSiteFrequency = result.occupiedSiteFrequency
+  })
+
+  // ! All the happy case below must have another set to check for `isLocationRedacted` data
 
   test(`GET ${ROUTE} calcurate correct detection count, detection frequency, and naive occupancy by site`, async () => {
     // Arrange
@@ -102,31 +131,14 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result
     const result = JSON.parse(response.body)
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsBySite
-  })
-
-  test(`GET ${ROUTE} have correct detected species information`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
-
-    // Assert TODO: Make mock data for calcurating known result
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsBySpecies
+    // const detectionsBySite = result.detectionsByLocationSite
   })
 
   test(`GET ${ROUTE} calcurate correct detection count and detection frequency for hourly`, async () => {
@@ -136,8 +148,8 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
@@ -153,8 +165,8 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
@@ -170,14 +182,31 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
     const result = JSON.parse(response.body)
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
     // const detectionsBySite = result.detectionsByTimeMonth
+  })
+
+  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for year`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of years)
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsByTimeYear
   })
 
   test(`GET ${ROUTE} calcurate correct detection count and detection frequency for date`, async () => {
@@ -187,14 +216,31 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
     const result = JSON.parse(response.body)
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
     // const detectionsBySite = result.detectionsByTimeDate
+  })
+
+  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for month/year`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of each month/years)
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsByTimeMonthYear
   })
 })
 
@@ -206,7 +252,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' })
+      url: spotlightDatasetUrl({ projectId: '1' })
     })
 
     // Assert
@@ -220,7 +266,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: 'x' })
+      url: spotlightDatasetUrl({ projectId: 'x' })
     })
 
     // Assert
@@ -231,6 +277,63 @@ describe('client errors', () => {
     expect(errorMessage).toContain('Invalid path params: projectId')
   })
 
+  test(`GET ${ROUTE} missing species id`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(400)
+
+    const result = JSON.parse(response.body)
+    const errorMessage = result.message
+    expect(errorMessage).toContain('Invalid query params')
+  })
+
+  test(`GET ${ROUTE} invalid species id`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: 'xxx', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(400)
+
+    const result = JSON.parse(response.body)
+    const errorMessage = result.message
+    expect(errorMessage).toContain('Invalid query params')
+  })
+
+  test(`GET ${ROUTE} not found species with given id`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: spotlightDatasetUrl({ projectId: '1' }),
+      query: { speciesId: '9999', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(404)
+
+    const result = JSON.parse(response.body)
+    const errorMessage = result.message
+    expect(errorMessage).toContain('Data not found')
+  })
+
   test(`GET ${ROUTE} rejects invalid date`, async () => {
     // Arrange
     const app = await getMockedApp()
@@ -238,7 +341,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      url: spotlightDatasetUrl({ projectId: '1' }),
       query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
