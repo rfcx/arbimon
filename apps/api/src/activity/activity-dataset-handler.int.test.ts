@@ -92,6 +92,108 @@ describe('happy path', () => {
     const result = JSON.parse(response.body)
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
   })
+
+  test(`GET ${ROUTE} calcurate correct detection count, detection frequency, and naive occupancy by site`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsBySite
+  })
+
+  test(`GET ${ROUTE} have correct detected species information`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsBySpecies
+  })
+
+  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for hourly`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsByTimeHour
+  })
+
+  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for day`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsByTimeDay
+  })
+
+  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for month`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsByTimeMonth
+  })
+
+  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for date`, async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    })
+
+    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
+    const result = JSON.parse(response.body)
+    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    // const detectionsBySite = result.detectionsByTimeDate
+  })
 })
 
 describe('client errors', () => {
