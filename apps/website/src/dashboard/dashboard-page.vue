@@ -1,10 +1,10 @@
 <template>
   <div v-if="store.selectedProject">
-    <draft-banner
+    <!-- <draft-banner
       current-mode="Draft"
       :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
       :project-slug="store.selectedProject?.slug"
-    />
+    /> -->
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
