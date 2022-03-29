@@ -30,20 +30,7 @@
               @click="toggleProjectSelector(true)"
             >
               <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-3 w-3 ml-1 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <icon-custom-angle-down class="ml-1 text-xs" />
             </div>
           </div>
           <div class="flex items-center mx-4 sm:hidden">
@@ -69,23 +56,10 @@
             class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
           >
             Arbimon
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3 w-3 ml-1 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
+            <icon-custom-linkout class="text-xs ml-1" />
           </a>
         </div>
-        <div class="flex items-center mx-4 <sm:hidden">
+        <div class="flex items-center mx-2 <sm:hidden">
           <auth-navbar-item-component dom-id="navbar-auth-desktop" />
         </div>
       </div>

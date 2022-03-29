@@ -1,9 +1,5 @@
 <template>
-  <no-data-panel
-    v-if="!hasData"
-    class="h-20"
-  />
-  <div v-else>
+  <div v-if="hasData">
     <div
       v-for="ratingAndSpecies in speciesByRating"
       :key="ratingAndSpecies[0]"
