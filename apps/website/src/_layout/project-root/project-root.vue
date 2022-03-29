@@ -12,7 +12,6 @@
         <router-view />
         <div class="footer">
           <last-sync
-
             :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
             :project-slug="store.selectedProject?.slug"
           />
