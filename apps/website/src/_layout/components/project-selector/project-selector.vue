@@ -4,7 +4,7 @@
     @emit-close="emitCloseProjectSelector"
   >
     <div>
-      <div class="p-2 border-b-1 sm:(flex justify-between items-center)">
+      <div class="p-4 border-b-1 sm:(flex justify-between items-center)">
         <div class="text-white text-xl">
           Select Project
         </div>
@@ -37,7 +37,7 @@
         :selected-project="newSelectedProject"
         @emit-select-project="setSelectedProject"
       />
-      <div class="flex justify-end mt-3 p-2">
+      <div class="flex justify-end mt-3 p-4">
         <button
           class="btn mr-2"
           @click="emitCloseProjectSelector"
