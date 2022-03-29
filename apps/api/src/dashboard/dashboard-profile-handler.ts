@@ -2,7 +2,7 @@ import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/comm
 
 import { getDashboardProfile } from '@/dashboard/dashboard-profile-dao'
 import { Handler } from '../_services/api-helpers/types'
-import { BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'
+import { BioInvalidPathParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 
 export const dashboardProfileHandler: Handler<DashboardProfileResponse, DashboardProfileParams> = async (req) => {
@@ -14,7 +14,5 @@ export const dashboardProfileHandler: Handler<DashboardProfileResponse, Dashboar
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
   // Query & respond
-  const dashboardProfile = await getDashboardProfile(projectIdInteger)
-  if (!dashboardProfile) throw BioNotFoundError()
-  return dashboardProfile
+  return await getDashboardProfile(projectIdInteger)
 }
