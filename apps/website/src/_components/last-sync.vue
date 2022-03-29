@@ -40,6 +40,6 @@ const syncHistoryRoute = computed(() => ({
   params: { projectSlug: props.projectSlug }
 }))
 
-const isProjectMember = store?.selectedProject?.isMyProject
+const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
 
 </script>
