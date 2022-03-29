@@ -1,5 +1,4 @@
 import fastify, { FastifyInstance } from 'fastify'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { describe, expect, test } from 'vitest'
 
 import { activityDatasetGeneratedUrl } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
@@ -19,9 +18,19 @@ const EXPECTED_PROPS = [
   'detectionsByTimeDate'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
+const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
   const app = await fastify()
-  await app.register(fastifyRequestContextPlugin)
+
+  const fakeRequestContext = {
+    get: (key: string) => ({
+      IS_PROJECT_MEMBER: false,
+      MEMBER_PROJECT_CORE_IDS: []
+    })[key],
+    set: (key: string, value: any) => {}
+  }
+
+  app.decorate('requestContext', fakeRequestContext)
+  app.decorateRequest('requestContext', fakeRequestContext)
 
   routesActivity
     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
@@ -30,10 +39,31 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe('happy path', () => {
+const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
+  const app = await fastify()
+
+  const fakeRequestContext = {
+    get: (key: string) => ({
+      IS_PROJECT_MEMBER: true,
+      MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
+    })[key],
+    set: (key: string, value: any) => {}
+  }
+
+  app.decorate('requestContext', fakeRequestContext)
+  app.decorateRequest('requestContext', fakeRequestContext)
+
+  routesActivity
+    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
+    .forEach(route => app.route(route))
+
+  return app
+}
+
+describe('simple tests', () => {
   test(`GET ${ROUTE} exists`, async () => {
    // Arrange
-   const app = await getMockedApp()
+   const app = await getMockedAppLoggedOut()
 
    // Act
    const routes = app.printRoutes()
@@ -44,13 +74,13 @@ describe('happy path', () => {
 
   test(`GET ${ROUTE} returns successfully`, async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedAppLoggedOut()
 
     // Act
     const response = await app.inject({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
     })
 
     // Assert
@@ -63,13 +93,13 @@ describe('happy path', () => {
 
   test(`GET ${ROUTE} contains all expected props`, async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedAppLoggedOut()
 
     // Act
     const response = await app.inject({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
     })
 
     // Assert
@@ -79,129 +109,97 @@ describe('happy path', () => {
 
   test(`GET ${ROUTE} does not contain any additional props`, async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedAppLoggedOut()
 
     // Act
     const response = await app.inject({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
 
     // Assert
     const result = JSON.parse(response.body)
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
   })
+})
 
-  // ! All the happy case below should have another set to check for `isLocationRedacted` data
+describe('known data tests', async () => {
+  // Arrange & Act once
+  const app = await getMockedAppLoggedIn()
 
-  test(`GET ${ROUTE} calcurate correct detection count, detection frequency, and naive occupancy by site`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
-
-    // Assert TODO: Make mock data for calcurating known result
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsBySite
+  const response = await app.inject({
+    method: GET,
+    url: activityDatasetGeneratedUrl({ projectId: '1' }),
+    query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
   })
 
-  test(`GET ${ROUTE} have correct detected species information`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
-
-    // Assert TODO: Make mock data for calcurating known result
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsBySpecies
+  test(`GET ${ROUTE} calculates isLocationRedacted correctly`, async () => {
+    const result = JSON.parse(response.body)?.isLocationRedacted
+    expect(result).toBeDefined()
+    expect(result).toEqual(false)
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for hourly`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
-
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeHour
+  test(`GET ${ROUTE} calculates detectionsBySite correctly`, async () => {
+    const result = JSON.parse(response.body)?.detectionsBySite
+    expect(result).toBeDefined()
+    expect(result).toBeTypeOf('object')
+    expect(Object.keys(result).length).toBe(877)
+    // ...
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for day`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
-
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeDay
+  test.todo(`GET ${ROUTE} calculates detectionsBySpecies correctly`, async () => {
+    const result = JSON.parse(response.body)?.detectionsBySpecies
+    expect(result).toBeDefined()
+    // ...
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for month`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
-
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeMonth
+  test.todo(`GET ${ROUTE} calculates detectionsByTimeHour correctly`, async () => {
+    const result = JSON.parse(response.body)?.detectionsByTimeHour
+    expect(result).toBeDefined()
+    // ...
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for date`, async () => {
-    // Arrange
-    const app = await getMockedApp()
+  test.todo(`GET ${ROUTE} calculate detectionsByTimeDay correctly`, async () => {
+    const result = JSON.parse(response.body)?.detectionsByTimeDay
+    expect(result).toBeDefined()
+    // ...
+  })
 
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
-    })
+  test.todo(`GET ${ROUTE} calculate detectionsByTimeMonth correctly`, async () => {
+    const result = JSON.parse(response.body)?.detectionsByTimeMonth
+    expect(result).toBeDefined()
+    // ...
+  })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeDate
+  test.todo(`GET ${ROUTE} calculate detectionsByTimeDate correctly`, async () => {
+    const result = JSON.parse(response.body)?.detectionsByTimeDate
+    expect(result).toBeDefined()
+    // ...
+  })
+})
+
+describe('known data tests with redacted data', async () => {
+  // Arrange & Act once
+  const app = await getMockedAppLoggedOut()
+
+  const response = await app.inject({
+    method: GET,
+    url: activityDatasetGeneratedUrl({ projectId: '1' }),
+    query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+  })
+
+  test(`GET ${ROUTE} calculates isLocationRedacted correctly`, async () => {
+    const result = JSON.parse(response.body)?.isLocationRedacted
+    expect(result).toBeDefined()
+    expect(result).toEqual(true)
   })
 })
 
 describe('client errors', () => {
   test(`GET ${ROUTE} rejects missing query`, async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedAppLoggedOut()
 
     // Act
     const response = await app.inject({
@@ -215,7 +213,7 @@ describe('client errors', () => {
 
   test(`GET ${ROUTE} rejects invalid project id`, async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedAppLoggedOut()
 
     // Act
     const response = await app.inject({
@@ -233,7 +231,7 @@ describe('client errors', () => {
 
   test(`GET ${ROUTE} rejects invalid date`, async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedAppLoggedOut()
 
     // Act
     const response = await app.inject({
