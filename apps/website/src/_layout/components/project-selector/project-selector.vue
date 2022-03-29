@@ -3,9 +3,9 @@
     name="projectSelectorModal"
     @emit-close="emitCloseProjectSelector"
   >
-    <div class="p-4">
-      <div class="py-2 border-b-2 sm:(flex justify-between items-center)">
-        <div class="text-white text-lg">
+    <div>
+      <div class="p-2 border-b-1 sm:(flex justify-between items-center)">
+        <div class="text-white text-xl">
           Select Project
         </div>
         <div class="<sm:(mt-2)">
@@ -30,10 +30,6 @@
         :selected-project="newSelectedProject"
         @emit-select-project="setSelectedProject"
       />
-      <hr
-        v-if="userProjects.length > 0"
-        class="border-dashed"
-      >
       <project-list
         class="mt-3"
         title="Public Projects"
@@ -41,7 +37,7 @@
         :selected-project="newSelectedProject"
         @emit-select-project="setSelectedProject"
       />
-      <div class="flex justify-end mt-3">
+      <div class="flex justify-end mt-3 p-2">
         <button
           class="btn mr-2"
           @click="emitCloseProjectSelector"

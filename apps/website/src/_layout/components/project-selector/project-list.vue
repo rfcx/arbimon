@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="text-subtle">
+    <div class="px-2 text-subtle">
       {{ title }}
     </div>
     <div
       v-if="projects.length > 0"
-      class="h-40 divide-y divide-gray-500"
+      class=" h-40 divide-y divide-gray-500 overflow-y-auto"
     >
       <div
         v-for="(project, idx) in props.projects"
         :key="'project-list-' + idx"
-        class="flex justify-between text-white cursor-pointer py-2 px-1"
+        class="flex justify-between text-white cursor-pointer py-2 mx-2"
         :class="{ 'font-bold': selectedProject?.id === project.id }"
         @click="emit('emitSelectProject', project)"
       >
@@ -21,7 +21,7 @@
     </div>
     <div
       v-else
-      class="h-40 italic text-subtle py-2 px-1"
+      class="h-40 italic text-subtle py-2 mx-2"
     >
       None
     </div>

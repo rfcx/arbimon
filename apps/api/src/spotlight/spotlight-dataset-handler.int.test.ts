@@ -100,7 +100,7 @@ describe('happy path', () => {
     Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
   })
 
-  test(`GET ${ROUTE} calcurate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency`, async () => {
+  test(`GET ${ROUTE} calculate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -124,7 +124,7 @@ describe('happy path', () => {
 
   // ! All the happy case below must have another set to check for `isLocationRedacted` data
 
-  test(`GET ${ROUTE} calcurate correct detection count, detection frequency, and naive occupancy by site`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count, detection frequency, and naive occupancy by site`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -141,7 +141,7 @@ describe('happy path', () => {
     // const detectionsBySite = result.detectionsByLocationSite
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for hourly`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count and detection frequency for hourly`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -158,7 +158,7 @@ describe('happy path', () => {
     // const detectionsBySite = result.detectionsByTimeHour
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for day`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count and detection frequency for day`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -175,7 +175,7 @@ describe('happy path', () => {
     // const detectionsBySite = result.detectionsByTimeDay
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for month`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count and detection frequency for month`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -192,7 +192,7 @@ describe('happy path', () => {
     // const detectionsBySite = result.detectionsByTimeMonth
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for year`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count and detection frequency for year`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -209,7 +209,7 @@ describe('happy path', () => {
     // const detectionsBySite = result.detectionsByTimeYear
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for date`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count and detection frequency for date`, async () => {
     // Arrange
     const app = await getMockedApp()
 
@@ -226,7 +226,7 @@ describe('happy path', () => {
     // const detectionsBySite = result.detectionsByTimeDate
   })
 
-  test(`GET ${ROUTE} calcurate correct detection count and detection frequency for month/year`, async () => {
+  test(`GET ${ROUTE} calculate correct detection count and detection frequency for month/year`, async () => {
     // Arrange
     const app = await getMockedApp()
 
