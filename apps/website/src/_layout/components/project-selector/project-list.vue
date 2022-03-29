@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="px-2 text-subtle">
+    <div class="px-4 text-subtle">
       {{ title }}
     </div>
     <div
@@ -10,7 +10,7 @@
       <div
         v-for="(project, idx) in props.projects"
         :key="'project-list-' + idx"
-        class="flex justify-between text-white cursor-pointer py-2 mx-2"
+        class="flex justify-between text-white cursor-pointer py-2 mx-4"
         :class="{ 'font-bold': selectedProject?.id === project.id }"
         @click="emit('emitSelectProject', project)"
       >
