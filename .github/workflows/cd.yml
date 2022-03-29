@@ -36,6 +36,7 @@ jobs:
           if [[ "${{ github.event_name }}" = "pull_request" ]]; then echo "BRANCH_NAME=`echo ${GITHUB_HEAD_REF}`"; else echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`"; fi >> $GITHUB_ENV
           echo "COMMIT_TITLE=`git show -s --format='%s'`" >> $GITHUB_ENV
           echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+          echo "RELEASE_DATE=$(date +%s)" >> $GITHUB_ENV
 
       - name: 'Setup: ENV from Branch'
         uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
@@ -87,6 +88,8 @@ jobs:
         with:
           build-args: |
             mode=${{ env.NAMESPACE }}
+            release_commit=${{ env.SHORT_SHA }}
+            release_date=${{ env.RELEASE_DATE }}
           target: api
           file: tools/deployment/Dockerfile
           context: .
@@ -106,6 +109,8 @@ jobs:
         with:
           build-args: |
             mode=${{ env.NAMESPACE }}
+            release_commit=${{ env.SHORT_SHA }}
+            release_date=${{ env.RELEASE_DATE }}
           target: cli
           file: tools/deployment/Dockerfile
           context: .
@@ -125,6 +130,8 @@ jobs:
         with:
           build-args: |
             mode=${{ env.NAMESPACE }}
+            release_commit=${{ env.SHORT_SHA }}
+            release_date=${{ env.RELEASE_DATE }}
           target: website
           file: tools/deployment/Dockerfile
           context: .

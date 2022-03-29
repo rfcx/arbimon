@@ -29,10 +29,17 @@ COPY apps ./apps
 COPY packages ./packages
 
 ARG mode=production
+ARG release_commit
+ARG release_date
+
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
+ENV VITE_RELEASE_COMMIT=${release_commit}
+ENV VITE_RELEASE_DATE=${release_date}
+
 RUN pnpm --filter=!website build
 RUN pnpm --filter=website build -- --mode ${mode}
+
 ENV NODE_ENV=development
 RUN pnpm -r pack-api
 RUN pnpm --filter=api use-packed
