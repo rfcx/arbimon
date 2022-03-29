@@ -16,9 +16,9 @@ export interface NavMenu {
 
 @Options({
   components: {
+    AuthNavbarItemComponent,
     MobileMenuToggleButton,
-    ProjectSelectorComponent,
-    AuthNavbarItemComponent
+    ProjectSelectorComponent
   }
 })
 export default class NavbarComponent extends Vue {

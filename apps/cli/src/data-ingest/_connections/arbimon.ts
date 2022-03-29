@@ -1,4 +1,5 @@
 import { ConnectionOptions } from 'mysql2/promise'
+import { Options, Sequelize } from 'sequelize'
 
 import { requireEnv } from '~/env'
 
@@ -6,6 +7,7 @@ import { requireEnv } from '~/env'
 const { ARBIMON_DB_USER, ARBIMON_DB_PASSWORD, ARBIMON_DB_HOSTNAME, ARBIMON_DB_DBNAME } =
   requireEnv('ARBIMON_DB_USER', 'ARBIMON_DB_PASSWORD', 'ARBIMON_DB_HOSTNAME', 'ARBIMON_DB_DBNAME')
 
+// TODO: remove Arbimon config and use Sequelize instead
 export const ARBIMON_CONFIG: ConnectionOptions = {
   user: ARBIMON_DB_USER,
   password: ARBIMON_DB_PASSWORD,
@@ -13,3 +15,33 @@ export const ARBIMON_CONFIG: ConnectionOptions = {
   database: ARBIMON_DB_DBNAME,
   timezone: '+00:00'
 }
+
+interface ArbimonConnectionOptions {
+  user: string
+  password: string
+  host: string
+  database: string
+  timezone: string
+}
+
+const getArbimonSequelizeBase = (co: ArbimonConnectionOptions): Sequelize => {
+  // Setup sequelize (ORM)
+  const sequelizeOptions: Options = {
+    host: co.host,
+    dialect: 'mysql',
+    define: {
+      charset: 'utf8',
+      collate: 'utf8_general_ci'
+    },
+    logging: false
+  }
+
+  return new Sequelize(
+    co.database,
+    co.user,
+    co.password,
+    sequelizeOptions
+  )
+}
+
+export const getArbimonSequelize = (): Sequelize => getArbimonSequelizeBase(ARBIMON_CONFIG as ArbimonConnectionOptions)

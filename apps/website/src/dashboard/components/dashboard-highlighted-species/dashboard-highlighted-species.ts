@@ -18,8 +18,4 @@ export default class DashboardHighlightedSpecies extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Inject() readonly ROUTE_NAMES!: RouteNames
   @Prop() species!: HighlightedSpeciesRow[]
-
-  get hasData (): boolean {
-    return this.species.length > 0
-  }
 }

@@ -1,4 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
@@ -34,16 +34,17 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
     updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
   })
 
+  // TODO: #691 the database connection got cut off when there is a lot of detection rows (20k+) in the query where clause
   // delete non exist items
-  await models.DetectionBySiteSpeciesHour.destroy({
-    where: {
-      timePrecisionHourLocal: {
-        [Op.ne]: null,
-        [Op.notIn]: data.map(i => i.timePrecisionHourLocal.toISOString())
-      },
-      locationProjectId: project.id
-    }
-  }).then(numberOfDeletedRows => {
-    console.info('| deleted %d detections summaries', numberOfDeletedRows)
-  })
+  // await models.DetectionBySiteSpeciesHour.destroy({
+  //   where: {
+  //     timePrecisionHourLocal: {
+  //       [Op.ne]: null,
+  //       [Op.notIn]: data.map(i => i.timePrecisionHourLocal.toISOString())
+  //     },
+  //     locationProjectId: project.id
+  //   }
+  // }).then(numberOfDeletedRows => {
+  //   console.info('| deleted %d detections summaries', numberOfDeletedRows)
+  // })
 }

@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Watch } from 'vue-property-decorator'
+import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
@@ -8,6 +8,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { BiodiversityStore } from '~/store'
 import { TimeBucket } from '~/time-buckets'
 import SpeciesRichnessByClass from './components/species-richness-by-class/species-richness-by-class.vue'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
@@ -29,6 +30,8 @@ import { richnessService } from './services'
   }
 })
 export default class SpeciesRichnessPage extends Vue {
+  @Inject() readonly store!: BiodiversityStore
+
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ColoredFilter[] = []
   speciesByClassDatasets: GroupedBarChartItem[] = []

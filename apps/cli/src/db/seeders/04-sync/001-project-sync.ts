@@ -1,9 +1,9 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { getArbimonProjects, writeProjectsToPostgres } from '@/data-ingest/projects'
+import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
+import { syncProjects } from '@/sync/arbimon'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const projects = await getArbimonProjects()
-  await writeProjectsToPostgres(params.context.sequelize, projects)
+  await syncProjects(getArbimonSequelize(), params.context.sequelize)
 }
