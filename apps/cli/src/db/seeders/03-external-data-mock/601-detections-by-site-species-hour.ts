@@ -1,8 +1,11 @@
+import * as hash from 'object-hash'
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { DataSourceModel } from '@rfcx-bio/common/dao/models/data-source-model'
 import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { ProjectVersionModel } from '@rfcx-bio/common/dao/models/project-version-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -26,9 +29,16 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const speciesArbimonToBio: Record<number, number> = Object.fromEntries(species.map(s => [s.idArbimon, s.id]))
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
-  // Data
-  const data: DetectionBySiteSpeciesHour[] =
-    rawDetections.map(d => ({
+  // Save data
+  await ProjectVersionModel(sequelize)
+    .create({
+      locationProjectId: puertoRicoProjectId,
+      isPublished: false,
+      isPublic: false
+    })
+
+  const detectionSummaries: DetectionBySiteSpeciesHour[] = rawDetections
+    .map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: classArbimonToBio[d.taxon_id] ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id] ?? -1, // TODO: Throw error
@@ -38,7 +48,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       durationMinutes: 12
     }))
 
-  await DetectionBySiteSpeciesHourModel(sequelize).bulkCreate(data, {
-    updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
-  })
+  await DataSourceModel(sequelize)
+    .create({
+      id: hash.MD5([{ 123: 456 }]),
+      locationProjectId: puertoRicoProjectId,
+      summaryText: JSON.stringify({
+        species: 500,
+        sites: 90
+      })
+    })
+
+  await DetectionBySiteSpeciesHourModel(sequelize)
+    .bulkCreate(detectionSummaries, {
+      updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
+    })
 }
+
+/**
+ * latest => findOne(...) ~~ SELECT * FROM project_version ORDER BY created_at DESC LIMIT 1
+ * most-recent published => findOne(...) ~~ SELECT * FROM project_version WHERE is_published=true ORDER BY created_at DESC LIMIT 1
+ */

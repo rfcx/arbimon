@@ -1,13 +1,26 @@
+import fastify, { FastifyInstance } from 'fastify'
+import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
 
-import { testApp } from '@/_testing/app-routes'
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
 
+const getMockedApp = async (): Promise<FastifyInstance> => {
+  const app = await fastify()
+  await app.register(fastifyRequestContextPlugin)
+
+  routesProject
+    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
+    .forEach(route => app.route(route))
+
+  return app
+}
+
 test('GET /projects contains valid project', async () => {
-  const app = await testApp(routesProject)
+  // Arrange
+  const app = await getMockedApp()
 
   // Act
   const response = await app.inject({
@@ -17,6 +30,7 @@ test('GET /projects contains valid project', async () => {
 
   // Assert
   expect(response.statusCode).toBe(200)
+
   const result = JSON.parse(response.body)
   const bciProject = result.find((p: any) => p.slug === 'bci-panama-2018')
   expect(bciProject).toBeDefined()

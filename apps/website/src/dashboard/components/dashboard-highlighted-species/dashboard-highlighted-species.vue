@@ -1,10 +1,6 @@
 <template>
-  <no-data-panel
-    v-if="!hasData"
-    class="h-20"
-  />
   <div
-    v-else
+    v-if="species.length > 0"
     class="ml-2"
   >
     <div

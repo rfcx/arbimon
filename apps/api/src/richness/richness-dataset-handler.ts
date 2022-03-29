@@ -16,8 +16,8 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
   const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
-  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
-  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
+  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
+  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 
   const datasetFilter = {
     locationProjectId: projectIdInteger,

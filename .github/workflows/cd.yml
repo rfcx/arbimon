@@ -59,7 +59,7 @@ jobs:
                 "ECR_REPO_API": "biodiversity-api/staging",
                 "ECR_REPO_CLI": "biodiversity-cli/staging",
                 "ECR_REPO_WEBSITE": "biodiversity-website/staging",
-                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIO_WEBHOOK }}",
+                "SLACK_WEBHOOK_SUCCESS": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "SLACK_WEBHOOK_FAILURE": "${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}",
                 "URL_WEB": "staging-bio.rfcx.org",
                 "URL_API": "staging-bio.rfcx.org/api"
