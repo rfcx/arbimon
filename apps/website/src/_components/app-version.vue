@@ -1,7 +1,7 @@
 <template>
-  <p class="text-center text-xs text-box-grey">
-    RFCx Biodiversity Reports <br>
-    Build: <span class="font-mono">{{ releaseCommit }}</span> - {{ formatDateFull(releaseDate) }}
+  <p>
+    RFCx Biodiversity Reports (version <span class="font-mono">{{ releaseCommit }}</span>)<br>
+    {{ formatDateFull(releaseDate) }}
   </p>
 </template>
 
