@@ -49,6 +49,7 @@ export const getArbimonSpeciesCallsForProjectSpecies = async (projectIdArbimon: 
   const results = await mysqlSelect<ArbimonSpeciesCallRow>(ARBIMON_CONFIG, sql)
   return results.map(row => ({
     ...row,
+    // TODO: respect the environment for generating redirect_url
     redirect_url: `https://arbimon.rfcx.org/project/${row.project_slugArbimon}/visualizer/rec/${row.recording_id}`,
     media_wav_url: `https://media-api.rfcx.org/internal/assets/streams/${row.site_idCore}_t${dateQueryParamify(row.start.toISOString())}.${dateQueryParamify(row.end.toISOString())}_fwav.wav`,
     media_spec_url: `https://media-api.rfcx.org/internal/assets/streams/${row.site_idCore}_t${dateQueryParamify(row.start.toISOString())}.${dateQueryParamify(row.end.toISOString())}_d512.512_mtrue_fspec.png`

@@ -1,4 +1,9 @@
 <template>
+  <!-- <draft-banner
+    current-mode="Draft"
+    :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+    :project-slug="store.selectedProject?.slug"
+  /> -->
   <page-title
     page-title="Activity Overview"
     page-subtitle="Temporal and spatial activity trends for all species"

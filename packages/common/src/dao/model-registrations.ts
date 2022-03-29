@@ -7,13 +7,14 @@ import { DashboardRichnessBySiteModel, MODEL_DASHBOARD_RICHNESS_BY_SITE } from '
 import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/dashboard-richness-by-taxon-model'
 import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED } from './models/dashboard-species-highlighted-model'
 import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
-import { DataSourceModel, MODEL_DATASOURCE } from './models/datasource-model'
+import { DataSourceModel, MODEL_DATA_SOURCE } from './models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/detection-by-site-species-hour-model'
 import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
 import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
 import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './models/location-project-profile-model'
 import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
+import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
 import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/species-in-project-model'
 import { MODEL_TAXON_CLASS, TaxonClassModel } from './models/taxon-class-model'
@@ -26,11 +27,14 @@ import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-
 
 export const modelRegistrations = <const>{
   // Tables
+  [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
+  [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_PROJECT]: [LocationProjectModel, {}],
   [MODEL_LOCATION_PROJECT_PROFILE]: [LocationProjectProfileModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
   [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
   [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
@@ -39,8 +43,6 @@ export const modelRegistrations = <const>{
   [MODEL_TAXON_SPECIES_PHOTO]: [TaxonSpeciesPhotoModel, { manyToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_RFCX]: [TaxonSpeciesRfcxModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
-  [MODEL_DATASOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
-  [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
