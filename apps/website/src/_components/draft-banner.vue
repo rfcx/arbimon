@@ -73,7 +73,7 @@
           v-if="props.syncUpdated"
           class="text-s"
         >
-          Last generated based on validated analysis data from Arbimon at: {{ formatFullDate(props.syncUpdated) }}
+          Last generated based on validated analysis data from Arbimon at: {{ formatDateFull(props.syncUpdated) }}
         </p>
         <p>
           <router-link
@@ -116,7 +116,7 @@ const props = withDefaults(defineProps<Props>(), {
   currentMode: 'Published'
 })
 
-const { formatFullDate } = useDateFormat()
+const { formatDateFull } = useDateFormat()
 const publishOptionModalOpen = ref(false)
 const accessbililyOption = ref(true)
 const secureOption = reactive({ allowDownload: true, linkArbimon: true })
