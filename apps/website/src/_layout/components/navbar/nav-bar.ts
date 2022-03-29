@@ -7,7 +7,6 @@ import { BiodiversityStore } from '~/store'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
-import VersionControl from './version-control.vue'
 
 export interface NavMenu {
   label: string
@@ -19,8 +18,7 @@ export interface NavMenu {
   components: {
     AuthNavbarItemComponent,
     MobileMenuToggleButton,
-    ProjectSelectorComponent,
-    VersionControl
+    ProjectSelectorComponent
   }
 })
 export default class NavbarComponent extends Vue {
