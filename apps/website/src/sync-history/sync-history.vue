@@ -9,14 +9,14 @@
       class="updated-list mb-4"
     >
       <ul v-if="update.createdAt !== update.updatedAt">
-        <li>{{ formatFullDate(update.updatedAt) }}</li>
+        <li>{{ formatDateFull(update.updatedAt) }}</li>
         <li class="mt-2 ml-4">
           no new changes
         </li>
       </ul>
       <ul v-else>
         <li class="">
-          {{ formatFullDate(update.createdAt) }}
+          {{ formatDateFull(update.createdAt) }}
         </li>
         <li class="mt-2 ml-4">
           <ul class="list-inside list-circle text-sm">
@@ -38,7 +38,7 @@ import { useStore } from '../_services/store'
 type DataSourceSummary = Record<'species' | 'sites', number>
 
 const store = useStore()
-const { formatFullDate } = useDateFormat()
+const { formatDateFull } = useDateFormat()
 
 const allUpdate = computed(() => store.projectFilters?.updatedList.map(({ summaryText, ...list }) => ({ ...list, summaryObject: (JSON.parse(summaryText) as DataSourceSummary) })))
 </script>
