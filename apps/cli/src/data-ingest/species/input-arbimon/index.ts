@@ -1,8 +1,7 @@
+import { QueryTypes, Sequelize } from 'sequelize'
+
 import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { urlify } from '@rfcx-bio/utils/url-helpers'
-
-import { mysqlSelect } from '../../../_services/mysql'
-import { ARBIMON_CONFIG } from '../../_connections/arbimon'
 
 export type ArbimonSpeciesData = Pick<TaxonSpecies, 'idArbimon' | 'slug' | 'scientificName' | 'taxonClassId'>
 
@@ -12,7 +11,7 @@ export interface ArbimonSpecies {
   'scientific_name': string
 }
 
-export const getArbimonSpecies = async (speciesIds: number[]): Promise<Array<Omit<ArbimonSpeciesData, 'taxon'>>> => {
+export const getArbimonSpecies = async (sequelize: Sequelize, speciesIds: number[]): Promise<Array<Omit<ArbimonSpeciesData, 'taxon'>>> => {
   const sql =
     `
     SELECT s.species_id, s.taxon_id, s.scientific_name
@@ -21,7 +20,8 @@ export const getArbimonSpecies = async (speciesIds: number[]): Promise<Array<Omi
     `
 
   // Query Arbimon
-  const results = await mysqlSelect<ArbimonSpecies>(ARBIMON_CONFIG, sql)
+  const results: ArbimonSpecies[] = await sequelize.query(sql, { type: QueryTypes.SELECT, raw: true })
+
   return results.map(i => ({
     idArbimon: i.species_id,
     slug: urlify(i.scientific_name),
