@@ -12,6 +12,7 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   await app.register(fastifyRequestContextPlugin)
 
   routesProject
+    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
     .forEach(route => app.route(route))
 
   return app
