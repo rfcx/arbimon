@@ -1,7 +1,6 @@
 <template>
   <page-title
     page-title="Sync History"
-    page-subtitle="TODO: Subtitle"
   />
   <div class="lists-updated mt-5">
     <div
@@ -11,12 +10,20 @@
     >
       <ul v-if="update.createdAt !== update.updatedAt">
         <li>{{ formatFullDate(update.updatedAt) }}</li>
-        no new changes
+        <li class="mt-2 ml-4">
+          no new changes
+        </li>
       </ul>
       <ul v-else>
-        <li>{{ formatFullDate(update.createdAt) }}</li>
-        <li>Sites: +{{ update.summaryObject.sites }}</li>
-        <li>Species: +{{ update.summaryObject.species }}</li>
+        <li class="">
+          {{ formatFullDate(update.createdAt) }}
+        </li>
+        <li class="mt-2 ml-4">
+          <ul class="list-inside list-circle text-sm">
+            <li>+{{ update.summaryObject.sites }} sites</li>
+            <li>+{{ update.summaryObject.species }} species</li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
@@ -34,7 +41,6 @@ const store = useStore()
 const { formatFullDate } = useDateFormat()
 
 const allUpdate = computed(() => store.projectFilters?.updatedList.map(({ summaryText, ...list }) => ({ ...list, summaryObject: (JSON.parse(summaryText) as DataSourceSummary) })))
-
 </script>
 
 <style lang="scss"></style>
