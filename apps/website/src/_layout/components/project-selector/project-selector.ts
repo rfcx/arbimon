@@ -61,13 +61,7 @@ export default class ProjectSelectorComponent extends Vue {
         .sort((a, b) => a.name.localeCompare(b.name))
       return slice(filteredProjects, 0, MAX_DISPLAY_ITEMS)
     }
-    const matchedProjectIdx = projects.findIndex(({ id }) => id === this.selectedProject?.id)
-    if (this.selectedProject !== null && matchedProjectIdx !== -1) {
-      const matchedProject = projects[matchedProjectIdx]
-      projects.splice(matchedProjectIdx, 1)
-      return slice([matchedProject, ...projects], 0, MAX_DISPLAY_ITEMS)
-    }
-    return slice(projects, 0, MAX_DISPLAY_ITEMS)
+    return projects
   }
 
   async confirmedSelectedProject (): Promise<void> {
