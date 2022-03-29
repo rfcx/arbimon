@@ -15,6 +15,7 @@
             :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
             :project-slug="store.selectedProject?.slug"
           />
+          <app-version class="mt-4" />
         </div>
       </div>
       <invalid-project-component v-else />
