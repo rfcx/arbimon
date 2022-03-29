@@ -7,12 +7,12 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'detection_by_site_hour'
-const INDEX_COLS = ['location_project_id', 'location_site_id', 'time_precision_hour_local']
+// const INDEX_COLS = ['location_project_id', 'location_site_id', 'time_precision_hour_local']
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
-    create materialized view ${VIEW_NAME} as
+    create view ${VIEW_NAME} as
     SELECT d.location_project_id,
            d.location_site_id,
            d.time_precision_hour_local,
@@ -26,11 +26,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
   )
 
-  for (const indexCol of INDEX_COLS) {
-    await params.context.sequelize.query(
-      `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
-    )
-  }
+  // for (const indexCol of INDEX_COLS) {
+  //   await params.context.sequelize.query(
+  //     `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
+  //   )
+  // }
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
