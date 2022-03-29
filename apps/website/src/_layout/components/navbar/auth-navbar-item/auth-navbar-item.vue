@@ -12,6 +12,7 @@
     aria-expanded="true"
     aria-haspopup="true"
   >
+    <!-- <version-control v-if="isProjectMember" class="mr-2" /> -->
     <div
       :id="domId"
       type="button"

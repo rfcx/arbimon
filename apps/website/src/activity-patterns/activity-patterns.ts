@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Watch } from 'vue-property-decorator'
+import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
@@ -14,6 +14,7 @@ import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
+import { BiodiversityStore } from '~/store'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import { SpotlightTimeDataset } from './components/activity-patterns-by-time/activity-patterns-by-time'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
@@ -43,6 +44,7 @@ const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
   }
 })
 export default class ActivityPatternsPage extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   // Dataset definitions
   species: SpeciesInProjectLight | null = null
   filters: ColoredFilter[] = []
