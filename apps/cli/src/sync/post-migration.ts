@@ -4,11 +4,13 @@ import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
 import { syncAllForProject } from '@/sync/all'
 import { syncProjects } from '@/sync/arbimon'
 import { getNeedSyncingProjects } from '@/sync/data-source'
+import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
+import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 import { refreshMviews } from '../db/actions/refresh-mviews'
 import { getSequelize } from '../db/connections'
 
 const main = async (): Promise<void> => {
-  console.info('Arbimon - sync start')
+  console.info('Post migration - sync start')
   try {
     const bioSequelize = getSequelize()
     const arbimonSequelize = getArbimonSequelize()
@@ -24,14 +26,18 @@ const main = async (): Promise<void> => {
       await Promise.all([syncAllForProject(arbimonSequelize, bioSequelize, project), wait(5000)])
     }
 
+    console.info('STEP: Sync species description - only for missing or outdated')
+    await syncOnlyMissingWikiSpeciesInfo(bioSequelize)
+    await syncOnlyMissingIUCNSpeciesInfo(bioSequelize)
+
     console.info('STEP: Refresh mviews')
     await refreshMviews(bioSequelize)
 
-    console.info('Arbimon sync end: successful')
+    console.info('Post migration sync end: successful')
   } catch (e) {
     console.error(e)
     process.exitCode = 1
-    console.info('Arbimon sync end: failed')
+    console.info('Post migration sync end: failed')
   }
 }
 
