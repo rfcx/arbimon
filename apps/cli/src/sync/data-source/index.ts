@@ -6,7 +6,7 @@ import { Project } from '@rfcx-bio/common/dao/types'
 import { rawEnvToProjectAndProfile } from '@/db/seeders/_data/location-project-and-profile'
 import { requireEnv } from '~/env'
 
-export const getNeedSyncingProjects = async (sequelize: Sequelize): Promise<Project[]> => {
+export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): Promise<Project[]> => {
   // Temporarily prioritize some
   const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
   const projectSlugs = [
@@ -27,7 +27,7 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize): Promise<Proj
     WHERE ds.location_project_id IS NULL 
       OR DATE_PART('hour', AGE(CURRENT_TIMESTAMP, lp.updated_at)) >= 1
     ORDER BY 1, ds.updated_at DESC
-    LIMIT 10
+    LIMIT ${limit}
   `
 
   const projectIds = await sequelize

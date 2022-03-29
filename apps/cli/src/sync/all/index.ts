@@ -1,5 +1,5 @@
 import * as hash from 'object-hash'
-import { Optional, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DataSource, Project } from '@rfcx-bio/common/dao/types'
@@ -12,74 +12,97 @@ import { getArbimonSpecies } from '@/data-ingest/species/input-arbimon'
 import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/output-bio-db/taxon-species'
 import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call/index'
 
-export const syncAllForProject = async (sequelize: Sequelize, project: Project): Promise<void> => {
+export const syncAllForProject = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, project: Project): Promise<void> => {
   console.info(`- site, species, detections: ${project.slug}`)
-  const detectionSummaries = await getArbimonHourlyDetectionsForProject(project.idArbimon)
-  await updateDataSource(sequelize, detectionSummaries, project)
+  const detectionSummaries = await getArbimonHourlyDetectionsForProject(arbimonSequelize, project.idArbimon)
+  await updateDataSource(arbimonSequelize, biodiversitySequelize, detectionSummaries, project)
 }
 
-const updateDataSource = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
-  // build up new datasource object
-  const newDataSource: Optional<DataSource, 'updatedAt' | 'createdAt'> = {
-    id: hash.MD5(summaries),
-    locationProjectId: project.id,
-    rawData: JSON.stringify(summaries),
-    summaryText: ''
-  }
+const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project): Promise<void> => {
+  const models = ModelRepository.getInstance(biodiversitySequelize)
 
-  // pull the latest datasource from DB
+  // Get latest ProjectVersion
+  // TODO
+
+  // if(latestProjectVersion.isPublished) {
+
+  // If frozen (already published), make new ProjectVersion & DataSource
+    // QUESTION: Is it better to create the new ProjectVersion during publish, and avoid that complexity here?
+    // ANSWER: Probably
+    // TODO: Make a ProjectVersion
+    // TODO: Make a DataSource (for this PV & source type, ex: CNN)
+
+  // } else {
+
+  // Else get latest data source
+  // TODO: Get latest datasource for this ProjectVersion AND DataSourceType (ex: CNN)
   console.info(`- checking datasource: ${project.slug}`)
-  const models = ModelRepository.getInstance(sequelize)
-  const previousDataSource = await models.DataSource.findOne({
-    where: { locationProjectId: project.id },
-    order: [['updatedAt', 'DESC']],
-    raw: true
-  })
+  const previousDataSource = await models.DataSource
+    .findOne({
+      where: { locationProjectId: project.id },
+      order: [['updatedAt', 'DESC']],
+      raw: true
+    })
 
-  if (previousDataSource !== null && previousDataSource.id === newDataSource.id) {
-    console.info('| nothing changed from last sync -', newDataSource.id)
-    await models.DataSource.upsert(newDataSource)
+  // Do we already have this data?
+  const newDataSourceId = hash.MD5(summaries)
+  if (previousDataSource?.id === newDataSourceId) {
+    // Touch to bump updatedAt
+    console.info('| nothing changed from last sync -', newDataSourceId)
+    await models.DataSource.update({}, {
+      where: {
+        id: previousDataSource.id,
+        locationProjectId: project.id
+      }
+    })
+    // TODO: Can we use previousDataSource.set('updatedAt', null).save()?
     return
   }
 
-  // find out what's new
-  console.info(`- finding out what's new: ${project.slug}`)
-  const newData = await extractNewData(sequelize, summaries, project, previousDataSource)
-  newDataSource.rawData = JSON.stringify(summaries)
-  newDataSource.summaryText = JSON.stringify({ sites: newData.siteIds.length, species: newData.speciesIds.length })
+  // } // end if
 
-  // pull new site and species data from Arbimon
+  // Detect new sites/species
+  console.info(`- finding out what's new: ${project.slug}`)
+  const newData = await extractNewData(biodiversitySequelize, summaries, project, previousDataSource)
+
+  // Save new sites from Arbimon
   if (newData.siteIds.length > 0) {
     console.info('| fetching %d sites', newData.siteIds.length)
-    const sites = await getArbimonSites(newData.siteIds, project.id)
-    await writeSitesToPostgres(sequelize, sites)
+    const sites = await getArbimonSites(arbimonSequelize, newData.siteIds, project.id)
+    await writeSitesToPostgres(biodiversitySequelize, sites)
   }
 
+  // Save new species from Arbimon
   if (newData.speciesIds.length > 0) {
     console.info('| fetching %d species', newData.speciesIds.length)
-    const species = await getArbimonSpecies(newData.speciesIds)
-    await writeArbimonSpeciesDataToPostgres(sequelize, species)
+    const species = await getArbimonSpecies(arbimonSequelize, newData.speciesIds)
+    await writeArbimonSpeciesDataToPostgres(biodiversitySequelize, species)
     console.info('| fetching species calls')
-    await syncOnlyMissingSpeciesCalls(sequelize, project)
+    await syncOnlyMissingSpeciesCalls(biodiversitySequelize, project)
     console.info('| fetching species information')
     // TODO: sync only missing data for project
   }
 
-  // insert new detection data
-  console.info('- insert or update detection summaries')
-  await writeDetections(sequelize, summaries, project)
+  // Save new data source
+  await models.DataSource.upsert({
+    id: newDataSourceId,
+    locationProjectId: project.id,
+    summaryText: JSON.stringify({ sites: newData.siteIds.length, species: newData.speciesIds.length })
+  })
 
-  await models.DataSource.upsert(newDataSource)
+  // Save new detections
+  console.info('- insert or update detection summaries')
+  await writeDetections(biodiversitySequelize, summaries, project)
 }
 
-const extractNewData = async (sequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDatasource: DataSource | null): Promise<ArbimonNewData> => {
+export const extractNewData = async (biodiversitySequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDatasource: DataSource | null): Promise<ArbimonNewData> => {
   const siteIdsInArbimon = new Set(summaries.map(s => s.site_id))
   const speciesIdsInArbimon = new Set(summaries.map(s => s.species_id))
 
   // no previous datasource, this is completely fresh new data
   if (previousDatasource === null) return { siteIds: [...siteIdsInArbimon], speciesIds: [...speciesIdsInArbimon] }
 
-  const models = ModelRepository.getInstance(sequelize)
+  const models = ModelRepository.getInstance(biodiversitySequelize)
 
   const siteIdsInBioArray = await models.LocationSite.findAll({
     attributes: ['idArbimon'],

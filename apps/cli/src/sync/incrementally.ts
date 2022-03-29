@@ -1,3 +1,4 @@
+import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
 import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { getSequelize } from '@/db/connections'
 import { syncAllForProject } from '@/sync/all'
@@ -8,24 +9,25 @@ import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 const main = async (): Promise<void> => {
   console.info('Incremental sync start')
   try {
-    const sequelize = getSequelize()
+    const arbimonSequelize = getArbimonSequelize()
+    const bioSequelize = getSequelize()
 
     console.info('STEP: Get project lookups')
-    const syncingProjects = await getNeedSyncingProjects(sequelize)
+    const syncingProjects = await getNeedSyncingProjects(bioSequelize)
 
     console.info('STEP: Sync site, species, and detections')
     for (const project of syncingProjects) {
-      await syncAllForProject(sequelize, project)
+      await syncAllForProject(arbimonSequelize, bioSequelize, project)
     }
 
     console.info('STEP: Sync missing Wiki species')
-    await syncOnlyMissingWikiSpeciesInfo(sequelize)
+    await syncOnlyMissingWikiSpeciesInfo(bioSequelize)
 
     console.info('STEP: Sync missing IUCN species')
-    await syncOnlyMissingIUCNSpeciesInfo(sequelize)
+    await syncOnlyMissingIUCNSpeciesInfo(bioSequelize)
 
     console.info('STEP: Refresh mviews')
-    await refreshMviews(sequelize)
+    await refreshMviews(bioSequelize)
 
     console.info('Incremental sync end: successful')
   } catch (e) {

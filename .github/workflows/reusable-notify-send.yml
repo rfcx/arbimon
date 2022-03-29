@@ -111,7 +111,7 @@ jobs:
           status: ${{ inputs.status }}
           notification_title: '❌ ${{ inputs.notification-title }} <{repo_url}/tree/${{ inputs.branch-name }}|${{ inputs.branch-name }}>'
           message_format: '*FAILED* @ <{run_url}|${{ steps.git-meta.outputs.commit-title }}>'
-          footer: 'Build: ${{ steps.build.outcome }} | Lint: ${{ steps.lint.outcome }} | Test: ${{ steps.test.outcome }}'
+          footer: ${{ inputs.notification-footer }}
           mention_users_when: 'failure,warnings'
           mention_users: ${{ env.SLACK_MENTION_USERS }}
         env:
