@@ -1,17 +1,17 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: biodiversity-cli-sync-species-information-JOB_NUMBER
+  name: biodiversity-cli-post-migration-sync-JOB_NUMBER
   namespace: testing
 spec:
   template:
     metadata:
       labels:
-        job_group: biodiversity-cli-sync-species-information
+        job_group: biodiversity-cli-post-migration-sync
     spec:
       containers:
-      - name: biodiversity-cli-sync-species-information-JOB_NUMBER
-        command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/sync-species-information.js"]
+      - name: biodiversity-cli-post-migration-sync-JOB_NUMBER
+        command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/post-migration.js"]
         image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/testing:latest
         imagePullPolicy: IfNotPresent
         envFrom:
