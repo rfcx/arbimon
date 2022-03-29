@@ -1,7 +1,6 @@
-import { Site } from '@rfcx-bio/common/dao/types'
+import { QueryTypes, Sequelize } from 'sequelize'
 
-import { mysqlSelect } from '../../../_services/mysql'
-import { ARBIMON_CONFIG } from '../../_connections/arbimon'
+import { Site } from '@rfcx-bio/common/dao/types'
 
 export interface ArbimonSite {
   'site_id': number
@@ -13,7 +12,7 @@ export interface ArbimonSite {
   'altitude': number
 }
 
-export const getArbimonSites = async (siteIds: number[], locationProjectId: number): Promise<Array<Omit<Site, 'id'>>> => {
+export const getArbimonSites = async (sequelize: Sequelize, siteIds: number[], locationProjectId: number): Promise<Array<Omit<Site, 'id'>>> => {
   const sql =
     `
     SELECT s.site_id, s.project_id, s.external_id core_site_id, s.name, s.lat latitude, s.lon longitude, s.alt altitude
@@ -22,7 +21,7 @@ export const getArbimonSites = async (siteIds: number[], locationProjectId: numb
     `
 
   // Query Arbimon
-  const results = await mysqlSelect<ArbimonSite>(ARBIMON_CONFIG, sql)
+  const results: ArbimonSite[] = await sequelize.query(sql, { type: QueryTypes.SELECT, raw: true })
   return results.map(i => {
     return {
       idCore: i.core_site_id ?? 'null',

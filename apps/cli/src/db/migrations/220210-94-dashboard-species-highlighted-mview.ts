@@ -12,7 +12,7 @@ const INDEX_COLS = ['location_project_id', 'highlighted_order']
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
-    create materialized view ${VIEW_NAME} as
+    CREATE MATERIALIZED VIEW ${VIEW_NAME} AS
     SELECT ps.location_project_id,
            ps.highlighted_order,
            sip.taxon_class_slug,
@@ -22,7 +22,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
            sip.risk_rating_id,
            sip.photo_url
     FROM species_in_project sip
-            INNER JOIN location_project_species ps on sip.taxon_species_id = ps.taxon_species_id
+            INNER JOIN location_project_species ps ON sip.taxon_species_id = ps.taxon_species_id AND sip.location_project_id = ps.location_project_id
     WHERE ps.highlighted_order IS NOT NULL
     ;
     `

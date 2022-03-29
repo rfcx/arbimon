@@ -9,9 +9,9 @@ import { getMemberProjectCoreIdsFromCache, updateMemberProjectCoreIds } from '~/
 const MEMBER_PROJECT_CORE_IDS = 'MEMBER_PROJECT_CORE_IDS'
 
 export const getMemberProjectCoreIds = (req: FastifyRequest): string[] =>
-  req.requestContext.get(MEMBER_PROJECT_CORE_IDS)
+  req.requestContext.get(MEMBER_PROJECT_CORE_IDS) ?? []
 
-export const loadMemberProjectCoreIds: Middleware = async (req, res): Promise<void> => {
+export const setMemberProjectCoreIds: Middleware = async (req, res): Promise<void> => {
   const token = req.headers.authorization
 
   // No token => no projects
@@ -40,6 +40,6 @@ export const loadMemberProjectCoreIds: Middleware = async (req, res): Promise<vo
 
   await updateMemberProjectCoreIds(auth0UserId, projectCoreIds)
 
-  // Return
+  // Set & return
   req.requestContext.set(MEMBER_PROJECT_CORE_IDS, projectCoreIds)
 }

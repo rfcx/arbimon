@@ -1,5 +1,3 @@
-import { ref } from 'vue'
-
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 type DateParam = string | Date | undefined
@@ -9,19 +7,20 @@ type DateParam = string | Date | undefined
 // }
 
 export default function useDateFormat (): {
-  formatDate: (dateInput: DateParam, pattern: string) => string
+  formatDate: (dateInput: DateParam, pattern?: string) => string
   formatFullDate: (dateInput: DateParam, pattern?: string) => string
   formatDateRange: (start: DateParam, end: DateParam) => string
 } {
   const formatDate = (dateInput: DateParam, pattern: string = 'MMMM D, YYYY'): string => {
-    const dateInputRef = ref(dateInput)
-    if (dateInputRef.value === undefined) return ''
-    if (typeof dateInputRef.value === 'string') {
-      if (dateInputRef.value?.length === 0) return ''
+    if (dateInput === undefined) return ''
+    if (typeof dateInput === 'string') {
+      if (dateInput?.length === 0) return ''
 
-      return dayjs(dateInputRef.value).format(pattern)
+      return dayjs(dateInput).format(pattern)
     }
-    return formatDate(dateInputRef.value.toISOString())
+    if (!dayjs(dateInput).isValid()) return ''
+
+    return formatDate(dateInput.toISOString())
   }
 
   const formatDateRange = (start: DateParam, end: DateParam): string => {

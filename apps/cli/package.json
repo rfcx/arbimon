@@ -19,6 +19,7 @@
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test-unit": "vitest --run --passWithNoTests .unit.test.",
+    "test-int": "vitest --run --no-threads .int.test.",
     "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
@@ -38,7 +39,8 @@
     "@types/mysql": "^2.15.19",
     "@types/object-hash": "^2.2.1",
     "@types/validator": "^13.7.0",
-    "object-hash": "^3.0.0"
+    "object-hash": "^3.0.0",
+    "sqlite3": "^5.0.2"
   },
   "description": "Biodiversity CLI",
   "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",

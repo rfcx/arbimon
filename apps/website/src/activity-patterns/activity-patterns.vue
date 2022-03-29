@@ -1,5 +1,10 @@
 <template>
   <div>
+    <!-- <draft-banner
+      current-mode="Draft"
+      :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+      :project-slug="store.selectedProject?.slug"
+    /> -->
     <page-title
       page-title="Species Spotlight"
       page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
