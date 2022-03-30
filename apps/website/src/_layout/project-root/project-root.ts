@@ -6,7 +6,10 @@ import InvalidProjectComponent from '../components/invalid-project/invalid-proje
 import NavbarComponent from '../components/navbar/nav-bar.vue'
 
 @Options({
-  components: { NavbarComponent, InvalidProjectComponent }
+  components: {
+    NavbarComponent,
+    InvalidProjectComponent
+  }
 })
 export default class ProjectRoot extends Vue {
   @Inject() readonly store!: BiodiversityStore

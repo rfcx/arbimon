@@ -1,44 +1,34 @@
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-type DateParam = string | Date | undefined
+import { Dayjs } from '@/../../../packages/utils/node_modules/dayjs'
 
-// const dayjsDateWithFormat = (date: Date | string, pattern: string): string => {
-//   return dayjs(date).format(pattern)
-// }
+type DateParam = string | Date | Dayjs | undefined
 
-export default function useDateFormat (): {
-  formatDate: (dateInput: DateParam, pattern?: string) => string
-  formatFullDate: (dateInput: DateParam, pattern?: string) => string
-  formatDateRange: (start: DateParam, end: DateParam) => string
-} {
-  const formatDate = (dateInput: DateParam, pattern: string = 'MMMM D, YYYY'): string => {
-    if (dateInput === undefined) return ''
-    if (typeof dateInput === 'string') {
-      if (dateInput?.length === 0) return ''
-
-      return dayjs(dateInput).format(pattern)
-    }
-    if (!dayjs(dateInput).isValid()) return ''
-
-    return formatDate(dateInput.toISOString())
-  }
-
-  const formatDateRange = (start: DateParam, end: DateParam): string => {
-    const newStartDate = dayjs(start).isValid()
-    const newEndDate = dayjs(end).isValid()
-
-    if (!newStartDate || !newEndDate) return ''
-
-    return `${formatDate(start)} - ${formatDate(end)}`
-  }
-
-  const formatFullDate = (dateInput: DateParam): string => {
-    return formatDate(dateInput, 'LLL (z)')
-  }
-
-  return {
-    formatDate,
-    formatFullDate,
-    formatDateRange
-  }
+const asDayJs = (dateInput: DateParam): Dayjs | undefined => {
+  if (dateInput === undefined || dateInput === '') return undefined
+  if (dayjs.isDayjs(dateInput)) return dateInput
+  return dayjs(dateInput)
 }
+
+const formatDate = (dateInput: DateParam, pattern: string = 'MMMM D, YYYY'): string =>
+  asDayJs(dateInput)?.format(pattern) ?? ''
+
+const formatDateFull = (dateInput: DateParam): string =>
+  formatDate(dateInput, 'LLL (z)')
+
+const formatDateRange = (start: DateParam, end: DateParam): string => {
+  const newStartDate = asDayJs(start)
+  const newEndDate = asDayJs(end)
+  if (!newStartDate || !newEndDate) return ''
+
+  return `${formatDate(start)} - ${formatDate(end)}`
+}
+
+const useDateFormat = () => <const>({
+  asDayJs,
+  formatDate,
+  formatDateFull,
+  formatDateRange
+})
+
+export default useDateFormat
