@@ -234,10 +234,12 @@ jobs:
 
       - name: 'Debugging: Event Context'
         if: always()
-        env: TO_ECHO: ${{ toJSON(github) }}
+        env: 
+          TO_ECHO: ${{ toJSON(github) }}
         run: echo "$TO_ECHO"
 
       - name: 'Debugging: Env'
         if: always()
-        env: TO_ECHO: ${{ toJSON(env) }}
+        env:
+          TO_ECHO: ${{ toJSON(env) }}
         run: echo "$TO_ECHO"
