@@ -1,7 +1,7 @@
 <template>
   <p>
-    RFCx Biodiversity Reports (version <span class="font-mono">{{ releaseCommit }}</span>)<br>
-    {{ formatDateFull(releaseDate) }}
+    RFCx Biodiversity Reports (version <span class="font-mono">{{ releaseCommit }}</span>)
+    <span v-if="releaseDate"><br>{{ formatDateFull(releaseDate) }}</span>
   </p>
 </template>
 
@@ -12,10 +12,9 @@ import useDateFormat from '../_services/hooks/use-date-format'
 
 // Convert unix seconds to DayJs
 const releaseDateRaw = Number(import.meta.env.VITE_RELEASE_DATE)
-const releaseDateDayJs = Number.isNaN(releaseDateRaw) ? new Date(releaseDateRaw * 1000) : Date()
 
 // Export refs
-const releaseDate = ref(releaseDateDayJs)
+const releaseDate = ref(Number.isNaN(releaseDateRaw) ? new Date(releaseDateRaw * 1000) : undefined)
 const releaseCommit = ref(import.meta.env.VITE_RELEASE_COMMIT)
 
 // Export formatters
