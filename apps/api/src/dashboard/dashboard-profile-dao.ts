@@ -5,15 +5,14 @@ import { DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboar
 
 import { getSequelize } from '../_services/db'
 
-export const getDashboardProfile = async (projectId: number): Promise<DashboardProfileResponse | undefined> => {
-  const projectProfile = await getProjectProfile(projectId)
-  if (!projectProfile) return undefined
-
-  const speciesHighlightedRaw = await getHighlightedSpecies(projectId)
+export const getDashboardProfile = async (projectId: number): Promise<DashboardProfileResponse> => {
+  const [projectProfile, speciesHighlightedRaw] = await Promise.all([
+    getProjectProfile(projectId),
+    getHighlightedSpecies(projectId)
+  ])
 
   return {
     ...projectProfile,
-    // TODO: Rename the return object to be same as what dao return & delete .map() here
     speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug, taxonSpeciesSlug, riskRatingId, ...rest }) =>
       ({
         ...rest,
@@ -25,14 +24,14 @@ export const getDashboardProfile = async (projectId: number): Promise<DashboardP
   }
 }
 
-const getProjectProfile = async (projectId: number): Promise<LocationProjectProfile | undefined> =>
+const getProjectProfile = async (locationProjectId: number): Promise<LocationProjectProfile> =>
   await ModelRepository.getInstance(getSequelize())
     .LocationProjectProfile
     .findOne({
-      where: { locationProjectId: projectId },
+      where: { locationProjectId },
       attributes: ['summary', 'readme'],
       raw: true
-    }) ?? undefined
+    }) ?? { locationProjectId, summary: '', readme: '' }
 
 const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>
   await ModelRepository.getInstance(getSequelize())

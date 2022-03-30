@@ -7,12 +7,12 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'dashboard_species_highlighted'
-const INDEX_COLS = ['location_project_id', 'highlighted_order']
+// const INDEX_COLS = ['location_project_id', 'highlighted_order']
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
-    CREATE MATERIALIZED VIEW ${VIEW_NAME} AS
+    CREATE VIEW ${VIEW_NAME} AS
     SELECT ps.location_project_id,
            ps.highlighted_order,
            sip.taxon_class_slug,
@@ -28,11 +28,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
   )
 
-  for (const indexCol of INDEX_COLS) {
-    await params.context.sequelize.query(
-      `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
-    )
-  }
+  // for (const indexCol of INDEX_COLS) {
+  //   await params.context.sequelize.query(
+  //     `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
+  //   )
+  // }
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
