@@ -1,4 +1,5 @@
 <template>
+  <project-selector-2 />
   <div v-if="store.selectedProject">
     <!-- <draft-banner
       current-mode="Draft"
