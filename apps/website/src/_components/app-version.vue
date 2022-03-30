@@ -1,7 +1,7 @@
 <template>
   <p>
-    RFCx Biodiversity Reports (version <span class="font-mono">{{ releaseCommit }}</span>)
-    <span v-if="releaseDate"><br>{{ formatDateFull(releaseDate) }}</span>
+    RFCx Biodiversity Reports ({{ releaseMode }}<span v-if="releaseCommit">-{{ releaseCommit }}</span>)<br>
+    {{ formatDateFull(releaseDate) }}
   </p>
 </template>
 
@@ -10,13 +10,11 @@ import { ref } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
 
-// Convert unix seconds to DayJs
-const releaseDateRaw = Number(import.meta.env.VITE_RELEASE_DATE)
-
-// Export refs
-const releaseDate = ref(Number.isNaN(releaseDateRaw) ? new Date(releaseDateRaw * 1000) : undefined)
-const releaseCommit = ref(import.meta.env.VITE_RELEASE_COMMIT)
-
-// Export formatters
 const { formatDateFull } = useDateFormat()
+
+const releaseMode = ref(import.meta.env.MODE)
+const releaseCommit = ref(import.meta.env.VITE_RELEASE_COMMIT)
+const releaseDateRaw = Number(import.meta.env.VITE_RELEASE_DATE)
+const releaseDate = ref(releaseDateRaw > 0 ? new Date(releaseDateRaw * 1000) : new Date())
+
 </script>
