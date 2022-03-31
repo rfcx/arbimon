@@ -2,10 +2,9 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 import { RouteLocationRaw } from 'vue-router'
 
+import ProjectSelector from '@/_layout/components/project-selector.vue'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
-import ProjectSelectorComponent from '../project-selector/project-selector.vue'
-import ProjectSelector from '@/_layout/components/project-selector.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
 
