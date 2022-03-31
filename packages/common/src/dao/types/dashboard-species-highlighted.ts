@@ -1,5 +1,5 @@
 export interface DashboardSpeciesHighlighted {
-  locationProjectId: number
+  projectId: number
   highlightedOrder: number
   taxonClassSlug: string
   taxonSpeciesSlug: string

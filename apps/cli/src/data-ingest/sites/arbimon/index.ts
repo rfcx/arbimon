@@ -12,7 +12,7 @@ export interface ArbimonSite {
   'altitude': number
 }
 
-export const getArbimonSites = async (sequelize: Sequelize, siteIds: number[], locationProjectId: number): Promise<Array<Omit<Site, 'id'>>> => {
+export const getArbimonSites = async (sequelize: Sequelize, siteIds: number[], projectId: number): Promise<Array<Omit<Site, 'id'>>> => {
   const sql =
     `
     SELECT s.site_id, s.project_id, s.external_id core_site_id, s.name, s.lat latitude, s.lon longitude, s.alt altitude
@@ -26,7 +26,7 @@ export const getArbimonSites = async (sequelize: Sequelize, siteIds: number[], l
     return {
       idCore: i.core_site_id ?? 'null',
       idArbimon: i.site_id,
-      locationProjectId,
+      projectId,
       name: i.name,
       latitude: i.latitude,
       longitude: i.longitude,

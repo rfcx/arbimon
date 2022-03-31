@@ -16,7 +16,7 @@ export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, species
   const siteIdArbimonToBio = await models.LocationSite.findAll()
     .then(allSites => Object.fromEntries(allSites.map(s => [s.idArbimon, s.id])))
 
-    const projectIdArbimonToBio = await models.LocationProject.findAll()
+    const projectIdArbimonToBio = await models.Project.findAll()
     .then(allProjects => Object.fromEntries(allProjects.map(s => [s.idArbimon, s.id])))
 
   const data: Array<Optional<TaxonSpeciesCall, 'id'>> = speciesCalls

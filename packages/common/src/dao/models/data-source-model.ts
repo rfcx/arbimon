@@ -14,7 +14,7 @@ export const DataSourceModel = defineWithDefaults<DataSource, ModelForInterface<
       type: DataTypes.STRING(255),
       primaryKey: true
     },
-    locationProjectId: {
+    projectId: {
       type: DataTypes.INTEGER, // 1
       primaryKey: true
     },

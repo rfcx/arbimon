@@ -10,7 +10,7 @@ export const DashboardRichnessByHourModel = defineWithDefaults<DashboardRichness
   MODEL_DASHBOARD_RICHNESS_BY_HOUR,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

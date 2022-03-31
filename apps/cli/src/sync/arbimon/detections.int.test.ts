@@ -19,7 +19,7 @@ beforeAll(async () => {
 
   // sync all data for a test project
   const project = await ModelRepository.getInstance(biodiversitySequelize)
-    .LocationProject
+    .Project
     .findOne({
       where: { idArbimon: testProjectIdArbimon },
       raw: true
@@ -33,7 +33,7 @@ beforeAll(async () => {
 test('Site: Test project has 2 sites - based on validated data', async () => {
   const numberOfSites = await ModelRepository.getInstance(biodiversitySequelize)
     .LocationSite
-    .count({ where: { locationProjectId: testProjectId } })
+    .count({ where: { projectId: testProjectId } })
 
   expect(numberOfSites).toBe(2)
 })
@@ -41,7 +41,7 @@ test('Site: Test project has 2 sites - based on validated data', async () => {
 test('Species: Test project has 10 species - based on validated data', async () => {
   const numberOfSpecies = await ModelRepository.getInstance(biodiversitySequelize)
     .SpeciesInProject
-    .count({ where: { locationProjectId: testProjectId } })
+    .count({ where: { projectId: testProjectId } })
 
   expect(numberOfSpecies).toBe(10)
 })
@@ -49,7 +49,7 @@ test('Species: Test project has 10 species - based on validated data', async () 
 test('Detections: Test project has 14 row of detection summaries', async () => {
   const numberOfDetectionSummariesRows = await ModelRepository.getInstance(biodiversitySequelize)
     .DetectionBySiteSpeciesHour
-    .count({ where: { locationProjectId: testProjectId } })
+    .count({ where: { projectId: testProjectId } })
   expect(numberOfDetectionSummariesRows).toBe(14)
 })
 
@@ -58,7 +58,7 @@ test('Detections: Test project summaries counts match with manual calculation', 
   const detectionSummariesCountRows = await ModelRepository.getInstance(biodiversitySequelize)
     .DetectionBySiteSpeciesHour
     .findAll({
-      where: { locationProjectId: testProjectId },
+      where: { projectId: testProjectId },
       order: [['timePrecisionHourLocal', 'ASC'], ['locationSiteId', 'ASC'], ['taxonSpeciesId', 'ASC']]
     }).then(result => {
       return result.map(r => r.count)

@@ -1,17 +1,17 @@
 import { Op } from 'sequelize'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 
-export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
+export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise<ProjectForUser[]> => {
   const models = ModelRepository.getInstance(getSequelize())
 
   const projects = memberProjectCoreIds.length === 0
     ? []
-    : await models.LocationProject
+    : await models.Project
       .findAll({
         order: ['name'],
         where: { idCore: memberProjectCoreIds },
@@ -29,7 +29,7 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
   ]
 
   const myProjectIds = projects.map(p => p.id)
-  const publicProjects = await models.LocationProject
+  const publicProjects = await models.Project
     .findAll({
       where: {
         id: { [Op.notIn]: myProjectIds },

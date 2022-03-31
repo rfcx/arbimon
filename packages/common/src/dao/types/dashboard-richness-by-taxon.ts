@@ -1,5 +1,5 @@
 export interface DashboardRichnessByTaxon {
-  locationProjectId: number
+  projectId: number
   taxonClassId: number
   count: number
 }

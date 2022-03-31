@@ -17,7 +17,7 @@ beforeAll(async () => {
 test('New project created', async () => {
   // Assert
   const models = ModelRepository.getInstance(biodiversitySequelize)
-  const project = await models.LocationProject.findOne({ where: { idArbimon: testProjectIdArbimon } })
+  const project = await models.Project.findOne({ where: { idArbimon: testProjectIdArbimon } })
   expect(project).toBeDefined()
 })
 
@@ -30,7 +30,7 @@ test('Project name updated', async () => {
 
   // Assert
   const project = await ModelRepository.getInstance(biodiversitySequelize)
-    .LocationProject
+    .Project
     .findOne({ where: { idArbimon: testProjectIdArbimon } })
     expect(project?.name).toBe(projectName)
 })
@@ -48,7 +48,7 @@ test('Project slug updated', async () => {
 
   // Assert
   const project = await ModelRepository.getInstance(biodiversitySequelize)
-    .LocationProject
+    .Project
     .findOne({ where: { idArbimon: testProjectIdArbimon } })
     expect(project?.slugArbimon).toBe(projectSlug)
 })
@@ -69,7 +69,7 @@ test('Project location updated', async () => {
 
   // Assert
   const project = await ModelRepository.getInstance(biodiversitySequelize)
-    .LocationProject
+    .Project
     .findOne({ where: { idArbimon: testProjectIdArbimon } })
     expect(project?.latitudeNorth).toBe(updatedSite.lattitude)
 })

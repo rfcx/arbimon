@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
 import { rawEnvToProjectAndProfile } from '@/db/seeders/_data/location-project-and-profile'
 import { requireEnv } from '~/env'
@@ -18,7 +18,7 @@ export const getPuertoRicoProjectId = async (sequelize: Sequelize): Promise<numb
     ?.slug ?? 'puerto-rico'
 
   // Lookup PR project ID
-  const puertoRicoProject = await LocationProjectModel(sequelize)
+  const puertoRicoProject = await ProjectModel(sequelize)
     .findOne({
       where: { slug: puertoRicoSlug },
       attributes: ['id']

@@ -1,6 +1,6 @@
 export interface ProjectVersion {
   id: number
-  locationProjectId: number
+  projectId: number
   isPublished: boolean
   isPublic: boolean
 }

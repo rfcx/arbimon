@@ -1,9 +1,9 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { LocationProjectSpeciesModel } from '@rfcx-bio/common/dao/models/location-project-species-model'
+import { TaxonSpeciesProjectModel } from '@rfcx-bio/common/dao/models/location-project-species-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { LocationProjectSpecies } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesProject } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
@@ -21,14 +21,14 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(res => Object.fromEntries(res.map(s => [s.slug, s.id])))
 
   // Data
-  const projectsSpeciesList: LocationProjectSpecies[] = projectSpeciesPuertoRico
+  const projectsSpeciesList: TaxonSpeciesProject[] = projectSpeciesPuertoRico
     .map(({ slug, highlightedOrder, riskRatingLocalCode, riskRatingLocalLevel, riskRatingLocalSource }) => {
       // Try to find species ID
       const taxonSpeciesId = speciesSlugToId[slug]
       if (!taxonSpeciesId) return undefined
 
       return {
-        locationProjectId: puertoRicoProjectId,
+        projectId: puertoRicoProjectId,
         taxonSpeciesId,
         highlightedOrder,
         riskRatingLocalCode,
@@ -38,6 +38,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     })
     .filter(isDefined)
 
-  await LocationProjectSpeciesModel(sequelize)
+  await TaxonSpeciesProjectModel(sequelize)
     .bulkCreate(projectsSpeciesList)
 }

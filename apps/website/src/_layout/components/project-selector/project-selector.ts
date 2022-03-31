@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject } from 'vue-property-decorator'
 import { RouteParamsRaw } from 'vue-router'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -22,19 +22,19 @@ export default class ProjectSelectorComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Emit() emitCloseProjectSelector (): boolean { return false }
 
-  newSelectedProject: LocationProjectForUser | null = null
+  newSelectedProject: ProjectForUser | null = null
   searchKeyword: string | null = null
 
-  get selectedProject (): LocationProjectForUser | null {
+  get selectedProject (): ProjectForUser | null {
     return this.store.selectedProject ?? null
   }
 
-  get userProjects (): LocationProjectForUser[] {
+  get userProjects (): ProjectForUser[] {
     const allMyProjects = this.store.projects.filter(({ isMyProject }) => isMyProject)
     return this.filterProject(allMyProjects)
   }
 
-  get publicProjects (): LocationProjectForUser[] {
+  get publicProjects (): ProjectForUser[] {
     const allPublicProjects = this.store.projects.filter(({ isMyProject }) => !isMyProject)
     return this.filterProject(allPublicProjects)
   }
@@ -45,15 +45,15 @@ export default class ProjectSelectorComponent extends Vue {
       : null
   }
 
-  isSelectedProject (project: LocationProjectForUser): boolean {
+  isSelectedProject (project: ProjectForUser): boolean {
     return project.id === this.newSelectedProject?.id
   }
 
-  setSelectedProject (project: LocationProjectForUser): void {
+  setSelectedProject (project: ProjectForUser): void {
     this.newSelectedProject = project
   }
 
-  filterProject (projects: LocationProjectForUser[]): LocationProjectForUser[] {
+  filterProject (projects: ProjectForUser[]): ProjectForUser[] {
     const keyword = this.searchKeyword
     if (keyword !== null && keyword.length > 0) {
       const filteredProjects = projects

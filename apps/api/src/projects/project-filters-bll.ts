@@ -4,15 +4,15 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getSites, getTaxonClasses, getTimeBounds, getUpdatedProject } from '@/projects/project-filters-dao'
 import { getSequelize } from '~/db'
 
-export const getProjectFilters = async (locationProjectId: number): Promise<ProjectFiltersResponse> => {
+export const getProjectFilters = async (projectId: number): Promise<ProjectFiltersResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
   const [locationSites, taxonClasses, [dateStartInclusiveUtc, dateEndInclusiveUtc], updatedList] = await Promise.all([
-    getSites(models, locationProjectId),
-    getTaxonClasses(models, locationProjectId),
-    getTimeBounds(models, locationProjectId),
-    getUpdatedProject(models, locationProjectId)
+    getSites(models, projectId),
+    getTaxonClasses(models, projectId),
+    getTimeBounds(models, projectId),
+    getUpdatedProject(models, projectId)
   ])
 
   return {

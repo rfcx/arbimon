@@ -26,7 +26,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
 
   // Query
   const datasetFilter: FilterDataset = {
-    locationProjectId: projectIdInteger,
+    projectId: projectIdInteger,
     startDateUtcInclusive,
     endDateUtcInclusive,
     // TODO ???: Better way to check query type!

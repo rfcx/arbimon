@@ -1,5 +1,5 @@
 export interface SpeciesInProject {
-  locationProjectId: number
+  projectId: number
   taxonClassId: number
   taxonClassSlug: string
   taxonSpeciesId: number

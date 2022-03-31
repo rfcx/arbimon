@@ -39,7 +39,7 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
   console.info(`- checking datasource: ${project.slug}`)
   const previousDataSource = await models.DataSource
     .findOne({
-      where: { locationProjectId: project.id },
+      where: { projectId: project.id },
       order: [['updatedAt', 'DESC']],
       raw: true
     })
@@ -52,7 +52,7 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
     await models.DataSource.update({}, {
       where: {
         id: previousDataSource.id,
-        locationProjectId: project.id
+        projectId: project.id
       }
     })
     // TODO: Can we use previousDataSource.set('updatedAt', null).save()?
@@ -86,7 +86,7 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
   // Save new data source
   await models.DataSource.upsert({
     id: newDataSourceId,
-    locationProjectId: project.id,
+    projectId: project.id,
     summaryText: JSON.stringify({ sites: newData.siteIds.length, species: newData.speciesIds.length })
   })
 
@@ -107,7 +107,7 @@ export const extractNewData = async (biodiversitySequelize: Sequelize, summaries
   const siteIdsInBioArray = await models.LocationSite.findAll({
     attributes: ['idArbimon'],
     where: {
-      locationProjectId: project.id
+      projectId: project.id
     },
     raw: true
   })

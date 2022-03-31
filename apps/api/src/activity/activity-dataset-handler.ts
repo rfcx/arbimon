@@ -11,11 +11,12 @@ import { getActivityOverviewData } from './activity-dataset-bll'
 
 export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDatasetParams, FilterDatasetQuery> = async (req) => {
   // Input & validation
-  const { projectId } = req.params
-  assertPathParamsExist({ projectId })
+  // TODO: We can extract this validation instead of repeating it in each handler
+  const { projectId: projectIdString } = req.params
+  assertPathParamsExist({ projectId: projectIdString })
 
-  const projectIdInteger = parseInt(projectId)
-  if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
+  const projectId = parseInt(projectIdString)
+  if (Number.isNaN(projectId)) throw BioInvalidPathParamError({ projectId: projectIdString })
 
   const { startDate, endDate, siteIds, taxons } = req.query
   if (!isValidDate(startDate)) throw BioInvalidQueryParamError({ startDate })
@@ -23,7 +24,7 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
 
   // Query
   const datasetFilter: FilterDataset = {
-    locationProjectId: projectIdInteger,
+    projectId,
     startDateUtcInclusive: startDate,
     endDateUtcInclusive: endDate,
     // TODO ???: Better way to check query type!

@@ -24,7 +24,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: speciesArbimonToBio[d.species_id].taxonClassId ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id].id ?? -1, // TODO: Throw error
-      locationProjectId: project.id,
+      projectId: project.id,
       locationSiteId: siteArbimonToBio[d.site_id] ?? -1, // TODO: Throw error
       count: d.detection_count,
       durationMinutes: d.duration_in_minutes
@@ -42,7 +42,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
   //       [Op.ne]: null,
   //       [Op.notIn]: data.map(i => i.timePrecisionHourLocal.toISOString())
   //     },
-  //     locationProjectId: project.id
+  //     projectId: project.id
   //   }
   // }).then(numberOfDeletedRows => {
   //   console.info('| deleted %d detections summaries', numberOfDeletedRows)

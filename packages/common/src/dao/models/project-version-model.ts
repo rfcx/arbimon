@@ -15,8 +15,10 @@ export const ProjectVersionModel = defineWithDefaultsAutoPk<ProjectVersion>(
       primaryKey: true,
       autoIncrement: true
     },
+
     // FKs
-    locationProjectId: DataTypes.INTEGER, // 1
+    projectId: DataTypes.INTEGER, // 1
+
     // Facts
     isPublished: DataTypes.BOOLEAN, // false for latest sync
     isPublic: DataTypes.BOOLEAN // true

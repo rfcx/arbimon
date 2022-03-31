@@ -9,18 +9,18 @@ import { getRichnessDataset } from './richness-dataset-bll'
 
 export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDatasetParams, RichnessDatasetQuery> = async (req) => {
   // Inputs & validation
-  const { projectId } = req.params
-  assertPathParamsExist({ projectId })
+  const { projectId: projectIdString } = req.params
+  assertPathParamsExist({ projectId: projectIdString })
 
-  const projectIdInteger = parseInt(projectId)
-  if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
+  const projectId = parseInt(projectIdString)
+  if (Number.isNaN(projectId)) throw BioInvalidPathParamError({ projectId: projectIdString })
 
   const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 
   const datasetFilter = {
-    locationProjectId: projectIdInteger,
+    projectId,
     startDateUtcInclusive,
     endDateUtcInclusive,
     // TODO ???: Better way to check query type!

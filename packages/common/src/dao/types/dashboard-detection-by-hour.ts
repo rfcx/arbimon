@@ -1,5 +1,5 @@
 export interface DashboardDetectionByHour {
-  locationProjectId: number
+  projectId: number
   hour: number
   count: number
 }

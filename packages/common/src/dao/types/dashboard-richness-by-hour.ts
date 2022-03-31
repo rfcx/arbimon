@@ -1,5 +1,5 @@
 export interface DashboardRichnessByHour {
-  locationProjectId: number
+  projectId: number
   hour: number
   richness: number
 }

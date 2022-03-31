@@ -1,5 +1,5 @@
 export interface DashboardSpeciesThreatened {
-  locationProjectId: number
+  projectId: number
   taxonSpeciesId: number
   taxonClassSlug: string
   taxonSpeciesSlug: string

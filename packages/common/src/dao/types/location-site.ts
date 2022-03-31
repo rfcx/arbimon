@@ -3,7 +3,7 @@ export interface Site {
   id: number
   idCore: string
   idArbimon: number
-  locationProjectId: number
+  projectId: number
   name: string
   latitude: number
   longitude: number

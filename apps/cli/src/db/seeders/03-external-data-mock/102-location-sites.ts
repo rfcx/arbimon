@@ -16,9 +16,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   // Save mock sites under PR project
   const sites: Array<Optional<Site, 'id'>> = rawSites
-    .map(({ id, locationProjectId, ...rest }) => ({
+    .map(({ id, projectId, ...rest }) => ({
       ...rest,
-      locationProjectId: puertoRicoProjectId
+      projectId: puertoRicoProjectId
     }))
 
   await LocationSiteModel(sequelize).bulkCreate(sites)

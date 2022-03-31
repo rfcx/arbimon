@@ -12,7 +12,7 @@ export interface Condition {
 }
 
 export interface FilterDatasetForSql extends Record<string, unknown> {
-  locationProjectId: number
+  projectId: number
   startDateUtcInclusive: string
   endDateUtcExclusive: string
   siteIds: number[]
@@ -26,14 +26,14 @@ export const toFilterDatasetForSql = ({ endDateUtcInclusive, ...rest }: FilterDa
   })
 
 export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition => {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
+  const { projectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
   const conditions = [
-    'dbssh.location_project_id = $locationProjectId', // dbssh is from detection_by_site_species_hour
+    'dbssh.location_project_id = $projectId', // dbssh is from detection_by_site_species_hour
     'dbssh.time_precision_hour_local >= $startDateUtcInclusive',
     'dbssh.time_precision_hour_local < $endDateUtcExclusive'
   ]
   const bind: BindOrReplacements = {
-    locationProjectId,
+    projectId,
     startDateUtcInclusive,
     endDateUtcExclusive
   }
@@ -52,7 +52,7 @@ export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition =>
 }
 
 export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
+  const { projectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
@@ -61,7 +61,7 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
         [Op.lt]: endDateUtcExclusive
       }
     },
-    locationProjectId
+    projectId
   }
 
   if (siteIds.length > 0) {
@@ -76,7 +76,7 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
 }
 
 export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
+  const { projectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
@@ -85,7 +85,7 @@ export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<D
         [Op.lt]: endDateUtcExclusive
       }
     },
-    locationProjectId
+    projectId
   }
 
   if (siteIds.length > 0) {

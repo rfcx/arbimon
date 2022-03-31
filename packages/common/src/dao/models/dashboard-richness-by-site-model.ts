@@ -10,7 +10,7 @@ export const DashboardRichnessBySiteModel = defineWithDefaults<DashboardRichness
   MODEL_DASHBOARD_RICHNESS_BY_SITE,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

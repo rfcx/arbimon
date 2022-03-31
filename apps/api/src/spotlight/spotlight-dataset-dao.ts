@@ -20,7 +20,7 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
         [Op.lt]: endDateUtcInclusive
       }
     },
-    locationProjectId: projectId
+    projectId
   }
 
   if (siteIds.length > 0) {
@@ -43,7 +43,7 @@ export async function filterSpeciesDetection (models: AllModels, projectId: numb
         [Op.lt]: endDateUtcInclusive
       }
     },
-    locationProjectId: projectId,
+    projectId,
     taxonSpeciesId: speciesId
   }
 

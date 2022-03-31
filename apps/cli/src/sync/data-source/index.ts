@@ -35,7 +35,7 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
     .then(p => p.map(i => i.id))
 
   // TODO: Why is this a separate query?!
-  return await ModelRepository.getInstance(sequelize).LocationProject.findAll({
+  return await ModelRepository.getInstance(sequelize).Project.findAll({
     where: {
       id: { [Op.in]: projectIds }
     },

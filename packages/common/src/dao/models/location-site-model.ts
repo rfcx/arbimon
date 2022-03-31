@@ -21,7 +21,7 @@ export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
     idArbimon: DataTypes.INTEGER, // 8412
 
     // FKs
-    locationProjectId: DataTypes.INTEGER, // 1
+    projectId: DataTypes.INTEGER, // 1
 
     // Facts
     name: DataTypes.STRING(255), // 'CU26'

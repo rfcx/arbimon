@@ -3,17 +3,17 @@ import { ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS, DataSource, Site, Tax
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 
-export const getSites = async (models: AllModels, locationProjectId: number): Promise<Site[]> =>
+export const getSites = async (models: AllModels, projectId: number): Promise<Site[]> =>
   await models
     .LocationSite
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       attributes: ATTRIBUTES_LOCATION_SITE.light,
       order: [['name', 'ASC']]
     })
 
 // TODO: Filter to get only classes that exist in the project
-export const getTaxonClasses = async (models: AllModels, locationProjectId: number): Promise<TaxonClass[]> =>
+export const getTaxonClasses = async (models: AllModels, projectId: number): Promise<TaxonClass[]> =>
   await models
     .TaxonClass
     .findAll({
@@ -23,20 +23,18 @@ export const getTaxonClasses = async (models: AllModels, locationProjectId: numb
 
 export const getTimeBounds = async (models: AllModels, id: number): Promise<[string?, string?]> =>
   await models
-    .LocationProjectMetric
+    .ProjectMetric
     .findByPk(id)
     .then(metric => [
       metric?.minDate ? dayjs(metric.minDate).toISOString() : undefined,
       metric?.maxDate ? dayjs(metric.maxDate).toISOString() : undefined
     ])
 
-export const getUpdatedProject = async (models: AllModels, locationProjectId: number): Promise<DataSource[]> =>
+export const getUpdatedProject = async (models: AllModels, projectId: number): Promise<DataSource[]> =>
   await models
     .DataSource
     .findAll({
       attributes: ['id', ['created_at', 'createdAt'], ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
-      where: {
-        locationProjectId: locationProjectId
-      },
+      where: { projectId },
       order: [['updatedAt', 'ASC']]
     })

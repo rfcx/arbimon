@@ -1,5 +1,5 @@
-export interface LocationProjectMetric {
-  locationProjectId: number
+export interface ProjectMetric {
+  projectId: number
   detectionCount: number
   siteCount: number
   speciesCount: number
@@ -7,7 +7,7 @@ export interface LocationProjectMetric {
   minDate: Date | null
 }
 
-export type LocationProjectMetricLight = Pick<LocationProjectMetric,
+export type ProjectMetricLight = Pick<ProjectMetric,
   'detectionCount' |
   'siteCount' |
   'speciesCount' |

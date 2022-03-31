@@ -1,5 +1,5 @@
 export interface DashboardRichnessBySite {
-  locationProjectId: number
+  projectId: number
   name: string
   latitude: number
   longitude: number

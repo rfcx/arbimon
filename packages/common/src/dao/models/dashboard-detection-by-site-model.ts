@@ -10,7 +10,7 @@ export const DashboardDetectionBySiteModel = defineWithDefaults<DashboardDetecti
   MODEL_DASHBOARD_DETECTION_BY_SITE,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

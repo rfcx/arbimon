@@ -2,7 +2,7 @@ import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { projectService } from '~/api/project-service'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
@@ -11,8 +11,8 @@ export const useStore = defineStore('root', {
   state: () => ({
     user: undefined as User | undefined,
     datasetColors: COLORS_BIO_INCLUSIVE,
-    projects: [] as LocationProjectForUser[],
-    selectedProject: undefined as LocationProjectForUser | undefined,
+    projects: [] as ProjectForUser[],
+    selectedProject: undefined as ProjectForUser | undefined,
     projectFilters: undefined as ProjectFiltersResponse | undefined,
     currentVersion: ''
   }),
@@ -27,11 +27,11 @@ export const useStore = defineStore('root', {
       const projects = await projectService.getProjects() ?? []
       await this.updateProjects(projects)
     },
-    async updateProjects (projects: LocationProjectForUser[]) {
+    async updateProjects (projects: ProjectForUser[]) {
       this.projects = projects
       await this.updateSelectedProject(projects?.[0])
     },
-    async updateSelectedProject (project?: LocationProjectForUser) {
+    async updateSelectedProject (project?: ProjectForUser) {
       if (this.selectedProject?.id === project?.id) return
 
       this.selectedProject = project

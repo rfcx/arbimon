@@ -10,7 +10,7 @@ export const DashboardSpeciesThreatenedModel = defineWithDefaults<DashboardSpeci
   MODEL_DASHBOARD_SPECIES_THREATENED,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

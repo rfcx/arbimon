@@ -10,7 +10,7 @@ export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpec
   MODEL_DASHBOARD_SPECIES_HIGHLIGHTED,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

@@ -1,16 +1,16 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { LocationProjectSpecies } from '../types/location-project-species'
+import { TaxonSpeciesProject } from '../types/location-project-species'
 
-export const MODEL_LOCATION_PROJECT_SPECIES = 'LocationProjectSpecies'
-export const TABLE_LOCATION_PROJECT_SPECIES = 'location_project_species'
+export const MODEL_TAXON_SPECIES_PROJECT = 'TaxonSpeciesProject'
+export const TABLE_TAXON_SPECIES_PROJECT = 'taxon_species_project'
 
-export const LocationProjectSpeciesModel = defineWithDefaults<LocationProjectSpecies>(
-  MODEL_LOCATION_PROJECT_SPECIES,
+export const TaxonSpeciesProjectModel = defineWithDefaults<TaxonSpeciesProject>(
+  MODEL_TAXON_SPECIES_PROJECT,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },
@@ -42,6 +42,6 @@ export const LocationProjectSpeciesModel = defineWithDefaults<LocationProjectSpe
     }
   },
   {
-    tableName: TABLE_LOCATION_PROJECT_SPECIES
+    tableName: TABLE_TAXON_SPECIES_PROJECT
   }
 )

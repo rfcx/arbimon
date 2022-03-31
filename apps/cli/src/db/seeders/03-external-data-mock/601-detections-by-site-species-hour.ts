@@ -32,7 +32,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   // Save data
   await ProjectVersionModel(sequelize)
     .create({
-      locationProjectId: puertoRicoProjectId,
+      projectId: puertoRicoProjectId,
       isPublished: false,
       isPublic: false
     })
@@ -42,7 +42,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: classArbimonToBio[d.taxon_id] ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id] ?? -1, // TODO: Throw error
-      locationProjectId: puertoRicoProjectId,
+      projectId: puertoRicoProjectId,
       locationSiteId: siteArbimonToBio[d.arbimon_site_id] ?? -1, // TODO: Throw error
       count: d.num_of_recordings,
       durationMinutes: 12
@@ -51,7 +51,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await DataSourceModel(sequelize)
     .create({
       id: hash.MD5([{ 123: 456 }]),
-      locationProjectId: puertoRicoProjectId,
+      projectId: puertoRicoProjectId,
       summaryText: JSON.stringify({
         species: 500,
         sites: 90

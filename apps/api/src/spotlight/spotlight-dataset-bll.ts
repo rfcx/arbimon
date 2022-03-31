@@ -19,11 +19,11 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
   })
   if (!species) throw BioNotFoundError()
 
-  const { locationProjectId } = filter
+  const { projectId } = filter
 
   const speciesIucn = await models.SpeciesInProject
     .findOne({
-      where: { locationProjectId, taxonSpeciesId: speciesId },
+      where: { projectId, taxonSpeciesId: speciesId },
       attributes: ['riskRatingId'],
       raw: true
     })
@@ -31,8 +31,8 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
   const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !isProjectMember
 
   // Filtering
-  const totalDetections = await filterDetecions(models, locationProjectId, filter)
-  const specificSpeciesDetections = await filterSpeciesDetection(models, locationProjectId, filter, speciesId)
+  const totalDetections = await filterDetecions(models, projectId, filter)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, projectId, filter, speciesId)
 
   // Metrics
   const totalRecordingCount = getRecordingCount(totalDetections)

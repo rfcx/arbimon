@@ -1,7 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { requireEnv } from '~/env'
@@ -25,5 +25,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       longitudeWest
     }))
 
-  await LocationProjectModel(sequelize).bulkCreate(projects)
+  await ProjectModel(sequelize).bulkCreate(projects)
 }

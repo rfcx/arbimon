@@ -1,5 +1,5 @@
-export interface LocationProjectProfile {
-  locationProjectId: number
+export interface ProjectProfile {
+  projectId: number
   summary: string
   readme: string
 }

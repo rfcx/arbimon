@@ -1,5 +1,5 @@
 export interface DashboardDetectionBySite {
-  locationProjectId: number
+  projectId: number
   name: string
   latitude: number
   longitude: number

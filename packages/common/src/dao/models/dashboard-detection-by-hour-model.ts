@@ -10,7 +10,7 @@ export const DashboardDetectionByHourModel = defineWithDefaults<DashboardDetecti
   MODEL_DASHBOARD_DETECTION_BY_HOUR,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

@@ -1,15 +1,15 @@
-import { LocationProjectLight } from '../../dao/types'
+import { ProjectLight } from '../../dao/types'
 
 // Request
 export const projectsRoute = '/projects'
 
 // Response
-export type LocationProjectForUser =
-  LocationProjectLight &
+export type ProjectForUser =
+  ProjectLight &
   {
     isMyProject: boolean
     hasPublishedVersions: boolean
     hasPublicVersions: boolean
   }
 
-export type ProjectsResponse = LocationProjectForUser[]
+export type ProjectsResponse = ProjectForUser[]

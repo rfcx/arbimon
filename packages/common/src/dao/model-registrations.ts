@@ -9,10 +9,10 @@ import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED }
 import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
 import { DataSourceModel, MODEL_DATA_SOURCE } from './models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/detection-by-site-species-hour-model'
-import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
-import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
-import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './models/location-project-profile-model'
-import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
+import { MODEL_PROJECT_METRIC, ProjectMetricModel } from './models/location-project-metric-model'
+import { MODEL_PROJECT, ProjectModel } from './models/location-project-model'
+import { MODEL_PROJECT_PROFILE, ProjectProfileModel } from './models/location-project-profile-model'
+import { MODEL_TAXON_SPECIES_PROJECT, TaxonSpeciesProjectModel } from './models/location-project-species-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
@@ -28,13 +28,13 @@ import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-
 export const modelRegistrations = <const>{
   // Tables
   [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
-  [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
-  [MODEL_LOCATION_PROJECT]: [LocationProjectModel, {}],
-  [MODEL_LOCATION_PROJECT_PROFILE]: [LocationProjectProfileModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
-  [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
-  [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
-  [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_PROJECT]: [ProjectModel, {}],
+  [MODEL_PROJECT_PROFILE]: [ProjectProfileModel, { oneToOne: [MODEL_PROJECT] }],
+  [MODEL_TAXON_SPECIES_PROJECT]: [TaxonSpeciesProjectModel, { manyToOne: [MODEL_PROJECT, MODEL_TAXON_SPECIES] }],
+  [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_PROJECT] }],
+  [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_PROJECT] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
   [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
   [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
@@ -53,7 +53,7 @@ export const modelRegistrations = <const>{
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
-  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel],
+  [MODEL_PROJECT_METRIC]: [ProjectMetricModel],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
 }
 

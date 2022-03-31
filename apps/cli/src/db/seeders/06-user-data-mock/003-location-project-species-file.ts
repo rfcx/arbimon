@@ -2,9 +2,9 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { speciesPredictionOccupancyGeneratedUrl } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
-import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
+import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { LocationProjectSpeciesFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
+import { TaxonSpeciesProjectFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 import { requireEnv } from '~/env'
@@ -32,11 +32,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const species = await TaxonSpeciesModel(sequelize).findAll({ raw: true })
 
   // Convert data
-  const files: LocationProjectSpeciesFile[] = species
+  const files: TaxonSpeciesProjectFile[] = species
     .flatMap(s => rawFilenames
       .filter(filename => filename.startsWith(s.slug))
       .map((filename, order) => ({
-        locationProjectId: puertoRicoProjectId,
+        projectId: puertoRicoProjectId,
         taxonSpeciesId: s.id,
         description: `Predicted Occupancy Map for ${s.scientificName}`,
         order,
@@ -51,5 +51,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     )
 
   // Update
-  await LocationProjectSpeciesFileModel(sequelize).bulkCreate(files)
+  await TaxonSpeciesProjectFileModel(sequelize).bulkCreate(files)
 }

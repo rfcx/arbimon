@@ -1,5 +1,5 @@
 export interface FilterDataset {
-  locationProjectId: number
+  projectId: number
   startDateUtcInclusive: string
   endDateUtcInclusive: string
   siteIds: number[]

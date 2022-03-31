@@ -10,7 +10,7 @@ export const DashboardRichnessByTaxonModel = defineWithDefaults<DashboardRichnes
   MODEL_DASHBOARD_RICHNESS_BY_TAXON,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

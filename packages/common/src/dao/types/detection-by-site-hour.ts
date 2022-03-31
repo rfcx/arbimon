@@ -1,7 +1,7 @@
 export interface DetectionBySiteHour {
   timePrecisionHourLocal: Date
   locationSiteId: number
-  locationProjectId: number
+  projectId: number
   count: number
   durationMinutes: number
 }

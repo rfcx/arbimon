@@ -3,11 +3,11 @@ import { DataTypes } from 'sequelize'
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
 import { Project } from '../types'
 
-export const MODEL_LOCATION_PROJECT = 'LocationProject'
-export const TABLE_LOCATION_PROJECT = 'location_project'
+export const MODEL_PROJECT = 'Project'
+export const TABLE_PROJECT = 'project'
 
-export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
-  MODEL_LOCATION_PROJECT,
+export const ProjectModel = defineWithDefaultsAutoPk<Project>(
+  MODEL_PROJECT,
   {
     // PK
     id: { // 1
@@ -42,6 +42,6 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
     longitudeWest: DataTypes.FLOAT // -67.94469784
   },
   {
-    tableName: TABLE_LOCATION_PROJECT
+    tableName: TABLE_PROJECT
   }
 )

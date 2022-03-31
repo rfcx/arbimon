@@ -10,7 +10,7 @@ export const SpeciesInProjectModel = defineWithDefaults<SpeciesInProject>(
   MODEL_SPECIES_IN_PROJECT,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

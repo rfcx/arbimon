@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
+import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
@@ -26,12 +26,12 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   return await getProjectSpeciesOne(projectId, speciesSlug, isProjectMember)
 }
 
-const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, isProjectMember: boolean): Promise<ProjectSpeciesOneResponse> => {
+const getProjectSpeciesOne = async (projectId: string, taxonSpeciesSlug: string, isProjectMember: boolean): Promise<ProjectSpeciesOneResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
   const speciesInformation = await models.SpeciesInProject.findOne({
-    where: { locationProjectId, taxonSpeciesSlug },
+    where: { projectId, taxonSpeciesSlug },
     raw: true
   })
 
@@ -49,7 +49,7 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
     attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
     where: {
       [Op.and]: {
-        callProjectId: locationProjectId,
+        callProjectId: projectId,
         taxonSpeciesId
       }
     },
@@ -60,8 +60,8 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
 
   if (!isLocationRedacted) {
-    const matchFiles = await LocationProjectSpeciesFileModel(sequelize).findAll({
-      where: { locationProjectId, taxonSpeciesId },
+    const matchFiles = await TaxonSpeciesProjectFileModel(sequelize).findAll({
+      where: { projectId, taxonSpeciesId },
       raw: true
     }).then(results => results.map(({ filename, url }) => ({ title: filename, url })))
     predictedOccupancyMaps.push(...matchFiles)

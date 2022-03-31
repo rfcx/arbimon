@@ -1,26 +1,26 @@
 import { ApiLine, ApiMap, ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { LocationProjectMetricLight } from '@rfcx-bio/common/dao/types/location-project-metric'
+import { ProjectMetricLight } from '@rfcx-bio/common/dao/types/location-project-metric'
 
 import { getSequelize } from '../_services/db'
 
-export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetricLight> => {
+export const getProjectMetrics = async (projectId: number): Promise<ProjectMetricLight> => {
   const result = await ModelRepository.getInstance(getSequelize())
-    .LocationProjectMetric
+    .ProjectMetric
     .findOne({
-      where: { locationProjectId },
+      where: { projectId },
       raw: true
     })
 
   return result ?? { detectionCount: 0, siteCount: 0, speciesCount: 0, maxDate: null, minDate: null }
 }
 
-export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpecies[]> => {
+export const getSpeciesThreatened = async (projectId: number): Promise<DashboardSpecies[]> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .DashboardSpeciesThreatened
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       raw: true
     })
 
@@ -34,51 +34,51 @@ export const getSpeciesThreatened = async (locationProjectId: number): Promise<D
   }))
 }
 
-export const getRichnessByTaxon = async (locationProjectId: number): Promise<ApiStack> => {
+export const getRichnessByTaxon = async (projectId: number): Promise<ApiStack> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .DashboardRichnessByTaxon
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       raw: true
     })
 
   return result.map(r => [r.taxonClassId, r.count])
 }
 
-export const getRichnessByRisk = async (locationProjectId: number): Promise<ApiStack> => {
+export const getRichnessByRisk = async (projectId: number): Promise<ApiStack> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .DashboardRichnessByRisk
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       raw: true
     })
 
   return result.map(r => [r.riskRatingId, r.count])
 }
 
-export const getRichnessBySite = async (locationProjectId: number): Promise<ApiMap> =>
+export const getRichnessBySite = async (projectId: number): Promise<ApiMap> =>
   await ModelRepository.getInstance(getSequelize())
     .DashboardRichnessBySite
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       attributes: ['name', 'latitude', 'longitude', ['richness', 'value']],
       raw: true
     }) as unknown as ApiMap
 
-export const getDetectionBySite = async (locationProjectId: number): Promise<ApiMap> =>
+export const getDetectionBySite = async (projectId: number): Promise<ApiMap> =>
   await ModelRepository.getInstance(getSequelize())
     .DashboardDetectionBySite
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       attributes: ['name', 'latitude', 'longitude', ['count', 'value']],
       raw: true
     }) as unknown as ApiMap
 
-export const getRichnessByHour = async (locationProjectId: number): Promise<ApiLine> => {
+export const getRichnessByHour = async (projectId: number): Promise<ApiLine> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .DashboardRichnessByHour
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       raw: true
     })
 
@@ -87,11 +87,11 @@ export const getRichnessByHour = async (locationProjectId: number): Promise<ApiL
   )
 }
 
-export const getDetectionByHour = async (locationProjectId: number): Promise<ApiLine> => {
+export const getDetectionByHour = async (projectId: number): Promise<ApiLine> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .DashboardDetectionByHour
     .findAll({
-      where: { locationProjectId },
+      where: { projectId },
       raw: true
     })
 

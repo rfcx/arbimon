@@ -1,4 +1,4 @@
-import { LocationProjectProfile, Project } from '@rfcx-bio/common/dao/types'
+import { Project, ProjectProfile } from '@rfcx-bio/common/dao/types'
 
 import { BioEnvironment } from '~/env/types'
 
@@ -73,7 +73,7 @@ const dataFakeProject = {
   readme: 'This is the readme for our test project'
 }
 
-type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
+type ProjectAndProfile = Omit<Project, 'id'> & Omit<ProjectProfile, 'projectId'>
 
 export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
   local: [

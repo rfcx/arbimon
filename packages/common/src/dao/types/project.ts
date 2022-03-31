@@ -1,4 +1,3 @@
-// TODO: Rename this to LocationProject & update references
 export interface Project {
   id: number
   idCore: string
@@ -12,7 +11,7 @@ export interface Project {
   longitudeWest: number
 }
 
-export type LocationProjectLight = Pick<Project,
+export type ProjectLight = Pick<Project,
   'id'| 'slug'| 'name'| 'latitudeNorth'| 'latitudeSouth'| 'longitudeEast'| 'longitudeWest'
 >
 

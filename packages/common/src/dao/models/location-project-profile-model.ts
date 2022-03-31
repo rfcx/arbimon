@@ -1,16 +1,16 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { LocationProjectProfile } from '../types/location-project-profile'
+import { ProjectProfile } from '../types/location-project-profile'
 
-export const MODEL_LOCATION_PROJECT_PROFILE = 'LocationProjectProfile'
-export const TABLE_LOCATION_PROJECTS_PROFILE = 'location_project_profile'
+export const MODEL_PROJECT_PROFILE = 'ProjectProfile'
+export const TABLE_PROJECT_PROFILE = 'project_profile'
 
-export const LocationProjectProfileModel = defineWithDefaults<LocationProjectProfile>(
-  MODEL_LOCATION_PROJECT_PROFILE,
+export const ProjectProfileModel = defineWithDefaults<ProjectProfile>(
+  MODEL_PROJECT_PROFILE,
   {
     // PK
-    locationProjectId: { // 1
+    projectId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },
@@ -20,6 +20,6 @@ export const LocationProjectProfileModel = defineWithDefaults<LocationProjectPro
     readme: DataTypes.TEXT
   },
   {
-    tableName: TABLE_LOCATION_PROJECTS_PROFILE
+    tableName: TABLE_PROJECT_PROFILE
   }
 )

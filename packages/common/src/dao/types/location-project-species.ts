@@ -1,5 +1,5 @@
-export interface LocationProjectSpecies {
-  locationProjectId: number
+export interface TaxonSpeciesProject {
+  projectId: number
   taxonSpeciesId: number
   highlightedOrder?: number
   description?: string

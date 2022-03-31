@@ -23,7 +23,7 @@ export async function getProjectSpeciesAll (projectId: number): Promise<ProjectS
   const models = ModelRepository.getInstance(sequelize)
 
   const species = await models.SpeciesInProject.findAll({
-    where: { locationProjectId: projectId },
+    where: { projectId },
     attributes: ATTRIBUTES_SPECIES_IN_PROJECT.light,
     order: [['scientificName', 'ASC']]
   })

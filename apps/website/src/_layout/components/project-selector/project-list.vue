@@ -30,16 +30,16 @@
 <script lang="ts" setup>
 import { defineEmits, defineProps } from 'vue'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 interface Props {
   title: string
-  projects: LocationProjectForUser[]
-  selectedProject: LocationProjectForUser
+  projects: ProjectForUser[]
+  selectedProject: ProjectForUser
 }
 
 interface Emits {
-  (ev: 'emitSelectProject', project: LocationProjectForUser): LocationProjectForUser
+  (ev: 'emitSelectProject', project: ProjectForUser): ProjectForUser
 }
 
 const props = defineProps<Props>()
