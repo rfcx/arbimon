@@ -29,7 +29,7 @@ export async function getMemberProjectCoreIdsFromApi (token: string): Promise<st
   try {
     const resp = await axios.request<CoreProjectLight[]>({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/projects`,
+      url: `${CORE_API_BASE_URL}/projects?fields=id`,
       headers: { authorization: token }
     })
 

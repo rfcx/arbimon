@@ -5,6 +5,7 @@ import { RouteLocationRaw } from 'vue-router'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 import ProjectSelectorComponent from '../project-selector/project-selector.vue'
+import ProjectSelector from '@/_layout/components/project-selector.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
 
@@ -18,7 +19,7 @@ export interface NavMenu {
   components: {
     AuthNavbarItemComponent,
     MobileMenuToggleButton,
-    ProjectSelectorComponent
+    ProjectSelector
   }
 })
 export default class NavbarComponent extends Vue {

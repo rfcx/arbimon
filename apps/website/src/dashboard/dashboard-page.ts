@@ -9,7 +9,6 @@ import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/d
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import ProjectSelector2 from '@/_layout/components/project-selector.vue'
 import { downloadSvgAsPng } from '~/charts'
 import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
@@ -57,7 +56,6 @@ const getDefaultPhoto = (taxonSlug: string): string =>
 
 @Options({
   components: {
-    ProjectSelector2,
     DashboardHighlightedSpecies,
     DashboardMetrics,
     DashboardProjectProfile,

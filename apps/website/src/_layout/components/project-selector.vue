@@ -32,17 +32,43 @@
         />
       </el-tabs>
 
-      <p
-        v-for="project in projectData[activeTab]"
-        :key="project.id"
-      >
-        {{ project.name }}
-      </p>
+      <div class="h-72">
+        <p
+          v-if="projectData[activeTab].length === 0"
+          class="text-subtle italic"
+        >
+          {{ displayProject }}
+        </p>
+        <div v-else>
+          <p
+            v-for="project in projectData[activeTab]"
+            :key="project.id"
+          >
+            {{ project.name }}
+          </p>
+        </div>
+      </div>
 
-      <el-pagination
-        layout="prev, pager, next"
-        :total="50"
-      />
+      <div class="flex justify-end">
+        <el-pagination
+          small
+          layout="prev, pager, next"
+          :total="projectData[activeTab].length"
+        />
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button
+          class="btn mr-2"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn-primary"
+        >
+          Select
+        </button>
+      </div>
     </div>
   </modal-popup>
 </template>
@@ -52,6 +78,10 @@ import { computed, ref } from 'vue'
 import { useStore } from '~/store'
 
 const store = useStore()
+
+const user = computed(() => {
+  return store.user
+})
 
 const tabs = <const>{
   myProjects: {
@@ -63,14 +93,22 @@ const tabs = <const>{
     label: 'Showcase projects'
   }
 }
+
 const activeTab = ref(tabs.myProjects.id)
+const searchKeyword = ref('')
+
+const displayProject = computed(() => {
+  if (activeTab.value === tabs.myProjects.id) {
+    return user.value === undefined ? 'Please login to see your project.' : "You don't have any project."
+  }
+  return 'No project found.'
+})
 
 const projectData = computed(() => ({
   myProjects: store.projects.filter(project => project.isMyProject),
   showcaseProjects: store.projects.filter(project => !project.isMyProject)
 }))
 
-const searchKeyword = ref('')
 </script>
 <style lang="scss" scoped>
 ::v-deep .el-input__inner {
