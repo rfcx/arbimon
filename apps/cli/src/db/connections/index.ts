@@ -26,7 +26,7 @@ export const getUmzug = (sequelize: Sequelize, verbose = false, storageTableName
   new Umzug({
     migrations: {
       glob: [
-        filename ? `${filename}.{js,mjs,ts}` : '!(*.d).{js,mjs,ts}',
+        filename ? `${filename}.{js,mjs,ts}` : '**/!(*.d).{js,mjs,ts}',
         { cwd }
       ],
       resolve: params => ({
