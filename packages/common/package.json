@@ -18,6 +18,7 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
     "profile-eslint": "cross-env TIMING=1 eslint .",
+    "test-int": "vitest --run --no-threads .int.test.",
     "test-unit": "vitest --run --passWithNoTests .unit.test.",
     "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
   },

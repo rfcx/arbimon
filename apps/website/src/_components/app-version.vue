@@ -16,5 +16,4 @@ const releaseMode = ref(import.meta.env.MODE)
 const releaseCommit = ref(import.meta.env.VITE_RELEASE_COMMIT)
 const releaseDateRaw = Number(import.meta.env.VITE_RELEASE_DATE)
 const releaseDate = ref(releaseDateRaw > 0 ? new Date(releaseDateRaw * 1000) : new Date())
-
 </script>
