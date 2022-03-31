@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'location_site'
+const TABLE_NAME = 'project_site'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -50,11 +50,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      detection_version_first_appears_id: {
+      project_version_first_detection_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'detection_version' },
+          model: { tableName: 'project_version' },
           key: 'id'
         }
       },

@@ -6,7 +6,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const VIEW_NAME = 'detection_version_geo'
+const VIEW_NAME = 'project_version_geo'
 // const INDEX_COLS = []
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {

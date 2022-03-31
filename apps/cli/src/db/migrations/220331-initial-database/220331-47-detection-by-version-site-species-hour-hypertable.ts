@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'detection_by_site_species_hour'
+const TABLE_NAME = 'detection_by_version_site_species_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -18,11 +18,19 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE(3), // hypertable key
         primaryKey: true
       },
-      location_site_id: {
+      project_version_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: { tableName: 'location_site' },
+          model: { tableName: 'project_version' },
+          key: 'id'
+        }
+      },
+      project_site_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'project_site' },
           key: 'id'
         }
       },
@@ -46,14 +54,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // FKs
-      detection_version_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: { tableName: 'detection_version' },
-          key: 'id'
-        }
-      },
       taxon_class_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

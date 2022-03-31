@@ -6,26 +6,26 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'detection_set_version'
+const TABLE_NAME = 'project_version_source_sync'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      detection_set_hash: { // 1239eb4a8416af46c0448426b51771f5
-        type: DataTypes.STRING(255),
-        primaryKey: true,
-        references: {
-          model: { tableName: 'detection_set' },
-          key: 'detection_set_hash'
-        }
-      },
-      detection_version_id: {
+      project_version_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: { tableName: 'detection_version' },
+          model: { tableName: 'project_version' },
+          key: 'id'
+        }
+      },
+      source_sync_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'source_sync' },
           key: 'id'
         }
       },

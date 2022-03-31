@@ -6,7 +6,7 @@
  import { DataTypes, QueryInterface } from 'sequelize'
  import { MigrationFn } from 'umzug'
 
- const TABLE_NAME = 'detection_source'
+ const TABLE_NAME = 'source'
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
    await params.context.createTable(

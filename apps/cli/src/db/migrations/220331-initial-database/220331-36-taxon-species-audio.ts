@@ -46,11 +46,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      location_site_id: {
+      project_site_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'location_site' },
+          model: { tableName: 'project_site' },
           key: 'id'
         }
       },

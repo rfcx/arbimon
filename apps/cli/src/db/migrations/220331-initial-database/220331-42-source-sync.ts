@@ -6,32 +6,34 @@
  import { DataTypes, QueryInterface } from 'sequelize'
  import { MigrationFn } from 'umzug'
 
- const TABLE_NAME = 'detection_set'
+ const TABLE_NAME = 'source_sync'
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
    await params.context.createTable(
      TABLE_NAME,
      {
       // PK
-      detection_set_hash: { // 1239eb4a8416af46c0448426b51771f5
-        type: DataTypes.STRING(255),
-        primaryKey: true
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
       },
 
+      // SKs
+      hash: DataTypes.STRING(255), // 1239eb4a8416af46c0448426b51771f5
+
       // FKs
-      detection_source_id: {
+      project_id: {
         type: DataTypes.INTEGER,
-        // primaryKey: true,
         references: {
-          model: { tableName: 'detection_source' },
+          model: { tableName: 'project' },
           key: 'id'
         }
       },
-      project_id: {
+      source_id: {
         type: DataTypes.INTEGER,
-        // primaryKey: true,
         references: {
-          model: { tableName: 'project' },
+          model: { tableName: 'source' },
           key: 'id'
         }
       },
