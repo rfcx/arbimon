@@ -36,30 +36,30 @@ jobs:
 
     steps:
       - name: 'Setup: Node'
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
         # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
         with:
           node-version: '16'
 
       - name: 'Setup: Git checkout'
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
 
       - name: 'Setup: Database init scripts'
         run: |
           find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U postgres -h localhost -f %
 
       - name: 'Cache: Dependencies'
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
         # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
         with:
           path: ~/.pnpm-store
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-${{ runner.os }}
 
       - name: 'Verify: pnpm install'
-        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         with:
           version: 6.20.1
           run_install: |
