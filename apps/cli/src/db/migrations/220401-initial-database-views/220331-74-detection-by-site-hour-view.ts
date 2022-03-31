@@ -10,21 +10,21 @@ const VIEW_NAME = 'detection_by_site_hour'
 // const INDEX_COLS = ['location_project_id', 'location_site_id', 'time_precision_hour_local']
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(
-    `
-    create view ${VIEW_NAME} as
-    SELECT d.location_project_id,
-           d.location_site_id,
-           d.time_precision_hour_local,
-           sum(d.count) as count,
-           max(d.duration_minutes) as duration_minutes
-    FROM detection_by_site_species_hour d
-    GROUP BY d.location_project_id,
-             d.location_site_id,
-             d.time_precision_hour_local
-    ;
-    `
-  )
+  // await params.context.sequelize.query(
+  //   `
+  //   create view ${VIEW_NAME} as
+  //   SELECT d.location_project_id,
+  //          d.location_site_id,
+  //          d.time_precision_hour_local,
+  //          sum(d.count) as count,
+  //          max(d.duration_minutes) as duration_minutes
+  //   FROM detection_by_site_species_hour d
+  //   GROUP BY d.location_project_id,
+  //            d.location_site_id,
+  //            d.time_precision_hour_local
+  //   ;
+  //   `
+  // )
 
   // for (const indexCol of INDEX_COLS) {
   //   await params.context.sequelize.query(

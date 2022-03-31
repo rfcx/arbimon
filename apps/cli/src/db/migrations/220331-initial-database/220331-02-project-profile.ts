@@ -6,24 +6,20 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_photo'
+const TABLE_NAME = 'project_profile'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      taxon_species_id: {
+      project_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: { tableName: 'taxon_species' },
+          model: { tableName: 'project' },
           key: 'id'
         }
-      },
-      source: {
-        type: DataTypes.STRING(255),
-        primaryKey: true
       },
       // Logging
       created_at: {
@@ -35,25 +31,13 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
       // Facts
-      photo_url: {
-        type: DataTypes.STRING(511),
-        allowNull: false
-      },
-      photo_caption: {
+      summary: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      photo_author: {
-        type: DataTypes.STRING(1023),
+      readme: {
+        type: DataTypes.TEXT,
         allowNull: false
-      },
-      photo_license: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      photo_license_url: {
-        type: DataTypes.STRING(255),
-        allowNull: true
       }
     }
   )

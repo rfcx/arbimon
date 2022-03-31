@@ -6,21 +6,13 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'location_project_species'
+const TABLE_NAME = 'taxon_species_photo'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      location_project_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: { tableName: 'location_project' },
-          key: 'id'
-        }
-      },
       taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -29,6 +21,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+      source: {
+        type: DataTypes.STRING(255),
+        primaryKey: true
+      },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -38,24 +35,25 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // Facts
-      highlighted_order: {
-        type: DataTypes.INTEGER,
-        allowNull: true
+      url: {
+        type: DataTypes.STRING(511),
+        allowNull: false
       },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: true
+      caption: {
+        type: DataTypes.STRING(255),
+        allowNull: false
       },
-      risk_rating_local_level: {
-        type: DataTypes.INTEGER,
-        allowNull: true
+      author: {
+        type: DataTypes.STRING(1023),
+        allowNull: false
       },
-      risk_rating_local_code: {
-        type: DataTypes.STRING(10),
-        allowNull: true
+      license: {
+        type: DataTypes.STRING(255),
+        allowNull: false
       },
-      risk_rating_local_source: {
+      license_url: {
         type: DataTypes.STRING(255),
         allowNull: true
       }

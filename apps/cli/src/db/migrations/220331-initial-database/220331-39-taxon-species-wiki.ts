@@ -6,21 +6,13 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'location_project_species_file'
+const TABLE_NAME = 'taxon_species_wiki'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      location_project_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: { tableName: 'location_project' },
-          key: 'id'
-        }
-      },
       taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -28,10 +20,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           model: { tableName: 'taxon_species' },
           key: 'id'
         }
-      },
-      order: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
       },
 
       // Logging
@@ -46,19 +34,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
 
       // Facts
       description: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      description_source_url: {
         type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      filename: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      mime_type: {
-        type: DataTypes.STRING(32),
-        allowNull: false
-      },
-      url: {
-        type: DataTypes.STRING(511),
         allowNull: false
       }
     }

@@ -6,21 +6,11 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const VIEW_NAME = 'dashboard_detection_by_hour'
+const VIEW_NAME = 'detection_version_species'
+// const INDEX_COLS = []
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(
-    `
-    create view ${VIEW_NAME} as
-    SELECT location_project_id,
-           EXTRACT(HOUR FROM time_precision_hour_local) AS hour,
-           sum(count)                                   AS count
-    FROM detection_by_site_species_hour
-    GROUP BY 1, 2
-    ORDER BY 1, 2
-    ;
-    `
-  )
+ // TODO
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

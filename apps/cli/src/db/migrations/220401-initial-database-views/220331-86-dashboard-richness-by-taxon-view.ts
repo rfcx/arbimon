@@ -10,18 +10,18 @@ const VIEW_NAME = 'dashboard_richness_by_taxon'
 // const INDEX_COLS = ['location_project_id', 'count']
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(
-    `
-    create view ${VIEW_NAME} as
-    SELECT sip.location_project_id,
-           sip.taxon_class_id,
-           COUNT(1) AS count
-    FROM species_in_project sip
-    GROUP BY sip.location_project_id, sip.taxon_class_id
-    ORDER BY sip.location_project_id, sip.taxon_class_id ASC
-    ;
-    `
-  )
+  // await params.context.sequelize.query(
+  //   `
+  //   create view ${VIEW_NAME} as
+  //   SELECT sip.location_project_id,
+  //          sip.taxon_class_id,
+  //          COUNT(1) AS count
+  //   FROM species_in_project sip
+  //   GROUP BY sip.location_project_id, sip.taxon_class_id
+  //   ORDER BY sip.location_project_id, sip.taxon_class_id ASC
+  //   ;
+  //   `
+  // )
 
   // for (const indexCol of INDEX_COLS) {
   //   await params.context.sequelize.query(

@@ -6,25 +6,19 @@
  import { DataTypes, QueryInterface } from 'sequelize'
  import { MigrationFn } from 'umzug'
 
- const TABLE_NAME = 'data_source'
+ const TABLE_NAME = 'detection_source'
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
    await params.context.createTable(
      TABLE_NAME,
      {
       // PK
-      id: { // 1239eb4a8416af46c0448426b51771f5
-        type: DataTypes.STRING(255),
-        primaryKey: true
-      },
-      location_project_id: {
+      id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        references: {
-          model: { tableName: 'location_project' },
-          key: 'id'
-        }
+        autoIncrement: true
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -34,12 +28,11 @@
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // Facts
-      summary_text: { // species +3 -2
-        type: DataTypes.JSON
-      },
-      raw_data: { // species +3 -2
-        type: DataTypes.JSON
+      name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
       }
     }
    )

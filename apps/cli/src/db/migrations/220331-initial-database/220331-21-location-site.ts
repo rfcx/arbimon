@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_call'
+const TABLE_NAME = 'location_site'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -27,54 +27,41 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+      // SKs
+      id_core: {
+        type: DataTypes.STRING(12),
+        allowNull: false,
+        unique: false
+      },
+      id_arbimon: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true
+      },
       // Dimensions
-      taxon_species_id: {
+      project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'taxon_species' },
-          key: 'id'
-        }
-      },
-      call_project_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'location_project' },
-          key: 'id'
-        }
-      },
-      call_site_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'location_site' },
+          model: { tableName: 'project' },
           key: 'id'
         }
       },
       // Facts
-      call_type: {
+      name: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      call_recorded_at: {
-        type: DataTypes.DATE,
+      latitude: {
+        type: DataTypes.FLOAT,
         allowNull: false
       },
-      call_timezone: {
-        type: DataTypes.STRING(255),
+      longitude: {
+        type: DataTypes.FLOAT,
         allowNull: false
       },
-      call_media_wav_url: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      call_media_spec_url: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      call_media_redirect_url: {
-        type: DataTypes.STRING(255),
+      altitude: {
+        type: DataTypes.FLOAT,
         allowNull: false
       }
     }

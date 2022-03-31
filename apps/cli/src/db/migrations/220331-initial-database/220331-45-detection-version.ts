@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'project_version'
+const TABLE_NAME = 'detection_version'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -18,6 +18,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         autoIncrement: true
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -27,15 +28,17 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // FKs
-      location_project_id: {
+      project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: { tableName: 'location_project' },
+          model: { tableName: 'project' },
           key: 'id'
         }
       },
+
       // Facts
       is_published: {
         type: DataTypes.BOOLEAN,

@@ -46,11 +46,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Dimensions
-      location_project_id: {
+      detection_version_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        primaryKey: true,
         references: {
-          model: { tableName: 'location_project' },
+          model: { tableName: 'detection_version' },
           key: 'id'
         }
       },
@@ -64,11 +64,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Facts
-      count: {
+      detection_minutes: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      duration_minutes: {
+      recording_minutes: {
         type: DataTypes.INTEGER,
         allowNull: false
       }
