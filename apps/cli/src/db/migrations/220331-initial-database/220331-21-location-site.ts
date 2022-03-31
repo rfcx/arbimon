@@ -18,6 +18,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         autoIncrement: true
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -27,6 +28,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // SKs
       id_core: {
         type: DataTypes.STRING(12),
@@ -38,6 +40,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
+
       // Dimensions
       project_id: {
         type: DataTypes.INTEGER,
@@ -47,6 +50,15 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+      detection_version_first_appears_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: { tableName: 'detection_version' },
+          key: 'id'
+        }
+      },
+
       // Facts
       name: {
         type: DataTypes.STRING(255),
