@@ -31,8 +31,8 @@ jobs:
           
       - name: 'Setup: Get ID of previous run' # Need to execute this early (before another run starts)
         id: workflow-runs
-        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
         # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
         with:
           # https://docs.github.com/en/rest/reference/actions#list-workflow-runs
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs

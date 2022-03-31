@@ -21,7 +21,7 @@
     </div>
     <div
       v-else
-      class="h-40 italic text-subtle py-2 mx-2"
+      class="h-40 italic text-subtle py-2 mx-4"
     >
       None
     </div>
