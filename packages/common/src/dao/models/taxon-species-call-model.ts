@@ -16,7 +16,7 @@ export const TaxonSpeciesCallModel = defineWithDefaultsAutoPk<TaxonSpeciesCall>(
       autoIncrement: true
     },
 
-    // Dimensions
+    // FKs
     taxonSpeciesId: DataTypes.INTEGER, // 1
     callProjectId: DataTypes.INTEGER, // ???
     callSiteId: DataTypes.INTEGER, // ???

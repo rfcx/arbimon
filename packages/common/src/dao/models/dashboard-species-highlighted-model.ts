@@ -19,7 +19,7 @@ export const DashboardSpeciesHighlightedModel = defineWithDefaults<DashboardSpec
       primaryKey: true
     },
 
-    // Dimensions
+    // FKs
     taxonClassSlug: DataTypes.STRING(255),
     taxonSpeciesSlug: DataTypes.STRING(255),
     riskRatingId: DataTypes.INTEGER,

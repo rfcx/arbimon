@@ -21,6 +21,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -30,6 +31,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // Facts
       common_name: {
         type: DataTypes.STRING(255),

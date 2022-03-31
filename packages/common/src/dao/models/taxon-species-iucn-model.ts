@@ -15,7 +15,7 @@ export const TaxonSpeciesIucnModel = defineWithDefaults<TaxonSpeciesIucn>(
       primaryKey: true
     },
 
-    // Dimensions
+    // FKs
     riskRatingIucnId: INTEGER, // 600 (= CR)
 
     // Facts

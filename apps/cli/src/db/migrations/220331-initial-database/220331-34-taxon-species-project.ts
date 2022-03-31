@@ -29,6 +29,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -38,6 +39,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // Facts
       highlighted_order: {
         type: DataTypes.INTEGER,

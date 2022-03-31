@@ -18,7 +18,7 @@
         primaryKey: true
       },
 
-      // Dimensions
+      // FKs
       detection_source_id: {
         type: DataTypes.INTEGER,
         // primaryKey: true,

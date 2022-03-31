@@ -19,7 +19,7 @@ export const DashboardSpeciesThreatenedModel = defineWithDefaults<DashboardSpeci
       primaryKey: true
     },
 
-    // Dimensions
+    // FKs
     taxonClassSlug: DataTypes.STRING(255),
     taxonSpeciesSlug: DataTypes.STRING(255),
     riskRatingId: DataTypes.INTEGER,

@@ -20,7 +20,7 @@ export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
     idCore: DataTypes.STRING(12), // MoLQA8aNulGb
     idArbimon: DataTypes.INTEGER, // 8412
 
-    // Dimensions
+    // FKs
     locationProjectId: DataTypes.INTEGER, // 1
 
     // Facts

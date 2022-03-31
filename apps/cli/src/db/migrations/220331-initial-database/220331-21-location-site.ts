@@ -41,7 +41,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         unique: true
       },
 
-      // Dimensions
+      // FKs
       project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

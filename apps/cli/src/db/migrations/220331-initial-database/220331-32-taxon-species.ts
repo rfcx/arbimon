@@ -18,6 +18,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         autoIncrement: true
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -27,6 +28,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // SKs
       id_arbimon: {
         type: DataTypes.INTEGER,
@@ -38,7 +40,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
-      // Dimensions
+
+      // FKs
       taxon_class_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -47,6 +50,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+
       // Facts
       scientific_name: {
         type: DataTypes.STRING(255),

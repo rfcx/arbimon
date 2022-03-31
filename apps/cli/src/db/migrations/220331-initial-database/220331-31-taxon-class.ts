@@ -17,6 +17,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         primaryKey: true
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -26,6 +27,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
+
       // SKs
       id_arbimon: {
         type: DataTypes.INTEGER,
@@ -37,6 +39,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
+
       // Facts
       common_name: {
         type: DataTypes.STRING(255),

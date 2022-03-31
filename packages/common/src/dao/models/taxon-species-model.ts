@@ -23,7 +23,7 @@ export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
       unique: true
     },
 
-    // Dimensions
+    // FKs
     taxonClassId: DataTypes.INTEGER, // 1
 
     // Facts

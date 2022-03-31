@@ -19,7 +19,7 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
       primaryKey: true
     },
 
-    // Dimensions
+    // FKs
     locationProjectId: DataTypes.INTEGER,
 
     // Facts

@@ -18,6 +18,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         autoIncrement: true
       },
+
       // Logging
       created_at: {
         type: DataTypes.DATE,
@@ -27,7 +28,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE,
         allowNull: false
       },
-      // Dimensions
+
+      // FKs
       taxon_species_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -52,6 +54,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+
       // Facts
       type: {
         type: DataTypes.STRING(255),

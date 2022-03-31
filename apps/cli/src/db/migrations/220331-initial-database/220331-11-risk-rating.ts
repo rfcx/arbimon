@@ -17,6 +17,7 @@
          type: DataTypes.INTEGER,
          primaryKey: true
        },
+
        // Logging
        created_at: {
          type: DataTypes.DATE,
@@ -26,12 +27,14 @@
          type: DataTypes.DATE,
          allowNull: false
        },
+
        // SKs
        code: {
          type: DataTypes.STRING(2),
          allowNull: false,
          unique: true
        },
+
        // Facts
        is_threatened: {
          type: DataTypes.BOOLEAN,

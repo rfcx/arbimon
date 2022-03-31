@@ -45,7 +45,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
 
-      // Dimensions
+      // FKs
       detection_version_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

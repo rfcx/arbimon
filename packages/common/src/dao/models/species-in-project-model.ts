@@ -25,7 +25,7 @@ export const SpeciesInProjectModel = defineWithDefaults<SpeciesInProject>(
       unique: true
     },
 
-    // Dimensions
+    // FKs
     taxonClassId: DataTypes.INTEGER, // 1
     taxonClassSlug: DataTypes.STRING(255),
 
