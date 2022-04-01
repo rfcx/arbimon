@@ -19,7 +19,7 @@
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test-unit": "vitest --run --passWithNoTests .unit.test.",
-    "test-int": "vitest --run --no-threads .int.test.",
+    "test-int": "cross-env BIO_DB_PORT=5434 vitest --run --no-threads .int.test.",
     "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
