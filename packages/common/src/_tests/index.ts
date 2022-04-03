@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize'
 
 import { getSequelizeBase } from '@/dao/connections'
 
-export const getSequelizeForTests = (verbose = true): Sequelize =>
+export const getSequelizeForTests = (logging: false | ((sql: string, timing?: number) => void) = console.info): Sequelize =>
   getSequelizeBase({
     databaseName: 'postgres',
     host: 'localhost',
@@ -10,5 +10,5 @@ export const getSequelizeForTests = (verbose = true): Sequelize =>
     port: 5432,
     isSsl: false,
     user: 'postgres',
-    verbose
+    logging
   })

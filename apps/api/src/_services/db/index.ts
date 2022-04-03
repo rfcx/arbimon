@@ -13,7 +13,7 @@ const {
   BIO_DB_PASSWORD: password
 } = env
 
-export const getSequelize = (verbose = false): Sequelize =>
+export const getSequelize = (logging: false | ((sql: string, timing?: number) => void) = false): Sequelize =>
   getSequelizeBase({
     host,
     port: Number(port),
@@ -21,5 +21,5 @@ export const getSequelize = (verbose = false): Sequelize =>
     user,
     password,
     isSsl: isSsl === 'true',
-    verbose
+    logging
   })

@@ -17,7 +17,7 @@ const { BIO_DB_HOSTNAME: host, BIO_DB_PORT: port, BIO_DB_SSL_ENABLED: isSsl, BIO
 requireEnv('BIO_DB_HOSTNAME', 'BIO_DB_PORT', 'BIO_DB_SSL_ENABLED', 'BIO_DB_DBNAME', 'BIO_DB_USER', 'BIO_DB_PASSWORD')
 
 export const getSequelize = (verbose = false): Sequelize =>
-  getSequelizeBase({ host, port, databaseName, user, password, isSsl, verbose })
+  getSequelizeBase({ host, port, databaseName, user, password, isSsl, logging: verbose ? console.info : false })
 
 const importMigration = async (path?: string): Promise<Pick<RunnableMigration<QueryInterface>, 'up' | 'down'>> =>
     await import(pathToFileURL(path ?? '').href)
