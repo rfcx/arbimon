@@ -1,8 +1,8 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
-import { ProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
+import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
+import { ProjectProfileModel } from '@rfcx-bio/common/dao/models-table/project-profile-model'
 import { ProjectProfile } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 

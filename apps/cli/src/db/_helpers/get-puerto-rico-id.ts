@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
 
 import { rawEnvToProjectAndProfile } from '@/db/seeders/_data/location-project-and-profile'
 import { requireEnv } from '~/env'

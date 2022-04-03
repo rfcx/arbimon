@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
+import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models-table/taxon-species-project-file-model'
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'

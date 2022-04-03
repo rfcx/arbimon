@@ -71,12 +71,12 @@ function calculateDetectionFrequencyActivity (detections: DetectionBySiteSpecies
   return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
 }
 
-export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], speciesId: number): Promise<SpotlightDetectionDataBySite> {
+export async function getDetectionsBySite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], speciesId: number): Promise<SpotlightDetectionDataBySite> {
   const summariesBySite: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(totalDetections, 'locationSiteId')
   const siteIds = Object.keys(summariesBySite)
 
   // TODO ???: Move query to somewhere more global
-  const sites = await models.LocationSite.findAll({
+  const sites = await models.ProjectSite.findAll({
     where: { id: siteIds },
     raw: true
   })

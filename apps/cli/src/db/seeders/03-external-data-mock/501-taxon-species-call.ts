@@ -4,9 +4,9 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-// import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-// import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
-// import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+// import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
+// import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models-table/taxon-species-call-model'
+// import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
 // import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
 // import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -19,7 +19,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 //   const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()
 //     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
-//   const siteNameToId = await LocationSiteModel(sequelize).findAll()
+//   const siteNameToId = await ProjectSiteModel(sequelize).findAll()
 //     .then(allSites => Object.fromEntries(allSites.map(s => [s.name, s.id])))
 
 //   // Convert data

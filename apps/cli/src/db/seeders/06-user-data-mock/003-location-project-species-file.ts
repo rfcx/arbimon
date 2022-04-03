@@ -2,8 +2,8 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { speciesPredictionOccupancyGeneratedUrl } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
-import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
+import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models-table/taxon-species-project-file-model'
 import { TaxonSpeciesProjectFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'

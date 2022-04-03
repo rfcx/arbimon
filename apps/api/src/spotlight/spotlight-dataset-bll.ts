@@ -7,7 +7,7 @@ import { FilterDataset } from '~/datasets/dataset-types'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { filterDetecions, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordingCount } from './spotlight-dataset-dao'
+import { filterDetecions, filterSpeciesDetection, getDetectionsBySite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordingCount } from './spotlight-dataset-dao'
 
 export async function getSpotlightDatasetData (filter: FilterDataset, speciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
@@ -44,7 +44,7 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
   // By site
-  const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsByLocationSite(models, totalDetections, speciesId)
+  const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsBySite(models, totalDetections, speciesId)
   const detectionsByTimeHour = getDetectionsByTimeHour(specificSpeciesDetections, totalRecordingCount)
   const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, totalRecordingCount)
   const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, totalRecordingCount)

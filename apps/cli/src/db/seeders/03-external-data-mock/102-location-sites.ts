@@ -1,7 +1,7 @@
 import { Optional, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
 import { Site } from '@rfcx-bio/common/dao/types'
 import { rawSites } from '@rfcx-bio/common/mock-data'
 
@@ -21,5 +21,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       projectId: puertoRicoProjectId
     }))
 
-  await LocationSiteModel(sequelize).bulkCreate(sites)
+  await ProjectSiteModel(sequelize).bulkCreate(sites)
 }

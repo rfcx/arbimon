@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
+import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models-table/taxon-species-iucn-model'
 import { ATTRIBUTES_TAXON_SPECIES_IUCN, TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 
 export const writeIucnSpeciesDataToPostgres = async (sequelize: Sequelize, newData: TaxonSpeciesIucn[]): Promise<void> => {

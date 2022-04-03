@@ -1,4 +1,4 @@
-import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
 import { wait } from '@rfcx-bio/utils/async'
 
 import { getSequelize } from '@/db/connections'

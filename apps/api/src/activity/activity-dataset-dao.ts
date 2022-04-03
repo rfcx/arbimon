@@ -63,7 +63,7 @@ export const getDetectionDataBySite = async (models: AllModels, detections: Dete
   const siteIds = Object.keys(detectionsBySites)
 
   // TODO ???: Move query to somewhere more global
-  const sites = await models.LocationSite.findAll({
+  const sites = await models.ProjectSite.findAll({
     where: { id: siteIds },
     raw: true
   })

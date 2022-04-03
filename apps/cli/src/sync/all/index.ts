@@ -104,7 +104,7 @@ export const extractNewData = async (biodiversitySequelize: Sequelize, summaries
 
   const models = ModelRepository.getInstance(biodiversitySequelize)
 
-  const siteIdsInBioArray = await models.LocationSite.findAll({
+  const siteIdsInBioArray = await models.ProjectSite.findAll({
     attributes: ['idArbimon'],
     where: {
       projectId: project.id

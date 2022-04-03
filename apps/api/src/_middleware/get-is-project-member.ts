@@ -1,7 +1,7 @@
 import { FastifyRequest } from 'fastify'
 
 import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
-import { ProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
 
 import { getIsProjectMember as getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'

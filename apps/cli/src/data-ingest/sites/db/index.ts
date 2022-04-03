@@ -1,10 +1,10 @@
 import { Sequelize } from 'sequelize'
 
-import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
 import { Site } from '@rfcx-bio/common/dao/types'
 
 export const writeSitesToPostgres = async (sequelize: Sequelize, sites: Array<Omit<Site, 'id'>>): Promise<void> => {
-  await LocationSiteModel(sequelize)
+  await ProjectSiteModel(sequelize)
     .bulkCreate(sites, {
        ignoreDuplicates: true
     })

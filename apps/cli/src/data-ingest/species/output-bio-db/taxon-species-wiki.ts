@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 
-import { TaxonSpeciesPhotoModel } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
-import { TaxonSpeciesWikiModel } from '@rfcx-bio/common/dao/models/taxon-species-wiki-model'
+import { TaxonSpeciesPhotoModel } from '@rfcx-bio/common/dao/models-table/taxon-species-photo-model'
+import { TaxonSpeciesWikiModel } from '@rfcx-bio/common/dao/models-table/taxon-species-wiki-model'
 import { ATTRIBUTES_TAXON_SPECIES_PHOTO, ATTRIBUTES_TAXON_SPECIES_WIKI, TaxonSpeciesPhoto, TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types'
 
 export const writeWikiSpeciesDataToPostgres = async (sequelize: Sequelize, newData: TaxonSpeciesWiki[]): Promise<void> => {

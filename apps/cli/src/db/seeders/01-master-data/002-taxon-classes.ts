@@ -1,7 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
+import { TaxonClassModel } from '@rfcx-bio/common/dao/models-table/taxon-class-model'
 
 import { rawTaxonClasses } from '../_data/taxon-class'
 

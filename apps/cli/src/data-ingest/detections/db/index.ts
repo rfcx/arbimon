@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
+import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models-table/detection-by-site-species-hour-model'
 import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour, Project, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary } from '@/data-ingest/detections/arbimon'
@@ -13,7 +13,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
 
   const [species, sites] = await Promise.all([
     models.TaxonSpecies.findAll(),
-    models.LocationSite.findAll()
+    models.ProjectSite.findAll()
   ])
 
   const speciesArbimonToBio: Record<number, TaxonSpecies> = Object.fromEntries(species.map(s => [s.idArbimon, s]))

@@ -1,6 +1,6 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
-import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
+import { RiskRatingModel } from '@rfcx-bio/common/dao/models-table/risk-rating-model'
 import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 import { getSequentially } from '@rfcx-bio/utils/async'
 
@@ -22,7 +22,7 @@ export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Prom
     .query<{ id: number, scientific_name: string }>(sql, { type: QueryTypes.SELECT, raw: true })
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, s.id])))
 
-  const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
+  const iucnCodeToId: Record<string, number> = await RiskRatingModel(sequelize).findAll()
     .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
   console.info('| syncOnlyMissingIUCNSpeciesInfo =', Object.entries(speciesNameToId).length)
   await syncIucnSpeciesInfo(sequelize, speciesNameToId, iucnCodeToId)

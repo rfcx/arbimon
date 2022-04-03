@@ -5,7 +5,7 @@ import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 
 export const getSites = async (models: AllModels, projectId: number): Promise<Site[]> =>
   await models
-    .LocationSite
+    .ProjectSite
     .findAll({
       where: { projectId },
       attributes: ATTRIBUTES_LOCATION_SITE.light,

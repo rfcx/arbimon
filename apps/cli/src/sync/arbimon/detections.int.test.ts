@@ -32,7 +32,7 @@ beforeAll(async () => {
 
 test('Site: Test project has 2 sites - based on validated data', async () => {
   const numberOfSites = await ModelRepository.getInstance(biodiversitySequelize)
-    .LocationSite
+    .ProjectSite
     .count({ where: { projectId: testProjectId } })
 
   expect(numberOfSites).toBe(2)
@@ -106,7 +106,7 @@ const getSpeciesIdFromSlug = async (slug: string): Promise<number | undefined> =
 
 const getSiteIdFromIdArbimon = async (idArbimon: number): Promise<number | undefined> => {
   return await ModelRepository.getInstance(biodiversitySequelize)
-    .LocationSite
+    .ProjectSite
     .findOne({
       where: { idArbimon: idArbimon },
       raw: true
