@@ -4,10 +4,10 @@ import { MigrationFn } from 'umzug'
 
 import { DataSourceModel } from '@rfcx-bio/common/dao/models-table/data-source-model'
 import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models-table/detection-by-site-species-hour-model'
+import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
 import { ProjectVersionModel } from '@rfcx-bio/common/dao/models-table/project-version-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models-table/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
-import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
 import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
