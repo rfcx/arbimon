@@ -51,14 +51,27 @@ describe('model repository', () => {
     )
   })
 
-  test.todo('models are in sync with migrations', async () => {
+  test('models are in sync with migrations', async () => {
     // Arrange
-    // get a list of models
+    const models = ModelRepository.getInstance(getSequelizeForTests())
 
     // Act
-    // exec sync
+    const corrections = await Promise.all(
+      Object.entries(models)
+        .map(async ([k, v]) => {
+          const logsRaw: string[] = []
+          await v.sync({ alter: true, logging: (sql: string) => logsRaw.push(sql) })
+
+          const logPairs = logsRaw
+            .filter(log => log.includes('ALTER') && !/ALTER TABLE "\w*" ALTER COLUMN "\w*" SET NOT NULL;ALTER TABLE "\w*" ALTER COLUMN "\w*" DROP DEFAULT;ALTER TABLE "\w*" ALTER COLUMN "\w*" TYPE [\w\s\\(\\)]*;/g.test(log))
+            .map(log => log.replace('Executing (default): ', ''))
+            .map(log => [k, log] as [string, string])
+
+          return logPairs
+        })
+    ).then(res => res.flat())
 
     // Assert
-    // assert no requested changes
+    expect(corrections, `Models expect the following changes:\n${corrections.join('\n')}`).toHaveLength(0)
   })
 })
