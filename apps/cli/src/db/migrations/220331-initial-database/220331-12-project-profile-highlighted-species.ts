@@ -6,13 +6,21 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_wiki'
+const TABLE_NAME = 'project_profile_highlighted_species'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
+      project_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'project' },
+          key: 'id'
+        }
+      },
       taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -33,12 +41,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Facts
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: false
-      },
-      description_source_url: {
-        type: DataTypes.STRING(255),
+      highlighted_order: {
+        type: DataTypes.INTEGER,
         allowNull: false
       }
     }

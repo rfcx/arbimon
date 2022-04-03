@@ -21,9 +21,20 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      source: {
-        type: DataTypes.STRING(255),
-        primaryKey: true
+      taxon_species_source_id_optional: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: -1
+      },
+      project_id_optional: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: -1
+      },
+      order: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: 1
       },
 
       // Logging

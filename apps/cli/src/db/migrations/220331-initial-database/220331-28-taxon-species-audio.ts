@@ -13,10 +13,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     TABLE_NAME,
     {
       // PK
-      id: {
+      taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        references: {
+          model: { tableName: 'taxon_species' },
+          key: 'id'
+        }
+      },
+      project_id_optional: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: -1
+      },
+      order: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: 1
       },
 
       // Logging
@@ -30,15 +43,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // FKs
-      taxon_species_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'taxon_species' },
-          key: 'id'
-        }
-      },
-      project_id: {
+      recording_project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -46,7 +51,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      project_site_id: {
+      recording_project_site_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -56,7 +61,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Facts
-      type: {
+      song_type: {
         type: DataTypes.STRING(255),
         allowNull: false
       },

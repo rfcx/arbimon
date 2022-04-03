@@ -6,21 +6,13 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_project_file'
+const TABLE_NAME = 'taxon_species_file'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
     TABLE_NAME,
     {
       // PK
-      project_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: { tableName: 'project' },
-          key: 'id'
-        }
-      },
       taxon_species_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -28,6 +20,16 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           model: { tableName: 'taxon_species' },
           key: 'id'
         }
+      },
+      taxon_species_source_id_optional: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: -1
+      },
+      project_id_optional: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        defaultValue: -1
       },
       order: {
         type: DataTypes.INTEGER,
