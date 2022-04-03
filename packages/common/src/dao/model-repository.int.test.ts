@@ -7,27 +7,28 @@ import { getSequelizeForTests } from '@/_tests'
 import { ModelRepository } from '@/dao/model-repository'
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url))
-const PATH_TO_MODELS = './models'
+const PATH_TO_MODELS = ['./models-cache', './models-table', './models-view']
 const MODEL_NAME_CONST_PREFIX = 'MODEL_'
 
-const getModelNames = async (): Promise<string[]> => {
-  const modelDirPath = resolve(CURRENT_DIR, PATH_TO_MODELS)
+const modelNamesForFolder = async (folderPath: string): Promise<string[]> => {
+  const filenames = await fs.readdir(folderPath)
 
-  const filenames = await fs.readdir(modelDirPath)
-  const modelFilenames = filenames
+  const modelPaths = filenames
     .filter(filename => filename.endsWith('-model.ts'))
-    .map(filename => `${PATH_TO_MODELS}/${filename.replace('.ts', '')}`)
+    .map(filename => `${folderPath}/${filename.slice(0, filename.lastIndexOf('.ts'))}`)
 
-  const modelExports = await Promise.all(modelFilenames.map(async filename => await import(filename)))
-  const foundModelNames = modelExports
-    .flatMap(modelExport =>
-      Object.entries(modelExport)
-        .filter(([k, _v]) => k.startsWith(MODEL_NAME_CONST_PREFIX))
-        .map(([_k, v]) => v as string)
-    )
+  const modelExports: Array<Record<string, unknown>> = await Promise.all(modelPaths.map(async path => await import(path)))
 
-  return foundModelNames
+  const modelNames = modelExports.flatMap(modelExport => Object.entries(modelExport)
+    .filter(([k, _v]) => k.startsWith(MODEL_NAME_CONST_PREFIX))
+    .map(([_k, v]) => v as string))
+
+  return modelNames
 }
+
+const getModelNames = async (): Promise<string[]> =>
+  await Promise.all(PATH_TO_MODELS.map(async path => await modelNamesForFolder(resolve(CURRENT_DIR, path))))
+    .then(lists => lists.flat())
 
 describe('model repository', () => {
   test('model repository can be constructed', async () => {
