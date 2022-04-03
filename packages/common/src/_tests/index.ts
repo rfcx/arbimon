@@ -7,7 +7,7 @@ export const getSequelizeForTests = (logging: false | ((sql: string, timing?: nu
     databaseName: 'postgres',
     host: 'localhost',
     password: 'test',
-    port: 5432,
+    port: 5434, // integration test db port
     isSsl: false,
     user: 'postgres',
     logging
