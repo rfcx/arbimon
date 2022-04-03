@@ -3,11 +3,11 @@ import { DataTypes } from 'sequelize'
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { RiskRatingIucn } from '../types/risk-rating-iucn'
 
-export const MODEL_RISK_RATING_IUCN = 'RiskRatingIucn'
-export const TABLE_RISK_RATING_IUCN = 'risk_rating_iucn'
+export const MODEL_RISK_RATING = 'RiskRating'
+export const TABLE_RISK_RATING = 'risk_rating'
 
-export const RiskRatingIucnModel = defineWithDefaults<RiskRatingIucn>(
-  MODEL_RISK_RATING_IUCN,
+export const RiskRatingModel = defineWithDefaults<RiskRatingIucn>(
+  MODEL_RISK_RATING,
   {
     // PK
     id: { // 1
@@ -26,6 +26,6 @@ export const RiskRatingIucnModel = defineWithDefaults<RiskRatingIucn>(
     isThreatened: DataTypes.BOOLEAN // true
   },
   {
-    tableName: TABLE_RISK_RATING_IUCN
+    tableName: TABLE_RISK_RATING
   }
 )

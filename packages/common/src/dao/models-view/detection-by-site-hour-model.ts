@@ -6,7 +6,7 @@ import { DetectionBySiteHour } from '../types/detection-by-site-hour'
 export const MODEL_DETECTION_BY_SITE_HOUR = <const>'DetectionBySiteHour'
 export const TABLE_DETECTION_BY_SITE_HOUR = <const>'detection_by_site_hour'
 
-export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteHour>(
+export const DetectionBySiteHourModel = defineWithDefaults<DetectionBySiteHour>(
   MODEL_DETECTION_BY_SITE_HOUR,
   {
     // PK

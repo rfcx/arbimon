@@ -3,11 +3,11 @@ import { DataTypes } from 'sequelize'
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
 import { Site } from '../types'
 
-export const MODEL_LOCATION_SITE = 'LocationSite'
-export const TABLE_LOCATION_SITE = 'location_site'
+export const MODEL_PROJECT_SITE = 'ProjectSite'
+export const TABLE_PROJECT_SITE = 'project_site'
 
-export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
-  MODEL_LOCATION_SITE,
+export const ProjectSiteModel = defineWithDefaultsAutoPk<Site>(
+  MODEL_PROJECT_SITE,
   {
     // PK
     id: { // 1
@@ -30,6 +30,6 @@ export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
     altitude: DataTypes.FLOAT // 30.85246588
   },
   {
-    tableName: TABLE_LOCATION_SITE
+    tableName: TABLE_PROJECT_SITE
   }
 )
