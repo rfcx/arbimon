@@ -4,7 +4,7 @@
     @emit-close="emit('emitClose')"
   >
     <div class="p-4">
-      <div class="flex justify-between items-center mt-2">
+      <div class="flex justify-between items-center">
         <h1 class="text-white text-xl">
           Select Project
         </h1>
@@ -39,48 +39,42 @@
       <div class="min-h-72 mt-2">
         <p
           v-if="projectData[activeTab].length === 0"
-          class="text-subtle italic"
+          class="text-subtle italic py-2"
         >
           {{ displayProject }}
         </p>
         <div v-else>
-          <!-- <div class="grid grid-cols-11 gap-2 m-0 py-2">
-            <div class="col-span-1" />
-            <div class="col-span-5">
-              Name
-            </div>
-            <div>
-              ID
-            </div>
-          </div> -->
+          <div class="grid grid-cols-17 gap-2 m-0 py-2 text-subtle">
+            <span class="col-span-9">Name</span>
+            <span class="col-span-8">ID</span>
+          </div>
           <div
             v-for="project in displayProjectData"
             :key="project.id"
-            class="grid grid-cols-11 gap-2 items-center m-0 py-2 cursor-pointer"
+            class="grid grid-cols-17 gap-2 items-center m-0 py-2 cursor-pointer"
             @click="setSelectedProject(project)"
           >
-            <span class="col-span-1 justify-self-center">
+            <div class="col-span-1 justify-self-center">
               <icon-fa-check
                 v-if="newSelectedProject?.id === project.id"
                 class="text-xs"
               />
-            </span>
-            <div
+            </div>
+            <span
               :title="project.name"
-              class="col-span-5 truncate"
+              class="col-span-8 truncate"
             >
               {{ project.name }}
-            </div>
-            <div
+            </span>
+            <span
               :title="project.slug"
-              class="col-span-5 text-subtle truncate"
+              class="col-span-8 truncate text-subtle"
             >
               {{ project.slug }}
-            </div>
+            </span>
           </div>
         </div>
       </div>
-      {{ currentPage }}
       <div class="flex justify-end">
         <el-pagination
           v-model:currentPage="currentPage"
@@ -88,6 +82,7 @@
           layout="prev, pager, next"
           :total="projectData[activeTab].length"
           :page-size="PAGE_SIZE"
+          :hide-on-single-page="projectData[activeTab].length <= PAGE_SIZE"
         />
       </div>
 
@@ -197,7 +192,7 @@ const confirmSelectedProject = async () => {
   margin: 0px;
 }
 
-.el-tabs__nav-wrap {
-  border: 1px solid $color-mirage-grey-light;
+::v-deep .el-tabs__nav-wrap::after {
+  border-bottom: 2px solid $color-box-grey !important;
 }
 </style>
