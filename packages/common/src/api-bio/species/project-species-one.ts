@@ -1,5 +1,5 @@
-import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types-table'
-import { SpeciesInProject } from '../../dao/types-view/species-in-project'
+import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types/tables'
+import { SpeciesInProject } from '../../dao/types/views/species-in-project'
 import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request

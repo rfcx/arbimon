@@ -1,4 +1,4 @@
-import { DataSource, Site, TaxonClass } from '../../dao/types-table'
+import { DataSource, Site, TaxonClass } from '../../dao/types/tables'
 import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request

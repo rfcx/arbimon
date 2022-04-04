@@ -7,7 +7,7 @@ import { getSequelizeForTests } from '@/_tests'
 import { ModelRepository } from '@/dao/model-repository'
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url))
-const PATH_TO_MODELS = ['./models-cache', './models-table', './models-view']
+const PATH_TO_MODELS = ['./models/cache', './models/tables', './models/views'] // TODO: Maybe we can just grep recursively?
 const MODEL_NAME_CONST_PREFIX = 'MODEL_'
 
 const modelNamesForFolder = async (folderPath: string): Promise<string[]> => {
