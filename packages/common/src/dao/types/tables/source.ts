@@ -1,6 +1,9 @@
-export const SOURCES = <const>{
-  iucn: 'IUCN',
-  wiki: 'WIKI'
+import { AttributeConstants } from '../../type-helpers'
+
+export interface Source {
+  id: number
+  name: string
 }
 
-export type Source = typeof SOURCES[keyof typeof SOURCES]
+export const ATTRIBUTES_SOURCE: AttributeConstants<Source> = {
+}

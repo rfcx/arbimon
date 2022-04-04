@@ -1,14 +1,16 @@
-export interface DetectionBySiteSpeciesHour {
+import { AttributeConstants } from '../../type-helpers'
+
+export interface DetectionByVersionSiteSpeciesHour {
   timePrecisionHourLocal: Date
-  locationSiteId: number
+  projectVersionId: number
+  projectSiteId: number
   taxonSpeciesId: number
-  projectId: number
   taxonClassId: number
-  count: number
-  durationMinutes: number
+  detectionMinutes: number
+  recordingMinutes: number
 }
 
-export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR: Record<string, Array<keyof DetectionBySiteSpeciesHour>> = {
-  pks: ['timePrecisionHourLocal', 'locationSiteId', 'taxonSpeciesId'],
-  updateOnDuplicate: ['projectId', 'taxonClassId', 'count', 'durationMinutes']
+export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR: AttributeConstants<DetectionByVersionSiteSpeciesHour> = {
+  pks: ['timePrecisionHourLocal', 'projectVersionId', 'projectSiteId', 'taxonSpeciesId'],
+  updateOnDuplicate: ['taxonClassId', 'detectionMinutes', 'recordingMinutes']
 }

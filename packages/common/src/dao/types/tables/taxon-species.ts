@@ -1,3 +1,5 @@
+import { AttributeConstants } from '../../type-helpers'
+
 export interface TaxonSpecies {
   id: number
   idArbimon: number
@@ -6,8 +8,8 @@ export interface TaxonSpecies {
   scientificName: string
 }
 
-export const ATTRIBUTES_TAXON_SPECIES: Record<string, Array<keyof TaxonSpecies>> = {
+export const ATTRIBUTES_TAXON_SPECIES: AttributeConstants<TaxonSpecies> = {
   pks: ['id'],
-  updateOnDuplicate: ['scientificName'],
+  updateOnDuplicate: ['scientificName', 'taxonClassId'],
   full: ['idArbimon', 'slug', 'taxonClassId', 'scientificName']
 }

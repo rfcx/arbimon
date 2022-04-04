@@ -1,26 +1,27 @@
-import { Source } from './source'
+import { AttributeConstants } from '../../type-helpers'
 
 export interface TaxonSpeciesPhoto {
   taxonSpeciesId: number
-  source: Source
+  taxonSpeciesSourceId: number
+  order: number
+  sourceUrl: string
   photoUrl: string
-  photoCaption: string
-  photoAuthor: string
-  photoLicense: string
-  photoLicenseUrl?: string
+  license: string
+  caption: string
+  author: string
 }
 
 export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
+  'sourceUrl' |
   'photoUrl' |
-  'photoCaption' |
-  'photoAuthor' |
-  'photoLicense' |
-  'photoLicenseUrl'
+  'license' |
+  'caption' |
+  'author'
 >
 
-export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
-  pks: ['taxonSpeciesId'],
-  updateOnDuplicate: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
-  light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
-  full: ['taxonSpeciesId', 'photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
+export const ATTRIBUTES_TAXON_SPECIES_PHOTO: AttributeConstants<TaxonSpeciesPhoto> = {
+  pks: ['taxonSpeciesId', 'taxonSpeciesSourceId', 'order'],
+  updateOnDuplicate: ['sourceUrl', 'photoUrl', 'license', 'caption', 'author'],
+  light: ['sourceUrl', 'photoUrl', 'license', 'caption', 'author'],
+  full: ['taxonSpeciesId', 'taxonSpeciesSourceId', 'order', 'sourceUrl', 'photoUrl', 'license', 'caption', 'author']
 }

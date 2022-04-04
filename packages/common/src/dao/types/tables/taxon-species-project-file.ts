@@ -1,9 +1,9 @@
 export interface TaxonSpeciesProjectFile {
-  projectId: number // 1
   taxonSpeciesId: number // 1
+  projectId: number // 1
   order: number // 0
-  description: string // Predicted Occupancy Map for Puerto Rico
+  fileUrl: string // https://blah-blah-storage.com/...
   filename: string // blah-blah.png
   mimeType: string // image/png
-  url: string // https://blah-blah-storage.com/...
+  description: string // Predicted Occupancy Map for Puerto Rico
 }

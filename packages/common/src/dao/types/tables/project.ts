@@ -1,3 +1,5 @@
+import { AttributeConstants } from '../../type-helpers'
+
 export interface Project {
   id: number
   idCore: string
@@ -5,17 +7,13 @@ export interface Project {
   slug: string
   slugArbimon: string
   name: string
-  latitudeNorth: number
-  latitudeSouth: number
-  longitudeEast: number
-  longitudeWest: number
 }
 
 export type ProjectLight = Pick<Project,
-  'id'| 'slug'| 'name'| 'latitudeNorth'| 'latitudeSouth'| 'longitudeEast'| 'longitudeWest'
+  'id'| 'slug'| 'name'
 >
 
-export const ATTRIBUTES_LOCATION_PROJECT: Record<string, Array<keyof Project>> = {
-  updateOnDuplicate: ['name', 'slug', 'slugArbimon', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
-  light: ['id', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+export const ATTRIBUTES_LOCATION_PROJECT: AttributeConstants<Project> = {
+  updateOnDuplicate: ['name', 'slug', 'slugArbimon'],
+  light: ['id', 'slug', 'name']
 }
