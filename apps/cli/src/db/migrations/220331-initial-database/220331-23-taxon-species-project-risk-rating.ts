@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_description'
+const TABLE_NAME = 'taxon_species_project_risk_rating'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -21,15 +21,13 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      taxon_species_source_id_optional: {
+      project_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: -1
-      },
-      project_id_optional: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        defaultValue: -1
+        references: {
+          model: { tableName: 'project' },
+          key: 'id'
+        }
       },
 
       // Logging
@@ -42,14 +40,28 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
 
+      // FKs
+      risk_rating_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: { tableName: 'risk_rating' },
+          key: 'id'
+        }
+      },
+
       // Facts
       source_url: {
         type: DataTypes.STRING(511),
         allowNull: false
       },
-      description: {
-        type: DataTypes.TEXT,
+      source_name: {
+        type: DataTypes.STRING(511),
         allowNull: false
+      },
+      risk_rating_custom_code: {
+        type: DataTypes.STRING(10),
+        allowNull: true // null to use code from risk_rating table
       }
     }
   )

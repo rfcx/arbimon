@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'taxon_species_audio'
+const TABLE_NAME = 'taxon_species_project_file'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
   await params.context.createTable(
@@ -21,15 +21,17 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      project_id_optional: {
+      project_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        defaultValue: -1
+        references: {
+          model: { tableName: 'project' },
+          key: 'id'
+        }
       },
       order: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        defaultValue: 1
+        primaryKey: true
       },
 
       // Logging
@@ -42,46 +44,20 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
 
-      // FKs
-      recording_project_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'project' },
-          key: 'id'
-        }
-      },
-      recording_project_site_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'project_site' },
-          key: 'id'
-        }
-      },
-
       // Facts
-      song_type: {
+      file_url: {
+        type: DataTypes.STRING(511),
+        allowNull: false
+      },
+      filename: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      recorded_at: {
-        type: DataTypes.DATE,
+      mime_type: {
+        type: DataTypes.STRING(32),
         allowNull: false
       },
-      timezone: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      media_wav_url: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      media_spec_url: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      media_redirect_url: {
+      description: {
         type: DataTypes.STRING(255),
         allowNull: false
       }
