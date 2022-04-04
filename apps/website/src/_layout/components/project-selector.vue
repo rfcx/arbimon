@@ -8,7 +8,10 @@
         <h1 class="text-white text-xl">
           Select Project
         </h1>
-        <icon-fa-close class="text-xs" />
+        <icon-fa-close
+          class="text-xs cursor-pointer"
+          @emit-close="emit('emitClose')"
+        />
       </div>
 
       <el-input
@@ -25,6 +28,7 @@
       </el-input>
 
       <el-tabs
+        v-if="!searchKeyword"
         v-model="activeTab"
         class="mt-2"
       >
@@ -36,9 +40,12 @@
         />
       </el-tabs>
 
-      <div class="min-h-72 mt-2">
+      <div
+        class="min-h-72 mt-2"
+        :class="{ 'min-h-84': searchKeyword }"
+      >
         <p
-          v-if="projectData[activeTab].length === 0"
+          v-if="displayProjectData.length === 0"
           class="text-subtle italic py-2"
         >
           {{ displayProject }}
@@ -104,7 +111,7 @@
   </modal-popup>
 </template>
 <script lang="ts" setup>
-import { computed, defineEmits, ref } from 'vue'
+import { computed, defineEmits, ref, watch } from 'vue'
 import { RouteParamsRaw, useRoute, useRouter } from 'vue-router'
 
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
@@ -144,8 +151,19 @@ const tabs = <const>{
 
 const activeTab = ref(tabs.myProjects.id)
 
+// On tab change
+watch(activeTab, () => {
+  currentPage.value = 1
+})
+
+// On search keyword change
+watch(searchKeyword, () => {
+  console.log(searchKeyword.value)
+  currentPage.value = 1
+})
+
 const displayProject = computed(() => {
-  if (activeTab.value === tabs.myProjects.id) {
+  if (activeTab.value === tabs.myProjects.id && !searchKeyword.value) {
     return user.value === undefined ? 'Please login to see your project.' : "You don't have any project."
   }
   return 'No project found.'
@@ -158,6 +176,17 @@ const projectData = computed(() => ({
 
 const displayProjectData = computed(() => {
   const startIdx = currentPage.value - 1
+
+  // Have search keyword
+  if (searchKeyword.value) {
+    const x = store.projects
+      .filter(({ name }) => name.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value)))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .slice(startIdx * PAGE_SIZE, (startIdx * PAGE_SIZE) + PAGE_SIZE)
+    return x
+  }
+
+  // No search keyword
   return projectData.value[activeTab.value].slice(startIdx * PAGE_SIZE, (startIdx * PAGE_SIZE) + PAGE_SIZE)
 })
 
