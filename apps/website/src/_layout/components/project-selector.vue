@@ -158,7 +158,6 @@ watch(activeTab, () => {
 
 // On search keyword change
 watch(searchKeyword, () => {
-  console.log(searchKeyword.value)
   currentPage.value = 1
 })
 
@@ -179,11 +178,10 @@ const displayProjectData = computed(() => {
 
   // Have search keyword
   if (searchKeyword.value) {
-    const x = store.projects
+    return store.projects
       .filter(({ name }) => name.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value)))
       .sort((a, b) => a.name.localeCompare(b.name))
       .slice(startIdx * PAGE_SIZE, (startIdx * PAGE_SIZE) + PAGE_SIZE)
-    return x
   }
 
   // No search keyword
