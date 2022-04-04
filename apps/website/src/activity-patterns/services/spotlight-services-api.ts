@@ -1,8 +1,7 @@
 import { projectSpeciesAllGeneratedUrl, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { PredictedOccupancyMap, projectSpeciesOneGeneratedUrl, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { SpotlightDatasetResponse, spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
-import { SpeciesInProject, SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProject, SpeciesInProjectLight, TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 
 import { apiClient } from '~/api'
 import { DatasetParameters, generateFilterQuery } from '~/filters'

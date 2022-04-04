@@ -1,4 +1,4 @@
-import { ProjectLight } from '../../dao/types/tables'
+import { ProjectLight } from '../../dao/types'
 
 // Request
 export const projectsRoute = '/projects'

@@ -1,10 +1,12 @@
 import { Sequelize } from 'sequelize'
 
-import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Site } from '@rfcx-bio/common/dao/types'
 
 export const writeSitesToPostgres = async (sequelize: Sequelize, sites: Array<Omit<Site, 'id'>>): Promise<void> => {
-  await ProjectSiteModel(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
+
+  await models.ProjectSite
     .bulkCreate(sites, {
        ignoreDuplicates: true
     })

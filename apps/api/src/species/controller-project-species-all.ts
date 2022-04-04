@@ -1,6 +1,6 @@
 import { ProjectSpeciesAllParams, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/common/dao/types/species-in-project'
+import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'

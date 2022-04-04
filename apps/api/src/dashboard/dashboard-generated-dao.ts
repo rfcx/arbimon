@@ -1,7 +1,7 @@
 import { ApiLine, ApiMap, ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ProjectMetricLight } from '@rfcx-bio/common/dao/types/location-project-metric'
+import { ProjectMetricLight } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '../_services/db'
 

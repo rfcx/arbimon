@@ -1,8 +1,7 @@
 import { FastifyRequest } from 'fastify'
 
 import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
-import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
-
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getIsProjectMember as getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { Middleware } from '~/api-helpers/types'
@@ -27,7 +26,10 @@ export const setIsProjectMember: Middleware<ProjectSpecificRouteParams> = async 
   }
 
   // Get idCore
-  const projectIdCore = await ProjectModel(getSequelize())
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
+
+  const projectIdCore = await models.Project
     .findByPk(projectIdBio, { attributes: ['idCore'] })
     .then(proj => proj?.idCore)
 

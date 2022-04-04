@@ -2,7 +2,7 @@ import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types'
 
 import { RouteNames } from '~/router'
 import { spotlightService } from '../../services'

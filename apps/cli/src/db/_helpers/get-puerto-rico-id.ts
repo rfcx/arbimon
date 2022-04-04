@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { rawEnvToProjectAndProfile } from '@/db/seeders/_data/location-project-and-profile'
 import { requireEnv } from '~/env'
@@ -12,13 +12,15 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
  * You should check the result using Number.isNaN
  */
 export const getPuertoRicoProjectId = async (sequelize: Sequelize): Promise<number> => {
+  const models = ModelRepository.getInstance(sequelize)
+
   // Find PR project slug
   const puertoRicoSlug = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
     .find(p => p.slug.startsWith('puerto'))
     ?.slug ?? 'puerto-rico'
 
   // Lookup PR project ID
-  const puertoRicoProject = await ProjectModel(sequelize)
+  const puertoRicoProject = await models.Project
     .findOne({
       where: { slug: puertoRicoSlug },
       attributes: ['id']

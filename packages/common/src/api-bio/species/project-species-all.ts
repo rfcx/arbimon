@@ -1,4 +1,4 @@
-import { SpeciesInProjectLight } from '../../dao/types/views/species-in-project'
+import { SpeciesInProjectLight } from '../../dao/types'
 import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request

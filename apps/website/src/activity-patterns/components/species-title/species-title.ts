@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProject } from '@rfcx-bio/common/dao/types'
 
 import { DEFAULT_RISK_RATING_ID, RiskRatingUi, RISKS_BY_ID } from '~/risk-ratings'
 

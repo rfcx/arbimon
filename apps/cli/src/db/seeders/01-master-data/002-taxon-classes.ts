@@ -1,11 +1,13 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { TaxonClassModel } from '@rfcx-bio/common/dao/models-table/taxon-class-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { rawTaxonClasses } from '../_data/taxon-class'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await TaxonClassModel(params.context.sequelize)
-    .bulkCreate(rawTaxonClasses)
+  const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
+
+  await models.TaxonClass.bulkCreate(rawTaxonClasses)
 }

@@ -1,8 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
-import { TaxonSpeciesProjectModel } from '@rfcx-bio/common/dao/models-table/taxon-species-project-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesProject } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -11,12 +10,13 @@ import { projectSpeciesPuertoRico } from '../_data/location-project-species-puer
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
   // Lookups
   const puertoRicoProjectId = await getPuertoRicoProjectId(sequelize)
   if (Number.isNaN(puertoRicoProjectId)) return
 
-  const speciesSlugToId: Record<string, number> = await TaxonSpeciesModel(sequelize)
+  const speciesSlugToId: Record<string, number> = await models.TaxonSpecies
     .findAll()
     .then(res => Object.fromEntries(res.map(s => [s.slug, s.id])))
 
@@ -38,6 +38,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     })
     .filter(isDefined)
 
-  await TaxonSpeciesProjectModel(sequelize)
-    .bulkCreate(projectsSpeciesList)
+  await models.TaxonSpeciesProject.bulkCreate(projectsSpeciesList)
 }

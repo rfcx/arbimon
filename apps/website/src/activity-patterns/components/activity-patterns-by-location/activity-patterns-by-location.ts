@@ -2,7 +2,7 @@ import { LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types'
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'

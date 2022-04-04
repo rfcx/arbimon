@@ -1,6 +1,6 @@
-import { RiskRatingIucn } from '@rfcx-bio/common/dao/types'
+import { RiskRating } from '@rfcx-bio/common/dao/types'
 
-export const rawRiskRatings: RiskRatingIucn[] = [
+export const rawRiskRatings: RiskRating[] = [
   { id: -1, code: 'NE', isThreatened: false },
   { id: 0, code: 'NA', isThreatened: false },
   { id: 100, code: 'DD', isThreatened: false },

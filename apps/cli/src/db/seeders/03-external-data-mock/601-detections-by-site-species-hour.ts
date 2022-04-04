@@ -2,12 +2,7 @@ import * as hash from 'object-hash'
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { DataSourceModel } from '@rfcx-bio/common/dao/models-table/data-source-model'
-import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models-table/detection-by-site-species-hour-model'
-import { ProjectSiteModel } from '@rfcx-bio/common/dao/models-table/project-site-model'
-import { ProjectVersionModel } from '@rfcx-bio/common/dao/models-table/project-version-model'
-import { TaxonClassModel } from '@rfcx-bio/common/dao/models-table/taxon-class-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
@@ -15,13 +10,14 @@ import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
   // Lookups
   const [puertoRicoProjectId, classes, species, sites] = await Promise.all([
     getPuertoRicoProjectId(sequelize),
-    TaxonClassModel(sequelize).findAll(),
-    TaxonSpeciesModel(sequelize).findAll(),
-    ProjectSiteModel(sequelize).findAll()
+    models.TaxonClass.findAll(),
+    models.TaxonSpecies.findAll(),
+    models.ProjectSite.findAll()
   ])
   if (Number.isNaN(puertoRicoProjectId)) return
 
@@ -30,7 +26,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
   // Save data
-  await ProjectVersionModel(sequelize)
+  await models.ProjectVersion
     .create({
       projectId: puertoRicoProjectId,
       isPublished: false,
@@ -48,7 +44,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       durationMinutes: 12
     }))
 
-  await DataSourceModel(sequelize)
+  await models.DataSource
     .create({
       id: hash.MD5([{ 123: 456 }]),
       projectId: puertoRicoProjectId,
@@ -58,7 +54,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       })
     })
 
-  await DetectionBySiteSpeciesHourModel(sequelize)
+  await models.DetectionBySiteSpeciesHour
     .bulkCreate(detectionSummaries, {
       updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
     })

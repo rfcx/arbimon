@@ -1,8 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
-import { TaxonSpeciesRfcxModel } from '@rfcx-bio/common/dao/models-table/taxon-species-rfcx-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -10,9 +9,10 @@ import { taxonSpeciesRfcx } from '../_data/taxon-species-rfcx'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
   // Key Lookups
-  const speciesScientificToId: Record<string, number> = await TaxonSpeciesModel(sequelize).findAll()
+  const speciesScientificToId: Record<string, number> = await models.TaxonSpecies.findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientificName, s.id])))
 
   // Convert data
@@ -29,5 +29,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     })
     .filter(isDefined)
 
-  await TaxonSpeciesRfcxModel(sequelize).bulkCreate(data)
+  await models.TaxonSpeciesRfcx.bulkCreate(data)
 }

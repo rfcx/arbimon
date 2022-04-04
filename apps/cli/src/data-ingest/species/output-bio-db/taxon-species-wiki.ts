@@ -1,11 +1,12 @@
 import { Sequelize } from 'sequelize'
 
-import { TaxonSpeciesPhotoModel } from '@rfcx-bio/common/dao/models-table/taxon-species-photo-model'
-import { TaxonSpeciesWikiModel } from '@rfcx-bio/common/dao/models-table/taxon-species-wiki-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_TAXON_SPECIES_PHOTO, ATTRIBUTES_TAXON_SPECIES_WIKI, TaxonSpeciesPhoto, TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types'
 
 export const writeWikiSpeciesDataToPostgres = async (sequelize: Sequelize, newData: TaxonSpeciesWiki[]): Promise<void> => {
-  const updateSpeciesWikiRows = await TaxonSpeciesWikiModel(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
+
+  const updateSpeciesWikiRows = await models.TaxonSpeciesWiki
     .bulkCreate(newData, {
       updateOnDuplicate: ATTRIBUTES_TAXON_SPECIES_WIKI.updateOnDuplicate
     })
@@ -14,7 +15,9 @@ export const writeWikiSpeciesDataToPostgres = async (sequelize: Sequelize, newDa
 }
 
 export const writeWikiSpeciesPhotoDataToPostgres = async (sequelize: Sequelize, newData: TaxonSpeciesPhoto[]): Promise<void> => {
-  const updateSpeciesWikiPhotoRows = await TaxonSpeciesPhotoModel(sequelize)
+  const models = ModelRepository.getInstance(sequelize)
+
+  const updateSpeciesWikiPhotoRows = await models.TaxonSpeciesPhoto
     .bulkCreate(newData, {
       updateOnDuplicate: ATTRIBUTES_TAXON_SPECIES_PHOTO.updateOnDuplicate
     })

@@ -1,7 +1,6 @@
 import { Optional, Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models-table/taxon-species-call-model'
 import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -38,5 +37,5 @@ export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, species
     })
     .filter(isDefined)
 
-  await TaxonSpeciesCallModel(sequelize).bulkCreate(data)
+  await models.TaxonSpeciesCall.bulkCreate(data)
 }

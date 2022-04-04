@@ -1,8 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { ProjectModel } from '@rfcx-bio/common/dao/models-table/project-model'
-import { ProjectProfileModel } from '@rfcx-bio/common/dao/models-table/project-profile-model'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ProjectProfile } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -13,9 +12,10 @@ const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
   // Lookups
-  const projectSlugToId: Record<string, number> = await ProjectModel(sequelize)
+  const projectSlugToId: Record<string, number> = await models.Project
     .findAll()
     .then(allProjects => Object.fromEntries(allProjects.map(s => [s.slug, s.id])))
 
@@ -33,5 +33,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     })
     .filter(isDefined)
 
-  await ProjectProfileModel(sequelize).bulkCreate(projectsProfile)
+  await models.ProjectProfile.bulkCreate(projectsProfile)
 }

@@ -2,9 +2,8 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { speciesPredictionOccupancyGeneratedUrl } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models-table/taxon-species-model'
-import { TaxonSpeciesProjectFileModel } from '@rfcx-bio/common/dao/models-table/taxon-species-project-file-model'
-import { TaxonSpeciesProjectFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { TaxonSpeciesProjectFile } from '@rfcx-bio/common/dao/types'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 import { requireEnv } from '~/env'
@@ -24,12 +23,13 @@ const baseUrl = baseUrls[BIO_ENVIRONMENT]
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
   // Lookups
   const puertoRicoProjectId = await getPuertoRicoProjectId(sequelize)
   if (Number.isNaN(puertoRicoProjectId)) return
 
-  const species = await TaxonSpeciesModel(sequelize).findAll({ raw: true })
+  const species = await models.TaxonSpecies.findAll({ raw: true })
 
   // Convert data
   const files: TaxonSpeciesProjectFile[] = species
@@ -51,5 +51,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     )
 
   // Update
-  await TaxonSpeciesProjectFileModel(sequelize).bulkCreate(files)
+  await models.TaxonSpeciesProjectFile.bulkCreate(files)
 }
