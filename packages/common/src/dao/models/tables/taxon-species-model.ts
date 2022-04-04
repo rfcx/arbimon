@@ -4,7 +4,7 @@ import { defineWithDefaultsAutoPk } from '../../model-helpers/defaults'
 import { TaxonSpecies } from '../../types'
 
 export const MODEL_TAXON_SPECIES = 'TaxonSpecies'
-export const TABLE_TAXON_SPECIES = 'taxon_species'
+const TABLE_TAXON_SPECIES = 'taxon_species'
 
 export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
   MODEL_TAXON_SPECIES,

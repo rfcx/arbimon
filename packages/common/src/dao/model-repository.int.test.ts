@@ -31,6 +31,11 @@ const getModelNames = async (): Promise<string[]> =>
     .then(lists => lists.flat())
 
 describe('model repository', () => {
+  test.todo('models have unique names')
+  test.todo('models have unique tables')
+  test.todo('model tables exist in the database')
+  test.todo('model views exist in the database')
+
   test('model repository can be constructed', async () => {
     // Act
     const models = ModelRepository.getInstance(getSequelizeForTests())

@@ -1,50 +1,35 @@
-import { CacheUserProjectModel, MODEL_CACHE_USER_PROJECT } from './models/cache/cache-user-project-model'
-import { DataSourceModel, MODEL_DATA_SOURCE } from './models/tables/data-source-model'
-import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/tables/detection-by-site-species-hour-model'
-import { MODEL_PROJECT, ProjectModel } from './models/tables/project-model'
-import { MODEL_PROJECT_PROFILE, ProjectProfileModel } from './models/tables/project-profile-model'
-import { MODEL_PROJECT_SITE, ProjectSiteModel } from './models/tables/project-site-model'
-import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/tables/project-version-model'
-import { MODEL_RISK_RATING, RiskRatingModel } from './models/tables/risk-rating-model'
-import { MODEL_TAXON_CLASS, TaxonClassModel } from './models/tables/taxon-class-model'
-import { MODEL_TAXON_SPECIES_CALL, TaxonSpeciesCallModel } from './models/tables/taxon-species-call-model'
-import { MODEL_TAXON_SPECIES_IUCN, TaxonSpeciesIucnModel } from './models/tables/taxon-species-iucn-model'
-import { MODEL_TAXON_SPECIES, TaxonSpeciesModel } from './models/tables/taxon-species-model'
-import { MODEL_TAXON_SPECIES_PHOTO, TaxonSpeciesPhotoModel } from './models/tables/taxon-species-photo-model'
-import { MODEL_TAXON_SPECIES_PROJECT_FILE, TaxonSpeciesProjectFileModel } from './models/tables/taxon-species-project-file-model'
-import { MODEL_TAXON_SPECIES_PROJECT, TaxonSpeciesProjectModel } from './models/tables/taxon-species-project-model'
-import { MODEL_TAXON_SPECIES_RFCX, TaxonSpeciesRfcxModel } from './models/tables/taxon-species-rfcx-model'
-import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/tables/taxon-species-wiki-model'
-import { DashboardDetectionByHourModel, MODEL_DASHBOARD_DETECTION_BY_HOUR } from './models/views/dashboard-detection-by-hour-model'
-import { DashboardDetectionBySiteModel, MODEL_DASHBOARD_DETECTION_BY_SITE } from './models/views/dashboard-detection-by-site-model'
-import { DashboardRichnessByHourModel, MODEL_DASHBOARD_RICHNESS_BY_HOUR } from './models/views/dashboard-richness-by-hour-model'
-import { DashboardRichnessByRiskModel, MODEL_DASHBOARD_RICHNESS_BY_RISK } from './models/views/dashboard-richness-by-risk-model'
-import { DashboardRichnessBySiteModel, MODEL_DASHBOARD_RICHNESS_BY_SITE } from './models/views/dashboard-richness-by-site-model'
-import { DashboardRichnessByTaxonModel, MODEL_DASHBOARD_RICHNESS_BY_TAXON } from './models/views/dashboard-richness-by-taxon-model'
-import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED } from './models/views/dashboard-species-highlighted-model'
-import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/views/dashboard-species-threatened-model'
-import { DetectionBySiteHourModel, MODEL_DETECTION_BY_SITE_HOUR } from './models/views/detection-by-site-hour-model'
-import { MODEL_PROJECT_METRIC, ProjectMetricModel } from './models/views/project-metric-model'
-import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/views/species-in-project-model'
+import { CacheUserProjectModel, DashboardDetectionByHourModel, DashboardDetectionBySiteModel, DashboardRichnessByHourModel, DashboardRichnessByRiskModel, DashboardRichnessBySiteModel, DashboardRichnessByTaxonModel, DashboardSpeciesHighlightedModel, DashboardSpeciesThreatenedModel, DetectionBySiteHourModel, DetectionByVersionSiteSpeciesHourModel, MODEL_CACHE_USER_PROJECT, MODEL_DASHBOARD_DETECTION_BY_HOUR, MODEL_DASHBOARD_DETECTION_BY_SITE, MODEL_DASHBOARD_RICHNESS_BY_HOUR, MODEL_DASHBOARD_RICHNESS_BY_RISK, MODEL_DASHBOARD_RICHNESS_BY_SITE, MODEL_DASHBOARD_RICHNESS_BY_TAXON, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED, MODEL_DASHBOARD_SPECIES_THREATENED, MODEL_DETECTION_BY_SITE_HOUR, MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR, MODEL_PROJECT, MODEL_PROJECT_METRIC, MODEL_PROJECT_PROFILE, MODEL_PROJECT_PROFILE_HIGHLIGHTED_SPECIES, MODEL_PROJECT_SITE, MODEL_PROJECT_VERSION, MODEL_RISK_RATING, MODEL_SOURCE, MODEL_SOURCE_DETECTION_BY_SYNC_SITE_SPECIES_HOUR, MODEL_SOURCE_RECORDING_BY_SYNC_SITE_HOUR, MODEL_SOURCE_SYNC, MODEL_SPECIES_IN_PROJECT, MODEL_TAXON_CLASS, MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_AUDIO, MODEL_TAXON_SPECIES_COMMON_NAME, MODEL_TAXON_SPECIES_DESCRIPTION, MODEL_TAXON_SPECIES_FILE, MODEL_TAXON_SPECIES_PHOTO, MODEL_TAXON_SPECIES_PROJECT_DESCRIPTION, MODEL_TAXON_SPECIES_PROJECT_FILE, MODEL_TAXON_SPECIES_PROJECT_RISK_RATING, MODEL_TAXON_SPECIES_RISK_RATING, MODEL_TAXON_SPECIES_SOURCE, ProjectMetricModel, ProjectModel, ProjectProfileHighlightedSpeciesModel, ProjectProfileModel, ProjectSiteModel, ProjectVersionModel, RiskRatingModel, SourceDetectionBySyncSiteSpeciesHourModel, SourceModel, SourceRecordingBySyncSiteHourModel, SourceSyncModel, SpeciesInProjectModel, TaxonClassModel, TaxonSpeciesAudioModel, TaxonSpeciesCommonNameModel, TaxonSpeciesDescriptionModel, TaxonSpeciesFileModel, TaxonSpeciesModel, TaxonSpeciesPhotoModel, TaxonSpeciesProjectDescriptionModel, TaxonSpeciesProjectFileModel, TaxonSpeciesProjectRiskRatingModel, TaxonSpeciesRiskRatingModel, TaxonSpeciesSourceModel } from './models'
 
 export const modelRegistrations = <const>{
   // Tables
-  [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_PROJECT] }],
-  [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES] }],
-  [MODEL_PROJECT]: [ProjectModel, {}],
+  [MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR]: [DetectionByVersionSiteSpeciesHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES, MODEL_TAXON_CLASS] }],
+
+  [MODEL_PROJECT]: [ProjectModel],
+  [MODEL_PROJECT_PROFILE_HIGHLIGHTED_SPECIES]: [ProjectProfileHighlightedSpeciesModel, { manyToOne: [MODEL_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_PROJECT_PROFILE]: [ProjectProfileModel, { oneToOne: [MODEL_PROJECT] }],
-  [MODEL_PROJECT_SITE]: [ProjectSiteModel, { manyToOne: [MODEL_PROJECT] }],
+  [MODEL_PROJECT_SITE]: [ProjectSiteModel, { manyToOne: [MODEL_PROJECT, MODEL_PROJECT_VERSION] }], // TODO: Need to customize the FK col name
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_PROJECT] }],
-  [MODEL_RISK_RATING]: [RiskRatingModel, {}],
-  [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
-  [MODEL_TAXON_SPECIES_CALL]: [TaxonSpeciesCallModel, { manyToOne: [MODEL_TAXON_SPECIES] }],
-  [MODEL_TAXON_SPECIES_IUCN]: [TaxonSpeciesIucnModel, { oneToOne: [MODEL_TAXON_SPECIES], manyToOne: [MODEL_RISK_RATING] }],
+
+  [MODEL_RISK_RATING]: [RiskRatingModel],
+
+  [MODEL_SOURCE]: [SourceModel],
+  [MODEL_SOURCE_DETECTION_BY_SYNC_SITE_SPECIES_HOUR]: [SourceDetectionBySyncSiteSpeciesHourModel, { manyToOne: [MODEL_SOURCE_SYNC, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES] }],
+  [MODEL_SOURCE_RECORDING_BY_SYNC_SITE_HOUR]: [SourceRecordingBySyncSiteHourModel, { manyToOne: [MODEL_SOURCE_SYNC, MODEL_PROJECT_SITE] }],
+  [MODEL_SOURCE_SYNC]: [SourceSyncModel, { manyToOne: [MODEL_PROJECT, MODEL_SOURCE] }],
+
+  [MODEL_TAXON_CLASS]: [TaxonClassModel],
+
   [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
-  [MODEL_TAXON_SPECIES_PHOTO]: [TaxonSpeciesPhotoModel, { manyToOne: [MODEL_TAXON_SPECIES] }],
-  [MODEL_TAXON_SPECIES_PROJECT_FILE]: [TaxonSpeciesProjectFileModel, {}],
-  [MODEL_TAXON_SPECIES_PROJECT]: [TaxonSpeciesProjectModel, { manyToOne: [MODEL_PROJECT, MODEL_TAXON_SPECIES] }],
-  [MODEL_TAXON_SPECIES_RFCX]: [TaxonSpeciesRfcxModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
-  [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
+  [MODEL_TAXON_SPECIES_AUDIO]: [TaxonSpeciesAudioModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_PROJECT, MODEL_PROJECT_SITE] }], // TODO: Need to customize the FK col name
+  [MODEL_TAXON_SPECIES_COMMON_NAME]: [TaxonSpeciesCommonNameModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
+  [MODEL_TAXON_SPECIES_DESCRIPTION]: [TaxonSpeciesDescriptionModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
+  [MODEL_TAXON_SPECIES_FILE]: [TaxonSpeciesFileModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
+  [MODEL_TAXON_SPECIES_PHOTO]: [TaxonSpeciesPhotoModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
+  [MODEL_TAXON_SPECIES_PROJECT_DESCRIPTION]: [TaxonSpeciesProjectDescriptionModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_PROJECT] }],
+  [MODEL_TAXON_SPECIES_PROJECT_FILE]: [TaxonSpeciesProjectFileModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_PROJECT] }],
+  [MODEL_TAXON_SPECIES_PROJECT_RISK_RATING]: [TaxonSpeciesProjectRiskRatingModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_PROJECT, MODEL_RISK_RATING] }],
+  [MODEL_TAXON_SPECIES_RISK_RATING]: [TaxonSpeciesRiskRatingModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE, MODEL_RISK_RATING] }],
+  [MODEL_TAXON_SPECIES_SOURCE]: [TaxonSpeciesSourceModel],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
@@ -61,7 +46,7 @@ export const modelRegistrations = <const>{
 
   // Caches
   // TODO - Delete these & use redis
-  [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}]
+  [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel]
 }
 
 export type ModelRegistrations = typeof modelRegistrations

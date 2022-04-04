@@ -1,20 +1,20 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../../model-helpers/defaults'
-import { TaxonSpeciesProjectFile } from '../../types'
+import { TaxonSpeciesFile } from '../../types'
 
-export const MODEL_TAXON_SPECIES_PROJECT_FILE = 'TaxonSpeciesProjectFile'
-const TABLE_TAXON_SPECIES_PROJECT_FILE = 'taxon_species_project_file'
+export const MODEL_TAXON_SPECIES_FILE = 'TaxonSpeciesProjectFile'
+const TABLE_TAXON_SPECIES_FILE = 'taxon_species_project_file'
 
-export const TaxonSpeciesProjectFileModel = defineWithDefaults<TaxonSpeciesProjectFile>(
-  MODEL_TAXON_SPECIES_PROJECT_FILE,
+export const TaxonSpeciesFileModel = defineWithDefaults<TaxonSpeciesFile>(
+  MODEL_TAXON_SPECIES_FILE,
   {
     // PK
     taxonSpeciesId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    projectId: { // 1
+    taxonSpeciesSourceId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },
@@ -30,6 +30,6 @@ export const TaxonSpeciesProjectFileModel = defineWithDefaults<TaxonSpeciesProje
     description: DataTypes.STRING(255)
   },
   {
-    tableName: TABLE_TAXON_SPECIES_PROJECT_FILE
+    tableName: TABLE_TAXON_SPECIES_FILE
   }
 )

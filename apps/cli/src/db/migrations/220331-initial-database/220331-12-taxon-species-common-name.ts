@@ -41,10 +41,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Facts
-      source_url: {
-        type: DataTypes.STRING(511),
-        allowNull: false
-      },
       common_name: {
         type: DataTypes.STRING(255),
         allowNull: false

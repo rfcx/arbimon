@@ -4,7 +4,7 @@ import { defineWithDefaultsAutoPk } from '../../model-helpers/defaults'
 import { Project } from '../../types'
 
 export const MODEL_PROJECT = 'Project'
-export const TABLE_PROJECT = 'project'
+const TABLE_PROJECT = 'project'
 
 export const ProjectModel = defineWithDefaultsAutoPk<Project>(
   MODEL_PROJECT,
@@ -35,11 +35,7 @@ export const ProjectModel = defineWithDefaultsAutoPk<Project>(
     },
 
     // Facts
-    name: DataTypes.STRING(255), // Puerto Rico Island-Wide
-    latitudeNorth: DataTypes.FLOAT, // 18.51375
-    latitudeSouth: DataTypes.FLOAT, // 17.93168
-    longitudeEast: DataTypes.FLOAT, // -65.24505
-    longitudeWest: DataTypes.FLOAT // -67.94469784
+    name: DataTypes.STRING(255) // Puerto Rico Island-Wide
   },
   {
     tableName: TABLE_PROJECT

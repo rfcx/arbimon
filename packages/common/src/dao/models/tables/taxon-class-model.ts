@@ -4,7 +4,7 @@ import { defineWithDefaults } from '../../model-helpers/defaults'
 import { TaxonClass } from '../../types'
 
 export const MODEL_TAXON_CLASS = 'TaxonClass'
-export const TABLE_TAXON_CLASS = 'taxon_class'
+const TABLE_TAXON_CLASS = 'taxon_class'
 
 export const TaxonClassModel = defineWithDefaults<TaxonClass>(
   MODEL_TAXON_CLASS,

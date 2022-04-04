@@ -32,6 +32,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // Facts
       name: { // RFCx, IUCN, Wiki
         type: DataTypes.STRING(15),
+        unique: true,
         allowNull: false
       },
       priority: { // -1, 100, 200

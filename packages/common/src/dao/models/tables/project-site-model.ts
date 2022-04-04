@@ -4,7 +4,7 @@ import { defineWithDefaultsAutoPk } from '../../model-helpers/defaults'
 import { Site } from '../../types'
 
 export const MODEL_PROJECT_SITE = 'ProjectSite'
-export const TABLE_PROJECT_SITE = 'project_site'
+const TABLE_PROJECT_SITE = 'project_site'
 
 export const ProjectSiteModel = defineWithDefaultsAutoPk<Site>(
   MODEL_PROJECT_SITE,
@@ -22,6 +22,7 @@ export const ProjectSiteModel = defineWithDefaultsAutoPk<Site>(
 
     // FKs
     projectId: DataTypes.INTEGER, // 1
+    projectVersionFirstDetectionId: DataTypes.INTEGER, // 123
 
     // Facts
     name: DataTypes.STRING(255), // 'CU26'

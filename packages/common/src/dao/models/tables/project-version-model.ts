@@ -4,7 +4,7 @@ import { defineWithDefaultsAutoPk } from '../../model-helpers/defaults'
 import { ProjectVersion } from '../../types'
 
 export const MODEL_PROJECT_VERSION = 'ProjectVersion'
-export const TABLE_PROJECT_VERSION = 'project_version'
+const TABLE_PROJECT_VERSION = 'project_version'
 
 export const ProjectVersionModel = defineWithDefaultsAutoPk<ProjectVersion>(
   MODEL_PROJECT_VERSION,

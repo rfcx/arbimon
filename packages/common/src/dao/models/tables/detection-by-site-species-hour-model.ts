@@ -1,20 +1,24 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../../model-helpers/defaults'
-import { DetectionBySiteSpeciesHour } from '../../types'
+import { DetectionByVersionSiteSpeciesHour } from '../../types'
 
-export const MODEL_DETECTION_BY_SITE_SPECIES_HOUR = <const>'DetectionBySiteSpeciesHour'
-export const TABLE_DETECTION_BY_SITE_SPECIES_HOUR = <const>'detection_by_site_species_hour'
+export const MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR = 'DetectionBySiteSpeciesHour'
+const TABLE_DETECTION_BY_VERSION_SITE_SPECIES_HOUR = 'detection_by_site_species_hour'
 
-export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteSpeciesHour>(
-  MODEL_DETECTION_BY_SITE_SPECIES_HOUR,
+export const DetectionByVersionSiteSpeciesHourModel = defineWithDefaults<DetectionByVersionSiteSpeciesHour>(
+  MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR,
   {
     // PK
     timePrecisionHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
       type: DataTypes.DATE(3),
       primaryKey: true
     },
-    locationSiteId: { // 123
+    projectVersionId: { // 123
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    projectSiteId: { // 123
       type: DataTypes.INTEGER,
       primaryKey: true
     },
@@ -24,14 +28,13 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
     },
 
     // FKs
-    projectId: DataTypes.INTEGER,
     taxonClassId: DataTypes.INTEGER,
 
     // Facts
-    count: DataTypes.INTEGER, // 1
-    durationMinutes: DataTypes.INTEGER // 12
+    detectionMinutes: DataTypes.INTEGER, // 1
+    recordingMinutes: DataTypes.INTEGER // 12
   },
   {
-    tableName: TABLE_DETECTION_BY_SITE_SPECIES_HOUR
+    tableName: TABLE_DETECTION_BY_VERSION_SITE_SPECIES_HOUR
   }
 )
