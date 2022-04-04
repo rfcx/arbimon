@@ -8,7 +8,7 @@
         <h1 class="text-white text-xl">
           Select Project
         </h1>
-        <icon-fa-close class="text-xxs" />
+        <icon-fa-close class="text-xs" />
       </div>
 
       <el-input
