@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesRiskRating } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { rawTaxonSpeciesIucn } from '@/db/seeders/_data/taxon-species-iucn'
@@ -17,7 +17,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.slug, s.id])))
 
   // Convert data
-  const data: TaxonSpeciesIucn[] = rawTaxonSpeciesIucn
+  const data: TaxonSpeciesRiskRating[] = rawTaxonSpeciesIucn
     .map(({ taxonSpeciesId: _, 'TaxonSpecies.slug': slug, ...rest }) => {
       const taxonSpeciesId = speciesSlugToId[slug]
       if (!taxonSpeciesId) return undefined

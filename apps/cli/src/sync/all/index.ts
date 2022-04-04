@@ -2,7 +2,7 @@ import * as hash from 'object-hash'
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DataSource, Project } from '@rfcx-bio/common/dao/types'
+import { Project, SourceSync } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary, ArbimonNewData, getArbimonHourlyDetectionsForProject } from '@/data-ingest/detections/arbimon'
 import { writeDetections } from '@/data-ingest/detections/db'
@@ -95,7 +95,7 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
   await writeDetections(biodiversitySequelize, summaries, project)
 }
 
-export const extractNewData = async (biodiversitySequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDatasource: DataSource | null): Promise<ArbimonNewData> => {
+export const extractNewData = async (biodiversitySequelize: Sequelize, summaries: ArbimonHourlyDetectionSummary[], project: Project, previousDatasource: SourceSync | null): Promise<ArbimonNewData> => {
   const siteIdsInArbimon = new Set(summaries.map(s => s.site_id))
   const speciesIdsInArbimon = new Set(summaries.map(s => s.species_id))
 

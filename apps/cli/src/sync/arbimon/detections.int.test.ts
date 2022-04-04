@@ -1,7 +1,7 @@
 import { beforeAll, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/data-ingest/_testing/arbimon'
 import { getSequelize } from '@/db/connections'
@@ -115,7 +115,7 @@ const getSiteIdFromIdArbimon = async (idArbimon: number): Promise<number | undef
     })
 }
 
-const getDetectionBySiteSpeciesHour = async (taxonSpeciesId: number, locationSiteId: number, time: string): Promise<DetectionBySiteSpeciesHour | null> => {
+const getDetectionBySiteSpeciesHour = async (taxonSpeciesId: number, locationSiteId: number, time: string): Promise<DetectionByVersionSiteSpeciesHour | null> => {
   return await ModelRepository.getInstance(biodiversitySequelize)
     .DetectionBySiteSpeciesHour
     .findOne({

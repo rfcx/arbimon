@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesProject } from '@rfcx-bio/common/dao/types'
+import { ProjectProfileHighlightedSpecies } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
@@ -21,7 +21,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(res => Object.fromEntries(res.map(s => [s.slug, s.id])))
 
   // Data
-  const projectsSpeciesList: TaxonSpeciesProject[] = projectSpeciesPuertoRico
+  const projectsSpeciesList: ProjectProfileHighlightedSpecies[] = projectSpeciesPuertoRico
     .map(({ slug, highlightedOrder, riskRatingLocalCode, riskRatingLocalLevel, riskRatingLocalSource }) => {
       // Try to find species ID
       const taxonSpeciesId = speciesSlugToId[slug]

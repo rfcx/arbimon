@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour, Project, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionByVersionSiteSpeciesHour, Project, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary } from '@/data-ingest/detections/arbimon'
 
@@ -18,7 +18,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
   const speciesArbimonToBio: Record<number, TaxonSpecies> = Object.fromEntries(species.map(s => [s.idArbimon, s]))
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
-  const data: DetectionBySiteSpeciesHour[] =
+  const data: DetectionByVersionSiteSpeciesHour[] =
     detections.map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: speciesArbimonToBio[d.species_id].taxonClassId ?? -1, // TODO: Throw error

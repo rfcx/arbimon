@@ -1,4 +1,4 @@
-import { DataSource, Site, TaxonClass } from '../../dao/types'
+import { Site, SourceSync, TaxonClass } from '../../dao/types'
 import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
@@ -15,5 +15,5 @@ export interface ProjectFiltersResponse {
   taxonClasses: TaxonClass[]
   dateStartInclusiveUtc?: string
   dateEndInclusiveUtc?: string
-  updatedList: DataSource[]
+  updatedList: SourceSync[]
 }

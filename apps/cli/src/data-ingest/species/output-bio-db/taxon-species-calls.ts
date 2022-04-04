@@ -1,7 +1,7 @@
 import { Optional, Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesAudio } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { ArbimonSpeciesCall } from '../input-arbimon-call'
@@ -18,7 +18,7 @@ export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, species
     const projectIdArbimonToBio = await models.Project.findAll()
     .then(allProjects => Object.fromEntries(allProjects.map(s => [s.idArbimon, s.id])))
 
-  const data: Array<Optional<TaxonSpeciesCall, 'id'>> = speciesCalls
+  const data: Array<Optional<TaxonSpeciesAudio, 'id'>> = speciesCalls
     .map(call => {
       const taxonSpeciesId = speciesIdArbimonToBio[call.species_id]
       const siteId = siteIdArbimonToBio[call.site_idArbimon]

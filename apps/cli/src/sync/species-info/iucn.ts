@@ -1,7 +1,7 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesRiskRating } from '@rfcx-bio/common/dao/types'
 import { getSequentially } from '@rfcx-bio/utils/async'
 
 import { getIucnSpecies } from '@/data-ingest/species/input-iucn/iucn-species'
@@ -34,7 +34,7 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
   const speciesNames = Object.keys(speciesNameToId)
   const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
 
-  const newData: TaxonSpeciesIucn[] = speciesNames.map(speciesName => {
+  const newData: TaxonSpeciesRiskRating[] = speciesNames.map(speciesName => {
     const iucnSpeciesData = iucnSpecies[speciesName]
     const iucnSpeciesNarrativeData = iucnSpeciesNarrative[speciesName]
 

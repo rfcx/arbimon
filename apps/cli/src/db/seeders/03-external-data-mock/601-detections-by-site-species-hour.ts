@@ -3,7 +3,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
@@ -33,7 +33,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       isPublic: false
     })
 
-  const detectionSummaries: DetectionBySiteSpeciesHour[] = rawDetections
+  const detectionSummaries: DetectionByVersionSiteSpeciesHour[] = rawDetections
     .map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
       taxonClassId: classArbimonToBio[d.taxon_id] ?? -1, // TODO: Throw error
