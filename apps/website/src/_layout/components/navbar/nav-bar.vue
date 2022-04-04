@@ -64,11 +64,10 @@
         </div>
       </div>
     </nav>
-    <!-- <project-selector-component
+    <project-selector
       v-if="hasOpenedProjectSelector"
-      @emit-close-project-selector="toggleProjectSelector"
-    /> -->
-    <project-selector />
+      @emit-close="toggleProjectSelector(false)"
+    />
   </div>
 </template>
 <script src="./nav-bar" lang="ts"></script>
