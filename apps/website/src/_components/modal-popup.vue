@@ -11,7 +11,7 @@
         class="hidden sm:inline-block sm:align-middle sm:h-screen"
         aria-hidden="true"
       />
-      <div class="inline-block bg-steel-grey rounded text-left overflow-hidden shadow-xl transform transition-all sm:(my-8 align-middle max-w-2xl w-full)">
+      <div class="inline-block bg-steel-grey rounded text-left overflow-hidden shadow-xl transform transition-al w-xs sm:(my-8 align-middle max-w-2xl w-full)">
         <div class="bg-steel-grey">
           <on-click-outside @trigger="emitClose">
             <slot />

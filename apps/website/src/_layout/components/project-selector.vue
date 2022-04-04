@@ -44,7 +44,7 @@
           {{ displayProject }}
         </p>
         <div v-else>
-          <div class="grid grid-cols-11 border-b-1 m-0 py-2">
+          <div class="grid grid-cols-11 gap-2 border-b-1 m-0 py-2">
             <div class="col-span-1" />
             <div class="col-span-5">
               Name
@@ -56,7 +56,7 @@
           <div
             v-for="project in projectData[activeTab]"
             :key="project.id"
-            class="grid grid-cols-11 m-0 py-2 items-center cursor-pointer"
+            class="grid grid-cols-11 gap-2 items-center m-0 py-2 cursor-pointer"
             @click="setSelectedProject(project)"
           >
             <span class="col-span-1 justify-self-center">
