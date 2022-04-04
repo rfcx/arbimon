@@ -1,8 +1,9 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 import { getSequentially } from '@rfcx-bio/utils/async'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+
 import { getIucnSpecies } from '@/data-ingest/species/input-iucn/iucn-species'
 import { getIucnSpeciesNarrative } from '@/data-ingest/species/input-iucn/iucn-species-narrative'
 import { writeIucnSpeciesDataToPostgres } from '@/data-ingest/species/output-bio-db/taxon-species-iucn'
@@ -11,7 +12,7 @@ const DEFAULT_RISK_RATING = -1
 
 export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
-  
+
   const sql = `
     SELECT DISTINCT ts.id, ts.scientific_name
     FROM taxon_species ts
