@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { TaxonSpeciesProjectFile } from '../types'
+import { defineWithDefaults } from '../model-helpers/defaults'
+import { TaxonSpeciesProjectFile } from '../types-table'
 
 export const MODEL_TAXON_SPECIES_PROJECT_FILE = 'TaxonSpeciesProjectFile'
 export const TABLE_TAXON_SPECIES_PROJECT_FILE = 'taxon_species_project_file'

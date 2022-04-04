@@ -1,4 +1,4 @@
-import { Site } from '../dao/types'
+import { Site } from '../dao/types-table'
 
 export const rawSites: Site[] = [
   {

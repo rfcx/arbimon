@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { ProjectMetric } from '../types/location-project-metric'
+import { defineWithDefaults } from '../model-helpers/defaults'
+import { ProjectMetric } from '../types-view/project-metric'
 
 export const MODEL_PROJECT_METRIC = 'ProjectMetric'
 export const TABLE_PROJECT_METRIC = 'project_metric'

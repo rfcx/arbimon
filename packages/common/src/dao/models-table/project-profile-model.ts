@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
+import { defineWithDefaults } from '../model-helpers/defaults'
 import { ProjectProfile } from '../types/location-project-profile'
 
 export const MODEL_PROJECT_PROFILE = 'ProjectProfile'

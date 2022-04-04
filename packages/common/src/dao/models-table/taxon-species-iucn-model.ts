@@ -1,6 +1,6 @@
 import { DataTypes, INTEGER } from 'sequelize'
 
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
+import { defineWithDefaults } from '../model-helpers/defaults'
 import { TaxonSpeciesIucn } from '../types/taxon-species-iucn'
 
 export const MODEL_TAXON_SPECIES_IUCN = 'TaxonSpeciesIucn'

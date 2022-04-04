@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { DashboardDetectionByHour } from '@/dao/types/dashboard-detection-by-hour'
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
+import { DashboardDetectionByHour } from '@/dao/types-view/dashboard-detection-by-hour'
+import { defineWithDefaults } from '../model-helpers/defaults'
 
 export const MODEL_DASHBOARD_DETECTION_BY_HOUR = 'DashboardDetectionByHour'
 export const TABLE_DASHBOARD_DETECTION_BY_HOUR = 'dashboard_detection_by_hour'

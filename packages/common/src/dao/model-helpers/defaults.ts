@@ -2,7 +2,7 @@ import { Model, ModelAttributes, ModelCtor, ModelOptions, Optional, Sequelize } 
 
 import { ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { WithAutoPk } from '@/dao/types/_common'
+import { WithAutoPk } from '@/dao/type-helpers/with-auto-pk'
 import { modelAttributeToColumn } from './utils'
 
 // TODO: Update return type when they fix `sequelize.define`
