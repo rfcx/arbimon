@@ -4,7 +4,7 @@
     @emit-close="emit('emitClose')"
   >
     <div class="p-4">
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center mt-2">
         <h1 class="text-white text-xl">
           Select Project
         </h1>
@@ -15,7 +15,7 @@
         v-model="searchKeyword"
         placeholder="Search project"
         size="small"
-        class="mt-2"
+        class="mt-4"
       >
         <template #suffix>
           <div class="inline-flex items-center">
@@ -26,7 +26,7 @@
 
       <el-tabs
         v-model="activeTab"
-        class="m-0"
+        class="mt-2"
       >
         <el-tab-pane
           v-for="tab in Object.values(tabs)"
@@ -36,15 +36,15 @@
         />
       </el-tabs>
 
-      <div class="min-h-72">
+      <div class="min-h-72 mt-2">
         <p
           v-if="projectData[activeTab].length === 0"
-          class="text-subtle italic pt-2"
+          class="text-subtle italic"
         >
           {{ displayProject }}
         </p>
         <div v-else>
-          <div class="grid grid-cols-11 gap-2 border-b-1 m-0 py-2">
+          <!-- <div class="grid grid-cols-11 gap-2 m-0 py-2">
             <div class="col-span-1" />
             <div class="col-span-5">
               Name
@@ -52,9 +52,9 @@
             <div>
               ID
             </div>
-          </div>
+          </div> -->
           <div
-            v-for="project in projectData[activeTab]"
+            v-for="project in displayProjectData"
             :key="project.id"
             class="grid grid-cols-11 gap-2 items-center m-0 py-2 cursor-pointer"
             @click="setSelectedProject(project)"
@@ -73,20 +73,21 @@
             </div>
             <div
               :title="project.slug"
-              class="col-span-5 truncate"
+              class="col-span-5 text-subtle truncate"
             >
               {{ project.slug }}
             </div>
           </div>
         </div>
       </div>
-
+      {{ currentPage }}
       <div class="flex justify-end">
         <el-pagination
+          v-model:currentPage="currentPage"
           small
           layout="prev, pager, next"
           :total="projectData[activeTab].length"
-          :hide-on-single-page="projectData[activeTab].length <= 10"
+          :page-size="PAGE_SIZE"
         />
       </div>
 
@@ -122,10 +123,14 @@ interface Emits {
 
 const emit = defineEmits<Emits>()
 
+const PAGE_SIZE = 10
+
 const route = useRoute()
 const router = useRouter()
-const searchKeyword = ref('')
 const store = useStore()
+const searchKeyword = ref('')
+const currentPage = ref(1)
+
 const newSelectedProject = ref<LocationProjectForUser | null>(store.selectedProject ?? null)
 const user = computed(() => {
   return store.user
@@ -155,6 +160,11 @@ const projectData = computed(() => ({
   myProjects: store.projects.filter(project => project.isMyProject),
   showcaseProjects: store.projects.filter(project => !project.isMyProject)
 }))
+
+const displayProjectData = computed(() => {
+  const startIdx = currentPage.value - 1
+  return projectData.value[activeTab.value].slice(startIdx * PAGE_SIZE, (startIdx * PAGE_SIZE) + PAGE_SIZE)
+})
 
 const setSelectedProject = (project: LocationProjectForUser) => {
   newSelectedProject.value = project
