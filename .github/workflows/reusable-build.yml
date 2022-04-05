@@ -105,12 +105,12 @@ jobs:
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
       
-      # skip this step until the issue about cypress.json not found is resolved
       # - name: 'Verify: Cypress'
       #   uses: cypress-io/github-action@v2
       #   with:
       #     install: false
       #     start: pnpm serve
+      #     project: apps/website
       #   env:
       #     NODE_OPTIONS: '--max_old_space_size=6656'
 
