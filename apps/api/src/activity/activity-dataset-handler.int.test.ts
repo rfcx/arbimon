@@ -142,11 +142,31 @@ describe('activity dataset handler', () => {
     })
 
     test(`GET ${ROUTE} calculates detectionsBySite correctly`, async () => {
+      // Arrange
+      const knownSiteId = '123'
+      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
+
+      // Act
       const result = JSON.parse(response.body)?.detectionsBySite
+
+      // Assert - property exists
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(Object.keys(result).length).toBe(877)
-      // ...
+
+      // Assert - first result is object
+      const firstResult = result[knownSiteId]
+      expect(firstResult).toBeTypeOf('object')
+
+      // Assert - first result contains (only) expected props
+      const firstResultAsObject = firstResult as Record<string, any>
+      expectedProperties.forEach(expectedProperty => expect(firstResultAsObject).toHaveProperty(expectedProperty))
+      Object.keys(firstResultAsObject).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+
+      // Assert - detection, detection frequency, occupancy are correct
+      expect(firstResultAsObject.detection).toBe(263)
+      expect(firstResultAsObject.detectionFrequency).toBeCloseTo(0.27058, 5)
+      expect(firstResultAsObject.occupancy).toBe(true)
     })
 
     test.todo(`GET ${ROUTE} calculates detectionsBySpecies correctly`, async () => {
