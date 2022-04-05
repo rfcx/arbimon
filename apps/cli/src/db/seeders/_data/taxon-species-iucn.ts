@@ -1,6 +1,7 @@
 import { TaxonSpeciesRiskRating } from '@rfcx-bio/common/dao/types'
 
-export const rawTaxonSpeciesIucn: Array<TaxonSpeciesRiskRating & { 'TaxonSpecies.slug': string }> = [
+export const rawTaxonSpeciesIucn: Array<TaxonSpeciesRiskRating & { 'TaxonSpecies.slug': string }> = []
+/*
   {
     taxonSpeciesId: 1,
     riskRatingIucnId: -1,
@@ -1577,4 +1578,4 @@ export const rawTaxonSpeciesIucn: Array<TaxonSpeciesRiskRating & { 'TaxonSpecies
     descriptionSourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Zimmerius%20vilissimus',
     'TaxonSpecies.slug': 'zimmerius-vilissimus'
   }
-]
+*/

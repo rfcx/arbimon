@@ -1,6 +1,6 @@
-import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types'
+// import { TaxonSpeciesRfcx } from '@rfcx-bio/common/dao/types'
 
-export const taxonSpeciesRfcx: Record<string, Partial<TaxonSpeciesRfcx>> =
+export const taxonSpeciesRfcx: Record<string, {commonName: string}> =
   ({
     'Accipiter striatus venator': { // Missing in IUCN
       commonName: 'Puerto Rican sharp-shinned hawk'

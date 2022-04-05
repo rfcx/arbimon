@@ -14,16 +14,12 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const models = ModelRepository.getInstance(sequelize)
 
   const projects: Array<Omit<Project, 'id'>> = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
-    .map(({ idCore, idArbimon, slug, slugArbimon, name, latitudeNorth, latitudeSouth, longitudeEast, longitudeWest }) => ({
+    .map(({ idCore, idArbimon, slug, slugArbimon, name }) => ({
       idCore,
       idArbimon,
       slug,
       slugArbimon,
-      name,
-      latitudeNorth,
-      latitudeSouth,
-      longitudeEast,
-      longitudeWest
+      name
     }))
 
   await models.Project.bulkCreate(projects)

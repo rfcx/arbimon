@@ -1,6 +1,4 @@
-import { TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types'
-
-export const rawTaxonSpeciesWiki: Array<TaxonSpeciesWiki & { 'TaxonSpecies.slug': string }> = [
+export const rawTaxonSpeciesWiki: Array<{ taxonSpeciesId: number, description: string, descriptionSourceUrl: string, 'TaxonSpecies.slug': string }> = [
   {
     taxonSpeciesId: 1,
     description: 'The Puerto Rican sharp-shinned hawk, (Accipiter striatus venator), falcón de sierra or gavilán pecho rufo in Spanish, is an endemic subspecies of the North American sharp-shinned hawk, occurring only in Puerto Rico. Discovered in 1912 and described as a distinct sub-species, it has been placed on the United States Fish and Wildlife Service list of endangered species because of its rapidly dwindling population in Puerto Rico. It can be found in the Toro Negro State Forest.',

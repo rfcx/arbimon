@@ -1,6 +1,7 @@
 import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
 
-export const rawTaxonSpeciesPhoto: Array<TaxonSpeciesPhoto & { 'TaxonSpecies.slug': string }> = [
+export const rawTaxonSpeciesPhoto: Array<TaxonSpeciesPhoto & { 'TaxonSpecies.slug': string }> = []
+/*
   {
     taxonSpeciesId: 1,
     source: 'WIKI',
@@ -1841,4 +1842,4 @@ export const rawTaxonSpeciesPhoto: Array<TaxonSpeciesPhoto & { 'TaxonSpecies.slu
     photoLicenseUrl: 'https://en.wikipedia.org/wiki/Guatemalan_tyrannulet#/media/File:Paltry_Tyrannulet.jpg',
     'TaxonSpecies.slug': 'zimmerius-vilissimus'
   }
-]
+*/
