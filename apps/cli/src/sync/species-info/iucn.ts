@@ -1,12 +1,6 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesRiskRating } from '@rfcx-bio/common/dao/types'
-import { getSequentially } from '@rfcx-bio/utils/async'
-
-import { getIucnSpecies } from '@/data-ingest/species/input-iucn/iucn-species'
-import { getIucnSpeciesNarrative } from '@/data-ingest/species/input-iucn/iucn-species-narrative'
-import { writeIucnSpeciesDataToPostgres } from '@/data-ingest/species/output-bio-db/taxon-species-iucn'
 
 const DEFAULT_RISK_RATING = -1
 
@@ -31,21 +25,21 @@ export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Prom
 }
 
 export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>, iucnCodeToId: Record<string, number>): Promise<void> => {
-  const speciesNames = Object.keys(speciesNameToId)
-  const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
+  // const speciesNames = Object.keys(speciesNameToId)
+  // const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
 
-  const newData: TaxonSpeciesRiskRating[] = speciesNames.map(speciesName => {
-    const iucnSpeciesData = iucnSpecies[speciesName]
-    const iucnSpeciesNarrativeData = iucnSpeciesNarrative[speciesName]
+  // const newData: TaxonSpeciesRiskRating[] = speciesNames.map(speciesName => {
+  //   const iucnSpeciesData = iucnSpecies[speciesName]
+  //   const iucnSpeciesNarrativeData = iucnSpeciesNarrative[speciesName]
 
-    return {
-      taxonSpeciesId: speciesNameToId[speciesName],
-      commonName: iucnSpeciesData?.main_common_name ?? '',
-      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? DEFAULT_RISK_RATING,
-      description: iucnSpeciesNarrativeData?.habitat ?? '',
-      descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
-    }
-  })
+  //   return {
+  //     taxonSpeciesId: speciesNameToId[speciesName],
+  //     commonName: iucnSpeciesData?.main_common_name ?? '',
+  //     riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? DEFAULT_RISK_RATING,
+  //     description: iucnSpeciesNarrativeData?.habitat ?? '',
+  //     descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
+  //   }
+  // })
 
-  await writeIucnSpeciesDataToPostgres(sequelize, newData)
+  // await writeIucnSpeciesDataToPostgres(sequelize, newData)
 }
