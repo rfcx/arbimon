@@ -32,29 +32,8 @@ const getModelNames = async (): Promise<string[]> =>
 
 describe('model repository', () => {
   test.todo('models have unique names')
-  test.todo('models have unique tables')
-  test.todo('model tables exist in the database')
-  test.todo('model views exist in the database')
-
-  test('model repository can be constructed', async () => {
-    // Act
-    const models = ModelRepository.getInstance(getSequelizeForTests())
-
-    // Assert
-    expect(models).toBeDefined()
-  })
-
-  test('model repository contains all models', async () => {
-    // Arrange
-    const modelNames = await getModelNames()
-    const models = ModelRepository.getInstance(getSequelizeForTests())
-
-    // Assert
-    expect(modelNames.length, 'Pre-condition failed (no models found)').toBeGreaterThan(0)
-    modelNames.forEach(modelName =>
-      expect(models, `${modelName} was not registered`).toHaveProperty(modelName)
-    )
-  })
+  test.todo('models have unique tables/views')
+  test.todo('models exist for all tables/views (& vice versa)')
 
   test('models are in sync with migrations', async () => {
     // Arrange
@@ -78,5 +57,25 @@ describe('model repository', () => {
 
     // Assert
     expect(corrections, `Models expect the following changes:\n${corrections.join('\n')}`).toHaveLength(0)
+  })
+
+  test('model repository can be constructed', async () => {
+    // Act
+    const models = ModelRepository.getInstance(getSequelizeForTests())
+
+    // Assert
+    expect(models).toBeDefined()
+  })
+
+  test('model repository contains all models', async () => {
+    // Arrange
+    const modelNames = await getModelNames()
+    const models = ModelRepository.getInstance(getSequelizeForTests())
+
+    // Assert
+    expect(modelNames.length, 'Pre-condition failed (no models found)').toBeGreaterThan(0)
+    modelNames.forEach(modelName =>
+      expect(models, `${modelName} was not registered`).toHaveProperty(modelName)
+    )
   })
 })
