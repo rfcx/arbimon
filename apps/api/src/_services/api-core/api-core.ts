@@ -25,11 +25,11 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getMemberProjectCoreIdsFromApi (token: string): Promise<string[]> {
+export async function getMemberProjectCoreIdsFromApi (token: string, limit: number = 1000, offset: number = 0): Promise<string[]> {
   try {
     const resp = await axios.request<CoreProjectLight[]>({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/projects`,
+      url: `${CORE_API_BASE_URL}/projects?fields=id&limit=${limit} &offset=${offset}`,
       headers: { authorization: token }
     })
 
