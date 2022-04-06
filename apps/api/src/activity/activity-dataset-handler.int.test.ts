@@ -6,8 +6,6 @@ import { activityDatasetGeneratedUrl } from '@rfcx-bio/common/api-bio/activity/a
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
 
-const ROUTE = '/projects/:projectId/activity'
-
 const EXPECTED_PROPS = [
   'isLocationRedacted',
   'detectionsBySite',
@@ -60,9 +58,9 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe('activity dataset handler', () => {
+describe('GET /projects/:projectId/activity (activity dataset)', () => {
   describe('simple tests', () => {
-    test(`GET ${ROUTE} exists`, async () => {
+    test('exists', async () => {
     // Arrange
     const app = await getMockedAppLoggedOut()
 
@@ -73,7 +71,7 @@ describe('activity dataset handler', () => {
     expect(routes).toContain(ROUTE)
     })
 
-    test(`GET ${ROUTE} returns successfully`, async () => {
+    test('returns successfully', async () => {
       // Arrange
       const app = await getMockedAppLoggedOut()
 
@@ -92,7 +90,7 @@ describe('activity dataset handler', () => {
       expect(result).toBeTypeOf('object')
     })
 
-    test(`GET ${ROUTE} contains all expected props`, async () => {
+    test('contains all expected props', async () => {
       // Arrange
       const app = await getMockedAppLoggedOut()
 
@@ -108,7 +106,7 @@ describe('activity dataset handler', () => {
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
     })
 
-    test(`GET ${ROUTE} does not contain any additional props`, async () => {
+    test('does not contain any additional props', async () => {
       // Arrange
       const app = await getMockedAppLoggedOut()
 
@@ -135,13 +133,13 @@ describe('activity dataset handler', () => {
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
 
-    test(`GET ${ROUTE} calculates isLocationRedacted correctly`, async () => {
+    test('calculates isLocationRedacted correctly', async () => {
       const result = JSON.parse(response.body)?.isLocationRedacted
       expect(result).toBeDefined()
       expect(result).toEqual(false)
     })
 
-    test(`GET ${ROUTE} calculates detectionsBySite correctly`, async () => {
+    test('calculates detectionsBySite correctly', async () => {
       // Arrange
       const knownSiteId = '123'
       const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
@@ -169,31 +167,31 @@ describe('activity dataset handler', () => {
       expect(firstResultAsObject.occupancy).toBe(true)
     })
 
-    test.todo(`GET ${ROUTE} calculates detectionsBySpecies correctly`, async () => {
+    test.todo('calculates detectionsBySpecies correctly', async () => {
       const result = JSON.parse(response.body)?.detectionsBySpecies
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo(`GET ${ROUTE} calculates detectionsByTimeHour correctly`, async () => {
+    test.todo('calculates detectionsByTimeHour correctly', async () => {
       const result = JSON.parse(response.body)?.detectionsByTimeHour
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo(`GET ${ROUTE} calculate detectionsByTimeDay correctly`, async () => {
+    test.todo('calculate detectionsByTimeDay correctly', async () => {
       const result = JSON.parse(response.body)?.detectionsByTimeDay
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo(`GET ${ROUTE} calculate detectionsByTimeMonth correctly`, async () => {
+    test.todo('calculate detectionsByTimeMonth correctly', async () => {
       const result = JSON.parse(response.body)?.detectionsByTimeMonth
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo(`GET ${ROUTE} calculate detectionsByTimeDate correctly`, async () => {
+    test.todo('calculate detectionsByTimeDate correctly', async () => {
       const result = JSON.parse(response.body)?.detectionsByTimeDate
       expect(result).toBeDefined()
       // ...
@@ -210,7 +208,7 @@ describe('activity dataset handler', () => {
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
 
-    test(`GET ${ROUTE} calculates isLocationRedacted correctly`, async () => {
+    test('calculates isLocationRedacted correctly', async () => {
       const result = JSON.parse(response.body)?.isLocationRedacted
       expect(result).toBeDefined()
       expect(result).toEqual(true)
@@ -218,7 +216,7 @@ describe('activity dataset handler', () => {
   })
 
   describe('client errors', () => {
-    test(`GET ${ROUTE} rejects missing query`, async () => {
+    test('rejects missing query', async () => {
       // Arrange
       const app = await getMockedAppLoggedOut()
 
@@ -232,7 +230,7 @@ describe('activity dataset handler', () => {
       expect(response.statusCode).toBe(400)
     })
 
-    test(`GET ${ROUTE} rejects invalid project id`, async () => {
+    test('rejects invalid project id', async () => {
       // Arrange
       const app = await getMockedAppLoggedOut()
 
@@ -250,7 +248,7 @@ describe('activity dataset handler', () => {
       expect(errorMessage).toContain('Invalid path params: projectId')
     })
 
-    test(`GET ${ROUTE} rejects invalid date`, async () => {
+    test('rejects invalid date', async () => {
       // Arrange
       const app = await getMockedAppLoggedOut()
 
@@ -281,8 +279,8 @@ describe('activity dataset handler', () => {
       expect(errorMessage2).toContain('endDate with value')
     })
 
-    test.todo(`GET ${ROUTE} rejects invalid site ids`)
+    test.todo('rejects invalid site ids')
 
-    test.todo(`GET ${ROUTE} rejects invalid taxons`)
+    test.todo('rejects invalid taxons')
   })
 })
