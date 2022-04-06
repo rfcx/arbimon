@@ -198,6 +198,12 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     })
   })
 
+  describe('known data tests with filtered data', async () => {
+    test.todo('detectionsBySite includes all sites from the filter')
+    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
+    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
+  })
+
   describe('known data tests with redacted data', async () => {
     // Arrange & Act once
     const app = await getMockedAppLoggedOut()
@@ -213,6 +219,8 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       expect(result).toBeDefined()
       expect(result).toEqual(true)
     })
+
+    test.todo('redacted species data (is / is not?) included in detectionsBySite')
   })
 
   describe('client errors', () => {
