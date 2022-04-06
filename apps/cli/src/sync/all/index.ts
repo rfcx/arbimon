@@ -1,4 +1,3 @@
-import * as hash from 'object-hash'
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -37,33 +36,33 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
   // Else get latest data source
   // TODO: Get latest datasource for this ProjectVersion AND DataSourceType (ex: CNN)
   console.info(`- checking datasource: ${project.slug}`)
-  const previousDataSource = await models.DataSource
-    .findOne({
-      where: { projectId: project.id },
-      order: [['updatedAt', 'DESC']],
-      raw: true
-    })
+  // const previousDataSource = await models.DataSource
+  //   .findOne({
+  //     where: { projectId: project.id },
+  //     order: [['updatedAt', 'DESC']],
+  //     raw: true
+  //   })
 
-  // Do we already have this data?
-  const newDataSourceId = hash.MD5(summaries)
-  if (previousDataSource?.id === newDataSourceId) {
-    // Touch to bump updatedAt
-    console.info('| nothing changed from last sync -', newDataSourceId)
-    await models.DataSource.update({}, {
-      where: {
-        id: previousDataSource.id,
-        projectId: project.id
-      }
-    })
-    // TODO: Can we use previousDataSource.set('updatedAt', null).save()?
-    return
-  }
+  // // Do we already have this data?
+  // const newDataSourceId = hash.MD5(summaries)
+  // if (previousDataSource?.id === newDataSourceId) {
+  //   // Touch to bump updatedAt
+  //   console.info('| nothing changed from last sync -', newDataSourceId)
+  //   await models.DataSource.update({}, {
+  //     where: {
+  //       id: previousDataSource.id,
+  //       projectId: project.id
+  //     }
+  //   })
+  //   // TODO: Can we use previousDataSource.set('updatedAt', null).save()?
+  //   return
+  // }
 
   // } // end if
 
   // Detect new sites/species
   console.info(`- finding out what's new: ${project.slug}`)
-  const newData = await extractNewData(biodiversitySequelize, summaries, project, previousDataSource)
+  const newData = await extractNewData(biodiversitySequelize, summaries, project, null)
 
   // Save new sites from Arbimon
   if (newData.siteIds.length > 0) {
@@ -84,11 +83,11 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
   }
 
   // Save new data source
-  await models.DataSource.upsert({
-    id: newDataSourceId,
-    projectId: project.id,
-    summaryText: JSON.stringify({ sites: newData.siteIds.length, species: newData.speciesIds.length })
-  })
+  // await models.DataSource.upsert({
+  //   id: newDataSourceId,
+  //   projectId: project.id,
+  //   summaryText: JSON.stringify({ sites: newData.siteIds.length, species: newData.speciesIds.length })
+  // })
 
   // Save new detections
   console.info('- insert or update detection summaries')

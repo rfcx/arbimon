@@ -21,12 +21,12 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
   const data: DetectionByVersionSiteSpeciesHour[] =
     detections.map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
-      taxonClassId: speciesArbimonToBio[d.species_id].taxonClassId ?? -1, // TODO: Throw error
+      projectVersionId: -1, // TODO: pass this data
+      projectSiteId: siteArbimonToBio[d.site_id] ?? -1, // TODO: Throw error
       taxonSpeciesId: speciesArbimonToBio[d.species_id].id ?? -1, // TODO: Throw error
-      projectId: project.id,
-      locationSiteId: siteArbimonToBio[d.site_id] ?? -1, // TODO: Throw error
-      count: d.detection_count,
-      durationMinutes: d.duration_in_minutes
+      taxonClassId: speciesArbimonToBio[d.species_id].taxonClassId ?? -1, // TODO: Throw error
+      detectionMinutes: d.detection_count,
+      recordingMinutes: d.duration_in_minutes
     }))
 
   await models.DetectionBySiteSpeciesHour.bulkCreate(data, {

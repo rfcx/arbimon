@@ -27,6 +27,7 @@ export const getArbimonSites = async (sequelize: Sequelize, siteIds: number[], p
       idCore: i.core_site_id ?? 'null',
       idArbimon: i.site_id,
       projectId,
+      projectVersionFirstDetectionId: -1, // TODO: pass this data in
       name: i.name,
       latitude: i.latitude,
       longitude: i.longitude,
