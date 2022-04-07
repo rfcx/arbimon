@@ -14,6 +14,5 @@ export type ProjectLight = Pick<Project,
 >
 
 export const ATTRIBUTES_LOCATION_PROJECT: AttributeConstants<Project> = {
-  updateOnDuplicate: ['name', 'slug', 'slugArbimon'],
   light: ['id', 'slug', 'name']
 }
