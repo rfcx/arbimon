@@ -164,9 +164,9 @@ watch(searchKeyword, () => {
 
 const displayProject = computed(() => {
   if (activeTab.value === tabs.myProjects.id && !searchKeyword.value) {
-    return user.value === undefined ? 'Please login to see your project.' : "You don't have any project."
+    return user.value === undefined ? 'Please login to see your project' : "You don't have any project"
   }
-  return 'No project found.'
+  return 'No projects found'
 })
 
 const projectData = computed(() => ({
