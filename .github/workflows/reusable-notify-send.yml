@@ -104,8 +104,8 @@ jobs:
       - name: 'Notify: Slack Failed'
         # Notify failure if previous run was not also a failure
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'failure'
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.9.0) @ 30 Mar 2022 https://github.com/ravsamhq/notify-slack-action/tags
+        uses: ravsamhq/notify-slack-action@1f019707281e1f3c939880a75b9c401e00f0f7cf
         with:
           notify_when: 'failure,warning'
           status: ${{ inputs.status }}
@@ -120,8 +120,8 @@ jobs:
       - name: 'Notify: Slack Success'
         # Notify success if previous run was not also a success
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
+        # v1 (1.9.0) @ 30 Mar 2022 https://github.com/ravsamhq/notify-slack-action/tags
+        uses: ravsamhq/notify-slack-action@1f019707281e1f3c939880a75b9c401e00f0f7cf
         with:
           notify_when: 'success'
           status: ${{ inputs.status }}
