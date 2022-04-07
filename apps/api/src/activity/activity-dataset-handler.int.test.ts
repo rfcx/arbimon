@@ -6,14 +6,16 @@ import { activityDatasetGeneratedUrl } from '@rfcx-bio/common/api-bio/activity/a
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
 
+const ROUTE = '/projects/:projectId/activity'
+
 const EXPECTED_PROPS = [
   'isLocationRedacted',
-  'detectionsBySite',
-  'detectionsBySpecies',
-  'detectionsByTimeHour',
-  'detectionsByTimeDay',
-  'detectionsByTimeMonth',
-  'detectionsByTimeDate'
+  'activityBySite',
+  'activityBySpecies',
+  'activityByTimeHour',
+  'activityByTimeDay',
+  'activityByTimeMonth',
+  'activityByTimeDate'
 ]
 
 const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {

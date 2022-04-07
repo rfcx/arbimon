@@ -93,18 +93,18 @@ const onDatasetChange = async () => {
   )).filter(isDefined)
 
   mapDatasets.value = transformToBySiteDatasets(datasets)
-  timeDatasets.value = datasets.map(({ color, detectionsByTimeDay, detectionsByTimeHour, detectionsByTimeMonth, detectionsByTimeDate }) => {
+  timeDatasets.value = datasets.map(({ color, activityByTimeHour, activityByTimeDay, activityByTimeMonth, activityByTimeDate }) => {
     const data = {
-      hourOfDay: detectionsByTimeHour,
-      dayOfWeek: detectionsByTimeDay,
-      monthOfYear: detectionsByTimeMonth,
-      dateSeries: detectionsByTimeDate
+      hourOfDay: activityByTimeHour,
+      dayOfWeek: activityByTimeDay,
+      monthOfYear: activityByTimeMonth,
+      dateSeries: activityByTimeDate
     }
     return { color, data }
   })
 
-  tableDatasets.value = datasets.map(({ color, detectionsBySpecies }) => ({ color, data: detectionsBySpecies }))
-  exportDatasets.value = datasets.map(({ detectionsBySpecies }) => detectionsBySpecies)
+  tableDatasets.value = datasets.map(({ color, activityBySpecies }) => ({ color, data: activityBySpecies }))
+  exportDatasets.value = datasets.map(({ activityBySpecies }) => activityBySpecies)
 }
 
 const exportSpeciesData = async () => {
