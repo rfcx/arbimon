@@ -6,10 +6,7 @@ export const createProjectVersionIfNeeded = async (sequelize: Sequelize, project
   const projectVersionModel = ModelRepository.getInstance(sequelize).ProjectVersion
   await Promise.all(projectIds.map(async (id) => {
     return await projectVersionModel.findOrCreate({
-      where: {
-        projectId: id
-      },
-      defaults: { isPublished: false, isPublic: false }
+      where: { projectId: id }
     })
   }))
 }
