@@ -8,8 +8,6 @@ import { getMemberProjectCoreIdsFromCache, updateMemberProjectCoreIds } from '~/
 
 const MEMBER_PROJECT_CORE_IDS = 'MEMBER_PROJECT_CORE_IDS'
 
-const LIMIT = 1000
-
 export const getMemberProjectCoreIds = (req: FastifyRequest): string[] =>
   req.requestContext.get(MEMBER_PROJECT_CORE_IDS) ?? []
 
@@ -34,18 +32,11 @@ export const setMemberProjectCoreIds: Middleware = async (req, res): Promise<voi
   }
 
   // Get from Core API (& update cache)
-  const projectCoreIds: string[] = []
-  let offset = 0
-  while (true) {
-    const ids = await getMemberProjectCoreIdsFromApi(token, LIMIT, offset)
-      .catch(err => {
-        req.log.error(err)
-        return []
-      })
-    if (ids.length === 0) break
-    projectCoreIds.push(...ids)
-    offset = offset + LIMIT
-  }
+  const projectCoreIds = await getMemberProjectCoreIdsFromApi(token)
+    .catch(err => {
+      req.log.error(err)
+      return []
+    })
 
   await updateMemberProjectCoreIds(auth0UserId, projectCoreIds)
 
