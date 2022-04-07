@@ -1,4 +1,4 @@
-import { AttributeConstants } from '../../type-helpers'
+import { TypesFor } from '@/dao/type-helpers'
 
 export interface TaxonClass {
   id: number
@@ -7,8 +7,8 @@ export interface TaxonClass {
   commonName: string
 }
 
-export type TaxonClassLight = Pick<TaxonClass, 'id' | 'slug' | 'commonName'>
-
-export const ATTRIBUTES_TAXON_CLASS: AttributeConstants<TaxonClass> = {
+export const ATTRIBUTES_TAXON_CLASS = <const>{
   light: ['id', 'slug', 'commonName']
 }
+
+export type TaxonClassTypes = TypesFor<TaxonClass, typeof ATTRIBUTES_TAXON_CLASS>
