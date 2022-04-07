@@ -20,14 +20,8 @@ export const ProjectVersionModel = defineWithDefaultsAutoPk<ProjectVersion>(
     projectId: DataTypes.INTEGER, // 1
 
     // Facts
-    isPublished: { // false for latest sync
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    isPublic: { // true
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    }
+    isPublished: DataTypes.BOOLEAN, // false for latest sync
+    isPublic: DataTypes.BOOLEAN // true
   },
   {
     tableName: TABLE_PROJECT_VERSION
