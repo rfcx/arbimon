@@ -7,7 +7,6 @@
   <species-richness-introduction
     :filters="filters"
     :have-data="haveData"
-    :richness-by-exports="speciesByExports"
   />
   <comparison-list-component
     class="mt-5"
