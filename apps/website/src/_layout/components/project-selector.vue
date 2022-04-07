@@ -84,13 +84,17 @@
         </div>
       </div>
       <div class="flex justify-end">
+        <div
+          v-if="total <= PAGE_SIZE"
+          class="w-full h-7"
+        />
         <el-pagination
           v-model:currentPage="currentPage"
           small
           layout="prev, pager, next"
-          :total="displayProjectData.length"
+          :total="total"
           :page-size="PAGE_SIZE"
-          :hide-on-single-page="displayProjectData.length <= PAGE_SIZE"
+          :hide-on-single-page="total <= PAGE_SIZE"
         />
       </div>
 
@@ -187,6 +191,14 @@ const displayProjectData = computed(() => {
 
   // No search keyword
   return projectData.value[activeTab.value].slice(startIdx * PAGE_SIZE, (startIdx * PAGE_SIZE) + PAGE_SIZE)
+})
+
+const total = computed(() => {
+  if (searchKeyword.value) {
+    return store.projects
+      .filter(({ name }) => name.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value))).length
+  }
+  return projectData.value[activeTab.value].length
 })
 
 const setSelectedProject = (project: LocationProjectForUser) => {
