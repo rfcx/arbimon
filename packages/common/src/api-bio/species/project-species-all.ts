@@ -6,7 +6,7 @@ export type ProjectSpeciesAllParams = ProjectSpecificRouteParams
 
 export const projectSpeciesAllRoute = '/projects/:projectId/species'
 
-export const projectSpeciesAllGeneratedUrl = (params: ProjectSpeciesAllParams): string =>
+export const projectSpeciesAllUrl = (params: ProjectSpeciesAllParams): string =>
   `/projects/${params.projectId}/species`
 
 // Response

@@ -1,7 +1,7 @@
 import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
-import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
+import { ProjectSpeciesFileParams } from '@rfcx-bio/common/api-bio/species/project-species-file'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
@@ -12,7 +12,7 @@ import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '.
 import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 
-export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
+export const projectSpeciesFileHandler: Handler<FastifyReply, ProjectSpeciesFileParams> = async (req, res) => {
   // Inputs & validation
   const { projectId, speciesSlug, filenameWithoutExtension } = req.params
   assertPathParamsExist({ projectId, speciesSlug, filenameWithoutExtension })

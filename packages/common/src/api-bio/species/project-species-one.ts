@@ -8,7 +8,7 @@ export type ProjectSpeciesOneParams = ProjectSpecificRouteParams & {
 
 export const projectSpeciesOneRoute = '/projects/:projectId/species/:speciesSlug'
 
-export const projectSpeciesOneGeneratedUrl = (params: ProjectSpeciesOneParams): string =>
+export const projectSpeciesOneUrl = (params: ProjectSpeciesOneParams): string =>
   `/projects/${params.projectId}/species/${params.speciesSlug}`
 
 // Response
