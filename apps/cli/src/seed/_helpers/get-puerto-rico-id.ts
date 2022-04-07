@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { rawEnvToProjectAndProfile } from '@/db/seeders/_data/location-project-and-profile'
+import { rawEnvToProjectAndProfile } from '@/seed/data/location-project-and-profile'
 import { requireEnv } from '~/env'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')

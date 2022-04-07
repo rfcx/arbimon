@@ -5,7 +5,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { requireEnv } from '~/env'
-import { rawEnvToProjectAndProfile } from '../_data/location-project-and-profile'
+import { rawEnvToProjectAndProfile } from '../../data/location-project-and-profile'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 

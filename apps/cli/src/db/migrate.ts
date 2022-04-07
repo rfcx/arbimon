@@ -1,4 +1,4 @@
-import { execMigrations } from '@/db/actions/exec-migrations'
+import { execMigrations } from './_helpers'
 import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')

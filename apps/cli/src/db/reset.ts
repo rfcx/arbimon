@@ -1,4 +1,4 @@
-import { dropTables } from './actions/drop-tables'
+import { dropTables } from './_helpers'
 import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')

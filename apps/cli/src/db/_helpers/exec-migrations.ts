@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { getUmzug } from '@/db/connections'
+import { getUmzug } from '../connections'
 
 export const execMigrations = async (sequelize: Sequelize, verbose = false): Promise<void> => {
   const umzug = getUmzug(sequelize, verbose)

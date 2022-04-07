@@ -6,7 +6,7 @@ import { ProjectProfile } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { requireEnv } from '~/env'
-import { rawEnvToProjectAndProfile } from '../_data/location-project-and-profile'
+import { rawEnvToProjectAndProfile } from '../../data/location-project-and-profile'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 

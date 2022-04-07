@@ -1,6 +1,4 @@
-import { execSeeders } from '@/db/actions/exec-seeders'
-import { refreshMviews } from '@/db/actions/refresh-mviews'
-import { dropTables, execMigrations } from './actions'
+import { dropTables, execMigrations, execSeeders, refreshMviews } from './_helpers'
 import { getSequelize } from './connections'
 
 const DEFAULT_LOCAL_SEEDER_PATHS = [
@@ -18,20 +16,20 @@ const seederPaths = process.argv
 
 const main = async (): Promise<void> => {
   try {
-    // Setup
+    // Reset, migrate
+    // TODO - Refactor as `withSequelize`
     const sequelize1 = getSequelize(verbose)
-    const sequelize2 = getSequelize(verbose) // Seeders uses a different Umzug (which seems to require a fresh Sequelize instance)
-
-    // Reset, migrate, seed, refresh mviews
     await dropTables(sequelize1)
     await execMigrations(sequelize1, verbose)
+    await sequelize1.close()
+
+    // Seed, refresh mviews
+    // Seeders uses a different Umzug (which seems to require a fresh Sequelize instance)
+    const sequelize2 = getSequelize(verbose)
     for (const seederPath of seederPaths.split(',')) {
       await execSeeders(sequelize2, seederPath, verbose)
     }
     await refreshMviews(sequelize2)
-
-    // Teardown
-    await sequelize1.close()
     await sequelize2.close()
   } catch (err: any) {
     console.error(err)

@@ -1,3 +1,5 @@
 export * from './drop-tables'
 export * from './exec-migrations'
 export * from './exec-seeders'
+export * from './fix-pk-desync'
+export * from './refresh-mviews'

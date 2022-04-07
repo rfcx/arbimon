@@ -1,5 +1,4 @@
-import { execSeeders } from '@/db/actions/exec-seeders'
-import { refreshMviews } from '@/db/actions/refresh-mviews'
+import { execSeeders, refreshMviews } from './_helpers'
 import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
