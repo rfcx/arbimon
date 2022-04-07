@@ -56,7 +56,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   // await models.DetectionBySiteSpeciesHour
   //   .bulkCreate(detectionSummaries, {
-  //     updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
+  //     updateOnDuplicate: UPDATE_ON_DUPLICATE_ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR
   //   })
 }
 

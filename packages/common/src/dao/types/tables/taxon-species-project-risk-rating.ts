@@ -10,5 +10,4 @@ export interface TaxonSpeciesProjectRiskRating {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_PROJECT_RISK_RATING: AttributeConstants<TaxonSpeciesProjectRiskRating> = {
-  updateOnDuplicate: ['riskRatingId', 'sourceUrl', 'sourceName', 'riskRatingCustomCode']
 }

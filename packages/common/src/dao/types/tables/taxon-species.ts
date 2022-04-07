@@ -9,7 +9,4 @@ export interface TaxonSpecies {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES: AttributeConstants<TaxonSpecies> = {
-  pks: ['id'],
-  updateOnDuplicate: ['scientificName', 'taxonClassId'],
-  full: ['idArbimon', 'slug', 'taxonClassId', 'scientificName']
 }

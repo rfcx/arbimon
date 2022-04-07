@@ -20,8 +20,5 @@ export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
 >
 
 export const ATTRIBUTES_TAXON_SPECIES_PHOTO: AttributeConstants<TaxonSpeciesPhoto> = {
-  pks: ['taxonSpeciesId', 'taxonSpeciesSourceId', 'order'],
-  updateOnDuplicate: ['sourceUrl', 'photoUrl', 'license', 'caption', 'author'],
   light: ['sourceUrl', 'photoUrl', 'license', 'caption', 'author'],
-  full: ['taxonSpeciesId', 'taxonSpeciesSourceId', 'order', 'sourceUrl', 'photoUrl', 'license', 'caption', 'author']
 }

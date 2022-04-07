@@ -8,5 +8,4 @@ export interface TaxonSpeciesDescription {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_DESCRIPTION: AttributeConstants<TaxonSpeciesDescription> = {
-  updateOnDuplicate: ['sourceUrl', 'description']
 }

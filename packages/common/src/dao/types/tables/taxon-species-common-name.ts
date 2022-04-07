@@ -7,5 +7,4 @@ export interface TaxonSpeciesCommonName {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_COMMON_NAME: AttributeConstants<TaxonSpeciesCommonName> = {
-  updateOnDuplicate: ['commonName']
 }

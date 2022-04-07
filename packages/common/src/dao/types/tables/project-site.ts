@@ -15,5 +15,4 @@ export interface Site {
 
 export const ATTRIBUTES_LOCATION_SITE: AttributeConstants<Site> = {
   light: ['id', 'name', 'latitude', 'longitude', 'altitude'],
-  updateOnDuplicate: ['idCore', 'name', 'latitude', 'longitude', 'altitude']
 }

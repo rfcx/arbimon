@@ -7,5 +7,4 @@ export interface TaxonSpeciesSource {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_SOURCE: AttributeConstants<TaxonSpeciesSource> = {
-  updateOnDuplicate: ['priority']
 }

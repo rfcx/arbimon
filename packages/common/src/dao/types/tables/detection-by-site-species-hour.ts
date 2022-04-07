@@ -11,6 +11,4 @@ export interface DetectionByVersionSiteSpeciesHour {
 }
 
 export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR: AttributeConstants<DetectionByVersionSiteSpeciesHour> = {
-  pks: ['timePrecisionHourLocal', 'projectVersionId', 'projectSiteId', 'taxonSpeciesId'],
-  updateOnDuplicate: ['taxonClassId', 'detectionMinutes', 'recordingMinutes']
 }
