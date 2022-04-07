@@ -10,7 +10,7 @@
         </h1>
         <icon-fa-close
           class="text-xs cursor-pointer"
-          @emit-close="emit('emitClose')"
+          @click="emit('emitClose')"
         />
       </div>
 
