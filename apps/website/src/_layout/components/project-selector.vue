@@ -41,7 +41,7 @@
       </el-tabs>
 
       <div
-        class="min-h-72 mt-2"
+        class="min-h-108 mt-2"
         :class="{ 'min-h-84': searchKeyword }"
       >
         <p
@@ -52,7 +52,8 @@
         </p>
         <div v-else>
           <div class="grid grid-cols-17 gap-2 m-0 py-2 text-subtle">
-            <span class="col-span-9">Name</span>
+            <span class="col-span-1" />
+            <span class="col-span-8">Name</span>
             <span class="col-span-8">ID</span>
           </div>
           <div
@@ -87,9 +88,9 @@
           v-model:currentPage="currentPage"
           small
           layout="prev, pager, next"
-          :total="projectData[activeTab].length"
+          :total="displayProjectData.length"
           :page-size="PAGE_SIZE"
-          :hide-on-single-page="projectData[activeTab].length <= PAGE_SIZE"
+          :hide-on-single-page="displayProjectData.length <= PAGE_SIZE"
         />
       </div>
 
