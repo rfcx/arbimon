@@ -5,6 +5,7 @@ import { Source } from '../../types'
 
 export const MODEL_SOURCE = 'Source'
 const TABLE_SOURCE = 'source'
+export const UPDATE_ON_DUPLICATE_SOURCE: Array<(keyof Source)> = ['name']
 
 export const SourceModel = defineWithDefaultsAutoPk<Source>(
   MODEL_SOURCE,

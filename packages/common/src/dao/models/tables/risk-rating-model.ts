@@ -5,6 +5,7 @@ import { RiskRating } from '../../types'
 
 export const MODEL_RISK_RATING = 'RiskRating'
 const TABLE_RISK_RATING = 'risk_rating'
+export const UPDATE_ON_DUPLICATE_RISK_RATING: Array<(keyof RiskRating)> = ['code', 'isThreatened']
 
 export const RiskRatingModel = defineWithDefaults<RiskRating>(
   MODEL_RISK_RATING,

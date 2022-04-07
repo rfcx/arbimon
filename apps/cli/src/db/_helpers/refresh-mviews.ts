@@ -22,5 +22,5 @@ export const refreshMviews = async (sequelize: Sequelize): Promise<void> => {
     console.info(`- public.${view}`)
     await sequelize.query(`REFRESH MATERIALIZED VIEW ${view}`)
   }
-  if (mvsOrdered.length === 0) console.info('No materialized views found')
+  if (mvsOrdered.length === 0) console.info('- No materialized views found')
 }

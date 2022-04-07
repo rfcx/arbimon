@@ -2,7 +2,10 @@ import { execSeeders, refreshMviews } from './_helpers'
 import { getSequelize } from './connections'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
-const seederPaths = process.argv.find(arg => arg.startsWith('--path='))?.split('=')[1]
+const seederPaths = process.argv
+  .find(arg => arg.startsWith('--path='))
+  ?.split('=')[1]
+  ?.split(',')
 
 const main = async (): Promise<void> => {
   // Validate inputs
@@ -12,18 +15,11 @@ const main = async (): Promise<void> => {
     return
   }
 
-  // Setup
   const sequelize = getSequelize(verbose)
 
-  // Execute seeders
-  for (const seederPath of seederPaths.split(',')) {
-    await execSeeders(sequelize, seederPath, verbose)
-  }
-
-  // Refresh mviews
+  for (const path of seederPaths) { await execSeeders(sequelize, path, verbose) }
   await refreshMviews(sequelize)
 
-  // Teardown
   await sequelize.close()
 }
 
