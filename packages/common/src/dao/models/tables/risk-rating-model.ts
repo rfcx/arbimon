@@ -12,8 +12,7 @@ export const RiskRatingModel = defineWithDefaults<RiskRating>(
     // PK
     id: { // 1
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
 
     // SKs

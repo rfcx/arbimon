@@ -1,6 +1,6 @@
-import { TaxonClass } from '@rfcx-bio/common/dao/types'
+import { TaxonClass } from '@/dao/types'
 
-export const rawTaxonClasses: TaxonClass[] = [
+ const masterTaxonClasses = <const>[
   { id: -1, idArbimon: 6, slug: 'others', commonName: 'Others' },
   { id: 100, idArbimon: 2, slug: 'amphibians', commonName: 'Amphibians' },
   { id: 200, idArbimon: 4, slug: 'bats', commonName: 'Bats' },
@@ -9,3 +9,6 @@ export const rawTaxonClasses: TaxonClass[] = [
   { id: 500, idArbimon: 3, slug: 'insects', commonName: 'Insects' },
   { id: 600, idArbimon: 5, slug: 'mammals', commonName: 'Mammals' }
 ]
+
+export type TaxonClassId = typeof masterTaxonClasses[number]['id']
+export const taxonClasses: readonly TaxonClass[] = masterTaxonClasses

@@ -1,6 +1,6 @@
-import { RiskRating } from '@rfcx-bio/common/dao/types'
+import { RiskRating } from '@/dao/types'
 
-export const rawRiskRatings: RiskRating[] = [
+const masterRiskRatings = <const>[
   { id: -1, code: 'NE', isThreatened: false },
   { id: 0, code: 'NA', isThreatened: false },
   { id: 100, code: 'DD', isThreatened: false },
@@ -13,3 +13,6 @@ export const rawRiskRatings: RiskRating[] = [
   { id: 800, code: 'EW', isThreatened: false },
   { id: 900, code: 'EX', isThreatened: false }
 ]
+
+export type RiskId = typeof masterRiskRatings[number]['id']
+export const riskRatings: readonly RiskRating[] = masterRiskRatings
