@@ -5,7 +5,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { rawTaxonSpeciesPhoto } from '@/seed/data/taxon-species-photo'
+import { rawTaxonSpeciesPhoto } from '../../data/generated/taxon-species-photo'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
