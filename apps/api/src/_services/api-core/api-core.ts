@@ -42,8 +42,7 @@ export async function getMemberProjectCoreIdsFromApi (token: string): Promise<st
     if (ids.length < DEFAULT_MEMBER_PROJECT_LIMIT) break
   }
 
-  // Merge via a Set in case new projects were added between calls, pushing IDs down to later pages
-  return [...new Set(results.flat())]
+  return results.flat()
 }
 
 async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number = DEFAULT_MEMBER_PROJECT_LIMIT, offset: number = DEFAULT_MEMBER_PROJECT_OFFSET): Promise<string[]> {
