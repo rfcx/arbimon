@@ -17,7 +17,10 @@ export const TaxonClassModel = defineWithDefaults<TaxonClass>(
     },
 
     // SKs
-    idArbimon: DataTypes.INTEGER, // ???
+    idArbimon: { // ???
+      type: DataTypes.INTEGER,
+      unique: true
+    },
     slug: { // birds
       type: DataTypes.STRING(255),
       unique: true

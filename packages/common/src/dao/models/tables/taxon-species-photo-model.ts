@@ -20,7 +20,8 @@ export const TaxonSpeciesPhotoModel = defineWithDefaults<TaxonSpeciesPhoto>(
     },
     order: { // 1
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      defaultValue: 1
     },
 
     // Facts

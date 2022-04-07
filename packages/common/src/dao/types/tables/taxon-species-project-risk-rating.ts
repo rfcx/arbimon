@@ -6,7 +6,7 @@ export interface TaxonSpeciesProjectRiskRating {
   riskRatingId: number
   sourceUrl: string
   sourceName: string
-  riskRatingCustomCode: string
+  riskRatingCustomCode: string | null
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_PROJECT_RISK_RATING: AttributeConstants<TaxonSpeciesProjectRiskRating> = {

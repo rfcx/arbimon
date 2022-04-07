@@ -16,7 +16,8 @@ export const TaxonSpeciesAudioModel = defineWithDefaults<TaxonSpeciesAudio>(
     },
     order: {
       type: DataTypes.INTEGER, // 1
-      primaryKey: true
+      primaryKey: true,
+      defaultValue: 1
     },
 
     // FKs

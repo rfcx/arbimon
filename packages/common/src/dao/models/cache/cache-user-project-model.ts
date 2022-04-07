@@ -15,14 +15,8 @@ export const CacheUserProjectModel = defineWithDefaults<CacheUserProject>(
       primaryKey: true
     },
     // Facts
-    projectCoreIds: {
-      type: DataTypes.ARRAY(DataTypes.STRING(255)),
-      allowNull: false
-    },
-    expiredAt: {
-      type: DataTypes.DATE,
-      allowNull: false
-    }
+    projectCoreIds: DataTypes.ARRAY(DataTypes.STRING(255)),
+    expiredAt: DataTypes.DATE
   },
   {
     tableName: TABLE_CACHE_USER_PROJECT

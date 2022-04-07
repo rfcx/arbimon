@@ -17,8 +17,14 @@ export const ProjectSiteModel = defineWithDefaultsAutoPk<Site>(
     },
 
     // SKs
-    idCore: DataTypes.STRING(12), // MoLQA8aNulGb
-    idArbimon: DataTypes.INTEGER, // 8412
+    idCore: { // MoLQA8aNulGb
+      type: DataTypes.STRING(12)
+      // unique: true
+    },
+    idArbimon: { // 8412
+      type: DataTypes.INTEGER,
+      unique: true
+     },
 
     // FKs
     projectId: DataTypes.INTEGER, // 1

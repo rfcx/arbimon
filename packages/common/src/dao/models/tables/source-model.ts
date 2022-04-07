@@ -13,8 +13,7 @@ export const SourceModel = defineWithDefaultsAutoPk<Source>(
     // PK
     id: { // 1
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
 
     // Facts

@@ -17,7 +17,10 @@ export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
     },
 
     // SKs
-    idArbimon: DataTypes.INTEGER, // ???
+    idArbimon: { // ???
+      type: DataTypes.INTEGER,
+      unique: true
+    },
     slug: { // accipiter-striatus-venator
       type: DataTypes.STRING(255),
       unique: true

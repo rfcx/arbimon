@@ -19,10 +19,9 @@
         autoIncrement: true
       },
 
-      // SKs
+      // SK
+      // Composite SK: hash + projectId + sourceId
       hash: DataTypes.STRING(255), // 1239eb4a8416af46c0448426b51771f5
-
-      // FKs
       project_id: {
         type: DataTypes.INTEGER,
         references: {

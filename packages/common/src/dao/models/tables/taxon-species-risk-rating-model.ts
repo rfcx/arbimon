@@ -24,7 +24,10 @@ export const TaxonSpeciesRiskRatingModel = defineWithDefaults<TaxonSpeciesRiskRa
 
     // Facts
     sourceUrl: DataTypes.STRING(511),
-    riskRatingCustomCode: DataTypes.STRING(255)
+    riskRatingCustomCode: {
+      type: DataTypes.STRING(10),
+      allowNull: true
+    }
   },
   {
     tableName: TABLE_TAXON_SPECIES_RISK_RATING

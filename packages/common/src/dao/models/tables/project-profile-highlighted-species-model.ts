@@ -20,10 +20,7 @@ export const ProjectProfileHighlightedSpeciesModel = defineWithDefaults<ProjectP
     },
 
     // Facts
-    highlightedOrder: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    }
+    highlightedOrder: DataTypes.INTEGER
   },
   {
     tableName: TABLE_PROJECT_PROFILE_HIGHLIGHTED_SPECIES

@@ -16,19 +16,15 @@ export const SourceSyncModel = defineWithDefaults<SourceSync, ModelForInterface<
       autoIncrement: true
     },
 
+    // SK
+    // Composite SK: hash + projectId + sourceId
+    hash: DataTypes.STRING(255),
+    projectId: DataTypes.INTEGER, // 1
+    sourceId: DataTypes.INTEGER, // 1
+
     // Logging
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-
-    // SKs
-    hash: { // 1239eb4a8416af46c0448426b51771f5
-      type: DataTypes.STRING(255),
-      unique: true
-    },
-
-    // FKs
-    projectId: DataTypes.INTEGER, // 1
-    sourceId: DataTypes.INTEGER, // 1
 
     // Facts
     summaryText: DataTypes.JSON
