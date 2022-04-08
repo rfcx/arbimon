@@ -1,34 +1,37 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { masterTaxonSpeciesSources } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesCommonName } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { rawTaxonSpeciesPhoto } from '../../data/generated/taxon-species-photo'
+import { preloadRfcxSpeciesSlugToCommonName } from '../../data/manual/taxon-species-rfcx'
 
-// TODO: Move to Wiki seed
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
   const models = ModelRepository.getInstance(sequelize)
 
-  // Lookups
-  const speciesSlugToId: Record<string, number> = await models.TaxonSpecies
-    .findAll({ attributes: ['id', 'slug'] })
+  // Key Lookups
+  const speciesSlugToId: Record<string, number> = await models.TaxonSpecies.findAll()
     .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.slug, s.id])))
 
+  const taxonSpeciesSourceId = masterTaxonSpeciesSources.RFCx.id
+
   // Convert data
-  const data: TaxonSpeciesPhoto[] = rawTaxonSpeciesPhoto
-    .map(({ taxonSpeciesId: _, 'TaxonSpecies.slug': slug, ...rest }) => {
+  const data: TaxonSpeciesCommonName[] = Object.entries(preloadRfcxSpeciesSlugToCommonName)
+    .map(([slug, commonName]) => {
+      // Try to find species ID
       const taxonSpeciesId = speciesSlugToId[slug]
       if (!taxonSpeciesId) return undefined
 
       return {
         taxonSpeciesId,
-        ...rest
+        taxonSpeciesSourceId,
+        commonName
       }
     })
     .filter(isDefined)
 
-  await models.TaxonSpeciesPhoto.bulkCreate(data)
+  await models.TaxonSpeciesCommonName.bulkCreate(data)
 }
