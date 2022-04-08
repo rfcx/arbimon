@@ -42,7 +42,7 @@
 
       <div
         class="min-h-108 mt-2"
-        :class="{ 'min-h-84': searchKeyword }"
+        :class="{ 'min-h-120': searchKeyword }"
       >
         <p
           v-if="displayProjectData.length === 0"
