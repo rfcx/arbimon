@@ -50,7 +50,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
-      project_version_first_detection_id: {
+      project_version_first_appears_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

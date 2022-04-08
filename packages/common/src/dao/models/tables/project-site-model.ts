@@ -1,12 +1,12 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../../model-helpers/defaults'
-import { Site } from '../../types'
+import { ProjectSite } from '../../types'
 
 export const MODEL_PROJECT_SITE = 'ProjectSite'
 const TABLE_PROJECT_SITE = 'project_site'
 
-export const ProjectSiteModel = defineWithDefaultsAutoPk<Site>(
+export const ProjectSiteModel = defineWithDefaultsAutoPk<ProjectSite>(
   MODEL_PROJECT_SITE,
   {
     // PK
@@ -28,7 +28,7 @@ export const ProjectSiteModel = defineWithDefaultsAutoPk<Site>(
 
     // FKs
     projectId: DataTypes.INTEGER, // 1
-    projectVersionFirstDetectionId: DataTypes.INTEGER, // 123
+    projectVersionFirstAppearsId: DataTypes.INTEGER, // 123
 
     // Facts
     name: DataTypes.STRING(255), // 'CU26'
