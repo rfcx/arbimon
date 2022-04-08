@@ -6,7 +6,7 @@ import { TABLE_SEQUELIZE_SEEDERS } from '@/db/connections/table-names'
 import { getUmzug } from '../connections'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
-const pathToSeeders = '../../ingest/seeders'
+const pathToSeeders = '../../seed/seeders'
 
 export const execSeeders = async (sequelize: Sequelize, seeder: string, verbose = false): Promise<void> => {
     // Extract CWD & filename

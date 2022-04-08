@@ -22,7 +22,6 @@ const main = async (): Promise<void> => {
     await dropTables(sequelize1)
     await execMigrations(sequelize1, verbose)
     await updateMasterData(sequelize1)
-    await sequelize1.close()
 
     // Seed, refresh mviews
     // Seeders uses a different Umzug (which seems to require a fresh Sequelize instance)
@@ -31,6 +30,9 @@ const main = async (): Promise<void> => {
       await execSeeders(sequelize2, path, verbose)
     }
     await refreshMviews(sequelize2)
+
+    // Cleanup
+    await sequelize1.close()
     await sequelize2.close()
   } catch (err: any) {
     console.error(err)
