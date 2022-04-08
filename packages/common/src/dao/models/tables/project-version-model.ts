@@ -1,12 +1,12 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Optional } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '../../model-helpers/defaults'
+import { defineWithDefaultsAutoPk, ModelForInterfaceWithPk } from '../../model-helpers/defaults'
 import { ProjectVersion } from '../../types'
 
 export const MODEL_PROJECT_VERSION = 'ProjectVersion'
 const TABLE_PROJECT_VERSION = 'project_version'
 
-export const ProjectVersionModel = defineWithDefaultsAutoPk<ProjectVersion>(
+export const ProjectVersionModel = defineWithDefaultsAutoPk<ProjectVersion, ModelForInterfaceWithPk<ProjectVersion, Optional<ProjectVersion, 'id' | 'isPublished' | 'isPublic'>>>(
   MODEL_PROJECT_VERSION,
   {
     // PK
