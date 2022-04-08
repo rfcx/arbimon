@@ -13,10 +13,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     TABLE_NAME,
     {
       // PK
-      id: {
+      id: { // -1, 100, 200
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+        primaryKey: true
       },
 
       // Logging
@@ -33,10 +32,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       name: { // RFCx, IUCN, Wiki
         type: DataTypes.STRING(15),
         unique: true,
-        allowNull: false
-      },
-      priority: { // -1, 100, 200
-        type: DataTypes.INTEGER,
         allowNull: false
       }
     }
