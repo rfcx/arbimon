@@ -27,22 +27,20 @@ export class ModelRepository {
         if (!source) throw new Error('Models must be constructed & registered before associations can be added')
 
         if ('oneToOne' in associations) {
-          associations.oneToOne?.forEach(targetName => {
-            const target = repo[targetName] as UnknownModel
-            if (!target) return
+          associations.oneToOne?.forEach(targetNameOrObject => {
+            const { target, foreignKey } = extractTargetFk(repo, targetNameOrObject)
+            if (!target || !foreignKey) return
 
-            const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
             source.belongsTo(target, { foreignKey })
             target.hasOne(source, { foreignKey })
           })
         }
 
         if ('manyToOne' in associations) {
-          associations.manyToOne?.forEach(targetName => {
-            const target = repo[targetName] as UnknownModel
-            if (!target) return
+          associations.manyToOne?.forEach(targetNameOrObject => {
+            const { target, foreignKey } = extractTargetFk(repo, targetNameOrObject)
+            if (!target || !foreignKey) return
 
-            const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
             source.belongsTo(target, { foreignKey })
             target.hasMany(source, { foreignKey })
           })
@@ -50,5 +48,23 @@ export class ModelRepository {
       })
 
     this.repo = repo
+  }
+}
+
+const extractTargetFk = (repo: AllModels, nameOrObject: string | { model: string, foreignKey: string }): { target: UnknownModel | undefined, foreignKey: string | undefined } => { 
+  if (typeof nameOrObject === 'object') {
+    // Custom FK
+    const { model, foreignKey } = nameOrObject
+    const target = repo[model as keyof AllModels] as UnknownModel
+    if (!target) return { target, foreignKey: undefined }
+
+    return { target, foreignKey }
+  } else {
+    // Default FK
+    const target = repo[nameOrObject as keyof AllModels] as UnknownModel
+    if (!target) return { target, foreignKey: undefined }
+
+    const foreignKey = `${target.name[0].toLowerCase()}${target.name.slice(1)}Id`
+    return { target, foreignKey }
   }
 }

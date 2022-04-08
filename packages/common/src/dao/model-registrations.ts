@@ -7,7 +7,7 @@ export const modelRegistrations = <const>{
   [MODEL_PROJECT]: [ProjectModel],
   [MODEL_PROJECT_PROFILE_HIGHLIGHTED_SPECIES]: [ProjectProfileHighlightedSpeciesModel, { manyToOne: [MODEL_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_PROJECT_PROFILE]: [ProjectProfileModel, { oneToOne: [MODEL_PROJECT] }],
-  [MODEL_PROJECT_SITE]: [ProjectSiteModel, { manyToOne: [MODEL_PROJECT, MODEL_PROJECT_VERSION] }], // TODO: Need to customize the FK col name
+  [MODEL_PROJECT_SITE]: [ProjectSiteModel, { manyToOne: [MODEL_PROJECT, { model: MODEL_PROJECT_VERSION, foreignKey: 'project_version_first_appears_id' }] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_PROJECT] }],
 
   [MODEL_RISK_RATING]: [RiskRatingModel],
@@ -20,7 +20,7 @@ export const modelRegistrations = <const>{
   [MODEL_TAXON_CLASS]: [TaxonClassModel],
 
   [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
-  [MODEL_TAXON_SPECIES_AUDIO]: [TaxonSpeciesAudioModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_PROJECT, MODEL_PROJECT_SITE] }], // TODO: Need to customize the FK col name
+  [MODEL_TAXON_SPECIES_AUDIO]: [TaxonSpeciesAudioModel, { manyToOne: [MODEL_TAXON_SPECIES, { model: MODEL_PROJECT, foreignKey: 'recordingProjectId' }, { model: MODEL_PROJECT_SITE, foreignKey: 'recordingSiteId' }] }],
   [MODEL_TAXON_SPECIES_COMMON_NAME]: [TaxonSpeciesCommonNameModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
   [MODEL_TAXON_SPECIES_DESCRIPTION]: [TaxonSpeciesDescriptionModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
   [MODEL_TAXON_SPECIES_FILE]: [TaxonSpeciesFileModel, { manyToOne: [MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_SOURCE] }],
