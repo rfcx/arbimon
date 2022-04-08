@@ -154,7 +154,7 @@ const tabs = <const>{
   }
 }
 
-const activeTab = ref(tabs.myProjects.id)
+const activeTab = ref(store.user ? tabs.myProjects.id : tabs.showcaseProjects.id)
 
 // On tab change
 watch(activeTab, () => {
