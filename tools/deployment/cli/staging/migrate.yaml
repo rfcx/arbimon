@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: biodiversity-cli-migrate-JOB_NUMBER
-        command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/db/reset-migrate-seed.js", "--", "--path=04-sync,05-preload,06-user-data-mock"]
+        command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/db/reset-migrate-seed.js", "--", "--path=03-preload,04-user-data-mock"]
         image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/staging:latest
         imagePullPolicy: IfNotPresent
         envFrom:

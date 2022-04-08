@@ -1,6 +1,14 @@
-// import * as hash from 'object-hash'
-import { QueryInterface } from 'sequelize'
+import { /* Optional, */ QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
+
+// import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+// import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
+
+// import { rawSpecies } from '../../data/manual/taxon-species'
+
+// import * as hash from 'object-hash'
+// import { QueryInterface } from 'sequelize'
+// import { MigrationFn } from 'umzug'
 
 // import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 // import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -9,6 +17,31 @@ import { MigrationFn } from 'umzug'
 // import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  // TODO: Mock sync detections & species from arbimon
+
+  // FROM SPECIES SEED
+
+  // const models = ModelRepository.getInstance(params.context.sequelize)
+
+  // // Lookups
+  // const taxonClassArbimonToBio = await models
+  //   .TaxonClass
+  //   .findAll()
+  //   .then(res => Object.fromEntries(res.map(t => [t.idArbimon, t.id])))
+
+  // // Save
+  // const data: Array<Optional<TaxonSpecies, 'id'>> =
+  //   rawSpecies.map(s => ({
+  //     idArbimon: s.speciesId,
+  //     slug: s.speciesSlug,
+  //     taxonClassId: taxonClassArbimonToBio[s.taxonId],
+  //     scientificName: s.scientificName
+  //   }))
+
+  // await models.TaxonSpecies.bulkCreate(data)
+
+  // FROM DETECTION SEED
+
   // const sequelize = params.context.sequelize
   // const models = ModelRepository.getInstance(sequelize)
 
@@ -59,8 +92,3 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   //     updateOnDuplicate: UPDATE_ON_DUPLICATE_ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR
   //   })
 }
-
-/**
- * latest => findOne(...) ~~ SELECT * FROM project_version ORDER BY created_at DESC LIMIT 1
- * most-recent published => findOne(...) ~~ SELECT * FROM project_version WHERE is_published=true ORDER BY created_at DESC LIMIT 1
- */

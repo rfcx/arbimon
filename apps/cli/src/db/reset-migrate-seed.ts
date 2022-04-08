@@ -2,10 +2,10 @@ import { dropTables, execMigrations, execSeeders, refreshMviews, updateMasterDat
 import { getSequelize } from './connections'
 
 const DEFAULT_LOCAL_SEEDER_PATHS = [
-  '02-integration-test-data',
-  '03-external-data-mock',
-  '05-preload',
-  '06-user-data-mock'
+  '01-integration-test-data',
+  '02-arbimon-data-mock',
+  '03-preload',
+  '04-user-data-mock'
 ]
 
 const verbose = process.argv.some(arg => arg === '--verbose')

@@ -7,6 +7,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { rawTaxonSpeciesPhoto } from '../../data/generated/taxon-species-photo'
 
+// TODO: Move to Wiki seed
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
   const models = ModelRepository.getInstance(sequelize)
