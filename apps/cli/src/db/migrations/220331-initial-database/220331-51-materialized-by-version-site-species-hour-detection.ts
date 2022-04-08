@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'detection_by_version_site_species_hour'
+const TABLE_NAME = 'materialized_by_version_site_species_hour_detection'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -64,11 +64,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Facts
-      detection_minutes: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
-      recording_minutes: {
+      count_detection_minutes: {
         type: DataTypes.INTEGER,
         allowNull: false
       }
