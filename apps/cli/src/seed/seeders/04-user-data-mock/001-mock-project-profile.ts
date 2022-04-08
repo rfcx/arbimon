@@ -5,10 +5,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ProjectProfile } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { requireEnv } from '~/env'
-import { rawEnvToProjectAndProfile } from '../../data/manual/location-project-and-profile'
-
-const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
+import { mockProjectProfilesBySlug } from '../../data/manual/project-profile'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
@@ -19,16 +16,17 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .findAll()
     .then(allProjects => Object.fromEntries(allProjects.map(s => [s.slug, s.id])))
 
-  const projectsProfile: ProjectProfile[] = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
-    .map(({ slug, summary, readme }) => {
+  // Create profiles
+  const projectsProfile: ProjectProfile[] = Object.entries(mockProjectProfilesBySlug)
+    .map(([slug, profile]) => {
       // Try to find project ID
       const projectId = projectSlugToId[slug]
       if (!projectId) return undefined
 
+      // Merge ID & profile data
       return {
         projectId,
-        summary,
-        readme
+        ...profile
       }
     })
     .filter(isDefined)

@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { requireEnv } from '~/env'
-import { rawEnvToProjectAndProfile } from '../data/manual/location-project-and-profile'
+import { mockProjectsByEnv } from '../data/manual/project'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
@@ -15,7 +15,7 @@ export const getPuertoRicoProjectId = async (sequelize: Sequelize): Promise<numb
   const models = ModelRepository.getInstance(sequelize)
 
   // Find PR project slug
-  const puertoRicoSlug = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
+  const puertoRicoSlug = mockProjectsByEnv[BIO_ENVIRONMENT]
     .find(p => p.slug.startsWith('puerto'))
     ?.slug ?? 'puerto-rico'
 
