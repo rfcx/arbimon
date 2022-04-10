@@ -19,9 +19,10 @@ export const execSeeders = async (sequelize: Sequelize, seeder: string, verbose 
     const umzug = getUmzug(sequelize, verbose, TABLE_SEQUELIZE_SEEDERS, cwd, filename)
 
     // Run seeders
+    console.info(`Seeding ${seeder}:`)
     const previouslyExecuted = await umzug.executed().then(previousSeeders => previousSeeders.length)
     await umzug.up().then(newSeeders => {
-      console.info(`Executed ${newSeeders.length} needed seeders in ${seeder} (${previouslyExecuted} previously executed)`)
+      console.info(`(executed ${newSeeders.length} needed seeders; ${previouslyExecuted} previously executed)`)
       newSeeders.forEach(r => console.info(`- ${r.name}`))
     })
 }

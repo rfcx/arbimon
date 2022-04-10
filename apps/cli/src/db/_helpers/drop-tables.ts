@@ -6,7 +6,7 @@ export const dropTables = async (sequelize: Sequelize): Promise<void> => {
   // Drop all public tables
   const tables = await sequelize.query<{ tablename: string }>('SELECT tablename FROM pg_tables WHERE schemaname = \'public\'', { type: QueryTypes.SELECT })
 
-  console.info('Drop if exists:')
+  console.info('Dropping tables (if exists):')
   for (const table of tables) {
     console.info(`- public.${table.tablename}`)
     await sequelize.query(`DROP TABLE IF EXISTS public.${table.tablename} CASCADE`)
