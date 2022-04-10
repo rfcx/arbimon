@@ -1,4 +1,4 @@
-import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
 import { TaxonClass } from '@rfcx-bio/common/dao/types'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 

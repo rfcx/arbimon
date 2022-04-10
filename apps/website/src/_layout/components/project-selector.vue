@@ -10,7 +10,7 @@
         </h1>
         <icon-fa-close
           class="text-xs cursor-pointer"
-          @emit-close="emit('emitClose')"
+          @click="emit('emitClose')"
         />
       </div>
 
@@ -41,8 +41,8 @@
       </el-tabs>
 
       <div
-        class="min-h-72 mt-2"
-        :class="{ 'min-h-84': searchKeyword }"
+        class="min-h-108 mt-2"
+        :class="{ 'min-h-120': searchKeyword }"
       >
         <p
           v-if="displayProjectData.length === 0"
@@ -52,7 +52,8 @@
         </p>
         <div v-else>
           <div class="grid grid-cols-17 gap-2 m-0 py-2 text-subtle">
-            <span class="col-span-9">Name</span>
+            <span class="col-span-1" />
+            <span class="col-span-8">Name</span>
             <span class="col-span-8">ID</span>
           </div>
           <div
@@ -83,13 +84,17 @@
         </div>
       </div>
       <div class="flex justify-end">
+        <div
+          v-if="total <= PAGE_SIZE"
+          class="w-full h-7"
+        />
         <el-pagination
           v-model:currentPage="currentPage"
           small
           layout="prev, pager, next"
-          :total="projectData[activeTab].length"
+          :total="total"
           :page-size="PAGE_SIZE"
-          :hide-on-single-page="projectData[activeTab].length <= PAGE_SIZE"
+          :hide-on-single-page="total <= PAGE_SIZE"
         />
       </div>
 
@@ -149,7 +154,7 @@ const tabs = <const>{
   }
 }
 
-const activeTab = ref(tabs.myProjects.id)
+const activeTab = ref(store.user ? tabs.myProjects.id : tabs.showcaseProjects.id)
 
 // On tab change
 watch(activeTab, () => {
@@ -163,9 +168,9 @@ watch(searchKeyword, () => {
 
 const displayProject = computed(() => {
   if (activeTab.value === tabs.myProjects.id && !searchKeyword.value) {
-    return user.value === undefined ? 'Please login to see your project.' : "You don't have any project."
+    return user.value === undefined ? 'Please login to see your project' : "You don't have any project"
   }
-  return 'No project found.'
+  return 'No projects found'
 })
 
 const projectData = computed(() => ({
@@ -186,6 +191,14 @@ const displayProjectData = computed(() => {
 
   // No search keyword
   return projectData.value[activeTab.value].slice(startIdx * PAGE_SIZE, (startIdx * PAGE_SIZE) + PAGE_SIZE)
+})
+
+const total = computed(() => {
+  if (searchKeyword.value) {
+    return store.projects
+      .filter(({ name }) => name.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value))).length
+  }
+  return projectData.value[activeTab.value].length
 })
 
 const setSelectedProject = (project: LocationProjectForUser) => {

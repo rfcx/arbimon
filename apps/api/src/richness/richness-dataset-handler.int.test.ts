@@ -17,8 +17,7 @@ const EXPECTED_PROPS = [
   'richnessByTimeDayOfWeek',
   'richnessByTimeMonthOfYear',
   'richnessByTimeUnix',
-  'richnessPresence',
-  'richnessExport'
+  'richnessPresence'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
@@ -116,7 +115,6 @@ describe('validate known data', () => {
     expect(result.richnessByTaxon).toEqual({})
     expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
     expect(result.richnessByTimeUnix).toEqual({})
-    expect(result.richnessExport).toEqual([])
     expect(result.richnessPresence).toEqual([])
   })
 })

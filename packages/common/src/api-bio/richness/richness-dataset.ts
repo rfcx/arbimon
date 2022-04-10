@@ -21,25 +21,12 @@ export interface RichnessDatasetResponse {
   richnessByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
   richnessByTimeUnix: Record<number, number> // unix -> richness
   richnessPresence: Record<number, RichnessPresence>
-  richnessExport: RichnessByExportReportRow[]
 }
 
 export interface RichnessSiteData {
   locationSiteId: number
   taxonClassId: number
   richness: number
-}
-
-export interface RichnessByExportReportRow {
-  name: string
-  site: string
-  latitude: number
-  longitude: number
-  day: string
-  month: string
-  year: string
-  date: string
-  hour: string
 }
 
 export interface RichnessPresence {
