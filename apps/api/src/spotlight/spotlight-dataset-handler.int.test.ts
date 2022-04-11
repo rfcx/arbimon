@@ -342,7 +342,7 @@ describe('client errors', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
