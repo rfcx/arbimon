@@ -34,7 +34,11 @@ export const useStore = defineStore('root', {
     async updateSelectedProject (project?: ProjectForUser) {
       if (this.selectedProject?.id === project?.id) return
 
+      // Set project & clear old data immediately
       this.selectedProject = project
+      this.projectFilters = undefined
+
+      // Load new data asynchronously
       this.projectFilters = project
         ? await projectService.getProjectFilters(project.id)
         : undefined
