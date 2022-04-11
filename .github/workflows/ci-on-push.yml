@@ -2,7 +2,8 @@ name: 'CI On Push'
 on:
   workflow_dispatch:
   push:
-    branches-ignore: # ignore branches using the CD workflow
+    # ignore branches using the CD workflow
+    branches-ignore:
       - master
       - staging
 concurrency: ${{ github.workflow }}-${{ github.ref }}

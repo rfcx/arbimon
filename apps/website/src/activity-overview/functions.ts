@@ -28,10 +28,9 @@ export interface CsvData {
 }
 
 export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[]): MapDataSet[] {
-  const maximumNumbers: Array<[number, number]> = datasets.map(({ detectionsBySite }) => {
-    const overviewBySiteValues = Object.values(detectionsBySite)
-    const detectionCounts = overviewBySiteValues.map(({ detection }) => detection)
-    const detectionFrequencies = overviewBySiteValues.map(({ detectionFrequency }) => detectionFrequency)
+  const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
+    const detectionCounts = activityBySite.map(({ detection }) => detection)
+    const detectionFrequencies = activityBySite.map(({ detectionFrequency }) => detectionFrequency)
     return [Math.max(0, ...detectionCounts), Math.max(0, ...detectionFrequencies)]
   })
 
@@ -40,9 +39,8 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
     [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, detectionsBySite }) => {
-    const overviewBySiteValues = Object.values(detectionsBySite)
-    const data = overviewBySiteValues.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
+  return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
+    const data = activityBySite.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,
       longitude,
