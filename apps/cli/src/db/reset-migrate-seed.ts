@@ -1,12 +1,6 @@
+import { DEFAULT_LOCAL_SEEDER_PATHS } from '../seed'
 import { dropTables, execMigrations, execSeeders, refreshMviews, updateMasterData } from './_helpers'
 import { getSequelize } from './connections'
-
-const DEFAULT_LOCAL_SEEDER_PATHS = [
-  '01-integration-test-data',
-  '02-arbimon-data-mock',
-  '03-preload',
-  '04-user-data-mock'
-]
 
 const verbose = process.argv.some(arg => arg === '--verbose')
 const seederPaths = process.argv
