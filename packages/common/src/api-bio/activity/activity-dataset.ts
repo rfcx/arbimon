@@ -11,24 +11,22 @@ export const activityDatasetGeneratedUrl = (params: ActivityDatasetParams): stri
 // Response
 export interface ActivityDatasetResponse {
   isLocationRedacted: boolean
-  detectionsBySite: ActivityOverviewDetectionDataBySite
-  detectionsBySpecies: ActivityOverviewDataBySpecies[]
-  detectionsByTimeHour: ActivityOverviewDetectionDataByTime
-  detectionsByTimeDay: ActivityOverviewDetectionDataByTime
-  detectionsByTimeMonth: ActivityOverviewDetectionDataByTime
-  detectionsByTimeDate: ActivityOverviewDetectionDataByTime
+  activityBySite: ActivityOverviewDetectionDataBySite[]
+  activityBySpecies: ActivityOverviewDataBySpecies[]
+  activityByTimeHour: ActivityOverviewDetectionDataByTime
+  activityByTimeDay: ActivityOverviewDetectionDataByTime
+  activityByTimeMonth: ActivityOverviewDetectionDataByTime
+  activityByTimeDate: ActivityOverviewDetectionDataByTime
 }
 
 export interface ActivityOverviewDetectionDataBySite {
-  [siteId: number]: {
-    siteId: number
-    siteName: string
-    latitude: number
-    longitude: number
-    detection: number
-    detectionFrequency: number
-    occupancy: boolean
-  }
+  siteId: number
+  siteName: string
+  latitude: number
+  longitude: number
+  detection: number
+  detectionFrequency: number
+  occupancy: boolean
 }
 
 export interface ActivityOverviewDetectionDataByTime {

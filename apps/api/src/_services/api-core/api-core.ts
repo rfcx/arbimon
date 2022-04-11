@@ -8,8 +8,9 @@ import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
+const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
+const DEFAULT_MEMBER_PROJECT_OFFSET = 0
 
-// Responsibility: calling API & returning domain errors
 export async function getIsProjectMember (projectId: string, token: string): Promise<CoreProject> {
     return await axios.request<CoreProject>({
       method: 'GET',
@@ -26,10 +27,29 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
 }
 
 export async function getMemberProjectCoreIdsFromApi (token: string): Promise<string[]> {
+  const results: string[][] = []
+  let offset = DEFAULT_MEMBER_PROJECT_OFFSET
+
+  while (true) {
+    // Get 1 "page" of IDs
+    const ids = await getMemberProjectCoreIdsFromApiPaged(token, DEFAULT_MEMBER_PROJECT_LIMIT, offset)
+
+    // Store new IDs & increment offset
+    results.push(ids)
+    offset = offset + DEFAULT_MEMBER_PROJECT_LIMIT
+
+    // Stop if the last request wasn't a complete "page"
+    if (ids.length < DEFAULT_MEMBER_PROJECT_LIMIT) break
+  }
+
+  return results.flat()
+}
+
+async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number = DEFAULT_MEMBER_PROJECT_LIMIT, offset: number = DEFAULT_MEMBER_PROJECT_OFFSET): Promise<string[]> {
   try {
     const resp = await axios.request<CoreProjectLight[]>({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/projects`,
+      url: `${CORE_API_BASE_URL}/projects?fields=id&limit=${limit} &offset=${offset}`,
       headers: { authorization: token }
     })
 

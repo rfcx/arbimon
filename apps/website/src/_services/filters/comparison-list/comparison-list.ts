@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Emit, Inject, Prop } from 'vue-property-decorator'
+import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -8,7 +8,9 @@ import { ColoredFilter, ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
-const defaultFilter = new FilterImpl(dayjs().subtract(20, 'years').startOf('day'), dayjs().startOf('day'))
+const DEFAULT_START = dayjs().subtract(20, 'years').startOf('day')
+const DEFAULT_END = dayjs().startOf('day')
+const defaultFilter = new FilterImpl(DEFAULT_START, DEFAULT_END)
 
 @Options({
   components: {
@@ -43,12 +45,14 @@ export default class ComparisonListComponent extends Vue {
 
   override mounted (): void {
     this.emitSelect()
-    if (this.store.projectFilters?.dateStartInclusiveUtc && this.store.projectFilters?.dateEndInclusiveUtc) {
-      this.filters = [new FilterImpl(
-        dayjs(this.store.projectFilters?.dateStartInclusiveUtc),
-        dayjs(this.store.projectFilters?.dateEndInclusiveUtc)
-      )]
-    }
+  }
+
+  @Watch('store.projectFilters', { deep: true, immediate: true })
+  onProjectFilterChange (): void {
+    this.filters = [new FilterImpl(
+      this.store.projectFilters?.dateStartInclusiveUtc ? dayjs(this.store.projectFilters?.dateStartInclusiveUtc) : DEFAULT_START,
+      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs(this.store.projectFilters?.dateEndInclusiveUtc) : DEFAULT_END
+    )]
   }
 
   addFilterConfig (): void {
