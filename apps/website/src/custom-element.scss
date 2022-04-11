@@ -50,4 +50,12 @@
   }
 }
 
+.el-pagination {
+  --el-pagination-bg-color: trasparent;
+}
+
+.el-pagination button:disabled {
+  background-color: transparent;
+}
+
 /* stylelint-enable selector-class-pattern */

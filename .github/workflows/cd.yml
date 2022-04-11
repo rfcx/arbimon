@@ -16,31 +16,31 @@ jobs:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
       - name: 'Setup: Docker Buildx'
-        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
         # v1 (1.6.0) @ 12 Nov 2021 https://github.com/docker/setup-buildx-action/tags
+        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
 
       - name: 'Setup: Configure AWS credentials'
-        uses: aws-actions/configure-aws-credentials@0d9a5be0dceea74e09396820e1e522ba4a110d2f
-        # v1 (1.5.11) @ 03 Nov 2021 https://github.com/aws-actions/configure-aws-credentials/tags
+        # v1 (1.6.1) @ 19 Jan 2022 https://github.com/aws-actions/configure-aws-credentials/tags
+        uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'eu-west-1'
 
       - name: 'Setup: Git checkout'
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
-        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+        # v3 (3.0.0) @ 02 Mar 2022 https://github.com/actions/checkout/tags
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
 
       - name: 'Setup: ENV from Git'
         run: |
           if [[ "${{ github.event_name }}" = "pull_request" ]]; then echo "BRANCH_NAME=`echo ${GITHUB_HEAD_REF}`"; else echo "BRANCH_NAME=`echo ${GITHUB_REF#refs/heads/}`"; fi >> $GITHUB_ENV
           echo "COMMIT_TITLE=`git show -s --format='%s'`" >> $GITHUB_ENV
           echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-          echo "RELEASE_DATE=$(date +%s)" >> $GITHUB_ENV
+          echo "RELEASE_DATE=$(date +"%s")" >> $GITHUB_ENV
 
       - name: 'Setup: ENV from Branch'
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         with:
           key: '${{ env.BRANCH_NAME }}'
           map: |
@@ -79,12 +79,12 @@ jobs:
 
       - name: 'Setup: Login to ECR'
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
         # v1 (1.3.3) @ 03 Nov 2021 https://github.com/aws-actions/amazon-ecr-login/tags
+        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
 
       - name: 'Build: Docker build API'
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+        # v2 (2.10.0) @ 15 Mar 2022 https://github.com/docker/build-push-action/tags
+        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           build-args: |
             mode=${{ env.NAMESPACE }}
@@ -104,8 +104,8 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_API }}:${{ env.SHORT_SHA }}
 
       - name: 'Build: Docker build CLI'
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+        # v2 (2.10.0) @ 15 Mar 2022 https://github.com/docker/build-push-action/tags
+        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           build-args: |
             mode=${{ env.NAMESPACE }}
@@ -125,8 +125,8 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_CLI }}:${{ env.SHORT_SHA }}
 
       - name: 'Build: Docker build WEB'
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
-        # v2 (2.7.0) @ 12 Nov 2021 https://github.com/docker/build-push-action/tags
+        # v2 (2.10.0) @ 15 Mar 2022 https://github.com/docker/build-push-action/tags
+        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
           build-args: |
             mode=${{ env.NAMESPACE }}
@@ -151,32 +151,32 @@ jobs:
           find tools/deployment -name "*.yaml" -exec sed -i s/JOB_NUMBER/${{ github.run_number }}/g {} +
 
       - name: 'Deploy: Start migrate'
-        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Wait for migrate to complete successfully'
-        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: wait --for=condition=complete --timeout=300s -n ${{ env.NAMESPACE }} job/biodiversity-cli-migrate-${{ github.run_number }}
 
       - name: 'Deploy: Kubernetes apply API'
-        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
           args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Kubernetes apply WEB'
-        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
@@ -187,9 +187,9 @@ jobs:
       # -------------------------------------------------- #
 
       - name: 'Notify: Get Slack User'
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         if: always()
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         with:
           key: '${{ github.event.sender.login }}'
           map: |
@@ -203,9 +203,9 @@ jobs:
             }
 
       - name: 'Notify: Slack Failed'
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         if: always()
+        # v1 (1.9.0) @ 30 Mar 2022 https://github.com/ravsamhq/notify-slack-action/tags
+        uses: ravsamhq/notify-slack-action@1f019707281e1f3c939880a75b9c401e00f0f7cf
         with:
           notify_when: 'failure,warning'
           status: ${{ job.status }}
@@ -219,9 +219,9 @@ jobs:
           SENDER: ${{ github.event.sender.login || 'CRON' }}
 
       - name: 'Notify: Slack Success'
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         if: always()
+        # v1 (1.9.0) @ 30 Mar 2022 https://github.com/ravsamhq/notify-slack-action/tags
+        uses: ravsamhq/notify-slack-action@1f019707281e1f3c939880a75b9c401e00f0f7cf
         with:
           notify_when: 'success'
           status: ${{ job.status }}
@@ -231,3 +231,15 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_SUCCESS }}
           SENDER: ${{ github.event.sender.login || 'CRON' }}
+
+      - name: 'Debugging: Event Context'
+        if: always()
+        run: echo "$TO_ECHO"
+        env: 
+          TO_ECHO: ${{ toJSON(github) }}
+
+      - name: 'Debugging: Env'
+        if: always()
+        run: echo "$TO_ECHO"
+        env:
+          TO_ECHO: ${{ toJSON(env) }}

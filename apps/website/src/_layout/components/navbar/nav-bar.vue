@@ -64,9 +64,9 @@
         </div>
       </div>
     </nav>
-    <project-selector-component
+    <project-selector
       v-if="hasOpenedProjectSelector"
-      @emit-close-project-selector="toggleProjectSelector"
+      @emit-close="toggleProjectSelector(false)"
     />
   </div>
 </template>

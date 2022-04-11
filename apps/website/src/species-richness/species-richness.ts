@@ -2,7 +2,6 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
@@ -37,7 +36,6 @@ export default class SpeciesRichnessPage extends Vue {
   speciesByClassDatasets: GroupedBarChartItem[] = []
   speciesByLocationDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
-  speciesByExports: RichnessByExportReportRow[][] = []
   detectedSpecies: DetectedSpeciesItem[] = []
 
   get haveData (): boolean {
@@ -61,7 +59,8 @@ export default class SpeciesRichnessPage extends Vue {
     const datasets = await (await Promise.all(
       this.filters.map(async (filter) => {
         const { startDate, endDate, sites, color, otherFilters } = filter
-        const data = await richnessService.getRichnessDataset(filterToDataset(filter))
+        const f = filterToDataset(filter)
+        const data = await richnessService.getRichnessDataset(f)
         return data ? { startDate, endDate, sites, color, otherFilters, data } : data
       })
     )).filter(isDefined)
@@ -83,6 +82,5 @@ export default class SpeciesRichnessPage extends Vue {
         }
       })
     this.detectedSpecies = getTableData(datasets)
-    this.speciesByExports = datasets.map(({ data }) => data.richnessExport)
   }
 }
