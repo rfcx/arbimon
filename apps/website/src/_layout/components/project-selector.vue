@@ -3,9 +3,9 @@
     title="select project"
     @emit-close="emit('emitClose')"
   >
-    <div class="p-4 flex flex-col min-h-120">
+    <div class="p-4 flex flex-col h-168">
       <div class="flex justify-between items-center">
-        <h1 class="text-white text-xl">
+        <h1 class="text-white text-lg">
           Select Project
         </h1>
         <icon-fa-close
@@ -41,7 +41,7 @@
       </el-tabs>
 
       <div
-        class="mt-2"
+        class="mt-2 flex flex-grow"
       >
         <p
           v-if="displayProjectData.length === 0"
@@ -82,7 +82,7 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end">
+      <div class="mt-auto mb-4 flex justify-end">
         <div
           v-if="total <= PAGE_SIZE"
           class="w-full h-7"
