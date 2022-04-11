@@ -60,39 +60,43 @@ export function calculateOccupancy (totalSiteCount: number, occupiedSites: numbe
 }
 
 export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewDetectionDataBySite[]> => {
-  const { conditions, bind } = datasetFilterWhereRaw(filter)
+  // Filter inner query by dataset filter
+  const { conditions: datasetConditions, bind } = datasetFilterWhereRaw(filter)
+
+  // Filter outer query by project & site
+  // Note: all `bind` values already defined by dataset filter
+  const outerConditions = ['ls.location_project_id = $locationProjectId']
+  if (filter.siteIds.length > 0) { outerConditions.push('ls.id = ANY($siteIds)') }
 
   const sql = `
-    SELECT
-      id as "siteId",
-      name as "siteName",
-      latitude,
-      longitude,
-      coalesce (sum(count), 0)::integer as detection,
-      coalesce ((sum(count)::decimal / sum(duration_minutes)), 0)::float as "detectionFrequency",
-      coalesce(sum(count) > 0, false) as occupancy
-    FROM  (
-      SELECT
-        location_site_id,
-        time_precision_hour_local,
-        coalesce (sum(count), 0) as count,
-        coalesce (max(duration_minutes), 0) as duration_minutes 
-      FROM
-        detection_by_site_species_hour dbssh
-      WHERE
-        ${conditions} 
-      GROUP BY
-        dbssh.time_precision_hour_local,
-        dbssh.location_site_id
-    ) as detection_by_time
-    RIGHT JOIN
-      location_site as ls
-    ON
-      location_site_id = ls.id
-    GROUP BY
-      ls.id,
-      ls.latitude,
-      ls.longitude
+    SELECT id                                 as "siteId",
+          name                                as "siteName",
+          latitude,
+          longitude,
+          detection,
+          detection::float / duration_minutes as "detectionFrequency",
+          detection > 0                       as occupancy
+    FROM (
+        SELECT ls.id,
+              ls.name,
+              ls.latitude,
+              ls.longitude,
+              coalesce(sum(detection_by_site_hour.count), 0)::integer   as detection,
+              coalesce(sum(detection_by_site_hour.duration_minutes), 1) as duration_minutes
+        FROM location_site as ls
+        LEFT JOIN (
+            SELECT time_precision_hour_local,
+                  location_site_id,
+                  sum(count)            as count,
+                  max(duration_minutes) as duration_minutes -- same recording
+            FROM detection_by_site_species_hour dbssh
+            WHERE ${datasetConditions}
+            GROUP BY dbssh.time_precision_hour_local, dbssh.location_site_id
+        ) as detection_by_site_hour
+            ON ls.id = detection_by_site_hour.location_site_id
+        WHERE ${outerConditions.join(' AND ')}
+        GROUP BY ls.id
+    ) detection_by_site
   `
 
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDetectionDataBySite[]
