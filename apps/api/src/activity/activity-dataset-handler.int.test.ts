@@ -1,7 +1,7 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { activityDatasetGeneratedUrl } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { activityDatasetGeneratedUrl, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
@@ -141,60 +141,61 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       expect(result).toEqual(false)
     })
 
-    test('calculates detectionsBySite correctly', async () => {
+    test('calculates activityBySite correctly', async () => {
       // Arrange
-      const knownSiteId = '123'
+      const knownSiteId = 123
       const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
 
       // Act
-      const result = JSON.parse(response.body)?.detectionsBySite
+      const maybeResult = JSON.parse(response.body)?.activityBySite
 
-      // Assert - property exists
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-      expect(Object.keys(result).length).toBe(877)
+      // Assert - property exists & correct type
+      expect(maybeResult).toBeDefined()
+      expect(Array.isArray(maybeResult)).toBe(true)
+      const result = maybeResult as ActivityOverviewDetectionDataBySite[]
+      expect(result.length).toBe(877)
 
       // Assert - first result is object
-      const firstResult = result[knownSiteId]
-      expect(firstResult).toBeTypeOf('object')
+      const maybeKnownSite = result.find(bySite => bySite.siteId === knownSiteId)
+      expect(maybeKnownSite).toBeTypeOf('object')
+      const knownSite = maybeKnownSite as Record<string, any>
 
       // Assert - first result contains (only) expected props
-      const firstResultAsObject = firstResult as Record<string, any>
-      expectedProperties.forEach(expectedProperty => expect(firstResultAsObject).toHaveProperty(expectedProperty))
-      Object.keys(firstResultAsObject).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+      expectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
+      Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
-      expect(firstResultAsObject.detection).toBe(263)
-      expect(firstResultAsObject.detectionFrequency).toBeCloseTo(0.27058, 5)
-      expect(firstResultAsObject.occupancy).toBe(true)
+      expect(knownSite.detection).toBe(263)
+      expect(knownSite.detectionFrequency).toBeCloseTo(0.27058, 5)
+      expect(knownSite.occupancy).toBe(true)
     })
 
-    test.todo('calculates detectionsBySpecies correctly', async () => {
-      const result = JSON.parse(response.body)?.detectionsBySpecies
+    test.todo('calculates activityBySpecies correctly', async () => {
+      const result = JSON.parse(response.body)?.activityBySpecies
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo('calculates detectionsByTimeHour correctly', async () => {
-      const result = JSON.parse(response.body)?.detectionsByTimeHour
+    test.todo('calculates activityByTimeHour correctly', async () => {
+      const result = JSON.parse(response.body)?.activityByTimeHour
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo('calculate detectionsByTimeDay correctly', async () => {
-      const result = JSON.parse(response.body)?.detectionsByTimeDay
+    test.todo('calculate activityByTimeDay correctly', async () => {
+      const result = JSON.parse(response.body)?.activityByTimeDay
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo('calculate detectionsByTimeMonth correctly', async () => {
-      const result = JSON.parse(response.body)?.detectionsByTimeMonth
+    test.todo('calculate activityByTimeMonth correctly', async () => {
+      const result = JSON.parse(response.body)?.activityByTimeMonth
       expect(result).toBeDefined()
       // ...
     })
 
-    test.todo('calculate detectionsByTimeDate correctly', async () => {
-      const result = JSON.parse(response.body)?.detectionsByTimeDate
+    test.todo('calculate activityByTimeDate correctly', async () => {
+      const result = JSON.parse(response.body)?.activityByTimeDate
       expect(result).toBeDefined()
       // ...
     })
