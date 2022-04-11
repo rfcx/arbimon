@@ -116,11 +116,10 @@
 </template>
 <script lang="ts" setup>
 import { computed, defineEmits, ref, watch } from 'vue'
-import { RouteParamsRaw, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
-import { ROUTE_NAMES } from '~/router/route-names'
 import { useStore } from '~/store'
 
 interface Emits {
@@ -205,15 +204,16 @@ const setSelectedProject = (project: LocationProjectForUser) => {
 }
 
 const confirmSelectedProject = async () => {
-  if (newSelectedProject.value) {
-      await store.updateSelectedProject(newSelectedProject.value)
-    const params: RouteParamsRaw = { projectSlug: newSelectedProject.value.slug }
-    if (route.name === ROUTE_NAMES.activityPatterns) {
-      await router.push({ params: { ...params, speciesSlug: undefined } })
-    } else {
-      await router.push({ params })
-    }
+  if (!newSelectedProject.value) return emit('emitClose')
+
+  // Update store for future navigation
+  await store.updateSelectedProject(newSelectedProject.value)
+
+  // If current route uses projectSlug, update it (guard will update store)
+  if (route.params.projectSlug !== undefined) {
+    await router.push({ params: { projectSlug: newSelectedProject.value.slug } })
   }
+
   emit('emitClose')
 }
 
