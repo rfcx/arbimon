@@ -3,7 +3,7 @@
     title="select project"
     @emit-close="emit('emitClose')"
   >
-    <div class="p-4">
+    <div class="p-4 flex flex-col min-h-120">
       <div class="flex justify-between items-center">
         <h1 class="text-white text-xl">
           Select Project
@@ -41,8 +41,7 @@
       </el-tabs>
 
       <div
-        class="min-h-108 mt-2"
-        :class="{ 'min-h-120': searchKeyword }"
+        class="mt-2"
       >
         <p
           v-if="displayProjectData.length === 0"
@@ -98,7 +97,7 @@
         />
       </div>
 
-      <div class="mt-4 flex justify-end">
+      <div class="mt-auto flex justify-end">
         <button
           class="btn mr-2"
           @click="emit('emitClose')"
