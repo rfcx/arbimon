@@ -8,8 +8,8 @@ import { ColoredFilter, ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
-const DEFAULT_START = dayjs().subtract(20, 'years').startOf('day')
-const DEFAULT_END = dayjs().startOf('day')
+const DEFAULT_START = dayjs.utc('1990-01-01T00:00:00.000Z').startOf('day')
+const DEFAULT_END = dayjs().utc().startOf('day').add(1, 'day')
 const defaultFilter = new FilterImpl(DEFAULT_START, DEFAULT_END)
 
 @Options({
@@ -50,8 +50,8 @@ export default class ComparisonListComponent extends Vue {
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
     this.filters = [new FilterImpl(
-      this.store.projectFilters?.dateStartInclusiveUtc ? dayjs(this.store.projectFilters?.dateStartInclusiveUtc) : DEFAULT_START,
-      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs(this.store.projectFilters?.dateEndInclusiveUtc) : DEFAULT_END
+      this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
+      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day').add(1, 'day') : DEFAULT_END
     )]
   }
 
