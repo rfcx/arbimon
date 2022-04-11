@@ -5,6 +5,7 @@
   // General
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "eslint.format.enable": true,
   "eslint.validate": ["typescript"],
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "npm.packageManager": "pnpm",
@@ -41,19 +42,19 @@
       "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },
 
-  // Formatter: Stylelint
-  "[css]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
-  "[scss]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
-
   // Formatter: ESLint
   "[javascript]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
   "[typescript]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
   "[typescriptreact]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
   "[vue]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
 
-  // Formatter: VSCode
+  // Formatter: Prettier
   "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
+  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Formatter: Stylelint
+  "[css]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
+  "[scss]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },  
 }
