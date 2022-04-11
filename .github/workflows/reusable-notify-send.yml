@@ -43,9 +43,9 @@ jobs:
 
       - name: 'Notify: Get conclusion of previous run'
         id: latest_run_conclusion
-        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
-        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
         if: always()
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
         with:
           # https://docs.github.com/en/rest/reference/actions#get-a-workflow-run
           route: GET /repos/{owner}/{repo}/actions/runs/{run_id}
@@ -61,9 +61,9 @@ jobs:
 
       - name: 'Notify: Get data of latest successful run'
         id: latest_success
-        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
-        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        # v2 (2.1.0) @ 03 Dec 2021 https://github.com/octokit/request-action/tags
+        uses: octokit/request-action@7e93b91076fad3920c29d44eb2a6311d929db3dd
         with:
           # https://docs.github.com/en/rest/reference/actions#list-workflow-runs
           route: GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs
@@ -81,9 +81,9 @@ jobs:
         run: 'echo ${{ fromJson(steps.latest_success.outputs.data).workflow_runs[0].head_commit.timestamp }}'
 
       - name: 'Notify: Get Slack User'
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
         if: always()
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
         with:
           key: '${{ github.event.sender.login }}'
           map: |
@@ -102,10 +102,10 @@ jobs:
           echo "::set-output name=commit-title::`git show -s --format='%s'`"
 
       - name: 'Notify: Slack Failed'
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         # Notify failure if previous run was not also a failure
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'failure'
+        # v1 (1.9.0) @ 30 Mar 2022 https://github.com/ravsamhq/notify-slack-action/tags
+        uses: ravsamhq/notify-slack-action@1f019707281e1f3c939880a75b9c401e00f0f7cf
         with:
           notify_when: 'failure,warning'
           status: ${{ inputs.status }}
@@ -118,10 +118,10 @@ jobs:
           SLACK_WEBHOOK_URL: '${{ secrets.slack-webhook }}'
 
       - name: 'Notify: Slack Success'
-        uses: ravsamhq/notify-slack-action@c09876e2b9d663560dfe5ea229a8ae677b382afa
-        # v1 (1.4.0) @ 03 Nov 2021 https://github.com/ravsamhq/notify-slack-action/tags
         # Notify success if previous run was not also a success
         if: always() && fromJson(steps.latest_run_conclusion.outputs.data).conclusion != 'success'
+        # v1 (1.9.0) @ 30 Mar 2022 https://github.com/ravsamhq/notify-slack-action/tags
+        uses: ravsamhq/notify-slack-action@1f019707281e1f3c939880a75b9c401e00f0f7cf
         with:
           notify_when: 'success'
           status: ${{ inputs.status }}

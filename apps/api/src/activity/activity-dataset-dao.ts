@@ -1,5 +1,5 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
-import { Op } from 'sequelize'
+import { Op, QueryTypes, Sequelize } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
@@ -7,6 +7,7 @@ import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
+import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
@@ -58,37 +59,43 @@ export function calculateOccupancy (totalSiteCount: number, occupiedSites: numbe
   return occupiedSites === 0 ? 0 : occupiedSites / totalSiteCount
 }
 
-export const getDetectionDataBySite = async (models: AllModels, detections: DetectionBySiteSpeciesHour[]): Promise<ActivityOverviewDetectionDataBySite> => {
-  const detectionsBySites: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(detections, 'locationSiteId')
-  const siteIds = Object.keys(detectionsBySites)
+export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewDetectionDataBySite[]> => {
+  const { conditions, bind } = datasetFilterWhereRaw(filter)
 
-  // TODO ???: Move query to somewhere more global
-  const sites = await models.LocationSite.findAll({
-    where: { id: siteIds },
-    raw: true
-  })
+  const sql = `
+    SELECT
+      id as "siteId",
+      name as "siteName",
+      latitude,
+      longitude,
+      coalesce (sum(count), 0)::integer as detection,
+      coalesce ((sum(count)::decimal / sum(duration_minutes)), 0)::float as "detectionFrequency",
+      coalesce(sum(count) > 0, false) as occupancy
+    FROM  (
+      SELECT
+        location_site_id,
+        time_precision_hour_local,
+        coalesce (sum(count), 0) as count,
+        coalesce (max(duration_minutes), 0) as duration_minutes 
+      FROM
+        detection_by_site_species_hour dbssh
+      WHERE
+        ${conditions} 
+      GROUP BY
+        dbssh.time_precision_hour_local,
+        dbssh.location_site_id
+    ) as detection_by_time
+    RIGHT JOIN
+      location_site as ls
+    ON
+      location_site_id = ls.id
+    GROUP BY
+      ls.id,
+      ls.latitude,
+      ls.longitude
+  `
 
-  const summariesBySites = mapValues(detectionsBySites, (detectionsSummaries, siteIdString) => {
-    const totalRecordingCount = getRecordingDurationMinutes(detectionsSummaries)
-
-    const detectionCount = sum(detectionsSummaries.map(({ count }) => count))
-    const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
-    const siteOccupiedFrequency = detectionsSummaries.length > 0
-
-    const siteId = Number(siteIdString)
-    const matchedSite = sites.find(s => s.id === siteId)
-
-    return {
-      siteId,
-      siteName: matchedSite?.name ?? '',
-      latitude: matchedSite?.latitude ?? 0,
-      longitude: matchedSite?.longitude ?? 0,
-      detection: detectionCount,
-      detectionFrequency: detectionFrequency,
-      occupancy: siteOccupiedFrequency
-    }
-  })
-  return summariesBySites
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDetectionDataBySite[]
 }
 
 export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {

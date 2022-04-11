@@ -37,18 +37,18 @@ jobs:
 
     steps:
       - name: 'Setup: Node'
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c
-        # v2 (2.4.1) @ 03 Nov 2021 https://github.com/actions/setup-node/tags
+        # v3 (3.1.0) @ 01 Apr 2022 https://github.com/actions/setup-node/tags
+        uses: actions/setup-node@5b52f097d36d4b0b2f94ed6de710023fbb8b2236
         with:
           node-version: '16'
 
       - name: 'Setup: Git checkout'
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
-        # v2 (2.4.0) @ 03 Nov 2021 https://github.com/actions/checkout/tags
+        # v3 (3.0.0) @ 02 Mar 2022 https://github.com/actions/checkout/tags
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
 
       - name: 'Cache: Dependencies'
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
-        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
+        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
         with:
           path: ~/.pnpm-store
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -56,8 +56,8 @@ jobs:
 
       - name: 'Cache: ESLint'
         if: ${{ inputs.lint }}
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
-        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
+        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
         with:
           path: |
             .eslintcache
@@ -67,8 +67,8 @@ jobs:
 
       - name: 'Cache: Stylelint'
         if: ${{ inputs.lint }}
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353
-        # v2 (2.1.6) @ 03 Nov 2021 https://github.com/actions/cache/tags
+        # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
+        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
         with:
           path: |
             .stylelintcache
@@ -77,8 +77,8 @@ jobs:
           restore-keys: stylelint-${{ runner.os }}
 
       - name: 'Verify: pnpm install'
-        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         # v2 (2.0.1) @ 03 Nov 2021 https://github.com/pnpm/action-setup/tags
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         with:
           version: 6.20.1
           run_install: |
@@ -105,12 +105,12 @@ jobs:
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
       
-      # skip this step until the issue about cypress.json not found is resolved
       # - name: 'Verify: Cypress'
       #   uses: cypress-io/github-action@v2
       #   with:
       #     install: false
       #     start: pnpm serve
+      #     project: apps/website
       #   env:
       #     NODE_OPTIONS: '--max_old_space_size=6656'
 

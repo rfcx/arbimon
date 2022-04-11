@@ -21,9 +21,9 @@ module.exports = [
     replacement: { function: 'return "createMap(" + captured[0] + ")"' }
   },
   {
-    regex: 'sequalize',
-    message: 'Spelling',
-    replacement: 'sequelize'
+    regex: 'from \'sequelize/dist\'',
+    message: 'Did you mean to import from root \'sequelize\'?',
+    replacement: 'from \'sequelize\''
   },
   {
     regex: 'from \'path/posix\'',
@@ -34,5 +34,11 @@ module.exports = [
     regex: 'from \'path/win32\'',
     message: 'Did you mean to import from OS-neutral \'path\'?',
     replacement: 'from \'path\''
+  },
+  // Spelling helpers
+  {
+    regex: 'sequalize',
+    message: 'Spelling',
+    replacement: 'sequelize'
   }
 ]
