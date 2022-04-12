@@ -26,7 +26,7 @@
         >
           <td>
             <icon-fa-check
-              v-if="project.id === selectedProject.id"
+              v-if="project.id === selectedProject?.id"
               class="text-xs"
             />
           </td>
