@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 import { RouteLocationRaw } from 'vue-router'
 
-import ProjectSelector from '@/_layout/components/project-selector.vue'
+import ProjectSelector from '@/_layout/components/project-selector/project-selector.vue'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
