@@ -1,15 +1,16 @@
 import { describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types'
+import { Project, ProjectSite } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { createProjectVersionIfNeeded } from '@/ingest/outputs/project-version'
-import { syncProjects } from '@/ingest/sync/projects'
+import { syncDaily } from '@/ingest/sync'
+import { syncProjects } from '@/ingest/sync/arbimon'
 
 // Arrange
-const testProject = { id: 4, idArbimon: 1920 }
+const testProject = { id: 1346, idArbimon: 1920 }
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = await getSequelize()
 
@@ -41,7 +42,20 @@ describe('First time sync', () => {
       expect(projectVersionBeforeSync).toBe(0)
       expect(projectVersionAfterSync).toBe(1)
       })
-    test.todo('Sites created with current project versions')
+
+    test('Sites created with current project versions', async () => {
+      // Act
+      await syncDaily(arbimonSequelize, biodiversitySequelize)
+
+      const projectVersionId = await getLastestProjectVersion(testProject.id)
+      expect(projectVersionId).not.toBe(-1)
+
+      const sites = await getSites(testProject.id)
+      const siteProjectVersions = sites.map(s => s.projectVersionFirstAppearsId)
+      siteProjectVersions.forEach(pvid => {
+        expect(pvid).toBe(projectVersionId)
+      })
+    })
 })
 
 describe('Existing project sync', async () => {
@@ -95,4 +109,14 @@ const getProject = async (idArbimon: number): Promise<Project | null> => {
 const getProjectVersionCount = async (projectId: number): Promise<number> => {
   const models = ModelRepository.getInstance(biodiversitySequelize)
   return await models.ProjectVersion.count({ where: { projectId: projectId } })
+}
+
+const getLastestProjectVersion = async (projectId: number): Promise<number> => {
+  const models = ModelRepository.getInstance(biodiversitySequelize)
+  return await models.ProjectVersion.findOne({ where: { projectId: projectId }, order: [['createdAt', 'DESC']], raw: true }).then(pv => pv?.id ?? -1)
+}
+
+const getSites = async (projectId: number): Promise<ProjectSite[]> => {
+  const models = ModelRepository.getInstance(biodiversitySequelize)
+  return await models.ProjectSite.findAll({ where: { projectId: projectId }, raw: true })
 }
