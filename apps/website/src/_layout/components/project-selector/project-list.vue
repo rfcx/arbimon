@@ -67,9 +67,7 @@ const props = defineProps<{
 
 defineEmits<{(e: 'selectProject', project: LocationProjectForUser): void}>()
 
-const ROW_HEIGHT_PX = 30
 const PAGE_SIZE = 10
 const currentPage = ref(1)
-
 const projectsForCurrentPage = computed(() => props.projects.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE))
 </script>
