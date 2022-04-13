@@ -9,7 +9,7 @@ import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
 const DEFAULT_START = dayjs.utc('1990-01-01T00:00:00.000Z').startOf('day')
-const DEFAULT_END = dayjs().utc().startOf('day').add(1, 'day')
+const DEFAULT_END = dayjs().utc().startOf('day')
 const defaultFilter = new FilterImpl(DEFAULT_START, DEFAULT_END)
 
 @Options({
@@ -51,7 +51,7 @@ export default class ComparisonListComponent extends Vue {
   onProjectFilterChange (): void {
     this.filters = [new FilterImpl(
       this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
-      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day').add(1, 'day') : DEFAULT_END
+      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
     )]
   }
 
