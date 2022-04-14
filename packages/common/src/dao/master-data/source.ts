@@ -1,8 +1,8 @@
 import { Source } from '@/dao/types'
 
-const masterSources = <const>[
-  { id: 100, name: 'Arbimon Validated' }
-]
+export const masterSources = <const>{
+  ArbimonValidated: { id: 100, name: 'Arbimon Validated' }
+}
 
-export type SourceId = typeof masterSources[number]['id']
-export const sources: readonly Source[] = masterSources
+export type SourceId = typeof masterSources[keyof typeof masterSources]['id']
+export const sources: readonly Source[] = Object.values(masterSources)

@@ -47,7 +47,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
 
       // Facts
       recording_minutes: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        type: DataTypes.STRING(255), // array?!
         allowNull: false
       }
     }

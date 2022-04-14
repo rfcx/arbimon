@@ -28,7 +28,7 @@ export const SourceDetectionBySyncSiteSpeciesHourModel = defineWithDefaults<Sour
     },
 
     // Facts
-    detectionMinutes: DataTypes.ARRAY(DataTypes.INTEGER) // [2, 3, 7, 14]
+    detectionMinutes: DataTypes.STRING(255) // DataTypes.ARRAY(DataTypes.INTEGER) // [2, 3, 7, 14]
   },
   {
     tableName: TABLE_SOURCE_DETECTION_BY_SYNC_SITE_SPECIES_HOUR

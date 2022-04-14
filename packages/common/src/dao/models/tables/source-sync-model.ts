@@ -6,7 +6,7 @@ import { SourceSync } from '../../types'
 export const MODEL_SOURCE_SYNC = 'SourceSync'
 const TABLE_SOURCE_SYNC = 'source_sync'
 
-export const SourceSyncModel = defineWithDefaults<SourceSync, ModelForInterface<SourceSync, Optional<SourceSync, 'createdAt' | 'updatedAt'>>>(
+export const SourceSyncModel = defineWithDefaults<SourceSync, ModelForInterface<SourceSync, Optional<SourceSync, 'id' | 'createdAt' | 'updatedAt'>>>(
   MODEL_SOURCE_SYNC,
   {
     // PK
@@ -27,7 +27,7 @@ export const SourceSyncModel = defineWithDefaults<SourceSync, ModelForInterface<
     updatedAt: DataTypes.DATE,
 
     // Facts
-    summaryText: DataTypes.JSON
+    changesJson: DataTypes.JSON
   },
   {
     tableName: TABLE_SOURCE_SYNC

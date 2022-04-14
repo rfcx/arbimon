@@ -3,5 +3,5 @@ export interface SourceDetectionBySyncSiteSpeciesHour {
   sourceSyncId: number
   projectSiteId: number
   taxonSpeciesId: number
-  detectionMinutes: number[]
+  detectionMinutes: string // number[]
 }

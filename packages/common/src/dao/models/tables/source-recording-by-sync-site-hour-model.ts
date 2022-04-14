@@ -24,8 +24,7 @@ export const SourceRecordingBySyncSiteHourModel = defineWithDefaults<SourceRecor
     },
 
     // Facts
-    recordingMinutes: DataTypes.ARRAY(DataTypes.INTEGER), // [1, 2, 3, 6, 7, 14]
-    durationMinutes: DataTypes.FLOAT
+    recordingMinutes: DataTypes.STRING(255) // DataTypes.ARRAY(DataTypes.INTEGER) // [1, 2, 3, 6, 7, 14]
   },
   {
     tableName: TABLE_SOURCE_RECORDING_BY_SYNC_SITE_HOUR

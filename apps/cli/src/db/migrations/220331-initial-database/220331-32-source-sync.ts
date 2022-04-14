@@ -48,7 +48,7 @@
       },
 
       // Facts
-      summary_text: { // species +3 -2
+      changes_json: {
         type: DataTypes.JSON
       }
     }

@@ -1,4 +1,12 @@
-export const rawSpeciesCalls = <const>[
+export interface Species {
+  speciesId: number
+  speciesSlug: string
+  scientificName: string
+  taxonId: number
+  taxon: string
+}
+
+export const rawSpecies: Array<Species & Record<string, any>> = [
   {
     speciesId: 22864,
     speciesSlug: 'accipiter-striatus-venator',

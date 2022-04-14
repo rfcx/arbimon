@@ -5,9 +5,9 @@ export interface SourceSync extends WithDates {
   hash: string
   projectId: number
   sourceId: number
-  summaryText: string
+  changesJson: Record<string, any> // { species: 3, sites: -2 }
 }
 
 export const ATTRIBUTES_SOURCE_SYNC: AttributeConstants<SourceSync> = {
-  light: ['id', 'hash', 'projectId', 'summaryText']
+  light: ['id', 'hash', 'projectId', 'changesJson']
 }
