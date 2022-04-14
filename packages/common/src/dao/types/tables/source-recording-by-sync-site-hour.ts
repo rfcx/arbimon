@@ -3,4 +3,5 @@ export interface SourceRecordingBySyncSiteHour {
   sourceSyncId: number
   projectSiteId: number
   recordingMinutes: number[]
+  durationMinutes: number
 }
