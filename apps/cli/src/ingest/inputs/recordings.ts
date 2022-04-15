@@ -49,8 +49,7 @@ export const tranformArbimonToBioRecordingSummaries = async (arbimonSummaries: A
       timePrecisionHourLocal: new Date(),
       sourceSyncId: 1, // TODO: map source
       projectSiteId: 3, // TODO: map site
-      recordingMinutes: s.recordingMinutes.split(',').map(sn => Number(sn)),
-      durationMinutes: s.durationMinutes
+      recordingMinutes: s.recordingMinutes // s.recordingMinutes.split(',').map(sn => Number(sn)),
     }
   })
 }

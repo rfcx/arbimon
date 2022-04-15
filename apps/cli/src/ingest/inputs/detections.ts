@@ -55,7 +55,7 @@ export const tranformArbimonToBioDetectionSummaries = async (arbimonSummaries: A
       sourceSyncId: 1,
       projectSiteId: 2,
       taxonSpeciesId: 3,
-      detectionMinutes: s.detectionMinutes.split(',').map(sn => Number(sn))
+      detectionMinutes: s.detectionMinutes // s.detectionMinutes.split(',').map(sn => Number(sn))
     }
   })
 }
