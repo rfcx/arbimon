@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, ProjectSite } from '@rfcx-bio/common/dao/types'
+import { expectDefined } from '@rfcx-bio/utils/_testing'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
@@ -35,10 +36,10 @@ describe('First time sync', () => {
       await createProjectVersionIfNeeded(biodiversitySequelize, allProjectIds)
 
       // Assert
-      const projectId = (await getProject(testProject.idArbimon))?.id ?? -1
-      const projectVersionAfterSync = await getProjectVersionCount(projectId)
+      const projectId = (await getProject(testProject.idArbimon))?.id
+      expectDefined(projectId)
 
-      expect(projectId).not.toBe(-1)
+      const projectVersionAfterSync = await getProjectVersionCount(projectId)
       expect(projectVersionBeforeSync).toBe(0)
       expect(projectVersionAfterSync).toBe(1)
       })
@@ -48,7 +49,7 @@ describe('First time sync', () => {
       await syncDaily(arbimonSequelize, biodiversitySequelize)
 
       const projectVersionId = await getLastestProjectVersion(testProject.id)
-      expect(projectVersionId).not.toBe(-1)
+      expectDefined(projectVersionId)
 
       const sites = await getSites(testProject.id)
       const siteProjectVersions = sites.map(s => s.projectVersionFirstAppearsId)
@@ -111,9 +112,9 @@ const getProjectVersionCount = async (projectId: number): Promise<number> => {
   return await models.ProjectVersion.count({ where: { projectId: projectId } })
 }
 
-const getLastestProjectVersion = async (projectId: number): Promise<number> => {
+const getLastestProjectVersion = async (projectId: number): Promise<number | undefined> => {
   const models = ModelRepository.getInstance(biodiversitySequelize)
-  return await models.ProjectVersion.findOne({ where: { projectId: projectId }, order: [['createdAt', 'DESC']], raw: true }).then(pv => pv?.id ?? -1)
+  return await models.ProjectVersion.findOne({ where: { projectId: projectId }, order: [['createdAt', 'DESC']], raw: true }).then(pv => pv?.id)
 }
 
 const getSites = async (projectId: number): Promise<ProjectSite[]> => {

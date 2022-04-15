@@ -22,11 +22,15 @@ export const syncSites = async (arbimonSequelize: Sequelize, biodiversitySequeli
   for (const project of projects) {
     console.info(`- sync sites for ${project.name}`)
     const version = await (ModelRepository.getInstance(biodiversitySequelize).ProjectVersion
-    .findOne({
-      where: { projectId: project.id },
-      order: [['created_at', 'DESC']],
-      raw: true
-    })).then(pv => pv?.id ?? -1) // TODO: handle error where there is no project version
+      .findOne({
+        where: { projectId: project.id },
+        order: [['created_at', 'DESC']],
+        raw: true
+      }))
+      .then(pv => pv?.id)
+
+    if (version === undefined) return // TODO: handle error where there is no project version
+
     const arbimonSites = await getArbimonSitesByProjectId(arbimonSequelize, project.idArbimon)
     const sites = tranformArbimonToBioProjectSites(arbimonSites, project.id, version)
     await createSitesIfNeeded(biodiversitySequelize, sites)
