@@ -3,26 +3,69 @@
  * Do not depend on imported code which may change
  */
 
- import { QueryInterface } from 'sequelize'
- import { MigrationFn } from 'umzug'
+import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
+import { MigrationFn } from 'umzug'
 
- const VIEW_NAME = 'by_version_site_hour_recording'
+const TABLE_NAME = 'materialized_by_version_site_hour_recording'
+const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(
-    `
-    CREATE VIEW ${VIEW_NAME} AS
-    SELECT srbssh.time_precision_hour_local,
-           pvss.project_version_id,
-           srbssh.project_site_id,
-           coalesce(array_length(array_agg(distinct srbssh.recording_minutes), 1), 0) as count_recording_minutes
-    FROM project_version_source_sync pvss
-            JOIN source_recording_by_sync_site_hour srbssh on pvss.source_sync_id = srbssh.source_sync_id
-    GROUP BY pvss.project_version_id, srbssh.time_precision_hour_local, srbssh.project_site_id
-    ;
-    `
+export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
+  await params.context.createTable(
+    TABLE_NAME,
+    {
+      // PK
+      [COLUMN_TIME_HOUR_LOCAL]: {
+        type: DataTypes.DATE(3), // hypertable key
+        primaryKey: true
+      },
+      project_version_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'project_version' },
+          key: 'id'
+        }
+      },
+      project_site_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'project_site' },
+          key: 'id'
+        }
+      },
+
+      // Logging
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+
+      // FKs
+      taxon_class_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: { tableName: 'taxon_class' },
+          key: 'id'
+        }
+      },
+
+      // Facts
+      count_recording_minutes: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
+    }
   )
-}
+  .then(async () => await params.context.sequelize.query(
+    `SELECT create_hypertable('${TABLE_NAME}', '${COLUMN_TIME_HOUR_LOCAL}');`,
+    { type: QueryTypes.RAW }
+  ))
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
-  await params.context.sequelize.query(`DROP VIEW IF EXISTS ${VIEW_NAME};`)
+  await params.context.dropTable(TABLE_NAME)
