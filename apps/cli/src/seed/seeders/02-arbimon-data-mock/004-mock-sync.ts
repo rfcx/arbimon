@@ -82,6 +82,15 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   })
 
   // Update byVersion
-  // await sequelize.query('INSERT INTO materialized_by_version_site_species_hour_recording SELECT * FROM by_version_site_species_hour_recording', { type: QueryTypes.INSERT })
-  // await sequelize.query('INSERT INTO materialized_by_version_site_species_hour_detection SELECT * FROM by_version_site_species_hour_detection', { type: QueryTypes.INSERT })
+  await sequelize.query(`
+    INSERT INTO materialized_by_version_site_hour_recording (time_precision_hour_local, project_version_id, project_site_id, created_at, updated_at, count_recording_minutes)
+    SELECT time_precision_hour_local, project_version_id, project_site_id, created_at, updated_at, count_recording_minutes
+    FROM by_version_site_hour_recording
+  `, { type: QueryTypes.INSERT })
+
+  await sequelize.query(`
+    INSERT INTO materialized_by_version_site_species_hour_detection (time_precision_hour_local, project_version_id, project_site_id, taxon_species_id, created_at, updated_at, taxon_class_id, count_detection_minutes)
+    SELECT time_precision_hour_local, project_version_id, project_site_id, taxon_species_id, created_at, updated_at, taxon_class_id, count_detection_minutes
+    FROM by_version_site_species_hour_detection
+  `, { type: QueryTypes.INSERT })
 }

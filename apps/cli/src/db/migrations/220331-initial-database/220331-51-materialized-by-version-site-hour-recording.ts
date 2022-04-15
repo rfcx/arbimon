@@ -45,16 +45,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
 
-      // FKs
-      taxon_class_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'taxon_class' },
-          key: 'id'
-        }
-      },
-
       // Facts
       count_recording_minutes: {
         type: DataTypes.INTEGER,

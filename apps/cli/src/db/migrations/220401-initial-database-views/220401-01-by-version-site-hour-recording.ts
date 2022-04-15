@@ -15,9 +15,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     SELECT srbssh.time_precision_hour_local,
            pvss.project_version_id,
            srbssh.project_site_id,
-           coalesce(array_length(array_agg(distinct srbssh.recording_minutes), 1), 0) as count_recording_minutes
+           max(srbssh.created_at) as created_at,
+           max(srbssh.updated_at) as updated_at,
+           length(regexp_replace(max(srbssh.recording_minutes), '[^,]', '', 'g')) + 1 as count_recording_minutes -- hack until column type is fixed
     FROM project_version_source_sync pvss
-            JOIN source_recording_by_sync_site_hour srbssh on pvss.source_sync_id = srbssh.source_sync_id
+            JOIN source_recording_by_sync_site_hour srbssh ON pvss.source_sync_id = srbssh.source_sync_id
     GROUP BY pvss.project_version_id, srbssh.time_precision_hour_local, srbssh.project_site_id
     ;
     `
