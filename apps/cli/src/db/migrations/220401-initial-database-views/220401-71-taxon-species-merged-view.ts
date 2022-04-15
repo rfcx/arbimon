@@ -15,7 +15,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 //     `
 //     create view ${VIEW_NAME} as
 //     SELECT species.*,
-//            COALESCE(lps.risk_rating_local_level, -1) AS risk_rating_local_id,
+//            COALESCE(lps.risk_rating_local_level, ${masterRiskRatings.NE.id}) AS risk_rating_local_id,
 //            CASE
 //                WHEN (lps.risk_rating_local_level > species.risk_rating_global_id) THEN lps.risk_rating_local_level
 //                ELSE species.risk_rating_global_id
@@ -32,7 +32,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 //                     WHEN MAX(tsi.common_name) <> '' THEN MAX(tsi.common_name)
 //                     ELSE ''
 //                     END                                    AS common_name,
-//                 COALESCE(MAX(tsi.risk_rating_iucn_id), -1) AS risk_rating_global_id,
+//                 COALESCE(MAX(tsi.risk_rating_iucn_id), ${masterRiskRatings.NE.id}) AS risk_rating_global_id,
 //                 MAX(tsp.photo_url)                         AS photo_url,
 //                 CASE
 //                     WHEN MAX(tsr.description) <> '' THEN MAX(tsr.description)

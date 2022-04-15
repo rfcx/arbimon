@@ -1,3 +1,5 @@
+import { ValueOf } from '@rfcx-bio/utils/utility-types'
+
 import { TaxonSpeciesSource } from '@/dao/types'
 
 export const masterTaxonSpeciesSources = <const>{
@@ -6,5 +8,5 @@ export const masterTaxonSpeciesSources = <const>{
   Wikipedia: { id: 700, name: 'Wikipedia' }
 }
 
-export type TaxonSpeciesSourceId = typeof masterTaxonSpeciesSources[keyof typeof masterTaxonSpeciesSources]['id']
+export type TaxonSpeciesSourceId = ValueOf<typeof masterTaxonSpeciesSources>['id']
 export const taxonSpeciesSources: readonly TaxonSpeciesSource[] = Object.values(masterTaxonSpeciesSources)
