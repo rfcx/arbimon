@@ -4,28 +4,24 @@ import { MigrationFn } from 'umzug'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
-import { rawSpecies } from '../../data/manual/taxon-species'
+import { mockTaxonSpeciesArbimon } from '../../data/generated/taxon-species-arbimon'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
   const models = ModelRepository.getInstance(sequelize)
 
   // Lookups
-  const taxonClassArbimonToBio = await models.TaxonClass.findAll()
-    .then(res => Object.fromEntries(res.map(t => [t.idArbimon, t.id])))
+  const taxonClassSlugToId = await models.TaxonClass.findAll()
+    .then(res => Object.fromEntries(res.map(t => [t.slug, t.id])))
 
   // Create species
-  const taxonSpecies: Array<Optional<TaxonSpecies, 'id'>> = rawSpecies.map(s => {
-    const taxonClassId = taxonClassArbimonToBio[s.taxonId]
-    if (!taxonClassId) throw new Error('Missing taxon class')
+  const taxonSpecies: Array<Optional<TaxonSpecies, 'id'>> = mockTaxonSpeciesArbimon
+    .map(({ taxonSlug, ...rest }) => {
+      const taxonClassId = taxonClassSlugToId[taxonSlug]
+      if (!taxonClassId) throw new Error('Missing taxon class')
 
-    return {
-      idArbimon: s.speciesId,
-      slug: s.speciesSlug,
-      scientificName: s.scientificName,
-      taxonClassId
-    }
-  })
+      return { ...rest, taxonClassId }
+    })
 
   await models.TaxonSpecies.bulkCreate(taxonSpecies)
 }

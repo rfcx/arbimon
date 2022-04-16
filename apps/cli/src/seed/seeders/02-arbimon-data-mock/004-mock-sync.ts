@@ -6,6 +6,7 @@ import { MigrationFn } from 'umzug'
 import { masterSources } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SourceDetectionBySyncSiteSpeciesHour, SourceRecordingBySyncSiteHour } from '@rfcx-bio/common/dao/types'
+import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { getPuertoRicoProjectId } from '@/seed/_helpers/get-puerto-rico-id'
 import { rawDetections } from '@/seed/data/manual/detections-by-hour'
@@ -62,7 +63,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .map(d => {
       const projectSiteId = siteArbimonToBio[d.arbimon_site_id]
       const taxonSpeciesId = speciesArbimonToBio[d.species_id]
-      if (!projectSiteId || !taxonSpeciesId) throw new Error('Site or species missing')
+      if (!projectSiteId || !taxonSpeciesId) return undefined
 
       return {
         timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
@@ -72,6 +73,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         detectionMinutes: recordingMinutes.slice(0, d.num_of_recordings).toString()
       }
     })
+    .filter(isDefined)
 
   await models.SourceDetectionBySyncSiteSpeciesHour.bulkCreate(detectionsBySyncSiteSpeciesHour)
 

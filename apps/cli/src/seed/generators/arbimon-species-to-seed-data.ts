@@ -8,18 +8,21 @@ import { getArbimonSpeciesIncremental } from '@/ingest/inputs/species'
 import { getGeneratedDataDirectory } from './_helpers'
 
 const main = async (): Promise<void> => {
+  // Get data
   const sequelizeArbimon = getArbimonSequelize()
-
   // TODO: After updated_at is added, change this to loop
   const dataRaw = await getArbimonSpeciesIncremental(sequelizeArbimon)
+
+  // Transform data
   const data = dataRaw.sort((a, b) => a.scientificName.localeCompare(b.scientificName))
 
+  // Write to file
   objectToTsFile(
     resolve(getGeneratedDataDirectory(), './taxon-species-arbimon.ts'),
       data,
-      'mockTaxonSpecies',
-      'MockTaxonSpecies[]',
-      dedent(`interface MockTaxonSpecies {
+      'mockTaxonSpeciesArbimon',
+      'MockTaxonSpeciesArbimon[]',
+      dedent(`interface MockTaxonSpeciesArbimon {
         idArbimon: number
         slug: string
         scientificName: string
