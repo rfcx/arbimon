@@ -11,7 +11,8 @@ const main = async (): Promise<void> => {
   const sequelizeArbimon = getArbimonSequelize()
 
   // TODO: After updated_at is added, change this to loop
-  const data = await getArbimonSpeciesIncremental(sequelizeArbimon)
+  const dataRaw = await getArbimonSpeciesIncremental(sequelizeArbimon)
+  const data = dataRaw.sort((a, b) => a.scientificName.localeCompare(b.scientificName))
 
   objectToTsFile(
     resolve(getGeneratedDataDirectory(), './taxon-species-arbimon.ts'),
