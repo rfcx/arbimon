@@ -161,11 +161,13 @@ importers:
     specifiers:
       '@rfcx-bio/common': workspace:^0.0.1
       '@rfcx-bio/utils': workspace:^0.0.1
+      '@types/dedent': ^0.7.0
       '@types/mysql': ^2.15.19
       '@types/object-hash': ^2.2.1
       '@types/validator': ^13.7.0
       axios: ^0.24.0
       dayjs: ^1.10.7
+      dedent: ^0.7.0
       dotenv: ^10.0.0
       lodash-es: ^4.17.21
       mysql2: ^2.3.3
@@ -180,6 +182,7 @@ importers:
       '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.24.0
       dayjs: 1.10.7
+      dedent: 0.7.0
       dotenv: 10.0.0
       lodash-es: 4.17.21
       mysql2: 2.3.3
@@ -188,6 +191,7 @@ importers:
       sequelize: 7.0.0-alpha.5_f4a109dd060499991e1c05464b741adf
       umzug: 3.0.0
     devDependencies:
+      '@types/dedent': 0.7.0
       '@types/mysql': 2.15.19
       '@types/object-hash': 2.2.1
       '@types/validator': 13.7.0
@@ -2045,6 +2049,10 @@ packages:
     dependencies:
       '@types/ms': 0.7.31
     dev: false
+
+  /@types/dedent/0.7.0:
+    resolution: {integrity: sha512-EGlKlgMhnLt/cM4DbUSafFdrkeJoC9Mvnj0PUCU7tFmTjMjNRT957kXCx0wYm3JuEq4o4ZsS5vG+NlkM2DMd2A==}
+    dev: true
 
   /@types/eslint-scope/3.7.1:
     resolution: {integrity: sha512-SCFeogqiptms4Fg29WpOTk5nHIzfpKCemSN63ksBQYKTcXoJEmJagV+DhVmbapZzY4/5YaOV1nZwrsU79fFm1g==}
@@ -4240,6 +4248,10 @@ packages:
     dependencies:
       mimic-response: 1.0.1
     dev: true
+
+  /dedent/0.7.0:
+    resolution: {integrity: sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=}
+    dev: false
 
   /deep-eql/3.0.1:
     resolution: {integrity: sha512-+QeIQyN5ZuO+3Uk5DYh6/1eKO0m0YmJFGNmFHGACpf1ClL1nmlV/p4gNgbl2pJGxgXb4faqo6UE+M5ACEMyVcw==}
