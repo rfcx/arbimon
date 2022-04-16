@@ -27,10 +27,3 @@ export const getArbimonSpeciesIncremental = async (sequelize: Sequelize): Promis
 
   return await sequelize.query<ArbimonSpecies>(sql, { type: QueryTypes.SELECT, raw: true })
 }
-
-export const speciesArbimonToBio = ({ taxonSlug, ...rest }: ArbimonSpecies, taxonClassSlugToId: Record<string, number>): Omit<TaxonSpecies, 'id'> | undefined => {
-  const taxonClassId = taxonClassSlugToId[taxonSlug]
-  if (!taxonClassId) return undefined
-
-  return { ...rest, taxonClassId }
-}

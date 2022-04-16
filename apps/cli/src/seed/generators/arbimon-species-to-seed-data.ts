@@ -4,7 +4,7 @@ import { resolve } from 'path'
 import { objectToTsFile } from '@rfcx-bio/utils/file/json-to-ts'
 
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
-import { getArbimonSpeciesIncremental } from '@/ingest/inputs/species'
+import { getArbimonSpeciesIncremental } from '@/ingest/inputs/arbimon-species'
 import { getGeneratedDataDirectory } from './_helpers'
 
 const main = async (): Promise<void> => {
