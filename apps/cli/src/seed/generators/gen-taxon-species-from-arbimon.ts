@@ -20,14 +20,9 @@ const main = async (): Promise<void> => {
   objectToTsFile(
     resolve(getGeneratedDataDirectory(), './taxon-species-arbimon.ts'),
       data,
-      'mockTaxonSpeciesArbimon',
-      'MockTaxonSpeciesArbimon[]',
-      dedent(`interface MockTaxonSpeciesArbimon {
-        idArbimon: number
-        slug: string
-        scientificName: string
-        taxonSlug: string
-      }`)
+      'taxonSpeciesArbimon',
+      'SeedTaxonSpecies[]',
+      'import { SeedTaxonSpecies } from \'../types\''
     )
 }
 
