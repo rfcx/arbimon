@@ -61,8 +61,14 @@ export interface IucnSpeciesNarrativeResponseResult {
   usetrade: string | null
 }
 
+export const IUCN_SOURCE_CITATION = 'IUCN 2021. IUCN Red List of Threatened Species. (Version 2021-3)'
+
 export class IucnService {
   constructor (private readonly options: IucnApiOptions) {}
+
+  getIucnSpeciesSourceUrl (scientificName: string): string {
+    return `${this.options.IUCN_BASE_URL}/website/${encodeURIComponent(scientificName)}`
+  }
 
   async getSpecies <U> (scientificName: string, mapFn: (data: IucnSpeciesResponse) => U | undefined | null): Promise<U | undefined> {
     const url = `${this.options.IUCN_BASE_URL}/species/${scientificName}?token=${this.options.IUCN_TOKEN}`

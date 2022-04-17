@@ -1,22 +1,13 @@
 import { masterTaxonSpeciesSources } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { TaxonSpeciesDescription } from '@rfcx-bio/common/dao/types'
 import { promiseSequential } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { getSequelize } from '@/db/connections'
 import { IucnService } from '@/ingest/_connections/iucn'
 import { getIucnSpeciesDescription } from '@/ingest/inputs/iucn-species-description'
-import { getIucnSpeciesSourceUrl } from '@/ingest/inputs/iucn-species-source'
-import { iucnDescriptionToBio } from '@/ingest/transformers/species-iucn-to-bio'
-import { requireEnv } from '~/env'
 
-const { IUCN_BASE_URL, IUCN_TOKEN } = requireEnv('IUCN_BASE_URL', 'IUCN_TOKEN')
-
-const main = async (): Promise<void> => {
-  const sequelize = getSequelize()
-  const models = ModelRepository.getInstance(sequelize)
-  const iucnService = new IucnService({ IUCN_BASE_URL, IUCN_TOKEN })
-
+export const syncIucnSpeciesDescription = async (models: AllModels, iucnService: IucnService): Promise<void> => {
   // Get species to sync
   const speciesToSync = await models.TaxonSpecies
     .findAll({
@@ -31,9 +22,8 @@ const main = async (): Promise<void> => {
   // Call IUCN APIs
   const maybeDescriptions = await promiseSequential( // TODO: Call batching
     speciesToSync.map(async s => await getIucnSpeciesDescription(iucnService, s.scientificName)
-      .then(description => iucnDescriptionToBio(s.id, masterTaxonSpeciesSources.IUCN.id, getIucnSpeciesSourceUrl(IUCN_BASE_URL, s.scientificName), description))
+      .then(description => iucnDescriptionToBio(s.id, masterTaxonSpeciesSources.IUCN.id, iucnService.getIucnSpeciesSourceUrl(s.scientificName), description))
   ))
-
   const descriptions = maybeDescriptions.filter(isDefined)
 
   // Save
@@ -41,4 +31,13 @@ const main = async (): Promise<void> => {
   await models.TaxonSpeciesDescription.bulkCreate(descriptions)
 }
 
-await main()
+export const iucnDescriptionToBio = (taxonSpeciesId: number, taxonSpeciesSourceId: number, sourceUrl: string, description?: string): TaxonSpeciesDescription | undefined => {
+  if (!description) return undefined
+
+  return {
+    taxonSpeciesId,
+    taxonSpeciesSourceId,
+    sourceUrl,
+    description
+  }
+}
