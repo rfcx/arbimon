@@ -1,7 +1,5 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
-import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
-
 export interface ArbimonSpecies {
   idArbimon: number
   slug: string

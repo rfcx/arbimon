@@ -8,7 +8,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { getSequelize } from '@/db/connections'
 import { IucnService } from '@/ingest/_connections/iucn'
 import { getIucnSpeciesDescription } from '@/ingest/inputs/iucn-species-description'
-import { MockTaxonSpeciesDescription } from '@/seed/data/mock-types/mock-taxon-species-description'
+import { SeedTaxonSpeciesDescription } from '@/seed/data/types'
 import { requireEnv } from '~/env'
 import { getGeneratedDataDirectory } from './_helpers'
 
@@ -38,8 +38,8 @@ const main = async (): Promise<void> => {
   console.info(`${iucnMissingInSeedSlugs.length} species previously recorded as missing in IUCN`)
 
   const descriptionPath = '../data/generated/taxon-species-description-iucn.js'
-  const descriptionsInSeed: MockTaxonSpeciesDescription[] = await import(descriptionPath)
-    .then(res => Object.values(res as Record<string, any>)?.[0] as MockTaxonSpeciesDescription[] ?? [])
+  const descriptionsInSeed: SeedTaxonSpeciesDescription[] = await import(descriptionPath)
+    .then(res => Object.values(res as Record<string, any>)?.[0] as SeedTaxonSpeciesDescription[] ?? [])
     .catch(() => [])
   console.info(`${descriptionsInSeed.length} IUCN descriptions already in seed (may include undetected)`)
 
@@ -53,7 +53,16 @@ const main = async (): Promise<void> => {
   // Get data
   const descriptionPromises = speciesToSync.map(async species =>
     await getIucnSpeciesDescription(iucnService, species.scientific_name)
-      .then(description => descriptionToSeed(species.slug, iucnService.getIucnSpeciesSourceUrl(species.scientific_name), description))
+      .then(description => {
+        if (!description) return undefined
+
+        const result: SeedTaxonSpeciesDescription = {
+          slug: species.slug,
+          sourceUrl: iucnService.getIucnSpeciesSourceUrl(species.scientific_name),
+          description
+        }
+        return result
+      })
   )
 
   const descriptionsNew = await promiseSequential(descriptionPromises)
@@ -69,9 +78,9 @@ const main = async (): Promise<void> => {
     objectToTsFile(
       resolve(getGeneratedDataDirectory(), './taxon-species-description-iucn.ts'),
       descriptionsAll,
-      'mockTaxonSpeciesDescriptionIucn',
-      'MockTaxonSpeciesDescription[]',
-      'import { MockTaxonSpeciesDescription } from \'../mock-types\''
+      'taxonSpeciesDescriptionIucn',
+      'SeedTaxonSpeciesDescription[]',
+      'import { SeedTaxonSpeciesDescription } from \'../types\''
     )
   }
 
@@ -92,11 +101,6 @@ const main = async (): Promise<void> => {
       'string[]'
     )
   }
-}
-
-const descriptionToSeed = (slug: string, sourceUrl: string, description?: string): MockTaxonSpeciesDescription | undefined => {
-  if (!description) return undefined
-  return { slug, sourceUrl, description }
 }
 
 await main()

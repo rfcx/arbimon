@@ -1,6 +1,6 @@
-import { MockTaxonSpeciesDescription } from '../mock-types'
+import { SeedTaxonSpeciesDescription } from '../types'
 
-export const mockTaxonSpeciesDescriptionIucn: MockTaxonSpeciesDescription[] = [
+export const taxonSpeciesDescriptionIucn: SeedTaxonSpeciesDescription[] = [
   {
     slug: 'agelaius-xanthomus',
     sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Agelaius%20xanthomus',
