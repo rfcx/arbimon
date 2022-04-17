@@ -25,6 +25,7 @@ const main = async (): Promise<void> => {
       FROM taxon_species s
       WHERE s.id IN (SELECT DISTINCT taxon_species_id FROM source_detection_by_sync_site_species_hour)
       ORDER BY s.slug
+      ;
     `,
     { type: QueryTypes.SELECT }
   )
