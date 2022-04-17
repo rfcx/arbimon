@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesCommonName } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { preloadRfcxSpeciesSlugToCommonName } from '../../data/manual/taxon-species-rfcx'
+import { taxonSpeciesCommonNameRfcx } from '../../data/manual/taxon-species-rfcx-common-name'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize
@@ -19,8 +19,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const taxonSpeciesSourceId = masterTaxonSpeciesSources.RFCx.id
 
   // Convert data
-  const data: TaxonSpeciesCommonName[] = Object.entries(preloadRfcxSpeciesSlugToCommonName)
-    .map(([slug, commonName]) => {
+  const data: TaxonSpeciesCommonName[] = taxonSpeciesCommonNameRfcx
+    .map(({ slug, commonName }) => {
       // Try to find species ID
       const taxonSpeciesId = speciesSlugToId[slug]
       if (!taxonSpeciesId) return undefined
