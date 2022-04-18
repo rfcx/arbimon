@@ -105,7 +105,16 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       url: dashboardGeneratedUrl({ projectId: '1' })
     })
 
-    test.todo('calculates richnessBySite correctly', async () => {
+    test.todo('species richness by site is correct', async () => {
+      // Arrange
+      // const knownSiteId = 123
+
+      // Act
+      const result = JSON.parse(response.body)?.richnessBySite
+      expect(result).toBeDefined()
+    })
+
+    test.todo('species richness by site is empty', async () => {
       // Arrange
       // const knownSiteId = 123
 
