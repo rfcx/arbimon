@@ -1,4 +1,3 @@
-import { DataSource } from '../../dao/types'
 import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
@@ -10,6 +9,13 @@ export const syncHistoryUrl = (params: SyncHistoryParams): string =>
   `/projects/${params.projectId}/sync-history`
 
 // Response
+export interface Sync {
+  id: number
+  createdAt: Date
+  updatedAt: Date
+  summaryText: string
+}
+
 export interface SyncHistoryResponse {
-  syncs: DataSource[]
+  syncs: Sync[]
 }
