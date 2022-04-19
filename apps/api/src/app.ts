@@ -14,6 +14,7 @@ import { routesRichness } from './richness'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
+import { routesSync } from './sync'
 
 export const createApp = async (): Promise<FastifyInstance> => {
   // Create app
@@ -39,7 +40,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesRichness,
     routesSpotlight,
     routesActivity,
-    routesStatus
+    routesStatus,
+    routesSync
   ]
 
   routesRegistrations
