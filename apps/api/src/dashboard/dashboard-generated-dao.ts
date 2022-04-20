@@ -9,6 +9,9 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Loca
   const result = await ModelRepository.getInstance(getSequelize())
     .LocationProjectMetric
     .findOne({
+      attributes: {
+        exclude: ['locationProjectId']
+      },
       where: { locationProjectId },
       raw: true
     })
