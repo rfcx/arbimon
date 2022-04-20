@@ -1,9 +1,13 @@
 <template>
-  <!-- <draft-banner
-    current-mode="Draft"
-    :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
-    :project-slug="store.selectedProject?.slug"
-  /> -->
+  <div v-if="isLoading" />
+  <div v-else>
+    <!-- <draft-banner
+      v-if="lastUpdatedAt"
+      current-mode="Draft"
+      :sync-updated="lastUpdatedAt"
+      :project-slug="store.selectedProject?.slug"
+    /> -->
+  </div>
   <page-title
     page-title="Activity Overview"
     page-subtitle="Temporal and spatial activity trends for all species"
@@ -24,20 +28,25 @@
       </template>
     </export-button>
   </page-title>
-  <comparison-list-component
-    class="mt-5"
-    @emit-select="onFilterChange"
-  />
-  <activity-overview-by-location
-    class="mt-5"
-    :datasets="mapDatasets"
-  />
-  <activity-overview-by-time
-    class="mt-5"
-    dom-id="activity-overview-by-time"
-    :datasets="timeDatasets"
-  />
-  <activity-overview-by-species :datasets="tableDatasets" />
+  <div v-if="isLoading">
+    Loading
+  </div>
+  <div v-else>
+    <comparison-list-component
+      class="mt-5"
+      @emit-select="onFilterChange"
+    />
+    <activity-overview-by-location
+      class="mt-5"
+      :datasets="mapDatasets"
+    />
+    <activity-overview-by-time
+      class="mt-5"
+      dom-id="activity-overview-by-time"
+      :datasets="timeDatasets"
+    />
+    <activity-overview-by-species :datasets="tableDatasets" />
+  </div>
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
@@ -54,11 +63,16 @@ import { activityService } from '@/activity-overview/services'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
+const store = useStore()
 const route = useRoute()
+
+const { isLoading, isError, data } = store.projectData
+const lastUpdatedAt = computed(() => data?.value?.updatedList[0]?.updatedAt ?? null)
 
 const filters = ref<ColoredFilter[]>([])
 

@@ -1,5 +1,7 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
+import { computed } from 'vue'
+import { useQuery, UseQueryReturnType } from 'vue-query'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
@@ -16,7 +18,16 @@ export const useStore = defineStore('root', {
     projectFilters: undefined as ProjectFiltersResponse | undefined,
     currentVersion: ''
   }),
-  getters: {},
+  getters: {
+    projectData: (state): UseQueryReturnType<ProjectFiltersResponse | undefined, unknown> => {
+      const projectId = computed(() => state.selectedProject?.id)
+      return useQuery(['fetch-project-filter', projectId], async () => {
+        if (projectId.value === undefined) return undefined
+
+        return await projectService.getProjectFilters(projectId.value)
+      })
+    }
+  },
   actions: {
     async updateUser (user: User | undefined = undefined) {
       // Set user & clear old data immediately
@@ -36,12 +47,6 @@ export const useStore = defineStore('root', {
 
       // Set project & clear old data immediately
       this.selectedProject = project
-      this.projectFilters = undefined
-
-      // Load new data asynchronously
-      this.projectFilters = project
-        ? await projectService.getProjectFilters(project.id)
-        : undefined
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version
