@@ -1,3 +1,5 @@
+import { describe } from 'vitest'
+
 const ROUTE = '/projects/:projectId/richness-export'
 
 describe.todo(`GET ${ROUTE} (richness export)`, () => {
