@@ -1,11 +1,14 @@
 import fastify, { FastifyInstance } from 'fastify'
+import fastifyRoutes from 'fastify-routes'
 import { describe, expect, test } from 'vitest'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
 import { dashboardGeneratedUrl } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Site } from '@rfcx-bio/common/dao/types'
 
 import { GET } from '~/api-helpers/types'
+import { getSequelize } from '~/db'
 import { routesDashboard } from './index'
 
 const ROUTE = '/projects/:projectId/dashboard-generated'
@@ -29,11 +32,29 @@ const EXPECTED_PROPS = [
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
 
+  await app.register(fastifyRoutes)
+
   routesDashboard
     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
     .forEach(route => app.route(route))
 
   return app
+}
+
+const createMockEmptySite = async (): Promise<Site> => {
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
+  const site = await models.LocationSite.create({
+    id: 999999,
+    idCore: 'MockEmpty',
+    idArbimon: 999999,
+    locationProjectId: 1,
+    name: 'Mock empty',
+    latitude: 70,
+    longitude: 70,
+    altitude: 30
+  })
+  return site
 }
 
 describe(`GET ${ROUTE}  (dashboard generated)`, () => {
@@ -43,7 +64,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       const app = await getMockedApp()
 
       // Act
-      const routes = app.printRoutes()
+      const routes = [...app.routes.keys()]
 
       // Assert
       expect(routes).toContain(ROUTE)
@@ -67,7 +88,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       expect(result).toBeTypeOf('object')
     })
 
-    test('contains all expected props', async () => {
+    test('contains all expected props & no more', async () => {
       // Arrange
       const app = await getMockedApp()
 
@@ -80,21 +101,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Assert
       const result = JSON.parse(response.body)
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-    })
-
-    test('does not contain any additional props', async () => {
-      // Arrange
-      const app = await getMockedApp()
-
-      // Act
-      const response = await app.inject({
-        method: GET,
-        url: dashboardGeneratedUrl({ projectId: '1' })
-      })
-
-      // Assert
-      const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
     })
   })
 
@@ -111,6 +118,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Arrange
       const knownSiteName = 'SA09'
       const expectedProperties = ['name', 'latitude', 'longitude', 'value']
+      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 14 }
 
       // Act
       const maybeResult = JSON.parse(response.body)?.richnessBySite
@@ -132,18 +140,37 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
 
       // Assert - latitude, longitude, and value are correct
-      expect(knownSite.latitude).toBe(17.962779)
-      expect(knownSite.longitude).toBe(-66.201552)
-      expect(knownSite.value).toBe(14)
+      expect(knownSite).toStrictEqual(expectedKnownSite)
     })
 
     test.todo('species richness by site is empty', async () => {
       // Arrange
-      // const knownSiteId = 123
+      const emptySite = await createMockEmptySite()
+      const knownSiteName = emptySite.name
+      const expectedProperties = ['name', 'latitude', 'longitude', 'value']
+      const expectedKnownSite = { name: knownSiteName, latitude: emptySite.latitude, longitude: emptySite.longitude, value: 0 }
 
       // Act
-      const result = JSON.parse(response.body)?.richnessBySite
-      expect(result).toBeDefined()
+      const maybeResult = JSON.parse(response.body)?.richnessBySite
+
+      // Assert - property exists & correct type
+      expect(maybeResult).toBeDefined()
+      expect(Array.isArray(maybeResult)).toBe(true)
+
+      const result = maybeResult as ApiMap
+      expect(result.length).toBe(878)
+
+      // Assert - first result is object
+      const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
+      expect(maybeKnownSite).toBeTypeOf('object')
+      const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }
+
+      // Assert - first result contains (only) expected props
+      expectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
+      Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+
+      // Assert - latitude, longitude, and value are correct
+      expect(knownSite.latitude).toStrictEqual(expectedKnownSite)
     })
   })
 })
