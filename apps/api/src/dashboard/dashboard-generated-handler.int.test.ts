@@ -118,7 +118,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Arrange
       const knownSiteName = 'SA09'
       const expectedProperties = ['name', 'latitude', 'longitude', 'value']
-      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 14 }
+      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 6 }
 
       // Act
       const maybeResult = JSON.parse(response.body)?.richnessBySite
