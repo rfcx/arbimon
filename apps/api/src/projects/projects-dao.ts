@@ -23,6 +23,7 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
   // TODO: Remove this hack & use ProjectVersion data
   const publicSlugs = [
     'bci-panama-2018',
+    'birds-of-madeira-flooded-habitats',
     'puerto-rico',
     'puerto-rico-island-wide',
     'rfcx-guardians-madre-de-dios-peru'

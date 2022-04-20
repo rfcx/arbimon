@@ -13,19 +13,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
     create view ${VIEW_NAME} as
     SELECT ls.location_project_id,
-           ls.name,
-           ls.latitude,
-           ls.longitude,
-           data.richness
-    FROM (
-        SELECT location_project_id,
-               location_site_id,
-               count(1)::integer AS richness
+       ls.name,
+       ls.longitude,
+       ls.latitude,
+       richness_by_site.richness
+    FROM location_site ls
+    JOIN (
+      SELECT
+        detection_by_site_species.location_site_id,
+        count(1)::integer as richness
+      FROM (
+        SELECT location_site_id
         FROM detection_by_site_species_hour
-        GROUP BY location_project_id, location_site_id
-    ) data
-    INNER JOIN location_site ls ON data.location_site_id = ls.id
-    ;
+        GROUP BY location_site_id, taxon_species_id
+      ) detection_by_site_species
+      GROUP BY location_site_id
+    ) richness_by_site
+    ON ls.id = richness_by_site.location_site_id
     `
   )
 }
