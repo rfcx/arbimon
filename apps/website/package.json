@@ -41,6 +41,7 @@
     "vue-class-component": "^8.0.0-rc.1",
     "vue-gtag": "^2.0.1",
     "vue-property-decorator": "^10.0.0-rc.3",
+    "vue-query": "^1.22.3",
     "vue-router": "^4.0.12",
     "vue3-markdown-it": "^1.0.9",
     "xlsx": "^0.17.3"
