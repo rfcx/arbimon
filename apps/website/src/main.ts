@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import VueGtag from 'vue-gtag'
+import { VueQueryPlugin } from 'vue-query'
 
 import appComponent from '@/_layout'
 import { ANALYTICS_CONFIGS } from '~/analytics'
@@ -21,6 +22,7 @@ async function init (): Promise<void> {
     .use(pinia)
     .use(router)
     .use(VueGtag, ANALYTICS_CONFIGS, router)
+    .use(VueQueryPlugin)
     .use(componentsFromGlob, import.meta.globEager('/src/_components/**/*.vue'))
     .provide('auth', authClient)
     .provide('store', useStore())
