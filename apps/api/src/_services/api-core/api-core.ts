@@ -11,7 +11,7 @@ const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
 const DEFAULT_MEMBER_PROJECT_OFFSET = 0
 
-export async function getIsProjectMember (projectId: string, token: string): Promise<CoreProject> {
+export async function getIsProjectMemberFromApi (projectId: string, token: string): Promise<CoreProject> {
     return await axios.request<CoreProject>({
       method: 'GET',
       url: `${CORE_API_BASE_URL}/projects/${projectId}/users`,
