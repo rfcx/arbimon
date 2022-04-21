@@ -136,6 +136,7 @@ importers:
       fastify-cors: ^6.0.2
       fastify-plugin: ^3.0.0
       fastify-request-context: ^2.2.0
+      fastify-routes: ^3.1.0
       fastify-static: ^4.5.0
       lodash-es: ^4.17.21
       pino-pretty: ^7.3.0
@@ -151,6 +152,7 @@ importers:
       fastify-cors: 6.0.2
       fastify-plugin: 3.0.0
       fastify-request-context: 2.2.0_fastify@3.23.1
+      fastify-routes: 3.1.0
       fastify-static: 4.5.0
       lodash-es: 4.17.21
       sequelize: 7.0.0-alpha.5
@@ -229,6 +231,7 @@ importers:
       vue-class-component: ^8.0.0-rc.1
       vue-gtag: ^2.0.1
       vue-property-decorator: ^10.0.0-rc.3
+      vue-query: ^1.22.3
       vue-router: ^4.0.12
       vue3-markdown-it: ^1.0.9
       windicss: ^3.2.1
@@ -253,6 +256,7 @@ importers:
       vue-class-component: 8.0.0-rc.1_vue@3.2.21
       vue-gtag: 2.0.1_vue@3.2.21
       vue-property-decorator: 10.0.0-rc.3_6f5031032aabf5cb20c4b6677c34c6b6
+      vue-query: 1.22.3_vue@3.2.21
       vue-router: 4.0.12_vue@3.2.21
       vue3-markdown-it: 1.0.9
       xlsx: 0.17.3
@@ -1488,7 +1492,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.9
-    dev: true
 
   /@babel/template/7.16.0:
     resolution: {integrity: sha512-MnZdpFD/ZdYhXwiunMqqgyZyucaYsbL0IrjoGjaVhGilz+x8YB++kRfygSOIj1yOtWKPlx7NBp+9I1RQSgsd5A==}
@@ -2471,6 +2474,10 @@ packages:
     resolution: {integrity: sha512-21u2jFOk8jbAneeGpDwZQ0W66RJa0IBDUyVl6SgKnn2cRFjLWzKj+ukXjpLhYr1KASyCe5E5U4jXwChVo0YUAw==}
     dev: false
 
+  /@vue/devtools-api/6.1.4:
+    resolution: {integrity: sha512-IiA0SvDrJEgXvVxjNkHPFfDx6SXw0b/TUkqMcDZWNg9fnCAHbTpoo59YfJ9QLFkwa3raau5vSlRVzMSLDnfdtQ==}
+    dev: false
+
   /@vue/eslint-config-standard/6.1.0_5f9b2f3a44dac3bc0a792ca144f1d0b4:
     resolution: {integrity: sha512-9+hrEyflDzsGdlBDl9jPV5DIYUx1TOU5OSQqRDKCrNumrxRj5HRWKuk+ocXWnha6uoNRtLC24mY7d/MwqvBCNw==}
     peerDependencies:
@@ -3236,6 +3243,19 @@ packages:
     dependencies:
       fill-range: 7.0.1
     dev: true
+
+  /broadcast-channel/3.7.0:
+    resolution: {integrity: sha512-cIAKJXAxGJceNZGTZSBzMxzyOn72cVgPnKx4dc6LRjQgbaJUQqhy5rzL3zbMxkMWsGKkv2hSFkPRMEXfoMZ2Mg==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+      detect-node: 2.1.0
+      js-sha3: 0.8.0
+      microseconds: 0.2.0
+      nano-time: 1.0.0
+      oblivious-set: 1.0.0
+      rimraf: 3.0.2
+      unload: 2.2.0
+    dev: false
 
   /browser-tabs-lock/1.2.15:
     resolution: {integrity: sha512-J8K9vdivK0Di+b8SBdE7EZxDr88TnATing7XoLw6+nFkXMQ6sVBh92K3NQvZlZU91AIkFRi0w3sztk5Z+vsswA==}
@@ -4344,6 +4364,10 @@ packages:
     hasBin: true
     dev: true
 
+  /detect-node/2.1.0:
+    resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
+    dev: false
+
   /diff/4.0.2:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
@@ -5374,7 +5398,7 @@ packages:
     dependencies:
       '@lukeed/ms': 2.0.0
       fast-jwt: 1.5.1
-      fastify-plugin: 3.0.0
+      fastify-plugin: 3.0.1
       http-errors: 2.0.0
       steed: 1.1.3
     dev: false
@@ -5396,6 +5420,12 @@ packages:
       asynchronous-local-storage: 1.0.2
       fastify: 3.23.1
       fastify-plugin: 3.0.0
+    dev: false
+
+  /fastify-routes/3.1.0:
+    resolution: {integrity: sha512-DSNqV+Fg3kIK1C/yLATLQBSIe7FJx70XfLFqfn52jdXv88gsj0s8uVHmREVBNJzofp3zIobqf7qHOJYMOc2V+A==}
+    dependencies:
+      fastify-plugin: 3.0.1
     dev: false
 
   /fastify-static/4.5.0:
@@ -6482,6 +6512,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /js-sha3/0.8.0:
+    resolution: {integrity: sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==}
+    dev: false
+
   /js-stringify/1.0.2:
     resolution: {integrity: sha1-Fzb939lyTyijaCrcYjCufk6Weds=}
     dev: true
@@ -6953,6 +6987,13 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
+  /match-sorter/6.3.1:
+    resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+      remove-accents: 0.4.2
+    dev: false
+
   /mathml-tag-names/2.1.3:
     resolution: {integrity: sha512-APMBEanjybaPzUrfqU0IMU5I0AswKMH7k8OTLs0vvV4KZpExkTkY87nR/zpbuTPj+gARop7aGUbl11pnDfW6xg==}
     dev: true
@@ -7021,6 +7062,10 @@ packages:
       braces: 3.0.2
       picomatch: 2.3.0
     dev: true
+
+  /microseconds/0.2.0:
+    resolution: {integrity: sha512-n7DHHMjR1avBbSpsTBj6fmMGh2AGrifVV4e+WYc3Q9lO+xnSZ3NyhcBND3vzzatt05LFhoKFRxrIyklmLlUtyA==}
+    dev: false
 
   /mime-db/1.50.0:
     resolution: {integrity: sha512-9tMZCDlYHqeERXEHO9f/hKfNXhre5dK2eE/krIvUjZbS2KPcqGDfNShIWS1uW9XOTKQKqK6qbeOci18rbfW77A==}
@@ -7173,6 +7218,12 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       lru-cache: 4.1.5
+    dev: false
+
+  /nano-time/1.0.0:
+    resolution: {integrity: sha1-sFVPaa2J4i0JB/ehKwmTpdlhN+8=}
+    dependencies:
+      big-integer: 1.6.51
     dev: false
 
   /nanoid/3.1.30:
@@ -7446,6 +7497,10 @@ packages:
 
   /obliterator/2.0.2:
     resolution: {integrity: sha512-g0TrA7SbUggROhDPK8cEu/qpItwH2LSKcNl4tlfBNT54XY+nOsqrs0Q68h1V9b3HOSpIWv15jb1lax2hAggdIg==}
+    dev: false
+
+  /oblivious-set/1.0.0:
+    resolution: {integrity: sha512-z+pI07qxo4c2CulUHCDf9lcqDlMSo72N/4rLUpRXf6fu+q8vjt8y0xS+Tlf8NTJDdTXHbdeO1n3MlbctwEoXZw==}
     dev: false
 
   /on-finished/2.3.0:
@@ -8231,6 +8286,23 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
+  /react-query/3.35.0:
+    resolution: {integrity: sha512-mRBJdpELLV+snzyXDsXM5ZEXM+HYt05L7st6ihSXr3nHX+4ULFr30mDjsziZvx0oF5dhlSDB8aMdvG6Ah4Bukg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.16.3
+      broadcast-channel: 3.7.0
+      match-sorter: 6.3.1
+    dev: false
+
   /read-pkg-up/7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
     engines: {node: '>=8'}
@@ -8347,7 +8419,6 @@ packages:
 
   /regenerator-runtime/0.13.9:
     resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
-    dev: true
 
   /regenerator-transform/0.14.5:
     resolution: {integrity: sha512-eOf6vka5IO151Jfsw2NO9WpGX58W6wWmefK3I1zEGr0lOD0u8rwPaNqQL1aRxUaxLeKO3ArNh3VYg1KbaD+FFw==}
@@ -8401,6 +8472,10 @@ packages:
     dependencies:
       jsesc: 0.5.0
     dev: true
+
+  /remove-accents/0.4.2:
+    resolution: {integrity: sha1-CkPTqq4egNuRngeuJUsoXZ4ce7U=}
+    dev: false
 
   /remove-trailing-separator/1.1.0:
     resolution: {integrity: sha1-wkvOKig62tW8P1jg1IJJuSN52O8=}
@@ -8517,7 +8592,6 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.0
-    dev: true
 
   /robust-predicates/3.0.1:
     resolution: {integrity: sha512-ndEIpszUHiG4HtDsQLeIuMvRsDnn8c8rYStabochtUeCvfuvNptb5TUbVD68LRAILPX7p9nqQGh4xJgn3EHS/g==}
@@ -9876,6 +9950,13 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
+  /unload/2.2.0:
+    resolution: {integrity: sha512-B60uB5TNBLtN6/LsgAf3udH9saB5p7gqJwcFfbOEZ8BcBHnGwCf6G/TGiEqkRAxX7zAFIUtzdrXQSdL3Q/wqNA==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+      detect-node: 2.1.0
+    dev: false
+
   /unplugin-auto-import/0.5.1_0a7c9a0b199819e12379074291a8228f:
     resolution: {integrity: sha512-Q3CvNbCB7nLbu+JdrF6jYs0Nx7kHmV2KzDcZHzTrdri3EhU1lUOgto+ce+Jw01Ds7RxBi9lwWwF3QoFwFPul1A==}
     engines: {node: '>=14'}
@@ -10360,6 +10441,20 @@ packages:
       vue: 3.2.21
     dev: false
 
+  /vue-demi/0.10.1_vue@3.2.21:
+    resolution: {integrity: sha512-L6Oi+BvmMv6YXvqv5rJNCFHEKSVu7llpWWJczqmAQYOdmPPw5PNYoz1KKS//Fxhi+4QP64dsPjtmvnYGo1jemA==}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.6.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.21
+    dev: false
+
   /vue-demi/0.12.1_vue@3.2.21:
     resolution: {integrity: sha512-QL3ny+wX8c6Xm1/EZylbgzdoDolye+VpCXRhI2hug9dJTP3OUJ3lmiKN3CsVV3mOJKwFi0nsstbgob0vG7aoIw==}
     engines: {node: '>=12'}
@@ -10409,6 +10504,29 @@ packages:
     dependencies:
       vue: 3.2.21
       vue-class-component: 8.0.0-rc.1_vue@3.2.21
+    dev: false
+
+  /vue-query/1.22.3_vue@3.2.21:
+    resolution: {integrity: sha512-QoDKuZMxOTpVU6ao1LeW7WvtEtrSW9m18rs/k4Pf5nGh9+zOkswDCYuiFgWdiOvEPmDRAH6R0/sXNAPib0GjfA==}
+    peerDependencies:
+      '@nuxtjs/composition-api': ^0.24.4
+      '@vue/composition-api': ^1.0.0
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@nuxtjs/composition-api':
+        optional: true
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      '@vue/devtools-api': 6.1.4
+      match-sorter: 6.3.1
+      react-query: 3.35.0
+      vue: 3.2.21
+      vue-demi: 0.10.1_vue@3.2.21
+    transitivePeerDependencies:
+      - react
+      - react-dom
+      - react-native
     dev: false
 
   /vue-router/4.0.12_vue@3.2.21:
