@@ -68,7 +68,7 @@
 </template>
 <script lang="ts" setup>
 import { isEqual } from 'lodash-es'
-import { computed, defineEmits, defineProps, ref, withDefaults } from 'vue'
+import { computed, defineEmits, defineProps, onMounted, ref, withDefaults } from 'vue'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -106,6 +106,10 @@ const emitSelect = () => {
     }))
   emits('emitSelect', fs)
 }
+
+onMounted(() => {
+  emitSelect()
+})
 
 const isDefaultFilter = computed(() => {
   return filters.length === 1 && isEqual(defaultFilter.value, filters[0])
