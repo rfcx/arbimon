@@ -1,1 +1,1 @@
-declare module 'vue3-markdown-it'
+import 'vue/macros-global'

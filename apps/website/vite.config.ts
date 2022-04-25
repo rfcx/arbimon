@@ -57,7 +57,9 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
       }
     }),
     pluginTsConfigPaths(),
-    pluginVue(),
+    pluginVue({
+      refTransform: true
+    }),
     pluginWindiCSS()
   ],
   server: {
