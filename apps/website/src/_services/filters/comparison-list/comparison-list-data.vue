@@ -98,13 +98,13 @@ const defaultFilter = computed(() => {
   )
 })
 const filters: FilterImpl[] = [defaultFilter.value]
-const coloredFilters = computed(() => filters.map((f, i) => ({
-      ...f,
-      color: store.datasetColors[i]
-    })))
 
 const emitSelect = () => {
-  emits('emitSelect', coloredFilters.value)
+  const fs = filters.map((f, i) => ({
+      ...f,
+      color: store.datasetColors[i]
+    }))
+  emits('emitSelect', fs)
 }
 
 const isDefaultFilter = computed(() => {
@@ -162,7 +162,7 @@ const removeFilterConfig = (idx: number): void => {
 }
 
 const apply = (filter: ComparisonFilter): void => {
-  const newFilter = new FilterImpl(filter.startDate, filter.endDate)
+  const newFilter = new FilterImpl(filter.startDate, filter.endDate, filter.sites, filter.otherFilters)
   if (isAddSelected.value) {
     filters.push(newFilter)
     isAddSelected.value = false
