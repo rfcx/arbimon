@@ -13,7 +13,7 @@ const main = async (): Promise<void> => {
     const bioSequelize = getSequelize()
 
     console.info('STEP: Get project lookups')
-    const syncingProjects = await getNeedSyncingProjects(bioSequelize)
+    const syncingProjects = await getNeedSyncingProjects(bioSequelize, 15)
 
     console.info('STEP: Sync site, species, and detections')
     for (const project of syncingProjects) {

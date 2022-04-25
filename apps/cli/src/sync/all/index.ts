@@ -36,7 +36,7 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
 
   // Else get latest data source
   // TODO: Get latest datasource for this ProjectVersion AND DataSourceType (ex: CNN)
-  console.info(`- checking datasource: ${project.slug}`)
+  console.info(`- checking datasource: ${project.slug} (${project.id})`)
   const previousDataSource = await models.DataSource
     .findOne({
       where: { locationProjectId: project.id },
@@ -47,15 +47,9 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
   // Do we already have this data?
   const newDataSourceId = hash.MD5(summaries)
   if (previousDataSource?.id === newDataSourceId) {
-    // Touch to bump updatedAt
     console.info('| nothing changed from last sync -', newDataSourceId)
-    await models.DataSource.update({}, {
-      where: {
-        id: previousDataSource.id,
-        locationProjectId: project.id
-      }
-    })
-    // TODO: Can we use previousDataSource.set('updatedAt', null).save()?
+    // Touch to bump updatedAt (update function didn't seem to update the updatedAt)
+    await models.DataSource.upsert(previousDataSource)
     return
   }
 
