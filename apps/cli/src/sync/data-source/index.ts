@@ -11,13 +11,14 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
   const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
   const projectSlugs = [
       ...rawEnvToProjectAndProfile[BIO_ENVIRONMENT].map(project => project.slugArbimon),
-      'destinos-awake'
+      'destinos-awake',
+      'las-balsas-jocotoco-foundation-project'
     ]
     .map(s => `'${s}'`)
     .join(',')
 
   const sql = `
-    SELECT DISTINCT 
+    SELECT DISTINCT
       CASE WHEN (lp.slug_arbimon IN (${projectSlugs})) THEN 0 ELSE 1 END,
       lp.id,
       lp.id_arbimon,
@@ -29,7 +30,6 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
     ORDER BY 1, ds.updated_at DESC
     LIMIT ${limit}
   `
-
   const projectIds = await sequelize
     .query<{ id: number, id_Arbimon: number, updated_at: Date | null }>(sql, { type: QueryTypes.SELECT, raw: true })
     .then(p => p.map(i => i.id))
