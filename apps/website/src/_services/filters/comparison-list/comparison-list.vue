@@ -4,73 +4,51 @@
       Click "Add comparison" below to compare between date ranges, sites, or taxonomies
     </h2>
     <div class="flex mt-5">
-      <div
-        v-for="(filter, idx) in filters"
-        :key="'site-card' + idx"
-        class="w-48 min-w-48 mr-4 cursor-pointer rounded-xl border-white text-white text-sm opacity-100 hover:opacity-90"
-        :style="{ 'border': `solid 3px ${getFilterColor(idx)}`, 'background-color': `${getFilterColor(idx)}80` }"
-        @click="popupOpen(idx)"
-      >
-        <!--TODO: 268 Show full information of filter when the user hovers over the comparison box -->
-        <!--TODO: 269 Extract comparison item to separate file -->
-        <div class="flex px-4 mt-2">
-          <div
-            class="flex flex-1"
-            :title="filter.displayTitle"
-          >
-            <div class="min-w-4">
-              <icon-fa-map-marker />
-            </div>
-            <div class="truncate max-w-24 ml-2">
-              {{ filter.displayTitle }}
-            </div>
-          </div>
-          <div
-            :class="{ 'invisible': isDefaultFilter }"
-            @click.stop="removeFilterConfig(idx)"
-          >
-            <icon-fa-close class="cursor-pointer w-3" />
-          </div>
-        </div>
-        <div
-          class="flex items-center my-2 px-4"
-        >
-          <div class="min-w-4">
-            <icon-fas-clock />
-          </div>
-          <div class="ml-2">
-            {{ filter.displayDate }}
-          </div>
-        </div>
-        <div
-          class="flex items-center py-2 px-4"
-          :style="{ 'border-top': `solid 1px ${getFilterColor(idx)}`}"
-        >
-          <div class="min-w-4">
-            <icon-fas-filter />
-          </div>
-          <div class="ml-2 first-letter:capitalize">
-            {{ getOptionalFilterText(idx) }}
-          </div>
-        </div>
-      </div>
-      <div
-        v-if="showAddButton"
-        class="flex justify-center items-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-mirage-grey text-white border-2 border-dashed hover:bg-steel-grey"
-        @click="addFilterConfig"
-      >
-        <div class="uppercase">
-          Add comparison
-        </div>
-      </div>
+      <div v-if="isLoading" />
+      <div v-else-if="isError" />
+      <div v-else-if="isNoData" />
+      <comparison-list-data
+        v-else-if="projectData"
+        :project-data="projectData"
+        :can-filter-by-taxon="props.canFilterByTaxon"
+        @emit-select="emitSelect"
+      />
     </div>
-    <comparison-filter-modal-component
-      v-if="isFilterOpen"
-      :initial-values="modalFilter"
-      :can-filter-by-taxon="canFilterByTaxon"
-      @emit-apply="apply"
-      @emit-close="popupClose"
-    />
   </div>
 </template>
-<script src="./comparison-list.ts" lang="ts"></script>
+<script lang="ts" setup>
+import { computed, defineEmits, defineProps, withDefaults } from 'vue'
+
+import { useStore } from '~/store'
+import { ColoredFilter } from '..'
+import ComparisonListData from './comparison-list-data.vue'
+
+const store = useStore()
+const props = withDefaults(
+  defineProps<{ canFilterByTaxon: boolean }>(),
+  { canFilterByTaxon: true }
+)
+
+const emits = defineEmits({
+  emitSelect (filters: ColoredFilter[]) {
+    return filters
+  }
+})
+
+const emitSelect = (filters: ColoredFilter[]) => {
+  emits('emitSelect', filters)
+}
+
+const { isLoading, isError, data: projectData } = store.projectData
+
+const isNoData = computed(() => {
+  if (projectData.value === undefined) return false
+
+  const { locationSites, taxonClasses, dateEndInclusiveUtc, dateStartInclusiveUtc } = projectData.value ?? {}
+  return locationSites.length === 0 ||
+    taxonClasses.length === 0 ||
+    dateEndInclusiveUtc === undefined ||
+    dateStartInclusiveUtc === undefined
+})
+
+</script>

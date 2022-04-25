@@ -1,12 +1,12 @@
 import { OnClickOutside } from '@vueuse/components'
-import { Options, Vue } from 'vue-class-component'
+import { Options, setup, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
-import { BiodiversityStore } from '~/store'
+import { BiodiversityStore, useStore } from '~/store'
 import DateRangePicker from './date-range-picker/date-range-picker.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
@@ -56,6 +56,16 @@ export default class ComparisonFilterModalComponent extends Vue {
   // Other filters
   otherFilters: FilterPropertyEquals[] = []
 
+  projectData = setup(() => {
+    const store = useStore()
+    const { isLoading, isError, data } = store.projectData
+    return {
+      isLoading,
+      isError,
+      data
+    }
+  })
+
   get menus (): FilterMenuItem[] {
     return [
       { id: 'sites', name: 'Sites' },
@@ -82,8 +92,10 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   get filtered (): Site[] {
+    if (this.projectData.data === undefined) return []
+
     const prefix = this.inputFilter.toLocaleLowerCase()
-    return (this.store.projectFilters?.locationSites ?? [])
+    return this.projectData.data.locationSites
       .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
   }
 
