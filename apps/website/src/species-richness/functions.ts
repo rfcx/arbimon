@@ -5,7 +5,7 @@ import { RichnessDatasetResponse, RichnessPresence } from '@rfcx-bio/common/api-
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
-import { useStoreOutsideSetup } from '~/store'
+import { useStore } from '~/store'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 
 interface RichnessDataset extends ColoredFilter {
@@ -15,9 +15,9 @@ interface RichnessDataset extends ColoredFilter {
 export const MAP_KEY_RICHNESS_TOTAL = 'All'
 
 export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
-  const store = useStoreOutsideSetup()
-
-  const taxonClasses = store.projectFilters?.taxonClasses
+  const store = useStore()
+  const taxonClasses = store.projectData.value.data?.taxonClasses
+  if (taxonClasses === undefined) return []
 
   return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.richnessByTaxon).map(Number)))]
     .map(taxonClassId => {
@@ -35,10 +35,11 @@ export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChar
 }
 
 export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
-  const store = useStoreOutsideSetup()
+  const store = useStore()
+  const taxonClasses = store.projectData.value.data?.taxonClasses
+  const locationSites = store.projectData.value.data?.locationSites
+  if (taxonClasses === undefined || locationSites === undefined) return []
 
-  const locationSites = store.projectFilters?.locationSites
-  const taxonClasses = store.projectFilters?.taxonClasses
   const intermediate = datasets.map(({ color, data: richnessData, sites, ...filter }) => {
     const groupedBySite = groupBy(richnessData.richnessBySite, 'locationSiteId')
     const locationSiteIds = Object.keys(groupedBySite).map(Number)
@@ -74,8 +75,9 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
 }
 
 export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[] {
-  const store = useStoreOutsideSetup()
-  const taxonClasses = store.projectFilters?.taxonClasses
+  const store = useStore()
+  const taxonClasses = store.projectData.value.data?.taxonClasses
+  if (taxonClasses === undefined) return []
 
   const richnessPresences = datasets.map(ds => ds.data.richnessPresence)
   const allSpecies: { [speciesId: number]: RichnessPresence } = Object.assign({}, ...richnessPresences)
