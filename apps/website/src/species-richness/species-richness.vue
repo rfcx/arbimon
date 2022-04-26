@@ -6,7 +6,7 @@
   /> -->
   <species-richness-introduction
     :filters="filters"
-    :have-data="haveData"
+    :has-data="hasData"
   />
   <comparison-list-component
     class="mt-5"

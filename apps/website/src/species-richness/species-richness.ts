@@ -38,7 +38,7 @@ export default class SpeciesRichnessPage extends Vue {
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
   detectedSpecies: DetectedSpeciesItem[] = []
 
-  get haveData (): boolean {
+  get hasData (): boolean {
     return this.speciesByClassDatasets.length > 0
   }
 
