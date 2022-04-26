@@ -99,7 +99,7 @@ const main = async (): Promise<void> => {
         ;
       `
       const bind = { idArbimon, idCore }
-      console.log({ sqlUpdateExternalId, bind })
+      console.info({ sqlUpdateExternalId, bind })
       // TODO: Test this query:
       // await sequelize.query(sqlUpdateExternalId, { bind, type: QueryTypes.UPDATE, raw: true })
     }
