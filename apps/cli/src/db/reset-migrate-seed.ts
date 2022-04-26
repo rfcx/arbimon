@@ -33,6 +33,7 @@ const main = async (): Promise<void> => {
     // Teardown
     await sequelize1.close()
     await sequelize2.close()
+    console.info('RMS: finished')
   } catch (err: any) {
     console.error(err)
     process.exitCode = 1
