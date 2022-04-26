@@ -1,10 +1,10 @@
 import { IDatePickerType } from 'element-plus/es/components/date-picker/src/date-picker.type'
-import { setup, Vue } from 'vue-class-component'
-import { Emit, Prop, Watch } from 'vue-property-decorator'
+import { Vue } from 'vue-class-component'
+import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { useStore } from '~/store'
+import { BiodiversityStore } from '~/store'
 
 export interface DateRangeShortcut {
   text: string
@@ -25,6 +25,7 @@ interface DateRangeTypeOption {
 export const MOCK_WHOLE_PROJECT_DATE_RANGE: [Date, Date] = [dayjs().subtract(20, 'years').toDate(), dayjs().toDate()]
 
 export default class DateRangePicker extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) defaultStartDate!: string | null
   @Prop({ default: null }) defaultEndDate!: string | null
 
@@ -37,16 +38,6 @@ export default class DateRangePicker extends Vue {
 
   dateValues: Date[] = []
   selectedType: IDatePickerType = DATE_PICKER_TYPE.date
-
-  projectData = setup(() => {
-    const store = useStore()
-    const { isLoading, isError, data } = store.projectData
-    return {
-      isLoading,
-      isError,
-      data
-    }
-  })
 
   get dateShortcuts (): DateRangeShortcut[] {
     return [
@@ -87,15 +78,15 @@ export default class DateRangePicker extends Vue {
   }
 
   get dateStartAtLatestUpdated (): Date {
-    if (this.projectData.data === undefined) return new Date()
+    if (!this.store.projectData.value.isData) return new Date()
 
-    return dayjs(this.projectData.data?.dateStartInclusiveUtc).toDate()
+    return dayjs(this.store.projectData.value.data.dateStartInclusiveUtc).toDate()
   }
 
   get dateEndAtLatestUpdated (): Date {
-    if (this.projectData.data === undefined) return new Date()
+    if (!this.store.projectData.value.isData) return new Date()
 
-    return dayjs(this.projectData.data.dateEndInclusiveUtc).toDate()
+    return dayjs(this.store.projectData.value.data.dateEndInclusiveUtc).toDate()
   }
 
   override created (): void {

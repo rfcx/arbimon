@@ -5,7 +5,7 @@
     <navbar-component />
     <!-- ================== page content =============== -->
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
-      <div v-if="isLoading" />
+      <div v-if="store.projectData.value.isLoading" />
       <div
         v-else-if="store.selectedProject"
         class="page_content"
@@ -32,7 +32,6 @@ import InvalidProjectComponent from '../components/invalid-project/invalid-proje
 import NavbarComponent from '../components/navbar/nav-bar.vue'
 
 const store = useStore()
-const { isLoading, isError, data } = store.projectData
-const lastUpdatedAt = computed(() => data?.value?.updatedList[0]?.updatedAt ?? null)
+const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
 </script>

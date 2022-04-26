@@ -1,12 +1,13 @@
 <template>
-  <div v-if="isLoading" />
+  <!-- TODO: Extract banner states to banner component -->
+  <div v-if="store.projectData.value.isLoading" />
   <div v-else>
-    <!-- <draft-banner
+    <draft-banner
       v-if="lastUpdatedAt"
       current-mode="Draft"
       :sync-updated="lastUpdatedAt"
       :project-slug="store.selectedProject?.slug"
-    /> -->
+    />
   </div>
   <page-title
     page-title="Activity Overview"
@@ -28,8 +29,14 @@
       </template>
     </export-button>
   </page-title>
-  <div v-if="isLoading">
+  <div v-if="store.projectData.value.isLoading">
     Loading
+  </div>
+  <div v-else-if="store.projectData.value.isError">
+    Error
+  </div>
+  <div v-else-if="store.projectData.value.isNoData">
+    No Data
   </div>
   <div v-else>
     <comparison-list-component
@@ -71,8 +78,7 @@ const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 const store = useStore()
 const route = useRoute()
 
-const { isLoading, isError, data } = store.projectData
-const lastUpdatedAt = computed(() => data?.value?.updatedList[0]?.updatedAt ?? null)
+const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
 const filters = ref<ColoredFilter[]>([])
 

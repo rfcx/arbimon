@@ -4,12 +4,12 @@
       Click "Add comparison" below to compare between date ranges, sites, or taxonomies
     </h2>
     <div class="flex mt-5">
-      <div v-if="isLoading" />
-      <div v-else-if="isError" />
-      <div v-else-if="isNoData" />
+      <div v-if="store.projectData.value.isLoading" />
+      <div v-else-if="store.projectData.value.isError" />
+      <div v-else-if="store.projectData.value.isNoData" />
       <comparison-list-data
-        v-else-if="projectData"
-        :project-data="projectData"
+        v-else
+        :project-data="store.projectData.value.data"
         :can-filter-by-taxon="props.canFilterByTaxon"
         @emit-select="emitSelect"
       />
@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, defineEmits, defineProps, withDefaults } from 'vue'
+import { defineEmits, defineProps, withDefaults } from 'vue'
 
 import { useStore } from '~/store'
 import { ColoredFilter } from '..'
@@ -38,17 +38,4 @@ const emits = defineEmits({
 const emitSelect = (filters: ColoredFilter[]) => {
   emits('emitSelect', filters)
 }
-
-const { isLoading, isError, data: projectData } = store.projectData
-
-const isNoData = computed(() => {
-  if (projectData.value === undefined) return false
-
-  const { locationSites, taxonClasses, dateEndInclusiveUtc, dateStartInclusiveUtc } = projectData.value ?? {}
-  return locationSites.length === 0 ||
-    taxonClasses.length === 0 ||
-    dateEndInclusiveUtc === undefined ||
-    dateStartInclusiveUtc === undefined
-})
-
 </script>

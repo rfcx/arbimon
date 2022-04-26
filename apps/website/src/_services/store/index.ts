@@ -1,13 +1,16 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
-import { computed } from 'vue'
-import { useQuery, UseQueryReturnType } from 'vue-query'
+import { computed, ComputedRef } from 'vue'
+import { useQuery } from 'vue-query'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { projectService } from '~/api/project-service'
+import { Loadable, queryAsLoadable } from '~/loadable'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
+
+const ONE_HOUR_IN_MILLIS = 3_600_000 // 60 * 60 * 1000
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -19,13 +22,19 @@ export const useStore = defineStore('root', {
     currentVersion: ''
   }),
   getters: {
-    projectData: (state): UseQueryReturnType<ProjectFiltersResponse | undefined, unknown> => {
+    projectData: (state): ComputedRef<Loadable<ProjectFiltersResponse, unknown>> => {
       const projectId = computed(() => state.selectedProject?.id)
-      return useQuery(['fetch-project-filter', projectId], async () => {
-        if (projectId.value === undefined) return undefined
 
-        return await projectService.getProjectFilters(projectId.value)
-      })
+      return queryAsLoadable(
+        useQuery(['fetch-project-filter', projectId], async () => {
+          if (projectId.value === undefined) return undefined
+
+          return await projectService.getProjectFilters(projectId.value)
+        }, {
+          staleTime: ONE_HOUR_IN_MILLIS
+        }),
+        (d: ProjectFiltersResponse | undefined): d is ProjectFiltersResponse => d !== undefined
+      )
     }
   },
   actions: {

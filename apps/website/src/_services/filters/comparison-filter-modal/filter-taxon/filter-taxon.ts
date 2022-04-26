@@ -1,10 +1,10 @@
-import { setup, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { TaxonClass } from '@rfcx-bio/common/dao/types'
 
 import { FilterPropertyEquals } from '~/filters'
-import { BiodiversityStore, useStore } from '~/store'
+import { BiodiversityStore } from '~/store'
 
 export default class FilterTaxon extends Vue {
   @Inject() readonly store!: BiodiversityStore
@@ -17,20 +17,10 @@ export default class FilterTaxon extends Vue {
 
   selectedTaxons: number[] = []
 
-  projectData = setup(() => {
-    const store = useStore()
-    const { isLoading, isError, data } = store.projectData
-    return {
-      isLoading,
-      isError,
-      data
-    }
-  })
-
   get taxons (): TaxonClass[] {
-    if (this.projectData.data === undefined) return []
+    if (this.store.projectData.value.data === undefined) return []
 
-    return this.projectData.data.taxonClasses
+    return this.store.projectData.value.data.taxonClasses
   }
 
   get isSelectedAllTaxons (): boolean {
