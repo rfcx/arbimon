@@ -58,7 +58,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     }),
     pluginTsConfigPaths(),
     pluginVue({
-      refTransform: true
+      reactivityTransform: true
     }),
     pluginWindiCSS()
   ],
