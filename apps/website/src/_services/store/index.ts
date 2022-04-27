@@ -17,12 +17,12 @@ export const useStore = defineStore('root', {
     user: undefined as User | undefined,
     datasetColors: COLORS_BIO_INCLUSIVE,
     projects: [] as LocationProjectForUser[],
-    selectedProject: undefined as LocationProjectForUser | undefined,
+    selectedProjectSlug: '',
     currentVersion: ''
   }),
   getters: {
-    projectData: (state): ComputedRef<Loadable<ProjectFiltersResponse, unknown>> => {
-      const projectId = computed(() => state.selectedProject?.id)
+    projectData (): ComputedRef<Loadable<ProjectFiltersResponse, unknown>> {
+      const projectId = computed(() => this.selectedProject?.id)
 
       return queryAsLoadable(
         useQuery(['fetch-project-filter', projectId], async () => {
@@ -34,27 +34,22 @@ export const useStore = defineStore('root', {
         }),
         (d: ProjectFiltersResponse | undefined): d is ProjectFiltersResponse => d !== undefined
       )
+    },
+    selectedProject: (state): LocationProjectForUser | undefined => {
+      if (state.projects.length === 0) return undefined
+      return state.projects.find(({ slug }) => slug === state.selectedProjectSlug)
     }
   },
   actions: {
     async updateUser (user: User | undefined = undefined) {
-      // Set user & clear old data immediately
       this.user = user
-      await this.updateProjects([])
 
-      // Load new data asynchronously
       const projects = await projectService.getProjects() ?? []
-      await this.updateProjects(projects)
-    },
-    async updateProjects (projects: LocationProjectForUser[]) {
       this.projects = projects
-      await this.updateSelectedProject(projects?.[0])
+      await this.updateSelectedProjectSlug(projects?.[0].slug ?? '')
     },
-    async updateSelectedProject (project?: LocationProjectForUser) {
-      if (this.selectedProject?.id === project?.id) return
-
-      // Set project & clear old data immediately
-      this.selectedProject = project
+    async updateSelectedProjectSlug (projectSlug: string) {
+      this.selectedProjectSlug = projectSlug
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version

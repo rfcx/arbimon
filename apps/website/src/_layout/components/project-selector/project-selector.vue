@@ -143,7 +143,7 @@ const confirmSelectedProject = async () => {
   if (!selectedProject.value) return emit('emitClose')
 
   // Update store for future navigation
-  await store.updateSelectedProject(selectedProject.value)
+  await store.updateSelectedProjectSlug(selectedProject.value.slug)
 
   // If current route uses projectSlug, update it (guard will update store)
   if (route.params.projectSlug !== undefined) {

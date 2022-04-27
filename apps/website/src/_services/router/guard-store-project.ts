@@ -4,11 +4,10 @@ import { useStore } from '~/store'
 
 export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, from, next) => {
   const store = useStore()
-  const currentProjectSlug = store.selectedProject?.slug
-  const newProjectSlug = to.params.projectSlug // TODO 44: Extract `projectSlug` as a const?
+  const newProjectSlug = Array.isArray(to.params.projectSlug) ? to.params.projectSlug[0] : to.params.projectSlug // TODO 44: Extract `projectSlug` as a const?
 
-  if (newProjectSlug !== currentProjectSlug) {
-    await store.updateSelectedProject(store.projects?.find(p => p.slug === newProjectSlug))
+  if (newProjectSlug !== store.selectedProjectSlug) {
+    await store.updateSelectedProjectSlug(newProjectSlug)
   }
 
   next()

@@ -1,6 +1,6 @@
 <template>
   <!-- TODO: Extract banner states to banner component -->
-  <div v-if="store.projectData.value.isLoading" />
+  <!-- <div v-if="store.projectData.value.isLoading" />
   <div v-else>
     <draft-banner
       v-if="lastUpdatedAt"
@@ -8,7 +8,7 @@
       :sync-updated="lastUpdatedAt"
       :project-slug="store.selectedProject?.slug"
     />
-  </div>
+  </div> -->
   <page-title
     page-title="Species Spotlight"
     page-subtitle="An in-depth look at the detection and occupancy trends of a single species"

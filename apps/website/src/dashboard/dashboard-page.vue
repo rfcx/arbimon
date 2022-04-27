@@ -173,8 +173,8 @@ watch(() => route.params.projectSlug, async (toProjectSlug, fromProjectSlug) => 
   }
 })
 
-onMounted(async () => {
-  await updatePage()
+onMounted(() => {
+  updatePage()
 })
 
 const getPopupHtml = (data: MapSiteData, dataKey: string) => data.distinctSpecies[dataKey]

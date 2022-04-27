@@ -1,6 +1,6 @@
 <template>
   <!-- TODO: Extract banner states to banner component -->
-  <div v-if="store.projectData.value.isLoading" />
+  <!-- <div v-if="store.projectData.value.isLoading" />
   <div v-else>
     <draft-banner
       v-if="lastUpdatedAt"
@@ -8,7 +8,7 @@
       :sync-updated="lastUpdatedAt"
       :project-slug="store.selectedProject?.slug"
     />
-  </div>
+  </div> -->
   <page-title
     page-title="Activity Overview"
     page-subtitle="Temporal and spatial activity trends for all species"
@@ -41,6 +41,7 @@
   <div v-else>
     <comparison-list-component
       class="mt-5"
+      :can-filter-by-taxon="true"
       @emit-select="onFilterChange"
     />
     <activity-overview-by-location

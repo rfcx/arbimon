@@ -1,6 +1,6 @@
 <template>
   <!-- TODO: Extract banner states to banner component -->
-  <div v-if="store.projectData.value.isLoading" />
+  <!-- <div v-if="store.projectData.value.isLoading" />
   <div v-else>
     <draft-banner
       v-if="lastUpdatedAt"
@@ -8,13 +8,14 @@
       :sync-updated="lastUpdatedAt"
       :project-slug="store.selectedProject?.slug"
     />
-  </div>
+  </div> -->
   <species-richness-introduction
     :filters="filters"
     :has-data="hasData"
   />
   <comparison-list-component
     class="mt-5"
+    :can-filter-by-taxon="true"
     @emit-select="onFilterChange"
   />
   <species-richness-by-class
