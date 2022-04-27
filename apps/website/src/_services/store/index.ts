@@ -18,7 +18,6 @@ export const useStore = defineStore('root', {
     datasetColors: COLORS_BIO_INCLUSIVE,
     projects: [] as LocationProjectForUser[],
     selectedProject: undefined as LocationProjectForUser | undefined,
-    projectFilters: undefined as ProjectFiltersResponse | undefined,
     currentVersion: ''
   }),
   getters: {
