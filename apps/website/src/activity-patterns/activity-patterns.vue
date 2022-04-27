@@ -102,7 +102,6 @@ import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import { SpotlightTimeDataset } from './components/activity-patterns-by-time/activity-patterns-by-time'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
@@ -117,7 +116,7 @@ import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
-const store = useStore()
+// const store = useStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -150,7 +149,7 @@ const infoTopic = computed(() => {
   return INFO_TOPICS.spotlight
 })
 
-const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
 const resetData = () => {
   predictedOccupancyMaps.value = []

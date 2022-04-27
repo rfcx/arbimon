@@ -1,6 +1,6 @@
 <template>
   <div v-if="store.selectedProject">
-    <div v-if="store.projectData.value.isLoading" />
+    <!-- <div v-if="store.projectData.value.isLoading" />
     <div v-else>
       <draft-banner
         v-if="lastUpdatedAt"
@@ -8,7 +8,7 @@
         :sync-updated="lastUpdatedAt"
         :project-slug="store.selectedProject?.slug"
       />
-    </div>
+    </div> -->
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
@@ -179,7 +179,7 @@ onMounted(() => {
 
 const getPopupHtml = (data: MapSiteData, dataKey: string) => data.distinctSpecies[dataKey]
 
-const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
 const color = computed(() => {
   return store.datasetColors[0] ?? '#EFEFEF'

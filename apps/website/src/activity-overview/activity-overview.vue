@@ -79,7 +79,7 @@ const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 const store = useStore()
 const route = useRoute()
 
-const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
 const filters = ref<ColoredFilter[]>([])
 

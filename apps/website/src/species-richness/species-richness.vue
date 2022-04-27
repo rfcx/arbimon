@@ -81,7 +81,7 @@ const hasData = computed(() => {
   return speciesByClassDatasets.value.length > 0
 })
 
-const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
 const onFilterChange = async (fs: ColoredFilter[]) => {
   filters.value = fs
