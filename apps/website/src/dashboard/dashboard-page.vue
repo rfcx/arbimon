@@ -230,7 +230,7 @@ const mapDataset = computed((): MapDataSet => {
     return {
     startDate: dayjs(),
     endDate: dayjs(),
-    sites: store.projectFilters?.locationSites ?? [],
+    sites: store.projectData.value.data?.locationSites ?? [],
     data: ((selectedTab.value === TAB_VALUES.richness ? generated.value?.richnessBySite : generated.value?.detectionBySite) ?? [])
       .map(({ name: siteName, latitude, longitude, value }) => ({
         siteName,
