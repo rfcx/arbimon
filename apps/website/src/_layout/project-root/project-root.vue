@@ -1,9 +1,6 @@
 <template>
   <div class="page-container">
-    <!-- ================= dynamic navbar ============== -->
-    <!-- URGENT 44 - Move navbar to App.vue -->
     <navbar-component />
-    <!-- ================== page content =============== -->
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
       <div v-if="store.projectData.value.isLoading" />
       <div
@@ -13,8 +10,9 @@
         <router-view />
         <div class="mt-5 py-2 grid sm:grid-cols-2 text-xs text-subtle border-t-1 border-l-0 border-r-0 border-b-0 border-solid opacity-50">
           <last-sync
+            v-if="lastUpdatedAt.isData"
             class="text-center sm:text-left"
-            :sync-updated="lastUpdatedAt"
+            :sync-updated="lastUpdatedAt.data"
             :project-slug="store.selectedProject?.slug"
           />
           <app-version class="text-center mt-2 sm:(mt-0 text-right)" />
@@ -25,13 +23,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue'
-
+import { mapLoadable } from '~/loadable/map-loadable'
 import { useStore } from '~/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 import NavbarComponent from '../components/navbar/nav-bar.vue'
 
 const store = useStore()
-const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
-
+// TODO: Enable stricter TS type-checking for array indexing (& remove explicit return type)
+const lastUpdatedAt = mapLoadable(store.projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
 </script>
