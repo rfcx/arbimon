@@ -1,2 +1,2 @@
+export * from './loadable'
 export * from './query-as-loadable'
-export * from './types'
