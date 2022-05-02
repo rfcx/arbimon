@@ -23,7 +23,10 @@ export const taxonSpeciesRfcx: Record<string, Partial<TaxonSpeciesRfcx>> =
     'Porphyrio martinica': { // Solveable via alias: Porphyrio martinicus
       commonName: 'Purple gallinule'
     },
-    'Loxigilla portoricensis': { // Solveable via alias: Pyrrhulagra portoricensis
+    'Loxigilla portoricensis': { // Old name in Arbimon; now using Melopyrrha portoricensis
+      commonName: 'Puerto Rican bullfinch'
+    },
+    'Melopyrrha portoricensis': { // Solveable via alias: Pyrrhulagra portoricensis
       commonName: 'Puerto Rican bullfinch'
     }
   })
