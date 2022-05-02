@@ -8,5 +8,6 @@ export const taxonSpeciesCommonNameRfcx: SeedTaxonSpeciesCommonName[] = [
   { slug: 'himantopus-mexicanus', commonName: 'Black-necked stilt' }, // Missing in IUCN (IUCN website redirects incorrectly to Himantopus himantopus)
   { slug: 'fulica-caribaea', commonName: 'American coot' }, // Solveable via alias: Fulica americana
   { slug: 'porphyrio-martinica', commonName: 'Purple gallinule' }, // Solveable via alias: Porphyrio martinicus
-  { slug: 'loxigilla-portoricensis', commonName: 'Puerto Rican bullfinch' } // Solveable via alias: Pyrrhulagra portoricensis
+  { slug: 'loxigilla-portoricensis', commonName: 'Puerto Rican bullfinch' }, // Old name in Arbimon; now using Melopyrrha portoricensis
+  { slug: 'melopyrrha-portoricensis', commonName: 'Puerto Rican bullfinch' } // Solveable via alias: Pyrrhulagra portoricensis
 ]

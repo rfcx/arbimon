@@ -3,7 +3,7 @@ import { FastifyRequest } from 'fastify'
 import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { getIsProjectMember as getIsProjectMemberFromApi } from '~/api-core/api-core'
+import { getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { Middleware } from '~/api-helpers/types'
 import { Auth0UserInfo } from '~/auth0'
