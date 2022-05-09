@@ -99,14 +99,11 @@ const defaultFilter = computed((): DetectionFilter => {
     taxonClasses: []
   }
 })
-const filters: DetectionFilter[] = [defaultFilter.value]
+
+const filters = ref<DetectionFilter[]>([defaultFilter.value])
 
 const emitSelect = () => {
-  const fs = filters.map((f, i) => ({
-      ...f,
-      color: store.datasetColors[i]
-    }))
-  emits('emitSelect', fs)
+  emits('emitSelect', filters.value)
 }
 
 onMounted(() => {
@@ -114,11 +111,11 @@ onMounted(() => {
 })
 
 const isDefaultFilter = computed(() => {
-  return filters.length === 1 && isEqual(defaultFilter.value, filters[0])
+  return filters.value.length === 1 && isEqual(defaultFilter.value, filters.value[0])
 })
 
 const isShowAdd = computed(() => {
-  return filters.length < 5
+  return filters.value.length < 5
 })
 
 const displayTitle = (filter: DetectionFilter) => {
@@ -140,7 +137,7 @@ const openPopup = (idx: number): void => {
   isOpenModal.value = true
   isAddSelected.value = false
   selectedFilterId.value = idx
-  modalFilter.value = filters[selectedFilterId.value]
+  modalFilter.value = filters.value[selectedFilterId.value]
 }
 
 const closePopup = (): void => {
@@ -148,7 +145,7 @@ const closePopup = (): void => {
 }
 
 const getTaxonFilterText = (idx: number) => {
-  const taxonClasses = filters[idx].taxonClasses
+  const taxonClasses = filters.value[idx].taxonClasses
   if (taxonClasses.length === 0) {
     return 'All taxon'
   }
@@ -160,7 +157,7 @@ const getTaxonFilterText = (idx: number) => {
 
 const addFilterConfig = () => {
   // Copy previous filter
-  const previousFilter = filters[filters.length - 1]
+  const previousFilter = filters.value[filters.value.length - 1]
   modalFilter.value = { ...previousFilter }
 
   // Open modal
@@ -169,9 +166,9 @@ const addFilterConfig = () => {
 }
 
 const removeFilterConfig = (idx: number): void => {
-  filters.splice(idx, 1)
-  if (filters.length === 0) {
-    filters.push(defaultFilter.value)
+  filters.value.splice(idx, 1)
+  if (filters.value.length === 0) {
+    filters.value.push(defaultFilter.value)
   }
   emitSelect()
 }
@@ -179,10 +176,10 @@ const removeFilterConfig = (idx: number): void => {
 const apply = (filter: DetectionFilter): void => {
   const newFilter = { ...filter }
   if (isAddSelected.value) {
-    filters.push(newFilter)
+    filters.value.push(newFilter)
     isAddSelected.value = false
   } else {
-    filters.splice(selectedFilterId.value, 1, newFilter)
+    filters.value.splice(selectedFilterId.value, 1, newFilter)
     selectedFilterId.value = -1
   }
   closePopup()
