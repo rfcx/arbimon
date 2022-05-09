@@ -33,7 +33,6 @@ export default class ComparisonFilterModalComponent extends Vue {
   @Prop({ default: true }) canFilterByTaxon!: boolean
 
   @Emit() emitApply (): DetectionFilter {
-    this.emitClose()
     return {
       dateStartLocal: dayjs.utc(this.dateStartLocal),
       dateEndLocal: dayjs.utc(this.dateEndLocal),

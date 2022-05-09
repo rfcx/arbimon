@@ -163,7 +163,7 @@ const addFilterConfig = () => {
   const previousFilter = filters[filters.length - 1]
   modalFilter.value = { ...previousFilter }
 
-// Open modal
+  // Open modal
   isAddSelected.value = true
   isOpenModal.value = true
 }
@@ -185,6 +185,7 @@ const apply = (filter: DetectionFilter): void => {
     filters.splice(selectedFilterId.value, 1, newFilter)
     selectedFilterId.value = -1
   }
+  closePopup()
   emitSelect()
 }
 

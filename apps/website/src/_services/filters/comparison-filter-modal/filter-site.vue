@@ -47,7 +47,7 @@
         v-for="item in filtered"
         :key="'site-list-' + item.id"
         :label="item.name"
-        :value="{ label: item.name, value: [item] }"
+        :value="formatSiteOptions(item)"
       />
     </el-select>
     <div class="ml-2 mt-3">
@@ -67,6 +67,8 @@
 </template>
 <script lang="ts" setup>
 import { computed, defineEmits, defineProps, onMounted, ref, watch, withDefaults } from 'vue'
+
+import { Site } from '@rfcx-bio/common/dao/types'
 
 import { DetectionFilterSiteGroup } from '~/filters/types'
 import { useStore } from '~/store'
@@ -112,6 +114,13 @@ const optionAllMatchingFilter = computed(() => {
       : undefined
 })
 
+const formatSiteOptions = (site: Site): DetectionFilterSiteGroup => {
+  return {
+    label: site.name,
+    sites: [site]
+  }
+}
+
 const onSelectorBlur = () => {
   const inputEl = document.querySelector('[name="input-site"]') as HTMLInputElement
   const searchSelector = document.querySelector('.search-select')
@@ -144,5 +153,61 @@ const onRemoveSiteTags = (item: DetectionFilterSiteGroup) => {
 
 </script>
 <style lang="scss">
+.search-select {
+  .select-trigger {
+    width: 32.5rem;
+    background-color: #141525;
+    margin-right: 1rem;
+    border-radius: 0.25rem;
 
+    & .el-input * > .el-icon.el-select__caret {
+      display: flex;
+    }
+  }
+
+  span.el-tag {
+    display: none;
+  }
+
+  * > input {
+    background-color: transparent;
+    border-radius: 0.25rem;
+  }
+
+  & * > .el-select__input {
+    margin: 0 0 0 2px;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+.selector-sites {
+  background-color:hsl(236, 25%, 15%);
+  border: 1px solid #45485D;
+  & .el-popper__arrow {
+    display: none;
+  }
+  & .el-select-dropdown__item {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid var(--el-border-color-base);
+    &:hover {
+      background-color: var(--el-border-color-base);
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.el-scrollbar__view.el-select-dropdown__list {
+  padding: 0;
+}
+
+@media (max-width: 700px) {
+  .search-select .select-trigger {
+    width: 11.25rem;
+    margin-right: 1rem;
+  }
+}
 </style>
