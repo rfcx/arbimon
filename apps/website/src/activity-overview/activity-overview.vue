@@ -39,7 +39,7 @@
     No Data
   </div>
   <div v-else>
-    <comparison-list-component
+    <filter-list-component
       class="mt-5"
       :can-filter-by-taxon="true"
       @emit-select="onFilterChange"
@@ -69,7 +69,7 @@ import ActivityOverviewByTime, { ActivityOverviewTimeDataset } from '@/activity-
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { activityService } from '@/activity-overview/services'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ComparisonListComponent, DetectionFilter } from '~/filters'
+import { DetectionFilter, FilterListComponent } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'

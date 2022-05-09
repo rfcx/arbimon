@@ -29,7 +29,7 @@
       </template>
     </export-button>
   </page-title>
-  <comparison-list-component
+  <filter-list-component
     class="mt-5"
     :can-filter-by-taxon="false"
     @emit-select="onFilterChange"
@@ -99,7 +99,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ComparisonListComponent, DetectionFilter } from '~/filters'
+import { DetectionFilter, FilterListComponent } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'

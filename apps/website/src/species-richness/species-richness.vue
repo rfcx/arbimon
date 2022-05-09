@@ -13,7 +13,7 @@
     :filters="filters"
     :has-data="hasData"
   />
-  <comparison-list-component
+  <filter-list-component
     class="mt-5"
     :can-filter-by-taxon="true"
     @emit-select="onFilterChange"
@@ -45,7 +45,7 @@ import { useRoute } from 'vue-router'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ComparisonListComponent, DetectionFilter } from '~/filters'
+import { DetectionFilter, FilterListComponent } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { useStore } from '~/store'
 import { TimeBucket } from '~/time-buckets'
