@@ -58,7 +58,7 @@
       Add comparison
     </div>
   </div>
-  <comparison-filter-modal
+  <filter-modal
     v-if="isOpenModal"
     :initial-values="modalFilter"
     :can-filter-by-taxon="canFilterByTaxon"
@@ -76,7 +76,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { DetectionFilter } from '~/filters/types'
 import { useStore } from '~/store'
-import ComparisonFilterModal from '../comparison-filter-modal/comparison-filter-modal.vue'
+import FilterModal from '../filter-modal/filter-modal.vue'
 
 const props = withDefaults(
     defineProps<{ projectData: ProjectFiltersResponse, canFilterByTaxon: boolean }>(),
