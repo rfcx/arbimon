@@ -11,13 +11,13 @@
     <div class="flex px-4 mt-2">
       <div
         class="flex flex-1"
-        :title="filter.displayTitle"
+        :title="displayTitle(filter)"
       >
         <div class="min-w-4">
           <icon-fa-map-marker />
         </div>
         <div class="truncate max-w-24 ml-2">
-          {{ filter.displayTitle }}
+          {{ displayTitle(filter) }}
         </div>
       </div>
       <div
@@ -34,7 +34,7 @@
         <icon-fas-clock />
       </div>
       <div class="ml-2">
-        {{ filter.displayDate }}
+        {{ displayDate(filter) }}
       </div>
     </div>
     <div
@@ -71,11 +71,11 @@ import { isEqual } from 'lodash-es'
 import { computed, defineEmits, defineProps, onMounted, ref, withDefaults } from 'vue'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
+import { formatDateRange } from '@rfcx-bio/utils/dates'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { FilterImpl } from '~/filters/classes'
+import { DetectionFilter } from '~/filters/types'
 import { useStore } from '~/store'
-import { ColoredFilter, ComparisonFilter } from '..'
 import ComparisonFilterModal from '../comparison-filter-modal/comparison-filter-modal.vue'
 
 const props = withDefaults(
@@ -83,21 +83,23 @@ const props = withDefaults(
     { canFilterByTaxon: true }
   )
 
-const emits = defineEmits<{(e: 'emitSelect', filters: ColoredFilter[]): void}>()
+const emits = defineEmits<{(e: 'emitSelect', filters: DetectionFilter[]): void}>()
 
 const store = useStore()
 const isAddSelected = ref(false)
 const selectedFilterId = ref(-1)
 const isOpenModal = ref(false)
-const modalFilter = ref<FilterImpl | null>(null)
+const modalFilter = ref<DetectionFilter | null>(null)
 
-const defaultFilter = computed(() => {
-  return new FilterImpl(
-    dayjs.utc(props.projectData.dateStartInclusiveUtc).startOf('day'),
-    dayjs.utc(props.projectData.dateEndInclusiveUtc).startOf('day')
-  )
+const defaultFilter = computed((): DetectionFilter => {
+  return {
+    dateStartLocal: dayjs.utc(props.projectData.dateStartInclusiveUtc).startOf('day'),
+    dateEndLocal: dayjs.utc(props.projectData.dateEndInclusiveUtc).startOf('day'),
+    siteGroups: [],
+    taxonClasses: []
+  }
 })
-const filters: FilterImpl[] = [defaultFilter.value]
+const filters: DetectionFilter[] = [defaultFilter.value]
 
 const emitSelect = () => {
   const fs = filters.map((f, i) => ({
@@ -119,6 +121,17 @@ const isShowAdd = computed(() => {
   return filters.length < 5
 })
 
+const displayTitle = (filter: DetectionFilter) => {
+  if (filter.siteGroups.length === 0 || filter.siteGroups[0].sites.length === 0) {
+    return 'All sites'
+  }
+  return filter.siteGroups.flatMap(({ label }) => label).join(', ')
+}
+
+const displayDate = (filter: DetectionFilter) => {
+  return formatDateRange(filter.dateStartLocal, filter.dateEndLocal)
+}
+
 const getFilterColor = (idx: number) => {
   return store.datasetColors[idx]
 }
@@ -135,24 +148,22 @@ const closePopup = (): void => {
 }
 
 const getTaxonFilterText = (idx: number) => {
-  const otherFilters = filters[idx].otherFilters
-  if (otherFilters.length === 0) return 'All taxon'
-  if (otherFilters.length === 1) return `${otherFilters[0].propertyName}: ${props.projectData.taxonClasses.find(tc => tc.id === otherFilters[0].value)?.commonName ?? ''}`
-  return `+ ${otherFilters.length} filter${otherFilters.length > 1 ? 's' : ''} applied`
+  const taxonClasses = filters[idx].taxonClasses
+  if (taxonClasses.length === 0) {
+    return 'All taxon'
+  }
+  if (taxonClasses.length === 1) {
+    return `Taxon: ${taxonClasses[0].commonName}`
+  }
+  return `+ ${taxonClasses.length} taxons applied`
 }
 
 const addFilterConfig = () => {
   // Copy previous filter
   const previousFilter = filters[filters.length - 1]
-  modalFilter.value = new FilterImpl(
-    previousFilter.startDate,
-    previousFilter.endDate,
-    previousFilter.sites.map(s => ({ ...s })),
-    previousFilter.otherFilters.map(f => ({ ...f })),
-    previousFilter.color
-  )
+  modalFilter.value = { ...previousFilter }
 
-  // Open modal
+// Open modal
   isAddSelected.value = true
   isOpenModal.value = true
 }
@@ -165,8 +176,8 @@ const removeFilterConfig = (idx: number): void => {
   emitSelect()
 }
 
-const apply = (filter: ComparisonFilter): void => {
-  const newFilter = new FilterImpl(filter.startDate, filter.endDate, filter.sites, filter.otherFilters)
+const apply = (filter: DetectionFilter): void => {
+  const newFilter = { ...filter }
   if (isAddSelected.value) {
     filters.push(newFilter)
     isAddSelected.value = false

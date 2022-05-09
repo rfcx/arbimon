@@ -12,7 +12,7 @@
       <span class="text-white ml-2">All</span>
     </label>
     <label
-      v-for="taxon in taxons"
+      v-for="taxon in taxonClasses"
       :key="'site-list-' + taxon.commonName"
       class="px-4 pb-2 align-middle list-item"
     >
@@ -20,7 +20,7 @@
         type="checkbox"
         class="rounded"
         :checked="isSelectedTaxon(taxon.id)"
-        @click="updateSelectedTaxons(taxon.id)"
+        @click="updateSelectedTaxons(taxon)"
       >
       <span class="text-white ml-2">{{ taxon.commonName }}</span>
     </label>

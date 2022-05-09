@@ -29,14 +29,12 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { INFO_TOPICS } from '@/info/info-page'
 import { downloadCsvReports } from '@/species-richness/csv'
 import { richnessService } from '@/species-richness/services'
-import { ColoredFilter, filterToDataset } from '~/filters'
-import { useStore } from '~/store'
+import { DetectionFilter } from '~/filters'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 
-const props = defineProps<{ filters: ColoredFilter[], hasData: boolean }>()
+const props = defineProps<{ filters: DetectionFilter[], hasData: boolean }>()
 
-const store = useStore()
 const infoTopic = INFO_TOPICS.richness
 const loading = ref(false)
 
@@ -45,10 +43,10 @@ const exportCsvReports = async () => {
   const filters = props.filters
   const reports = (await Promise.all(
     filters.map(async (filter) => {
-      return await richnessService.getRichnessExport(filterToDataset(filter))
+      return await richnessService.getRichnessExport(filter)
     })
   )).filter(isDefined)
-  await downloadCsvReports(filters, reports, DEFAULT_PREFIX, store.projectData.value.data?.taxonClasses ?? [])
+  await downloadCsvReports(filters, reports, DEFAULT_PREFIX)
   loading.value = false
 }
 

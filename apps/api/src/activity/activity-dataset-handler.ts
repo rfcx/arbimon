@@ -17,18 +17,18 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { startDate, endDate, siteIds, taxons } = req.query
-  if (!isValidDate(startDate)) throw BioInvalidQueryParamError({ startDate })
-  if (!isValidDate(endDate)) throw BioInvalidQueryParamError({ endDate })
+  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxonClassIds } = req.query
+  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
+  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
 
   // Query
   const datasetFilter: FilterDataset = {
     locationProjectId: projectIdInteger,
-    startDateUtcInclusive: startDate,
-    endDateUtcInclusive: endDate,
+    startDateUtcInclusive,
+    endDateUtcInclusive,
     // TODO ???: Better way to check query type!
     siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
-    taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
+    taxons: Array.isArray(taxonClassIds) ? taxonClassIds.map(Number) : typeof taxonClassIds === 'string' ? [Number(taxonClassIds)] : []
   }
 
   const isProjectMember = getIsProjectMember(req)

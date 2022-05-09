@@ -1,19 +1,10 @@
 import { Dayjs } from 'dayjs'
 
+import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { SiteGroup } from '~/filters'
 import { useStore } from '~/store'
-import { ComparisonFilter, DatasetParameters } from './types'
-
-export function filterToDataset ({ startDate, endDate, sites, otherFilters }: ComparisonFilter): DatasetParameters {
-  return {
-    startDate: startDate,
-    endDate: endDate,
-    sites: sites.flatMap(sg => sg.value),
-    otherFilters
-  }
-}
+import { DetectionFilter, DetectionFilterSiteGroup } from './types'
 
 export function getExportGroupName (prefix: string, exportDatetime: string = getExportDateTime()): string {
   const project = useStore().selectedProject
@@ -21,11 +12,11 @@ export function getExportGroupName (prefix: string, exportDatetime: string = get
   return `${projectName}--${prefix.replaceAll(' ', '-')}--${exportDatetime}`
 }
 
-export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, sites?: SiteGroup[], taxonFilter?: string[]): string {
+export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, siteGroups?: DetectionFilterSiteGroup[], taxonFilter?: string[]): string {
   const project = useStore().selectedProject
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
-  const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''
+  const siteName = siteGroups ? `--${getSiteName(siteGroups).replaceAll(' ', '_')}` : ''
   const date = dateGroup ? getDateFormatted(startDate, endDate, 'YYMMDD').replaceAll(' ', '') : `${getExportDateTime()}`
   const indexPrefix = `${(datasetIndex + 1).toString() + '-'}`
   const taxonFilterName = getTaxonFilterName(taxonFilter ?? [])
@@ -45,12 +36,12 @@ function getDateFormatted (startDate: Dayjs, endDate: Dayjs, dateFormat: string)
   return startDate.isSame(endDate, 'date') ? start : `${start} - ${end}`
 }
 
-function getSiteName (sites: SiteGroup[]): string {
-  const siteLength = sites.length
+function getSiteName (siteGroups: DetectionFilterSiteGroup[]): string {
+  const siteLength = siteGroups.length
   switch (siteLength) {
     case 0: return 'All sites'
-    case 1: return sites[0].label
-    default: return `${sites[0].label} + ${siteLength - 1} other sites`
+    case 1: return siteGroups[0].label
+    default: return `${siteGroups[0].label} + ${siteLength - 1} other sites`
   }
 }
 
@@ -63,11 +54,22 @@ function getTaxonFilterName (taxonFilter: string[]): string {
   }
 }
 
-export function generateFilterQuery (rawFilter: DatasetParameters): string {
-  const siteIdsStringArray = (new URLSearchParams(rawFilter.sites.map(({ id }) => ['siteIds', id.toString()]))).toString()
-  const taxonsStringArray = (new URLSearchParams(rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => ['taxons', value.toString()]))).toString()
+export function detectionFilterToDatasetQuery (filter: DetectionFilter): FilterDatasetQuery {
+  return {
+    startDate: filter.dateStartLocal.toISOString(),
+    endDate: filter.dateEndLocal.toISOString(),
+    siteIds: filter.siteGroups.flatMap(({ sites }) => sites.map(({ id }) => id.toString())),
+    taxonClassIds: filter.taxonClasses.map(tc => tc.id.toString())
+  }
+}
 
-  let params = Object.entries({ startDate: rawFilter.startDate.toISOString(), endDate: rawFilter.endDate.toISOString() }).map(([key, value]) => `${key}=${value}`).join('&')
+export function generateFilterQuery (rawFilter: DetectionFilter): string {
+  const rawQuery = detectionFilterToDatasetQuery(rawFilter)
+
+  const siteIdsStringArray = (new URLSearchParams(rawQuery.siteIds.map(id => ['siteIds', id]))).toString()
+  const taxonsStringArray = (new URLSearchParams(rawQuery.taxonClassIds.map(id => ['taxonClassIds', id]))).toString()
+
+  let params = Object.entries({ startDate: rawQuery.startDate, endDate: rawQuery.endDate }).map(([key, value]) => `${key}=${value}`).join('&')
 
   if (siteIdsStringArray) {
     params = `${params}&${siteIdsStringArray}`

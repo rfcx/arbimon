@@ -3,45 +3,43 @@ import { groupBy } from 'lodash-es'
 import { RichnessDatasetResponse, RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter } from '~/filters'
+import { DetectionFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { useStore } from '~/store'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 
-interface RichnessDataset extends ColoredFilter {
-  data: RichnessDatasetResponse
-}
+export type RichnessDataset = RichnessDatasetResponse & DetectionFilter
 
 export const MAP_KEY_RICHNESS_TOTAL = 'All'
 
-export function getBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
+export function transformToBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
   const store = useStore()
   const taxonClasses = store.projectData.value.data?.taxonClasses
   if (taxonClasses === undefined) return []
 
-  return [...new Set(datasets.flatMap(ds => Object.keys(ds.data.richnessByTaxon).map(Number)))]
+  return [...new Set(datasets.flatMap(ds => Object.keys(ds.richnessByTaxon).map(Number)))]
     .map(taxonClassId => {
       const taxonClassName = taxonClasses?.find(tc => tc.id === taxonClassId)?.commonName ?? 'Unknown'
       return {
         group: taxonClassName,
-        series: datasets.map(ds => ({
+        series: datasets.map((ds, idx) => ({
             category: '', // TODO - Maybe add the dataset name here
-            frequency: ds.data.richnessByTaxon[taxonClassId] ?? 0,
-            color: ds.color
+            frequency: ds.richnessByTaxon[taxonClassId] ?? 0,
+            color: store.datasetColors[idx]
           }
         ))
       }
   })
 }
 
-export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
+export function transformToBySiteDataset (datasets: RichnessDataset[]): MapDataSet[] {
   const store = useStore()
   const taxonClasses = store.projectData.value.data?.taxonClasses
   const locationSites = store.projectData.value.data?.locationSites
   if (taxonClasses === undefined || locationSites === undefined) return []
 
-  const intermediate = datasets.map(({ color, data: richnessData, sites, ...filter }) => {
-    const groupedBySite = groupBy(richnessData.richnessBySite, 'locationSiteId')
+  const intermediate = datasets.map(({ richnessBySite, dateStartLocal, dateEndLocal, siteGroups }) => {
+    const groupedBySite = groupBy(richnessBySite, 'locationSiteId')
     const locationSiteIds = Object.keys(groupedBySite).map(Number)
     const data = locationSiteIds.map(locationSiteId => {
       const matchedSite = locationSites?.find(s => s.id === locationSiteId)
@@ -60,7 +58,9 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
         }
       }
     })
-    return { color, data, sites: sites.flatMap(sg => sg.value), ...filter, maxValues: {} }
+
+    const sites = siteGroups.flatMap(({ sites }) => sites)
+    return { startDate: dateStartLocal, endDate: dateEndLocal, sites, data, maxValues: {} }
   })
 
   // TODO: Do this natively in the API instead of after the fact
@@ -79,7 +79,7 @@ export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[
   const taxonClasses = store.projectData.value.data?.taxonClasses
   if (taxonClasses === undefined) return []
 
-  const richnessPresences = datasets.map(ds => ds.data.richnessPresence)
+  const richnessPresences = datasets.map(ds => ds.richnessPresence)
   const allSpecies: { [speciesId: number]: RichnessPresence } = Object.assign({}, ...richnessPresences)
 
   return Object.entries(allSpecies)

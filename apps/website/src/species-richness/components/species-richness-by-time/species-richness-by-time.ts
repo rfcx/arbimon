@@ -1,7 +1,7 @@
 import { mapKeys } from 'lodash-es'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -9,6 +9,7 @@ import { LAYOUT_BREAKPOINT } from '@/_layout/config'
 import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
+import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
@@ -17,8 +18,9 @@ const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
   components: { LineChartComponent }
 })
 export default class SpeciesRichnessByTime extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop() domId!: string
-  @Prop() datasets!: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}>
+  @Prop() datasets!: Array<{data: Record<TimeBucket, Record<number, number>>}>
 
   selectedBucket: TimeBucket = 'hourOfDay'
   buckets: Record<TimeBucket, string> = TIME_BUCKET_LABELS
@@ -45,12 +47,12 @@ export default class SpeciesRichnessByTime extends Vue {
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
     if (this.selectedBucket === 'dateSeries') {
-      return this.datasets.map(({ color, data }) => {
+      return this.datasets.map(({ data }, idx) => {
         const dateSeriesData = mapKeys(data[this.selectedBucket], (value, key) => Number(key) / SECONDS_PER_DAY) ?? []
-        return { color, data: dateSeriesData }
+        return { color: this.store.datasetColors[idx], data: dateSeriesData }
       })
     }
-    return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket] ?? [] }))
+    return this.datasets.map(({ data }, idx) => ({ color: this.store.datasetColors[idx], data: data[this.selectedBucket] ?? [] }))
   }
 
   override created (): void {

@@ -5,6 +5,7 @@ import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { RouteNames } from '~/router'
+import { BiodiversityStore } from '~/store'
 import { ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from './functions'
 
 interface Header {
@@ -13,7 +14,6 @@ interface Header {
 }
 
 export interface SpeciesDataset {
-  color: string
   data: ActivityOverviewDataBySpecies[]
 }
 
@@ -68,6 +68,7 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
 
 export default class ActivityOverviewBySpecies extends Vue {
   @Inject() readonly ROUTE_NAMES!: RouteNames
+  @Inject() readonly store!: BiodiversityStore
   @Prop() datasets!: SpeciesDataset[]
 
   pageIndex = 1 // 1-based for humans
@@ -134,6 +135,10 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   get totalSpecies (): number {
     return Math.max(0, this.formattedDatasets.length)
+  }
+
+  get filterColor (): string[] {
+    return this.store.datasetColors
   }
 
   @Watch('datasets')

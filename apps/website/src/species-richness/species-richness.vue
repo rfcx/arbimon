@@ -45,7 +45,7 @@ import { useRoute } from 'vue-router'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
+import { ComparisonListComponent, DetectionFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { useStore } from '~/store'
 import { TimeBucket } from '~/time-buckets'
@@ -55,20 +55,20 @@ import SpeciesRichnessByTime from './components/species-richness-by-time/species
 import SpeciesRichnessDetectedSpecies from './components/species-richness-detected-species/species-richness-detected-species.vue'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
-import { getBarChartDataset, getMapDataset, getTableData } from './functions'
+import { getTableData, transformToBarChartDataset, transformToBySiteDataset } from './functions'
 import { richnessService } from './services'
 
 const store = useStore()
 const route = useRoute()
 
 // Dataset definitions
-const filters = ref<ColoredFilter[]>([])
+const filters = ref<DetectionFilter[]>([])
 
 // Data for children
 const colors = store.datasetColors
 const speciesByClassDatasets = ref<GroupedBarChartItem[]>([])
 const speciesByLocationDatasets = ref<MapDataSet[]>([])
-const speciesByTimeDatasets = ref<Array<{color: string, data: Record<TimeBucket, Record<number, number>>}>>([])
+const speciesByTimeDatasets = ref<Array<{data: Record<TimeBucket, Record<number, number>>}>>([])
 const detectedSpecies = ref<DetectedSpeciesItem[]>([])
 
 watch(() => route.params.projectSlug, async (toProjectSlug, fromProjectSlug) => {
@@ -83,36 +83,34 @@ const hasData = computed(() => {
 
 // const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
-const onFilterChange = async (fs: ColoredFilter[]) => {
+const onFilterChange = async (fs: DetectionFilter[]) => {
   filters.value = fs
   await onDatasetChange()
 }
 
 const onDatasetChange = async () => {
   // TODO 117 - Only update the changed dataset
-  const datasets = await (await Promise.all(
+  const datasets = (await Promise.all(
     filters.value.map(async (filter) => {
-      const { startDate, endDate, sites, color, otherFilters } = filter
-      const f = filterToDataset(filter)
-      const data = await richnessService.getRichnessDataset(f)
-      return data ? { startDate, endDate, sites, color, otherFilters, data } : data
+      const { dateStartLocal, dateEndLocal, siteGroups, taxonClasses } = filter
+      const data = await richnessService.getRichnessDataset(filter)
+      if (!data) return undefined
+
+      return { ...data, dateStartLocal, dateEndLocal, siteGroups, taxonClasses }
     })
   )).filter(isDefined)
 
-  speciesByClassDatasets.value = getBarChartDataset(datasets)
-  speciesByLocationDatasets.value = getMapDataset(datasets)
+  speciesByClassDatasets.value = transformToBarChartDataset(datasets)
+  speciesByLocationDatasets.value = transformToBySiteDataset(datasets)
   speciesByTimeDatasets.value = datasets
-    .map(({ color, data }) => {
-      const { richnessByTimeHourOfDay, richnessByTimeDayOfWeek, richnessByTimeMonthOfYear, richnessByTimeUnix } = data
-      return {
-        color,
-        data: {
+    .map(({ richnessByTimeHourOfDay, richnessByTimeDayOfWeek, richnessByTimeMonthOfYear, richnessByTimeUnix }) => {
+      const data = {
           hourOfDay: richnessByTimeHourOfDay,
           dayOfWeek: richnessByTimeDayOfWeek,
           monthOfYear: richnessByTimeMonthOfYear,
           dateSeries: richnessByTimeUnix
         }
-      }
+      return { data }
     })
   detectedSpecies.value = getTableData(datasets)
 }

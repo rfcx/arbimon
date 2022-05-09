@@ -20,7 +20,7 @@
 import { defineEmits, defineProps, withDefaults } from 'vue'
 
 import { useStore } from '~/store'
-import { ColoredFilter } from '..'
+import { DetectionFilter } from '..'
 import ComparisonListData from './comparison-list-data.vue'
 
 const store = useStore()
@@ -30,12 +30,12 @@ const props = withDefaults(
 )
 
 const emits = defineEmits({
-  emitSelect (filters: ColoredFilter[]) {
+  emitSelect (filters: DetectionFilter[]) {
     return filters
   }
 })
 
-const emitSelect = (filters: ColoredFilter[]) => {
+const emitSelect = (filters: DetectionFilter[]) => {
   emits('emitSelect', filters)
 }
 </script>

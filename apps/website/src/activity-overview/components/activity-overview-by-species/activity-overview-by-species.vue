@@ -102,7 +102,7 @@
                   <div class="flex items-center">
                     <div
                       class="rounded-full w-1.5 h-1.5"
-                      :style="`background-color:${datasets[speciesData.datasetIdx].color}`"
+                      :style="`background-color:${filterColor[speciesData.datasetIdx]}`"
                     />
                     <div class="ml-2">
                       Dataset {{ speciesData.datasetIdx + 1 }}

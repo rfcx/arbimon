@@ -4,11 +4,11 @@ import { SpotlightDatasetResponse, SpotlightDetectionDataBySite, SpotlightDetect
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { getCSVDatasetMetadata } from '~/export'
-import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
+import { DetectionFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { Metrics } from './types'
 
-export type SpotlightDataset = SpotlightDatasetResponse & DatasetParameters
+export type SpotlightDataset = SpotlightDatasetResponse & DetectionFilter
 
 export const SPOTLIGHT_MAP_KEYS = {
   detection: 'detection',
@@ -62,7 +62,7 @@ export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapData
     detectionFrequency: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, detectionsByLocationSite }) => {
+  return datasets.map(({ dateStartLocal, dateEndLocal, siteGroups, detectionsByLocationSite }) => {
     const detectionsByLocationSiteValues = Object.values(detectionsByLocationSite)
     const data = detectionsByLocationSiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
       siteName,
@@ -75,41 +75,42 @@ export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapData
       }
     }))
 
-    return { startDate, endDate, sites, data, maxValues }
+    const sites = siteGroups.flatMap(({ sites }) => sites)
+    return { startDate: dateStartLocal, endDate: dateEndLocal, sites, data, maxValues }
   })
 }
 
-export async function exportDetectionCSV (filters: ColoredFilter[], datasets: SpotlightExportData[], reportPrefix: string): Promise<void> {
+export async function exportDetectionCSV (filters: DetectionFilter[], datasets: SpotlightExportData[], reportPrefix: string): Promise<void> {
   const exportDateTime = getExportDateTime()
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 
   const hourFiles: JsZipFile[] = await Promise.all(
-    filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-h.csv`
+    filters.map(async ({ dateStartLocal, dateEndLocal, siteGroups }, idx) => {
+      const filename = `${getExportFilterName(dateStartLocal, dateEndLocal, reportPrefix, idx, exportDateTime, siteGroups)}-h.csv`
       const data = await getHourCSVData(datasets[idx].hour)
       return { filename, data }
     })
   )
 
   const monthFiles: JsZipFile[] = await Promise.all(
-    filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-m.csv`
-      const data = await getMonthCSVData(startDate, endDate, datasets[idx].month)
+    filters.map(async ({ dateStartLocal, dateEndLocal, siteGroups }, idx) => {
+      const filename = `${getExportFilterName(dateStartLocal, dateEndLocal, reportPrefix, idx, exportDateTime, siteGroups)}-m.csv`
+      const data = await getMonthCSVData(dateStartLocal, dateEndLocal, datasets[idx].month)
       return { filename, data }
     })
   )
 
   const yearFiles: JsZipFile[] = await Promise.all(
-    filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-y.csv`
-      const data = await getYearCSVData(startDate, endDate, datasets[idx].year)
+    filters.map(async ({ dateStartLocal, dateEndLocal, siteGroups }, idx) => {
+      const filename = `${getExportFilterName(dateStartLocal, dateEndLocal, reportPrefix, idx, exportDateTime, siteGroups)}-y.csv`
+      const data = await getYearCSVData(dateStartLocal, dateEndLocal, datasets[idx].year)
       return { filename, data }
     })
   )
 
   const siteFiles: JsZipFile[] = await Promise.all(
-    filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = `${getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites)}-s.csv`
+    filters.map(async ({ dateStartLocal, dateEndLocal, siteGroups }, idx) => {
+      const filename = `${getExportFilterName(dateStartLocal, dateEndLocal, reportPrefix, idx, exportDateTime, siteGroups)}-s.csv`
       const data = await getSiteCSVData(datasets[idx].sites)
       return { filename, data }
     })

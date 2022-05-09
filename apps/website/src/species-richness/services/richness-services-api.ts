@@ -2,13 +2,13 @@ import { RichnessDatasetResponse, richnessDatasetUrl } from '@rfcx-bio/common/ap
 import { RichnessByExportReportRow, RichnessExportResponse, richnessExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { apiClient } from '~/api'
-import { DatasetParameters, generateFilterQuery } from '~/filters'
+import { DetectionFilter, generateFilterQuery } from '~/filters'
 import { useStore } from '~/store'
 
 export class RichnessService {
   constructor (private readonly baseUrl: string) {}
 
-  async getRichnessDataset (rawFilter: DatasetParameters): Promise<RichnessDatasetResponse | undefined> {
+  async getRichnessDataset (rawFilter: DetectionFilter): Promise<RichnessDatasetResponse | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined
@@ -20,7 +20,7 @@ export class RichnessService {
     return resp
   }
 
-  async getRichnessExport (rawFilter: DatasetParameters): Promise<RichnessByExportReportRow[]> {
+  async getRichnessExport (rawFilter: DetectionFilter): Promise<RichnessByExportReportRow[]> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return []

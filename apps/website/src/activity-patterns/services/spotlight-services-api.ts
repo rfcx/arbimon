@@ -5,7 +5,7 @@ import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/
 import { SpeciesInProject, SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClient } from '~/api'
-import { DatasetParameters, generateFilterQuery } from '~/filters'
+import { DetectionFilter, generateFilterQuery } from '~/filters'
 import { useStore } from '~/store'
 
 export interface ProjectSpecies {
@@ -46,7 +46,7 @@ export class SpotlightService {
     return resp?.species
   }
 
-  async getSpotlightDataset (rawFilter: DatasetParameters, speciesId: number): Promise<SpotlightDatasetResponse | undefined> {
+  async getSpotlightDataset (rawFilter: DetectionFilter, speciesId: number): Promise<SpotlightDatasetResponse | undefined> {
     const store = useStore()
     const projectId = store.selectedProject?.id
     if (projectId === undefined) return undefined

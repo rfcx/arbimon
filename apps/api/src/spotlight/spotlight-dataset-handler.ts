@@ -16,7 +16,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxonClassIds } = req.query
   const speciesId = Number(speciesIdString)
   if (isNaN(speciesId)) throw BioInvalidQueryParamError({ speciesIdString })
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
@@ -31,7 +31,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
     endDateUtcInclusive,
     // TODO ???: Better way to check query type!
     siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
-    taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
+    taxons: Array.isArray(taxonClassIds) ? taxonClassIds.map(Number) : typeof taxonClassIds === 'string' ? [Number(taxonClassIds)] : []
   }
 
   return await getSpotlightDatasetData(datasetFilter, speciesId, isProjectMember)

@@ -15,7 +15,7 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxonClassIds } = req.query
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 
@@ -25,7 +25,7 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
     endDateUtcInclusive,
     // TODO ???: Better way to check query type!
     siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
-    taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
+    taxons: Array.isArray(taxonClassIds) ? taxonClassIds.map(Number) : typeof taxonClassIds === 'string' ? [Number(taxonClassIds)] : []
   }
 
   const isProjectMember = getIsProjectMember(req)

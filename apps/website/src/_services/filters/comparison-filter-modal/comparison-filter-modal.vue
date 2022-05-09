@@ -66,6 +66,7 @@
               :key="'site-match-' + optionAllMatchingFilter.label"
               :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
               :value="optionAllMatchingFilter"
+              value-key="sites"
             />
             <el-option
               v-for="item in filtered"

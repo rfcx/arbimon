@@ -1,6 +1,5 @@
 import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 
-import { DatasetParameters } from '~/filters'
 import { TimeBucket } from '~/time-buckets'
 
 export interface DetectionGroupedBySite {
@@ -9,12 +8,6 @@ export interface DetectionGroupedBySite {
 
 export interface DetectionGroupByDetectionKey {
   [taxonNameOrSiteId: string]: MockHourlyDetectionSummary[]
-}
-
-export interface ActivityOverviewData extends DatasetParameters {
-  overviewBySite: ActivityOverviewDataBySite
-  overviewByTime: ActivityOverviewDataByTime
-  overviewBySpecies: ActivityOverviewDataBySpecies[]
 }
 
 export interface ActivityOverviewDataBySite {

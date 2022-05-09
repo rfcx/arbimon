@@ -1,6 +1,6 @@
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
 import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
@@ -10,12 +10,12 @@ import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '~/
 import { downloadSvgAsPng } from '~/charts'
 import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
+import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
 
 export interface SpotlightTimeDataset {
-  color: string
   data: SpotlightDataByTime
 }
 
@@ -38,6 +38,7 @@ const DATASET_LABELS = {
   }
 })
 export default class ActivityPatternsByTime extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop() domId!: string
   @Prop() species!: SpeciesInProjectLight
   @Prop() datasets!: SpotlightTimeDataset[]
@@ -72,7 +73,7 @@ export default class ActivityPatternsByTime extends Vue {
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
-    return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
+    return this.datasets.map(({ data }, idx) => ({ color: this.store.datasetColors[idx], data: data[this.selectedBucket][this.selectedType] ?? [] }))
   }
 
   get hasData (): boolean {

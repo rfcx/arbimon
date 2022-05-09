@@ -69,7 +69,7 @@ import ActivityOverviewByTime, { ActivityOverviewTimeDataset } from '@/activity-
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { activityService } from '@/activity-overview/services'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
+import { ComparisonListComponent, DetectionFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
@@ -81,7 +81,7 @@ const route = useRoute()
 
 // const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
 
-const filters = ref<ColoredFilter[]>([])
+const filters = ref<DetectionFilter[]>([])
 
 const mapDatasets = ref<MapDataSet[]>([])
 const timeDatasets = ref<ActivityOverviewTimeDataset[]>([])
@@ -97,7 +97,7 @@ watch(() => route.params.projectSlug, async (toProjectSlug, fromProjectSlug) => 
   }
 })
 
-const onFilterChange = async (newFilters: ColoredFilter[]): Promise<void> => {
+const onFilterChange = async (newFilters: DetectionFilter[]): Promise<void> => {
   filters.value = newFilters
   await onDatasetChange()
 }
@@ -105,26 +105,26 @@ const onFilterChange = async (newFilters: ColoredFilter[]): Promise<void> => {
 const onDatasetChange = async () => {
   const datasets = (await Promise.all(
     filters.value.map(async (filter) => {
-      const { color, startDate, endDate, otherFilters, sites } = filter
-      const data = await activityService.getActivityDataset(filterToDataset(filter))
+      const { dateStartLocal, dateEndLocal, taxonClasses, siteGroups } = filter
+      const data = await activityService.getActivityDataset(filter)
       if (!data) return undefined
 
-      return { ...data, otherFilters, startDate, endDate, color, sites: sites.flatMap(({ value }) => value) }
+      return { ...data, dateStartLocal, dateEndLocal, siteGroups, taxonClasses }
     })
   )).filter(isDefined)
 
   mapDatasets.value = transformToBySiteDatasets(datasets)
-  timeDatasets.value = datasets.map(({ color, activityByTimeHour, activityByTimeDay, activityByTimeMonth, activityByTimeDate }) => {
+  timeDatasets.value = datasets.map(({ activityByTimeHour, activityByTimeDay, activityByTimeMonth, activityByTimeDate }) => {
     const data = {
       hourOfDay: activityByTimeHour,
       dayOfWeek: activityByTimeDay,
       monthOfYear: activityByTimeMonth,
       dateSeries: activityByTimeDate
     }
-    return { color, data }
+    return { data }
   })
 
-  tableDatasets.value = datasets.map(({ color, activityBySpecies }) => ({ color, data: activityBySpecies }))
+  tableDatasets.value = datasets.map(({ activityBySpecies }) => ({ data: activityBySpecies }))
   exportDatasets.value = datasets.map(({ activityBySpecies }) => activityBySpecies)
 }
 

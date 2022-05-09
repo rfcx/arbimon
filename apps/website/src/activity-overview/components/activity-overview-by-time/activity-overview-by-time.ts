@@ -1,6 +1,6 @@
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -8,12 +8,12 @@ import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTime, ActivityOvervi
 import { downloadSvgAsPng } from '~/charts'
 import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
+import { BiodiversityStore } from '~/store'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
 
 export interface ActivityOverviewTimeDataset {
-  color: string
   data: ActivityOverviewDataByTime
 }
 
@@ -36,6 +36,7 @@ const DATASET_LABELS = {
   }
 })
 export default class ActivityOverviewByTime extends Vue {
+  @Inject() readonly store!: BiodiversityStore
   @Prop() domId!: string
   @Prop() datasets!: ActivityOverviewTimeDataset[]
 
@@ -74,7 +75,7 @@ export default class ActivityOverviewByTime extends Vue {
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
-    return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket][this.selectedType] ?? [] }))
+    return this.datasets.map(({ data }, idx) => ({ color: this.store.datasetColors[idx], data: data[this.selectedBucket][this.selectedType] ?? [] }))
   }
 
   async downloadChart (): Promise<void> {

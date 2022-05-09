@@ -99,7 +99,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
+import { ComparisonListComponent, DetectionFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
@@ -122,7 +122,7 @@ const route = useRoute()
 
 // Dataset definitions
 const species = ref<SpeciesInProjectLight | null>(null)
-const filters = ref<ColoredFilter[]>([])
+const filters = ref<DetectionFilter[]>([])
 
 // Data for children
 const predictedOccupancyMaps = ref<PredictedOccupancyMap[]>([])
@@ -175,7 +175,7 @@ const onSelectedSpeciesChange = async (sp: SpeciesInProjectLight | undefined) =>
   ])
 }
 
-const onFilterChange = async (fs: ColoredFilter[]) => {
+const onFilterChange = async (fs: DetectionFilter[]) => {
   filters.value = fs
   await onDatasetChange()
 }
@@ -187,23 +187,25 @@ const onDatasetChange = async () => {
 
   const datasets = (await Promise.all(
     filters.value.map(async (filter) => {
-      const { color, startDate, endDate, sites, otherFilters } = filter
-      const data = await spotlightService.getSpotlightDataset(filterToDataset(filter), speciesId)
-      return data ? { ...data, startDate, endDate, color, sites: sites.flatMap(({ value }) => value), otherFilters } : data
+      const { dateStartLocal, dateEndLocal, siteGroups, taxonClasses } = filter
+      const data = await spotlightService.getSpotlightDataset(filter, speciesId)
+      if (!data) return undefined
+
+      return { ...data, dateStartLocal, dateEndLocal, siteGroups, taxonClasses }
     })
   )).filter(isDefined)
 
   isLocationRedacted.value = datasets[0]?.isLocationRedacted ?? true
   metrics.value = transformToMetricsDatasets(datasets)
   mapDatasets.value = transformToBySiteDataset(datasets)
-  timeDatasets.value = datasets.map(({ color, detectionsByTimeHour, detectionsByTimeDay, detectionsByTimeMonth, detectionsByTimeDate }) => {
+  timeDatasets.value = datasets.map(({ detectionsByTimeHour, detectionsByTimeDay, detectionsByTimeMonth, detectionsByTimeDate }) => {
     const data = {
       hourOfDay: detectionsByTimeHour,
       dayOfWeek: detectionsByTimeDay,
       monthOfYear: detectionsByTimeMonth,
       dateSeries: detectionsByTimeDate
     }
-    return { color, data }
+    return { data }
   })
   exportDatasets.value = datasets
     .map(({ detectionsByLocationSite, detectionsByTimeHour, detectionsByTimeMonthYear, detectionsByTimeYear }) =>

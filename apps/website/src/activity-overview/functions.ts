@@ -3,10 +3,10 @@ import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { getCSVDatasetMetadata } from '~/export'
-import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
+import { DetectionFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 
-export type ActivityOverviewDataBySite = ActivityDatasetResponse & DatasetParameters
+export type ActivityOverviewDataBySite = ActivityDatasetResponse & DetectionFilter
 
 export const ACTIVITY_OVERVIEW_MAP_KEYS = {
   detection: 'detection',
@@ -39,7 +39,8 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
     [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
-  return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
+  return datasets.map(({ dateStartLocal, dateEndLocal, siteGroups, activityBySite }) => {
+    const sites = siteGroups.flatMap(({ sites }) => sites)
     const data = activityBySite.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,
@@ -50,11 +51,11 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }
     }))
-    return { startDate, endDate, sites, data, maxValues }
+    return { startDate: dateStartLocal, endDate: dateEndLocal, sites, data, maxValues }
   })
 }
 
-export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOverviewDataBySpecies[][], reportPrefix: string): Promise<void> {
+export async function exportCSV (filters: DetectionFilter[], datasets: ActivityOverviewDataBySpecies[][], reportPrefix: string): Promise<void> {
   const sortedDatasets = datasets.map(dataset => {
     return dataset.sort((a, b) => a.scientificName.localeCompare(b.scientificName) ||
       a.taxon.localeCompare(b.taxon) ||
@@ -66,8 +67,8 @@ export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOve
   const groupName = getExportGroupName(reportPrefix, exportDateTime)
 
   const files: JsZipFile[] = await Promise.all(
-    filters.map(async ({ startDate, endDate, sites }, idx) => {
-      const filename = getExportFilterName(startDate, endDate, reportPrefix, idx, exportDateTime, sites) + '.csv'
+    filters.map(async ({ dateStartLocal, dateEndLocal, siteGroups }, idx) => {
+      const filename = getExportFilterName(dateStartLocal, dateEndLocal, reportPrefix, idx, exportDateTime, siteGroups) + '.csv'
       const data = await getCSVData(sortedDatasets[idx])
       return { filename, data }
     })
