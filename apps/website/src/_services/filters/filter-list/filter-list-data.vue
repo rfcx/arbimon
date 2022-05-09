@@ -76,7 +76,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { DetectionFilter } from '~/filters/types'
 import { useStore } from '~/store'
-import FilterModal from '../filter-modal/filter-modal.vue'
+import FilterModal from '../comparison-filter-modal/comparison-filter-modal.vue'
 
 const props = withDefaults(
     defineProps<{ projectData: ProjectFiltersResponse, canFilterByTaxon: boolean }>(),
