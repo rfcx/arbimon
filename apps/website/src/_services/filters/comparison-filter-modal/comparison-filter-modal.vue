@@ -108,8 +108,8 @@
         class="p-4 flex"
       >
         <date-range-picker
-          :default-start-date="startDate"
-          :default-end-date="endDate"
+          :default-start-date="dateStartLocal"
+          :default-end-date="dateEndLocal"
           @emit-date-change="onDateChange"
         />
       </div>

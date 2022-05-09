@@ -81,7 +81,7 @@ export default class ActivityPatternsByLocation extends Vue {
 
   mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
-    const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+    const siteGroup = sites.map(s => ({ label: s.name, sites: [s] }))
 
     return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}--${this.species.taxonSpeciesSlug}`, datasetIndex, undefined, siteGroup)
   }
