@@ -19,76 +19,15 @@
         </div>
       </div>
       <!-- right content -->
-      <!-- site -->
+      <!-- Site -->
       <div
         v-if="currentActiveMenuId === menus[0].id"
         class="w-full"
       >
-        <div class="w-full px-4 pt-3">
-          <input
-            type="text"
-            placeholder="Search"
-            class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary hidden"
-          >
-        </div>
-        <div class="max-h-md">
-          <label
-            class="select-all-items pl-4 pb-2 align-middle list-item list-none"
-          >
-            <input
-              type="radio"
-              class="rounded"
-              :checked="isSelectedAllSites"
-              @click="selectAllSites()"
-            >
-            <span class="text-white ml-2">All sites in the project</span>
-          </label>
-
-          <el-select
-            v-model="selectedSiteGroups"
-            value-key="label"
-            multiple
-            filterable
-            popper-class="selector-sites"
-            name="input-site"
-            fit-input-width
-            reserve-keyword
-            placeholder="Type to filter sites"
-            no-data-text="No matching sites"
-            class="search-select ml-4 mt-2"
-            :filter-method="onFilterType"
-            @blur="onSetSelectorPlaceHolder"
-            @input="onRemoveSelectorPlaceHolder"
-            @focus="onRemoveSelectorPlaceHolder"
-          >
-            <el-option
-              v-if="optionAllMatchingFilter"
-              :key="'site-match-' + optionAllMatchingFilter.label"
-              :label="'All sites starting with ' + inputFilter.toLocaleUpperCase()"
-              :value="optionAllMatchingFilter"
-              value-key="sites"
-            />
-            <el-option
-              v-for="item in filtered"
-              :key="'site-list-' + item.id"
-              :label="item.name"
-              :value="{ label: item.name, value: [item] }"
-            />
-          </el-select>
-          <div class="ml-2 mt-3">
-            <el-tag
-              v-for="site in selectedSiteGroups"
-              :key="'site-tag-'+ site.label"
-              class="ml-2 mb-2 select-none"
-              closable
-              type="info"
-              effect="dark"
-              @close="onRemoveSiteTags(site)"
-            >
-              {{ site.label }}
-            </el-tag>
-          </div>
-        </div>
+        <filter-site
+          :initial-site-groups="siteGroups"
+          @emit-selected-site-group="onSiteGroupChange"
+        />
       </div>
 
       <!-- Taxon -->
@@ -98,7 +37,7 @@
       >
         <filter-taxon
           :initial-taxon-classes="selectedTaxons"
-          @emit-selected-taxons="updateSelectedTaxons"
+          @emit-selected-taxons="onTaxonChange"
         />
       </div>
 
