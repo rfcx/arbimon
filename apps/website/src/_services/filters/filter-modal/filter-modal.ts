@@ -27,7 +27,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
     FilterTaxon
   }
 })
-export default class ComparisonFilterModalComponent extends Vue {
+export default class FilterModalComponent extends Vue {
   @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) initialValues!: DetectionFilter | null
   @Prop({ default: true }) canFilterByTaxon!: boolean

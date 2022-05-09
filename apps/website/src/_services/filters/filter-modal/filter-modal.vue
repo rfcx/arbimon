@@ -69,4 +69,4 @@
     </div>
   </modal-popup>
 </template>
-<script src="./comparison-filter-modal.ts" lang="ts"></script>
+<script src="./filter-modal.ts" lang="ts"></script>
