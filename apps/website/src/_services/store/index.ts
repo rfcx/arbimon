@@ -6,10 +6,9 @@ import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { projectService } from '~/api/project-service'
-import { Loadable, queryAsLoadable, useApiQuery } from '~/loadable'
+import { useApiQuery } from '~/api/use-api-query'
+import { Loadable, queryAsLoadable } from '~/loadable'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
-
-const ONE_HOUR_IN_MILLIS = 3_600_000 // 60 * 60 * 1000
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -28,8 +27,6 @@ export const useStore = defineStore('root', {
           if (projectId.value === undefined) return undefined
 
           return await projectService.getProjectFilters(projectId.value)
-        }, {
-          staleTime: ONE_HOUR_IN_MILLIS
         }),
         (d: ProjectFiltersResponse | undefined): d is ProjectFiltersResponse => d !== undefined
       )
