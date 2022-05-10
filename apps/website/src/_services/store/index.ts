@@ -6,8 +6,7 @@ import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { projectService } from '~/api/project-service'
-import { Loadable, queryAsLoadable } from '~/loadable'
-import { useApiQuery } from '~/loadable/query'
+import { Loadable, queryAsLoadable, useApiQuery } from '~/loadable'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
 const ONE_HOUR_IN_MILLIS = 3_600_000 // 60 * 60 * 1000
