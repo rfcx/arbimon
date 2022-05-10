@@ -1,13 +1,13 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 import { computed, ComputedRef } from 'vue'
-import { useQuery } from 'vue-query'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { projectService } from '~/api/project-service'
 import { Loadable, queryAsLoadable } from '~/loadable'
+import { useApiQuery } from '~/loadable/query'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
 const ONE_HOUR_IN_MILLIS = 3_600_000 // 60 * 60 * 1000
@@ -25,7 +25,7 @@ export const useStore = defineStore('root', {
       const projectId = computed(() => this.selectedProject?.id)
 
       return queryAsLoadable(
-        useQuery(['fetch-project-filter', projectId], async () => {
+        useApiQuery(['fetch-project-filter', projectId], async () => {
           if (projectId.value === undefined) return undefined
 
           return await projectService.getProjectFilters(projectId.value)

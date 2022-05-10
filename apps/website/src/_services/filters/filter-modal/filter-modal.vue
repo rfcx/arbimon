@@ -11,7 +11,7 @@
         <div
           v-for="(menu) in menus"
           :key="'menu-' + menu.id"
-          class="text-white px-4 py-2 border-b-1"
+          class="text-white px-4 py-2 border-b-1 select-none"
           :class="{ 'border-l-4 border-l-brand-primary': isCurrentActive(menu.id) }"
           @click="setActiveMenuId(menu.id)"
         >

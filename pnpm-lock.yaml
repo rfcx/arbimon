@@ -224,6 +224,7 @@ importers:
       mapbox-gl: ^2.5.1
       numeral: ^2.0.6
       pinia: ^2.0.2
+      react-query: ^3.39.0
       unplugin-auto-import: ^0.5.1
       unplugin-icons: ^0.12.22
       unplugin-vue-components: ^0.17.8
@@ -252,6 +253,7 @@ importers:
       mapbox-gl: 2.5.1
       numeral: 2.0.6
       pinia: 2.0.2_typescript@4.5.5+vue@3.2.21
+      react-query: 3.39.0
       vue: 3.2.21
       vue-class-component: 8.0.0-rc.1_vue@3.2.21
       vue-gtag: 2.0.1_vue@3.2.21
@@ -8288,8 +8290,8 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
-  /react-query/3.35.0:
-    resolution: {integrity: sha512-mRBJdpELLV+snzyXDsXM5ZEXM+HYt05L7st6ihSXr3nHX+4ULFr30mDjsziZvx0oF5dhlSDB8aMdvG6Ah4Bukg==}
+  /react-query/3.39.0:
+    resolution: {integrity: sha512-Od0IkSuS79WJOhzWBx/ys0x13+7wFqgnn64vBqqAAnZ9whocVhl/y1padD5uuZ6EIkXbFbInax0qvY7zGM0thA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: '*'
@@ -10522,7 +10524,7 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.1.4
       match-sorter: 6.3.1
-      react-query: 3.35.0
+      react-query: 3.39.0
       vue: 3.2.21
       vue-demi: 0.10.1_vue@3.2.21
     transitivePeerDependencies:

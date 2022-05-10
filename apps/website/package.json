@@ -37,6 +37,7 @@
     "mapbox-gl": "^2.5.1",
     "numeral": "^2.0.6",
     "pinia": "^2.0.2",
+    "react-query": "^3.39.0",
     "vue": "^3.2.21",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-gtag": "^2.0.1",
