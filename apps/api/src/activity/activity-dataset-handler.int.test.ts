@@ -81,7 +81,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const response = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
       })
 
       // Assert
@@ -100,7 +100,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const response = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
       })
 
       // Assert
@@ -292,6 +292,6 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
     test.todo('rejects invalid site ids')
 
-    test.todo('rejects invalid taxons')
+    test.todo('rejects invalid taxon class ids')
   })
 })

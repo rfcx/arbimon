@@ -51,7 +51,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: '/projects/1/richness',
-      query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
     })
 
     // Assert
@@ -70,7 +70,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: richnessDatasetUrl({ projectId: '1' }),
-      query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
     })
 
     // Assert

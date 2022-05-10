@@ -31,7 +31,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
     dateStartUtcInclusive,
     dateEndUtcInclusive,
     siteIds: arrayFromQuery(siteIds).map(Number),
-    taxons: arrayFromQuery(taxonClassIds).map(Number)
+    taxonClassIds: arrayFromQuery(taxonClassIds).map(Number)
   }
 
   return await getSpotlightDatasetData(datasetFilter, speciesId, isProjectMember)

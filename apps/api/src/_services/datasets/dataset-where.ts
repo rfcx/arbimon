@@ -16,7 +16,7 @@ export interface FilterDatasetForSql extends Record<string, unknown> {
   dateStartUtcInclusive: string
   dateEndUtcExclusive: string
   siteIds: number[]
-  taxons: number[]
+  taxonClassIds: number[]
 }
 
 export const toFilterDatasetForSql = ({ dateEndUtcInclusive, ...rest }: FilterDataset): FilterDatasetForSql =>
@@ -26,7 +26,7 @@ export const toFilterDatasetForSql = ({ dateEndUtcInclusive, ...rest }: FilterDa
   })
 
 export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition => {
-  const { locationProjectId, dateStartUtcInclusive, dateEndUtcExclusive, siteIds, taxons } = filter
+  const { locationProjectId, dateStartUtcInclusive, dateEndUtcExclusive, siteIds, taxonClassIds } = filter
   const conditions = [
     'dbssh.location_project_id = $locationProjectId', // dbssh is from detection_by_site_species_hour
     'dbssh.time_precision_hour_local >= $dateStartUtcInclusive',
@@ -43,16 +43,16 @@ export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition =>
     bind.siteIds = siteIds
   }
 
-  if (taxons.length > 0) {
-    conditions.push('dbssh.taxon_class_id = ANY($taxons)')
-    bind.taxons = taxons
+  if (taxonClassIds.length > 0) {
+    conditions.push('dbssh.taxon_class_id = ANY($taxonClassIds)')
+    bind.taxonClassIds = taxonClassIds
   }
 
   return { conditions: conditions.join(' AND '), bind }
 }
 
 export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { locationProjectId, dateStartUtcInclusive, dateEndUtcExclusive, siteIds, taxons } = filter
+  const { locationProjectId, dateStartUtcInclusive, dateEndUtcExclusive, siteIds, taxonClassIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
@@ -68,8 +68,8 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
     where.locationSiteId = siteIds
   }
 
-  if (taxons.length > 0) {
-    where.taxonClassId = taxons
+  if (taxonClassIds.length > 0) {
+    where.taxonClassId = taxonClassIds
   }
 
   return where

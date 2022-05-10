@@ -28,7 +28,7 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
     dateStartUtcInclusive,
     dateEndUtcInclusive,
     siteIds: arrayFromQuery(siteIds).map(Number),
-    taxons: arrayFromQuery(taxonClassIds).map(Number)
+    taxonClassIds: arrayFromQuery(taxonClassIds).map(Number)
   }
 
   const isProjectMember = getIsProjectMember(req)

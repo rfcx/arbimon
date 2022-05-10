@@ -3,5 +3,5 @@ export interface FilterDataset {
   dateStartUtcInclusive: string
   dateEndUtcInclusive: string
   siteIds: number[]
-  taxons: number[]
+  taxonClassIds: number[]
 }

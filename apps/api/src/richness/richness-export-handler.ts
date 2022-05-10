@@ -1,6 +1,7 @@
 import { RichnessExportParams, RichnessExportQuery, RichnessExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
+import { FilterDataset } from '~/datasets/dataset-types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { arrayFromQuery } from '~/utils/request-query'
 import { Handler } from '../_services/api-helpers/types'
@@ -20,12 +21,12 @@ export const richnessExportHandler: Handler<RichnessExportResponse, RichnessExpo
   if (!isValidDate(dateStartUtcInclusive)) throw BioInvalidQueryParamError({ dateStartUtcInclusive })
   if (!isValidDate(dateEndUtcInclusive)) throw BioInvalidQueryParamError({ dateEndUtcInclusive })
 
-  const datasetFilter = {
+  const datasetFilter: FilterDataset = {
     locationProjectId: projectIdInteger,
     dateStartUtcInclusive,
     dateEndUtcInclusive,
     siteIds: arrayFromQuery(siteIds).map(Number),
-    taxons: arrayFromQuery(taxonClassIds).map(Number)
+    taxonClassIds: arrayFromQuery(taxonClassIds).map(Number)
   }
 
   const isProjectMember = getIsProjectMember(req)
