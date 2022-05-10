@@ -3,6 +3,7 @@ import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
+import { arrayFromQuery } from '~/utils/request-query'
 import { Handler } from '../_services/api-helpers/types'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { assertPathParamsExist } from '../_services/validation'
@@ -17,18 +18,17 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxonClassIds } = req.query
-  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDateUtcInclusive })
-  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDateUtcInclusive })
+  const { dateStartUtcInclusive, dateEndUtcInclusive, siteIds, taxonClassIds } = req.query
+  if (!isValidDate(dateStartUtcInclusive)) throw BioInvalidQueryParamError({ dateStartUtcInclusive })
+  if (!isValidDate(dateEndUtcInclusive)) throw BioInvalidQueryParamError({ dateEndUtcInclusive })
 
   // Query
   const datasetFilter: FilterDataset = {
     locationProjectId: projectIdInteger,
-    startDateUtcInclusive,
-    endDateUtcInclusive,
-    // TODO ???: Better way to check query type!
-    siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
-    taxons: Array.isArray(taxonClassIds) ? taxonClassIds.map(Number) : typeof taxonClassIds === 'string' ? [Number(taxonClassIds)] : []
+    dateStartUtcInclusive,
+    dateEndUtcInclusive,
+    siteIds: arrayFromQuery(siteIds).map(Number),
+    taxons: arrayFromQuery(taxonClassIds).map(Number)
   }
 
   const isProjectMember = getIsProjectMember(req)

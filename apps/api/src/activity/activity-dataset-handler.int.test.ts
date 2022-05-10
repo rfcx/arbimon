@@ -81,7 +81,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const response = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
       // Assert
@@ -100,7 +100,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const response = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
       // Assert
@@ -116,7 +116,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const response = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+        query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -132,7 +132,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     const response = await app.inject({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+      query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z' }
     })
 
     test('calculates isLocationRedacted correctly', async () => {
@@ -214,7 +214,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     const response = await app.inject({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+      query: { dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2031-01-01T00:00:00.000Z' }
     })
 
     test('calculates isLocationRedacted correctly', async () => {
@@ -267,13 +267,13 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const response1 = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+        query: { dateStartUtcInclusive: 'abc', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
       })
 
       const response2 = await app.inject({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
+        query: { dateStartUtcInclusive: '2021-01-01T00:00:00.000Z', dateEndUtcInclusive: 'abc' }
       })
 
       // Assert
@@ -286,8 +286,8 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       const errorMessage2 = result2.message
       expect(errorMessage1).toContain('Invalid query params')
       expect(errorMessage2).toContain('Invalid query params')
-      expect(errorMessage1).toContain('startDate with value')
-      expect(errorMessage2).toContain('endDate with value')
+      expect(errorMessage1).toContain('dateStartUtcInclusive with value')
+      expect(errorMessage2).toContain('dateEndUtcInclusive with value')
     })
 
     test.todo('rejects invalid site ids')

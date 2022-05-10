@@ -14,13 +14,13 @@ import { dayjs } from '../_services/dayjs-initialized'
 
 // Similar logic with filterDetection in `controller-spotlight-dataset.ts`. Moving to common?
 export async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
+  const { dateStartUtcInclusive, dateEndUtcInclusive, siteIds, taxons } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
-        [Op.gte]: startDateUtcInclusive,
-        [Op.lt]: endDateUtcInclusive
+        [Op.gte]: dateStartUtcInclusive,
+        [Op.lt]: dateEndUtcInclusive
       }
     },
     locationProjectId: projectId

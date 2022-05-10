@@ -57,7 +57,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
     // Assert
@@ -76,7 +76,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
     // Assert
@@ -92,7 +92,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -108,7 +108,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
     // Assert
@@ -132,7 +132,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result
@@ -149,7 +149,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
@@ -166,7 +166,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
@@ -183,7 +183,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
@@ -200,7 +200,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of years)
@@ -217,7 +217,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
@@ -234,7 +234,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: '2001-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of each month/years)
@@ -285,7 +285,7 @@ describe('client errors', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { dateStartUtcInclusive: '2021-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -304,7 +304,7 @@ describe('client errors', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: 'xxx', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: 'xxx', dateStartUtcInclusive: '2021-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -323,7 +323,7 @@ describe('client errors', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '9999', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '9999', dateStartUtcInclusive: '2021-01-01T00:00:00.000Z', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -342,7 +342,7 @@ describe('client errors', () => {
     const response = await app.inject({
       method: GET,
       url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { speciesId: '1', dateStartUtcInclusive: 'abc', dateEndUtcInclusive: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -351,6 +351,6 @@ describe('client errors', () => {
     const result = JSON.parse(response.body)
     const errorMessage = result.message
     expect(errorMessage).toContain('Invalid query params')
-    expect(errorMessage).toContain('startDate with value')
+    expect(errorMessage).toContain('dateStartUtcInclusive with value')
   })
 })

@@ -1,7 +1,7 @@
 export interface FilterDataset {
   locationProjectId: number
-  startDateUtcInclusive: string
-  endDateUtcInclusive: string
+  dateStartUtcInclusive: string
+  dateEndUtcInclusive: string
   siteIds: number[]
   taxons: number[]
 }

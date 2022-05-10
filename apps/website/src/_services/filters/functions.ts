@@ -56,8 +56,8 @@ function getTaxonFilterName (taxonFilter: string[]): string {
 
 export function detectionFilterToDatasetQuery (filter: DetectionFilter): FilterDatasetQuery {
   return {
-    startDate: filter.dateStartLocal.toISOString(),
-    endDate: filter.dateEndLocal.toISOString(),
+    dateStartUtcInclusive: filter.dateStartLocal.toISOString(),
+    dateEndUtcInclusive: filter.dateEndLocal.toISOString(),
     siteIds: filter.siteGroups.flatMap(({ sites }) => sites.map(({ id }) => id.toString())),
     taxonClassIds: filter.taxonClasses.map(tc => tc.id.toString())
   }
@@ -69,7 +69,7 @@ export function generateFilterQuery (rawFilter: DetectionFilter): string {
   const siteIdsStringArray = (new URLSearchParams(rawQuery.siteIds.map(id => ['siteIds', id]))).toString()
   const taxonsStringArray = (new URLSearchParams(rawQuery.taxonClassIds.map(id => ['taxonClassIds', id]))).toString()
 
-  let params = Object.entries({ startDate: rawQuery.startDate, endDate: rawQuery.endDate }).map(([key, value]) => `${key}=${value}`).join('&')
+  let params = Object.entries({ dateStartUtcInclusive: rawQuery.dateStartUtcInclusive, dateEndUtcInclusive: rawQuery.dateEndUtcInclusive }).map(([key, value]) => `${key}=${value}`).join('&')
 
   if (siteIdsStringArray) {
     params = `${params}&${siteIdsStringArray}`

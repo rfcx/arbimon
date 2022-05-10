@@ -11,13 +11,13 @@ import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 
 export async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
+  const { dateStartUtcInclusive, dateEndUtcInclusive, siteIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
-        [Op.gte]: startDateUtcInclusive,
-        [Op.lt]: endDateUtcInclusive
+        [Op.gte]: dateStartUtcInclusive,
+        [Op.lt]: dateEndUtcInclusive
       }
     },
     locationProjectId: projectId
@@ -34,13 +34,13 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
 }
 
 export async function filterSpeciesDetection (models: AllModels, projectId: number, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds } = filter
+  const { dateStartUtcInclusive, dateEndUtcInclusive, siteIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
-        [Op.gte]: startDateUtcInclusive,
-        [Op.lt]: endDateUtcInclusive
+        [Op.gte]: dateStartUtcInclusive,
+        [Op.lt]: dateEndUtcInclusive
       }
     },
     locationProjectId: projectId,

@@ -1,6 +1,6 @@
 export interface FilterDatasetQuery {
-  startDate: string
-  endDate: string
+  dateStartUtcInclusive: string
+  dateEndUtcInclusive: string
   siteIds: string[]
   taxonClassIds: string[]
 }
