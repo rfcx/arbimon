@@ -1,14 +1,15 @@
 <template>
   <!-- TODO: Extract banner states to banner component -->
-  <!-- <div v-if="store.projectData.value.isLoading" />
-  <div v-else>
+  <!--
+  <div v-if="lastUpdatedAt.isData">
     <draft-banner
       v-if="lastUpdatedAt"
       current-mode="Draft"
-      :sync-updated="lastUpdatedAt"
+      :sync-updated="lastUpdatedAt.data"
       :project-slug="store.selectedProject?.slug"
     />
-  </div> -->
+  </div>
+  -->
   <species-richness-introduction
     :filters="filters"
     :has-data="hasData"
@@ -60,6 +61,7 @@ import { richnessService } from './services'
 
 const store = useStore()
 const route = useRoute()
+// const projectData = useProjectData()
 
 // Dataset definitions
 const filters = ref<DetectionFilter[]>([])
@@ -81,7 +83,7 @@ const hasData = computed(() => {
   return speciesByClassDatasets.value.length > 0
 })
 
-// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = mapLoadable(projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
 
 const onFilterChange = async (fs: DetectionFilter[]) => {
   filters.value = fs
