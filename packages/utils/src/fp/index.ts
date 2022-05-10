@@ -1,1 +1,2 @@
-export const asPromise = async <T>(data: T): Promise<T> => data
+export * from './as-promise'
+export * from './map-if-defined'
