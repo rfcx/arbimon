@@ -7,47 +7,13 @@
     @click="openPopup(idx)"
   >
     <!--TODO: 268 Show full information of filter when the user hovers over the comparison box -->
-    <!--TODO: 269 Extract comparison item to separate file -->
-    <div class="flex px-4 mt-2">
-      <div
-        class="flex flex-1"
-        :title="displayTitle(filter)"
-      >
-        <div class="min-w-4">
-          <icon-fa-map-marker />
-        </div>
-        <div class="truncate max-w-24 ml-2">
-          {{ displayTitle(filter) }}
-        </div>
-      </div>
-      <div
-        :class="{ 'invisible': isDefaultFilter }"
-        @click.stop="removeFilterConfig(idx)"
-      >
-        <icon-fa-close class="cursor-pointer w-3" />
-      </div>
-    </div>
-    <div
-      class="flex items-center my-2 px-4"
-    >
-      <div class="min-w-4">
-        <icon-fas-clock />
-      </div>
-      <div class="ml-2">
-        {{ displayDate(filter) }}
-      </div>
-    </div>
-    <div
-      class="flex items-center py-2 px-4"
-      :style="{ 'border-top': `solid 1px ${getFilterColor(idx)}`}"
-    >
-      <div class="min-w-4">
-        <icon-fas-filter />
-      </div>
-      <div class="ml-2 first-letter:capitalize">
-        {{ getTaxonFilterText(idx) }}
-      </div>
-    </div>
+    <filter-list-item
+      :filter="filter"
+      :is-default-filter="isDefaultFilter"
+      :color="getFilterColor(idx)"
+      :taxon-filter-text="getTaxonFilterText(idx)"
+      @emit-remove-config="removeFilterConfig(idx)"
+    />
   </div>
   <div
     v-if="isShowAdd"
@@ -71,12 +37,12 @@ import { isEqual } from 'lodash-es'
 import { computed, defineEmits, defineProps, onMounted, ref, withDefaults } from 'vue'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
-import { formatDateRange } from '@rfcx-bio/utils/dates'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { DetectionFilter } from '~/filters/types'
 import { useStore } from '~/store'
 import FilterModal from '../filter-modal/filter-modal.vue'
+import FilterListItem from './filter-list-item.vue'
 
 const props = withDefaults(
     defineProps<{ projectData: ProjectFiltersResponse, canFilterByTaxon: boolean }>(),
@@ -117,17 +83,6 @@ const isDefaultFilter = computed(() => {
 const isShowAdd = computed(() => {
   return filters.value.length < 5
 })
-
-const displayTitle = (filter: DetectionFilter) => {
-  if (filter.siteGroups.length === 0 || filter.siteGroups[0].sites.length === 0) {
-    return 'All sites'
-  }
-  return filter.siteGroups.flatMap(({ label }) => label).join(', ')
-}
-
-const displayDate = (filter: DetectionFilter) => {
-  return formatDateRange(filter.dateStartLocal, filter.dateEndLocal)
-}
 
 const getFilterColor = (idx: number) => {
   return store.datasetColors[idx]
