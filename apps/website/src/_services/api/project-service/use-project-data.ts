@@ -16,7 +16,8 @@ const getLoadable = (): ComputedRef<Loadable<ProjectFiltersResponse, unknown>> =
     ['fetch-project-filter', projectId],
     async () => {
       if (projectId.value === undefined) return undefined
-      return await projectService.getProjectFilters(projectId.value)
+      const projects = await projectService.getProjectFilters(projectId.value)
+      return projects
     }
   )
 
