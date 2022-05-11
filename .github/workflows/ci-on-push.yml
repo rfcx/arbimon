@@ -28,8 +28,9 @@ jobs:
     name: 'Notify'
     if: ${{ always() }}
     needs: [prepare, build]
-    uses: ./.github/workflows/reusable-notify-send.yml
+    uses: rfcx/cicd/.github/workflows/notify-send.yaml@master
     with:
+      repo: biodiversity-analytics
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-on-push.yml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
