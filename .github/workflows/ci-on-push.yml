@@ -11,8 +11,9 @@ jobs:
 
   prepare:
     name: 'Prepare'
-    uses: ./.github/workflows/reusable-notify-prepare.yml
+    uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
     with:
+      repo: biodiversity-analytics
       workflow-id: ci-on-push.yml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
