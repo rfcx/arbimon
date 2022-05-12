@@ -1,7 +1,6 @@
-import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
+import { QueryTypes, Sequelize } from 'sequelize'
 
-import { mysqlSelect } from '../../../_services/mysql'
-import { ARBIMON_CONFIG } from '../../_connections/arbimon'
+import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 export interface ArbimonSpeciesCall {
   'species_id': number
@@ -35,7 +34,7 @@ type ArbimonSpeciesCallRow = Omit<ArbimonSpeciesCall, 'redirect_url' | 'media_wa
 //   'timezone': string
 // }
 
-export const getArbimonSpeciesCallsForProjectSpecies = async (projectIdArbimon: number, speciesIdsArbimon: number[] = []): Promise<ArbimonSpeciesCall[]> => {
+export const getArbimonSpeciesCallsForProjectSpecies = async (sequelize: Sequelize, projectIdArbimon: number, speciesIdsArbimon: number[] = []): Promise<ArbimonSpeciesCall[]> => {
   const sql = `
   SELECT t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, DATE_ADD(r.datetime_utc, interval t.x1 second) start, DATE_ADD(r.datetime_utc, interval t.x2 second) "end", t.recording_id, s.timezone 
   FROM templates t  
@@ -46,7 +45,7 @@ export const getArbimonSpeciesCallsForProjectSpecies = async (projectIdArbimon: 
   WHERE t.project_id = ${projectIdArbimon} AND t.deleted != 1 AND r.datetime_utc is not null
   ${speciesIdsArbimon.length > 0 ? ` AND t.species_id IN (${speciesIdsArbimon.join(',')})` : ''}
   ;`
-  const results = await mysqlSelect<ArbimonSpeciesCallRow>(ARBIMON_CONFIG, sql)
+  const results = await sequelize.query<ArbimonSpeciesCallRow>(sql, { type: QueryTypes.SELECT })
   return results.map(row => ({
     ...row,
     // TODO: respect the environment for generating redirect_url
