@@ -14,11 +14,12 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const models = ModelRepository.getInstance(sequelize)
 
   // Create projects
-  const projects = await models.Project.bulkCreate(mockProjectsByEnv[BIO_ENVIRONMENT])
+  const projects = mockProjectsByEnv[BIO_ENVIRONMENT]
+  const projectsCreated = await models.Project.bulkCreate(projects)
 
   // Create project versions
   const projectVersions: Array<Omit<ProjectVersion, 'id' | 'isPublished' | 'isPublic'>> =
-    projects.map(project => ({ projectId: project.id }))
+    projectsCreated.map(project => ({ projectId: project.id }))
 
   await models.ProjectVersion.bulkCreate(projectVersions)
 }
