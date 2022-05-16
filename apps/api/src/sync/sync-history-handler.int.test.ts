@@ -1,110 +1,45 @@
-import fastify, { FastifyInstance } from 'fastify'
-import { describe, expect, test } from 'vitest'
+import { LightMyRequestResponse } from 'fastify'
+import { beforeAll, describe, expect, test } from 'vitest'
 
 import { syncHistoryUrl } from '@rfcx-bio/common/api-bio/sync'
-import { DataSource } from '@rfcx-bio/common/dao/types'
+import { SourceSync } from '@rfcx-bio/common/dao/types'
 
+import { getMockedFastify } from '@/_testing/get-mocked-fastify'
 import { routesSync } from '@/sync'
 import { GET } from '~/api-helpers/types'
 
 const ROUTE = '/projects/:projectId/sync-history'
 
-const PROJECT_ID_WITH_ACCESS = '1'
-const PROJECT_ID_NO_ACCESS = '2'
-const CORE_ID_OF_PROJECT_WITH_ACCESS = 'zy5jbxx4cs9f'
-
-// TODO: Extract `getMockedApp...`
-const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      IS_PROJECT_MEMBER: false,
-      MEMBER_PROJECT_CORE_IDS: []
-    })[key],
-    set: (key: string, value: any) => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-
-  routesSync
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
-const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      IS_PROJECT_MEMBER: true,
-      MEMBER_PROJECT_CORE_IDS: [CORE_ID_OF_PROJECT_WITH_ACCESS]
-    })[key],
-    set: (key: string, value: any) => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-
-  routesSync
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
-const getMockedAppLoggedInAndNoAccess = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      IS_PROJECT_MEMBER: false,
-      MEMBER_PROJECT_CORE_IDS: [CORE_ID_OF_PROJECT_WITH_ACCESS]
-    })[key],
-    set: (key: string, value: any) => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-
-  routesSync
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
+const TEST_PROJECT_ID = '2'
 
 describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
-    // Arrange
-    const app = await getMockedAppLoggedIn()
+      // Arrange
+      const app = await getMockedFastify({ routes: routesSync, isProjectMember: true })
 
-    // Act
-    const routes = app.printRoutes()
+      // Act
+      const routes = app.printRoutes()
 
-    // Assert
-    expect(routes).toContain(ROUTE)
+      // Assert
+      expect(routes).toContain(ROUTE)
     })
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await getMockedFastify({ routes: routesSync, isProjectMember: true })
 
       // Act
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BEARER AbCdEf123456' },
-        url: syncHistoryUrl({ projectId: PROJECT_ID_WITH_ACCESS })
+        url: syncHistoryUrl({ projectId: TEST_PROJECT_ID })
       })
 
       // Assert
       expect(response.statusCode).toBe(200)
 
-      const result = JSON.parse(response.body)
+      const result = response.json()
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
     })
@@ -114,13 +49,13 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const EXPECTED_PROPS = [
         'syncs'
       ]
-      const app = await getMockedAppLoggedIn()
+      const app = await getMockedFastify({ routes: routesSync, isProjectMember: true })
 
       // Act
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BEARER AbCdEf123456' },
-        url: syncHistoryUrl({ projectId: PROJECT_ID_WITH_ACCESS })
+        url: syncHistoryUrl({ projectId: TEST_PROJECT_ID })
       })
 
       // Assert
@@ -131,22 +66,29 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   })
 
   describe('known data tests', async () => {
-    // Arrange & Act once
-    const app = await getMockedAppLoggedIn()
+    let response: LightMyRequestResponse
 
-    const response = await app.inject({
-      method: GET,
-      headers: { authorization: 'BEARER AbCdEf123456' },
-      url: syncHistoryUrl({ projectId: PROJECT_ID_WITH_ACCESS })
+    beforeAll(async () => {
+      // Arrange & Act once
+      const app = await getMockedFastify({ routes: routesSync, isProjectMember: true })
+
+      response = await app.inject({
+        method: GET,
+        headers: { authorization: 'BEARER AbCdEf123456' },
+        url: syncHistoryUrl({ projectId: TEST_PROJECT_ID })
+      })
     })
 
     test('calculates syncs correctly', async () => {
       // Arrange
       const EXPECTED_PROPS = [
-        'createdAt',
         'id',
-        'summaryText',
-        'updatedAt'
+        'createdAt',
+        'updatedAt',
+        'hash',
+        'projectId',
+        'sourceId',
+        'changesJson'
       ]
 
       // Assert
@@ -154,7 +96,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toBeDefined()
       expect(Array.isArray(result)).toBe(true)
 
-      const resultArray = result as DataSource[]
+      const resultArray = result as SourceSync[]
       expect(resultArray.length).toEqual(1)
 
       const knownSync = resultArray[0]
@@ -167,12 +109,12 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('client errors', () => {
     test('rejects missing token with 401', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await getMockedFastify({ routes: routesSync })
 
       // Act
       const response = await app.inject({
         method: GET,
-        url: syncHistoryUrl({ projectId: PROJECT_ID_NO_ACCESS })
+        url: syncHistoryUrl({ projectId: TEST_PROJECT_ID })
       })
 
       // Assert
@@ -181,13 +123,13 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('rejects invalid token with 401', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await getMockedFastify({ routes: routesSync })
 
       // Act
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BANANA AbCdEf123456' }, // not BEARER
-        url: syncHistoryUrl({ projectId: PROJECT_ID_NO_ACCESS })
+        url: syncHistoryUrl({ projectId: TEST_PROJECT_ID })
       })
 
       // Assert
@@ -196,13 +138,13 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('rejects authenticated but unauthorized (non-project member) with 403', async () => {
       // Arrange
-      const app = await getMockedAppLoggedInAndNoAccess()
+      const app = await getMockedFastify({ routes: routesSync })
 
       // Act
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BEARER AbCdEf123456' },
-        url: syncHistoryUrl({ projectId: PROJECT_ID_NO_ACCESS })
+        url: syncHistoryUrl({ projectId: TEST_PROJECT_ID })
       })
 
       // Assert
