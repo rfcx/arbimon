@@ -9,5 +9,4 @@ export interface SourceSync extends WithDates {
 }
 
 export const ATTRIBUTES_SOURCE_SYNC: AttributeConstants<SourceSync> = {
-  light: ['id', 'hash', 'projectId', 'changesJson']
 }

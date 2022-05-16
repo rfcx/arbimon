@@ -46,7 +46,7 @@
           <li class="mt-2 ml-4">
             <ul class="list-inside list-circle text-sm">
               <li
-                v-for="entry in Object.entries(sync.summaryObject)"
+                v-for="entry in Object.entries(sync.changesObject)"
                 :key="entry[0]"
               >
                 +{{ entry[1] }} {{ entry[0] }}
@@ -67,7 +67,7 @@ import useDateFormat from '../_services/hooks/use-date-format'
 
 // Data
 const { isLoading, isError, data } = useSyncHistory()
-const syncs = computed(() => data?.value?.syncs?.map(({ summaryText, ...list }) => ({ ...list, summaryObject: (JSON.parse(summaryText) as Record<string, number>) })) ?? [])
+const syncs = computed(() => data?.value?.syncs?.map(({ changesJson, ...rest }) => ({ ...rest, changesObject: (JSON.parse(changesJson) as Record<string, number>) })) ?? [])
 
 // Formatters
 const { formatDateFull } = useDateFormat()
