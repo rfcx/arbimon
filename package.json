@@ -22,7 +22,8 @@
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "s:api": "pnpm --filter=db serve && pnpm --filter=cli db-rms && pnpm --filter=api serve",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
-    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\""
+    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\"",
+    "serve-test": "pnpm --filter=db serve-test && pnpm --filter=cli db-rms-test"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
