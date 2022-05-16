@@ -16,10 +16,12 @@
     "preview": "vite preview --port 8080",
     "profile-eslint": "cross-env TIMING=1 NODE_OPTIONS=\"--max_old_space_size=8192\" eslint .",
     "serve": "concurrently -r \"vite\" \"pnpm open\"",
-    "test-unit": "vitest --run .unit.test.",
-    "test-unit-coverage": "vitest --run --coverage .unit.test.",
+    "test-int": "cross-env BIO_DB_PORT=5434 vitest --no-threads --passWithNoTests .int.test.",
+    "test-int-ci": "vitest --no-threads --passWithNoTests .int.test.",
+    "test-unit": "vitest --passWithNoTests .unit.test.",
+    "test-unit-coverage": "vitest --coverage --passWithNoTests .unit.test.",
     "test-ui": "cypress run",
-    "test-ui:explorer": "cypress open"
+    "test-ui-explorer": "cypress open"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.19.2",

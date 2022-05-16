@@ -10,7 +10,7 @@
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
     "db-rms": "pnpm serve lib/db/reset-migrate-seed",
-    "db-rms-integration": "pnpm serve lib/db/reset-migrate-seed -- --path=01-integration-test-data,02-arbimon-data-mock,03-preload,04-user-data-mock",
+    "db-rms-test": "cross-env BIO_DB_PORT=5434 pnpm serve lib/db/reset-migrate-seed -- --path=01-integration-test-data,02-arbimon-data-mock,03-preload,04-user-data-mock",
     "db-seed": "pnpm serve lib/db/seed -- --path=01-integration-test-data,02-arbimon-data-mock,03-preload,04-user-data-mock",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
@@ -18,9 +18,10 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
-    "test-unit": "vitest --run --passWithNoTests .unit.test.",
-    "test-int": "cross-env BIO_DB_PORT=5434 vitest --run --no-threads .int.test.",
-    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
+    "test-int": "cross-env BIO_DB_PORT=5434 vitest --no-threads --passWithNoTests .int.test.",
+    "test-int-ci": "vitest --no-threads --passWithNoTests .int.test.",
+    "test-unit": "vitest --passWithNoTests .unit.test.",
+    "test-unit-coverage": "vitest --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:^0.0.1",

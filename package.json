@@ -8,8 +8,7 @@
     "ci-build": "pnpm -r build",
     "ci-lint": "pnpm -r lint --stream --workspace-concurrency 1",
     "ci-test-unit": "pnpm -r test-unit",
-    "ci-test-int": "pnpm -r test-int",
-    "ci-serve-test-int": "pnpm --filter=db serve-test && cross-env BIO_DB_PORT=5434 pnpm --filter=cli db-rms-integration && pnpm -r test-int && pnpm --filter=db stop-test",
+    "ci-test-int": "pnpm -r test-int-ci",
     "clean-sheet": "pnpm clean-slate",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
     "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension johnsoncodehk.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer",
@@ -23,8 +22,7 @@
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "s:api": "pnpm --filter=db serve && pnpm --filter=cli db-rms && pnpm --filter=api serve",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
-    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\"",
-    "test-db-up": "pnpm --filter=db serve-test && pnpm --filter=cli exec cross-env BIO_DB_PORT=5434 pnpm db-rms-integration"
+    "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\""
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

@@ -18,8 +18,8 @@
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
     "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
     "profile-eslint": "cross-env TIMING=1 eslint .",
-    "test-unit": "vitest --run .unit.test.",
-    "test-coverage": "vitest --run --coverage .unit.test."
+    "test-unit": "vitest --passWithNoTests .unit.test.",
+    "test-unit-coverage": "vitest --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
     "dayjs": "^1.10.7",
