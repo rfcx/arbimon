@@ -6,9 +6,8 @@ export interface DetectionByVersionSiteSpeciesHour {
   projectSiteId: number
   taxonSpeciesId: number
   taxonClassId: number
-  detectionMinutes: number
-  recordingMinutes: number
+  countDetectionMinutes: number
 }
 
-export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR: AttributeConstants<DetectionByVersionSiteSpeciesHour> = {
+export const ATTRIBUTES_DETECTION_BY_VERSION_SITE_SPECIES_HOUR: AttributeConstants<DetectionByVersionSiteSpeciesHour> = {
 }

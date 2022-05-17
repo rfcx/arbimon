@@ -1,20 +1,20 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../../model-helpers/defaults'
-import { SourceRecordingBySyncSiteHour } from '../../types'
+import { RecordingBySourceSiteHour } from '../../types'
 
-export const MODEL_SOURCE_RECORDING_BY_SYNC_SITE_HOUR = 'SourceRecordingBySyncSiteHour'
-const TABLE_SOURCE_RECORDING_BY_SYNC_SITE_HOUR = 'source_recording_by_sync_site_hour'
+export const MODEL_RECORDING_BY_SOURCE_SITE_HOUR = 'RecordingBySourceSiteHour'
+const TABLE_RECORDING_BY_SOURCE_SITE_HOUR = 'recording_by_source_site_hour'
 
-export const SourceRecordingBySyncSiteHourModel = defineWithDefaults<SourceRecordingBySyncSiteHour>(
-  MODEL_SOURCE_RECORDING_BY_SYNC_SITE_HOUR,
+export const RecordingBySourceSiteHourModel = defineWithDefaults<RecordingBySourceSiteHour>(
+  MODEL_RECORDING_BY_SOURCE_SITE_HOUR,
   {
     // PK
     timePrecisionHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
       type: DataTypes.DATE(3),
       primaryKey: true
     },
-    sourceSyncId: { // 123
+    sourceId: { // 123
       type: DataTypes.INTEGER,
       primaryKey: true
     },
@@ -27,6 +27,6 @@ export const SourceRecordingBySyncSiteHourModel = defineWithDefaults<SourceRecor
     recordingMinutes: DataTypes.STRING(255) // DataTypes.ARRAY(DataTypes.INTEGER) // [1, 2, 3, 6, 7, 14]
   },
   {
-    tableName: TABLE_SOURCE_RECORDING_BY_SYNC_SITE_HOUR
+    tableName: TABLE_RECORDING_BY_SOURCE_SITE_HOUR
   }
 )

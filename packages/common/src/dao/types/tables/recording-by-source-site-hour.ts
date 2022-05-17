@@ -1,6 +1,6 @@
-export interface SourceRecordingBySyncSiteHour {
+export interface RecordingBySourceSiteHour {
   timePrecisionHourLocal: Date
-  sourceSyncId: number
+  sourceId: number
   projectSiteId: number
   recordingMinutes: string // number[]
 }

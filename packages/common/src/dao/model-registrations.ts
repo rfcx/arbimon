@@ -1,7 +1,8 @@
-import { CacheUserProjectModel, DashboardDetectionByHourModel, DashboardDetectionBySiteModel, DashboardRichnessByHourModel, DashboardRichnessByRiskModel, DashboardRichnessBySiteModel, DashboardRichnessByTaxonModel, DashboardSpeciesHighlightedModel, DashboardSpeciesThreatenedModel, DetectionBySiteHourModel, DetectionByVersionSiteSpeciesHourModel, MODEL_CACHE_USER_PROJECT, MODEL_DASHBOARD_DETECTION_BY_HOUR, MODEL_DASHBOARD_DETECTION_BY_SITE, MODEL_DASHBOARD_RICHNESS_BY_HOUR, MODEL_DASHBOARD_RICHNESS_BY_RISK, MODEL_DASHBOARD_RICHNESS_BY_SITE, MODEL_DASHBOARD_RICHNESS_BY_TAXON, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED, MODEL_DASHBOARD_SPECIES_THREATENED, MODEL_DETECTION_BY_SITE_HOUR, MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR, MODEL_PROJECT, MODEL_PROJECT_METRIC, MODEL_PROJECT_PROFILE, MODEL_PROJECT_PROFILE_HIGHLIGHTED_SPECIES, MODEL_PROJECT_SITE, MODEL_PROJECT_VERSION, MODEL_PROJECT_VERSION_SOURCE_SYNC, MODEL_RISK_RATING, MODEL_SOURCE, MODEL_SOURCE_DETECTION_BY_SYNC_SITE_SPECIES_HOUR, MODEL_SOURCE_RECORDING_BY_SYNC_SITE_HOUR, MODEL_SOURCE_SYNC, MODEL_SPECIES_IN_PROJECT, MODEL_TAXON_CLASS, MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_AUDIO, MODEL_TAXON_SPECIES_COMMON_NAME, MODEL_TAXON_SPECIES_DESCRIPTION, MODEL_TAXON_SPECIES_FILE, MODEL_TAXON_SPECIES_PHOTO, MODEL_TAXON_SPECIES_PROJECT_DESCRIPTION, MODEL_TAXON_SPECIES_PROJECT_FILE, MODEL_TAXON_SPECIES_PROJECT_RISK_RATING, MODEL_TAXON_SPECIES_RISK_RATING, MODEL_TAXON_SPECIES_SOURCE, ProjectMetricModel, ProjectModel, ProjectProfileHighlightedSpeciesModel, ProjectProfileModel, ProjectSiteModel, ProjectVersionModel, ProjectVersionSourceSyncModel, RiskRatingModel, SourceDetectionBySyncSiteSpeciesHourModel, SourceModel, SourceRecordingBySyncSiteHourModel, SourceSyncModel, SpeciesInProjectModel, TaxonClassModel, TaxonSpeciesAudioModel, TaxonSpeciesCommonNameModel, TaxonSpeciesDescriptionModel, TaxonSpeciesFileModel, TaxonSpeciesModel, TaxonSpeciesPhotoModel, TaxonSpeciesProjectDescriptionModel, TaxonSpeciesProjectFileModel, TaxonSpeciesProjectRiskRatingModel, TaxonSpeciesRiskRatingModel, TaxonSpeciesSourceModel } from './models'
+import { CacheUserProjectModel, DashboardDetectionByHourModel, DashboardDetectionBySiteModel, DashboardRichnessByHourModel, DashboardRichnessByRiskModel, DashboardRichnessBySiteModel, DashboardRichnessByTaxonModel, DashboardSpeciesHighlightedModel, DashboardSpeciesThreatenedModel, DetectionBySourceSiteSpeciesHourModel, DetectionByVersionSiteSpeciesHourModel, MODEL_CACHE_USER_PROJECT, MODEL_DASHBOARD_DETECTION_BY_HOUR, MODEL_DASHBOARD_DETECTION_BY_SITE, MODEL_DASHBOARD_RICHNESS_BY_HOUR, MODEL_DASHBOARD_RICHNESS_BY_RISK, MODEL_DASHBOARD_RICHNESS_BY_SITE, MODEL_DASHBOARD_RICHNESS_BY_TAXON, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED, MODEL_DASHBOARD_SPECIES_THREATENED, MODEL_DETECTION_BY_SOURCE_SITE_SPECIES_HOUR, MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR, MODEL_PROJECT, MODEL_PROJECT_METRIC, MODEL_PROJECT_PROFILE, MODEL_PROJECT_PROFILE_HIGHLIGHTED_SPECIES, MODEL_PROJECT_SITE, MODEL_PROJECT_VERSION, MODEL_RECORDING_BY_SOURCE_SITE_HOUR, MODEL_RECORDING_BY_VERSION_SITE_HOUR, MODEL_RISK_RATING, MODEL_SOURCE, MODEL_SPECIES_IN_PROJECT, MODEL_SYNC_DATA_TYPE, MODEL_SYNC_LOG_BY_PROJECT, MODEL_SYNC_STATUS, MODEL_TAXON_CLASS, MODEL_TAXON_SPECIES, MODEL_TAXON_SPECIES_AUDIO, MODEL_TAXON_SPECIES_COMMON_NAME, MODEL_TAXON_SPECIES_DESCRIPTION, MODEL_TAXON_SPECIES_FILE, MODEL_TAXON_SPECIES_PHOTO, MODEL_TAXON_SPECIES_PROJECT_DESCRIPTION, MODEL_TAXON_SPECIES_PROJECT_FILE, MODEL_TAXON_SPECIES_PROJECT_RISK_RATING, MODEL_TAXON_SPECIES_RISK_RATING, MODEL_TAXON_SPECIES_SOURCE, ProjectMetricModel, ProjectModel, ProjectProfileHighlightedSpeciesModel, ProjectProfileModel, ProjectSiteModel, ProjectVersionModel, RecordingBySourceSiteHourModel, RecordingByVersionSiteHourModel, RiskRatingModel, SourceModel, SpeciesInProjectModel, SyncDataTypeModel, SyncLogByProjectModel, SyncStatusModel, TaxonClassModel, TaxonSpeciesAudioModel, TaxonSpeciesCommonNameModel, TaxonSpeciesDescriptionModel, TaxonSpeciesFileModel, TaxonSpeciesModel, TaxonSpeciesPhotoModel, TaxonSpeciesProjectDescriptionModel, TaxonSpeciesProjectFileModel, TaxonSpeciesProjectRiskRatingModel, TaxonSpeciesRiskRatingModel, TaxonSpeciesSourceModel } from './models'
 
 export const modelRegistrations = <const>{
   // Tables
+  [MODEL_DETECTION_BY_SOURCE_SITE_SPECIES_HOUR]: [DetectionBySourceSiteSpeciesHourModel, { manyToOne: [MODEL_SOURCE, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES] }],
   [MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR]: [DetectionByVersionSiteSpeciesHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES, MODEL_TAXON_CLASS] }],
 
   [MODEL_PROJECT]: [ProjectModel],
@@ -9,14 +10,17 @@ export const modelRegistrations = <const>{
   [MODEL_PROJECT_PROFILE]: [ProjectProfileModel, { oneToOne: [MODEL_PROJECT] }],
   [MODEL_PROJECT_SITE]: [ProjectSiteModel, { manyToOne: [MODEL_PROJECT, { model: MODEL_PROJECT_VERSION, foreignKey: 'project_version_first_appears_id' }] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_PROJECT] }],
-  [MODEL_PROJECT_VERSION_SOURCE_SYNC]: [ProjectVersionSourceSyncModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_SOURCE_SYNC] }],
+
+  [MODEL_RECORDING_BY_SOURCE_SITE_HOUR]: [RecordingBySourceSiteHourModel, { manyToOne: [MODEL_SOURCE, MODEL_PROJECT_SITE] }],
+  [MODEL_RECORDING_BY_VERSION_SITE_HOUR]: [RecordingByVersionSiteHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE] }],
 
   [MODEL_RISK_RATING]: [RiskRatingModel],
 
   [MODEL_SOURCE]: [SourceModel],
-  [MODEL_SOURCE_DETECTION_BY_SYNC_SITE_SPECIES_HOUR]: [SourceDetectionBySyncSiteSpeciesHourModel, { manyToOne: [MODEL_SOURCE_SYNC, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES] }],
-  [MODEL_SOURCE_RECORDING_BY_SYNC_SITE_HOUR]: [SourceRecordingBySyncSiteHourModel, { manyToOne: [MODEL_SOURCE_SYNC, MODEL_PROJECT_SITE] }],
-  [MODEL_SOURCE_SYNC]: [SourceSyncModel, { manyToOne: [MODEL_PROJECT, MODEL_SOURCE] }],
+
+  [MODEL_SYNC_DATA_TYPE]: [SyncDataTypeModel],
+  [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_PROJECT, MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
+  [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
 
   [MODEL_TAXON_CLASS]: [TaxonClassModel],
 
@@ -41,7 +45,6 @@ export const modelRegistrations = <const>{
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
-  [MODEL_DETECTION_BY_SITE_HOUR]: [DetectionBySiteHourModel],
   [MODEL_PROJECT_METRIC]: [ProjectMetricModel],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel],
 

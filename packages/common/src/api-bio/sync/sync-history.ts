@@ -1,4 +1,4 @@
-import { SourceSync } from '@/dao/types'
+import { SyncLogByProject } from '@/dao/types'
 import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
@@ -11,5 +11,5 @@ export const syncHistoryUrl = (params: SyncHistoryParams): string =>
 
 // Response
 export interface SyncHistoryResponse {
-  syncs: SourceSync[]
+  syncs: SyncLogByProject[]
 }
