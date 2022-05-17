@@ -1,11 +1,10 @@
 import { groupBy } from 'lodash-es'
-import * as hash from 'object-hash'
 import { QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { masterSources } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { SourceDetectionBySyncSiteSpeciesHour, SourceRecordingBySyncSiteHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySourceSiteSpeciesHour, RecordingBySourceSiteHour } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { getPuertoRicoProjectId } from '@/seed/_helpers/get-puerto-rico-id'
@@ -32,17 +31,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const speciesArbimonToBio: Record<number, number> = Object.fromEntries(species.map(s => [s.idArbimon, s.id]))
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
-  // Create sync
-  const sync = await models.SourceSync.create({
-    projectId,
-    sourceId: masterSources.ArbimonValidated.id,
-    hash: hash.MD5([{ abc: 456 }]),
-    changesJson: { detections: rawDetections.length }
-  })
-
-  // Create bySyncRecordings
+  // Create recording by source
   const recordingMinutes = Array.from({ length: 12 }, (_, i) => i * 5)
-  const recordingsBySyncSiteHour: SourceRecordingBySyncSiteHour[] = Object.values(groupBy(rawDetections, d => `${d.date}${d.hour}${d.arbimon_site_id}`))
+  const recordingsBySyncSiteHour: RecordingBySourceSiteHour[] = Object.values(groupBy(rawDetections, d => `${d.date}${d.hour}${d.arbimon_site_id}`))
     .map(ds => ds[0])
     .map(d => {
       const projectSiteId = siteArbimonToBio[d.arbimon_site_id]
@@ -50,16 +41,16 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
       return {
         timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
-        sourceSyncId: sync.id,
+        sourceId: masterSources.ArbimonValidated.id,
         projectSiteId: siteArbimonToBio[d.arbimon_site_id],
         recordingMinutes: recordingMinutes.toString()
       }
     })
 
-  await models.SourceRecordingBySyncSiteHour.bulkCreate(recordingsBySyncSiteHour)
+  await models.RecordingBySourceSiteHour.bulkCreate(recordingsBySyncSiteHour)
 
-  // Create bySyncDetections
-  const detectionsBySyncSiteSpeciesHour: SourceDetectionBySyncSiteSpeciesHour[] = rawDetections
+  // Create detections by source
+  const detectionsBySyncSiteSpeciesHour: DetectionBySourceSiteSpeciesHour[] = rawDetections
     .map(d => {
       const projectSiteId = siteArbimonToBio[d.arbimon_site_id]
       const taxonSpeciesId = speciesArbimonToBio[d.species_id]
@@ -69,30 +60,43 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
         projectSiteId,
         taxonSpeciesId,
-        sourceSyncId: sync.id,
+        sourceId: masterSources.ArbimonValidated.id,
         detectionMinutes: recordingMinutes.slice(0, d.num_of_recordings).toString()
       }
     })
     .filter(isDefined)
 
-  await models.SourceDetectionBySyncSiteSpeciesHour.bulkCreate(detectionsBySyncSiteSpeciesHour)
+  await models.DetectionBySourceSiteSpeciesHour.bulkCreate(detectionsBySyncSiteSpeciesHour)
 
-  // Link sync to version
-  await models.ProjectVersionSourceSync.create({
-    projectVersionId: latestProjectVersion.id,
-    sourceSyncId: sync.id
-  })
+  // Update recordings/detections by version
+  await sequelize.query(
+    `
+      INSERT INTO recording_by_version_site_hour (time_precision_hour_local, project_version_id, project_site_id, created_at, updated_at, count_recording_minutes)
+      SELECT rbssh.time_precision_hour_local,
+      $projectVersionId,
+      rbssh.project_site_id,
+      rbssh.created_at,
+      rbssh.updated_at,
+      length(regexp_replace(rbssh.recording_minutes, '[^,]', '', 'g')) + 1
+      FROM recording_by_source_site_hour rbssh
+    `,
+    { type: QueryTypes.INSERT, bind: { projectVersionId: latestProjectVersion.id } }
+  )
 
-  // Update byVersion
-  await sequelize.query(`
-    INSERT INTO materialized_by_version_site_hour_recording (time_precision_hour_local, project_version_id, project_site_id, created_at, updated_at, count_recording_minutes)
-    SELECT time_precision_hour_local, project_version_id, project_site_id, created_at, updated_at, count_recording_minutes
-    FROM by_version_site_hour_recording
-  `, { type: QueryTypes.INSERT })
-
-  await sequelize.query(`
-    INSERT INTO materialized_by_version_site_species_hour_detection (time_precision_hour_local, project_version_id, project_site_id, taxon_species_id, created_at, updated_at, taxon_class_id, count_detection_minutes)
-    SELECT time_precision_hour_local, project_version_id, project_site_id, taxon_species_id, created_at, updated_at, taxon_class_id, count_detection_minutes
-    FROM by_version_site_species_hour_detection
-  `, { type: QueryTypes.INSERT })
+  await sequelize.query(
+    `
+      INSERT INTO detection_by_version_site_species_hour (time_precision_hour_local, project_version_id, project_site_id, taxon_species_id, created_at, updated_at, taxon_class_id, count_detection_minutes)
+      SELECT dbsssh.time_precision_hour_local,
+            $projectVersionId,
+            dbsssh.project_site_id,
+            dbsssh.taxon_species_id,
+            dbsssh.created_at,
+            dbsssh.updated_at,
+            ts.taxon_class_id,
+            length(regexp_replace(dbsssh.detection_minutes, '[^,]', '', 'g')) + 1
+      FROM detection_by_source_site_species_hour dbsssh
+      JOIN taxon_species ts on dbsssh.taxon_species_id = ts.id
+    `,
+    { type: QueryTypes.INSERT, bind: { projectVersionId: latestProjectVersion.id } }
+  )
 }
