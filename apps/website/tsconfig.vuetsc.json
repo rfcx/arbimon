@@ -4,10 +4,6 @@
     "noEmit": true,
     "rootDir": "../../"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.vue",
-    "*.d.ts"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.vue", "*.d.ts"],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]
 }
