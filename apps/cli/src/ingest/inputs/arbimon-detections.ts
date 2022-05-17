@@ -1,6 +1,6 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
-import { SourceDetectionBySyncSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySourceSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 
 export interface ArbimonDetectionSummaries {
   'projectId': number
@@ -45,14 +45,14 @@ const sqliteSQL = `
   return results
 }
 
-export const tranformArbimonToBioDetectionSummaries = async (arbimonSummaries: ArbimonDetectionSummaries[], bioSequelize: Sequelize): Promise<SourceDetectionBySyncSiteSpeciesHour[]> => {
+export const tranformArbimonToBioDetectionSummaries = async (arbimonSummaries: ArbimonDetectionSummaries[], bioSequelize: Sequelize): Promise<DetectionBySourceSiteSpeciesHour[]> => {
   return arbimonSummaries.map(s => {
     // TODO: map source
     // TODO: map site id
     // TODO: map species id
     return {
       timePrecisionHourLocal: new Date(),
-      sourceSyncId: 1,
+      sourceId: 1,
       projectSiteId: 2,
       taxonSpeciesId: 3,
       detectionMinutes: s.detectionMinutes // s.detectionMinutes.split(',').map(sn => Number(sn))

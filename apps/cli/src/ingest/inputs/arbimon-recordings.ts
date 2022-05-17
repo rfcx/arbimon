@@ -1,6 +1,6 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
-import { SourceRecordingBySyncSiteHour } from '@rfcx-bio/common/dao/types'
+import { RecordingBySourceSiteHour } from '@rfcx-bio/common/dao/types'
 
 export interface ArbimonRecordingSummaries {
   'projectId': number
@@ -43,11 +43,11 @@ const results: ArbimonRecordingSummaries[] = await sequelize.query(sql, { type: 
 return results
 }
 
-export const tranformArbimonToBioRecordingSummaries = async (arbimonSummaries: ArbimonRecordingSummaries[], bioSequelize: Sequelize): Promise<SourceRecordingBySyncSiteHour[]> => {
+export const tranformArbimonToBioRecordingSummaries = async (arbimonSummaries: ArbimonRecordingSummaries[], bioSequelize: Sequelize): Promise<RecordingBySourceSiteHour[]> => {
   return arbimonSummaries.map(s => {
     return {
       timePrecisionHourLocal: new Date(),
-      sourceSyncId: 1, // TODO: map source
+      sourceId: 1, // TODO: map source
       projectSiteId: 3, // TODO: map site
       recordingMinutes: s.recordingMinutes // s.recordingMinutes.split(',').map(sn => Number(sn)),
     }
