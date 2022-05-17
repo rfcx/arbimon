@@ -6,10 +6,9 @@
   },
   "include": [
     "src/**/*.ts",
-    "./*.ts",
-    "./*.js",
     "../../packages/*/src/**/*.ts",
-    "../../packages/*/src/**/*.js"
+    "./*.js",
+    "./*.ts"
   ],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]
 }
