@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { richnessDatasetUrl } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { getInjectAsLoggedInProjectMember, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
@@ -20,6 +20,8 @@ const EXPECTED_PROPS = [
 ]
 
 const TEST_PROJECT_ID = '2'
+const TEST_7_PROJECT_ID = '7'
+const TEST_8_PROJECT_ID = '8'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -68,12 +70,12 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
   })
 
-  describe('validate known data', () => {
+  describe('validate known data', async () => {
     test('does not have any data on given date', async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
+        url: richnessDatasetUrl({ projectId: TEST_7_PROJECT_ID }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
       })
 
@@ -86,6 +88,147 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
       expect(result.richnessByTimeUnix).toEqual({})
       expect(result.richnessPresence).toEqual({})
+    })
+
+    test('test isLocationRedacted', async () => {
+      const url = richnessDatasetUrl({ projectId: TEST_8_PROJECT_ID })
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url,
+        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
+      const result = JSON.parse(response.body)
+      expect(result).toBeDefined()
+      expect(result).toBeTypeOf('object')
+      expect(result.isLocationRedacted).toBeFalsy()
+    })
+
+    test.todo('calculates richnessBySite correctly', async () => {
+      const url = richnessDatasetUrl({ projectId: TEST_8_PROJECT_ID })
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url,
+        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+      })
+
+      // Arrange
+      const locationSiteId = 143888
+      const richness = 2
+      const taxonClassId = 1
+      const expectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
+
+      // Act
+      const result = JSON.parse(response.body)?.richnessBySite
+
+      // Assert - property exists & correct type
+      expect(result).toBeDefined()
+      expect(Array.isArray(result)).toBe(true)
+      const res = result as RichnessSiteData[]
+      expect(res.length).toBe(1)
+
+      // Assert - first result is object
+      const testedSite = result.find((site: RichnessSiteData) => site.locationSiteId === locationSiteId)
+      expect(testedSite).toBeTypeOf('object')
+      const site = testedSite as Record<string, any>
+
+      // Assert - first result contains (only) expected props
+      expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
+      Object.keys(site).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+
+      // Assert - detection, detection frequency, occupancy are correct
+      expect(site.richness).toBe(richness)
+      expect(site.richness).toBe(taxonClassId)
+    })
+    test.todo('richnessBySite -> check locationSiteId, richness, taxonClassId of the first item in array', async () => {})
+    test.todo('does not duplicates sites for richnessBySite', async () => {})
+    test.todo('check specific calculation in richnessBySite', async () => {})
+
+    test.todo('use right calculation/check values of richnessByTaxon', async () => {})
+    test.todo('check specific calculation in richnessByTaxon', async () => {})
+    test.todo('does not duplicates values for richnessByTaxon', async () => {})
+
+    test.todo('use right calculation/check values of richnessByTimeDayOfWeek', async () => {})
+    test.todo('check specific calculation in richnessByTimeDayOfWeek', async () => {})
+    test.todo('does not duplicates values for richnessByTimeDayOfWeek', async () => {})
+
+    test.todo('use right calculation/check values of richnessByTimeHourOfDay', async () => {})
+    test.todo('check specific calculation in richnessByTimeHourOfDay', async () => {})
+    test.todo('does not duplicates values for richnessByTimeHourOfDay', async () => {})
+
+    test.todo('richnessByTimeUnix in a correct time range data', async () => {})
+    test.todo('use right calculation/check values of richnessByTimeUnix', async () => {})
+    test.todo('check specific calculation in richnessByTimeUnix', async () => {})
+    test.todo('does not duplicates values for richnessByTimeUnix', async () => {})
+
+    test.todo('use right calculation/check values of richnessPresence', async () => {})
+    test.todo('check specific calculation in richnessPresence', async () => {})
+    test.todo('does not duplicates values for richnessPresence', async () => {})
+    test('fake test', async () => {
+      const url = richnessDatasetUrl({ projectId: '1' })
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url,
+        query: { startDate: '2018-04-15T00:00:00.000Z', endDate: '2018-05-04T00:00:00.000Z' }
+      })
+      const body = response.json()
+      expect(body).toMatchInlineSnapshot(`
+        {
+          "isLocationRedacted": false,
+          "richnessBySite": [],
+          "richnessByTaxon": {},
+          "richnessByTimeDayOfWeek": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+          },
+          "richnessByTimeHourOfDay": {
+            "0": 0,
+            "1": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "2": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0,
+            "9": 0,
+          },
+          "richnessByTimeMonthOfYear": {
+            "0": 0,
+            "1": 0,
+            "10": 0,
+            "11": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0,
+            "9": 0,
+          },
+          "richnessByTimeUnix": {},
+          "richnessPresence": {},
+        }
+      `)
     })
   })
 

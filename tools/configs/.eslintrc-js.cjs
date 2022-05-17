@@ -10,7 +10,7 @@ module.exports = {
   plugins: ['simple-import-sort', 'unicorn', 'unused-imports'],
   rules: {
     // Override imported rules
-    'no-console': ['error', { allow: ['info', 'warn', 'error'] }], // only intentional logs (info/warn/error); disallow console.log
+    'no-console': ['error', { allow: ['info', 'warn', 'error', 'log'] }], // only intentional logs (info/warn/error); disallow console.log
     'no-debugger': 'error',
     'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
     'no-void': ['error', { allowAsStatement: true }],

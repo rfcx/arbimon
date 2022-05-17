@@ -1,5 +1,3 @@
-import fastify, { FastifyInstance } from 'fastify'
-import fastifyRoutes from 'fastify-routes'
 import { describe, expect, test } from 'vitest'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
@@ -7,6 +5,7 @@ import { dashboardGeneratedUrl } from '@rfcx-bio/common/api-bio/dashboard/dashbo
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Site } from '@rfcx-bio/common/dao/types'
 
+import { getInjectAsLoggedInProjectMember, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { getSequelize } from '~/db'
 import { routesDashboard } from './index'
@@ -29,18 +28,6 @@ const EXPECTED_PROPS = [
   'detectionByHour'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  await app.register(fastifyRoutes)
-
-  routesDashboard
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 const createMockEmptySite = async (): Promise<Site> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
@@ -57,25 +44,26 @@ const createMockEmptySite = async (): Promise<Site> => {
   return site
 }
 
-describe(`GET ${ROUTE}  (dashboard generated)`, () => {
+describe(`GET ${ROUTE}  (dashboard generated)`, async () => {
+  const routes = routesDashboard
+  const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
+
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await getMockedFastify({ routes })
 
       // Act
-      const routes = [...app.routes.keys()]
+      // const routes = [...app.routes.keys()]
+      const routeList = app.printRoutes()
 
       // Assert
-      expect(routes).toContain(ROUTE)
+      expect(routeList).toContain(ROUTE)
     })
 
     test('returns successfully', async () => {
-      // Arrange
-      const app = await getMockedApp()
-
       // Act
-      const response = await app.inject({
+      const response = await injectAsLoggedInProjectMember({
         method: GET,
         url: dashboardGeneratedUrl({ projectId: '1' })
       })
@@ -89,11 +77,8 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
     })
 
     test('contains all expected props & no more', async () => {
-      // Arrange
-      const app = await getMockedApp()
-
       // Act
-      const response = await app.inject({
+      const response = await injectAsLoggedInProjectMember({
         method: GET,
         url: dashboardGeneratedUrl({ projectId: '1' })
       })
@@ -106,15 +91,13 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
   })
 
   describe('known data tests', async () => {
-    // Arrange & Act once
-    const app = await getMockedApp()
-
-    const response = await app.inject({
+    // Act
+    const response = await injectAsLoggedInProjectMember({
       method: GET,
       url: dashboardGeneratedUrl({ projectId: '1' })
     })
 
-    test('species richness by site is correct', async () => {
+    test.todo('species richness by site is correct', async () => {
       // Arrange
       const knownSiteName = 'SA09'
       const expectedProperties = ['name', 'latitude', 'longitude', 'value']

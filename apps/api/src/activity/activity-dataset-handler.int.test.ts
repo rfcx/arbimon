@@ -1,8 +1,9 @@
-import fastify, { FastifyInstance } from 'fastify'
+// import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { activityDatasetGeneratedUrl, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
+import { getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
 
@@ -18,67 +19,70 @@ const EXPECTED_PROPS = [
   'activityByTimeDate'
 ]
 
-const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
+// const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
+//   const app = await fastify()
 
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      IS_PROJECT_MEMBER: false,
-      MEMBER_PROJECT_CORE_IDS: []
-    })[key],
-    set: (key: string, value: any) => {}
-  }
+//   const fakeRequestContext = {
+//     get: (key: string) => ({
+//       IS_PROJECT_MEMBER: false,
+//       MEMBER_PROJECT_CORE_IDS: []
+//     })[key],
+//     set: (key: string, value: any) => {}
+//   }
 
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
+//   app.decorate('requestContext', fakeRequestContext)
+//   app.decorateRequest('requestContext', fakeRequestContext)
 
-  routesActivity
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
+//   routesActivity
+//     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
+//     .forEach(route => app.route(route))
 
-  return app
-}
+//   return app
+// }
 
-const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
+// const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
+//   const app = await fastify()
 
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      IS_PROJECT_MEMBER: true,
-      MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
-    })[key],
-    set: (key: string, value: any) => {}
-  }
+//   const fakeRequestContext = {
+//     get: (key: string) => ({
+//       IS_PROJECT_MEMBER: true,
+//       MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
+//     })[key],
+//     set: (key: string, value: any) => {}
+//   }
 
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
+//   app.decorate('requestContext', fakeRequestContext)
+//   app.decorateRequest('requestContext', fakeRequestContext)
 
-  routesActivity
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
+//   routesActivity
+//     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
+//     .forEach(route => app.route(route))
 
-  return app
-}
+//   return app
+// }
 
-describe('GET /projects/:projectId/activity (activity dataset)', () => {
+describe(`GET ${ROUTE} (activity dataset)`, async () => {
+  const routes = routesActivity
+  const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
+  const injectAsLoggedOut = await getInjectAsLoggedOut(routes)
+
   describe('simple tests', () => {
     test('exists', async () => {
     // Arrange
-    const app = await getMockedAppLoggedOut()
+    // const app = await getMockedAppLoggedOut()
+    const app = await getMockedFastify({ routes })
 
     // Act
-    const routes = app.printRoutes()
+    const routeList = app.printRoutes()
 
     // Assert
-    expect(routes).toContain(ROUTE)
+    expect(routeList).toContain(ROUTE)
     })
 
     test('returns successfully', async () => {
-      // Arrange
-      const app = await getMockedAppLoggedOut()
-
-      // Act
-      const response = await app.inject({
+      // Arrange & Act once
+      // const app = await getMockedAppLoggedOut()
+      const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
@@ -93,11 +97,9 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     })
 
     test('contains all expected props', async () => {
-      // Arrange
-      const app = await getMockedAppLoggedOut()
-
-      // Act
-      const response = await app.inject({
+      // Arrange & Act once
+      // const app = await getMockedAppLoggedOut()
+      const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
@@ -109,11 +111,9 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     })
 
     test('does not contain any additional props', async () => {
-      // Arrange
-      const app = await getMockedAppLoggedOut()
-
-      // Act
-      const response = await app.inject({
+      // Arrange & Act once
+      // const app = await getMockedAppLoggedOut()
+      const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
@@ -127,9 +127,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await getMockedAppLoggedIn()
-
-    const response = await app.inject({
+    const response = await injectAsLoggedInProjectMember({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
@@ -209,9 +207,9 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
   describe('known data tests with redacted data', async () => {
     // Arrange & Act once
-    const app = await getMockedAppLoggedOut()
+    // const app = await getMockedAppLoggedOut()
 
-    const response = await app.inject({
+    const response = await injectAsLoggedOut({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
@@ -228,11 +226,9 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
   describe('client errors', () => {
     test('rejects missing query', async () => {
-      // Arrange
-      const app = await getMockedAppLoggedOut()
-
-      // Act
-      const response = await app.inject({
+      // Arrange & Act once
+      // const app = await getMockedAppLoggedOut()
+      const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' })
       })
@@ -242,11 +238,9 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     })
 
     test('rejects invalid project id', async () => {
-      // Arrange
-      const app = await getMockedAppLoggedOut()
-
-      // Act
-      const response = await app.inject({
+      // Arrange & Act once
+      // const app = await getMockedAppLoggedOut()
+      const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: 'x' })
       })
@@ -260,17 +254,14 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
     })
 
     test('rejects invalid date', async () => {
-      // Arrange
-      const app = await getMockedAppLoggedOut()
-
-      // Act
-      const response1 = await app.inject({
+      // Arrange & Act once
+      // const app = await getMockedAppLoggedOut()
+      const response1 = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
       })
-
-      const response2 = await app.inject({
+      const response2 = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }

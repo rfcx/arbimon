@@ -1,9 +1,8 @@
-import fastify, { FastifyInstance } from 'fastify'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { describe, expect, test } from 'vitest'
 
 import { spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
+import { getInjectAsLoggedInProjectMember, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesSpotlight } from './index'
 
@@ -26,331 +25,274 @@ const EXPECTED_PROPS = [
   'detectionsByTimeMonthYear'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRequestContextPlugin)
+describe(`GET ${ROUTE} (spotlight dataset)`, async () => {
+  const routes = routesSpotlight
+  const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
 
-  routesSpotlight
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
-describe('happy path', () => {
-  test(`GET ${ROUTE} exists`, async () => {
-   // Arrange
-   const app = await getMockedApp()
-
-   // Act
-   const routes = app.printRoutes()
-
-   // Assert
-   expect(routes).toContain(ROUTE)
-  })
-
-  test(`GET ${ROUTE} returns successfully`, async () => {
+  describe('happy path', () => {
+    test('exists', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await getMockedFastify({ routes })
 
     // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
-    })
+    const routeList = app.printRoutes()
 
     // Assert
-    expect(response.statusCode).toBe(200)
-
-    const result = JSON.parse(response.body)
-    expect(result).toBeDefined()
-    expect(result).toBeTypeOf('object')
-  })
-
-  test(`GET ${ROUTE} contains all expected props`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+    expect(routeList).toContain(ROUTE)
     })
 
-    // Assert
-    const result = JSON.parse(response.body)
-    EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-  })
+    test('returns successfully', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      })
 
-  test(`GET ${ROUTE} does not contain any additional props`, async () => {
-    // Arrange
-    const app = await getMockedApp()
+      // Assert
+      expect(response.statusCode).toBe(200)
 
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      const result = JSON.parse(response.body)
+      expect(result).toBeDefined()
+      expect(result).toBeTypeOf('object')
     })
 
-    // Assert
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-  })
+    test('contains all expected props', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      })
 
-  test(`GET ${ROUTE} calculate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      // Assert
+      const result = JSON.parse(response.body)
+      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
     })
 
-    // Assert
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const totalSiteCount = result.totalSiteCount
-    // const totalRecordingCount = result.totalRecordingCount
-    // const detectionCount = result.detectionCount
-    // const detectionFrequency = result.detectionFrequency
-    // const occupiedSiteCount = result.occupiedSiteCount
-    // const occupiedSiteFrequency = result.occupiedSiteFrequency
-  })
+    test('does not contain any additional props', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-  // ! All the happy case below must have another set to check for `isLocationRedacted` data
-
-  test(`GET ${ROUTE} calculate correct detection count, detection frequency, and naive occupancy by site`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
     })
 
-    // Assert TODO: Make mock data for calcurating known result
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByLocationSite
-  })
+    test('calculate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
+      })
 
-  test(`GET ${ROUTE} calculate correct detection count and detection frequency for hourly`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const totalSiteCount = result.totalSiteCount
+      // const totalRecordingCount = result.totalRecordingCount
+      // const detectionCount = result.detectionCount
+      // const detectionFrequency = result.detectionFrequency
+      // const occupiedSiteCount = result.occupiedSiteCount
+      // const occupiedSiteFrequency = result.occupiedSiteFrequency
     })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeHour
-  })
+    // ! All the happy case below must have another set to check for `isLocationRedacted` data
 
-  test(`GET ${ROUTE} calculate correct detection count and detection frequency for day`, async () => {
-    // Arrange
-    const app = await getMockedApp()
+    test('calculate correct detection count, detection frequency, and naive occupancy by site', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert TODO: Make mock data for calcurating known result
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByLocationSite
     })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeDay
-  })
+    test(`GET ${ROUTE} calculate correct detection count and detection frequency for hourly`, async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-  test(`GET ${ROUTE} calculate correct detection count and detection frequency for month`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByTimeHour
     })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeMonth
-  })
+    test('calculate correct detection count and detection frequency for day', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-  test(`GET ${ROUTE} calculate correct detection count and detection frequency for year`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByTimeDay
     })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of years)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeYear
-  })
+    test('calculate correct detection count and detection frequency for month', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-  test(`GET ${ROUTE} calculate correct detection count and detection frequency for date`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByTimeMonth
     })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeDate
-  })
+    test('calculate correct detection count and detection frequency for year', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-  test(`GET ${ROUTE} calculate correct detection count and detection frequency for month/year`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of years)
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByTimeYear
     })
 
-    // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of each month/years)
-    const result = JSON.parse(response.body)
-    Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    // const detectionsBySite = result.detectionsByTimeMonthYear
-  })
-})
+    test('calculate correct detection count and detection frequency for date', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-describe('client errors', () => {
-  test(`GET ${ROUTE} rejects missing query`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' })
+      // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByTimeDate
     })
 
-    // Assert
-    expect(response.statusCode).toBe(400)
+    test('calculate correct detection count and detection frequency for month/year', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
+
+      // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of each month/years)
+      const result = JSON.parse(response.body)
+      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      // const detectionsBySite = result.detectionsByTimeMonthYear
+    })
   })
 
-  test(`GET ${ROUTE} rejects invalid project id`, async () => {
-    // Arrange
-    const app = await getMockedApp()
+  describe('client errors', () => {
+    test('rejects missing query', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' })
+      })
 
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: 'x' })
+      // Assert
+      expect(response.statusCode).toBe(400)
     })
 
-    // Assert
-    expect(response.statusCode).toBe(400)
+    test('rejects invalid project id', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' })
+      })
 
-    const result = JSON.parse(response.body)
-    const errorMessage = result.message
-    expect(errorMessage).toContain('Invalid path params: projectId')
-  })
+      // Assert
+      expect(response.statusCode).toBe(400)
 
-  test(`GET ${ROUTE} missing species id`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      const result = JSON.parse(response.body)
+      const errorMessage = result.message
+      expect(errorMessage).toContain('Invalid path params: projectId')
     })
 
-    // Assert
-    expect(response.statusCode).toBe(400)
+    test('missing species id', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-    const result = JSON.parse(response.body)
-    const errorMessage = result.message
-    expect(errorMessage).toContain('Invalid query params')
-  })
+      // Assert
+      expect(response.statusCode).toBe(400)
 
-  test(`GET ${ROUTE} invalid species id`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: 'xxx', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      const result = JSON.parse(response.body)
+      const errorMessage = result.message
+      expect(errorMessage).toContain('Invalid query params')
     })
 
-    // Assert
-    expect(response.statusCode).toBe(400)
+    test('invalid species id', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: 'xxx', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-    const result = JSON.parse(response.body)
-    const errorMessage = result.message
-    expect(errorMessage).toContain('Invalid query params')
-  })
+      // Assert
+      expect(response.statusCode).toBe(400)
 
-  test(`GET ${ROUTE} not found species with given id`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '9999', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      const result = JSON.parse(response.body)
+      const errorMessage = result.message
+      expect(errorMessage).toContain('Invalid query params')
     })
 
-    // Assert
-    expect(response.statusCode).toBe(404)
+    test('not found species with given id', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '9999', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-    const result = JSON.parse(response.body)
-    const errorMessage = result.message
-    expect(errorMessage).toContain('Data not found')
-  })
+      // Assert
+      expect(response.statusCode).toBe(404)
 
-  test(`GET ${ROUTE} rejects invalid date`, async () => {
-    // Arrange
-    const app = await getMockedApp()
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
-      query: { speciesId: '1', startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+      const result = JSON.parse(response.body)
+      const errorMessage = result.message
+      expect(errorMessage).toContain('Data not found')
     })
 
-    // Assert
-    expect(response.statusCode).toBe(400)
+    test('rejects invalid date', async () => {
+      // Arrange & Act once
+      const response = await injectAsLoggedInProjectMember({
+        method: GET,
+        url: spotlightDatasetUrl({ projectId: '1' }),
+        query: { speciesId: '1', startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+      })
 
-    const result = JSON.parse(response.body)
-    const errorMessage = result.message
-    expect(errorMessage).toContain('Invalid query params')
-    expect(errorMessage).toContain('startDate with value')
+      // Assert
+      expect(response.statusCode).toBe(400)
+
+      const result = JSON.parse(response.body)
+      const errorMessage = result.message
+      expect(errorMessage).toContain('Invalid query params')
+      expect(errorMessage).toContain('startDate with value')
+    })
   })
 })
