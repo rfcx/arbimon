@@ -19,6 +19,8 @@ const EXPECTED_PROPS = [
   'richnessPresence'
 ]
 
+const TEST_PROJECT_ID = '2'
+
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
   const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
@@ -39,7 +41,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: '/projects/1/richness',
+        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
@@ -55,7 +57,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: '1' }),
+        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
@@ -71,7 +73,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: '1' }),
+        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
       })
 
@@ -83,7 +85,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       expect(result.richnessByTaxon).toEqual({})
       expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
       expect(result.richnessByTimeUnix).toEqual({})
-      expect(result.richnessPresence).toEqual([])
+      expect(result.richnessPresence).toEqual({})
     })
   })
 
@@ -92,7 +94,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Act
         const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: '/projects/1/richness'
+        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID })
       })
 
       // Assert
@@ -103,7 +105,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Act
         const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: '/projects/x/richness'
+        url: richnessDatasetUrl({ projectId: 'x' })
       })
 
       // Assert
@@ -118,7 +120,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Act
         const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: '/projects/1/richness',
+        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
         query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
       })
 
