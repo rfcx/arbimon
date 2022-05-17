@@ -6,7 +6,7 @@
  import { DataTypes, QueryInterface } from 'sequelize'
  import { MigrationFn } from 'umzug'
 
- const TABLE_NAME = 'source_sync'
+ const TABLE_NAME = 'sync_status'
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
    await params.context.createTable(
@@ -15,24 +15,19 @@
       // PK
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-
-      // SK
-      // Composite SK: hash + projectId + sourceId
-      hash: DataTypes.STRING(255), // 1239eb4a8416af46c0448426b51771f5
-      project_id: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: { tableName: 'project' },
-          key: 'id'
-        }
+        primaryKey: true
       },
       source_id: {
         type: DataTypes.INTEGER,
         references: {
           model: { tableName: 'source' },
+          key: 'id'
+        }
+      },
+      sync_data_type_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: { tableName: 'sync_data_type' },
           key: 'id'
         }
       },
@@ -47,9 +42,10 @@
         allowNull: false
       },
 
-      // Facts
-      changes_json: {
-        type: DataTypes.JSON
+      // Fact
+      sync_until_date: {
+        type: DataTypes.DATE,
+        allowNull: false
       }
     }
    )

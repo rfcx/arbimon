@@ -16,6 +16,8 @@ create table projects (
   clustering_enabled tinyint(1) not null default '0',
   external_id varchar(12) default null,
   featured tinyint(1) default '0',
+  created_at timestamp null default current_timestamp,
+  updated_at datetime not null default current_timestamp,
   deleted_at datetime default null,
   image varchar(255) default null,
   reports_enabled tinyint(1) not null default '0'
