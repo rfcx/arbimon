@@ -1,15 +1,14 @@
 import { keyBy, mapValues } from 'lodash-es'
 import { QueryTypes, Sequelize } from 'sequelize'
 
-import { RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { RichnessPresence, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
-import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 
 export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
   const result = await models
-    .DetectionBySiteSpeciesHour
+    .DetectionByVersionSiteSpeciesHour
     .findAll({
       attributes: ['taxonClassId', [sequelize.literal('COUNT(DISTINCT(taxon_species_id))::integer'), 'richness']],
       where: whereInDataset(filter),
@@ -20,31 +19,24 @@ export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequ
   return Object.fromEntries(result.map(r => [r.taxonClassId, r.richness]))
 }
 
-// TODO 640: Move with `getRichnessBySite()`
-export interface SpeciesCountBySite {
-  locationSiteId: number
-  taxonClassId: number
-  richness: number
-}
-
-export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<SpeciesCountBySite[]> => {
+export const getRichnessBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<RichnessSiteData[]> => {
   const { conditions, bind } = datasetFilterWhereRaw(filter)
 
   const sql = `
-    SELECT 
-      species_group.location_site_id as "locationSiteId",
+    SELECT
+      species_group.project_site_id as "locationSiteId",
       species_group.taxon_class_id as "taxonClassId",
       COUNT(DISTINCT species_group.taxon_species_id)::integer as "richness"
     FROM (
-      SELECT location_site_id, taxon_class_id, taxon_species_id
-      FROM detection_by_site_species_hour dbssh
+      SELECT project_site_id, taxon_class_id, taxon_species_id
+      FROM detection_by_version_site_species_hour dbvssh
       WHERE ${conditions}
-      GROUP BY location_site_id, taxon_class_id, taxon_species_id
+      GROUP BY project_site_id, taxon_class_id, taxon_species_id
     ) species_group
-    GROUP BY species_group.location_site_id, species_group.taxon_class_id
+    GROUP BY species_group.project_site_id, species_group.taxon_class_id
   `
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as SpeciesCountBySite[]
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as RichnessSiteData[]
 }
 
 type TimeSeries = 'hour' | 'dow' | 'month'
@@ -61,16 +53,17 @@ export const getRichnessByTimeSeries = async (sequelize: Sequelize, filter: Filt
   }
 
   const sql = `
-    SELECT gs.gs as grouped_time_bucket, COALESCE(data.richness, 0)::integer as richness
+    SELECT gs.gs                               as grouped_time_bucket,
+           COALESCE(data.richness, 0)::integer as richness
     FROM generate_series(0, ${seriesEnd(timeSeries)}) gs
-      LEFT JOIN (
-      SELECT extract(${timeSeries} FROM time_precision_hour_local) as grouped_time_bucket,
-             Count(distinct taxon_species_id) as richness
-      FROM detection_by_site_species_hour dbssh
+    LEFT JOIN (
+      SELECT extract(${timeSeries} FROM time_precision_hour_local) as time_bucket,
+             Count(distinct taxon_species_id)             as richness
+      FROM detection_by_version_site_species_hour dbvssh
       WHERE ${conditions}
-      GROUP BY grouped_time_bucket
+      GROUP BY time_bucket
     ) as data
-    ON gs.gs = data.grouped_time_bucket
+    ON gs.gs = data.time_bucket
     ORDER BY gs.gs
   `
 
@@ -93,12 +86,13 @@ export const getRichnessByTimeMonthOfYear = async (sequelize: Sequelize, filter:
 export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
   const { conditions, bind } = datasetFilterWhereRaw(filter)
 
+  // TODO: Pretty sure this is wrong -- let's write a test to catch it!
   const sql = `
     SELECT extract(epoch FROM date_group.date) as date_unix, date_group.richness
     FROM (
       SELECT DATE(time_precision_hour_local) as date,
              Count(distinct taxon_species_id) as richness
-      FROM detection_by_site_species_hour dbssh
+      FROM detection_by_version_site_species_hour dbvssh
       WHERE ${conditions}
       GROUP BY DATE(time_precision_hour_local)
     ) as date_group
@@ -109,25 +103,25 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
 }
 
 export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<Record<number, RichnessPresence>> => {
-  const filterBase = datasetFilterWhereRaw(filter)
+  // const filterBase = datasetFilterWhereRaw(filter)
 
-  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
-  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+  // const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
+  // const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
 
-  const sql = `
-    SELECT 
-      sip.taxon_class_id as "taxonClassId",
-      sip.taxon_species_id as "taxonSpeciesId",
-      sip.taxon_species_slug as "taxonSpeciesSlug",
-      sip.common_name as "commonName",
-      sip.scientific_name as "scientificName"
-    FROM
-      detection_by_site_species_hour dbssh
-      LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
-    WHERE ${conditions}
-    GROUP BY
-      sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
-  `
+  // const sql = `
+  //   SELECT
+  //     sip.taxon_class_id as "taxonClassId",
+  //     sip.taxon_species_id as "taxonSpeciesId",
+  //     sip.taxon_species_slug as "taxonSpeciesSlug",
+  //     sip.common_name as "commonName",
+  //     sip.scientific_name as "scientificName"
+  //   FROM detection_by_version_site_species_hour dbvssh
+  //   LEFT JOIN species_in_project sip ON dbvssh.taxon_species_id = sip.taxon_species_id
+  //   WHERE ${conditions}
+  //   GROUP BY
+  //     sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbvssh.taxon_species_id
+  // `
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  // return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  return {} // TODO: Update query (SIP no longer exists)
 }

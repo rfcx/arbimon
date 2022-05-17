@@ -14,8 +14,8 @@ export const richnessDatasetUrl = (params: RichnessDatasetParams): string =>
 // Response
 export interface RichnessDatasetResponse {
   isLocationRedacted: boolean
-  richnessByTaxon: Record<number, number> // taxonClassId -> richness
   richnessBySite: RichnessSiteData[]
+  richnessByTaxon: Record<number, number> // taxonClassId -> richness
   richnessByTimeHourOfDay: Record<number, number> // hourOfDay -> richness
   richnessByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
   richnessByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
