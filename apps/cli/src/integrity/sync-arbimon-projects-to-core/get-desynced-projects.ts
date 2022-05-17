@@ -13,6 +13,7 @@ export const getDesyncedProjects = async (sequelize: Sequelize, limit: number): 
     SELECT name, description, is_private, project_id
     FROM projects p
     WHERE p.external_id IS NULL
+    ORDER BY project_id
     LIMIT ${limit}
     ;
   `

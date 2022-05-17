@@ -1,7 +1,5 @@
 import { Dayjs } from 'dayjs'
-import { groupBy, mapValues } from 'lodash-es'
 
-import { MockHourlyDetectionSummary } from '@rfcx-bio/common/mock-data'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { SiteGroup } from '~/filters'
@@ -15,43 +13,6 @@ export function filterToDataset ({ startDate, endDate, sites, otherFilters }: Co
     sites: sites.flatMap(sg => sg.value),
     otherFilters
   }
-}
-
-// ! TO BE REMVOE AFTER MOVE ALL RELATED FUNCTIONS TO API
-export const filterMocksByParameters = (detections: MockHourlyDetectionSummary[], datasetParams: DatasetParameters): MockHourlyDetectionSummary[] => {
-  const { startDate, endDate, sites, otherFilters } = datasetParams
-  const start = startDate.toISOString()
-  const end = endDate.add(1, 'day').toISOString()
-
-  // TODO - Extract this to UI filter package
-  const propertyEqualFilters = mapValues(groupBy(otherFilters, 'propertyName'), f => f.map(v => v.value))
-  const siteIds = sites.map(s => s.id)
-  const taxons = propertyEqualFilters.taxon ?? []
-  const species = propertyEqualFilters.species ?? []
-
-  // TODO - Move to API
-  return detections.filter(r =>
-    r.date >= start &&
-    r.date < end &&
-    (sites.length === 0 || siteIds.includes(r.site_id)) &&
-    (taxons.length === 0 || taxons.includes(r.taxon)) &&
-    (species.length === 0 || species.includes(r.species_id.toString()))
-  )
-}
-
-// ! TO BE REMVOE AFTER MOVE ALL RELATED FUNCTIONS TO API
-export const filterMocksBySpecies = (detections: MockHourlyDetectionSummary[], speciesId: number): MockHourlyDetectionSummary[] => {
-  // TODO - Move to API
-  return detections.filter(r => r.species_id === speciesId)
-}
-
-export function getFilterFriendlyName (filter: ComparisonFilter): string {
-  const { startDate, endDate, sites } = filter
-
-  const siteName = getSiteGroupName(sites)
-  const date = getDateFormatted(startDate, endDate, 'DD MMM YY')
-
-  return `${siteName} (${date})`
 }
 
 export function getExportGroupName (prefix: string, exportDatetime: string = getExportDateTime()): string {
@@ -90,15 +51,6 @@ function getSiteName (sites: SiteGroup[]): string {
     case 0: return 'All sites'
     case 1: return sites[0].label
     default: return `${sites[0].label} + ${siteLength - 1} other sites`
-  }
-}
-
-function getSiteGroupName (sites: SiteGroup[]): string {
-  const siteLength = sites.length
-  switch (siteLength) {
-    case 0: return 'All sites'
-    case 1: return sites[0].label
-    default: return `${sites[0].label} + ${siteLength - 1} other groups`
   }
 }
 
