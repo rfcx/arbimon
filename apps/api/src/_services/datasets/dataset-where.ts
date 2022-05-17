@@ -1,7 +1,7 @@
 import { BindOrReplacements, Op } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
 import { FilterDataset } from './dataset-types'
@@ -12,7 +12,7 @@ export interface Condition {
 }
 
 export interface FilterDatasetForSql extends Record<string, unknown> {
-  projectId: number
+  projectVersionId: number
   startDateUtcInclusive: string
   endDateUtcExclusive: string
   siteIds: number[]
@@ -26,46 +26,46 @@ export const toFilterDatasetForSql = ({ endDateUtcInclusive, ...rest }: FilterDa
   })
 
 export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition => {
-  const { projectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
+  const { projectVersionId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
   const conditions = [
-    'dbssh.location_project_id = $projectId', // dbssh is from detection_by_site_species_hour
-    'dbssh.time_precision_hour_local >= $startDateUtcInclusive',
-    'dbssh.time_precision_hour_local < $endDateUtcExclusive'
+    'dbvssh.project_version_id = $projectVersionId', // dbvssh is from detection_by_site_species_hour
+    'dbvssh.time_precision_hour_local >= $startDateUtcInclusive',
+    'dbvssh.time_precision_hour_local < $endDateUtcExclusive'
   ]
   const bind: BindOrReplacements = {
-    projectId,
+    projectVersionId,
     startDateUtcInclusive,
     endDateUtcExclusive
   }
 
   if (siteIds.length > 0) {
-    conditions.push('dbssh.location_site_id = ANY($siteIds)')
+    conditions.push('dbvssh.project_site_id = ANY($siteIds)')
     bind.siteIds = siteIds
   }
 
   if (taxons.length > 0) {
-    conditions.push('dbssh.taxon_class_id = ANY($taxons)')
+    conditions.push('dbvssh.taxon_class_id = ANY($taxons)')
     bind.taxons = taxons
   }
 
   return { conditions: conditions.join(' AND '), bind }
 }
 
-export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { projectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
+export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionByVersionSiteSpeciesHour> => {
+  const { projectVersionId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
 
-  const where: Where<DetectionBySiteSpeciesHour> = {
+  const where: Where<DetectionByVersionSiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
         [Op.gte]: startDateUtcInclusive,
         [Op.lt]: endDateUtcExclusive
       }
     },
-    projectId
+    projectVersionId
   }
 
   if (siteIds.length > 0) {
-    where.locationSiteId = siteIds
+    where.projectSiteId = siteIds
   }
 
   if (taxons.length > 0) {
@@ -75,21 +75,21 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
   return where
 }
 
-export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { projectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
+export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<DetectionByVersionSiteSpeciesHour> => {
+  const { projectVersionId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
 
-  const where: Where<DetectionBySiteSpeciesHour> = {
+  const where: Where<DetectionByVersionSiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
         [Op.gte]: startDateUtcInclusive,
         [Op.lt]: endDateUtcExclusive
       }
     },
-    projectId
+    projectVersionId
   }
 
   if (siteIds.length > 0) {
-    where.locationSiteId = siteIds
+    where.projectSiteId = siteIds
   }
 
   return where
