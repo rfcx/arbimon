@@ -20,5 +20,5 @@ export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
 >
 
 export const ATTRIBUTES_TAXON_SPECIES_PHOTO: AttributeConstants<TaxonSpeciesPhoto> = {
-  light: ['sourceUrl', 'photoUrl', 'license', 'caption', 'author'],
+  light: ['sourceUrl', 'photoUrl', 'license', 'caption', 'author']
 }

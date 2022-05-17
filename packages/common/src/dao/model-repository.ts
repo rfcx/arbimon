@@ -51,7 +51,7 @@ export class ModelRepository {
   }
 }
 
-const extractTargetFk = (repo: AllModels, nameOrObject: string | { model: string, foreignKey: string }): { target: UnknownModel | undefined, foreignKey: string | undefined } => { 
+const extractTargetFk = (repo: AllModels, nameOrObject: string | { model: string, foreignKey: string }): { target: UnknownModel | undefined, foreignKey: string | undefined } => {
   if (typeof nameOrObject === 'object') {
     // Custom FK
     const { model, foreignKey } = nameOrObject
