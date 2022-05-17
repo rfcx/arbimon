@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'source_recording_by_sync_site_hour'
+const TABLE_NAME = 'detection_by_source_site_species_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -34,6 +34,14 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           key: 'id'
         }
       },
+      taxon_species_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'taxon_species' },
+          key: 'id'
+        }
+      },
 
       // Logging
       created_at: {
@@ -46,7 +54,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Facts
-      recording_minutes: {
+      detection_minutes: {
         type: DataTypes.STRING(255), // array?!
         allowNull: false
       }

@@ -6,7 +6,7 @@
 import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-const TABLE_NAME = 'materialized_by_version_site_species_hour_detection'
+const TABLE_NAME = 'recording_by_source_site_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -18,11 +18,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.DATE(3), // hypertable key
         primaryKey: true
       },
-      project_version_id: {
+      source_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: { tableName: 'project_version' },
+          model: { tableName: 'source' },
           key: 'id'
         }
       },
@@ -31,14 +31,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         primaryKey: true,
         references: {
           model: { tableName: 'project_site' },
-          key: 'id'
-        }
-      },
-      taxon_species_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: { tableName: 'taxon_species' },
           key: 'id'
         }
       },
@@ -53,19 +45,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
 
-      // FKs
-      taxon_class_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: { tableName: 'taxon_class' },
-          key: 'id'
-        }
-      },
-
       // Facts
-      count_detection_minutes: {
-        type: DataTypes.INTEGER,
+      recording_minutes: {
+        type: DataTypes.STRING(255), // array?!
         allowNull: false
       }
     }
