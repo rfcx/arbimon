@@ -20,8 +20,6 @@ const EXPECTED_PROPS = [
 ]
 
 const TEST_PROJECT_ID = '10001'
-const TEST_7_PROJECT_ID = '7'
-const TEST_8_PROJECT_ID = '8'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -75,7 +73,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_7_PROJECT_ID }),
+        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
       })
 
@@ -91,7 +89,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     test('test isLocationRedacted', async () => {
-      const url = richnessDatasetUrl({ projectId: TEST_8_PROJECT_ID })
+      const url = richnessDatasetUrl({ projectId: TEST_PROJECT_ID })
       const response = await injectAsLoggedInProjectMember({
         method: GET,
         url,
@@ -104,7 +102,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     test.todo('calculates richnessBySite correctly', async () => {
-      const url = richnessDatasetUrl({ projectId: TEST_8_PROJECT_ID })
+      const url = richnessDatasetUrl({ projectId: TEST_PROJECT_ID })
       const response = await injectAsLoggedInProjectMember({
         method: GET,
         url,
