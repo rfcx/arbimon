@@ -95,7 +95,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     test('calculates activityBySite correctly', async () => {
       // Arrange
       const knownSiteId = 123
-      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
+      const siteExpectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
 
       // Act
       const maybeResult = JSON.parse(response.body)?.activityBySite
@@ -112,8 +112,8 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
       const knownSite = maybeKnownSite as Record<string, any>
 
       // Assert - first result contains (only) expected props
-      expectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
-      Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+      siteExpectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
+      expect(Object.keys(knownSite).length).toBe(siteExpectedProperties.length)
 
       // Assert - detection, detection frequency, occupancy are correct
       expect(knownSite.detection).toBe(263)

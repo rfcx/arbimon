@@ -115,7 +115,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const locationSiteId = 143888
       const richness = 2
       const taxonClassId = 1
-      const expectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
+      const siteExpectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
 
       // Act
       const result = JSON.parse(response.body)?.richnessBySite
@@ -132,8 +132,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const site = testedSite as Record<string, any>
 
       // Assert - first result contains (only) expected props
-      expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
-      Object.keys(site).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+      siteExpectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
+      Object.keys(site).forEach(actualProperty => expect(siteExpectedProperties).toContain(actualProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
       expect(site.richness).toBe(richness)
