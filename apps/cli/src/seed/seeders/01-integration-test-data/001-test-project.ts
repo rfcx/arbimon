@@ -9,7 +9,7 @@ import { testProject, testProject2, testProject2Version, testProjectVersion } fr
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   // Create mocked projects
-  const projects: Array<Omit<Project, 'id'>> = [testProject, testProject2]
+  const projects: Project[] = [testProject, testProject2]
   await ModelRepository.getInstance(getSequelize())
     .Project
     .bulkCreate(projects)
