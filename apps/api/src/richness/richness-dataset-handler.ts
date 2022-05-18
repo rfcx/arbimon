@@ -30,7 +30,7 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
       attributes: ['id'],
       raw: true
     })
-  if (!projectVersion) throw BioNotFoundError()
+  if (projectVersion === null) throw BioNotFoundError()
   const projectVersionId = projectVersion.id
 
   const datasetFilter: FilterDataset = {

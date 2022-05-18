@@ -2,15 +2,19 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonClass } from '@rfcx-bio/common/dao/types'
+import { Source } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
-import { testTaxonClass1, testTaxonClass2 } from '@/seed/data/integration/taxon-class'
+
+export const testSource: Source = {
+  id: 10001,
+  name: 'source-test-project-10001'
+}
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // Create list of mocked taxon classes
-  const taxonClasses: TaxonClass[] = [testTaxonClass1, testTaxonClass2]
+  // Create mocked source
+  const source: Source[] = [testSource]
   await ModelRepository.getInstance(getSequelize())
-    .TaxonClass
-    .bulkCreate(taxonClasses)
+    .Source
+    .bulkCreate(source)
 }

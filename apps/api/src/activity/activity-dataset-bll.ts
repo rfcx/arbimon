@@ -10,16 +10,16 @@ export const getActivityOverviewData = async (filter: FilterDataset, isProjectMe
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
-  const { projectId } = filter
+  const { projectVersionId } = filter
 
   const filterForSql = toFilterDatasetForSql(filter)
 
   // Filtering
-  const totalDetections = await filterDetecions(models, projectId, filter)
+  const totalDetections = await filterDetecions(models, projectVersionId, filter)
   const totalRecordingCount = getRecordingDurationMinutes(totalDetections)
 
   const activityBySite = await getDetectionsBySite(sequelize, filterForSql)
-  const activityBySpecies = await getDetectionDataBySpecies(models, totalDetections, isProjectMember, projectId)
+  const activityBySpecies = await getDetectionDataBySpecies(models, totalDetections, isProjectMember, projectVersionId)
   const activityByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingCount)
   const activityByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingCount)
   const activityByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingCount)
