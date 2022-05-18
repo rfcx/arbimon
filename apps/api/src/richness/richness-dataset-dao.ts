@@ -86,7 +86,6 @@ export const getRichnessByTimeMonthOfYear = async (sequelize: Sequelize, filter:
 export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {
   const { conditions, bind } = datasetFilterWhereRaw(filter)
 
-  // TODO: Pretty sure this is wrong -- let's write a test to catch it!
   const sql = `
     SELECT extract(epoch FROM date_group.date) as date_unix, date_group.richness
     FROM (

@@ -11,7 +11,7 @@
     "ci-test-int": "pnpm -r test-int-ci",
     "clean-sheet": "pnpm clean-slate",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
-    "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension johnsoncodehk.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer",
+    "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension Vue.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer",
     "lint:eslint": "eslint . --ignore-pattern \"*/\" --cache",
     "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",

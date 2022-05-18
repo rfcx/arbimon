@@ -2,7 +2,6 @@ import { LightMyRequestResponse } from 'fastify'
 import { beforeAll, describe, expect, test } from 'vitest'
 
 import { syncHistoryUrl } from '@rfcx-bio/common/api-bio/sync'
-import { SourceSync } from '@rfcx-bio/common/dao/types'
 
 import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { routesSync } from '@/sync'
@@ -77,7 +76,7 @@ describe(`GET ${ROUTE}`, async () => {
 
     test('calculates syncs correctly', async () => {
       // Arrange
-      const SYNC_EXPECTED_PROPS = [
+      const syncExpectedProperties = [
         'id',
         'createdAt',
         'updatedAt',
@@ -97,8 +96,8 @@ describe(`GET ${ROUTE}`, async () => {
 
       const knownSync = resultArray[0]
       expect(knownSync).toBeTypeOf('object')
-      SYNC_EXPECTED_PROPS.forEach(expectedProp => expect(knownSync).toHaveProperty(expectedProp))
-      expect(Object.keys(knownSync).length).toBe(SYNC_EXPECTED_PROPS.length)
+      syncExpectedProperties.forEach(expectedProp => expect(knownSync).toHaveProperty(expectedProp))
+      expect(Object.keys(knownSync).length).toBe(syncExpectedProperties.length)
     })
   })
 

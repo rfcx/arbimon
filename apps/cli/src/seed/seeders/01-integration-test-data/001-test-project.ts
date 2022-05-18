@@ -2,15 +2,21 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types'
+import { Project, ProjectVersion } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
-import { testProject } from '@/seed/data/integration/project'
+import { testProject, testProject2, testProject2Version, testProjectVersion } from '@/seed/data/integration/project' // testEmptyProject, testEmptySlugArbimonProject, testEmptySlugProject
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const projects: Array<Omit<Project, 'id'>> = [testProject]
-
+  // Create mocked projects
+  const projects: Project[] = [testProject, testProject2]
   await ModelRepository.getInstance(getSequelize())
     .Project
     .bulkCreate(projects)
+
+  // Create mocked projects versions
+  const projectsVersions: ProjectVersion[] = [testProjectVersion, testProject2Version]
+  await ModelRepository.getInstance(getSequelize())
+    .ProjectVersion
+    .bulkCreate(projectsVersions)
 }
