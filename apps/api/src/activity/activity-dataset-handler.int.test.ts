@@ -1,4 +1,3 @@
-// import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { activityDatasetGeneratedUrl, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
@@ -19,48 +18,6 @@ const EXPECTED_PROPS = [
   'activityByTimeDate'
 ]
 
-// const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
-//   const app = await fastify()
-
-//   const fakeRequestContext = {
-//     get: (key: string) => ({
-//       IS_PROJECT_MEMBER: false,
-//       MEMBER_PROJECT_CORE_IDS: []
-//     })[key],
-//     set: (key: string, value: any) => {}
-//   }
-
-//   app.decorate('requestContext', fakeRequestContext)
-//   app.decorateRequest('requestContext', fakeRequestContext)
-
-//   routesActivity
-//     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-//     .forEach(route => app.route(route))
-
-//   return app
-// }
-
-// const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
-//   const app = await fastify()
-
-//   const fakeRequestContext = {
-//     get: (key: string) => ({
-//       IS_PROJECT_MEMBER: true,
-//       MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
-//     })[key],
-//     set: (key: string, value: any) => {}
-//   }
-
-//   app.decorate('requestContext', fakeRequestContext)
-//   app.decorateRequest('requestContext', fakeRequestContext)
-
-//   routesActivity
-//     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-//     .forEach(route => app.route(route))
-
-//   return app
-// }
-
 describe(`GET ${ROUTE} (activity dataset)`, async () => {
   const routes = routesActivity
   const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
@@ -69,7 +26,6 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
   describe('simple tests', () => {
     test('exists', async () => {
     // Arrange
-    // const app = await getMockedAppLoggedOut()
     const app = await getMockedFastify({ routes })
 
     // Act
@@ -80,8 +36,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     })
 
     test('returns successfully', async () => {
-      // Arrange & Act once
-      // const app = await getMockedAppLoggedOut()
+      // Act
       const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
@@ -97,8 +52,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     })
 
     test('contains all expected props', async () => {
-      // Arrange & Act once
-      // const app = await getMockedAppLoggedOut()
+      // Act
       const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
@@ -111,8 +65,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     })
 
     test('does not contain any additional props', async () => {
-      // Arrange & Act once
-      // const app = await getMockedAppLoggedOut()
+      // Act
       const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
@@ -126,7 +79,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
   })
 
   describe('known data tests', async () => {
-    // Arrange & Act once
+    // Act
     const response = await injectAsLoggedInProjectMember({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
@@ -206,9 +159,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
   })
 
   describe('known data tests with redacted data', async () => {
-    // Arrange & Act once
-    // const app = await getMockedAppLoggedOut()
-
+    // Act
     const response = await injectAsLoggedOut({
       method: GET,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
@@ -226,8 +177,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
 
   describe('client errors', () => {
     test('rejects missing query', async () => {
-      // Arrange & Act once
-      // const app = await getMockedAppLoggedOut()
+      // Act
       const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' })
@@ -238,8 +188,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     })
 
     test('rejects invalid project id', async () => {
-      // Arrange & Act once
-      // const app = await getMockedAppLoggedOut()
+      // Act
       const response = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: 'x' })
@@ -254,8 +203,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     })
 
     test('rejects invalid date', async () => {
-      // Arrange & Act once
-      // const app = await getMockedAppLoggedOut()
+      // Act
       const response1 = await injectAsLoggedOut({
         method: GET,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
