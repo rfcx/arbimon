@@ -19,7 +19,7 @@ const EXPECTED_PROPS = [
   'richnessPresence'
 ]
 
-const TEST_PROJECT_ID = '2'
+const TEST_PROJECT_ID = '10001'
 const TEST_7_PROJECT_ID = '7'
 const TEST_8_PROJECT_ID = '8'
 
