@@ -4,19 +4,11 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { getArbimonDetectionSummaries, tranformArbimonToBioDetectionSummaries } from '@/ingest/inputs/arbimon-detections'
-import { getArbimonProjects, tranformArbimonToBioProjects } from '@/ingest/inputs/arbimon-projects'
 import { getArbimonRecordingSummaries, tranformArbimonToBioRecordingSummaries } from '@/ingest/inputs/arbimon-recordings'
 import { getArbimonSitesByProjectId, tranformArbimonToBioProjectSites } from '@/ingest/inputs/arbimon-sites'
-import { writeProjectsToPostgres } from '@/ingest/outputs/projects'
 import { createSitesIfNeeded } from '@/ingest/outputs/sites'
 import { createDetections } from '@/ingest/outputs/source-detections'
 import { createRecordings } from '@/ingest/outputs/source-recordings'
-
-export const syncProjects = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
-  const arbimonProjects = await getArbimonProjects(arbimonSequelize)
-  const projects = tranformArbimonToBioProjects(arbimonProjects)
-  await writeProjectsToPostgres(biodiversitySequelize, projects)
-}
 
 export const syncSites = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projects: Project[]): Promise<void> => {
   for (const project of projects) {

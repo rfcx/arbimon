@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_PROJECT } from '@rfcx-bio/common/dao/models'
 import { Project } from '@rfcx-bio/common/dao/types'
 
-export const writeProjectsToPostgres = async (sequelize: Sequelize, projects: Array<Omit<Project, 'id'>>): Promise<void> => {
+export const writeProjectsToBio = async (sequelize: Sequelize, projects: Array<Omit<Project, 'id'>>): Promise<void> => {
   const model = ModelRepository.getInstance(sequelize).Project
 
   // update items

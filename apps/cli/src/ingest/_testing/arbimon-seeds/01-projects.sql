@@ -1,2 +1,50 @@
-INSERT INTO projects (project_id, name,url,description,project_type_id,is_private,is_enabled,current_plan,storage_usage,processing_usage,pattern_matching_enabled,citizen_scientist_enabled,cnn_enabled,aed_enabled,clustering_enabled,external_id,featured,deleted_at,image,reports_enabled) 
-VALUES (1920,'RFCx TH','rfcx-th','A test project for Thai team',1,1,1,846,0.0,0.0,1,0,0,0,0,'807cuoi3cvwi',0,NULL,NULL,1);
+INSERT INTO
+    projects (
+        project_id,
+        name,
+        url,
+        description,
+        project_type_id,
+        is_private,
+        is_enabled,
+        current_plan,
+        storage_usage,
+        processing_usage,
+        pattern_matching_enabled,
+        citizen_scientist_enabled,
+        cnn_enabled,
+        aed_enabled,
+        clustering_enabled,
+        external_id,
+        featured,
+        created_at,
+        updated_at,
+        deleted_at,
+        image,
+        reports_enabled
+    )
+VALUES
+    (
+        1920,
+        'RFCx TH',
+        'rfcx-th',
+        'A test project for Thai team',
+        1,
+        1,
+        1,
+        846,
+        0.0,
+        0.0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        '807cuoi3cvwi',
+        0,
+        '2021-03-18T11:00:00.000Z',
+        '2021-03-18T11:00:00.000Z',
+        NULL,
+        NULL,
+        1
+    );
