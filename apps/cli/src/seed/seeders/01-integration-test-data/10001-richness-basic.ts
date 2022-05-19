@@ -1,8 +1,9 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { masterTaxonClasses } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySourceSiteSpeciesHour, DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
+import { DetectionBySourceSiteSpeciesHour, DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source, SpeciesInProject } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
@@ -59,6 +60,73 @@ export const testSource: Source = {
   id: 10001,
   name: 'source-test-project-10001'
 }
+
+export const testSpeciesInProject: SpeciesInProject[] = [
+  {
+    projectId: 10001,
+    taxonSpeciesId: 1,
+    taxonSpeciesSlug: 'catto',
+    taxonClassId: masterTaxonClasses.Mammals.id,
+    taxonClassSlug: masterTaxonClasses.Mammals.slug,
+    scientificName: 'catto',
+    commonName: masterTaxonClasses.Mammals.commonName,
+    description: '',
+    sourceUrl: '',
+    sourceCite: '',
+    riskRatingId: 600,
+    riskRatingGlobalId: 600,
+    riskRatingLocalId: 600,
+    photoUrl: ''
+  },
+  {
+    projectId: 10001,
+    taxonSpeciesId: 2,
+    taxonSpeciesSlug: 'cobra',
+    taxonClassId: masterTaxonClasses.Amphibians.id,
+    taxonClassSlug: masterTaxonClasses.Amphibians.slug,
+    scientificName: 'cobra',
+    commonName: masterTaxonClasses.Amphibians.commonName,
+    description: '',
+    sourceUrl: '',
+    sourceCite: '',
+    riskRatingId: 600,
+    riskRatingGlobalId: 600,
+    riskRatingLocalId: 600,
+    photoUrl: ''
+  },
+  {
+    projectId: 10001,
+    taxonSpeciesId: 3,
+    taxonSpeciesSlug: 'eagle',
+    taxonClassId: masterTaxonClasses.Birds.id,
+    taxonClassSlug: masterTaxonClasses.Birds.slug,
+    scientificName: 'eagle',
+    commonName: masterTaxonClasses.Birds.commonName,
+    description: '',
+    sourceUrl: '',
+    sourceCite: '',
+    riskRatingId: 600,
+    riskRatingGlobalId: 600,
+    riskRatingLocalId: 600,
+    photoUrl: ''
+  },
+  {
+    projectId: 10001,
+    taxonSpeciesId: 4,
+    taxonSpeciesSlug: 'sparrow',
+    taxonClassId: masterTaxonClasses.Birds.id,
+    taxonClassSlug: masterTaxonClasses.Birds.slug,
+    scientificName: 'sparrow',
+    commonName: masterTaxonClasses.Birds.commonName,
+    description: '',
+    sourceUrl: '',
+    sourceCite: '',
+    riskRatingId: 600,
+    riskRatingGlobalId: 600,
+    riskRatingLocalId: 600,
+    photoUrl: ''
+  }
+]
 
 export const testDetectionsBySourceSiteSpeciesHour: DetectionBySourceSiteSpeciesHour[] = [
   {
