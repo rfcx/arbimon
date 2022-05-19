@@ -1,10 +1,22 @@
-import { describe, expect, test } from 'vitest'
+import { HTTPMethods } from 'fastify'
+import { beforeEach, describe, expect, test } from 'vitest'
 
 import { richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
-import { getInjectAsLoggedInProjectMember, getMockedFastify } from '@/_testing/get-inject'
+import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
+
+interface InjectOptions {
+  method: HTTPMethods
+  url?: string
+  query?: {
+    startDate: string
+    endDate: string
+    siteIds?: string
+    taxons?: string
+  }
+}
 
 const ROUTE = '/projects/:projectId/richness'
 
@@ -19,11 +31,17 @@ const EXPECTED_PROPS = [
   'richnessPresence'
 ]
 
-const TEST_PROJECT_ID = '10001'
+const PROJECT_ID_BASIC = '10001'
+const PROJECT_ID_NO_SITES = '10002'
+const PROJECT_ID_NO_DETECTIONS = '10003'
+const PROJECT_ID_ONE_DETECTION = '10004'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
   const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
+  const injectAsLoggedInNotProjectMember = await getInjectAsLoggedInNotProjectMember(routes)
+  const injectAsLoggedOut = await getInjectAsLoggedOut(routes)
+  const injectAsInvalidToken = await getInjectAsInvalidToken(routes)
 
   describe('happy path', () => {
     test('exists', async () => {
@@ -37,27 +55,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       expect(routeList).toContain(ROUTE)
     })
 
-    test('returns successfully', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-        method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(200)
-
-      const result = JSON.parse(response.body)
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-    })
-
     test('contains all expected props & no more', async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
+        url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC }),
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
@@ -66,43 +68,275 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
       expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
     })
+
+    describe('check response status code for users with different injection', async () => {
+      let options: InjectOptions
+      beforeEach(async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        options = {
+          method: GET,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        }
+      })
+      test('returns successfully for logged in project member', async () => {
+        // Act
+        const response = await injectAsLoggedInProjectMember(options)
+
+        // Assert
+        expect(response.statusCode).toBe(200)
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+      })
+      // TODO: return empty data for logged out user (?)
+      test('returns successfully for logged out user', async () => {
+        // Act
+        const response = await injectAsLoggedOut(options)
+
+         // Assert
+         expect(response.statusCode).toBe(200)
+         const result = JSON.parse(response.body)
+         expect(result).toBeDefined()
+         expect(result).toBeTypeOf('object')
+      })
+      // TODO: return 403 code for user is logged in as not project member (?)
+      test('returns successfully if the user is logged in as NOT project member', async () => {
+        // Act
+        const response = await injectAsLoggedInNotProjectMember(options)
+
+         // Assert
+         expect(response.statusCode).toBe(200)
+         const result = JSON.parse(response.body)
+         expect(result).toBeDefined()
+         expect(result).toBeTypeOf('object')
+      })
+      // TODO: return 401 code for user with invalid token (?)
+      test('returns successfully for user with invalid token', async () => {
+        // Act
+        const response = await injectAsInvalidToken(options)
+
+        // Assert
+        expect(response.statusCode).toBe(200)
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+      })
+    })
   })
 
   describe('validate known data', async () => {
-    test('does not have any data on given date', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-        method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
+    // TODO: return 404 code for richness if have not any data (?)
+    describe('check empty response in different cases', async () => {
+      let options: InjectOptions
+      beforeEach(async () => {
+        options = {
+          method: GET
+        }
       })
+      test('does not have any data on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
+        })
 
-      // Assert
-      const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+        // Assert
+        const result = JSON.parse(response.body)
+        Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+        expect(result.richnessBySite).toEqual([])
+        expect(result.richnessByTaxon).toEqual({})
+        expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
+        expect(result.richnessByTimeUnix).toEqual({})
+        expect(result.richnessPresence).toEqual({})
+      })
+      test('does not have any data in project without sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_NO_SITES })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
 
-      expect(result.richnessBySite).toEqual([])
-      expect(result.richnessByTaxon).toEqual({})
-      expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
-      expect(result.richnessByTimeUnix).toEqual({})
-      expect(result.richnessPresence).toEqual({})
+        // Assert
+        const result = JSON.parse(response.body)
+        Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+        expect(result.richnessBySite).toEqual([])
+        expect(result.richnessByTaxon).toEqual({})
+        expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
+        expect(result.richnessByTimeUnix).toEqual({})
+        expect(result.richnessPresence).toEqual({})
+      })
+      test('does not have any detections in project without detections', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_NO_DETECTIONS })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+        expect(result.richnessBySite).toEqual([])
+        expect(result.richnessByTaxon).toEqual({})
+        expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
+        expect(result.richnessByTimeUnix).toEqual({})
+        expect(result.richnessPresence).toEqual({})
+      })
     })
 
-    test('test isLocationRedacted', async () => {
-      const url = richnessDatasetUrl({ projectId: TEST_PROJECT_ID })
-      const response = await injectAsLoggedInProjectMember({
-        method: GET,
-        url,
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+    describe('test isLocationRedacted with different injection', async () => {
+      let options: InjectOptions
+      beforeEach(async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        options = {
+          method: GET,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+        }
       })
-      const result = JSON.parse(response.body)
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-      expect(result.isLocationRedacted).toBeFalsy()
+      test('isLocationRedacted should be false if logged in as project member', async () => {
+        // Act
+        const response = await injectAsLoggedInProjectMember(options)
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.isLocationRedacted).toBeFalsy()
+      })
+      test('isLocationRedacted should be true if logged out', async () => {
+        // Act
+        const response = await injectAsLoggedOut(options)
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.isLocationRedacted).toBeTruthy()
+      })
+      // TODO: return 403 code for user is logged in as not project member (?)
+      test('isLocationRedacted should be true if if logged in as NOT project member', async () => {
+        // Act
+        const response = await injectAsLoggedInNotProjectMember(options)
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.isLocationRedacted).toBeTruthy()
+      })
+      // TODO: return 401 code for user with invalid token (?)
+      test('isLocationRedacted should be true if token is invalid', async () => {
+        // Act
+        const response = await injectAsInvalidToken(options)
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.isLocationRedacted).toBeTruthy()
+      })
     })
 
-    test.todo('calculates richnessBySite correctly', async () => {
-      const url = richnessDatasetUrl({ projectId: TEST_PROJECT_ID })
+    describe('calculates detections correctly', async () => {
+      let options: InjectOptions
+      beforeEach(async () => {
+        options = {
+          method: GET
+        }
+      })
+      test('richnessByTaxon have to include one type of species with count equal to 1', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_ONE_DETECTION })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+
+        const oneSpeciesInArray = Object.keys(result.richnessByTaxon).length
+        const oneSpeciesCount = Object.values(result.richnessByTaxon)[0]
+        expect(oneSpeciesInArray).toEqual(1)
+        expect(oneSpeciesCount).toEqual(1)
+      })
+      test('richnessByTaxon have to include one type of filtered species with count equal to 2', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: '100' }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        // "richnessByTaxon": {
+        //   "100": 1 (?2)
+        // }
+        // expect(Object.keys(result.richnessByTaxon).length).toEqual(1)
+        // expect(Object.values(result.richnessByTaxon)).toEqual(2)
+      })
+      test('richnessByTaxon have to include 3 types of species', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(Object.keys(result.richnessByTaxon).length).toEqual(3)
+      })
+
+      test('richnessBySite have to include 3 objects with 3 different species', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.richnessBySite.length).toEqual(3)
+        const firstItem = result.richnessBySite[0]
+        const secondItem = result.richnessBySite[1]
+        const thirdItem = result.richnessBySite[2]
+        const firstItemId = firstItem.locationSiteId
+        const secondItemId = secondItem.locationSiteId
+        const thirdItemId = thirdItem.locationSiteId
+        expect(firstItemId).toEqual(secondItemId)
+        expect(firstItemId).not.toEqual(thirdItemId)
+        expect(firstItem.richness).toEqual(secondItem.richness)
+        expect(firstItem.richness).toEqual(thirdItem.richness)
+        expect(firstItem.taxonClassId).not.toEqual(secondItem.taxonClassId)
+        expect(firstItem.taxonClassId).not.toEqual(thirdItem.taxonClassId)
+        expect(secondItem.taxonClassId).not.toEqual(thirdItem.taxonClassId)
+      })
+    })
+
+    test('calculates richnessBySite correctly', async () => {
+      const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
       const response = await injectAsLoggedInProjectMember({
         method: GET,
         url,
@@ -110,9 +344,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Arrange
-      const locationSiteId = 143888
-      const richness = 2
-      const taxonClassId = 1
+      const locationSiteId = 10001001
+      const richness = 1
+      const taxonClassId = 100
       const siteExpectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
 
       // Act
@@ -122,7 +356,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       expect(result).toBeDefined()
       expect(Array.isArray(result)).toBe(true)
       const res = result as RichnessSiteData[]
-      expect(res.length).toBe(1)
+      expect(res.length).toBe(3)
 
       // Assert - first result is object
       const testedSite = result.find((site: RichnessSiteData) => site.locationSiteId === locationSiteId)
@@ -133,10 +367,12 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       siteExpectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
       Object.keys(site).forEach(actualProperty => expect(siteExpectedProperties).toContain(actualProperty))
 
-      // Assert - detection, detection frequency, occupancy are correct
+      // Assert - locationSiteId, richness, taxonClassId
+      expect(site.locationSiteId).toBe(locationSiteId)
       expect(site.richness).toBe(richness)
-      expect(site.richness).toBe(taxonClassId)
+      expect(site.taxonClassId).toBe(taxonClassId)
     })
+
     test.todo('richnessBySite -> check locationSiteId, richness, taxonClassId of the first item in array', async () => {})
     test.todo('does not duplicates sites for richnessBySite', async () => {})
     test.todo('check specific calculation in richnessBySite', async () => {})
@@ -168,7 +404,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Act
         const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID })
+        url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
       })
 
       // Assert
@@ -194,7 +430,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Act
         const response = await injectAsLoggedInProjectMember({
         method: GET,
-        url: richnessDatasetUrl({ projectId: TEST_PROJECT_ID }),
+        url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC }),
         query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
       })
 
