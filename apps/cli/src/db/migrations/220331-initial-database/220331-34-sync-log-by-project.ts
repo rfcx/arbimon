@@ -15,7 +15,8 @@
       // PK
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
 
       // FKs

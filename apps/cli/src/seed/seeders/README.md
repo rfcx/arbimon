@@ -22,7 +22,7 @@ You can also run specific seeders manually:
 
 ## Testing/Staging
 
-You can run any seeder manuually on `testing`/`staging` using `--mode`:
+You can run any seeder manually on `testing`/`staging` using `--mode`:
 
 - `pnpm serve lib/seed -- --mode=testing --path=directory/name-of-seeder.js`
 
