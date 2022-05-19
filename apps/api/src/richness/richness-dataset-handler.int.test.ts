@@ -289,6 +289,26 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(twoSpeciesSameTaxonInArray).toEqual(1)
         expect(twoSpeciesSameTaxonCount).toEqual(2)
       })
+      test('richnessByTaxon have to include two type of filtered species', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: ['100', '300'] }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        const twoSpeciesSameTaxonInArray = Object.keys(result.richnessByTaxon).length
+        const taxon1 = result.richnessByTaxon['100']
+        const taxon2 = result.richnessByTaxon['300']
+        expect(twoSpeciesSameTaxonInArray).toEqual(2)
+        expect(taxon1).toEqual(1)
+        expect(taxon2).toEqual(2)
+      })
       test('richnessByTaxon have to include 3 types of species', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
