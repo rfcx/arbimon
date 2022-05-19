@@ -1,24 +1,20 @@
-import { describe, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { syncArbimonProjects } from './sync-arbimon-project'
+import { getArbimonProjects } from '@/ingest/inputs/arbimon-projects'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
-const biodiversitySequelize = await getSequelize()
 
-describe('sync arbimon project', () => {
-  test('can sync first project', async () => {
+describe('getArbimonProjects', () => {
+  test('can get oldest project', async () => {
     // Act
-    await syncArbimonProjects(arbimonSequelize, biodiversitySequelize, dayjs.utc('1980-01-01 00:00:00').toDate())
+    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('1980-01-01 00:00:00').toDate())
 
     // Assert
-    const projectsInBio = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll()
-    expect(projectsInBio.length).toBe(1)
-    expect(projectsInBio[0].idArbimon).toBe(1920)
+    expect(actual.length).toBe(1)
+    expect(actual[0].projectId).toBe(1920)
   })
 
   /*
