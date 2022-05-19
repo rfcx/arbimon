@@ -13,12 +13,9 @@
      TABLE_NAME,
      {
       // PK
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
-      },
       source_id: {
         type: DataTypes.INTEGER,
+        primaryKey: true,
         references: {
           model: { tableName: 'source' },
           key: 'id'
@@ -26,6 +23,7 @@
       },
       sync_data_type_id: {
         type: DataTypes.INTEGER,
+        primaryKey: true,
         references: {
           model: { tableName: 'sync_data_type' },
           key: 'id'
