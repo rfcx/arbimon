@@ -272,22 +272,22 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
       test('richnessByTaxon have to include one type of filtered species with count equal to 2', async () => {
         // Act
+        const taxonClassId = '300'
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
           ...options,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: '100' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: taxonClassId }
         })
 
         // Assert
         const result = JSON.parse(response.body)
         expect(result).toBeDefined()
         expect(result).toBeTypeOf('object')
-        // "richnessByTaxon": {
-        //   "100": 1 (?2)
-        // }
-        // expect(Object.keys(result.richnessByTaxon).length).toEqual(1)
-        // expect(Object.values(result.richnessByTaxon)).toEqual(2)
+        const twoSpeciesSameTaxonInArray = Object.keys(result.richnessByTaxon).length
+        const twoSpeciesSameTaxonCount = result.richnessByTaxon[taxonClassId]
+        expect(twoSpeciesSameTaxonInArray).toEqual(1)
+        expect(twoSpeciesSameTaxonCount).toEqual(2)
       })
       test('richnessByTaxon have to include 3 types of species', async () => {
         // Act
@@ -305,7 +305,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(Object.keys(result.richnessByTaxon).length).toEqual(3)
       })
 
-      test('richnessBySite have to include 3 objects with 3 different species', async () => {
+      test('richnessBySite have to include 3 objects with different location site id or different taxon class id if the site id is the same', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -322,16 +322,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const firstItem = result.richnessBySite[0]
         const secondItem = result.richnessBySite[1]
         const thirdItem = result.richnessBySite[2]
-        const firstItemId = firstItem.locationSiteId
-        const secondItemId = secondItem.locationSiteId
-        const thirdItemId = thirdItem.locationSiteId
-        expect(firstItemId).toEqual(secondItemId)
-        expect(firstItemId).not.toEqual(thirdItemId)
-        expect(firstItem.richness).toEqual(secondItem.richness)
-        expect(firstItem.richness).toEqual(thirdItem.richness)
+        const firstItemSiteId = firstItem.locationSiteId
+        const secondItemSiteId = secondItem.locationSiteId
+        const thirdItemSiteId = thirdItem.locationSiteId
+        // Check site id
+        expect(firstItemSiteId).toEqual(secondItemSiteId)
+        expect(firstItemSiteId).not.toEqual(thirdItemSiteId)
+
+        // Check if the same site item have different taxon class
         expect(firstItem.taxonClassId).not.toEqual(secondItem.taxonClassId)
-        expect(firstItem.taxonClassId).not.toEqual(thirdItem.taxonClassId)
-        expect(secondItem.taxonClassId).not.toEqual(thirdItem.taxonClassId)
       })
     })
 
