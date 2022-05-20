@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize'
 
-import { getArbimonProjects, tranformArbimonToBioProjects } from '@/ingest/inputs/arbimon-projects'
+import { getArbimonProjects, tranformArbimonToBioProjects } from '@/ingest/inputs/get-arbimon-projects'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
 
 export const syncArbimonProjects = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncUntil: Date, lastSyncdId: number, batchLimit: number): Promise<void> => {
