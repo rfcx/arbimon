@@ -826,117 +826,78 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 2 })
       })
 
-      test.todo('have richnessPresence data on given date')
-      test.todo('have richnessPresence data on given date filter by site')
-      test.todo('have richnessPresence data on given date filter by sites')
-      test.todo('have richnessPresence data on given date filter by taxon')
-      test.todo('have richnessPresence data on given date filter by taxons')
+      // TODO: Update richness presence test case after the query code updated
+      test.todo('have richnessPresence data on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        const richnessPresence = JSON.parse(response.body).richnessPresence
+        expect(richnessPresence).toBeDefined()
+        expect(richnessPresence).toBeTypeOf('object')
+      })
+      test.todo('have richnessPresence data on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+        })
+
+        // Assert
+        const richnessPresence = JSON.parse(response.body).richnessPresence
+        expect(richnessPresence).toBeDefined()
+        expect(richnessPresence).toBeTypeOf('object')
+      })
+      test.todo('have richnessPresence data on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+        })
+
+        // Assert
+        const richnessPresence = JSON.parse(response.body).richnessPresence
+        expect(richnessPresence).toBeDefined()
+        expect(richnessPresence).toBeTypeOf('object')
+      })
+      test.todo('have richnessPresence data on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+        })
+
+        // Assert
+        const richnessPresence = JSON.parse(response.body).richnessPresence
+        expect(richnessPresence).toBeDefined()
+        expect(richnessPresence).toBeTypeOf('object')
+      })
+      test.todo('have richnessPresence data on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        const richnessPresence = JSON.parse(response.body).richnessPresence
+        expect(richnessPresence).toBeDefined()
+        expect(richnessPresence).toBeTypeOf('object')
+      })
     })
-
-    // test('calculates richnessBySite correctly', async () => {
-    //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-    //   const response = await injectAsLoggedInProjectMember({
-    //     method: GET,
-    //     url,
-    //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
-    //   })
-
-    //   // Arrange
-    //   const locationSiteId = 10001001
-    //   const richness = 1
-    //   const taxonClassId = 100
-    //   const siteExpectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
-
-    //   // Act
-    //   const result = JSON.parse(response.body)?.richnessBySite
-
-    //   // Assert - property exists & correct type
-    //   expect(result).toBeDefined()
-    //   expect(Array.isArray(result)).toBe(true)
-    //   const res = result as RichnessSiteData[]
-    //   expect(res.length).toBe(3)
-
-    //   // Assert - first result is object
-    //   const testedSite = result.find((site: RichnessSiteData) => site.locationSiteId === locationSiteId)
-    //   expect(testedSite).toBeTypeOf('object')
-    //   const site = testedSite as Record<string, any>
-
-    //   // Assert - first result contains (only) expected props
-    //   siteExpectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
-    //   Object.keys(site).forEach(actualProperty => expect(siteExpectedProperties).toContain(actualProperty))
-
-    //   // Assert - locationSiteId, richness, taxonClassId
-    //   expect(site.locationSiteId).toBe(locationSiteId)
-    //   expect(site.richness).toBe(richness)
-    //   expect(site.taxonClassId).toBe(taxonClassId)
-    // })
-
-    // test('richnessByTimeDayOfWeek have all expected day key with correct value', async () => {
-    //   // Act
-    //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-    //   const response = await injectAsLoggedInProjectMember({
-    //     method: GET,
-    //     url,
-    //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
-    //   })
-
-    //   // Assert
-    //   const result = JSON.parse(response.body)
-    //   expect(result).toBeDefined()
-    //   expect(result).toBeTypeOf('object')
-    //   const richnessByTimeDayOfWeek = result.richnessByTimeDayOfWeek
-    //   const expectedKeys = [...Array(7).keys()].map(n => n.toString())
-    //   const expectedValues = [0, 0, 0, 4, 0, 0, 0]
-    //   const actualValues = Object.values(richnessByTimeDayOfWeek)
-    //   expectedKeys.forEach(expectedKey => expect(richnessByTimeDayOfWeek).toHaveProperty(expectedKey))
-    //   expect(expectedValues).toEqual(actualValues)
-    // })
-
-    // test('richnessByTimeDayOfWeek have all expected day key with 0s', async () => {
-    //   // Act
-    //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-    //   const response = await injectAsLoggedInProjectMember({
-    //     method: GET,
-    //     url,
-    //     query: { startDate: '2021-05-01T00:00:00.000Z', endDate: '2021-05-21T11:00:00.000Z' }
-    //   })
-
-    //   // Assert
-    //   const result = JSON.parse(response.body)
-    //   expect(result).toBeDefined()
-    //   expect(result).toBeTypeOf('object')
-    //   const richnessByTimeDayOfWeek = result.richnessByTimeDayOfWeek
-    //   const expectedKeys = [...Array(7).keys()].map(n => n.toString())
-    //   const expectedValues = [0, 0, 0, 0, 0, 0, 0]
-    //   const actualValues = Object.values(richnessByTimeDayOfWeek)
-    //   expectedKeys.forEach(expectedKey => expect(richnessByTimeDayOfWeek).toHaveProperty(expectedKey))
-    //   expect(expectedValues).toEqual(actualValues)
-    // })
-
-    // test.todo('richnessBySite -> check locationSiteId, richness, taxonClassId of the first item in array', async () => {})
-    // test.todo('does not duplicates sites for richnessBySite', async () => {})
-    // test.todo('check specific calculation in richnessBySite', async () => {})
-
-    // test.todo('use right calculation/check values of richnessByTaxon', async () => {})
-    // test.todo('check specific calculation in richnessByTaxon', async () => {})
-    // test.todo('does not duplicates values for richnessByTaxon', async () => {})
-
-    // test.todo('use right calculation/check values of richnessByTimeDayOfWeek', async () => {})
-    // test.todo('check specific calculation in richnessByTimeDayOfWeek', async () => {})
-    // test.todo('does not duplicates values for richnessByTimeDayOfWeek', async () => {})
-
-    // test.todo('use right calculation/check values of richnessByTimeHourOfDay', async () => {})
-    // test.todo('check specific calculation in richnessByTimeHourOfDay', async () => {})
-    // test.todo('does not duplicates values for richnessByTimeHourOfDay', async () => {})
-
-    // test.todo('richnessByTimeUnix in a correct time range data', async () => {})
-    // test.todo('use right calculation/check values of richnessByTimeUnix', async () => {})
-    // test.todo('check specific calculation in richnessByTimeUnix', async () => {})
-    // test.todo('does not duplicates values for richnessByTimeUnix', async () => {})
-
-    // test.todo('use right calculation/check values of richnessPresence', async () => {})
-    // test.todo('check specific calculation in richnessPresence', async () => {})
-    // test.todo('does not duplicates values for richnessPresence', async () => {})
   })
 
   describe('client errors', () => {
