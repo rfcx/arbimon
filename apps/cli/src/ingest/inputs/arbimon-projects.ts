@@ -10,6 +10,7 @@ export interface ArbimonProject {
   'description': string | null
   'isPrivate': boolean
   'reportsEnabled': boolean
+  'updated_at': string
 }
 
 /*
@@ -42,7 +43,7 @@ Tests:
 - What if 2 projects have *exactly* the same updated_at && get split by the sync limit (1 sync'd; 1 not)
 - What if Arbimon data cannot be inserted into Bio? (ex: null idCore)
 */
-export const getArbimonProjects = async (sequelize: Sequelize, syncUntil: Date): Promise<ArbimonProject[]> => {
+export const getArbimonProjects = async (sequelize: Sequelize, syncUntil: Date, lastSyncdId: number, batchLimit: number): Promise<ArbimonProject[]> => {
   const sql = `
     SELECT  p.project_id AS projectId, 
           p.name, 
@@ -51,13 +52,24 @@ export const getArbimonProjects = async (sequelize: Sequelize, syncUntil: Date):
           p.is_private AS isPrivate, 
           p.is_enabled AS reportsEnabled, 
           p.external_id AS coreProjectId, 
-          p.reports_enabled
+          p.reports_enabled,
+          p.updated_at
     FROM projects p
-    WHERE updated_at >= $syncUntil
+    WHERE p.updated_at > $syncUntil OR (p.updated_at = $syncUntil AND p.project_id > $lastSyncdId)
+    ORDER BY p.updated_at, p.project_id
+    LIMIT $batchLimit
     ;
     `
 
-  const results: ArbimonProject[] = await sequelize.query(sql, { type: QueryTypes.SELECT, raw: true, bind: { syncUntil } })
+  const results: ArbimonProject[] = await sequelize.query(sql, {
+    type: QueryTypes.SELECT,
+    raw: true,
+    bind: {
+      batchLimit,
+      lastSyncdId,
+      syncUntil: sequelize.getDialect() === 'mysql' ? syncUntil : syncUntil.toISOString()
+    }
+  })
   return results
 }
 

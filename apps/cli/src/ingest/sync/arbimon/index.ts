@@ -32,13 +32,11 @@ export const syncSites = async (arbimonSequelize: Sequelize, biodiversitySequeli
 export const syncRecordings = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projects: Project[]): Promise<void> => {
   const arbimonRecordingSummaries = await getArbimonRecordingSummaries(arbimonSequelize, projects.map(p => p.idArbimon))
   const recordingSummaries = await tranformArbimonToBioRecordingSummaries(arbimonRecordingSummaries, biodiversitySequelize)
-  console.log(recordingSummaries)
   await createRecordings(biodiversitySequelize, recordingSummaries)
 }
 
 export const syncDetections = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projects: Project[]): Promise<void> => {
   const arbimonDetectionSummaries = await getArbimonDetectionSummaries(arbimonSequelize, projects.map(p => p.idArbimon))
   const detectionSummaries = await tranformArbimonToBioDetectionSummaries(arbimonDetectionSummaries, biodiversitySequelize)
-  console.log(detectionSummaries)
   await createDetections(biodiversitySequelize, detectionSummaries)
 }
