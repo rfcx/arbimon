@@ -90,7 +90,7 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
     SELECT extract(epoch FROM date_group.date) as date_unix, date_group.richness
     FROM (
       SELECT DATE(time_precision_hour_local) as date,
-             Count(distinct taxon_species_id) as richness
+             Count(distinct taxon_species_id)::integer as richness
       FROM detection_by_version_site_species_hour dbvssh
       WHERE ${conditions}
       GROUP BY DATE(time_precision_hour_local)

@@ -163,6 +163,13 @@ export const testDetectionsBySourceSiteSpeciesHour: DetectionBySourceSiteSpecies
     projectSiteId: 10001002,
     taxonSpeciesId: 4,
     detectionMinutes: '10'
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-01-17T14:00:00.000Z'),
+    sourceId: 10001,
+    projectSiteId: 10001001,
+    taxonSpeciesId: 2,
+    detectionMinutes: '10'
   }
 ]
 
@@ -205,6 +212,14 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001002,
     taxonSpeciesId: 4,
     taxonClassId: 300,
+    countDetectionMinutes: 10
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-01-17T14:00:00.000Z'),
+    projectVersionId: 10001,
+    projectSiteId: 10001001,
+    taxonSpeciesId: 2,
+    taxonClassId: 100,
     countDetectionMinutes: 10
   }
 ]

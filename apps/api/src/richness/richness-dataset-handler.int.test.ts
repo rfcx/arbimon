@@ -482,29 +482,351 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(siteData2?.locationSiteId).toBe(10001001)
       })
 
-      test.todo('have richnessByTimeHourOfDay data on given date')
-      test.todo('have richnessByTimeHourOfDay data on given date filter by site')
-      test.todo('have richnessByTimeHourOfDay data on given date filter by sites')
-      test.todo('have richnessByTimeHourOfDay data on given date filter by taxon')
-      test.todo('have richnessByTimeHourOfDay data on given date filter by taxons')
+      test('have richnessByTimeHourOfDay data on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
 
-      test.todo('have richnessByTimeDayOfWeek data on given date')
-      test.todo('have richnessByTimeDayOfWeek data on given date filter by site')
-      test.todo('have richnessByTimeDayOfWeek data on given date filter by sites')
-      test.todo('have richnessByTimeDayOfWeek data on given date filter by taxon')
-      test.todo('have richnessByTimeDayOfWeek data on given date filter by taxons')
+        // Assert
+        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(richnessByTimeHourOfDay).toBeDefined()
+        expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
-      test.todo('have richnessByTimeMonthOfYear data on given date')
-      test.todo('have richnessByTimeMonthOfYear data on given date filter by site')
-      test.todo('have richnessByTimeMonthOfYear data on given date filter by sites')
-      test.todo('have richnessByTimeMonthOfYear data on given date filter by taxon')
-      test.todo('have richnessByTimeMonthOfYear data on given date filter by taxons')
+        expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 4, 12: 0, 13: 0, 14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+      })
+      test('have richnessByTimeHourOfDay data on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+        })
 
-      test.todo('have richnessByTimeUnix data on given date')
-      test.todo('have richnessByTimeUnix data on given date filter by site')
-      test.todo('have richnessByTimeUnix data on given date filter by sites')
-      test.todo('have richnessByTimeUnix data on given date filter by taxon')
-      test.todo('have richnessByTimeUnix data on given date filter by taxons')
+        // Assert
+        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(richnessByTimeHourOfDay).toBeDefined()
+        expect(richnessByTimeHourOfDay).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2, 12: 0, 13: 0, 14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+      })
+      test('have richnessByTimeHourOfDay data on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+        })
+
+        // Assert
+        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(richnessByTimeHourOfDay).toBeDefined()
+        expect(richnessByTimeHourOfDay).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+      })
+      test('have richnessByTimeHourOfDay data on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+        })
+
+        // Assert
+        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(richnessByTimeHourOfDay).toBeDefined()
+        expect(richnessByTimeHourOfDay).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+      })
+      test('have richnessByTimeHourOfDay data on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['300', '600'] }
+        })
+
+        // Assert
+        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(richnessByTimeHourOfDay).toBeDefined()
+        expect(richnessByTimeHourOfDay).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 3, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+      })
+
+      test('have richnessByTimeDayOfWeek data on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(richnessByTimeDayOfWeek).toBeDefined()
+        expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 4, 4: 0, 5: 0, 6: 0 })
+      })
+      test('have richnessByTimeDayOfWeek data on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+        })
+
+        // Assert
+        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(richnessByTimeDayOfWeek).toBeDefined()
+        expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0 })
+      })
+      test('have richnessByTimeDayOfWeek data on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+        })
+
+        // Assert
+        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(richnessByTimeDayOfWeek).toBeDefined()
+        expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0 })
+      })
+      test('have richnessByTimeDayOfWeek data on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+        })
+
+        // Assert
+        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(richnessByTimeDayOfWeek).toBeDefined()
+        expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0 })
+      })
+      test('have richnessByTimeDayOfWeek data on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(richnessByTimeDayOfWeek).toBeDefined()
+        expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0 })
+      })
+
+      // TODO: Investigate month render code
+      // test('have richnessByTimeMonthOfYear data on given date', async () => {
+      //   // Act
+      //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      //   const response = await injectAsLoggedInProjectMember({
+      //     url,
+      //     ...options,
+      //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+      //   })
+
+      //   // Assert
+      //   const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+      //   expect(richnessByTimeMonthOfYear).toBeDefined()
+      //   expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+      //   console.log({ richnessByTimeMonthOfYear })
+      //   expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+      //   expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 4, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+      // })
+      // test('have richnessByTimeMonthOfYear data on given date filter by site', async () => {
+      //   // Act
+      //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      //   const response = await injectAsLoggedInProjectMember({
+      //     url,
+      //     ...options,
+      //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '10001001' }
+      //   })
+
+      //   // Assert
+      //   const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+      //   expect(richnessByTimeMonthOfYear).toBeDefined()
+      //   expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+      //   expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+      //   expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+      // })
+      // test('have richnessByTimeMonthOfYear data on given date filter by sites', async () => {
+      //   // Act
+      //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      //   const response = await injectAsLoggedInProjectMember({
+      //     url,
+      //     ...options,
+      //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+      //   })
+
+      //   // Assert
+      //   const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+      //   expect(richnessByTimeMonthOfYear).toBeDefined()
+      //   expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+      //   expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+      //   expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+      // })
+      // test('have richnessByTimeMonthOfYear data on given date filter by taxon', async () => {
+      //   // Act
+      //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      //   const response = await injectAsLoggedInProjectMember({
+      //     url,
+      //     ...options,
+      //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+      //   })
+
+      //   // Assert
+      //   const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+      //   expect(richnessByTimeMonthOfYear).toBeDefined()
+      //   expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+      //   expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+      //   expect(richnessByTimeMonthOfYear).toEqual({ 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+      // })
+      // test('have richnessByTimeMonthOfYear data on given date filter by taxons', async () => {
+      //   // Act
+      //   const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      //   const response = await injectAsLoggedInProjectMember({
+      //     url,
+      //     ...options,
+      //     query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+      //   })
+
+      //   // Assert
+      //   const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+      //   expect(richnessByTimeMonthOfYear).toBeDefined()
+      //   expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+      //   expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+      //   expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+      // })
+
+      test('have richnessByTimeUnix data on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 4 })
+      })
+      test('have richnessByTimeUnix data on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+        })
+
+        // Assert
+        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 2 })
+      })
+      test('have richnessByTimeUnix data on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+        })
+
+        // Assert
+        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1615939200: 2 })
+      })
+      test('have richnessByTimeUnix data on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+        })
+
+        // Assert
+        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1615939200: 1 })
+      })
+      test('have richnessByTimeUnix data on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          ...options,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 2 })
+      })
 
       test.todo('have richnessPresence data on given date')
       test.todo('have richnessPresence data on given date filter by site')
