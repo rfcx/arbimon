@@ -25,12 +25,13 @@ export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
       type: DataTypes.STRING(255),
       unique: true
     },
+    scientificName: { // Accipiter striatus venator
+      type: DataTypes.STRING(255),
+      unique: true
+    },
 
     // FKs
-    taxonClassId: DataTypes.INTEGER, // 1
-
-    // Facts
-    scientificName: DataTypes.STRING(255) // Accipiter striatus venator
+    taxonClassId: DataTypes.INTEGER // 1
   },
   {
     tableName: TABLE_TAXON_SPECIES

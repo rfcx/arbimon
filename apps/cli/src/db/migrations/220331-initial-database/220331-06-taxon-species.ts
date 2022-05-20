@@ -40,6 +40,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
+      scientific_name: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true
+      },
 
       // FKs
       taxon_class_id: {
@@ -49,12 +54,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
           model: { tableName: 'taxon_class' },
           key: 'id'
         }
-      },
-
-      // Facts
-      scientific_name: {
-        type: DataTypes.STRING(255),
-        allowNull: false
       }
     }
   )
