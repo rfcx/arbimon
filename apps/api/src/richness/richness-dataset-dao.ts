@@ -52,13 +52,15 @@ export const getRichnessByTimeSeries = async (sequelize: Sequelize, filter: Filt
     }
   }
 
+  const monthExtraCondition = timeSeries === 'month' ? '- 1' : ''
+
   const sql = `
-    SELECT gs.gs                               as grouped_time_bucket,
+    SELECT gs.gs as grouped_time_bucket,
            COALESCE(data.richness, 0)::integer as richness
     FROM generate_series(0, ${seriesEnd(timeSeries)}) gs
     LEFT JOIN (
-      SELECT extract(${timeSeries} FROM time_precision_hour_local) as time_bucket,
-             Count(distinct taxon_species_id)             as richness
+      SELECT extract(${timeSeries} FROM time_precision_hour_local) ${monthExtraCondition} as time_bucket,
+             COUNT(distinct taxon_species_id) as richness
       FROM detection_by_version_site_species_hour dbvssh
       WHERE ${conditions}
       GROUP BY time_bucket
