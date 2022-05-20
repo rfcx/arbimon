@@ -59,20 +59,22 @@ describe('getArbimonProjects', () => {
   test('does not miss projects with the same updated_at as previously synced', async () => {
     // Arrange
     const batchLimit = 2
+    const updatedAtDate = '2021-03-20T12:00:00.000Z'
     const insertNewRowSQLStatement = `
     INSERT INTO projects (project_id, name, url, description, project_type_id, is_private, is_enabled,
       current_plan, storage_usage, processing_usage, pattern_matching_enabled,
       citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
       external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
     ) VALUES
-    (1925, 'RFCx 6', 'rfcx-6', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvwi5', 0, '2021-03-20T12:00:00.000Z', '2021-03-20T12:00:00.000Z', NULL, NULL, 1)
+    (1925, 'RFCx 6', 'rfcx-6', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvwi5', 0, $updatedAt, $updatedAt, NULL, NULL, 1)
     `
-    await arbimonSequelize.query(insertNewRowSQLStatement)
+    await arbimonSequelize.query(insertNewRowSQLStatement, { bind: { updatedAt: updatedAtDate } })
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('2021-03-20T12:00:00.000Z').toDate(), 1924, batchLimit)
+    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc(updatedAtDate).toDate(), 1924, batchLimit)
 
     // Assert
     expect(actual.length).toBe(1)
+    expect(actual[0].projectId).toBe(1925)
   })
 })
