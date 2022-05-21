@@ -12,7 +12,6 @@ export const testProject4: Project = {
   idCore: 'integration1',
   idArbimon: 133890,
   slug: 'integration-test-project4',
-  slugArbimon: 'integration-test-project4',
   name: 'Integration Test Project 4'
 }
 

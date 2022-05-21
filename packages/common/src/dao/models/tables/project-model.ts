@@ -5,7 +5,7 @@ import { Project } from '../../types'
 
 export const MODEL_PROJECT = 'Project'
 const TABLE_PROJECT = 'project'
-export const UPDATE_ON_DUPLICATE_PROJECT: Array<keyof Project> = ['name', 'slug', 'slugArbimon']
+export const UPDATE_ON_DUPLICATE_PROJECT: Array<keyof Project> = ['name', 'slug']
 
 export const ProjectModel = defineWithDefaultsAutoPk<Project>(
   MODEL_PROJECT,
@@ -27,10 +27,6 @@ export const ProjectModel = defineWithDefaultsAutoPk<Project>(
       unique: true
     },
     slug: { // puerto-rico-island-wide
-      type: DataTypes.STRING(255),
-      unique: true
-    },
-    slugArbimon: { // fake-arbimon-project-for-bio
       type: DataTypes.STRING(255),
       unique: true
     },

@@ -79,7 +79,7 @@ import { test } from 'vitest'
 //     const project = await ModelRepository.getInstance(biodiversitySequelize)
 //       .Project
 //       .findOne({ where: { idArbimon: testProject.idArbimon } })
-//       expect(project?.slugArbimon).toBe(projectSlug)
+//       expect(project?.slug).toBe(projectSlug)
 //   })
 
 //   test('Project - name updated', async () => {
