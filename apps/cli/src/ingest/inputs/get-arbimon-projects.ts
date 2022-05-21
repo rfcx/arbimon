@@ -23,13 +23,3 @@ export const getArbimonProjects = async (sequelize: Sequelize, syncUntil: Date, 
     }
   })
 }
-
-export const tranformArbimonToBioProjects = (arbimonProjects: ArbimonProject[]): Array<Omit<Project, 'id'>> => {
-  return arbimonProjects.map(p => ({
-    idCore: p.coreProjectId,
-    idArbimon: p.projectId,
-    slug: p.slug,
-    slugArbimon: p.slug,
-    name: p.name
-  }))
-}
