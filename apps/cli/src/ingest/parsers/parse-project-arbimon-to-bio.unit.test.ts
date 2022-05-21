@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { parseProjectArbimonToBio } from './parse-project-arbimon-to-bio'
 
-describe('ingest > inputs > parseProjectArbimonToBio', () => {
+describe('ingest > parsers > parseProjectArbimonToBio', () => {
   const VALID_PROJECT = {
     idArbimon: 123,
     idCore: '123',
@@ -18,7 +18,7 @@ describe('ingest > inputs > parseProjectArbimonToBio', () => {
     expect(actual.success).toBe(true)
   })
 
-  test('fails in any prop missing', async () => {
+  test('fails if required props are missing', async () => {
     // Arrange
     const { idArbimon, ...missingIdArbimon } = VALID_PROJECT
     const { idCore, ...missingIdCore } = VALID_PROJECT
