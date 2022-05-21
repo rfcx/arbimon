@@ -17,8 +17,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(batchLimit)
-    expect(actual[0].projectId).toBe(1920)
-    expect(actual[0].projectId).toBe(1921)
+    expect(actual[0].idArbimon).toBe(1920)
+    expect(actual[1].idArbimon).toBe(1921)
   })
 
   test('can get next batch of projects', async () => {
@@ -30,8 +30,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(batchLimit)
-    expect(actual[0].projectId).toBe(1921)
-    expect(actual[1].projectId).toBe(1922)
+    expect(actual[0].idArbimon).toBe(1921)
+    expect(actual[1].idArbimon).toBe(1922)
   })
 
   test('can get last incomplete batch of projects', async () => {
@@ -43,8 +43,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(batchLimit)
-    expect(actual[0].projectId).toBe(1923)
-    expect(actual[1].projectId).toBe(1924)
+    expect(actual[0].idArbimon).toBe(1923)
+    expect(actual[1].idArbimon).toBe(1924)
   })
 
   test('can gets no projects when nothing left to sync', async () => {
@@ -93,6 +93,6 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(1)
-    expect(actual[0].projectId).toBe(1925)
+    expect(actual[0].idArbimon).toBe(1925)
   })
 })
