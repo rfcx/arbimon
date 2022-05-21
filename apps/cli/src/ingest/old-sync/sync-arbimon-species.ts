@@ -4,8 +4,7 @@ import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { getArbimonSpeciesIncremental } from '@/ingest/inputs/arbimon-species'
-import { ArbimonSpecies } from '../../inputs/arbimon-species'
+import { ArbimonSpecies, getArbimonSpeciesIncremental } from '@/ingest/old-inputs/arbimon-species'
 
 export const syncArbimonSpecies = async (sequelizeArbimon: Sequelize, models: AllModels): Promise<void> => {
   // Lookups

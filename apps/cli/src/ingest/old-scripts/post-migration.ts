@@ -1,11 +1,11 @@
 import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
-import { syncIncremental } from '@/ingest/sync'
+import { syncAfterMigration } from '../old-sync/sync-after-migration'
 
 const main = async (): Promise<void> => {
   const arbimonSequelize = getArbimonSequelize()
   const bioSequelize = getSequelize()
-  await syncIncremental(arbimonSequelize, bioSequelize)
+  await syncAfterMigration(arbimonSequelize, bioSequelize)
 }
 
 await main()
