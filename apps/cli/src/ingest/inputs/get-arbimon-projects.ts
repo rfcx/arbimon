@@ -2,8 +2,8 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 export const getArbimonProjects = async (sequelize: Sequelize, syncUntil: Date, lastSyncdId: number, batchLimit: number): Promise<Record<string, any>> => {
   const sql = `
-    SELECT p.project_id AS projectId,
-           p.external_id AS coreProjectId,
+    SELECT p.project_id AS idArbimon,
+           p.external_id AS idCore,
            p.url AS slug,
            p.name
     FROM projects p

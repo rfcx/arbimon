@@ -60,7 +60,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
   test('includes expected props (& no more)', async () => {
     // Arrange
-    const expectedProps = ['projectId', 'coreProjectId', 'slug', 'name']
+    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name']
 
     // Act
     const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('1980-01-01T00:00:00.000Z').toDate(), 0, 1)
