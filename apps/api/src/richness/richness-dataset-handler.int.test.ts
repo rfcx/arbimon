@@ -36,9 +36,8 @@ const isObjectValueNumber = (obj: any): boolean => {
 }
 
 const PROJECT_ID_BASIC = '10001'
-const PROJECT_ID_NO_SITES = '10002'
 const PROJECT_ID_NO_DETECTIONS = '10003'
-const PROJECT_ID_ONE_DETECTION = '10004'
+const PROJECT_ID_TIME_BUCKET = '10005'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -374,6 +373,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
         expect(richnessByTaxon).toEqual({ 300: 2, 600: 1 })
       })
+
       test('have richnessBySite data on given date', async () => {
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -484,11 +484,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('have richnessByTimeHourOfDay data on given date', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
         })
 
         // Assert
@@ -497,15 +497,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 4, 12: 0, 13: 0, 14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 2, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 2 })
       })
       test('have richnessByTimeHourOfDay data on given date filter by site', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
         })
 
         // Assert
@@ -514,15 +514,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2, 12: 0, 13: 0, 14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
       test('have richnessByTimeHourOfDay data on given date filter by sites', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
         })
 
         // Assert
@@ -531,15 +531,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
       test('have richnessByTimeHourOfDay data on given date filter by taxon', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
         })
 
         // Assert
@@ -548,15 +548,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
       test('have richnessByTimeHourOfDay data on given date filter by taxons', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['300', '600'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
         })
 
         // Assert
@@ -565,16 +565,16 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 3, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
 
       test('have richnessByTimeDayOfWeek data on given date', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
         })
 
         // Assert
@@ -583,15 +583,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 4, 4: 0, 5: 0, 6: 0 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 2 })
       })
       test('have richnessByTimeDayOfWeek data on given date filter by site', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
         })
 
         // Assert
@@ -600,15 +600,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1 })
       })
       test('have richnessByTimeDayOfWeek data on given date filter by sites', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
         })
 
         // Assert
@@ -617,15 +617,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 1 })
       })
       test('have richnessByTimeDayOfWeek data on given date filter by taxon', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
         })
 
         // Assert
@@ -634,15 +634,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 1 })
       })
       test('have richnessByTimeDayOfWeek data on given date filter by taxons', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
         })
 
         // Assert
@@ -651,16 +651,16 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 2, 4: 0, 5: 0, 6: 0 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1 })
       })
 
       test('have richnessByTimeMonthOfYear data on given date', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
         })
 
         // Assert
@@ -669,15 +669,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 4, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 3, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
       test('have richnessByTimeMonthOfYear data on given date filter by site', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
         })
 
         // Assert
@@ -686,15 +686,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 2, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
       test('have richnessByTimeMonthOfYear data on given date filter by sites', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
         })
 
         // Assert
@@ -703,15 +703,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 0, 1: 0, 2: 2, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
       })
       test('have richnessByTimeMonthOfYear data on given date filter by taxon', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
         })
 
         // Assert
@@ -720,15 +720,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 0, 1: 0, 2: 1, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
       })
       test('have richnessByTimeMonthOfYear data on given date filter by taxons', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
         })
 
         // Assert
@@ -737,16 +737,16 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 2, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
 
       test('have richnessByTimeUnix data on given date', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
         })
 
         // Assert
@@ -755,15 +755,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 4 })
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1641081600: 1, 1641600000: 1, 1645056000: 1 })
       })
       test('have richnessByTimeUnix data on given date filter by site', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
         })
 
         // Assert
@@ -772,15 +772,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 2 })
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1 })
       })
       test('have richnessByTimeUnix data on given date filter by sites', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
         })
 
         // Assert
@@ -789,15 +789,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1615939200: 2 })
+        expect(richnessByTimeUnix).toEqual({ 1641081600: 1, 1641600000: 1, 1645056000: 1 })
       })
       test('have richnessByTimeUnix data on given date filter by taxon', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
         })
 
         // Assert
@@ -806,15 +806,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1615939200: 1 })
+        expect(richnessByTimeUnix).toEqual({ 1641081600: 1, 1641600000: 1, 1645056000: 1 })
       })
       test('have richnessByTimeUnix data on given date filter by taxons', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await injectAsLoggedInProjectMember({
           url,
           ...options,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
         })
 
         // Assert
@@ -823,7 +823,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1610841600: 1, 1615939200: 2 })
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1 })
       })
 
       // TODO: Update richness presence test case after the query code updated
