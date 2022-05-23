@@ -5,7 +5,7 @@ import { Project } from '../../types'
 
 export const MODEL_PROJECT = 'Project'
 const TABLE_PROJECT = 'project'
-export const UPDATE_ON_DUPLICATE_PROJECT: Array<keyof Project> = ['name', 'slug']
+export const UPDATE_ON_DUPLICATE_PROJECT: Array<keyof Project> = ['name', 'slug', 'idCore']
 
 export const ProjectModel = defineWithDefaultsAutoPk<Project>(
   MODEL_PROJECT,
