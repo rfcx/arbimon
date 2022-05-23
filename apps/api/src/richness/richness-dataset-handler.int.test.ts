@@ -60,8 +60,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
   describe.each([
     { label: 'logged-in-project-member', inject: injectAsLoggedInProjectMember },
-    { label: 'logged-in-not-project-member', inject: injectAsLoggedInNotProjectMember },
-    { label: 'logged-out', inject: injectAsLoggedOut }
+    // { label: 'logged-in-not-project-member', inject: injectAsLoggedInNotProjectMember },
+    // { label: 'logged-out', inject: injectAsLoggedOut }
   ])('as %s', ({ inject }) => {
     describe('basic', () => {
       test('returns successfully', async () => {

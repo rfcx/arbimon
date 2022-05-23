@@ -1,8 +1,9 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { masterRiskRatings } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
@@ -54,7 +55,7 @@ export const testSites: ProjectSite[] = [
   }
 ]
 
-export const testSource: Source = {
+export const testSource: any = {
   id: 10001,
   name: 'source-test-project-10001'
 }
@@ -66,7 +67,7 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001001,
     taxonSpeciesId: 1,
     taxonClassId: 600,
-    countDetectionMinutes: 10
+    countDetectionMinutes: 2
   },
   {
     timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'),
@@ -74,7 +75,7 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001001,
     taxonSpeciesId: 2,
     taxonClassId: 100,
-    countDetectionMinutes: 10
+    countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-03-17T11:11:00.000Z'),
@@ -82,7 +83,7 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001001,
     taxonSpeciesId: 2,
     taxonClassId: 100,
-    countDetectionMinutes: 10
+    countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-03-17T11:11:00.000Z'),
@@ -90,7 +91,7 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001002,
     taxonSpeciesId: 3,
     taxonClassId: 300,
-    countDetectionMinutes: 10
+    countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-03-17T11:11:00.000Z'),
@@ -98,7 +99,7 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001002,
     taxonSpeciesId: 4,
     taxonClassId: 300,
-    countDetectionMinutes: 10
+    countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-01-17T14:00:00.000Z'),
@@ -106,7 +107,42 @@ export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeci
     projectSiteId: 10001001,
     taxonSpeciesId: 2,
     taxonClassId: 100,
-    countDetectionMinutes: 10
+    countDetectionMinutes: 1
+  }
+]
+
+const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
+  {
+    taxonSpeciesId: 1,
+    projectId: 10001,
+    riskRatingId: masterRiskRatings.DD.id,
+    sourceUrl: '',
+    sourceName: '',
+    riskRatingCustomCode: masterRiskRatings.DD.code
+  },
+  {
+    taxonSpeciesId: 2,
+    projectId: 10001,
+    riskRatingId: masterRiskRatings.DD.id,
+    sourceUrl: '',
+    sourceName: '',
+    riskRatingCustomCode: masterRiskRatings.DD.code
+  },
+  {
+    taxonSpeciesId: 3,
+    projectId: 10001,
+    riskRatingId: masterRiskRatings.CR.id, // protected species
+    sourceUrl: '',
+    sourceName: '',
+    riskRatingCustomCode: masterRiskRatings.CR.code
+  },
+  {
+    taxonSpeciesId: 4,
+    projectId: 10001,
+    riskRatingId: masterRiskRatings.CR.id, // protected species
+    sourceUrl: '',
+    sourceName: '',
+    riskRatingCustomCode: masterRiskRatings.CR.code
   }
 ]
 
@@ -129,13 +165,18 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .bulkCreate(testSites)
 
   // Create mocked source
-  const source: Source[] = [testSource]
+  const source: [any] = [testSource]
   await ModelRepository.getInstance(getSequelize())
     .Source
     .bulkCreate(source)
 
-   // Create summary of mocked hourly validated detections
-   await ModelRepository.getInstance(getSequelize())
-     .DetectionByVersionSiteSpeciesHour
-     .bulkCreate(testDetectionsByVersionSiteSpeciesHour)
+  // Create summary of mocked hourly validated detections
+  await ModelRepository.getInstance(getSequelize())
+    .DetectionByVersionSiteSpeciesHour
+    .bulkCreate(testDetectionsByVersionSiteSpeciesHour)
+
+  // Create summary of mocked hourly validated detections
+  await ModelRepository.getInstance(getSequelize())
+    .TaxonSpeciesProjectRiskRating
+    .bulkCreate(testTaxonSpeciesProjectRiskRating)
 }

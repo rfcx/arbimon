@@ -8,7 +8,7 @@ import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 export const getRichnessExportData = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessByExportReportRow[]> => {
   const filterBase = datasetFilterWhereRaw(filter)
 
-  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
+  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT tsp.risk_rating_id = ANY ($protectedRiskRating)` : filterBase.conditions
   const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
 
   const sql = `
@@ -23,8 +23,10 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
         EXTRACT(day FROM dbvssh.time_precision_hour_local) as day,
         EXTRACT(month FROM dbvssh.time_precision_hour_local) as month,
         EXTRACT(year FROM dbvssh.time_precision_hour_local) as year,
-        EXTRACT(hour from dbvssh.time_precision_hour_local) as hour
+        EXTRACT(hour from dbvssh.time_precision_hour_local) as hour,
+        dbvssh.count_detection_minutes as detectionMinuteCount
     FROM detection_by_version_site_species_hour dbvssh
+    ${!isProjectMember ? 'JOIN taxon_species_project_risk_rating as tsp on dbvssh.taxon_species_id = tsp.taxon_species_id' : ''}
     JOIN project_site ps on dbvssh.project_site_id = ps.id
     JOIN taxon_species_merged tsm on dbvssh.taxon_species_id = tsm.id
     WHERE ${conditions} 

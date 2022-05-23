@@ -13,28 +13,28 @@ const testSpecies: TaxonSpecies[] = [
     idArbimon: 1,
     slug: 'catto',
     taxonClassId: masterTaxonClasses.Mammals.id, // 600
-    scientificName: 'catto'
+    scientificName: 'Catto'
   },
   {
     id: 2,
     idArbimon: 2,
     slug: 'cobra',
     taxonClassId: masterTaxonClasses.Amphibians.id, // 100
-    scientificName: 'cobra'
+    scientificName: 'Cobra'
   },
   {
     id: 3,
     idArbimon: 3,
     slug: 'eagle',
     taxonClassId: masterTaxonClasses.Birds.id, // 300
-    scientificName: 'eagle'
+    scientificName: 'Eagle'
   },
   {
     id: 4,
     idArbimon: 4,
     slug: 'sparrow',
     taxonClassId: masterTaxonClasses.Birds.id, // 300
-    scientificName: 'sparrow'
+    scientificName: 'Sparrow'
   }
 ]
 
