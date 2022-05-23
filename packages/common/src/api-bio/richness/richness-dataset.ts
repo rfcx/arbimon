@@ -20,7 +20,7 @@ export interface RichnessDatasetResponse {
   richnessByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
   richnessByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
   richnessByTimeUnix: Record<number, number> // unix -> richness
-  richnessPresence: Record<number, RichnessPresence>
+  detectedSpecies: Record<number, DetectedSpecies>
 }
 
 export interface RichnessSiteData {
@@ -29,7 +29,7 @@ export interface RichnessSiteData {
   richness: number
 }
 
-export interface RichnessPresence {
+export interface DetectedSpecies {
   taxonClassId: number
   taxonSpeciesId: number
   taxonSpeciesSlug: string

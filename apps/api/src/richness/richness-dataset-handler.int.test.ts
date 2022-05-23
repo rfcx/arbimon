@@ -28,7 +28,7 @@ const EXPECTED_PROPS = [
   'richnessByTimeDayOfWeek',
   'richnessByTimeMonthOfYear',
   'richnessByTimeUnix',
-  'richnessPresence'
+  'detectedSpecies'
 ]
 
 const isObjectValueNumber = (obj: any): boolean => {
@@ -89,32 +89,19 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(result).toBeDefined()
         expect(result).toBeTypeOf('object')
       })
-      // TODO: return empty data for logged out user (?)
       test('returns successfully for logged out user', async () => {
         // Act
         const response = await injectAsLoggedOut(options)
 
-         // Assert
-         expect(response.statusCode).toBe(200)
-         const result = JSON.parse(response.body)
-         expect(result).toBeDefined()
-         expect(result).toBeTypeOf('object')
+        // Assert
+        expect(response.statusCode).toBe(200)
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
       })
-      // TODO: return 403 code for user is logged in as not project member (?)
       test('returns successfully if the user is logged in as NOT project member', async () => {
         // Act
         const response = await injectAsLoggedInNotProjectMember(options)
-
-         // Assert
-         expect(response.statusCode).toBe(200)
-         const result = JSON.parse(response.body)
-         expect(result).toBeDefined()
-         expect(result).toBeTypeOf('object')
-      })
-      // TODO: return 401 code for user with invalid token (?)
-      test('returns successfully for user with invalid token', async () => {
-        // Act
-        const response = await injectAsInvalidToken(options)
 
         // Assert
         expect(response.statusCode).toBe(200)
@@ -138,7 +125,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(result.richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
         expect(result.richnessByTimeMonthOfYear).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
         expect(result.richnessByTimeUnix).toEqual({})
-        expect(result.richnessPresence).toEqual({})
+        expect(result.detectedSpecies).toEqual({})
       }
       const expectedRichnessByTimeValueAreNumber = (result: RichnessDatasetResponse): void => {
         expect(isObjectValueNumber(result.richnessByTimeHourOfDay)).toBe(true)
@@ -146,20 +133,6 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(result.richnessByTimeMonthOfYear)).toBe(true)
         expect(isObjectValueNumber(result.richnessByTimeUnix)).toBe(true)
       }
-      test('does not have any data on given date', async () => {
-        // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-        const response = await injectAsLoggedInProjectMember({
-          ...options,
-          url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
-        })
-
-        // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
-        expectedRichnessByTimeValueAreNumber(result)
-      })
       test('does not have any data on empty project', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_NO_DETECTIONS })
@@ -174,6 +147,21 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expectedEmptyResult(result)
         expectedRichnessByTimeValueAreNumber(result)
       })
+      test('does not have any data on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInProjectMember({
+          ...options,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
+        })
+
+        // Assert
+        const result = JSON.parse(response.body)
+        expectedEmptyResult(result)
+        expectedRichnessByTimeValueAreNumber(result)
+      })
+      // TODO Nutto: Combined it
       test('does not have any data on specific site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
@@ -260,7 +248,6 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(result).toBeTypeOf('object')
         expect(result.isLocationRedacted).toBeTruthy()
       })
-      // TODO: return 403 code for user is logged in as not project member (?)
       test('isLocationRedacted should be true if if logged in as NOT project member', async () => {
         // Act
         const response = await injectAsLoggedInNotProjectMember(options)
@@ -271,7 +258,6 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(result).toBeTypeOf('object')
         expect(result.isLocationRedacted).toBeTruthy()
       })
-      // TODO: return 401 code for user with invalid token (?)
       test('isLocationRedacted should be true if token is invalid', async () => {
         // Act
         const response = await injectAsInvalidToken(options)
@@ -288,7 +274,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const options: InjectOptions = {
         method: GET
       }
-      test('have richnessByTaxon on given date', async () => {
+      test('richnessByTaxon is calcurate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -827,7 +813,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // TODO: Update richness presence test case after the query code updated
-      test.todo('have richnessPresence data on given date', async () => {
+      test('have detectedSpecies data on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -837,11 +823,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        const richnessPresence = JSON.parse(response.body).richnessPresence
-        expect(richnessPresence).toBeDefined()
-        expect(richnessPresence).toBeTypeOf('object')
+        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(detectedSpecies).toBeDefined()
+        expect(detectedSpecies).toBeTypeOf('object')
       })
-      test.todo('have richnessPresence data on given date filter by site', async () => {
+      test('have detectedSpecies data on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -851,11 +837,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        const richnessPresence = JSON.parse(response.body).richnessPresence
-        expect(richnessPresence).toBeDefined()
-        expect(richnessPresence).toBeTypeOf('object')
+        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(detectedSpecies).toBeDefined()
+        expect(detectedSpecies).toBeTypeOf('object')
       })
-      test.todo('have richnessPresence data on given date filter by sites', async () => {
+      test('have detectedSpecies data on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -865,11 +851,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        const richnessPresence = JSON.parse(response.body).richnessPresence
-        expect(richnessPresence).toBeDefined()
-        expect(richnessPresence).toBeTypeOf('object')
+        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(detectedSpecies).toBeDefined()
+        expect(detectedSpecies).toBeTypeOf('object')
       })
-      test.todo('have richnessPresence data on given date filter by taxon', async () => {
+      test('have detectedSpecies data on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -879,11 +865,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        const richnessPresence = JSON.parse(response.body).richnessPresence
-        expect(richnessPresence).toBeDefined()
-        expect(richnessPresence).toBeTypeOf('object')
+        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(detectedSpecies).toBeDefined()
+        expect(detectedSpecies).toBeTypeOf('object')
       })
-      test.todo('have richnessPresence data on given date filter by taxons', async () => {
+      test('have detectedSpecies data on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -893,9 +879,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        const richnessPresence = JSON.parse(response.body).richnessPresence
-        expect(richnessPresence).toBeDefined()
-        expect(richnessPresence).toBeTypeOf('object')
+        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(detectedSpecies).toBeDefined()
+        expect(detectedSpecies).toBeTypeOf('object')
       })
     })
   })
@@ -937,12 +923,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       // Assert
       expect(response.statusCode).toBe(404)
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Data not found')
     })
 
-    test('rejects invalid date', async () => {
+    test('rejects invalid startDate', async () => {
       // Act
       const response = await injectAsLoggedInProjectMember({
         method: GET,
@@ -958,5 +941,22 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       expect(errorMessage).toContain('Invalid query params')
       expect(errorMessage).toContain('startDate with value')
     })
+  })
+
+  test('rejects invalid endDate', async () => {
+    // Act
+    const response = await injectAsLoggedInProjectMember({
+      method: GET,
+      url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC }),
+      query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(400)
+
+    const result = JSON.parse(response.body)
+    const errorMessage = result.message
+    expect(errorMessage).toContain('Invalid query params')
+    expect(errorMessage).toContain('endDate with value')
   })
 })

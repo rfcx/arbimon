@@ -1,7 +1,7 @@
 import { keyBy, mapValues } from 'lodash-es'
 import { QueryTypes, Sequelize } from 'sequelize'
 
-import { RichnessPresence, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { DetectedSpecies, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
@@ -103,11 +103,25 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
   return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
-export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<Record<number, RichnessPresence>> => {
+export const getDetectedSpecies = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<Record<number, DetectedSpecies>> => {
   // const filterBase = datasetFilterWhereRaw(filter)
 
   // const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
   // const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+
+  // const sql = `
+  //   SELECT
+  //     ts.id as "taxon_species_id",
+  //     ts.taxon_class_id as "taxon_class_id",
+  //     ts.slug as "taxon_species_slug",
+  //     ts.scientific_name as "scientific_name"
+  //   FROM detection_by_version_site_species_hour dbvssh
+  //   LEFT JOIN taxon_species ts on dbvssh.taxon_species_id = ts.id
+  //   WHERE ${conditions}
+  //   GROUP BY ts.id, ts.taxon_class_id, ts.slug, ts.scientific_name
+  // `
+
+  // await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
 
   // const sql = `
   //   SELECT

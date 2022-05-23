@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { FilterDataset } from '~/datasets/dataset-types'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '../_services/db'
-import { getRichnessBySite, getRichnessByTaxonClass, getRichnessByTimeDayOfWeek, getRichnessByTimeHourOfDay, getRichnessByTimeMonthOfYear, getRichnessByTimeUnix, getRichnessPresence } from './richness-dataset-dao'
+import { getDetectedSpecies, getRichnessBySite, getRichnessByTaxonClass, getRichnessByTimeDayOfWeek, getRichnessByTimeHourOfDay, getRichnessByTimeMonthOfYear, getRichnessByTimeUnix } from './richness-dataset-dao'
 
 export const getRichnessDataset = async (filter: FilterDataset, isProjectMember: boolean): Promise<RichnessDatasetResponse> => {
   const sequelize = getSequelize()
@@ -12,14 +12,14 @@ export const getRichnessDataset = async (filter: FilterDataset, isProjectMember:
 
   const filterForSql = toFilterDatasetForSql(filter)
 
-  const [richnessByTaxon, richnessBySite, richnessByTimeHourOfDay, richnessByTimeDayOfWeek, richnessByTimeMonthOfYear, richnessByTimeUnix, richnessPresence] = await Promise.all([
+  const [richnessByTaxon, richnessBySite, richnessByTimeHourOfDay, richnessByTimeDayOfWeek, richnessByTimeMonthOfYear, richnessByTimeUnix, detectedSpecies] = await Promise.all([
     await getRichnessByTaxonClass(models, sequelize, filterForSql),
     await getRichnessBySite(sequelize, filterForSql),
     await getRichnessByTimeHourOfDay(sequelize, filterForSql),
     await getRichnessByTimeDayOfWeek(sequelize, filterForSql),
     await getRichnessByTimeMonthOfYear(sequelize, filterForSql),
     await getRichnessByTimeUnix(sequelize, filterForSql),
-    await getRichnessPresence(sequelize, filterForSql, isProjectMember)
+    await getDetectedSpecies(sequelize, filterForSql, isProjectMember)
   ])
 
   return {
@@ -30,6 +30,6 @@ export const getRichnessDataset = async (filter: FilterDataset, isProjectMember:
     richnessByTimeDayOfWeek,
     richnessByTimeMonthOfYear,
     richnessByTimeUnix,
-    richnessPresence
+    detectedSpecies
   }
 }
