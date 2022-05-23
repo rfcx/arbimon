@@ -18,7 +18,7 @@ export interface RichnessExportResponse {
 
 export interface RichnessByExportReportRow {
   scientificName: string
-  commonName: string
+  commonName?: string
   site: string
   latitude: number
   longitude: number
