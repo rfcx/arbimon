@@ -1,3 +1,4 @@
+import { HTTPMethods } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { RichnessDatasetResponse, richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
@@ -7,7 +8,7 @@ import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
 
 interface InjectOptions {
-          method
+  method: HTTPMethods
   url?: string
   query?: {
     startDate: string
