@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash-es'
 
-import { RichnessDatasetResponse, RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { DetectedSpecies, RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
@@ -77,8 +77,8 @@ export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[
   const store = useStoreOutsideSetup()
   const taxonClasses = store.projectFilters?.taxonClasses
 
-  const richnessPresences = datasets.map(ds => ds.data.richnessPresence)
-  const allSpecies: { [speciesId: number]: RichnessPresence } = Object.assign({}, ...richnessPresences)
+  const detectedSpecies = datasets.map(ds => ds.data.detectedSpecies)
+  const allSpecies: { [speciesId: number]: DetectedSpecies } = Object.assign({}, ...detectedSpecies)
 
   return Object.entries(allSpecies)
     .map(([key, value]) => {
@@ -90,8 +90,8 @@ export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[
         taxonSpeciesSlug,
         commonName,
         scientificName,
-        data: richnessPresences.map(sp => key in sp),
-        total: richnessPresences.filter(sp => key in sp).length
+        data: detectedSpecies.map(sp => key in sp),
+        total: detectedSpecies.filter(sp => key in sp).length
       }
     })
     .sort((a, b) => b.total - a.total || a.scientificName.localeCompare(b.scientificName))

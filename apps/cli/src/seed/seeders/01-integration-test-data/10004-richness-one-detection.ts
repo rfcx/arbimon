@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySourceSiteSpeciesHour, DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
@@ -39,14 +39,6 @@ export const testSource4: Source = {
   name: 'source-test-project-10004'
 }
 
-export const testDetectionBySourceSiteSpeciesHour: DetectionBySourceSiteSpeciesHour = {
-  timePrecisionHourLocal: new Date('2021-02-11T11:00:00.000Z'),
-  sourceId: 10004,
-  projectSiteId: 10004,
-  taxonSpeciesId: 3,
-  detectionMinutes: '10'
-}
-
 export const testDetectionByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour = {
   timePrecisionHourLocal: new Date('2021-02-11T11:00:00.000Z'),
   projectVersionId: 10004,
@@ -80,12 +72,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await ModelRepository.getInstance(getSequelize())
     .Source
     .bulkCreate(source)
-
-  // Create summary of mocked validated detections
-  const detectionBySource: DetectionBySourceSiteSpeciesHour[] = [testDetectionBySourceSiteSpeciesHour]
-  await ModelRepository.getInstance(getSequelize())
-    .DetectionBySourceSiteSpeciesHour
-    .bulkCreate(detectionBySource)
 
    // Create summary of mocked hourly validated detections
    const detection: DetectionByVersionSiteSpeciesHour[] = [testDetectionByVersionSiteSpeciesHour]

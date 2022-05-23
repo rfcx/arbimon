@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySourceSiteSpeciesHour, DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
@@ -63,54 +63,9 @@ const testSource: Source = {
   name: 'source-test-project-10005'
 }
 
-const testDetectionsBySourceSiteSpeciesHour: DetectionBySourceSiteSpeciesHour[] = [
-  {
-    timePrecisionHourLocal: new Date('2021-12-31T23:59:59.000Z'), // Friday 31 Dec, 2021 (month end, year end cases)
-    sourceId: 10005,
-    projectSiteId: 10005001,
-    taxonSpeciesId: 1,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-01-01T00:00:00.000Z'), // Saturday 1 Jan, 2022 (month start, year start cases)
-    sourceId: 10005,
-    projectSiteId: 10005001,
-    taxonSpeciesId: 2,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sunday 2 Jan, 2022 (week start)
-    sourceId: 10005,
-    projectSiteId: 10005002,
-    taxonSpeciesId: 3,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-01-08T23:59:59.000Z'), // Saturday 8 Jan, 2022 (week end)
-    sourceId: 10005,
-    projectSiteId: 10005003,
-    taxonSpeciesId: 4,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-02-17T17:00:00.000Z'), // Thursday 17 Feb, 2022 (random)
-    sourceId: 10005,
-    projectSiteId: 10005003,
-    taxonSpeciesId: 4,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-02-17T17:30:00.000Z'), // Thursday 17 Feb, 2022 (same hour)
-    sourceId: 10005,
-    projectSiteId: 10005003,
-    taxonSpeciesId: 4,
-    detectionMinutes: '10'
-  }
-]
-
 const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
   {
-    timePrecisionHourLocal: new Date('2021-12-31T23:59:59.000Z'),
+    timePrecisionHourLocal: new Date('2021-12-31T23:00:00.000Z'), // Friday 31 Dec, 2021 (month end, year end cases)
     projectVersionId: 10005,
     projectSiteId: 10005001,
     taxonSpeciesId: 1,
@@ -118,7 +73,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 10
   },
   {
-    timePrecisionHourLocal: new Date('2022-01-01T00:00:00.000Z'),
+    timePrecisionHourLocal: new Date('2022-01-01T00:00:00.000Z'), // Saturday 1 Jan, 2022 (month start, year start cases)
     projectVersionId: 10005,
     projectSiteId: 10005001,
     taxonSpeciesId: 2,
@@ -126,7 +81,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 10
   },
   {
-    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'),
+    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sunday 2 Jan, 2022 (week start)
     projectVersionId: 10005,
     projectSiteId: 10005002,
     taxonSpeciesId: 3,
@@ -134,7 +89,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 10
   },
   {
-    timePrecisionHourLocal: new Date('2022-01-08T23:59:59.000Z'),
+    timePrecisionHourLocal: new Date('2022-01-08T23:00:00.000Z'), // Saturday 8 Jan, 2022 (week end)
     projectVersionId: 10005,
     projectSiteId: 10005003,
     taxonSpeciesId: 4,
@@ -142,7 +97,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 10
   },
   {
-    timePrecisionHourLocal: new Date('2022-02-17T17:00:00.000Z'),
+    timePrecisionHourLocal: new Date('2022-02-17T17:00:00.000Z'), // Thursday 17 Feb, 2022 (random)
     projectVersionId: 10005,
     projectSiteId: 10005003,
     taxonSpeciesId: 4,
@@ -150,11 +105,11 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 10
   },
   {
-    timePrecisionHourLocal: new Date('2022-02-17T17:30:00.000Z'),
+    timePrecisionHourLocal: new Date('2022-02-17T17:00:00.000Z'), // Thursday 17 Feb, 2022 (random)
     projectVersionId: 10005,
     projectSiteId: 10005003,
-    taxonSpeciesId: 4,
-    taxonClassId: 300,
+    taxonSpeciesId: 1,
+    taxonClassId: 600,
     countDetectionMinutes: 10
   }
 ]
@@ -182,11 +137,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await ModelRepository.getInstance(getSequelize())
     .Source
     .bulkCreate(source)
-
-  // Create summary of mocked validated detections
-  await ModelRepository.getInstance(getSequelize())
-    .DetectionBySourceSiteSpeciesHour
-    .bulkCreate(testDetectionsBySourceSiteSpeciesHour)
 
    // Create summary of mocked hourly validated detections
    await ModelRepository.getInstance(getSequelize())

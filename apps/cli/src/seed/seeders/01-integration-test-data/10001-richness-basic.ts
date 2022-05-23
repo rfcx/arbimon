@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySourceSiteSpeciesHour, DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
@@ -58,51 +58,6 @@ export const testSource: Source = {
   id: 10001,
   name: 'source-test-project-10001'
 }
-
-export const testDetectionsBySourceSiteSpeciesHour: DetectionBySourceSiteSpeciesHour[] = [
-  {
-    timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'),
-    sourceId: 10001,
-    projectSiteId: 10001001,
-    taxonSpeciesId: 1,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'),
-    sourceId: 10001,
-    projectSiteId: 10001001,
-    taxonSpeciesId: 2,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2021-03-17T11:11:00.000Z'),
-    sourceId: 10001,
-    projectSiteId: 10001001,
-    taxonSpeciesId: 2,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2021-03-17T11:11:00.000Z'),
-    sourceId: 10001,
-    projectSiteId: 10001002,
-    taxonSpeciesId: 3,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2021-03-17T11:11:00.000Z'),
-    sourceId: 10001,
-    projectSiteId: 10001002,
-    taxonSpeciesId: 4,
-    detectionMinutes: '10'
-  },
-  {
-    timePrecisionHourLocal: new Date('2021-01-17T14:00:00.000Z'),
-    sourceId: 10001,
-    projectSiteId: 10001001,
-    taxonSpeciesId: 2,
-    detectionMinutes: '10'
-  }
-]
 
 export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
   {
@@ -178,11 +133,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await ModelRepository.getInstance(getSequelize())
     .Source
     .bulkCreate(source)
-
-  // Create summary of mocked validated detections
-  await ModelRepository.getInstance(getSequelize())
-    .DetectionBySourceSiteSpeciesHour
-    .bulkCreate(testDetectionsBySourceSiteSpeciesHour)
 
    // Create summary of mocked hourly validated detections
    await ModelRepository.getInstance(getSequelize())

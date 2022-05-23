@@ -311,7 +311,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 2, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 2 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 2, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 2, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 2 })
       })
       test('richnessByTimeHourOfDay is calcurate correctly on given date filter by site', async () => {
         // Act
@@ -345,7 +345,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 2, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
       test('richnessByTimeHourOfDay is calcurate correctly on given date filter by taxon', async () => {
         // Act
@@ -379,7 +379,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
-        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
+        expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
     })
 
@@ -399,7 +399,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 2 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 2, 5: 1, 6: 2 })
       })
       test('richnessByTimeDayOfWeek is calcurate correctly on given date filter by site', async () => {
         // Act
@@ -433,7 +433,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 1 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 2, 5: 0, 6: 1 })
       })
       test('richnessByTimeDayOfWeek is calcurate correctly on given date filter by taxon', async () => {
         // Act
@@ -467,7 +467,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
-        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1 })
+        expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 1, 6: 1 })
       })
     })
 
@@ -487,7 +487,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 3, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 3, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
       test('richnessByTimeMonthOfYear is calcurate correctly on given date filter by site', async () => {
         // Act
@@ -521,7 +521,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
       })
       test('richnessByTimeMonthOfYear is calcurate correctly on given date filter by taxon', async () => {
         // Act
@@ -555,7 +555,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
-        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
     })
 
@@ -575,7 +575,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1641081600: 1, 1641600000: 1, 1645056000: 1 })
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1641081600: 1, 1641600000: 1, 1645056000: 2 })
       })
       test('richnessByTimeUnix is calcurate correctly on given date filter by site', async () => {
         // Act
@@ -609,7 +609,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1641081600: 1, 1641600000: 1, 1645056000: 1 })
+        expect(richnessByTimeUnix).toEqual({ 1641081600: 1, 1641600000: 1, 1645056000: 2 })
       })
       test('richnessByTimeUnix is calcurate correctly on given date filter by taxon', async () => {
         // Act
@@ -643,7 +643,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
-        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1 })
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1645056000: 1 })
       })
     })
 
@@ -722,13 +722,13 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
   })
 
-  describe.each([
-    { label: 'logged-in-not-project-member', inject: injectAsLoggedInNotProjectMember },
-    { label: 'logged-out', inject: injectAsLoggedOut },
-    { label: 'invalid-token', inject: injectAsLoggedOut }
-  ])('critically endangered species redacted for non-project-members', ({ inject }) => {
-    
-  })
+  // describe.each([
+  //   { label: 'logged-in-not-project-member', inject: injectAsLoggedInNotProjectMember },
+  //   { label: 'logged-out', inject: injectAsLoggedOut },
+  //   { label: 'invalid-token', inject: injectAsLoggedOut }
+  // ])('critically endangered species redacted for non-project-members', ({ inject }) => {
+
+  // })
 
   // describe('critically endangered species NOT redacted for project-members', () => {
 
