@@ -44,6 +44,14 @@
       sync_until_date: {
         type: DataTypes.DATE,
         allowNull: false
+      },
+      sync_until_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      sync_batch_limit: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       }
     }
    )
