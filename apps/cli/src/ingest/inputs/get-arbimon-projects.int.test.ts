@@ -11,9 +11,11 @@ describe('ingest > inputs > getArbimonProjects', () => {
   test('can get oldest projects', async () => {
     // Arrange
     const batchLimit = 2
+    const lastSyncdProjectId = null
+    const lastSyncdUntilDate = '1980-01-01T00:00:00.000Z'
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('1980-01-01T00:00:00.000Z').toDate(), 0, batchLimit)
+    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc(lastSyncdUntilDate).toDate(), lastSyncdProjectId, batchLimit)
 
     // Assert
     expect(actual.length).toBe(batchLimit)
@@ -24,9 +26,11 @@ describe('ingest > inputs > getArbimonProjects', () => {
   test('can get next batch of projects', async () => {
     // Arrange
     const batchLimit = 2
+    const lastSyncdProjectId = 1920
+    const lastSyncdUntilDate = '2021-03-18T11:00:00.000Z'
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('2021-03-18T11:00:00.000Z').toDate(), 1920, batchLimit)
+    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc(lastSyncdUntilDate).toDate(), lastSyncdProjectId, batchLimit)
 
     // Assert
     expect(actual.length).toBe(batchLimit)
@@ -37,9 +41,11 @@ describe('ingest > inputs > getArbimonProjects', () => {
   test('can get last incomplete batch of projects', async () => {
     // Arrange
     const batchLimit = 2
+    const lastSyncdProjectId = 1922
+    const lastSyncdUntilDate = '2021-03-20T02:00:00.000Z'
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('2021-03-20T02:00:00.000Z').toDate(), 1922, batchLimit)
+    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc(lastSyncdUntilDate).toDate(), lastSyncdProjectId, batchLimit)
 
     // Assert
     expect(actual.length).toBe(batchLimit)
@@ -50,9 +56,11 @@ describe('ingest > inputs > getArbimonProjects', () => {
   test('can gets no projects when nothing left to sync', async () => {
     // Arrange
     const batchLimit = 2
+    const lastSyncdProjectId = 1924
+    const lastSyncdUntilDate = '2021-03-20T12:00:00.000Z'
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc('2021-03-20T12:00:00.000Z').toDate(), 1924, batchLimit)
+    const actual = await getArbimonProjects(arbimonSequelize, dayjs.utc(lastSyncdUntilDate).toDate(), lastSyncdProjectId, batchLimit)
 
     // Assert
     expect(actual.length).toBe(0)
