@@ -13,15 +13,16 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
 
   const sql = `
     SELECT
-        tsm.common_name as name,
+        tsm.scientific_name as scientificName,
+        tsm.common_name as commonName,
         ps.name as site,
         ps.latitude as latitude,
         ps.longitude as longitude,
         ps.altitude as altitude,
+        dbvssh.time_precision_hour_local as date,
         EXTRACT(day FROM dbvssh.time_precision_hour_local) as day,
         EXTRACT(month FROM dbvssh.time_precision_hour_local) as month,
         EXTRACT(year FROM dbvssh.time_precision_hour_local) as year,
-        dbvssh.time_precision_hour_local as date,
         EXTRACT(hour from dbvssh.time_precision_hour_local) as hour
     FROM detection_by_version_site_species_hour dbvssh
     JOIN project_site ps on dbvssh.project_site_id = ps.id
