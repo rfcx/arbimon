@@ -12,25 +12,22 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
   const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
 
   const sql = `
-    SELECT 
-      sip.common_name as name,
-      ls.name as site,
-      ls.latitude as latitude,
-      ls.longitude as longitude,
-      ls.altitude as altitude,
-      EXTRACT(day FROM dbssh.time_precision_hour_local) as day,
-      EXTRACT(month FROM dbssh.time_precision_hour_local) as month,
-      EXTRACT(year FROM dbssh.time_precision_hour_local) as year,
-      dbssh.time_precision_hour_local as date,
-      EXTRACT(hour from dbssh.time_precision_hour_local) as hour
-    FROM
-      detection_by_version_site_species_hour dbssh
-      LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
-      LEFT JOIN project_site ls ON dbssh.project_site_id = ls.id
+    SELECT
+        tsm.common_name as name,
+        ps.name as site,
+        ps.latitude as latitude,
+        ps.longitude as longitude,
+        ps.altitude as altitude,
+        EXTRACT(day FROM dbvssh.time_precision_hour_local) as day,
+        EXTRACT(month FROM dbvssh.time_precision_hour_local) as month,
+        EXTRACT(year FROM dbvssh.time_precision_hour_local) as year,
+        dbvssh.time_precision_hour_local as date,
+        EXTRACT(hour from dbvssh.time_precision_hour_local) as hour
+    FROM detection_by_version_site_species_hour dbvssh
+    JOIN project_site ps on dbvssh.project_site_id = ps.id
+    JOIN taxon_species_merged tsm on dbvssh.taxon_species_id = tsm.id
     WHERE ${conditions} 
-    GROUP BY
-      ls.id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, dbssh.taxon_species_id, dbssh.time_precision_hour_local
-    ORDER BY sip.common_name, ls.name, dbssh.time_precision_hour_local
+    ORDER BY tsm.common_name, ps.name, dbvssh.time_precision_hour_local    
   `
 
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
