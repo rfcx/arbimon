@@ -59,9 +59,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
   })
 
   describe.each([
-    ['logged-in-project-member', injectAsLoggedInProjectMember]
-    // { label: 'logged-in-not-project-member', inject: injectAsLoggedInNotProjectMember },
-    // { label: 'logged-out', inject: injectAsLoggedOut }
+    ['logged-in-project-member', injectAsLoggedInProjectMember],
+    ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
+    ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
     describe('basic', () => {
       test('returns successfully', async () => {
@@ -77,8 +77,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject(options)
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const result = JSON.parse(response.body)
+        expect(response.statusCode, response.body).toBe(200)
+
+        const result = response.json()
         expect(result).toBeDefined()
         expect(result).toBeTypeOf('object')
       })
@@ -92,8 +93,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const result = JSON.parse(response.body)
+        expect(response.statusCode, response.body).toBe(200)
+
+        const result = response.json()
         EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
         expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
       })
@@ -110,8 +112,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
 
@@ -129,8 +132,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
 
@@ -148,8 +152,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
 
@@ -167,8 +172,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
 
@@ -186,8 +192,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
 
@@ -208,10 +215,10 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Arrange
         const siteExpectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode, response.body).toBe(200)
 
         // Assert - property exists & correct type
-        const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
+        const { richnessBySite } = response.json()
         expect(richnessBySite).toBeDefined()
         expect(Array.isArray(richnessBySite)).toBe(true)
         expect(richnessBySite.length).toBe(3)
@@ -236,8 +243,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
         expect(richnessBySite.length).toBe(2)
         richnessBySite.forEach((site: RichnessSiteData) => expect(site.locationSiteId).toBe(10001001))
         const taxonClass1 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 100)
@@ -256,8 +264,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
         expect(richnessBySite.length).toBe(3)
 
         // Assert - correct contain taxon class on different site
@@ -286,8 +295,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
         expect(richnessBySite.length).toBe(1)
         expect(richnessBySite[0].taxonClassId).toBe(600)
         expect(richnessBySite[0].richness).toBe(1)
@@ -303,8 +313,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
         expect(richnessBySite.length).toBe(2)
         const siteData1 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 300)
         const siteData2 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 600)
@@ -327,8 +338,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeHourOfDay } = response.json()
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
@@ -346,8 +358,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeHourOfDay } = response.json()
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
@@ -365,8 +378,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeHourOfDay } = response.json()
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
@@ -384,8 +398,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeHourOfDay } = response.json()
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
@@ -403,8 +418,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeHourOfDay } = response.json()
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
 
@@ -424,8 +440,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeDayOfWeek } = response.json()
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
@@ -443,8 +460,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeDayOfWeek } = response.json()
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
@@ -462,8 +480,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeDayOfWeek } = response.json()
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
@@ -481,8 +500,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeDayOfWeek } = response.json()
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
@@ -500,8 +520,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeDayOfWeek } = response.json()
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
 
@@ -521,8 +542,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
@@ -540,8 +562,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
@@ -559,8 +582,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
@@ -578,8 +602,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
@@ -597,8 +622,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
 
@@ -618,8 +644,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
@@ -637,8 +664,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
@@ -656,8 +684,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
@@ -675,8 +704,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
@@ -694,8 +724,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
 
@@ -717,8 +748,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
@@ -733,8 +765,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
@@ -749,8 +782,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
@@ -765,8 +799,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
@@ -781,8 +816,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(200)
-        const detectedSpecies = JSON.parse(response.body).detectedSpecies
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
@@ -830,8 +866,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
     })
@@ -846,8 +883,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
     })
@@ -862,8 +900,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
     })
@@ -878,8 +917,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
@@ -895,8 +935,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
     })
@@ -911,8 +952,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
     })
@@ -931,8 +973,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const response = await injectAsLoggedInProjectMember(options)
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeFalsy()
@@ -943,8 +986,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const response = await injectAsLoggedOut(options)
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeTruthy()
@@ -955,8 +999,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const response = await injectAsLoggedInNotProjectMember(options)
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeTruthy()
@@ -967,8 +1012,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const response = await injectAsInvalidToken(options)
 
       // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeTruthy()
