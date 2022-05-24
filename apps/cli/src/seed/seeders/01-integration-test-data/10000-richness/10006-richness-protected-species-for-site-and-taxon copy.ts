@@ -27,7 +27,7 @@ export const testSites: ProjectSite[] = [
   {
     id: 10006001,
     idCore: 'ts10006001',
-    idArbimon: 1111228,
+    idArbimon: 10006001,
     projectId: 10006,
     projectVersionFirstAppearsId: 10006,
     name: 'Test Site 6001',
@@ -38,7 +38,7 @@ export const testSites: ProjectSite[] = [
   {
     id: 10006002,
     idCore: 'ts10006002',
-    idArbimon: 1111229,
+    idArbimon: 10006002,
     projectId: 10006,
     projectVersionFirstAppearsId: 10006,
     name: 'Test Site 6002',
@@ -49,7 +49,7 @@ export const testSites: ProjectSite[] = [
   {
     id: 10006003,
     idCore: 'ts10006003',
-    idArbimon: 1111230,
+    idArbimon: 10006003,
     projectId: 10006,
     projectVersionFirstAppearsId: 10006,
     name: 'Test Site 6003',
@@ -66,15 +66,15 @@ const testSource: Source = {
 
 const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
   {
-    timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'), // Wed
+    timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'),
     projectVersionId: 10006,
     projectSiteId: 10006001,
-    taxonSpeciesId: 1,
+    taxonSpeciesId: 1, // protected
     taxonClassId: 600,
     countDetectionMinutes: 2
   },
   {
-    timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'), // Wed
+    timePrecisionHourLocal: new Date('2021-03-17T11:00:00.000Z'),
     projectVersionId: 10006,
     projectSiteId: 10006001,
     taxonSpeciesId: 5,
@@ -82,52 +82,108 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 2
   },
   {
-    timePrecisionHourLocal: new Date('2022-01-01T00:00:00.000Z'), // Sat
+    timePrecisionHourLocal: new Date('2021-03-20T00:00:00.000Z'),
     projectVersionId: 10006,
     projectSiteId: 10006001,
-    taxonSpeciesId: 1,
+    taxonSpeciesId: 1, // protected
     taxonClassId: 600,
     countDetectionMinutes: 2
   },
   {
-    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
+    timePrecisionHourLocal: new Date('2021-03-20T00:00:00.000Z'),
     projectVersionId: 10006,
     projectSiteId: 10006001,
     taxonSpeciesId: 5,
     taxonClassId: 600,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-20T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006001,
+    taxonSpeciesId: 6,
+    taxonClassId: 100,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-20T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006001,
+    taxonSpeciesId: 8, // protected
+    taxonClassId: 300,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-10T11:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006002,
+    taxonSpeciesId: 1, // protected
+    taxonClassId: 600,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-12T11:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006003,
+    taxonSpeciesId: 5,
+    taxonClassId: 600,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-13T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006003,
+    taxonSpeciesId: 1, // protected
+    taxonClassId: 600,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-14T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006002,
+    taxonSpeciesId: 5,
+    taxonClassId: 600,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-16T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006003,
+    taxonSpeciesId: 6,
+    taxonClassId: 100,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-18T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006002,
+    taxonSpeciesId: 8, // protected
+    taxonClassId: 300,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-19T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006002,
+    taxonSpeciesId: 9, // protected
+    taxonClassId: 100,
+    countDetectionMinutes: 2
+  },
+  {
+    timePrecisionHourLocal: new Date('2021-03-19T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006002,
+    taxonSpeciesId: 7,
+    taxonClassId: 500,
     countDetectionMinutes: 2
   }
-  // {
-  //   timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
-  //   projectVersionId: 10006,
-  //   projectSiteId: 10006001,
-  //   taxonSpeciesId: 5,
-  //   taxonClassId: 600,
-  //   countDetectionMinutes: 2
-  // },
-  // {
-  //   timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
-  //   projectVersionId: 10006,
-  //   projectSiteId: 10006001,
-  //   taxonSpeciesId: 5,
-  //   taxonClassId: 600,
-  //   countDetectionMinutes: 2
-  // },
-  // {
-  //   timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
-  //   projectVersionId: 10006,
-  //   projectSiteId: 10006001,
-  //   taxonSpeciesId: 5,
-  //   taxonClassId: 600,
-  //   countDetectionMinutes: 2
-  // }
 ]
 
 const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
   {
     taxonSpeciesId: 1,
     projectId: 10006,
-    riskRatingId: masterRiskRatings.CR.id,
+    riskRatingId: masterRiskRatings.CR.id, // protected
     sourceUrl: '',
     sourceName: '',
     riskRatingCustomCode: masterRiskRatings.CR.code
@@ -159,7 +215,7 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
   {
     taxonSpeciesId: 8,
     projectId: 10006,
-    riskRatingId: masterRiskRatings.CR.id,
+    riskRatingId: masterRiskRatings.CR.id, // protected
     sourceUrl: '',
     sourceName: '',
     riskRatingCustomCode: masterRiskRatings.CR.code

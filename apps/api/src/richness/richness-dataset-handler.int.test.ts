@@ -38,6 +38,8 @@ const isObjectValueNumber = (obj: any): boolean => {
 const PROJECT_ID_BASIC = '10001'
 const PROJECT_ID_NO_DETECTIONS = '10003'
 const PROJECT_ID_TIME_BUCKET = '10005'
+const PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON = '10006'
+const PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET = '10007'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -102,6 +104,48 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTaxon', () => {
+      test('richnessByTaxon are present if no sites filter', async () => {
+        // Arrange
+        const allTaxonIds = ['100', '300', '600']
+
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+        expect(Object.keys(richnessByTaxon).every(taxonId => allTaxonIds.includes(taxonId))).toBeTruthy()
+      })
+
+      test('richnessByTaxon in filter are present & no more', async () => {
+        // Arrange
+        const taxonIdsToBeFilter = ['100', '300']
+
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: taxonIdsToBeFilter }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+        expect(Object.keys(richnessByTaxon).every(taxonId => taxonIdsToBeFilter.includes(taxonId))).toBeTruthy()
+      })
+
       test('richnessByTaxon is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
@@ -204,7 +248,47 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessBySite', () => {
-      test('richnessBySite is calculate correctly on given date', async () => {
+      test('richnessBySite are present if no sites filter', async () => {
+        const allSiteIds = ['10001001', '10001002']
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+        const mappedSiteIds = richnessBySite.map((site: RichnessSiteData) => site.locationSiteId.toString())
+        expect(mappedSiteIds.every((siteId: string) => allSiteIds.includes(siteId))).toBeTruthy()
+      })
+
+      test('richnessBySite in filter are present & no more', async () => {
+        // Act
+        const siteIdsToBeFilter = ['10001001', '10001002']
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: siteIdsToBeFilter }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+        const mappedSiteIds = richnessBySite.map((site: RichnessSiteData) => site.locationSiteId.toString())
+        expect(mappedSiteIds.every((siteId: string) => siteIdsToBeFilter.includes(siteId))).toBeTruthy()
+      })
+
+      test('richnessBySite is return expected properties', async () => {
+        // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
           method,
@@ -221,7 +305,6 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const { richnessBySite } = response.json()
         expect(richnessBySite).toBeDefined()
         expect(Array.isArray(richnessBySite)).toBe(true)
-        expect(richnessBySite.length).toBe(3)
 
         // Assert - first result is object
         const testedSite = richnessBySite.find((site: RichnessSiteData) => site.locationSiteId === 10001001)
@@ -231,6 +314,29 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Assert - first result contains (only) expected props
         siteExpectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
         Object.keys(site).forEach(actualProperty => expect(siteExpectedProperties).toContain(actualProperty))
+      })
+
+      test('richnessBySite is calculate correctly on given date', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+        expect(richnessBySite.length).toBe(3)
+        const taxonClass1 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const taxonClass2 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        const taxonClass3 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(taxonClass1.richness).toBe(1)
+        expect(taxonClass2.richness).toBe(2)
+        expect(taxonClass3.richness).toBe(1)
       })
 
       test('richnessBySite is calculate correctly on given date filter by site', async () => {
@@ -272,9 +378,9 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         // Assert - correct contain taxon class on different site
         const siteData1 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10001001)
         const siteData2 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10001002)
-        expect(siteData1.map(s => s.taxonClassId)).not.contain(300)
-        expect(siteData2.map(s => s.taxonClassId)).not.contain(100)
-        expect(siteData2.map(s => s.taxonClassId)).not.toContain(600)
+        expect(siteData1.map((site: RichnessSiteData) => site.taxonClassId)).not.contain(300)
+        expect(siteData2.map((site: RichnessSiteData) => site.taxonClassId)).not.contain(100)
+        expect(siteData2.map((site: RichnessSiteData) => site.taxonClassId)).not.toContain(600)
 
         // Assert - correct contain taxon class value on different site
         const taxonClass1 = siteData1.find((site: RichnessSiteData) => site.taxonClassId === 100)
@@ -833,9 +939,382 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
   // })
 
-  // describe('critically endangered species NOT redacted for project-members', () => {
+  describe('critically endangered species NOT redacted for project-members', () => {
+    describe('richnessByTaxon', () => {
+      test('richnessByTaxon are present if no sites filter', async () => {
+        // Arrange
+        const allTaxonIds = ['100', '300', '500', '600']
 
-  // })
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+        expect(Object.keys(richnessByTaxon).every(taxonId => allTaxonIds.includes(taxonId))).toBeTruthy()
+      })
+
+      test('richnessByTaxon in filter are present & no more', async () => {
+        // Arrange
+        const taxonIdsToBeFilter = ['100', '300']
+
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: taxonIdsToBeFilter }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+        expect(Object.keys(richnessByTaxon).every(taxonId => taxonIdsToBeFilter.includes(taxonId))).toBeTruthy()
+      })
+
+      test('richnessByTaxon is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
+        expect(richnessByTaxon).toEqual({ 100: 2, 300: 1, 500: 1, 600: 2 })
+      })
+
+      test('richnessByTaxon is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
+        expect(richnessByTaxon).toEqual({ 100: 1, 300: 1, 600: 2 })
+      })
+
+      test('richnessByTaxon is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10006002', '10006003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
+        expect(richnessByTaxon).toEqual({ 100: 2, 300: 1, 500: 1, 600: 2 })
+      })
+
+      test('richnessByTaxon is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
+        expect(richnessByTaxon).toEqual({ 600: 2 })
+      })
+
+      test('richnessByTaxon is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['300', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTaxon } = response.json()
+        expect(richnessByTaxon).toBeDefined()
+        expect(richnessByTaxon).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
+        expect(richnessByTaxon).toEqual({ 300: 1, 600: 2 })
+      })
+    })
+
+    describe('richnessBySite', () => {
+      test('richnessBySite are present if no sites filter', async () => {
+        const allSiteIds = ['10006001', '10006002', '10006003']
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+        const mappedSiteIds = richnessBySite.map((site: RichnessSiteData) => site.locationSiteId.toString())
+        expect(mappedSiteIds.every((siteId: string) => allSiteIds.includes(siteId))).toBeTruthy()
+      })
+
+      test('richnessBySite in filter are present & no more', async () => {
+        // Act
+        const siteIdsToBeFilter = ['10006001', '10006003']
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: siteIdsToBeFilter }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+        const mappedSiteIds = richnessBySite.map((site: RichnessSiteData) => site.locationSiteId.toString())
+        expect(mappedSiteIds.every((siteId: string) => siteIdsToBeFilter.includes(siteId))).toBeTruthy()
+      })
+
+      test('richnessBySite is return expected properties', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Arrange
+        const siteExpectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
+
+        expect(response.statusCode, response.body).toBe(200)
+
+        // Assert - property exists & correct type
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+
+        // Assert - first result is object
+        const testedSite = richnessBySite.find((site: RichnessSiteData) => site.locationSiteId === 10006001)
+        expect(testedSite).toBeTypeOf('object')
+        const site = testedSite as Record<string, any>
+
+        // Assert - first result contains (only) expected props
+        siteExpectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
+        Object.keys(site).forEach(actualProperty => expect(siteExpectedProperties).toContain(actualProperty))
+      })
+
+      test('richnessBySite is calculate correctly on given date', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite).toBeDefined()
+        expect(Array.isArray(richnessBySite)).toBe(true)
+        expect(richnessBySite.length).toBe(9)
+
+        const richnessBySite1 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006001)
+        expect(richnessBySite1.length).toBe(3)
+        const site1TaxonClass1 = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const site1TaxonClass2 = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        const site1TaxonClass3 = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site1TaxonClass1.richness).toBe(1)
+        expect(site1TaxonClass2.richness).toBe(1)
+        expect(site1TaxonClass3.richness).toBe(2)
+
+        const richnessBySite2 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006002)
+        expect(richnessBySite2.length).toBe(4)
+        const site2TaxonClass1 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const site2TaxonClass2 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        const site2TaxonClass3 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 500)
+        const site2TaxonClass4 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site2TaxonClass1.richness).toBe(1)
+        expect(site2TaxonClass2.richness).toBe(1)
+        expect(site2TaxonClass3.richness).toBe(1)
+        expect(site2TaxonClass4.richness).toBe(2)
+
+        const richnessBySite3 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006003)
+        expect(richnessBySite3.length).toBe(2)
+        const site3TaxonClass1 = richnessBySite3.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const site3TaxonClass2 = richnessBySite3.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site3TaxonClass1.richness).toBe(1)
+        expect(site3TaxonClass2.richness).toBe(2)
+      })
+
+      test('richnessBySite is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite.length).toBe(3)
+        richnessBySite.forEach((site: RichnessSiteData) => expect(site.locationSiteId).toBe(10006001))
+        const taxonClass1 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const taxonClass2 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        const taxonClass3 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(taxonClass1?.richness).toBe(1)
+        expect(taxonClass2?.richness).toBe(1)
+        expect(taxonClass3?.richness).toBe(2)
+      })
+
+      test('richnessBySite is calculate correctly on given date filter by sites', async () => {
+        // Arrange
+        const siteIdsToBeFilter = ['10006001', '10006003']
+
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: siteIdsToBeFilter }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite.length).toBe(5)
+
+        richnessBySite.forEach((site: RichnessSiteData) => expect(siteIdsToBeFilter.includes(site.locationSiteId.toString())).toBeTruthy())
+
+        const richnessBySite1 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006001)
+        expect(richnessBySite1.length).toBe(3)
+        const site1TaxonClass1 = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const site1TaxonClass2 = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        const site1TaxonClass3 = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site1TaxonClass1.richness).toBe(1)
+        expect(site1TaxonClass2.richness).toBe(1)
+        expect(site1TaxonClass3.richness).toBe(2)
+
+        const richnessBySite2 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006003)
+        expect(richnessBySite2.length).toBe(2)
+        const site2TaxonClass1 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 100)
+        const site2TaxonClass2 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site2TaxonClass1.richness).toBe(1)
+        expect(site2TaxonClass2.richness).toBe(2)
+      })
+
+      test('richnessBySite is calculate correctly on given date filter by taxon', async () => {
+        // Arrange
+        const taxonIdToBeFilter = '600'
+
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: taxonIdToBeFilter }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite.length).toBe(3)
+        richnessBySite.forEach((site: RichnessSiteData) => expect(site.taxonClassId.toString() === taxonIdToBeFilter).toBeTruthy())
+
+        const richnessBySite1 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006001)
+        const site1TaxonClass = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site1TaxonClass.richness).toBe(2)
+
+        const richnessBySite2 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006002)
+        const site2TaxonClass = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site2TaxonClass.richness).toBe(2)
+
+        const richnessBySite3 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006003)
+        const site3TaxonClass = richnessBySite3.find((site: RichnessSiteData) => site.taxonClassId === 600)
+        expect(site3TaxonClass.richness).toBe(2)
+      })
+
+      test('richnessBySite is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['300', '500'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessBySite } = response.json()
+        expect(richnessBySite.length).toBe(3)
+        const richnessBySite1 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006001)
+        const site1TaxonClass = richnessBySite1.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        expect(site1TaxonClass.richness).toBe(1)
+
+        const richnessBySite2 = richnessBySite.filter((site: RichnessSiteData) => site.locationSiteId === 10006002)
+        const site2TaxonClass1 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 300)
+        const site2TaxonClass2 = richnessBySite2.find((site: RichnessSiteData) => site.taxonClassId === 500)
+        expect(site2TaxonClass1.richness).toBe(1)
+        expect(site2TaxonClass2.richness).toBe(1)
+      })
+    })
+  })
 
   describe('check empty value cases', async () => {
     const expectedEmptyResult = (result: RichnessDatasetResponse): void => {
