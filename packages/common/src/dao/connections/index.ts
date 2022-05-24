@@ -39,7 +39,10 @@ export const getSequelizeBase = ({ host, port, databaseName, user, password, isS
       timestamps: true,
       underscored: true
     },
-    logging
+    logging,
+    pool: {
+      max: 20
+    }
   }
 
   return new Sequelize(
