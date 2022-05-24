@@ -231,6 +231,28 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(emptyResult).toEqual([])
         expect(emptyResult.length).toEqual(0)
       })
+
+      test('get correct site/species/taxon on non-CR species', async () => {
+        // Act
+        const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedOut({
+          ...options,
+          url,
+          query: { ...options.query, taxons: '100' }
+        })
+        const expectedSite = 'Test Site'
+        const expectedCommonName = 'Cobra'
+        const expectedScientificName = 'Naja'
+
+        // Assert
+        const result = JSON.parse(response.body)
+        const richnessExport = result.richnessExport
+        expect(richnessExport.length).toEqual(3)
+        expect(richnessExport).toBeDefined()
+        richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
+        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificName).toContain(item.scientificname))
+        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonName).toEqual(item.commonname))
+      })
     })
 
     describe('protected data (as non-project members)', async () => {
@@ -256,6 +278,28 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         const emptyResult = result.richnessExport
         expect(emptyResult).toEqual([])
         expect(emptyResult.length).toEqual(0)
+      })
+
+      test('get correct site/species/taxon on non-CR species', async () => {
+        // Act
+        const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await injectAsLoggedInNotProjectMember({
+          ...options,
+          url,
+          query: { ...options.query, taxons: '600' }
+        })
+        const expectedSite = 'Test Site'
+        const expectedCommonName = 'Cat'
+        const expectedScientificName = 'Felis catus'
+
+        // Assert
+        const result = JSON.parse(response.body)
+        const richnessExport = result.richnessExport
+        expect(richnessExport.length).toEqual(1)
+        expect(richnessExport).toBeDefined()
+        richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
+        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificName).toContain(item.scientificname))
+        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonName).toEqual(item.commonname))
       })
     })
 
