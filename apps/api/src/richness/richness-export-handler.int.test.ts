@@ -207,7 +207,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       })
     })
 
-    describe('check public data (as logout member)', async () => {
+    describe('protected data (as logout member)', async () => {
       const startDate = '2001-01-01T00:00:00.000Z'
       const endDate = '2021-03-20T11:00:00.000Z'
       const options: InjectOptions = {
