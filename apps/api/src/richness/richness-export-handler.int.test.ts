@@ -119,8 +119,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has expected results on given date', async () => {
         // Act
         const expectedObject = {
-          scientificname: 'Eagle',
-          commonname: 'Birds',
+          scientificname: 'Accipitridae',
+          commonname: 'Eagle',
           site: 'Test Site 2',
           latitude: 18.31307,
           longitude: -65.24878,
@@ -143,7 +143,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         const richnessExport = result.richnessExport
         expect(richnessExport.length).toEqual(6)
         expect(richnessExport).toBeDefined()
-        const foundSiteDetection = richnessExport.find((item: { scientificname: string }) => item.scientificname === 'Eagle')
+        const foundSiteDetection = richnessExport.find((item: { scientificname: string }) => item.scientificname === expectedObject.scientificname)
         expect(foundSiteDetection).toEqual(expectedObject)
       })
 
@@ -156,8 +156,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           query: { ...options.query, siteIds: '10001002' }
         })
         const expectedSite = 'Test Site 2'
-        const expectedSpecies = ['Sparrow', 'Eagle']
-        const expectedTaxon = 'Birds'
+        const expectedCommonNames = ['Sparrow', 'Eagle']
+        const expectedScientificNames = ['Accipitridae', 'Passeridae']
 
         // Assert
         const result = JSON.parse(response.body)
@@ -165,8 +165,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(2)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedSpecies).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedTaxon).toEqual(item.commonname))
+        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificNames).toContain(item.scientificname))
+        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonNames).toContain(item.commonname))
       })
 
       test('get correct site/species/taxon by taxon filter', async () => {
@@ -178,8 +178,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           query: { ...options.query, taxons: '100' }
         })
         const expectedSite = 'Test Site'
-        const expectedSpecies = 'Cobra'
-        const expectedTaxon = 'Amphibians'
+        const expectedCommonName = 'Cobra'
+        const expectedScientificName = 'Naja'
 
         // Assert
         const result = JSON.parse(response.body)
@@ -187,8 +187,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(3)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedSpecies).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedTaxon).toEqual(item.commonname))
+        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificName).toContain(item.scientificname))
+        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonName).toEqual(item.commonname))
       })
       test('get correct site/species/taxon by several taxons (test using CR species)', async () => {
         // Act
@@ -199,8 +199,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           query: { ...options.query, taxons: ['100', '300'] }
         })
         const expectedSite = ['Test Site', 'Test Site 2']
-        const expectedSpecies = ['Cobra', 'Eagle', 'Sparrow']
-        const expectedTaxon = ['Amphibians', 'Birds']
+        const expectedCommonNames = ['Cobra', 'Eagle', 'Sparrow']
+        const expectedScientificNames = ['Naja', 'Accipitridae', 'Passeridae']
 
         // Assert
         const result = JSON.parse(response.body)
@@ -208,8 +208,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(5)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toContain(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedSpecies).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedTaxon).toContain(item.commonname))
+        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificNames).toContain(item.scientificname))
+        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonNames).toContain(item.commonname))
       })
     })
 
