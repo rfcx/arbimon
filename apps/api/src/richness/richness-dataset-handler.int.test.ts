@@ -59,10 +59,10 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
   })
 
   describe.each([
-    { label: 'logged-in-project-member', inject: injectAsLoggedInProjectMember },
+    ['logged-in-project-member', injectAsLoggedInProjectMember]
     // { label: 'logged-in-not-project-member', inject: injectAsLoggedInNotProjectMember },
     // { label: 'logged-out', inject: injectAsLoggedOut }
-  ])('as %s', ({ inject }) => {
+  ])('as %s', (_, inject) => {
     describe('basic', () => {
       test('returns successfully', async () => {
         // Arrange
@@ -92,6 +92,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const result = JSON.parse(response.body)
         EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
         expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
@@ -99,7 +100,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTaxon', () => {
-      test('richnessByTaxon is calcurate correctly on given date', async () => {
+      test('richnessByTaxon is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -109,6 +110,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
@@ -116,7 +118,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
         expect(richnessByTaxon).toEqual({ 100: 1, 300: 2, 600: 1 })
       })
-      test('richnessByTaxon is calcurate correctly data on given date filter by site', async () => {
+
+      test('richnessByTaxon is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -126,6 +129,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
@@ -133,7 +137,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
         expect(richnessByTaxon).toEqual({ 100: 1, 600: 1 })
       })
-      test('richnessByTaxon is calcurate correctly on given date filter by sites', async () => {
+
+      test('richnessByTaxon is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -143,6 +148,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
@@ -150,7 +156,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
         expect(richnessByTaxon).toEqual({ 300: 2 })
       })
-      test('richnessByTaxon is calcurate correctly on given date filter by taxon', async () => {
+
+      test('richnessByTaxon is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -160,6 +167,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
@@ -167,7 +175,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTaxon)).toBeTruthy()
         expect(richnessByTaxon).toEqual({ 600: 1 })
       })
-      test('richnessByTaxon is calcurate correctly on given date filter by taxons', async () => {
+
+      test('richnessByTaxon is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -177,6 +186,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTaxon = JSON.parse(response.body).richnessByTaxon
         expect(richnessByTaxon).toBeDefined()
         expect(richnessByTaxon).toBeTypeOf('object')
@@ -187,7 +197,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessBySite', () => {
-      test('richnessBySite is calcurate correctly on given date', async () => {
+      test('richnessBySite is calculate correctly on given date', async () => {
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
           method,
@@ -197,6 +207,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         // Arrange
         const siteExpectedProperties = ['locationSiteId', 'richness', 'taxonClassId']
+
+        expect(response.statusCode).toBe(200)
 
         // Assert - property exists & correct type
         const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
@@ -213,7 +225,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         siteExpectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
         Object.keys(site).forEach(actualProperty => expect(siteExpectedProperties).toContain(actualProperty))
       })
-      test('richnessBySite is calcurate correctly on given date filter by site', async () => {
+
+      test('richnessBySite is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -223,6 +236,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
         expect(richnessBySite.length).toBe(2)
         richnessBySite.forEach((site: RichnessSiteData) => expect(site.locationSiteId).toBe(10001001))
@@ -231,7 +245,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(taxonClass1?.richness).toBe(1)
         expect(taxonClass2?.richness).toBe(1)
       })
-      test('richnessBySite is calcurate correctly on given date filter by sites', async () => {
+
+      test('richnessBySite is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -241,6 +256,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
         expect(richnessBySite.length).toBe(3)
 
@@ -259,7 +275,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(taxonClass2?.richness).toBe(1)
         expect(taxonClass3?.richness).toBe(2)
       })
-      test('richnessBySite is calcurate correctly on given date filter by taxon', async () => {
+
+      test('richnessBySite is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -269,12 +286,14 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
         expect(richnessBySite.length).toBe(1)
         expect(richnessBySite[0].taxonClassId).toBe(600)
         expect(richnessBySite[0].richness).toBe(1)
       })
-      test('richnessBySite is calcurate correctly on given date filter by taxons', async () => {
+
+      test('richnessBySite is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -284,6 +303,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessBySite = JSON.parse(response.body)?.richnessBySite as RichnessSiteData[]
         expect(richnessBySite.length).toBe(2)
         const siteData1 = richnessBySite.find((site: RichnessSiteData) => site.taxonClassId === 300)
@@ -297,7 +317,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeHourOfDay', () => {
-      test('richnessByTimeHourOfDay is calcurate correctly on given date', async () => {
+      test('richnessByTimeHourOfDay is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -307,6 +327,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
@@ -314,7 +335,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
         expect(richnessByTimeHourOfDay).toEqual({ 0: 2, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 2, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 2 })
       })
-      test('richnessByTimeHourOfDay is calcurate correctly on given date filter by site', async () => {
+
+      test('richnessByTimeHourOfDay is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -324,6 +346,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
@@ -331,7 +354,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
         expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
-      test('richnessByTimeHourOfDay is calcurate correctly on given date filter by sites', async () => {
+
+      test('richnessByTimeHourOfDay is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -341,6 +365,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
@@ -348,7 +373,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
         expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 2, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
-      test('richnessByTimeHourOfDay is calcurate correctly on given date filter by taxon', async () => {
+
+      test('richnessByTimeHourOfDay is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -358,6 +384,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
@@ -365,7 +392,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeHourOfDay)).toBeTruthy()
         expect(richnessByTimeHourOfDay).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 1, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 1 })
       })
-      test('richnessByTimeHourOfDay is calcurate correctly on given date filter by taxons', async () => {
+
+      test('richnessByTimeHourOfDay is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -375,6 +403,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeHourOfDay = JSON.parse(response.body).richnessByTimeHourOfDay
         expect(richnessByTimeHourOfDay).toBeDefined()
         expect(richnessByTimeHourOfDay).toBeTypeOf('object')
@@ -385,7 +414,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeDayOfWeek', () => {
-      test('richnessByTimeDayOfWeek is calcurate correctly on given date', async () => {
+      test('richnessByTimeDayOfWeek is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -395,6 +424,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
@@ -402,7 +432,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
         expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 2, 5: 1, 6: 2 })
       })
-      test('richnessByTimeDayOfWeek is calcurate correctly on given date filter by site', async () => {
+
+      test('richnessByTimeDayOfWeek is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -412,6 +443,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
@@ -419,7 +451,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
         expect(richnessByTimeDayOfWeek).toEqual({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1 })
       })
-      test('richnessByTimeDayOfWeek is calcurate correctly on given date filter by sites', async () => {
+
+      test('richnessByTimeDayOfWeek is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -429,6 +462,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
@@ -436,7 +470,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
         expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 2, 5: 0, 6: 1 })
       })
-      test('richnessByTimeDayOfWeek is calcurate correctly on given date filter by taxon', async () => {
+
+      test('richnessByTimeDayOfWeek is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -446,6 +481,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
@@ -453,7 +489,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
         expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 1 })
       })
-      test('richnessByTimeDayOfWeek is calcurate correctly on given date filter by taxons', async () => {
+
+      test('richnessByTimeDayOfWeek is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -463,6 +500,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeDayOfWeek = JSON.parse(response.body).richnessByTimeDayOfWeek
         expect(richnessByTimeDayOfWeek).toBeDefined()
         expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
@@ -473,7 +511,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeMonthOfYear', () => {
-      test('richnessByTimeMonthOfYear is calcurate correctly on given date', async () => {
+      test('richnessByTimeMonthOfYear is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -483,6 +521,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
@@ -490,7 +529,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
         expect(richnessByTimeMonthOfYear).toEqual({ 0: 3, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
-      test('richnessByTimeMonthOfYear is calcurate correctly on given date filter by site', async () => {
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -500,6 +540,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
@@ -507,7 +548,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
         expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
-      test('richnessByTimeMonthOfYear is calcurate correctly on given date filter by sites', async () => {
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -517,6 +559,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
@@ -524,7 +567,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
         expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
       })
-      test('richnessByTimeMonthOfYear is calcurate correctly on given date filter by taxon', async () => {
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -534,6 +578,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
@@ -541,7 +586,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
         expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0 })
       })
-      test('richnessByTimeMonthOfYear is calcurate correctly on given date filter by taxons', async () => {
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -551,6 +597,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeMonthOfYear = JSON.parse(response.body).richnessByTimeMonthOfYear
         expect(richnessByTimeMonthOfYear).toBeDefined()
         expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
@@ -561,7 +608,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeUnix', () => {
-      test('richnessByTimeUnix is calcurate correctly on given date', async () => {
+      test('richnessByTimeUnix is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -571,6 +618,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
@@ -578,7 +626,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
         expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1641081600: 1, 1641600000: 1, 1645056000: 2 })
       })
-      test('richnessByTimeUnix is calcurate correctly on given date filter by site', async () => {
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -588,6 +637,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
@@ -595,7 +645,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
         expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1 })
       })
-      test('richnessByTimeUnix is calcurate correctly on given date filter by sites', async () => {
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -605,6 +656,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
@@ -612,7 +664,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
         expect(richnessByTimeUnix).toEqual({ 1641081600: 1, 1641600000: 1, 1645056000: 2 })
       })
-      test('richnessByTimeUnix is calcurate correctly on given date filter by taxon', async () => {
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -622,6 +675,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
@@ -629,7 +683,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
         expect(richnessByTimeUnix).toEqual({ 1641081600: 1, 1641600000: 1, 1645056000: 1 })
       })
-      test('richnessByTimeUnix is calcurate correctly on given date filter by taxons', async () => {
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
         const response = await inject({
@@ -639,6 +694,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const richnessByTimeUnix = JSON.parse(response.body).richnessByTimeUnix
         expect(richnessByTimeUnix).toBeDefined()
         expect(richnessByTimeUnix).toBeTypeOf('object')
@@ -650,7 +706,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
     describe('detectedSpecies', () => {
       // TODO: Update richness presence test case after the query code updated
-      test('detectedSpecies is calcurate correctly on given date', async () => {
+
+      test('detectedSpecies is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -660,11 +717,13 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const detectedSpecies = JSON.parse(response.body).detectedSpecies
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
-      test('detectedSpecies is calcurate correctly on given date filter by site', async () => {
+
+      test('detectedSpecies is calculate correctly on given date filter by site', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -674,11 +733,13 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const detectedSpecies = JSON.parse(response.body).detectedSpecies
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
-      test('detectedSpecies is calcurate correctly on given date filter by sites', async () => {
+
+      test('detectedSpecies is calculate correctly on given date filter by sites', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -688,11 +749,13 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const detectedSpecies = JSON.parse(response.body).detectedSpecies
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
-      test('detectedSpecies is calcurate correctly on given date filter by taxon', async () => {
+
+      test('detectedSpecies is calculate correctly on given date filter by taxon', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -702,11 +765,13 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const detectedSpecies = JSON.parse(response.body).detectedSpecies
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
       })
-      test('detectedSpecies is calcurate correctly on given date filter by taxons', async () => {
+
+      test('detectedSpecies is calculate correctly on given date filter by taxons', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
@@ -716,6 +781,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         })
 
         // Assert
+        expect(response.statusCode).toBe(200)
         const detectedSpecies = JSON.parse(response.body).detectedSpecies
         expect(detectedSpecies).toBeDefined()
         expect(detectedSpecies).toBeTypeOf('object')
@@ -764,6 +830,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
@@ -779,6 +846,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
@@ -794,12 +862,13 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
     })
 
-    test('does not have  any data on specific sites', async () => {
+    test('does not have any data on specific sites', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
       const response = await injectAsLoggedInProjectMember({
@@ -809,6 +878,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
       expectedEmptyResult(result)
@@ -825,6 +895,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
@@ -840,6 +911,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       })
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
@@ -853,41 +925,49 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       url,
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
     }
+
     test('isLocationRedacted should be false if logged in as project member', async () => {
       // Act
       const response = await injectAsLoggedInProjectMember(options)
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeFalsy()
     })
+
     test('isLocationRedacted should be true if logged out', async () => {
       // Act
       const response = await injectAsLoggedOut(options)
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeTruthy()
     })
+
     test('isLocationRedacted should be true if if logged in as NOT project member', async () => {
       // Act
       const response = await injectAsLoggedInNotProjectMember(options)
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeTruthy()
     })
+
     test('isLocationRedacted should be true if token is invalid', async () => {
       // Act
       const response = await injectAsInvalidToken(options)
 
       // Assert
+      expect(response.statusCode).toBe(200)
       const result = JSON.parse(response.body)
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
