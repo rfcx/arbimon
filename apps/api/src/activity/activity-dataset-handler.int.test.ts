@@ -1,8 +1,9 @@
+import { InjectOptions } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { activityDatasetGeneratedUrl, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { activityDatasetGeneratedUrl, ActivityDatasetResponse, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
-import { getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
+import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
 
@@ -18,13 +19,18 @@ const EXPECTED_PROPS = [
   'activityByTimeDate'
 ]
 
+const PROJECT_ID_BASIC = '20001001'
+
 describe(`GET ${ROUTE} (activity dataset)`, async () => {
   const routes = routesActivity
-  const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
-  const injectAsLoggedOut = await getInjectAsLoggedOut(routes)
 
-  describe('simple tests', () => {
-    test('exists', async () => {
+  const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
+  const injectAsLoggedInNotProjectMember = await getInjectAsLoggedInNotProjectMember(routes)
+  const injectAsLoggedOut = await getInjectAsLoggedOut(routes)
+  const injectAsInvalidToken = await getInjectAsInvalidToken(routes)
+  const method = GET
+
+  test('exists', async () => {
     // Arrange
     const app = await getMockedFastify({ routes })
 
@@ -33,48 +39,48 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
 
     // Assert
     expect(routeList).toContain(ROUTE)
-    })
+  })
 
-    test('returns successfully', async () => {
+  describe.each([
+    ['logged-in-project-member', injectAsLoggedInProjectMember],
+    ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
+    ['logged-out', injectAsLoggedOut]
+  ])('as %s', (_, inject) => {
+    const url = activityDatasetGeneratedUrl({ projectId: PROJECT_ID_BASIC })
+    const options: InjectOptions = {
+      method,
+      url,
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-27T00:00:00.000Z' }
+    }
+    test(`returns success status response code for ${_} injection`, async () => {
       // Act
-      const response = await injectAsLoggedOut({
-        method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
-      })
-
+      const response = await inject(options)
       // Assert
       expect(response.statusCode).toBe(200)
-
       const result = JSON.parse(response.body)
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
     })
 
-    test('contains all expected props', async () => {
+    test('contains all expected props & no more', async () => {
       // Act
-      const response = await injectAsLoggedOut({
-        method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
-      })
+      const response = await inject(options)
 
       // Assert
-      const result = JSON.parse(response.body)
+      const result = JSON.parse(response.body) as ActivityDatasetResponse
+      const keys = Object.keys(result)
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      expect(keys.length).toBe(EXPECTED_PROPS.length)
     })
 
     test('does not contain any additional props', async () => {
       // Act
-      const response = await injectAsLoggedOut({
-        method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
-      })
+      const response = await inject(options)
 
       // Assert
       const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      const keys = Object.keys(result)
+      keys.forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
     })
   })
 

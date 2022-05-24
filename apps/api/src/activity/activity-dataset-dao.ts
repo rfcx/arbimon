@@ -4,7 +4,7 @@ import { Op, QueryTypes, Sequelize } from 'sequelize'
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
@@ -13,10 +13,10 @@ import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 
 // Similar logic with filterDetection in `controller-spotlight-dataset.ts`. Moving to common?
-export async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+export async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionByVersionSiteSpeciesHour[]> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
 
-  const where: Where<DetectionBySiteSpeciesHour> = {
+  const where: Where<DetectionByVersionSiteSpeciesHour> = {
     timePrecisionHourLocal: {
       [Op.and]: {
         [Op.gte]: startDateUtcInclusive,
@@ -27,7 +27,7 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
   }
 
   if (siteIds.length > 0) {
-    where.locationSiteId = siteIds
+    where.projectSiteId = siteIds
   }
 
   // ! Be careful
@@ -35,22 +35,22 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
     where.taxonClassId = taxons
   }
 
-  return await models.DetectionBySiteSpeciesHour.findAll({
+  return await models.DetectionByVersionSiteSpeciesHour.findAll({
     where,
     raw: true
   })
 }
 
-export function getRecordingDurationMinutes (detections: DetectionBySiteSpeciesHour[]): number {
-  const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.locationSiteId}`))
-  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
+export function getRecordingDurationMinutes (detections: DetectionByVersionSiteSpeciesHour[]): number {
+  const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.projectSiteId}`))
+  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].detectionMinutes))
 }
 
-export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
+export function calculateDetectionCount (detections: DetectionByVersionSiteSpeciesHour[]): number {
   return sum(detections.map(({ count }) => count))
 }
 
-function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): number {
+function calculateDetectionFrequency (detections: DetectionByVersionSiteSpeciesHour[], totalRecordingCount: number): number {
   const detectionCount = calculateDetectionCount(detections)
   return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
 }
@@ -65,8 +65,8 @@ export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDa
 
   // Filter outer query by project & site
   // Note: all `bind` values already defined by dataset filter
-  const outerConditions = ['ls.location_project_id = $locationProjectId']
-  if (filter.siteIds.length > 0) { outerConditions.push('ls.id = ANY($siteIds)') }
+  const outerConditions = ['ps.project_id = $projectId']
+  if (filter.siteIds.length > 0) { outerConditions.push('ps.id = ANY($siteIds)') }
 
   const sql = `
     SELECT id                                 as "siteId",
@@ -77,25 +77,25 @@ export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDa
           detection::float / duration_minutes as "detectionFrequency",
           detection > 0                       as occupancy
     FROM (
-        SELECT ls.id,
-              ls.name,
-              ls.latitude,
-              ls.longitude,
+        SELECT ps.id,
+              ps.name,
+              ps.latitude,
+              ps.longitude,
               coalesce(sum(detection_by_site_hour.count), 0)::integer   as detection,
               coalesce(sum(detection_by_site_hour.duration_minutes), 1) as duration_minutes
-        FROM location_site as ls
+        FROM project_site as ps
         LEFT JOIN (
             SELECT time_precision_hour_local,
-                  location_site_id,
+                  project_site_id,
                   sum(count)            as count,
-                  max(duration_minutes) as duration_minutes -- same recording
-            FROM detection_by_site_species_hour dbssh
+                  max(detection_minutes) as duration_minutes -- same recording
+            FROM detection_by_source_site_species_hour dbssh
             WHERE ${datasetConditions}
-            GROUP BY dbssh.time_precision_hour_local, dbssh.location_site_id
+            GROUP BY dbssh.time_precision_hour_local, dbssh.project_site_id
         ) as detection_by_site_hour
-            ON ls.id = detection_by_site_hour.location_site_id
+            ON ps.id = detection_by_site_hour.project_site_id
         WHERE ${outerConditions.join(' AND ')}
-        GROUP BY ls.id
+        GROUP BY ps.id
     ) detection_by_site
   `
 
@@ -119,7 +119,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   if (filterDetecions.length === 0) return []
 
   const detectionsBySpecies = groupBy(filteredDetections, 'taxonSpeciesId')
-  const totalSiteCount = new Set(filteredDetections.map(({ locationSiteId }) => locationSiteId)).size
+  const totalSiteCount = new Set(filteredDetections.map(({ projectSiteId }) => projectSiteId)).size
 
   // TODO ???: Move query to somewhere more global
   const taxonClasses = await models.TaxonClass.findAll({ raw: true })
@@ -134,7 +134,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
     const detectionCount = calculateDetectionCount(speciesDetectedDetections)
     const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingCount)
-    const occupiedSites = new Set(speciesDetectedDetections.map(({ locationSiteId }) => locationSiteId)).size
+    const occupiedSites = new Set(speciesDetectedDetections.map(({ projectSiteId }) => projectSiteId)).size
     const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
 
     const matchedSpecies = species.find(({ taxonSpeciesId }) => taxonSpeciesId === Number(speciesId))
