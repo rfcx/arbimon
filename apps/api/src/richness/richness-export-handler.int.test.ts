@@ -1,4 +1,4 @@
-import { HTTPMethods, LightMyRequest } from 'fastify'
+import { HTTPMethods } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { RichnessExportResponse, richnessExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
@@ -46,65 +46,59 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
   const injectAsLoggedInNotProjectMember = await getInjectAsLoggedInNotProjectMember(routes)
   const injectAsLoggedOut = await getInjectAsLoggedOut(routes)
 
-  describe('happy path', () => {
-    const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-    const options: InjectOptions = {
-      method: GET,
-      url,
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
-    }
-    test('the route exists', async () => {
-      // Arrange
-      const app = await getMockedFastify({ routes })
+  test('the route exists', async () => {
+    // Arrange
+    const app = await getMockedFastify({ routes })
 
-      // Act
-      const routeList = app.printRoutes({ includeHooks: true })
-      // Assert
-      expect(routeList).toContain('-export')
-    })
-
-    test('the route contains richnessExport prop & no more', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember(options)
-
-      // Assert
-      const result = JSON.parse(response.body) as RichnessExportResponse
-      const [key] = Object.keys(result)
-      expect(key).toEqual(EXPECTED_PROPS_KEY)
-      expect([key].length).toBe(1)
-    })
-
-    test('richnessExport includes all expected props', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember(options)
-
-      // Assert
-      const result = JSON.parse(response.body) as RichnessExportResponse
-      const [key] = Object.keys(result)
-      expect(key).toEqual(EXPECTED_PROPS_KEY)
-      expect([key].length).toBe(1)
-    })
-
-    test('returns successfully for users with different injections', async () => {
-      // Act
-      const asyncA = async (options: InjectOptions): LightMyRequest<Response> => {
-        return await injectAsLoggedInProjectMember(options)
+    // Act
+    const routeList = app.printRoutes({ includeHooks: true })
+    // Assert
+    expect(routeList).toContain('-export')
+  })
+  describe.each([
+    ['logged-in-project-member', injectAsLoggedInProjectMember],
+    ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
+    ['logged-out', injectAsLoggedOut]
+  ])('as %s', (_, inject) => {
+    describe('basic', () => {
+      const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
+      const options: InjectOptions = {
+        method: GET,
+        url,
+        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
       }
-      const asyncB = async (options: InjectOptions): LightMyRequest<Response> => {
-        return await injectAsLoggedInNotProjectMember(options)
-      }
-      const asyncC = async (options: InjectOptions): LightMyRequest<Response> => {
-        return await injectAsLoggedOut(options)
-      }
-      const list = [asyncA, asyncB, asyncC]
-      for (const fn of list) {
-        const response = await fn(options)
+
+      test('the route contains richnessExport prop & no more', async () => {
+        // Act
+        const response = await inject(options)
+
+        // Assert
+        const result = JSON.parse(response.body) as RichnessExportResponse
+        const [key] = Object.keys(result)
+        expect(key).toEqual(EXPECTED_PROPS_KEY)
+        expect([key].length).toBe(1)
+      })
+
+      test('richnessExport includes all expected props', async () => {
+        // Act
+        const response = await inject(options)
+
+        // Assert
+        const result = JSON.parse(response.body) as RichnessExportResponse
+        const [key] = Object.keys(result)
+        expect(key).toEqual(EXPECTED_PROPS_KEY)
+        expect([key].length).toBe(1)
+      })
+
+      test(`returns success status response code for ${_} injection`, async () => {
+        // Act
+        const response = await inject(options)
         // Assert
         expect(response.statusCode).toBe(200)
         const result = JSON.parse(response.body)
         expect(result).toBeDefined()
         expect(result).toBeTypeOf('object')
-      }
+      })
     })
   })
 
