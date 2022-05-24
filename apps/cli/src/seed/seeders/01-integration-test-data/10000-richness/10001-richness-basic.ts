@@ -11,9 +11,9 @@ import { getSequelize } from '@/db/connections'
 export const testProject: Project = {
   id: 10001,
   idCore: 'integration1',
-  idArbimon: 133887,
-  slug: 'integration-test-project',
-  name: 'Integration Test Project'
+  idArbimon: 10001001,
+  slug: 'integration-test-project1',
+  name: 'Integration Test Project 1'
 }
 
 export const testProjectVersion: ProjectVersion = {

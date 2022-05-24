@@ -9,10 +9,10 @@ import { getSequelize } from '@/db/connections'
 
 // Mocked projects
 export const testProject: Project = {
-  id: 10005,
+  id: 10006,
   idCore: 'integration6',
-  idArbimon: 133887,
-  slug: 'integration-test-project',
+  idArbimon: 10006001,
+  slug: 'integration-test-project6',
   name: 'Integration Test Project 6'
 }
 
@@ -96,31 +96,31 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     taxonSpeciesId: 5,
     taxonClassId: 600,
     countDetectionMinutes: 2
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
-    projectVersionId: 10006,
-    projectSiteId: 10006001,
-    taxonSpeciesId: 5,
-    taxonClassId: 600,
-    countDetectionMinutes: 2
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
-    projectVersionId: 10006,
-    projectSiteId: 10006001,
-    taxonSpeciesId: 5,
-    taxonClassId: 600,
-    countDetectionMinutes: 2
-  },
-  {
-    timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
-    projectVersionId: 10006,
-    projectSiteId: 10006001,
-    taxonSpeciesId: 5,
-    taxonClassId: 600,
-    countDetectionMinutes: 2
   }
+  // {
+  //   timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
+  //   projectVersionId: 10006,
+  //   projectSiteId: 10006001,
+  //   taxonSpeciesId: 5,
+  //   taxonClassId: 600,
+  //   countDetectionMinutes: 2
+  // },
+  // {
+  //   timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
+  //   projectVersionId: 10006,
+  //   projectSiteId: 10006001,
+  //   taxonSpeciesId: 5,
+  //   taxonClassId: 600,
+  //   countDetectionMinutes: 2
+  // },
+  // {
+  //   timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sun
+  //   projectVersionId: 10006,
+  //   projectSiteId: 10006001,
+  //   taxonSpeciesId: 5,
+  //   taxonClassId: 600,
+  //   countDetectionMinutes: 2
+  // }
 ]
 
 const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [

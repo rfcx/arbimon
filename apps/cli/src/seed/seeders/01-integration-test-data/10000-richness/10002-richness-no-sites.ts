@@ -10,7 +10,7 @@ import { getSequelize } from '@/db/connections'
 export const testProject2: Project = {
   id: 10002,
   idCore: 'integration1',
-  idArbimon: 133888,
+  idArbimon: 10002001,
   slug: 'integration-test-project2',
   name: 'Integration Test Project 2'
 }
