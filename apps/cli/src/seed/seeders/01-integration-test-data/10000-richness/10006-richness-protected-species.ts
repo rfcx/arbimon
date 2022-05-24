@@ -9,9 +9,9 @@ import { getSequelize } from '@/db/connections'
 
 // Mocked projects
 export const testProject: Project = {
-  id: 10005,
+  id: 10006,
   idCore: 'integration6',
-  idArbimon: 133887,
+  idArbimon: 133892,
   slug: 'integration-test-project',
   name: 'Integration Test Project 6'
 }
