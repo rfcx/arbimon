@@ -3,6 +3,8 @@ import { describe, expect, test } from 'vitest'
 
 import { RichnessDatasetResponse, richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
+import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
+import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
 import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
@@ -65,43 +67,8 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    describe('basic', () => {
-      test('returns successfully', async () => {
-        // Arrange
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-        const options: InjectOptions = {
-          method,
-          url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
-        }
-
-        // Act
-        const response = await inject(options)
-
-        // Assert
-        expect(response.statusCode, response.body).toBe(200)
-
-        const result = response.json()
-        expect(result).toBeDefined()
-        expect(result).toBeTypeOf('object')
-      })
-
-      test('contains all expected props & no more', async () => {
-        // Act
-        const response = await inject({
-          method,
-          url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC }),
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
-        })
-
-        // Assert
-        expect(response.statusCode, response.body).toBe(200)
-
-        const result = response.json()
-        EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-        expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
-      })
-    })
+    describeDatasetApiReturnsValidResponse(inject, richnessDatasetUrl, EXPECTED_PROPS)
+    describeDatasetApiRejectsInvalidRequests(inject, richnessDatasetUrl)
 
     describe('richnessByTaxon', () => {
       test('richnessByTaxon are present if no sites filter', async () => {
@@ -1862,80 +1829,6 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
       expect(result.isLocationRedacted).toBeTruthy()
-    })
-  })
-
-  describe('client errors', () => {
-    test('rejects missing query', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-          method,
-        url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-    })
-
-    test('rejects invalid project id', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-          method,
-        url: richnessDatasetUrl({ projectId: 'x' })
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid path params: projectId')
-    })
-
-    test('reject not found project id', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-          method,
-        url: richnessDatasetUrl({ projectId: '10097' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(404)
-    })
-
-    test('rejects invalid startDate', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-          method,
-        url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC }),
-        query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid query params')
-      expect(errorMessage).toContain('startDate with value')
-    })
-
-    test('rejects invalid endDate', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember({
-          method,
-        url: richnessDatasetUrl({ projectId: PROJECT_ID_BASIC }),
-        query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid query params')
-      expect(errorMessage).toContain('endDate with value')
     })
   })
 })
