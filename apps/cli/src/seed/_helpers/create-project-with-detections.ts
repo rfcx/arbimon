@@ -4,8 +4,8 @@ import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, RecordingByVersionSiteHour } from '@rfcx-bio/common/dao/types'
 
 export type SiteAutoProject = Omit<ProjectSite, 'projectId' | 'projectVersionFirstAppearsId'>
-export type DetectionAutoProject = Omit<DetectionByVersionSiteSpeciesHour, 'projectVersionId'>
-export type RecordingAutoProject = Omit<RecordingByVersionSiteHour, 'projectVersionId'>
+export type DetectionAutoProject = Omit<DetectionByVersionSiteSpeciesHour, 'projectId' | 'projectVersionId'>
+export type RecordingAutoProject = Omit<RecordingByVersionSiteHour, 'projectId' | 'projectVersionId'>
 
 export const createProjectWithDetections = async (
   models: AllModels,
@@ -36,12 +36,14 @@ export const createProjectWithDetections = async (
   // Create mock detections
   await models.DetectionByVersionSiteSpeciesHour.bulkCreate(detections.map(d => ({
     ...d,
+    projectId: project.id,
     projectVersionId: projectVersion.id
   })))
 
   // Create mock recordings
   await models.RecordingByVersionSiteHour.bulkCreate(recordings.map(r => ({
     ...r,
+    projectId: project.id,
     projectVersionId: projectVersion.id
   })))
 }
