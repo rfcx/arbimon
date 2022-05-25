@@ -2,7 +2,7 @@ import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
 import { ProjectSpeciesFileParams } from '@rfcx-bio/common/api-bio/species/project-species-file'
-import { RISK_RATING_PROTECTED_IDS_SET } from '@rfcx-bio/common/dao/master-data'
+import { RISK_RATING_PROTECTED_ID } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
@@ -26,7 +26,7 @@ export const projectSpeciesFileHandler: Handler<FastifyReply, ProjectSpeciesFile
 
   if (!species) throw BioNotFoundError()
 
-  const isLocationRedacted = RISK_RATING_PROTECTED_IDS_SET.has(species.riskRatingId) && !getIsProjectMember(req)
+  const isLocationRedacted = species.riskRatingId === RISK_RATING_PROTECTED_ID && !getIsProjectMember(req)
   if (isLocationRedacted) throw BioForbiddenError()
 
   // Query file

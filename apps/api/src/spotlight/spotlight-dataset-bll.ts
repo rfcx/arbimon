@@ -1,7 +1,7 @@
 import { sum } from 'lodash-es'
 
 import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { RISK_RATING_PROTECTED_IDS_SET } from '@rfcx-bio/common/dao/master-data'
+import { RISK_RATING_PROTECTED_ID } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { FilterDataset } from '~/datasets/dataset-types'
@@ -28,7 +28,7 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
       raw: true
     })
 
-  const isLocationRedacted = RISK_RATING_PROTECTED_IDS_SET.has(speciesIucn?.riskRatingId) && !isProjectMember
+  const isLocationRedacted = speciesIucn?.riskRatingId === RISK_RATING_PROTECTED_ID && !isProjectMember
 
   // Filtering
   const totalDetections = await filterDetecions(models, projectId, filter)

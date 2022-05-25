@@ -2,7 +2,7 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 import { Op, QueryTypes, Sequelize } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
-import { RISK_RATING_PROTECTED_IDS } from '@rfcx-bio/common/dao/master-data'
+import { RISK_RATING_PROTECTED_ID } from '@rfcx-bio/common/dao/master-data'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -109,7 +109,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
   if (!isProjectMember) {
     const protectedSpecies = await models.SpeciesInProject.findAll({
-      where: { projectId, riskRatingId: RISK_RATING_PROTECTED_IDS }, // TODO: Add `is_protected` column in the DB
+      where: { projectId, riskRatingId: RISK_RATING_PROTECTED_ID }, // TODO: Add `is_protected` column in the DB
       raw: true
     })
 

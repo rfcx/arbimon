@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { RISK_RATING_PROTECTED_IDS_SET } from '@rfcx-bio/common/dao/master-data'
+import { RISK_RATING_PROTECTED_ID } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
@@ -55,7 +55,7 @@ const getProjectSpeciesOne = async (projectId: string, taxonSpeciesSlug: string,
     raw: true
   })
 
-  const isLocationRedacted = RISK_RATING_PROTECTED_IDS_SET.has(speciesInformation.riskRatingId) && !isProjectMember
+  const isLocationRedacted = speciesInformation.riskRatingId === RISK_RATING_PROTECTED_ID && !isProjectMember
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
 
   if (!isLocationRedacted) {

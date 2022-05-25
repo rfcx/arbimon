@@ -22,5 +22,4 @@ export const riskRatings: readonly RiskRating[] = Object.values(masterRiskRating
 export const RISK_RATING_THREATENED_IDS = riskRatings.filter(rr => rr.isThreatened).map(rr => rr.id)
 export const RISK_RATING_THREATENED_IDS_SET = new Set(RISK_RATING_THREATENED_IDS)
 
-export const RISK_RATING_PROTECTED_IDS = riskRatings.filter(rr => rr.isProtected).map(rr => rr.id)
-export const RISK_RATING_PROTECTED_IDS_SET = new Set(RISK_RATING_PROTECTED_IDS)
+export const RISK_RATING_PROTECTED_ID = 600
