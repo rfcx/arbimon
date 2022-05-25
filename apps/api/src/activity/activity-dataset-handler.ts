@@ -1,8 +1,10 @@
 import { ActivityDatasetParams, ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
-import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
+import { getSequelize } from '~/db'
+import { BioInvalidPathParamError, BioInvalidQueryParamError, BioNotFoundError } from '~/errors'
 import { Handler } from '../_services/api-helpers/types'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { assertPathParamsExist } from '../_services/validation'
@@ -18,15 +20,24 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
   const projectId = parseInt(projectIdString)
   if (Number.isNaN(projectId)) throw BioInvalidPathParamError({ projectId: projectIdString })
 
-  const { startDate, endDate, siteIds, taxons } = req.query
-  if (!isValidDate(startDate)) throw BioInvalidQueryParamError({ startDate })
-  if (!isValidDate(endDate)) throw BioInvalidQueryParamError({ endDate })
+  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
+  if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 
-  // Query
+  const projectVersion = await ModelRepository.getInstance(getSequelize())
+    .ProjectVersion
+    .findOne({
+      where: { projectId },
+      attributes: ['id'],
+      raw: true
+    })
+  if (projectVersion === null) throw BioNotFoundError()
+  const projectVersionId = projectVersion.id
+
   const datasetFilter: FilterDataset = {
-    projectId,
-    startDateUtcInclusive: startDate,
-    endDateUtcInclusive: endDate,
+    projectVersionId,
+    startDateUtcInclusive,
+    endDateUtcInclusive,
     // TODO ???: Better way to check query type!
     siteIds: Array.isArray(siteIds) ? siteIds.map(Number) : typeof siteIds === 'string' ? [Number(siteIds)] : [],
     taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []

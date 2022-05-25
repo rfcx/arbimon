@@ -71,7 +71,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    describeDatasetApiReturnsValidResponse(inject, richnessExportUrl, EXPECTED_PROPS)
+    describeDatasetApiReturnsValidResponse(inject, richnessExportUrl, EXPECTED_PROPS, PROJECT_ID_BASIC)
     describeDatasetApiRejectsInvalidRequests(inject, richnessExportUrl)
 
     describe('basic', () => {
@@ -290,7 +290,11 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       })
     })
 
-    describe('check empty value cases', async () => {
+    describe.each([
+      ['logged-in-project-member', injectAsLoggedInProjectMember],
+      ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
+      ['logged-out', injectAsLoggedOut]
+    ])('check empty value cases', (_, inject) => {
       const startDate = '2001-01-01T00:00:00.000Z'
       const endDate = ['2002-01-01T11:00:00.000Z', '2021-03-20T11:00:00.000Z']
       const options: InjectOptions = {
@@ -301,7 +305,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has no result on a empty project', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_NO_DETECTIONS })
-        const response = await injectAsLoggedInProjectMember({
+        const response = await inject({
           ...options,
           url
         })
@@ -313,7 +317,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has no result on a date without detections', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-        const response = await injectAsLoggedInProjectMember({
+        const response = await inject({
           ...options,
           url
         })
@@ -325,7 +329,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has no result on a non-existent site in the project', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-        const response = await injectAsLoggedInProjectMember({
+        const response = await inject({
           ...options,
           url,
           query: { ...options.query, endDate: endDate[1], siteIds: '10001010' }
@@ -338,7 +342,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has no result on a non-existent sites in the project', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-        const response = await injectAsLoggedInProjectMember({
+        const response = await inject({
           ...options,
           url,
           query: { ...options.query, endDate: endDate[1], siteIds: ['10001010', '10001011'] }
@@ -351,7 +355,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has no result on a non-existent taxon in the project', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-        const response = await injectAsLoggedInProjectMember({
+        const response = await inject({
           ...options,
           url,
           query: { ...options.query, endDate: endDate[1], taxons: '400' }
@@ -364,7 +368,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has no result on a non-existent taxons in the project', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-        const response = await injectAsLoggedInProjectMember({
+        const response = await inject({
           ...options,
           url,
           query: { ...options.query, endDate: endDate[1], taxons: ['400', '500'] }

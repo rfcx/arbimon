@@ -55,7 +55,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    describeDatasetApiReturnsValidResponse(inject, richnessDatasetUrl, EXPECTED_PROPS)
+    describeDatasetApiReturnsValidResponse(inject, richnessDatasetUrl, EXPECTED_PROPS, PROJECT_ID_BASIC)
     describeDatasetApiRejectsInvalidRequests(inject, richnessDatasetUrl)
 
     describe('richnessByTaxon', () => {

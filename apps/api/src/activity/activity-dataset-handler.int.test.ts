@@ -3,6 +3,8 @@ import { describe, expect, test } from 'vitest'
 
 import { activityDatasetGeneratedUrl, ActivityDatasetResponse, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
+import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
+import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
 import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
@@ -46,48 +48,14 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    const url = activityDatasetGeneratedUrl({ projectId: PROJECT_ID_BASIC })
-    const options: InjectOptions = {
-      method,
-      url,
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-27T00:00:00.000Z' }
-    }
-    test(`returns success status response code for ${_} injection`, async () => {
-      // Act
-      const response = await inject(options)
-      // Assert
-      expect(response.statusCode).toBe(200)
-      const result = JSON.parse(response.body)
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-    })
-
-    test('contains all expected props & no more', async () => {
-      // Act
-      const response = await inject(options)
-
-      // Assert
-      const result = JSON.parse(response.body) as ActivityDatasetResponse
-      const keys = Object.keys(result)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-      expect(keys.length).toBe(EXPECTED_PROPS.length)
-    })
-
-    test('does not contain any additional props', async () => {
-      // Act
-      const response = await inject(options)
-
-      // Assert
-      const result = JSON.parse(response.body)
-      const keys = Object.keys(result)
-      keys.forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
-    })
+    describeDatasetApiReturnsValidResponse(inject, activityDatasetGeneratedUrl, EXPECTED_PROPS, PROJECT_ID_BASIC)
+    describeDatasetApiRejectsInvalidRequests(inject, activityDatasetGeneratedUrl)
   })
 
   describe('known data tests', async () => {
     // Act
     const response = await injectAsLoggedInProjectMember({
-      method: GET,
+      method,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
@@ -167,7 +135,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
   describe('known data tests with redacted data', async () => {
     // Act
     const response = await injectAsLoggedOut({
-      method: GET,
+      method,
       url: activityDatasetGeneratedUrl({ projectId: '1' }),
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
@@ -185,7 +153,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     test('rejects missing query', async () => {
       // Act
       const response = await injectAsLoggedOut({
-        method: GET,
+        method,
         url: activityDatasetGeneratedUrl({ projectId: '1' })
       })
 
@@ -196,7 +164,7 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     test('rejects invalid project id', async () => {
       // Act
       const response = await injectAsLoggedOut({
-        method: GET,
+        method,
         url: activityDatasetGeneratedUrl({ projectId: 'x' })
       })
 
@@ -211,12 +179,12 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     test('rejects invalid date', async () => {
       // Act
       const response1 = await injectAsLoggedOut({
-        method: GET,
+        method,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
       })
       const response2 = await injectAsLoggedOut({
-        method: GET,
+        method,
         url: activityDatasetGeneratedUrl({ projectId: '1' }),
         query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
       })

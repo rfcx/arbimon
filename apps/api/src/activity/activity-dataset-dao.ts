@@ -43,7 +43,7 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
 
 export function getRecordingDurationMinutes (detections: DetectionByVersionSiteSpeciesHour[]): number {
   const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.projectSiteId}`))
-  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].detectionMinutes))
+  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
 }
 
 export function calculateDetectionCount (detections: DetectionByVersionSiteSpeciesHour[]): number {
@@ -65,7 +65,7 @@ export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDa
 
   // Filter outer query by project & site
   // Note: all `bind` values already defined by dataset filter
-  const outerConditions = ['ps.project_id = $projectId']
+  const outerConditions = ['ps.project_version_first_appears_id = $projectVersionId']
   if (filter.siteIds.length > 0) { outerConditions.push('ps.id = ANY($siteIds)') }
 
   const sql = `
@@ -87,7 +87,7 @@ export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDa
         LEFT JOIN (
             SELECT time_precision_hour_local,
                   project_site_id,
-                  sum(count)            as count,
+                  length(regexp_replace(detection_minutes, '[^,]', '', 'g')) + 1 as count,
                   max(detection_minutes) as duration_minutes -- same recording
             FROM detection_by_source_site_species_hour dbssh
             WHERE ${datasetConditions}
