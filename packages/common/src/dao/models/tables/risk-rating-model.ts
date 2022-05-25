@@ -23,7 +23,8 @@ export const RiskRatingModel = defineWithDefaults<RiskRating>(
     },
 
     // Facts
-    isThreatened: DataTypes.BOOLEAN // true
+    isThreatened: DataTypes.BOOLEAN, // true
+    isProtected: DataTypes.BOOLEAN // true
   },
   {
     tableName: TABLE_RISK_RATING

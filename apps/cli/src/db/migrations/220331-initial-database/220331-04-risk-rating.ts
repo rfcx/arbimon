@@ -39,6 +39,10 @@
        is_threatened: {
          type: DataTypes.BOOLEAN,
          allowNull: false
+       },
+       is_protected: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false
        }
      }
    )

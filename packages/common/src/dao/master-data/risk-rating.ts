@@ -3,18 +3,24 @@ import { ValueOf } from '@rfcx-bio/utils/utility-types'
 import { RiskRating } from '@/dao/types'
 
 export const masterRiskRatings = <const>{
-  NE: { id: -1, code: 'NE', isThreatened: false },
-  NA: { id: 0, code: 'NA', isThreatened: false },
-  DD: { id: 100, code: 'DD', isThreatened: false },
-  LC: { id: 200, code: 'LC', isThreatened: false },
-  NT: { id: 300, code: 'NT', isThreatened: false },
-  VU: { id: 400, code: 'VU', isThreatened: true },
-  EN: { id: 500, code: 'EN', isThreatened: true },
-  CR: { id: 600, code: 'CR', isThreatened: true },
-  RE: { id: 700, code: 'RE', isThreatened: false },
-  EW: { id: 800, code: 'EW', isThreatened: false },
-  EX: { id: 900, code: 'EX', isThreatened: false }
+  NE: { id: -1, code: 'NE', isThreatened: false, isProtected: false },
+  NA: { id: 0, code: 'NA', isThreatened: false, isProtected: false },
+  DD: { id: 100, code: 'DD', isThreatened: false, isProtected: false },
+  LC: { id: 200, code: 'LC', isThreatened: false, isProtected: false },
+  NT: { id: 300, code: 'NT', isThreatened: false, isProtected: false },
+  VU: { id: 400, code: 'VU', isThreatened: true, isProtected: false },
+  EN: { id: 500, code: 'EN', isThreatened: true, isProtected: false },
+  CR: { id: 600, code: 'CR', isThreatened: true, isProtected: true },
+  RE: { id: 700, code: 'RE', isThreatened: false, isProtected: false },
+  EW: { id: 800, code: 'EW', isThreatened: false, isProtected: false },
+  EX: { id: 900, code: 'EX', isThreatened: false, isProtected: false }
 }
 
 export type RiskId = ValueOf<typeof masterRiskRatings>['id']
 export const riskRatings: readonly RiskRating[] = Object.values(masterRiskRatings)
+
+export const RISK_RATING_THREATENED_IDS = riskRatings.filter(rr => rr.isThreatened).map(rr => rr.id)
+export const RISK_RATING_THREATENED_IDS_SET = new Set(RISK_RATING_THREATENED_IDS)
+
+export const RISK_RATING_PROTECTED_IDS = riskRatings.filter(rr => rr.isProtected).map(rr => rr.id)
+export const RISK_RATING_PROTECTED_IDS_SET = new Set(RISK_RATING_PROTECTED_IDS)
