@@ -5,6 +5,7 @@ export interface DetectionByVersionSiteSpeciesHour {
   projectVersionId: number
   projectSiteId: number
   taxonSpeciesId: number
+  projectId: number
   taxonClassId: number
   countDetectionMinutes: number
 }

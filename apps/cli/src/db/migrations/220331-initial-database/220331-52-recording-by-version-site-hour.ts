@@ -45,6 +45,16 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
 
+      // FKs
+      project_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'project' },
+          key: 'id'
+        }
+      },
+
       // Facts
       count_recording_minutes: {
         type: DataTypes.INTEGER,

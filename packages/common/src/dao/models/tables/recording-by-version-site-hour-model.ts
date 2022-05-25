@@ -23,6 +23,9 @@ export const RecordingByVersionSiteHourModel = defineWithDefaults<RecordingByVer
       primaryKey: true
     },
 
+    // FKs
+    projectId: DataTypes.INTEGER, // 123
+
     // Facts
     countRecordingMinutes: DataTypes.INTEGER
   },

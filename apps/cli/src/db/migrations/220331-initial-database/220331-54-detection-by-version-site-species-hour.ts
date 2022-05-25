@@ -54,6 +54,14 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // FKs
+      project_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        references: {
+          model: { tableName: 'project' },
+          key: 'id'
+        }
+      },
       taxon_class_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

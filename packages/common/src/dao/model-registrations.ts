@@ -3,8 +3,8 @@ import { MODEL_SYNC_ERROR } from './models/tables/sync-error-model'
 
 export const modelRegistrations = <const>{
   // Tables
-  [MODEL_DETECTION_BY_SOURCE_SITE_SPECIES_HOUR]: [DetectionBySourceSiteSpeciesHourModel, { manyToOne: [MODEL_SOURCE, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES] }],
-  [MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR]: [DetectionByVersionSiteSpeciesHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES, MODEL_TAXON_CLASS] }],
+  [MODEL_DETECTION_BY_SOURCE_SITE_SPECIES_HOUR]: [DetectionBySourceSiteSpeciesHourModel, { manyToOne: [MODEL_SOURCE, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES, MODEL_PROJECT] }],
+  [MODEL_DETECTION_BY_VERSION_SITE_SPECIES_HOUR]: [DetectionByVersionSiteSpeciesHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE, MODEL_TAXON_SPECIES, MODEL_PROJECT, MODEL_TAXON_CLASS] }],
 
   [MODEL_PROJECT]: [ProjectModel],
   [MODEL_PROJECT_PROFILE_HIGHLIGHTED_SPECIES]: [ProjectProfileHighlightedSpeciesModel, { manyToOne: [MODEL_PROJECT, MODEL_TAXON_SPECIES] }],
@@ -12,8 +12,8 @@ export const modelRegistrations = <const>{
   [MODEL_PROJECT_SITE]: [ProjectSiteModel, { manyToOne: [MODEL_PROJECT, { model: MODEL_PROJECT_VERSION, foreignKey: 'project_version_first_appears_id' }] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_PROJECT] }],
 
-  [MODEL_RECORDING_BY_SOURCE_SITE_HOUR]: [RecordingBySourceSiteHourModel, { manyToOne: [MODEL_SOURCE, MODEL_PROJECT_SITE] }],
-  [MODEL_RECORDING_BY_VERSION_SITE_HOUR]: [RecordingByVersionSiteHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE] }],
+  [MODEL_RECORDING_BY_SOURCE_SITE_HOUR]: [RecordingBySourceSiteHourModel, { manyToOne: [MODEL_SOURCE, MODEL_PROJECT_SITE, MODEL_PROJECT] }],
+  [MODEL_RECORDING_BY_VERSION_SITE_HOUR]: [RecordingByVersionSiteHourModel, { manyToOne: [MODEL_PROJECT_VERSION, MODEL_PROJECT_SITE, MODEL_PROJECT] }],
 
   [MODEL_RISK_RATING]: [RiskRatingModel],
 

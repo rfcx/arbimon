@@ -29,6 +29,7 @@ export const DetectionByVersionSiteSpeciesHourModel = defineWithDefaults<Detecti
     },
 
     // FKs
+    projectId: DataTypes.INTEGER, // 123
     taxonClassId: DataTypes.INTEGER,
 
     // Facts

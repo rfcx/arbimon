@@ -27,6 +27,9 @@ export const DetectionBySourceSiteSpeciesHourModel = defineWithDefaults<Detectio
       primaryKey: true
     },
 
+    // FKs
+    projectId: DataTypes.INTEGER, // 123
+
     // Facts
     detectionMinutes: DataTypes.STRING(255) // DataTypes.ARRAY(DataTypes.INTEGER) // [2, 3, 7, 14]
   },

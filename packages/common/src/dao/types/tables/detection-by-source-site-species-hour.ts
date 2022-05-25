@@ -5,6 +5,7 @@ export interface DetectionBySourceSiteSpeciesHour {
   sourceId: number
   projectSiteId: number
   taxonSpeciesId: number
+  projectId: number
   detectionMinutes: string // number[]
 }
 

@@ -23,6 +23,9 @@ export const RecordingBySourceSiteHourModel = defineWithDefaults<RecordingBySour
       primaryKey: true
     },
 
+    // FKs
+    projectId: DataTypes.INTEGER, // 123
+
     // Facts
     recordingMinutes: DataTypes.STRING(255) // DataTypes.ARRAY(DataTypes.INTEGER) // [1, 2, 3, 6, 7, 14]
   },
