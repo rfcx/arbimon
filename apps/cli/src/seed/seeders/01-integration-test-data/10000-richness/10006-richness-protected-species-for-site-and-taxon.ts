@@ -154,6 +154,14 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     countDetectionMinutes: 2
   },
   {
+    timePrecisionHourLocal: new Date('2021-03-19T00:00:00.000Z'),
+    projectVersionId: 10006,
+    projectSiteId: 10006002,
+    taxonSpeciesId: 7,
+    taxonClassId: 500,
+    countDetectionMinutes: 2
+  },
+  {
     timePrecisionHourLocal: new Date('2021-03-18T00:00:00.000Z'),
     projectVersionId: 10006,
     projectSiteId: 10006002,
@@ -167,14 +175,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     projectSiteId: 10006002,
     taxonSpeciesId: 9, // protected
     taxonClassId: 100,
-    countDetectionMinutes: 2
-  },
-  {
-    timePrecisionHourLocal: new Date('2021-03-19T00:00:00.000Z'),
-    projectVersionId: 10006,
-    projectSiteId: 10006002,
-    taxonSpeciesId: 7,
-    taxonClassId: 500,
     countDetectionMinutes: 2
   }
 ]
