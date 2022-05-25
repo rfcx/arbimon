@@ -959,10 +959,28 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
   })
 
   describe.each([
-    ['logged-in-project-member', injectAsLoggedInProjectMember],
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
-    ['logged-out', injectAsLoggedOut]
-  ])('critically endangered species redacted for non-project-members', (_, inject) => {
+    ['logged-out', injectAsLoggedOut],
+    ['invalid-token-user', injectAsInvalidToken]
+  ])('critically endangered species redacted for non-project-members', (label, inject) => {
+    test(`isLocationRedacted should be true if ${label}`, async () => {
+      // Act
+      const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      const response = await inject({
+        method,
+        url,
+        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+      })
+
+      // Assert
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
+      expect(result).toBeDefined()
+      expect(result).toBeTypeOf('object')
+      expect(result.isLocationRedacted).toBeTruthy()
+    })
+
     describe('richnessByTaxon', () => {
       test('richnessByTaxon are present if no sites filter', async () => {
         // Arrange
@@ -1698,6 +1716,24 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
   })
 
   describe('critically endangered species NOT redacted for project-members', () => {
+    test('isLocationRedacted should be false if logged in as project member', async () => {
+      // Act
+      const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+      const response = await injectAsLoggedInProjectMember({
+        method,
+        url,
+        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
+      })
+
+      // Assert
+      expect(response.statusCode, response.body).toBe(200)
+
+      const result = response.json()
+      expect(result).toBeDefined()
+      expect(result).toBeTypeOf('object')
+      expect(result.isLocationRedacted).toBeFalsy()
+    })
+
     describe('richnessByTaxon', () => {
       test('richnessByTaxon are present if no sites filter', async () => {
         // Arrange
@@ -2440,7 +2476,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
   })
 
-  describe('check empty value cases', async () => {
+  describe.each([
+    ['logged-in-project-member', injectAsLoggedInProjectMember],
+    ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
+    ['logged-out', injectAsLoggedOut]
+  ])('check empty value cases', (_, inject) => {
     const expectedEmptyResult = (result: RichnessDatasetResponse): void => {
       Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
       expect(result.richnessBySite).toEqual([])
@@ -2462,7 +2502,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     test('does not have any data on empty project', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_NO_DETECTIONS })
-      const response = await injectAsLoggedInProjectMember({
+      const response = await inject({
         method,
         url,
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
@@ -2479,7 +2519,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     test('does not have any data on given date', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-      const response = await injectAsLoggedInProjectMember({
+      const response = await inject({
         method,
         url,
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
@@ -2496,7 +2536,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     test('does not have any data on specific site', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-      const response = await injectAsLoggedInProjectMember({
+      const response = await inject({
         method,
         url,
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', siteIds: '10001010' }
@@ -2513,7 +2553,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     test('does not have any data on specific sites', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-      const response = await injectAsLoggedInProjectMember({
+      const response = await inject({
         method,
         url,
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', siteIds: ['10001010', '10001011'] }
@@ -2531,7 +2571,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     test('does not have any data on specific taxon', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-      const response = await injectAsLoggedInProjectMember({
+      const response = await inject({
         method,
         url,
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: '400' }
@@ -2548,7 +2588,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     test('does not have any data on specific taxons', async () => {
       // Act
       const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-      const response = await injectAsLoggedInProjectMember({
+      const response = await inject({
         method,
         url,
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z', taxons: ['400', '500'] }
@@ -2560,67 +2600,6 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
       const result = response.json()
       expectedEmptyResult(result)
       expectedRichnessByTimeValueAreNumber(result)
-    })
-  })
-
-  describe('check isLocationRedacted with different injection', async () => {
-    const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
-    const options: InjectOptions = {
-        method,
-      url,
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
-    }
-
-    test('isLocationRedacted should be false if logged in as project member', async () => {
-      // Act
-      const response = await injectAsLoggedInProjectMember(options)
-
-      // Assert
-      expect(response.statusCode, response.body).toBe(200)
-
-      const result = response.json()
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-      expect(result.isLocationRedacted).toBeFalsy()
-    })
-
-    test('isLocationRedacted should be true if logged out', async () => {
-      // Act
-      const response = await injectAsLoggedOut(options)
-
-      // Assert
-      expect(response.statusCode, response.body).toBe(200)
-
-      const result = response.json()
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-      expect(result.isLocationRedacted).toBeTruthy()
-    })
-
-    test('isLocationRedacted should be true if if logged in as NOT project member', async () => {
-      // Act
-      const response = await injectAsLoggedInNotProjectMember(options)
-
-      // Assert
-      expect(response.statusCode, response.body).toBe(200)
-
-      const result = response.json()
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-      expect(result.isLocationRedacted).toBeTruthy()
-    })
-
-    test('isLocationRedacted should be true if token is invalid', async () => {
-      // Act
-      const response = await injectAsInvalidToken(options)
-
-      // Assert
-      expect(response.statusCode, response.body).toBe(200)
-
-      const result = response.json()
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-      expect(result.isLocationRedacted).toBeTruthy()
     })
   })
 })
