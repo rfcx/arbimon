@@ -22,9 +22,11 @@ export interface RichnessByExportReportRow {
   site: string
   latitude: number
   longitude: number
-  day: string
-  month: string
-  year: string
+  altitude: number
   date: string
+  year: string
+  month: string
+  day: string
   hour: string
+  countDetectionMinutes: number
 }
