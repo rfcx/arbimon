@@ -1,7 +1,7 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
 import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
-import { RISK_RATING_PROTECTED_IDS } from '@rfcx-bio/common/dao/master-data'
+import { RISK_RATING_PROTECTED_ID } from '@rfcx-bio/common/dao/master-data'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
 
@@ -13,10 +13,20 @@ type RichnessByExportReportRowSql = Omit<RichnessByExportReportRow, 'scientificN
 }
 
 export const getRichnessExportData = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessByExportReportRow[]> => {
-  const filterBase = datasetFilterWhereRaw(filter)
+  const conditionsAndBindBase = datasetFilterWhereRaw(filter)
 
-  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT tsp.risk_rating_id = ANY ($protectedRiskRating)` : filterBase.conditions
-  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+  // Remove protected species if not a project member
+  const { conditions, bind } = isProjectMember
+    ? conditionsAndBindBase
+    : {
+      conditions: `${conditionsAndBindBase.conditions} AND tsm.risk_rating_id != $riskRatingProtectedId AND tsp.risk_rating_id != $riskRatingProtectedId`,
+      bind: { ...conditionsAndBindBase.bind, riskRatingProtectedId: RISK_RATING_PROTECTED_ID }
+    }
+
+  const nonProjectMemberJoins = `
+    JOIN project_version pv ON dbvssh.project_version_id = pv.id
+    LEFT JOIN taxon_species_project_risk_rating as tsp on dbvssh.taxon_species_id = tsp.taxon_species_id AND tsp.project_id = pv.project_id
+  `
 
   const sql = `
     SELECT
@@ -33,9 +43,9 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
         EXTRACT(hour from dbvssh.time_precision_hour_local) as hour,
         dbvssh.count_detection_minutes
     FROM detection_by_version_site_species_hour dbvssh
-    ${!isProjectMember ? 'JOIN taxon_species_project_risk_rating as tsp on dbvssh.taxon_species_id = tsp.taxon_species_id' : ''}
-    JOIN project_site ps on dbvssh.project_site_id = ps.id
-    JOIN taxon_species_merged tsm on dbvssh.taxon_species_id = tsm.id
+        JOIN project_site ps on dbvssh.project_site_id = ps.id
+        JOIN taxon_species_merged tsm on dbvssh.taxon_species_id = tsm.id
+        ${!isProjectMember ? nonProjectMemberJoins : ''}
     WHERE ${conditions}
     ORDER BY tsm.common_name, ps.name, dbvssh.time_precision_hour_local
   `
