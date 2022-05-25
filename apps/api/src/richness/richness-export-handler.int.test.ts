@@ -1,7 +1,7 @@
-import { HTTPMethods } from 'fastify'
+import { HTTPMethods, LightMyRequestResponse } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { RichnessExportResponse, richnessExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { richnessExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
@@ -40,6 +40,12 @@ const [EXPECTED_PROPS_KEY] = Object.keys(EXPECTED_PROPS)
 const PROJECT_ID_BASIC = '10001'
 const PROJECT_ID_NO_DETECTIONS = '10003'
 
+const expectEmptyResponse = (response: LightMyRequestResponse): void => {
+  const result = response.json()
+  expect(Object.keys(result).length).toBe(1)
+  expect(result.richnessExport).toStrictEqual([])
+}
+
 describe(`GET ${ROUTE} (richness export)`, async () => {
   const routes = routesRichness
   const injectAsLoggedInProjectMember = await getInjectAsLoggedInProjectMember(routes)
@@ -55,6 +61,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
     // Assert
     expect(routeList).toContain('-export')
   })
+
   describe.each([
     ['logged-in-project-member', injectAsLoggedInProjectMember],
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
@@ -214,6 +221,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         method: GET,
         query: { startDate, endDate }
       }
+
       test('get empty result on test using CR species', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
@@ -224,12 +232,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        const [key] = Object.keys(result)
-        expect(key).toEqual(EXPECTED_PROPS_KEY)
-        const emptyResult = result.richnessExport
-        expect(emptyResult).toEqual([])
-        expect(emptyResult.length).toEqual(0)
+        expectEmptyResponse(response)
       })
 
       test('get correct site/species/taxon on non-CR species', async () => {
@@ -272,12 +275,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        const [key] = Object.keys(result)
-        expect(key).toEqual(EXPECTED_PROPS_KEY)
-        const emptyResult = result.richnessExport
-        expect(emptyResult).toEqual([])
-        expect(emptyResult.length).toEqual(0)
+        expectEmptyResponse(response)
       })
 
       test('get correct site/species/taxon on non-CR species', async () => {
@@ -310,13 +308,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         method: GET,
         query: { startDate, endDate: endDate[0] }
       }
-      const expectedEmptyResult = (result: RichnessExportResponse): void => {
-        const [key] = Object.keys(result)
-        expect(key).toEqual(EXPECTED_PROPS_KEY)
-        const emptyResult = result.richnessExport
-        expect(emptyResult).toEqual([])
-        expect(emptyResult.length).toEqual(0)
-      }
+
       test('has no result on a empty project', async () => {
         // Act
         const url = richnessExportUrl({ projectId: PROJECT_ID_NO_DETECTIONS })
@@ -326,8 +318,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
+        expectEmptyResponse(response)
       })
 
       test('has no result on a date without detections', async () => {
@@ -339,8 +330,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
+        expectEmptyResponse(response)
       })
 
       test('has no result on a non-existent site in the project', async () => {
@@ -353,8 +343,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
+        expectEmptyResponse(response)
       })
 
       test('has no result on a non-existent sites in the project', async () => {
@@ -367,8 +356,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
+        expectEmptyResponse(response)
       })
 
       test('has no result on a non-existent taxon in the project', async () => {
@@ -381,8 +369,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
+        expectEmptyResponse(response)
       })
 
       test('has no result on a non-existent taxons in the project', async () => {
@@ -395,8 +382,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         })
 
         // Assert
-        const result = JSON.parse(response.body)
-        expectedEmptyResult(result)
+        expectEmptyResponse(response)
       })
     })
   })
