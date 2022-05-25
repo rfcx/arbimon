@@ -3,6 +3,8 @@ import { describe, expect, test } from 'vitest'
 
 import { richnessExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
+import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
+import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
 import { getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
@@ -20,22 +22,22 @@ interface InjectOptions {
 
 const ROUTE = '/projects/:projectId/richness-export'
 
-const EXPECTED_PROPS = {
-  richnessExport: [
-    'name',
-    'site',
-    'latitude',
-    'longitude',
-    'altitude',
-    'day',
-    'month',
-    'year',
-    'hour',
-    'date'
-  ]
-}
+const EXPECTED_PROPS = [
+  'richnessExport'
+]
 
-const [EXPECTED_PROPS_KEY] = Object.keys(EXPECTED_PROPS)
+const EXPECTED_PROPS_RICHNESS_EXPORT = [
+  'name',
+  'site',
+  'latitude',
+  'longitude',
+  'altitude',
+  'day',
+  'month',
+  'year',
+  'hour',
+  'date'
+]
 
 const PROJECT_ID_BASIC = '10001'
 const PROJECT_ID_NO_DETECTIONS = '10003'
@@ -67,6 +69,9 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
+    describeDatasetApiReturnsValidResponse(inject, richnessExportUrl, EXPECTED_PROPS)
+    describeDatasetApiRejectsInvalidRequests(inject, richnessExportUrl)
+
     describe('basic', () => {
       const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
       const options: InjectOptions = {
@@ -75,36 +80,15 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-20T11:00:00.000Z' }
       }
 
-      test('the route contains richnessExport prop & no more', async () => {
-        // Act
-        const response = await inject(options)
-
-        // Assert
-        const result = JSON.parse(response.body) as RichnessExportResponse
-        const [key] = Object.keys(result)
-        expect(key).toEqual(EXPECTED_PROPS_KEY)
-        expect([key].length).toBe(1)
-      })
-
       test('richnessExport includes all expected props', async () => {
         // Act
         const response = await inject(options)
 
         // Assert
-        const result = JSON.parse(response.body) as RichnessExportResponse
-        const [key] = Object.keys(result)
-        expect(key).toEqual(EXPECTED_PROPS_KEY)
-        expect([key].length).toBe(1)
-      })
-
-      test(`returns success status response code for ${_} injection`, async () => {
-        // Act
-        const response = await inject(options)
-        // Assert
-        expect(response.statusCode).toBe(200)
-        const result = JSON.parse(response.body)
-        expect(result).toBeDefined()
-        expect(result).toBeTypeOf('object')
+        const { richnessExport } = response.json()
+        expect(richnessExport).toBeDefined()
+        EXPECTED_PROPS_RICHNESS_EXPORT.forEach(expectedProp => expect(richnessExport).toHaveProperty(expectedProp))
+        expect(Object.keys(richnessExport).length).toBe(EXPECTED_PROPS_RICHNESS_EXPORT.length)
       })
     })
   })

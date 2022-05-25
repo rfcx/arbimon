@@ -2,7 +2,9 @@ import fastify, { FastifyInstance, InjectOptions, LightMyRequestResponse } from 
 
 import { RouteRegistration } from '~/api-helpers/types'
 
-interface MockOptions {
+export type InjectFunction = (opts: InjectOptions) => Promise<LightMyRequestResponse>
+
+export interface MockOptions {
   routes: RouteRegistration[]
   isProjectMember?: boolean
   memberProjectCoreIds?: string[]
@@ -28,8 +30,6 @@ export const getMockedFastify = async ({ routes = [], isProjectMember = false, m
 
   return app
 }
-
-type InjectFunction = (opts: InjectOptions) => Promise<LightMyRequestResponse>
 
 export const getInjectAsLoggedInProjectMember = async (routes: RouteRegistration[]): Promise<InjectFunction> => {
   const app = await getMockedFastify({ routes, isProjectMember: true })
