@@ -401,6 +401,26 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeHourOfDay', () => {
+      test('All hours of day (0-23) are present', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeHourOfDay } = response.json()
+        expect(richnessByTimeHourOfDay).toBeDefined()
+        expect(richnessByTimeHourOfDay).toBeTypeOf('object')
+        const expectedHourOfDay = [...Array(24).keys()].map(String)
+        const actualHourOfDay = Object.keys(richnessByTimeHourOfDay)
+        expect(actualHourOfDay).toHaveLength(24)
+        expect(actualHourOfDay).toEqual(expectedHourOfDay)
+      })
+
       test('richnessByTimeHourOfDay is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
@@ -503,6 +523,26 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeDayOfWeek', () => {
+      test('All day of week (0-6) are present', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeDayOfWeek } = response.json()
+        expect(richnessByTimeDayOfWeek).toBeDefined()
+        expect(richnessByTimeDayOfWeek).toBeTypeOf('object')
+        const expectedDayOfWeek = [...Array(7).keys()].map(String)
+        const actualDayOfWeek = Object.keys(richnessByTimeDayOfWeek)
+        expect(actualDayOfWeek).toHaveLength(7)
+        expect(actualDayOfWeek).toEqual(expectedDayOfWeek)
+      })
+
       test('richnessByTimeDayOfWeek is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
@@ -605,6 +645,26 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('richnessByTimeMonthOfYear', () => {
+      test('All month of year (0-11) are present', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+        const expectedMonthOfYear = [...Array(12).keys()].map(String)
+        const actualMonthOfYear = Object.keys(richnessByTimeMonthOfYear)
+        expect(actualMonthOfYear).toHaveLength(12)
+        expect(actualMonthOfYear).toEqual(expectedMonthOfYear)
+      })
+
       test('richnessByTimeMonthOfYear is calculate correctly on given date', async () => {
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_TIME_BUCKET })
