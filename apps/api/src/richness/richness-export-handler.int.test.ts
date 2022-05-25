@@ -109,8 +109,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       test('has expected results on given date', async () => {
         // Act
         const expectedObject = {
-          scientificname: 'Accipitridae',
-          commonname: 'Eagle',
+          scientificName: 'Accipitridae',
+          commonName: 'Eagle',
           site: 'Test Site 2',
           latitude: 18.31307,
           longitude: -65.24878,
@@ -120,7 +120,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           month: 3,
           year: 2021,
           hour: 11,
-          detectionminutecount: 1
+          countDetectionMinutes: 1
         }
         const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })
         const response = await injectAsLoggedInProjectMember({
@@ -133,7 +133,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         const richnessExport = result.richnessExport
         expect(richnessExport.length).toEqual(6)
         expect(richnessExport).toBeDefined()
-        const foundSiteDetection = richnessExport.find((item: { scientificname: string }) => item.scientificname === expectedObject.scientificname)
+        const foundSiteDetection = richnessExport.find((item: { scientificName: string }) => item.scientificName === expectedObject.scientificName)
         expect(foundSiteDetection).toEqual(expectedObject)
       })
 
@@ -155,8 +155,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(2)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificNames).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonNames).toContain(item.commonname))
+        richnessExport.forEach((item: { scientificName: string }) => expect(expectedScientificNames).toContain(item.scientificName))
+        richnessExport.forEach((item: { commonName: string }) => expect(expectedCommonNames).toContain(item.commonName))
       })
 
       test('get correct site/species/taxon by taxon filter', async () => {
@@ -177,8 +177,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(3)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificName).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonName).toEqual(item.commonname))
+        richnessExport.forEach((item: { scientificName: string }) => expect(expectedScientificName).toContain(item.scientificName))
+        richnessExport.forEach((item: { commonName: string }) => expect(expectedCommonName).toEqual(item.commonName))
       })
       test('get correct site/species/taxon by several taxons (test using CR species)', async () => {
         // Act
@@ -198,8 +198,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(5)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toContain(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificNames).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonNames).toContain(item.commonname))
+        richnessExport.forEach((item: { scientificName: string }) => expect(expectedScientificNames).toContain(item.scientificName))
+        richnessExport.forEach((item: { commonName: string }) => expect(expectedCommonNames).toContain(item.commonName))
       })
     })
 
@@ -242,8 +242,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(3)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificName).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonName).toEqual(item.commonname))
+        richnessExport.forEach((item: { scientificName: string }) => expect(expectedScientificName).toContain(item.scientificName))
+        richnessExport.forEach((item: { commonName: string }) => expect(expectedCommonName).toEqual(item.commonName))
       })
     })
 
@@ -285,8 +285,8 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         expect(richnessExport.length).toEqual(1)
         expect(richnessExport).toBeDefined()
         richnessExport.forEach((item: { site: string }) => expect(expectedSite).toEqual(item.site))
-        richnessExport.forEach((item: { scientificname: string }) => expect(expectedScientificName).toContain(item.scientificname))
-        richnessExport.forEach((item: { commonname: string }) => expect(expectedCommonName).toEqual(item.commonname))
+        richnessExport.forEach((item: { scientificName: string }) => expect(expectedScientificName).toContain(item.scientificName))
+        richnessExport.forEach((item: { commonName: string }) => expect(expectedCommonName).toEqual(item.commonName))
       })
     })
 
