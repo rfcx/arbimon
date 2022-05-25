@@ -7,7 +7,7 @@ import { Project, ProjectVersion } from '@rfcx-bio/common/dao/types'
 import { getSequelize } from '@/db/connections'
 
 // Mocked projects
-export const testProject2: Project = {
+const testProject2: Project = {
   id: 10002,
   idCore: 'integration1',
   idArbimon: 10002001,
@@ -15,7 +15,7 @@ export const testProject2: Project = {
   name: 'Integration Test Project 2'
 }
 
-export const testProjectVersion2: ProjectVersion = {
+const testProjectVersion2: ProjectVersion = {
   id: 10002,
   projectId: 10002,
   isPublished: true,

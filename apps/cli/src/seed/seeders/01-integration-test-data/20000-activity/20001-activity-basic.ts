@@ -8,7 +8,7 @@ import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion
 import { getSequelize } from '@/db/connections'
 
 // Mocked projects
-export const testProject: Project = {
+const testProject: Project = {
   id: 20001001,
   idCore: 'integration2',
   idArbimon: 20001001,
@@ -16,14 +16,14 @@ export const testProject: Project = {
   name: 'Integration Test Project 2'
 }
 
-export const testProjectVersion: ProjectVersion = {
+const testProjectVersion: ProjectVersion = {
   id: 2,
   projectId: 20001001,
   isPublished: true,
   isPublic: true
 }
 
-export const testSites: ProjectSite[] = [
+const testSites: ProjectSite[] = [
   {
     id: 20001001,
     idCore: 'testSite0001',
@@ -48,12 +48,7 @@ export const testSites: ProjectSite[] = [
   }
 ]
 
-export const testSource: any = {
-  id: 20001,
-  name: 'source-test-project-20001'
-}
-
-export const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
+const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
   {
     timePrecisionHourLocal: new Date('2021-03-23T11:00:00.000Z'),
     projectVersionId: 2,
@@ -189,20 +184,10 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .ProjectSite
     .bulkCreate(testSites)
 
-  // Create mocked source
-  const source: [any] = [testSource]
-  await ModelRepository.getInstance(getSequelize())
-    .Source
-    .bulkCreate(source)
-
   // Create summary of mocked hourly validated detections
-  try {
-    await ModelRepository.getInstance(getSequelize())
-      .DetectionByVersionSiteSpeciesHour
-      .bulkCreate(testDetectionsByVersionSiteSpeciesHour)
-  } catch (errr) {
-    console.error('\n\n--------errr--------', errr)
-  }
+  await ModelRepository.getInstance(getSequelize())
+    .DetectionByVersionSiteSpeciesHour
+    .bulkCreate(testDetectionsByVersionSiteSpeciesHour)
 
   // Create summary of mocked hourly validated detections
   await ModelRepository.getInstance(getSequelize())

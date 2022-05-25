@@ -2,12 +2,12 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
 // Mocked projects
-export const testProject4: Project = {
+const testProject4: Project = {
   id: 10004,
   idCore: 'integration1',
   idArbimon: 10004001,
@@ -15,14 +15,14 @@ export const testProject4: Project = {
   name: 'Integration Test Project 4'
 }
 
-export const testProjectVersion4: ProjectVersion = {
+const testProjectVersion4: ProjectVersion = {
   id: 10004,
   projectId: 10004,
   isPublished: true,
   isPublic: true
 }
 
-export const testSite4: ProjectSite = {
+const testSite4: ProjectSite = {
   id: 10004,
   idCore: 'testSite0004',
   idArbimon: 1111224,
@@ -34,12 +34,7 @@ export const testSite4: ProjectSite = {
   altitude: 30.85246588
 }
 
-export const testSource4: Source = {
-  id: 10004,
-  name: 'source-test-project-10004'
-}
-
-export const testDetectionByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour = {
+const testDetectionByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour = {
   timePrecisionHourLocal: new Date('2021-02-11T11:00:00.000Z'),
   projectVersionId: 10004,
   projectSiteId: 10004,
@@ -66,12 +61,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await ModelRepository.getInstance(getSequelize())
     .ProjectSite
     .bulkCreate(sites)
-
-  // Create mocked source
-  const source: Source[] = [testSource4]
-  await ModelRepository.getInstance(getSequelize())
-    .Source
-    .bulkCreate(source)
 
    // Create summary of mocked hourly validated detections
    const detection: DetectionByVersionSiteSpeciesHour[] = [testDetectionByVersionSiteSpeciesHour]

@@ -3,12 +3,12 @@ import { MigrationFn } from 'umzug'
 
 import { masterRiskRatings } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, Source, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
+import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 
 // Mocked projects
-export const testProject: Project = {
+const testProject: Project = {
   id: 10007,
   idCore: 'integration7',
   idArbimon: 10007001,
@@ -23,7 +23,7 @@ const testProjectVersion: ProjectVersion = {
   isPublic: true
 }
 
-export const testSites: ProjectSite[] = [
+const testSites: ProjectSite[] = [
   {
     id: 10007001,
     idCore: 'ts10007001',
@@ -58,11 +58,6 @@ export const testSites: ProjectSite[] = [
     altitude: 30.85246588
   }
 ]
-
-const testSource: Source = {
-  id: 10007,
-  name: 'source-test-project-10007'
-}
 
 const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
   // Same site same taxon (300) same species different date same time
@@ -442,12 +437,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await ModelRepository.getInstance(getSequelize())
     .ProjectSite
     .bulkCreate(testSites)
-
-  // Create mocked source
-  const source: [any] = [testSource]
-  await ModelRepository.getInstance(getSequelize())
-    .Source
-    .bulkCreate(source)
 
   // Create summary of mocked hourly validated detections
   await ModelRepository.getInstance(getSequelize())
