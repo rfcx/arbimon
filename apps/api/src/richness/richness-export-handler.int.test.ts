@@ -27,16 +27,18 @@ const EXPECTED_PROPS = [
 ]
 
 const EXPECTED_PROPS_RICHNESS_EXPORT = [
-  'name',
+  'scientificName',
+  'commonName',
   'site',
   'latitude',
   'longitude',
   'altitude',
-  'day',
-  'month',
+  'date',
   'year',
+  'month',
+  'day',
   'hour',
-  'date'
+  'detectionMinuteCount'
 ]
 
 const PROJECT_ID_BASIC = '10001'
@@ -86,8 +88,11 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
 
         // Assert
         const { richnessExport } = response.json()
-        expect(richnessExport).toBeDefined()
-        EXPECTED_PROPS_RICHNESS_EXPORT.forEach(expectedProp => expect(richnessExport).toHaveProperty(expectedProp))
+        expect(Array.isArray(richnessExport)).toBeDefined()
+        expect(richnessExport.length).toBeGreaterThan(0)
+
+        const firstEntry = richnessExport[0]
+        EXPECTED_PROPS_RICHNESS_EXPORT.forEach(expectedProp => expect(firstEntry).toHaveProperty(expectedProp))
         expect(Object.keys(richnessExport).length).toBe(EXPECTED_PROPS_RICHNESS_EXPORT.length)
       })
     })
