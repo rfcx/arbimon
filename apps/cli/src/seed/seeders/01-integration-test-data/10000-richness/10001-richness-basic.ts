@@ -5,7 +5,6 @@ import { masterRiskRatings } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '@/db/connections'
 import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '@/seed/_helpers/create-project-with-detections'
 
 const testProject: Project = {
@@ -130,7 +129,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   )
 
   // Create project risk ratings
-  await ModelRepository.getInstance(getSequelize())
-    .TaxonSpeciesProjectRiskRating
-    .bulkCreate(testTaxonSpeciesProjectRiskRating)
+  await models.TaxonSpeciesProjectRiskRating.bulkCreate(testTaxonSpeciesProjectRiskRating)
 }
