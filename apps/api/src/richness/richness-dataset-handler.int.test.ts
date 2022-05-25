@@ -1,4 +1,3 @@
-import { HTTPMethods } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { RichnessDatasetResponse, richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
@@ -8,17 +7,6 @@ import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-data
 import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
-
-interface InjectOptions {
-  method: HTTPMethods
-  url?: string
-  query?: {
-    startDate: string
-    endDate: string
-    siteIds?: string
-    taxons?: string
-  }
-}
 
 const ROUTE = '/projects/:projectId/richness'
 
@@ -1713,6 +1701,108 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
     })
+
+    describe('richnessByTimeUnix', () => {
+      test('richnessByTimeUnix is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 2, 1641081600: 2, 1644105600: 2, 1644710400: 2, 1644883200: 3 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1641081600: 1, 1644105600: 1, 1644710400: 1, 1644883200: 2 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 2, 1641081600: 2, 1644105600: 2, 1644710400: 2, 1644883200: 3 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1641081600: 1, 1644105600: 1, 1644710400: 1, 1644883200: 2 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          url,
+          method,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1641081600: 1, 1644105600: 1, 1644710400: 1, 1644883200: 1 })
+      })
+    })
   })
 
   describe('critically endangered species NOT redacted for project-members', () => {
@@ -2472,6 +2562,108 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
         expect(richnessByTimeMonthOfYear).toEqual({ 0: 3, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
+      })
+    })
+
+    describe('richnessByTimeUnix', () => {
+      test('richnessByTimeUnix is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 3, 1640995200: 1, 1641081600: 3, 1641168000: 1, 1644105600: 3, 1644710400: 4, 1644883200: 5 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 2, 1641081600: 2, 1644105600: 2, 1644710400: 2, 1644883200: 3 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 3, 1640995200: 1, 1641081600: 3, 1641168000: 1, 1644105600: 3, 1644710400: 4, 1644883200: 5 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 2, 1641081600: 2, 1644105600: 2, 1644710400: 2, 1644883200: 3 })
+      })
+
+      test('richnessByTimeUnix is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          url,
+          method,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeUnix } = response.json()
+        expect(richnessByTimeUnix).toBeDefined()
+        expect(richnessByTimeUnix).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
+        expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1641081600: 1, 1641168000: 1, 1644105600: 1, 1644710400: 2, 1644883200: 2 })
       })
     })
   })
