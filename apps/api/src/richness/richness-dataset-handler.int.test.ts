@@ -1573,6 +1573,128 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeDayOfWeek).toEqual({ 0: 1, 1: 0, 2: 1, 3: 0, 4: 0, 5: 1, 6: 0 })
       })
     })
+
+    describe('richnessByTimeMonthOfYear', () => {
+      test('All month of year (0-11) are present', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+        const expectedMonthOfYear = [...Array(12).keys()].map(String)
+        const actualMonthOfYear = Object.keys(richnessByTimeMonthOfYear)
+        expect(actualMonthOfYear).toHaveLength(12)
+        expect(actualMonthOfYear).toEqual(expectedMonthOfYear)
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 3, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 3, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 3, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 1, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
+      })
+    })
   })
 
   describe('critically endangered species NOT redacted for project-members', () => {
@@ -2192,6 +2314,128 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         expect(isObjectValueNumber(richnessByTimeDayOfWeek)).toBeTruthy()
         expect(richnessByTimeDayOfWeek).toEqual({ 0: 2, 1: 1, 2: 2, 3: 0, 4: 0, 5: 1, 6: 1 })
+      })
+    })
+
+    describe('richnessByTimeMonthOfYear', () => {
+      test('All month of year (0-11) are present', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+        const expectedMonthOfYear = [...Array(12).keys()].map(String)
+        const actualMonthOfYear = Object.keys(richnessByTimeMonthOfYear)
+        expect(actualMonthOfYear).toHaveLength(12)
+        expect(actualMonthOfYear).toEqual(expectedMonthOfYear)
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 5, 1: 5, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 3 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 3, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 5, 1: 5, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 3 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: '300' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 2, 1: 3, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 2 })
+      })
+
+      test('richnessByTimeMonthOfYear is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { richnessByTimeMonthOfYear } = response.json()
+        expect(richnessByTimeMonthOfYear).toBeDefined()
+        expect(richnessByTimeMonthOfYear).toBeTypeOf('object')
+
+        expect(isObjectValueNumber(richnessByTimeMonthOfYear)).toBeTruthy()
+        expect(richnessByTimeMonthOfYear).toEqual({ 0: 3, 1: 2, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 1 })
       })
     })
   })
