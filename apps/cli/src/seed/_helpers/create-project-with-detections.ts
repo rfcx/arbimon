@@ -10,9 +10,9 @@ export type RecordingAutoProject = Omit<RecordingByVersionSiteHour, 'projectVers
 export const createProjectWithDetections = async (
   models: AllModels,
   project: Project,
-  sites: SiteAutoProject[],
-  detections: DetectionAutoProject[],
-  recordings?: RecordingAutoProject[]
+  sites: SiteAutoProject[] = [],
+  detections: DetectionAutoProject[] = [],
+  recordings: RecordingAutoProject[] = fakeRecordingsFromDetections(detections)
 ): Promise<void> => {
   // Create mock project
   await models.Project.create(project)
@@ -27,40 +27,36 @@ export const createProjectWithDetections = async (
   await models.ProjectVersion.create(projectVersion)
 
   // Create mock projects sites
-  const sitesFull: ProjectSite[] = sites.map(s => ({
+  await models.ProjectSite.bulkCreate(sites.map(s => ({
     ...s,
     projectId: project.id,
     projectVersionFirstAppearsId: projectVersion.id
-
-  }))
-  await models.ProjectSite.bulkCreate(sitesFull)
+  })))
 
   // Create mock detections
-  const detectionsFull: DetectionByVersionSiteSpeciesHour[] = detections.map(d => ({
+  await models.DetectionByVersionSiteSpeciesHour.bulkCreate(detections.map(d => ({
     ...d,
     projectVersionId: projectVersion.id
-  }))
-  await models.DetectionByVersionSiteSpeciesHour.bulkCreate(detectionsFull)
+  })))
 
   // Create mock recordings
-  const recordingsFull: RecordingByVersionSiteHour[] = recordings
-    ? recordings.map(r => ({
-      ...r,
-      projectVersionId: projectVersion.id
-    }))
-    : recordingsFromDetections(detectionsFull)
-  await models.RecordingByVersionSiteHour.bulkCreate(recordingsFull)
+  await models.RecordingByVersionSiteHour.bulkCreate(recordings.map(r => ({
+    ...r,
+    projectVersionId: projectVersion.id
+  })))
 }
 
-const recordingsFromDetections = (detections: DetectionByVersionSiteSpeciesHour[]): RecordingByVersionSiteHour[] => {
+const fakeRecordingsFromDetections = (detections: DetectionAutoProject[]): RecordingAutoProject[] => {
+  if (detections.length === 0) return []
+
   // Pretend detection minutes === recording minutes
-  const recordingsWithDupes = detections.map(({ timePrecisionHourLocal, projectVersionId, projectSiteId, countDetectionMinutes: countRecordingMinutes }) =>
-    ({ timePrecisionHourLocal, projectVersionId, projectSiteId, countRecordingMinutes }))
+  const recordingsWithDupes = detections.map(({ timePrecisionHourLocal, projectSiteId, countDetectionMinutes: countRecordingMinutes }) =>
+    ({ timePrecisionHourLocal, projectSiteId, countRecordingMinutes }))
 
   // Merge 1 row per species => 1 row (taking max "countRecordingMinutes")
   return Object.values(
     mapValues(
-      groupBy(recordingsWithDupes, ({ timePrecisionHourLocal, projectVersionId, projectSiteId }) => `${timePrecisionHourLocal.getTime()}-${projectVersionId}-${projectSiteId}`),
+      groupBy(recordingsWithDupes, ({ timePrecisionHourLocal, projectSiteId }) => `${timePrecisionHourLocal.getTime()}-${projectSiteId}`),
       vs => ({ ...vs[0], countRecordingMinutes: Math.max(...vs.map(v => v.countRecordingMinutes)) })
     )
   )
