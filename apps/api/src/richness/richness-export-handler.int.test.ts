@@ -38,7 +38,7 @@ const EXPECTED_PROPS_RICHNESS_EXPORT = [
   'month',
   'day',
   'hour',
-  'detectionMinuteCount'
+  'countDetectionMinutes'
 ]
 
 const PROJECT_ID_BASIC = '10001'
@@ -93,7 +93,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
 
         const firstEntry = richnessExport[0]
         EXPECTED_PROPS_RICHNESS_EXPORT.forEach(expectedProp => expect(firstEntry).toHaveProperty(expectedProp))
-        expect(Object.keys(richnessExport).length).toBe(EXPECTED_PROPS_RICHNESS_EXPORT.length)
+        expect(Object.keys(firstEntry).length).toBe(EXPECTED_PROPS_RICHNESS_EXPORT.length)
       })
     })
   })
