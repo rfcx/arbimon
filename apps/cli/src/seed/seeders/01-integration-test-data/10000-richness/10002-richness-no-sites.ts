@@ -2,12 +2,11 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, ProjectVersion } from '@rfcx-bio/common/dao/types'
+import { Project } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '@/db/connections'
+import { createProjectWithDetections } from '@/seed/_helpers/create-project-with-detections'
 
-// Mocked projects
-const testProject2: Project = {
+const testProject: Project = {
   id: 10002,
   idCore: 'integration1',
   idArbimon: 10002001,
@@ -15,23 +14,13 @@ const testProject2: Project = {
   name: 'Integration Test Project 2'
 }
 
-const testProjectVersion2: ProjectVersion = {
-  id: 10002,
-  projectId: 10002,
-  isPublished: true,
-  isPublic: true
-}
-
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // Create mocked projects
-  const projects: Project[] = [testProject2]
-  await ModelRepository.getInstance(getSequelize())
-    .Project
-    .bulkCreate(projects)
+  const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
-  // Create mocked projects versions
-  const projectsVersions: ProjectVersion[] = [testProjectVersion2]
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectVersion
-    .bulkCreate(projectsVersions)
+  // Create mock project, version, sites, detections, recordings
+  await createProjectWithDetections(
+    models,
+    testProject
+  )
 }

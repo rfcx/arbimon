@@ -3,11 +3,10 @@ import { MigrationFn } from 'umzug'
 
 import { masterRiskRatings } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
+import { Project, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '@/db/connections'
+import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '@/seed/_helpers/create-project-with-detections'
 
-// Mocked projects
 const testProject: Project = {
   id: 10007,
   idCore: 'integration7',
@@ -16,20 +15,11 @@ const testProject: Project = {
   name: 'Integration Test Project 7'
 }
 
-const testProjectVersion: ProjectVersion = {
-  id: 10007,
-  projectId: 10007,
-  isPublished: true,
-  isPublic: true
-}
-
-const testSites: ProjectSite[] = [
+const testSites: SiteAutoProject[] = [
   {
     id: 10007001,
     idCore: 'ts10007001',
     idArbimon: 10007001,
-    projectId: 10007,
-    projectVersionFirstAppearsId: 10007,
     name: 'Test Site 7001',
     latitude: 18.31307,
     longitude: -65.24878,
@@ -39,8 +29,6 @@ const testSites: ProjectSite[] = [
     id: 10007002,
     idCore: 'ts10007002',
     idArbimon: 10007002,
-    projectId: 10007,
-    projectVersionFirstAppearsId: 10007,
     name: 'Test Site 7002',
     latitude: 18.31307,
     longitude: -65.24878,
@@ -50,8 +38,6 @@ const testSites: ProjectSite[] = [
     id: 10007003,
     idCore: 'ts10007003',
     idArbimon: 10007003,
-    projectId: 10007,
-    projectVersionFirstAppearsId: 10007,
     name: 'Test Site 7003',
     latitude: 18.31307,
     longitude: -65.24878,
@@ -59,11 +45,10 @@ const testSites: ProjectSite[] = [
   }
 ]
 
-const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
+const testDetectionsByVersionSiteSpeciesHour: DetectionAutoProject[] = [
   // Same site same taxon (300) same species different date same time
   {
     timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri Dec 1640908800
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -71,7 +56,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-01-02T23:00:00.000Z'), // Sun Jan 1641081600
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -79,7 +63,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-06T23:00:00.000Z'), // Sun Feb 1644105600
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -87,7 +70,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T23:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -95,7 +77,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T11:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -103,7 +84,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -113,7 +93,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   // Same site same taxon (300) different species different date same time
   {
     timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri Dec 1640908800
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 3,
     taxonClassId: 300,
@@ -121,7 +100,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-01-02T23:00:00.000Z'), // Sun Jan 1641081600
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 3,
     taxonClassId: 300,
@@ -129,7 +107,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-06T23:00:00.000Z'), // Sun Feb 1644105600
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -137,7 +114,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T23:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -145,7 +121,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T11:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -153,7 +128,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 3,
     taxonClassId: 300,
@@ -161,7 +135,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -171,7 +144,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   // Different site same taxon (300) same species different date same time
   {
     timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri Dec 1640908800
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8,
     taxonClassId: 300,
@@ -179,7 +151,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-01-02T23:00:00.000Z'), // Sun Jan 1641081600
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -187,7 +158,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-06T23:00:00.000Z'), // Sun Feb 1644105600
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -195,7 +165,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T23:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -203,7 +172,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T11:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -211,7 +179,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8, // protected
     taxonClassId: 300,
@@ -221,7 +188,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   // Different site same taxon (300) different species different date same time
   {
     timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri Dec 1640908800
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 3,
     taxonClassId: 300,
@@ -229,7 +195,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-01-02T23:00:00.000Z'), // Sun Jan 1641081600
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 3,
     taxonClassId: 300,
@@ -237,7 +202,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-06T23:00:00.000Z'), // Sun Feb 1644105600
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -245,7 +209,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T23:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -253,7 +216,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T11:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -261,7 +223,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 3,
     taxonClassId: 300,
@@ -269,7 +230,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 4,
     taxonClassId: 300,
@@ -279,7 +239,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   // Different taxon (100)
   {
     timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri Dec 1640908800
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 6,
     taxonClassId: 100,
@@ -287,7 +246,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-01-02T23:00:00.000Z'), // Sun Jan 1641081600
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 6,
     taxonClassId: 100,
@@ -295,7 +253,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-06T23:00:00.000Z'), // Sun Feb 1644105600
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 6,
     taxonClassId: 100,
@@ -303,7 +260,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T23:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 6,
     taxonClassId: 100,
@@ -311,7 +267,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-13T11:00:00.000Z'), // Sun Feb 1644710400
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 9, // protected
     taxonClassId: 100,
@@ -319,7 +274,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 6,
     taxonClassId: 100,
@@ -327,7 +281,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue Feb 1644883200
-    projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 9, // protected
     taxonClassId: 100,
@@ -337,7 +290,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   // Site with only protected species
   {
     timePrecisionHourLocal: new Date('2022-01-01T00:00:00.000Z'), // Sat Jan 1640995200
-    projectVersionId: 10007,
     projectSiteId: 10007003,
     taxonSpeciesId: 1, // protected
     taxonClassId: 600,
@@ -345,7 +297,6 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
   },
   {
     timePrecisionHourLocal: new Date('2022-01-03T15:00:00.000Z'), // Mon Jan 1641168000
-    projectVersionId: 10007,
     projectSiteId: 10007003,
     taxonSpeciesId: 9, // protected
     taxonClassId: 100,
@@ -421,30 +372,17 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
 ]
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // Create mocked projects
-  const projects: Project[] = [testProject]
-  await ModelRepository.getInstance(getSequelize())
-    .Project
-    .bulkCreate(projects)
+  const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
-  // Create mocked projects versions
-  const projectsVersions: ProjectVersion[] = [testProjectVersion]
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectVersion
-    .bulkCreate(projectsVersions)
+  // Create mock project, version, sites, detections, recordings
+  await createProjectWithDetections(
+    models,
+    testProject,
+    testSites,
+    testDetectionsByVersionSiteSpeciesHour
+  )
 
-  // Create mocked projects sites
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectSite
-    .bulkCreate(testSites)
-
-  // Create summary of mocked hourly validated detections
-  await ModelRepository.getInstance(getSequelize())
-    .DetectionByVersionSiteSpeciesHour
-    .bulkCreate(testDetectionsByVersionSiteSpeciesHour)
-
-  // Create summary of mocked hourly validated detections
-  await ModelRepository.getInstance(getSequelize())
-    .TaxonSpeciesProjectRiskRating
-    .bulkCreate(testTaxonSpeciesProjectRiskRating)
+  // Create project risk ratings
+  await models.TaxonSpeciesProjectRiskRating.bulkCreate(testTaxonSpeciesProjectRiskRating)
 }

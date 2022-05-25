@@ -2,12 +2,11 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionByVersionSiteSpeciesHour, Project, ProjectSite, ProjectVersion } from '@rfcx-bio/common/dao/types'
+import { Project } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '@/db/connections'
+import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '@/seed/_helpers/create-project-with-detections'
 
-// Mocked projects
-const testProject4: Project = {
+const testProject: Project = {
   id: 10004,
   idCore: 'integration1',
   idArbimon: 10004001,
@@ -15,56 +14,37 @@ const testProject4: Project = {
   name: 'Integration Test Project 4'
 }
 
-const testProjectVersion4: ProjectVersion = {
-  id: 10004,
-  projectId: 10004,
-  isPublished: true,
-  isPublic: true
-}
+const testSites: SiteAutoProject[] = [
+  {
+    id: 10004,
+    idCore: 'testSite0004',
+    idArbimon: 1111224,
+    name: 'Test Site 4',
+    latitude: 20.31307,
+    longitude: -80.24878,
+    altitude: 30.85246588
+  }
+]
 
-const testSite4: ProjectSite = {
-  id: 10004,
-  idCore: 'testSite0004',
-  idArbimon: 1111224,
-  projectId: 10004,
-  projectVersionFirstAppearsId: 10004,
-  name: 'Test Site 4',
-  latitude: 20.31307,
-  longitude: -80.24878,
-  altitude: 30.85246588
-}
-
-const testDetectionByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour = {
-  timePrecisionHourLocal: new Date('2021-02-11T11:00:00.000Z'),
-  projectVersionId: 10004,
-  projectSiteId: 10004,
-  taxonSpeciesId: 3,
-  taxonClassId: 300,
-  countDetectionMinutes: 1
-}
+const testDetectionsByVersionSiteSpeciesHour: DetectionAutoProject[] = [
+  {
+    timePrecisionHourLocal: new Date('2021-02-11T11:00:00.000Z'),
+    projectSiteId: 10004,
+    taxonSpeciesId: 3,
+    taxonClassId: 300,
+    countDetectionMinutes: 1
+  }
+]
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // Create mocked projects
-  const projects: Project[] = [testProject4]
-  await ModelRepository.getInstance(getSequelize())
-    .Project
-    .bulkCreate(projects)
+  const sequelize = params.context.sequelize
+  const models = ModelRepository.getInstance(sequelize)
 
-  // Create mocked projects versions
-  const projectsVersions: ProjectVersion[] = [testProjectVersion4]
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectVersion
-    .bulkCreate(projectsVersions)
-
-  // Create mocked projects sites
-  const sites: ProjectSite[] = [testSite4]
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectSite
-    .bulkCreate(sites)
-
-   // Create summary of mocked hourly validated detections
-   const detection: DetectionByVersionSiteSpeciesHour[] = [testDetectionByVersionSiteSpeciesHour]
-   await ModelRepository.getInstance(getSequelize())
-     .DetectionByVersionSiteSpeciesHour
-     .bulkCreate(detection)
+  // Create mock project, version, sites, detections, recordings
+  await createProjectWithDetections(
+    models,
+    testProject,
+    testSites,
+    testDetectionsByVersionSiteSpeciesHour
+  )
 }
