@@ -67,7 +67,7 @@ const testSource: Source = {
 const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[] = [
   // Same site same taxon (300) same species different date same time
   {
-    timePrecisionHourLocal: new Date('2022-12-31T23:00:00.000Z'), // Fri
+    timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri
     projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 8, // protected
@@ -117,7 +117,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
 
   // Same site same taxon (300) different species different date same time
   {
-    timePrecisionHourLocal: new Date('2022-12-31T23:00:00.000Z'), // Fri
+    timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri
     projectVersionId: 10007,
     projectSiteId: 10007001,
     taxonSpeciesId: 3,
@@ -175,7 +175,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
 
   // Different site same taxon (300) same species different date same time
   {
-    timePrecisionHourLocal: new Date('2022-12-31T23:00:00.000Z'), // Fri
+    timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri
     projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 8,
@@ -225,7 +225,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
 
   // Different site same taxon (300) different species different date same time
   {
-    timePrecisionHourLocal: new Date('2022-12-31T23:00:00.000Z'), // Fri
+    timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri
     projectVersionId: 10007,
     projectSiteId: 10007002,
     taxonSpeciesId: 3,
@@ -283,9 +283,9 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
 
   // Different taxon (100)
   {
-    timePrecisionHourLocal: new Date('2022-12-31T23:00:00.000Z'), // Fri
+    timePrecisionHourLocal: new Date('2021-12-31T00:00:00.000Z'), // Fri
     projectVersionId: 10007,
-    projectSiteId: 10007001,
+    projectSiteId: 10007002,
     taxonSpeciesId: 6,
     taxonClassId: 100,
     countDetectionMinutes: 2
@@ -318,7 +318,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     timePrecisionHourLocal: new Date('2022-02-13T11:00:00.000Z'), // Sun
     projectVersionId: 10007,
     projectSiteId: 10007002,
-    taxonSpeciesId: 9,
+    taxonSpeciesId: 9, // protected
     taxonClassId: 100,
     countDetectionMinutes: 2
   },
@@ -334,7 +334,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
     timePrecisionHourLocal: new Date('2022-02-15T11:00:00.000Z'), // Tue
     projectVersionId: 10007,
     projectSiteId: 10007002,
-    taxonSpeciesId: 9,
+    taxonSpeciesId: 9, // protected
     taxonClassId: 100,
     countDetectionMinutes: 2
   },
