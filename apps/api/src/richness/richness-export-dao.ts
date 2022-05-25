@@ -24,8 +24,7 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
     }
 
   const nonProjectMemberJoins = `
-    JOIN project_version pv ON dbvssh.project_version_id = pv.id
-    LEFT JOIN taxon_species_project_risk_rating as tsp on dbvssh.taxon_species_id = tsp.taxon_species_id AND tsp.project_id = pv.project_id
+    LEFT JOIN taxon_species_project_risk_rating as tsp on tsp.taxon_species_id = dbvssh.taxon_species_id AND tsp.project_id = dbvssh.project_id
   `
 
   const sql = `
