@@ -181,7 +181,7 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionByVersionSiteSpeciesHour[
 
 const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
   {
-    taxonSpeciesId: 1,
+    taxonSpeciesId: 1, // 600
     projectId: 10006,
     riskRatingId: masterRiskRatings.CR.id, // protected
     sourceUrl: '',
@@ -189,7 +189,7 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.CR.code
   },
   {
-    taxonSpeciesId: 5,
+    taxonSpeciesId: 5, // 600
     projectId: 10006,
     riskRatingId: masterRiskRatings.LC.id,
     sourceUrl: '',
@@ -197,7 +197,7 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.LC.code
   },
   {
-    taxonSpeciesId: 6,
+    taxonSpeciesId: 6, // 100
     projectId: 10006,
     riskRatingId: masterRiskRatings.EN.id,
     sourceUrl: '',
@@ -205,7 +205,7 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.EN.code
   },
   {
-    taxonSpeciesId: 7,
+    taxonSpeciesId: 7, // 500
     projectId: 10006,
     riskRatingId: masterRiskRatings.VU.id,
     sourceUrl: '',
@@ -213,7 +213,7 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.VU.code
   },
   {
-    taxonSpeciesId: 8,
+    taxonSpeciesId: 8, // 300
     projectId: 10006,
     riskRatingId: masterRiskRatings.CR.id, // protected
     sourceUrl: '',
@@ -221,12 +221,12 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.CR.code
   },
   {
-    taxonSpeciesId: 9,
+    taxonSpeciesId: 9, // 100
     projectId: 10006,
-    riskRatingId: masterRiskRatings.EN.id,
+    riskRatingId: masterRiskRatings.CR.id, // protected
     sourceUrl: '',
     sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.EN.code
+    riskRatingCustomCode: masterRiskRatings.CR.code
   }
 ]
 
