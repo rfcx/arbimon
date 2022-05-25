@@ -375,49 +375,4 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
       })
     })
   })
-
-  describe('client errors', () => {
-    test('rejects missing query', async () => {
-        // Act
-        const response = await injectAsLoggedInProjectMember({
-        method: GET,
-        url: richnessExportUrl({ projectId: PROJECT_ID_BASIC })
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-    })
-
-    test('rejects invalid project id', async () => {
-        // Act
-        const response = await injectAsLoggedInProjectMember({
-        method: GET,
-        url: richnessExportUrl({ projectId: 'x' })
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid path params: projectId')
-    })
-
-    test('rejects invalid date', async () => {
-        // Act
-        const response = await injectAsLoggedInProjectMember({
-        method: GET,
-        url: richnessExportUrl({ projectId: PROJECT_ID_BASIC }),
-        query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid query params')
-      expect(errorMessage).toContain('startDate with value')
-    })
-  })
 })
