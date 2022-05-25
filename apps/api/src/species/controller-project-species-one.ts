@@ -1,13 +1,13 @@
 import { Op } from 'sequelize'
 
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { RISK_RATING_PROTECTED_IDS_SET } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { getSequelize } from '@/_services/db'
 import { BioNotFoundError } from '~/errors'
-import { isProtectedSpecies } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 
@@ -55,7 +55,7 @@ const getProjectSpeciesOne = async (projectId: string, taxonSpeciesSlug: string,
     raw: true
   })
 
-  const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !isProjectMember
+  const isLocationRedacted = RISK_RATING_PROTECTED_IDS_SET.has(speciesInformation.riskRatingId) && !isProjectMember
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
 
   if (!isLocationRedacted) {

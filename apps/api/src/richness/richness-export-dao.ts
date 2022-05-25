@@ -1,9 +1,9 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
 import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { RISK_RATING_PROTECTED_IDS } from '@rfcx-bio/common/dao/master-data'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
-import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 
 // TODO: Replace this with a generic implementation of `SnakeCase<RichnessByExportReportRow>` in TS 4.5
 type RichnessByExportReportRowSql = Omit<RichnessByExportReportRow, 'scientificName' | 'commonName' | 'countDetectionMinutes'> & {

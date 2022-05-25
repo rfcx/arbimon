@@ -2,11 +2,11 @@ import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
 import { ProjectSpeciesFileParams } from '@rfcx-bio/common/api-bio/species/project-species-file'
+import { RISK_RATING_PROTECTED_IDS_SET } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { getSequelize } from '~/db'
-import { isProtectedSpecies } from '~/security/protected-species'
 import { Handler } from '../_services/api-helpers/types'
 import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
@@ -26,7 +26,7 @@ export const projectSpeciesFileHandler: Handler<FastifyReply, ProjectSpeciesFile
 
   if (!species) throw BioNotFoundError()
 
-  const isLocationRedacted = isProtectedSpecies(species.riskRatingId) && !getIsProjectMember(req)
+  const isLocationRedacted = RISK_RATING_PROTECTED_IDS_SET.has(species.riskRatingId) && !getIsProjectMember(req)
   if (isLocationRedacted) throw BioForbiddenError()
 
   // Query file

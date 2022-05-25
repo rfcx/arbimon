@@ -2,13 +2,13 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 import { Op, QueryTypes, Sequelize } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { RISK_RATING_PROTECTED_IDS } from '@rfcx-bio/common/dao/master-data'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionByVersionSiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
-import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 
