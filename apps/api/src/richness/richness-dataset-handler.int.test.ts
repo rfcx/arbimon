@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { RichnessDatasetResponse, richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { DetectedSpecies, RichnessDatasetResponse, richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
 import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
@@ -30,6 +30,7 @@ const PROJECT_ID_NO_DETECTIONS = '10003'
 const PROJECT_ID_TIME_BUCKET = '10005'
 const PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON = '10006'
 const PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET = '10007'
+const PROJECT_ID_DETECTED_SPECIES = '10008'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -857,7 +858,30 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     })
 
     describe('detectedSpecies', () => {
-      // TODO: Update richness presence test case after the query code updated
+      test('detectedSpecies is return expected properties', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Arrange
+        const detectedSpeciesExpectedProperties = ['taxonClassId', 'taxonSpeciesId', 'taxonSpeciesSlug', 'commonName', 'scientificName']
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies.length).toBeGreaterThan(0)
+
+        const speciesSample = detectedSpecies[0]
+        expect(speciesSample).toBeTypeOf('object')
+        detectedSpeciesExpectedProperties.forEach(expectedProperty => expect(speciesSample).toHaveProperty(expectedProperty))
+        Object.keys(speciesSample).forEach(actualProperty => expect(detectedSpeciesExpectedProperties).toContain(actualProperty))
+      })
 
       test('detectedSpecies is calculate correctly on given date', async () => {
         // Act
@@ -873,7 +897,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
-        expect(detectedSpecies).toBeTypeOf('object')
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(5)
+        const expectedSpeciesIds = [1, 2, 3, 4, 7]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
       })
 
       test('detectedSpecies is calculate correctly on given date filter by site', async () => {
@@ -882,7 +910,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10008001' }
         })
 
         // Assert
@@ -890,7 +918,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
-        expect(detectedSpecies).toBeTypeOf('object')
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [1, 7]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
       })
 
       test('detectedSpecies is calculate correctly on given date filter by sites', async () => {
@@ -899,7 +931,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001003'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10008002', '10008003'] }
         })
 
         // Assert
@@ -907,7 +939,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
-        expect(detectedSpecies).toBeTypeOf('object')
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(3)
+        const expectedSpeciesIds = [2, 3, 4]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
       })
 
       test('detectedSpecies is calculate correctly on given date filter by taxon', async () => {
@@ -916,7 +952,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '600' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '300' }
         })
 
         // Assert
@@ -924,7 +960,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
-        expect(detectedSpecies).toBeTypeOf('object')
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [3, 4]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
       })
 
       test('detectedSpecies is calculate correctly on given date filter by taxons', async () => {
@@ -941,7 +981,11 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         const { detectedSpecies } = response.json()
         expect(detectedSpecies).toBeDefined()
-        expect(detectedSpecies).toBeTypeOf('object')
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [1, 2]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
       })
     })
   })
