@@ -1,14 +1,49 @@
-import { describe, test } from 'vitest'
+import { Op } from 'sequelize'
+import { describe, expect, test } from 'vitest'
+
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+
+import { getSequelize } from '@/db/connections'
+import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
+import { syncArbimonProjectsBatch } from './sync-arbimon-project'
+import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+
+const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
+const biodiversitySequelize = await getSequelize()
+
+const SYNC_CONFIG: SyncConfig = {
+  sourceId: masterSources.ArbimonValidated.id,
+  syncDataTypeId: masterSyncDataTypes.Project.id,
+  syncBatchLimit: 2
+}
 
 describe('ingest > sync', () => {
   describe('syncArbimonProjectsBatch', () => {
-    test.todo('can sync projects', async () => {
+    test('can sync projects', async () => {
       // Arrange
+      const syncStatus = await ModelRepository.getInstance(getSequelize())
+        .SyncStatus
+        .findOne({
+          where: { sourceId: SYNC_CONFIG.sourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+          raw: true
+        }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
       // Act
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
 
       // Assert
-      // TODO: Assert valid projects are in Bio projects table
+      // - Assert valid projects are in Bio projects table
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll({
+        where: { idArbimon: { [Op.in]: [1920, 1921] } }
+      })
+      expect(projects.length).toBe(2)
+
+      // - Assert new project version
+      const projectVersions = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.findAll({
+        where: { projectId: { [Op.in]: projects.map(p => p.id) } }
+      })
+      expect(projectVersions.length).toBe(2)
     })
 
     test.todo('can sync projects when some invalid', async () => {

@@ -22,17 +22,23 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   if (arbimonProjects.length === 0) return syncStatus
 
   const [projects, validationErrors] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
+  console.log('validationErrors', validationErrors)
+  const transaction = await biodiversitySequelize.transaction()
+  try {
+    await writeProjectsToBio(biodiversitySequelize, projects.map(p => p.data), transaction)
 
-  // TODO: Use a transaction
-  await writeProjectsToBio(biodiversitySequelize, projects)
-  // const insertErrors = await writeProjectsToBio(biodiversitySequelize, projects)
-  console.log(validationErrors)
-  // await writeErrorsToBio(validationErrors, insertErrors)
+    // const insertErrors = await writeProjectsToBio(biodiversitySequelize, projects)
 
-  const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: arbimonProjects[arbimonProjects.length - 1].updatedAt, syncUntilId: arbimonProjects[arbimonProjects.length - 1].id }
-  // await writeSyncResult(updatedSyncStatus)
+    // await writeErrorsToBio(validationErrors, insertErrors)
 
-  return updatedSyncStatus
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: arbimonProjects[arbimonProjects.length - 1].updatedAt, syncUntilId: arbimonProjects[arbimonProjects.length - 1].id }
+    // await writeSyncResult(updatedSyncStatus)
+    await transaction.commit()
+    return updatedSyncStatus
+  } catch (error) {
+    await transaction.rollback()
+    throw error
+  }
 }
 
 export const syncArbimonProjects = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {

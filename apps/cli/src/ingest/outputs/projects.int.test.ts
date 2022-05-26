@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -11,37 +12,38 @@ const biodiversitySequelize = await getSequelize()
 describe('ingest > outputs > projects', () => {
   test('can write new project', async () => {
     // Arrange
-    const numberOfSeededProjects = 5
     const input: Array<Omit<Project, 'id'>> = [{
-      idCore: '807cuoi3cvw0',
-      idArbimon: 1920,
-      slug: 'rfcx-1',
-      name: 'RFCx 1'
+      idCore: '807cuoi3cv99',
+      idArbimon: 9999,
+      slug: 'rfcx-99',
+      name: 'RFCx 99'
     },
     {
-      idCore: '807cuoi3cvw1',
-      idArbimon: 1921,
-      slug: 'rfcx-2',
-      name: 'RFCx 2'
+      idCore: '807cuoi3cv98',
+      idArbimon: 9998,
+      slug: 'rfcx-98',
+      name: 'RFCx 98'
     }]
 
     // Act
     await writeProjectsToBio(biodiversitySequelize, input)
 
     // Assert
-    const projects = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll()
-    expect(projects.length).toBe(numberOfSeededProjects + 2)
-    expect(projects[projects.length - 2].idArbimon).toBe(input[0].idArbimon)
-    expect(projects[projects.length - 1].idArbimon).toBe(input[1].idArbimon)
+    const projects = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll({
+      where: {
+        idArbimon: { [Op.in]: input.map(i => i.idArbimon) }
+      }
+    })
+    expect(projects.length).toBe(input.length)
   })
 
   test('can update project (Name, Slug, IdCore)', async () => {
     // Arrange
     const inputItem: Omit<Project, 'id'> = {
       idCore: '807cuoi3cvwx',
-      idArbimon: 1920,
-      slug: 'rfcx-11',
-      name: 'RFCx 11'
+      idArbimon: 9999,
+      slug: 'rfcx-99-1',
+      name: 'RFCx 99-1'
     }
 
     // Act
