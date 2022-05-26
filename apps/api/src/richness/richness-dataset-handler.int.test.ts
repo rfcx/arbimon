@@ -31,6 +31,7 @@ const PROJECT_ID_TIME_BUCKET = '10005'
 const PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON = '10006'
 const PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET = '10007'
 const PROJECT_ID_DETECTED_SPECIES = '10008'
+const PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES = '10009'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -885,7 +886,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('detectedSpecies is calculate correctly on given date', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_DETECTED_SPECIES })
         const response = await inject({
           method,
           url,
@@ -906,7 +907,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('detectedSpecies is calculate correctly on given date filter by site', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_DETECTED_SPECIES })
         const response = await inject({
           method,
           url,
@@ -927,7 +928,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('detectedSpecies is calculate correctly on given date filter by sites', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_DETECTED_SPECIES })
         const response = await inject({
           method,
           url,
@@ -948,7 +949,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('detectedSpecies is calculate correctly on given date filter by taxon', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_DETECTED_SPECIES })
         const response = await inject({
           method,
           url,
@@ -969,7 +970,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('detectedSpecies is calculate correctly on given date filter by taxons', async () => {
         // Act
-        const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_DETECTED_SPECIES })
         const response = await inject({
           method,
           url,
@@ -1847,6 +1848,138 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1641081600: 1, 1644105600: 1, 1644710400: 1, 1644883200: 1 })
       })
     })
+
+    describe('detectedSpecies', () => {
+      test('detectedSpecies is return expected properties', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Arrange
+        const detectedSpeciesExpectedProperties = ['taxonClassId', 'taxonSpeciesId', 'taxonSpeciesSlug', 'commonName', 'scientificName']
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies.length).toBeGreaterThan(0)
+
+        const speciesSample = detectedSpecies[0]
+        expect(speciesSample).toBeTypeOf('object')
+        detectedSpeciesExpectedProperties.forEach(expectedProperty => expect(speciesSample).toHaveProperty(expectedProperty))
+        Object.keys(speciesSample).forEach(actualProperty => expect(detectedSpeciesExpectedProperties).toContain(actualProperty))
+      })
+
+      test('detectedSpecies is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(5)
+        const expectedSpeciesIds = [1, 2, 3, 4, 7]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10009001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [1, 7]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10009002', '10009003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [3, 4]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '300' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [3, 4]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await inject({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(2)
+        const expectedSpeciesIds = [1, 2]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+    })
   })
 
   describe('critically endangered species NOT redacted for project-members', () => {
@@ -2708,6 +2841,138 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
         expect(isObjectValueNumber(richnessByTimeUnix)).toBeTruthy()
         expect(richnessByTimeUnix).toEqual({ 1640908800: 1, 1640995200: 1, 1641081600: 1, 1641168000: 1, 1644105600: 1, 1644710400: 2, 1644883200: 2 })
+      })
+    })
+
+    describe('detectedSpecies', () => {
+      test('detectedSpecies is return expected properties', async () => {
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Arrange
+        const detectedSpeciesExpectedProperties = ['taxonClassId', 'taxonSpeciesId', 'taxonSpeciesSlug', 'commonName', 'scientificName']
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies.length).toBeGreaterThan(0)
+
+        const speciesSample = detectedSpecies[0]
+        expect(speciesSample).toBeTypeOf('object')
+        detectedSpeciesExpectedProperties.forEach(expectedProperty => expect(speciesSample).toHaveProperty(expectedProperty))
+        Object.keys(speciesSample).forEach(actualProperty => expect(detectedSpeciesExpectedProperties).toContain(actualProperty))
+      })
+
+      test('detectedSpecies is calculate correctly on given date', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(8)
+        const expectedSpeciesIds = [1, 2, 3, 4, 5, 6, 7, 8]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by site', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10009001' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(4)
+        const expectedSpeciesIds = [1, 5, 6, 7]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by sites', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10009002', '10009003'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(3)
+        const expectedSpeciesIds = [3, 4, 8]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by taxon', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: '300' }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(3)
+        const expectedSpeciesIds = [3, 4, 8]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
+      })
+
+      test('detectedSpecies is calculate correctly on given date filter by taxons', async () => {
+        // Act
+        const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES })
+        const response = await injectAsLoggedInProjectMember({
+          method,
+          url,
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', taxons: ['100', '600'] }
+        })
+
+        // Assert
+        expect(response.statusCode, response.body).toBe(200)
+
+        const { detectedSpecies } = response.json()
+        expect(detectedSpecies).toBeDefined()
+        expect(Array.isArray(detectedSpecies)).toBe(true)
+        expect(detectedSpecies).toHaveLength(4)
+        const expectedSpeciesIds = [1, 2, 5, 6]
+        const actualSpeciesIds = detectedSpecies.map((d: DetectedSpecies) => d.taxonSpeciesId)
+        expect(actualSpeciesIds).toEqual(expectedSpeciesIds)
       })
     })
   })
