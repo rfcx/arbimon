@@ -48,11 +48,13 @@ const sqliteSQL = `
 export const tranformArbimonToBioDetectionSummaries = async (arbimonSummaries: ArbimonDetectionSummaries[], bioSequelize: Sequelize): Promise<DetectionBySourceSiteSpeciesHour[]> => {
   return arbimonSummaries.map(s => {
     // TODO: map source
+    // TODO: map project
     // TODO: map site id
     // TODO: map species id
     return {
       timePrecisionHourLocal: new Date(),
       sourceId: 1,
+      projectId: 1,
       projectSiteId: 2,
       taxonSpeciesId: 3,
       detectionMinutes: s.detectionMinutes // s.detectionMinutes.split(',').map(sn => Number(sn))

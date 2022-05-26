@@ -42,6 +42,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       return {
         timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
         sourceId: masterSources.ArbimonValidated.id,
+        projectId,
         projectSiteId: siteArbimonToBio[d.arbimon_site_id],
         recordingMinutes: recordingMinutes.toString()
       }
@@ -58,6 +59,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
       return {
         timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
+        projectId,
         projectSiteId,
         taxonSpeciesId,
         sourceId: masterSources.ArbimonValidated.id,

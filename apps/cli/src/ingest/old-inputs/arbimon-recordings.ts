@@ -47,6 +47,7 @@ export const tranformArbimonToBioRecordingSummaries = async (arbimonSummaries: A
   return arbimonSummaries.map(s => {
     return {
       timePrecisionHourLocal: new Date(),
+      projectId: 1, // TODO: map project
       sourceId: 1, // TODO: map source
       projectSiteId: 3, // TODO: map site
       recordingMinutes: s.recordingMinutes // s.recordingMinutes.split(',').map(sn => Number(sn)),
