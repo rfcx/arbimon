@@ -21,7 +21,7 @@ const testSites: SiteAutoProject[] = [
     id: 10009001,
     idCore: 'ts10009001',
     idArbimon: 10009001,
-    name: 'Test Site 8001',
+    name: 'Test Site 9001',
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588
@@ -30,7 +30,7 @@ const testSites: SiteAutoProject[] = [
     id: 10009002,
     idCore: 'ts10009002',
     idArbimon: 10009002,
-    name: 'Test Site 2',
+    name: 'Test Site 9002',
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588
@@ -39,7 +39,7 @@ const testSites: SiteAutoProject[] = [
     id: 10009003,
     idCore: 'ts10009003',
     idArbimon: 10009003,
-    name: 'Test Site 8003',
+    name: 'Test Site 9003',
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588
