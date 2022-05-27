@@ -26,13 +26,13 @@ const isObjectValueNumber = (obj: any): boolean => {
   return Object.values(obj).every(o => typeof o === 'number')
 }
 
-const PROJECT_ID_BASIC = '10001001'
-const PROJECT_ID_NO_DETECTIONS = '10003001'
-const PROJECT_ID_TIME_BUCKET = '10005001'
-const PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON = '10006001'
-const PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET = '10007001'
-const PROJECT_ID_DETECTED_SPECIES = '10008001'
-const PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES = '10009001'
+const PROJECT_ID_BASIC = '10001000'
+const PROJECT_ID_NO_DETECTIONS = '10003000'
+const PROJECT_ID_TIME_BUCKET = '10005000'
+const PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON = '10006000'
+const PROJECT_ID_PROTECTED_SPECIES_FOR_TIME_BUCKET = '10007000'
+const PROJECT_ID_DETECTED_SPECIES = '10008000'
+const PROJECT_ID_PROTECTED_SPECIES_FOR_DETECTED_SPECIES = '10009000'
 
 describe(`GET ${ROUTE} (richness dataset)`, async () => {
   const routes = routesRichness
@@ -137,7 +137,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001000' }
         })
 
         // Assert
@@ -157,7 +157,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001002', '10001097'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001001', '10001097'] } // ???
         })
 
         // Assert
@@ -214,7 +214,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
     describe('richnessBySite', () => {
       test('richnessBySite are present if no sites filter', async () => {
-        const allSiteIds = ['10001001', '10001002']
+        const allSiteIds = ['10001000', '10001001']
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
           method,
@@ -234,7 +234,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('richnessBySite in filter are present & no more', async () => {
         // Act
-        const siteIdsToBeFilter = ['10001001', '10001002']
+        const siteIdsToBeFilter = ['10001000', '10001001']
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_BASIC })
         const response = await inject({
           method,
@@ -310,7 +310,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10001000' }
         })
 
         // Assert
@@ -331,7 +331,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001001', '10001002'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10001000', '10001001'] }
         })
 
         // Assert
@@ -445,7 +445,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           url,
           method,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005000' }
         })
 
         // Assert
@@ -465,7 +465,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           url,
           method,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005001', '10005002'] }
         })
 
         // Assert
@@ -567,7 +567,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005000' }
         })
 
         // Assert
@@ -587,7 +587,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005001', '10005002'] }
         })
 
         // Assert
@@ -689,7 +689,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005000' }
         })
 
         // Assert
@@ -709,7 +709,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005001', '10005002'] }
         })
 
         // Assert
@@ -791,7 +791,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10005000' }
         })
 
         // Assert
@@ -811,7 +811,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005002', '10005003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10005001', '10005002'] }
         })
 
         // Assert
@@ -919,7 +919,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10008001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10008000' }
         })
 
         // Assert
@@ -940,7 +940,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10008002', '10008003'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10008001', '10008002'] }
         })
 
         // Assert
@@ -1092,7 +1092,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006000' }
         })
 
         // Assert
@@ -1112,7 +1112,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10006002', '10006003'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10006001', '10006002'] }
         })
 
         // Assert
@@ -1169,7 +1169,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
     describe('richnessBySite', () => {
       test('richnessBySite are present if no sites filter', async () => {
-        const allSiteIds = ['10006001', '10006002', '10006003']
+        const allSiteIds = ['10006000', '10006001', '10006002']
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
         const response = await inject({
           method,
@@ -1189,7 +1189,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('richnessBySite in filter are present & no more', async () => {
         // Act
-        const siteIdsToBeFilter = ['10006001', '10006003']
+        const siteIdsToBeFilter = ['10006000', '10006002']
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
         const response = await inject({
           method,
@@ -1282,7 +1282,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006000' }
         })
 
         // Assert
@@ -1299,7 +1299,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('richnessBySite is calculate correctly on given date filter by sites', async () => {
         // Arrange
-        const siteIdsToBeFilter = ['10006001', '10006003']
+        const siteIdsToBeFilter = ['10006000', '10006002']
 
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
@@ -1436,7 +1436,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           url,
           method,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -1456,7 +1456,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           url,
           method,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -1558,7 +1558,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -1578,7 +1578,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -1680,7 +1680,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -1700,7 +1700,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -1782,7 +1782,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -1802,7 +1802,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -1910,7 +1910,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10009001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10009000' }
         })
 
         // Assert
@@ -1931,7 +1931,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await inject({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10009002', '10009003'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10009001', '10009002'] }
         })
 
         // Assert
@@ -2078,7 +2078,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006000' }
         })
 
         // Assert
@@ -2098,7 +2098,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10006002', '10006003'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10006001', '10006002'] }
         })
 
         // Assert
@@ -2155,7 +2155,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
     describe('richnessBySite', () => {
       test('richnessBySite are present if no sites filter', async () => {
-        const allSiteIds = ['10006001', '10006002', '10006003']
+        const allSiteIds = ['10006000', '10006001', '10006002']
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
         const response = await injectAsLoggedInProjectMember({
           method,
@@ -2175,7 +2175,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('richnessBySite in filter are present & no more', async () => {
         // Act
-        const siteIdsToBeFilter = ['10006001', '10006003']
+        const siteIdsToBeFilter = ['10006000', '10006002']
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
         const response = await injectAsLoggedInProjectMember({
           method,
@@ -2272,7 +2272,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10006000' }
         })
 
         // Assert
@@ -2291,7 +2291,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
 
       test('richnessBySite is calculate correctly on given date filter by sites', async () => {
         // Arrange
-        const siteIdsToBeFilter = ['10006001', '10006003']
+        const siteIdsToBeFilter = ['10006000', '10006002']
 
         // Act
         const url = richnessDatasetUrl({ projectId: PROJECT_ID_PROTECTED_SPECIES_FOR_SITE_AND_TAXON })
@@ -2431,7 +2431,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           url,
           method,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -2451,7 +2451,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           url,
           method,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -2553,7 +2553,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -2573,7 +2573,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -2675,7 +2675,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -2695,7 +2695,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -2777,7 +2777,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007001' }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: '10007000' }
         })
 
         // Assert
@@ -2797,7 +2797,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007002', '10007003'] }
+          query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2022-03-31T00:00:00.000Z', siteIds: ['10007001', '10007002'] }
         })
 
         // Assert
@@ -2905,7 +2905,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10009001' }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: '10009000' }
         })
 
         // Assert
@@ -2926,7 +2926,7 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           method,
           url,
-          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10009002', '10009003'] }
+          query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-21T11:00:00.000Z', siteIds: ['10009001', '10009002'] }
         })
 
         // Assert

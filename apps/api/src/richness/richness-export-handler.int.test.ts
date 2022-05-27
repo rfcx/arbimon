@@ -42,8 +42,8 @@ const EXPECTED_PROPS_RICHNESS_EXPORT = [
   'countDetectionMinutes'
 ]
 
-const PROJECT_ID_BASIC = '10001001'
-const PROJECT_ID_NO_DETECTIONS = '10003001'
+const PROJECT_ID_BASIC = '10001000'
+const PROJECT_ID_NO_DETECTIONS = '10003000'
 
 const expectEmptyResponse = (response: LightMyRequestResponse): void => {
   const result = response.json()
@@ -119,7 +119,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         const expectedObject = {
           scientificName: 'Accipitridae',
           commonName: 'Eagle',
-          site: 'Test Site 2',
+          site: '10001001 Richness Basic',
           latitude: 18.31307,
           longitude: -65.24878,
           altitude: 30.85246588,
@@ -151,9 +151,9 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
         const response = await injectAsLoggedInProjectMember({
           ...options,
           url,
-          query: { ...options.query, siteIds: '10001002' }
+          query: { ...options.query, siteIds: '10001001' }
         })
-        const expectedSite = 'Test Site 2'
+        const expectedSite = '10001001 Richness Basic'
         const expectedCommonNames = ['Sparrow', 'Eagle']
         const expectedScientificNames = ['Accipitridae', 'Passeridae']
 
@@ -175,7 +175,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           url,
           query: { ...options.query, taxons: '100' }
         })
-        const expectedSite = 'Test Site'
+        const expectedSite = '10001000 Richness Basic'
         const expectedCommonName = 'Cobra'
         const expectedScientificName = 'Naja'
 
@@ -196,7 +196,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           url,
           query: { ...options.query, taxons: ['100', '300'] }
         })
-        const expectedSite = ['Test Site', 'Test Site 2']
+        const expectedSite = ['10001000 Richness Basic', '10001001 Richness Basic']
         const expectedCommonNames = ['Cobra', 'Eagle', 'Sparrow']
         const expectedScientificNames = ['Naja', 'Accipitridae', 'Passeridae']
 
@@ -240,7 +240,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           url,
           query: { ...options.query, taxons: '100' }
         })
-        const expectedSite = 'Test Site'
+        const expectedSite = '10001000 Richness Basic'
         const expectedCommonName = 'Cobra'
         const expectedScientificName = 'Naja'
 
@@ -283,7 +283,7 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
           url,
           query: { ...options.query, taxons: '600' }
         })
-        const expectedSite = 'Test Site'
+        const expectedSite = '10001000 Richness Basic'
         const expectedCommonName = 'Cat'
         const expectedScientificName = 'Felis catus'
 
