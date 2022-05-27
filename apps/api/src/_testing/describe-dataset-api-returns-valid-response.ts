@@ -1,24 +1,23 @@
-import { InjectOptions } from 'fastify'
+import { LightMyRequestResponse } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
-
 import { GET } from '~/api-helpers/types'
-import { InjectFunction } from './get-inject'
+import { DatasetInjectAndParams } from './dataset-inject-and-params'
 
-export const describeDatasetApiReturnsValidResponse = (inject: InjectFunction, getUrl: (params: ProjectSpecificRouteParams) => string, expectedProps: string[], projectId: string): void => {
+export const describeDatasetApiReturnsValidResponse = ({ inject, getUrl, projectId, query }: DatasetInjectAndParams, expectedProps: string[]): void => {
   describe('valid requests', () => {
-    const method = GET
-    const url = getUrl({ projectId })
-    const options: InjectOptions = {
-      method,
-      url,
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-27T00:00:00.000Z' }
-    }
-    test('returns successfully', async () => {
-      // Act
-      const response = await inject(options)
+    let response: LightMyRequestResponse
 
+    beforeAll(async () => {
+      // Act once
+      response = await inject({
+        method: GET,
+        url: getUrl({ projectId }),
+        query
+      })
+    })
+
+    test('returns successfully', async () => {
       // Assert
       expect(response.statusCode, response.body).toBe(200)
 
@@ -28,25 +27,12 @@ export const describeDatasetApiReturnsValidResponse = (inject: InjectFunction, g
     })
 
     test('contains all expected props & no more', async () => {
-      // Act
-      const response = await inject(options)
-
       // Assert
       expect(response.statusCode, response.body).toBe(200)
 
       const result = response.json()
       expectedProps.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
       expect(Object.keys(result).length).toBe(expectedProps.length)
-    })
-
-    test('does not contain any additional props', async () => {
-      // Act
-      const response = await inject(options)
-
-      // Assert
-      const result = JSON.parse(response.body)
-      const keys = Object.keys(result)
-      keys.forEach(actualProp => expect(expectedProps).toContain(actualProp))
     })
   })
 }

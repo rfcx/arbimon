@@ -1,8 +1,8 @@
-import { InjectOptions } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { activityDatasetGeneratedUrl, ActivityDatasetResponse, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { activityDatasetGeneratedUrl, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
+import { DatasetInjectAndParams } from '@/_testing/dataset-inject-and-params'
 import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
 import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
 import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
@@ -48,8 +48,15 @@ describe(`GET ${ROUTE} (activity dataset)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    describeDatasetApiReturnsValidResponse(inject, activityDatasetGeneratedUrl, EXPECTED_PROPS, PROJECT_ID_BASIC)
-    describeDatasetApiRejectsInvalidRequests(inject, activityDatasetGeneratedUrl)
+    const injectAndParams: DatasetInjectAndParams = {
+      inject,
+      getUrl: activityDatasetGeneratedUrl,
+      projectId: PROJECT_ID_BASIC,
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-27T00:00:00.000Z' }
+    }
+
+    describeDatasetApiReturnsValidResponse(injectAndParams, EXPECTED_PROPS)
+    describeDatasetApiRejectsInvalidRequests(injectAndParams)
   })
 
   describe('known data tests', async () => {

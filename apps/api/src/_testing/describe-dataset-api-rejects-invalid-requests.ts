@@ -1,20 +1,20 @@
 import { describe, expect, test } from 'vitest'
 
-import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/common/project-specific-route'
-
 import { GET } from '~/api-helpers/types'
-import { InjectFunction } from './get-inject'
+import { DatasetInjectAndParams } from './dataset-inject-and-params'
 
-const PROJECT_ID_BASIC = '10001'
-
-export const describeDatasetApiRejectsInvalidRequests = (inject: InjectFunction, getUrl: (params: ProjectSpecificRouteParams) => string): void => {
+export const describeDatasetApiRejectsInvalidRequests = ({ inject, getUrl, projectId, query }: DatasetInjectAndParams): void => {
   describe('invalid requests', () => {
+    const validOptions = {
+      method: GET,
+      url: getUrl({ projectId }),
+      query
+    }
+
     test('rejects missing query', async () => {
-      // Act
-      const response = await inject({
-        method: GET,
-        url: getUrl({ projectId: PROJECT_ID_BASIC })
-      })
+      // Arrange & Act
+      const { query, ...optionsWithQuery } = validOptions
+      const response = await inject({ ...optionsWithQuery })
 
       // Assert
       expect(response.statusCode).toBe(400)
@@ -22,10 +22,7 @@ export const describeDatasetApiRejectsInvalidRequests = (inject: InjectFunction,
 
     test('rejects invalid project id', async () => {
       // Act
-      const response = await inject({
-        method: GET,
-        url: getUrl({ projectId: 'x' })
-      })
+      const response = await inject({ ...validOptions, url: getUrl({ projectId: 'x' }) })
 
       // Assert
       expect(response.statusCode).toBe(400)
@@ -35,50 +32,30 @@ export const describeDatasetApiRejectsInvalidRequests = (inject: InjectFunction,
       expect(errorMessage).toContain('Invalid path params: projectId')
     })
 
-    test('reject not found project id', async () => {
+    test('rejects not found project id', async () => {
       // Act
-      const response = await inject({
-        method: GET,
-        url: getUrl({ projectId: '-1' }),
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
-      })
+      const response = await inject({ ...validOptions, url: getUrl({ projectId: '-1' }) })
 
       // Assert
       expect(response.statusCode).toBe(404)
     })
 
-    test('rejects invalid startDate', async () => {
+    test('rejects invalid startDate or endDate', async () => {
       // Act
-      const response = await inject({
-        method: GET,
-        url: getUrl({ projectId: PROJECT_ID_BASIC }),
-        query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
-      })
+      const response1 = await inject({ ...validOptions, query: { ...validOptions.query, startDate: 'abc' } })
+      const response2 = await inject({ ...validOptions, query: { ...validOptions.query, endDate: 'abc' } })
 
       // Assert
-      expect(response.statusCode).toBe(400)
+      expect(response1.statusCode).toBe(400)
+      expect(response2.statusCode).toBe(400)
 
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid query params')
-      expect(errorMessage).toContain('startDate with value')
-    })
+      const { message1 } = response1.json()
+      expect(message1).toContain('Invalid query params')
+      expect(message1).toContain('startDate with value')
 
-    test('rejects invalid endDate', async () => {
-      // Act
-      const response = await inject({
-        method: GET,
-        url: getUrl({ projectId: PROJECT_ID_BASIC }),
-        query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(400)
-
-      const result = JSON.parse(response.body)
-      const errorMessage = result.message
-      expect(errorMessage).toContain('Invalid query params')
-      expect(errorMessage).toContain('endDate with value')
+      const { message2 } = response2.json()
+      expect(message2).toContain('Invalid query params')
+      expect(message2).toContain('endDate with value')
     })
   })
 }

@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest'
 
 import { richnessExportUrl } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
+import { DatasetInjectAndParams } from '@/_testing/dataset-inject-and-params'
 import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
 import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
 import { getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
@@ -71,8 +72,15 @@ describe(`GET ${ROUTE} (richness export)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    describeDatasetApiReturnsValidResponse(inject, richnessExportUrl, EXPECTED_PROPS, PROJECT_ID_BASIC)
-    describeDatasetApiRejectsInvalidRequests(inject, richnessExportUrl)
+    const injectAndParams: DatasetInjectAndParams = {
+      inject,
+      getUrl: richnessExportUrl,
+      projectId: PROJECT_ID_BASIC,
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-27T00:00:00.000Z' }
+    }
+
+    describeDatasetApiReturnsValidResponse(injectAndParams, EXPECTED_PROPS)
+    describeDatasetApiRejectsInvalidRequests(injectAndParams)
 
     describe('basic', () => {
       const url = richnessExportUrl({ projectId: PROJECT_ID_BASIC })

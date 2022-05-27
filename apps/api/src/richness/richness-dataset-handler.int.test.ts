@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { DetectedSpecies, RichnessDatasetResponse, richnessDatasetUrl, RichnessSiteData } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
+import { DatasetInjectAndParams } from '@/_testing/dataset-inject-and-params'
 import { describeDatasetApiRejectsInvalidRequests } from '@/_testing/describe-dataset-api-rejects-invalid-requests'
 import { describeDatasetApiReturnsValidResponse } from '@/_testing/describe-dataset-api-returns-valid-response'
 import { getInjectAsInvalidToken, getInjectAsLoggedInNotProjectMember, getInjectAsLoggedInProjectMember, getInjectAsLoggedOut, getMockedFastify } from '@/_testing/get-inject'
@@ -57,8 +58,15 @@ describe(`GET ${ROUTE} (richness dataset)`, async () => {
     ['logged-in-not-project-member', injectAsLoggedInNotProjectMember],
     ['logged-out', injectAsLoggedOut]
   ])('as %s', (_, inject) => {
-    describeDatasetApiReturnsValidResponse(inject, richnessDatasetUrl, EXPECTED_PROPS, PROJECT_ID_BASIC)
-    describeDatasetApiRejectsInvalidRequests(inject, richnessDatasetUrl)
+    const injectAndParams: DatasetInjectAndParams = {
+      inject,
+      getUrl: richnessDatasetUrl,
+      projectId: PROJECT_ID_BASIC,
+      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-03-27T00:00:00.000Z' }
+    }
+
+    describeDatasetApiReturnsValidResponse(injectAndParams, EXPECTED_PROPS)
+    describeDatasetApiRejectsInvalidRequests(injectAndParams)
 
     describe('richnessByTaxon', () => {
       test('richnessByTaxon are present if no sites filter', async () => {
