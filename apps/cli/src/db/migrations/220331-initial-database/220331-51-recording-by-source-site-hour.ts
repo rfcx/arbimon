@@ -3,16 +3,17 @@
  * Do not depend on imported code which may change
  */
 
-import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
+import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
+import { createHypertable } from '../_helpers/220331-create-hypertable'
+import { setTimestampDefaults, TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
 
 const TABLE_NAME = 'recording_by_source_site_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
-  await params.context.createTable(
+export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+  await createTable(
     TABLE_NAME,
     {
       // PK
@@ -55,10 +56,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       }
     }
   )
-  .then(async () => await params.context.sequelize.query(
-    `SELECT create_hypertable('${TABLE_NAME}', '${COLUMN_TIME_HOUR_LOCAL}');`,
-    { type: QueryTypes.RAW }
-  ))
+  await setTimestampDefaults(sequelize, TABLE_NAME)
+  await createHypertable(sequelize, TABLE_NAME, COLUMN_TIME_HOUR_LOCAL)
+}
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
   await params.context.dropTable(TABLE_NAME)
