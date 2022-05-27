@@ -2,9 +2,9 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types'
 
 import { createProjectWithDetections, SiteAutoProject } from '../../_helpers/create-project-with-detections'
+import { defineTestProject } from '../../_helpers/define-test-project'
 
 export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
@@ -17,19 +17,16 @@ export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }
   )
 }
 
-const testProject: Project = {
-  id: 10003,
-  idCore: 'integration1',
-  idArbimon: 10003001,
-  slug: 'integration-test-project3',
-  name: 'Integration Test Project 3'
-}
+const projectId = 10003001
+const siteId1 = 10003001
+
+const testProject = defineTestProject(projectId, 'Richness No Detections')
 
 const testSites: SiteAutoProject[] = [
   {
-    id: 10003,
+    id: siteId1,
     idCore: 'testSite0003',
-    idArbimon: 1111223,
+    idArbimon: siteId1,
     name: 'Test Site 3',
     latitude: 19.31307,
     longitude: -67.24878,

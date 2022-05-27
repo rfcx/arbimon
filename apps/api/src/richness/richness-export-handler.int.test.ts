@@ -42,8 +42,8 @@ const EXPECTED_PROPS_RICHNESS_EXPORT = [
   'countDetectionMinutes'
 ]
 
-const PROJECT_ID_BASIC = '10001'
-const PROJECT_ID_NO_DETECTIONS = '10003'
+const PROJECT_ID_BASIC = '10001001'
+const PROJECT_ID_NO_DETECTIONS = '10003001'
 
 const expectEmptyResponse = (response: LightMyRequestResponse): void => {
   const result = response.json()

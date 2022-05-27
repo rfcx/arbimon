@@ -2,9 +2,10 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types'
 
+import { taxonSpeciesAndClassForId } from '@/seed/data/integration/test-taxon-species'
 import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '../../_helpers/create-project-with-detections'
+import { defineTestProject } from '../../_helpers/define-test-project'
 
 export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
@@ -18,37 +19,36 @@ export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }
   )
 }
 
-const testProject: Project = {
-  id: 10005,
-  idCore: 'integration5',
-  idArbimon: 10005001,
-  slug: 'integration-test-project5',
-  name: 'Integration Test Project 5'
-}
+const projectId = 10005001
+const siteId1 = 10005001
+const siteId2 = 10005002
+const siteId3 = 10005003
+
+const testProject = defineTestProject(projectId, 'Richness Time Bucket')
 
 const testSites: SiteAutoProject[] = [
   {
-    id: 10005001,
+    id: siteId1,
     idCore: 'ts10005001',
-    idArbimon: 1111225,
+    idArbimon: siteId1,
     name: 'Test Site 5001',
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588
   },
   {
-    id: 10005002,
+    id: siteId2,
     idCore: 'ts10005002',
-    idArbimon: 1111226,
+    idArbimon: siteId2,
     name: 'Test Site 5002',
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588
   },
   {
-    id: 10005003,
+    id: siteId3,
     idCore: 'ts10005003',
-    idArbimon: 1111227,
+    idArbimon: siteId3,
     name: 'Test Site 5003',
     latitude: 18.31307,
     longitude: -65.24878,
@@ -59,44 +59,38 @@ const testSites: SiteAutoProject[] = [
 const testDetectionsByVersionSiteSpeciesHour: DetectionAutoProject[] = [
   {
     timePrecisionHourLocal: new Date('2021-12-31T23:00:00.000Z'), // Friday 31 Dec, 2021 (month end, year end cases)
-    projectSiteId: 10005001,
-    taxonSpeciesId: 1,
-    taxonClassId: 600,
+    projectSiteId: siteId1,
+    ...taxonSpeciesAndClassForId(1),
     countDetectionMinutes: 10
   },
   {
     timePrecisionHourLocal: new Date('2022-01-01T00:00:00.000Z'), // Saturday 1 Jan, 2022 (month start, year start cases)
-    projectSiteId: 10005001,
-    taxonSpeciesId: 2,
-    taxonClassId: 100,
+    projectSiteId: siteId1,
+    ...taxonSpeciesAndClassForId(2),
     countDetectionMinutes: 10
   },
   {
     timePrecisionHourLocal: new Date('2022-01-02T00:00:00.000Z'), // Sunday 2 Jan, 2022 (week start)
-    projectSiteId: 10005002,
-    taxonSpeciesId: 3,
-    taxonClassId: 300,
+    projectSiteId: siteId2,
+    ...taxonSpeciesAndClassForId(3),
     countDetectionMinutes: 10
   },
   {
     timePrecisionHourLocal: new Date('2022-01-08T23:00:00.000Z'), // Saturday 8 Jan, 2022 (week end)
-    projectSiteId: 10005003,
-    taxonSpeciesId: 4,
-    taxonClassId: 300,
+    projectSiteId: siteId3,
+    ...taxonSpeciesAndClassForId(4),
     countDetectionMinutes: 10
   },
   {
     timePrecisionHourLocal: new Date('2022-02-17T17:00:00.000Z'), // Thursday 17 Feb, 2022 (random)
-    projectSiteId: 10005003,
-    taxonSpeciesId: 4,
-    taxonClassId: 300,
+    projectSiteId: siteId3,
+    ...taxonSpeciesAndClassForId(4),
     countDetectionMinutes: 10
   },
   {
     timePrecisionHourLocal: new Date('2022-02-17T17:00:00.000Z'), // Thursday 17 Feb, 2022 (random)
-    projectSiteId: 10005003,
-    taxonSpeciesId: 1,
-    taxonClassId: 600,
+    projectSiteId: siteId3,
+    ...taxonSpeciesAndClassForId(1),
     countDetectionMinutes: 10
   }
 ]
