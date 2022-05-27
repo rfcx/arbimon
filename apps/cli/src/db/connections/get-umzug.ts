@@ -18,7 +18,10 @@ export const getUmzug = (sequelize: Sequelize, verbose = false, storageTableName
     migrations: {
       glob: [
         filename ? `${filename}.{js,mjs,ts}` : '**/!(*.d).{js,mjs,ts}',
-        { cwd }
+        {
+          cwd,
+          ignore: ['**/_helpers/*.*']
+        }
       ],
       resolve: params => ({
         name: params.name,

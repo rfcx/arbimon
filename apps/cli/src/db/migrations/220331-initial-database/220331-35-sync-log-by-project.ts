@@ -6,6 +6,8 @@
  import { DataTypes, QueryInterface } from 'sequelize'
  import { MigrationFn } from 'umzug'
 
+import { TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
+
  const TABLE_NAME = 'sync_log_by_project'
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -18,6 +20,7 @@
         primaryKey: true,
         autoIncrement: true
       },
+      ...TIMESTAMP_COLUMNS,
 
       // FKs
       project_id: {
@@ -41,16 +44,6 @@
           model: { tableName: 'sync_data_type' },
           key: 'id'
         }
-      },
-
-      // Logging
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false
       },
 
       // Fact

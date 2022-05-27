@@ -6,6 +6,8 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
+
 const TABLE_NAME = 'taxon_class'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
@@ -17,16 +19,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         primaryKey: true
       },
-
-      // Logging
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
+      ...TIMESTAMP_COLUMNS,
 
       // SKs
       id_arbimon: {

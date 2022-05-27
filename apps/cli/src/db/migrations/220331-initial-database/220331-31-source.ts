@@ -3,30 +3,23 @@
  * Do not depend on imported code which may change
  */
 
- import { DataTypes, QueryInterface } from 'sequelize'
- import { MigrationFn } from 'umzug'
+import { DataTypes, QueryInterface } from 'sequelize'
+import { MigrationFn } from 'umzug'
 
- const TABLE_NAME = 'source'
+import { TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
 
- export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
-   await params.context.createTable(
-     TABLE_NAME,
-     {
+const TABLE_NAME = 'source'
+
+export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
+  await params.context.createTable(
+    TABLE_NAME,
+    {
       // PK
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true
       },
-
-      // Logging
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
+      ...TIMESTAMP_COLUMNS,
 
       // Facts
       name: {
@@ -34,7 +27,7 @@
         allowNull: false
       }
     }
-   )
+  )
 
- export const down: MigrationFn<QueryInterface> = async (params) =>
-   await params.context.dropTable(TABLE_NAME)
+export const down: MigrationFn<QueryInterface> = async (params) =>
+  await params.context.dropTable(TABLE_NAME)
