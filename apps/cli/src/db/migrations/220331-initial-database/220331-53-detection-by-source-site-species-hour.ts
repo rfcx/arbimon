@@ -12,8 +12,10 @@ import { setTimestampDefaults, TIMESTAMP_COLUMNS } from '../_helpers/220331-time
 const TABLE_NAME = 'detection_by_source_site_species_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
-export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
-  await createTable(
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  const sequelize = params.context.sequelize
+
+  await params.context.createTable(
     TABLE_NAME,
     {
       // PK

@@ -9,7 +9,7 @@ import { MigrationFn } from 'umzug'
 const VIEW_NAME = 'dashboard_species_highlighted'
 // const INDEX_COLS = ['location_project_id', 'highlighted_order']
 
-export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   // await sequelize.query(
   //   `
   //   CREATE VIEW ${VIEW_NAME} AS

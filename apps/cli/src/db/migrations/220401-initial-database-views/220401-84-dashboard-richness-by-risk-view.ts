@@ -8,7 +8,7 @@ import { MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'dashboard_richness_by_risk'
 
-export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   // await sequelize.query(
   //   `
   //   create view ${VIEW_NAME} as

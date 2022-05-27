@@ -9,7 +9,7 @@ import { MigrationFn } from 'umzug'
 const VIEW_NAME = 'detection_by_site_hour'
 // const INDEX_COLS = ['location_project_id', 'location_site_id', 'time_precision_hour_local']
 
-export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   // await sequelize.query(
   //   `
   //   create view ${VIEW_NAME} as

@@ -9,7 +9,7 @@ import { MigrationFn } from 'umzug'
 const VIEW_NAME = 'project_version_taxon_species'
 // const INDEX_COLS = []
 
-export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
  // TODO
 }
 

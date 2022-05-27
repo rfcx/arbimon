@@ -10,8 +10,10 @@ import { setTimestampDefaults, TIMESTAMP_COLUMNS } from '../_helpers/220331-time
 
 const TABLE_NAME = 'sync_data_type'
 
-export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
-  await createTable(
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  const sequelize = params.context.sequelize
+
+  await params.context.createTable(
     TABLE_NAME,
     {
       // PK
