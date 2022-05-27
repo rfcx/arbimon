@@ -10,8 +10,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { rawDetections } from '@/seed/data/manual/detections-by-hour'
 import { getPuertoRicoProjectId } from '../_helpers/get-puerto-rico-id'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
   // Get lookups

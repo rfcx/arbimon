@@ -6,8 +6,7 @@ import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { taxonSpeciesArbimon } from '../../data/generated/taxon-species-arbimon'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
   // Lookups

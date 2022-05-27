@@ -11,7 +11,6 @@ const TABLES_WITH_AUTO_INCREMENT = [
   'sync_log_by_project'
 ]
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   await fixPkDesyncs(sequelize, TABLES_WITH_AUTO_INCREMENT)
 }

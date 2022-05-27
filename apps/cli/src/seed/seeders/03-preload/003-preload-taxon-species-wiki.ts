@@ -16,11 +16,10 @@ import { MigrationFn } from 'umzug'
 
 // import { rawTaxonSpeciesPhoto } from '../../data/generated/taxon-species-photo'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // FROM WIKI
-
-  // const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   // const models = ModelRepository.getInstance(sequelize)
+
+  // FROM WIKI
 
   // // Lookups
   // const speciesSlugToId: Record<string, number> = await models.TaxonSpecies

@@ -12,8 +12,8 @@ import { MigrationFn } from 'umzug'
 
 // import { rawSpeciesCallData } from '../_data/taxon-species-call'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-//   const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+//  const models = ModelRepository.getInstance(sequelize)
 
 //   // Lookups
 //   const speciesScientificToId = await TaxonSpeciesModel(sequelize).findAll()

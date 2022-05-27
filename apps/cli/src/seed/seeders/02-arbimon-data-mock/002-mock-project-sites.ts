@@ -7,8 +7,7 @@ import { ProjectSite } from '@rfcx-bio/common/dao/types'
 import { mockSites } from '../../data/manual/project-sites'
 import { getPuertoRicoProjectId } from '../_helpers/get-puerto-rico-id'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
   // Lookups

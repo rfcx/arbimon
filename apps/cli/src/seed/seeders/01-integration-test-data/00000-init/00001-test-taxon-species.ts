@@ -5,8 +5,6 @@ import { masterTaxonClasses } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '@/db/connections'
-
 const testSpecies: TaxonSpecies[] = [
   {
     id: 1,
@@ -77,8 +75,8 @@ const testSpecies: TaxonSpecies[] = [
  * Create mocked taxon species
  * @param params
  */
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await ModelRepository.getInstance(getSequelize())
-    .TaxonSpecies
-    .bulkCreate(testSpecies)
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  await models.TaxonSpecies.bulkCreate(testSpecies)
 }

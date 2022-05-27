@@ -9,8 +9,7 @@ import { mockProjectsByEnv } from '../../data/manual/project'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
   // Create projects

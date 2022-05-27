@@ -20,8 +20,7 @@ const baseUrls: Record<BioEnvironment, string> = {
 
 const baseUrl = baseUrls[BIO_ENVIRONMENT]
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   // const models = ModelRepository.getInstance(sequelize)
 
   // // Lookups

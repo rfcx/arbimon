@@ -7,8 +7,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { mockProjectProfilesBySlug } from '../../data/manual/project-profile'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  const sequelize = params.context.sequelize
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
   // Lookups
