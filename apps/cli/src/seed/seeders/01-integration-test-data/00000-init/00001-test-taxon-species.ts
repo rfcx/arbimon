@@ -5,6 +5,12 @@ import { masterTaxonClasses } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  await models.TaxonSpecies.bulkCreate(testSpecies)
+}
+
 const testSpecies: TaxonSpecies[] = [
   {
     id: 1,
@@ -70,13 +76,3 @@ const testSpecies: TaxonSpecies[] = [
     scientificName: 'Dendrobatidae'
   }
 ]
-
-/**
- * Create mocked taxon species
- * @param params
- */
-export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
-  const models = ModelRepository.getInstance(sequelize)
-
-  await models.TaxonSpecies.bulkCreate(testSpecies)
-}

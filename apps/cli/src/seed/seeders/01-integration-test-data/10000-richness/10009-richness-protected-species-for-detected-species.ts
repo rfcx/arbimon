@@ -7,6 +7,21 @@ import { Project, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/typ
 
 import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '../../_helpers/create-project-with-detections'
 
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  // Create mock project, version, sites, detections, recordings
+  await createProjectWithDetections(
+    models,
+    testProject,
+    testSites,
+    testDetectionsByVersionSiteSpeciesHour
+  )
+
+  // Create project risk ratings
+  await models.TaxonSpeciesProjectRiskRating.bulkCreate(testTaxonSpeciesProjectRiskRating)
+}
+
 const testProject: Project = {
   id: 10009,
   idCore: 'integration1',
@@ -192,18 +207,3 @@ const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.CR.code
   }
 ]
-
-export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
-  const models = ModelRepository.getInstance(sequelize)
-
-  // Create mock project, version, sites, detections, recordings
-  await createProjectWithDetections(
-    models,
-    testProject,
-    testSites,
-    testDetectionsByVersionSiteSpeciesHour
-  )
-
-  // Create project risk ratings
-  await models.TaxonSpeciesProjectRiskRating.bulkCreate(testTaxonSpeciesProjectRiskRating)
-}

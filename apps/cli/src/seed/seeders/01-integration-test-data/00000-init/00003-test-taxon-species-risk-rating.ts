@@ -5,6 +5,12 @@ import { masterRiskRatings, masterTaxonSpeciesSources } from '@rfcx-bio/common/d
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesRiskRating } from '@rfcx-bio/common/dao/types'
 
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  await models.TaxonSpeciesRiskRating.bulkCreate(testTaxonSpeciesRiskRating)
+}
+
 const testTaxonSpeciesRiskRating: TaxonSpeciesRiskRating[] = [
   {
     taxonSpeciesId: 1,
@@ -70,13 +76,3 @@ const testTaxonSpeciesRiskRating: TaxonSpeciesRiskRating[] = [
     riskRatingCustomCode: masterRiskRatings.CR.code
   }
 ]
-
-/**
- * Create mocked taxon species
- * @param params
- */
-export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
-  const models = ModelRepository.getInstance(sequelize)
-
-  await models.TaxonSpeciesRiskRating.bulkCreate(testTaxonSpeciesRiskRating)
-}

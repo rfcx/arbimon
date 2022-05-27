@@ -6,6 +6,17 @@ import { Project } from '@rfcx-bio/common/dao/types'
 
 import { createProjectWithDetections, SiteAutoProject } from '../../_helpers/create-project-with-detections'
 
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  // Create mock project, version, sites, detections, recordings
+  await createProjectWithDetections(
+    models,
+    testProject,
+    testSites
+  )
+}
+
 const testProject: Project = {
   id: 10003,
   idCore: 'integration1',
@@ -25,14 +36,3 @@ const testSites: SiteAutoProject[] = [
     altitude: 35.85246588
   }
 ]
-
-export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
-  const models = ModelRepository.getInstance(sequelize)
-
-  // Create mock project, version, sites, detections, recordings
-  await createProjectWithDetections(
-    models,
-    testProject,
-    testSites
-  )
-}

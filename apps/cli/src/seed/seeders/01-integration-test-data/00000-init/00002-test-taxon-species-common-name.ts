@@ -5,6 +5,12 @@ import { masterTaxonSpeciesSources } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpeciesCommonName } from '@rfcx-bio/common/dao/types'
 
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  await models.TaxonSpeciesCommonName.bulkCreate(testSpeciesCommonName)
+}
+
 const testSpeciesCommonName: TaxonSpeciesCommonName[] = [
   {
     taxonSpeciesId: 1,
@@ -52,13 +58,3 @@ const testSpeciesCommonName: TaxonSpeciesCommonName[] = [
     commonName: 'Poison dart frog'
   }
 ]
-
-/**
- * Create mocked taxon species
- * @param params
- */
-export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
-  const models = ModelRepository.getInstance(sequelize)
-
-  await models.TaxonSpeciesCommonName.bulkCreate(testSpeciesCommonName)
-}

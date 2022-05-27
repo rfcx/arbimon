@@ -6,6 +6,18 @@ import { Project } from '@rfcx-bio/common/dao/types'
 
 import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '../../_helpers/create-project-with-detections'
 
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
+  // Create mock project, version, sites, detections, recordings
+  await createProjectWithDetections(
+    models,
+    testProject,
+    testSites,
+    testDetectionsByVersionSiteSpeciesHour
+  )
+}
+
 const testProject: Project = {
   id: 10004,
   idCore: 'integration1',
@@ -35,15 +47,3 @@ const testDetectionsByVersionSiteSpeciesHour: DetectionAutoProject[] = [
     countDetectionMinutes: 1
   }
 ]
-
-export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
-  const models = ModelRepository.getInstance(sequelize)
-
-  // Create mock project, version, sites, detections, recordings
-  await createProjectWithDetections(
-    models,
-    testProject,
-    testSites,
-    testDetectionsByVersionSiteSpeciesHour
-  )
-}
