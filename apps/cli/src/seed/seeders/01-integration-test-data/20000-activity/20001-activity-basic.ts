@@ -3,9 +3,14 @@ import { MigrationFn } from 'umzug'
 
 import { masterRiskRatings } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
 
-import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '../../_helpers/create-project-with-detections'
+import { taxonSpeciesAndClassForId } from '@/seed/data/integration/test-taxon-species'
+import { createProjectWithDetections, DetectionAutoProject } from '../../_helpers/create-project-with-detections'
+import { defineTestProject, defineTestSites } from '../../_helpers/define-test-data'
+
+const SCENARIO_ID = 20001
+const SCENARIO_NAME = 'Richness Basic'
 
 export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
@@ -22,141 +27,98 @@ export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }
   await models.TaxonSpeciesProjectRiskRating.bulkCreate(testTaxonSpeciesProjectRiskRating)
 }
 
-const testProject: Project = {
-  id: 20001001,
-  idCore: 'integration2',
-  idArbimon: 20001001,
-  slug: 'integration-test-project-20001001',
-  name: 'Integration Test Project 2'
-}
+const testProject = defineTestProject(SCENARIO_ID, SCENARIO_NAME)
 
-const testSites: SiteAutoProject[] = [
-  {
-    id: 20001001,
-    idCore: 'testSite0001',
-    idArbimon: 2111221,
-    name: 'Test Site',
-    latitude: 18.31307,
-    longitude: -65.24878,
-    altitude: 30.85246588
-  },
-  {
-    id: 20001002,
-    idCore: 'testSite0002',
-    idArbimon: 2111222,
-    name: 'Test Site 2',
-    latitude: 18.31307,
-    longitude: -65.24878,
-    altitude: 30.85246588
-  }
-]
+const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] =
+  [
+    {
+      taxonSpeciesId: 1,
+      projectId: testProject.id,
+      riskRatingId: masterRiskRatings.DD.id,
+      riskRatingCustomCode: masterRiskRatings.DD.code
+    },
+    {
+      taxonSpeciesId: 2,
+      projectId: testProject.id,
+      riskRatingId: masterRiskRatings.DD.id,
+      riskRatingCustomCode: masterRiskRatings.DD.code
+    },
+    {
+      taxonSpeciesId: 3,
+      projectId: testProject.id,
+      riskRatingId: masterRiskRatings.CR.id, // protected species
+      riskRatingCustomCode: masterRiskRatings.CR.code
+    },
+    {
+      taxonSpeciesId: 4,
+      projectId: testProject.id,
+      riskRatingId: masterRiskRatings.CR.id, // protected species
+      riskRatingCustomCode: masterRiskRatings.CR.code
+    },
+    {
+      taxonSpeciesId: 5,
+      projectId: testProject.id,
+      riskRatingId: masterRiskRatings.EN.id,
+      riskRatingCustomCode: masterRiskRatings.EN.code
+    },
+    {
+      taxonSpeciesId: 6,
+      projectId: testProject.id,
+      riskRatingId: masterRiskRatings.CR.id, // protected species
+      riskRatingCustomCode: masterRiskRatings.CR.code
+    }
+  ]
+  .map(prr => ({ sourceUrl: '', sourceName: '', ...prr }))
+
+const testSites = Array.from({ length: 2 }, defineTestSites(SCENARIO_ID, SCENARIO_NAME))
 
 const testDetectionsByVersionSiteSpeciesHour: DetectionAutoProject[] = [
   {
     timePrecisionHourLocal: new Date('2021-03-23T11:00:00.000Z'),
-    projectSiteId: 20001001,
-    taxonSpeciesId: 1,
-    taxonClassId: 600,
+    projectSiteId: testSites[0].id,
+    ...taxonSpeciesAndClassForId(1),
     countDetectionMinutes: 2
   },
   {
     timePrecisionHourLocal: new Date('2021-03-24T11:00:00.000Z'),
-    projectSiteId: 20001001,
-    taxonSpeciesId: 2,
-    taxonClassId: 100,
+    projectSiteId: testSites[0].id,
+    ...taxonSpeciesAndClassForId(2),
     countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-03-25T11:11:00.000Z'),
-    projectSiteId: 20001001,
-    taxonSpeciesId: 2,
-    taxonClassId: 100,
+    projectSiteId: testSites[0].id,
+    ...taxonSpeciesAndClassForId(2),
     countDetectionMinutes: 2
   },
   {
     timePrecisionHourLocal: new Date('2021-03-25T11:11:00.000Z'),
-    projectSiteId: 20001002,
-    taxonSpeciesId: 3,
-    taxonClassId: 300,
+    projectSiteId: testSites[1].id,
+    ...taxonSpeciesAndClassForId(3),
     countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-03-26T11:11:00.000Z'),
-    projectSiteId: 20001002,
-    taxonSpeciesId: 4,
-    taxonClassId: 300,
+    projectSiteId: testSites[1].id,
+    ...taxonSpeciesAndClassForId(4),
     countDetectionMinutes: 3
   },
   {
     timePrecisionHourLocal: new Date('2021-01-27T14:00:00.000Z'),
-    projectSiteId: 20001001,
-    taxonSpeciesId: 2,
-    taxonClassId: 100,
+    projectSiteId: testSites[0].id,
+    ...taxonSpeciesAndClassForId(2),
     countDetectionMinutes: 2
   },
   {
     timePrecisionHourLocal: new Date('2021-01-27T14:00:00.000Z'),
-    projectSiteId: 20001001,
-    taxonSpeciesId: 5,
-    taxonClassId: 600,
+    projectSiteId: testSites[0].id,
+    ...taxonSpeciesAndClassForId(5),
     countDetectionMinutes: 1
   },
   {
     timePrecisionHourLocal: new Date('2021-01-27T14:00:00.000Z'),
-    projectSiteId: 20001001,
-    taxonSpeciesId: 6,
-    taxonClassId: 100,
+    projectSiteId: testSites[0].id,
+    ...taxonSpeciesAndClassForId(6),
     countDetectionMinutes: 1
-  }
-]
-
-const testTaxonSpeciesProjectRiskRating: TaxonSpeciesProjectRiskRating[] = [
-  {
-    taxonSpeciesId: 1,
-    projectId: 20001001,
-    riskRatingId: masterRiskRatings.DD.id,
-    sourceUrl: '',
-    sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.DD.code
-  },
-  {
-    taxonSpeciesId: 2,
-    projectId: 20001001,
-    riskRatingId: masterRiskRatings.DD.id,
-    sourceUrl: '',
-    sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.DD.code
-  },
-  {
-    taxonSpeciesId: 3,
-    projectId: 20001001,
-    riskRatingId: masterRiskRatings.CR.id, // protected species
-    sourceUrl: '',
-    sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.CR.code
-  },
-  {
-    taxonSpeciesId: 4,
-    projectId: 20001001,
-    riskRatingId: masterRiskRatings.CR.id, // protected species
-    sourceUrl: '',
-    sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.CR.code
-  },
-  {
-    taxonSpeciesId: 5,
-    projectId: 20001001,
-    riskRatingId: masterRiskRatings.EN.id,
-    sourceUrl: '',
-    sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.EN.code
-  },
-  {
-    taxonSpeciesId: 6,
-    projectId: 20001001,
-    riskRatingId: masterRiskRatings.CR.id, // protected species
-    sourceUrl: '',
-    sourceName: '',
-    riskRatingCustomCode: masterRiskRatings.CR.code
   }
 ]
