@@ -49,11 +49,11 @@ export const describeDatasetApiRejectsInvalidRequests = ({ inject, getUrl, proje
       expect(response1.statusCode).toBe(400)
       expect(response2.statusCode).toBe(400)
 
-      const { message1 } = response1.json()
+      const { message: message1 } = response1.json()
       expect(message1).toContain('Invalid query params')
       expect(message1).toContain('startDate with value')
 
-      const { message2 } = response2.json()
+      const { message: message2 } = response2.json()
       expect(message2).toContain('Invalid query params')
       expect(message2).toContain('endDate with value')
     })

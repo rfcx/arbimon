@@ -1,5 +1,5 @@
 import { LightMyRequestResponse } from 'fastify'
-import { describe, expect, test } from 'vitest'
+import { beforeAll, describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
 import { DatasetInjectAndParams } from './dataset-inject-and-params'
