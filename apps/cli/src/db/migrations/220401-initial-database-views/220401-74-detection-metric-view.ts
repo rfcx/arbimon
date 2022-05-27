@@ -9,8 +9,8 @@ import { MigrationFn } from 'umzug'
 const VIEW_NAME = 'detection_metric'
 // const INDEX_COLS = ['location_project_id']
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // await params.context.sequelize.query(
+export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+  // await sequelize.query(
   //   `
   //   create view ${VIEW_NAME} AS
   //   SELECT d.location_project_id,
@@ -26,7 +26,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   // )
 
   // for (const indexCol of INDEX_COLS) {
-  //   await params.context.sequelize.query(
+  //   await sequelize.query(
   //     `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
   //   )
   // }

@@ -9,8 +9,8 @@ import { MigrationFn } from 'umzug'
 const VIEW_NAME = 'taxon_species_merged'
 // const INDEX_COLS = []
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(`
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  await sequelize.query(`
     CREATE VIEW ${VIEW_NAME} AS
     WITH audio AS (SELECT DISTINCT ON (taxon_species_id) taxon_species_id, audio_url, source_url, spectrogram_url
                    FROM taxon_species_audio
@@ -44,7 +44,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   `)
 
   // for (const indexCol of INDEX_COLS) {
-  //   await params.context.sequelize.query(
+  //   await sequelize.query(
   //     `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
   //   )
   // }

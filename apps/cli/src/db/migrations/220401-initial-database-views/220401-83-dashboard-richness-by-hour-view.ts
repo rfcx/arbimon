@@ -8,8 +8,8 @@ import { MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'dashboard_richness_by_hour'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // await params.context.sequelize.query(
+export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+  // await sequelize.query(
   //   `
   //   create view ${VIEW_NAME} as
   //   SELECT location_project_id,
