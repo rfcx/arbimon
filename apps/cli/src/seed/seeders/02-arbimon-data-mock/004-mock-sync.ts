@@ -7,8 +7,8 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySourceSiteSpeciesHour, RecordingBySourceSiteHour } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { getPuertoRicoProjectId } from '@/seed/_helpers/get-puerto-rico-id'
 import { rawDetections } from '@/seed/data/manual/detections-by-hour'
+import { getPuertoRicoProjectId } from '../_helpers/get-puerto-rico-id'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const sequelize = params.context.sequelize

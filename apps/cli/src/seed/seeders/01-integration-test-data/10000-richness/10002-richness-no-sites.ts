@@ -4,7 +4,7 @@ import { MigrationFn } from 'umzug'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
-import { createProjectWithDetections } from '@/seed/_helpers/create-project-with-detections'
+import { createProjectWithDetections } from '../../_helpers/create-project-with-detections'
 
 const testProject: Project = {
   id: 10002,

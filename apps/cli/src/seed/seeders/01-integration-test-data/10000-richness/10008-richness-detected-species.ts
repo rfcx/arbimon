@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, TaxonSpeciesProjectRiskRating } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
-import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '@/seed/_helpers/create-project-with-detections'
+import { createProjectWithDetections, DetectionAutoProject, SiteAutoProject } from '../../_helpers/create-project-with-detections'
 
 const testProject: Project = {
   id: 10008,

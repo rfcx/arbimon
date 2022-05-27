@@ -5,7 +5,7 @@ import { MigrationFn } from 'umzug'
 // import { ProjectProfileHighlightedSpecies } from '@rfcx-bio/common/dao/types'
 // import { isDefined } from '@rfcx-bio/utils/predicates'
 
-// import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
+// import { getPuertoRicoProjectId } from '../_helpers/get-puerto-rico-id'
 // import { projectSpeciesPuertoRico } from '../_data/location-project-species-puerto-rico'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {

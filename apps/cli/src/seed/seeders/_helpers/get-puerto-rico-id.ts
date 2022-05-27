@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { requireEnv } from '~/env'
-import { mockProjectsByEnv } from '../data/manual/project'
+import { mockProjectsByEnv } from '../../data/manual/project'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
