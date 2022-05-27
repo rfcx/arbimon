@@ -6,10 +6,12 @@
 import { DataTypes, QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { setTimestampDefaults, TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
+
 const TABLE_NAME = 'cache_user_project'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
-  await params.context.createTable(
+export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+  await createTable(
     TABLE_NAME,
     {
       // PK
@@ -17,15 +19,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.STRING,
         primaryKey: true
       },
-      // Logging
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
+      ...TIMESTAMP_COLUMNS,
+
       // Facts
       project_core_ids: {
         type: DataTypes.ARRAY(DataTypes.STRING(255)),
@@ -37,6 +32,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       }
     }
   )
+  await setTimestampDefaults(sequelize, TABLE_NAME)
+}
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
   await params.context.dropTable(TABLE_NAME)

@@ -3,15 +3,15 @@
  * Do not depend on imported code which may change
  */
 
- import { DataTypes, QueryInterface } from 'sequelize'
- import { MigrationFn } from 'umzug'
+import { DataTypes, QueryInterface } from 'sequelize'
+import { MigrationFn } from 'umzug'
 
-import { TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
+import { setTimestampDefaults, TIMESTAMP_COLUMNS } from '../_helpers/220331-timestamps'
 
- const TABLE_NAME = 'sync_error'
+const TABLE_NAME = 'sync_error'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
-  await params.context.createTable(
+export const up: MigrationFn<QueryInterface> = async ({ context: { createTable, sequelize } }): Promise<void> => {
+  await createTable(
     TABLE_NAME,
     {
       // PK
@@ -44,6 +44,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       }
     }
   )
+  await setTimestampDefaults(sequelize, TABLE_NAME)
+}
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
   await params.context.dropTable(TABLE_NAME)

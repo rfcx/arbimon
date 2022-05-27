@@ -1,4 +1,4 @@
-import { DataTypes, ModelAttributes } from 'sequelize'
+import { DataTypes, ModelAttributes, QueryTypes, Sequelize } from 'sequelize'
 
 export const TIMESTAMP_COLUMNS: ModelAttributes = {
   created_at: {
@@ -10,3 +10,14 @@ export const TIMESTAMP_COLUMNS: ModelAttributes = {
     allowNull: false
   }
 }
+
+export const setTimestampDefaults = async (sequelize: Sequelize, tableName: string): Promise<unknown> =>
+  await sequelize.query(
+    `
+      ALTER TABLE ${tableName}
+      ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP,
+      ALTER COLUMN updated_at SET DEFAULT CURRENT_TIMESTAMP
+      ;
+    `,
+    { type: QueryTypes.RAW }
+  )

@@ -4,6 +4,6 @@
 
 That must extend transitively to any imports they depend on
 
-- You may reuse existing helper functions
-- You must NOT change/update/edit/refactor existing helper functions
+- You may reuse existing (old) helper functions
+- You must NOT change/update/edit/refactor existing (old) helper functions
 - If you need different behaviour, you must define a new function
