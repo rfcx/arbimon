@@ -10,7 +10,7 @@ import { createProjectWithDetections, DetectionAutoProject } from '../../_helper
 import { defineTestProject, defineTestSites } from '../../_helpers/define-test-data'
 
 const SCENARIO_ID = 20001
-const SCENARIO_NAME = 'Richness Basic'
+const SCENARIO_NAME = 'Activity Basic'
 
 export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
