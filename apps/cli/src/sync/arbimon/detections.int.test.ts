@@ -76,15 +76,15 @@ test('Detections: Test site (NU - Eng) has 13 row of detection summaries', async
   expect(numberOfDetectionSummariesRows).toBe(13)
 })
 
-test('Detections: detected hemidactylium-scutatum 4 times at NU - Eng between 10am (Local time) on 06/12/2020', async () => {
-  const speciesId = await getSpeciesIdFromSlug('hemidactylium-scutatum')
-  const siteId = await getSiteIdFromIdArbimon(88526)
-  const date = '2020-12-06 10:00:00'
+test('Detections: detected asio-flammeus 1 time - Eng between 5 a.m. (Local time) on 24/03/2021', async () => {
+  const speciesId = await getSpeciesIdFromSlug('asio-flammeus')
+  const siteId = await getSiteIdFromIdArbimon(8439)
+  const date = '2021-03-24 05:00:00'
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const detection = await getDetectionBySiteSpeciesHour(speciesId!, siteId!, date)
   const detectionCount = detection?.count ?? 0
-  expect(detectionCount).toBe(4)
+  expect(detectionCount).toBe(1)
 })
 
 test('Create new datasource', async () => {})

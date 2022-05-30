@@ -10,7 +10,7 @@ import { getArbimonSites } from '@/data-ingest/sites/arbimon'
 import { writeSitesToPostgres } from '@/data-ingest/sites/db'
 import { getArbimonSpecies } from '@/data-ingest/species/input-arbimon'
 import { writeArbimonSpeciesDataToPostgres } from '@/data-ingest/species/output-bio-db/taxon-species'
-import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call/index'
+import { syncOnlyMissingSpeciesCalls } from '@/sync/species-call'
 
 export const syncAllForProject = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, project: Project): Promise<void> => {
   console.info(`- site, species, detections: ${project.slug}`)
@@ -72,7 +72,7 @@ const updateDataSource = async (arbimonSequelize: Sequelize, biodiversitySequeli
     const species = await getArbimonSpecies(arbimonSequelize, newData.speciesIds)
     await writeArbimonSpeciesDataToPostgres(biodiversitySequelize, species)
     console.info('| fetching species calls')
-    await syncOnlyMissingSpeciesCalls(biodiversitySequelize, project)
+    await syncOnlyMissingSpeciesCalls(arbimonSequelize, biodiversitySequelize, project)
     console.info('| fetching species information')
     // TODO: sync only missing data for project
   }

@@ -41,12 +41,16 @@ export const envGetters = <const>{
   ARBIMON_DB_PASSWORD: stringGetter,
   ARBIMON_DB_USER: stringGetter,
 
+  AUTHO_ANONYMOUS_CLIENT_SECRET: stringGetter,
+
   BIO_DB_DBNAME: stringGetter,
   BIO_DB_HOSTNAME: stringGetter,
   BIO_DB_PASSWORD: stringGetter,
   BIO_DB_PORT: numberGetter,
   BIO_DB_SSL_ENABLED: booleanGetter,
   BIO_DB_USER: stringGetter,
+
+  CORE_API_BASE_URL: stringGetter,
 
   IUCN_BASE_URL: stringGetter,
   IUCN_TOKEN: stringGetter,

@@ -1,7 +1,6 @@
-import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
+import { QueryTypes, Sequelize } from 'sequelize'
 
-import { mysqlSelect } from '../../../_services/mysql'
-import { ARBIMON_CONFIG } from '../../_connections/arbimon'
+import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 export interface ArbimonSpeciesCall {
   'species_id': number
@@ -35,8 +34,8 @@ type ArbimonSpeciesCallRow = Omit<ArbimonSpeciesCall, 'redirect_url' | 'media_wa
 //   'timezone': string
 // }
 
-export const getArbimonSpeciesCallsForProjectSpecies = async (projectIdArbimon: number, speciesIdsArbimon: number[] = []): Promise<ArbimonSpeciesCall[]> => {
-  const sql = `
+export const getArbimonSpeciesCallsForProjectSpecies = async (sequelize: Sequelize, projectIdArbimon: number, speciesIdsArbimon: number[] = []): Promise<ArbimonSpeciesCall[]> => {
+  const mysqlSQL = `
   SELECT t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, DATE_ADD(r.datetime_utc, interval t.x1 second) start, DATE_ADD(r.datetime_utc, interval t.x2 second) "end", t.recording_id, s.timezone 
   FROM templates t  
     JOIN recordings r on t.recording_id = r.recording_id
@@ -46,7 +45,21 @@ export const getArbimonSpeciesCallsForProjectSpecies = async (projectIdArbimon: 
   WHERE t.project_id = ${projectIdArbimon} AND t.deleted != 1 AND r.datetime_utc is not null
   ${speciesIdsArbimon.length > 0 ? ` AND t.species_id IN (${speciesIdsArbimon.join(',')})` : ''}
   ;`
-  const results = await mysqlSelect<ArbimonSpeciesCallRow>(ARBIMON_CONFIG, sql)
+
+  const sqliteSQL = `
+  SELECT t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, datetime(r.datetime_utc, '+1 seconds') "start", datetime(r.datetime_utc, '+1 seconds') "end", t.recording_id, s.timezone 
+  FROM templates t  
+    JOIN recordings r on t.recording_id = r.recording_id
+    JOIN songtypes st ON t.songtype_id = st.songtype_id 
+    JOIN sites s ON r.site_id = s.site_id
+    JOIN projects p ON s.project_id = p.project_id 
+  WHERE t.project_id = ${projectIdArbimon} AND t.deleted != 1 AND r.datetime_utc is not null
+  ${speciesIdsArbimon.length > 0 ? ` AND t.species_id IN (${speciesIdsArbimon.join(',')})` : ''}
+  ;`
+
+  const sql = sequelize.getDialect() === 'mysql' ? mysqlSQL : sqliteSQL
+
+  const results = await sequelize.query<ArbimonSpeciesCallRow>(sql, { type: QueryTypes.SELECT })
   return results.map(row => ({
     ...row,
     // TODO: respect the environment for generating redirect_url

@@ -9,5 +9,5 @@ export const getSyncs = async (projectId: number): Promise<Sync[]> =>
     .findAll({
       attributes: ['id', ['created_at', 'createdAt'], ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
       where: { locationProjectId: projectId },
-      order: [['updatedAt', 'ASC']]
+      order: [['updatedAt', 'DESC']]
     }) as unknown as Sync[]
