@@ -38,5 +38,6 @@ export const getUpdatedProject = async (models: AllModels, locationProjectId: nu
       where: {
         locationProjectId: locationProjectId
       },
-      order: [['updatedAt', 'ASC']]
+      order: [['updatedAt', 'DESC']],
+      limit: 1 // TODO: We will want to remove this from this API (and create proper version(s) APIs)
     })
