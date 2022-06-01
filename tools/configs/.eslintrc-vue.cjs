@@ -7,6 +7,7 @@ module.exports = {
     '@vue/typescript/recommended',
     './.eslintrc-ts.cjs'
   ],
+  parser: 'vue-eslint-parser',
   parserOptions: {
     parser: {
       ts: '@typescript-eslint/parser',
@@ -19,6 +20,7 @@ module.exports = {
     // Override imported rules
     '@typescript-eslint/no-empty-function': 'off',
     indent: 'off',
+    'vue/no-setup-props-destructure': 'off', // doesn't understand Reactivity Transform
 
     // Customize Rules
     'regex/invalid': [
