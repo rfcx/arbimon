@@ -122,10 +122,10 @@ export async function exportDetectionCSV (filters: ColoredFilter[], datasets: Sp
 
 export async function getHourCSVData (dataset: SpotlightDetectionDataByTime): Promise<string> {
   const { detection, detectionFrequency } = dataset
-  const dataAsJson = Array.from(Array(23).keys()).map(n => ({
-    hour: n,
-    detections: detection[n] ?? 0,
-    detection_frequency: detectionFrequency[n] ?? 0
+  const dataAsJson = Array.from({ length: 24 }, (_, idx) => ({
+    hour: idx,
+    detections: detection[idx] ?? 0,
+    detection_frequency: detectionFrequency[idx] ?? 0
   }))
   return await toCsv(dataAsJson)
 }
