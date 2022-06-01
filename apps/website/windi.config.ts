@@ -7,9 +7,8 @@ import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
 import pluginScrollSnap from 'windicss/plugin/scroll-snap'
 
-const range = (size: number, startAt = 1): number[] => {
-  return Array.from(Array(size).keys()).map(i => i + startAt)
-}
+const range = (length: number, startAt = 1): number[] =>
+  Array.from({ length }, (_, idx) => idx + startAt)
 
 export default defineConfig({
   darkMode: false,
