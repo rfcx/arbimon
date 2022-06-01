@@ -83,5 +83,5 @@ export function generateHorizontalLegend <T extends d3.BaseType> (svg: d3.Select
 }
 
 export function getLegendGroupNames (totalGroup: number): string[] {
-  return [...Array(totalGroup).keys()].map(n => `Dataset ${n + 1}`)
+  return Array.from({ length: totalGroup }, (_, idx) => `Dataset ${idx + 1}`)
 }
