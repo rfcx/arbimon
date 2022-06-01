@@ -83,6 +83,7 @@
     "vite-tsconfig-paths": "^3.3.17",
     "vitest": "^0.6.0",
     "vue": "^3.2.21",
+    "vue-eslint-parser": "^9.0.2",
     "vue-tsc": "^0.28.10",
     "wait-port": "^0.2.9",
     "webpack": "^5.61.0"
