@@ -29,6 +29,8 @@ Capacity:
 
 <!-- Description, images, links showing how the feature works -->
 
+- TODO
+
 ### Exclusions / Limitations
 
 <!-- Be clear about what is not needed / will be done later -->
@@ -44,7 +46,7 @@ Capacity:
 
 ### Deferred Work / Ideas
 
-- Estimated job size (ex: minutes of recording within job bounds)
+- TODO
 
 -----
 
@@ -67,6 +69,8 @@ Capacity:
 
 <!-- Description, images, links showing how the feature works -->
 
+- TODO
+
 ### Exclusions / Limitations
 
 <!-- Be clear about what is not needed / will be done later -->
@@ -82,7 +86,7 @@ Capacity:
 
 ### Deferred Work / Ideas
 
-- Estimated job size (ex: minutes of recording within job bounds)
+- TODO
 
 -----
 
@@ -105,6 +109,8 @@ Capacity:
 
 <!-- Description, images, links showing how the feature works -->
 
+- TODO
+
 ### Exclusions / Limitations
 
 <!-- Be clear about what is not needed / will be done later -->
@@ -120,7 +126,7 @@ Capacity:
 
 ### Deferred Work / Ideas
 
-- Estimated job size (ex: minutes of recording within job bounds)
+- TODO
 
 -----
 
