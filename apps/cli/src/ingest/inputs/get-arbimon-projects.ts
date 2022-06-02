@@ -7,7 +7,8 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
     SELECT p.project_id AS idArbimon,
            p.external_id AS idCore,
            p.url AS slug,
-           p.name
+           p.name,
+           p.updated_at AS updatedAt
     FROM projects p
     WHERE p.updated_at > $syncUntilDate OR (p.updated_at = $syncUntilDate AND p.project_id > $syncUntilId)
     ORDER BY p.updated_at, p.project_id

@@ -8,6 +8,7 @@ import { SyncStatus } from '@rfcx-bio/common/dao/types'
 import { getSequelize } from '@/db/connections'
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-projects'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
+import { writeSyncResult } from '../outputs/sync-status'
 import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
@@ -22,17 +23,18 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   if (arbimonProjects.length === 0) return syncStatus
 
   const [projects, validationErrors] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
+  const projectData = projects.map(p => p.data)
   console.log('validationErrors', validationErrors)
   const transaction = await biodiversitySequelize.transaction()
   try {
-    await writeProjectsToBio(biodiversitySequelize, projects.map(p => p.data), transaction)
+    await writeProjectsToBio(projectData, biodiversitySequelize, transaction)
 
     // const insertErrors = await writeProjectsToBio(biodiversitySequelize, projects)
-
     // await writeErrorsToBio(validationErrors, insertErrors)
 
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: arbimonProjects[arbimonProjects.length - 1].updatedAt, syncUntilId: arbimonProjects[arbimonProjects.length - 1].id }
-    // await writeSyncResult(updatedSyncStatus)
+    const lastSyncdProject = arbimonProjects[projectData.length - 1]
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
+    await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
     await transaction.commit()
     return updatedSyncStatus
   } catch (error) {

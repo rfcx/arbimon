@@ -26,7 +26,7 @@ describe('ingest > outputs > projects', () => {
     }]
 
     // Act
-    await writeProjectsToBio(biodiversitySequelize, input)
+    await writeProjectsToBio(input, biodiversitySequelize)
 
     // Assert
     const projects = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll({
@@ -47,7 +47,7 @@ describe('ingest > outputs > projects', () => {
     }
 
     // Act
-    await writeProjectsToBio(biodiversitySequelize, [inputItem])
+    await writeProjectsToBio([inputItem], biodiversitySequelize)
 
     // Assert
     const updatedProject = await ModelRepository.getInstance(biodiversitySequelize).Project.findOne({ where: { idArbimon: inputItem.idArbimon } })

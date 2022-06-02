@@ -6,7 +6,7 @@ import { Project } from '@rfcx-bio/common/dao/types'
 
 import { createProjectVersionIfNeeded } from './project-version'
 
-export const writeProjectsToBio = async (sequelize: Sequelize, projects: Array<Omit<Project, 'id'>>, transaction: Transaction | null = null): Promise<void> => {
+export const writeProjectsToBio = async (projects: Array<Omit<Project, 'id'>>, sequelize: Sequelize, transaction: Transaction | null = null): Promise<void> => {
   const options = {
     updateOnDuplicate: UPDATE_ON_DUPLICATE_PROJECT,
     ...(transaction) && { transaction }

@@ -82,7 +82,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
       syncUntilId: 0,
       syncBatchLimit: 1
     }
-    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name']
+    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'updatedAt']
 
     // Act
     const actual = await getArbimonProjects(arbimonSequelize, params)

@@ -1,6 +1,6 @@
 import { Sequelize, Transaction } from 'sequelize'
 
-export const createProjectVersionIfNeeded = async (sequelize: Sequelize, transaction: Transaction | null): Promise<void> => {
+export const createProjectVersionIfNeeded = async (sequelize: Sequelize, transaction: Transaction | null = null): Promise<void> => {
   const sql = `
     INSERT INTO project_version (project_id, created_at, updated_at)
       SELECT p.id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP

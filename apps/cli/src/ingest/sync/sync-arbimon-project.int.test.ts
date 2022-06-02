@@ -22,7 +22,7 @@ describe('ingest > sync', () => {
   describe('syncArbimonProjectsBatch', () => {
     test('can sync projects', async () => {
       // Arrange
-      const syncStatus = await ModelRepository.getInstance(getSequelize())
+      const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
         .SyncStatus
         .findOne({
           where: { sourceId: SYNC_CONFIG.sourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
@@ -48,7 +48,7 @@ describe('ingest > sync', () => {
 
     test.todo('can sync projects when some invalid', async () => {
       // Arrange
-
+      // TODO: add invalid data to arbimon database
       // Act
 
       // Assert
