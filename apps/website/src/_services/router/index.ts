@@ -57,6 +57,17 @@ const routes: RouteRecordRaw[] = [
         path: 'sync-history',
         name: ROUTE_NAMES.syncHistory,
         component: PAGES.SyncHistory
+      },
+      {
+        path: 'analysis/cnn',
+        name: ROUTE_NAMES.cnnJobList,
+        component: PAGES.CNNJobList,
+        alias: 'analysis'
+      },
+      {
+        path: 'analysis/cnn/create',
+        name: ROUTE_NAMES.cnnJobCreate,
+        component: PAGES.CNNJobCreate
       }
     ]
   },
