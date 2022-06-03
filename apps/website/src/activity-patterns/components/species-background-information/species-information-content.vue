@@ -37,13 +37,11 @@
 <script setup lang="ts">
 import { onMounted, onUpdated, ref, watch, withDefaults } from 'vue'
 
-interface Props {
+const props = withDefaults(defineProps<{
   content: string
   redirectUrl: string
   source: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   content: '',
   redirectUrl: '',
   source: ''
