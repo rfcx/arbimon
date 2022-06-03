@@ -41,7 +41,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, defineEmits, defineProps, withDefaults } from 'vue'
+import { computed, withDefaults } from 'vue'
 
 import { formatDateRange } from '@rfcx-bio/utils/dates'
 

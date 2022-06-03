@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineEmits, defineProps, withDefaults } from 'vue'
+import { withDefaults } from 'vue'
 
 import { useProjectData } from '~/api/project-service/use-project-data'
 import { DetectionFilter } from '..'

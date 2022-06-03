@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
 import { isEqual } from 'lodash-es'
-import { computed, defineEmits, defineProps, onMounted, ref, withDefaults } from 'vue'
+import { computed, onMounted, ref, withDefaults } from 'vue'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'

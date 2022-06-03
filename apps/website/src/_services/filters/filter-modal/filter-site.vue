@@ -66,7 +66,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, defineEmits, defineProps, onMounted, ref, watch, withDefaults } from 'vue'
+import { computed, onMounted, ref, watch, withDefaults } from 'vue'
 
 import { Site } from '@rfcx-bio/common/dao/types'
 

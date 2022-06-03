@@ -16,7 +16,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 
 import { downloadSvgAsPng } from '~/charts'
 import { BarChartConfig, generateChartExport, GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
