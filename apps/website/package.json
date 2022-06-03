@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vue-tsc --project \"tsconfig.vuetsc.json\" --noEmit --skipLibCheck && vite build",
-    "clean": "rimraf \"./dist\" \"./.eslintcache\"",
+    "clean": "rimraf \"./dist\" \"./.eslintcache\" \"./.stylelintcache\"",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint . --cache",
