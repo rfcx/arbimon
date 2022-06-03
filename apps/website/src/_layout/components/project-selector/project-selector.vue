@@ -156,7 +156,7 @@ const confirmSelectedProject = async () => {
 </script>
 <style lang="scss" scoped>
 
-@import "@/variables.scss";
+@import "@/_styles/variables.scss";
 ::v-deep .el-input__inner {
   &:focus {
     border-color: #e5e7eb;
