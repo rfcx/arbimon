@@ -10,7 +10,7 @@ danger: { DEFAULT: '#D46767', light: '#e5a4a4', dark: '#7f3e3e' },
 warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
 */
 
-@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
   $font-size:   (
     "extra-large": 1.25rem,
     "large": 1.125rem,
