@@ -25,7 +25,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@use "./src/element.scss" as *;'
+        additionalData: '@use "@/_styles/element-plus.scss" as *;'
       }
     }
   },

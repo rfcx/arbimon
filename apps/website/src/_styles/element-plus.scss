@@ -1,0 +1,28 @@
+/* just override what you need */
+
+/*
+textColor: { primary: '#fff', warning: '#FFCD00', danger: '#D46767' },
+colors: { 'brand-primary': { DEFAULT: '#31984F', light: '#E6F3EA', dark: '#25713b' },
+'box-grey': { DEFAULT: '#45485D', dark: '#2f3140' },
+'steel-grey': { DEFAULT: '#232436', light: '#4a4c72', dark: '#202031'},
+'mirage-grey': { DEFAULT: '#141525', light: '#E3E3E5', dark: '#06060D'},
+danger: { DEFAULT: '#D46767', light: '#e5a4a4', dark: '#7f3e3e' },
+warning: { DEFAULT: '#FFCD00', light: '#ffe166', dark: '#997b00'}
+*/
+
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $font-size:   (
+    "extra-large": 1.25rem,
+    "large": 1.125rem,
+    "medium": 1rem,
+    "base": 1rem,
+    "small": 0.875rem,
+    "extra-small": 0.75rem,
+  ),
+);
+
+// custom dark variables
+@use "./element-plus-dark.scss";
+
+// import dark theme
+@use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
