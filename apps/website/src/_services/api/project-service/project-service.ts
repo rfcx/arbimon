@@ -14,3 +14,5 @@ export class ProjectService {
     return await apiClient.getOrUndefined<ProjectFiltersResponse>(`${this.baseUrl}${projectFiltersUrl({ projectId: projectId.toString() })}`)
   }
 }
+
+export const projectService = new ProjectService(import.meta.env.VITE_BIO_API_BASE_URL)

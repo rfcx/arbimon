@@ -6,7 +6,7 @@
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "eslint.format.enable": true,
-  "eslint.validate": ["typescript"],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "npm.packageManager": "pnpm",
 

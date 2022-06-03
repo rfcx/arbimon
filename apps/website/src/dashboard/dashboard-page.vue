@@ -1,14 +1,16 @@
 <template>
   <div v-if="store.selectedProject">
-    <!-- <div v-if="store.projectData.value.isLoading" />
-    <div v-else>
+    <!-- TODO: Extract banner states to banner component -->
+    <!--
+    <div v-if="lastUpdatedAt.isData">
       <draft-banner
         v-if="lastUpdatedAt"
         current-mode="Draft"
-        :sync-updated="lastUpdatedAt"
+        :sync-updated="lastUpdatedAt.data"
         :project-slug="store.selectedProject?.slug"
       />
-    </div> -->
+    </div>
+    -->
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
@@ -114,6 +116,7 @@ import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/d
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { useProjectData } from '~/api/project-service/use-project-data'
 import { downloadSvgAsPng } from '~/charts'
 import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
@@ -145,6 +148,7 @@ interface Tab {
 
 const store = useStore()
 const route = useRoute()
+const projectData = useProjectData()
 
 const ROUTE_NAMES = inject<RouteNames>('ROUTE_NAMES') as RouteNames
 
@@ -179,7 +183,7 @@ onMounted(() => {
 
 const getPopupHtml = (data: MapSiteData, dataKey: string) => data.distinctSpecies[dataKey]
 
-// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = mapLoadable(projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
 
 const color = computed(() => {
   return store.datasetColors[0] ?? '#EFEFEF'
@@ -230,7 +234,7 @@ const mapDataset = computed((): MapDataSet => {
     return {
     startDate: dayjs(),
     endDate: dayjs(),
-    sites: store.projectData.value.data?.locationSites ?? [],
+    sites: projectData.value.data?.locationSites ?? [],
     data: ((selectedTab.value === TAB_VALUES.richness ? generated.value?.richnessBySite : generated.value?.detectionBySite) ?? [])
       .map(({ name: siteName, latitude, longitude, value }) => ({
         siteName,
@@ -276,11 +280,11 @@ const speciesThreatened = computed((): ThreatenedSpeciesRow[] => {
 })
 
 const richnessByTaxon = computed((): HorizontalStack[] => {
-  if (store.projectData.value.isNoData) return []
+  if (projectData.value.isNoData) return []
 
   return (generated.value?.richnessByTaxon ?? [])
     .map(([taxonId, count]) => {
-      const name = store.projectData.value.data?.taxonClasses.find(tc => tc.id === taxonId)?.commonName ?? '-'
+      const name = projectData.value.data?.taxonClasses.find(tc => tc.id === taxonId)?.commonName ?? '-'
       const color = TAXON_CLASSES_BY_ID[taxonId].color
       return { name, color, count }
     })

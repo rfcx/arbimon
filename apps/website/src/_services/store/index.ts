@@ -1,13 +1,9 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
-import { computed, ComputedRef } from 'vue'
 
-import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
 
 import { projectService } from '~/api/project-service'
-import { useApiQuery } from '~/api/use-api-query'
-import { Loadable, queryAsLoadable } from '~/loadable'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
 export const useStore = defineStore('root', {
@@ -19,18 +15,6 @@ export const useStore = defineStore('root', {
     currentVersion: ''
   }),
   getters: {
-    projectData (): ComputedRef<Loadable<ProjectFiltersResponse, unknown>> {
-      const projectId = computed(() => this.selectedProject?.id)
-
-      return queryAsLoadable(
-        useApiQuery(['fetch-project-filter', projectId], async () => {
-          if (projectId.value === undefined) return undefined
-
-          return await projectService.getProjectFilters(projectId.value)
-        }),
-        (d: ProjectFiltersResponse | undefined): d is ProjectFiltersResponse => d !== undefined
-      )
-    },
     selectedProject: (state): LocationProjectForUser | undefined => {
       if (state.projects.length === 0) return undefined
       return state.projects.find(({ slug }) => slug === state.selectedProjectSlug)

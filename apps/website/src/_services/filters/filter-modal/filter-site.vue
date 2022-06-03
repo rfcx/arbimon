@@ -70,10 +70,11 @@ import { computed, defineEmits, defineProps, onMounted, ref, watch, withDefaults
 
 import { Site } from '@rfcx-bio/common/dao/types'
 
+import { useProjectData } from '~/api/project-service/use-project-data'
 import { DetectionFilterSiteGroup } from '~/filters/types'
-import { useStore } from '~/store'
 
-const store = useStore()
+const projectData = useProjectData()
+
 const props = withDefaults(
   defineProps<{ initialSiteGroups: DetectionFilterSiteGroup[] }>(),
   { initialSiteGroups: () => [] }
@@ -98,10 +99,10 @@ const isSelectedAllSites = computed(() => {
 })
 
 const filtered = computed(() => {
-  if (!store.projectData.value.isData) return []
+  if (!projectData.value.isData) return []
 
   const prefix = inputFilter.value.toLocaleLowerCase()
-  return store.projectData.value.data.locationSites
+  return projectData.value.data.locationSites
     .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
 })
 

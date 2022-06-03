@@ -1,14 +1,15 @@
 <template>
   <!-- TODO: Extract banner states to banner component -->
-  <!-- <div v-if="store.projectData.value.isLoading" />
-  <div v-else>
+  <!--
+  <div v-if="lastUpdatedAt.isData">
     <draft-banner
       v-if="lastUpdatedAt"
       current-mode="Draft"
-      :sync-updated="lastUpdatedAt"
+      :sync-updated="lastUpdatedAt.data"
       :project-slug="store.selectedProject?.slug"
     />
-  </div> -->
+  </div>
+  -->
   <page-title
     page-title="Activity Overview"
     page-subtitle="Temporal and spatial activity trends for all species"
@@ -29,13 +30,13 @@
       </template>
     </export-button>
   </page-title>
-  <div v-if="store.projectData.value.isLoading">
+  <div v-if="projectData.isLoading">
     Loading
   </div>
-  <div v-else-if="store.projectData.value.isError">
+  <div v-else-if="projectData.isError">
     Error
   </div>
-  <div v-else-if="store.projectData.value.isNoData">
+  <div v-else-if="projectData.isNoData">
     No Data
   </div>
   <div v-else>
@@ -69,17 +70,17 @@ import ActivityOverviewByTime, { ActivityOverviewTimeDataset } from '@/activity-
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { activityService } from '@/activity-overview/services'
 import { INFO_TOPICS } from '@/info/info-page'
+import { useProjectData } from '~/api/project-service/use-project-data'
 import { DetectionFilter, FilterListComponent } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
-import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
-const store = useStore()
 const route = useRoute()
+const projectData = useProjectData()
 
-// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const lastUpdatedAt = mapLoadable(projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
 
 const filters = ref<DetectionFilter[]>([])
 

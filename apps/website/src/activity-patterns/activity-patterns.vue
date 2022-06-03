@@ -1,14 +1,15 @@
 <template>
   <!-- TODO: Extract banner states to banner component -->
-  <!-- <div v-if="store.projectData.value.isLoading" />
-  <div v-else>
+  <!--
+  <div v-if="lastUpdatedAt.isData">
     <draft-banner
       v-if="lastUpdatedAt"
       current-mode="Draft"
-      :sync-updated="lastUpdatedAt"
+      :sync-updated="lastUpdatedAt.data"
       :project-slug="store.selectedProject?.slug"
     />
-  </div> -->
+  </div>
+  -->
   <page-title
     page-title="Species Spotlight"
     page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
@@ -116,7 +117,6 @@ import { spotlightService } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
-// const store = useStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -149,7 +149,8 @@ const infoTopic = computed(() => {
   return INFO_TOPICS.spotlight
 })
 
-// const lastUpdatedAt = computed(() => store.projectData.value.data?.updatedList[0]?.updatedAt ?? null)
+// const projectData = useProjectData()
+// const lastUpdatedAt = mapLoadable(projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
 
 const resetData = () => {
   predictedOccupancyMaps.value = []

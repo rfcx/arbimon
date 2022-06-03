@@ -1,10 +1,10 @@
 import { IDatePickerType } from 'element-plus/es/components/date-picker/src/date-picker.type'
-import { Vue } from 'vue-class-component'
-import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
+import { setup, Vue } from 'vue-class-component'
+import { Emit, Prop, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { BiodiversityStore } from '~/store'
+import { useProjectData } from '~/api/project-service/use-project-data'
 
 export interface DateRangeShortcut {
   text: string
@@ -25,7 +25,6 @@ interface DateRangeTypeOption {
 export const MOCK_WHOLE_PROJECT_DATE_RANGE: [Date, Date] = [dayjs().subtract(20, 'years').toDate(), dayjs().toDate()]
 
 export default class DateRangePicker extends Vue {
-  @Inject() readonly store!: BiodiversityStore
   @Prop({ default: null }) defaultStartDate!: string | null
   @Prop({ default: null }) defaultEndDate!: string | null
 
@@ -35,6 +34,8 @@ export default class DateRangePicker extends Vue {
     this.dateValues = this.dateValues ?? [this.dateStartAtLatestUpdated, this.dateEndAtLatestUpdated]
     return this.dateValues
   }
+
+  projectData = setup(() => useProjectData())
 
   dateValues: Date[] = []
   selectedType: IDatePickerType = DATE_PICKER_TYPE.date
@@ -78,15 +79,15 @@ export default class DateRangePicker extends Vue {
   }
 
   get dateStartAtLatestUpdated (): Date {
-    if (!this.store.projectData.value.isData) return new Date()
+    if (!this.projectData.isData) return new Date()
 
-    return dayjs(this.store.projectData.value.data.dateStartInclusiveUtc).toDate()
+    return dayjs(this.projectData.data.dateStartInclusiveUtc).toDate()
   }
 
   get dateEndAtLatestUpdated (): Date {
-    if (!this.store.projectData.value.isData) return new Date()
+    if (!this.projectData.isData) return new Date()
 
-    return dayjs(this.store.projectData.value.data.dateEndInclusiveUtc).toDate()
+    return dayjs(this.projectData.data.dateEndInclusiveUtc).toDate()
   }
 
   override created (): void {

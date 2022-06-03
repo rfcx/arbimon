@@ -2,7 +2,7 @@
   <div class="page-container">
     <navbar-component />
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
-      <div v-if="store.projectData.value.isLoading" />
+      <div v-if="projectData.isLoading" />
       <div
         v-else-if="store.selectedProject"
         class="page_content"
@@ -23,12 +23,15 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { useProjectData } from '~/api/project-service/use-project-data'
 import { mapLoadable } from '~/loadable/map-loadable'
 import { useStore } from '~/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 import NavbarComponent from '../components/navbar/nav-bar.vue'
 
 const store = useStore()
+const projectData = useProjectData()
+
 // TODO: Enable stricter TS type-checking for array indexing (& remove explicit return type)
-const lastUpdatedAt = mapLoadable(store.projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
+const lastUpdatedAt = mapLoadable(projectData, (data): Date | null => data.updatedList[0]?.updatedAt ?? null)
 </script>

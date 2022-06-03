@@ -2,6 +2,7 @@ import { groupBy } from 'lodash-es'
 
 import { RichnessDatasetResponse, RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
+import { useProjectData } from '~/api/project-service/use-project-data'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { DetectionFilter } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -14,7 +15,8 @@ export const MAP_KEY_RICHNESS_TOTAL = 'All'
 
 export function transformToBarChartDataset (datasets: RichnessDataset[]): GroupedBarChartItem[] {
   const store = useStore()
-  const taxonClasses = store.projectData.value.data?.taxonClasses
+  const projectData = useProjectData()
+  const taxonClasses = projectData.value.data?.taxonClasses
   if (taxonClasses === undefined) return []
 
   return [...new Set(datasets.flatMap(ds => Object.keys(ds.richnessByTaxon).map(Number)))]
@@ -33,9 +35,9 @@ export function transformToBarChartDataset (datasets: RichnessDataset[]): Groupe
 }
 
 export function transformToBySiteDataset (datasets: RichnessDataset[]): MapDataSet[] {
-  const store = useStore()
-  const taxonClasses = store.projectData.value.data?.taxonClasses
-  const locationSites = store.projectData.value.data?.locationSites
+  const projectData = useProjectData()
+  const taxonClasses = projectData.value.data?.taxonClasses
+  const locationSites = projectData.value.data?.locationSites
   if (taxonClasses === undefined || locationSites === undefined) return []
 
   const intermediate = datasets.map(({ richnessBySite, dateStartLocal, dateEndLocal, siteGroups }) => {
@@ -75,8 +77,8 @@ export function transformToBySiteDataset (datasets: RichnessDataset[]): MapDataS
 }
 
 export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[] {
-  const store = useStore()
-  const taxonClasses = store.projectData.value.data?.taxonClasses
+  const projectData = useProjectData()
+  const taxonClasses = projectData.value.data?.taxonClasses
   if (taxonClasses === undefined) return []
 
   const richnessPresences = datasets.map(ds => ds.richnessPresence)
