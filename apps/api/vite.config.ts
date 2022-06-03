@@ -4,13 +4,6 @@ import { UserConfig as UserConfigVitest } from 'vitest'
 
 // https://vitejs.dev/config/
 const config: UserConfigVite & { test: UserConfigVitest } = {
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@use "./src/element.scss" as *;'
-      }
-    }
-  },
   plugins: [
     pluginTsConfigPaths()
   ],

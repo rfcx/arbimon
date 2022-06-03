@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, inject } from 'vue'
+import { computed, inject } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
 import { BiodiversityStore } from '../_services/store'
