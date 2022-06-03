@@ -1,4 +1,4 @@
-import { computed, ComputedRef, readonly, Ref } from 'vue'
+import { computed, ComputedRef, Ref } from 'vue'
 
 import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -25,4 +25,4 @@ const getLoadable = (): ComputedRef<Loadable<ProjectFiltersResponse, unknown>> =
 
 // Export as singleton
 let loadable: ComputedRef<Loadable<ProjectFiltersResponse, unknown>> | undefined
-export const useProjectData = (): Ref<Loadable<ProjectFiltersResponse>> => { loadable ??= getLoadable(); return readonly(loadable) }
+export const useProjectData = (): Ref<Loadable<ProjectFiltersResponse>> => { loadable ??= getLoadable(); return loadable }
