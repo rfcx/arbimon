@@ -106,13 +106,11 @@ enum currentMode {
   PUBLISHED = 'Published'
 }
 
-interface Props {
+const props = withDefaults(defineProps<{
   currentMode: string
   syncUpdated: Date | string | null
   projectSlug: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   currentMode: 'Published'
 })
 
