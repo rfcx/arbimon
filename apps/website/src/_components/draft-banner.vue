@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, ref, withDefaults } from 'vue'
+import { computed, reactive, ref, withDefaults } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
 import ModalPopup from './modal-popup.vue'
@@ -106,13 +106,11 @@ enum currentMode {
   PUBLISHED = 'Published'
 }
 
-interface Props {
+const props = withDefaults(defineProps<{
   currentMode: string
   syncUpdated: Date | string | null
   projectSlug: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   currentMode: 'Published'
 })
 
@@ -154,7 +152,6 @@ const onClosePublishModalOptions = () => {
   }
 
   .draft_content {
-
     .draft-title {
       display: flex;
       margin-bottom: .25rem;
@@ -165,6 +162,5 @@ const onClosePublishModalOptions = () => {
       }
     }
   }
-
 }
 </style>

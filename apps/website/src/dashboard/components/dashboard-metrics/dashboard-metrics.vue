@@ -26,21 +26,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 import useDateFormat from '../../../_services/hooks/use-date-format'
 
-// Props
-interface Metrics {
+const props = defineProps<{ metrics: {
   detectionCount: number
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number
   maxDate?: Date
   minDate?: Date
-}
-
-const props = defineProps<{ metrics: Metrics}>()
+}}>()
 const { formatDateRange } = useDateFormat()
 </script>
 
