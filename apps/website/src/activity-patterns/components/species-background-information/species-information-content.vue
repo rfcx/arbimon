@@ -35,7 +35,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, onUpdated, ref, watch, withDefaults } from 'vue'
+import { onMounted, onUpdated, ref, watch, withDefaults } from 'vue'
 
 interface Props {
   content: string
