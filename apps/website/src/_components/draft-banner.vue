@@ -154,7 +154,6 @@ const onClosePublishModalOptions = () => {
   }
 
   .draft_content {
-
     .draft-title {
       display: flex;
       margin-bottom: .25rem;
@@ -165,6 +164,5 @@ const onClosePublishModalOptions = () => {
       }
     }
   }
-
 }
 </style>

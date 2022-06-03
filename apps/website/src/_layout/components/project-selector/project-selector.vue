@@ -155,19 +155,18 @@ const confirmSelectedProject = async () => {
 
 </script>
 <style lang="scss" scoped>
-
 @import "@/variables.scss";
-::v-deep .el-input__inner {
+:deep(.el-input__inner) {
   &:focus {
     border-color: #e5e7eb;
   }
 }
 
-::v-deep .el-tabs__header {
+:deep(.el-tabs__header) {
   margin: 0px;
 }
 
-::v-deep .el-tabs__nav-wrap::after {
+:deep(.el-tabs__nav-wrap::after) {
   border-bottom: 2px solid $color-box-grey !important;
 }
 </style>
