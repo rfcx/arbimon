@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, ref, withDefaults } from 'vue'
+import { computed, reactive, ref, withDefaults } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
 import ModalPopup from './modal-popup.vue'

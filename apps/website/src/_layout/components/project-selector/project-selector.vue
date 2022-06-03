@@ -80,7 +80,7 @@
 </template>
 <script lang="ts" setup>
 import { partition } from 'lodash-es'
-import { computed, defineEmits, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
