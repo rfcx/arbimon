@@ -32,7 +32,7 @@ const unionGetter = <T extends string> (allowed: T[]): Getter<T> => (env, key) =
 }
 
 // Env keys/types
-export const envGetters = <const>{
+export const envGetters = {
   PROTECTION: unionGetter<Protection>(Object.values(PROTECTION_VALUES)),
   BIO_ENVIRONMENT: unionGetter<BioEnvironment>(Object.values(BIO_ENVIRONMENT_VALUES)),
 
@@ -57,4 +57,4 @@ export const envGetters = <const>{
 
   WIKI_BASE_URL: stringGetter,
   WIKI_MEDIA_BASE_URL: stringGetter
-}
+} as const

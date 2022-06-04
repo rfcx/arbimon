@@ -14,5 +14,5 @@ export const MAPBOX_STYLE_SATELLITE_STREETS = 'mapbox://styles/mapbox/satellite-
 export const MAPBOX_STYLE_RFCX = 'mapbox://styles/rfcx/ckapdhmby26zo1io3nqd84dsd'
 export const MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS = 'mapbox://styles/rfcx/ck9g6dci83g3x1io8dl27r7aq'
 
-const ALL_MAPBOX_STYLES = <const>[MAPBOX_STYLE_SATELLITE_STREETS, MAPBOX_STYLE_RFCX, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS]
+const ALL_MAPBOX_STYLES = [MAPBOX_STYLE_SATELLITE_STREETS, MAPBOX_STYLE_RFCX, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS] as const
 export type MapboxStyle = typeof ALL_MAPBOX_STYLES[number]
