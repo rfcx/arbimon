@@ -41,6 +41,7 @@
     "@auth0/auth0-spa-js": "^1.19.2",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
+    "@types/markdown-it": "^12.2.3",
     "@vueuse/components": "^6.7.6",
     "@vueuse/core": "^6.7.6",
     "axios": "^0.24.0",
