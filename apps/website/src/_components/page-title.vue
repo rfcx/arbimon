@@ -21,6 +21,7 @@
     <slot />
   </div>
 </template>
+
 <script lang="ts">
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
@@ -29,6 +30,12 @@ import { RouteLocationRaw } from 'vue-router'
 import { RouteNames } from '~/router'
 
 export default class PageTitle extends Vue {
+  @Inject() readonly ROUTE_NAMES!: RouteNames
+@Prop() pageTitle!: string
+  @Prop({ default: '' }) pageSubtitle!: string
+  @Prop() pageInformation!: string
+  @Prop() topic!: string
+
   get learnmoreRoute (): RouteLocationRaw {
     return {
       name: this.ROUTE_NAMES.info,
@@ -42,14 +49,9 @@ export default class PageTitle extends Vue {
   get popoverPlacement (): string {
     return screen.width > 640 ? 'right' : 'bottom'
   }
-
-  @Inject() readonly ROUTE_NAMES!: RouteNames
-  @Prop() pageTitle!: string
-  @Prop({ default: '' }) pageSubtitle!: string
-  @Prop() pageInformation!: string
-  @Prop() topic!: string
 }
 </script>
+
 <style lang="scss">
 .info-popover {
   width: 360px !important;
@@ -58,5 +60,4 @@ export default class PageTitle extends Vue {
     width: 120px !important;
   }
 }
-
 </style>
