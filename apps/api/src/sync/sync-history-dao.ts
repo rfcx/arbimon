@@ -7,7 +7,7 @@ export const getSyncs = async (projectId: number): Promise<SourceSync[]> =>
   await ModelRepository.getInstance(getSequelize())
     .SourceSync
     .findAll({
+      attributes: ['id', ['created_at', 'createdAt'], ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
       where: { projectId },
-      order: [['updatedAt', 'ASC']],
-      raw: true
+      order: [['updatedAt', 'DESC']]
     })

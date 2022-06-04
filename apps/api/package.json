@@ -1,16 +1,32 @@
 {
   "name": "@rfcx-bio/api",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
+  "description": "Biodiversity API",
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./*.tgz\" \"./.eslintcache\"",
-    "lint:eslint": "eslint . --cache",
-    "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
     "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
     "preview": "pnpm build && pnpm -r pack-api && pnpm use-packed && concurrently -r --kill-others-on-fail \"node --experimental-specifier-resolution=node lib/index.js\" \"pnpm open\"",
     "preview-reset": "rimraf \"./*.tgz\" && pnpm use-ws",
@@ -39,22 +55,6 @@
     "lodash-es": "^4.17.21",
     "sequelize": "7.0.0-alpha.5"
   },
-  "description": "Biodiversity API",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
-  "keywords": [
-    "biodiversity",
-    "analytics",
-    "rfcx",
-    "rainforest",
-    "connection"
-  ],
   "devDependencies": {
     "pino-pretty": "^7.3.0"
   }

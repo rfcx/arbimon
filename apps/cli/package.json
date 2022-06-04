@@ -1,8 +1,24 @@
 {
   "name": "@rfcx-bio/cli",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
+  "description": "Biodiversity CLI",
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
@@ -12,10 +28,10 @@
     "db-rms": "pnpm serve lib/db/reset-migrate-seed",
     "db-rms-test": "cross-env BIO_DB_PORT=5434 pnpm serve lib/db/reset-migrate-seed -- --path=01-integration-test-data",
     "db-seed": "pnpm serve lib/db/seed -- --path=02-arbimon-data-mock,03-preload,04-user-data-mock",
-    "lint:eslint": "eslint . --cache",
-    "lint:prettier": "prettier . --check",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
     "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
     "test-int": "cross-env BIO_DB_PORT=5434 vitest --no-threads --passWithNoTests .int.test.",
@@ -45,21 +61,5 @@
     "@types/validator": "^13.7.0",
     "object-hash": "^3.0.0",
     "sqlite3": "^5.0.2"
-  },
-  "description": "Biodiversity CLI",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
-  "keywords": [
-    "biodiversity",
-    "analytics",
-    "rfcx",
-    "rainforest",
-    "connection"
-  ]
+  }
 }

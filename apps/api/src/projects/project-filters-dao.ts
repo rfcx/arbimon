@@ -36,5 +36,6 @@ export const getUpdatedProject = async (models: AllModels, projectId: number): P
     .findAll({
       attributes: ['id', ['created_at', 'createdAt'], ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
       where: { projectId },
-      order: [['updatedAt', 'ASC']]
+      order: [['updatedAt', 'DESC']],
+      limit: 1 // TODO: We will want to remove this from this API (and create proper version(s) APIs)
     })

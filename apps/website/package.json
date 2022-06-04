@@ -1,27 +1,43 @@
 {
   "name": "@rfcx-bio/website",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
+  "description": "Analyze biodiversity data from the RFCx platform",
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "build": "vue-tsc --project \"tsconfig.vuetsc.json\" --noEmit --skipLibCheck && vite build",
-    "clean": "rimraf \"./dist\" \"./.eslintcache\"",
+    "clean": "rimraf \"./dist\" \"./.eslintcache\" \"./.stylelintcache\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "lint:stylelint": "stylelint . --cache",
-    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
-    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
     "open": "wait-port -o silent localhost:8080 && node ./launch.js",
     "preview": "vite preview --port 8080",
     "profile-eslint": "cross-env TIMING=1 NODE_OPTIONS=\"--max_old_space_size=8192\" eslint .",
     "serve": "concurrently -r \"vite\" \"pnpm open\"",
     "test-int": "cross-env BIO_DB_PORT=5434 vitest --no-threads --passWithNoTests .int.test.",
     "test-int-ci": "vitest --no-threads --passWithNoTests .int.test.",
-    "test-unit": "vitest --passWithNoTests .unit.test.",
-    "test-unit-coverage": "vitest --coverage --passWithNoTests .unit.test.",
     "test-ui": "cypress run",
-    "test-ui-explorer": "cypress open"
+    "test-ui-explorer": "cypress open",
+    "test-unit": "vitest --passWithNoTests .unit.test.",
+    "test-unit-coverage": "vitest --coverage --passWithNoTests .unit.test."
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.19.2",
@@ -68,21 +84,5 @@
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=7.0.0"
-  },
-  "description": "Analyze biodiversity data from the RFCx platform",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
-  "keywords": [
-    "biodiversity",
-    "analytics",
-    "rfcx",
-    "rainforest",
-    "connection"
-  ]
+  }
 }
