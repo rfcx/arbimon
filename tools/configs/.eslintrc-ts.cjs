@@ -4,8 +4,10 @@ module.exports = {
   extends: ['./.eslintrc-js.cjs'],
   plugins: ['sort-class-members'],
   rules: {
-    // Override imported rules
+    // Disable rules
     '@typescript-eslint/indent': 'off', // This rule is totally broken: https://github.com/typescript-eslint/typescript-eslint/issues/1824
+
+    // Add/override rules
     '@typescript-eslint/space-before-function-paren': [
       'error',
       {
@@ -22,8 +24,6 @@ module.exports = {
         allowNullableObject: true
       }
     ],
-
-    // Customize rules
     'regex/invalid': ['error', regexRules],
     'sort-class-members/sort-class-members': [
       'error',
