@@ -12,12 +12,17 @@
     </p>
   </div>
 </template>
+
 <script lang="ts">
 import numeral from 'numeral'
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 export default class NumericMetric extends Vue {
+  @Prop() value!: number
+  @Prop({ default: null }) totalValue!: number | null
+  @Prop() subtitle!: string
+
   get valueShortScale (): string {
     return numeral(this.value).format('0a')
   }
@@ -25,9 +30,5 @@ export default class NumericMetric extends Vue {
   get totalShortScale (): string | null {
     return this.totalValue === null ? this.totalValue : numeral(this.totalValue).format('0a')
   }
-
-  @Prop() value!: number
-  @Prop({ default: null }) totalValue!: number | null
-  @Prop() subtitle!: string
 }
 </script>

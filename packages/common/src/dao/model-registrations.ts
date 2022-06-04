@@ -25,7 +25,7 @@ import { MODEL_TAXON_SPECIES_PHOTO, TaxonSpeciesPhotoModel } from './models/taxo
 import { MODEL_TAXON_SPECIES_RFCX, TaxonSpeciesRfcxModel } from './models/taxon-species-rfcx-model'
 import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-species-wiki-model'
 
-export const modelRegistrations = <const>{
+export const modelRegistrations = {
   // Tables
   [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
   [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
@@ -55,6 +55,6 @@ export const modelRegistrations = <const>{
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
   [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
-}
+} as const
 
 export type ModelRegistrations = typeof modelRegistrations
