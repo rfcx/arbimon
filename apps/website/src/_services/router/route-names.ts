@@ -1,4 +1,6 @@
 export const ROUTE_NAMES = <const>{
+  cnnJobCreate: 'cnn_job_create',
+  cnnJobList: 'cnn_job_list',
   home: 'home',
   dashboard: 'dashboard',
   speciesRichness: 'species_richness',
