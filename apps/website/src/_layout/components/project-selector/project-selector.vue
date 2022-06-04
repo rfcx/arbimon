@@ -97,10 +97,10 @@ const emit = defineEmits<{(e: 'emitClose'): void}>()
 // Tabs
 const tabProjects = computed(() => partition(store.projects, p => p.isMyProject))
 
-const tabIds = <const>{
+const tabIds = {
   myProjects: 'myProjects',
   showcaseProjects: 'showcaseProjects'
-}
+} as const
 
 const tabs = computed(() => ([
   {

@@ -30,7 +30,6 @@ import { Emit, Prop } from 'vue-property-decorator'
 @Options({
   components: { OnClickOutside }
 })
-
 export default class ModalPopup extends Vue {
   @Prop({ default: 'modal' }) title!: string
   @Emit() emitClose (): boolean { return false }

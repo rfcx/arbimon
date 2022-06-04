@@ -1,4 +1,4 @@
-export const rawSpeciesCalls = <const>[
+export const rawSpeciesCalls = [
   {
     speciesId: 22864,
     speciesSlug: 'accipiter-striatus-venator',
@@ -3967,4 +3967,4 @@ export const rawSpeciesCalls = <const>[
       }
     ]
   }
-]
+] as const
