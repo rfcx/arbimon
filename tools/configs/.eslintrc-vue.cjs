@@ -17,12 +17,12 @@ module.exports = {
   },
   plugins: ['regex'],
   rules: {
-    // Override imported rules
+    // Disable rules
     '@typescript-eslint/no-empty-function': 'off',
     indent: 'off',
     'vue/no-setup-props-destructure': 'off', // doesn't understand Reactivity Transform
 
-    // Customize Rules
+    // Add/override rules
     'regex/invalid': [
       'error', [
         ...regexRules,
