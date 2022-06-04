@@ -1,25 +1,41 @@
 {
   "name": "rfcx-bio",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
+  "description": "Monorepo root",
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "ci-build": "pnpm -r build",
     "ci-lint": "pnpm -r lint --stream --workspace-concurrency 1",
-    "ci-test-unit": "pnpm -r test-unit",
-    "ci-test-int": "pnpm -r test-int",
     "ci-serve-test-int": "pnpm --filter=db serve-test && cross-env BIO_DB_PORT=5434 pnpm --filter=cli db-rms-integration && cross-env BIO_DB_PORT=5434 pnpm -r test-int && pnpm --filter=db stop-test",
+    "ci-test-int": "pnpm -r test-int",
+    "ci-test-unit": "pnpm -r test-unit",
     "clean": "rimraf \"./.eslintcache\"",
     "clean-sheet": "pnpm clean-slate",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
     "init-vscode": "code --force --install-extension dbaeumer.vscode-eslint && code --force --install-extension esbenp.prettier-vscode && code --force --install-extension stylelint.vscode-stylelint && code --force --install-extension johnsoncodehk.volar && code --force --install-extension voorjaar.windicss-intellisense && code --force --install-extension hbenl.vscode-test-explorer",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
+    "lint-diff:eslint": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
+    "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
     "lint:eslint": "eslint . --ignore-pattern \"*/\" --cache",
     "lint:prettier": "prettier . --check",
-    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
-    "lint-diff:eslint": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
-    "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
-    "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
     "prepare": "ts-patch install -s",
     "profile-eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "s:api": "pnpm --filter=db serve && pnpm --filter=cli db-rms && pnpm --filter=api serve",
@@ -89,21 +105,5 @@
     "vue-tsc": "^0.28.10",
     "wait-port": "^0.2.9",
     "webpack": "^5.61.0"
-  },
-  "description": "Monorepo root",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
-  "keywords": [
-    "biodiversity",
-    "analytics",
-    "rfcx",
-    "rainforest",
-    "connection"
-  ]
+  }
 }
