@@ -1,8 +1,8 @@
+import fastifyCors from '@fastify/cors'
+import { fastifyRequestContextPlugin } from '@fastify/request-context'
+import fastifyStatic from '@fastify/static'
 import fastify, { FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
-import fastifyCors from 'fastify-cors'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
-import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { env } from './_services/env'

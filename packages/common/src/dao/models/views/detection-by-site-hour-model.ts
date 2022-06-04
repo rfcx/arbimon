@@ -3,8 +3,8 @@ import { DataTypes } from 'sequelize'
 import { defineWithDefaults } from '../../model-helpers/defaults'
 import { DetectionBySiteHour } from '../../types'
 
-export const MODEL_DETECTION_BY_SITE_HOUR = <const>'DetectionBySiteHour'
-export const TABLE_DETECTION_BY_SITE_HOUR = <const>'detection_by_site_hour'
+export const MODEL_DETECTION_BY_SITE_HOUR = 'DetectionBySiteHour'
+export const TABLE_DETECTION_BY_SITE_HOUR = 'detection_by_site_hour'
 
 export const DetectionBySiteHourModel = defineWithDefaults<DetectionBySiteHour>(
   MODEL_DETECTION_BY_SITE_HOUR,
