@@ -259,6 +259,7 @@ importers:
       mapbox-gl: 2.8.2
       numeral: 2.0.6
       pinia: 2.0.14_typescript@4.5.5+vue@3.2.36
+      react-query: 3.39.1
       vue: 3.2.36
       vue-class-component: 8.0.0-rc.1_vue@3.2.36
       vue-gtag: 2.0.1_vue@3.2.36
