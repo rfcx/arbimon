@@ -1,12 +1,16 @@
 {
-  // Relative paths
-  "typescript.tsdk": "node_modules/typescript/lib",
-
   // General
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "eslint.format.enable": true,
-  "eslint.validate": ["javascript", "javascriptreact", "json", "jsonc", "typescript", "vue"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "typescript",
+    "vue"
+  ],
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "npm.packageManager": "pnpm",
 
@@ -26,7 +30,7 @@
     ".env": "*.env, .env.*, env.d.ts",
     "dockerfile": ".dockerignore, dockerfile*",
     "package.json": ".babelrc*, .browserslist*, .circleci*, .codecov, .commitlint*, .editorconfig, .eslintcache, .eslintrc.*, .firebase*, .flowconfig, .github*, .gitlab*, .gitpod*, .huskyrc*, .jslint*, .lintstagedrc*, .markdownlint*, .mocha*, .node-version, .nodemon*, .npm*, .nvmrc, .pm2*, .pnp.*, .pnpm*, .prettier*, .releaserc*, .sentry*, .stackblitz*, .styleci*, .stylelintcache, .stylelintignore, .stylelintrc.*, .tazerc*, .textlint*, .tool-versions, .travis*, .vscode*, .watchman*, .xo-config*, .yamllint*, .yarnrc*, api-extractor.json, appveyor*, ava.config.*, azure-pipelines*, babel.config.*, bower.json, build.config.*, commitlint*, crowdin*, cypress.json, dangerfile*, dprint.json, firebase.json, grunt*, gulp*, jasmine.*, jenkins*, jest.config.*, jsconfig.*, karma*, lerna*, lint-staged*, nest-cli.*, netlify*, nodemon*, nx.*, package-lock.json, playwright.config.*, pm2.*, pnpm*, prettier*, pullapprove*, puppeteer.config.*, renovate*, rollup.config.*, stylelint*, tsconfig.*, tsdoc.*, tslint*, tsup.config.*, turbo*, typedoc*, vercel*, vetur.config.*, vite.config.*, vitest.config.*, webpack.config.*, windi.config.*, workspace.json, xo.config.*, yarn*",
-    "readme.*": "authors, backers.md, changelog*, citation*, code_of_conduct.md, codeowners, contributing.md, contributors, copying, credits, governance.md, history.md, license*, maintainers, readme*, security.md, sponsors.md",
+    "readme.*": "authors, backers.md, changelog*, citation*, code_of_conduct.md, codeowners, contributing.md, contributors, copying, credits, governance.md, history.md, license*, maintainers, readme*, security.md, sponsors.md"
   },
 
   // Language-specific
@@ -38,10 +42,11 @@
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "javascript.preferences.useAliasesForRenames": false,
   "typescript.preferences.useAliasesForRenames": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "yaml.schemas": {
-      "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },
 
   // Formatter: ESLint
@@ -58,7 +63,5 @@
 
   // Formatter: Stylelint
   "[css]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" },
-  "[scss]": {
-    "editor.defaultFormatter": "stylelint.vscode-stylelint"
-  }  
+  "[scss]": { "editor.defaultFormatter": "stylelint.vscode-stylelint" }
 }
