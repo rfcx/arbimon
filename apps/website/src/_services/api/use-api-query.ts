@@ -7,7 +7,7 @@ const DEFAULT_OPTIONS: Omit<UseQueryOptions<any, any, any, any>, 'queryKey' | 'q
   staleTime: ONE_HOUR_IN_MILLIS
 }
 
-export function useApiQuery<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey> (queryKey: QueryKey, queryFn: QueryFunction<TQueryFnData>, options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>): UseQueryReturnType<TData, TError> {
+export function useApiQuery<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey> (queryKey: TQueryKey, queryFn: QueryFunction<TQueryFnData>, options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>): UseQueryReturnType<TData, TError> {
   return useQuery<TQueryFnData, TError, TData, TQueryKey>(
     queryKey,
     queryFn,
