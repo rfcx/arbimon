@@ -30,12 +30,11 @@ import { RouteLocationRaw } from 'vue-router'
 import { RouteNames } from '~/router'
 
 export default class PageTitle extends Vue {
-  @Prop() pageTitle!: string
+  @Inject() readonly ROUTE_NAMES!: RouteNames
+@Prop() pageTitle!: string
   @Prop({ default: '' }) pageSubtitle!: string
   @Prop() pageInformation!: string
   @Prop() topic!: string
-  
-  @Inject() readonly ROUTE_NAMES!: RouteNames
 
   get learnmoreRoute (): RouteLocationRaw {
     return {

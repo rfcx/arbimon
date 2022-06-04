@@ -8,7 +8,7 @@
 // - `apps/api/src/_services/env/keys.ts` -- CONFIG & SECRETS
 
 // CANNOT be undefined or an empty string
-export const envKeysRequired = <const>[
+export const envKeysRequired = [
   // Secrets
   'BIO_DB_DBNAME',
   'BIO_DB_HOSTNAME',
@@ -21,11 +21,11 @@ export const envKeysRequired = <const>[
 
   // Config
   'CORE_API_BASE_URL'
-]
+] as const
 
 // CAN be undefined or empty string
-export const envKeysOptional = <const>[
+export const envKeysOptional = [
   'NODE_ENV',
   'FASTIFY_PORT',
   'FASTIFY_ADDRESS'
-]
+] as const
