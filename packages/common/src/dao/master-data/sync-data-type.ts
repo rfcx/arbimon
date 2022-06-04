@@ -2,14 +2,14 @@ import { ValueOf } from '@rfcx-bio/utils/utility-types'
 
 import { SyncDataType } from '@/dao/types'
 
-export const masterSyncDataTypes = <const>{
+export const masterSyncDataTypes = {
   Project: { id: 100, name: 'Project' },
   Site: { id: 200, name: 'Site' },
   Species: { id: 300, name: 'Species' },
   SpeciesCall: { id: 400, name: 'Species Call' },
   Recording: { id: 500, name: 'Recording' },
   Detection: { id: 600, name: 'Detection' }
-}
+} as const
 
 export type SyncTypesId = ValueOf<typeof masterSyncDataTypes>['id']
 export const syncTypes: readonly SyncDataType[] = Object.values(masterSyncDataTypes)

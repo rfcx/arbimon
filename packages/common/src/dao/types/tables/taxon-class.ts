@@ -7,8 +7,8 @@ export interface TaxonClass {
   commonName: string
 }
 
-export const ATTRIBUTES_TAXON_CLASS = <const>{
+export const ATTRIBUTES_TAXON_CLASS = {
   light: ['id', 'slug', 'commonName']
-}
+} as const
 
 export type TaxonClassTypes = TypesFor<TaxonClass, typeof ATTRIBUTES_TAXON_CLASS>

@@ -2,7 +2,7 @@ import { ValueOf } from '@rfcx-bio/utils/utility-types'
 
 import { RiskRating } from '@/dao/types'
 
-export const masterRiskRatings = <const>{
+export const masterRiskRatings = {
   NE: { id: -1, code: 'NE', isThreatened: false, isProtected: false },
   NA: { id: 0, code: 'NA', isThreatened: false, isProtected: false },
   DD: { id: 100, code: 'DD', isThreatened: false, isProtected: false },
@@ -14,7 +14,7 @@ export const masterRiskRatings = <const>{
   RE: { id: 700, code: 'RE', isThreatened: false, isProtected: false },
   EW: { id: 800, code: 'EW', isThreatened: false, isProtected: false },
   EX: { id: 900, code: 'EX', isThreatened: false, isProtected: false }
-}
+} as const
 
 export type RiskId = ValueOf<typeof masterRiskRatings>['id']
 export const riskRatings: readonly RiskRating[] = Object.values(masterRiskRatings)
