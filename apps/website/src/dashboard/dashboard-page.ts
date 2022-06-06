@@ -1,3 +1,4 @@
+import { AxiosInstance } from 'axios'
 import { max } from 'lodash-es'
 import { LngLatBoundsLike } from 'mapbox-gl'
 import numeral from 'numeral'
@@ -31,7 +32,7 @@ import DashboardProjectProfile from './components/dashboard-project-profile/dash
 import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
 import { ThreatenedSpeciesRow } from './components/dashboard-threatened-species/dashboard-threatened-species'
 import DashboardThreatenedSpecies from './components/dashboard-threatened-species/dashboard-threatened-species.vue'
-import { dashboardService } from './services'
+import { getDashboardGeneratedData, getDashboardProfileData } from './services'
 
 interface Tab {
   label: string
@@ -67,6 +68,7 @@ const getDefaultPhoto = (taxonSlug: string): string =>
   }
 })
 export default class DashboardPage extends Vue {
+  @Inject() readonly apiClientBio!: AxiosInstance
   @Inject() readonly ROUTE_NAMES!: RouteNames
   @Inject() readonly store!: BiodiversityStore
 
@@ -206,8 +208,8 @@ export default class DashboardPage extends Vue {
     if (projectId === undefined) return
 
     const [generated, profile] = await Promise.all([
-      dashboardService.getDashboardGeneratedData(projectId),
-      dashboardService.getDashboardProfileData(projectId)
+      getDashboardGeneratedData(this.apiClientBio, projectId),
+      getDashboardProfileData(this.apiClientBio, projectId)
     ])
 
     this.generated = generated ?? null
@@ -217,7 +219,7 @@ export default class DashboardPage extends Vue {
   async downloadLineChart (): Promise<void> {
     const margins = { ...this.lineChartConfig.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.lineChartConfig, margins, width: 1024, height: 576 }
-    const svg = await generateChartExport(this.lineChartSeries, exportConfig)
+    const svg = generateChartExport(this.lineChartSeries, exportConfig)
     if (!svg) return
 
     await downloadSvgAsPng(svg, getExportGroupName(`dashboard-${this.selectedTab}-line-chart`))

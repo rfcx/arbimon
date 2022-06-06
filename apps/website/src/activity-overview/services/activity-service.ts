@@ -1,21 +1,9 @@
+import { AxiosInstance } from 'axios'
+
 import { activityDatasetGeneratedUrl, ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { apiClient } from '~/api'
 import { DatasetParameters, generateFilterQuery } from '~/filters'
-import { useStore } from '~/store'
 
-export class ActivityService {
-  constructor (private readonly baseUrl: string) {}
-
-  async getActivityDataset (rawFilter: DatasetParameters): Promise<ActivityDatasetResponse | undefined> {
-    const store = useStore()
-    const projectId = store.selectedProject?.id
-    if (projectId === undefined) return undefined
-
-    const query = generateFilterQuery(rawFilter)
-    const url = `${this.baseUrl}${activityDatasetGeneratedUrl({ projectId: projectId.toString() })}?${query}`
-    const response = await apiClient.getOrUndefined<ActivityDatasetResponse>(url)
-
-    return response
-  }
-}
+export const getActivityDataset = async (apiClient: AxiosInstance, projectId: number, rawFilter: DatasetParameters): Promise<ActivityDatasetResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `${activityDatasetGeneratedUrl({ projectId: projectId.toString() })}?${generateFilterQuery(rawFilter)}`)
