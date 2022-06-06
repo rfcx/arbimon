@@ -1,7 +1,7 @@
+import { Auth0Client } from '@auth0/auth0-spa-js'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { AuthClient } from '~/auth-client'
 import { BiodiversityStore } from '~/store'
 import VersionControl from './version-control.vue'
 
@@ -11,7 +11,7 @@ import VersionControl from './version-control.vue'
   }
 })
 export default class AuthNavbarItemComponent extends Vue {
-  @Inject() readonly auth!: AuthClient
+  @Inject() readonly auth!: Auth0Client
   @Inject() readonly store!: BiodiversityStore
   @Prop() readonly domId!: string
 
@@ -24,10 +24,14 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async login (): Promise<void> {
+    // TODO: Should we use `window.location.origin` here too?
     await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
 
   async logout (): Promise<void> {
-    await this.auth.logout()
+    // Auth0 logout forces a full refresh
+    await this.auth.logout({ returnTo: window.location.origin })
+    // If we could avoid the refresh, we would need to update the user:
+    // await this.updateUser(this.clientAuth0)
   }
 }

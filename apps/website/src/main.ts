@@ -4,10 +4,11 @@ import { VueQueryPlugin } from 'vue-query'
 
 import appComponent from '@/_layout'
 import { ANALYTICS_CONFIGS } from '~/analytics'
-import { useAuthClient } from '~/auth-client'
+import { getIdToken, useAuth0Client } from '~/auth-client'
+import { handleAuthRedirect } from '~/auth-client/auth0-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
 import router, { ROUTE_NAMES } from '~/router'
-import { pinia, useStore } from '~/store'
+import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -15,9 +16,17 @@ import 'virtual:windi.css'
 import './main.scss'
 
 async function init (): Promise<void> {
-  const authClient = useAuthClient()
-  const redirectAfterAuth = await authClient.init(window.location.origin)
+  // Authenticate current user
+  const authClient = await useAuth0Client()
+  const redirectAfterAuth = await handleAuthRedirect(authClient)
+  const user = await authClient.getUser()
 
+  // Save to store
+  const store = useStoreOutsideSetup()
+  await store.updateUser(user)
+
+
+  // Setup app
   const app = createApp(appComponent)
     .use(pinia)
     .use(router)
@@ -32,7 +41,9 @@ async function init (): Promise<void> {
   app.provide('gtag', app.config.globalProperties.$gtag)
   app.mount('#app')
 
+  // Handle redirects
   if (redirectAfterAuth !== undefined) await router.replace(redirectAfterAuth)
+  else if (store.selectedProject) await router.replace({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } })
 }
 
 void init()
