@@ -59,15 +59,18 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.SyncHistory
       },
       {
-        path: 'analysis/cnn',
-        name: ROUTE_NAMES.cnnJobList,
-        component: PAGES.CNNJobList,
-        alias: 'analysis'
+        path: 'detect',
+        redirect: { name: ROUTE_NAMES.cnnJobList }
       },
       {
-        path: 'analysis/cnn/create',
+        path: 'detect/cnn',
+        name: ROUTE_NAMES.cnnJobList,
+        component: PAGES.CnnJobList
+      },
+      {
+        path: 'detect/cnn/create',
         name: ROUTE_NAMES.cnnJobCreate,
-        component: PAGES.CNNJobCreate
+        component: PAGES.CnnJobCreate
       }
     ]
   },
