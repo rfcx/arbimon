@@ -40,7 +40,8 @@
   <activity-overview-by-species :datasets="tableDatasets" />
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { AxiosInstance } from 'axios'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { ActivityOverviewDataBySpecies } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
@@ -50,15 +51,19 @@ import ActivityOverviewByLocation from '@/activity-overview/components/activity-
 import ActivityOverviewBySpecies from '@/activity-overview/components/activity-overview-by-species/activity-overview-by-species.vue'
 import ActivityOverviewByTime, { ActivityOverviewTimeDataset } from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
-import { activityService } from '@/activity-overview/services'
+import { apiClientBioKey } from '@/globals'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
+import { getActivityDataset } from './services'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
 const route = useRoute()
+const store = useStore()
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const filters = ref<ColoredFilter[]>([])
 
@@ -82,11 +87,14 @@ const onFilterChange = async (newFilters: ColoredFilter[]): Promise<void> => {
 }
 
 const onDatasetChange = async () => {
+  const projectId = store.selectedProject?.id
+  if (projectId === undefined) return
+
   const datasets = (await Promise.all(
     filters.value.map(async (filter) => {
       const { color, startDate, endDate, otherFilters, sites } = filter
-      const data = await activityService.getActivityDataset(filterToDataset(filter))
-      if (!data) return undefined
+      const data = await getActivityDataset(apiClientBio, projectId, filterToDataset(filter))
+      if (data === undefined) return undefined
 
       return { ...data, otherFilters, startDate, endDate, color, sites: sites.flatMap(({ value }) => value) }
     })

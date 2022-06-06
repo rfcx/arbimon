@@ -1,15 +1,21 @@
+import { AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
+import { getSpeciesAll } from '@/activity-patterns/services'
 import { RouteNames } from '~/router'
-import { spotlightService } from '../../services'
+import { BiodiversityStore } from '~/store'
 
 export default class SpeciesSelector extends Vue {
+  @Inject() readonly apiClientBio!: AxiosInstance
   @Inject() readonly ROUTE_NAMES!: RouteNames
+  @Inject() readonly store!: BiodiversityStore
+
   @Prop() speciesSlug!: string
+
   @Emit() emitSelectedSpeciesChanged (species: SpeciesInProjectLight | undefined): SpeciesInProjectLight | undefined {
     return species
   }
@@ -78,6 +84,9 @@ export default class SpeciesSelector extends Vue {
   }
 
   async getAllSpecies (): Promise<SpeciesInProjectLight[]> {
-    return await spotlightService.getSpeciesAll() ?? []
+    const projectId = this.store.selectedProject?.id
+    if (projectId === undefined) return []
+
+    return await getSpeciesAll(this.apiClientBio, projectId) ?? []
   }
 }
