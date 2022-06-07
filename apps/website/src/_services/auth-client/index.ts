@@ -1,2 +1,3 @@
-export * from './auth0-client'
+export * from './get-id-token'
+export * from './handle-auth-callback'
 export * from './use-auth0-client'

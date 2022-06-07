@@ -6,8 +6,7 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 
 import appComponent from '@/_layout'
 import { ANALYTICS_CONFIGS } from '~/analytics'
-import { getIdToken, useAuth0Client } from '~/auth-client'
-import { handleAuthRedirect } from '~/auth-client/auth0-client'
+import { getIdToken, handleAuthCallback, useAuth0Client } from '~/auth-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
 import router, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
@@ -21,7 +20,7 @@ import './main.scss'
 async function init (): Promise<void> {
   // Authenticate current user
   const authClient = await useAuth0Client()
-  const redirectAfterAuth = await handleAuthRedirect(authClient)
+  const redirectAfterAuth = await handleAuthCallback(authClient)
   const user = await authClient.getUser()
 
   // Save to store
