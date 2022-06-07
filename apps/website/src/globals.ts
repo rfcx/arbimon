@@ -8,6 +8,7 @@ import { BiodiversityStore } from '~/store'
 
 export const authClientKey = Symbol('authClientKey') as InjectionKey<Auth0Client>
 export const apiClientBioKey = Symbol('apiClientBioKey') as InjectionKey<AxiosInstance>
+export const apiClientCoreKey = Symbol('apiClientCoreKey') as InjectionKey<AxiosInstance>
 export const storeKey = Symbol('storeKey') as InjectionKey<BiodiversityStore>
 export const gtagKey = Symbol('gtagKey') as InjectionKey<AxiosInstance>
 export const togglesKey = Symbol('togglesKey') as InjectionKey<FeatureToggles>

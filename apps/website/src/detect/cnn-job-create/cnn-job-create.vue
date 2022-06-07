@@ -118,5 +118,13 @@
   </form>
 </template>
 <script setup lang="ts">
-  import { ROUTE_NAMES } from '~/router'
+// import { AxiosInstance } from 'axios'
+// import { inject } from 'vue'
+
+// import { apiClientCoreKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
+// import { useClassifiers } from '../_composables/use-classifiers'
+
+// const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+// const classifierQuery = useClassifiers(apiClientCore)
 </script>

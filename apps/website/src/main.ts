@@ -11,7 +11,7 @@ import { FEATURE_TOGGLES } from '~/feature-toggles'
 import router, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
-import { apiClientBioKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
+import { apiClientBioKey, apiClientCoreKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
@@ -28,7 +28,9 @@ async function init (): Promise<void> {
   await store.updateUser(user)
 
   // Setup API token
-  const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, user ? async () => await getIdToken(authClient) : undefined)
+  const getToken = user ? async () => await getIdToken(authClient) : undefined
+  const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, getToken)
+  const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
 
   // Setup app
   const app = createApp(appComponent)
@@ -42,6 +44,7 @@ async function init (): Promise<void> {
   app
     .provide(authClientKey, authClient)
     .provide(apiClientBioKey, apiClientBio)
+    .provide(apiClientCoreKey, apiClientCore)
     .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
     .provide(gtagKey, app.config.globalProperties.$gtag)
     .provide(togglesKey, FEATURE_TOGGLES)
