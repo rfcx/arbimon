@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
+import { routeNamesKey } from '@/globals'
 import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { RouteNames } from '~/router'
 import { ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from './functions'
@@ -67,7 +68,8 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
 }
 
 export default class ActivityOverviewBySpecies extends Vue {
-  @Inject() readonly ROUTE_NAMES!: RouteNames
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+
   @Prop() datasets!: SpeciesDataset[]
 
   pageIndex = 1 // 1-based for humans
