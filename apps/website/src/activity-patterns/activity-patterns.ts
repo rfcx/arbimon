@@ -1,3 +1,4 @@
+import { AxiosInstance } from 'axios'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
@@ -10,6 +11,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
+import { apiClientBioKey, storeKey } from '@/globals'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -25,7 +27,7 @@ import SpeciesSelector from './components/species-selector/species-selector.vue'
 import SpeciesTitle from './components/species-title/species-title.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
-import { spotlightService } from './services'
+import { getSpeciesOne, getSpotlightDataset } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
@@ -44,7 +46,9 @@ const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
   }
 })
 export default class ActivityPatternsPage extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   // Dataset definitions
   species: SpeciesInProjectLight | null = null
   filters: ColoredFilter[] = []
@@ -86,6 +90,9 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async onDatasetChange (): Promise<void> {
+    const projectId = this.store.selectedProject?.id
+    if (projectId === undefined) return
+
     // TODO 117 - Only update the changed dataset
     const speciesId = this.species?.taxonSpeciesId ?? NaN
     if (!speciesId) return
@@ -95,7 +102,7 @@ export default class ActivityPatternsPage extends Vue {
     const datasets = (await Promise.all(
       filters.map(async (filter) => {
         const { color, startDate, endDate, sites, otherFilters } = filter
-        const data = await spotlightService.getSpotlightDataset(filterToDataset(filter), speciesId)
+        const data = await getSpotlightDataset(this.apiClientBio, projectId, filterToDataset(filter), speciesId)
         return data ? { ...data, startDate, endDate, color, sites: sites.flatMap(({ value }) => value), otherFilters } : data
       })
     )).filter(isDefined)
@@ -137,11 +144,14 @@ export default class ActivityPatternsPage extends Vue {
   }
 
   async getSpeciesInformation (): Promise<void> {
+    const projectId = this.store.selectedProject?.id
+    if (projectId === undefined) return
+
     const species = this.species
     if (!species) return
 
     try {
-      const data = await spotlightService.getSpeciesOne(species.taxonSpeciesSlug)
+      const data = await getSpeciesOne(this.apiClientBio, projectId, species.taxonSpeciesSlug)
 
       // Only update if received data matches current filters
       if (this.species?.scientificName === species.scientificName) {

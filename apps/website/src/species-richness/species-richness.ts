@@ -1,9 +1,11 @@
+import { AxiosInstance } from 'axios'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
+import { apiClientBioKey, storeKey } from '@/globals'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -16,7 +18,7 @@ import SpeciesRichnessDetectedSpecies from './components/species-richness-detect
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import { getBarChartDataset, getMapDataset, getTableData } from './functions'
-import { richnessService } from './services'
+import { getRichnessDataset } from './services'
 
 @Options({
   components: {
@@ -29,7 +31,8 @@ import { richnessService } from './services'
   }
 })
 export default class SpeciesRichnessPage extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
 
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ColoredFilter[] = []
@@ -55,12 +58,14 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   async onDatasetChange (): Promise<void> {
+    const projectId = this.store.selectedProject?.id
+    if (projectId === undefined) return
+
     // TODO 117 - Only update the changed dataset
     const datasets = await (await Promise.all(
       this.filters.map(async (filter) => {
         const { startDate, endDate, sites, color, otherFilters } = filter
-        const f = filterToDataset(filter)
-        const data = await richnessService.getRichnessDataset(f)
+        const data = await getRichnessDataset(this.apiClientBio, projectId, filterToDataset(filter))
         return data ? { startDate, endDate, sites, color, otherFilters, data } : data
       })
     )).filter(isDefined)

@@ -60,13 +60,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { AxiosInstance } from 'axios'
+import { computed, inject } from 'vue'
 
+import { apiClientBioKey } from '@/globals'
 import { useSyncHistory } from '@/sync-history/use-sync-history'
 import useDateFormat from '../_services/hooks/use-date-format'
 
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
 // Data
-const { isLoading, isError, data } = useSyncHistory()
+const { isLoading, isError, data } = useSyncHistory(apiClientBio)
 const syncs = computed(() => data?.value?.syncs?.map(({ summaryText, ...list }) => ({ ...list, summaryObject: (JSON.parse(summaryText) as Record<string, number>) })) ?? [])
 
 // Formatters

@@ -2,6 +2,7 @@ import { groupBy } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
+import { routeNamesKey, storeKey } from '@/globals'
 import { RiskRatingUi } from '~/risk-ratings'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -16,8 +17,9 @@ export interface ThreatenedSpeciesRow {
 }
 
 export default class DashboardEndangeredSpecies extends Vue {
-  @Inject() readonly store!: BiodiversityStore
-  @Inject() readonly ROUTE_NAMES!: RouteNames
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+
   @Prop() species!: ThreatenedSpeciesRow[]
 
   get hasData (): boolean {
