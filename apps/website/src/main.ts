@@ -42,7 +42,7 @@ async function init (): Promise<void> {
   app
     .provide(authClientKey, authClient)
     .provide(apiClientBioKey, apiClientBio)
-    .provide(storeKey, store) // TODO: Replace with useStore()
+    .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
     .provide(gtagKey, app.config.globalProperties.$gtag)
     .provide(togglesKey, FEATURE_TOGGLES)
     .provide(routeNamesKey, ROUTE_NAMES)
@@ -52,7 +52,6 @@ async function init (): Promise<void> {
 
   // Handle redirects
   if (redirectAfterAuth !== undefined) await router.replace(redirectAfterAuth)
-  else if (store.selectedProject) await router.replace({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } })
 }
 
 void init()

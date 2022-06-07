@@ -26,7 +26,6 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async login (): Promise<void> {
-    // TODO: Should we use `window.location.origin` here too?
     await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
 
