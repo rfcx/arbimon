@@ -27,7 +27,6 @@ async function init (): Promise<void> {
   // Save to store
   const store = useStoreOutsideSetup()
   await store.updateUser(user)
-  console.log(store.projects)
 
   // Setup API token
   const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, user ? async () => await getIdToken(authClient) : undefined)
