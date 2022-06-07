@@ -1,8 +1,6 @@
 <template>
-  <h1 class="text-lg mb-5">
-    Create New CNN Job
-  </h1>
-  <form>
+  <page-title page-title="Create New CNN Job" />
+  <form class="mt-5">
     <ol class="relative border-l border-box-grey">
       <li class="mb-8 ml-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
@@ -106,12 +104,19 @@
       </li>
     </ol>
     <div class="flex space-x-4">
-      <button class="btn">
-        Cancel
-      </button>
-      <button class="btn btn-primary">
-        Create
-      </button>
+      <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
+        <button class="btn">
+          Cancel
+        </button>
+      </router-link>
+      <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
+        <button class="btn btn-primary">
+          Create
+        </button>
+      </router-link>
     </div>
   </form>
 </template>
+<script setup lang="ts">
+  import { ROUTE_NAMES } from '~/router'
+</script>
