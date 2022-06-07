@@ -3,7 +3,7 @@ import { Howl } from 'howler'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
-import { getCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
+import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 import { TaxonSpeciesCallLight } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -64,12 +64,12 @@ export default class SpotlightPlayer extends Vue {
   }
 
   async getSpectrogramImage (): Promise<void> {
-    const spectrogramList = (await Promise.all(this.speciesCalls.map(async ({ callMediaSpecUrl }) => await getCoreMedia(this.apiClientBio, callMediaSpecUrl)))).filter(isDefined)
+    const spectrogramList = (await Promise.all(this.speciesCalls.map(async ({ callMediaSpecUrl }) => await apiBioGetCoreMedia(this.apiClientBio, callMediaSpecUrl)))).filter(isDefined)
     this.spectrograms = spectrogramList.map(data => window.URL.createObjectURL(data))
   }
 
   async getAudio (): Promise<void> {
-    const audioList = (await Promise.all(this.speciesCalls.map(async ({ callMediaWavUrl }) => await getCoreMedia(this.apiClientBio, callMediaWavUrl)))).filter(isDefined)
+    const audioList = (await Promise.all(this.speciesCalls.map(async ({ callMediaWavUrl }) => await apiBioGetCoreMedia(this.apiClientBio, callMediaWavUrl)))).filter(isDefined)
 
     this.audioList = audioList.map(data => {
       return new Howl({

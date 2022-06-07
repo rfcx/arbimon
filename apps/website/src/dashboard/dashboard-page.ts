@@ -6,8 +6,8 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { DashboardGeneratedResponse, getDashboardGeneratedData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
-import { DashboardProfileResponse, getDashboardProfileData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { apiBioGetDashboardGeneratedData, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { apiBioGetDashboardProfileData, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
@@ -208,8 +208,8 @@ export default class DashboardPage extends Vue {
     if (projectId === undefined) return
 
     const [generated, profile] = await Promise.all([
-      getDashboardGeneratedData(this.apiClientBio, projectId),
-      getDashboardProfileData(this.apiClientBio, projectId)
+      apiBioGetDashboardGeneratedData(this.apiClientBio, projectId),
+      apiBioGetDashboardProfileData(this.apiClientBio, projectId)
     ])
 
     this.generated = generated ?? null

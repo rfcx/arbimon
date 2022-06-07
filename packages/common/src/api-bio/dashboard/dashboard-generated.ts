@@ -34,5 +34,5 @@ export interface DashboardGeneratedResponse {
 export const dashboardGeneratedRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-generated`
 
 // Service
-export const getDashboardGeneratedData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardGeneratedResponse | undefined> =>
+export const apiBioGetDashboardGeneratedData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardGeneratedResponse | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/dashboard-generated`)

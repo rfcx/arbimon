@@ -11,7 +11,7 @@ export interface CoreMediaQuery {
 export const coreMediaRoute = '/core-media'
 
 // Service
-export const getCoreMedia = async (apiClient: AxiosInstance, mediaUrl: string): Promise<Blob | undefined> => {
+export const apiBioGetCoreMedia = async (apiClient: AxiosInstance, mediaUrl: string): Promise<Blob | undefined> => {
   const url = `/core-media?${new URLSearchParams(mediaUrl).toString()}`
   return await apiGetOrUndefined(apiClient, url, { responseType: 'blob' })
 }

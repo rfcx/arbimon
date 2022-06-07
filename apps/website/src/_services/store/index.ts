@@ -1,8 +1,8 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { getProjectFilters, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { getProjects, LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
+import { apiBioGetProjectFilters, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { apiBioGetProjects, LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -28,7 +28,7 @@ export const useStore = defineStore('root', {
       const apiClient = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, user ? async () => await getIdToken(authClient) : undefined)
 
       // Load new data
-      const projects = await getProjects(apiClient) ?? []
+      const projects = await apiBioGetProjects(apiClient) ?? []
       await this.updateProjects(projects)
     },
     async updateProjects (projects: LocationProjectForUser[]) {
@@ -48,7 +48,7 @@ export const useStore = defineStore('root', {
 
       // Load new data asynchronously
       this.projectFilters = project
-        ? await getProjectFilters(apiClientBio, project.id)
+        ? await apiBioGetProjectFilters(apiClientBio, project.id)
         : undefined
     },
     async setCurrentVersion (version: string) {

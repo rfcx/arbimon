@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { getRichnessExport } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { apiBioGetRichnessExport } from '@rfcx-bio/common/api-bio/richness/richness-export'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
@@ -33,7 +33,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
 
     this.loading = true
     const reports = (await Promise.all(
-      this.filters.map(async filter => await getRichnessExport(this.apiClientBio, projectId, filterToQuery(filter)).then(res => res?.richnessExport))
+      this.filters.map(async filter => await apiBioGetRichnessExport(this.apiClientBio, projectId, filterToQuery(filter)).then(res => res?.richnessExport))
     )).filter(isDefined)
     await downloadCsvReports(this.filters, reports, DEFAULT_PREFIX, this.store.projectFilters?.taxonClasses ?? [])
     this.loading = false

@@ -15,5 +15,5 @@ export const projectSpeciesPredictedOccupancyRoute = `${PROJECT_SPECIFIC_ROUTE_P
 
 // Service
 // TODO: Delete this (store files in S3)
-export const getPredictedOccupancy = async (apiClient: AxiosInstance, url: string): Promise<Blob | undefined> =>
+export const apiBioGetProjectSpeciesPredictedOccupancy = async (apiClient: AxiosInstance, url: string): Promise<Blob | undefined> =>
   await apiGetOrUndefined(apiClient, url, { baseURL: '', responseType: 'blob' })

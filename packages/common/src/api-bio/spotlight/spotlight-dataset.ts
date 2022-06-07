@@ -59,7 +59,7 @@ export type SpotlightDataByTime = DataByTime<SpotlightDetectionDataByTime>
 export const spotlightDatasetRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/spotlight`
 
 // Service
-export const getSpotlightDataset = async (apiClient: AxiosInstance, projectId: number, speciesId: number, datasetQuery: DatasetQueryParams): Promise<SpotlightDatasetResponse | undefined> => {
+export const apiBioGetSpotlightDataset = async (apiClient: AxiosInstance, projectId: number, speciesId: number, datasetQuery: DatasetQueryParams): Promise<SpotlightDatasetResponse | undefined> => {
   const query = datasetQueryParamsToString(datasetQuery)
   query.append('speciesId', speciesId.toString())
 

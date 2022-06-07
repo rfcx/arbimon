@@ -38,5 +38,5 @@ export interface RichnessPresence {
 export const richnessDatasetRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/richness`
 
 // Service
-export const getRichnessDataset = async (apiClient: AxiosInstance, projectId: number, datasetQuery: DatasetQueryParams): Promise<RichnessDatasetResponse | undefined> =>
+export const apiBioGetRichnessDataset = async (apiClient: AxiosInstance, projectId: number, datasetQuery: DatasetQueryParams): Promise<RichnessDatasetResponse | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/richness?${datasetQueryParamsToString(datasetQuery).toString()}`)

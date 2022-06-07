@@ -52,5 +52,5 @@ export type ActivityOverviewDataByTime = DataByTime<ActivityOverviewDetectionDat
 export const activityDatasetRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/activity`
 
 // Service
-export const getActivityDataset = async (apiClient: AxiosInstance, projectId: number, datasetQuery: DatasetQueryParams): Promise<ActivityDatasetResponse | undefined> =>
+export const apiBioGetActivityDataset = async (apiClient: AxiosInstance, projectId: number, datasetQuery: DatasetQueryParams): Promise<ActivityDatasetResponse | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/activity?${datasetQueryParamsToString(datasetQuery).toString()}`)

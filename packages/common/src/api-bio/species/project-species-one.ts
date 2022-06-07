@@ -28,5 +28,5 @@ export interface ProjectSpeciesOneResponse {
 export const projectSpeciesOneRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/species/:speciesSlug`
 
 // Service
-export const getSpeciesOne = async (apiClient: AxiosInstance, projectId: number, speciesSlug: string): Promise<ProjectSpeciesOneResponse | undefined> =>
+export const apiBioGetProjectSpeciesOne = async (apiClient: AxiosInstance, projectId: number, speciesSlug: string): Promise<ProjectSpeciesOneResponse | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/species/${speciesSlug}`)

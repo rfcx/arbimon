@@ -44,7 +44,7 @@ import { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { ActivityOverviewDataBySpecies, getActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { ActivityOverviewDataBySpecies, apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import ActivityOverviewByLocation from '@/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
@@ -92,7 +92,7 @@ const onDatasetChange = async () => {
   const datasets = (await Promise.all(
     filters.value.map(async (filter) => {
       const { color, startDate, endDate, otherFilters, sites } = filter
-      const data = await getActivityDataset(apiClientBio, projectId, filterToQuery(filter))
+      const data = await apiBioGetActivityDataset(apiClientBio, projectId, filterToQuery(filter))
       if (data === undefined) return undefined
 
       return { ...data, otherFilters, startDate, endDate, color, sites: sites.flatMap(({ value }) => value) }

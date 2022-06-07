@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { getRichnessDataset } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { apiBioGetRichnessDataset } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
@@ -65,7 +65,7 @@ export default class SpeciesRichnessPage extends Vue {
     const datasets = await (await Promise.all(
       this.filters.map(async (filter) => {
         const { startDate, endDate, sites, color, otherFilters } = filter
-        const data = await getRichnessDataset(this.apiClientBio, projectId, filterToQuery(filter))
+        const data = await apiBioGetRichnessDataset(this.apiClientBio, projectId, filterToQuery(filter))
         return data ? { startDate, endDate, sites, color, otherFilters, data } : data
       })
     )).filter(isDefined)
