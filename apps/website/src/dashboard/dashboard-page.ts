@@ -10,6 +10,7 @@ import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/d
 import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
 import { downloadSvgAsPng } from '~/charts'
 import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
@@ -68,9 +69,9 @@ const getDefaultPhoto = (taxonSlug: string): string =>
   }
 })
 export default class DashboardPage extends Vue {
-  @Inject() readonly apiClientBio!: AxiosInstance
-  @Inject() readonly ROUTE_NAMES!: RouteNames
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   generated: DashboardGeneratedResponse | null = null
   profile: DashboardProfileResponse | null = null

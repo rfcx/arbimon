@@ -17,10 +17,12 @@ export const getApiClient = (baseURL: string, getToken?: () => Promise<string>):
     // apiClient.interceptors.response.use()
   }
 
+  console.log('getApiClient', getToken)
   return apiClient
 }
 
 export const apiGetOrUndefined = async <T> (apiClient: AxiosInstance, url: string, config?: AxiosRequestConfig): Promise<T | undefined> => {
+  console.log('apiGetOrUndefined', apiClient, url, config)
   return await apiClient.get<T>(url, config)
     .then(res => res.data)
     .catch(() => undefined)

@@ -6,6 +6,7 @@ import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-pro
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
+import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
@@ -31,7 +32,8 @@ const DEFAULT_PREFIX = 'Spotlight-By-Site'
   }
 })
 export default class ActivityPatternsByLocation extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop() species!: SpeciesInProjectLight
   @Prop({ default: [] }) datasets!: MapDataSet[]
 

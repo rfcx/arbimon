@@ -2,6 +2,7 @@ import { Auth0Client } from '@auth0/auth0-spa-js'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
+import { authClientKey, storeKey } from '@/globals'
 import { BiodiversityStore } from '~/store'
 import VersionControl from './version-control.vue'
 
@@ -11,8 +12,9 @@ import VersionControl from './version-control.vue'
   }
 })
 export default class AuthNavbarItemComponent extends Vue {
-  @Inject() readonly auth!: Auth0Client
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: authClientKey }) readonly auth!: Auth0Client
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop() readonly domId!: string
 
   get userImage (): string {
