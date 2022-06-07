@@ -3,11 +3,12 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
+import { getRichnessDataset } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
+import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { BiodiversityStore } from '~/store'
 import { TimeBucket } from '~/time-buckets'
@@ -18,7 +19,6 @@ import SpeciesRichnessDetectedSpecies from './components/species-richness-detect
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import { getBarChartDataset, getMapDataset, getTableData } from './functions'
-import { getRichnessDataset } from './services'
 
 @Options({
   components: {
@@ -65,7 +65,7 @@ export default class SpeciesRichnessPage extends Vue {
     const datasets = await (await Promise.all(
       this.filters.map(async (filter) => {
         const { startDate, endDate, sites, color, otherFilters } = filter
-        const data = await getRichnessDataset(this.apiClientBio, projectId, filterToDataset(filter))
+        const data = await getRichnessDataset(this.apiClientBio, projectId, filterToQuery(filter))
         return data ? { startDate, endDate, sites, color, otherFilters, data } : data
       })
     )).filter(isDefined)

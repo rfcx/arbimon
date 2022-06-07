@@ -2,7 +2,7 @@ import fastify, { FastifyInstance } from 'fastify'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { expect, test } from 'vitest'
 
-import { projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
+import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'

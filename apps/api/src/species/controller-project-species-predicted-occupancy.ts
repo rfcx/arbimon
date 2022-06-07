@@ -1,7 +1,7 @@
 import { FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
-import { SpeciesPredictionOccupancyParams } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
+import { ProjectSpeciesPredictedOccupancyParams } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
@@ -12,7 +12,7 @@ import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '.
 import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'
 
-export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPredictionOccupancyParams> = async (req, res) => {
+export const projectSpeciesPredictedOccupancyHandler: Handler<FastifyReply, ProjectSpeciesPredictedOccupancyParams> = async (req, res) => {
   // Inputs & validation
   const { projectId, speciesSlug, filenameWithoutExtension } = req.params
   assertPathParamsExist({ projectId, speciesSlug, filenameWithoutExtension })
@@ -34,5 +34,5 @@ export const speciesPredictionOccupancyHandler: Handler<FastifyReply, SpeciesPre
   if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw BioInvalidPathParamError({ filenameWithoutExtension })
 
   // Response
-  return await res.sendFile(mockPredictionsFolderName + '/' + filenameWithoutExtension + '.png')
+  return await res.sendFile(`${mockPredictionsFolderName}/${filenameWithoutExtension}.png`)
 }
