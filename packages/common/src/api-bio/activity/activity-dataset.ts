@@ -1,4 +1,4 @@
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { ProjectSpecificRouteParams } from '../_helpers'
 import { DataByTime } from '../common/time-bucket'
 
 // Request

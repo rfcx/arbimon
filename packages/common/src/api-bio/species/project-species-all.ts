@@ -1,5 +1,5 @@
 import { SpeciesInProjectLight } from '../../dao/types/species-in-project'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { ProjectSpecificRouteParams } from '../_helpers'
 
 // Request
 export type ProjectSpeciesAllParams = ProjectSpecificRouteParams

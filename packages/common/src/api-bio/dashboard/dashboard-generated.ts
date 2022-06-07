@@ -1,5 +1,4 @@
-import { ApiLine, ApiMap, ApiStack } from '../_helpers'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { ApiLine, ApiMap, ApiStack, ProjectSpecificRouteParams } from '../_helpers'
 import { DashboardSpecies } from './common'
 
 // Request

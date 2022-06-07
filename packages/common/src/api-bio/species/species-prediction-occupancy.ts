@@ -1,4 +1,4 @@
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { ProjectSpecificRouteParams } from '../_helpers'
 
 // Request
 export type SpeciesPredictionOccupancyParams = ProjectSpecificRouteParams & {

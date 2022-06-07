@@ -1,4 +1,4 @@
-import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectSpecificRouteParams } from '../_helpers'
 
 // Request
 export type SyncHistoryParams = ProjectSpecificRouteParams
