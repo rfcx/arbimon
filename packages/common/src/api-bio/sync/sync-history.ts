@@ -1,14 +1,15 @@
-import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { AxiosInstance } from 'axios'
 
-// Request
-export type SyncHistoryParams = ProjectSpecificRouteParams
+import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
-export const syncHistoryRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/sync-history`
+// Request types
+export type SyncHistoryParams = ProjectRouteParamsSerialized
 
-export const syncHistoryUrl = (params: SyncHistoryParams): string =>
-  `/projects/${params.projectId}/sync-history`
+// Response types
+export interface SyncHistoryResponse {
+  syncs: Sync[]
+}
 
-// Response
 export interface Sync {
   id: number
   createdAt: Date
@@ -16,6 +17,9 @@ export interface Sync {
   summaryText: string
 }
 
-export interface SyncHistoryResponse {
-  syncs: Sync[]
-}
+// Route
+export const syncHistoryRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/sync-history`
+
+// Service
+export const getSyncHistory = async (apiClient: AxiosInstance, params: SyncHistoryParams): Promise<SyncHistoryResponse | undefined> =>
+  await apiClient.get(`/projects/${params.projectId}/sync-history`)

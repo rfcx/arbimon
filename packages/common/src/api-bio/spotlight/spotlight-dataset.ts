@@ -1,18 +1,14 @@
-import { FilterDatasetQuery } from '../common/filter'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
-import { DataByTime } from '../common/time-bucket'
+import { AxiosInstance } from 'axios'
 
-// Request
-export type SpotlightDatasetParams = ProjectSpecificRouteParams
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-export type SpotlightDatasetQuery = FilterDatasetQuery & { speciesId: number }
+import { DataByTime, DatasetQueryParams, DatasetQueryParamsSerialized, datasetQueryParamsToString, PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
-export const spotlightDatasetRoute = '/projects/:projectId/spotlight'
+// Request types
+export type SpotlightDatasetParams = ProjectRouteParamsSerialized
+export type SpotlightDatasetQuery = DatasetQueryParamsSerialized & { speciesId: string }
 
-export const spotlightDatasetUrl = (params: SpotlightDatasetParams): string =>
-  `/projects/${params.projectId}/spotlight`
-
-// Response
+// Response types
 export interface SpotlightDatasetResponse {
   isLocationRedacted: boolean
   totalSiteCount: number
@@ -58,3 +54,15 @@ export interface SpotlightExportData {
 
 // ? Moving to somewhere
 export type SpotlightDataByTime = DataByTime<SpotlightDetectionDataByTime>
+
+// Route
+export const spotlightDatasetRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/spotlight`
+
+// Service
+export const getSpotlightDataset = async (apiClient: AxiosInstance, projectId: number, speciesId: number, datasetQuery: DatasetQueryParams): Promise<SpotlightDatasetResponse | undefined> => {
+  const query = datasetQueryParamsToString(datasetQuery)
+  query.append('speciesId', speciesId.toString())
+
+  const url = `/projects/${projectId}/spotlight?${query.toString()}`
+  return await apiGetOrUndefined(apiClient, url)
+}

@@ -1,10 +1,4 @@
-export interface ProjectCreator {
-  firstname: string
-  lastname: string
-  email: string
-  picture: string
-}
-
+// Response types
 export interface CoreProject {
   id: string
   name: string
@@ -25,3 +19,10 @@ export interface CoreProject {
 }
 
 export type CoreProjectLight = Pick<CoreProject, 'id' | 'name' | 'is_public' | 'external_id'>
+
+export interface ProjectCreator {
+  firstname: string
+  lastname: string
+  email: string
+  picture: string
+}

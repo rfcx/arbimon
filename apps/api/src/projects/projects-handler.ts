@@ -1,4 +1,4 @@
-import { ProjectsResponse } from '@rfcx-bio/common/api-bio/common/projects'
+import { ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { getMemberProjectCoreIds } from '@/_middleware/get-member-projects'
 import { getProjects } from '@/projects/projects-bll'

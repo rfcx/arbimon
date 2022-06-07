@@ -3,9 +3,9 @@ import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { getPredictedOccupancy } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-import { getPredictedOccupancyMapImage } from '@/activity-patterns/services'
 import { apiClientBioKey } from '@/globals'
 
 export default class ActivityPatternsPredictedOccupancy extends Vue {
@@ -23,7 +23,7 @@ export default class ActivityPatternsPredictedOccupancy extends Vue {
 
   async getBlobImageUrls (): Promise<void> {
     this.blobUrls = await Promise.all(this.predictedOccupancyMaps.map(async ({ url }) => {
-      const blob = await getPredictedOccupancyMapImage(this.apiClientBio, url)
+      const blob = await getPredictedOccupancy(this.apiClientBio, url)
       return blob ? window.URL.createObjectURL(blob) : ''
     }))
   }
