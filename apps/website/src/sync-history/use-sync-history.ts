@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios'
 import { computed } from 'vue'
 import { useQuery, UseQueryReturnType } from 'vue-query'
 
-import { getSyncHistory, SyncHistoryParams, SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
+import { apiBioGetSyncHistory, SyncHistoryParams, SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { useStoreOutsideSetup } from '~/store'
 
@@ -14,5 +14,5 @@ export const useSyncHistory = (apiClient: AxiosInstance): UseQueryReturnType<Syn
     if (projectId.value === undefined) return { syncs: [] }
 
     const params: SyncHistoryParams = { projectId: projectId.value.toString() }
-    return await getSyncHistory(apiClient, params) ?? []
+    return await apiBioGetSyncHistory(apiClient, params) ?? []
   })

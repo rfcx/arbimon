@@ -19,5 +19,5 @@ export interface DashboardProfileResponse {
 export const dashboardProfileRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-profile`
 
 // Service
-export const getDashboardProfileData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardProfileResponse | undefined> =>
+export const apiBioGetDashboardProfileData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardProfileResponse | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/dashboard-profile`)

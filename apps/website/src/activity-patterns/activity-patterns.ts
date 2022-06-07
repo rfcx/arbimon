@@ -3,8 +3,8 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { getSpeciesOne, PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { getSpotlightDataset, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { apiBioGetProjectSpeciesOne, PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { apiBioGetSpotlightDataset, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -101,7 +101,7 @@ export default class ActivityPatternsPage extends Vue {
     const datasets = (await Promise.all(
       filters.map(async (filter) => {
         const { color, startDate, endDate, sites, otherFilters } = filter
-        const data = await getSpotlightDataset(this.apiClientBio, projectId, speciesId, filterToQuery(filter))
+        const data = await apiBioGetSpotlightDataset(this.apiClientBio, projectId, speciesId, filterToQuery(filter))
         return data ? { ...data, startDate, endDate, color, sites: sites.flatMap(({ value }) => value), otherFilters } : data
       })
     )).filter(isDefined)
@@ -150,7 +150,7 @@ export default class ActivityPatternsPage extends Vue {
     if (!species) return
 
     try {
-      const data = await getSpeciesOne(this.apiClientBio, projectId, species.taxonSpeciesSlug)
+      const data = await apiBioGetProjectSpeciesOne(this.apiClientBio, projectId, species.taxonSpeciesSlug)
 
       // Only update if received data matches current filters
       if (this.species?.scientificName === species.scientificName) {

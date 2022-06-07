@@ -21,5 +21,5 @@ export interface Sync {
 export const syncHistoryRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/sync-history`
 
 // Service
-export const getSyncHistory = async (apiClient: AxiosInstance, params: SyncHistoryParams): Promise<SyncHistoryResponse | undefined> =>
+export const apiBioGetSyncHistory = async (apiClient: AxiosInstance, params: SyncHistoryParams): Promise<SyncHistoryResponse | undefined> =>
   await apiClient.get(`/projects/${params.projectId}/sync-history`)

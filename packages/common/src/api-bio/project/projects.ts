@@ -22,5 +22,5 @@ export type ProjectsResponse = LocationProjectForUser[]
 export const projectsRoute = '/projects'
 
 // Service
-export const getProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> =>
+export const apiBioGetProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> =>
   await apiGetOrUndefined(apiClient, projectsRoute)
