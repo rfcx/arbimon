@@ -5,9 +5,5 @@ export const handleAuthCallback = async (client: Auth0Client): Promise<string | 
 
   // Handle callbacks
   const redirectLoginResult = await client.handleRedirectCallback()
-  const redirectAfterAuth = redirectLoginResult.appState?.redirectPath
-
-  // Calculate redirect
-  if (redirectAfterAuth !== undefined && redirectAfterAuth !== '/') return redirectAfterAuth
-  return undefined
+  return redirectLoginResult.appState?.redirectPath
 }
