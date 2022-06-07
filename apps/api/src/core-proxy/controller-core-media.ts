@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify'
 
-import { CoreMediaQuery } from '@rfcx-bio/common/api-bio/media/core-media'
+import { CoreMediaQuery } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
 import { getMedia } from '../_services/api-core/api-core'
 import { Handler } from '../_services/api-helpers/types'

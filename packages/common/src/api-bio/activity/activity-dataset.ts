@@ -1,14 +1,14 @@
-import { ProjectSpecificRouteParams } from '../_helpers'
-import { DataByTime } from '../common/time-bucket'
+import { AxiosInstance } from 'axios'
 
-// Request
-export type ActivityDatasetParams = ProjectSpecificRouteParams
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-export const activityDatasetRoute = '/projects/:projectId/activity'
+import { DataByTime, DatasetQueryParams, DatasetQueryParamsSerialized, datasetQueryParamsToString, PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
-export const activityDatasetGeneratedUrl = (params: ActivityDatasetParams): string => `/projects/${params.projectId}/activity`
+// Request types
+export type ActivityDatasetParams = ProjectRouteParamsSerialized
+export type ActivityDatasetQuery = DatasetQueryParamsSerialized
 
-// Response
+// Response types
 export interface ActivityDatasetResponse {
   isLocationRedacted: boolean
   activityBySite: ActivityOverviewDetectionDataBySite[]
@@ -47,3 +47,10 @@ export interface ActivityOverviewDataBySpecies {
 // ----- Not related to api return item ----
 // ? Moving to somewhere
 export type ActivityOverviewDataByTime = DataByTime<ActivityOverviewDetectionDataByTime>
+
+// Route
+export const activityDatasetRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/activity`
+
+// Service
+export const getActivityDataset = async (apiClient: AxiosInstance, projectId: number, datasetQuery: DatasetQueryParams): Promise<ActivityDatasetResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/activity?${datasetQueryParamsToString(datasetQuery).toString()}`)

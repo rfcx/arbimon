@@ -1,4 +1,4 @@
-import { Sync } from '@rfcx-bio/common/api-bio/sync'
+import { Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'

@@ -1,4 +1,4 @@
-export interface ProjectSpecificRouteParams {
+export interface ProjectRouteParamsSerialized {
   projectId: string
 }
 

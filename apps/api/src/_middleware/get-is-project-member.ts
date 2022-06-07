@@ -1,6 +1,6 @@
 import { FastifyRequest } from 'fastify'
 
-import { ProjectSpecificRouteParams } from '@rfcx-bio/common/api-bio/_helpers'
+import { ProjectRouteParamsSerialized } from '@rfcx-bio/common/api-bio/_helpers'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
 import { getIsProjectMemberFromApi } from '~/api-core/api-core'
@@ -16,7 +16,7 @@ const IS_PROJECT_MEMBER = 'IS_PROJECT_MEMBER'
 export const getIsProjectMember = (req: FastifyRequest): boolean =>
   req.requestContext.get(IS_PROJECT_MEMBER) ?? false
 
-export const setIsProjectMember: Middleware<ProjectSpecificRouteParams> = async (req, res): Promise<void> => {
+export const setIsProjectMember: Middleware<ProjectRouteParamsSerialized> = async (req, res): Promise<void> => {
   const token = req.headers.authorization
   const projectIdBio = Number(req.params.projectId)
 

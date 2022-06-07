@@ -1,11 +1,10 @@
 import { User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { getProjectFilters, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { getProjects, LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
-import { getProjectFilters, getProjects } from '~/api/project-service'
 import { getIdToken, useAuth0Client } from '~/auth-client'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 
@@ -21,15 +20,14 @@ export const useStore = defineStore('root', {
   getters: {},
   actions: {
     async updateUser (user: User | undefined = undefined) {
-      // Set user & clear old data immediately
+      // Set user
       this.user = user
-      await this.updateProjects([])
 
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()
       const apiClient = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, user ? async () => await getIdToken(authClient) : undefined)
 
-      // Load new data asynchronously
+      // Load new data
       const projects = await getProjects(apiClient) ?? []
       await this.updateProjects(projects)
     },

@@ -20,6 +20,7 @@ export const getApiClient = (baseURL: string, getToken?: () => Promise<string>):
   return apiClient
 }
 
+// TODO: Wrap calls with `useQuery`, allow errors to propagate, and delete this function
 export const apiGetOrUndefined = async <T> (apiClient: AxiosInstance, url: string, config?: AxiosRequestConfig): Promise<T | undefined> => {
   return await apiClient.get<T>(url, config)
     .then(res => res.data)
