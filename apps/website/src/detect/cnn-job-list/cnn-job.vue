@@ -1,5 +1,13 @@
 <template>
-  <table class="w-full text-sm text-left">
+  <div class="flex items-center justify-between">
+    <page-title page-title="CNN Jobs" />
+    <router-link :to="{ name: ROUTE_NAMES.cnnJobCreate }">
+      <button class="btn btn-primary">
+        Create
+      </button>
+    </router-link>
+  </div>
+  <table class="w-full text-sm text-left mt-5">
     <thead class="text-xs text-subtle uppercase">
       <tr class="border-b border-box-grey">
         <th
@@ -29,7 +37,7 @@
       </tr>
     </thead>
     <tbody>
-      <job-row-vue
+      <JobItemRow
         v-for="job in jobs"
         :key="job.id"
         :job="job"
@@ -39,7 +47,9 @@
 </template>
 
 <script setup lang="ts">
-  import jobRowVue from './components/job-row.vue'
+
+  import { ROUTE_NAMES } from '~/router'
+  import JobItemRow from './components/job-item-row.vue'
 
   const jobs = [
     {
