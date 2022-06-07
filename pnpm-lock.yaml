@@ -138,7 +138,7 @@ importers:
       '@js-temporal/polyfill': ^0.3.0
       '@rfcx-bio/common': workspace:^0.0.1
       '@rfcx-bio/utils': workspace:^0.0.1
-      axios: ^0.24.0
+      axios: ^0.27.2
       dayjs: ^1.10.7
       fastify: ^3.23.1
       fastify-auth0-verify: ^0.7.0
@@ -154,7 +154,7 @@ importers:
       '@js-temporal/polyfill': 0.3.0
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
-      axios: 0.24.0
+      axios: 0.27.2
       dayjs: 1.11.2
       fastify: 3.29.0
       fastify-auth0-verify: 0.7.4
@@ -172,7 +172,7 @@ importers:
       '@types/mysql': ^2.15.19
       '@types/object-hash': ^2.2.1
       '@types/validator': ^13.7.0
-      axios: ^0.24.0
+      axios: ^0.27.2
       dayjs: ^1.10.7
       dotenv: ^10.0.0
       lodash-es: ^4.17.21
@@ -186,7 +186,7 @@ importers:
     dependencies:
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
-      axios: 0.24.0
+      axios: 0.27.2
       dayjs: 1.11.2
       dotenv: 10.0.0
       lodash-es: 4.17.21
@@ -220,7 +220,7 @@ importers:
       '@vueuse/core': ^6.7.6
       '@windicss/plugin-animations': ^1.0.9
       '@windicss/plugin-interaction-variants': ^1.0.0
-      axios: ^0.24.0
+      axios: ^0.27.2
       c8: ^7.10.0
       d3: ^7.1.1
       dayjs: ^1.10.7
@@ -250,7 +250,7 @@ importers:
       '@types/markdown-it': 12.2.3
       '@vueuse/components': 6.9.2_vue@3.2.36
       '@vueuse/core': 6.9.2_vue@3.2.36
-      axios: 0.24.0
+      axios: 0.27.2
       d3: 7.4.4
       dayjs: 1.11.2
       element-plus: 1.2.0-beta.6_vue@3.2.36
@@ -289,6 +289,7 @@ importers:
     specifiers:
       '@rfcx-bio/utils': workspace:^0.0.1
       '@types/pg': ^8.6.4
+      axios: ^0.27.2
       dayjs: ^1.10.7
       lodash-es: ^4.17.21
       pg: ^8.7.1
@@ -297,6 +298,7 @@ importers:
     dependencies:
       '@rfcx-bio/utils': link:../utils
       '@types/pg': 8.6.5
+      axios: 0.27.2
       dayjs: 1.11.2
       lodash-es: 4.17.21
       pg: 8.7.3
@@ -305,13 +307,13 @@ importers:
 
   packages/utils:
     specifiers:
-      axios: ^0.24.0
+      axios: ^0.27.2
       dayjs: ^1.10.7
       jszip: ^3.7.1
       lodash-es: ^4.17.21
       xlsx: ^0.17.3
     dependencies:
-      axios: 0.24.0
+      axios: 0.27.2
       dayjs: 1.11.2
       jszip: 3.10.0
       lodash-es: 4.17.21
@@ -3316,7 +3318,6 @@ packages:
 
   /asynckit/0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
-    dev: true
 
   /at-least-node/1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
@@ -3346,10 +3347,11 @@ packages:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
 
-  /axios/0.24.0:
-    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+  /axios/0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
     dependencies:
       follow-redirects: 1.15.1
+      form-data: 4.0.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -3909,7 +3911,6 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
-    dev: true
 
   /commander/2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -4579,7 +4580,6 @@ packages:
   /delayed-stream/1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
-    dev: true
 
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
@@ -5939,6 +5939,15 @@ packages:
       combined-stream: 1.0.8
       mime-types: 2.1.35
     dev: true
+
+  /form-data/4.0.0:
+    resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
+    engines: {node: '>= 6'}
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      mime-types: 2.1.35
+    dev: false
 
   /forwarded/0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
@@ -7484,14 +7493,12 @@ packages:
   /mime-db/1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
-    dev: true
 
   /mime-types/2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
-    dev: true
 
   /mime/1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
