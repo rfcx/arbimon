@@ -6,9 +6,10 @@ import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-
 import { downloadPng } from '@rfcx-bio/utils/file'
 
 import { getPredictedOccupancyMapImage } from '@/activity-patterns/services'
+import { apiClientBioKey } from '@/globals'
 
 export default class ActivityPatternsPredictedOccupancy extends Vue {
-  @Inject() readonly apiClientBio!: AxiosInstance
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
 
   @Prop() predictedOccupancyMaps!: PredictedOccupancyMap[]
   @Prop() speciesSlug!: string

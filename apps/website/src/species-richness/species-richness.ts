@@ -5,6 +5,7 @@ import { RouteLocationNormalized } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
+import { apiClientBioKey, storeKey } from '@/globals'
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -30,8 +31,8 @@ import { getRichnessDataset } from './services'
   }
 })
 export default class SpeciesRichnessPage extends Vue {
-  @Inject() readonly store!: BiodiversityStore
-  @Inject() readonly apiClientBio!: AxiosInstance
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
 
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ColoredFilter[] = []

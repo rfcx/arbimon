@@ -11,6 +11,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
+import { apiClientBioKey, storeKey } from '@/globals'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
@@ -45,8 +46,8 @@ const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
   }
 })
 export default class ActivityPatternsPage extends Vue {
-  @Inject() readonly apiClientBio!: AxiosInstance
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   // Dataset definitions
   species: SpeciesInProjectLight | null = null

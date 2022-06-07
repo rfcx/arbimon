@@ -8,6 +8,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { getMedia } from '@/activity-patterns/services'
+import { apiClientBioKey, storeKey } from '@/globals'
 import { BiodiversityStore } from '~/store'
 import AudioController from './audio-controller.vue'
 
@@ -21,8 +22,8 @@ const SCROLL_STEP = 150
   }
 })
 export default class SpotlightPlayer extends Vue {
-  @Inject() readonly apiClientBio!: AxiosInstance
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop() speciesCalls!: TaxonSpeciesCallLight[]
 

@@ -4,6 +4,7 @@ import { Inject, Prop } from 'vue-property-decorator'
 
 import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
+import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
@@ -29,7 +30,8 @@ const DEFAULT_PREFIX = 'Overview-By-Site'
   }
 })
 export default class ActivityOverviewByLocation extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   isShowLabels = true

@@ -6,13 +6,14 @@ import { RouteLocationNormalized } from 'vue-router'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { getSpeciesAll } from '@/activity-patterns/services'
+import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
 import { RouteNames } from '~/router'
 import { BiodiversityStore } from '~/store'
 
 export default class SpeciesSelector extends Vue {
-  @Inject() readonly apiClientBio!: AxiosInstance
-  @Inject() readonly ROUTE_NAMES!: RouteNames
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop() speciesSlug!: string
 
