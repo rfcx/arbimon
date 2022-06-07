@@ -1,6 +1,6 @@
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types'
 import { SpeciesInProject } from '../../dao/types/species-in-project'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { ProjectSpecificRouteParams } from '../_helpers'
 
 // Request
 export type ProjectSpeciesOneParams = ProjectSpecificRouteParams & {

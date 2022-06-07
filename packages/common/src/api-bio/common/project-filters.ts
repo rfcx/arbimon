@@ -1,5 +1,5 @@
 import { DataSource, Site, TaxonClass } from '../../dao/types'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { ProjectSpecificRouteParams } from '../_helpers'
 
 // Request
 export type ProjectFiltersParams = ProjectSpecificRouteParams

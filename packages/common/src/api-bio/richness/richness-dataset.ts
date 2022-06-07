@@ -1,5 +1,5 @@
+import { ProjectSpecificRouteParams } from '../_helpers'
 import { FilterDatasetQuery } from '../common/filter'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
 
 // Request
 export type RichnessDatasetParams = ProjectSpecificRouteParams
