@@ -25,15 +25,13 @@ export const useStore = defineStore('root', {
       this.user = user
       await this.updateProjects([])
 
-      // Load new data asynchronously
-      if (user) {
-        // Temporary hack to get an API Client (this will be extracted in the loading branch)
-        const authClient = await useAuth0Client()
-        const apiClient = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, async () => await getIdToken(authClient))
+      // Temporary hack to get an API Client (this will be extracted in the loading branch)
+      const authClient = await useAuth0Client()
+      const apiClient = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, user ? async () => await getIdToken(authClient) : undefined)
 
-        const projects = await getProjects(apiClient) ?? []
-        await this.updateProjects(projects)
-      }
+      // Load new data asynchronously
+      const projects = await getProjects(apiClient) ?? []
+      await this.updateProjects(projects)
     },
     async updateProjects (projects: LocationProjectForUser[]) {
       this.projects = projects
