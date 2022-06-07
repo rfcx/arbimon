@@ -47,40 +47,54 @@
 </template>
 
 <script setup lang="ts">
+import { ROUTE_NAMES } from '~/router'
+import JobItemRow from './components/job-item-row.vue'
 
-  import { ROUTE_NAMES } from '~/router'
-  import JobItemRow from './components/job-item-row.vue'
-
-  const jobs = [
-    {
-      id: '1',
-      modelName: 'PR Regional CNN',
-      input: {
-        sites: 'SR1',
-        dateRange: '5-11-2022',
-        timeOfDay: 'Dirnual'
-      },
-      progress: {
-        status: 'Procressing',
-        value: 20
-      },
-      numberOfRecordings: 4000,
-      createdAt: new Date()
+const jobs = [
+  {
+    id: '1',
+    modelName: 'PR Regional CNN',
+    input: {
+      sites: 'SR*',
+      dateRange: '2022-05-11',
+      timeOfDay: 'Diurnal'
     },
-    {
-      id: '2',
-      modelName: 'PR Regional CNN',
-      input: {
-        sites: 'SR1',
-        dateRange: '5-3-2022',
-        timeOfDay: 'Dirnual'
-      },
-      progress: {
-        status: 'Queued',
-        value: 0
-      },
-      numberOfRecordings: 2000,
-      createdAt: new Date()
-    }
-  ]
+    progress: {
+      status: 'Processing',
+      value: 20
+    },
+    numberOfRecordings: 4000,
+    createdAt: new Date()
+  },
+  {
+    id: '2',
+    modelName: 'PR Regional CNN',
+    input: {
+      sites: 'SR*',
+      dateRange: '2022-05-12',
+      timeOfDay: 'Diurnal'
+    },
+    progress: {
+      status: 'Queued',
+      value: 0
+    },
+    numberOfRecordings: 2000,
+    createdAt: new Date()
+  },
+  {
+    id: '3',
+    modelName: 'PR Regional CNN',
+    input: {
+      sites: 'SR*',
+      dateRange: '2022-05-11 - 2022-05-12',
+      timeOfDay: 'Nocturnal'
+    },
+    progress: {
+      status: 'Queued',
+      value: 0
+    },
+    numberOfRecordings: 4000,
+    createdAt: new Date()
+  }
+]
 </script>

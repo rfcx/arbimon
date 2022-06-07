@@ -11,18 +11,16 @@
       Time of day: {{ props.jobInput.timeOfDay }}
     </div>
     <div class="text-subtle">
-      Date Range: {{ props.jobInput.dateRange }}
+      Dates: {{ props.jobInput.dateRange }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 import { JobInput } from '~/job'
 
 const props = defineProps<{
   numberOfRecordings: number,
   jobInput: JobInput
 }>()
-
 </script>
