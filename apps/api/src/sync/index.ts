@@ -1,4 +1,4 @@
-import { syncHistoryRoute } from '@rfcx-bio/common/api-bio/sync'
+import { syncHistoryRoute } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
 import { syncHistoryHandler } from '@/sync/sync-history-handler'

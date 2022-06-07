@@ -16,7 +16,7 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { speciesId: speciesIdString, startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  const { speciesId: speciesIdString, dateStartInclusiveLocalIso: startDateUtcInclusive, dateEndInclusiveLocalIso: endDateUtcInclusive, siteIds, taxonClassIds: taxons } = req.query
   const speciesId = Number(speciesIdString)
   if (isNaN(speciesId)) throw BioInvalidQueryParamError({ speciesIdString })
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })

@@ -4,8 +4,8 @@ import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { routeNamesKey } from '@/globals'
-import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { RouteNames } from '~/router'
+import { ActivityOverviewDataBySpecies } from '../../types'
 import { ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from './functions'
 
 interface Header {

@@ -3,8 +3,8 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { getSpeciesOne, PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { getSpotlightDataset, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
 import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -13,7 +13,7 @@ import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDataset
 import { Metrics } from '@/activity-patterns/types'
 import { apiClientBioKey, storeKey } from '@/globals'
 import { INFO_TOPICS } from '@/info/info-page'
-import { ColoredFilter, ComparisonListComponent, filterToDataset } from '~/filters'
+import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -27,7 +27,6 @@ import SpeciesSelector from './components/species-selector/species-selector.vue'
 import SpeciesTitle from './components/species-title/species-title.vue'
 import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
-import { getSpeciesOne, getSpotlightDataset } from './services'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
 
@@ -102,7 +101,7 @@ export default class ActivityPatternsPage extends Vue {
     const datasets = (await Promise.all(
       filters.map(async (filter) => {
         const { color, startDate, endDate, sites, otherFilters } = filter
-        const data = await getSpotlightDataset(this.apiClientBio, projectId, filterToDataset(filter), speciesId)
+        const data = await getSpotlightDataset(this.apiClientBio, projectId, speciesId, filterToQuery(filter))
         return data ? { ...data, startDate, endDate, color, sites: sites.flatMap(({ value }) => value), otherFilters } : data
       })
     )).filter(isDefined)

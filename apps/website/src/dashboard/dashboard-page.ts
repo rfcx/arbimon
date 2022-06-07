@@ -6,8 +6,8 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { DashboardGeneratedResponse, getDashboardGeneratedData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { DashboardProfileResponse, getDashboardProfileData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
@@ -33,7 +33,6 @@ import DashboardProjectProfile from './components/dashboard-project-profile/dash
 import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
 import { ThreatenedSpeciesRow } from './components/dashboard-threatened-species/dashboard-threatened-species'
 import DashboardThreatenedSpecies from './components/dashboard-threatened-species/dashboard-threatened-species.vue'
-import { getDashboardGeneratedData, getDashboardProfileData } from './services'
 
 interface Tab {
   label: string
