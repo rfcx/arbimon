@@ -13,7 +13,7 @@
       />
     </td>
     <td class="px-6 py-4 align-text-top">
-      {{ props.job.createdAt }}
+      {{ formatDateFull(props.job.createdAt) }}
     </td>
     <td class="px-6 py-4 align-text-top">
       <JobProgress
@@ -24,12 +24,14 @@
 </template>
 
 <script setup lang="ts">
-
+import useDateFormat from '~/hooks/use-date-format'
 import { Job } from '~/job'
 import JobInput from './job-input.vue'
 import JobProgress from './job-progress.vue'
 
-  const props = defineProps<{
-    job: Job
-  }>()
+const props = defineProps<{
+  job: Job
+}>()
+
+const { formatDateFull } = useDateFormat()
 </script>

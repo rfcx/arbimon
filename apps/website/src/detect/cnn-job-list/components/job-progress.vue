@@ -13,11 +13,9 @@
 </template>
 
 <script setup lang="ts">
-
 import { JobProgress } from '~/job'
 
 const props = defineProps<{
   jobProgress: JobProgress
 }>()
-
 </script>
