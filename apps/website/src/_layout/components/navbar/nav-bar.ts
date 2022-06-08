@@ -3,7 +3,8 @@ import { Inject } from 'vue-property-decorator'
 import { RouteLocationRaw } from 'vue-router'
 
 import ProjectSelector from '@/_layout/components/project-selector/project-selector.vue'
-import { storeKey } from '@/globals'
+import { storeKey, togglesKey } from '@/globals'
+import { FeatureToggles } from '~/feature-toggles'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
@@ -23,6 +24,7 @@ export interface NavMenu {
   }
 })
 export default class NavbarComponent extends Vue {
+  @Inject({ from: togglesKey }) readonly toggles!: FeatureToggles
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   hasToggledMobileMenu = false
