@@ -64,6 +64,10 @@ export default class NavbarComponent extends Vue {
     else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectSlug}`
   }
 
+  get isPride (): boolean {
+    return this.toggles.logoPride && new Date().getMonth() === 5 // June
+  }
+
   toggleMobileMenu (): void {
     this.hasToggledMobileMenu = !this.hasToggledMobileMenu
   }
