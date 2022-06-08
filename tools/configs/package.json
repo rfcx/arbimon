@@ -1,30 +1,30 @@
 {
   "name": "@rfcx-bio/configs",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
-  "type": "module",
-  "scripts": {
-    "lint:eslint": "eslint . --cache",
-    "lint:prettier": "prettier . --check",
-    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
-    "lint-fix": "eslint . --fix",
-    "profile-eslint": "cross-env TIMING=1 eslint ."
-  },
   "description": "Base configs & config factories for RFCx Biodiversity project",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
   "keywords": [
     "biodiversity",
     "analytics",
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "profile-eslint": "cross-env TIMING=1 eslint ."
+  }
 }

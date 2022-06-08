@@ -1,6 +1,6 @@
 // TODO: Migrate frontend code to DAO TaxonSpecies & delete this file
 
-const SPECIES_SOURCES = <const>['IUCN', 'Wiki', 'Project']
+const SPECIES_SOURCES = ['IUCN', 'Wiki', 'Project'] as const
 /**
  * @deprecated Use TaxonSpecies
  */

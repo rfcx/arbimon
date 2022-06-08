@@ -1,13 +1,15 @@
 import { NavigationGuardWithThis } from 'vue-router'
 
-import { useAuthClient } from '~/auth-client'
+import { useAuth0Client } from '~/auth-client'
+import { useStoreOutsideSetup } from '~/store'
 
 export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to, from, next) => {
   // Already authenticated
-  const authClient = useAuthClient()
-  if (authClient.isAuthenticated) return next()
+  const store = useStoreOutsideSetup()
+  if (store.user !== undefined) return next()
 
   // Redirect to login
   next(false)
-  await authClient.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
+  const auth0Client = await useAuth0Client()
+  await auth0Client.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
 }

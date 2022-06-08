@@ -1,14 +1,14 @@
+import fastifyCors from '@fastify/cors'
+import { fastifyRequestContextPlugin } from '@fastify/request-context'
+import fastifyStatic from '@fastify/static'
 import fastify, { FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
-import fastifyCors from 'fastify-cors'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
-import fastifyStatic from 'fastify-static'
 import { resolve } from 'path'
 
 import { env } from './_services/env'
 import { routesActivity } from './activity'
+import { routesCoreProxy } from './core-proxy'
 import { routesDashboard } from './dashboard'
-import { routesMedia } from './media'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
@@ -34,7 +34,7 @@ export const createApp = async (): Promise<FastifyInstance> => {
   // Register routes
   const routesRegistrations = [
     routesDashboard,
-    routesMedia,
+    routesCoreProxy,
     routesProject,
     routesSpecies,
     routesRichness,

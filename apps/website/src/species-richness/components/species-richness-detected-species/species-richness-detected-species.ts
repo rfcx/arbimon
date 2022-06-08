@@ -3,6 +3,7 @@ import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { firstDiffDigit } from '@rfcx-bio/utils/number'
 
+import { routeNamesKey } from '@/globals'
 import { RouteNames } from '~/router'
 import { DetectedSpeciesItem } from './types'
 
@@ -35,7 +36,8 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
 const HEADER_COLOR = '#ffffff80'
 
 export default class SpeciesRichnessDetectedSpecies extends Vue {
-  @Inject() readonly ROUTE_NAMES!: RouteNames
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
 

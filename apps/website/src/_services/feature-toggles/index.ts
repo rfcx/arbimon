@@ -4,12 +4,13 @@ const featureTogglesRaw = {
   /* START: Declare toggles here */
 
   // Example:
-  // toggleAoLine: import.meta.env.VITE_TOGGLE_AO_LINE
+  // showActivityLineChart: import.meta.env.VITE_TOGGLE_SHOW_ACTIVITY_LINE_CHART
+
+  logoPride: import.meta.env.VITE_TOGGLE_LOGO_PRIDE
 
   /* STOP: Declare toggles here */
 }
 
 // Setup types & export
-type FeatureTogglesRaw = typeof featureTogglesRaw
-export type FeatureToggles = { [K in keyof FeatureTogglesRaw]: boolean}
-export const FEATURE_TOGGLES: FeatureToggles = mapValues(featureTogglesRaw, value => value as boolean)
+export const FEATURE_TOGGLES = mapValues(featureTogglesRaw, value => value === 'true')
+export type FeatureToggles = typeof FEATURE_TOGGLES

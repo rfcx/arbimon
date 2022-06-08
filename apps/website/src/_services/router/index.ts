@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { useStoreOutsideSetup } from '~/store'
+import { authRequiredGuard } from './guard-auth-required'
 import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
@@ -22,6 +23,29 @@ const routes: RouteRecordRaw[] = [
     path: '/preferences',
     name: ROUTE_NAMES.preferences,
     component: PAGES.Preferences
+  },
+  {
+    path: '/info/:topic',
+    name: ROUTE_NAMES.info,
+    component: PAGES.Info
+  },
+  {
+    path: '/:projectSlug/detect',
+    component: PAGES.AppGlobalRoot,
+    redirect: { name: ROUTE_NAMES.cnnJobList },
+    beforeEnter: [authRequiredGuard, storeProjectGuard],
+    children: [
+      {
+        path: 'cnn',
+        name: ROUTE_NAMES.cnnJobList,
+        component: PAGES.CnnJobList
+      },
+      {
+        path: 'cnn/create',
+        name: ROUTE_NAMES.cnnJobCreate,
+        component: PAGES.CnnJobCreate
+      }
+    ]
   },
   {
     path: '/:projectSlug',
@@ -47,11 +71,6 @@ const routes: RouteRecordRaw[] = [
         path: 'spotlight/:speciesSlug?',
         name: ROUTE_NAMES.activityPatterns,
         component: PAGES.ActivityPatterns
-      },
-      {
-        path: 'info/:topic',
-        name: ROUTE_NAMES.info,
-        component: PAGES.Info
       },
       {
         path: 'sync-history',
