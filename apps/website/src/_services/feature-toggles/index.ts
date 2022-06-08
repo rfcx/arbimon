@@ -4,7 +4,7 @@ const featureTogglesRaw = {
   /* START: Declare toggles here */
 
   // Example:
-  // aoLine: import.meta.env.VITE_TOGGLE_AO_LINE
+  // showActivityLineChart: import.meta.env.VITE_TOGGLE_SHOW_ACTIVITY_LINE_CHART
 
   logoPride: import.meta.env.VITE_TOGGLE_LOGO_PRIDE
 
