@@ -1,3 +1,4 @@
+export { default as AppGlobalRoot } from '@/_layout/app-global-root'
 export { default as Error } from '@/_layout/error'
 export { default as ProjectRoot } from '@/_layout/project-root'
 export { default as ActivityOverview } from '@/activity-overview'
