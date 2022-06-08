@@ -17,15 +17,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, inject } from 'vue'
+import { computed, inject } from 'vue'
 
+import { storeKey } from '@/globals'
 import useDateFormat from '../_services/hooks/use-date-format'
 import { BiodiversityStore } from '../_services/store'
 
 const props = defineProps<{syncUpdated: Date | string | null, projectSlug: string}>()
 
 const { formatDateFull } = useDateFormat()
-const store = inject<BiodiversityStore>('store')
+const store = inject(storeKey) as BiodiversityStore
 
 const syncHistoryRoute = computed(() => ({
   name: 'sync_history',

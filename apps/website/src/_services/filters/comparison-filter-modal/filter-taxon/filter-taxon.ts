@@ -3,11 +3,13 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 
 import { TaxonClass } from '@rfcx-bio/common/dao/types'
 
+import { storeKey } from '@/globals'
 import { FilterPropertyEquals } from '~/filters'
 import { BiodiversityStore } from '~/store'
 
 export default class FilterTaxon extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop({ default: [] }) initialTaxonClasses!: number[]
 
   @Emit() emitSelectedTaxons (): FilterPropertyEquals[] {

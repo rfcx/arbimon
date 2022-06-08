@@ -1,52 +1,8 @@
 {
   "name": "@rfcx-bio/api",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./*.tgz\" \"./.eslintcache\"",
-    "lint:eslint": "eslint . --cache",
-    "lint:prettier": "prettier . --check",
-    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
-    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
-    "preview": "pnpm build && pnpm -r pack-api && pnpm use-packed && concurrently -r --kill-others-on-fail \"node --experimental-specifier-resolution=node lib/index.js\" \"pnpm open\"",
-    "preview-reset": "rimraf \"./*.tgz\" && pnpm use-ws",
-    "profile-eslint": "cross-env TIMING=1 eslint .",
-    "serve": "nodemon --watch src --watch ../../packages/common/src --watch ../../packages/utils/src -e ts --exec \"pnpm build && node --experimental-specifier-resolution=node lib/index.js\"",
-    "test-unit": "vitest .unit.test.",
-    "test-coverage": "vitest --coverage .unit.test.",
-    "test-int": "vitest --no-threads .int.test.",
-    "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
-    "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"
-  },
-  "dependencies": {
-    "@js-temporal/polyfill": "^0.3.0",
-    "@rfcx-bio/common": "workspace:^0.0.1",
-    "@rfcx-bio/utils": "workspace:^0.0.1",
-    "axios": "^0.24.0",
-    "dayjs": "^1.10.7",
-    "fastify": "^3.23.1",
-    "fastify-auth0-verify": "^0.7.0",
-    "fastify-cors": "^6.0.2",
-    "fastify-plugin": "^3.0.0",
-    "fastify-request-context": "^2.2.0",
-    "fastify-routes": "^3.1.0",
-    "fastify-static": "^4.5.0",
-    "lodash-es": "^4.17.21",
-    "sequelize": "7.0.0-alpha.5"
-  },
   "description": "Biodiversity API",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
   "keywords": [
     "biodiversity",
     "analytics",
@@ -54,6 +10,50 @@
     "rainforest",
     "connection"
   ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./*.tgz\" \"./.eslintcache\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "open": "wait-port -t 10000 http://localhost:3000 && open-cli http://localhost:3000",
+    "preview": "pnpm build && pnpm -r pack-api && pnpm use-packed && concurrently -r --kill-others-on-fail \"node --experimental-specifier-resolution=node lib/index.js\" \"pnpm open\"",
+    "preview-reset": "rimraf \"./*.tgz\" && pnpm use-ws",
+    "profile-eslint": "cross-env TIMING=1 eslint .",
+    "serve": "nodemon --watch src --watch ../../packages/common/src --watch ../../packages/utils/src -e ts --exec \"pnpm build && node --experimental-specifier-resolution=node lib/index.js\"",
+    "test-coverage": "vitest --coverage .unit.test.",
+    "test-int": "vitest --no-threads .int.test.",
+    "test-unit": "vitest .unit.test.",
+    "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
+    "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"
+  },
+  "dependencies": {
+    "@fastify/cors": "^7.0.0",
+    "@fastify/request-context": "^3.0.0",
+    "@fastify/static": "^5.0.2",
+    "@js-temporal/polyfill": "^0.3.0",
+    "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/utils": "workspace:^0.0.1",
+    "axios": "^0.27.2",
+    "dayjs": "^1.10.7",
+    "fastify": "^3.23.1",
+    "fastify-auth0-verify": "^0.7.0",
+    "fastify-plugin": "^3.0.0",
+    "fastify-routes": "^3.1.0",
+    "lodash-es": "^4.17.21",
+    "sequelize": "7.0.0-alpha.5"
+  },
   "devDependencies": {
     "pino-pretty": "^7.3.0"
   }

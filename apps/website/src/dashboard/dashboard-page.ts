@@ -1,3 +1,4 @@
+import { AxiosInstance } from 'axios'
 import { max } from 'lodash-es'
 import { LngLatBoundsLike } from 'mapbox-gl'
 import numeral from 'numeral'
@@ -5,10 +6,11 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
-import { DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { apiBioGetDashboardGeneratedData, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { apiBioGetDashboardProfileData, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
 import { downloadSvgAsPng } from '~/charts'
 import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
@@ -31,7 +33,6 @@ import DashboardProjectProfile from './components/dashboard-project-profile/dash
 import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
 import { ThreatenedSpeciesRow } from './components/dashboard-threatened-species/dashboard-threatened-species'
 import DashboardThreatenedSpecies from './components/dashboard-threatened-species/dashboard-threatened-species.vue'
-import { dashboardService } from './services'
 
 interface Tab {
   label: string
@@ -67,8 +68,9 @@ const getDefaultPhoto = (taxonSlug: string): string =>
   }
 })
 export default class DashboardPage extends Vue {
-  @Inject() readonly ROUTE_NAMES!: RouteNames
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   generated: DashboardGeneratedResponse | null = null
   profile: DashboardProfileResponse | null = null
@@ -206,8 +208,8 @@ export default class DashboardPage extends Vue {
     if (projectId === undefined) return
 
     const [generated, profile] = await Promise.all([
-      dashboardService.getDashboardGeneratedData(projectId),
-      dashboardService.getDashboardProfileData(projectId)
+      apiBioGetDashboardGeneratedData(this.apiClientBio, projectId),
+      apiBioGetDashboardProfileData(this.apiClientBio, projectId)
     ])
 
     this.generated = generated ?? null
@@ -217,7 +219,7 @@ export default class DashboardPage extends Vue {
   async downloadLineChart (): Promise<void> {
     const margins = { ...this.lineChartConfig.margins, bottom: 80, left: 80 }
     const exportConfig = { ...this.lineChartConfig, margins, width: 1024, height: 576 }
-    const svg = await generateChartExport(this.lineChartSeries, exportConfig)
+    const svg = generateChartExport(this.lineChartSeries, exportConfig)
     if (!svg) return
 
     await downloadSvgAsPng(svg, getExportGroupName(`dashboard-${this.selectedTab}-line-chart`))

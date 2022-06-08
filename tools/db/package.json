@@ -1,31 +1,31 @@
 {
   "name": "@rfcx-bio/db",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
-  "type": "module",
-  "scripts": {
-    "logs": "docker compose logs timescaledb",
-    "reset": "docker compose down && docker volume rm db_data-timescaledb",
-    "serve": "docker compose up -d",
-    "stop": "docker compose down",
-    "serve-test": "docker compose -f docker-compose.test.yaml up -d --quiet-pull && docker compose exec -T -e PGPASSWORD=test timescaledb-test pg_isready",
-    "stop-test": "docker compose -f docker-compose.test.yaml down"
-  },
   "description": "Biodiversity DB",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
   "keywords": [
     "biodiversity",
     "analytics",
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "logs": "docker compose logs timescaledb",
+    "reset": "docker compose down && docker volume rm db_data-timescaledb",
+    "serve": "docker compose up -d",
+    "serve-test": "docker compose -f docker-compose.test.yaml up -d --quiet-pull && docker compose exec -T -e PGPASSWORD=test timescaledb-test pg_isready",
+    "stop": "docker compose down",
+    "stop-test": "docker compose -f docker-compose.test.yaml down"
+  }
 }

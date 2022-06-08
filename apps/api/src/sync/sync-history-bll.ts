@@ -1,4 +1,4 @@
-import { SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync'
+import { SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { getSyncs } from '@/sync/sync-history-dao'
 
