@@ -34,7 +34,7 @@ Steps:
 
     ```
     docker build -f tools/deployment/Dockerfile --target website -t bio-website .
-    docker run --rm -it -p 8080:8080 bio-website
+    docker run --rm -it -p 8101:8080 bio-website
     ```
 
 4.  Build & run CLI image (from monorepo root)
