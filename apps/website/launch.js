@@ -18,7 +18,7 @@ import { getAvailableBrowsers, launchBrowser } from 'detect-browsers'
  * https://developer.apple.com/forums/thread/685385
  */
 
-const SERVE_URL = 'http://localhost:8080'
+const SERVE_URL = 'http://localhost:8101'
 
 const main = async () => {
   // Detect browsers
