@@ -121,10 +121,23 @@
 // import { AxiosInstance } from 'axios'
 // import { inject } from 'vue'
 
+// import { apiCoreGetClassifierAll } from '@rfcx-bio/common/api-core/classifier/classifier-all'
 // import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+// import { classifierJobCreate } from '../_composables/classifier-job'
 // import { useClassifiers } from '../_composables/use-classifiers'
 
 // const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 // const classifierQuery = useClassifiers(apiClientCore)
+
+// const create = async (): Promise<void> => {
+//   const testJob = {
+//     classifier_id: 8,
+//     project_id: 'bbbbbbbbbbb7',
+//     query_streams: 'Antony*'
+//   }
+//   const result = await classifierJobCreate(apiClientCore, testJob)
+//   console.info(result)
+// }
+
 </script>
