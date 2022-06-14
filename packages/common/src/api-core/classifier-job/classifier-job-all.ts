@@ -7,7 +7,12 @@ export interface ClassifierJobAllParams {
 }
 
 // Response types
-export type ClassifierJobAllResponse = ClassifierJob[]
+export type ClassifierJobAllResponse = ClassifierJobAll
+
+export interface ClassifierJobAll {
+  total: number
+  items: ClassifierJob[]
+}
 
 export interface ClassifierJob {
   id: number
@@ -28,5 +33,12 @@ export interface ClassifierJob {
 }
 
 // Service
-export const apiCoreGetClassifierJobAll = async (apiClient: AxiosInstance, params: ClassifierJobAllParams = {}): Promise<ClassifierJobAllResponse | undefined> =>
-  await apiClient.get('/classifier-jobs', { params })
+export const apiCoreGetClassifierJobAll = async (apiClient: AxiosInstance, params: ClassifierJobAllParams = {}): Promise<ClassifierJobAllResponse> => {
+  const res = await apiClient.get('/classifier-jobs', { params })
+
+  const result: ClassifierJobAll = {
+    total: res.headers?.['total-items'] ? Number(res.headers['total-items']) : 0,
+    items: res.data
+  }
+  return result
+}
