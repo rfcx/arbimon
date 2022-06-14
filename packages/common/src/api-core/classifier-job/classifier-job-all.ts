@@ -10,20 +10,20 @@ export interface ClassifierJobAllParams {
 export type ClassifierJobAllResponse = ClassifierJob[]
 
 export interface ClassifierJob {
-  id: number,
-  classifier_id: number,
-  project_id: string,
-  query_streams: string,
-  query_start: string,
-  query_end: string,
-  query_hours: string,
-  minutes_total: number,
-  minutes_completed: number,
-  status: number,
-  created_by_id: number,
-  created_at: string,
-  updated_at: string,
-  started_at: string,
+  id: number
+  classifier_id: number
+  project_id: string
+  query_streams: string
+  query_start: string
+  query_end: string
+  query_hours: string
+  minutes_total: number
+  minutes_completed: number
+  status: number
+  created_by_id: number
+  created_at: string
+  updated_at: string
+  started_at: string
   completed_at: string
 }
 
