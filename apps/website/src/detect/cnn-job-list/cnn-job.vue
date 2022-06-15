@@ -47,25 +47,16 @@
 </template>
 
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
-import { inject } from 'vue'
+// import { AxiosInstance } from 'axios'
+// import { inject } from 'vue'
 
-import { ClassifierJobAll } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-all'
-
-import { apiClientCoreKey } from '@/globals'
+// import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { classifierJobAllGet } from '../_composables/classifier-job'
+// import { useClassifierJobs } from '../_composables/use-classifier-jobs'
 import JobItemRow from './components/job-item-row.vue'
 
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-
-const allJobs = async (): Promise<ClassifierJobAll> => {
-  const result = await classifierJobAllGet(apiClientCore)
-  console.info(result)
-  return result
-}
-
-allJobs()
+// const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+// const { isLoading, isError, data } = useClassifierJobs(apiClientCore)
 
 const jobs = [
   {
