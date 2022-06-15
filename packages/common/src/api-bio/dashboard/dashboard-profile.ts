@@ -1,17 +1,23 @@
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { AxiosInstance } from 'axios'
+
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
+import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 import { DashboardSpecies } from './common'
 
-// Request
-export type DashboardProfileParams = ProjectSpecificRouteParams
+// Request types
+export type DashboardProfileParams = ProjectRouteParamsSerialized
 
-export const dashboardProfileRoute = '/projects/:projectId/dashboard-profile'
-
-export const dashboardProfileUrl = (params: DashboardProfileParams): string =>
-  `/projects/${params.projectId}/dashboard-profile` // TODO: Generate automatically from dashboardProfileRoute
-
-// Response
+// Response types
 export interface DashboardProfileResponse {
   summary: string
   readme: string // markdown string
   speciesHighlighted: DashboardSpecies[]
 }
+
+// Route
+export const dashboardProfileRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-profile`
+
+// Service
+export const apiBioGetDashboardProfileData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardProfileResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/dashboard-profile`)

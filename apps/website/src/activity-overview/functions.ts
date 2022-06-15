@@ -1,10 +1,10 @@
 import { ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
-import { ActivityOverviewDataBySpecies } from '~/api/activity-overview-service'
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 import { MapDataSet } from '~/maps/map-bubble'
+import { ActivityOverviewDataBySpecies } from './types'
 
 export type ActivityOverviewDataBySite = ActivityDatasetResponse & DatasetParameters
 

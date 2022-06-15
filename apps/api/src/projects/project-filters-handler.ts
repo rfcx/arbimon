@@ -1,4 +1,4 @@
-import { ProjectFiltersParams, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/common/project-filters'
+import { ProjectFiltersParams, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 
 import { getProjectFilters } from '@/projects/project-filters-bll'
 import { ApiServerError, BioInvalidPathParamError } from '~/errors'

@@ -1,4 +1,4 @@
-import { SyncHistoryParams, SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync'
+import { SyncHistoryParams, SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { getSyncHistory } from '@/sync/sync-history-bll'
 import { Handler } from '~/api-helpers/types'
