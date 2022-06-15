@@ -9,12 +9,20 @@
         <h2 class="mb-4 text-md">
           Choose Model
         </h2>
+        <span v-if="isLoading">Loading</span>
+        <span v-else-if="isError">Error</span>
+        <span v-else-if="data === undefined">No response</span>
         <select
           id="models"
+          v-model="selectedClassifier"
           class="block w-full p-2.5 bg-steel-grey rounded-full rounded-lg ring-1 ring-subtle"
         >
-          <option value="PR">
-            Regional CNN - Purto Rico
+          <option
+            v-for="classifier in data ?? []"
+            :key="classifier.id"
+            :value="classifier.id"
+          >
+            {{ classifier.name }} (v{{ classifier.version }})
           </option>
         </select>
       </li>
@@ -118,17 +126,19 @@
   </form>
 </template>
 <script setup lang="ts">
-// import { AxiosInstance } from 'axios'
-// import { inject } from 'vue'
+import { AxiosInstance } from 'axios'
+import { inject, ref, watch } from 'vue'
 
-// import { apiCoreGetClassifierAll } from '@rfcx-bio/common/api-core/classifier/classifier-all'
-// import { apiClientCoreKey } from '@/globals'
+import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-// import { classifierJobCreate } from '../_composables/classifier-job'
-// import { useClassifiers } from '../_composables/use-classifiers'
+// import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
+import { useClassifiers } from '../_composables/use-classifiers'
 
-// const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-// const classifierQuery = useClassifiers(apiClientCore)
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const { isLoading, isError, data } = useClassifiers(apiClientCore)
+
+const selectedClassifier = ref(-1)
+watch(data, () => { selectedClassifier.value = data.value?.[0]?.id ?? -1 })
 
 // const create = async (): Promise<void> => {
 //   const testJob = {
@@ -139,5 +149,4 @@ import { ROUTE_NAMES } from '~/router'
 //   const result = await classifierJobCreate(apiClientCore, testJob)
 //   console.info(result)
 // }
-
 </script>
