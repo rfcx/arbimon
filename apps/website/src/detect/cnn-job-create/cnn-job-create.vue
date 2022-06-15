@@ -101,7 +101,7 @@
           </div>
         </div>
       </li>
-      <li class="mb-8 ml-6">
+      <!-- <li class="mb-8 ml-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           3
         </span>
@@ -109,7 +109,7 @@
           Review job size
         </h2>
         <span class="text-subtle">1,300 recordings selected</span>
-      </li>
+      </li> -->
     </ol>
     <div class="flex space-x-4">
       <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
