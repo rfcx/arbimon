@@ -24,11 +24,11 @@ const formatDateRange = (start: DateParam, end: DateParam): string => {
   return `${formatDate(start)} - ${formatDate(end)}`
 }
 
-const useDateFormat = () => <const>({
+const useDateFormat = () => ({
   asDayJs,
   formatDate,
   formatDateFull,
   formatDateRange
-})
+}) as const
 
 export default useDateFormat

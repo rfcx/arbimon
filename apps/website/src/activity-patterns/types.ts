@@ -1,4 +1,16 @@
-import { ActivityPatternsDataByTime } from '~/api/activity-patterns-service'
+import { TimeBucket } from '~/time-buckets'
+
+export type ActivityPatternsDataByTime = Record<TimeBucket, ActivityPatternsDataByTimeBucket>
+
+export interface ActivityPatternsDataByTimeBucket {
+  detection: Record<number, number>
+  detectionFrequency: Record<number, number>
+}
+
+export const ACTIVITY_PATTERN_TIME_KEYS: Record<string, keyof ActivityPatternsDataByTimeBucket> = {
+  detection: 'detection',
+  detectionFrequency: 'detectionFrequency'
+}
 
 export interface MetricsDataset {
   value: string

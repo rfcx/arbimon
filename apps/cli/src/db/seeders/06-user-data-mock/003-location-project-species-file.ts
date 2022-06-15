@@ -1,7 +1,6 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { speciesPredictionOccupancyGeneratedUrl } from '@rfcx-bio/common/api-bio/species/species-prediction-occupancy'
 import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { LocationProjectSpeciesFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
@@ -42,11 +41,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         order,
         filename,
         mimeType: 'image/png',
-        url: `${baseUrl}${speciesPredictionOccupancyGeneratedUrl({
-          projectId: puertoRicoProjectId.toString(),
-          speciesSlug: s.slug,
-          filenameWithoutExtension: filename.slice(0, filename.lastIndexOf('.')) ?? filename
-        })}`
+        url: `${baseUrl}/projects/${puertoRicoProjectId.toString()}/predicted-occupancy/${s.slug}/${filename.slice(0, filename.lastIndexOf('.')) ?? filename}`
       }))
     )
 

@@ -26,12 +26,11 @@
 </template>
 <script src="./species-selector.ts" lang="ts"></script>
 <style lang="scss" scoped>
-::v-deep .el-input__inner  {
+:deep(.el-input__inner) {
   font-style: italic;
 }
 
-::v-deep .select-trigger {
+:deep(.select-trigger) {
   width: 300px;
 }
-
 </style>

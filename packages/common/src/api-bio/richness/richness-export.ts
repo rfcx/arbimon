@@ -1,17 +1,14 @@
-import { FilterDatasetQuery } from '../common/filter'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { AxiosInstance } from 'axios'
 
-// Request
-export type RichnessExportParams = ProjectSpecificRouteParams
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-export type RichnessExportQuery = FilterDatasetQuery
+import { DatasetQueryParams, DatasetQueryParamsSerialized, datasetQueryParamsToString, PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
-export const richnessExportRoute = '/projects/:projectId/richness-export'
+// Request types
+export type RichnessExportParams = ProjectRouteParamsSerialized
+export type RichnessExportQuery = DatasetQueryParamsSerialized
 
-export const richnessExportUrl = (params: RichnessExportParams): string =>
-  `/projects/${params.projectId}/richness-export`
-
-// Response
+// Response types
 export interface RichnessExportResponse {
   richnessExport: RichnessByExportReportRow[]
 }
@@ -27,3 +24,10 @@ export interface RichnessByExportReportRow {
   date: string
   hour: string
 }
+
+// Route
+export const richnessExportRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/richness-export`
+
+// Service
+export const apiBioGetRichnessExport = async (apiClient: AxiosInstance, projectId: number, datasetQuery: DatasetQueryParams): Promise<RichnessExportResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/richness-export?${datasetQueryParamsToString(datasetQuery).toString()}`)

@@ -1,49 +1,50 @@
 {
   "name": "@rfcx-bio/common",
   "version": "0.0.1",
-  "license": "UNLICENSED",
   "private": true,
-  "type": "module",
-  "files": [
-    "lib/**/*.js"
-  ],
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "scripts": {
-    "build": "tsc --build tsconfig.build.json",
-    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
-    "lint:eslint": "eslint . --cache",
-    "lint:prettier": "prettier . --check",
-    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
-    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
-    "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
-    "profile-eslint": "cross-env TIMING=1 eslint .",
-    "test-unit": "vitest --run --passWithNoTests .unit.test.",
-    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test."
-  },
-  "dependencies": {
-    "@rfcx-bio/utils": "workspace:^0.0.1",
-    "@types/pg": "^8.6.4",
-    "dayjs": "^1.10.7",
-    "lodash-es": "^4.17.21",
-    "pg": "^8.7.1",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "7.0.0-alpha.5"
-  },
   "description": "Biodiversity shared code",
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
-  },
   "keywords": [
     "biodiversity",
     "analytics",
     "rfcx",
     "rainforest",
     "connection"
-  ]
+  ],
+  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "files": [
+    "lib/**/*.js"
+  ],
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
+    "profile-eslint": "cross-env TIMING=1 eslint .",
+    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test.",
+    "test-unit": "vitest --run --passWithNoTests .unit.test."
+  },
+  "dependencies": {
+    "@rfcx-bio/utils": "workspace:^0.0.1",
+    "@types/pg": "^8.6.4",
+    "axios": "^0.27.2",
+    "dayjs": "^1.10.7",
+    "lodash-es": "^4.17.21",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "7.0.0-alpha.5"
+  }
 }

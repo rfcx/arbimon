@@ -32,7 +32,7 @@ import { Emit, Prop } from 'vue-property-decorator'
 })
 
 export default class ModalPopup extends Vue {
-  @Emit() emitClose (): boolean { return false }
   @Prop({ default: 'modal' }) title!: string
+  @Emit() emitClose (): boolean { return false }
 }
 </script>

@@ -3,6 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
 import { LAYOUT_BREAKPOINT } from '@/_layout/config'
+import { storeKey } from '@/globals'
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { MAP_KEY_RICHNESS_TOTAL } from '@/species-richness/functions'
 import { getExportFilterName } from '~/filters'
@@ -24,7 +25,8 @@ const DEFAULT_PREFIX = 'Species-By-Site'
   }
 })
 export default class SpeciesRichnessByLocation extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
   isShowLabels = true
