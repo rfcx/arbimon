@@ -9,16 +9,16 @@
         <h2 class="mb-4 text-md">
           Choose Model
         </h2>
-        <span v-if="isLoading">Loading</span>
-        <span v-else-if="isError">Error</span>
-        <span v-else-if="data === undefined">No response</span>
+        <span v-if="isLoadingClassifiers">Loading</span>
+        <span v-else-if="isErrorClassifier">Error</span>
+        <span v-else-if="classifiers === undefined">No response</span>
         <select
           id="models"
           v-model="selectedClassifier"
           class="block w-full p-2.5 bg-steel-grey rounded-full rounded-lg ring-1 ring-subtle"
         >
           <option
-            v-for="classifier in data ?? []"
+            v-for="classifier in classifiers ?? []"
             :key="classifier.id"
             :value="classifier.id"
           >
@@ -117,31 +117,36 @@
           Cancel
         </button>
       </router-link>
-      <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
-        <button
-          class="btn btn-primary"
-          @click="create"
-        >
-          Create
-        </button>
-      </router-link>
+      <button
+        :disabled="isLoadingPostJob"
+        class="btn btn-primary"
+        @click="create"
+      >
+        Create
+      </button>
+      <span v-if="isLoadingPostJob">Saving...</span>
+      <span v-if="isErrorPostJob">Error :(</span>
     </div>
   </form>
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { inject, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
+const router = useRouter()
+
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading, isError, data } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 const selectedClassifier = ref(-1)
-watch(data, () => { selectedClassifier.value = data.value?.[0]?.id ?? -1 })
+watch(classifiers, () => { selectedClassifier.value = classifiers.value?.[0]?.id ?? -1 })
 
 const create = async (): Promise<void> => {
   const testJob = {
@@ -149,7 +154,6 @@ const create = async (): Promise<void> => {
     project_id: 'bbbbbbbbbbb7',
     query_streams: 'Antony*'
   }
-  const { data } = usePostClassifierJob(apiClientCore, testJob)
-  console.info(data)
+  mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
 }
 </script>
