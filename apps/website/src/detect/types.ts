@@ -17,3 +17,9 @@ export interface Job {
   numberOfRecordings: number
   createdAt: Date
 }
+
+export interface JobFilterItem {
+  value: string
+  label: string
+  checked: boolean
+}
