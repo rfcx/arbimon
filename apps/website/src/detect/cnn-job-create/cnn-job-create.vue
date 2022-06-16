@@ -152,7 +152,7 @@ const create = async (): Promise<void> => {
   const testJob = {
     classifier_id: 8,
     project_id: 'bbbbbbbbbbb7',
-    query_streams: 'Antony*'
+    query_streams: 'CR*'
   }
   mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
 }
