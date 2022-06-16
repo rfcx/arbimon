@@ -17,7 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { JobInput } from '~/job'
+
+import { JobInput } from '../../types'
 
 const props = defineProps<{
   numberOfRecordings: number,
