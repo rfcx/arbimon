@@ -15,8 +15,7 @@ export interface Classifier {
   id: number
   name: string
   version: number
-  status: string
-  external_id: string
+  last_executed_at: string
 }
 
 // Service

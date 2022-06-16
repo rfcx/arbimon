@@ -10,7 +10,7 @@ export interface JobProgress {
 }
 
 export interface Job {
-  id: string
+  id: number
   modelName: string
   input: JobInput
   progress: JobProgress
