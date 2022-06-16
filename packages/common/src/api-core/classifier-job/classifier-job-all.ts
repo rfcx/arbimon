@@ -2,6 +2,9 @@ import { AxiosInstance } from 'axios'
 
 // Request types
 export interface ClassifierJobAllParams {
+  created_by?: string
+  status?: number
+  projects?: string[]
   limit?: number
   offset?: number
 }
