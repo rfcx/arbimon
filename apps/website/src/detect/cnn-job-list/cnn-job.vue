@@ -36,6 +36,13 @@
         </th>
       </tr>
     </thead>
+    <!-- <tbody v-if="data?.items">
+      <JobItemRow
+        v-for="job in data.items"
+        :key="job.id"
+        :job="jobFormatted(job)"
+      />
+    </tbody> -->
     <tbody>
       <JobItemRow
         v-for="job in jobs"
@@ -47,20 +54,53 @@
 </template>
 
 <script setup lang="ts">
-// import { AxiosInstance } from 'axios'
-// import { inject } from 'vue'
+import { AxiosInstance } from 'axios'
+import { inject, watch } from 'vue'
 
-// import { apiClientCoreKey } from '@/globals'
+// import { ClassifierJob } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-all'
+import { apiClientCoreKey } from '@/globals'
+// import { Job } from '~/job'
 import { ROUTE_NAMES } from '~/router'
-// import { useClassifierJobs } from '../_composables/use-classifier-jobs'
+import { useClassifierJobs } from '../_composables/use-classifier-jobs'
 import JobItemRow from './components/job-item-row.vue'
 
-// const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-// const { isLoading, isError, data } = useClassifierJobs(apiClientCore)
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const { data } = useClassifierJobs(apiClientCore)
+
+// const jobFormatted = (job: ClassifierJob): Job => {
+//   return {
+//     id: job.id,
+//     modelName: job.classifier.name,
+//     input: {
+//       sites: job.queryStreams,
+//       dateRange: job.queryStart + (job.queryEnd !== undefined ? (' / ' + job.queryEnd) : ''),
+//       timeOfDay: job.queryHours
+//     },
+//     progress: {
+//       status: getStatus(job.status),
+//       value: job.status
+//     },
+//     numberOfRecordings: 4000,
+//     createdAt: new Date(job.created_at)
+//   }
+// }
+
+watch(data, () => { console.info(data) })
+
+// const getStatus = (s: number): string => {
+//   switch (s) {
+//     case 0: return 'Queued'
+//     case 20: return 'Processing'
+//     case 30: return 'Done'
+//     case 40: return 'Error'
+//     case 50: return 'Cancelled'
+//     default: return '-'
+//   }
+// }
 
 const jobs = [
   {
-    id: '1',
+    id: 1,
     modelName: 'PR Regional CNN',
     input: {
       sites: 'SR*',
@@ -75,7 +115,7 @@ const jobs = [
     createdAt: new Date()
   },
   {
-    id: '2',
+    id: 2,
     modelName: 'PR Regional CNN',
     input: {
       sites: 'SR*',
@@ -90,7 +130,7 @@ const jobs = [
     createdAt: new Date()
   },
   {
-    id: '3',
+    id: 3,
     modelName: 'PR Regional CNN',
     input: {
       sites: 'SR*',

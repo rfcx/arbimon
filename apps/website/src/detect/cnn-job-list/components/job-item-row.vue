@@ -6,7 +6,7 @@
     >
       {{ props.job.modelName }}
     </th>
-    <td class="px-6 py-4 align-text-top">
+    <td class="px-6 py-4 align-text-top w-80">
       <JobInput
         :number-of-recordings="props.job.numberOfRecordings"
         :job-input="props.job.input"

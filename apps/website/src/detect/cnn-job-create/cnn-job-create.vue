@@ -118,7 +118,10 @@
         </button>
       </router-link>
       <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
-        <button class="btn btn-primary">
+        <button
+          class="btn btn-primary"
+          @click="create"
+        >
           Create
         </button>
       </router-link>
@@ -131,8 +134,8 @@ import { inject, ref, watch } from 'vue'
 
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-// import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 import { useClassifiers } from '../_composables/use-classifiers'
+import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading, isError, data } = useClassifiers(apiClientCore)
@@ -140,13 +143,13 @@ const { isLoading, isError, data } = useClassifiers(apiClientCore)
 const selectedClassifier = ref(-1)
 watch(data, () => { selectedClassifier.value = data.value?.[0]?.id ?? -1 })
 
-// const create = async (): Promise<void> => {
-//   const testJob = {
-//     classifier_id: 8,
-//     project_id: 'bbbbbbbbbbb7',
-//     query_streams: 'Antony*'
-//   }
-//   const result = await classifierJobCreate(apiClientCore, testJob)
-//   console.info(result)
-// }
+const create = async (): Promise<void> => {
+  const testJob = {
+    classifier_id: 8,
+    project_id: 'bbbbbbbbbbb7',
+    query_streams: 'Antony*'
+  }
+  const { data } = usePostClassifierJob(apiClientCore, testJob)
+  console.info(data)
+}
 </script>

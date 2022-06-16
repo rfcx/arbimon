@@ -14,16 +14,22 @@ export interface ClassifierJobAll {
   items: ClassifierJob[]
 }
 
+interface Classifier {
+  id: number
+  name: string
+}
+
 export interface ClassifierJob {
   id: number
-  classifier_id: number
-  project_id: string
-  query_streams: string
-  query_start: string
-  query_end: string
-  query_hours: string
-  minutes_total: number
-  minutes_completed: number
+  classifier: Classifier
+  classifierId: number
+  projectId: string
+  queryStreams: string
+  queryStart: string
+  queryEnd: string
+  queryHours: string
+  minutesTotal: number
+  minutesCompleted: number
   status: number
   created_by_id: number
   created_at: string
