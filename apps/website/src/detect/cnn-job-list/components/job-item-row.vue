@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import useDateFormat from '~/hooks/use-date-format'
-import { Job } from '~/job'
+import { Job } from '../../types'
 import JobInput from './job-input.vue'
 import JobProgress from './job-progress.vue'
 
