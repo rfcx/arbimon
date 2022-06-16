@@ -63,7 +63,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     pluginWindiCSS()
   ],
   server: {
-    port: 8080,
+    port: 8101, // Bio-1
     open: false
   },
   test: {

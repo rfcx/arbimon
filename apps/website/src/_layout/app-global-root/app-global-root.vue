@@ -7,7 +7,7 @@
       v-if="store.selectedProject"
       class="page_content lg:flex"
     >
-      <Sidebar class="w-64 flex-initial items-stretch min-h-[calc(100vh-3.25rem)]" />
+      <Sidebar class="hidden lg:flex w-64 flex-initial items-stretch min-h-[calc(100vh-3.25rem)]" />
       <div class="w-full p-6">
         <router-view />
       </div>
