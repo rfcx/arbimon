@@ -18,6 +18,18 @@
   <p v-else-if="isErrorClassifierJobs">
     Error :(
   </p>
+  <p
+    v-else-if="jobs && !jobs.length"
+    class="mt-5 text-lg"
+  >
+    No jobs found.
+    <router-link
+      :to="{ name: ROUTE_NAMES.cnnJobCreate }"
+      class="font-bold"
+    >
+      Create a new job
+    </router-link>
+  </p>
   <table
     v-else
     class="w-full text-sm text-left mt-5"
@@ -50,13 +62,6 @@
         </th>
       </tr>
     </thead>
-    <!-- <tbody v-if="data?.items">
-      <JobItemRow
-        v-for="job in data.items"
-        :key="job.id"
-        :job="jobFormatted(job)"
-      />
-    </tbody> -->
     <tbody>
       <JobItemRow
         v-for="job in jobs"
@@ -71,7 +76,6 @@
 import { AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
-// import { ClassifierJob } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-all'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useClassifierJobs } from '../_composables/use-classifier-jobs'
@@ -99,35 +103,17 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   id: cj.id,
   modelName: cj.classifier.name,
   input: {
-    sites: cj.queryStreams,
-    dateRange: `${cj.queryStart}-${cj.queryEnd}`,
-    timeOfDay: cj.queryHours
+    sites: cj.queryStreams !== null ? cj.queryStreams : '-',
+    dateRange: `${cj.queryStart !== null ? cj.queryStart : '-'} / ${cj.queryEnd !== null ? cj.queryEnd : '-'}`,
+    timeOfDay: cj.queryHours !== null ? cj.queryHours : '-'
   },
   progress: {
     status: getStatus(cj.status),
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
   numberOfRecordings: 0,
-  createdAt: new Date()
+  createdAt: new Date(cj.created_at)
 })) ?? [])
-
-// const jobFormatted = (job: ClassifierJob): Job => {
-//   return {
-//     id: job.id,
-//     modelName: job.classifier.name,
-//     input: {
-//       sites: job.queryStreams,
-//       dateRange: job.queryStart + (job.queryEnd !== undefined ? (' / ' + job.queryEnd) : ''),
-//       timeOfDay: job.queryHours
-//     },
-//     progress: {
-//       status: getStatus(job.status),
-//       value: job.status
-//     },
-//     numberOfRecordings: 4000,
-//     createdAt: new Date(job.created_at)
-//   }
-// }
 
 // const jobs = [
 //   {

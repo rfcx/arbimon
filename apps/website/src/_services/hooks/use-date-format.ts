@@ -16,6 +16,9 @@ const formatDate = (dateInput: DateParam, pattern: string = 'MMMM D, YYYY'): str
 const formatDateFull = (dateInput: DateParam): string =>
   formatDate(dateInput, 'LLL (z)')
 
+const formatDateLocal = (dateInput: DateParam): string =>
+  formatDate(dateInput, 'YYYY-MM-DD HH:mm')
+
 const formatDateRange = (start: DateParam, end: DateParam): string => {
   const newStartDate = asDayJs(start)
   const newEndDate = asDayJs(end)
@@ -28,7 +31,8 @@ const useDateFormat = () => ({
   asDayJs,
   formatDate,
   formatDateFull,
-  formatDateRange
+  formatDateRange,
+  formatDateLocal
 }) as const
 
 export default useDateFormat

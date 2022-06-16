@@ -14,10 +14,10 @@ export interface ClassifierJob {
   classifier: Classifier
   classifierId: number
   projectId: string
-  queryStreams: string
-  queryStart: string
-  queryEnd: string
-  queryHours: string
+  queryStreams: string | null
+  queryStart: string | null
+  queryEnd: string | null
+  queryHours: string | null
   minutesTotal: number
   minutesCompleted: number
   status: number

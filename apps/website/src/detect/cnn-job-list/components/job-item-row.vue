@@ -13,7 +13,7 @@
       />
     </td>
     <td class="px-6 py-4 align-text-top">
-      {{ formatDateFull(props.job.createdAt) }}
+      {{ formatDateLocal(props.job.createdAt) }}
     </td>
     <td class="px-6 py-4 align-text-top">
       <JobProgress
@@ -33,5 +33,5 @@ const props = defineProps<{
   job: Job
 }>()
 
-const { formatDateFull } = useDateFormat()
+const { formatDateLocal } = useDateFormat()
 </script>
