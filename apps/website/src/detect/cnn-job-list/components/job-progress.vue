@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { JobProgress } from '~/job'
+import { JobProgress } from '../../types'
 
 const props = defineProps<{
   jobProgress: JobProgress

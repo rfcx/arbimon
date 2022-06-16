@@ -6,14 +6,14 @@
     >
       {{ props.job.modelName }}
     </th>
-    <td class="px-6 py-4 align-text-top">
+    <td class="px-6 py-4 align-text-top w-80">
       <JobInput
         :number-of-recordings="props.job.numberOfRecordings"
         :job-input="props.job.input"
       />
     </td>
     <td class="px-6 py-4 align-text-top">
-      {{ formatDateFull(props.job.createdAt) }}
+      {{ formatDateLocal(props.job.createdAt) }}
     </td>
     <td class="px-6 py-4 align-text-top">
       <JobProgress
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import useDateFormat from '~/hooks/use-date-format'
-import { Job } from '~/job'
+import { Job } from '../../types'
 import JobInput from './job-input.vue'
 import JobProgress from './job-progress.vue'
 
@@ -33,5 +33,5 @@ const props = defineProps<{
   job: Job
 }>()
 
-const { formatDateFull } = useDateFormat()
+const { formatDateLocal } = useDateFormat()
 </script>
