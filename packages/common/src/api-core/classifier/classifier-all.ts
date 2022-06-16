@@ -1,5 +1,7 @@
 import { AxiosInstance } from 'axios'
 
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
 // Request types
 export interface ClassifierAllParams {
   limit?: number
@@ -13,10 +15,9 @@ export interface Classifier {
   id: number
   name: string
   version: number
-  status: string
-  external_id: string
+  last_executed_at: string
 }
 
 // Service
 export const apiCoreGetClassifierAll = async (apiClient: AxiosInstance, params: ClassifierAllParams = {}): Promise<ClassifierAllResponse | undefined> =>
-  await apiClient.get('/classifiers', { params })
+  await apiGetOrUndefined(apiClient, '/classifiers', { params })
