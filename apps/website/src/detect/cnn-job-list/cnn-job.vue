@@ -73,7 +73,6 @@ import { computed, inject } from 'vue'
 
 // import { ClassifierJob } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-all'
 import { apiClientCoreKey } from '@/globals'
-// import { Job } from '~/job'
 import { ROUTE_NAMES } from '~/router'
 import { useClassifierJobs } from '../_composables/use-classifier-jobs'
 import JobItemRow from './components/job-item-row.vue'
