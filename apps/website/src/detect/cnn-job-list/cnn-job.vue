@@ -10,7 +10,6 @@
   <JobFilter
     :filter-options="filterOptions"
     @emit-select="onFilterChange"
-    @change="refetch()"
   />
   <p>
     <!-- DEBUG START -->
@@ -92,10 +91,9 @@ import JobItemRow from './components/job-item-row.vue'
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
-const variables = reactive({
-  created_by: 'all'
-})
-const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs, refetch } = useClassifierJobs(apiClientCore, variables)
+const params = reactive({ created_by: 'all' })
+
+const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
 
 // TODO: Extract
 const getStatus = (s: number): string => {
@@ -133,8 +131,8 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   createdAt: new Date(cj.created_at)
 })) ?? [])
 
-const onFilterChange = async (filter: string): Promise<void> => {
-  variables.created_by = filter
+const onFilterChange = (filter: string): void => {
+  params.created_by = filter === 'me' ? 'me' : 'all'
 }
 
 // const jobs = [

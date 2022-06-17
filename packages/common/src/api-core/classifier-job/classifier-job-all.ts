@@ -43,7 +43,7 @@ export interface ClassifierJobAll {
 }
 
 // Service
-export const apiCoreGetClassifierJobAll = async (apiClient: AxiosInstance, params: ClassifierJobAllParams = {}): Promise<ClassifierJobAll> => {
+export const apiCoreGetClassifierJobAll = async (apiClient: AxiosInstance, params?: ClassifierJobAllParams): Promise<ClassifierJobAll> => {
   const res = await apiClient.get<ClassifierJobAllResponse>('/classifier-jobs', { params })
   if (!Array.isArray(res.data)) return { total: 0, items: [] }
 
