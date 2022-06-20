@@ -38,11 +38,19 @@
 
   const emit = defineEmits<{(e: 'emitSelectSite', value: string): void}>()
   const store = useStore()
+  const projectSiteOptions = computed(() => store.projectFilters?.locationSites ?? [])
   const inputFilter = ref('')
+
+  watch(projectSiteOptions, async () => {
+    const onlySelectedAllOption = selectedOptions.value.length === 1 && isAllSiteOptionSelected.value
+    if (!onlySelectedAllOption) {
+      selectedOptions.value = [] // clear value when the user change to other project
+    }
+  })
 
   // options
   const siteOptions = computed(() => {
-    const allSitesOptions = (store.projectFilters?.locationSites ?? [])
+    const allSitesOptions = projectSiteOptions.value
       .map(s => ({
         value: s.name,
         label: s.name
