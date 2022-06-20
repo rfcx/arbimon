@@ -5,7 +5,7 @@ import { apiCoreGetClassifierJobAll, ClassifierJobAll, ClassifierJobAllParams } 
 
 export const useClassifierJobs = (apiClient: AxiosInstance, params?: ClassifierJobAllParams): UseQueryReturnType<ClassifierJobAll | undefined, unknown > => {
   return useQuery(
-    ['fetch-classifier-jobs'],
+    ['fetch-classifier-jobs', params],
     async () => await apiCoreGetClassifierJobAll(apiClient, params)
   )
 }
