@@ -33,10 +33,6 @@ watch(selectedFilter, () => {
 
 </script>
 <style lang="scss" scoped>
-:deep(.el-input__inner) {
-  font-style: italic;
-}
-
 :deep(.select-trigger) {
   width: 300px;
 }
