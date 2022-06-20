@@ -38,6 +38,7 @@
     "test-unit": "vitest --run .unit.test."
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "dayjs": "^1.10.7",
     "jszip": "^3.7.1",
     "lodash-es": "^4.17.21",

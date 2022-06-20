@@ -83,7 +83,7 @@ import { partition } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { useStore } from '~/store'
 import projectList from './project-list.vue'

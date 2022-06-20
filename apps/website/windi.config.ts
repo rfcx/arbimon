@@ -22,6 +22,9 @@ export default defineConfig({
           '.navbar-menu-item.router-link-exact-active': {
             'box-shadow': 'inset 5px 0 0 #31984f'
           }
+        },
+        '.router-link-active > a > span': {
+          'font-weight': '700'
         }
       }
       addComponents(navbarItems)
@@ -99,6 +102,8 @@ export default defineConfig({
     // nav;
     'navbar-container': 'box-content text-primary flex items-center justify-center h-13',
     'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
-    'navbar-menu-item': 'px-2'
+    'navbar-menu-item': 'px-2',
+    // input
+    'input-field': 'bg-box-grey border text-sm rounded-lg block w-full p-2.5 focus:border-brand-primary bg-mirage-grey text-white'
   }
 })
