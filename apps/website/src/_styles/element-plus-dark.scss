@@ -40,19 +40,23 @@ $--colors: (
   )
 );
 
+@forward "element-plus/theme-chalk/src/dark/var.scss" with (
+  $colors: $--colors,
   $text-color: (
-    "primary": #fff,
-    "regular": #fff,
-    "secondary": #fff,
-    "placeholder": #999,
+    "primary": map.get($--colors, 'white'),
+    "regular": map.get($--colors, 'white'),
+    "secondary": map.get($--colors, 'white'),
+    "placeholder": map.get($--colors, 'placeholder'),
   ),
   $bg-color: (
-    "base": #141525,
+    "page": map.get($--colors, 'mirage-grey', 'base'),
+    "": map.get($--colors, 'steel-grey', 'base'),
+    "overlay": map.get($--colors, 'mirage-grey', 'base'),
   ),
   $border-color: (
-    "base": #45485D,
-    "light": #232436,
-    "lighter": #45485D,
-    "extra-light": #45485D,
+    "base": map.get($--colors, 'box-grey', 'base'),
+    "light": map.get($--colors, 'steel-grey', 'base'),
+    "lighter": map.get($--colors, 'box-grey', 'base'),
+    "extra-light": map.get($--colors, 'box-grey', 'base'),
   ),
 );
