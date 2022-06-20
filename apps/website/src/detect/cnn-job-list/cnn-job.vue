@@ -7,16 +7,22 @@
       </button>
     </router-link>
   </div>
-  <!-- DEBUG START -->
-  {{ isLoadingClassifierJobs }}
-  {{ isErrorClassifierJobs }}
-  {{ classifierJobs }}
-  <!-- DEBUG END -->
+  <JobFilter
+    :filter-options="filterOptions"
+    @emit-select="onFilterChange"
+  />
+  <p>
+    <!-- DEBUG START -->
+    {{ isLoadingClassifierJobs }}
+    {{ isErrorClassifierJobs }}
+    {{ classifierJobs }}
+    <!-- DEBUG END -->
+  </p>
   <p v-if="isLoadingClassifierJobs">
     Loading...
   </p>
   <p v-else-if="isErrorClassifierJobs">
-    Error :(
+    Error getting a list of classifier jobs
   </p>
   <p
     v-else-if="jobs && !jobs.length"
@@ -74,15 +80,20 @@
 
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject } from 'vue'
+import { computed, inject, reactive } from 'vue'
 
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useClassifierJobs } from '../_composables/use-classifier-jobs'
+import { JobFilterItem } from '../types'
+import JobFilter from './components/job-filter.vue'
 import JobItemRow from './components/job-item-row.vue'
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore)
+
+const params = reactive({ created_by: 'all' })
+
+const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
 
 // TODO: Extract
 const getStatus = (s: number): string => {
@@ -95,6 +106,11 @@ const getStatus = (s: number): string => {
     default: return 'Unknown'
   }
 }
+
+const filterOptions: JobFilterItem[] = [
+  { value: 'me', label: 'My jobs', checked: false },
+  { value: 'all', label: 'All jobs', checked: true }
+]
 
 const getProgress = (minComplete: number, minTotal: number): number =>
   0
@@ -114,6 +130,10 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   numberOfRecordings: 0,
   createdAt: new Date(cj.created_at)
 })) ?? [])
+
+const onFilterChange = (filter: string): void => {
+  params.created_by = filter === 'me' ? 'me' : 'all'
+}
 
 // const jobs = [
 //   {

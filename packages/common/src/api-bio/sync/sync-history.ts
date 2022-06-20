@@ -1,5 +1,7 @@
 import { AxiosInstance } from 'axios'
 
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
 import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
 // Request types
@@ -22,4 +24,4 @@ export const syncHistoryRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/sync-history`
 
 // Service
 export const apiBioGetSyncHistory = async (apiClient: AxiosInstance, params: SyncHistoryParams): Promise<SyncHistoryResponse | undefined> =>
-  await apiClient.get(`/projects/${params.projectId}/sync-history`)
+  await apiGetOrUndefined(apiClient, `/projects/${params.projectId}/sync-history`)
