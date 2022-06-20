@@ -15,7 +15,7 @@
         <select
           id="models"
           v-model="selectedClassifier"
-          class="block w-full p-2.5 bg-steel-grey rounded-full rounded-lg ring-1 ring-subtle"
+          class="block w-full p-2.5 bg-mirage-grey rounded-lg"
         >
           <option
             v-for="classifier in classifiers ?? []"
@@ -40,13 +40,7 @@
           >
             Sites
           </label>
-          <input
-            id="sites"
-            type="text"
-            class="input-field"
-            placeholder="Select sites"
-            required
-          >
+          <site-picker @emit-select-site="onSelectSites" />
         </div>
         <label
           for="date"
@@ -134,6 +128,7 @@ import { AxiosInstance } from 'axios'
 import { inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import SitePicker from '@/_services/picker/site-picker.vue'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useClassifiers } from '../_composables/use-classifiers'
@@ -145,15 +140,35 @@ const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
 const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
-const selectedClassifier = ref(-1)
+// create params
+// const selectedProjectId = store.selectedProject.idCore // TODO: add idCore to selected project in Pinia
+const selectedClassifier = ref<number>(-1)
+const selectedQueryStreams = ref<string | null>(null) // null = hasn't filled in yet, '' = all, 'AR' = filter only AR
+
 watch(classifiers, () => { selectedClassifier.value = classifiers.value?.[0]?.id ?? -1 })
 
+const hasErrorValidatingRequestParams = (): string | null => {
+  // - classifier_id should not be -1
+  // - project_id should not be null
+  // - query_streams should not be null
+  return null
+}
+
 const create = async (): Promise<void> => {
+  // if some field is null, then warn the user!
+  if (hasErrorValidatingRequestParams()) {
+    // TODO: show error
+    return
+  }
   const testJob = {
-    classifier_id: 8,
+    classifier_id: selectedClassifier.value,
     project_id: 'bbbbbbbbbbb7',
     query_streams: 'CR*'
   }
   mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
+}
+
+const onSelectSites = (value: string) => {
+  selectedQueryStreams.value = value
 }
 </script>
