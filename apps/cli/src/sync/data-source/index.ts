@@ -28,7 +28,7 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
     LEFT JOIN data_source ds ON lp.id = ds.location_project_id
     WHERE ds.location_project_id IS NULL 
       OR DATE_PART('hour', AGE(CURRENT_TIMESTAMP, ds.updated_at)) >= 3
-    ORDER BY 1, ds.updated_at DESC
+    ORDER BY 1, ds.updated_at NULLS FIRST
     LIMIT ${limit}
   `
   const projectIds = await sequelize
