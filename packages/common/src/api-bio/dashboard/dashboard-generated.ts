@@ -1,16 +1,14 @@
-import { ApiLine, ApiMap, ApiStack } from '../_helpers'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { AxiosInstance } from 'axios'
+
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
+import { ApiLine, ApiMap, ApiStack, PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 import { DashboardSpecies } from './common'
 
-// Request
-export type DashboardGeneratedParams = ProjectSpecificRouteParams
+// Request types
+export type DashboardGeneratedParams = ProjectRouteParamsSerialized
 
-export const dashboardGeneratedRoute = '/projects/:projectId/dashboard-generated'
-
-export const dashboardGeneratedUrl = (params: DashboardGeneratedParams): string =>
-  `/projects/${params.projectId}/dashboard-generated` // TODO: Generate automatically from dashboardGeneratedRoute
-
-// Response
+// Response types
 export interface DashboardGeneratedResponse {
   // Metrics
   detectionCount: number
@@ -31,3 +29,10 @@ export interface DashboardGeneratedResponse {
   richnessByHour: ApiLine
   detectionByHour: ApiLine
 }
+
+// Route
+export const dashboardGeneratedRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-generated`
+
+// Service
+export const apiBioGetDashboardGeneratedData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardGeneratedResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/dashboard-generated`)

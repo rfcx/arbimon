@@ -3,6 +3,7 @@ import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { storeKey } from '@/globals'
 import { BiodiversityStore } from '~/store'
 import { ColoredFilter, ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
@@ -19,8 +20,10 @@ const defaultFilter = new FilterImpl(DEFAULT_START, DEFAULT_END)
 })
 
 export default class ComparisonListComponent extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop({ default: true }) canFilterByTaxon!: boolean
+
   @Emit() emitSelect (): ColoredFilter[] {
     return this.filters.map((f, i) => ({
       ...f,

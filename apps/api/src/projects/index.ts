@@ -1,5 +1,5 @@
-import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/common/project-filters'
-import { projectsRoute } from '@rfcx-bio/common/api-bio/common/projects'
+import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { setMemberProjectCoreIds } from '@/_middleware/get-member-projects'
 import { GET, RouteRegistration } from '../_services/api-helpers/types'

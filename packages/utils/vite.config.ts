@@ -7,10 +7,6 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   plugins: [
     pluginTsConfigPaths()
   ],
-  server: {
-    port: 8080,
-    open: false
-  },
   test: {
     include: ['src/**/*.{test,spec}.ts']
   }

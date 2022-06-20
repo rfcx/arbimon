@@ -57,7 +57,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
 const props = defineProps<{
   readonly selectedProject: LocationProjectForUser | null,

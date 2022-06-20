@@ -5,6 +5,7 @@ import { Emit, Inject, Prop } from 'vue-property-decorator'
 import { Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { storeKey } from '@/globals'
 import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
 import { BiodiversityStore } from '~/store'
 import DateRangePicker from './date-range-picker/date-range-picker.vue'
@@ -25,7 +26,8 @@ const DATE_FORMAT = 'YYYY-MM-DD'
   }
 })
 export default class ComparisonFilterModalComponent extends Vue {
-  @Inject() readonly store!: BiodiversityStore
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop({ default: null }) initialValues!: ComparisonFilter | null
   @Prop({ default: true }) canFilterByTaxon!: boolean
 

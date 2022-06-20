@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
