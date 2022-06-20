@@ -52,7 +52,7 @@ export const getArbimonHourlyDetectionsForProjects = async (arbimonSequelize: Se
         SUM(r.duration)/60 duration_in_minutes
     FROM recordings r 
     WHERE r.site_id IN (SELECT site_id FROM sites WHERE project_id IN (${idsString}))
-    GROUP by hour(r.datetime), r.site_id) rc
+    GROUP by hour(r.datetime), date(r.datetime), r.site_id) rc
   ON rvc.hour = rc.hour AND rvc.site_id = rc.site_id
   ORDER BY rvc.date, rvc.hour, rvc.site_id, rvc.species_id
   ;
