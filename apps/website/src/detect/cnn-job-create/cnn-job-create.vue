@@ -112,7 +112,7 @@
         </button>
       </router-link>
       <button
-        :disabled="isLoadingPostJob"
+        :disabled="isLoadingPostJob || !hasPermissionToCreateJob"
         class="btn btn-primary"
         @click="create"
       >
@@ -120,28 +120,35 @@
       </button>
       <span v-if="isLoadingPostJob">Saving...</span>
       <span v-if="isErrorPostJob">Error :(</span>
+      <span v-if="!hasPermissionToCreateJob">No permission to create job for this project 😞</span>
     </div>
   </form>
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import SitePicker from '@/_services/picker/site-picker.vue'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
+const store = useStore()
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
 const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
+// project
+const selectedProject = computed(() => store.selectedProject)
+const hasPermissionToCreateJob = computed(() => selectedProject.value?.isMyProject ?? false)
+
 // create params
-// const selectedProjectId = store.selectedProject.idCore // TODO: add idCore to selected project in Pinia
+const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
 const selectedClassifier = ref<number>(-1)
 const selectedQueryStreams = ref<string | null>(null) // null = hasn't filled in yet, '' = all, 'AR' = filter only AR
 
@@ -162,8 +169,8 @@ const create = async (): Promise<void> => {
   }
   const testJob = {
     classifier_id: selectedClassifier.value,
-    project_id: 'bbbbbbbbbbb7',
-    query_streams: 'CR*'
+    project_id: selectedProjectIdCore.value ?? '',
+    query_streams: selectedQueryStreams.value ?? ''
   }
   mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
 }
