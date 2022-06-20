@@ -1,5 +1,13 @@
 <template>
   <page-title page-title="Create New CNN Job" />
+  <el-alert
+    v-if="warningMessage"
+    :title="warningMessage"
+    type="warning"
+    class="my-4"
+    effect="dark"
+    @close="warningMessage = ''"
+  />
   <form class="mt-5">
     <ol class="relative border-l border-box-grey">
       <li class="mb-8 ml-6">
@@ -114,7 +122,7 @@
       <button
         :disabled="isLoadingPostJob || !hasPermissionToCreateJob"
         class="btn btn-primary"
-        @click="create"
+        @click.prevent="create"
       >
         Create
       </button>
@@ -147,10 +155,14 @@ const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePost
 const selectedProject = computed(() => store.selectedProject)
 const hasPermissionToCreateJob = computed(() => selectedProject.value?.isMyProject ?? false)
 
+// validation
+const warningMessage = ref('')
+
 // create params
 const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
 const selectedClassifier = ref<number>(-1)
 const selectedQueryStreams = ref<string | null>(null) // null = hasn't filled in yet, '' = all, 'AR' = filter only AR
+// TODO: selected date range
 
 watch(classifiers, () => { selectedClassifier.value = classifiers.value?.[0]?.id ?? -1 })
 
@@ -158,13 +170,21 @@ const hasErrorValidatingRequestParams = (): string | null => {
   // - classifier_id should not be -1
   // - project_id should not be null
   // - query_streams should not be null
+  const validClassifier = selectedClassifier.value !== -1
+  const validProject = selectedProjectIdCore.value !== ''
+  const validQueryStreams = selectedQueryStreams.value !== null
+  if (!validClassifier) return 'Please select classifier'
+  else if (!validProject) return 'Project is not valid'
+  else if (!validQueryStreams) return 'Please select sites'
   return null
 }
 
 const create = async (): Promise<void> => {
   // if some field is null, then warn the user!
-  if (hasErrorValidatingRequestParams()) {
+  const errorValidatingRequestParams = hasErrorValidatingRequestParams()
+  if (errorValidatingRequestParams) {
     // TODO: show error
+    warningMessage.value = errorValidatingRequestParams
     return
   }
   const testJob = {
