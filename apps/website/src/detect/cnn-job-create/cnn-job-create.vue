@@ -1,5 +1,13 @@
 <template>
   <page-title page-title="Create New CNN Job" />
+  <el-alert
+    v-if="warningMessage"
+    :title="warningMessage"
+    type="warning"
+    class="my-4"
+    effect="dark"
+    @close="warningMessage = ''"
+  />
   <form class="mt-5">
     <ol class="relative border-l border-box-grey">
       <li class="mb-8 ml-6">
@@ -15,7 +23,7 @@
         <select
           id="models"
           v-model="selectedClassifier"
-          class="block w-full p-2.5 bg-steel-grey rounded-full rounded-lg ring-1 ring-subtle"
+          class="block w-full p-2.5 bg-mirage-grey rounded-lg"
         >
           <option
             v-for="classifier in classifiers ?? []"
@@ -40,13 +48,7 @@
           >
             Sites
           </label>
-          <input
-            id="sites"
-            type="text"
-            class="input-field"
-            placeholder="Select sites"
-            required
-          >
+          <site-picker @emit-select-site="onSelectSites" />
         </div>
         <label
           for="date"
@@ -118,42 +120,82 @@
         </button>
       </router-link>
       <button
-        :disabled="isLoadingPostJob"
+        :disabled="isLoadingPostJob || !hasPermissionToCreateJob"
         class="btn btn-primary"
-        @click="create"
+        @click.prevent="create"
       >
         Create
       </button>
       <span v-if="isLoadingPostJob">Saving...</span>
       <span v-if="isErrorPostJob">Error :(</span>
+      <span v-if="!hasPermissionToCreateJob">No permission to create job for this project 😞</span>
     </div>
   </form>
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import SitePicker from '@/_services/picker/site-picker.vue'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
+const store = useStore()
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
 const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
-const selectedClassifier = ref(-1)
+// project
+const selectedProject = computed(() => store.selectedProject)
+const hasPermissionToCreateJob = computed(() => selectedProject.value?.isMyProject ?? false)
+
+// validation
+const warningMessage = ref('')
+
+// create params
+const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
+const selectedClassifier = ref<number>(-1)
+const selectedQueryStreams = ref<string | null>(null) // null = hasn't filled in yet, '' = all, 'AR' = filter only AR
+// TODO: selected date range
+
 watch(classifiers, () => { selectedClassifier.value = classifiers.value?.[0]?.id ?? -1 })
 
+const hasErrorValidatingRequestParams = (): string | null => {
+  // - classifier_id should not be -1
+  // - project_id should not be null
+  // - query_streams should not be null
+  const validClassifier = selectedClassifier.value !== -1
+  const validProject = selectedProjectIdCore.value !== ''
+  const validQueryStreams = selectedQueryStreams.value !== null
+  if (!validClassifier) return 'Please select classifier'
+  else if (!validProject) return 'Project is not valid'
+  else if (!validQueryStreams) return 'Please select sites'
+  return null
+}
+
 const create = async (): Promise<void> => {
+  // if some field is null, then warn the user!
+  const errorValidatingRequestParams = hasErrorValidatingRequestParams()
+  if (errorValidatingRequestParams) {
+    // TODO: show error
+    warningMessage.value = errorValidatingRequestParams
+    return
+  }
   const testJob = {
-    classifier_id: 8,
-    project_id: 'bbbbbbbbbbb7',
-    query_streams: 'CR*'
+    classifier_id: selectedClassifier.value,
+    project_id: selectedProjectIdCore.value ?? '',
+    query_streams: selectedQueryStreams.value ?? ''
   }
   mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
+}
+
+const onSelectSites = (value: string) => {
+  selectedQueryStreams.value = value
 }
 </script>
