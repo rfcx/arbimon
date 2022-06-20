@@ -90,7 +90,7 @@ export const getArbimonHourlyDetectionsForProjects = async (arbimonSequelize: Se
     WHERE r.site_id IN (SELECT site_id FROM sites WHERE project_id IN (${idsString}))
     GROUP by strftime('%H',r.datetime), r.site_id
   ) rc
-  ON rvc.hour = rc.hour AND rvc.site_id = rc.site_id
+  ON rvc.hour = rc.hour AND rvc.date = rc.date AND rvc.site_id = rc.site_id
   ORDER BY rvc.date, rvc.hour, rvc.site_id, rvc.species_id
   ;
   `
