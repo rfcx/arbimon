@@ -35,7 +35,7 @@ export default class DateRangePicker extends Vue {
     return this.dateValues
   }
 
-  dateValues: Date[] = []
+  dateValues: [Date, Date] = MOCK_WHOLE_PROJECT_DATE_RANGE
   selectedType: IDatePickerType = DATE_PICKER_TYPE.date
 
   get dateShortcuts (): DateRangeShortcut[] {
