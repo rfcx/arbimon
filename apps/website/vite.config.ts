@@ -67,7 +67,10 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     open: false
   },
   test: {
-    include: ['src/**/*.{test,spec}.ts']
+    deps: { inline: ['element-plus'] },
+    environment: 'happy-dom',
+    include: ['src/**/*.{test,spec}.ts'],
+    setupFiles: ['./setup-component-tests.js']
   }
 }
 
