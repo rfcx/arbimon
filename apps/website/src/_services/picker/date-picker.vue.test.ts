@@ -3,6 +3,7 @@ import { render, RenderResult } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'
 import { describe, expect, test, vi } from 'vitest'
 
+import { Dayjs } from '@/../../../packages/utils/node_modules/dayjs'
 import Component from './date-picker.vue'
 
 describe('DatePicker', () => {
@@ -24,17 +25,25 @@ describe('DatePicker', () => {
     expect(dateInputs[1]).toBeDefined()
   })
 
-  test.todo('emit date range when start date changed', async () => {
+  test('emit date range when start date changed', async () => {
+    // Arrange
     const wrapper = mount(Component, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn })]
       }
     })
 
-    await wrapper.find('button').trigger('click')
-    await wrapper.find('button').trigger('click')
+    // Act
+    // await wrapper.find('button').trigger('click')
+    // await wrapper.find('button').trigger('click')
 
-    expect(wrapper.emitted()).toHaveProperty('increment')
+    // Assert
+    const emitted = wrapper.emitted()
+    expect(emitted).toHaveProperty('dateRangeSelected')
+
+    const firstEmit = (emitted.dateRangeSelected[0] as Array<[Dayjs, Dayjs]>)[0]
+    expect(firstEmit[0]).toBeDefined()
+    expect(firstEmit[1]).toBeDefined()
   })
 
   test.todo('emit date range when end date changed')
