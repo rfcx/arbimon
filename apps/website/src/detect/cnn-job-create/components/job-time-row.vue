@@ -17,7 +17,7 @@
 const timeRanges = [
   { value: 'all', label: 'All', time: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] },
   { value: 'diurnal', label: 'Diurnal', time: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] },
-  { value: 'nocturnal', label: 'Nocturnal', time: [19 , 20, 21, 22, 23, 24, 1, 2, 3, 4, 5, 6] },
+  { value: 'nocturnal', label: 'Nocturnal', time: [19, 20, 21, 22, 23, 24, 1, 2, 3, 4, 5, 6] }
 ]
 
 const emit = defineEmits<{(e: 'emitSelectTime', value: number[]): void}>()

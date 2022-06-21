@@ -139,7 +139,7 @@ import { computed, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
-import JobTimeRow from './components/job-time-row.vue'
+
 import SitePicker from '@/_services/picker/site-picker.vue'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -147,6 +147,7 @@ import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 import JobModel from './components/job-model.vue'
+import JobTimeRow from './components/job-time-row.vue'
 
 const router = useRouter()
 const store = useStore()
