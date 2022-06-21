@@ -54,13 +54,27 @@ export default defineConfig({
         danger: '#D46767'
       },
       colors: {
+        placeholder: '#999',
+        faded: '#333',
+        subtle: '#ffffff90',
         'brand-primary': {
           DEFAULT: '#31984F',
           light: '#E6F3EA',
           dark: '#25713b'
         },
-        faded: '#333',
-        subtle: '#ffffff90',
+        danger: {
+          DEFAULT: '#D46767',
+          light: '#e5a4a4',
+          dark: '#7f3e3e'
+        },
+        warning: {
+          DEFAULT: '#FFCD00',
+          light: '#ffe166',
+          dark: '#997b00'
+        },
+        info: {
+          DEFAULT: '#45485D'
+        },
         'box-grey': {
           DEFAULT: '#45485D',
           dark: '#2f3140'
@@ -74,16 +88,6 @@ export default defineConfig({
           DEFAULT: '#141525',
           light: '#E3E3E5',
           dark: '#06060D'
-        },
-        danger: {
-          DEFAULT: '#D46767',
-          light: '#e5a4a4',
-          dark: '#7f3e3e'
-        },
-        warning: {
-          DEFAULT: '#FFCD00',
-          light: '#ffe166',
-          dark: '#997b00'
         }
       }
     }
