@@ -14,7 +14,7 @@ describe('SitePicker', () => {
     }
   })
 
-  test('has all option', async () => {
+  test.todo('has all option', async () => {
     // Arrange
     const { getByText } = render(Component)
 
