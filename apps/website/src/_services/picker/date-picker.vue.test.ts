@@ -17,7 +17,7 @@ describe('DatePicker', () => {
     const { getAllByRole } = renderWithPinia()
 
     // Act
-    const dateInputs = getAllByRole('input', { className: /el-range-input/i })
+    const dateInputs = getAllByRole('searchbox', { name: '' })
 
     // Assert
     expect(dateInputs[0]).toBeDefined()
