@@ -1,12 +1,11 @@
 <template>
   <page-title page-title="Create New CNN Job" />
   <el-alert
-    v-if="warningMessage"
-    :title="warningMessage"
+    v-if="errors.length > 0"
+    :title="errors.join('; ')"
     type="warning"
     class="my-4"
     effect="dark"
-    @close="warningMessage = ''"
   />
   <form class="mt-5">
     <ol class="relative border-l border-box-grey">
@@ -120,7 +119,7 @@
         </button>
       </router-link>
       <button
-        :disabled="isLoadingPostJob || !hasPermissionToCreateJob"
+        :disabled="isLoadingPostJob || errors.length > 0"
         class="btn btn-primary"
         @click.prevent="create"
       >
@@ -128,14 +127,16 @@
       </button>
       <span v-if="isLoadingPostJob">Saving...</span>
       <span v-if="isErrorPostJob">Error :(</span>
-      <span v-if="!hasPermissionToCreateJob">No permission to create job for this project 😞</span>
     </div>
   </form>
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
+import { Dayjs } from 'dayjs'
 import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import SitePicker from '@/_services/picker/site-picker.vue'
 import { apiClientCoreKey } from '@/globals'
@@ -147,55 +148,56 @@ import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 const router = useRouter()
 const store = useStore()
 
+// External data
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
 const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
-// project
 const selectedProject = computed(() => store.selectedProject)
-const hasPermissionToCreateJob = computed(() => selectedProject.value?.isMyProject ?? false)
-
-// validation
-const warningMessage = ref('')
-
-// create params
 const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
+
+// Fields
 const selectedClassifier = ref<number>(-1)
-const selectedQueryStreams = ref<string | null>(null) // null = hasn't filled in yet, '' = all, 'AR' = filter only AR
-// TODO: selected date range
+const selectedQueryStreams = ref<string | null>(null) // null = all, 'AR' = filter only AR
+const selectedQueryStart = ref<Dayjs | null>(null)
+const selectedQueryEnd = ref<Dayjs | null>(null)
+const selectedQueryHours = ref<number[]>([])
 
+// Watches & callbacks
 watch(classifiers, () => { selectedClassifier.value = classifiers.value?.[0]?.id ?? -1 })
+const onSelectSites = (value: string) => { selectedQueryStreams.value = value }
 
-const hasErrorValidatingRequestParams = (): string | null => {
-  // - classifier_id should not be -1
-  // - project_id should not be null
-  // - query_streams should not be null
-  const validClassifier = selectedClassifier.value !== -1
-  const validProject = selectedProjectIdCore.value !== ''
-  const validQueryStreams = selectedQueryStreams.value !== null
-  if (!validClassifier) return 'Please select classifier'
-  else if (!validProject) return 'Project is not valid'
-  else if (!validQueryStreams) return 'Please select sites'
-  return null
-}
+// Validation
+const shouldValidate = ref(false)
 
+const errorProject = computed(() => selectedProjectIdCore.value !== '' ? undefined : 'No project selected or project is invalid')
+const errorPermission = computed(() => selectedProject.value?.isMyProject ?? false ? undefined : 'You do not have permission to create jobs for this project')
+const errorClassifier = computed(() => selectedClassifier.value > 0 ? undefined : 'Please select a classifier')
+
+const errors = computed(() => shouldValidate.value ? [errorProject.value, errorPermission.value, errorClassifier.value].filter(isDefined) : [])
+
+// Create job (call API)
 const create = async (): Promise<void> => {
-  // if some field is null, then warn the user!
-  const errorValidatingRequestParams = hasErrorValidatingRequestParams()
-  if (errorValidatingRequestParams) {
-    // TODO: show error
-    warningMessage.value = errorValidatingRequestParams
-    return
-  }
+  // Enable validation on first submit
+  shouldValidate.value = true
+
+  // Reject if validation errors
+  if (errors.value.length > 0) { return }
+
+  // Reject if invalid project
+  const selectedProjectIdCoreValue = selectedProjectIdCore.value
+  if (!selectedProjectIdCoreValue) { return }
+
+  // Save
   const testJob = {
     classifier_id: selectedClassifier.value,
-    project_id: selectedProjectIdCore.value ?? '',
-    query_streams: selectedQueryStreams.value ?? ''
+    project_id: selectedProjectIdCoreValue,
+    ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
+    ...selectedQueryStart.value && { query_start: selectedQueryStart.value.toISOString() },
+    ...selectedQueryEnd.value && { query_start: selectedQueryEnd.value.toISOString() },
+    ...selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
   }
-  mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
-}
 
-const onSelectSites = (value: string) => {
-  selectedQueryStreams.value = value
+  mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
 }
 </script>
