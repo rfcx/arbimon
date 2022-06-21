@@ -11,7 +11,7 @@
       :key="classifier.id"
       :value="classifier.id"
       class="my-0.5"
-      :label="classifier.name +  ' (v' + classifier.version + ')'"
+      :label="classifier.name + ' (v' + classifier.version + ')'"
     />
   </el-select>
 </template>
