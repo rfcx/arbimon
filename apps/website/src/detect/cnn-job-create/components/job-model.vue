@@ -28,7 +28,7 @@ const emit = defineEmits<{(e: 'selectedClassifier', value: number): void}>()
 
 const selectedClassifier = ref<number>(props.classifierModels[0]?.id)
 
-watch(selectedClassifier, () => { 
+watch(selectedClassifier, () => {
   emit('selectedClassifier', selectedClassifier.value)
 })
 
