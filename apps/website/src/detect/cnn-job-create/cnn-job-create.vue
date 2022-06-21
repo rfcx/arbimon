@@ -135,7 +135,7 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { Dayjs } from 'dayjs'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'

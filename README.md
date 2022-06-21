@@ -49,7 +49,7 @@ The following must be true to consider the Sprint "DONE":
    _or_  
    `pnpm -w serve` (from anywhere in the project)
 
-   - If the issue ia occured try `pnpm clean-slate`, after `pnpm i` and finally `pnpm serve`
+   - If the issue is occured try `pnpm clean-slate`, after `pnpm i` and finally `pnpm serve`
 
 2. After you finish, you might want to stop your db:
 
