@@ -33,13 +33,15 @@
 
 import { computed, ref, watch } from 'vue'
 
-import { useStore } from '~/store'
+import { Site } from '@rfcx-bio/common/dao/types'
 
 const ALL_SITES_OPTIONS = 'All sites in the project'
 
-const emit = defineEmits<{(e: 'emitSelectSite', value: string): void}>()
-const store = useStore()
-const projectSiteOptions = computed(() => store.projectFilters?.locationSites ?? [])
+const emit = defineEmits<{(e: 'emitSelectSites', value: string): void}>()
+const props = defineProps<{
+  initialSites?: Site[]
+}>()
+const projectSiteOptions = computed(() => props.initialSites ?? [])
 const inputFilter = ref('')
 
 watch(projectSiteOptions, async () => {
@@ -96,7 +98,7 @@ const selectedQuerySites = computed(() => {
   return isAllSiteOptionSelected.value ? '' : selectedOptions.value.join(',')
 })
 watch(selectedQuerySites, () => {
-  emit('emitSelectSite', selectedQuerySites.value)
+  emit('emitSelectSites', selectedQuerySites.value)
 })
 
 const onFilter = (query: string) => {

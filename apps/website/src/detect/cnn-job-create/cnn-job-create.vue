@@ -38,7 +38,10 @@
           >
             Sites
           </label>
-          <site-picker @emit-select-site="onSelectSites" />
+          <site-picker
+            :initial-sites="projectFilters?.locationSites"
+            @emit-select-sites="onSelectSites"
+          />
         </div>
         <div class="mb-4">
           <label
