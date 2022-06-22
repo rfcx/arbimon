@@ -16,7 +16,12 @@ describe('TimeOfDayPicker', () => {
 
     // Assert
     expect(buttonAll).toBeDefined()
+    expect(buttonAll.textContent).toMatch(/all/i)
+
     expect(buttonDiurnal).toBeDefined()
+    expect(buttonDiurnal.textContent).toMatch(/diurnal/i)
+
     expect(buttonNocturnal).toBeDefined()
+    expect(buttonNocturnal.textContent).toMatch(/nocturnal/i)
   })
 })
