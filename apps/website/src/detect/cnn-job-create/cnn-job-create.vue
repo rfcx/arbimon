@@ -60,7 +60,7 @@
           >
             Time of day
           </label>
-          <JobTimeRow @emit-select-time="onSelectTime" />
+          <TimeOfDayPicker @emit-select-time="onSelectTime" />
         </div>
       </li>
       <!-- <li class="mb-8 ml-6">
@@ -102,13 +102,13 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import DatePicker from '@/_services/picker/date-picker.vue'
 import SitePicker from '@/_services/picker/site-picker.vue'
+import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 import JobModel from './components/job-model.vue'
-import JobTimeRow from './components/job-time-row.vue'
 
 const router = useRouter()
 const store = useStore()
