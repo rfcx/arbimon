@@ -20,7 +20,8 @@
         <span v-else-if="isErrorClassifier">Error</span>
         <span v-else-if="classifiers === undefined">No response</span>
         <classifier-picker
-          :classifier-models="classifiers ?? []"
+          v-else
+          :classifier-models="classifiers"
           @selected-classifier="onSelectClassifier"
         />
       </li>
