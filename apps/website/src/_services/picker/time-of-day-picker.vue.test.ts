@@ -29,10 +29,10 @@ describe('TimeOfDayPicker', () => {
     expect(buttonNocturnal.textContent).toMatch(/nocturnal/i)
   })
 
-  test('emits 0-23 when "all" clicked', async () => {
+  test('emits null when "all" clicked', async () => {
     // Arrange
     const eventName = 'emitSelectTime'
-    const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    const expected = null
 
     const { getByRole, emitted } = render(component, DEFAULT_RENDER_OPTIONS)
 
@@ -47,7 +47,7 @@ describe('TimeOfDayPicker', () => {
 
     const firstEmit = (events[eventName][0] as number[][])[0]
     expect(firstEmit).toBeDefined()
-    expect(firstEmit.sort((a, b) => a - b)).toEqual(expected)
+    expect(firstEmit).toEqual(expected)
   })
 
   test('emits 6-17 when "diurnal" clicked', async () => {
