@@ -2,7 +2,6 @@
   <el-date-picker
     id="date-range-input"
     v-model="dateValues"
-    :default-value="[props.initialDateStartLocal, props.initialDateEndLocal]"
     type="daterange"
     unlink-panels
     range-separator="to"
