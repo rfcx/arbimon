@@ -90,7 +90,7 @@ const groupOptions = computed(() => {
 })
 
 // selected values
-const selectedOptions = ref<string[]>([])
+const selectedOptions = ref<string[]>([ALL_SITES_OPTIONS])
 const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS))
 
 // emit data to the parent component
