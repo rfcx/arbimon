@@ -1,21 +1,15 @@
-import { createTestingPinia } from '@pinia/testing'
-import { render, RenderResult } from '@testing-library/vue'
+import { render } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 import { Dayjs } from '@/../../../packages/utils/node_modules/dayjs'
-import Component from './date-picker.vue'
+import { DEFAULT_RENDER_OPTIONS } from '@/_testing/default-render-options'
+import component from './date-picker.vue'
 
 describe('DatePicker', () => {
-  const renderWithPinia = (): RenderResult => render(Component, {
-    global: {
-      plugins: [createTestingPinia({ createSpy: vi.fn })]
-    }
-  })
-
   test('has date input', async () => {
     // Arrange
-    const { getAllByRole } = renderWithPinia()
+    const { getAllByRole } = render(component, DEFAULT_RENDER_OPTIONS)
 
     // Act
     const dateInputs = getAllByRole('searchbox', { name: '' })
@@ -27,11 +21,7 @@ describe('DatePicker', () => {
 
   test('emit date range when start date changed', async () => {
     // Arrange
-    const wrapper = mount(Component, {
-      global: {
-        plugins: [createTestingPinia({ createSpy: vi.fn })]
-      }
-    })
+    const wrapper = mount(component, DEFAULT_RENDER_OPTIONS)
 
     // Act
     // await wrapper.find('button').trigger('click')

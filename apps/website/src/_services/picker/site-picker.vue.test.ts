@@ -1,18 +1,12 @@
-import { createTestingPinia } from '@pinia/testing'
 import { render } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
-import ComponentRaw from './site-picker.vue'
+import { DEFAULT_RENDER_OPTIONS } from '@/_testing/default-render-options'
+import component from './site-picker.vue'
 
 describe('SitePicker', () => {
-  const Component = mount(ComponentRaw, {
-    global: {
-      plugins: [createTestingPinia({
-        createSpy: vi.fn
-      })]
-    }
-  })
+  const Component = mount(component, DEFAULT_RENDER_OPTIONS)
 
   test.todo('has all option', async () => {
     // Arrange
