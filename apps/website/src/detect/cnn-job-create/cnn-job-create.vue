@@ -102,7 +102,7 @@
     effect="dark"
     show-icon
   >
-    <pre>{{ JSON.stringify(debugging, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
+    <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
   </el-alert>
 </template>
 <script setup lang="ts">
@@ -168,14 +168,17 @@ const errorClassifier = computed(() => selectedClassifier.value > 0 ? undefined 
 
 const errors = computed(() => shouldValidate.value ? [errorProject.value, errorPermission.value, errorClassifier.value].filter(isDefined) : [])
 
-const debugging = computed(() => ({
+const job = computed(() => selectedProjectIdCore.value
+  ? {
     classifier_id: selectedClassifier.value,
     project_id: selectedProjectIdCore.value,
     ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
     ...selectedQueryStart.value && { query_start: selectedQueryStart.value },
     ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value },
     ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
-  }))
+  }
+  : undefined
+)
 
 // Create job (call API)
 const create = async (): Promise<void> => {
@@ -186,20 +189,10 @@ const create = async (): Promise<void> => {
   if (errors.value.length > 0) { return }
 
   // Reject if invalid project
-  const projectId = selectedProjectIdCore.value
-  if (!projectId) { return }
-
-  const job = {
-    classifier_id: selectedClassifier.value,
-    project_id: projectId,
-    ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
-    ...selectedQueryStart.value && { query_start: selectedQueryStart.value },
-    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value },
-    ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
-  }
+  if (!job.value) { return }
 
   // Save
-  mutatePostJob(job, {
+  mutatePostJob(job.value, {
     onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) }
   })
 }
