@@ -133,6 +133,14 @@
       <span v-if="isErrorPostJob">Error saving job :(</span>
     </div>
   </form>
+  <el-alert
+    title="Debugging"
+    :description="JSON.stringify(debugging, null, 2)"
+    type="info"
+    class="my-4"
+    effect="dark"
+    show-icon
+  />
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
@@ -182,6 +190,15 @@ const errorPermission = computed(() => selectedProject.value?.isMyProject ?? fal
 const errorClassifier = computed(() => selectedClassifier.value > 0 ? undefined : 'Please select a classifier')
 
 const errors = computed(() => shouldValidate.value ? [errorProject.value, errorPermission.value, errorClassifier.value].filter(isDefined) : [])
+
+const debugging = computed(() => ({
+    classifier_id: selectedClassifier.value,
+    project_id: selectedProjectIdCore.value,
+    ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
+    ...selectedQueryStart.value && { query_start: selectedQueryStart.value.toISOString() },
+    ...selectedQueryEnd.value && { query_start: selectedQueryEnd.value.toISOString() },
+    ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
+  }))
 
 // Create job (call API)
 const create = async (): Promise<void> => {
