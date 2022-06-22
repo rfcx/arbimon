@@ -53,8 +53,7 @@
             Date
           </label>
           <date-picker
-            :initial-date-start-local="defaultDateRange.start"
-            :initial-date-end-local="defaultDateRange.end"
+            :initial-dates="projectDateRange"
             @emit-select-date-range="onSelectQueryDates"
           />
         </div>
@@ -107,15 +106,14 @@
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { Dayjs } from 'dayjs'
 import { computed, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
+import { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey } from '@/globals'
@@ -136,28 +134,27 @@ const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePost
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
 const projectFilters = computed(() => store.projectFilters)
-const defaultDateRange = computed(() => {
-  const dateStartUtc = projectFilters.value?.dateStartInclusiveUtc
-  const dateEndUtc = projectFilters.value?.dateEndInclusiveUtc
-  return {
-    ...dateStartUtc && { start: dayjs.utc(dateStartUtc).toDate() },
-    ...dateEndUtc && { end: dayjs.utc(dateEndUtc).toDate() }
-  }
+const projectDateRange = computed(() => {
+  const dateStartLocalIso = projectFilters.value?.dateStartInclusiveUtc
+  const dateEndLocalIso = projectFilters.value?.dateEndInclusiveUtc
+
+  if (!dateStartLocalIso || !dateEndLocalIso) { return undefined }
+  return { dateStartLocalIso, dateEndLocalIso }
 })
 
 // Fields
 const selectedClassifier = ref<number>(-1)
 const selectedQueryStreams = ref<string | null>(null) // null = all, 'AR' = filter only AR
-const selectedQueryStart = ref<Dayjs | null>(null)
-const selectedQueryEnd = ref<Dayjs | null>(null)
+const selectedQueryStart = ref<string | null>(null)
+const selectedQueryEnd = ref<string | null>(null)
 const selectedQueryHours = ref<number[] | null>(null)
 
 // Watches & callbacks
 const onSelectClassifier = (value: number) => { selectedClassifier.value = value }
 const onSelectQuerySites = (value: string) => { selectedQueryStreams.value = value }
-const onSelectQueryDates = (dateRange: [Dayjs, Dayjs]) => {
-  selectedQueryStart.value = dateRange[0]
-  selectedQueryEnd.value = dateRange[1]
+const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  selectedQueryStart.value = dateStartLocalIso
+  selectedQueryEnd.value = dateEndLocalIso
 }
 const onSelectQueryHours = (value: number[] | null) => { selectedQueryHours.value = value }
 
@@ -174,8 +171,8 @@ const debugging = computed(() => ({
     classifier_id: selectedClassifier.value,
     project_id: selectedProjectIdCore.value,
     ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
-    ...selectedQueryStart.value && { query_start: selectedQueryStart.value.toISOString() },
-    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value.toISOString() },
+    ...selectedQueryStart.value && { query_start: selectedQueryStart.value },
+    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value },
     ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
   }))
 
