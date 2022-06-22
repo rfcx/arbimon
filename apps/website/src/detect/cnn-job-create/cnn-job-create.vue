@@ -40,7 +40,10 @@
           >
             Sites
           </label>
-          <site-picker @emit-select-site="onSelectSites" />
+          <site-picker
+            :initial-sites="projectFilters?.locationSites"
+            @emit-select-sites="onSelectSites"
+          />
         </div>
         <div class="mb-4">
           <label
@@ -49,52 +52,11 @@
           >
             Date
           </label>
-          <div
-            date-rangepicker
-            class="flex items-center"
-          >
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg
-                  class="w-5 h-5 text-gray-500 "
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                ><path
-                  fill-rule="evenodd"
-                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                  clip-rule="evenodd"
-                /></svg>
-              </div>
-              <input
-                name="start"
-                type="text"
-                class="bg-mirage-grey text-white border border-box-gray sm:text-sm rounded-lg block w-full pl-10 p-2.5"
-                placeholder="Select date start"
-              >
-            </div>
-            <span class="mx-4">to</span>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg
-                  class="w-5 h-5 text-gray-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                ><path
-                  fill-rule="evenodd"
-                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                  clip-rule="evenodd"
-                /></svg>
-              </div>
-              <input
-                name="end"
-                type="text"
-                class="bg-mirage-grey text-white border border-box-gray  sm:text-sm rounded-lg block w-full pl-10 p-2.5"
-                placeholder="Select date end"
-              >
-            </div>
-          </div>
+          <date-picker
+            :initial-date-start-local="defaultDateRange.start"
+            :initial-date-end-local="defaultDateRange.end"
+            @emit-select-date-range="onSelectDates"
+          />
         </div>
         <div class="mb-4">
           <label
@@ -148,9 +110,11 @@ import { Dayjs } from 'dayjs'
 import { computed, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
+import DatePicker from '@/_services/picker/date-picker.vue'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey } from '@/globals'
@@ -167,8 +131,18 @@ const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
 const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
+// Current projects
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
+const projectFilters = computed(() => store.projectFilters)
+const defaultDateRange = computed(() => {
+  const dateStartUtc = projectFilters.value?.dateStartInclusiveUtc
+  const dateEndUtc = projectFilters.value?.dateEndInclusiveUtc
+  return {
+    ...dateStartUtc && { start: dayjs.utc(dateStartUtc).toDate() },
+    ...dateEndUtc && { end: dayjs.utc(dateEndUtc).toDate() }
+  }
+})
 
 // Fields
 const selectedClassifier = ref<number>(-1)
@@ -180,6 +154,10 @@ const selectedQueryHours = ref<number[] | null>(null)
 // Watches & callbacks
 const onSelectClassifier = (value: number) => { selectedClassifier.value = value }
 const onSelectSites = (value: string) => { selectedQueryStreams.value = value }
+const onSelectDates = (dateRange: [Dayjs, Dayjs]) => {
+  selectedQueryStart.value = dateRange[0]
+  selectedQueryEnd.value = dateRange[1]
+}
 const onSelectTime = (timeRange: number[]) => { selectedQueryHours.value = timeRange }
 
 // Validation
