@@ -6,6 +6,7 @@
     type="warning"
     class="my-4"
     effect="dark"
+    show-icon
   />
   <form class="mt-5">
     <ol class="relative border-l border-box-grey">
@@ -126,10 +127,10 @@
         class="btn btn-primary"
         @click.prevent="create"
       >
-        Create
+        <span v-if="isLoadingPostJob">Saving</span>
+        <span v-else>Create</span>
       </button>
-      <span v-if="isLoadingPostJob">Saving...</span>
-      <span v-if="isErrorPostJob">Error :(</span>
+      <span v-if="isErrorPostJob">Error saving job :(</span>
     </div>
   </form>
 </template>
@@ -204,6 +205,8 @@ const create = async (): Promise<void> => {
     ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
   }
 
-  mutatePostJob(testJob, { onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) } })
+  mutatePostJob(testJob, {
+    onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) }
+  })
 }
 </script>
