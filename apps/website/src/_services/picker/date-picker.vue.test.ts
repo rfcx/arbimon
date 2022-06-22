@@ -1,12 +1,16 @@
-import { render } from '@testing-library/vue'
+import { cleanup, render } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test } from 'vitest'
 
 import { Dayjs } from '@/../../../packages/utils/node_modules/dayjs'
 import { DEFAULT_RENDER_OPTIONS } from '@/_testing/default-render-options'
 import component from './date-picker.vue'
 
 describe('DatePicker', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   test('has date input', async () => {
     // Arrange
     const { getAllByRole } = render(component, DEFAULT_RENDER_OPTIONS)
