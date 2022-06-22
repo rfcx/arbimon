@@ -19,7 +19,7 @@
         <span v-if="isLoadingClassifiers">Loading</span>
         <span v-else-if="isErrorClassifier">Error</span>
         <span v-else-if="classifiers === undefined">No response</span>
-        <job-model
+        <classifier-picker
           :classifier-models="classifiers ?? []"
           @selected-classifier="onSelectClassifier"
         />
@@ -140,6 +140,7 @@ import { useRouter } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
+import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey } from '@/globals'
@@ -147,7 +148,6 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
-import JobModel from './components/job-model.vue'
 
 const router = useRouter()
 const store = useStore()

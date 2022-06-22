@@ -16,7 +16,7 @@
   </el-select>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 import { ClassifierAllResponse } from '@rfcx-bio/common/api-core/classifier/classifier-all'
 
@@ -26,10 +26,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{(e: 'selectedClassifier', value: number): void}>()
 
-const selectedClassifier = ref<number>(props.classifierModels[0]?.id)
+const initialValue = props.classifierModels[0]?.id
+const selectedClassifier = ref<number | undefined>(initialValue)
 
-watch(selectedClassifier, () => {
-  emit('selectedClassifier', selectedClassifier.value)
-})
-
+watchEffect(() => { emit('selectedClassifier', selectedClassifier.value ?? -1) })
 </script>
