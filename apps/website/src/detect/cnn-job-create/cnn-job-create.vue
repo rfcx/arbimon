@@ -97,12 +97,13 @@
   </form>
   <el-alert
     title="Debugging"
-    :description="JSON.stringify(debugging, null, 2)"
     type="info"
     class="my-4"
     effect="dark"
     show-icon
-  />
+  >
+    <pre>{{ JSON.stringify(debugging, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
+  </el-alert>
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
