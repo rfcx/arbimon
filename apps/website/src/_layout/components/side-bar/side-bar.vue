@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="w-64 h-max border-r-1 border-box-grey bg-steel-grey"
+    class="w-64 border-r-1 border-box-grey bg-steel-grey"
     aria-label="Sidebar"
   >
     <div class="overflow-y-auto py-4 rounded">
@@ -23,6 +23,7 @@
             class="flex items-center p-4"
           >
             <span>Pattern Matching</span>
+            <icon-custom-linkout class="text-xs ml-1" />
           </a>
         </li>
         <li>
@@ -31,6 +32,7 @@
             class="flex items-center p-4"
           >
             <span>Random Forest Models</span>
+            <icon-custom-linkout class="text-xs ml-1" />
           </a>
         </li>
         <li>
@@ -39,6 +41,7 @@
             class="flex items-center p-4"
           >
             <span>Soundscape analysis</span>
+            <icon-custom-linkout class="text-xs ml-1" />
           </a>
         </li>
       </ul>

@@ -19,7 +19,7 @@
       <el-input
         v-model="searchKeyword"
         placeholder="Filter projects"
-        size="small"
+        size="large"
         class="mt-4"
       >
         <template #suffix>
