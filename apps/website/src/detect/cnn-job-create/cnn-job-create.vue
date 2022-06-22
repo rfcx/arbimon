@@ -42,7 +42,7 @@
           </label>
           <site-picker
             :initial-sites="projectFilters?.locationSites"
-            @emit-select-sites="onSelectSites"
+            @emit-select-sites="onSelectQuerySites"
           />
         </div>
         <div class="mb-4">
@@ -55,7 +55,7 @@
           <date-picker
             :initial-date-start-local="defaultDateRange.start"
             :initial-date-end-local="defaultDateRange.end"
-            @emit-select-date-range="onSelectDates"
+            @emit-select-date-range="onSelectQueryDates"
           />
         </div>
         <div class="mb-4">
@@ -65,7 +65,7 @@
           >
             Time of day
           </label>
-          <TimeOfDayPicker @emit-select-time="onSelectTime" />
+          <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
         </div>
       </li>
       <!-- <li class="mb-8 ml-6">
@@ -154,12 +154,12 @@ const selectedQueryHours = ref<number[] | null>(null)
 
 // Watches & callbacks
 const onSelectClassifier = (value: number) => { selectedClassifier.value = value }
-const onSelectSites = (value: string) => { selectedQueryStreams.value = value }
-const onSelectDates = (dateRange: [Dayjs, Dayjs]) => {
+const onSelectQuerySites = (value: string) => { selectedQueryStreams.value = value }
+const onSelectQueryDates = (dateRange: [Dayjs, Dayjs]) => {
   selectedQueryStart.value = dateRange[0]
   selectedQueryEnd.value = dateRange[1]
 }
-const onSelectTime = (timeRange: number[]) => { selectedQueryHours.value = timeRange }
+const onSelectQueryHours = (value: number[] | null) => { selectedQueryHours.value = value }
 
 // Validation
 const shouldValidate = ref(false)
