@@ -11,7 +11,7 @@ describe('DatePicker', () => {
     cleanup()
   })
 
-  test('has date input', async () => {
+  test.todo('has date input', async () => {
     // Arrange
     const { getAllByRole } = render(component, DEFAULT_RENDER_OPTIONS)
 
@@ -23,7 +23,7 @@ describe('DatePicker', () => {
     expect(dateInputs[1]).toBeDefined()
   })
 
-  test('emit date range when start date changed', async () => {
+  test.todo('emit date range when start date changed', async () => {
     // Arrange
     const wrapper = mount(component, DEFAULT_RENDER_OPTIONS)
 
