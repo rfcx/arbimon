@@ -7,35 +7,29 @@
       </button>
     </router-link>
   </div>
+
   <JobFilter
     :filter-options="filterOptions"
     @emit-select="onFilterChange"
   />
-  <p>
-    <!-- DEBUG START -->
-    {{ isLoadingClassifierJobs }}
-    {{ isErrorClassifierJobs }}
-    {{ classifierJobs }}
-    <!-- DEBUG END -->
-  </p>
   <p v-if="isLoadingClassifierJobs">
     Loading...
   </p>
   <p v-else-if="isErrorClassifierJobs">
     Error getting a list of classifier jobs
   </p>
-  <p
+  <div
     v-else-if="jobs && !jobs.length"
     class="mt-5 text-lg"
   >
-    No jobs found.
+    <p>No jobs found</p>
     <router-link
       :to="{ name: ROUTE_NAMES.cnnJobCreate }"
       class="font-bold"
     >
       Create a new job
     </router-link>
-  </p>
+  </div>
   <table
     v-else
     class="w-full text-sm text-left mt-5"
