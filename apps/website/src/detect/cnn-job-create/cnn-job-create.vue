@@ -95,13 +95,14 @@
     </div>
   </form>
   <el-alert
+    v-if="false"
     title="Debugging"
     type="info"
     class="my-4"
     effect="dark"
     show-icon
   >
-    <pre>{{ JSON.stringify(debugging, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
+    <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
   </el-alert>
 </template>
 <script setup lang="ts">
@@ -167,14 +168,14 @@ const errorClassifier = computed(() => selectedClassifier.value > 0 ? undefined 
 
 const errors = computed(() => shouldValidate.value ? [errorProject.value, errorPermission.value, errorClassifier.value].filter(isDefined) : [])
 
-const debugging = computed(() => ({
-    classifier_id: selectedClassifier.value,
-    project_id: selectedProjectIdCore.value,
-    ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
-    ...selectedQueryStart.value && { query_start: selectedQueryStart.value },
-    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value },
-    ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
-  }))
+const job = computed(() => ({
+  classifier_id: selectedClassifier.value,
+  project_id: selectedProjectIdCore.value,
+  ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
+  ...selectedQueryStart.value && { query_start: selectedQueryStart.value },
+  ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value },
+  ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
+}))
 
 // Create job (call API)
 const create = async (): Promise<void> => {
@@ -185,20 +186,11 @@ const create = async (): Promise<void> => {
   if (errors.value.length > 0) { return }
 
   // Reject if invalid project
-  const selectedProjectIdCoreValue = selectedProjectIdCore.value
-  if (!selectedProjectIdCoreValue) { return }
+  const jobRaw = job.value
+  if (jobRaw.project_id !== undefined) { return }
 
   // Save
-  const testJob = {
-    classifier_id: selectedClassifier.value,
-    project_id: selectedProjectIdCoreValue,
-    ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
-    ...selectedQueryStart.value && { query_start: selectedQueryStart.value.toISOString() },
-    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value.toISOString() },
-    ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
-  }
-
-  mutatePostJob(testJob, {
+  mutatePostJob(jobRaw, {
     onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) }
   })
 }
