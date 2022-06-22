@@ -174,7 +174,7 @@ const debugging = computed(() => ({
     project_id: selectedProjectIdCore.value,
     ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
     ...selectedQueryStart.value && { query_start: selectedQueryStart.value.toISOString() },
-    ...selectedQueryEnd.value && { query_start: selectedQueryEnd.value.toISOString() },
+    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value.toISOString() },
     ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
   }))
 
