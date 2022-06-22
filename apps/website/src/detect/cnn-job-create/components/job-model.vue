@@ -4,7 +4,8 @@
     filterable
     placeholder="Select classifier"
     no-data-text="No matching classifiers"
-    class="block w-full p-2.5 bg-mirage-grey rounded-lg"
+    class="block w-full"
+    size="large"
   >
     <el-option
       v-for="classifier in classifierModels"

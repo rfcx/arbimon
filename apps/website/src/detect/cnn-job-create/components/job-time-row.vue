@@ -4,10 +4,10 @@
       v-for="time in timeRanges"
       :key="'time-' + time.value"
       class="btn text-sm"
-      @click="onTimeClick(time.value)"
       round
+      @click="onTimeClick(time.value)"
     >
-     {{ time.label }}
+      {{ time.label }}
     </el-button>
   </el-row>
 </template>
