@@ -1,0 +1,62 @@
+@use "sass:map";
+
+$colors: (
+  "white": #fff,
+  "black": #000,
+  "placeholder": #999,
+  "faded-grey": #333,
+  "subtle-white": #ffffff90,
+  "primary": (
+    "light": #e6f3ea,
+    "base": #31984f,
+    "dark": #25713b,
+  ),
+  "danger": (
+    "light": #e5a4a4,
+    "base": #d46767,
+    "dark": #7f3e3e,
+  ),
+  "warning": (
+    "light": #ffe166,
+    "base": #ffcd00,
+    "dark": #997b00,
+  ),
+  "info" : (
+    "base": #45485d,
+  ),
+  "box-grey" : (
+    "base": #45485d,
+    "dark": #2f3140,
+  ),
+  "steel-grey" : (
+    "light": #4a4c72,
+    "base": #232436,
+    "dark": #202031,
+  ),
+  "mirage-grey" : (
+    "light": #e3e3e5,
+    "base": #141525,
+    "dark": #06060d,
+  )
+);
+
+@forward "element-plus/theme-chalk/src/dark/var.scss" with (
+  $colors: $colors,
+  $text-color: (
+    "primary": map.get($colors, "white"),
+    "regular": map.get($colors, "white"),
+    "secondary": map.get($colors, "white"),
+    "placeholder": map.get($colors, "placeholder"),
+  ),
+  $bg-color: (
+    "page": map.get($colors, "mirage-grey", "base"),
+    "": map.get($colors, "steel-grey", "base"),
+    "overlay": map.get($colors, "mirage-grey", "base"),
+  ),
+  $border-color: (
+    "base": map.get($colors, "box-grey", "base"),
+    "light": map.get($colors, "steel-grey", "base"),
+    "lighter": map.get($colors, "box-grey", "base"),
+    "extra-light": map.get($colors, "box-grey", "base"),
+  ),
+);

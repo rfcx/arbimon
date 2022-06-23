@@ -7,35 +7,29 @@
       </button>
     </router-link>
   </div>
+
   <JobFilter
     :filter-options="filterOptions"
     @emit-select="onFilterChange"
   />
-  <p>
-    <!-- DEBUG START -->
-    {{ isLoadingClassifierJobs }}
-    {{ isErrorClassifierJobs }}
-    {{ classifierJobs }}
-    <!-- DEBUG END -->
-  </p>
   <p v-if="isLoadingClassifierJobs">
     Loading...
   </p>
   <p v-else-if="isErrorClassifierJobs">
     Error getting a list of classifier jobs
   </p>
-  <p
+  <div
     v-else-if="jobs && !jobs.length"
     class="mt-5 text-lg"
   >
-    No jobs found.
+    <p>No jobs found</p>
     <router-link
       :to="{ name: ROUTE_NAMES.cnnJobCreate }"
       class="font-bold"
     >
       Create a new job
     </router-link>
-  </p>
+  </div>
   <table
     v-else
     class="w-full text-sm text-left mt-5"
@@ -95,36 +89,23 @@ const params = reactive({ created_by: 'all' })
 
 const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
 
-// TODO: Extract
-const getStatus = (s: number): string => {
-  switch (s) {
-    case 0: return 'Queued'
-    case 20: return 'Processing'
-    case 30: return 'Done'
-    case 40: return 'Error'
-    case 50: return 'Cancelled'
-    default: return 'Unknown'
-  }
-}
-
 const filterOptions: JobFilterItem[] = [
   { value: 'me', label: 'My jobs', checked: false },
   { value: 'all', label: 'All jobs', checked: true }
 ]
 
-const getProgress = (minComplete: number, minTotal: number): number =>
-  0
+const getProgress = (minComplete: number, minTotal: number): number => 0
 
 const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   id: cj.id,
   modelName: cj.classifier.name,
   input: {
-    sites: cj.queryStreams !== null ? cj.queryStreams : '-',
-    dateRange: `${cj.queryStart !== null ? cj.queryStart : '-'} / ${cj.queryEnd !== null ? cj.queryEnd : '-'}`,
-    timeOfDay: cj.queryHours !== null ? cj.queryHours : '-'
+    sites: cj.queryStreams !== null ? cj.queryStreams : 'All sites',
+    dateRange: `${cj.queryStart !== null ? cj.queryStart : ''} / ${cj.queryEnd !== null ? cj.queryEnd : '-'}`,
+    timeOfDay: cj.queryHours !== null ? cj.queryHours : 'All day'
   },
   progress: {
-    status: getStatus(cj.status),
+    status: cj.status,
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
   numberOfRecordings: 0,
@@ -135,51 +116,4 @@ const onFilterChange = (filter: string): void => {
   params.created_by = filter === 'me' ? 'me' : 'all'
 }
 
-// const jobs = [
-//   {
-//     id: 1,
-//     modelName: 'PR Regional CNN',
-//     input: {
-//       sites: 'SR*',
-//       dateRange: '2022-05-11',
-//       timeOfDay: 'Diurnal'
-//     },
-//     progress: {
-//       status: 'Processing',
-//       value: 20
-//     },
-//     numberOfRecordings: 4000,
-//     createdAt: new Date()
-//   },
-//   {
-//     id: 2,
-//     modelName: 'PR Regional CNN',
-//     input: {
-//       sites: 'SR*',
-//       dateRange: '2022-05-12',
-//       timeOfDay: 'Diurnal'
-//     },
-//     progress: {
-//       status: 'Queued',
-//       value: 0
-//     },
-//     numberOfRecordings: 2000,
-//     createdAt: new Date()
-//   },
-//   {
-//     id: 3,
-//     modelName: 'PR Regional CNN',
-//     input: {
-//       sites: 'SR*',
-//       dateRange: '2022-05-11 - 2022-05-12',
-//       timeOfDay: 'Nocturnal'
-//     },
-//     progress: {
-//       status: 'Queued',
-//       value: 0
-//     },
-//     numberOfRecordings: 4000,
-//     createdAt: new Date()
-//   }
-// ]
 </script>
