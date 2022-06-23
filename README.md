@@ -28,7 +28,7 @@ The following must be true to consider the Sprint "DONE":
 
    - node 16: [https://nodejs.org](https://nodejs.org)
    - pnpm 6: `npm i -g pnpm@6`
-   - VSCode & extensions: `pnpm init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
+   - VSCode & extensions: `pnpm node init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
      - If you have Vetur installed, disable it for this workspace
    - Docker Desktop: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 
@@ -48,6 +48,8 @@ The following must be true to consider the Sprint "DONE":
    `pnpm serve` (from the monorepo root)  
    _or_  
    `pnpm -w serve` (from anywhere in the project)
+
+   - If the issue is occured try `pnpm clean-slate`, after `pnpm i` and finally `pnpm serve`
 
 2. After you finish, you might want to stop your db:
 

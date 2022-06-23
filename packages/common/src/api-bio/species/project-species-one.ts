@@ -1,17 +1,17 @@
-import { SpeciesInProject, TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types'
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { AxiosInstance } from 'axios'
 
-// Request
-export type ProjectSpeciesOneParams = ProjectSpecificRouteParams & {
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
+import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types'
+import { SpeciesInProject } from '../../dao/types/species-in-project'
+import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
+
+// Request types
+export type ProjectSpeciesOneParams = ProjectRouteParamsSerialized & {
   speciesSlug: string
 }
 
-export const projectSpeciesOneRoute = '/projects/:projectId/species/:speciesSlug'
-
-export const projectSpeciesOneUrl = (params: ProjectSpeciesOneParams): string =>
-  `/projects/${params.projectId}/species/${params.speciesSlug}`
-
-// Response
+// Response types
 export interface PredictedOccupancyMap {
   title: string
   url: string
@@ -23,3 +23,10 @@ export interface ProjectSpeciesOneResponse {
   speciesCalls: TaxonSpeciesCallLight[]
   predictedOccupancyMaps: PredictedOccupancyMap[]
 }
+
+// Route
+export const projectSpeciesOneRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/species/:speciesSlug`
+
+// Service
+export const apiBioGetProjectSpeciesOne = async (apiClient: AxiosInstance, projectId: number, speciesSlug: string): Promise<ProjectSpeciesOneResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/species/${speciesSlug}`)

@@ -22,6 +22,9 @@ export default defineConfig({
           '.navbar-menu-item.router-link-exact-active': {
             'box-shadow': 'inset 5px 0 0 #31984f'
           }
+        },
+        '.router-link-active > a > span': {
+          'font-weight': '700'
         }
       }
       addComponents(navbarItems)
@@ -51,13 +54,27 @@ export default defineConfig({
         danger: '#D46767'
       },
       colors: {
+        placeholder: '#999',
+        faded: '#333',
+        subtle: '#ffffff90',
         'brand-primary': {
           DEFAULT: '#31984F',
           light: '#E6F3EA',
           dark: '#25713b'
         },
-        faded: '#333',
-        subtle: '#ffffff90',
+        danger: {
+          DEFAULT: '#D46767',
+          light: '#e5a4a4',
+          dark: '#7f3e3e'
+        },
+        warning: {
+          DEFAULT: '#FFCD00',
+          light: '#ffe166',
+          dark: '#997b00'
+        },
+        info: {
+          DEFAULT: '#45485D'
+        },
         'box-grey': {
           DEFAULT: '#45485D',
           dark: '#2f3140'
@@ -71,16 +88,6 @@ export default defineConfig({
           DEFAULT: '#141525',
           light: '#E3E3E5',
           dark: '#06060D'
-        },
-        danger: {
-          DEFAULT: '#D46767',
-          light: '#e5a4a4',
-          dark: '#7f3e3e'
-        },
-        warning: {
-          DEFAULT: '#FFCD00',
-          light: '#ffe166',
-          dark: '#997b00'
         }
       }
     }
@@ -99,6 +106,8 @@ export default defineConfig({
     // nav;
     'navbar-container': 'box-content text-primary flex items-center justify-center h-13',
     'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
-    'navbar-menu-item': 'px-2'
+    'navbar-menu-item': 'px-2',
+    // input
+    'input-field': 'bg-box-grey border text-sm rounded-lg block w-full p-2.5 focus:border-brand-primary bg-mirage-grey text-white'
   }
 })

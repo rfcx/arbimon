@@ -1,0 +1,47 @@
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $font-size:   (
+    "extra-large": 1.25rem,
+    "large": 1.125rem,
+    "medium": 1rem,
+    "base": 1rem,
+    "small": 0.875rem,
+    "extra-small": 0.75rem,
+  ),
+  $select: (
+    "input-color": var(--el-bg-color-white),
+    "bg-color": var(--el-bg-color),
+    "input-focus-border-color": var(--el-text-color-placeholder),
+    "input-font-size": var(--el-font-size-base)
+  ),
+  $select-dropdown: (
+    "bg-color": var(--el-bg-color),
+  ),
+  $select-option: (
+    "hover-background": var(--el-border-color-light),
+  ),
+  $input: (
+    "bg-color": var(--el-bg-color),
+    "focus-border": var(--el-bg-color),
+    "hover-border": var(--el-bg-color),
+  ),
+  $tag: (
+    "font-size": var(--el-font-size-base)
+  ),
+  $button: (
+    "bg-color": var(--el-bg-color),
+    "hover-bg-color": var(--el-color-primary),
+    "active-bg-color": var(--el-color-primary),
+    "text-color": var(--el-text-color-regular),
+    "hover-text-color": var(--el-text-color-regular),
+    "active-text-color": var(--el-text-color-regular),
+  ),
+  $popover: (
+    "bg-color": var(--el-color-info)
+  )
+);
+
+// customize dark variables
+@use "./element-plus-dark.scss";
+
+// import dark theme
+@use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;

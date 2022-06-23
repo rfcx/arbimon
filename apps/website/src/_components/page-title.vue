@@ -27,11 +27,13 @@ import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 import { RouteLocationRaw } from 'vue-router'
 
+import { routeNamesKey } from '@/globals'
 import { RouteNames } from '~/router'
 
 export default class PageTitle extends Vue {
-  @Inject() readonly ROUTE_NAMES!: RouteNames
-@Prop() pageTitle!: string
+  @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
+
+  @Prop() pageTitle!: string
   @Prop({ default: '' }) pageSubtitle!: string
   @Prop() pageInformation!: string
   @Prop() topic!: string

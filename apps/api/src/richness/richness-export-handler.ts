@@ -17,7 +17,7 @@ export const richnessExportHandler: Handler<RichnessExportResponse, RichnessExpo
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  const { dateStartInclusiveLocalIso: startDateUtcInclusive, dateEndInclusiveLocalIso: endDateUtcInclusive, siteIds, taxonClassIds: taxons } = req.query
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 

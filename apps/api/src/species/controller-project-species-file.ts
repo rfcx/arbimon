@@ -34,5 +34,5 @@ export const projectSpeciesFileHandler: Handler<FastifyReply, ProjectSpeciesFile
   if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw BioInvalidPathParamError({ filenameWithoutExtension })
 
   // Response
-  return await res.sendFile(mockPredictionsFolderName + '/' + filenameWithoutExtension + '.png')
+  return await res.sendFile(`${mockPredictionsFolderName}/${filenameWithoutExtension}.png`)
 }

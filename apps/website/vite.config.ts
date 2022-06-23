@@ -25,7 +25,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@use "./src/element.scss" as *;'
+        additionalData: '@use "@/_styles/element-plus.scss" as *;'
       }
     }
   },
@@ -63,11 +63,14 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     pluginWindiCSS()
   ],
   server: {
-    port: 8080,
+    port: 8101, // Bio-1
     open: false
   },
   test: {
-    include: ['src/**/*.{test,spec}.ts']
+    deps: { inline: ['element-plus'] },
+    environment: 'happy-dom',
+    include: ['src/**/*.{test,spec}.ts'],
+    setupFiles: ['./setup-component-tests.js']
   }
 }
 

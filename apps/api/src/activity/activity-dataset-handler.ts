@@ -1,5 +1,5 @@
+import { DatasetQueryParamsSerialized } from '@rfcx-bio/common/api-bio/_helpers'
 import { ActivityDatasetParams, ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
-import { FilterDatasetQuery } from '@rfcx-bio/common/api-bio/common/filter'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
@@ -11,7 +11,7 @@ import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 import { getActivityOverviewData } from './activity-dataset-bll'
 
-export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDatasetParams, FilterDatasetQuery> = async (req) => {
+export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDatasetParams, DatasetQueryParamsSerialized> = async (req) => {
   // Input & validation
   // TODO: We can extract this validation instead of repeating it in each handler
   const { projectId: projectIdString } = req.params
@@ -20,7 +20,7 @@ export const activityDatasetHandler: Handler<ActivityDatasetResponse, ActivityDa
   const projectId = parseInt(projectIdString)
   if (Number.isNaN(projectId)) throw BioInvalidPathParamError({ projectId: projectIdString })
 
-  const { startDate: startDateUtcInclusive, endDate: endDateUtcInclusive, siteIds, taxons } = req.query
+  const { dateStartInclusiveLocalIso: startDateUtcInclusive, dateEndInclusiveLocalIso: endDateUtcInclusive, siteIds, taxonClassIds: taxons } = req.query
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 

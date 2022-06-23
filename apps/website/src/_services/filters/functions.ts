@@ -1,17 +1,18 @@
 import { Dayjs } from 'dayjs'
 
+import { DatasetQueryParams } from '@rfcx-bio/common/api-bio/_helpers'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { SiteGroup } from '~/filters'
 import { useStore } from '~/store'
-import { ComparisonFilter, DatasetParameters } from './types'
+import { ComparisonFilter } from './types'
 
-export function filterToDataset ({ startDate, endDate, sites, otherFilters }: ComparisonFilter): DatasetParameters {
+export function filterToQuery ({ startDate, endDate, sites, otherFilters }: ComparisonFilter): DatasetQueryParams {
   return {
-    startDate: startDate,
-    endDate: endDate,
-    sites: sites.flatMap(sg => sg.value),
-    otherFilters
+    dateStartInclusiveLocalIso: startDate.toISOString(),
+    dateEndInclusiveLocalIso: endDate.toISOString(),
+    siteIds: sites.flatMap(sg => sg.value.map(s => s.id)),
+    taxonClassIds: otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value as number)
   }
 }
 
@@ -61,21 +62,4 @@ function getTaxonFilterName (taxonFilter: string[]): string {
     case 2: return `Taxon=${taxonFilter[0]}&${taxonFilter[1]}--`
     default: return `Taxon=${taxonFilter?.[0]}+ ${taxonFilter.length - 1} other taxons--`
   }
-}
-
-export function generateFilterQuery (rawFilter: DatasetParameters): string {
-  const siteIdsStringArray = (new URLSearchParams(rawFilter.sites.map(({ id }) => ['siteIds', id.toString()]))).toString()
-  const taxonsStringArray = (new URLSearchParams(rawFilter.otherFilters.filter(({ propertyName }) => propertyName === 'taxon').map(({ value }) => ['taxons', value.toString()]))).toString()
-
-  let params = Object.entries({ startDate: rawFilter.startDate.toISOString(), endDate: rawFilter.endDate.toISOString() }).map(([key, value]) => `${key}=${value}`).join('&')
-
-  if (siteIdsStringArray) {
-    params = `${params}&${siteIdsStringArray}`
-  }
-
-  if (taxonsStringArray) {
-    params = `${params}&${taxonsStringArray}`
-  }
-
-  return params
 }

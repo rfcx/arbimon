@@ -1,0 +1,69 @@
+/* Element plus class customization */
+
+@import "./variables";
+
+/* stylelint-disable selector-class-pattern */
+
+.el-date-editor .el-range-input {
+  background-color: transparent !important;
+}
+
+.el-picker-panel,
+.el-picker-panel__sidebar {
+  background-color: $color-mirage-grey !important;
+}
+
+.el-popover .el-popper__arrow::before {
+  border: none !important;
+  background: $color-box-grey !important;
+}
+
+.el-input .el-input__inner {
+  border-radius: 0.25rem;
+  background: transparent !important;
+
+  &:focus-visible {
+    box-shadow: none;
+  }
+}
+
+.el-input .el-input__prefix {
+  left: 12px;
+}
+
+.el-input .el-input__suffix {
+  right: 12px;
+}
+
+.el-popper.is-light .el-popper__arrow::before {
+  background: $color-mirage-grey;
+}
+
+.el-tag .el-select__tags-text {
+  color: $color-white;
+}
+
+.el-tag .el-icon {
+  color: $color-white;
+}
+
+.el-select-dropdown__item {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.el-select-dropdown__item.is-disabled {
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.el-pagination {
+  --el-pagination-bg-color: trasparent;
+}
+
+.el-pagination button:disabled {
+  background-color: transparent;
+}
+
+/* stylelint-enable selector-class-pattern */

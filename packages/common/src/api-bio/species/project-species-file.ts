@@ -1,14 +1,19 @@
-import { ProjectSpecificRouteParams } from '../common/project-specific-route'
+import { AxiosInstance } from 'axios'
 
-// Request
-export type ProjectSpeciesFileParams = ProjectSpecificRouteParams & {
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
+import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers/project-specific-route'
+
+// Request types
+export type ProjectSpeciesFileParams = ProjectRouteParamsSerialized & {
   speciesSlug: string
   filenameWithoutExtension: string
 }
 
-export const projectSpeciesFileRoute = '/projects/:projectId/species-file/:speciesSlug/:filenameWithoutExtension'
+// Route
+export const projectSpeciesPredictedOccupancyRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/predicted-occupancy/:speciesSlug/:filenameWithoutExtension`
 
-export const projectSpeciesFileUrl = (params: ProjectSpeciesFileParams): string =>
-  `/projects/${params.projectId}/species-file/${params.speciesSlug}/${params.filenameWithoutExtension}`
-
-// Response - FastifyReply
+// Service
+// TODO: Delete this (store files in S3)
+export const apiBioGetProjectSpeciesPredictedOccupancy = async (apiClient: AxiosInstance, url: string): Promise<Blob | undefined> =>
+  await apiGetOrUndefined(apiClient, url, { baseURL: '', responseType: 'blob' })

@@ -1,0 +1,34 @@
+/*
+- For element plus manual color customization purpose.
+- Colors related to the color inside `windi.config.ts`.
+*/
+
+// ------------ General Color -----------
+$color-white: #fff;
+$color-black: #000;
+$color-placeholder: #999;
+$color-faded-grey: #333;
+$color-subtle-white: #ffffff90;
+$color-brand-primary: #31984f;
+$color-brand-light: #e6f3ea;
+$color-brand-dark: #25713b;
+$color-danger: #d46767;
+$color-danger-light: #e5a4a4;
+$color-danger-dark: #7f3e3e;
+$color-warning: #ffcd00;
+$color-warning-light: #ffe166;
+$color-warning-dark: #997b00;
+$color-info: #45485d;
+$color-box-grey: #45485d;
+$color-box-grey-dark: #2f3140;
+$color-steel-grey: #232436;
+$color-steel-grey-light: #4a4c72;
+$color-steel-grey-dark: #202031;
+$color-mirage-grey: #141525;
+$color-mirage-grey-light: #e3e3e5;
+$color-mirage-grey-dark: #06060d;
+
+// -------------- Text Color ------------
+$text-primary-color: $color-white;
+$text-warning-color: $color-warning;
+$text-danger-color: $color-danger;

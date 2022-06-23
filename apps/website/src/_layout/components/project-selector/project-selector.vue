@@ -19,7 +19,7 @@
       <el-input
         v-model="searchKeyword"
         placeholder="Filter projects"
-        size="small"
+        size="large"
         class="mt-4"
       >
         <template #suffix>
@@ -83,7 +83,7 @@ import { partition } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/common/projects'
+import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { useStore } from '~/store'
 import projectList from './project-list.vue'
@@ -155,7 +155,8 @@ const confirmSelectedProject = async () => {
 
 </script>
 <style lang="scss" scoped>
-@import "@/variables.scss";
+@import "@/_styles/variables.scss";
+
 :deep(.el-input__inner) {
   &:focus {
     border-color: #e5e7eb;
