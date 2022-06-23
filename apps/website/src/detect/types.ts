@@ -5,7 +5,7 @@ export interface JobInput {
 }
 
 export interface JobProgress {
-  status: string
+  status: number
   value: number
 }
 
