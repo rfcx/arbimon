@@ -41,8 +41,8 @@ const resync = async (project: Project, arbimonSequelize: Sequelize, bioSequeliz
 }
 
 const main = async (): Promise<void> => {
-  const slug = process.argv.find(arg => arg.startsWith('--slug='))?.split('=')[1].toLowerCase() ?? ''
-  if (slug === '') {
+  const slug = process.argv.find(arg => arg.startsWith('--slug='))?.split('=')[1].toLowerCase()
+  if (slug === undefined) {
     exitWithError('Error: Please provide project slug, for example: pnpm serve lib/sync/reset-and-resync.js -- --slug=rfcx-th')
     return
   }
