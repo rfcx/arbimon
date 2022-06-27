@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { parseSpeciesArbimonToBio } from './parse-species-arbimon-to-bio'
 
-describe('ingest > parsers > parseProjectArbimonToBio', () => {
+describe('ingest > parsers > parseSpeciesArbimonToBio', () => {
   const VALID_SPECIES = {
     idArbimon: 1749,
     slug: 'actitis-macularius',
