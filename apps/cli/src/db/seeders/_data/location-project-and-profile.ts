@@ -81,7 +81,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,
       slug: 'puerto-rico',
-      slugArbimon: 'puerto-rico',
       name: 'Puerto Rico',
       ...dataPr
     },
@@ -89,7 +88,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'bci392pan298',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
-      slugArbimon: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
       ...dataBci
     },
@@ -97,7 +95,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'rbj7k70v4na7',
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
-      slugArbimon: 'fake-arbimon-project-for-bio',
       name: 'Fake Project',
       ...dataFakeProject
     }
@@ -107,7 +104,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,
       slug: 'puerto-rico',
-      slugArbimon: 'puerto-rico',
       name: 'Puerto Rico',
       ...dataPr
     },
@@ -115,7 +111,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'bci392pan298',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
-      slugArbimon: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
       ...dataBci
     },
@@ -123,7 +118,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'rbj7k70v4na7',
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
-      slugArbimon: 'fake-arbimon-project-for-bio',
       name: 'Fake Project',
       ...dataFakeProject
     }
@@ -133,7 +127,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,
       slug: 'puerto-rico',
-      slugArbimon: 'puerto-rico',
       name: 'Puerto Rico',
       ...dataPr
     },
@@ -141,7 +134,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'bci392pan298',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
-      slugArbimon: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
       ...dataBci
     }
@@ -151,7 +143,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'n9nrlg45vyf0',
       idArbimon: 1989,
       slug: 'puerto-rico-island-wide',
-      slugArbimon: 'puerto-rico-island-wide',
       name: 'Puerto Rico Island-Wide',
       ...dataPr
     },
@@ -159,7 +150,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'xle0i1t9uea4',
       idArbimon: 1209,
       slug: 'bci-panama-2018',
-      slugArbimon: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
       ...dataBci
     },
@@ -167,7 +157,6 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idCore: 'kwsda03lllt4',
       idArbimon: 1429,
       slug: 'rfcx-guardians-madre-de-dios-peru',
-      slugArbimon: 'rfcx-guardians-madre-de-dios-peru',
       name: 'RFCx-Guardians in Madre de Dios Peru',
       ...dataMadre
     }
