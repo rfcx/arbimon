@@ -7,5 +7,7 @@ create table species (
   image varchar(200) default null,
   description text,
   biotab_id int(11) default null,
-  defined_by int(10) default nul
+  defined_by int(10) default null,
+  created_at text not null,
+  updated_at text not null
 );
