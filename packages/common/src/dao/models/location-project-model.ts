@@ -30,10 +30,6 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
       type: DataTypes.STRING(255),
       unique: true
     },
-    slugArbimon: { // fake-arbimon-project-for-bio
-      type: DataTypes.STRING(255),
-      unique: true
-    },
 
     // Facts
     name: DataTypes.STRING(255), // Puerto Rico Island-Wide

@@ -3,7 +3,7 @@ import { AttributeConstants } from '../type-helpers'
 export interface SyncLogByProject {
   id: number
   projectId: number
-  sourceId: number
+  syncSourceId: number
   syncDataTypeId: number
   delta: number
 }

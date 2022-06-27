@@ -16,20 +16,28 @@ describe('ingest > outputs > projects', () => {
       idCore: '807cuoi3cv99',
       idArbimon: 9999,
       slug: 'rfcx-99',
-      name: 'RFCx 99'
+      name: 'RFCx 99',
+      latitudeNorth: 1,
+      latitudeSouth: 1,
+      longitudeEast: 1,
+      longitudeWest: 1
     },
     {
       idCore: '807cuoi3cv98',
       idArbimon: 9998,
       slug: 'rfcx-98',
-      name: 'RFCx 98'
+      name: 'RFCx 98',
+      latitudeNorth: 1,
+      latitudeSouth: 1,
+      longitudeEast: 1,
+      longitudeWest: 1
     }]
 
     // Act
     await writeProjectsToBio(input, biodiversitySequelize)
 
     // Assert
-    const projects = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll({
+    const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
       where: {
         idArbimon: { [Op.in]: input.map(i => i.idArbimon) }
       }
@@ -43,14 +51,18 @@ describe('ingest > outputs > projects', () => {
       idCore: '807cuoi3cvwx',
       idArbimon: 9999,
       slug: 'rfcx-99-1',
-      name: 'RFCx 99-1'
+      name: 'RFCx 99-1',
+      latitudeNorth: 1,
+      latitudeSouth: 1,
+      longitudeEast: 1,
+      longitudeWest: 1
     }
 
     // Act
     await writeProjectsToBio([inputItem], biodiversitySequelize)
 
     // Assert
-    const updatedProject = await ModelRepository.getInstance(biodiversitySequelize).Project.findOne({ where: { idArbimon: inputItem.idArbimon } })
+    const updatedProject = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: inputItem.idArbimon } })
     expect(updatedProject?.name).toBe(inputItem.name)
     expect(updatedProject?.slug).toBe(inputItem.slug)
     expect(updatedProject?.idCore).toBe(inputItem.idCore)

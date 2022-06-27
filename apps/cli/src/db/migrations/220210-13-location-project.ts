@@ -43,11 +43,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false,
         unique: true
       },
-      slug_arbimon: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true
-      },
       // Facts
       name: {
         type: DataTypes.STRING(255),
@@ -55,19 +50,23 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
       latitude_north: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       latitude_south: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       longitude_east: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       longitude_west: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       }
     }
   )

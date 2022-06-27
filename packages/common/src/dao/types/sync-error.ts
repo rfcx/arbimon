@@ -1,7 +1,7 @@
 import { AttributeConstants } from '../type-helpers'
 
 export interface SyncError {
-  sourceId: number
+  syncSourceId: number
   syncDataTypeId: number
   externalId: string
   error: string

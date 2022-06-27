@@ -1,7 +1,7 @@
 import { AttributeConstants } from '../type-helpers'
 
 export interface SyncStatus {
-  sourceId: number
+  syncSourceId: number
   syncDataTypeId: number
   syncUntilDate: Date
   syncUntilId: number

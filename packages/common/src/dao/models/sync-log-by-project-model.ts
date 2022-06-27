@@ -18,7 +18,7 @@ export const SyncLogByProjectModel = defineWithDefaultsAutoPk<SyncLogByProject>(
 
     // FKs
     projectId: DataTypes.INTEGER, // 1
-    sourceId: DataTypes.INTEGER, // 1
+    syncSourceId: DataTypes.INTEGER, // 1
     syncDataTypeId: DataTypes.INTEGER, // 1
 
     // Facts

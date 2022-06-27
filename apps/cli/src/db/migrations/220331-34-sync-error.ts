@@ -17,7 +17,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     TABLE_NAME,
     {
       // PK
-      source_id: {
+      sync_source_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {

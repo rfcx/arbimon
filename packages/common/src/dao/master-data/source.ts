@@ -6,5 +6,5 @@ export const masterSources = {
   ArbimonValidated: { id: 100, name: 'Arbimon Validated' }
 } as const
 
-export type SourceId = ValueOf<typeof masterSources>['id']
+export type SyncSourceId = ValueOf<typeof masterSources>['id']
 export const sources: readonly SyncSource[] = Object.values(masterSources)
