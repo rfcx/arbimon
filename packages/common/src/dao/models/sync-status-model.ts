@@ -10,7 +10,7 @@ export const SyncStatusModel = defineWithDefaults<SyncStatus>(
   MODEL_SYNC_STATUS,
   {
     // PK
-    sourceId: { // 1
+    syncSourceId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

@@ -10,7 +10,7 @@ export const SyncErrorModel = defineWithDefaults<SyncError>(
   MODEL_SYNC_ERROR,
   {
     // PK
-    sourceId: { // 1
+    syncSourceId: { // 1
       type: DataTypes.INTEGER,
       primaryKey: true
     },

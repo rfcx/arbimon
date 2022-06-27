@@ -13,7 +13,7 @@ const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = await getSequelize()
 
 const SYNC_CONFIG: SyncConfig = {
-  sourceId: masterSources.ArbimonValidated.id,
+  syncSourceId: masterSources.ArbimonValidated.id,
   syncDataTypeId: masterSyncDataTypes.Project.id,
   syncBatchLimit: 2
 }
@@ -25,7 +25,7 @@ describe('ingest > sync', () => {
       const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
         .SyncStatus
         .findOne({
-          where: { sourceId: SYNC_CONFIG.sourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+          where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
           raw: true
         }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
@@ -34,14 +34,14 @@ describe('ingest > sync', () => {
 
       // Assert
       // - Assert valid projects are in Bio projects table
-      const projects = await ModelRepository.getInstance(biodiversitySequelize).Project.findAll({
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
         where: { idArbimon: { [Op.in]: [1920, 1921] } }
       })
       expect(projects.length).toBe(2)
 
       // - Assert new project version
       const projectVersions = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.findAll({
-        where: { projectId: { [Op.in]: projects.map(p => p.id) } }
+        where: { locationProjectId: { [Op.in]: projects.map(p => p.id) } }
       })
       expect(projectVersions.length).toBe(2)
     })

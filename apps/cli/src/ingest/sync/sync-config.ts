@@ -1,7 +1,7 @@
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-export type SyncConfig = Pick<SyncStatus, 'sourceId' | 'syncDataTypeId' | 'syncBatchLimit'>
+export type SyncConfig = Pick<SyncStatus, 'syncSourceId' | 'syncDataTypeId' | 'syncBatchLimit'>
 
 export const getDefaultSyncStatus = (syncConfig: SyncConfig): SyncStatus =>
   ({

@@ -13,7 +13,7 @@ import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bi
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
 const SYNC_CONFIG: SyncConfig = {
-  sourceId: masterSources.ArbimonValidated.id,
+  syncSourceId: masterSources.ArbimonValidated.id,
   syncDataTypeId: masterSyncDataTypes.Project.id,
   syncBatchLimit: 1000
 }
@@ -47,7 +47,7 @@ export const syncArbimonProjects = async (arbimonSequelize: Sequelize, biodivers
   let syncStatus = await ModelRepository.getInstance(getSequelize())
     .SyncStatus
     .findOne({
-      where: { sourceId: SYNC_CONFIG.sourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 

@@ -33,7 +33,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
           key: 'id'
         }
       },
-      source_id: {
+      sync_source_id: {
         type: DataTypes.INTEGER,
         references: {
           model: { tableName: 'sync_source' },
