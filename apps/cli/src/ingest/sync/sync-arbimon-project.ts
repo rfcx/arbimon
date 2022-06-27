@@ -22,9 +22,8 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   const arbimonProjects = await getArbimonProjects(arbimonSequelize, syncStatus)
   if (arbimonProjects.length === 0) return syncStatus
 
-  const [projects, validationErrors] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
+  const [projects] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
   const projectData = projects.map(p => p.data)
-  console.log('validationErrors', validationErrors)
   const transaction = await biodiversitySequelize.transaction()
   try {
     await writeProjectsToBio(projectData, biodiversitySequelize, transaction)
