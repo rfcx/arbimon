@@ -17,6 +17,11 @@ import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-m
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
 import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/species-in-project-model'
+import { MODEL_SYNC_DATA_TYPE, SyncDataTypeModel } from './models/sync-data-type-model'
+import { MODEL_SYNC_ERROR, SyncErrorModel } from './models/sync-error-model'
+import { MODEL_SYNC_LOG_BY_PROJECT, SyncLogByProjectModel } from './models/sync-log-by-project-model'
+import { MODEL_SYNC_SOURCE, SyncSourceModel } from './models/sync-source-model'
+import { MODEL_SYNC_STATUS, SyncStatusModel } from './models/sync-status-model'
 import { MODEL_TAXON_CLASS, TaxonClassModel } from './models/taxon-class-model'
 import { MODEL_TAXON_SPECIES_CALL, TaxonSpeciesCallModel } from './models/taxon-species-call-model'
 import { MODEL_TAXON_SPECIES_IUCN, TaxonSpeciesIucnModel } from './models/taxon-species-iucn-model'
@@ -24,6 +29,12 @@ import { MODEL_TAXON_SPECIES, TaxonSpeciesModel } from './models/taxon-species-m
 import { MODEL_TAXON_SPECIES_PHOTO, TaxonSpeciesPhotoModel } from './models/taxon-species-photo-model'
 import { MODEL_TAXON_SPECIES_RFCX, TaxonSpeciesRfcxModel } from './models/taxon-species-rfcx-model'
 import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-species-wiki-model'
+// [MODEL_SOURCE]: [SourceModel],
+
+//   [MODEL_SYNC_DATA_TYPE]: [SyncDataTypeModel],
+//   [MODEL_SYNC_ERROR]: [SyncErrorModel, { manyToOne: [MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
+//   [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_PROJECT, MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
+//   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
 
 export const modelRegistrations = {
   // Tables
@@ -43,6 +54,11 @@ export const modelRegistrations = {
   [MODEL_TAXON_SPECIES_PHOTO]: [TaxonSpeciesPhotoModel, { manyToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_RFCX]: [TaxonSpeciesRfcxModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
   [MODEL_TAXON_SPECIES_WIKI]: [TaxonSpeciesWikiModel, { oneToOne: [MODEL_TAXON_SPECIES] }],
+  [MODEL_SYNC_SOURCE]: [SyncSourceModel],
+  [MODEL_SYNC_DATA_TYPE]: [SyncDataTypeModel],
+  [MODEL_SYNC_ERROR]: [SyncErrorModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
+  [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
+  [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
