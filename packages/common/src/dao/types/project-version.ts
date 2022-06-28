@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface ProjectVersion {
   id: number
   locationProjectId: number
@@ -5,4 +7,7 @@ export interface ProjectVersion {
   isPublic: boolean
 }
 
-export const ATTRIBUTES_PROJECT_VERSION: Record<string, Array<keyof ProjectVersion>> = {}
+export const ATTRIBUTES_PROJECT_VERSION = attributes<ProjectVersion>()({
+})
+
+export type ProjectVersionTypes = AttributeTypes< ProjectVersion, typeof ATTRIBUTES_PROJECT_VERSION>

@@ -2,14 +2,14 @@ import { AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { LocationProjectLight } from '../../dao/types'
+import { LocationProjectTypes } from '../../dao/types'
 
 // Request types
 // nothing specific...
 
 // Response types
 export type LocationProjectForUser =
-  LocationProjectLight &
+  LocationProjectTypes['light'] &
   {
     isMyProject: boolean
     hasPublishedVersions: boolean
