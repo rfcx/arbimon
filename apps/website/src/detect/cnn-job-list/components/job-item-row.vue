@@ -79,7 +79,9 @@ const openErrorMessage = () => {
 
 const update = async (): Promise<void> => {
   mutatedPostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
-    onSuccess: () => emit('emitUpdate'),
+    onSuccess: () => {
+      emit('emitUpdate')
+    },
     onError: () => openErrorMessage()
   })
 }
