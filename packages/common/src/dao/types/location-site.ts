@@ -1,4 +1,5 @@
-// TODO: Rename this to LocationSite & update references
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface Site {
   id: number
   idCore: string
@@ -10,6 +11,6 @@ export interface Site {
   altitude: number
 }
 
-export const ATTRIBUTES_LOCATION_SITE: Record<string, Array<keyof Site>> = {
+export const ATTRIBUTES_LOCATION_SITE = attributes<Site>()({
   light: ['id', 'name', 'latitude', 'longitude', 'altitude']
-}
+})

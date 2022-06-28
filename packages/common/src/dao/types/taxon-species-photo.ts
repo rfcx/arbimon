@@ -18,7 +18,7 @@ export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
   'photoLicenseUrl'
 >
 
-export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
+export const ATTRIBUTES_TAXON_SPECIES_PHOTO = attributes<TaxonSpeciesPhoto>()({
   light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
   full: ['taxonSpeciesId', 'photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
-}
+})
