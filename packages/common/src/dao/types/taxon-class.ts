@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface TaxonClass {
   id: number
   idArbimon: number
@@ -5,6 +7,6 @@ export interface TaxonClass {
   commonName: string
 }
 
-export const ATTRIBUTES_TAXON_CLASS: Record<string, Array<keyof TaxonClass>> = {
+export const ATTRIBUTES_TAXON_CLASS = attributes<TaxonClass>()({
   light: ['id', 'slug', 'commonName']
-}
+})

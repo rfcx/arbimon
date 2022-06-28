@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface SpeciesInProject {
   locationProjectId: number
   taxonClassId: number
@@ -23,6 +25,6 @@ export type SpeciesInProjectLight = Pick<SpeciesInProject,
   'taxonClassSlug'
 >
 
-export const ATTRIBUTES_SPECIES_IN_PROJECT: Record<string, Array<keyof SpeciesInProject>> = {
+export const ATTRIBUTES_SPECIES_IN_PROJECT = attributes<SpeciesInProject>()({
   light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug']
-}
+})

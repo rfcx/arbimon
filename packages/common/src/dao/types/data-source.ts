@@ -1,4 +1,4 @@
-import { WithDates } from '../type-helpers'
+import { attributes, AttributeTypes, WithDates } from '../type-helpers'
 
 export interface DataSource extends WithDates {
   id: string
@@ -6,6 +6,6 @@ export interface DataSource extends WithDates {
   summaryText: string
 }
 
-export const ATTRIBUTES_DATA_SOURCE: Record<string, Array<keyof DataSource>> = {
+export const ATTRIBUTES_DATA_SOURCE = attributes<DataSource>()({
   light: ['id', 'locationProjectId', 'summaryText']
-}
+})

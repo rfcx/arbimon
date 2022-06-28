@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface LocationProjectMetric {
   locationProjectId: number
   detectionCount: number
@@ -14,3 +16,7 @@ export type LocationProjectMetricLight = Pick<LocationProjectMetric,
   'maxDate' |
   'minDate'
 >
+
+export const ATTRIBUTES_LOCATION_PROJECT_METRIC = attributes<LocationProjectMetric>()({
+  light: ['detectionCount', 'siteCount', 'speciesCount', 'maxDate', 'minDate']
+})

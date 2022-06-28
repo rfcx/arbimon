@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface TaxonSpeciesCall {
   id: number
   taxonSpeciesId: number
@@ -18,6 +20,6 @@ export type TaxonSpeciesCallLight = Pick<TaxonSpeciesCall,
   'callMediaRedirectUrl'
 >
 
-export const ATTRIBUTES_TAXON_SPECIES_CALL: Record<string, Array<keyof TaxonSpeciesCall>> = {
+export const ATTRIBUTES_TAXON_SPECIES_CALL = attributes<TaxonSpeciesCall>()({
   light: ['callType', 'callMediaSpecUrl', 'callMediaWavUrl', 'callMediaRedirectUrl']
-}
+})
