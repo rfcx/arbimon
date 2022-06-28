@@ -1,6 +1,6 @@
 <template>
   <div class="mb-1 text-subtle">
-    {{ getStatus(props.jobProgress.status) }}
+    {{ statusLabel }}
   </div>
   <div
     v-if="isRunning"
@@ -16,28 +16,24 @@
 </template>
 
 <script setup lang="ts">
-
 import { computed } from 'vue'
 
-import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { JobProgress } from '../../types'
-
-// TODO: Extract
-const getStatus = (s: number): string => {
-  switch (s) {
-    case 0: return 'Queued'
-    case 20: return 'Processing'
-    case 30: return 'Done'
-    case 40: return 'Error'
-    case 50: return 'Cancelled'
-    default: return 'Unknown'
-  }
-}
 
 const props = defineProps<{
   jobProgress: JobProgress
 }>()
 
-const isRunning = computed(() => props.jobProgress.status === CLASSIFIER_JOB_STATUS.RUNNING)
+const statusCode = computed(() => props.jobProgress.status)
+const isRunning = computed(() => statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING)
+const statusLabel = computed(() => {
+  if (!Object.keys(CLASSIFIER_JOB_LABELS).map(Number).includes(statusCode.value)) {
+    return 'Unknown'
+  }
+
+  return CLASSIFIER_JOB_LABELS[statusCode.value]
+})
+
 </script>
