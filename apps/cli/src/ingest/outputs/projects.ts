@@ -30,7 +30,7 @@ export const writeProjectsToBio = async (projects: Array<Omit<Project, 'id'>>, s
       })
     return []
   } catch (batchInsertError) {
-    console.error('⚠️ Batch insert failed... try loop insert')
+    console.error('⚠️ Batch insert failed (%s)... try loop insert', batchInsertError.message)
     return await loopUpsert(projects, sequelize)
   }
 }
