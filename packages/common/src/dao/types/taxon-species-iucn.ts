@@ -7,5 +7,4 @@ export interface TaxonSpeciesIucn {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_IUCN: Record<string, Array<keyof TaxonSpeciesIucn>> = {
-  updateOnDuplicate: ['commonName', 'description', 'descriptionSourceUrl', 'riskRatingIucnId']
 }
