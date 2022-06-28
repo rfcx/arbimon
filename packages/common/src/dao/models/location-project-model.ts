@@ -5,7 +5,7 @@ import { Project } from '../types'
 
 export const MODEL_LOCATION_PROJECT = 'LocationProject'
 export const TABLE_LOCATION_PROJECT = 'location_project'
-export const UPDATE_ON_DUPLICATE_LOCATION_PROJECT: Array<keyof Project> = ['name', 'slug', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+export const UPDATE_ON_DUPLICATE_LOCATION_PROJECT: Array<keyof Project> = ['name', 'slug', 'idCore', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 
 export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
   MODEL_LOCATION_PROJECT,
