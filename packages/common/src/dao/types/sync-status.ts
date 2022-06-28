@@ -1,4 +1,4 @@
-import { AttributeConstants } from '../type-helpers'
+import { attributes } from '../type-helpers'
 
 export interface SyncStatus {
   syncSourceId: number
@@ -8,5 +8,5 @@ export interface SyncStatus {
   syncBatchLimit: number
 }
 
-export const ATTRIBUTES_SYNC_STATUS: AttributeConstants<SyncStatus> = {
-}
+export const ATTRIBUTES_SYNC_STATUS = attributes<SyncStatus>()({
+})
