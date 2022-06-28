@@ -1,3 +1,4 @@
+import { attributes, AttributeTypes } from '../type-helpers'
 import { Source } from './source'
 
 export interface TaxonSpeciesPhoto {
@@ -10,15 +11,9 @@ export interface TaxonSpeciesPhoto {
   photoLicenseUrl?: string
 }
 
-export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
-  'photoUrl' |
-  'photoCaption' |
-  'photoAuthor' |
-  'photoLicense' |
-  'photoLicenseUrl'
->
-
-export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
+export const ATTRIBUTES_TAXON_SPECIES_PHOTO = attributes<TaxonSpeciesPhoto>()({
   light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
   full: ['taxonSpeciesId', 'photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
-}
+})
+
+export type TaxonSpeciesPhotoTypes = AttributeTypes<TaxonSpeciesPhoto, typeof ATTRIBUTES_TAXON_SPECIES_PHOTO>

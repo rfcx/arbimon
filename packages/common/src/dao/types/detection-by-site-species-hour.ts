@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface DetectionBySiteSpeciesHour {
   timePrecisionHourLocal: Date
   locationSiteId: number
@@ -8,6 +10,7 @@ export interface DetectionBySiteSpeciesHour {
   durationMinutes: number
 }
 
-export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR: Record<string, Array<keyof DetectionBySiteSpeciesHour>> = {
-  pks: ['timePrecisionHourLocal', 'locationSiteId', 'taxonSpeciesId']
-}
+export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR = attributes<DetectionBySiteSpeciesHour>()({
+})
+
+export type DetectionBySiteSpeciesHourTypes = AttributeTypes< DetectionBySiteSpeciesHour, typeof ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR>
