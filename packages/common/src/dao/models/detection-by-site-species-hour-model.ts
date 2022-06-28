@@ -5,6 +5,7 @@ import { DetectionBySiteSpeciesHour } from '../types'
 
 export const MODEL_DETECTION_BY_SITE_SPECIES_HOUR = 'DetectionBySiteSpeciesHour'
 export const TABLE_DETECTION_BY_SITE_SPECIES_HOUR = 'detection_by_site_species_hour'
+export const UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR: Array<keyof DetectionBySiteSpeciesHour> = ['locationProjectId', 'taxonClassId', 'count', 'durationMinutes']
 
 export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteSpeciesHour>(
   MODEL_DETECTION_BY_SITE_SPECIES_HOUR,

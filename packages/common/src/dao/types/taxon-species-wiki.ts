@@ -5,5 +5,4 @@ export interface TaxonSpeciesWiki {
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_WIKI: Record<string, Array<keyof TaxonSpeciesWiki>> = {
-  updateOnDuplicate: ['description', 'descriptionSourceUrl']
 }

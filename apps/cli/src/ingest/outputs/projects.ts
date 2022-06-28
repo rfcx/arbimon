@@ -1,14 +1,14 @@
 import { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { UPDATE_ON_DUPLICATE_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
+import { UPDATE_ON_DUPLICATE_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { createProjectVersionIfNeeded } from './project-version'
 
 export const writeProjectsToBio = async (projects: Array<Omit<Project, 'id'>>, sequelize: Sequelize, transaction: Transaction | null = null): Promise<void> => {
   const options = {
-    updateOnDuplicate: UPDATE_ON_DUPLICATE_PROJECT,
+    updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_PROJECT,
     ...(transaction) && { transaction }
   }
 
