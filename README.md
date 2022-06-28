@@ -6,19 +6,19 @@ Website for exploring biodiversity data; built with Vue 3, Typescript, Vite, pnp
 
 ### _Sprint DoD_
 
-The following must be true to consider the Sprint "DONE":
+The following must be true to consider a feature "DONE":
 
-- Code follows [STANDARDS.md](./STANDARDS.md)
+- Code follows [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Updated [CHANGELOG.md](./CHANGELOG.md)
 - Code deployed to staging
-- Demo video & staging URL sent to PO by Tuesday
+- Demo video sent to #biodiversity-vision
 
 ### _Resources_
 
-- [Roadmap (Figma)](https://www.figma.com/file/Z4ybxswWvqiTdEsOgI2w7P/Milestone-and-Epic)
+- [Roadmap](https://docs.google.com/presentation/d/1id5AlF8pMdBgPravcf0q6lPOC09aHDFKGokJSUmkBmM/edit#slide=id.g131f6138dba_0_0)
 - [Design (Figma)](https://www.figma.com/files/team/1022436685454438648/Biodiversity-Team)
-- [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/4)
-- [Other files (Google Drive)](https://drive.google.com/drive/folders/17ZdAoPzetLPqkes4lkGQlKg_uHpkyxxg)
+- [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/9)
+- [Other files (Google Drive)](https://drive.google.com/drive/u/2/folders/0AEi1v_8CH7p8Uk9PVA)
 
 ## Installation
 
@@ -36,10 +36,13 @@ The following must be true to consider the Sprint "DONE":
 
    `pnpm i`
 
-3. Setup local environment:
+3. Create local environment:
+
    - Copy `apps/api/.env.example` to `.env` (and fill missing variables)
-   - Copy `apps/cli/.env.example` to `.env` (and fill missing variables)
-   - Copy `apps/website/.env` to `.env.local` (and fill missing variables)
+
+4. (optional) Override default environment:
+   - Create `apps/cli/.env.local` (and override variables as necessary)
+   - Create `apps/website/.env.local` (and override variables as necessary)
 
 ## Run the App!
 
@@ -49,13 +52,23 @@ The following must be true to consider the Sprint "DONE":
    _or_  
    `pnpm -w serve` (from anywhere in the project)
 
-   - If the issue is occured try `pnpm clean-slate`, after `pnpm i` and finally `pnpm serve`
-
 2. After you finish, you might want to stop your db:
 
    `pnpm --filter=db stop`
 
 ## More Commands
+
+### _Resetting Workspace_
+
+If you encounter an issue, you may want to clean caches & artifacts, or reinstall dependencies.
+
+- Delete all build and lint artifacts/caches:
+
+  `pnpm -r clean`
+
+- Delete all build and lint artifacts/caches AND dependencies (node_modules):
+
+  `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
 
 ### _Build, Lint, Test_
 
@@ -68,16 +81,6 @@ The following must be true to consider the Sprint "DONE":
 - You can run all lint auto-fixes with:
 
   `pnpm -r lint-fix`
-
-### _Resetting Workspace_
-
-- Delete all build artifacts:
-
-  `pnpm -r clean`
-
-- Delete all build artifacts AND dependencies (node_modules):
-
-  `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
 
 ### _Cheatsheet: pnpm_
 
@@ -125,9 +128,15 @@ Note: `develop` branch is auto-deployed to `testing` daily.
 
 // TODO: Standardize this; I like that `website` is ready to go on fresh clones...
 
-- Developers can set the values of configuration and secrets locally using:
+- Developers can override configuration and secrets locally using:
+
   - `/apps/api/.env` (copy `.env.example` to get started)
+  - `/apps/cli/.env.local` (override any variable in `.env`)
   - `/apps/website/.env.local` (override any variable in `.env`)
+
+- CLI and website also support "modes", which will load respective env:
+
+  `pnpm serve -- --mode=staging` (from their directories; not from the monorepo root)
 
 ### _Deployed Environment_
 
