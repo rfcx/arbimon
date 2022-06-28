@@ -10,6 +10,13 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     name: 'Project 123'
   }
 
+  const INVALID_PROJECT = {
+    idArbimon: 123,
+    idCore: null,
+    slug: 'project-123',
+    name: 'Project 123'
+  }
+
   test('succeeds for valid data', async () => {
     // Act
     const actual = parseProjectArbimonToBio(VALID_PROJECT)
@@ -63,5 +70,13 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
 
     // Assert
     actualMissing.forEach(actual => expect(actual.success).toBe(false))
+  })
+
+  test('fails if props are in wrong type', async () => {
+    // Act
+    const actual = parseProjectArbimonToBio(INVALID_PROJECT)
+
+    // Assert
+    expect(actual.success).toBe(false)
   })
 })
