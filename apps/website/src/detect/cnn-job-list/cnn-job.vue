@@ -67,6 +67,7 @@
         v-for="job in jobs"
         :key="job.id"
         :job="job"
+        @emit-select=""
       />
     </tbody>
   </table>
