@@ -8,6 +8,8 @@ import { SyncStatus } from '@rfcx-bio/common/dao/types'
 import { getSequelize } from '@/db/connections'
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-projects'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
+import { createProjectVersionIfNeeded } from '../outputs/project-version'
+import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
@@ -26,15 +28,26 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   const projectData = projects.map(p => p.data)
   const transaction = await biodiversitySequelize.transaction()
   try {
-    await writeProjectsToBio(projectData, biodiversitySequelize, transaction)
+    // Write projects to Bio
+    const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize, transaction)
 
-    // const insertErrors = await writeProjectsToBio(biodiversitySequelize, projects)
-    // await writeErrorsToBio(validationErrors, insertErrors)
+    // Create all missing project versions
+    await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
 
+    // Update sync status
     const lastSyncdProject = arbimonProjects[projectData.length - 1]
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
+
+    // Log sync errors
+    await Promise.all(insertErrors.map(async e => {
+      const error = { ...e, syncSourceId: updatedSyncStatus.syncDataTypeId, syncDataTypeId: updatedSyncStatus.syncDataTypeId }
+      await writeSyncError(error, biodiversitySequelize, transaction)
+    }))
+
+    // commit transactions
     await transaction.commit()
+    // return sync status
     return updatedSyncStatus
   } catch (error) {
     await transaction.rollback()

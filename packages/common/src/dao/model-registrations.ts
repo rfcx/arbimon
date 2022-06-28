@@ -29,12 +29,6 @@ import { MODEL_TAXON_SPECIES, TaxonSpeciesModel } from './models/taxon-species-m
 import { MODEL_TAXON_SPECIES_PHOTO, TaxonSpeciesPhotoModel } from './models/taxon-species-photo-model'
 import { MODEL_TAXON_SPECIES_RFCX, TaxonSpeciesRfcxModel } from './models/taxon-species-rfcx-model'
 import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-species-wiki-model'
-// [MODEL_SOURCE]: [SourceModel],
-
-//   [MODEL_SYNC_DATA_TYPE]: [SyncDataTypeModel],
-//   [MODEL_SYNC_ERROR]: [SyncErrorModel, { manyToOne: [MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
-//   [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_PROJECT, MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
-//   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SOURCE, MODEL_SYNC_DATA_TYPE] }],
 
 export const modelRegistrations = {
   // Tables
