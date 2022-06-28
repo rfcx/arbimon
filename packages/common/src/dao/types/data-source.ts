@@ -1,4 +1,4 @@
-import { WithDates } from './_common'
+import { WithDates } from '../type-helpers'
 
 export interface DataSource extends WithDates {
   id: string
