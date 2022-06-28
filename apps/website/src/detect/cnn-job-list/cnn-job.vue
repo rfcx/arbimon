@@ -67,7 +67,7 @@
         v-for="job in jobs"
         :key="job.id"
         :job="job"
-        @emit-select=""
+        @emit-update="handleUpdate()"
       />
     </tbody>
   </table>
@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject, reactive } from 'vue'
+import { computed, getCurrentInstance, inject, reactive } from 'vue'
 
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -115,6 +115,11 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
 
 const onFilterChange = (filter: string): void => {
   params.created_by = filter === 'me' ? 'me' : 'all'
+}
+
+const handleUpdate = () => {
+  const instance = getCurrentInstance()
+  instance?.proxy?.$forceUpdate()
 }
 
 </script>
