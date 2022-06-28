@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
-import { computed, inject } from 'vue'
+import { computed, defineEmits, inject } from 'vue'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
@@ -58,10 +58,12 @@ const props = defineProps<{
   job: Job
 }>()
 
-const toggles = inject(togglesKey) as FeatureToggles
-const displayCancleButton = computed(() => toggles.cancelJobButton)
+const emit = defineEmits<{(e: 'emitUpdate'): void}>()
 
 const { formatDateLocal } = useDateFormat()
+
+const toggles = inject(togglesKey) as FeatureToggles
+const displayCancleButton = computed(() => toggles.cnnCancelJob)
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingPostStatus, mutate: mutatedPostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
@@ -77,7 +79,7 @@ const openErrorMessage = () => {
 
 const update = async (): Promise<void> => {
   mutatedPostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
-    onSuccess: () => {},
+    onSuccess: () => emit('emitUpdate'),
     onError: () => openErrorMessage()
   })
 }
