@@ -2,7 +2,7 @@ import { LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
 import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
@@ -34,7 +34,7 @@ const DEFAULT_PREFIX = 'Spotlight-By-Site'
 export default class ActivityPatternsByLocation extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
-  @Prop() species!: SpeciesInProjectLight
+  @Prop() species!: SpeciesInProjectTypes['light']
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   selectedType = SPOTLIGHT_MAP_KEYS.detectionFrequency

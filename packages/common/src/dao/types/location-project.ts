@@ -13,10 +13,8 @@ export interface Project {
   longitudeWest: number
 }
 
-export type LocationProjectLight = Pick<Project,
-  'id'| 'idCore' | 'slug'| 'name'| 'latitudeNorth'| 'latitudeSouth'| 'longitudeEast'| 'longitudeWest'
->
-
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
   light: ['id', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 })
+
+export type LocationProjectTypes = AttributeTypes<Project, typeof ATTRIBUTES_LOCATION_PROJECT>

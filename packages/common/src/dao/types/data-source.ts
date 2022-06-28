@@ -9,3 +9,5 @@ export interface DataSource extends WithDates {
 export const ATTRIBUTES_DATA_SOURCE = attributes<DataSource>()({
   light: ['id', 'locationProjectId', 'summaryText']
 })
+
+export type DataSourceTypes = AttributeTypes<DataSource, typeof ATTRIBUTES_DATA_SOURCE>
