@@ -27,6 +27,16 @@ describe('ingest > outputs > sync error', () => {
     expect(result).toBeDefined()
     expect(result?.error).toBe(ERROR_LOG.error)
   })
+
+  test('can log a new error log for an empty error message', async () => {
+    // Act
+    await writeSyncError({ ...ERROR_LOG, error: '' }, biodiversitySequelize)
+    // Assert
+    const result = await ModelRepository.getInstance(biodiversitySequelize).SyncError.findOne({ where })
+    expect(result).toBeDefined()
+    expect(result?.error).toBe('')
+  })
+
   test('can update existing error in the database', async () => {
     // Act
     await writeSyncError(ERROR_LOG, biodiversitySequelize)
@@ -36,5 +46,23 @@ describe('ingest > outputs > sync error', () => {
 
     expect(result.length).toEqual(1)
     expect(result[0].externalId).toBe(ERROR_LOG.externalId)
+  })
+
+  test('fail for a project with invalid external id', async () => {
+    // Act & Assert
+    try {
+      await writeSyncError({ ...ERROR_LOG, externalId: '807cuoi3cvw11' }, biodiversitySequelize)
+    } catch (e) {
+      expect(e).toMatch(/Batch insert failed/)
+    }
+  })
+
+  test('fail for incorrect syncDataTypeId', async () => {
+    // Act & Assert
+    try {
+      await writeSyncError({ ...ERROR_LOG, syncDataTypeId: 10 }, biodiversitySequelize)
+    } catch (e) {
+      expect(e).includes(/violates foreign key constraint/)
+    }
   })
 })
