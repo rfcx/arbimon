@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { SpeciesInProjectLight } from '../../dao/types/species-in-project'
+import { SpeciesInProjectTypes } from '../../dao/types/species-in-project'
 import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
 // Request types
@@ -10,7 +10,7 @@ export type ProjectSpeciesAllParams = ProjectRouteParamsSerialized
 
 // Response types
 export interface ProjectSpeciesAllResponse {
-  species: SpeciesInProjectLight[]
+  species: Array<SpeciesInProjectTypes['light']>
 }
 
 // Route

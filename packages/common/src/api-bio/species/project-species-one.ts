@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '../../dao/types'
+import { TaxonSpeciesCallTypes, TaxonSpeciesPhotoTypes } from '../../dao/types'
 import { SpeciesInProject } from '../../dao/types/species-in-project'
 import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
 
@@ -19,8 +19,8 @@ export interface PredictedOccupancyMap {
 
 export interface ProjectSpeciesOneResponse {
   speciesInformation: SpeciesInProject
-  speciesPhotos: TaxonSpeciesPhotoLight[]
-  speciesCalls: TaxonSpeciesCallLight[]
+  speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']>
+  speciesCalls: Array<TaxonSpeciesCallTypes['light']>
   predictedOccupancyMaps: PredictedOccupancyMap[]
 }
 

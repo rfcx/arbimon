@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface TaxonSpecies {
   id: number
   idArbimon: number
@@ -6,6 +8,8 @@ export interface TaxonSpecies {
   scientificName: string
 }
 
-export const ATTRIBUTES_TAXON_SPECIES: Record<string, Array<keyof TaxonSpecies>> = {
+export const ATTRIBUTES_TAXON_SPECIES = attributes<TaxonSpecies>()({
   full: ['idArbimon', 'slug', 'taxonClassId', 'scientificName']
-}
+})
+
+export type TaxonSpeciesTypes = AttributeTypes< TaxonSpecies, typeof ATTRIBUTES_TAXON_SPECIES>
