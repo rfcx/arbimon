@@ -5,8 +5,8 @@ import { RouteLocationNormalized } from 'vue-router'
 
 import { apiBioGetProjectSpeciesOne, PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { apiBioGetSpotlightDataset, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { TaxonSpeciesCallLight, TaxonSpeciesPhotoLight } from '@rfcx-bio/common/dao/types'
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { TaxonSpeciesCallTypes, TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
+import { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
@@ -49,7 +49,7 @@ export default class ActivityPatternsPage extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   // Dataset definitions
-  species: SpeciesInProjectLight | null = null
+  species: SpeciesInProjectTypes['light'] | null = null
   filters: ColoredFilter[] = []
 
   // Data for children
@@ -58,9 +58,9 @@ export default class ActivityPatternsPage extends Vue {
   mapDatasets: MapDataSet[] = []
   timeDatasets: SpotlightTimeDataset[] = []
   exportDatasets: SpotlightExportData[] = []
-  speciesInformation: SpeciesInProjectLight | null = null
-  speciesCalls: TaxonSpeciesCallLight[] = []
-  speciesPhotos: TaxonSpeciesPhotoLight[] = []
+  speciesInformation: SpeciesInProjectTypes['light'] | null = null
+  speciesCalls: Array<TaxonSpeciesCallTypes['light']> = []
+  speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']> = []
   isLocationRedacted = false
 
   get hasExportData (): boolean {
@@ -71,7 +71,7 @@ export default class ActivityPatternsPage extends Vue {
     return INFO_TOPICS.spotlight
   }
 
-  async onSelectedSpeciesChange (species: SpeciesInProjectLight | undefined): Promise<void> {
+  async onSelectedSpeciesChange (species: SpeciesInProjectTypes['light'] | undefined): Promise<void> {
     const speciesSlug = species?.taxonSpeciesSlug
     void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
 

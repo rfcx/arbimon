@@ -11,3 +11,5 @@ export interface TaxonSpecies {
 export const ATTRIBUTES_TAXON_SPECIES = attributes<TaxonSpecies>()({
   full: ['idArbimon', 'slug', 'taxonClassId', 'scientificName']
 })
+
+export type TaxonSpeciesTypes = AttributeTypes< TaxonSpecies, typeof ATTRIBUTES_TAXON_SPECIES>

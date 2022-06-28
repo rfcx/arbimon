@@ -17,14 +17,8 @@ export interface SpeciesInProject {
   photoUrl?: string
 }
 
-export type SpeciesInProjectLight = Pick<SpeciesInProject,
-  'taxonSpeciesId' |
-  'taxonSpeciesSlug' |
-  'scientificName' |
-  'commonName' |
-  'taxonClassSlug'
->
-
 export const ATTRIBUTES_SPECIES_IN_PROJECT = attributes<SpeciesInProject>()({
   light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug']
 })
+
+export type SpeciesInProjectTypes = AttributeTypes< SpeciesInProject, typeof ATTRIBUTES_SPECIES_IN_PROJECT>

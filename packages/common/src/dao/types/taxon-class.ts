@@ -10,3 +10,5 @@ export interface TaxonClass {
 export const ATTRIBUTES_TAXON_CLASS = attributes<TaxonClass>()({
   light: ['id', 'slug', 'commonName']
 })
+
+export type TaxonClassTypes = AttributeTypes< TaxonClass, typeof ATTRIBUTES_TAXON_CLASS>

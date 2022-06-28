@@ -13,3 +13,4 @@ export interface DetectionBySiteSpeciesHour {
 export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR = attributes<DetectionBySiteSpeciesHour>()({
 })
 
+export type DetectionBySiteSpeciesHourTypes = AttributeTypes< DetectionBySiteSpeciesHour, typeof ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR>

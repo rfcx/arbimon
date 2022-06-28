@@ -8,3 +8,5 @@ export interface TaxonSpeciesWiki {
 
 export const ATTRIBUTES_TAXON_SPECIES_WIKI = attributes<TaxonSpeciesWiki>()({
 })
+
+export type TaxonSpeciesWikiTypes = AttributeTypes< TaxonSpeciesWiki, typeof ATTRIBUTES_TAXON_SPECIES_WIKI>

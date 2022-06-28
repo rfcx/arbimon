@@ -9,14 +9,8 @@ export interface LocationProjectMetric {
   minDate: Date | null
 }
 
-export type LocationProjectMetricLight = Pick<LocationProjectMetric,
-  'detectionCount' |
-  'siteCount' |
-  'speciesCount' |
-  'maxDate' |
-  'minDate'
->
-
 export const ATTRIBUTES_LOCATION_PROJECT_METRIC = attributes<LocationProjectMetric>()({
   light: ['detectionCount', 'siteCount', 'speciesCount', 'maxDate', 'minDate']
 })
+
+export type LocationProjectMetricTypes = AttributeTypes< LocationProjectMetric, typeof ATTRIBUTES_LOCATION_PROJECT_METRIC>

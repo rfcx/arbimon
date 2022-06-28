@@ -10,3 +10,5 @@ export interface TaxonSpeciesIucn {
 
 export const ATTRIBUTES_TAXON_SPECIES_IUCN = attributes<TaxonSpeciesIucn>()({
 })
+
+export type TaxonSpeciesIucnTypes = AttributeTypes< TaxonSpeciesIucn, typeof ATTRIBUTES_TAXON_SPECIES_IUCN>
