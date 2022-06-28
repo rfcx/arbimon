@@ -5,6 +5,7 @@ import { Site } from '../types'
 
 export const MODEL_LOCATION_SITE = 'LocationSite'
 export const TABLE_LOCATION_SITE = 'location_site'
+export const UPDATE_ON_DUPLICATE_LOCATION_SITE: Array<keyof Site> = ['idCore', 'name', 'latitude', 'longitude', 'altitude']
 
 export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
   MODEL_LOCATION_SITE,

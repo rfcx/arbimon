@@ -1,14 +1,15 @@
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_PROJECT, Project } from '@rfcx-bio/common/dao/types'
+import { UPDATED_ON_DUPLICATE_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
+import { Project } from '@rfcx-bio/common/dao/types'
 
 export const writeProjectsToPostgres = async (sequelize: Sequelize, projects: Array<Omit<Project, 'id'>>): Promise<void> => {
   const model = ModelRepository.getInstance(sequelize).LocationProject
 
   // update items
   const updatedRows = await model.bulkCreate(projects, {
-    updateOnDuplicate: ATTRIBUTES_LOCATION_PROJECT.updateOnDuplicate
+    updateOnDuplicate: UPDATED_ON_DUPLICATE_LOCATION_PROJECT
   })
 
   console.info(`- writeProjectsToPostgres: bulk upsert ${updatedRows.length} projects`)
