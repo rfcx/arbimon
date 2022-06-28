@@ -21,13 +21,13 @@
       />
     </td>
     <td
-      v-if="displayCancleButton"
+      v-if="displayCancelButton"
       class="align-text-top"
     >
       <button
         class="btn w-20"
         :disabled="!canCancelJob || isLoadingPostStatus"
-        @click="update"
+        @click="cancelJob"
       >
         <icon-fas-spinner
           v-if="isLoadingPostStatus"
@@ -42,13 +42,15 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
-import { computed, defineEmits, inject } from 'vue'
+import { computed, inject } from 'vue'
+import { useQueryClient } from 'vue-query'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientCoreKey, togglesKey } from '@/globals'
 import { FeatureToggles } from '~/feature-toggles'
 import useDateFormat from '~/hooks/use-date-format'
+import { FETCH_CLASSIFIER_JOBS_KEY } from '../../_composables/use-classifier-jobs'
 import { usePostClassifierJobStatus } from '../../_composables/use-post-classifier-job-status'
 import { Job } from '../../types'
 import JobInput from './job-input.vue'
@@ -58,15 +60,13 @@ const props = defineProps<{
   job: Job
 }>()
 
-const emit = defineEmits<{(e: 'emitUpdate'): void}>()
-
 const { formatDateLocal } = useDateFormat()
 
 const toggles = inject(togglesKey) as FeatureToggles
-const displayCancleButton = computed(() => toggles.cnnCancelJob)
+const displayCancelButton = toggles.cnnCancelJob
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingPostStatus, mutate: mutatedPostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
+const { isLoading: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
 
 const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING)
 
@@ -77,11 +77,11 @@ const openErrorMessage = () => {
   })
 }
 
-const update = async (): Promise<void> => {
-  mutatedPostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
-    onSuccess: () => {
-      emit('emitUpdate')
-    },
+const queryClient = useQueryClient()
+
+const cancelJob = async (): Promise<void> => {
+  mutatePostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
+    onSuccess: () => queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY),
     onError: () => openErrorMessage()
   })
 }
