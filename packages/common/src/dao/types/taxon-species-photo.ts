@@ -19,8 +19,6 @@ export type TaxonSpeciesPhotoLight = Pick<TaxonSpeciesPhoto,
 >
 
 export const ATTRIBUTES_TAXON_SPECIES_PHOTO: Record<string, Array<keyof TaxonSpeciesPhoto>> = {
-  pks: ['taxonSpeciesId'],
-  updateOnDuplicate: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
   light: ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl'],
   full: ['taxonSpeciesId', 'photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
 }
