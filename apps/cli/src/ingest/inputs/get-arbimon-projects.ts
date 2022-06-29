@@ -9,17 +9,17 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
            p.url AS slug,
            p.name,
            p.updated_at AS updatedAt,
-           s.north AS latitudeNorth,
-           s.south AS latitudeSouth,
-           s.east AS longitudeEast,
-           s.west AS longitudeWest
+           (CASE WHEN s.north IS NULL THEN 0 ELSE s.north END) latitudeNorth,
+           (CASE WHEN s.south IS NULL THEN 0 ELSE s.south END) latitudeSouth,
+           (CASE WHEN s.east IS NULL THEN 0 ELSE s.east END) longitudeEast,
+           (CASE WHEN s.west IS NULL THEN 0 ELSE s.west END) longitudeWest
     FROM projects p 
     LEFT JOIN (
-      SELECT  project_id,
-              IFNULL(Min(s.lat), 0) north, 
-              IFNULL(Max(s.lat), 0) south,
-              IFNULL(Min(s.lon), 0) east,
-              IFNULL(Max(s.lon), 0) west
+      SELECT project_id,
+             Min(s.lat) north, 
+             Max(s.lat) south,
+             Min(s.lon) east,
+             Max(s.lon) west
       FROM sites s
       GROUP BY project_id 
     ) s
