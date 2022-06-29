@@ -12,7 +12,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
   test('can get oldest species', async () => {
     // Arrange
     const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc('2021-03-18T11:00:00.000Z').toDate(),
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: 0,
       syncBatchLimit: 2
     }
@@ -22,11 +22,11 @@ describe('ingest > inputs > getArbimonSpecies', () => {
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
-    expect(actual[0].idArbimon).toBe(3842)
-    expect(actual[1].idArbimon).toBe(9620)
+    expect(actual[0].idArbimon).toBe(42251)
+    expect(actual[1].idArbimon).toBe(16729)
   })
 
-  test('can get next batch of species without species id', async () => {
+  test('can get next batch when updated_at is greater', async () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-06-20T00:00:00.000Z').toDate(),
@@ -43,7 +43,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     expect(actual[1].idArbimon).toBe(1050)
   })
 
-  test('can get next batch of species include species id', async () => {
+  test('can get next batch when updated_at is equal and id is greater', async () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-06-22T11:00:00.000Z').toDate(),
@@ -108,32 +108,5 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     expect(item).toBeDefined()
     expectedProps.forEach(prop => expect(item).toHaveProperty(prop))
     expect(Object.keys(item).length).toBe(expectedProps.length)
-  })
-
-  test('does not miss species with the same updated_at as previously synced', async () => {
-    // Arrange
-    const updatedAt = '2022-06-23T16:00:00.000Z'
-
-    const insertNewRowSQLStatement = `
-      INSERT INTO species (
-          species_id, scientific_name, code_name, taxon_id, family_id, image, description,
-          biotab_id, defined_by, created_at, updated_at
-      )
-      VALUES (2756, 'Eudynamys scolopacea', 'EUDSCO', 1, 70, NULL, NULL, NULL, NULL, $updatedAt, $updatedAt);
-      `
-    await arbimonSequelize.query(insertNewRowSQLStatement, { bind: { updatedAt } })
-
-    const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc(updatedAt).toDate(),
-      syncUntilId: 2755,
-      syncBatchLimit: 2
-    }
-
-    // Act
-    const actual = await getArbimonSpecies(arbimonSequelize, params)
-
-    // Assert
-    expect(actual.length).toBe(1)
-    expect(actual[0].idArbimon).toBe(2756)
   })
 })
