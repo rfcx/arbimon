@@ -1,4 +1,4 @@
-import { AttributeConstants } from '../type-helpers'
+import { attributes } from '../type-helpers'
 
 export interface SyncError {
   syncSourceId: number
@@ -7,5 +7,5 @@ export interface SyncError {
   error: string
 }
 
-export const ATTRIBUTES_SYNC_ERROR: AttributeConstants<SyncError> = {
-}
+export const ATTRIBUTES_SYNC_ERROR = attributes<SyncError>()({
+})

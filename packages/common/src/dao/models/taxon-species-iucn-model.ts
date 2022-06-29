@@ -5,6 +5,7 @@ import { TaxonSpeciesIucn } from '../types/taxon-species-iucn'
 
 export const MODEL_TAXON_SPECIES_IUCN = 'TaxonSpeciesIucn'
 export const TABLE_TAXON_SPECIES_IUCN = 'taxon_species_iucn'
+export const UPDATE_ON_DUPLICATE_TAXON_SPECIES_IUCN: Array<keyof TaxonSpeciesIucn> = ['commonName', 'description', 'descriptionSourceUrl', 'riskRatingIucnId']
 
 export const TaxonSpeciesIucnModel = defineWithDefaults<TaxonSpeciesIucn>(
   MODEL_TAXON_SPECIES_IUCN,

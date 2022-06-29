@@ -5,6 +5,7 @@ import { TaxonSpeciesPhoto } from '../types/taxon-species-photo'
 
 export const MODEL_TAXON_SPECIES_PHOTO = 'TaxonSpeciesPhoto'
 export const TABLE_TAXON_SPECIES_PHOTO = 'taxon_species_photo'
+export const UPDATE_ON_DUPLICATE_TAXON_SPECIES_PHOTO: Array<keyof TaxonSpeciesPhoto> = ['photoUrl', 'photoCaption', 'photoAuthor', 'photoLicense', 'photoLicenseUrl']
 
 export const TaxonSpeciesPhotoModel = defineWithDefaults<TaxonSpeciesPhoto>(
   MODEL_TAXON_SPECIES_PHOTO,

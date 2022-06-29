@@ -1,4 +1,4 @@
-import { AttributeConstants } from '../type-helpers'
+import { attributes } from '../type-helpers'
 
 export interface SyncLogByProject {
   id: number
@@ -8,5 +8,5 @@ export interface SyncLogByProject {
   delta: number
 }
 
-export const ATTRIBUTES_SYNC_LOG_BY_PROJECT: AttributeConstants<SyncLogByProject> = {
-}
+export const ATTRIBUTES_SYNC_LOG_BY_PROJECT = attributes<SyncLogByProject>()({
+})

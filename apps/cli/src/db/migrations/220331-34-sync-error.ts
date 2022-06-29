@@ -38,6 +38,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       // Fact
       external_id: {
         type: DataTypes.STRING(255),
+        primaryKey: true,
         allowNull: false
       },
       error: {

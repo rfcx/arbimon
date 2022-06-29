@@ -3,12 +3,12 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { DataSourceModel } from '@rfcx-bio/common/dao/models/data-source-model'
-import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
+import { DetectionBySiteSpeciesHourModel, UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { ProjectVersionModel } from '@rfcx-bio/common/dao/models/project-version-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
@@ -60,7 +60,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 
   await DetectionBySiteSpeciesHourModel(sequelize)
     .bulkCreate(detectionSummaries, {
-      updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
+      updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR
     })
 }
 
