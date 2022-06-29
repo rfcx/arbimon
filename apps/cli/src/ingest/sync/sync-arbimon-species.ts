@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize'
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { urlify } from '@rfcx-bio/utils/url-helpers'
 
 import { getSequelize } from '@/db/connections'
 import { getArbimonSpecies } from '@/ingest/inputs/get-arbimon-species'
@@ -32,7 +33,9 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
   if (!isSyncable(lastSyncedTaxonSpecies)) throw new Error('Input does not contain needed sync-status data')
 
   // Parse input
-  const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonSpecies, parseSpeciesArbimonToBio)
+  const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonSpecies.map(item => {
+    return { ...item, slug: urlify(item.scientificName) }
+  }), parseSpeciesArbimonToBio)
   const species = inputsAndOutputs.map(inputAndOutput => {
     const data = inputAndOutput[1].data
     const taxonClass = taxonClasses.find(cl => cl.idArbimon === inputAndOutput[1].data.taxonClassId)
