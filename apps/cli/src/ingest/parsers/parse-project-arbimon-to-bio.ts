@@ -1,7 +1,5 @@
 import { SafeParseReturnType, z } from 'zod'
 
-import { Project } from '@rfcx-bio/common/dao/types'
-
 const ProjectArbimonSchema = z.object({
   idArbimon: z.number(),
   idCore: z.string(),
@@ -9,5 +7,7 @@ const ProjectArbimonSchema = z.object({
   name: z.string()
 })
 
-export const parseProjectArbimonToBio = (projectArbimon: object): SafeParseReturnType<Project, Record<string, any>> =>
+export type ProjectArbimon = z.infer<typeof ProjectArbimonSchema>
+
+export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseReturnType<unknown, ProjectArbimon> =>
   ProjectArbimonSchema.safeParse(projectArbimon)
