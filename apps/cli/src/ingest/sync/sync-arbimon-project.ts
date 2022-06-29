@@ -1,4 +1,3 @@
-import { partition } from 'lodash-es'
 import { Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
@@ -11,8 +10,10 @@ import { writeProjectsToBio } from '@/ingest/outputs/projects'
 import { createProjectVersionIfNeeded } from '../outputs/project-version'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
+import { parseArray } from '../parsers/parse-array'
 import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.ArbimonValidated.id,
@@ -22,10 +23,17 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonProjects = await getArbimonProjects(arbimonSequelize, syncStatus)
+
+  // Exit early if nothing to sync
   if (arbimonProjects.length === 0) return syncStatus
 
-  const [projects, validationErrors] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
-  const projectData = projects.map(p => p.data)
+  // Error if project doesn't contain needed sync status data
+  const lastSyncdProject = arbimonProjects[arbimonProjects.length - 1]
+  if (!isSyncable(lastSyncdProject)) throw new Error('Input does not contain needed sync-status data')
+
+  // Parse input
+  const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonProjects, parseProjectArbimonToBio)
+  const projectData = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
   // Write projects to Bio
   const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize)
@@ -35,13 +43,12 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
 
     // Update sync status
-    const lastSyncdProject = arbimonProjects[arbimonProjects.length - 1]
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     // TODO: Log sync errors #809
-    if (validationErrors.length > 0) {
-      console.error('validation error', validationErrors)
+    if (inputsAndErrors.length > 0) {
+      console.error('validation error', inputsAndErrors)
       /*
       await Promise.all(validationErrors.map(async e => {
         const error = {
