@@ -15,7 +15,7 @@ const biodiversitySequelize = await getSequelize()
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.ArbimonValidated.id,
   syncDataTypeId: masterSyncDataTypes.Species.id,
-  syncBatchLimit: 2
+  syncBatchLimit: 1000
 }
 
 describe('ingest > sync', () => {

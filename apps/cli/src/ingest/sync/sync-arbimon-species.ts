@@ -20,12 +20,12 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonSpecies = await getArbimonSpecies(arbimonSequelize, syncStatus)
-  const classes = await ModelRepository.getInstance(biodiversitySequelize).TaxonClass.findAll()
+  const taxonClasses = await ModelRepository.getInstance(biodiversitySequelize).TaxonClass.findAll()
   if (arbimonSpecies.length === 0) return syncStatus
   const [species] = partition(arbimonSpecies.map(parseSpeciesArbimonToBio), p => p.success)
 
   const speciesData = species.map(sp => {
-    return { ...sp.data, taxonClassId: classes.find(cl => cl.idArbimon === sp.data.taxonClassId)?.id }
+    return { ...sp.data, taxonClassId: taxonClasses.find(cl => cl.idArbimon === sp.data.taxonClassId)?.id }
   })
   const transaction = await biodiversitySequelize.transaction()
   try {
