@@ -24,24 +24,38 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   const arbimonProjects = await getArbimonProjects(arbimonSequelize, syncStatus)
   if (arbimonProjects.length === 0) return syncStatus
 
-  const [projects] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
+  const [projects, validationErrors] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
   const projectData = projects.map(p => p.data)
+
+  // Write projects to Bio
+  const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
   try {
-    // Write projects to Bio
-    const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize, transaction)
-
     // Create all missing project versions
     await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
 
     // Update sync status
-    const lastSyncdProject = arbimonProjects[projectData.length - 1]
+    const lastSyncdProject = arbimonProjects[arbimonProjects.length - 1]
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
-    // Log sync errors
+    // TODO: Log sync errors #809
+    if (validationErrors.length > 0) {
+      console.error('validation error', validationErrors)
+      /*
+      await Promise.all(validationErrors.map(async e => {
+        const error = {
+          externalId: 'TODO: find this from zod error',
+          error: 'ValidationError',
+          syncSourceId: updatedSyncStatus.syncDataTypeId,
+          syncDataTypeId: updatedSyncStatus.syncDataTypeId
+        }
+        await writeSyncError(error, biodiversitySequelize, transaction)
+      })) */
+    }
+
     await Promise.all(insertErrors.map(async e => {
-      const error = { ...e, syncSourceId: updatedSyncStatus.syncDataTypeId, syncDataTypeId: updatedSyncStatus.syncDataTypeId }
+      const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
       await writeSyncError(error, biodiversitySequelize, transaction)
     }))
 
