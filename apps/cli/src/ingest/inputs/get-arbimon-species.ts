@@ -11,7 +11,7 @@ export interface ArbimonSpecies {
   'updated_at': string
 }
 
-export const getArbimonSpecies = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<Record<string, any>> => {
+export const getArbimonSpecies = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   const sql = `
     SELECT species_id, taxon_id, scientific_name, updated_at
     FROM species
