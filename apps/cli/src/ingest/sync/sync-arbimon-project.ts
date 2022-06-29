@@ -13,6 +13,7 @@ import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.ArbimonValidated.id,
@@ -22,7 +23,13 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonProjects = await getArbimonProjects(arbimonSequelize, syncStatus)
+
+  // Exit early if nothing to sync
   if (arbimonProjects.length === 0) return syncStatus
+
+  // Error if project doesn't contain needed sync status data
+  const lastSyncdProject = arbimonProjects[arbimonProjects.length - 1]
+  if (!isSyncable(lastSyncdProject)) throw new Error('Input does not contain needed sync-status data')
 
   const [projects, validationErrors] = partition(arbimonProjects.map(parseProjectArbimonToBio), p => p.success)
   const projectData = projects.map(p => p.data)
@@ -35,7 +42,6 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
 
     // Update sync status
-    const lastSyncdProject = arbimonProjects[arbimonProjects.length - 1]
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
