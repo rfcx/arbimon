@@ -2,7 +2,7 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<Record<string, any>> => {
+export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   const sql = `
     SELECT p.project_id AS idArbimon,
            p.external_id AS idCore,
