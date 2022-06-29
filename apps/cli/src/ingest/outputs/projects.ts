@@ -6,14 +6,13 @@ import { Project, SyncError } from '@rfcx-bio/common/dao/types'
 
 import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 
-// Temporary hack to provide default values (will remove once the Model type is upgraded to understand defaults)
-const addDefaults = (project: ProjectArbimon): Omit<Project, 'id'> => ({ longitudeEast: 0, longitudeWest: 0, latitudeNorth: 0, latitudeSouth: 0, ...project })
+const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id'> => ({ ...project })
 
 const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const project of projects) {
     try {
-      await ModelRepository.getInstance(sequelize).LocationProject.upsert(addDefaults(project))
+      await ModelRepository.getInstance(sequelize).LocationProject.upsert(transformProjectArbimonToProjectBio(project))
     } catch (e: any) {
       // store insert errors
       failedToInsertItems.push({
@@ -29,7 +28,7 @@ export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: 
   try {
     await ModelRepository.getInstance(sequelize)
       .LocationProject
-      .bulkCreate(projects.map(addDefaults), {
+      .bulkCreate(projects.map(transformProjectArbimonToProjectBio), {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_PROJECT,
         ...transaction && { transaction }
       })

@@ -47,10 +47,10 @@ describe('ingest > sync', () => {
           raw: true
         }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-        const idArbimons = [1920, 1921]
-        await arbimonSequelize.query(INITIAL_INSERT_SQL)
+      const idArbimons = [1920, 1921]
+      await arbimonSequelize.query(INITIAL_INSERT_SQL)
 
-        // Act
+      // Act
       const updatedSyncStatus = await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
 
       // Assert

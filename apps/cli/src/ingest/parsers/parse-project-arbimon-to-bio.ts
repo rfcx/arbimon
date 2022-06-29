@@ -4,7 +4,11 @@ const ProjectArbimonSchema = z.object({
   idArbimon: z.number(),
   idCore: z.string(),
   slug: z.string(),
-  name: z.string()
+  name: z.string(),
+  latitudeNorth: z.number(),
+  latitudeSouth: z.number(),
+  longitudeEast: z.number(),
+  longitudeWest: z.number()
 })
 
 export type ProjectArbimon = z.infer<typeof ProjectArbimonSchema>

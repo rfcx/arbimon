@@ -7,14 +7,11 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     idArbimon: 123,
     idCore: '123',
     slug: 'project-123',
-    name: 'Project 123'
-  }
-
-  const INVALID_PROJECT = {
-    idArbimon: 123,
-    idCore: null,
-    slug: 'project-123',
-    name: 'Project 123'
+    name: 'Project 123',
+    latitudeNorth: 0,
+    latitudeSouth: 0,
+    longitudeEast: 0,
+    longitudeWest: 0
   }
 
   test('succeeds for valid data', async () => {
@@ -31,13 +28,21 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     const { idCore, ...missingIdCore } = VALID_PROJECT
     const { slug, ...missingSlug } = VALID_PROJECT
     const { name, ...missingName } = VALID_PROJECT
+    const { latitudeNorth, ...missingLatiudeNorth } = VALID_PROJECT
+    const { latitudeSouth, ...missingLatiudeSouth } = VALID_PROJECT
+    const { longitudeEast, ...missingLongitudeEast } = VALID_PROJECT
+    const { longitudeWest, ...missingLongitudeWest } = VALID_PROJECT
 
     // Act
     const actualMissing = [
       parseProjectArbimonToBio(missingIdArbimon),
       parseProjectArbimonToBio(missingIdCore),
       parseProjectArbimonToBio(missingSlug),
-      parseProjectArbimonToBio(missingName)
+      parseProjectArbimonToBio(missingName),
+      parseProjectArbimonToBio(missingLatiudeNorth),
+      parseProjectArbimonToBio(missingLatiudeSouth),
+      parseProjectArbimonToBio(missingLongitudeEast),
+      parseProjectArbimonToBio(missingLongitudeWest)
     ]
 
     // Assert
@@ -74,7 +79,8 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
 
   test('fails if props are in wrong type', async () => {
     // Act
-    const actual = parseProjectArbimonToBio(INVALID_PROJECT)
+    const nullIdCore = { ...VALID_PROJECT, idCore: null }
+    const actual = parseProjectArbimonToBio(nullIdCore)
 
     // Assert
     expect(actual.success).toBe(false)
