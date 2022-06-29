@@ -9,7 +9,7 @@ import { SyncQueryParams } from './sync-query-params'
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
 describe('ingest > inputs > getArbimonProjects', () => {
-  test('can get oldest projects', async () => {
+  test('can get first batch of projects', async () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
@@ -29,8 +29,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
   test('can get next batch of projects', async () => {
     // Arrange
     const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc('2021-03-18T11:00:00.000Z').toDate(),
-      syncUntilId: 1920,
+      syncUntilDate: dayjs.utc('2021-03-19T11:00:00.000Z').toDate(),
+      syncUntilId: 1921,
       syncBatchLimit: 2
     }
 
@@ -39,15 +39,15 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
-    expect(actual[0].idArbimon).toBe(1921)
-    expect(actual[1].idArbimon).toBe(1922)
+    expect(actual[0].idArbimon).toBe(1922)
+    expect(actual[1].idArbimon).toBe(1923)
   })
 
   test('can get last incomplete batch of projects', async () => {
     // Arrange
     const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc('2021-03-20T02:00:00.000Z').toDate(),
-      syncUntilId: 1922,
+      syncUntilDate: dayjs.utc('2021-03-20T11:00:00.000Z').toDate(),
+      syncUntilId: 1923,
       syncBatchLimit: 2
     }
 
@@ -55,9 +55,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
-    expect(actual[0].idArbimon).toBe(1923)
-    expect(actual[1].idArbimon).toBe(1924)
+    expect(actual.length).toBe(1)
+    expect(actual[0].idArbimon).toBe(1924)
   })
 
   test('can gets no projects when nothing left to sync', async () => {
