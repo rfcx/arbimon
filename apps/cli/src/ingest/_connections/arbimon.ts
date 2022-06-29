@@ -20,8 +20,6 @@ const ARBIMON_CONFIG: ArbimonConnectionOptions = {
   database: ARBIMON_DB_DBNAME
 }
 
-console.info('\n\n--------ARBIMON_CONFIG---------', ARBIMON_CONFIG)
-
 const getArbimonSequelizeBase = ({ user, password, host, database }: ArbimonConnectionOptions): Sequelize => {
   const sequelizeOptions: Options = {
     host,
