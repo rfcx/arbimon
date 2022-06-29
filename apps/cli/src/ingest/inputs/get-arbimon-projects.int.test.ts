@@ -166,9 +166,9 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     const item = actual[0]
-    expect(item.latitudeNorth).toBe(null)
-    expect(item.latitudeSouth).toBe(null)
-    expect(item.longitudeEast).toBe(null)
-    expect(item.longitudeWest).toBe(null)
+    expect(item.latitudeNorth).toBe(0)
+    expect(item.latitudeSouth).toBe(0)
+    expect(item.longitudeEast).toBe(0)
+    expect(item.longitudeWest).toBe(0)
   })
 })

@@ -80,6 +80,25 @@ describe('ingest > sync', () => {
       expect(latestSyncStatus?.syncUntilId).toBe(1921)
     })
 
+    test('sync is idempotent', async () => {
+      // Arrange
+      const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
+      const idArbimons = [1920, 1921]
+      await arbimonSequelize.query(INITIAL_INSERT_SQL)
+
+      // Act
+      // Run the same batch twice
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+
+      // Assert
+      // - Assert valid projects are in Bio projects table
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
+        where: { idArbimon: { [Op.in]: idArbimons } }
+      })
+      expect(projects.length).toBe(2)
+    })
+
     test('can sync projects when some invalid', async () => {
       // Arrange
       const idArbimon = 1929
@@ -121,25 +140,6 @@ describe('ingest > sync', () => {
         }
       })
       expect(syncError).toBeInstanceOf(Object)
-    })
-
-    test('sync is idempotent', async () => {
-      // Arrange
-      const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
-      const idArbimons = [1920, 1921]
-      await arbimonSequelize.query(INITIAL_INSERT_SQL)
-
-      // Act
-      // Run the same batch twice
-      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
-      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
-
-      // Assert
-      // - Assert valid projects are in Bio projects table
-      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
-        where: { idArbimon: { [Op.in]: idArbimons } }
-      })
-      expect(projects.length).toBe(2)
     })
   })
 
