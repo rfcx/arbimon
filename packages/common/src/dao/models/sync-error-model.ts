@@ -18,9 +18,12 @@ export const SyncErrorModel = defineWithDefaults<SyncError>(
       type: DataTypes.INTEGER,
       primaryKey: true
     },
+    externalId: {
+      type: DataTypes.STRING(255),
+      primaryKey: true
+    },
 
     // Facts
-    externalId: DataTypes.STRING(255),
     error: DataTypes.STRING(255)
   },
   {

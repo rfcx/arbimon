@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -18,7 +18,25 @@ const SYNC_CONFIG: SyncConfig = {
   syncBatchLimit: 2
 }
 
+const INITIAL_INSERT_SQL = `
+  INSERT INTO projects (
+    project_id, name, url, description, project_type_id, is_private, is_enabled,
+    current_plan, storage_usage, processing_usage, pattern_matching_enabled,
+    citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
+    external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
+  )
+  VALUES 
+    (1920, 'RFCx 1', 'rfcx-1', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuodd', 0, '2021-03-20T12:01:00.000Z', '2021-03-20T15:00:00.000Z', NULL, NULL, 1),
+    (1921, 'RFCx 2', 'rfcx-2', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cdd', 0, '2021-03-20T12:01:00.000Z', '2021-03-20T15:00:00.000Z', NULL, NULL, 1)
+  ;
+`
+
 describe('ingest > sync', () => {
+  beforeEach(async () => {
+    await arbimonSequelize.query('DELETE FROM projects')
+    await biodiversitySequelize.query('DELETE FROM sync_status')
+    await biodiversitySequelize.query('DELETE FROM sync_error')
+  })
   describe('syncArbimonProjectsBatch', () => {
     test('can sync projects', async () => {
       // Arrange
@@ -29,45 +47,100 @@ describe('ingest > sync', () => {
           raw: true
         }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
+        const idArbimons = [1920, 1921]
+        await arbimonSequelize.query(INITIAL_INSERT_SQL)
+
+        // Act
+      const updatedSyncStatus = await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+
+      // Assert
+
+      // - Assert write project bio is returning sync status
+      expect(updatedSyncStatus).toBeTypeOf('object')
+
+      // - Assert valid projects are in Bio projects table
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
+        where: { idArbimon: { [Op.in]: idArbimons } }
+      })
+      expect(projects.length).toBe(2)
+
+      // - Assert new project version got created
+      const projectVersions = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.findAll({
+        where: { locationProjectId: { [Op.in]: projects.map(p => p.id) } }
+      })
+      expect(projectVersions.length).toBe(2)
+
+      // - Assert update sync status
+      const latestSyncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+        .SyncStatus
+        .findOne({
+          where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+          raw: true
+        })
+      expect(latestSyncStatus?.syncUntilId).toBe(1921)
+    })
+
+    test('can sync projects when some invalid', async () => {
+      // Arrange
+      const idArbimon = 1929
+      const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+      .SyncStatus
+      .findOne({
+        where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+        raw: true
+      }) ?? getDefaultSyncStatus(SYNC_CONFIG)
+      const insertNewRowWithTooLongIdCoreSqlStatement = `
+      INSERT INTO projects (
+        project_id, name, url, description, project_type_id, is_private, is_enabled,
+        current_plan, storage_usage, processing_usage, pattern_matching_enabled,
+        citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
+        external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
+      )
+      VALUES 
+        ($idArbimon, 'RFCx 8', 'rfcx-8', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvwdkkk', 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1),
+        (1930, 'RFCx 9', 'rfcx-9', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvw', 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1)
+      ;
+      `
+      await arbimonSequelize.query(insertNewRowWithTooLongIdCoreSqlStatement, { bind: { idArbimon } })
+
       // Act
       await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
 
       // Assert
       // - Assert valid projects are in Bio projects table
       const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
-        where: { idArbimon: { [Op.in]: [1920, 1921] } }
+        where: { idArbimon: { [Op.in]: [idArbimon, 1930] } }
+      })
+      expect(projects.length).toBe(1)
+      // - Assert invalid projects are in Bio sync_error table
+      const syncError = await ModelRepository.getInstance(biodiversitySequelize).SyncError.findOne({
+        where: {
+          syncSourceId: SYNC_CONFIG.syncSourceId,
+          syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
+          externalId: `${idArbimon}`
+        }
+      })
+      expect(syncError).toBeInstanceOf(Object)
+    })
+
+    test('sync is idempotent', async () => {
+      // Arrange
+      const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
+      const idArbimons = [1920, 1921]
+      await arbimonSequelize.query(INITIAL_INSERT_SQL)
+
+      // Act
+      // Run the same batch twice
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+
+      // Assert
+      // - Assert valid projects are in Bio projects table
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
+        where: { idArbimon: { [Op.in]: idArbimons } }
       })
       expect(projects.length).toBe(2)
-
-      // - Assert new project version
-      const projectVersions = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.findAll({
-        where: { locationProjectId: { [Op.in]: projects.map(p => p.id) } }
-      })
-      expect(projectVersions.length).toBe(2)
     })
-
-    test.todo('can sync projects when some invalid', async () => {
-      // Arrange
-      // TODO: add invalid data to arbimon database
-      // Act
-
-      // Assert
-      // TODO: Assert valid projects are in Bio projects table
-      // TODO: Assert invalid projects are in Bio sync_error table
-    })
-
-    test.todo('sync is idempotent', async () => {
-      // Arrange
-
-      // Act
-      // TODO: Run the same batch twice
-
-      // Assert
-      // TODO: Assert result is the same as if we ran sync once
-    })
-
-    test.todo('updates sync status with last ID and updatedAt', async () => { })
-    test.todo('returns sync status (to support immediately looping)', async () => { })
   })
 
   describe('syncArbimonProjects', () => {

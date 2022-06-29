@@ -16,12 +16,12 @@ pnpm serve lib/path/to/some/script.js -- --mode=production
 
 ## Examples
 
-### Data Ingest
+### Data Ingest (Sync)
 
-Get detections data from Arbimon and write it to a JSON file
+Get all data (incremental) from Arbimon and write it to a bio
 
 ```
-pnpm serve lib/data-ingest/detections/to-mock.js
+pnpm serve lib/ingest/sync/incremental.js
 ```
 
 ### Database Migrations
@@ -36,4 +36,18 @@ Completely reset the database (deletes all tables & wipes migration log):
 
 ```
 pnpm serve lib/db/reset
+```
+
+### Test
+
+- Integration tests
+
+```
+pnpm test-int
+```
+
+- Unit tests
+
+```
+pnpm test-unit
 ```
