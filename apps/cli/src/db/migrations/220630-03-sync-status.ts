@@ -41,7 +41,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         allowNull: false
       },
       sync_until_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(12),
         allowNull: false
       },
       sync_batch_limit: {

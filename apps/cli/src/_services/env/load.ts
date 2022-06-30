@@ -13,16 +13,12 @@ const loadDotEnv = async (): Promise<Record<string, string>> => {
 
   // Detect mode
   // TODO: Do we need a ENV variable to set this when deployed?
-  const mode = process.argv.find(arg => arg.startsWith('--mode='))?.split('=')[1].toLowerCase() ?? 'dev'
-  console.info(`*** Biodiversity CLI ***\nRunning in ${mode.toUpperCase()} mode`)
+  const mode = process.argv.find(arg => arg.startsWith('--mode='))?.split('=')[1].toLowerCase()
+  console.info(`*** Biodiversity CLI ***\nRunning in ${mode?.toUpperCase() ?? 'default'} mode`)
 
   // Import layered env
-  const envFiles = [
-    '.env',
-    '.env.local',
-    `.env.${mode}`,
-    `.env.${mode}.local`
-  ]
+  const envFiles = ['.env', '.env.local']
+  if (mode) envFiles.push(`.env.${mode}`, `.env.${mode}.local`)
 
   const envs = await Promise.all(
     envFiles

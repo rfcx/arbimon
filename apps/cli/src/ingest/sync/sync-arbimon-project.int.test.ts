@@ -6,6 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
+import { deleteOutputProjects } from '../outputs/helper'
 import { syncArbimonProjectsBatch } from './sync-arbimon-project'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
@@ -41,11 +42,12 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
       where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     })
-  expect(updatedSyncStatus?.syncUntilId).toBe(expectedSyncUntilId)
+  expect(updatedSyncStatus?.syncUntilId).toBe(expectedSyncUntilId.toString())
 }
 
 describe('ingest > sync', () => {
   beforeEach(async () => {
+    await deleteOutputProjects(biodiversitySequelize)
     await arbimonSequelize.query('DELETE FROM projects')
     await biodiversitySequelize.query('DELETE FROM sync_status')
     await biodiversitySequelize.query('DELETE FROM sync_error')
@@ -151,7 +153,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(idsArbimon[idsArbimon.length - 1])
     })
 
-    test.todo('can sync projects when all is invalid', async () => {
+    test('can sync projects when all is invalid', async () => {
       // Arrange
       const idsArbimon = [1931, 1932]
       const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
