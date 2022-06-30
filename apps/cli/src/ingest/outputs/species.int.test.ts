@@ -5,58 +5,65 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
+import { rawTaxonClasses } from '@/db/seeders/_data/taxon-class'
 import { writeSpeciesToBio } from './species'
 
 const biodiversitySequelize = await getSequelize()
 
 describe('ingest > outputs > taxon species', () => {
+  const BIRDS_ID = rawTaxonClasses[3].id
+
   test('can write new taxon species', async () => {
     // Arrange
-    const input: Array<Omit<TaxonSpecies, 'id'>> = [{
+    const INPUT: Array<Omit<TaxonSpecies, 'id'>> = [{
       idArbimon: 2757,
       slug: 'eudynamys-melanorhynchus',
-      taxonClassId: 300,
+      taxonClassId: BIRDS_ID,
       scientificName: 'Eudynamys melanorhynchus'
     },
     {
       idArbimon: 2758,
       slug: 'eudynamys-cyanocephalus',
-      taxonClassId: 300,
+      taxonClassId: BIRDS_ID,
       scientificName: 'Eudynamys cyanocephalus'
     }]
 
     // Act
-    await writeSpeciesToBio(input, biodiversitySequelize)
+    await writeSpeciesToBio(INPUT, biodiversitySequelize)
 
     // Assert
     const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
       where: {
-        idArbimon: { [Op.in]: input.map(i => i.idArbimon) }
+        idArbimon: { [Op.in]: INPUT.map(i => i.idArbimon) }
       }
     })
-    expect(species.length).toBe(input.length)
+    expect(species.length).toBe(INPUT.length)
   })
 
   test('can update taxon species (slug, taxonClassId, scientificName)', async () => {
     // Arrange
-    const inputItem: Omit<TaxonSpecies, 'id'> = {
+    const INPUT: Omit<TaxonSpecies, 'id'> = {
       idArbimon: 2759,
       slug: 'eudynamys-taitensis',
-      taxonClassId: 300,
+      taxonClassId: BIRDS_ID,
       scientificName: 'Eudynamys taitensis'
     }
 
-    const updatedScientificName = 'Eudynamys taitensis updated'
+    const UPDATED_SLUG = 'eudynamys-taitensis-updated'
+    const UPDATED_NAME = 'Eudynamys taitensis updated'
+    const UPDATED_TAXON_CLASS_ID = rawTaxonClasses[4].id
 
-    await writeSpeciesToBio([inputItem], biodiversitySequelize)
+    await writeSpeciesToBio([INPUT], biodiversitySequelize)
 
     // Act
-    await writeSpeciesToBio([{ ...inputItem, scientificName: updatedScientificName }], biodiversitySequelize)
+    await writeSpeciesToBio([
+      { ...INPUT, slug: UPDATED_SLUG, scientificName: UPDATED_NAME, taxonClassId: UPDATED_TAXON_CLASS_ID }
+    ], biodiversitySequelize)
 
     // Assert
-    const updatedTaxonSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: inputItem.idArbimon } })
-    expect(updatedTaxonSpecies?.slug).toBe(inputItem.slug)
-    expect(updatedTaxonSpecies?.taxonClassId).toBe(inputItem.taxonClassId)
-    expect(updatedTaxonSpecies?.scientificName).toBe(updatedScientificName)
+    const updatedTaxonSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: INPUT.idArbimon } })
+    expect(updatedTaxonSpecies?.slug).toBe(UPDATED_SLUG)
+    expect(updatedTaxonSpecies?.taxonClassId).toBe(UPDATED_TAXON_CLASS_ID)
+    expect(updatedTaxonSpecies?.scientificName).toBe(UPDATED_NAME)
   })
 })
