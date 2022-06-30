@@ -70,17 +70,60 @@ If you encounter an issue, you may want to clean caches & artifacts, or reinstal
 
   `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
 
-### _Build, Lint, Test_
+### _Build_
 
-- Use the pnpm arg `-r` to run scripts in all packages:
+- Build any package (and it's dependencies):
 
-  `pnpm -r build`  
-  `pnpm -r lint`  
-  `pnpm -r test`
+  `pnpm build`
 
-- You can run all lint auto-fixes with:
+- Use the pnpm arg `-r` to build all packages:
 
-  `pnpm -r lint-fix`
+  `pnpm -r build`
+
+### _Lint_
+
+- Run all linters, or only a single linter:
+
+  `pnpm lint` (all linters)  
+  `pnpm lint:eslint`  
+  `pnpm lint:prettier`  
+  `pnpm lint:stylelint`
+
+- Lint is pretty heavy; use the helper to run it sequentially across all packages:
+
+  `pnpm -w lint-all`
+
+- Run linters with auto-fixes:
+
+  `pnpm lint-fix` (one package)  
+  `pnpm -w lint-fix-all` (all packages)
+
+### _Test_
+
+- Before running `test:int`, you must start a local Postgres database:
+
+  `pnpm -w serve-int`
+
+- Each package has some of the following test scripts:
+
+  `pnpm test:component` (unit tests for vue components)  
+  `pnpm test:int` (heavy tests or tests that require a database)  
+  `pnpm test:unit` (basic unit tests)  
+  `pnpm test-ui` (tests executed in a browser)
+
+- For TDD, you probably want to execute a single file, `describe`, or `test`:
+
+  `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test` (fast way to execute 1 file)  
+  `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test -t "has all, dirunal, nocturnal options"` (filter within the file; you should use this _in addition_ to file-path filtering)
+
+- For TDD integration tests, you need a more complex command:
+
+  `pnpm exec cross-env BIO_DB_PORT=5434 vitest --no-threads src/sync/sync-history-handler.int.test`
+
+- You can also run all tests in a package, or across the entire project:
+
+  `pnpm test` (all vitest-based tests; does not include Cypress-based tests)  
+  `pnpm -w test-all` (calls `test` in all packages sequentially, like `lint-all`)
 
 ### _Cheatsheet: pnpm_
 
@@ -105,7 +148,7 @@ There are 3 shared deployments:
   - https://bio.rfcx.org
   - https://bio.rfcx.org/api
 
-### _Testing_
+### _Deployment: Testing_
 
 Any branch can be deployed to the `testing` cluster:
 
@@ -115,7 +158,7 @@ Any branch can be deployed to the `testing` cluster:
 
 Note: `develop` branch is auto-deployed to `testing` daily.
 
-### _Staging & Production_
+### _Deployment: Staging & Deployment: Production_
 
 `staging` & `production` are automatically deployed by GitHub Actions (CD):
 
@@ -145,6 +188,6 @@ Note: `develop` branch is auto-deployed to `testing` daily.
   - `/apps/website/.env`
 - _Secret_ variables must be manually configured:
   - API secrets can be set manually via Kubernetes apply
-  - Website secrets can be set manually as GitHub secrets
   - // TODO: run Kubernetes apply from CD
-  - **The values of secrets should never be committed to Git**
+  - Website secrets can be set manually as GitHub secrets
+  - **Secrets should never be committed to Git**
