@@ -39,13 +39,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       // Facts
       is_published: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
+        allowNull: false
       },
       is_public: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
+        allowNull: false
       }
     }
   )
