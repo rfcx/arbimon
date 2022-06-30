@@ -11,7 +11,7 @@ import { createProjectVersionIfNeeded } from '../outputs/project-version'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
-import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
+import { parseProjectArbimonToBio, ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 import { isSyncable } from './syncable'
 
@@ -35,6 +35,11 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonProjects, parseProjectArbimonToBio)
   const projectData = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
+  // Exit early if all is errored
+  if (arbimonProjects.length === inputsAndErrors.length) {
+    // TODO: update sync status to the latest id
+  }
+
   // Write projects to Bio
   const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
@@ -46,20 +51,18 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
-    // TODO: Log sync errors #809
-    if (inputsAndErrors.length > 0) {
-      console.error('validation error', inputsAndErrors)
-      /*
-      await Promise.all(validationErrors.map(async e => {
-        const error = {
-          externalId: 'TODO: find this from zod error',
-          error: 'ValidationError',
-          syncSourceId: updatedSyncStatus.syncDataTypeId,
-          syncDataTypeId: updatedSyncStatus.syncDataTypeId
-        }
-        await writeSyncError(error, biodiversitySequelize, transaction)
-      })) */
-    }
+    await Promise.all(inputsAndErrors.map(async e => {
+      const hasIdArbimon = (value: unknown): value is ProjectArbimon => (Boolean(value)) && typeof value === 'object'
+      if (!hasIdArbimon(e[0])) { throw new Error('Invalid input') }
+      const idArbimon = e[0]?.idArbimon ?? 'unknown'
+      const error = {
+        externalId: `${idArbimon}`,
+        error: 'ValidationError: ' + JSON.stringify(e[1]),
+        syncSourceId: updatedSyncStatus.syncDataTypeId,
+        syncDataTypeId: updatedSyncStatus.syncDataTypeId
+      }
+      await writeSyncError(error, biodiversitySequelize, transaction)
+    }))
 
     await Promise.all(insertErrors.map(async e => {
       const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
