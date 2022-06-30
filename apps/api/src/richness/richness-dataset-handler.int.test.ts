@@ -1,8 +1,6 @@
+import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastify, { FastifyInstance } from 'fastify'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { describe, expect, test } from 'vitest'
-
-import { richnessDatasetUrl } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
@@ -69,7 +67,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: richnessDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/richness',
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
     })
 
@@ -85,7 +83,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: richnessDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/richness',
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -103,7 +101,7 @@ describe('validate known data', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: richnessDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/richness',
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
     })
 
