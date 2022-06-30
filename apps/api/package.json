@@ -42,6 +42,7 @@
   "dependencies": {
     "@fastify/cors": "^7.0.0",
     "@fastify/request-context": "^3.0.0",
+    "@fastify/routes": "^4.0.0",
     "@fastify/static": "^5.0.2",
     "@js-temporal/polyfill": "^0.3.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
@@ -51,7 +52,6 @@
     "fastify": "^3.23.1",
     "fastify-auth0-verify": "^0.7.0",
     "fastify-plugin": "^3.0.0",
-    "fastify-routes": "^3.1.0",
     "lodash-es": "^4.17.21",
     "sequelize": "7.0.0-alpha.5"
   },
