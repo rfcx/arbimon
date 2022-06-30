@@ -1,9 +1,8 @@
+import fastifyRoutes from '@fastify/routes'
 import fastify, { FastifyInstance } from 'fastify'
-import fastifyRoutes from 'fastify-routes'
 import { describe, expect, test } from 'vitest'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { dashboardGeneratedUrl } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Site } from '@rfcx-bio/common/dao/types'
 
@@ -77,7 +76,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: dashboardGeneratedUrl({ projectId: '1' })
+        url: '/projects/1'
       })
 
       // Assert
@@ -95,7 +94,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: dashboardGeneratedUrl({ projectId: '1' })
+        url: '/projects/1'
       })
 
       // Assert
@@ -111,7 +110,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
 
     const response = await app.inject({
       method: GET,
-      url: dashboardGeneratedUrl({ projectId: '1' })
+      url: '/projects/1'
     })
 
     test('species richness by site is correct', async () => {

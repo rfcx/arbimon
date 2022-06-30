@@ -1,7 +1,7 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { activityDatasetGeneratedUrl, ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
@@ -80,7 +80,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
+        url: '/projects/1/activity',
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
@@ -99,7 +99,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
+        url: '/projects/1/activity',
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
       })
 
@@ -115,7 +115,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
+        url: '/projects/1/activity',
         query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
       })
 
@@ -131,7 +131,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      url: '/projects/1/activity',
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
 
@@ -213,7 +213,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
     const response = await app.inject({
       method: GET,
-      url: activityDatasetGeneratedUrl({ projectId: '1' }),
+      url: '/projects/1/activity',
       query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
     })
 
@@ -234,7 +234,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' })
+        url: '/projects/1/activity'
       })
 
       // Assert
@@ -248,7 +248,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: 'x' })
+        url: '/projects/x/activity'
       })
 
       // Assert
@@ -266,13 +266,13 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response1 = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
+        url: '/projects/1/activity',
         query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
       })
 
       const response2 = await app.inject({
         method: GET,
-        url: activityDatasetGeneratedUrl({ projectId: '1' }),
+        url: '/projects/1/activity',
         query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
       })
 
