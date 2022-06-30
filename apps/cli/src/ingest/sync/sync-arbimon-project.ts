@@ -43,7 +43,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
 
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndErrors.map(async e => {
