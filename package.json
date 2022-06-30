@@ -95,6 +95,7 @@
     "stylelint-config-standard-scss": "^3.0.0",
     "ts-node": "^10.5.0",
     "ts-patch": "^2.0.1",
+    "ts-to-zod": "^1.11.0",
     "tsconfig-paths": "^3.12.0",
     "typescript": "4.5",
     "typescript-transform-paths": "^3.3.1",
