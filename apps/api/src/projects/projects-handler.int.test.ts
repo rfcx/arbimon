@@ -1,5 +1,5 @@
+import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastify, { FastifyInstance } from 'fastify'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
