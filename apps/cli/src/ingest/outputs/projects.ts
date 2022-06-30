@@ -35,7 +35,7 @@ export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: 
       })
     return []
   } catch (batchInsertError) {
-    console.error('⚠️ Batch insert failed... try loop upsert', batchInsertError)
+    console.error('⚠️ Batch insert failed... try loop upsert')
     return await loopUpsert(projects, sequelize)
   }
 }
