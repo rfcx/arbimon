@@ -23,7 +23,6 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonProjects = await getArbimonProjects(arbimonSequelize, syncStatus)
-
   // Exit early if nothing to sync
   if (arbimonProjects.length === 0) return syncStatus
 
@@ -34,11 +33,6 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   // Parse input
   const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonProjects, parseProjectArbimonToBio)
   const projectData = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
-
-  // Exit early if all is errored
-  if (arbimonProjects.length === inputsAndErrors.length) {
-    // TODO: update sync status to the latest id
-  }
 
   // Write projects to Bio
   const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize)
