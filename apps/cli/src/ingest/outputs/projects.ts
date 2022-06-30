@@ -14,10 +14,11 @@ const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, tran
     try {
       await ModelRepository.getInstance(sequelize).LocationProject.upsert(transformProjectArbimonToProjectBio(project))
     } catch (e: any) {
+      const errorMessage = (e instanceof Error) ? e.message : ''
       // store insert errors
       failedToInsertItems.push({
         externalId: `${project.idArbimon}`,
-        error: e.message
+        error: `Insert error: ${errorMessage}`
       })
     }
   }
@@ -34,7 +35,7 @@ export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: 
       })
     return []
   } catch (batchInsertError) {
-    console.error('⚠️ Batch insert failed... try loop insert', batchInsertError)
+    console.error('⚠️ Batch insert failed... try loop upsert', batchInsertError)
     return await loopUpsert(projects, sequelize)
   }
 }

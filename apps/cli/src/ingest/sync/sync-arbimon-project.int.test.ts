@@ -141,6 +141,59 @@ describe('ingest > sync', () => {
       })
       expect(syncError).toBeInstanceOf(Object)
     })
+
+    test('can sync projects when all is invalid', async () => {
+      // Arrange
+      const idArbimons = [1931, 1932]
+      const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+      .SyncStatus
+      .findOne({
+        where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+        raw: true
+      }) ?? getDefaultSyncStatus(SYNC_CONFIG)
+      const insertNewRowWithTooLongIdCoreSqlStatement = `
+      INSERT INTO projects (
+        project_id, name, url, description, project_type_id, is_private, is_enabled,
+        current_plan, storage_usage, processing_usage, pattern_matching_enabled,
+        citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
+        external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
+      )
+      VALUES 
+        ($idArbimon1, 'RFCx 8', 'rfcx-8', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvwdkkk', 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1),
+        ($idArbimon2, 'RFCx 9', 'rfcx-9', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, NULL, 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1)
+      ;
+      `
+      const idObject = idArbimons.reduce((acc, id, index) => { return { ...acc, [`idArbimon${index + 1}`]: id } }, {})
+      await arbimonSequelize.query(insertNewRowWithTooLongIdCoreSqlStatement, { bind: idObject })
+
+      // Act
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+
+      // Assert
+      // - Assert 0 project added in Bio projects table
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
+        where: { idArbimon: { [Op.in]: idArbimons } }
+      })
+      expect(projects.length).toBe(0)
+      // - Assert invalid projects are in Bio sync_error table
+      const syncError = await ModelRepository.getInstance(biodiversitySequelize).SyncError.findAll({
+        where: {
+          syncSourceId: SYNC_CONFIG.syncSourceId,
+          syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
+          externalId: { [Op.in]: idArbimons.map(i => `${i}`) }
+        }
+      })
+      expect(syncError.length).toBe(2)
+
+      // - Assert sync status time and id are updated to the latest
+      const updatedSyncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+      .SyncStatus
+      .findOne({
+        where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+        raw: true
+      })
+      expect(updatedSyncStatus?.syncUntilId).toBe(idArbimons[1])
+    })
   })
 
   describe('syncArbimonProjects', () => {
