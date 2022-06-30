@@ -2,9 +2,11 @@ import { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_TAXON_SPECIES } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { SyncError } from '@rfcx-bio/common/dao/types'
+import { SyncError, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { SpeciesArbimon } from '../parsers/parse-species-arbimon-to-bio'
+
+const transformSpeciesArbimonToTaxonSpeciesBio = (species: SpeciesArbimon): Omit<TaxonSpecies, 'id'> => ({ ...species })
 
 const loopUpsert = async (species: SpeciesArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
@@ -26,7 +28,7 @@ export const writeSpeciesToBio = async (species: SpeciesArbimon[], sequelize: Se
   try {
     await ModelRepository.getInstance(sequelize)
       .TaxonSpecies
-      .bulkCreate(species, {
+      .bulkCreate(species.map(transformSpeciesArbimonToTaxonSpeciesBio), {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_TAXON_SPECIES,
         ...transaction && { transaction }
       })
