@@ -53,7 +53,7 @@ When using a mode that has the config option `PROTECTION=warn`, you will see the
 > Running in TESTING mode  
 > This is a protected mode - are you sure you want to continue? (y|N)  
 
-## Common Modes
+### Common Modes
 
 **Note: You will need to add secrets in respective `.env.${mode}.local` files**
 
@@ -68,7 +68,7 @@ When using a mode that has the config option `PROTECTION=warn`, you will see the
 - `locpro` - LOCAL Bio; PRODUCTION Arbimon/Core
 - `locsta` - LOCAL Bio; STAGING Arbimon/Core
 
-## Custom Modes
+### Custom Modes
 
 **You can create whatever modes you want!**
 
