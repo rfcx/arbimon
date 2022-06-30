@@ -40,19 +40,23 @@ describe('ingest > outputs > taxon species', () => {
   test('can update taxon species (slug, taxonClassId, scientificName)', async () => {
     // Arrange
     const inputItem: Omit<TaxonSpecies, 'id'> = {
-      idArbimon: 2758,
-      slug: 'eudynamys-cyanocephalus',
+      idArbimon: 2759,
+      slug: 'eudynamys-taitensis',
       taxonClassId: 300,
-      scientificName: 'Eudynamys cyanocephalus new'
+      scientificName: 'Eudynamys taitensis'
     }
 
-    // Act
+    const updatedScientificName = 'Eudynamys taitensis updated'
+
     await writeSpeciesToBio([inputItem], biodiversitySequelize)
+
+    // Act
+    await writeSpeciesToBio([{ ...inputItem, scientificName: updatedScientificName }], biodiversitySequelize)
 
     // Assert
     const updatedTaxonSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: inputItem.idArbimon } })
     expect(updatedTaxonSpecies?.slug).toBe(inputItem.slug)
     expect(updatedTaxonSpecies?.taxonClassId).toBe(inputItem.taxonClassId)
-    expect(updatedTaxonSpecies?.scientificName).toBe(inputItem.scientificName)
+    expect(updatedTaxonSpecies?.scientificName).toBe(updatedScientificName)
   })
 })
