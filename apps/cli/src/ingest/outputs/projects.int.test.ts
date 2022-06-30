@@ -5,11 +5,25 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
+import { deleteOutputProjects } from './helper'
 import { writeProjectsToBio } from './projects'
 
 const biodiversitySequelize = await getSequelize()
 
 describe('ingest > outputs > projects', () => {
+  test('can perform with 0 project', async () => {
+    // Arrange
+    await deleteOutputProjects(biodiversitySequelize)
+    const input: Array<Omit<Project, 'id'>> = []
+
+    // Act
+    await writeProjectsToBio(input, biodiversitySequelize)
+
+    // Assert
+    const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll()
+    expect(projects.length).toBe(input.length)
+  })
+
   test('can write new project', async () => {
     // Arrange
     const input: Array<Omit<Project, 'id'>> = [{
