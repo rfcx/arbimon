@@ -2,17 +2,89 @@
 
 CLI scripts to be run locally or as CRON jobs
 
+## Quick Start
+
+Run a script using `serve` and the script's path under `lib`:
+
+- `pnpm serve lib/index.js`
+
+If you need to pass arguments to a script, don't forget to use `--` to tell `pnpm` to pass-thru:
+
+- `pnpm serve lib/path/to/some-script.js -- --some-param=123`
+
+**TL;DR: Don't forget:**
+
+- `lib` (not `src`)
+- `.js` (not `.ts`)
+- `--` before script arguments
+
+## Environment
+
+The default environment is declared in `.env`, committed to Git, and shared with the team. Scripts will run using:
+- **LOCAL** - Bio DB
+- **NO** - Arbimon DB
+- **NO** - Core DB/APIs
+
+You can override the default environment locally by editing `.env.local`  
+**All secrets must be declared in `.env.local`, not in `.env`**
+
+To avoid repeatedly editing/changing environment files (which creates uncertainty and risk, ex: forgetting you're connected to production), you are encouraged to define standard modes.
+
 ## Modes
 
-During local testing, some scripts automatically limit queries to reduce load on 3rd-party APIs -- you will see a banner:
+You can specify a "mode" to import additional predefined env:
 
-> Running in DEV mode
+- `pnpm serve lib/path/to/some/script.js -- --mode=testing`
 
-To run these scripts in "production" mode, you must set a flag:
+The following env files will be imported based on the mode (with later files overriding earlier files):
+- `.env`
+- `.env.local`
+- `.env.${mode}` (ex: `.env.testing`)
+- `.env.${mode}.local` (ex: `.env.testing.local`)
 
-```
-pnpm serve lib/path/to/some/script.js -- --mode=production
-```
+With no explicit mode set, scripts will start with a banner:
+
+> *** Biodiversity CLI ***  
+> Running in default mode  
+
+When using a mode that has the config option `PROTECTION=warn`, you will see the following banner:
+
+> *** Biodiversity CLI ***  
+> Running in TESTING mode  
+> This is a protected mode - are you sure you want to continue? (y|N)  
+
+## Common Modes
+
+**Note: You will need to add secrets in respective `.env.${mode}.local` files**
+
+*Parallel deployments:*
+
+- `production` - PRODUCTION Bio/Arbimon/Core
+- `staging` - STAGING Bio/Arbimon/Core
+- `testing` - TESTING Bio/Arbimon/Core (or STAGING if no TESTING)
+
+*Bio local + remote external:*
+
+- `locpro` - LOCAL Bio; PRODUCTION Arbimon/Core
+- `locsta` - LOCAL Bio; STAGING Arbimon/Core
+
+## Custom Modes
+
+**You can create whatever modes you want!**
+
+If you wanted a new **shared** mode `abc`, you would create:
+
+- `.env.abc` (config; secret keys; committed)  
+- `.env.abc.local` (secret values; NOT committed)  
+
+If you wanted a new **private** mode, `def`, you would create:
+
+- `.env.def.local` (config & secrets; NOT committed)  
+
+You could use these modes like:
+
+- `pnpm serve lib/path/to/some/script.js -- --mode=abc`
+- `pnpm serve lib/path/to/some/script.js -- --mode=def`
 
 ## Examples
 
