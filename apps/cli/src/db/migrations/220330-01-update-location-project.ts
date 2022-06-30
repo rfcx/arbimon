@@ -10,7 +10,7 @@ const TABLE_NAME = 'location_project'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> => {
   return await Promise.all([
-    await params.context.removeColumn(TABLE_NAME, 'slug_arbimon2'),
+    await params.context.removeColumn(TABLE_NAME, 'slug_arbimon'),
     await params.context.changeColumn(TABLE_NAME, 'latitude_north', {
       type: DataTypes.FLOAT,
       defaultValue: 0
