@@ -33,7 +33,11 @@ describe('ingest > outputs > sync status', () => {
   })
 
   test('can update existing status in the database', async () => {
+    // Arrange
+    const syncUntilDate = dayjs('1980-01-01T00:00:00.000Z').toDate()
+
     // Act
+    await writeSyncResult({ ...STATUS_LOG, syncUntilDate }, biodiversitySequelize)
     await writeSyncResult(STATUS_LOG, biodiversitySequelize)
 
     // Assert
