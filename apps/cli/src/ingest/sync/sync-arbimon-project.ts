@@ -17,7 +17,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.ArbimonValidated.id,
   syncDataTypeId: masterSyncDataTypes.Project.id,
-  syncBatchLimit: 500
+  syncBatchLimit: 1000
 }
 
 export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
