@@ -41,7 +41,7 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
       where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     })
-  expect(updatedSyncStatus?.syncUntilId).toBe(expectedSyncUntilId)
+  expect(updatedSyncStatus?.syncUntilId).toBe(expectedSyncUntilId.toString())
 }
 
 describe('ingest > sync', () => {

@@ -21,7 +21,7 @@ export const SyncStatusModel = defineWithDefaults<SyncStatus>(
 
     // Facts
     syncUntilDate: DataTypes.DATE,
-    syncUntilId: DataTypes.INTEGER,
+    syncUntilId: DataTypes.STRING,
     syncBatchLimit: DataTypes.INTEGER
   },
   {
