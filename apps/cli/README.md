@@ -98,14 +98,24 @@ pnpm serve lib/data-ingest/detections/to-mock.js
 
 ### Database Migrations
 
-Run migrations manually (note: the target database must be running)
+If you're targeting a local database, you must first start it:
 
-```
-pnpm migrate -- --verbose
-```
+- `pnpm --filter=db serve` (local dev DB)  
+- `pnpm --filter=db serve-int` (local integration test DB)  
 
 Completely reset the database (deletes all tables & wipes migration log):
 
-```
-pnpm serve lib/db/reset
-```
+- `pnpm db-reset`
+
+Run migrations (creates tables, views, etc)
+
+- `pnpm db-migrate -- --verbose`
+
+Run seeders (inserts fake data)
+
+- `pnpm db-seed -- --verbose`
+
+Run reset, migrate, and seed (as 1 script):
+
+- `pnpm db-rms`  
+- `pnpm db-rms-int`  
