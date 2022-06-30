@@ -1,8 +1,6 @@
+import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastify, { FastifyInstance } from 'fastify'
-import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { describe, expect, test } from 'vitest'
-
-import { spotlightDatasetUrl } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesSpotlight } from './index'
@@ -56,7 +54,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
@@ -75,7 +73,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
@@ -91,7 +89,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -107,7 +105,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '' }
     })
 
@@ -131,7 +129,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -148,7 +146,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -165,7 +163,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -182,7 +180,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -199,7 +197,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -216,7 +214,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -233,7 +231,7 @@ describe('happy path', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -252,7 +250,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' })
+      url: '/projects/1/spotlight'
     })
 
     // Assert
@@ -266,7 +264,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: 'x' })
+      url: '/projects/x/spotlight'
     })
 
     // Assert
@@ -284,7 +282,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -303,7 +301,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: 'xxx', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -322,7 +320,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '9999', startDate: '2021-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
@@ -341,7 +339,7 @@ describe('client errors', () => {
     // Act
     const response = await app.inject({
       method: GET,
-      url: spotlightDatasetUrl({ projectId: '1' }),
+      url: '/projects/1/spotlight',
       query: { speciesId: '1', startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
     })
 
