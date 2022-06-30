@@ -5,3 +5,11 @@ export const CLASSIFIER_JOB_STATUS = {
   ERROR: 40,
   CANCELLED: 50
 }
+
+export const CLASSIFIER_JOB_LABELS: { [key: number]: string } = {
+  0: 'Queued',
+  20: 'Processing',
+  30: 'Done',
+  40: 'Error',
+  50: 'Cancelled'
+}

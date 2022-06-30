@@ -10,9 +10,9 @@ export interface ClassifierJobAllParams {
 }
 
 // Response types
-export type ClassifierJobAllResponse = ClassifierJob[]
+export type ClassifierJobAllResponse = ClassifierJobResponse[]
 
-export interface ClassifierJob {
+export interface ClassifierJobResponse {
   id: number
   classifier: Classifier
   classifierId: number
@@ -31,6 +31,26 @@ export interface ClassifierJob {
   completed_at: string
 }
 
+export interface ClassifierJobInput {
+  sites: string
+  dateRange: string
+  timeOfDay: string
+}
+
+export interface ClassifierJobProgress {
+  status: number
+  value: number
+}
+
+export interface ClassifierJob {
+  id: number
+  modelName: string
+  input: ClassifierJobInput
+  progress: ClassifierJobProgress
+  numberOfRecordings: number
+  createdAt: Date
+}
+
 interface Classifier {
   id: number
   name: string
@@ -39,7 +59,7 @@ interface Classifier {
 // Wrapper types
 export interface ClassifierJobAll {
   total: number
-  items: ClassifierJob[]
+  items: ClassifierJobResponse[]
 }
 
 // Service

@@ -8,7 +8,7 @@
     </router-link>
   </div>
 
-  <JobFilter
+  <job-filter
     :filter-options="filterOptions"
     @emit-select="onFilterChange"
   />
@@ -63,7 +63,7 @@
       </tr>
     </thead>
     <tbody>
-      <JobItemRow
+      <job-item-row
         v-for="job in jobs"
         :key="job.id"
         :job="job"
