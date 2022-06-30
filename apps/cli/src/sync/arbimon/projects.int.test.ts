@@ -50,7 +50,7 @@ test('Project slug updated', async () => {
   const project = await ModelRepository.getInstance(biodiversitySequelize)
     .LocationProject
     .findOne({ where: { idArbimon: testProjectIdArbimon } })
-    expect(project?.slugArbimon).toBe(projectSlug)
+    expect(project?.slug).toBe(projectSlug)
 })
 
 test('Project location updated', async () => {
