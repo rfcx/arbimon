@@ -4,7 +4,7 @@ export interface SyncStatus {
   syncSourceId: number
   syncDataTypeId: number
   syncUntilDate: Date
-  syncUntilId: number
+  syncUntilId: string
   syncBatchLimit: number
 }
 

@@ -7,5 +7,5 @@ export const getDefaultSyncStatus = (syncConfig: SyncConfig): SyncStatus =>
   ({
     ...syncConfig,
     syncUntilDate: dayjs('1980-01-01T00:00:00.000Z').toDate(),
-    syncUntilId: 0
+    syncUntilId: '0'
   })
