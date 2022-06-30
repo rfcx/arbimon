@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: biodiversity-cli-sync-db-incremental
-            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/incrementally.js"]
+            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/ingest/sync/incremental.js"]
             image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli/staging:latest
             imagePullPolicy: IfNotPresent
             envFrom:
