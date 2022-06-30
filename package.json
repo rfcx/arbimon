@@ -34,6 +34,7 @@
     "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
     "lint-diff:eslint": "eslint --cache $(git diff --name-only --diff-filter=ACMRTUXB origin/staging HEAD | grep -E \"\\.(js|cjs|ts|vue)$\" | xargs)",
     "lint-fix": "eslint . --fix --ignore-pattern \"*/\" && prettier . --write --loglevel warn",
+    "lint-fix-all": "pnpm -r lint-fix --stream --workspace-concurrency 1",
     "lint-profile:eslint": "cross-env TIMING=1 eslint . --ignore-pattern \"*/\"",
     "lint:eslint": "eslint . --ignore-pattern \"*/\" --cache",
     "lint:prettier": "prettier . --check",
