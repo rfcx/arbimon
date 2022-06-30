@@ -1,4 +1,4 @@
-import { attributes } from '../type-helpers'
+import { attributes, AttributeTypes } from '../type-helpers'
 
 export interface SyncLogByProject {
   id: number
@@ -10,3 +10,5 @@ export interface SyncLogByProject {
 
 export const ATTRIBUTES_SYNC_LOG_BY_PROJECT = attributes<SyncLogByProject>()({
 })
+
+export type SyncLogByProjectTypes = AttributeTypes<SyncLogByProject, typeof ATTRIBUTES_SYNC_LOG_BY_PROJECT>

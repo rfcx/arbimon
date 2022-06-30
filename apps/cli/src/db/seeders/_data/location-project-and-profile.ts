@@ -76,7 +76,7 @@ const dataFakeProject = {
 type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
 
 export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
-  local: [
+  default: [
     {
       idCore: 'zy5jbxx4cs9f',
       idArbimon: 1556,

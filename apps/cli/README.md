@@ -53,7 +53,7 @@ When using a mode that has the config option `PROTECTION=warn`, you will see the
 > Running in TESTING mode  
 > This is a protected mode - are you sure you want to continue? (y|N)  
 
-## Common Modes
+### Common Modes
 
 **Note: You will need to add secrets in respective `.env.${mode}.local` files**
 
@@ -68,7 +68,7 @@ When using a mode that has the config option `PROTECTION=warn`, you will see the
 - `locpro` - LOCAL Bio; PRODUCTION Arbimon/Core
 - `locsta` - LOCAL Bio; STAGING Arbimon/Core
 
-## Custom Modes
+### Custom Modes
 
 **You can create whatever modes you want!**
 
@@ -98,28 +98,24 @@ pnpm serve lib/ingest/sync/incremental.js
 
 ### Database Migrations
 
-Run migrations manually (note: the target database must be running)
+If you're targeting a local database, you must first start it:
 
-```
-pnpm migrate -- --verbose
-```
+- `pnpm --filter=db serve` (local dev DB)  
+- `pnpm --filter=db serve-int` (local integration test DB)  
 
 Completely reset the database (deletes all tables & wipes migration log):
 
-```
-pnpm serve lib/db/reset
-```
+- `pnpm db-reset`
 
-### Test
+Run migrations (creates tables, views, etc)
 
-- Integration tests
+- `pnpm db-migrate -- --verbose`
 
-```
-pnpm test-int
-```
+Run seeders (inserts fake data)
 
-- Unit tests
+- `pnpm db-seed -- --verbose`
 
-```
-pnpm test-unit
-```
+Run reset, migrate, and seed (as 1 script):
+
+- `pnpm db-rms`  
+- `pnpm db-rms-int`  

@@ -8,13 +8,18 @@ import { UPDATE_ON_DUPLICATE_SYNC_SOURCE } from '@rfcx-bio/common/dao/models/syn
 export const updateMasterData = async (sequelize: Sequelize): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)
 
+  const masterData = [
+    { model: models.SyncSource, data: sources, updateOnDuplicate: UPDATE_ON_DUPLICATE_SYNC_SOURCE },
+    { model: models.SyncDataType, data: syncTypes, updateOnDuplicate: UPDATE_ON_DUPLICATE_SYNC_DATA_TYPE }
+  ]
+
   // Add any missing master-data
-  // TODO: Make this a loop
   console.info('Updating master data:')
-  await models.SyncSource.bulkCreate(sources, { updateOnDuplicate: UPDATE_ON_DUPLICATE_SYNC_SOURCE })
-  console.info('- Sources')
-  await models.SyncDataType.bulkCreate(syncTypes, { updateOnDuplicate: UPDATE_ON_DUPLICATE_SYNC_DATA_TYPE })
-  console.info('- Sync data type')
+  for (const { model, data, updateOnDuplicate } of masterData) {
+    console.info(`- ${model.name}`)
+    await model.bulkCreate(data, { updateOnDuplicate })
+  }
+
   // Remove obsolete master-data
   // TODO
 }

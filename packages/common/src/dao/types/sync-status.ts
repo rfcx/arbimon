@@ -1,4 +1,4 @@
-import { attributes } from '../type-helpers'
+import { attributes, AttributeTypes } from '../type-helpers'
 
 export interface SyncStatus {
   syncSourceId: number
@@ -10,3 +10,5 @@ export interface SyncStatus {
 
 export const ATTRIBUTES_SYNC_STATUS = attributes<SyncStatus>()({
 })
+
+export type SyncStatusTypes = AttributeTypes<SyncStatus, typeof ATTRIBUTES_SYNC_STATUS>
