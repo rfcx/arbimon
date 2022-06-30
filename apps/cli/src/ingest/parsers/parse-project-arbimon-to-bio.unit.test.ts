@@ -78,11 +78,33 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
   })
 
   test('fails if props are in wrong type', async () => {
-    // Act
+    // Arrange
     const nullIdCore = { ...VALID_PROJECT, idCore: null }
+
+    // Act
     const actual = parseProjectArbimonToBio(nullIdCore)
 
     // Assert
     expect(actual.success).toBe(false)
+  })
+
+  test('fails if slug is not urlified', async () => {
+    // Arrange
+    const NOT_VALID_SLUG_1 = 'not/a/slug'
+    const NOT_VALID_SLUG_2 = 'not a slug'
+    const NOT_VALID_SLUG_3 = 'Not-a-slug'
+    const NOT_VALID_SLUG_4 = 'not-a-slug/1'
+
+    // Act
+    const actual = parseProjectArbimonToBio({ ...VALID_PROJECT, slug: NOT_VALID_SLUG_1 })
+    const actual2 = parseProjectArbimonToBio({ ...VALID_PROJECT, slug: NOT_VALID_SLUG_2 })
+    const actual3 = parseProjectArbimonToBio({ ...VALID_PROJECT, slug: NOT_VALID_SLUG_3 })
+    const actual4 = parseProjectArbimonToBio({ ...VALID_PROJECT, slug: NOT_VALID_SLUG_4 })
+
+    // Assert
+    expect(actual.success).toBe(false)
+    expect(actual2.success).toBe(false)
+    expect(actual3.success).toBe(false)
+    expect(actual4.success).toBe(false)
   })
 })

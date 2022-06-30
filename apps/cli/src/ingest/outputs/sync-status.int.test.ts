@@ -14,7 +14,7 @@ describe('ingest > outputs > sync status', () => {
     syncSourceId: masterSources.ArbimonValidated.id,
     syncDataTypeId: masterSyncDataTypes.Project.id,
     syncUntilDate: dayjs.utc('2021-03-19T11:00:00.000Z').toDate(),
-    syncUntilId: 1921,
+    syncUntilId: '1921',
     syncBatchLimit: 2
   }
 
@@ -33,7 +33,11 @@ describe('ingest > outputs > sync status', () => {
   })
 
   test('can update existing status in the database', async () => {
+    // Arrange
+    const syncUntilDate = dayjs('1980-01-01T00:00:00.000Z').toDate()
+
     // Act
+    await writeSyncResult({ ...STATUS_LOG, syncUntilDate }, biodiversitySequelize)
     await writeSyncResult(STATUS_LOG, biodiversitySequelize)
 
     // Assert
@@ -57,7 +61,7 @@ describe('ingest > outputs > sync status', () => {
   test('fail for a project with incorrect id', async () => {
     // Act & Assert
     try {
-      await writeSyncResult({ ...STATUS_LOG, syncUntilId: 1821 }, biodiversitySequelize)
+      await writeSyncResult({ ...STATUS_LOG, syncUntilId: '1821' }, biodiversitySequelize)
     } catch (e) {
       expect(e).toMatch(/Batch insert failed/)
     }

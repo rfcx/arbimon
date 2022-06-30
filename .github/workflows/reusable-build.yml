@@ -87,25 +87,32 @@ jobs:
 
       - name: 'Verify: Build'
         id: build
-        run: pnpm ci-build
+        run: pnpm build-all
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
 
       - name: 'Verify: Lint'
         if: ${{ inputs.lint }}
         id: lint
-        run: pnpm ci-lint
+        run: pnpm lint-all
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
 
-      - name: 'Verify: Test'
+      - name: 'Verify: Unit Tests'
         if: ${{ inputs.test }}
         id: test
-        run: pnpm ci-test-unit
+        run: pnpm ci-all-test-unit
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
       
-      # - name: 'Verify: Cypress'
+      - name: 'Verify: Component Tests'
+        if: ${{ inputs.test }}
+        id: test
+        run: pnpm ci-all-test-component
+        env:
+          NODE_OPTIONS: '--max_old_space_size=6656'
+      
+      # - name: 'Verify: UI Tests'
       #   uses: cypress-io/github-action@v2
       #   with:
       #     install: false

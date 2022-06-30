@@ -42,7 +42,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 2
     }
 
@@ -59,7 +59,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-19T11:00:00.000Z').toDate(),
-      syncUntilId: 1921,
+      syncUntilId: '1921',
       syncBatchLimit: 2
     }
 
@@ -76,7 +76,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-20T11:00:00.000Z').toDate(),
-      syncUntilId: 1923,
+      syncUntilId: '1923',
       syncBatchLimit: 2
     }
 
@@ -92,7 +92,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-20T12:00:00.000Z').toDate(),
-      syncUntilId: 1924,
+      syncUntilId: '1924',
       syncBatchLimit: 2
     }
 
@@ -121,7 +121,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc(updatedAt).toDate(),
-      syncUntilId: 1924,
+      syncUntilId: '1924',
       syncBatchLimit: 2
     }
 
@@ -137,7 +137,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 1
     }
     const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'updatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
@@ -156,7 +156,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 1
     }
     await arbimonSequelize.query('DELETE FROM sites')

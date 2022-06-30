@@ -4,7 +4,6 @@ import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '@/db/connections'
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-projects'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
 import { createProjectVersionIfNeeded } from '../outputs/project-version'
@@ -23,6 +22,8 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonProjects = await getArbimonProjects(arbimonSequelize, syncStatus)
+  console.info('- syncArbimonProjectsBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
+  console.info('- syncArbimonProjectsBatch: found %d projects', arbimonProjects.length)
   // Exit early if nothing to sync
   if (arbimonProjects.length === 0) return syncStatus
 
@@ -42,7 +43,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
 
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndErrors.map(async e => {
@@ -73,19 +74,18 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   }
 }
 
-export const syncArbimonProjects = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
-  let syncStatus = await ModelRepository.getInstance(getSequelize())
+export const syncArbimonProjects = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
+  const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
     .SyncStatus
     .findOne({
       where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  while (true) {
-    const updatedSyncStatus = await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
-    if (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId) return
-    syncStatus = updatedSyncStatus
-  }
+  const updatedSyncStatus = await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+  return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)
+      // || numberOfItemsSynced < syncStatus.syncBatchLimit
+      // TODO: add number of syncd items as a response of syncArbimonProjectsBatch so that we can check the case above ☝️
 }
 
 export const syncArbimonProjectsByIds = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, arbimonProjectIds: number[]): Promise<void> => {
