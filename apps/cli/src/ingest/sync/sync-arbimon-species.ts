@@ -24,7 +24,8 @@ const SYNC_CONFIG: SyncConfig = {
 export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonSpecies = await getArbimonSpecies(arbimonSequelize, syncStatus)
   const taxonClasses = await ModelRepository.getInstance(biodiversitySequelize).TaxonClass.findAll()
-
+  console.info('- syncArbimonSpeciesBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
+  console.info('- syncArbimonSpeciesBatch: found %d species', arbimonSpecies.length)
   // Exit early if nothing to sync
   if (arbimonSpecies.length === 0) return syncStatus
 
@@ -43,8 +44,7 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
   })
 
   const speciesData = species.filter(item => item.taxonClassId !== undefined)
-
-  // Write projects to Bio
+  // Write species to Bio
   const insertErrors = await writeSpeciesToBio(speciesData as SpeciesArbimon[], biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
   try {
@@ -72,17 +72,14 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
   }
 }
 
-export const syncArbimonSpecies = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
-  let syncStatus = await ModelRepository.getInstance(getSequelize())
+export const syncArbimonSpecies = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
+  const syncStatus = await ModelRepository.getInstance(getSequelize())
     .SyncStatus
     .findOne({
       where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  while (true) {
-    const updatedSyncStatus = await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
-    if (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId) return
-    syncStatus = updatedSyncStatus
-  }
+  const updatedSyncStatus = await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+  return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)
 }
