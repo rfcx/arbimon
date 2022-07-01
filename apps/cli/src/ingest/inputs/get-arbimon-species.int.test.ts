@@ -13,7 +13,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 2
     }
 
@@ -30,7 +30,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-06-20T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 2
     }
 
@@ -47,7 +47,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-06-22T11:00:00.000Z').toDate(),
-      syncUntilId: 501,
+      syncUntilId: '501',
       syncBatchLimit: 2
     }
 
@@ -64,7 +64,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
      // Arrange
      const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-06-22T11:00:00.000Z').toDate(),
-      syncUntilId: 2755,
+      syncUntilId: '2755',
       syncBatchLimit: 2
     }
 
@@ -80,7 +80,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-06-23T15:40:00.000Z').toDate(),
-      syncUntilId: 74,
+      syncUntilId: '74',
       syncBatchLimit: 2
     }
 
@@ -95,7 +95,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 1
     }
     const expectedProps = ['idArbimon', 'scientificName', 'taxonClassId', 'updatedAt']

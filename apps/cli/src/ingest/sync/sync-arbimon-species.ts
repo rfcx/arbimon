@@ -16,7 +16,7 @@ import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
-  syncSourceId: masterSources.ArbimonValidated.id,
+  syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Species.id,
   syncBatchLimit: 1000
 }
@@ -49,7 +49,7 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
   const transaction = await biodiversitySequelize.transaction()
   try {
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncedTaxonSpecies.updatedAt, syncUntilId: lastSyncedTaxonSpecies.idArbimon }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncedTaxonSpecies.updatedAt, syncUntilId: lastSyncedTaxonSpecies.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     // TODO: Log sync errors #809

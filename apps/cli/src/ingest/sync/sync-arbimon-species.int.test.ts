@@ -13,7 +13,7 @@ const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = await getSequelize()
 
 const SYNC_CONFIG: SyncConfig = {
-  syncSourceId: masterSources.ArbimonValidated.id,
+  syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Species.id,
   syncBatchLimit: 1000
 }
