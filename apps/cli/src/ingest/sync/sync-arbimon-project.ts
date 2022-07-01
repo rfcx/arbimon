@@ -10,7 +10,7 @@ import { createProjectVersionIfNeeded } from '../outputs/project-version'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
-import { parseProjectArbimonToBio, ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 import { isSyncable } from './syncable'
 
@@ -47,9 +47,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndParsingErrors.map(async e => {
-      const hasIdArbimon = (value: unknown): value is ProjectArbimon => (Boolean(value)) && typeof value === 'object'
-      if (!hasIdArbimon(e[0])) { throw new Error('Invalid input') }
-      const idArbimon = e[0]?.idArbimon ?? 'unknown'
+      const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1]),
