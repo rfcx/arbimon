@@ -100,14 +100,14 @@ jobs:
 
       - name: 'Verify: Unit Tests'
         if: ${{ inputs.test }}
-        id: test
+        id: test-unit
         run: pnpm ci-all-test-unit
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
       
       - name: 'Verify: Component Tests'
         if: ${{ inputs.test }}
-        id: test
+        id: test-component
         run: pnpm ci-all-test-component
         env:
           NODE_OPTIONS: '--max_old_space_size=6656'
