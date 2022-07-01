@@ -1,0 +1,11 @@
+import { ValueOf } from '@rfcx-bio/utils/utility-types'
+
+import { SyncSource } from '@/dao/types'
+
+export const masterSources = {
+  Arbimon: { id: 100, name: 'Arbimon' },
+  DetectionArbimonValidated: { id: 200, name: 'Arbimon Validated' }
+} as const
+
+export type SyncSourceId = ValueOf<typeof masterSources>['id']
+export const sources: readonly SyncSource[] = Object.values(masterSources)

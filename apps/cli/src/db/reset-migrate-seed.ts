@@ -1,5 +1,6 @@
 import { execSeeders } from '@/db/actions/exec-seeders'
 import { refreshMviews } from '@/db/actions/refresh-mviews'
+import { updateMasterData } from './_helpers/update-master-data'
 import { dropTables, execMigrations } from './actions'
 import { getSequelize } from './connections'
 
@@ -28,6 +29,7 @@ const main = async (): Promise<void> => {
     for (const seederPath of seederPaths.split(',')) {
       await execSeeders(sequelize2, seederPath, verbose)
     }
+    await updateMasterData(sequelize2)
     await refreshMviews(sequelize2)
 
     // Teardown
