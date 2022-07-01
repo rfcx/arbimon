@@ -1,0 +1,41 @@
+import { Sequelize, Transaction } from 'sequelize'
+
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { UPDATE_ON_DUPLICATE_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
+import { Project, SyncError } from '@rfcx-bio/common/dao/types'
+
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+
+const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id'> => ({ ...project })
+
+const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
+  const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
+  for (const project of projects) {
+    try {
+      await ModelRepository.getInstance(sequelize).LocationProject.upsert(transformProjectArbimonToProjectBio(project))
+    } catch (e: any) {
+      const errorMessage = (e instanceof Error) ? e.message : ''
+      // store insert errors
+      failedToInsertItems.push({
+        externalId: `${project.idArbimon}`,
+        error: `InsertError: ${errorMessage}`
+      })
+    }
+  }
+  return failedToInsertItems
+}
+
+export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
+  try {
+    await ModelRepository.getInstance(sequelize)
+      .LocationProject
+      .bulkCreate(projects.map(transformProjectArbimonToProjectBio), {
+        updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_PROJECT,
+        ...transaction && { transaction }
+      })
+    return []
+  } catch (batchInsertError) {
+    console.info('⚠️ Batch insert failed... try loop upsert')
+    return await loopUpsert(projects, sequelize)
+  }
+}
