@@ -11,7 +11,7 @@ const biodiversitySequelize = await getSequelize()
 
 describe('ingest > outputs > sync status', () => {
   const STATUS_LOG = {
-    syncSourceId: masterSources.ArbimonValidated.id,
+    syncSourceId: masterSources.Arbimon.id,
     syncDataTypeId: masterSyncDataTypes.Project.id,
     syncUntilDate: dayjs.utc('2021-03-19T11:00:00.000Z').toDate(),
     syncUntilId: '1921',
