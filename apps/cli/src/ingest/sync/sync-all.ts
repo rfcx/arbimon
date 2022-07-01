@@ -31,6 +31,6 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
     exitWithSuccess()
   } catch (e) {
     console.error(e)
-    process.exit(0)
+    process.exitCode = 1
   }
 }
