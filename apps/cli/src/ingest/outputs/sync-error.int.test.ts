@@ -16,7 +16,7 @@ describe('ingest > outputs > sync error', () => {
     error: 'Batch insert failed'
   }
 
-  const where = { syncSourceId: ERROR_LOG.syncSourceId, syncDataTypeId: ERROR_LOG.syncDataTypeId, externalId: ERROR_LOG.externalId }
+  const { error, ...where } = ERROR_LOG
 
   test('can log a new error when the sync fails', async () => {
     // Act
