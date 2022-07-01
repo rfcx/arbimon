@@ -34,7 +34,7 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
   if (!isSyncable(lastSyncedTaxonSpecies)) throw new Error('Input does not contain needed sync-status data')
 
   // Parse input
-  const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonSpecies.map(item => {
+  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonSpecies.map(item => {
     return { ...item, slug: urlify(item.scientificName) }
   }), parseSpeciesArbimonToBio)
   const species = inputsAndOutputs.map(inputAndOutput => {
@@ -52,10 +52,16 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncedTaxonSpecies.updatedAt, syncUntilId: lastSyncedTaxonSpecies.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
-    // TODO: Log sync errors #809
-    if (inputsAndErrors.length > 0) {
-      console.error('validation error', inputsAndErrors)
-    }
+    await Promise.all(inputsAndParsingErrors.map(async e => {
+      const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
+      const error = {
+        externalId: `${idArbimon}`,
+        error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
+        syncSourceId: updatedSyncStatus.syncDataTypeId,
+        syncDataTypeId: updatedSyncStatus.syncDataTypeId
+      }
+      await writeSyncError(error, biodiversitySequelize, transaction)
+    }))
 
     await Promise.all(insertErrors.map(async e => {
       const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
