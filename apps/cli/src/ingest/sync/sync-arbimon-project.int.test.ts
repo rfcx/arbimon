@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
-import { deleteOutputProjects } from '../outputs/helper'
+import { deleteOutputProjects } from '../_testing/helper'
 import { syncArbimonProjectsBatch } from './sync-arbimon-project'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
