@@ -21,6 +21,7 @@ If you need to pass arguments to a script, don't forget to use `--` to tell `pnp
 ## Environment
 
 The default environment is declared in `.env`, committed to Git, and shared with the team. Scripts will run using:
+
 - **LOCAL** - Bio DB
 - **NO** - Arbimon DB
 - **NO** - Core DB/APIs
@@ -37,6 +38,7 @@ You can specify a "mode" to import additional predefined env:
 - `pnpm serve lib/path/to/some/script.js -- --mode=testing`
 
 The following env files will be imported based on the mode (with later files overriding earlier files):
+
 - `.env`
 - `.env.local`
 - `.env.${mode}` (ex: `.env.testing`)
@@ -44,26 +46,26 @@ The following env files will be imported based on the mode (with later files ove
 
 With no explicit mode set, scripts will start with a banner:
 
-> *** Biodiversity CLI ***  
-> Running in default mode  
+> **_ Biodiversity CLI _**  
+> Running in default mode
 
 When using a mode that has the config option `PROTECTION=warn`, you will see the following banner:
 
-> *** Biodiversity CLI ***  
+> **_ Biodiversity CLI _**  
 > Running in TESTING mode  
-> This is a protected mode - are you sure you want to continue? (y|N)  
+> This is a protected mode - are you sure you want to continue? (y|N)
 
 ### Common Modes
 
 **Note: You will need to add secrets in respective `.env.${mode}.local` files**
 
-*Parallel deployments:*
+_Parallel deployments:_
 
 - `production` - PRODUCTION Bio/Arbimon/Core
 - `staging` - STAGING Bio/Arbimon/Core
 - `testing` - TESTING Bio/Arbimon/Core (or STAGING if no TESTING)
 
-*Bio local + remote external:*
+_Bio local + remote external:_
 
 - `locpro` - LOCAL Bio; PRODUCTION Arbimon/Core
 - `locsta` - LOCAL Bio; STAGING Arbimon/Core
@@ -74,12 +76,12 @@ When using a mode that has the config option `PROTECTION=warn`, you will see the
 
 If you wanted a new **shared** mode `abc`, you would create:
 
-- `.env.abc` (config; secret keys; committed)  
-- `.env.abc.local` (secret values; NOT committed)  
+- `.env.abc` (config; secret keys; committed)
+- `.env.abc.local` (secret values; NOT committed)
 
 If you wanted a new **private** mode, `def`, you would create:
 
-- `.env.def.local` (config & secrets; NOT committed)  
+- `.env.def.local` (config & secrets; NOT committed)
 
 You could use these modes like:
 
@@ -100,8 +102,8 @@ pnpm serve lib/ingest/sync/incremental.js
 
 If you're targeting a local database, you must first start it:
 
-- `pnpm --filter=db serve` (local dev DB)  
-- `pnpm --filter=db serve-int` (local integration test DB)  
+- `pnpm --filter=db serve` (local dev DB)
+- `pnpm --filter=db serve-int` (local integration test DB)
 
 Completely reset the database (deletes all tables & wipes migration log):
 
@@ -117,5 +119,5 @@ Run seeders (inserts fake data)
 
 Run reset, migrate, and seed (as 1 script):
 
-- `pnpm db-rms`  
-- `pnpm db-rms-int`  
+- `pnpm db-rms`
+- `pnpm db-rms-int`
