@@ -13,7 +13,7 @@ import { rawFilenames } from '../_data/location-project-species-file'
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
 
 const baseUrls: Record<BioEnvironment, string> = {
-  local: 'http://localhost:3000',
+  default: 'http://localhost:3000',
   testing: 'https://testing-bio.rfcx.org/api',
   staging: 'https://staging-bio.rfcx.org/api',
   production: 'https://bio.rfcx.org/api'

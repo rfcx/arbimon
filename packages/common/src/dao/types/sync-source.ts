@@ -1,4 +1,4 @@
-import { attributes } from '../type-helpers'
+import { attributes, AttributeTypes } from '../type-helpers'
 
 export interface SyncSource {
   id: number
@@ -7,3 +7,5 @@ export interface SyncSource {
 
 export const ATTRIBUTES_SOURCE = attributes<SyncSource>()({
 })
+
+export type SyncSourceTypes = AttributeTypes<SyncSource, typeof ATTRIBUTES_SOURCE>

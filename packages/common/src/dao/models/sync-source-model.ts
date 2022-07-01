@@ -17,7 +17,10 @@ export const SyncSourceModel = defineWithDefaultsAutoPk<SyncSource>(
     },
 
     // Facts
-    name: DataTypes.STRING(255)
+    name: {
+      type: DataTypes.STRING(255),
+      unique: true
+    }
   },
   {
     tableName: TABLE_SYNC_SOURCE
