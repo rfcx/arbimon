@@ -10,7 +10,7 @@ const biodiversitySequelize = await getSequelize()
 
 describe('ingest > outputs > sync error', () => {
   const ERROR_LOG = {
-    syncSourceId: masterSources.ArbimonValidated.id,
+    syncSourceId: masterSources.Arbimon.id,
     syncDataTypeId: masterSyncDataTypes.Project.id,
     externalId: '807cuoi3cvw1',
     error: 'Batch insert failed'
@@ -53,7 +53,7 @@ describe('ingest > outputs > sync error', () => {
     try {
       await writeSyncError({ ...ERROR_LOG, externalId: '807cuoi3cvw11' }, biodiversitySequelize)
     } catch (e) {
-      expect(e).toMatch(/Batch insert failed/)
+      expect(e).toMatch(/SequelizeDatabaseError/)
     }
   })
 

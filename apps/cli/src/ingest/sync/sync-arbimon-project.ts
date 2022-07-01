@@ -15,7 +15,7 @@ import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
-  syncSourceId: masterSources.ArbimonValidated.id,
+  syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Project.id,
   syncBatchLimit: 1000
 }
@@ -32,7 +32,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   if (!isSyncable(lastSyncdProject)) throw new Error('Input does not contain needed sync-status data')
 
   // Parse input
-  const [inputsAndOutputs, inputsAndErrors] = parseArray(arbimonProjects, parseProjectArbimonToBio)
+  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonProjects, parseProjectArbimonToBio)
   const projectData = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
   // Write projects to Bio
@@ -46,7 +46,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
-    await Promise.all(inputsAndErrors.map(async e => {
+    await Promise.all(inputsAndParsingErrors.map(async e => {
       const hasIdArbimon = (value: unknown): value is ProjectArbimon => (Boolean(value)) && typeof value === 'object'
       if (!hasIdArbimon(e[0])) { throw new Error('Invalid input') }
       const idArbimon = e[0]?.idArbimon ?? 'unknown'
