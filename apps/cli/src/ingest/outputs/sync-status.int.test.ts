@@ -47,15 +47,13 @@ describe('ingest > outputs > sync status', () => {
     expect(result[0].syncUntilId).toBe(STATUS_LOG.syncUntilId)
   })
 
-  test('can update existing status when syncBatchLimit is empty', async () => {
-    // Act
-    await writeSyncResult({ ...STATUS_LOG, syncBatchLimit: 0 }, biodiversitySequelize)
-
-    // Assert
-    const result = await ModelRepository.getInstance(biodiversitySequelize).SyncStatus.findAll({ where: { ...where, syncUntilId: STATUS_LOG.syncUntilId } })
-
-    expect(result.length).toEqual(1)
-    expect(result[0].syncUntilId).toBe(STATUS_LOG.syncUntilId)
+  test('fail when syncBatchLimit is empty', async () => {
+     // Act & Assert
+     try {
+      await writeSyncResult({ ...STATUS_LOG, syncBatchLimit: 0 }, biodiversitySequelize)
+    } catch (e) {
+      expect(e).toMatch(/ValidationError/)
+    }
   })
 
   test('fail for a project with incorrect id', async () => {
@@ -79,7 +77,7 @@ describe('ingest > outputs > sync status', () => {
   test('fail for invalid date', async () => {
     // Act & Assert
     try {
-      await writeSyncResult({ ...STATUS_LOG, syncUntilDate: dayjs('').toDate() }, biodiversitySequelize)
+      await writeSyncResult({ ...STATUS_LOG, syncUntilDate: dayjs.utc(null).toDate() }, biodiversitySequelize)
     } catch (e) {
       expect(e).includes(/invalid input syntax for type timestamp with time zone/)
     }
