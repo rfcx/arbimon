@@ -1,7 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { syncHistoryUrl } from '@rfcx-bio/common/api-bio/sync'
 import { DataSource } from '@rfcx-bio/common/dao/types'
 
 import { routesSync } from '@/sync'
@@ -98,7 +97,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BEARER AbCdEf123456' },
-        url: syncHistoryUrl({ projectId: PROJECT_ID_WITH_ACCESS })
+        url: `/projects/${PROJECT_ID_WITH_ACCESS}/sync-history`
       })
 
       // Assert
@@ -120,7 +119,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BEARER AbCdEf123456' },
-        url: syncHistoryUrl({ projectId: PROJECT_ID_WITH_ACCESS })
+        url: `/projects/${PROJECT_ID_WITH_ACCESS}/sync-history`
       })
 
       // Assert
@@ -137,7 +136,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     const response = await app.inject({
       method: GET,
       headers: { authorization: 'BEARER AbCdEf123456' },
-      url: syncHistoryUrl({ projectId: PROJECT_ID_WITH_ACCESS })
+      url: `/projects/${PROJECT_ID_WITH_ACCESS}/sync-history`
     })
 
     test('calculates syncs correctly', async () => {
@@ -172,7 +171,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: syncHistoryUrl({ projectId: PROJECT_ID_NO_ACCESS })
+        url: `/projects/${PROJECT_ID_NO_ACCESS}/sync-history`
       })
 
       // Assert
@@ -187,7 +186,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BANANA AbCdEf123456' }, // not BEARER
-        url: syncHistoryUrl({ projectId: PROJECT_ID_NO_ACCESS })
+        url: `/projects/${PROJECT_ID_NO_ACCESS}/sync-history`
       })
 
       // Assert
@@ -202,7 +201,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         headers: { authorization: 'BEARER AbCdEf123456' },
-        url: syncHistoryUrl({ projectId: PROJECT_ID_NO_ACCESS })
+        url: `/projects/${PROJECT_ID_NO_ACCESS}/sync-history`
       })
 
       // Assert
