@@ -22,7 +22,7 @@
     </td>
     <td
       v-if="displayCancelButton"
-      class="align-text-top"
+      class="px-6 py-4 align-text-top"
     >
       <button
         class="btn w-20"
