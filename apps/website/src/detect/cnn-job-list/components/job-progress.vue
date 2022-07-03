@@ -2,17 +2,13 @@
   <div class="mb-1 text-subtle">
     {{ statusLabel }}
   </div>
-  <div
+  <el-progress
     v-if="isRunning"
-    class="w-14 bg-faded rounded-full h-2.5"
-  >
-    <div
-      class="bg-brand-primary h-2.5 rounded-full"
-      :style="{ 'width': `${props.jobProgress.value}%` }"
-    >
-      <!---->
-    </div>
-  </div>
+    class="max-w-36"
+    :stroke-width="12"
+    :percentage="jobProgress.value"
+    :indeterminate="true"
+  />
 </template>
 
 <script setup lang="ts">
@@ -37,3 +33,8 @@ const statusLabel = computed(() => {
 })
 
 </script>
+<style lang="scss">
+.el-progress__text {
+  font-size: 0.875rem !important;
+}
+</style>

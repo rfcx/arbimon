@@ -65,7 +65,7 @@
     <tbody>
       <job-item-row
         v-for="job in jobs"
-        :key="job.id"
+        :key="'job-item-row-' + job.id"
         :job="job"
       />
     </tbody>
@@ -94,7 +94,9 @@ const filterOptions: JobFilterItem[] = [
   { value: 'all', label: 'All jobs', checked: true }
 ]
 
-const getProgress = (minComplete: number, minTotal: number): number => 0
+const getProgress = (minComplete: number, minTotal: number): number => {
+  return Math.round((minComplete / minTotal) * 100 * 10) / 10
+}
 
 const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   id: cj.id,
