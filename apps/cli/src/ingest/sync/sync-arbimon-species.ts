@@ -23,11 +23,11 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   const arbimonSpecies = await getArbimonSpecies(arbimonSequelize, syncStatus)
+  // Exit early if nothing to sync
+  if (arbimonSpecies.length === 0) return syncStatus
   const taxonClasses = await ModelRepository.getInstance(biodiversitySequelize).TaxonClass.findAll()
   console.info('- syncArbimonSpeciesBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
   console.info('- syncArbimonSpeciesBatch: found %d species', arbimonSpecies.length)
-  // Exit early if nothing to sync
-  if (arbimonSpecies.length === 0) return syncStatus
 
   // Error if taxon species doesn't contain needed sync status data
   const lastSyncedTaxonSpecies = arbimonSpecies[arbimonSpecies.length - 1]
