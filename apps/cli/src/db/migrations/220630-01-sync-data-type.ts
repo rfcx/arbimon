@@ -26,6 +26,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       // Facts
       name: {
         type: DataTypes.STRING(255),
+        unique: true,
         allowNull: false
       }
     }

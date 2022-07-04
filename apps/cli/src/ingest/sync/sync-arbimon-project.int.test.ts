@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
-import { deleteOutputProjects } from '../outputs/helper'
+import { deleteOutputProjects } from '../_testing/helper'
 import { syncArbimonProjectsBatch } from './sync-arbimon-project'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
@@ -14,7 +14,7 @@ const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = await getSequelize()
 
 const SYNC_CONFIG: SyncConfig = {
-  syncSourceId: masterSources.ArbimonValidated.id,
+  syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Project.id,
   syncBatchLimit: 2
 }
@@ -145,7 +145,7 @@ describe('ingest > sync', () => {
         where: {
           syncSourceId: SYNC_CONFIG.syncSourceId,
           syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
-          externalId: `${idsArbimon[0]}`
+          externalId: idsArbimon[0].toString()
         }
       })
       expect(syncError).toBeInstanceOf(Object)
