@@ -26,4 +26,3 @@ export const getArbimonSites = async (sequelize: Sequelize, params: SyncQueryPar
     `
   )
 }
-
