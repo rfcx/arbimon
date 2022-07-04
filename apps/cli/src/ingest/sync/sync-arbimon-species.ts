@@ -37,7 +37,11 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
   const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonSpecies.map(item => {
     return { ...item, slug: urlify(item.scientificName) }
   }), parseSpeciesArbimonToBio)
-  const species = inputsAndOutputs.map(inputAndOutput => {
+  const filteredSpecies = inputsAndOutputs.filter(inputAndOutput => {
+    const taxonClass = taxonClasses.find(cl => cl.idArbimon === inputAndOutput[1].data.taxonClassId)
+    return taxonClass?.id !== undefined
+  })
+  const species = filteredSpecies.map(inputAndOutput => {
     const data = inputAndOutput[1].data
     const taxonClass = taxonClasses.find(cl => cl.idArbimon === inputAndOutput[1].data.taxonClassId)
     return { ...data, taxonClassId: taxonClass?.id }
