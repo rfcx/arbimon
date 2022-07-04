@@ -80,6 +80,7 @@ jobs:
         id: migrate-seed
         run: pnpm --filter=cli db-rms
         env:
+          BIO_DB_PORT: 5432
           NODE_OPTIONS: '--max_old_space_size=6656'
       
       - name: 'Verify: Integration Tests'
