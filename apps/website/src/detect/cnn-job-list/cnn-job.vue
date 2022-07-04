@@ -65,7 +65,7 @@
     <tbody>
       <job-item-row
         v-for="job in jobs"
-        :key="job.id"
+        :key="'job-item-row-' + job.id"
         :job="job"
       />
     </tbody>
@@ -74,11 +74,14 @@
 
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject, reactive } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, reactive } from 'vue'
+import { useQueryClient } from 'vue-query'
+
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useClassifierJobs } from '../_composables/use-classifier-jobs'
+import { FETCH_CLASSIFIER_JOBS_KEY, useClassifierJobs } from '../_composables/use-classifier-jobs'
 import { JobFilterItem } from '../types'
 import JobFilter from './components/job-filter.vue'
 import JobItemRow from './components/job-item-row.vue'
@@ -93,8 +96,6 @@ const filterOptions: JobFilterItem[] = [
   { value: 'me', label: 'My jobs', checked: false },
   { value: 'all', label: 'All jobs', checked: true }
 ]
-
-const getProgress = (minComplete: number, minTotal: number): number => 0
 
 const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   id: cj.id,
@@ -112,8 +113,28 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   createdAt: new Date(cj.created_at)
 })) ?? [])
 
+const getProgress = (minComplete: number, minTotal: number): number => {
+  return Math.round((minComplete / minTotal) * 100 * 10) / 10
+}
+
 const onFilterChange = (filter: string): void => {
   params.created_by = filter === 'me' ? 'me' : 'all'
 }
+
+const queryClient = useQueryClient()
+const pollingJob = setInterval(() => {
+    queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY)
+}, 2 * 60 * 1000) // 2 minutes
+const pollJob = () => pollingJob
+
+onMounted(() => {
+  if (jobs.value.some(job => [CLASSIFIER_JOB_STATUS.WAITING, CLASSIFIER_JOB_STATUS.RUNNING].includes(job.progress.status))) {
+    pollJob()
+  }
+})
+
+onBeforeUnmount(() => {
+  clearInterval(pollingJob)
+})
 
 </script>

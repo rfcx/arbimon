@@ -5,7 +5,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
-import { deleteOutputProjects } from './helper'
+import { deleteOutputProjects } from '../_testing/helper'
 import { writeProjectsToBio } from './projects'
 
 const biodiversitySequelize = await getSequelize()
