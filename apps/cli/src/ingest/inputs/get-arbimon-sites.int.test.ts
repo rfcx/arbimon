@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -27,7 +27,7 @@ describe('ingest > inputs > getArbimonSites', async () => {
 
   const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
-  test.todo('can get oldest sites', async () => {
+  test('can get oldest sites', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 123, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00' } })
@@ -39,7 +39,7 @@ describe('ingest > inputs > getArbimonSites', async () => {
 
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: 0,
+      syncUntilId: '0',
       syncBatchLimit: 2
     }
 
