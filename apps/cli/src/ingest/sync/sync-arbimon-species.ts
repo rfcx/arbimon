@@ -47,9 +47,8 @@ export const syncArbimonSpeciesBatch = async (arbimonSequelize: Sequelize, biodi
     return { ...data, taxonClassId: taxonClass?.id }
   })
 
-  const speciesData = species.filter(item => item.taxonClassId !== undefined)
   // Write species to Bio
-  const insertErrors = await writeSpeciesToBio(speciesData as SpeciesArbimon[], biodiversitySequelize)
+  const insertErrors = await writeSpeciesToBio(species as SpeciesArbimon[], biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
   try {
     // Update sync status
