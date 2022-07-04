@@ -51,6 +51,7 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
 describe('ingest > sync', () => {
   beforeEach(async () => {
     await arbimonSequelize.query('DELETE FROM species')
+    await biodiversitySequelize.query('DELETE FROM taxon_species_rfcx')
     await biodiversitySequelize.query('DELETE FROM sync_status')
     await biodiversitySequelize.query('DELETE FROM sync_error')
   })
@@ -104,6 +105,28 @@ describe('ingest > sync', () => {
 
       // - Assert update sync status of the new batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_SECOND_BATCH[IDS_ARBIMON_SECOND_BATCH.length - 1])
+    })
+
+    test('where sync is up-to-date', async () => {
+      // Arrange
+      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 4 })
+      const IDS_ARBIMON_FULL_BATCH = [...IDS_ARBIMON_FIRST_BATCH, ...IDS_ARBIMON_SECOND_BATCH]
+      await arbimonSequelize.query(INITIAL_INSERT_SQL)
+
+      // Act
+      // Run the same batch twice
+     await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+     await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+
+      // Assert
+      // - Assert valid species are in Bio taxon species table
+      const expectedSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
+        where: { idArbimon: { [Op.in]: IDS_ARBIMON_FULL_BATCH } }
+      })
+      expect(expectedSpecies.length).toBe(4)
+
+      // - Assert update sync status of the same batch twice
+      await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
     })
   })
 })
