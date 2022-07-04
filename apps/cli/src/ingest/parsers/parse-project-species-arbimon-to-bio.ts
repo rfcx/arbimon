@@ -1,8 +1,8 @@
 import { SafeParseReturnType, z } from 'zod'
 
 const ProjectSpeciesArbimonSchema = z.object({
-  projectId: z.number(),
-  speciesId: z.number()
+  locationProjectId: z.number(),
+  taxonSpeciesId: z.number()
 })
 
 export type ProjectSpeciesArbimon = z.infer<typeof ProjectSpeciesArbimonSchema>
