@@ -67,8 +67,6 @@ describe('ingest > outputs > sites', () => {
         longitude: 2,
         altitude: 2
       }
-      console.log('DEFAULT_SITE', DEFAULT_SITE)
-      console.log('inputUpdatedSite', inputUpdatedSite)
       // Act
       await writeSitesToBio([inputUpdatedSite], biodiversitySequelize)
 
