@@ -1,11 +1,11 @@
 import { ApiLine, ApiMap, ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
 import { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { LocationProjectMetricLight } from '@rfcx-bio/common/dao/types/location-project-metric'
+import { LocationProjectMetricTypes } from '@rfcx-bio/common/dao/types/location-project-metric'
 
 import { getSequelize } from '../_services/db'
 
-export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetricLight> => {
+export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetricTypes['light']> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .LocationProjectMetric
     .findOne({

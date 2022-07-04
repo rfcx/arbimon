@@ -1,3 +1,5 @@
+import { attributes, AttributeTypes } from '../type-helpers'
+
 export interface TaxonSpeciesIucn {
   taxonSpeciesId: number
   commonName: string
@@ -6,6 +8,7 @@ export interface TaxonSpeciesIucn {
   descriptionSourceUrl: string
 }
 
-export const ATTRIBUTES_TAXON_SPECIES_IUCN: Record<string, Array<keyof TaxonSpeciesIucn>> = {
-  updateOnDuplicate: ['commonName', 'description', 'descriptionSourceUrl', 'riskRatingIucnId']
-}
+export const ATTRIBUTES_TAXON_SPECIES_IUCN = attributes<TaxonSpeciesIucn>()({
+})
+
+export type TaxonSpeciesIucnTypes = AttributeTypes< TaxonSpeciesIucn, typeof ATTRIBUTES_TAXON_SPECIES_IUCN>

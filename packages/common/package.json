@@ -30,12 +30,11 @@
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint-profile:eslint": "cross-env TIMING=1 eslint .",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
-    "profile-eslint": "cross-env TIMING=1 eslint .",
-    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test.",
-    "test-unit": "vitest --run --passWithNoTests .unit.test."
+    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\""
   },
   "dependencies": {
     "@rfcx-bio/utils": "workspace:^0.0.1",

@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
-import { TaxonSpeciesCallLight } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -25,7 +25,7 @@ export default class SpotlightPlayer extends Vue {
   @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
-  @Prop() speciesCalls!: TaxonSpeciesCallLight[]
+  @Prop() speciesCalls!: Array<TaxonSpeciesCallTypes['light']>
 
   loading = false
 

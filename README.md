@@ -6,19 +6,19 @@ Website for exploring biodiversity data; built with Vue 3, Typescript, Vite, pnp
 
 ### _Sprint DoD_
 
-The following must be true to consider the Sprint "DONE":
+The following must be true to consider a feature "DONE":
 
-- Code follows [STANDARDS.md](./STANDARDS.md)
+- Code follows [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Updated [CHANGELOG.md](./CHANGELOG.md)
 - Code deployed to staging
-- Demo video & staging URL sent to PO by Tuesday
+- Demo video sent to #biodiversity-vision
 
 ### _Resources_
 
-- [Roadmap (Figma)](https://www.figma.com/file/Z4ybxswWvqiTdEsOgI2w7P/Milestone-and-Epic)
+- [Roadmap](https://docs.google.com/presentation/d/1id5AlF8pMdBgPravcf0q6lPOC09aHDFKGokJSUmkBmM/edit#slide=id.g131f6138dba_0_0)
 - [Design (Figma)](https://www.figma.com/files/team/1022436685454438648/Biodiversity-Team)
-- [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/4)
-- [Other files (Google Drive)](https://drive.google.com/drive/folders/17ZdAoPzetLPqkes4lkGQlKg_uHpkyxxg)
+- [Product & Sprint Backlogs (GitHub)](https://github.com/orgs/rfcx/projects/9)
+- [Other files (Google Drive)](https://drive.google.com/drive/u/2/folders/0AEi1v_8CH7p8Uk9PVA)
 
 ## Installation
 
@@ -36,10 +36,13 @@ The following must be true to consider the Sprint "DONE":
 
    `pnpm i`
 
-3. Setup local environment:
+3. Create local environment:
+
    - Copy `apps/api/.env.example` to `.env` (and fill missing variables)
-   - Copy `apps/cli/.env.example` to `.env` (and fill missing variables)
-   - Copy `apps/website/.env` to `.env.local` (and fill missing variables)
+
+4. (optional) Override default environment:
+   - Create `apps/cli/.env.local` (and override variables as necessary)
+   - Create `apps/website/.env.local` (and override variables as necessary)
 
 ## Run the App!
 
@@ -49,35 +52,78 @@ The following must be true to consider the Sprint "DONE":
    _or_  
    `pnpm -w serve` (from anywhere in the project)
 
-   - If the issue is occured try `pnpm clean-slate`, after `pnpm i` and finally `pnpm serve`
-
 2. After you finish, you might want to stop your db:
 
    `pnpm --filter=db stop`
 
 ## More Commands
 
-### _Build, Lint, Test_
-
-- Use the pnpm arg `-r` to run scripts in all packages:
-
-  `pnpm -r build`  
-  `pnpm -r lint`  
-  `pnpm -r test`
-
-- You can run all lint auto-fixes with:
-
-  `pnpm -r lint-fix`
-
 ### _Resetting Workspace_
 
-- Delete all build artifacts:
+If you encounter an issue, you may want to clean caches & artifacts, or reinstall dependencies.
+
+- Delete all build and lint artifacts/caches:
 
   `pnpm -r clean`
 
-- Delete all build artifacts AND dependencies (node_modules):
+- Delete all build and lint artifacts/caches AND dependencies (node_modules):
 
   `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
+
+### _Build_
+
+- Build any package (and it's dependencies):
+
+  `pnpm build`
+
+- Use the pnpm arg `-r` to build all packages:
+
+  `pnpm -r build`
+
+### _Lint_
+
+- Run all linters, or only a single linter:
+
+  `pnpm lint` (all linters)  
+  `pnpm lint:eslint`  
+  `pnpm lint:prettier`  
+  `pnpm lint:stylelint`
+
+- Lint is pretty heavy; use the helper to run it sequentially across all packages:
+
+  `pnpm -w lint-all`
+
+- Run linters with auto-fixes:
+
+  `pnpm lint-fix` (one package)  
+  `pnpm -w lint-fix-all` (all packages)
+
+### _Test_
+
+- Before running `test:int`, you must start a local Postgres database:
+
+  `pnpm -w serve-int`
+
+- Each package has some of the following test scripts:
+
+  `pnpm test:component` (unit tests for vue components)  
+  `pnpm test:int` (heavy tests or tests that require a database)  
+  `pnpm test:unit` (basic unit tests)  
+  `pnpm test-ui` (tests executed in a browser)
+
+- For TDD, you probably want to execute a single file, `describe`, or `test`:
+
+  `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test` (fast way to execute 1 file)  
+  `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test -t "has all, dirunal, nocturnal options"` (filter within the file; you should use this _in addition_ to file-path filtering)
+
+- For TDD integration tests, you need a more complex command:
+
+  `pnpm exec cross-env BIO_DB_PORT=5434 vitest --no-threads src/sync/sync-history-handler.int.test`
+
+- You can also run all tests in a package, or across the entire project:
+
+  `pnpm test` (all vitest-based tests; does not include Cypress-based tests)  
+  `pnpm -w test-all` (calls `test` in all packages sequentially, like `lint-all`)
 
 ### _Cheatsheet: pnpm_
 
@@ -102,7 +148,7 @@ There are 3 shared deployments:
   - https://bio.rfcx.org
   - https://bio.rfcx.org/api
 
-### _Testing_
+### _Deployment: Testing_
 
 Any branch can be deployed to the `testing` cluster:
 
@@ -112,7 +158,7 @@ Any branch can be deployed to the `testing` cluster:
 
 Note: `develop` branch is auto-deployed to `testing` daily.
 
-### _Staging & Production_
+### _Deployment: Staging & Deployment: Production_
 
 `staging` & `production` are automatically deployed by GitHub Actions (CD):
 
@@ -125,9 +171,15 @@ Note: `develop` branch is auto-deployed to `testing` daily.
 
 // TODO: Standardize this; I like that `website` is ready to go on fresh clones...
 
-- Developers can set the values of configuration and secrets locally using:
+- Developers can override configuration and secrets locally using:
+
   - `/apps/api/.env` (copy `.env.example` to get started)
+  - `/apps/cli/.env.local` (override any variable in `.env`)
   - `/apps/website/.env.local` (override any variable in `.env`)
+
+- CLI and website also support "modes", which will load respective env:
+
+  `pnpm serve -- --mode=staging` (from their directories; not from the monorepo root)
 
 ### _Deployed Environment_
 
@@ -136,6 +188,6 @@ Note: `develop` branch is auto-deployed to `testing` daily.
   - `/apps/website/.env`
 - _Secret_ variables must be manually configured:
   - API secrets can be set manually via Kubernetes apply
-  - Website secrets can be set manually as GitHub secrets
   - // TODO: run Kubernetes apply from CD
-  - **The values of secrets should never be committed to Git**
+  - Website secrets can be set manually as GitHub secrets
+  - **Secrets should never be committed to Git**

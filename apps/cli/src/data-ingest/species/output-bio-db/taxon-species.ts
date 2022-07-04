@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_TAXON_SPECIES } from '@rfcx-bio/common/dao/types'
+import { UPDATE_ON_DUPLICATE_TAXON_SPECIES } from '@rfcx-bio/common/dao/models/taxon-species-model'
 
 import { ArbimonSpeciesData } from '@/data-ingest/species/input-arbimon'
 
@@ -25,7 +25,7 @@ export const writeArbimonSpeciesDataToPostgres = async (sequelize: Sequelize, sp
   await models
     .TaxonSpecies
     .bulkCreate(newData, {
-      updateOnDuplicate: ATTRIBUTES_TAXON_SPECIES.updateOnDuplicate
+      updateOnDuplicate: UPDATE_ON_DUPLICATE_TAXON_SPECIES
     })
     .then(async () => {
       // fix auto increment key break - https://github.com/sequelize/sequelize/issues/9295

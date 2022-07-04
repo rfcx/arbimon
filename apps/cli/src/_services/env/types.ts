@@ -5,10 +5,10 @@ export const PROTECTION_VALUES: Record<string, Protection> = {
   WARN: 'warn'
 }
 
-export type BioEnvironment = 'local' | 'testing' | 'staging' | 'production'
+export type BioEnvironment = 'default' | 'testing' | 'staging' | 'production'
 
 export const BIO_ENVIRONMENT_VALUES: Record<string, BioEnvironment> = {
-  LOCAL: 'local',
+  DEFAULT: 'default',
   TESTING: 'testing',
   STAGING: 'staging',
   PRODUCTION: 'production'

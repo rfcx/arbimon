@@ -22,21 +22,22 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
+    "ci-test-int": "vitest --no-threads .int.test.",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
     "db-rms": "pnpm serve lib/db/reset-migrate-seed",
-    "db-rms-integration": "pnpm serve lib/db/reset-migrate-seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock,05-preload,06-user-data-mock",
+    "db-rms-int": "cross-env BIO_DB_PORT=5434 pnpm serve lib/db/reset-migrate-seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock,05-preload,06-user-data-mock",
     "db-seed": "pnpm serve lib/db/seed -- --path=01-master-data,02-integration-test-data,03-external-data-mock,05-preload,06-user-data-mock",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint-profile:eslint": "cross-env TIMING=1 eslint .",
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
-    "profile-eslint": "cross-env TIMING=1 eslint .",
     "serve": "pnpm build && node --experimental-specifier-resolution=node",
-    "test-coverage": "vitest --run --coverage --passWithNoTests .unit.test.",
-    "test-int": "vitest --run --no-threads .int.test.",
-    "test-unit": "vitest --run --passWithNoTests .unit.test."
+    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\"",
+    "test:int": "cross-env BIO_DB_PORT=5434 pnpm ci-test-int --",
+    "test:unit": "vitest .unit.test."
   },
   "dependencies": {
     "@rfcx-bio/common": "workspace:^0.0.1",
@@ -49,7 +50,8 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "7.0.0-alpha.5",
-    "umzug": "^3.0.0"
+    "umzug": "^3.0.0",
+    "zod": "^3.16.1"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.19",
