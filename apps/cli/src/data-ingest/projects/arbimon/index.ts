@@ -35,7 +35,6 @@ export const getArbimonProjects = async (sequelize: Sequelize): Promise<Array<Om
       idCore: i.core_project_id ?? '',
       idArbimon: i.project_id,
       slug: i.slug,
-      slugArbimon: i.slug,
       name: i.name,
       latitudeNorth: i.north ?? 0,
       latitudeSouth: i.south ?? 0,

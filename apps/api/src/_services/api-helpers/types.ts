@@ -1,7 +1,7 @@
 import { FastifyReply, FastifySchema, HTTPMethods, preValidationHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
 import { ReplyDefault } from 'fastify/types/utils'
 
-import { NoExtraProperties } from '@rfcx-bio/utils/utility-types'
+import { NoExtraProps } from '@rfcx-bio/utils/utility-types'
 
 // For declaring handlers
 type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = RouteHandlerMethod<
@@ -15,7 +15,7 @@ type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Quer
 type FastifyHandlerRequest<Response, Params, Querystring> = Parameters<FastifyHandler<Response, Params, Querystring>>[0]
 
 export type Handler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> =
-  (req: FastifyHandlerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProperties<Response>>
+  (req: FastifyHandlerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProps<Response>>
 
 export type Middleware<Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> =
   (req: FastifyHandlerRequest<void, Params, Querystring>, res: FastifyReply) => Promise<void>

@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { DetectionBySiteSpeciesHourModel } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
-import { ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR, DetectionBySiteSpeciesHour, Project, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHourModel, UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
+import { DetectionBySiteSpeciesHour, Project, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { ArbimonHourlyDetectionSummary } from '@/data-ingest/detections/arbimon'
 
@@ -31,7 +31,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
     }))
 
   await DetectionBySiteSpeciesHourModel(sequelize).bulkCreate(data, {
-    updateOnDuplicate: ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR.updateOnDuplicate
+    updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR
   })
 
   // TODO: #691 the database connection got cut off when there is a lot of detection rows (20k+) in the query where clause
