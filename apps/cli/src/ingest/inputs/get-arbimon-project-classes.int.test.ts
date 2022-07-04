@@ -30,7 +30,7 @@ describe('ingest > inputs > getArbimonProjectClasses', () => {
 
     // Assert
     expect(actual.length).toBe(3)
-    const filteredSpeciesId = actual.map((item: any) => item.speciesId)
+    const filteredSpeciesId = actual.map((item: any) => item.taxonSpeciesId)
     IDS_PROJECT_1_SPECIES.forEach(expectedProp => expect(filteredSpeciesId).toContain(expectedProp))
   })
 
@@ -51,11 +51,11 @@ describe('ingest > inputs > getArbimonProjectClasses', () => {
     // Assert
     expect(actual.length).toBe(4)
     const newArray = [...IDS_PROJECT_1_SPECIES, ...NEW_PROJECT_SPECIES]
-    const filteredSpeciesId = actual.map((item: any) => item.speciesId)
+    const filteredSpeciesId = actual.map((item: any) => item.taxonSpeciesId)
     newArray.forEach(expectedProp => expect(filteredSpeciesId).toContain(expectedProp))
   })
 
-  test('can get new project classes', async () => {
+  test('can get project classes for the next project', async () => {
     // Arrange
     const sql = `
       INSERT INTO project_classes (project_class_id,project_id,species_id,songtype_id)
@@ -70,7 +70,7 @@ describe('ingest > inputs > getArbimonProjectClasses', () => {
 
     // Assert
     expect(actual.length).toBe(2)
-    const filteredSpeciesId = actual.map((item: any) => item.speciesId)
+    const filteredSpeciesId = actual.map((item: any) => item.taxonSpeciesId)
     IDS_PROJECT_2_SPECIES.forEach(expectedProp => expect(filteredSpeciesId).toContain(expectedProp))
   })
 })

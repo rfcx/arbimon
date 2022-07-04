@@ -4,8 +4,8 @@ import { parseProjectSpeciesArbimonToBio } from './parse-project-species-arbimon
 
 describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
   const VALID_PROJECT_CLASS = {
-    projectId: 1920,
-    speciesId: 74
+    locationProjectId: 1920,
+    taxonSpeciesId: 74
   }
 
   test('succeeds for valid data', async () => {
@@ -18,8 +18,8 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
 
   test('fails if required props are missing', async () => {
     // Arrange
-    const { projectId, ...missingProjectId } = VALID_PROJECT_CLASS
-    const { speciesId, ...missingSpeciesId } = VALID_PROJECT_CLASS
+    const { locationProjectId, ...missingProjectId } = VALID_PROJECT_CLASS
+    const { taxonSpeciesId, ...missingSpeciesId } = VALID_PROJECT_CLASS
 
     // Act
     const actualMissing = [
@@ -33,11 +33,11 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
 
   test('fails if non-nullish props are nullish', async () => {
     // Arrange
-    const nullProjectId = { ...VALID_PROJECT_CLASS, projectId: null }
-    const nullSpeciesId = { ...VALID_PROJECT_CLASS, speciesId: null }
+    const nullProjectId = { ...VALID_PROJECT_CLASS, locationProjectId: null }
+    const nullSpeciesId = { ...VALID_PROJECT_CLASS, taxonSpeciesId: null }
 
-    const undefinedProjectId = { ...VALID_PROJECT_CLASS, projectId: undefined }
-    const undefinedSpeciesId = { ...VALID_PROJECT_CLASS, speciesId: undefined }
+    const undefinedProjectId = { ...VALID_PROJECT_CLASS, locationProjectId: undefined }
+    const undefinedSpeciesId = { ...VALID_PROJECT_CLASS, taxonSpeciesId: undefined }
 
     // Act
     const actualMissing = [
