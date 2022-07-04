@@ -48,6 +48,8 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
   expect(updatedSyncStatus?.syncUntilId).toBe(expectedSyncUntilId.toString())
 }
 
+const idsArbimonObject = (ids: number[]): Record<string, number> => ids.reduce((acc, id, index) => { return { ...acc, [`idArbimon${index + 1}`]: id } }, {})
+
 describe('ingest > sync', () => {
   beforeEach(async () => {
     await arbimonSequelize.query('DELETE FROM species')
@@ -64,12 +66,12 @@ describe('ingest > sync', () => {
       await arbimonSequelize.query(INITIAL_INSERT_SQL)
 
       // Act
-      const updatedSyncStatus = await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+      const UPDATED_SYNC_STATUS = await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
 
       // Assert
 
       // - Assert write species bio is returning sync status of a first batch
-      expect(updatedSyncStatus).toBeTypeOf('object')
+      expect(UPDATED_SYNC_STATUS).toBeTypeOf('object')
 
       // - Assert valid species are in Bio taxon species table of the first batch
       const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
@@ -128,5 +130,62 @@ describe('ingest > sync', () => {
       // - Assert update sync status of the same batch twice
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
     })
+  })
+
+  test('can not sync species when a taxon_id is invalid', async () => {
+    // Arrange
+    const SYNC_STATUS = await getSyncStatus()
+    const ID_ARBIMON = 1111111
+    const INSERT_SQL = `
+      INSERT INTO species (
+        species_id, scientific_name, code_name, taxon_id, family_id, image, description,
+        biotab_id, defined_by, created_at, updated_at
+      )
+      VALUES
+      (${ID_ARBIMON},'Carpodacus erythrinus not valid','CARERY',222222,189,NULL,NULL,NULL,NULL,'2021-03-18T11:00:00.000Z','2021-03-22T11:00:00.000Z')
+      ;
+    `
+    await arbimonSequelize.query(INSERT_SQL)
+
+    // Act
+    await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+
+    // Assert
+    const notExpectedSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
+      where: { idArbimon: { [Op.eq]: ID_ARBIMON } }
+    })
+    expect(notExpectedSpecies.length).toBe(0)
+  })
+
+  test.todo('write sync error when a slug is not unique', async () => {
+    // Arrange
+    const SYNC_STATUS = await getSyncStatus()
+    const IDS_ARBIMON = [9620, 9621]
+    const INSERT_SQL = `
+      INSERT INTO species (
+        species_id, scientific_name, code_name, taxon_id, family_id, image, description,
+        biotab_id, defined_by, created_at, updated_at
+      )
+      VALUES
+      ($idArbimon1,'Carpodacus erythrinus test','CARERY',1,189,NULL,NULL,NULL,NULL,'2021-03-18T11:00:00.000Z','2021-03-22T11:00:00.000Z'),
+      ($idArbimon2,'Carpodacus erythrinus test','CARERY',1,189,NULL,NULL,NULL,NULL,'2021-03-18T11:00:00.000Z','2021-03-22T11:00:00.000Z')
+      ;
+    `
+
+    // Act & Assert
+    await arbimonSequelize.query(INSERT_SQL, { bind: idsArbimonObject(IDS_ARBIMON) })
+    await syncArbimonSpeciesBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+    const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
+      where: { idArbimon: { [Op.in]: IDS_ARBIMON } }
+    })
+    const syncError = await ModelRepository.getInstance(biodiversitySequelize).SyncError.findOne({
+      where: {
+        syncSourceId: SYNC_CONFIG.syncSourceId,
+        syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
+        externalId: IDS_ARBIMON[1].toString()
+      }
+    })
+    expect(species.length).toBe(1)
+    expect(syncError).toBeInstanceOf(Object)
   })
 })

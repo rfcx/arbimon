@@ -66,4 +66,29 @@ describe('ingest > outputs > taxon species', () => {
     expect(updatedTaxonSpecies?.taxonClassId).toBe(UPDATED_TAXON_CLASS_ID)
     expect(updatedTaxonSpecies?.scientificName).toBe(UPDATED_NAME)
   })
+
+  test('skip species with not unique slug', async () => {
+    // Arrange
+    const INPUT: Array<Omit<TaxonSpecies, 'id'>> = [{
+      idArbimon: 2760,
+      slug: 'eudynamys-melanorhynchus-test',
+      taxonClassId: BIRDS_ID,
+      scientificName: 'Eudynamys melanorhynchus test'
+    },
+    {
+      idArbimon: 2761,
+      slug: 'eudynamys-melanorhynchus-test',
+      taxonClassId: BIRDS_ID,
+      scientificName: 'Eudynamys melanorhynchus test'
+    }]
+
+    const IDS_ARBIMON = [2760, 2761]
+
+    // Act
+    await writeSpeciesToBio(INPUT, biodiversitySequelize)
+
+    // Assert
+    const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({ where: { idArbimon: IDS_ARBIMON } })
+    expect(species.length).toBe(1)
+  })
 })
