@@ -19,6 +19,10 @@ const DEFAULT_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: 1920, name: 
 const DEFAULT_SITE = { idCore: '807cuoi3cvwx', idArbimon: 9999, locationProjectId: 1, name: 'RFCx 99', latitude: 1, longitude: 1, altitude: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z' }
 
 describe('ingest > outputs > sites', () => {
+  beforeEach(async () => {
+    // remove all data related to project
+    await deleteOutputProjects(biodiversitySequelize)
+  })
   describe('ingest sites when project is exist', () => {
     beforeEach(async () => {
       // remove all data related to project
@@ -78,6 +82,18 @@ describe('ingest > outputs > sites', () => {
       expect(updatedSite?.latitude).toBe(inputUpdatedSite.latitude)
       expect(updatedSite?.longitude).toBe(inputUpdatedSite.longitude)
       expect(updatedSite?.altitude).toBe(inputUpdatedSite.altitude)
+    })
+  })
+  describe('ingest sites when project is not exist', () => {
+    test('can log error', async () => {
+      // Act
+      const errors = await writeSitesToBio([DEFAULT_SITE], biodiversitySequelize)
+
+      // Assert
+      const siteInDB = await ModelRepository.getInstance(biodiversitySequelize).LocationSite
+        .findOne({ where: { idArbimon: DEFAULT_SITE.idArbimon } })
+      expect(errors.length).toBeGreaterThan(0)
+      expect(siteInDB).toBeNull()
     })
   })
 })
