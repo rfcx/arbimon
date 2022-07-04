@@ -5,7 +5,7 @@ import { TaxonSpecies } from '../types'
 
 export const MODEL_TAXON_SPECIES = 'TaxonSpecies'
 export const TABLE_TAXON_SPECIES = 'taxon_species'
-export const UPDATE_ON_DUPLICATE_TAXON_SPECIES: Array<keyof TaxonSpecies> = ['scientificName']
+export const UPDATE_ON_DUPLICATE_TAXON_SPECIES: Array<keyof TaxonSpecies> = ['scientificName', 'slug', 'taxonClassId']
 
 export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
   MODEL_TAXON_SPECIES,
@@ -18,7 +18,11 @@ export const TaxonSpeciesModel = defineWithDefaultsAutoPk<TaxonSpecies>(
     },
 
     // SKs
-    idArbimon: DataTypes.INTEGER, // ???
+    idArbimon: {
+      type: DataTypes.INTEGER,
+      unique: true
+    },
+
     slug: { // accipiter-striatus-venator
       type: DataTypes.STRING(255),
       unique: true
