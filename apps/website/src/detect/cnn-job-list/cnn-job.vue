@@ -19,7 +19,7 @@
     Error getting a list of classifier jobs
   </p>
   <div
-    v-else-if="jobs"
+    v-else-if="jobs && !jobs.length"
     class="mt-5 text-lg"
   >
     <span>No jobs found.</span>
