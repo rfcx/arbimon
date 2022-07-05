@@ -11,7 +11,7 @@ export const getArbimonSites = async (sequelize: Sequelize, params: SyncQueryPar
     `
     SELECT s.site_id AS idArbimon,
           s.external_id AS idCore,
-          s.project_id AS locationProjectId,
+          s.project_id AS projectIdArbimon,
           s.name,
           s.lat AS latitude,
           s.lon AS longitude,

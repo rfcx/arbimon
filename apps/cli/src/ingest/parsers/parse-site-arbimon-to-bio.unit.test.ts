@@ -6,7 +6,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
   const VALID_SITE = {
     idArbimon: 123,
     idCore: '123',
-    locationProjectId: 1,
+    projectIdArbimon: 1,
     name: 'Site 123',
     latitude: 0,
     longitude: 0,
@@ -25,7 +25,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     // Arrange
     const { idArbimon, ...missingIdArbimon } = VALID_SITE
     const { idCore, ...missingIdCore } = VALID_SITE
-    const { locationProjectId, ...missingProjectId } = VALID_SITE
+    const { projectIdArbimon, ...missingProjectId } = VALID_SITE
     const { name, ...missingName } = VALID_SITE
     const { latitude, ...missingLatiude } = VALID_SITE
     const { longitude, ...missingLongitude } = VALID_SITE
@@ -50,7 +50,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     // Arrange
     const nullIdArbimon = { ...VALID_SITE, idArbimon: null }
     const nullIdCore = { ...VALID_SITE, idCore: null }
-    const nullProjectId = { ...VALID_SITE, locationProjectId: null }
+    const nullProjectId = { ...VALID_SITE, projectIdArbimon: null }
     const nullName = { ...VALID_SITE, name: null }
     const nullLatitude = { ...VALID_SITE, latitude: null }
     const nullLongitude = { ...VALID_SITE, longitude: null }
@@ -58,7 +58,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
 
     const undefinedIdArbimon = { ...VALID_SITE, idArbimon: undefined }
     const undefinedIdCore = { ...VALID_SITE, idCore: undefined }
-    const undefinedProjectId = { ...VALID_SITE, locationProjectId: undefined }
+    const undefinedProjectId = { ...VALID_SITE, projectIdArbimon: undefined }
     const undefinedName = { ...VALID_SITE, name: undefined }
     const undefinedLatitude = { ...VALID_SITE, latitude: undefined }
     const undefinedLongitude = { ...VALID_SITE, longitude: undefined }
