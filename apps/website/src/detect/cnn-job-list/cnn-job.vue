@@ -113,8 +113,9 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
   createdAt: new Date(cj.created_at)
 })) ?? [])
 
-const getProgress = (minComplete: number, minTotal: number): number => {
-  return Math.round((minComplete / minTotal) * 100 * 10) / 10
+const getProgress = (minutesComplete: number, minutesTotal: number): number => {
+  if (minutesTotal === null || minutesTotal === 0) return 0.0
+  return Math.round((minutesComplete / minutesTotal) * 100 * 10) / 10
 }
 
 const onFilterChange = (filter: string): void => {
