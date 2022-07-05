@@ -4,6 +4,7 @@ metadata:
   name: biodiversity-cli-post-migration-sync-JOB_NUMBER
   namespace: production
 spec:
+  ttlSecondsAfterFinished: 86400 # delete finish job after a day
   template:
     metadata:
       labels:
