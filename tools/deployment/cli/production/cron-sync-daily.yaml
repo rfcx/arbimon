@@ -6,6 +6,8 @@ metadata:
 spec:
   # Daily at 04:37 UTC
   schedule: '37 4 * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:

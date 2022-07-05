@@ -22,12 +22,13 @@
     v-else-if="jobs && !jobs.length"
     class="mt-5 text-lg"
   >
-    <p>No jobs found</p>
+    <span>No jobs found.</span>
+    &nbsp;
     <router-link
       :to="{ name: ROUTE_NAMES.cnnJobCreate }"
-      class="font-bold"
+      class="font-bold underline"
     >
-      Create a new job
+      Create now
     </router-link>
   </div>
   <table
@@ -124,8 +125,8 @@ const onFilterChange = (filter: string): void => {
 
 const queryClient = useQueryClient()
 const pollingJob = setInterval(() => {
-    queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY)
-}, 2 * 60 * 1000) // 2 minutes
+  queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY)
+}, 1 * 60 * 1000) // 1 minute
 const pollJob = () => pollingJob
 
 onMounted(() => {
