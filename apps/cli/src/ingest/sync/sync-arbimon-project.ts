@@ -50,7 +50,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
       const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
       const error = {
         externalId: `${idArbimon}`,
-        error: 'ValidationError: ' + JSON.stringify(e[1]),
+        error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
         syncSourceId: updatedSyncStatus.syncDataTypeId,
         syncDataTypeId: updatedSyncStatus.syncDataTypeId
       }
