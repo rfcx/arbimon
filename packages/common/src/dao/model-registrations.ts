@@ -15,6 +15,7 @@ import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './m
 import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
+import { MODEL_RECORDING_BY_SITE_HOUR, RecordingBySiteHourModel } from './models/recording-by-site-hour'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
 import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/species-in-project-model'
 import { MODEL_SYNC_DATA_TYPE, SyncDataTypeModel } from './models/sync-data-type-model'
@@ -40,6 +41,7 @@ export const modelRegistrations = {
   [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_RECORDING_BY_SITE_HOUR]: [RecordingBySiteHourModel, { manyToOne: [MODEL_RECORDING_BY_SITE_HOUR] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
   [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
   [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
