@@ -6,6 +6,7 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ElAlert: typeof import('element-plus/es')['ElAlert']
+    ElButton: typeof import('element-plus/es')['ElButton']
     ElCarousel: typeof import('element-plus/es')['ElCarousel']
     ElCarouselItem: typeof import('element-plus/es')['ElCarouselItem']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
@@ -47,6 +48,7 @@ declare module '@vue/runtime-core' {
     IconFasSearch: typeof import('~icons/fa-solid/search')['default']
     IconFasSpinner: typeof import('~icons/fa-solid/spinner')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
+    IconFaTrash: typeof import('~icons/fa/trash')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
