@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize'
 
 export const deleteOutputProjects = async (biodiversitySequelize: Sequelize): Promise<void> => {
+  await biodiversitySequelize.query('DELETE FROM sync_log_by_project')
   await biodiversitySequelize.query('DELETE FROM location_project_species')
   await biodiversitySequelize.query('DELETE FROM location_project_species_file')
   await biodiversitySequelize.query('DELETE FROM data_source')
