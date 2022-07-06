@@ -51,6 +51,8 @@ export const envGetters = {
   BIO_DB_USER: stringGetter,
 
   CORE_API_BASE_URL: stringGetter,
+  ARBIMON_BASE_URL: stringGetter,
+  MEDIA_API_BASE_URL: stringGetter,
 
   IUCN_BASE_URL: stringGetter,
   IUCN_TOKEN: stringGetter,
