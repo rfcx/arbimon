@@ -15,7 +15,7 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
     callType: 'Common Song',
     recordingId: 7047505,
     callTimezone: 'Asia/Bangkok',
-    dateCreated: '2022-03-22 07:31:11',
+    updatedAt: '2022-03-22 07:31:11',
     idArbimon: 980
   }
 
@@ -32,7 +32,7 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
       callType: 'Common Song',
       recordingId: 7047505,
       callTimezone: 'Asia/Bangkok',
-      dateCreated: '2022-03-22 07:31:11',
+      updatedAt: '2022-03-22 07:31:11',
       idArbimon: 980
     },
     {
@@ -47,7 +47,7 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
       callType: 12, // not valid format
       recordingId: 7047505,
       callTimezone: 'Asia/Bangkok',
-      dateCreated: '2022-03-22 07:31:11'
+      updatedAt: '2022-03-22 07:31:11'
     }
   ]
 
