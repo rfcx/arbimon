@@ -6,6 +6,8 @@ metadata:
 spec:
   # every hours
   schedule: '30 * * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
