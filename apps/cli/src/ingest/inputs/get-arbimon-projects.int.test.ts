@@ -51,8 +51,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
-    expect(actual[0].idArbimon).toBe(1920)
-    expect(actual[1].idArbimon).toBe(1921)
+    expect((actual[0] as any).idArbimon).toBe(1920)
+    expect((actual[1] as any).idArbimon).toBe(1921)
   })
 
   test('can get next batch of projects', async () => {
@@ -68,8 +68,8 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
-    expect(actual[0].idArbimon).toBe(1922)
-    expect(actual[1].idArbimon).toBe(1923)
+    expect((actual[0] as any).idArbimon).toBe(1922)
+    expect((actual[1] as any).idArbimon).toBe(1923)
   })
 
   test('can get last incomplete batch of projects', async () => {
@@ -85,7 +85,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(1)
-    expect(actual[0].idArbimon).toBe(1924)
+    expect((actual[0] as any).idArbimon).toBe(1924)
   })
 
   test('can gets no projects when nothing left to sync', async () => {
@@ -130,7 +130,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual.length).toBe(1)
-    expect(actual[0].idArbimon).toBe(1925)
+    expect((actual[0] as any).idArbimon).toBe(1925)
   })
 
   test('includes expected props (& no more)', async () => {
@@ -146,7 +146,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    const item = actual[0]
+    const item: any = actual[0]
     expect(item).toBeDefined()
     expectedProps.forEach(prop => expect(item).toHaveProperty(prop))
     expect(Object.keys(item).length).toBe(expectedProps.length)
@@ -165,7 +165,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    const item = actual[0]
+    const item: any = actual[0]
     expect(item.latitudeNorth).toBe(0)
     expect(item.latitudeSouth).toBe(0)
     expect(item.longitudeEast).toBe(0)

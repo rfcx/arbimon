@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize'
 
 import { syncArbimonProjects } from './sync-arbimon-project'
 import { syncArbimonSpecies } from './sync-arbimon-species'
+import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
 
 export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
@@ -24,10 +25,12 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       return
     }
 
-    // TODO: sync other tables
-    // sites
-    // species call
-    // ...
+    const isTaxonSpeciesCallsSyncedUpToDate = await syncArbimonSpeciesCalls(arbimonSequelize, biodiversitySequelize)
+
+    if (!isTaxonSpeciesCallsSyncedUpToDate) {
+      console.info('- wait to sync more taxon species calls in the next round...')
+      return
+    }
     return
   } catch (e) {
     console.error('SYNC - Incremental failed', e)
