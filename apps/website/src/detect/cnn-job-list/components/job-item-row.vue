@@ -21,7 +21,7 @@
       />
     </td>
     <td
-      v-if="canCancelJob"
+      v-if="canCancelJob && !isLoadingPostStatus"
       class="px-4 py-4 align-text-top"
     >
       <div>
