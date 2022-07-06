@@ -19,6 +19,7 @@
         unlink-panels
         :shortcuts="dateShortcuts"
         range-separator="to"
+        size="large"
       />
     </div>
   </div>

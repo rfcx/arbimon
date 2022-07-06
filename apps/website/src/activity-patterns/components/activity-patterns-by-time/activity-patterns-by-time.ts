@@ -3,7 +3,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { downloadSvgAsPng } from '~/charts'
@@ -39,7 +39,7 @@ const DATASET_LABELS = {
 })
 export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
-  @Prop() species!: SpeciesInProjectLight
+  @Prop() species!: SpeciesInProjectTypes['light']
   @Prop() datasets!: SpotlightTimeDataset[]
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency

@@ -4,7 +4,7 @@ import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { RouteLocationNormalized } from 'vue-router'
 
 import { apiBioGetProjectSpeciesAll } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { SpeciesInProjectLight } from '@rfcx-bio/common/dao/types/species-in-project'
+import { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
 import { RouteNames } from '~/router'
@@ -17,20 +17,20 @@ export default class SpeciesSelector extends Vue {
 
   @Prop() speciesSlug!: string
 
-  @Emit() emitSelectedSpeciesChanged (species: SpeciesInProjectLight | undefined): SpeciesInProjectLight | undefined {
+  @Emit() emitSelectedSpeciesChanged (species: SpeciesInProjectTypes['light'] | undefined): SpeciesInProjectTypes['light'] | undefined {
     return species
   }
 
   selectedSpeciesSlug = ''
-  allSpecies: SpeciesInProjectLight[] = []
+  allSpecies: Array<SpeciesInProjectTypes['light']> = []
   currentSpeciesQuery = ''
 
-  get selectedSpecies (): SpeciesInProjectLight | undefined {
+  get selectedSpecies (): SpeciesInProjectTypes['light'] | undefined {
     if (!this.selectedSpeciesSlug) return undefined
     return this.allSpecies.find(s => s.taxonSpeciesSlug === this.selectedSpeciesSlug)
   }
 
-  get filteredSpecies (): SpeciesInProjectLight[] {
+  get filteredSpecies (): Array<SpeciesInProjectTypes['light']> {
     if (!this.currentSpeciesQuery) return this.allSpecies
     const query = this.currentSpeciesQuery.trim().toLowerCase()
 
@@ -59,7 +59,7 @@ export default class SpeciesSelector extends Vue {
   }
 
   @Watch('allSpecies')
-  onAllSpeciesChange (allSpecies: SpeciesInProjectLight[]): void {
+  onAllSpeciesChange (allSpecies: Array<SpeciesInProjectTypes['light']>): void {
     if (allSpecies.length > 0) {
       if (this.speciesSlug) {
         const matchedSlug = allSpecies.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === this.speciesSlug)
@@ -84,7 +84,7 @@ export default class SpeciesSelector extends Vue {
     this.onFilterType('')
   }
 
-  async getAllSpecies (): Promise<SpeciesInProjectLight[]> {
+  async getAllSpecies (): Promise<Array<SpeciesInProjectTypes['light']>> {
     const projectId = this.store.selectedProject?.id
     if (projectId === undefined) return []
 

@@ -80,11 +80,12 @@ jobs:
         id: migrate-seed
         run: pnpm --filter=cli db-rms
         env:
+          BIO_DB_PORT: 5432
           NODE_OPTIONS: '--max_old_space_size=6656'
       
-      - name: 'Verify: Test'
+      - name: 'Verify: Integration Tests'
         id: test
-        run: pnpm ci-test-int
+        run: pnpm ci-all-test-int
         env:
           BIO_DB_DBNAME: postgres
           BIO_DB_HOSTNAME: localhost

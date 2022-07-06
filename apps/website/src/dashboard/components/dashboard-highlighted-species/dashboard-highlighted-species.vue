@@ -20,7 +20,7 @@
           <el-tag
             class="species-highlights border-none text-xs"
             effect="dark"
-            size="mini"
+            size="small"
             :color="item.riskRating.color"
             :title="item.riskRating.label"
           >

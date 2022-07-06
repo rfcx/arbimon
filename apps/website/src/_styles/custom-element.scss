@@ -5,7 +5,7 @@
 /* stylelint-disable selector-class-pattern */
 
 .el-date-editor .el-range-input {
-  background-color: $color-mirage-grey !important;
+  background-color: transparent !important;
 }
 
 .el-picker-panel,
@@ -20,7 +20,7 @@
 
 .el-input .el-input__inner {
   border-radius: 0.25rem;
-  background: $color-mirage-grey !important;
+  background: transparent !important;
 
   &:focus-visible {
     box-shadow: none;
@@ -36,7 +36,15 @@
 }
 
 .el-popper.is-light .el-popper__arrow::before {
-  background: #141525;
+  background: $color-mirage-grey;
+}
+
+.el-tag .el-select__tags-text {
+  color: $color-white;
+}
+
+.el-tag .el-icon {
+  color: $color-white;
 }
 
 .el-select-dropdown__item {

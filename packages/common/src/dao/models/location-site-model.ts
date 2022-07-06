@@ -5,6 +5,7 @@ import { Site } from '../types'
 
 export const MODEL_LOCATION_SITE = 'LocationSite'
 export const TABLE_LOCATION_SITE = 'location_site'
+export const UPDATE_ON_DUPLICATE_LOCATION_SITE: Array<keyof Site> = ['idCore', 'name', 'latitude', 'longitude', 'altitude']
 
 export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
   MODEL_LOCATION_SITE,
@@ -18,7 +19,10 @@ export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
 
     // SKs
     idCore: DataTypes.STRING(12), // MoLQA8aNulGb
-    idArbimon: DataTypes.INTEGER, // 8412
+    idArbimon: { // 8412
+      type: DataTypes.INTEGER,
+      unique: true
+    },
 
     // Dimensions
     locationProjectId: DataTypes.INTEGER, // 1
