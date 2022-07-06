@@ -13,7 +13,7 @@
       />
     </td>
     <td class="px-6 py-4 align-text-top">
-      {{ formatDateLocal(props.job.createdAt) }}
+      <span>{{ formatDateLocal(props.job.createdAt) }}</span>
     </td>
     <td class="px-6 py-4 align-text-top">
       <job-progress
@@ -21,20 +21,15 @@
       />
     </td>
     <td
-      v-if="displayCancelButton"
-      class="px-6 py-4 align-text-top"
+      v-if="canCancelJob"
+      class="px-4 py-4 align-text-top"
     >
-      <button
-        class="btn w-20"
-        :disabled="!canCancelJob || isLoadingPostStatus"
-        @click="cancelJob"
-      >
-        <icon-fas-spinner
-          v-if="isLoadingPostStatus"
-          class="animate-spin inline mr-1"
+      <div>
+        <icon-fa-trash
+          class="cursor-pointer"
+          @click="cancelJob"
         />
-        <span v-else>Cancel</span>
-      </button>
+      </div>
     </td>
   </tr>
 </template>
@@ -47,8 +42,7 @@ import { useQueryClient } from 'vue-query'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
-import { apiClientCoreKey, togglesKey } from '@/globals'
-import { FeatureToggles } from '~/feature-toggles'
+import { apiClientCoreKey } from '@/globals'
 import useDateFormat from '~/hooks/use-date-format'
 import { FETCH_CLASSIFIER_JOBS_KEY } from '../../_composables/use-classifier-jobs'
 import { usePostClassifierJobStatus } from '../../_composables/use-post-classifier-job-status'
@@ -61,9 +55,6 @@ const props = defineProps<{
 }>()
 
 const { formatDateLocal } = useDateFormat()
-
-const toggles = inject(togglesKey) as FeatureToggles
-const displayCancelButton = toggles.cnnCancelJob
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
