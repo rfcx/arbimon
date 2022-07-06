@@ -25,7 +25,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@use "./src/element.scss" as *;'
+        additionalData: '@use "@/_styles/element-plus.scss" as *;'
       }
     }
   },
@@ -67,7 +67,10 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     open: false
   },
   test: {
-    include: ['src/**/*.{test,spec}.ts']
+    deps: { inline: ['element-plus'] },
+    environment: 'happy-dom',
+    include: ['src/**/*.{test,spec}.ts'],
+    setupFiles: ['./setup-component-tests.js']
   }
 }
 

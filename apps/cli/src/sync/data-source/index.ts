@@ -10,7 +10,7 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
   // Temporarily prioritize some
   const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')
   const projectSlugs = [
-      ...rawEnvToProjectAndProfile[BIO_ENVIRONMENT].map(project => project.slugArbimon),
+      ...rawEnvToProjectAndProfile[BIO_ENVIRONMENT].map(project => project.slug),
       'destinos-awake',
       'las-balsas-jocotoco-foundation-project',
       'weforest-wildlife-corridors'
@@ -20,7 +20,7 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
 
   const sql = `
     SELECT DISTINCT
-      CASE WHEN (lp.slug_arbimon IN (${projectSlugs})) THEN 0 ELSE 1 END,
+      CASE WHEN (lp.slug IN (${projectSlugs})) THEN 0 ELSE 1 END,
       lp.id,
       lp.id_arbimon,
       ds.updated_at

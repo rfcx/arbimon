@@ -8,7 +8,7 @@
       <el-tag
         class="threatened-tag border-none text-xs"
         effect="dark"
-        size="mini"
+        size="small"
         :color="ratingAndSpecies[1][0].riskRating.color"
         :title="ratingAndSpecies[1][0].riskRating.label"
       >

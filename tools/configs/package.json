@@ -23,8 +23,8 @@
   "scripts": {
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix",
+    "lint-profile:eslint": "cross-env TIMING=1 eslint .",
     "lint:eslint": "eslint . --cache",
-    "lint:prettier": "prettier . --check",
-    "profile-eslint": "cross-env TIMING=1 eslint ."
+    "lint:prettier": "prettier . --check"
   }
 }
