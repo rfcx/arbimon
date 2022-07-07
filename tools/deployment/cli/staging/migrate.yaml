@@ -4,6 +4,7 @@ metadata:
   name: biodiversity-cli-migrate-JOB_NUMBER
   namespace: staging
 spec:
+  ttlSecondsAfterFinished: 86400 # delete finish job after a day
   template:
     metadata:
       labels:

@@ -2,7 +2,7 @@ import { attributes, AttributeTypes } from '../type-helpers'
 
 export interface SyncLogByProject {
   id: number
-  projectId: number
+  locationProjectId: number
   syncSourceId: number
   syncDataTypeId: number
   delta: number

@@ -7,7 +7,6 @@ const featureTogglesRaw = {
   // showActivityLineChart: import.meta.env.VITE_TOGGLE_SHOW_ACTIVITY_LINE_CHART
 
   logoPride: import.meta.env.VITE_TOGGLE_LOGO_PRIDE,
-  cnnCancelJob: import.meta.env.VITE_TOGGLE_CNN_CANCEL_JOB
   /* STOP: Declare toggles here */
 }
 
