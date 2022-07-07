@@ -10,6 +10,7 @@ import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
 import { writeProjectsToBio } from '../outputs/projects'
 import { syncArbimonSpeciesCallBatch } from './sync-arbimon-species-call'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { deleteOutputProjects } from '../_testing/helper'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = await getSequelize()
@@ -47,8 +48,7 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
 describe('ingest > sync', () => {
   beforeEach(async () => {
     await biodiversitySequelize.query('DELETE FROM taxon_species_call')
-    await biodiversitySequelize.query('DELETE FROM location_site')
-    await biodiversitySequelize.query('DELETE FROM location_project')
+    await deleteOutputProjects(biodiversitySequelize)
     await biodiversitySequelize.query('DELETE FROM sync_status')
     await biodiversitySequelize.query('DELETE FROM sync_error')
     // Batch project data
