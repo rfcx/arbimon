@@ -1,9 +1,9 @@
 import { Op } from 'sequelize'
-import { beforeEach, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, Site, SyncStatus } from '@rfcx-bio/common/dao/types'
+import { Project, Site, SyncStatus, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
@@ -18,14 +18,13 @@ const biodiversitySequelize = await getSequelize()
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.SpeciesCall.id,
-  syncBatchLimit: 2
+  syncBatchLimit: 4
 }
-
 const SQL_INSERT_TEMPLATE = `
   INSERT INTO templates (template_id, project_id, recording_id, species_id, songtype_id, name, uri, x1, y1, x2, y2, date_created, deleted, source_project_id, user_id)
   VALUES ($templateId, $projectId, $recordingId, $speciesId, $songtypeId, $name, $uri, $x1, $y1, $x2, $y2, $dateCreated, $deleted, $sourceProjectId, $userId);
 `
-const DEFAULT_TEMPLATE = { templateId: 970, projectId: 1920, recordingId: 7047505, speciesId: 1050, songtypeId: 1, name: 'Falco', uri: 'project_1920/templates/970.png', x1: 75.24309455587392, y1: 469.36114732724906, x2: 80.86693409742121, y2: 2252.9335071707956, dateCreated: '2022-03-22 07:31:11', deleted: 0, sourceProjectId: null, userId: 1017 }
+const DEFAULT_TEMPLATE = { templateId: 975, projectId: 1920, recordingId: 7047504, speciesId: 1050, songtypeId: 1, name: 'Falco', uri: 'project_1920/templates/970.png', x1: 75.24309455587392, y1: 469.36114732724906, x2: 80.86693409742121, y2: 2252.9335071707956, dateCreated: '2022-03-27 07:31:11', deleted: 0, sourceProjectId: null, userId: 1017 }
 
 const getSyncStatus = async (): Promise<SyncStatus> => {
   const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
@@ -46,6 +45,39 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
 // const idsArbimonObject = (ids: number[]): Record<string, number> => ids.reduce((acc, id, index) => { return { ...acc, [`idArbimon${index + 1}`]: id } }, {})
 
 describe('ingest > sync', () => {
+  beforeAll(async () => {
+    // Batch species
+    const SPECIES_INPUT: Array<Omit<TaxonSpecies, 'id'>> = [{
+      idArbimon: 74,
+      slug: 'crypturellus-boucardi',
+      taxonClassId: 300,
+      scientificName: 'Crypturellus boucardi'
+    },
+    {
+      idArbimon: 3842,
+      slug: 'merops-orientalis',
+      taxonClassId: 300,
+      scientificName: 'Merops orientalis'
+    },
+    {
+      idArbimon: 12675,
+      slug: 'hemidactylium-scutatum',
+      taxonClassId: 300,
+      scientificName: 'Hemidactylium scutatum'
+    },
+    {
+      idArbimon: 42251,
+      slug: 'aepyceros-melampus',
+      taxonClassId: 300,
+      scientificName: 'Aepyceros melampus'
+    }]
+
+    await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate(SPECIES_INPUT)
+
+    // Batch species calls
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: DEFAULT_TEMPLATE })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 976, dateCreated: '2022-03-28 07:31:11' } })
+  })
   beforeEach(async () => {
     await biodiversitySequelize.query('DELETE FROM taxon_species_call')
     await deleteOutputProjects(biodiversitySequelize)
@@ -82,12 +114,17 @@ describe('ingest > sync', () => {
 
     await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
   })
+  afterAll(async () => {
+    await biodiversitySequelize.query('DELETE FROM taxon_species_call')
+    await biodiversitySequelize.query('DELETE FROM taxon_species WHERE id_arbimon in (74, 3842, 12675, 42251)')
+  })
 
   describe('syncArbimonSpeciesCallBatch', () => {
+    const IDS_ARBIMON_FIRST_BATCH = [970, 971, 972, 973]
+    const IDS_ARBIMON_SECOND_BATCH = [974, 975, 976]
+
     test('can sync species calls of a first batch', async () => {
       // Arrange
-      await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: DEFAULT_TEMPLATE })
-      const ID_ARBIMON_FIRST_BATCH = 970
       const SYNC_STATUS = await getSyncStatus()
 
       // Act
@@ -100,22 +137,17 @@ describe('ingest > sync', () => {
 
       // - Assert valid species are in Bio taxon species table of the first batch
       const speciesCalls = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findAll({
-        where: { idArbimon: ID_ARBIMON_FIRST_BATCH }
+        where: { idArbimon: { [Op.in]: IDS_ARBIMON_FIRST_BATCH } }
       })
-
-      expect(speciesCalls.length).toBe(1)
+      expect(speciesCalls.length).toBe(4)
 
       // - Assert update sync status of the first batch
-      await expectLastSyncIdInSyncStatusToBe(ID_ARBIMON_FIRST_BATCH)
+      await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FIRST_BATCH[IDS_ARBIMON_FIRST_BATCH.length - 1])
     })
 
-    test.todo('where syncUntilId = latest id of a new batch', async () => {
+    test('where syncUntilId = latest id of a new batch', async () => {
       // Arrange
-      await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: DEFAULT_TEMPLATE })
-      await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 971, speciesId: 3842, name: 'Merops orientalis Common Song', dateCreated: '2022-03-23 03:05:37' } })
-      await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 972, speciesId: 42251, name: 'Aepyceros melampus Common Song', dateCreated: '2022-03-23 03:05:50' } })
       const SYNC_STATUS = await getSyncStatus()
-      const IDS_ARBIMON_SECOND_BATCH = [972]
 
       // Act
       const UPDATED_SYNC_STATUS_FIRST_BATCH = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
@@ -132,14 +164,36 @@ describe('ingest > sync', () => {
       const calls = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_SECOND_BATCH } }
       })
-      expect(calls.length).toBe(1)
+      expect(calls.length).toBe(3)
 
       // - Assert update sync status of the new batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_SECOND_BATCH[IDS_ARBIMON_SECOND_BATCH.length - 1])
     })
 
     test.todo('where sync is up-to-date', async () => {
-     // todo
+      // Arrange
+      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 7 })
+      const IDS_ARBIMON_FULL_BATCH = [...IDS_ARBIMON_FIRST_BATCH, ...IDS_ARBIMON_SECOND_BATCH]
+
+      // Act
+      const UPDATED_SYNC_STATUS_FIRST_BATCH = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+      const SYNC_STATUS_SECOND_BATCH = await getSyncStatus()
+      const UPDATED_SYNC_STATUS_SECOND_BATCH = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS_SECOND_BATCH)
+
+      // Assert
+
+      // - Assert write species bio is returning sync status of the new batch
+      expect(UPDATED_SYNC_STATUS_FIRST_BATCH).toBeTypeOf('object')
+      expect(UPDATED_SYNC_STATUS_SECOND_BATCH).toBeTypeOf('object')
+
+      // - Assert valid species are in Bio taxon species table of the new batch
+      const calls = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findAll({
+        where: { idArbimon: { [Op.in]: IDS_ARBIMON_FULL_BATCH } }
+      })
+      expect(calls.length).toBe(7)
+
+      // - Assert update sync status of the new batch
+      await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
     })
   })
 })
