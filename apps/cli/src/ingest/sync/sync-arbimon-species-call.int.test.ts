@@ -7,10 +7,10 @@ import { Project, Site, SyncStatus } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
+import { deleteOutputProjects } from '../_testing/helper'
 import { writeProjectsToBio } from '../outputs/projects'
 import { syncArbimonSpeciesCallBatch } from './sync-arbimon-species-call'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
-import { deleteOutputProjects } from '../_testing/helper'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = await getSequelize()
