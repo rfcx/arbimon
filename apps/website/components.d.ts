@@ -47,6 +47,7 @@ declare module '@vue/runtime-core' {
     IconFasSearch: typeof import('~icons/fa-solid/search')['default']
     IconFasSpinner: typeof import('~icons/fa-solid/spinner')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
+    IconFaTrash: typeof import('~icons/fa/trash')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
