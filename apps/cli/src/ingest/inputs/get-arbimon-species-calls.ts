@@ -1,9 +1,13 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize'
 
+import { getWithQueryParams } from './get-with-query-params'
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
-  const sql = `
+export const getArbimonSpeciesCalls = async (sequelize: Sequelize, params: SyncQueryParams): Promise<unknown[]> => {
+  return await getWithQueryParams(
+    sequelize,
+    params,
+    `
     SELECT t.species_id AS taxonSpeciesId,
       t.project_id AS callProjectId,
       p.url AS  projectSlugArbimon,
@@ -26,16 +30,8 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
       AND t.date_created > $syncUntilDate
       OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId)
     ORDER BY t.date_created, t.template_id
-    LIMIT $syncBatchLimit;
-  `
-
-  return await sequelize.query(sql, {
-    type: QueryTypes.SELECT,
-    raw: true,
-    bind: {
-      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
-      syncUntilId,
-      syncBatchLimit
-    }
-  })
+    LIMIT $syncBatchLimit
+    ;
+    `
+  )
 }
