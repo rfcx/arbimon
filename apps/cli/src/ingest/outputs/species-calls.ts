@@ -61,7 +61,7 @@ const loopUpsert = async (speciesCalls: Array<Omit<TaxonSpeciesCall, 'id'>>, seq
   return failedToInsertItems
 }
 
-export const writeSpeciesCallsToBio = async (speciesCalls: SpeciesCallArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
+export const writeSpeciesCallsToBio = async (speciesCalls: SpeciesCallArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[Array<Omit<TaxonSpeciesCall, 'id'>>, Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   const calls = await Promise.all(speciesCalls.map(async (call) => {
     return await transformSpeciesCall(call, sequelize)
   }))
@@ -72,9 +72,13 @@ export const writeSpeciesCallsToBio = async (speciesCalls: SpeciesCallArbimon[],
       .bulkCreate(filteredCalls, {
         ...transaction && { transaction }
       })
-    return []
+    return [filteredCalls, []]
   } catch (batchInsertError) {
     console.error('⚠️ Batch insert of species calls failed... try loop insert', (batchInsertError as any).errors)
-    return await loopUpsert(filteredCalls, sequelize)
+    const failedToInsertItems = await loopUpsert(filteredCalls, sequelize)
+    return [
+      filteredCalls.filter(call => !failedToInsertItems.find(error => error.externalId === `${call.idArbimon}`)),
+      failedToInsertItems
+    ]
   }
 }

@@ -1,3 +1,4 @@
+import { groupBy } from 'lodash-es'
 import { Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
@@ -8,6 +9,7 @@ import { getSequelize } from '@/db/connections'
 import { writeSpeciesCallsToBio } from '@/ingest/outputs/species-calls'
 import { getArbimonSpeciesCalls } from '../inputs/get-arbimon-species-calls'
 import { writeSyncError } from '../outputs/sync-error'
+import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
 import { parseSpeciesCallArbimonToBio } from '../parsers/parse-species-call-arbimon-to-bio'
@@ -38,7 +40,7 @@ export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, b
   const speciesCalls = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
   // Write species to Bio
-  const insertErrors = await writeSpeciesCallsToBio(speciesCalls, biodiversitySequelize)
+  const [insertSuccess, insertErrors] = await writeSpeciesCallsToBio(speciesCalls, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
   try {
     // Update sync status
@@ -59,6 +61,18 @@ export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, b
     await Promise.all(insertErrors.map(async e => {
       const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
       await writeSyncError(error, biodiversitySequelize, transaction)
+    }))
+
+    // log project sync
+    const groupedByProject = groupBy(insertSuccess, 'callProjectId')
+    await Promise.all(Object.keys(groupedByProject).map(async projectId => {
+      const log = {
+        locationProjectId: parseInt(projectId),
+        syncSourceId: SYNC_CONFIG.syncSourceId,
+        syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
+        delta: groupedByProject[projectId].length
+      }
+      await writeSyncLogByProject(log, biodiversitySequelize, transaction)
     }))
 
     // commit transactions

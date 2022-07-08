@@ -195,5 +195,40 @@ describe('ingest > sync', () => {
       // - Assert update sync status of the new batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
     })
+
+    test('sync status is updated', async () => {
+      // Arrange
+      const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
+
+      // Act
+      const UPDATED_SYNC_STATUS = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+
+      const SEARCHED_SYNC_STATUS = await ModelRepository.getInstance(biodiversitySequelize)
+        .SyncStatus
+        .findOne({
+          where: { syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+          raw: true
+        })
+
+      // Assert
+      expect(SEARCHED_SYNC_STATUS?.syncUntilId).toBe(UPDATED_SYNC_STATUS.syncUntilId)
+    })
+
+    test('species calls sync log is created', async () => {
+      // Arrange
+      const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
+      await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+
+      // Act
+      const SYNC_LOG = await ModelRepository.getInstance(biodiversitySequelize).SyncLogByProject.findOne({
+        where: { syncDataTypeId: SYNC_CONFIG.syncDataTypeId, syncSourceId: SYNC_CONFIG.syncSourceId },
+        order: [['createdAt', 'DESC']],
+        raw: true
+      })
+
+      // Assert
+      expect(SYNC_LOG).toBeDefined()
+      expect(SYNC_LOG?.delta).toBe(IDS_ARBIMON_FIRST_BATCH.length)
+    })
   })
 })
