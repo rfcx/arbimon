@@ -4,6 +4,7 @@ import { Sequelize } from 'sequelize'
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { writeSpeciesCallsToBio } from '@/ingest/outputs/species-calls'
@@ -19,7 +20,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.SpeciesCall.id,
-  syncBatchLimit: 1000
+  syncBatchLimit: 2000
 }
 
 export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
@@ -44,7 +45,7 @@ export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, b
   const transaction = await biodiversitySequelize.transaction()
   try {
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncedTaxonSpeciesCall.updatedAt, syncUntilId: lastSyncedTaxonSpeciesCall.idArbimon.toString() }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs.utc(lastSyncedTaxonSpeciesCall.updatedAt).toDate(), syncUntilId: lastSyncedTaxonSpeciesCall.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndParsingErrors.map(async e => {
@@ -52,7 +53,7 @@ export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, b
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
-        syncSourceId: updatedSyncStatus.syncDataTypeId,
+        syncSourceId: updatedSyncStatus.syncSourceId,
         syncDataTypeId: updatedSyncStatus.syncDataTypeId
       }
       await writeSyncError(error, biodiversitySequelize, transaction)

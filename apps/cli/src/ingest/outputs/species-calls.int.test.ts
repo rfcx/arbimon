@@ -2,6 +2,7 @@ import { afterAll, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
@@ -56,7 +57,7 @@ describe('ingest > outputs > species calls', async () => {
     taxonClassId: 300,
     scientificName: 'Falco amurensis'
   }
-  await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
+
   const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
 
   if (!species) return
@@ -66,14 +67,14 @@ describe('ingest > outputs > species calls', async () => {
     callProjectId: 1920,
     projectSlugArbimon: 'rfcx-1',
     callSiteId: 88528,
-    callRecordedAt: '2020-12-06 03:06:19',
+    callRecordedAt: dayjs.utc('2020-12-06 03:06:19').toDate(),
     start: 75.24309455587392,
     end: 80.86693409742121,
     siteIdCore: 'cydwrzz91cbz',
     callType: 'Common Song',
     recordingId: 7047505,
     callTimezone: 'Asia/Bangkok',
-    updatedAt: '2022-03-22 07:31:11',
+    updatedAt: dayjs.utc('2022-03-22 07:31:11').toDate(),
     idArbimon: 980
   }]
 

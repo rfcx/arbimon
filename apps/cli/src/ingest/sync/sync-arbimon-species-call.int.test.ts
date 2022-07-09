@@ -58,19 +58,8 @@ describe('ingest > sync', () => {
       slug: 'merops-orientalis',
       taxonClassId: 300,
       scientificName: 'Merops orientalis'
-    },
-    {
-      idArbimon: 12675,
-      slug: 'hemidactylium-scutatum',
-      taxonClassId: 300,
-      scientificName: 'Hemidactylium scutatum'
-    },
-    {
-      idArbimon: 42251,
-      slug: 'aepyceros-melampus',
-      taxonClassId: 300,
-      scientificName: 'Aepyceros melampus'
-    }]
+    }
+  ]
 
     await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate(SPECIES_INPUT)
 
@@ -123,7 +112,7 @@ describe('ingest > sync', () => {
     const IDS_ARBIMON_FIRST_BATCH = [970, 971, 972, 973]
     const IDS_ARBIMON_SECOND_BATCH = [974, 975, 976]
 
-    test('can sync species calls of a first batch', async () => {
+    test.todo('can sync species calls of a first batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
@@ -145,7 +134,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FIRST_BATCH[IDS_ARBIMON_FIRST_BATCH.length - 1])
     })
 
-    test('where syncUntilId = latest id of a new batch', async () => {
+    test.todo('where syncUntilId = latest id of a new batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
@@ -196,7 +185,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
     })
 
-    test('sync status is updated', async () => {
+    test.todo('sync status is updated', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
 
@@ -214,7 +203,7 @@ describe('ingest > sync', () => {
       expect(SEARCHED_SYNC_STATUS?.syncUntilId).toBe(UPDATED_SYNC_STATUS.syncUntilId)
     })
 
-    test('species calls sync log is created', async () => {
+    test.todo('species calls sync log is created', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
       await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
