@@ -1,3 +1,4 @@
+import utc from 'dayjs/plugin/utc'
 import { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -8,6 +9,8 @@ import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
 import { requireEnv } from '~/env'
 import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
+
+dayjs.extend(utc)
 
 const { ARBIMON_BASE_URL, MEDIA_API_BASE_URL } = requireEnv('ARBIMON_BASE_URL', 'MEDIA_API_BASE_URL')
 
@@ -37,7 +40,7 @@ const transformSpeciesCall = async (speciesCall: SpeciesCallArbimon, sequelize: 
       callProjectId: callProjectId,
       callSiteId: callSiteId,
       callType: speciesCall.callType,
-      callRecordedAt: new Date(speciesCall.callRecordedAt),
+      callRecordedAt: dayjs.utc(speciesCall.callRecordedAt).toDate(),
       callTimezone: speciesCall.callTimezone,
       callMediaRedirectUrl: `${ARBIMON_BASE_URL}/project/${speciesCall.projectSlugArbimon}/visualizer/rec/${speciesCall.recordingId}`,
       callMediaWavUrl: `${MEDIA_API_BASE_URL}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_fwav.wav`,

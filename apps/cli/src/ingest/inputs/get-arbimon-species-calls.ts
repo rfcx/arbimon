@@ -22,10 +22,10 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, params: SyncQ
       t.date_created as updatedAt,
       t.template_id as idArbimon
     FROM templates t
-      JOIN songtypes st ON t.songtype_id = st.songtype_id
+      JOIN recordings r ON t.recording_id = r.recording_id
       JOIN sites s ON r.site_id = s.site_id
       JOIN projects p ON s.project_id = p.project_id
-      JOIN recordings r ON t.recording_id = r.recording_id
+      JOIN songtypes st ON t.songtype_id = st.songtype_id
     WHERE t.deleted=0 AND r.datetime_utc IS NOT NULL
       AND t.date_created > $syncUntilDate
       OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId)

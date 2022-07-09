@@ -8,48 +8,16 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
     callProjectId: 1920,
     projectSlugArbimon: 'rfcx-1',
     callSiteId: 88528,
-    callRecordedAt: '2020-12-06 03:06:19',
+    callRecordedAt: new Date('2020-12-06 03:06:19'),
     start: 75.24309455587392,
     end: 80.86693409742121,
     siteIdCore: 'cydwrzz91cbz',
     callType: 'Common Song',
     recordingId: 7047505,
     callTimezone: 'Asia/Bangkok',
-    updatedAt: '2022-03-22 07:31:11',
+    updatedAt: new Date('2022-03-22 07:31:11'),
     idArbimon: 980
   }
-
-  const NOT_VALID_SPECIES_CALLS = [
-    {
-      taxonSpeciesId: 42251,
-      callProjectId: 1920,
-      projectSlugArbimon: 'rfcx-1',
-      callSiteId: 88528,
-      callRecordedAt: '2020-12-06 03:06:19',
-      start: '54.322105263157894', // not valid format
-      end: '59.764210526315786', // not valid format
-      siteIdCore: 'cydwrzz91cbzzz', // not valid format
-      callType: 'Common Song',
-      recordingId: 7047505,
-      callTimezone: 'Asia/Bangkok',
-      updatedAt: '2022-03-22 07:31:11',
-      idArbimon: 980
-    },
-    {
-      taxonSpeciesId: 3842,
-      callProjectId: 1920,
-      projectSlugArbimon: 'rfcx-1',
-      callSiteId: 88528,
-      callRecordedAt: undefined, // not valid format
-      start: 10.488421052631578,
-      end: 17.810526315789474,
-      siteIdCore: 'cydwrzz91cbz',
-      callType: 12, // not valid format
-      recordingId: 7047505,
-      callTimezone: 'Asia/Bangkok',
-      updatedAt: '2022-03-22 07:31:11'
-    }
-  ]
 
   test('succeeds for valid species call data', async () => {
     // Act
@@ -61,12 +29,16 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
 
   test('fail for not valid species call data', async () => {
     // Act
-    const actual = parseSpeciesCallArbimonToBio(NOT_VALID_SPECIES_CALLS[0])
-    const actual2 = parseSpeciesCallArbimonToBio(NOT_VALID_SPECIES_CALLS[1])
-
+    const res = [
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, start: '54.322105263157894' }),
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, siteIdCore: 'cydwrzz91cbzzz' }),
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: undefined }),
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: '2020-12-06 03:06:19' }),
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callType: 12 }),
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, updatedAt: '2022-03-22 07:31:11' })
+    ]
     // Assert
-    expect(actual.success).toBe(false)
-    expect(actual2.success).toBe(false)
+    res.forEach(r => expect(r.success).toBe(false))
   })
 
   test('fails if required props are missing', async () => {
