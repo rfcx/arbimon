@@ -10,4 +10,5 @@ export const deleteOutputProjects = async (biodiversitySequelize: Sequelize): Pr
   await biodiversitySequelize.query('DELETE FROM location_project_profile')
   await biodiversitySequelize.query('DELETE FROM project_version')
   await biodiversitySequelize.query('DELETE FROM location_project')
+  await biodiversitySequelize.query('DELETE FROM recording_by_site_hour')
 }
