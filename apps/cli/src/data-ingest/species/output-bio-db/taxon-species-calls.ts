@@ -30,6 +30,7 @@ export async function writeSpeciesCallsToPostgres (sequelize: Sequelize, species
         callSiteId: siteId,
         callType: call.songtype,
         callRecordedAt: new Date(call.start),
+        idArbimon: call.site_idArbimon,
         callTimezone: call.timezone,
         callMediaWavUrl: call.media_wav_url,
         callMediaSpecUrl: call.media_spec_url,

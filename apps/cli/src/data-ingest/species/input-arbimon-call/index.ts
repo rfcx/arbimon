@@ -16,6 +16,7 @@ export interface ArbimonSpeciesCall {
   'redirect_url': string
   'media_wav_url': string
   'media_spec_url': string
+  'id_arbimon': number
 }
 
 type ArbimonSpeciesCallRow = Omit<ArbimonSpeciesCall, 'redirect_url' | 'media_wav_url' | 'media_spec_url'>
@@ -36,7 +37,7 @@ type ArbimonSpeciesCallRow = Omit<ArbimonSpeciesCall, 'redirect_url' | 'media_wa
 
 export const getArbimonSpeciesCallsForProjectSpecies = async (sequelize: Sequelize, projectIdArbimon: number, speciesIdsArbimon: number[] = []): Promise<ArbimonSpeciesCall[]> => {
   const mysqlSQL = `
-  SELECT t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, DATE_ADD(r.datetime_utc, interval t.x1 second) start, DATE_ADD(r.datetime_utc, interval t.x2 second) "end", t.recording_id, s.timezone 
+  SELECT t.template_id id_arbimon, t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, DATE_ADD(r.datetime_utc, interval t.x1 second) start, DATE_ADD(r.datetime_utc, interval t.x2 second) "end", t.recording_id, s.timezone
   FROM templates t  
     JOIN recordings r on t.recording_id = r.recording_id
     JOIN songtypes st ON t.songtype_id = st.songtype_id 
@@ -47,7 +48,7 @@ export const getArbimonSpeciesCallsForProjectSpecies = async (sequelize: Sequeli
   ;`
 
   const sqliteSQL = `
-  SELECT t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, datetime(r.datetime_utc, '+1 seconds') "start", datetime(r.datetime_utc, '+1 seconds') "end", t.recording_id, s.timezone 
+  SELECT t.template_id id_arbimon, t.species_id, t.project_id project_idArbimon, p.url project_slugArbimon, r.site_id site_idArbimon, s.external_id site_idCore, st.songtype, datetime(r.datetime_utc, '+1 seconds') "start", datetime(r.datetime_utc, '+1 seconds') "end", t.recording_id, s.timezone
   FROM templates t  
     JOIN recordings r on t.recording_id = r.recording_id
     JOIN songtypes st ON t.songtype_id = st.songtype_id 

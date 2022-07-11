@@ -51,7 +51,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
-        syncSourceId: updatedSyncStatus.syncDataTypeId,
+        syncSourceId: updatedSyncStatus.syncSourceId,
         syncDataTypeId: updatedSyncStatus.syncDataTypeId
       }
       await writeSyncError(error, biodiversitySequelize, transaction)
