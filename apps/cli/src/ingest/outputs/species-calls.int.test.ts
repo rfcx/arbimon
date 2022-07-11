@@ -2,7 +2,6 @@ import { afterAll, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
@@ -13,9 +12,12 @@ const biodiversitySequelize = await getSequelize()
 
 describe('ingest > outputs > species calls', async () => {
   afterAll(async () => {
+    // Delete species data created in these tests
     await biodiversitySequelize.query('DELETE FROM taxon_species_call')
+    await biodiversitySequelize.query('DELETE FROM taxon_species WHERE id_arbimon in (1050)')
   })
-  // Batch project data
+
+  // Batch project data before tests
   const PROJECT_INPUT: Omit<Project, 'id'> = {
     idArbimon: 1920,
     idCore: '807cuoi3cvw0',
@@ -44,13 +46,11 @@ describe('ingest > outputs > species calls', async () => {
     altitude: 0.0
   }
 
-  await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
-
   const site = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.findOne({ where: { idArbimon: SITE_INPUT.idArbimon } })
 
-  if (!site) return
+  if (!site) await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
 
-  // Batch species
+  // Batch species if it takes
   const SPECIES_INPUT: Omit<TaxonSpecies, 'id'> = {
     idArbimon: 1050,
     slug: 'falco-amurensis',
@@ -60,21 +60,21 @@ describe('ingest > outputs > species calls', async () => {
 
   const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
 
-  if (!species) return
+  if (!species) await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
 
   const SPECIES_CALL_INPUT: SpeciesCallArbimon[] = [{
     taxonSpeciesId: 1050,
     callProjectId: 1920,
     projectSlugArbimon: 'rfcx-1',
     callSiteId: 88528,
-    callRecordedAt: dayjs.utc('2020-12-06 03:06:19').toDate(),
+    callRecordedAt: '2020-12-06 03:06:19',
     start: 75.24309455587392,
     end: 80.86693409742121,
     siteIdCore: 'cydwrzz91cbz',
     callType: 'Common Song',
     recordingId: 7047505,
     callTimezone: 'Asia/Bangkok',
-    updatedAt: dayjs.utc('2022-03-22 07:31:11').toDate(),
+    updatedAt: '2022-03-22 07:31:11',
     idArbimon: 980
   }]
 
