@@ -2,6 +2,7 @@ import { attributes, AttributeTypes } from '../type-helpers'
 
 export interface TaxonSpeciesCall {
   id: number
+  idArbimon: number
   taxonSpeciesId: number
   callProjectId: number
   callSiteId: number
