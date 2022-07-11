@@ -7,7 +7,7 @@ export interface ArbimonRecordingBySiteHourQuery {
   siteIdArbimon: number
   timePrecisionHourLocal: Date
   totalDuration: number
-  recordedMinutes: number[]
+  recordedMinutes: string // string of number separate by comma (,) e.g. `5,10`
   firstRecordingIdArbimon: number
   lastRecordingIdArbimon: number
   lastUploaded: Date

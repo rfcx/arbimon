@@ -9,7 +9,7 @@ const RecordingBySiteHourArbimonSchema = z.object({
   siteIdArbimon: z.number(),
   timePrecisionHourLocal: z.date(),
   totalDuration: z.number(),
-  recordedMinutes: z.array(z.number()),
+  recordedMinutes: z.string(), // string of number separate by comma (,) e.g. `5,10`
   firstRecordingIdArbimon: z.number(),
   lastRecordingIdArbimon: z.number(),
   lastUploaded: z.date()
@@ -53,7 +53,8 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingBySiteHour
     return {
       ...recordingBySiteHourBio,
       locationProjectId: biodiversityProjects.find(project => project.idArbimon === recordingBySiteHourArbimon.projectIdArbimon)?.id ?? -1,
-      locationSiteId: biodiversitySites.find(site => site.idArbimon === recordingBySiteHourArbimon.siteIdArbimon)?.id ?? -1
+      locationSiteId: biodiversitySites.find(site => site.idArbimon === recordingBySiteHourArbimon.siteIdArbimon)?.id ?? -1,
+      recordedMinutes: recordingBySiteHourBio.recordedMinutes.split(',').map(Number)
     }
   })
 }
