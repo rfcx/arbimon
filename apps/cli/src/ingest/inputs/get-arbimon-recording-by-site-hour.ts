@@ -14,7 +14,6 @@ export interface ArbimonRecordingBySiteHourQuery {
 }
 
 export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<ArbimonRecordingBySiteHourQuery[]> => {
-  // TODO: Calculate `timePrecisionHourLocal`
   const mysqlSQL = `
     SELECT  s.project_id projectIdArbimon,
             r.site_id siteIdArbimon,

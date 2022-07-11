@@ -29,10 +29,10 @@ const RecordingBySiteHourBioSchema = z.object({
 export type RecordingBySiteHourArbimon = z.infer<typeof RecordingBySiteHourArbimonSchema>
 export type RecordingBySiteHourBio = z.infer<typeof RecordingBySiteHourBioSchema>
 
-export const parseRecordingsToBio = (recordingBySiteHourArbimon: unknown): SafeParseReturnType<unknown, RecordingBySiteHourArbimon> =>
+export const parseRecordingBySiteHourToBio = (recordingBySiteHourArbimon: unknown): SafeParseReturnType<unknown, RecordingBySiteHourArbimon> =>
   RecordingBySiteHourArbimonSchema.safeParse(recordingBySiteHourArbimon)
 
-export const mapRecordingArbimonWithBioFk = async (recordingBySiteHourDataArbimon: RecordingBySiteHourArbimon[], sequelize: Sequelize): Promise<RecordingBySiteHourBio[]> => {
+export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingBySiteHourDataArbimon: RecordingBySiteHourArbimon[], sequelize: Sequelize): Promise<RecordingBySiteHourBio[]> => {
   const arbimonRecordingBySiteHourGroupByProject = groupBy(recordingBySiteHourDataArbimon, 'projectIdArbimon')
   const arbimonRecordingBySiteHourGroupBySites = groupBy(recordingBySiteHourDataArbimon, 'siteIdArbimon')
 

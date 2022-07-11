@@ -11,7 +11,7 @@ import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
-import { mapRecordingArbimonWithBioFk, parseRecordingsToBio, RecordingBySiteHourArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import { mapRecordingBySiteHourArbimonWithBioFk, parseRecordingBySiteHourToBio, RecordingBySiteHourArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
 const SYNC_CONFIG: SyncConfig = {
@@ -31,11 +31,11 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
   // =========== Parser ==========
 
   // unknown to expected format
-  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray<ArbimonRecordingBySiteHourQuery, RecordingBySiteHourArbimon>(arbimonRecordingBySiteHour, parseRecordingsToBio)
+  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray<ArbimonRecordingBySiteHourQuery, RecordingBySiteHourArbimon>(arbimonRecordingBySiteHour, parseRecordingBySiteHourToBio)
   const recordingDataBySiteHourArbimon = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
   // convert to bio db
-  const recordingBySiteHourBio = await mapRecordingArbimonWithBioFk(recordingDataBySiteHourArbimon, biodiversitySequelize)
+  const recordingBySiteHourBio = await mapRecordingBySiteHourArbimonWithBioFk(recordingDataBySiteHourArbimon, biodiversitySequelize)
 
   // =========== Output ==========
   const [insertSuccesses, insertErrors] = await writeRecordingBySiteHourToBio(recordingBySiteHourBio, biodiversitySequelize)
