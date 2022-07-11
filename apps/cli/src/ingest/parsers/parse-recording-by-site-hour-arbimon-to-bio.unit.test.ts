@@ -8,7 +8,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     siteIdArbimon: 123,
     timePrecisionHourLocal: new Date('2022-07-06 07:00:00'),
     totalDuration: 60.25,
-    recordedMinutes: [5, 10],
+    recordedMinutes: '5,10',
     firstRecordingIdArbimon: 222,
     lastRecordingIdArbimon: 223,
     lastUploaded: new Date('2022-07-06 16:00:00')
