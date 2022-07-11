@@ -22,13 +22,8 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHour: Record
         raw: true
       }) as unknown as RecordingBySiteHourBio | undefined
       const newRecording = { ...recording, recordedMinutes: JSON.stringify([...new Set([...recording.recordedMinutes, ...existRecording?.recordedMinutes ?? []])].sort((a, b) => a - b)).replace('[', '{').replace(']', '}') }
-      if (!existRecording) {
-        // @ts-expect-error
-        await ModelRepository.getInstance(sequelize).RecordingBySiteHour.create(newRecording)
-      } else {
-        // @ts-expect-error
-        await ModelRepository.getInstance(sequelize).RecordingBySiteHour.update({ recordedMinutes: newRecording.recordedMinutes }, { where })
-      }
+      // @ts-expect-error
+      await ModelRepository.getInstance(sequelize).RecordingBySiteHour.upsert(newRecording)
       // @ts-expect-error
       successToInsertItems.push(newRecording)
     } catch (e: any) {
