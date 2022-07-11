@@ -2,7 +2,18 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<Array<Record<string, any>>> => {
+export interface ArbimonRecordingBySiteHourQuery {
+  projectIdArbimon: number
+  siteIdArbimon: number
+  timePrecisionHourLocal: Date
+  totalDuration: number
+  recordedMinutes: number[]
+  firstRecordingIdArbimon: number
+  lastRecordingIdArbimon: number
+  lastUploaded: Date
+}
+
+export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<ArbimonRecordingBySiteHourQuery[]> => {
   // TODO: Calculate `timePrecisionHourLocal`
   const mysqlSQL = `
     SELECT  s.project_id projectIdArbimon,

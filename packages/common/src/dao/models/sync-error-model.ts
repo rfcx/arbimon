@@ -19,7 +19,7 @@ export const SyncErrorModel = defineWithDefaults<SyncError>(
       primaryKey: true
     },
     externalId: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING(72),
       primaryKey: true
     },
 
