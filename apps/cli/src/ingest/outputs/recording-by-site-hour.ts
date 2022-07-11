@@ -11,17 +11,25 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHour: Record
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
 
   for (const recording of recordingsBySiteHour) {
+    const where = {
+      timePrecisionHourLocal: recording.timePrecisionHourLocal,
+      locationProjectId: recording.locationProjectId,
+      locationSiteId: recording.locationSiteId
+    }
     try {
       const existRecording = await ModelRepository.getInstance(sequelize).RecordingBySiteHour.findOne({
-        where: {
-          timePrecisionHourLocal: recording.timePrecisionHourLocal,
-          locationProjectId: recording.locationProjectId,
-          locationSiteId: recording.locationSiteId
-        },
+        where,
         raw: true
-      })
-      const newRecording = existRecording ? { ...recording, recordedMinutes: [...recording.recordedMinutes, ...existRecording.recordedMinutes] } : recording
-      await ModelRepository.getInstance(sequelize).RecordingBySiteHour.upsert(newRecording)
+      }) as unknown as RecordingBySiteHourBio | undefined
+      const newRecording = { ...recording, recordedMinutes: JSON.stringify([...new Set([...recording.recordedMinutes, ...existRecording?.recordedMinutes ?? []])].sort((a, b) => a - b)).replace('[', '{').replace(']', '}') }
+      if (!existRecording) {
+        // @ts-expect-error
+        await ModelRepository.getInstance(sequelize).RecordingBySiteHour.create(newRecording)
+      } else {
+        // @ts-expect-error
+        await ModelRepository.getInstance(sequelize).RecordingBySiteHour.update({ recordedMinutes: newRecording.recordedMinutes }, { where })
+      }
+      // @ts-expect-error
       successToInsertItems.push(newRecording)
     } catch (e: any) {
       console.error('⚠️ Insert recording by site hour failed...')
