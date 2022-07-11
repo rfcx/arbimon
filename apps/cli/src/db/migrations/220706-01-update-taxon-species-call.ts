@@ -9,7 +9,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     'id_arbimon',
     {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      defaultValue: null,
       unique: true
     }
   )
