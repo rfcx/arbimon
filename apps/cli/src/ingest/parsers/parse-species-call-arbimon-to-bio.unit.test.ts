@@ -8,14 +8,14 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
     callProjectId: 1920,
     projectSlugArbimon: 'rfcx-1',
     callSiteId: 88528,
-    callRecordedAt: new Date('2020-12-06 03:06:19'),
+    callRecordedAt: '2020-12-06 03:06:19',
     start: 75.24309455587392,
     end: 80.86693409742121,
     siteIdCore: 'cydwrzz91cbz',
     callType: 'Common Song',
     recordingId: 7047505,
     callTimezone: 'Asia/Bangkok',
-    updatedAt: new Date('2022-03-22 07:31:11'),
+    updatedAt: '2022-03-22 07:31:11',
     idArbimon: 980
   }
 
@@ -33,9 +33,9 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, start: '54.322105263157894' }),
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, siteIdCore: 'cydwrzz91cbzzz' }),
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: undefined }),
-      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: '2020-12-06 03:06:19' }),
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: new Date('2020-12-06 03:06:19') }),
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callType: 12 }),
-      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, updatedAt: '2022-03-22 07:31:11' })
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, updatedAt: new Date('2022-03-22 07:31:11') })
     ]
     // Assert
     res.forEach(r => expect(r.success).toBe(false))

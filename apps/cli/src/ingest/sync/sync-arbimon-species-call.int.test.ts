@@ -42,24 +42,41 @@ const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Pr
   expect(updatedSyncStatus?.syncUntilId).toBe(expectedSyncUntilId.toString())
 }
 
-// const idsArbimonObject = (ids: number[]): Record<string, number> => ids.reduce((acc, id, index) => { return { ...acc, [`idArbimon${index + 1}`]: id } }, {})
-
 describe('ingest > sync', () => {
   beforeAll(async () => {
-    // Batch species
+    // Remove and batch test species before testing
+    await biodiversitySequelize.query('DELETE FROM taxon_species WHERE id_arbimon in (74, 3842, 12675, 42251, 1050)')
     const SPECIES_INPUT: Array<Omit<TaxonSpecies, 'id'>> = [{
-      idArbimon: 74,
-      slug: 'crypturellus-boucardi',
-      taxonClassId: 300,
-      scientificName: 'Crypturellus boucardi'
-    },
-    {
-      idArbimon: 3842,
-      slug: 'merops-orientalis',
-      taxonClassId: 300,
-      scientificName: 'Merops orientalis'
-    }
-  ]
+        idArbimon: 74,
+        slug: 'crypturellus-boucardi',
+        taxonClassId: 300,
+        scientificName: 'Crypturellus boucardi'
+      },
+      {
+        idArbimon: 3842,
+        slug: 'merops-orientalis',
+        taxonClassId: 300,
+        scientificName: 'Merops orientalis'
+      },
+      {
+        idArbimon: 42251,
+        slug: 'aepyceros-melampus',
+        taxonClassId: 300,
+        scientificName: 'Aepyceros melampus'
+      },
+      {
+        idArbimon: 12675,
+        slug: 'hemidactylium-scutatum',
+        taxonClassId: 300,
+        scientificName: 'Hemidactylium scutatum'
+      },
+      {
+        idArbimon: 1050,
+        slug: 'falco-amurensis',
+        taxonClassId: 300,
+        scientificName: 'Falco amurensis'
+      }
+    ]
 
     await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate(SPECIES_INPUT)
 
@@ -68,6 +85,7 @@ describe('ingest > sync', () => {
     await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 976, dateCreated: '2022-03-28 07:31:11' } })
   })
   beforeEach(async () => {
+    // Delete project level data
     await biodiversitySequelize.query('DELETE FROM taxon_species_call')
     await deleteOutputProjects(biodiversitySequelize)
     await biodiversitySequelize.query('DELETE FROM sync_status')
@@ -105,14 +123,14 @@ describe('ingest > sync', () => {
   })
   afterAll(async () => {
     await biodiversitySequelize.query('DELETE FROM taxon_species_call')
-    await biodiversitySequelize.query('DELETE FROM taxon_species WHERE id_arbimon in (74, 3842, 12675, 42251)')
+    await biodiversitySequelize.query('DELETE FROM taxon_species WHERE id_arbimon in (74, 3842, 12675, 42251, 1050)')
   })
 
   describe('syncArbimonSpeciesCallBatch', () => {
     const IDS_ARBIMON_FIRST_BATCH = [970, 971, 972, 973]
     const IDS_ARBIMON_SECOND_BATCH = [974, 975, 976]
 
-    test.todo('can sync species calls of a first batch', async () => {
+    test('can sync species calls of a first batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
@@ -134,7 +152,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FIRST_BATCH[IDS_ARBIMON_FIRST_BATCH.length - 1])
     })
 
-    test.todo('where syncUntilId = latest id of a new batch', async () => {
+    test('where syncUntilId = latest id of a new batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
@@ -159,7 +177,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_SECOND_BATCH[IDS_ARBIMON_SECOND_BATCH.length - 1])
     })
 
-    test.todo('where sync is up-to-date', async () => {
+    test('where sync is up-to-date', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 7 })
       const IDS_ARBIMON_FULL_BATCH = [...IDS_ARBIMON_FIRST_BATCH, ...IDS_ARBIMON_SECOND_BATCH]
@@ -185,7 +203,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
     })
 
-    test.todo('sync status is updated', async () => {
+    test('sync status is updated', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
 
@@ -203,7 +221,7 @@ describe('ingest > sync', () => {
       expect(SEARCHED_SYNC_STATUS?.syncUntilId).toBe(UPDATED_SYNC_STATUS.syncUntilId)
     })
 
-    test.todo('species calls sync log is created', async () => {
+    test('species calls sync log is created', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
       await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)

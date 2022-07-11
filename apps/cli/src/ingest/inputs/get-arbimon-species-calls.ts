@@ -1,13 +1,10 @@
-import { Sequelize } from 'sequelize'
+import { QueryTypes, Sequelize } from 'sequelize'
 
-import { getWithQueryParams } from './get-with-query-params'
+import { SpeciesCallArbimonRow } from '../parsers/parse-species-call-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonSpeciesCalls = async (sequelize: Sequelize, params: SyncQueryParams): Promise<unknown[]> => {
-  return await getWithQueryParams(
-    sequelize,
-    params,
-    `
+export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+  const sql = `
     SELECT t.species_id AS taxonSpeciesId,
       t.project_id AS callProjectId,
       p.url AS  projectSlugArbimon,
@@ -32,6 +29,20 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, params: SyncQ
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
     ;
-    `
-  )
+  `
+  const results = await sequelize.query<SpeciesCallArbimonRow>(sql, {
+    type: QueryTypes.SELECT,
+    raw: true,
+    bind: {
+      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilId,
+      syncBatchLimit
+    }
+  })
+
+  return results.map(row => ({
+    ...row,
+    updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt,
+    callRecordedAt: sequelize.getDialect() === 'mysql' ? row.callRecordedAt.toISOString() : row.updatedAt
+  }))
 }
