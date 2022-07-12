@@ -46,7 +46,7 @@ export const getArbimonRecordingValidations = async (sequelize: Sequelize, { syn
        rvc.date,
        rvc.hour,
        rvc.site_id,
-       rvc.species_id,
+       rvc.species_id speciesId,
        rvc.detection_count detectionCount,
        rc.duration_in_minutes,
        rvc.updated_at
