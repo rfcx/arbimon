@@ -30,8 +30,9 @@ const SQL_INSERT_REC_VALIDATIONS = `
 
 const DEFAULT_PROJECT = { projectId: 1920, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', deletedAt: null, name: 'RFCx 1', url: 'rfcx-1', description: 'A test project for testing', projectTypeId: 1, isPrivate: 1, isEnabled: 1, currentPlan: 846, storageUsage: 0.0, processingUsage: 0.0, patternMatchingEnabled: 1, citizenScientistEnabled: 0, cnnEnabled: 0, aedEnabled: 0, clusteringEnabled: 0, externalId: '807cuoi3cvw0', featured: 0, image: null, reportsEnabled: 1 }
 const DEFAULT_SITE_1 = { projectId: 1920, siteId: 88528, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok' }
-const DEFAULT_SITE_2 = { projectId: 1920, siteId: 88529, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok' }
-const DEFAULT_RECORDING_1 = { recordingId: 7047505, siteId: 88528, uri: '2020/12/06/cm1n9bvgn0jr/dfd0cc07-856a-41b9-9bf2-b1a6efd4b1da.flac', datetime: '2020-12-06 10:06:19', mic: 'Unknown', recorder: 'Unknown', version: 'Unknown', sampleRate: 48000, precision: 0, duration: 90.24, samples: 4331520, fileSize: 1913060, bitRate: '170321', sampleEncoding: 'flac', uploadTime: '2022-03-22 06:31:32', meta: '{"artist":"AudioMoth 2495F303562DE118","comment":"Recorded at 10:06:19 06/12/2020 (UTC) during deployment EEC909D42565A5F0 at medium gain setting while battery state was 4.2V and temperature was 19.6C.","encoder":"Lavf58.24.101","filename":"20201206_100619.WAV"}', datetimeUtc: '2020-12-06 03:06:19' }
+const DEFAULT_SITE_2 = { projectId: 1920, siteId: 88529, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbf', timezone: 'Asia/Bangkok' }
+const DEFAULT_RECORDING_SITE_1 = { recordingId: 7047505, siteId: 88528, uri: '2020/12/06/cydwrzz91cbz/dfd0cc07-856a-41b9-9bf2-b1a6efd4b1da.flac', datetime: '2020-12-06 10:06:19', mic: 'Unknown', recorder: 'Unknown', version: 'Unknown', sampleRate: 48000, precision: 0, duration: 90.24, samples: 4331520, fileSize: 1913060, bitRate: '170321', sampleEncoding: 'flac', uploadTime: '2022-03-22 06:31:32', meta: '{"artist":"AudioMoth 2495F303562DE118","comment":"Recorded at 10:06:19 06/12/2020 (UTC) during deployment EEC909D42565A5F0 at medium gain setting while battery state was 4.2V and temperature was 19.6C.","encoder":"Lavf58.24.101","filename":"20201206_100619.WAV"}', datetimeUtc: '2020-12-06 03:06:19' }
+const DEFAULT_RECORDING_SITE_2 = { recordingId: 7047506, siteId: 88529, uri: '2020/12/06/cydwrzz91cbf/dfd0cc07-856a-41b9-9bf2-b1a6efd4b1df.flac', datetime: '2020-12-06 10:06:19', mic: 'Unknown', recorder: 'Unknown', version: 'Unknown', sampleRate: 48000, precision: 0, duration: 90.24, samples: 4331520, fileSize: 1913060, bitRate: '170321', sampleEncoding: 'flac', uploadTime: '2022-03-22 06:31:32', meta: '{"artist":"AudioMoth 2495F303562DE118","comment":"Recorded at 10:06:19 06/12/2020 (UTC) during deployment EEC909D42565A5F0 at medium gain setting while battery state was 4.2V and temperature was 19.6C.","encoder":"Lavf58.24.101","filename":"20201206_100619.WAV"}', datetimeUtc: '2020-12-06 03:06:19' }
 const DEFAULT_REC_VALIDATIONS = { recordingValidationId: 2391041, recordingId: 7047505, projectId: 1920, userId: 1017, speciesId: 1050, songtypeId: 1, present: 0, presentReview: 1, presentAed: 0 }
 
 describe('ingest > inputs > getArbimonRecordingValidations', async () => {
@@ -43,7 +44,7 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE_1 })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE_2 })
-    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_1 })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_1 })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, present: 0, presentReview: 1 } })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 74, present: 0, presentReview: 2 } })
   })
@@ -64,26 +65,53 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     // Assert
     expect(actual.length).toBe(2)
     DETECTIONS_COUNT.forEach(expectedProp => expect(actual.map((item: any) => item.detectionCount)).toContain(expectedProp))
+
+    // Check that presentReview=2 does not increase the detections count
+    const [result] = actual.filter(item => (item as any).speciesId === 74)
+    expect((result as any).detectionCount).toBe(1)
   })
 
-  test.todo('can get next batch when updated_at is greater', async () => {
+  test('can get batch when updated_at is greater', async () => {
     // Arrange
-    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391043, speciesId: 3842 } })
-    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391044, speciesId: 42251 } })
-    const DETECTIONS_COUNT = [1, 1]
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING_SITE_1, recordingId: 7047506 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_2.recordingId, recordingValidationId: 2391043, speciesId: 3842, present: 1, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_2.recordingId, recordingValidationId: 2391044, speciesId: 42251, present: 1, presentReview: 0 } })
 
     const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc().toDate(),
+      syncUntilDate: dayjs.utc('2022-01-03 01:00:00').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 2
+      syncBatchLimit: 4
     }
 
     // Act
     const actual = await getArbimonRecordingValidations(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(2)
-    DETECTIONS_COUNT.forEach(expectedProp => expect(actual.map((item: any) => item.detectionCount)).toContain(expectedProp))
+    expect(actual.length).toBe(4)
+    actual.map((item: any) => item.detectionCount).forEach(item => expect(item).toBe(1))
+  })
+
+  test('check that the same species for different songtypes is increased the detections count', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_2 })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING_SITE_1, recordingId: 7047506 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_2.recordingId, recordingValidationId: 2391043, speciesId: 3842, present: 1, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_2.recordingId, recordingValidationId: 2391044, speciesId: 42251, present: 1, presentReview: 0 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_1.recordingId, recordingValidationId: 2391045, speciesId: 74, songtypeId: 2, present: 1, presentReview: 2 } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-03 01:00:00').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 5
+    }
+
+    // Act
+    const actual = await getArbimonRecordingValidations(arbimonSequelize, params)
+
+    // Assert
+    expect(actual.length).toBe(5)
+    const [result] = actual.filter(item => (item as any).speciesId === 74)
+    expect((result as any).detectionCount).toBe(2)
   })
 
   test.todo('can get next batch when updated_at is equal and id is greater', async () => {
