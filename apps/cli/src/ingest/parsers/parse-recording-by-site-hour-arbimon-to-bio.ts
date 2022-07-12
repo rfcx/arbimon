@@ -7,23 +7,23 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 const RecordingBySiteHourArbimonSchema = z.object({
   projectIdArbimon: z.number(),
   siteIdArbimon: z.number(),
-  timePrecisionHourLocal: z.date(),
+  timePrecisionHourLocal: z.string(), // string of date e.g. 2020-12-06 10:00:00
   totalDuration: z.number(),
   recordedMinutes: z.string(), // string of number separate by comma (,) e.g. `5,10`
   firstRecordingIdArbimon: z.number(),
   lastRecordingIdArbimon: z.number(),
-  lastUploaded: z.date()
+  lastUploaded: z.string() // string of date e.g. 2020-12-06 10:00:00
 })
 
 const RecordingBySiteHourBioSchema = z.object({
-  timePrecisionHourLocal: z.date(),
+  timePrecisionHourLocal: z.string(), // string of date e.g. 2020-12-06 10:00:00
   locationProjectId: z.number(),
   locationSiteId: z.number(),
   totalDuration: z.number(),
   recordedMinutes: z.array(z.number()),
   firstRecordingIdArbimon: z.number(),
   lastRecordingIdArbimon: z.number(),
-  lastUploaded: z.date()
+  lastUploaded: z.string() // string of date e.g. 2020-12-06 10:00:00
 })
 
 export type RecordingBySiteHourArbimon = z.infer<typeof RecordingBySiteHourArbimonSchema>
@@ -37,13 +37,13 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingBySiteHour
   const arbimonRecordingBySiteHourGroupBySites = groupBy(recordingBySiteHourDataArbimon, 'siteIdArbimon')
 
   // get distinct bio project ids
-  const biodiversityProjects = (await ModelRepository.getInstance(sequelize).LocationProject.findAll({
-    where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupByProject) } },
+  const biodiversityProjects = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
+    where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupByProject).map(Number) } },
     raw: true
-  }))
+  })
 
   const biodiversitySites = (await ModelRepository.getInstance(sequelize).LocationSite.findAll({
-    where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupBySites) } },
+    where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupBySites).map(Number) } },
     raw: true
   }))
 

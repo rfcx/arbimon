@@ -31,7 +31,7 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHour: Record
       const errorMessage = (e instanceof Error) ? e.message : ''
       // store insert errors
       failedToInsertItems.push({
-        externalId: `${recording.lastUploaded.toString()}-${recording.locationSiteId}-${recording.firstRecordingIdArbimon}-${recording.lastRecordingIdArbimon}`,
+        externalId: `${recording.lastUploaded.toString()}|${recording.locationSiteId}|${recording.firstRecordingIdArbimon}|${recording.lastRecordingIdArbimon}`,
         error: `InsertError: ${errorMessage}`
       })
     }

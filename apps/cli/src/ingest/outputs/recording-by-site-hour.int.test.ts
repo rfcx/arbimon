@@ -17,22 +17,22 @@ describe('ingest > output > recording by site hour', () => {
       {
         locationProjectId: 1,
         locationSiteId: 123,
-        timePrecisionHourLocal: new Date('2022-07-06 07:00:00'),
+        timePrecisionHourLocal: '2022-07-06 07:00:00',
         totalDuration: 60.25,
         recordedMinutes: [5, 10],
         firstRecordingIdArbimon: 222,
         lastRecordingIdArbimon: 223,
-        lastUploaded: new Date('2022-07-06 16:00:00')
+        lastUploaded: '2022-07-06 16:00:00'
       },
       {
         locationProjectId: 1,
         locationSiteId: 123,
-        timePrecisionHourLocal: new Date('2022-07-06 08:00:00'),
+        timePrecisionHourLocal: '2022-07-06 08:00:00',
         totalDuration: 180.5,
         recordedMinutes: [15, 20],
         firstRecordingIdArbimon: 224,
         lastRecordingIdArbimon: 225,
-        lastUploaded: new Date('2022-07-06 17:00:00')
+        lastUploaded: '2022-07-06 17:00:00'
       }
     ]
 
@@ -49,23 +49,23 @@ describe('ingest > output > recording by site hour', () => {
     const OLD_RECORD = {
       locationProjectId: 1,
       locationSiteId: 123,
-      timePrecisionHourLocal: new Date('2022-07-06 07:00:00'),
+      timePrecisionHourLocal: '2022-07-06 07:00:00',
       totalDuration: 60.25,
       recordedMinutes: [5, 10],
       firstRecordingIdArbimon: 222,
       lastRecordingIdArbimon: 223,
-      lastUploaded: new Date('2022-07-06 16:00:00')
+      lastUploaded: '2022-07-06 16:00:00'
     }
 
     const NEW_RECORD = {
       locationProjectId: 1,
       locationSiteId: 123,
-      timePrecisionHourLocal: new Date('2022-07-06 07:00:00'),
+      timePrecisionHourLocal: '2022-07-06 07:00:00',
       totalDuration: 60.25,
       recordedMinutes: [20, 30],
       firstRecordingIdArbimon: 224,
       lastRecordingIdArbimon: 225,
-      lastUploaded: new Date('2022-07-06 16:00:00')
+      lastUploaded: '2022-07-06 16:00:00'
     }
 
     // Act
