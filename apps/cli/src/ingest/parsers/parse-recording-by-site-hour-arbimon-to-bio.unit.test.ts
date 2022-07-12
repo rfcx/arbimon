@@ -6,12 +6,12 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
   const VALID_RECORDING_BY_SITE_HOUR = {
     projectIdArbimon: 1,
     siteIdArbimon: 123,
-    timePrecisionHourLocal: new Date('2022-07-06 07:00:00'),
+    timePrecisionHourLocal: '2022-07-06 07:00:00',
     totalDuration: 60.25,
     recordedMinutes: '5,10',
     firstRecordingIdArbimon: 222,
     lastRecordingIdArbimon: 223,
-    lastUploaded: new Date('2022-07-06 16:00:00')
+    lastUploaded: '2022-07-06 16:00:00'
   }
 
   test('succeeds for valid data', async () => {
