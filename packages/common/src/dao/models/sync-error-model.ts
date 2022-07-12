@@ -24,7 +24,7 @@ export const SyncErrorModel = defineWithDefaults<SyncError>(
     },
 
     // Facts
-    error: DataTypes.STRING(255)
+    error: DataTypes.STRING(512)
   },
   {
     tableName: TABLE_SYNC_ERROR

@@ -24,7 +24,7 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
   // =========== Input ==========
   const arbimonRecordingBySiteHour = await getArbimonRecordingBySiteHour(arbimonSequelize, syncStatus)
   console.info('- syncArbimonRecordingBySiteHourBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
-  console.info('- syncArbimonRecordingBySiteHourBatch: found %d sites', arbimonRecordingBySiteHour.length)
+  console.info('- syncArbimonRecordingBySiteHourBatch: found %d recordings', arbimonRecordingBySiteHour.length)
   if (arbimonRecordingBySiteHour.length === 0) return syncStatus
 
   const lastSyncRecordingBySiteHour = arbimonRecordingBySiteHour[arbimonRecordingBySiteHour.length - 1] // already last uploaded item because query order by it
@@ -50,7 +50,7 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
     // sync error
     await Promise.all(inputsAndParsingErrors.map(async e => {
       const error = {
-        externalId: `${e[0].lastUploaded.toString()}-${e[0].siteIdArbimon}-${e[0].firstRecordingIdArbimon}-${e[0].lastRecordingIdArbimon}`,
+        externalId: `${e[0].lastUploaded.toString()}|${e[0].siteIdArbimon}|${e[0].firstRecordingIdArbimon}|${e[0].lastRecordingIdArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
         syncSourceId: updatedSyncStatus.syncSourceId,
         syncDataTypeId: updatedSyncStatus.syncDataTypeId
