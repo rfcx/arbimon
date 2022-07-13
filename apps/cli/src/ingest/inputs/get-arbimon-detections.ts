@@ -12,6 +12,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
       r.site_id siteId,
       rv.species_id speciesId,
       count(rv.species_id) detection_count detectionCount,
+      GROUP_CONCAT(minute(r.datetime) SEPARATOR ',') as detectionMinutes,
       GROUP_CONCAT(DISTINCT rv.recording_validation_id ORDER BY rv.recording_validation_id ASC SEPARATOR ';') as detectionId,
       rv.updated_at updatedAt
     FROM recordings r
@@ -33,6 +34,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
       r.site_id siteId,
       rv.species_id speciesId,
       count(1) detectionCount,
+      GROUP_CONCAT(strftime('%M',r.datetime), ',') as detectionMinutes,
       GROUP_CONCAT(rv.recording_validation_id, ';') detectionId,
       rv.updated_at updatedAt
     FROM recordings r
@@ -43,8 +45,8 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
     ORDER BY rv.updated_at, s.project_id, hour, r.site_id, rv.species_id
     LIMIT $syncBatchLimit
     OFFSET ${offset}
-    ;
-    `
+  ;
+  `
 
   const sql = sequelize.getDialect() === 'mysql' ? mysqlSQL : sqliteSQL
 
