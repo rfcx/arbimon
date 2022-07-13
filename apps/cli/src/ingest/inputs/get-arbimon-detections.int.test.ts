@@ -35,7 +35,7 @@ const DEFAULT_RECORDING_SITE_1 = { recordingId: 7047505, siteId: 88528, uri: '20
 const DEFAULT_RECORDING_SITE_2 = { recordingId: 7047506, siteId: 88529, uri: '2020/12/06/cydwrzz91cbf/dfd0cc07-856a-41b9-9bf2-b1a6efd4b1df.flac', datetime: '2020-12-06 10:06:19', mic: 'Unknown', recorder: 'Unknown', version: 'Unknown', sampleRate: 48000, precision: 0, duration: 90.24, samples: 4331520, fileSize: 1913060, bitRate: '170321', sampleEncoding: 'flac', uploadTime: '2022-03-22 06:31:32', meta: '{"artist":"AudioMoth 2495F303562DE118","comment":"Recorded at 10:06:19 06/12/2020 (UTC) during deployment EEC909D42565A5F0 at medium gain setting while battery state was 4.2V and temperature was 19.6C.","encoder":"Lavf58.24.101","filename":"20201206_100619.WAV"}', datetimeUtc: '2020-12-06 03:06:19' }
 const DEFAULT_REC_VALIDATIONS = { recordingValidationId: 2391041, recordingId: 7047505, projectId: 1920, userId: 1017, speciesId: 1050, songtypeId: 1, present: 0, presentReview: 1, presentAed: 0 }
 
-describe('ingest > inputs > getArbimonRecordingValidations', async () => {
+describe('ingest > inputs > getArbimonDetections', async () => {
   beforeEach(async () => {
     await arbimonSequelize.query('DELETE FROM recording_validations')
     await arbimonSequelize.query('DELETE FROM recordings')
