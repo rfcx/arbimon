@@ -190,12 +190,14 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     expect(actual.length).toBe(1)
     expect((actual[0] as any).updatedAt).toContain('2022-01-02 01:00:00')
     expect((actual[0] as any).detectionCount).toEqual(1)
+    expect((actual[0] as any).detectionMinutes).toEqual('06')
     expect(actual.length).toBe(1)
     expect((actual2[0] as any).updatedAt).toContain('2022-07-13 01:00:00')
     expect((actual[0] as any).detectionCount).toEqual(1)
+    expect((actual[0] as any).detectionMinutes).toEqual('06')
   })
 
-  test.todo('can get no recording validations when nothing left to sync', async () => {
+  test('can get no recording validations when nothing left to sync', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_2 })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391043, recordingId: 7047506, present: 0, presentReview: 1 } })
@@ -213,7 +215,7 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     expect(actual.length).toBe(0)
   })
 
-  test.todo('includes expected props (& no more)', async () => {
+  test('includes expected props (& no more)', async () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
@@ -227,6 +229,7 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
       'siteId',
       'speciesId',
       'detectionCount',
+      'detectionMinutes',
       'detectionId',
       'updatedAt'
     ]
