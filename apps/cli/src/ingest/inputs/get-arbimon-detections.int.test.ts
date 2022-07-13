@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { getArbimonRecordingValidations } from './get-arbimon-recording-validations'
+import { getArbimonDetections } from './get-arbimon-detections'
 import { SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -60,7 +60,7 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     }
 
     // Act
-    const actual = await getArbimonRecordingValidations(arbimonSequelize, params)
+    const actual = await getArbimonDetections(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(2)
@@ -84,7 +84,7 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     }
 
     // Act
-    const actual = await getArbimonRecordingValidations(arbimonSequelize, params)
+    const actual = await getArbimonDetections(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(4)
@@ -94,7 +94,7 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
   test('check that the same species for different songtypes is increased the detections count', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_2 })
-    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING_SITE_1, recordingId: 7047506 } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING_SITE_2, recordingId: 7047506 } })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_2.recordingId, recordingValidationId: 2391043, speciesId: 3842, present: 1, presentReview: 2 } })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_2.recordingId, recordingValidationId: 2391044, speciesId: 42251, present: 1, presentReview: 0 } })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_1.recordingId, recordingValidationId: 2391045, speciesId: 74, songtypeId: 2, present: 1, presentReview: 2 } })
@@ -106,23 +106,138 @@ describe('ingest > inputs > getArbimonRecordingValidations', async () => {
     }
 
     // Act
-    const actual = await getArbimonRecordingValidations(arbimonSequelize, params)
+    const actual = await getArbimonDetections(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(5)
+    expect(actual.length).toBe(4)
     const [result] = actual.filter(item => (item as any).speciesId === 74)
     expect((result as any).detectionCount).toBe(2)
   })
 
-  test.todo('can get next batch when updated_at is equal and id is greater', async () => {
-    // TODO
+  test('can get next batch when updated_at and offset are greater', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_2 })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391043, recordingId: 7047506, present: 0, presentReview: 1 } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-03 01:00:00').toDate(),
+      syncUntilId: '2',
+      syncBatchLimit: 2
+    }
+
+    // Act
+    const actual = await getArbimonDetections(arbimonSequelize, params)
+
+    // Assert
+    expect(actual.length).toBe(1)
+  })
+
+  test('can get final batch by offset when updated_at and offset are greater', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_2 })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391043, recordingId: 7047506, present: 0, presentReview: 1 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391044, recordingId: 7047506, speciesId: 42251, present: 0, presentReview: 1 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_1.recordingId, recordingValidationId: 2391045, speciesId: 42251, present: 1, presentReview: 0 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: DEFAULT_RECORDING_SITE_1.recordingId, recordingValidationId: 2391046, speciesId: 74, songtypeId: 2, present: 1, presentReview: 2 } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-03 01:00:00').toDate(),
+      syncUntilId: '4',
+      syncBatchLimit: 2
+    }
+
+    const expectedResult = { speciesId: 42251, siteId: 88529, detectionCount: 1 }
+
+     // Act
+    const actual = await getArbimonDetections(arbimonSequelize, params)
+
+    // Assert
+    expect(actual.length).toBe(1)
+    expect((actual[0] as any).detectionCount).toBe(expectedResult.detectionCount)
+    expect((actual[0] as any).speciesId).toBe(expectedResult.speciesId)
+    expect((actual[0] as any).siteId).toBe(expectedResult.siteId)
+  })
+
+  test('can get updated detections when updated_at is greater', async () => {
+    // Arrange
+    await arbimonSequelize.query('DELETE FROM recording_validations')
+    await arbimonSequelize.query(`
+      INSERT INTO recording_validations (recording_validation_id,recording_id,project_id,user_id,species_id,songtype_id,present,present_review, present_aed, created_at, updated_at)
+      VALUES (2391041 , 7047505, 1920, 1017, 1050, 1, 0, 1, 0, '2022-01-02 01:00:00', '2022-01-02 01:00:00');`)
+
+    const paramsFirstBatch: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 1
+    }
+
+    const paramsSecondBatch: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-02 01:00:00').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 1
+    }
+
+    // Act
+    const actual = await getArbimonDetections(arbimonSequelize, paramsFirstBatch)
+
+    await arbimonSequelize.query(`
+      INSERT INTO recording_validations (recording_validation_id,recording_id,project_id,user_id,species_id,songtype_id,present,present_review, present_aed, created_at, updated_at)
+      VALUES (2391041 , 7047505, 1920, 1017, 1050, 2, 0, 1, 0, '2022-07-13 01:00:00', '2022-07-13 01:00:00');`)
+
+    const actual2 = await getArbimonDetections(arbimonSequelize, paramsSecondBatch)
+
+    // Assert
+    expect(actual.length).toBe(1)
+    expect((actual[0] as any).updatedAt).toContain('2022-01-02 01:00:00')
+    expect((actual[0] as any).detectionCount).toEqual(1)
+    expect(actual.length).toBe(1)
+    expect((actual2[0] as any).updatedAt).toContain('2022-07-13 01:00:00')
+    expect((actual[0] as any).detectionCount).toEqual(1)
   })
 
   test.todo('can get no recording validations when nothing left to sync', async () => {
-    // TODO
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_2 })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391043, recordingId: 7047506, present: 0, presentReview: 1 } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-03 01:00:00').toDate(),
+      syncUntilId: '4',
+      syncBatchLimit: 2
+    }
+
+    // Act
+    const actual = await getArbimonDetections(arbimonSequelize, params)
+
+    // Assert
+    expect(actual.length).toBe(0)
   })
 
   test.todo('includes expected props (& no more)', async () => {
-    // TODO
+    // Arrange
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 1
+    }
+    const EXPECTED_PROPS = [
+      'projectId',
+      'date',
+      'hour',
+      'siteId',
+      'speciesId',
+      'detectionCount',
+      'detectionId',
+      'updatedAt'
+    ]
+
+    // Act
+    const actual = await getArbimonDetections(arbimonSequelize, params)
+
+    // Assert
+    const item = actual[0]
+    expect(item).toBeDefined()
+    EXPECTED_PROPS.forEach(prop => expect(item).toHaveProperty(prop))
+    expect(Object.keys(item as any).length).toBe(EXPECTED_PROPS.length)
   })
 })
