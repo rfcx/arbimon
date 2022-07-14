@@ -18,10 +18,10 @@ describe('TimeOfDayPicker', () => {
     const { getByRole } = render(component, DEFAULT_RENDER_OPTIONS)
 
     // Act
-    const buttonAll = getByRole('searchbox', { name: /all day/i })
-    const buttonDiurnal = getByRole('searchbox', { name: /diurnal/i })
-    const buttonNocturnal = getByRole('searchbox', { name: /nocturnal/i })
-    const buttonCustom = getByRole('searchbox', { name: /custom/i })
+    const buttonAll = getByRole('button', { name: /all day/i })
+    const buttonDiurnal = getByRole('button', { name: /diurnal/i })
+    const buttonNocturnal = getByRole('button', { name: /nocturnal/i })
+    const buttonCustom = getByRole('button', { name: /custom/i })
 
     // Assert
     expect(buttonAll).toBeDefined()
