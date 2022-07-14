@@ -18,19 +18,23 @@ describe('TimeOfDayPicker', () => {
     const { getByRole } = render(component, DEFAULT_RENDER_OPTIONS)
 
     // Act
-    const buttonAll = getByRole('searchbox', { name: /all/i })
+    const buttonAll = getByRole('searchbox', { name: /all day/i })
     const buttonDiurnal = getByRole('searchbox', { name: /diurnal/i })
     const buttonNocturnal = getByRole('searchbox', { name: /nocturnal/i })
+    const buttonCustom = getByRole('searchbox', { name: /custom/i })
 
     // Assert
     expect(buttonAll).toBeDefined()
-    expect((buttonAll as HTMLInputElement).value).toMatch(/all/i)
+    expect((buttonAll as HTMLInputElement).value).toMatch(/all day/i)
 
     expect(buttonDiurnal).toBeDefined()
     expect((buttonDiurnal as HTMLInputElement).value).toMatch(/diurnal/i)
 
     expect(buttonNocturnal).toBeDefined()
     expect((buttonNocturnal as HTMLInputElement).value).toMatch(/nocturnal/i)
+
+    expect(buttonCustom).toBeDefined()
+    expect((buttonCustom as HTMLInputElement).value).toMatch(/custom/i)
   })
 
   test.todo('emits null when "all" clicked', async () => {
