@@ -193,7 +193,7 @@ const validated = ref(false)
 const errorProject = computed(() => job.projectIdCore !== null && job.projectIdCore !== '' ? undefined : 'No project selected or project is invalid')
 const errorPermission = computed(() => hasProjectPermission.value ? undefined : 'You do not have permission to create jobs for this project')
 const errorClassifier = computed(() => job.classifierId > 0 ? undefined : 'Please select a classifier')
-const errorHours = computed(() => /^((\b([0-9]|1[0-9]|2[0-3])\b(-\b([0-9]|1[0-9]|2[0-3])\b)?)(,)?)+$/g.test(job.queryHour ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
+const errorHours = computed(() => /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/g.test(job.queryHour ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
 
 const errors = computed(() => validated.value ? [errorProject.value, errorPermission.value, errorClassifier.value, errorHours.value].filter(isDefined) : [])
 

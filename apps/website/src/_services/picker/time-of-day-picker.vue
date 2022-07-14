@@ -3,6 +3,7 @@
     <el-button
       v-for="item in hours"
       :key="'time-' + item.label"
+      :title="item.label"
       :label="item.label"
       :color="item.label === selectedTime.selectedTimeType ? '#45485D' : '#232436'"
       round
@@ -31,10 +32,10 @@ interface TimeLabel {
 }
 
 const hours: { [key: string]: TimeLabel } = {
-  all: { label: 'all day', value: '0-23' },
-  diurnal: { label: 'diurnal', value: '6-17' },
-  nocturnal: { label: 'nocturnal', value: '0-5,18-23' },
-  custom: { label: 'custom', value: '' }
+  all: { label: 'All day', value: '0-23' },
+  diurnal: { label: 'Diurnal', value: '6-17' },
+  nocturnal: { label: 'Nocturnal', value: '0-5,18-23' },
+  custom: { label: 'Custom', value: '' }
 }
 
 const emit = defineEmits<{(e: 'emitSelectTime', value: string): void}>()
