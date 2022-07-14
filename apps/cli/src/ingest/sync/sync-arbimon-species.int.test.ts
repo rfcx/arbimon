@@ -52,6 +52,7 @@ const idsArbimonObject = (ids: number[]): Record<string, number> => ids.reduce((
 
 describe('ingest > sync', () => {
   beforeEach(async () => {
+    // Delete species before testing
     await arbimonSequelize.query('DELETE FROM species')
     await biodiversitySequelize.query('DELETE FROM taxon_species_rfcx')
     await biodiversitySequelize.query('DELETE FROM sync_status')

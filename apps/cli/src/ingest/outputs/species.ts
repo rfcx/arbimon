@@ -34,7 +34,7 @@ export const writeSpeciesToBio = async (species: SpeciesArbimon[], sequelize: Se
       })
     return []
   } catch (batchInsertError) {
-    console.error('⚠️ Batch insert of taxon spesies failed... try loop insert', batchInsertError)
+    console.error('⚠️ Batch insert of taxon species failed... try loop insert', (batchInsertError as any).errors)
     return await loopUpsert(species, sequelize)
   }
 }
