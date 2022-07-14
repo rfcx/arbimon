@@ -4,6 +4,7 @@ import { syncArbimonProjects } from './sync-arbimon-project'
 import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'
 import { syncArbimonSites } from './sync-arbimon-site'
 import { syncArbimonSpecies } from './sync-arbimon-species'
+import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
 
 export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
@@ -32,14 +33,19 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
     const isSiteSyncedUpToDate = await syncArbimonSites(arbimonSequelize, biodiversitySequelize)
     console.info('> Sites: up to date =', isSiteSyncedUpToDate)
 
-    // wait til taxon species sync is done before sync project level data
     if (!isSiteSyncedUpToDate) {
       console.info('- wait to sync more sites in the next round...')
       return
     }
 
+    const isTaxonSpeciesCallsSyncedUpToDate = await syncArbimonSpeciesCalls(arbimonSequelize, biodiversitySequelize)
+    console.info('> Taxon Species Calls: up to date =', isTaxonSpeciesSyncedUpToDate)
+
+    if (!isTaxonSpeciesCallsSyncedUpToDate) {
+      console.info('- wait to sync more taxon species calls in the next round...')
+      return
+    }
     // TODO: sync other tables
-    // species call
     // recordings
     // detections
     // ...
