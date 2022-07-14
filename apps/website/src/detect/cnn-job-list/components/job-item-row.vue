@@ -2,34 +2,36 @@
   <tr class="border-b border-box-grey">
     <th
       scope="row"
-      class="px-6 py-4 align-text-top"
+      class="w-2/10 px-6 py-4 align-text-top"
     >
       {{ props.job.modelName }}
     </th>
-    <td class="px-6 py-4 align-text-top w-80">
+    <td class="w-3/10 px-6 py-4 align-text-top w-80">
       <job-input
         :number-of-recordings="props.job.numberOfRecordings"
         :job-input="props.job.input"
       />
     </td>
-    <td class="px-6 py-4 align-text-top">
+    <td class="w-2/10 w-48 px-6 py-4 align-text-top">
       <span>{{ formatDateLocal(props.job.createdAt) }}</span>
     </td>
-    <td class="px-6 py-4 align-text-top">
+    <td class="w-1/10 px-6 py-4 align-text-top">
       <job-progress
         :job-progress="props.job.progress"
       />
     </td>
-    <td
-      v-if="canCancelJob && !isLoadingPostStatus"
-      class="px-4 py-4 align-text-top"
-    >
-      <div>
-        <icon-fa-trash
-          class="cursor-pointer"
-          @click="cancelJob"
-        />
-      </div>
+    <td class="w-1/10 px-6 py-4  align-text-top">
+      <span
+        v-if="canCancelJob && !isLoadingPostStatus"
+        class="mx-auto"
+      >
+        <button>
+          <icon-fa-trash
+            class="cursor-pointer"
+            @click="cancelJob"
+          />
+        </button>
+      </span>
     </td>
   </tr>
 </template>
