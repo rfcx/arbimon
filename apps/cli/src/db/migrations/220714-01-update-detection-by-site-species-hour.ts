@@ -10,10 +10,18 @@
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> => {
   return await Promise.all([
-    await params.context.changeColumn(TABLE_NAME, 'duration_minutes', {
-      type: DataTypes.ARRAY,
+    // await params.context.renameColumn(TABLE_NAME, 'duration_minutes', 'detection_minutes'),
+    // await params.context.changeColumn(TABLE_NAME, 'detection_minutes', {
+    //   type: DataTypes.STRING(255),
+    //   defaultValue: null
+    // })
+    await params.context.addColumn(TABLE_NAME, 'detection_minutes', {
+      type: DataTypes.STRING(255),
       defaultValue: null
-    }),
-    await params.context.renameColumn(TABLE_NAME, 'duration_minutes', 'detection_minutes')
+    })
   ])
  }
+
+ export const down: MigrationFn<QueryInterface> = async (params) => {
+  return await params.context.removeColumn(TABLE_NAME, 'detection_minutes')
+}

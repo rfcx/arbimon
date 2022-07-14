@@ -23,7 +23,8 @@ const DetectionBySiteSpeciesHourBioSchema = z.object({
   locationProjectId: z.number(),
   taxonClassId: z.number(),
   count: z.number(),
-  detectionMinutes: z.number().array()
+  durationMinutes: z.number(), // TODO: remove parameter
+  detectionMinutes: z.string()
 })
 
 export type DetectionArbimon = z.infer<typeof DetectionArbimonSchema>
@@ -63,7 +64,8 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
       taxonSpeciesId: biodiversitySpecies.find(species => species.idArbimon === speciesId)?.id ?? -1,
       taxonClassId: biodiversitySpecies.find(species => species.idArbimon === speciesId)?.taxonClassId ?? -1,
       count: detectionCount,
-      detectionMinutes: detectionMinutes.split(',').map(Number)
+      durationMinutes: 60,
+      detectionMinutes
     }
   })
 }

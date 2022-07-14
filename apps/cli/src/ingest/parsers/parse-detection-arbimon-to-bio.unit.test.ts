@@ -10,6 +10,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
     siteId: 88528,
     speciesId: 74,
     detectionCount: 1,
+    durationMinutes: 60, // TODO: remove parameter
     detectionMinutes: '06',
     detectionId: '2391042',
     updatedAt: '2022-07-13 21:24:52'

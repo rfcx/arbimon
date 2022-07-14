@@ -30,7 +30,14 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
 
     // Facts
     count: DataTypes.INTEGER, // 1
-    detectionMinutes: DataTypes.ARRAY // [12, 15]
+    durationMinutes: { // TODO: remove parameter
+      type: DataTypes.INTEGER,
+      defaultValue: null
+    },
+    detectionMinutes: {
+      type: DataTypes.STRING(255),
+      defaultValue: null
+    }
   },
   {
     tableName: TABLE_DETECTION_BY_SITE_SPECIES_HOUR
