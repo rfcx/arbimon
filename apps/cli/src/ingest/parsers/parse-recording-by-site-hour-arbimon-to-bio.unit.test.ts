@@ -7,7 +7,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     projectIdArbimon: 1,
     siteIdArbimon: 123,
     timePrecisionHourLocal: '2022-07-06 07:00:00',
-    totalDuration: 60.25,
+    totalDurationInMinutes: 60.25,
     recordedMinutes: '5,10',
     firstRecordingIdArbimon: 222,
     lastRecordingIdArbimon: 223,
@@ -27,7 +27,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     const { projectIdArbimon, ...missingProjectIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
     const { siteIdArbimon, ...missingSiteIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
     const { timePrecisionHourLocal, ...missingTimePrecisionHourLocal } = VALID_RECORDING_BY_SITE_HOUR
-    const { totalDuration, ...missingTotalDuration } = VALID_RECORDING_BY_SITE_HOUR
+    const { totalDurationInMinutes, ...missingTotalDurationInMinutes } = VALID_RECORDING_BY_SITE_HOUR
     const { recordedMinutes, ...missingRecordedMinutes } = VALID_RECORDING_BY_SITE_HOUR
     const { firstRecordingIdArbimon, ...missingFirstRecordingIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
     const { lastRecordingIdArbimon, ...missingLastRecordingIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
@@ -38,7 +38,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
       parseRecordingBySiteHourToBio(missingProjectIdArbimon),
       parseRecordingBySiteHourToBio(missingSiteIdArbimon),
       parseRecordingBySiteHourToBio(missingTimePrecisionHourLocal),
-      parseRecordingBySiteHourToBio(missingTotalDuration),
+      parseRecordingBySiteHourToBio(missingTotalDurationInMinutes),
       parseRecordingBySiteHourToBio(missingRecordedMinutes),
       parseRecordingBySiteHourToBio(missingFirstRecordingIdArbimon),
       parseRecordingBySiteHourToBio(missingLastRecordingIdArbimon),
@@ -54,7 +54,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     const nullProjectIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, projectIdArbimon: null }
     const nullSiteIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, siteIdArbimon: null }
     const nullTimePrecisionHourLocal = { ...VALID_RECORDING_BY_SITE_HOUR, timePrecisionHourLocal: null }
-    const nullTotalDuration = { ...VALID_RECORDING_BY_SITE_HOUR, totalDuration: null }
+    const nullTotalDurationInMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, totalDurationInMinutes: null }
     const nullRecordedMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, recordedMinutes: null }
     const nullFirstRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, firstRecordingIdArbimon: null }
     const nullLastRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, lastRecordingIdArbimon: null }
@@ -63,7 +63,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     const undefinedProjectIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, projectIdArbimon: undefined }
     const undefinedSiteIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, siteIdArbimon: undefined }
     const undefinedTimePrecisionHourLocal = { ...VALID_RECORDING_BY_SITE_HOUR, timePrecisionHourLocal: undefined }
-    const undefinedTotalDuration = { ...VALID_RECORDING_BY_SITE_HOUR, totalDuration: undefined }
+    const undefinedTotalDurationInMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, totalDurationInMinutes: undefined }
     const undefinedRecordedMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, recordedMinutes: undefined }
     const undefinedFirstRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, firstRecordingIdArbimon: undefined }
     const undefinedLastRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, lastRecordingIdArbimon: undefined }
@@ -74,7 +74,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
       parseRecordingBySiteHourToBio(nullProjectIdArbimon),
       parseRecordingBySiteHourToBio(nullSiteIdArbimon),
       parseRecordingBySiteHourToBio(nullTimePrecisionHourLocal),
-      parseRecordingBySiteHourToBio(nullTotalDuration),
+      parseRecordingBySiteHourToBio(nullTotalDurationInMinutes),
       parseRecordingBySiteHourToBio(nullRecordedMinutes),
       parseRecordingBySiteHourToBio(nullFirstRecordingIdArbimon),
       parseRecordingBySiteHourToBio(nullLastRecordingIdArbimon),
@@ -82,7 +82,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
       parseRecordingBySiteHourToBio(undefinedProjectIdArbimon),
       parseRecordingBySiteHourToBio(undefinedSiteIdArbimon),
       parseRecordingBySiteHourToBio(undefinedTimePrecisionHourLocal),
-      parseRecordingBySiteHourToBio(undefinedTotalDuration),
+      parseRecordingBySiteHourToBio(undefinedTotalDurationInMinutes),
       parseRecordingBySiteHourToBio(undefinedRecordedMinutes),
       parseRecordingBySiteHourToBio(undefinedFirstRecordingIdArbimon),
       parseRecordingBySiteHourToBio(undefinedLastRecordingIdArbimon),

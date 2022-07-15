@@ -4,7 +4,7 @@ export interface RecordingBySiteHour extends WithDates {
   timePrecisionHourLocal: Date
   locationProjectId: number
   locationSiteId: number
-  totalDuration: number
+  totalDurationInMinutes: number
   recordedMinutes: number[]
 }
 

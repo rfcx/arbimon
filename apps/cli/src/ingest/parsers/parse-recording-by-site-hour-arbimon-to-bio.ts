@@ -8,7 +8,7 @@ const RecordingBySiteHourArbimonSchema = z.object({
   projectIdArbimon: z.number(),
   siteIdArbimon: z.number(),
   timePrecisionHourLocal: z.string(), // string of date e.g. 2020-12-06 10:00:00
-  totalDuration: z.number(),
+  totalDurationInMinutes: z.number(),
   recordedMinutes: z.string(), // string of number separate by comma (,) e.g. `5,10`
   firstRecordingIdArbimon: z.number(),
   lastRecordingIdArbimon: z.number(),
@@ -19,7 +19,7 @@ const RecordingBySiteHourBioSchema = z.object({
   timePrecisionHourLocal: z.string(), // string of date e.g. 2020-12-06 10:00:00
   locationProjectId: z.number(),
   locationSiteId: z.number(),
-  totalDuration: z.number(),
+  totalDurationInMinutes: z.number(),
   recordedMinutes: z.array(z.number()),
   firstRecordingIdArbimon: z.number(),
   lastRecordingIdArbimon: z.number(),
