@@ -49,6 +49,10 @@ beforeAll(async () => {
   `)
 })
 
+const getMinutesFromSeconds = (second: number): number => {
+  return second / 60
+}
+
 describe('ingest > input > getArbimonRecordings', () => {
   test('includes expected props (& no more)', async () => {
     // Arrange
@@ -57,7 +61,7 @@ describe('ingest > input > getArbimonRecordings', () => {
       syncUntilId: '0',
       syncBatchLimit: 1
     }
-    const expectedProps = ['projectIdArbimon', 'siteIdArbimon', 'timePrecisionHourLocal', 'totalDuration', 'recordedMinutes', 'firstRecordingIdArbimon', 'lastRecordingIdArbimon', 'lastUploaded']
+    const expectedProps = ['projectIdArbimon', 'siteIdArbimon', 'timePrecisionHourLocal', 'totalDurationInMinutes', 'recordedMinutes', 'firstRecordingIdArbimon', 'lastRecordingIdArbimon', 'lastUploaded']
 
     // Act
     const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
@@ -86,7 +90,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual[0].projectIdArbimon).toBe(1920)
     expect(actual[0].siteIdArbimon).toBe(88526)
     expect(actual[0].timePrecisionHourLocal).toBe('2022-07-06 07:00:00')
-    expect(actual[0].totalDuration).toBe(120.5 / 60)
+    expect(actual[0].totalDurationInMinutes).toBe(getMinutesFromSeconds(120.5))
     expect(actual[0].recordedMinutes).toBe('30,50')
     expect(actual[0].firstRecordingIdArbimon).toBe(1001)
     expect(actual[0].lastRecordingIdArbimon).toBe(1002)
@@ -95,7 +99,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual[1].projectIdArbimon).toBe(1920)
     expect(actual[1].siteIdArbimon).toBe(88527)
     expect(actual[1].timePrecisionHourLocal).toBe('2022-07-06 07:00:00')
-    expect(actual[1].totalDuration).toBe(60.25 / 60)
+    expect(actual[1].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
     expect(actual[1].recordedMinutes).toBe('50')
     expect(actual[1].firstRecordingIdArbimon).toBe(1003)
     expect(actual[1].lastRecordingIdArbimon).toBe(1003)
@@ -119,7 +123,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual[0].projectIdArbimon).toBe(1921)
     expect(actual[0].siteIdArbimon).toBe(88528)
     expect(actual[0].timePrecisionHourLocal).toBe('2022-07-06 08:00:00')
-    expect(actual[0].totalDuration).toBe(60.25 / 60)
+    expect(actual[0].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
     expect(actual[0].recordedMinutes).toBe('30')
     expect(actual[0].firstRecordingIdArbimon).toBe(1004)
     expect(actual[0].lastRecordingIdArbimon).toBe(1004)
@@ -128,7 +132,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual[1].projectIdArbimon).toBe(1921)
     expect(actual[1].siteIdArbimon).toBe(88528)
     expect(actual[1].timePrecisionHourLocal).toBe('2022-07-06 09:00:00')
-    expect(actual[1].totalDuration).toBe(60.25 / 60)
+    expect(actual[1].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
     expect(actual[1].recordedMinutes).toBe('50')
     expect(actual[1].firstRecordingIdArbimon).toBe(1005)
     expect(actual[1].lastRecordingIdArbimon).toBe(1005)
@@ -152,7 +156,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual[0].projectIdArbimon).toBe(1921)
     expect(actual[0].siteIdArbimon).toBe(88528)
     expect(actual[0].timePrecisionHourLocal).toBe('2022-07-06 10:00:00')
-    expect(actual[0].totalDuration).toBe(60.25 / 60)
+    expect(actual[0].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
     expect(actual[0].recordedMinutes).toBe('50')
     expect(actual[0].firstRecordingIdArbimon).toBe(1006)
     expect(actual[0].lastRecordingIdArbimon).toBe(1006)

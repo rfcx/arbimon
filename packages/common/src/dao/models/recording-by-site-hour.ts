@@ -28,7 +28,7 @@ export const RecordingBySiteHourModel = defineWithDefaults<RecordingBySiteHour, 
     updatedAt: DataTypes.DATE,
 
     // Facts
-    totalDuration: DataTypes.FLOAT,
+    totalDurationInMinutes: DataTypes.FLOAT,
     recordedMinutes: DataTypes.ARRAY(DataTypes.INTEGER)
   },
   {

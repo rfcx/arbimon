@@ -6,7 +6,7 @@ export interface ArbimonRecordingBySiteHourQuery {
   projectIdArbimon: number
   siteIdArbimon: number
   timePrecisionHourLocal: Date
-  totalDuration: number
+  totalDurationInMinutes: number
   recordedMinutes: string // string of number separate by comma (,) e.g. `5,10`
   firstRecordingIdArbimon: number
   lastRecordingIdArbimon: number
@@ -18,7 +18,7 @@ export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { sync
     SELECT  s.project_id projectIdArbimon,
             r.site_id siteIdArbimon,
             DATE_FORMAT(r.datetime, '%Y-%m-%d %H:00:00') timePrecisionHourLocal,
-            SUM(r.duration) / 60 totalDuration,
+            SUM(r.duration) / 60 totalDurationInMinutes,
             GROUP_CONCAT(DISTINCT MINUTE(r.datetime) SEPARATOR ',') recordedMinutes,
             MIN(r.recording_id) firstRecordingIdArbimon,
             MAX(r.recording_id) lastRecordingIdArbimon,
@@ -35,7 +35,7 @@ export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { sync
     SELECT  s.project_id projectIdArbimon,
             r.site_id siteIdArbimon,
             strftime('%Y-%m-%d %H:00:00', r.datetime) timePrecisionHourLocal,
-            SUM(r.duration) / 60 totalDuration,
+            SUM(r.duration) / 60 totalDurationInMinutes,
             GROUP_CONCAT(DISTINCT strftime('%M', r.datetime)) recordedMinutes,
             MIN(r.recording_id) firstRecordingIdArbimon,
             MAX(r.recording_id) lastRecordingIdArbimon,
