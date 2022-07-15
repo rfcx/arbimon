@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from 'vitest'
+import { afterAll, beforeEach, describe, expect, test } from 'vitest'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -47,6 +47,9 @@ describe('ingest > inputs > getArbimonDetections', async () => {
     await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING_SITE_1 })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, present: 0, presentReview: 1 } })
     await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 74, present: 0, presentReview: 2 } })
+  })
+  afterAll(async () => {
+    await arbimonSequelize.query('DELETE FROM recording_validations')
   })
 
   test('can get oldest recording validations', async () => {

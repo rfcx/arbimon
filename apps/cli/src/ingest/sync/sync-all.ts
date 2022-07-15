@@ -44,10 +44,6 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       console.info('- wait to sync more taxon species calls in the next round...')
       return
     }
-    // TODO: sync other tables
-    // recordings
-    // detections
-    // ...
     return
   } catch (e) {
     console.error('SYNC - Incremental failed', e)
