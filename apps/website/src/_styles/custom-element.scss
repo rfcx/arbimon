@@ -27,6 +27,13 @@
   }
 }
 
+.el-input__wrapper {
+  &.is-focus {
+    border-color: var(--el-bg-color-white) !important;
+    box-shadow: 0 0 0 1px var(--el-bg-color-white) !important;
+  }
+}
+
 .el-input .el-input__prefix {
   left: 12px;
 }
