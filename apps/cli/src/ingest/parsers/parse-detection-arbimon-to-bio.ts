@@ -3,16 +3,18 @@ import { Op, Sequelize } from 'sequelize'
 import { SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 const DetectionArbimonSchema = z.object({
-  projectId: z.number(),
+  idArbimon: z.number(),
+  datetime: z.string(),
   date: z.string(),
   hour: z.string(),
   siteId: z.number(),
   speciesId: z.number(),
-  detectionCount: z.number(),
-  detectionMinutes: z.string(),
-  detectionId: z.string(),
+  present: z.number().nullable(),
+  presentReview: z.number(),
+  presentAed: z.number(),
   updatedAt: z.string()
 })
 
@@ -34,15 +36,8 @@ export const parseDetectionArbimonToBio = (detectionArbimon: unknown): SafeParse
 DetectionArbimonSchema.safeParse(detectionArbimon)
 
 export const transformDetectionArbimonToBio = async (detectionArbimon: DetectionArbimon[], sequelize: Sequelize): Promise<DetectionBySiteSpeciesHourBio[]> => {
-  const arbimonDetectionGroupByProject = groupBy(detectionArbimon, 'projectId')
   const arbimonDetectionGroupBySites = groupBy(detectionArbimon, 'siteId')
   const arbimonDetectionGroupBySpecies = groupBy(detectionArbimon, 'speciesId')
-
-  // get distinct bio project ids
-  const biodiversityProjects = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
-    where: { idArbimon: { [Op.in]: Object.keys(arbimonDetectionGroupByProject).map(Number) } },
-    raw: true
-  })
 
   const biodiversitySites = (await ModelRepository.getInstance(sequelize).LocationSite.findAll({
     where: { idArbimon: { [Op.in]: Object.keys(arbimonDetectionGroupBySites).map(Number) } },
@@ -56,16 +51,17 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
 
   // map bio `project id`, `site id` and `species id` into `detection by site species hour` object
   return detectionArbimon.map(detection => {
-    const { projectId, siteId, speciesId, date, hour, detectionCount, detectionMinutes } = detection
+    const { siteId, speciesId, date, hour, datetime } = detection
+    const site = biodiversitySites.find(site => site.idArbimon === siteId)
     return {
       timePrecisionHourLocal: new Date(new Date(date).getTime() + Number(hour) * 60 * 60 * 1000),
-      locationProjectId: biodiversityProjects.find(project => project.idArbimon === projectId)?.id ?? -1,
-      locationSiteId: biodiversitySites.find(site => site.idArbimon === siteId)?.id ?? -1,
+      locationProjectId: site?.locationProjectId ?? -1,
+      locationSiteId: site?.id ?? -1,
       taxonSpeciesId: biodiversitySpecies.find(species => species.idArbimon === speciesId)?.id ?? -1,
       taxonClassId: biodiversitySpecies.find(species => species.idArbimon === speciesId)?.taxonClassId ?? -1,
-      count: detectionCount,
-      durationMinutes: 60,
-      detectionMinutes
+      count: 1,
+      durationMinutes: 60, // TODO: remove
+      detectionMinutes: dayjs(datetime).minute().toString()
     }
   })
 }

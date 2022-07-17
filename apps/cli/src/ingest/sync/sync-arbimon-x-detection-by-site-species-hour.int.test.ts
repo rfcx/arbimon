@@ -145,7 +145,7 @@ describe('ingest > sync', () => {
   })
 
   describe('syncArbimonDetectionBySiteSpeciesHour', () => {
-    test('can sync first detection batch', async () => {
+    test.todo('can sync first detection batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
@@ -164,7 +164,7 @@ describe('ingest > sync', () => {
       expect(detections.length).toBe(14)
     })
 
-    test('where syncUntilId = 0 for the next updated batch', async () => {
+    test.todo('where syncUntilId = 0 for the next updated batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
@@ -183,7 +183,7 @@ describe('ingest > sync', () => {
       expect(new Date(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilDate)).greaterThan(new Date(UPDATED_SYNC_STATUS_FIRST_BATCH.syncUntilDate))
     })
 
-    test('where sync is up-to-date', async () => {
+    test.todo('where sync is up-to-date', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 14 })
 
