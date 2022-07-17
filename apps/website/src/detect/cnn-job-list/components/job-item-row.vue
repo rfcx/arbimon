@@ -8,7 +8,7 @@
     </th>
     <td class="w-3/10 px-6 py-4 align-text-top w-80">
       <job-input
-        :number-of-recordings="props.job.numberOfRecordings"
+        :total-duration-minutes="props.job.totalDurationMinutes"
         :job-input="props.job.input"
       />
     </td>

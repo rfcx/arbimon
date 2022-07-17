@@ -83,7 +83,7 @@ import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { FETCH_CLASSIFIER_JOBS_KEY, useClassifierJobs } from '../_composables/use-classifier-jobs'
-import { JobFilterItem } from '../types'
+import { Job, JobFilterItem } from '../types'
 import JobFilter from './components/job-filter.vue'
 import JobItemRow from './components/job-item-row.vue'
 
@@ -103,7 +103,7 @@ const filterOptions: JobFilterItem[] = [
   { value: 'all', label: 'All jobs', checked: true }
 ]
 
-const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
+const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
   id: cj.id,
   modelName: cj.classifier.name,
   input: {
@@ -115,7 +115,7 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
     status: cj.status,
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
-  numberOfRecordings: 0,
+  totalDurationMinutes: cj.minutesTotal,
   createdAt: new Date(cj.created_at)
 })) ?? [])
 
