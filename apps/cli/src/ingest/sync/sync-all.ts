@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize'
 
 import { syncArbimonProjects } from './sync-arbimon-project'
+import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'
 import { syncArbimonSites } from './sync-arbimon-site'
 import { syncArbimonSpecies } from './sync-arbimon-species'
 import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
@@ -48,6 +49,16 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
     // recordings
     // detections
     // ...
+
+    const isRecordingBySiteHourUpToDate = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Recordings: up to date =', isRecordingBySiteHourUpToDate)
+
+    // wait til recording sync is done before sync project level data
+    if (!isRecordingBySiteHourUpToDate) {
+      console.info('- wait to sync more recordings in the next round...')
+      return
+    }
+
     return
   } catch (e) {
     console.error('SYNC - Incremental failed', e)
