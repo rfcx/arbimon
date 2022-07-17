@@ -15,7 +15,7 @@ const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHour[], detection
       const errorMessage = (e instanceof Error) ? e.message : ''
       // store insert errors
       failedToInsertItems.push({
-        externalId: `${detectionArbimon[dtIdx].updatedAt}|project:${dt.locationProjectId}|site:${dt.locationSiteId}|species:${dt.taxonSpeciesId}|detectionsExternalId:${detectionArbimon[dtIdx].detectionId}`,
+        externalId: `${detectionArbimon[dtIdx].updatedAt}|project:${dt.locationProjectId}|site:${dt.locationSiteId}|species:${dt.taxonSpeciesId}|detectionsExternalId:${detectionArbimon[dtIdx].idArbimon}`,
         error: `InsertError: ${errorMessage}`
       })
     }
