@@ -9,8 +9,8 @@
     show-icon
   />
   <form class="mt-5">
-    <ol class="relative border-l border-box-grey">
-      <li class="mb-8 ml-6">
+    <ol class="relative border-box-grey">
+      <li class="border-l-1 border-box-grey pb-8 pl-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           1
         </span>
@@ -26,7 +26,7 @@
           @selected-classifier="onSelectClassifier"
         />
       </li>
-      <li class="mb-8 ml-6">
+      <li class="border-l-1 border-box-grey pb-8 pl-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           2
         </span>
@@ -67,15 +67,15 @@
           <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
         </div>
       </li>
-      <!-- <li class="mb-8 ml-6">
+      <li class="pb-8 pl-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           3
         </span>
         <h2 class="mb-4 text-md">
-          Review job size
+          Job size estimation
         </h2>
-        <span class="text-subtle">1,300 recordings selected</span>
-      </li> -->
+        <span class="text-subtle">1,300 minutes of recordings</span>
+      </li>
     </ol>
     <div class="flex flex-row items-center space-x-4">
       <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
