@@ -24,18 +24,37 @@ const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHour[], detection
 }
 
 export const writeDetectionsToBio = async (detections: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[DetectionBySiteSpeciesHour[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
-  const detectionsBio = await Promise.all(await transformDetectionArbimonToBio(detections, sequelize))
+  const [itemsToInsertOrUpsert, itemsToReset] = await Promise.all(await transformDetectionArbimonToBio(detections, sequelize))
   try {
-    await ModelRepository.getInstance(sequelize)
-      .DetectionBySiteSpeciesHour
-      .bulkCreate(detectionsBio, {
-        updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR,
-        ...transaction && { transaction }
-      })
-    return [detectionsBio, []]
+    // Insert new or updated items
+    if (itemsToInsertOrUpsert.length) {
+      await ModelRepository.getInstance(sequelize)
+        .DetectionBySiteSpeciesHour
+        .bulkCreate(itemsToInsertOrUpsert, {
+          updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR,
+          ...transaction && { transaction }
+        })
+    }
+    // Reset not validated items
+    if (itemsToReset.length) {
+      for (const d of itemsToReset) {
+        const numberOfDeletedRows = await ModelRepository
+          .getInstance(sequelize)
+          .DetectionBySiteSpeciesHour
+          .destroy({
+            where: {
+              timePrecisionHourLocal: d.timePrecisionHourLocal,
+              locationSiteId: d.locationSiteId,
+              taxonSpeciesId: d.taxonSpeciesId
+            }
+          })
+          console.info(`> ${numberOfDeletedRows} detections reset successfully for time ${d.timePrecisionHourLocal.toISOString()}, site ${d.locationSiteId}, species ${d.taxonSpeciesId}`)
+      }
+    }
+    return [itemsToInsertOrUpsert, []]
   } catch (batchInsertError) {
     console.info('⚠️ Batch insert `detections by site species hour` failed... try loop upsert')
-    const failedToInsertItems = await loopUpsert(detectionsBio, detections, sequelize, transaction)
+    const failedToInsertItems = await loopUpsert(itemsToInsertOrUpsert, detections, sequelize, transaction)
     return [[], failedToInsertItems]
   }
 }

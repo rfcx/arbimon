@@ -3,7 +3,6 @@ import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, Site, SyncStatus, TaxonSpecies } from '@rfcx-bio/common/dao/types'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
@@ -145,27 +144,29 @@ describe('ingest > sync', () => {
   })
 
   describe('syncArbimonDetectionBySiteSpeciesHour', () => {
-    test.todo('can sync first detection batch', async () => {
+    test('can sync first detection batch', async () => {
       // Arrange
       const SYNC_STATUS = await getSyncStatus()
 
       // Act
       const UPDATED_SYNC_STATUS = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
+
       // Assert
 
       // - Assert write detections bio is returning sync status of a first batch
       expect(UPDATED_SYNC_STATUS).toBeTypeOf('object')
       expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(2)
-      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('0')
+      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('2391016')
       expect(new Date(UPDATED_SYNC_STATUS.syncUntilDate)).greaterThan(new Date('1980-01-01T00:00:00.000Z'))
 
       // - Assert valid detections count in Bio taxon species table of the first batch
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
-      expect(detections.length).toBe(14)
+      expect(detections.length).toBe(2)
     })
 
-    test.todo('where syncUntilId = 0 for the next updated batch', async () => {
+    test('where syncUntilId = latest id of a new batch', async () => {
       // Arrange
+      const expectedIds = [2391015, 2391016, 2391017, 2391018]
       const SYNC_STATUS = await getSyncStatus()
 
       // Act
@@ -178,14 +179,18 @@ describe('ingest > sync', () => {
       // - Assert write species bio is returning sync status of the new batch
       expect(UPDATED_SYNC_STATUS_FIRST_BATCH).toBeTypeOf('object')
       expect(UPDATED_SYNC_STATUS_SECOND_BATCH).toBeTypeOf('object')
-      expect(UPDATED_SYNC_STATUS_FIRST_BATCH.syncUntilId).toBe('0')
-      expect(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilId).toBe('0')
-      expect(new Date(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilDate)).greaterThan(new Date(UPDATED_SYNC_STATUS_FIRST_BATCH.syncUntilDate))
+
+      // - Assert valid detections are in Bio table of the new batch
+      const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
+      expect(detections.length).toBe(4)
+
+      // - Assert update sync status of the new batch
+      expect(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilId).toBe(expectedIds[expectedIds.length - 1].toString())
     })
 
-    test.todo('where sync is up-to-date', async () => {
+    test('where sync is up-to-date', async () => {
       // Arrange
-      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 14 })
+      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 100 })
 
       // Act
       const UPDATED_SYNC_STATUS_FIRST_BATCH = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
@@ -203,22 +208,22 @@ describe('ingest > sync', () => {
       expect(detections.length).toBe(14)
     })
 
-    test.todo('can sync next detection batch', async () => {
+    test('can sync next detection batch', async () => {
       // Arrange
-      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 14 })
+      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 100 })
 
       // Act
       const UPDATED_SYNC_STATUS = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
-      await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingId: 7047504, speciesId: 1051 } })
       await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 1051 } })
+      const SYNC_STATUS_SECOND_BATCH = await getSyncStatus()
+      const UPDATED_SYNC_STATUS_SECOND_BATCH = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS_SECOND_BATCH)
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
-      const UPDATED_SYNC_STATUS_SECOND_BATCH = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, { ...SYNC_STATUS, syncUntilDate: dayjs.utc('2022-07-15 01:00:00').toDate(), syncBatchLimit: 14 })
 
       // Assert
       expect(UPDATED_SYNC_STATUS).toBeTypeOf('object')
       expect(UPDATED_SYNC_STATUS_SECOND_BATCH).toBeTypeOf('object')
-      expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(14)
-      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('0')
+      expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(100)
+      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('2391040')
       expect(detections.length).toBe(15)
     })
   })
