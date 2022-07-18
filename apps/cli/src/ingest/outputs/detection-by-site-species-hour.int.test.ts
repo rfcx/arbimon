@@ -66,15 +66,15 @@ describe('ingest > outputs > detection by site species hour', async () => {
     datetime: '2020-12-06 10:06:19',
     date: '2020-12-06',
     hour: '10',
-    siteId: 88529,
-    speciesId: 3842,
+    siteId: 88528,
+    speciesId: 1050,
     present: 1,
     presentReview: 2,
     presentAed: 0,
     updatedAt: '2022-01-03T01:00:00.000Z'
   }
 
-  test.todo('can write species calls', async () => {
+  test.todo('can write a new detection', async () => {
     // Act
     await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
 
@@ -84,10 +84,151 @@ describe('ingest > outputs > detection by site species hour', async () => {
         locationProjectId: ID_PROJECT
       }
     })
+
     expect(detections.length).toBe(1)
+    expect(detections[0].count).toBe(1)
+    expect(detections[0].detectionMinutes).toEqual('6')
   })
 
   test.todo('can update existing detection', async () => {
-   // TODO
+    // Act
+    // Write the first detection
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+
+    // Update the detection
+    await writeDetectionsToBio([{
+      ...DETECTION_INPUT,
+      idArbimon: 2391044,
+      datetime: '2020-12-06 10:30:19'
+    }], biodiversitySequelize)
+
+    // Assert
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
+      where: {
+        locationProjectId: ID_PROJECT
+      }
+    })
+
+    expect(detections.length).toBe(1)
+    expect(detections[0].count).toBe(2)
+    expect(detections[0].detectionMinutes).toEqual('6,30')
+  })
+
+  test.todo('can update existing detection and insert new detection', async () => {
+    // Act
+    // Write the first detection
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+
+    // Update the existing detection + insert a new one
+    await writeDetectionsToBio([
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391044,
+        datetime: '2020-12-06 10:30:19'
+      },
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391045,
+        datetime: '2020-12-06 11:30:19',
+        hour: '11'
+      }
+    ], biodiversitySequelize)
+
+    // Assert
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
+      where: {
+        locationProjectId: ID_PROJECT
+      }
+    })
+
+    expect(detections.length).toBe(2)
+    expect(detections[0].count).toBe(2)
+    expect(detections[1].count).toBe(1)
+    expect(detections[0].detectionMinutes).toEqual('6,30')
+    expect(detections[1].detectionMinutes).toEqual('30')
+  })
+
+  test('can insert a new detection and remove the old one', async () => {
+    // Act
+    // Write the first detection
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+
+    // Insert a new detection + remove not validated detection
+    await writeDetectionsToBio([
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391044,
+        datetime: '2020-12-06 11:30:19',
+        hour: '11'
+      },
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391043,
+        datetime: '2020-12-06 10:06:19',
+        present: null,
+        presentReview: 0
+      }
+    ], biodiversitySequelize)
+
+    // Assert
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
+      where: {
+        locationProjectId: ID_PROJECT
+      }
+    })
+
+    expect(detections.length).toBe(1)
+    expect(detections[0].count).toBe(1)
+    expect(detections[0].detectionMinutes).toEqual('30')
+  })
+
+  test('can insert new detections, update the first one and remove the second one', async () => {
+    // Act
+    // Write the first detection
+    await writeDetectionsToBio([
+      DETECTION_INPUT,
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391044,
+        datetime: '2020-12-06 11:30:19',
+        hour: '11'
+      }
+    ], biodiversitySequelize)
+
+    // Update the existing detection + remove not validated detection
+    await writeDetectionsToBio([
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391044,
+        datetime: '2020-12-06 11:55:00',
+        hour: '11'
+      },
+      {
+        ...DETECTION_INPUT,
+        idArbimon: 2391043,
+        datetime: '2020-12-06 10:06:19',
+        present: null,
+        presentReview: 0
+      }
+    ], biodiversitySequelize)
+
+    // Assert
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
+      where: {
+        locationProjectId: ID_PROJECT
+      }
+    })
+
+    expect(detections.length).toBe(1)
+    expect(detections[0].count).toBe(2)
+    expect(detections[0].detectionMinutes).toEqual('30,55')
   })
 })
+
+// TODO test list
+// check if count will be -1
+// check if '' in the detectionMinutes will be something else
+// check different sites
+// check different species
+// check different projects
+// check if input detection is not validated , but there is not any previous rows in the bio db to decrease the count/detectionMinutes
