@@ -122,6 +122,7 @@ import { useRouter } from 'vue-router'
 
 import { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
+import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
@@ -139,11 +140,6 @@ import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
-
-// External data
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
-const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Fields
 const job: ClassifierJobCreateConfiguration = reactive({
@@ -183,6 +179,11 @@ watch(() => store.selectedProject, () => {
 // Internal data
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
+
+// External data
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Current projects
 const projectFilters = computed(() => store.projectFilters)
@@ -241,8 +242,8 @@ const createJob = async (): Promise<void> => {
 
   // Save
   mutatePostJob(job, {
-    onSuccess: () => {
-      // TODO: push `minutes_total` to core api
+    onSuccess: async (response) => {
+      await apiCorePostClassifierJobUpdateStatus(apiClientCore, response.jobId, { minutes_total: totalDurationInMinutes.value })
       router.push({ name: ROUTE_NAMES.cnnJobList })
     }
   })
