@@ -1,53 +1,48 @@
-import { beforeAll, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
+import { deleteOutputProjects } from '../_testing/helper'
 import { DetectionArbimon } from '../parsers/parse-detection-arbimon-to-bio'
 import { writeDetectionsToBio } from './detection-by-site-species-hour'
-import { writeProjectsToBio } from './projects'
 
 const biodiversitySequelize = await getSequelize()
 
 describe('ingest > outputs > detection by site species hour', async () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     // Delete detections before tests
     await biodiversitySequelize.query('DELETE FROM detection_by_site_species_hour')
+    await deleteOutputProjects(biodiversitySequelize)
+    // Batch project data before tests
+    const PROJECT_INPUT: Omit<Project, 'id'> = {
+      idArbimon: 1920,
+      idCore: '807cuoi3cvw0',
+      slug: 'rfcx-1',
+      name: 'rfcx 1',
+      latitudeNorth: 0,
+      latitudeSouth: 0,
+      longitudeEast: 0,
+      longitudeWest: 0
+    }
+    await ModelRepository.getInstance(biodiversitySequelize).LocationProject.bulkCreate([PROJECT_INPUT])
+
+    const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: PROJECT_INPUT.idArbimon } })
+
+    console.info('project', project)
+    // Batch site data
+    const SITE_INPUT: Omit<Site, 'id'> = {
+      idCore: 'cydwrzz91cbz',
+      idArbimon: 88528,
+      locationProjectId: project?.id ?? -1,
+      name: 'Site 3',
+      latitude: 16.742010693566815,
+      longitude: 100.1923308193772,
+      altitude: 0.0
+    }
+    await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
   })
-
-  // Batch project data before tests
-  const PROJECT_INPUT: Omit<Project, 'id'> = {
-    idArbimon: 1920,
-    idCore: '807cuoi3cvw0',
-    slug: 'rfcx-1',
-    name: 'rfcx 1',
-    latitudeNorth: 0,
-    latitudeSouth: 0,
-    longitudeEast: 0,
-    longitudeWest: 0
-  }
-  await writeProjectsToBio([PROJECT_INPUT], biodiversitySequelize)
-  const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: PROJECT_INPUT.idArbimon } })
-
-  if (!project) return
-
-  const ID_PROJECT = project.id
-
-  // Batch site data
-  const SITE_INPUT: Omit<Site, 'id'> = {
-    idCore: 'cydwrzz91cbz',
-    idArbimon: 88528,
-    locationProjectId: ID_PROJECT,
-    name: 'Site 3',
-    latitude: 16.742010693566815,
-    longitude: 100.1923308193772,
-    altitude: 0.0
-  }
-
-  const site = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.findOne({ where: { idArbimon: SITE_INPUT.idArbimon } })
-
-  if (!site) await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
 
   // Batch species if it takes
   const SPECIES_INPUT: Omit<TaxonSpecies, 'id'> = {
@@ -74,23 +69,19 @@ describe('ingest > outputs > detection by site species hour', async () => {
     updatedAt: '2022-01-03T01:00:00.000Z'
   }
 
-  test.todo('can write a new detection', async () => {
+  test('can write a new detection', async () => {
     // Act
     await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
 
     // Assert
-    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
-      where: {
-        locationProjectId: ID_PROJECT
-      }
-    })
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(1)
     expect(detections[0].detectionMinutes).toEqual('6')
   })
 
-  test.todo('can update existing detection', async () => {
+  test('can update existing detection', async () => {
     // Act
     // Write the first detection
     await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
@@ -103,18 +94,14 @@ describe('ingest > outputs > detection by site species hour', async () => {
     }], biodiversitySequelize)
 
     // Assert
-    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
-      where: {
-        locationProjectId: ID_PROJECT
-      }
-    })
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(2)
     expect(detections[0].detectionMinutes).toEqual('6,30')
   })
 
-  test.todo('can update existing detection and insert new detection', async () => {
+  test('can update existing detection and insert new detection', async () => {
     // Act
     // Write the first detection
     await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
@@ -135,11 +122,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
     ], biodiversitySequelize)
 
     // Assert
-    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
-      where: {
-        locationProjectId: ID_PROJECT
-      }
-    })
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
 
     expect(detections.length).toBe(2)
     expect(detections[0].count).toBe(2)
@@ -171,11 +154,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
     ], biodiversitySequelize)
 
     // Assert
-    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
-      where: {
-        locationProjectId: ID_PROJECT
-      }
-    })
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(1)
@@ -213,11 +192,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
     ], biodiversitySequelize)
 
     // Assert
-    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
-      where: {
-        locationProjectId: ID_PROJECT
-      }
-    })
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(2)

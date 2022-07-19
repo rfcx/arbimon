@@ -10,11 +10,7 @@
 
  export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> => {
   return await Promise.all([
-    // await params.context.renameColumn(TABLE_NAME, 'duration_minutes', 'detection_minutes'),
-    // await params.context.changeColumn(TABLE_NAME, 'detection_minutes', {
-    //   type: DataTypes.STRING(255),
-    //   defaultValue: null
-    // })
+    // await params.context.removeColumn(TABLE_NAME, 'duration_minutes'),
     await params.context.addColumn(TABLE_NAME, 'detection_minutes', {
       type: DataTypes.STRING(255),
       defaultValue: null
