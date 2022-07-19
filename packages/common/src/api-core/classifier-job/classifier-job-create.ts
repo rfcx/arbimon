@@ -6,7 +6,7 @@ export interface ClassifierJobCreateConfiguration {
   queryStreams: string | null
   queryStart: string | null
   queryEnd: string | null
-  queryHour: string | null
+  queryHours: string | null
 }
 
 // Request types
