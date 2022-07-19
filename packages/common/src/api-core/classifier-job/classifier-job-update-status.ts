@@ -2,7 +2,8 @@ import { AxiosInstance } from 'axios'
 
 // Request type
 export interface ClassifierJobUpdateStatusParams {
-  status: number
+  status?: number
+  minutes_total?: number
 }
 
 export const apiCorePostClassifierJobUpdateStatus = async (apiClient: AxiosInstance, jobId: number, payload: ClassifierJobUpdateStatusParams): Promise<void> => {
