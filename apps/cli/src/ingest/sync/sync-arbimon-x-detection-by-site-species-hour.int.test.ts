@@ -23,6 +23,12 @@ const SQL_INSERT_REC_VALIDATIONS = `
   INSERT INTO recording_validations (recording_validation_id,recording_id,project_id,user_id,species_id,songtype_id,present,present_review, present_aed, created_at, updated_at)
   VALUES ($recordingValidationId, $recordingId, $projectId, $userId, $speciesId, $songtypeId, $present, $presentReview, $presentAed, $createdAt, $updatedAt);
 `
+
+const SQL_UPDATE_REC_VALIDATIONS = `
+  UPDATE recording_validations SET present=$present, present_review=$presentReview, updated_at=$updatedAt
+  WHERE recording_validation_id=$recordingValidationId;
+`
+
 const DEFAULT_REC_VALIDATIONS = { recordingValidationId: 2391041, recordingId: 7048796, projectId: 1920, userId: 1017, speciesId: 1051, songtypeId: 4, present: 0, presentReview: 5, presentAed: 0, createdAt: '2022-07-15 17:00:00', updatedAt: '2022-07-15 17:00:00' }
 
 const getSyncStatus = async (): Promise<SyncStatus> => {
@@ -208,23 +214,49 @@ describe('ingest > sync', () => {
       expect(detections.length).toBe(14)
     })
 
-    test('can sync next detection batch', async () => {
+    test('can sync next detection batch: update, insert and remove rows', async () => {
       // Arrange
-      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 100 })
+      await arbimonSequelize.query('DELETE FROM recording_validations')
+
+      // 1. Insert new detections
+      await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391030, recordingId: 7048805, userId: 1017, speciesId: 501, songtypeId: 1, present: 1, presentReview: 0 } })
+      await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391041, speciesId: 1051 } })
+      await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 12675, updatedAt: '2022-07-17T11:10:00.000Z' } })
+      // Get sync status
+      const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 2 })
 
       // Act
       const UPDATED_SYNC_STATUS = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
-      await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 1051 } })
+      // 2. Update present review count in the synced detection
+      await arbimonSequelize.query(SQL_UPDATE_REC_VALIDATIONS, { bind: { present: 0, presentReview: 2, updatedAt: '2022-07-18T14:30:00.000Z', recordingValidationId: 2391030 } })
+      // Get last sync status
       const SYNC_STATUS_SECOND_BATCH = await getSyncStatus()
+      // Sync updates
       const UPDATED_SYNC_STATUS_SECOND_BATCH = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS_SECOND_BATCH)
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
+      // 3. Reset just synced detection
+      await arbimonSequelize.query(SQL_UPDATE_REC_VALIDATIONS, { bind: { present: null, presentReview: 0, updatedAt: '2022-07-19T11:25:00.000Z', recordingValidationId: 2391030 } })
+      // Get last sync status
+      const SYNC_STATUS_THIRD_BATCH = await getSyncStatus()
+      // Sync updates
+      const UPDATED_SYNC_STATUS_THIRD_BATCH = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS_THIRD_BATCH)
+      const detections2 = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
 
       // Assert
       expect(UPDATED_SYNC_STATUS).toBeTypeOf('object')
       expect(UPDATED_SYNC_STATUS_SECOND_BATCH).toBeTypeOf('object')
-      expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(100)
-      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('2391040')
-      expect(detections.length).toBe(15)
+      expect(UPDATED_SYNC_STATUS_THIRD_BATCH).toBeTypeOf('object')
+      expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(2)
+      // Check last sync id for the 1st batch
+      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('2391041')
+      // Check last sync id for the 2nd batch
+      expect(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilId).toBe('2391030')
+      // Check last sync id for the 3d batch
+      expect(UPDATED_SYNC_STATUS_THIRD_BATCH.syncUntilId).toBe('2391030')
+      // Check count of updated detections after 2nd batch
+      expect(detections.length).toBe(3)
+      // Check count of updated detections after reseting detection on the 3d batch
+      expect(detections2.length).toBe(2)
     })
   })
 })
