@@ -1,6 +1,6 @@
 <template>
   <p class="inline-flex pb-2">
-    {{ numberOfRecordings }}
+    {{ totalDurationMinutes }}
   </p>
   <div class="border-l-3 border-box-grey pl-2 text-subtle">
     <p>Sites: {{ props.jobInput.sites }}</p>
@@ -16,12 +16,12 @@ import { computed } from 'vue'
 import { JobInput } from '../../types'
 
 const props = defineProps<{
-  numberOfRecordings: number,
+  totalDurationMinutes: number,
   jobInput: JobInput
 }>()
 
-const numberOfRecordings = computed(() => {
-  const numOfRecordingsString = props.numberOfRecordings > 0 ? props.numberOfRecordings.toLocaleString() : '~'
-  return `${numOfRecordingsString} recordings`
+const totalDurationMinutes = computed(() => {
+  const totalDurationMinutesString = props.totalDurationMinutes > 0 ? props.totalDurationMinutes.toLocaleString() : '~'
+  return `${totalDurationMinutesString} minutes of recordings`
 })
 </script>

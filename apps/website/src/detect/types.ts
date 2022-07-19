@@ -14,7 +14,7 @@ export interface Job {
   modelName: string
   input: JobInput
   progress: JobProgress
-  numberOfRecordings: number
+  totalDurationMinutes: number
   createdAt: Date
 }
 
