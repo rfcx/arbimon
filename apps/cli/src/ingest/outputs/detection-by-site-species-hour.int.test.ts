@@ -14,7 +14,9 @@ describe('ingest > outputs > detection by site species hour', async () => {
   beforeEach(async () => {
     // Delete detections before tests
     await biodiversitySequelize.query('DELETE FROM detection_by_site_species_hour')
+    await biodiversitySequelize.query('DELETE FROM taxon_species WHERE id_arbimon=1050')
     await deleteOutputProjects(biodiversitySequelize)
+
     // Batch project data before tests
     const PROJECT_INPUT: Omit<Project, 'id'> = {
       idArbimon: 1920,
@@ -30,7 +32,6 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: PROJECT_INPUT.idArbimon } })
 
-    console.info('project', project)
     // Batch site data
     const SITE_INPUT: Omit<Site, 'id'> = {
       idCore: 'cydwrzz91cbz',
@@ -42,19 +43,17 @@ describe('ingest > outputs > detection by site species hour', async () => {
       altitude: 0.0
     }
     await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
+
+    // Batch species if it takes
+    const SPECIES_INPUT: Omit<TaxonSpecies, 'id'> = {
+      idArbimon: 1050,
+      slug: 'falco-amurensis',
+      taxonClassId: 300,
+      scientificName: 'Falco amurensis'
+    }
+
+    await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
   })
-
-  // Batch species if it takes
-  const SPECIES_INPUT: Omit<TaxonSpecies, 'id'> = {
-    idArbimon: 1050,
-    slug: 'falco-amurensis',
-    taxonClassId: 300,
-    scientificName: 'Falco amurensis'
-  }
-
-  const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
-
-  if (!species) await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
 
   const DETECTION_INPUT: DetectionArbimon = {
     idArbimon: 2391043,
@@ -198,12 +197,55 @@ describe('ingest > outputs > detection by site species hour', async () => {
     expect(detections[0].count).toBe(2)
     expect(detections[0].detectionMinutes).toEqual('30,55')
   })
-})
 
-// TODO test list
-// check if count will be -1
-// check if '' in the detectionMinutes will be something else
-// check different sites
-// check different species
-// check different projects
-// check if input detection is not validated , but there is not any previous rows in the bio db to decrease the count/detectionMinutes
+  test('reset existing detection twice', async () => {
+    // Act
+    // Write the first detection
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+
+    // Reset the detection 1st time
+    await writeDetectionsToBio([{
+      ...DETECTION_INPUT,
+      present: null,
+      presentReview: 0
+    }], biodiversitySequelize)
+
+    // Reset the detection 2nd time
+    await writeDetectionsToBio([{
+      ...DETECTION_INPUT,
+      present: null,
+      presentReview: 0
+    }], biodiversitySequelize)
+
+    // Assert
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
+
+    expect(detections.length).toBe(0)
+  })
+
+  test('check grouping detections for different sites', async () => {
+    // Act
+    // Batch site data
+    const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: 1920 } })
+    const SITE_INPUT: Omit<Site, 'id'> = {
+      idCore: 'cydwrzz91cby',
+      idArbimon: 88535,
+      locationProjectId: project?.id ?? -1,
+      name: 'Site 3-2',
+      latitude: 16.74,
+      longitude: 100.19,
+      altitude: 0.0
+    }
+    await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([SITE_INPUT])
+    // Write the first detections
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+    await writeDetectionsToBio([{ ...DETECTION_INPUT, siteId: 88535 }], biodiversitySequelize)
+
+    // Assert
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
+
+    expect(detections.length).toBe(2)
+    detections.forEach(item => expect(item.count).toBe(1))
+    detections.forEach(item => expect(item.detectionMinutes).toEqual('6'))
+  })
+})
