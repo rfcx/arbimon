@@ -5,6 +5,7 @@ import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site
 import { syncArbimonSites } from './sync-arbimon-site'
 import { syncArbimonSpecies } from './sync-arbimon-species'
 import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
+import { syncArbimonDetectionBySiteSpeciesHour } from './sync-arbimon-x-detection-by-site-species-hour'
 
 export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
@@ -49,9 +50,16 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
     const isRecordingBySiteHourUpToDate = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
     console.info('> Recordings: up to date =', isRecordingBySiteHourUpToDate)
 
-    // wait til recording sync is done before sync project level data
     if (!isRecordingBySiteHourUpToDate) {
       console.info('- wait to sync more recordings in the next round...')
+      return
+    }
+
+    const isDetectionsBySiteSpeciesHourUpToDate = await syncArbimonDetectionBySiteSpeciesHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Detections: up to date =', isDetectionsBySiteSpeciesHourUpToDate)
+
+    if (!isDetectionsBySiteSpeciesHourUpToDate) {
+      console.info('- wait to sync more detections in the next round...')
       return
     }
 
