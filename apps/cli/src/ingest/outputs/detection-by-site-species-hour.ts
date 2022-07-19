@@ -32,7 +32,7 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
         .DetectionBySiteSpeciesHour
         .bulkCreate(itemsToInsertOrUpsert, {
           updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR,
-          ...transaction && { transaction }
+          transaction
         })
     }
     // Reset not validated items
@@ -46,7 +46,8 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
               timePrecisionHourLocal: d.timePrecisionHourLocal,
               locationSiteId: d.locationSiteId,
               taxonSpeciesId: d.taxonSpeciesId
-            }
+            },
+            transaction
           })
           console.info(`> ${numberOfDeletedRows} detections reset successfully for time ${d.timePrecisionHourLocal.toISOString()}, site ${d.locationSiteId}, species ${d.taxonSpeciesId}`)
       }
