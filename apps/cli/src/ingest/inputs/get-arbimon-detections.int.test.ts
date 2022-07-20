@@ -163,6 +163,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
       'date',
       'hour',
       'siteId',
+      'recordingDuration',
       'speciesId',
       'present',
       'presentReview',

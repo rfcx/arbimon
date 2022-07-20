@@ -7,7 +7,7 @@ export interface DetectionBySiteSpeciesHour {
   locationProjectId: number
   taxonClassId: number
   count: number
-  durationMinutes?: number // TODO: remove parameter
+  durationMinutes: number
   detectionMinutes?: string
 }
 

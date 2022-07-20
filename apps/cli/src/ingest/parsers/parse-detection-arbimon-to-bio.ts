@@ -5,12 +5,18 @@ import { SafeParseReturnType, z } from 'zod'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+interface RecordingData {
+  detectionMinutes: string[]
+  durationMinutes: number
+}
+
 const DetectionArbimonSchema = z.object({
   idArbimon: z.number(),
-  datetime: z.string(),
+  datetime: z.string(), // recording datetime
   date: z.string(),
   hour: z.string(),
   siteId: z.number(),
+  recordingDuration: z.number(),
   speciesId: z.number(),
   present: z.number().nullable(),
   presentReview: z.number(),
@@ -25,7 +31,7 @@ const DetectionBySiteSpeciesHourBioSchema = z.object({
   locationProjectId: z.number(),
   taxonClassId: z.number(),
   count: z.number(),
-  durationMinutes: z.number(), // TODO: remove parameter
+  durationMinutes: z.number(),
   detectionMinutes: z.string()
 })
 
@@ -40,8 +46,19 @@ function isNotValidated (val: DetectionArbimon): boolean {
   return (val.present === null || val.present === 0) && val.presentReview === 0
 }
 
-function getDetectionMinutes (dts: DetectionArbimon[]): string {
-  return dts.map(item => dayjs(item.datetime).minute().toString()).join(',')
+function filterRepeatingDetectionMinutes (dts: DetectionArbimon[]): RecordingData {
+  const recordingData = dts.reduce((acc, cur) => {
+      if (!acc.detectionMinutes.includes(cur.datetime)) {
+        acc.detectionMinutes.push(cur.datetime)
+        acc.durationMinutes += cur.recordingDuration
+      }
+      return acc
+    }, { detectionMinutes: [] as string[], durationMinutes: 0 })
+  return recordingData
+}
+
+function getDetectionMinutes (datetimeArray: string[]): string {
+  return datetimeArray.map(item => dayjs(item).minute().toString()).join(',')
 }
 
 export const transformDetectionArbimonToBio = async (detectionArbimon: DetectionArbimon[], sequelize: Sequelize): Promise<DetectionBySiteSpeciesHourBio[][]> => {
@@ -50,6 +67,7 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
   const itemsToDelete: DetectionBySiteSpeciesHourBio[] = []
   const arbimonDetectionGroupBySites = groupBy(detectionArbimon, 'siteId')
   const arbimonDetectionGroupBySpecies = groupBy(detectionArbimon, 'speciesId')
+
   // group arbimon detections by date, hour,site, species
   const arbimonDetectionGroupByDateHourSiteSpecies = Object.values(groupBy(detectionArbimon, d => `${d.date}-${d.hour}-${d.siteId}-${d.speciesId}`))
 
@@ -79,12 +97,17 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
     })
 
     if (biodiversityDetection === null) {
-      // detections to insert
-      // only validated detections
+      // detections to insert (only validated detections)
       const filteredArbimonDetectionsByValidation = dts.filter(dt => !isNotValidated(dt))
       if (filteredArbimonDetectionsByValidation.length) {
         const site = biodiversitySites.find(site => site.idArbimon === dts[0].siteId)
-        const newDetectionMinutes = getDetectionMinutes(filteredArbimonDetectionsByValidation)
+
+        // filter repeating recordings datetime to avoid inserting duplicate of
+        // recordings data: durationMinutes and detectionMinutes
+        const recordingData = filterRepeatingDetectionMinutes(filteredArbimonDetectionsByValidation)
+
+        const newDetectionMinutes = getDetectionMinutes(recordingData.detectionMinutes)
+        const newDurationMinutes = recordingData.durationMinutes / 60
 
         itemsToInsertOrUpsert.push({
           timePrecisionHourLocal,
@@ -92,22 +115,27 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
           locationSiteId: site?.id ?? -1,
           taxonSpeciesId: taxonSpeciesId ?? -1,
           taxonClassId: biodiversitySpecies.find(species => species.idArbimon === dts[0].speciesId)?.taxonClassId ?? -1,
-          count: filteredArbimonDetectionsByValidation.length,
-          durationMinutes: 60, // TODO: remove
-          detectionMinutes: newDetectionMinutes
+          count: filteredArbimonDetectionsByValidation.length, // 1 - count of detection in the group
+          durationMinutes: newDurationMinutes, // 3 - duration of recordings datetime minutes, related to this group by site/species/date/hour
+          detectionMinutes: newDetectionMinutes // '10,25,55' - array of recordings datetime minutes (values), related to this group by site/species/date/hour
         })
       }
     } else if (biodiversityDetection?.detectionMinutes) {
       // detections to upsert
       const count = biodiversityDetection.count
       const detectionMinutes = biodiversityDetection.detectionMinutes?.split(',')
+      const durationMinutes = biodiversityDetection.durationMinutes
       const detectionCountMinutes = {
         count,
-        detectionMinutes
+        detectionMinutes,
+        durationMinutes
       }
       dts.forEach(dt => {
         const dtMinutes = dayjs(dt.datetime).minute().toString()
+
+        // filter repeating recordings detectionMinutes to avoid inserting duplicate of it
         const existing = detectionCountMinutes?.detectionMinutes.includes(dtMinutes)
+
         // If new detection exists and validated -> do nothing
         // If new detection does not exist and not validated -> do nothing
         // If new detection exists and not validated -> remove it
@@ -118,10 +146,12 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
           detectionCountMinutes.count = detectionCountMinutes.count - 1
           const index = detectionCountMinutes.detectionMinutes.findIndex(min => min === dtMinutes)
           detectionCountMinutes.detectionMinutes.splice(index, 1)
+          detectionCountMinutes.durationMinutes = detectionCountMinutes.durationMinutes - dt.recordingDuration / 60
         }
         if (!existing && !isNotValidated(dt)) {
           detectionCountMinutes.count = detectionCountMinutes.count + 1
           detectionCountMinutes.detectionMinutes.push(dtMinutes)
+          detectionCountMinutes.durationMinutes = detectionCountMinutes.durationMinutes + (dt.recordingDuration / 60)
         }
       })
 
@@ -131,7 +161,7 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
         taxonSpeciesId: biodiversityDetection.taxonSpeciesId,
         locationProjectId: biodiversityDetection.locationProjectId,
         taxonClassId: biodiversityDetection.taxonClassId,
-        durationMinutes: 60, // TODO: remove
+        durationMinutes: detectionCountMinutes.durationMinutes,
         count: detectionCountMinutes.count,
         detectionMinutes: detectionCountMinutes.detectionMinutes.join(',')
       }
