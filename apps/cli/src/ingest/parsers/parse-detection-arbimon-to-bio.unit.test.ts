@@ -9,6 +9,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
     date: '2020-12-06',
     hour: '10',
     siteId: 88529,
+    recordingDuration: 90.24,
     speciesId: 3842,
     present: 1,
     presentReview: 2,

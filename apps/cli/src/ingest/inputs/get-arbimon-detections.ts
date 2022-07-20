@@ -12,6 +12,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
       date(r.datetime) date,
       ${isMysqlSQL ? 'hour(r.datetime)' : "strftime('%H', r.datetime)"} hour,
       r.site_id siteId,
+      r.duration recordingDuration,
       rv.species_id speciesId,
       rv.present,
       rv.present_review presentReview,
