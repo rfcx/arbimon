@@ -52,7 +52,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
     await arbimonSequelize.query('DELETE FROM recording_validations')
   })
 
-  test.todo('can get oldest recording validations', async () => {
+  test('can get oldest recording validations', async () => {
     // Arrange
     const IDS_DETECTION = [2391041, 2391042]
 
