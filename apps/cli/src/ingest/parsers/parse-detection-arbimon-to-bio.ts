@@ -14,7 +14,7 @@ const DetectionArbimonSchema = z.object({
   idArbimon: z.number(),
   datetime: z.string(), // recording datetime
   date: z.string(),
-  hour: z.string(),
+  hour: z.number(),
   siteId: z.number(),
   recordingDuration: z.number(),
   speciesId: z.number(),
@@ -83,7 +83,7 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
 
   // Group new selected arbimon detections
   for (const dts of arbimonDetectionGroupByDateHourSiteSpecies) {
-    const timePrecisionHourLocal = new Date(new Date(dts[0].date).getTime() + Number(dts[0].hour) * 60 * 60 * 1000)
+    const timePrecisionHourLocal = new Date(new Date(dts[0].date).getTime() + dts[0].hour * 60 * 60 * 1000)
     const locationSiteId = biodiversitySites.find(site => site.idArbimon === dts[0].siteId)?.id
     const taxonSpeciesId = biodiversitySpecies.find(species => species.idArbimon === dts[0].speciesId)?.id
     // Find existing detections in the bio db

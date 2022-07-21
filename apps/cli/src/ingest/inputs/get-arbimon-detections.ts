@@ -2,6 +2,20 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { SyncQueryParams } from './sync-query-params'
 
+export interface DetectionArbimonQuery {
+  idArbimon: number
+  datetime: Date
+  date: Date
+  hour: number
+  siteId: number
+  recordingDuration: number
+  speciesId: number
+  present: number | null
+  presentReview: number
+  presentAed: number
+  updatedAt: number
+}
+
 export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   const isMysqlSQL = sequelize.getDialect() === 'mysql'
 
@@ -26,7 +40,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
   ;
   `
 
-  return await sequelize.query(sql, {
+  const results = await sequelize.query<DetectionArbimonQuery>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -35,4 +49,10 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
       syncBatchLimit
     }
    })
+
+  return results.map(row => ({
+    ...row,
+    datetime: sequelize.getDialect() === 'mysql' ? row.datetime.toISOString() : row.datetime,
+    updatedAt: sequelize.getDialect() === 'mysql' ? row.date.toISOString() : row.date
+  }))
 }
