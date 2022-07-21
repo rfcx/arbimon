@@ -39,19 +39,15 @@ beforeAll(async () => {
       duration, samples, file_size, bit_rate, sample_encoding, upload_time, meta, datetime_utc
     )
     VALUES
-      (1001, 88526, 'rfcx_1/site_1/2022/07/m1e1-2022-07-06_07-50.wav', '2022-07-06 07:30:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06 14:00:00', NULL, NULL),
-      (1002, 88526, 'rfcx_1/site_1/2022/07/m1e1-2022-07-06_08-50.wav', '2022-07-06 07:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06 15:00:00', NULL, NULL),
-      (1003, 88527, 'rfcx_1/site_2/2022/07/m1e1-2022-07-06_07-50.wav', '2022-07-06 07:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06 16:00:00', NULL, NULL),
-      (1004, 88528, 'rfcx_2/site_3/2022/07/m1e1-2022-07-06_08-30.wav', '2022-07-06 08:30:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06 16:00:00', NULL, NULL),
-      (1005, 88528, 'rfcx_2/site_3/2022/07/m1e1-2022-07-06_09-50.wav', '2022-07-06 09:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06 17:00:00', NULL, NULL),
-      (1006, 88528, 'rfcx_2/site_3/2022/07/m1e1-2022-07-06_10-50.wav', '2022-07-06 10:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06 17:00:00', NULL, NULL)
+      (1001, 88526, 'rfcx_1/site_1/2022/07/m1e1-2022-07-06_07-50.wav', '2022-07-06 07:30:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06T14:00:00.000Z', NULL, NULL),
+      (1002, 88526, 'rfcx_1/site_1/2022/07/m1e1-2022-07-06_08-50.wav', '2022-07-06 07:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06T15:00:00.000Z', NULL, NULL),
+      (1003, 88527, 'rfcx_1/site_2/2022/07/m1e1-2022-07-06_07-50.wav', '2022-07-06 07:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06T16:00:00.000Z', NULL, NULL),
+      (1004, 88528, 'rfcx_2/site_3/2022/07/m1e1-2022-07-06_08-30.wav', '2022-07-06 08:30:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06T16:00:00.000Z', NULL, NULL),
+      (1005, 88528, 'rfcx_2/site_3/2022/07/m1e1-2022-07-06_09-50.wav', '2022-07-06 09:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06T17:00:00.000Z', NULL, NULL),
+      (1006, 88528, 'rfcx_2/site_3/2022/07/m1e1-2022-07-06_10-50.wav', '2022-07-06 10:50:00', 'ChinosMic', 'MotoG', '1.0.5b', 44100, 16, 60.25, 2657025, 5314094, '706k', '16-bit Signed Integer PCM', '2022-07-06T17:00:00.000Z', NULL, NULL)
     ;
   `)
 })
-
-const getMinutesFromSeconds = (second: number): number => {
-  return second / 60
-}
 
 describe('ingest > input > getArbimonRecordings', () => {
   test('includes expected props (& no more)', async () => {
@@ -61,7 +57,8 @@ describe('ingest > input > getArbimonRecordings', () => {
       syncUntilId: '0',
       syncBatchLimit: 1
     }
-    const expectedProps = ['projectIdArbimon', 'siteIdArbimon', 'timePrecisionHourLocal', 'totalDurationInMinutes', 'recordedMinutes', 'firstRecordingIdArbimon', 'lastRecordingIdArbimon', 'lastUploaded']
+
+    const expectedProps = ['projectIdArbimon', 'siteIdArbimon', 'datetime', 'duration', 'idArbimon', 'updatedAt']
 
     // Act
     const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
@@ -70,7 +67,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const recording = actual[0]
     expect(recording).toBeDefined()
     expectedProps.forEach(prop => expect(recording).toHaveProperty(prop))
-    expect(Object.keys(recording).length).toBe(expectedProps.length)
+    expect(Object.keys(recording as any).length).toBe(expectedProps.length)
   })
 
   test('can get first batch of recordings', async () => {
@@ -81,38 +78,26 @@ describe('ingest > input > getArbimonRecordings', () => {
       syncBatchLimit: 2
     }
 
+    const expectIds = [1001, 1002]
+
     // Act
     const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
 
-    expect(actual[0].projectIdArbimon).toBe(1920)
-    expect(actual[0].siteIdArbimon).toBe(88526)
-    expect(actual[0].timePrecisionHourLocal).toBe('2022-07-06 07:00:00')
-    expect(actual[0].totalDurationInMinutes).toBe(getMinutesFromSeconds(120.5))
-    expect(actual[0].recordedMinutes).toBe('30,50')
-    expect(actual[0].firstRecordingIdArbimon).toBe(1001)
-    expect(actual[0].lastRecordingIdArbimon).toBe(1002)
-    expect(actual[0].lastUploaded).toBe('2022-07-06 15:00:00')
-
-    expect(actual[1].projectIdArbimon).toBe(1920)
-    expect(actual[1].siteIdArbimon).toBe(88527)
-    expect(actual[1].timePrecisionHourLocal).toBe('2022-07-06 07:00:00')
-    expect(actual[1].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
-    expect(actual[1].recordedMinutes).toBe('50')
-    expect(actual[1].firstRecordingIdArbimon).toBe(1003)
-    expect(actual[1].lastRecordingIdArbimon).toBe(1003)
-    expect(actual[1].lastUploaded).toBe('2022-07-06 16:00:00')
+    expectIds.forEach(id => expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy())
   })
 
   test('can get next batch of recordings', async () => {
     // Arrange
     const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc('2022-07-06 16:00:00').toDate(),
-      syncUntilId: '1003',
+      syncUntilDate: dayjs.utc('2022-07-06 15:00:00').toDate(),
+      syncUntilId: '1002',
       syncBatchLimit: 2
     }
+
+    const expectIds = [1003, 1004]
 
     // Act
     const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
@@ -120,26 +105,10 @@ describe('ingest > input > getArbimonRecordings', () => {
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
 
-    expect(actual[0].projectIdArbimon).toBe(1921)
-    expect(actual[0].siteIdArbimon).toBe(88528)
-    expect(actual[0].timePrecisionHourLocal).toBe('2022-07-06 08:00:00')
-    expect(actual[0].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
-    expect(actual[0].recordedMinutes).toBe('30')
-    expect(actual[0].firstRecordingIdArbimon).toBe(1004)
-    expect(actual[0].lastRecordingIdArbimon).toBe(1004)
-    expect(actual[0].lastUploaded).toBe('2022-07-06 16:00:00')
-
-    expect(actual[1].projectIdArbimon).toBe(1921)
-    expect(actual[1].siteIdArbimon).toBe(88528)
-    expect(actual[1].timePrecisionHourLocal).toBe('2022-07-06 09:00:00')
-    expect(actual[1].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
-    expect(actual[1].recordedMinutes).toBe('50')
-    expect(actual[1].firstRecordingIdArbimon).toBe(1005)
-    expect(actual[1].lastRecordingIdArbimon).toBe(1005)
-    expect(actual[1].lastUploaded).toBe('2022-07-06 17:00:00')
+    expectIds.forEach(id => expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy())
   })
 
-  test('can get last incomplete batch of projects', async () => {
+  test('can get last incomplete batch of recordings', async () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-07-06 17:00:00').toDate(),
@@ -153,17 +122,10 @@ describe('ingest > input > getArbimonRecordings', () => {
     // Assert
     expect(actual.length).toBe(1)
 
-    expect(actual[0].projectIdArbimon).toBe(1921)
-    expect(actual[0].siteIdArbimon).toBe(88528)
-    expect(actual[0].timePrecisionHourLocal).toBe('2022-07-06 10:00:00')
-    expect(actual[0].totalDurationInMinutes).toBe(getMinutesFromSeconds(60.25))
-    expect(actual[0].recordedMinutes).toBe('50')
-    expect(actual[0].firstRecordingIdArbimon).toBe(1006)
-    expect(actual[0].lastRecordingIdArbimon).toBe(1006)
-    expect(actual[0].lastUploaded).toBe('2022-07-06 17:00:00')
+    expect((actual[0] as any).idArbimon).toBe(1006)
   })
 
-  test('can gets no recording by site hour when nothing left to sync', async () => {
+  test('can gets no recording when nothing left to sync', async () => {
     // Arrange
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-07-06 17:00:00').toDate(),
@@ -178,9 +140,9 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual.length).toBe(0)
   })
 
-  test('does not miss projects with the same upload_tine as previously synced', async () => {
+  test('does not miss recordings with the same upload_time as previously synced', async () => {
     // Arrange
-    const uploadTime = '2022-07-06 17:00:00'
+    const uploadTime = '2022-07-06T17:00:00.000Z'
 
     const insertNewRowSQLStatement = `
       INSERT INTO recordings (
@@ -204,7 +166,6 @@ describe('ingest > input > getArbimonRecordings', () => {
 
     // Arrange
     expect(actual.length).toBe(1)
-    expect(actual[0].firstRecordingIdArbimon).toBe(1007)
-    expect(actual[0].lastRecordingIdArbimon).toBe(1007)
+    expect((actual[0] as any).idArbimon).toBe(1007)
   })
 })
