@@ -4,6 +4,7 @@ import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 import { Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
+import { isValidDate } from '~/validation/query-validation'
 import { getDetectRecording } from './detect-recording-bll'
 
 export const detectRecordingHandler: Handler<DetectRecordingResponse, DetectRecordingParams, DetectRecordingQueryParams> = async (req) => {
@@ -14,7 +15,10 @@ export const detectRecordingHandler: Handler<DetectRecordingResponse, DetectReco
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const { queryHours } = req.query
+  const { dateStartLocal, dateEndLocal, queryHours } = req.query
+  if (!isValidDate(dateStartLocal)) throw BioInvalidQueryParamError({ dateStartLocal })
+  if (!isValidDate(dateEndLocal)) throw BioInvalidQueryParamError({ dateEndLocal })
+
   if (queryHours && !isValidQueryHours(queryHours)) throw BioInvalidQueryParamError({ queryHours })
 
   // Query & Response
