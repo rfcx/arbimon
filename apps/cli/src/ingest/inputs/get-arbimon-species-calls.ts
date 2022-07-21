@@ -43,6 +43,6 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
   return results.map(row => ({
     ...row,
     updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt,
-    callRecordedAt: sequelize.getDialect() === 'mysql' ? row.callRecordedAt.toISOString() : row.updatedAt
+    callRecordedAt: sequelize.getDialect() === 'mysql' ? row.callRecordedAt.toISOString() : row.callRecordedAt
   }))
 }

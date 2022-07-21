@@ -2,54 +2,30 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { SyncQueryParams } from './sync-query-params'
 
-export interface ArbimonRecordingBySiteHourQuery {
+export interface ArbimonRecordingQuery {
   projectIdArbimon: number
   siteIdArbimon: number
-  timePrecisionHourLocal: Date
-  totalDurationInMinutes: number
-  recordedMinutes: string // string of number separate by comma (,) e.g. `5,10`
-  firstRecordingIdArbimon: number
-  lastRecordingIdArbimon: number
-  lastUploaded: Date
+  datetime: Date
+  duration: number
+  idArbimon: number
+  updatedAt: Date
 }
 
-export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<ArbimonRecordingBySiteHourQuery[]> => {
-  const mysqlSQL = `
-    SELECT  s.project_id projectIdArbimon,
-            r.site_id siteIdArbimon,
-            DATE_FORMAT(r.datetime, '%Y-%m-%d %H:00:00') timePrecisionHourLocal,
-            SUM(r.duration) / 60 totalDurationInMinutes,
-            GROUP_CONCAT(DISTINCT MINUTE(r.datetime) SEPARATOR ',') recordedMinutes,
-            MIN(r.recording_id) firstRecordingIdArbimon,
-            MAX(r.recording_id) lastRecordingIdArbimon,
-            MAX(r.upload_time) lastUploaded
-    FROM recordings r 
-    JOIN sites s ON r.site_id = s.site_id
-    WHERE r.upload_time > $syncUntilDate OR (r.upload_time <= $syncUntilDate AND r.recording_id > $syncUntilId)
-    GROUP BY projectIdArbimon, siteIdArbimon, timePrecisionHourLocal
-    ORDER BY r.upload_time ASC
-    LIMIT $syncBatchLimit
-  `
-
-  const sqliteSQL = `
-    SELECT  s.project_id projectIdArbimon,
-            r.site_id siteIdArbimon,
-            strftime('%Y-%m-%d %H:00:00', r.datetime) timePrecisionHourLocal,
-            SUM(r.duration) / 60 totalDurationInMinutes,
-            GROUP_CONCAT(DISTINCT strftime('%M', r.datetime)) recordedMinutes,
-            MIN(r.recording_id) firstRecordingIdArbimon,
-            MAX(r.recording_id) lastRecordingIdArbimon,
-            MAX(r.upload_time) lastUploaded
+export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+  const sql = `SELECT  s.project_id projectIdArbimon,
+      r.site_id siteIdArbimon,
+      r.datetime datetime,
+      r.duration duration,
+      r.recording_id idArbimon,
+      r.upload_time updatedAt
     FROM recordings r
     JOIN sites s ON r.site_id = s.site_id
-    WHERE r.upload_time > $syncUntilDate OR (r.upload_time <= $syncUntilDate AND r.recording_id > $syncUntilId)
-    GROUP BY projectIdArbimon, siteIdArbimon, timePrecisionHourLocal
-    ORDER BY r.upload_time ASC
-    LIMIT $syncBatchLimit
+    WHERE r.upload_time > $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id > $syncUntilId)
+    ORDER BY r.upload_time, r.recording_id
+    LIMIT $syncBatchLimit;
   `
 
-  const sql = sequelize.getDialect() === 'mysql' ? mysqlSQL : sqliteSQL
-  return await sequelize.query(sql, {
+  const results = await sequelize.query<ArbimonRecordingQuery>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -58,4 +34,10 @@ export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { sync
       syncBatchLimit
     }
   })
+
+  return results.map(row => ({
+    ...row,
+    datetime: sequelize.getDialect() === 'mysql' ? row.datetime.toISOString() : row.datetime,
+    updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt
+  }))
 }
