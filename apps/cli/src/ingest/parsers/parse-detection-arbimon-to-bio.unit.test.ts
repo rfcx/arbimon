@@ -6,8 +6,6 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
   const VALID_DETECTION = {
     idArbimon: 2391043,
     datetime: '2020-12-06 10:06:19',
-    date: '2020-12-06',
-    hour: 10,
     siteId: 88529,
     recordingDuration: 90.24,
     speciesId: 3842,
@@ -32,8 +30,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
       parseDetectionArbimonToBio({ ...VALID_DETECTION, siteId: '88529' }),
       parseDetectionArbimonToBio({ ...VALID_DETECTION, presentReview: null }),
       parseDetectionArbimonToBio({ ...VALID_DETECTION, speciesId: '12345' }),
-      parseDetectionArbimonToBio({ ...VALID_DETECTION, hour: '12' }),
-      parseDetectionArbimonToBio({ ...VALID_DETECTION, date: new Date('2022-03-22') })
+      parseDetectionArbimonToBio({ ...VALID_DETECTION, datetime: new Date('2020-12-06 10:06:19') })
     ]
     // Assert
     res.forEach(r => expect(r.success).toBe(false))
@@ -41,7 +38,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
 
   test('fails if required props are missing', async () => {
     // Arrange
-    const { date, ...missingDate } = VALID_DETECTION
+    const { datetime, ...missingDate } = VALID_DETECTION
     const { idArbimon, ...missingIdArbimon } = VALID_DETECTION
     const { presentReview, ...missingPresentReview } = VALID_DETECTION
 
@@ -58,10 +55,10 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
 
   test('fails if non-nullish props are nullish', async () => {
     // Arrange
-    const nullDate = { ...VALID_DETECTION, date: null }
+    const nullDate = { ...VALID_DETECTION, datetime: null }
     const nullIdArbimon = { ...VALID_DETECTION, idArbimon: null }
 
-    const undefinedDate = { ...VALID_DETECTION, date: undefined }
+    const undefinedDate = { ...VALID_DETECTION, datetime: undefined }
     const undefinedIdArbimon = { ...VALID_DETECTION, idArbimon: undefined }
 
     // Act
