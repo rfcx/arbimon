@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { getArbimonRecordingBySiteHour } from './get-arbimon-recording-by-site-hour'
+import { getArbimonRecording } from './get-arbimon-recording'
 import { SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -61,7 +61,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const expectedProps = ['projectIdArbimon', 'siteIdArbimon', 'datetime', 'duration', 'idArbimon', 'updatedAt']
 
     // Act
-    const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
+    const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
     const recording = actual[0]
@@ -81,7 +81,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const expectIds = [1001, 1002]
 
     // Act
-    const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
+    const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
@@ -100,7 +100,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const expectIds = [1003, 1004]
 
     // Act
-    const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
+    const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
@@ -117,7 +117,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     }
 
     // Act
-    const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
+    const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(1)
@@ -134,7 +134,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     }
 
     // Act
-    const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
+    const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
     expect(actual.length).toBe(0)
@@ -162,7 +162,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     }
 
     // Act
-    const actual = await getArbimonRecordingBySiteHour(arbimonSequelize, params)
+    const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Arrange
     expect(actual.length).toBe(1)

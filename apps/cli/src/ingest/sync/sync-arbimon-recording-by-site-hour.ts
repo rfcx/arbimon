@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { getArbimonRecordingBySiteHour } from '../inputs/get-arbimon-recording-by-site-hour'
+import { getArbimonRecording } from '../inputs/get-arbimon-recording'
 import { writeRecordingBySiteHourToBio } from '../outputs/recording-by-site-hour'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
@@ -24,7 +24,7 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   // =========== Input ==========
-  const arbimonRecordingBySiteHour = await getArbimonRecordingBySiteHour(arbimonSequelize, syncStatus)
+  const arbimonRecordingBySiteHour = await getArbimonRecording(arbimonSequelize, syncStatus)
   console.info('- syncArbimonRecordingBySiteHourBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
   console.info('- syncArbimonRecordingBySiteHourBatch: found %d recordings', arbimonRecordingBySiteHour.length)
   if (arbimonRecordingBySiteHour.length === 0) return syncStatus

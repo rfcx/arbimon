@@ -11,7 +11,7 @@ export interface ArbimonRecordingQuery {
   updatedAt: Date
 }
 
-export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   const sql = `SELECT  s.project_id projectIdArbimon,
       r.site_id siteIdArbimon,
       r.datetime datetime,
@@ -25,11 +25,13 @@ export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { sync
     LIMIT $syncBatchLimit;
   `
 
+  const isMySql = sequelize.getDialect() === 'mysql'
+
   const results = await sequelize.query<ArbimonRecordingQuery>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
       syncBatchLimit
     }
@@ -37,7 +39,7 @@ export const getArbimonRecordingBySiteHour = async (sequelize: Sequelize, { sync
 
   return results.map(row => ({
     ...row,
-    datetime: sequelize.getDialect() === 'mysql' ? row.datetime.toISOString() : row.datetime,
-    updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
   }))
 }
