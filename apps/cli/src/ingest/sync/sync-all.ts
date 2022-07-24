@@ -29,7 +29,7 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       return
     }
 
-    console.info('Project level data:')
+    console.info('\nProject level data:\n')
     const isSiteSyncedUpToDate = await syncArbimonSites(arbimonSequelize, biodiversitySequelize)
     console.info('> Sites: up to date =', isSiteSyncedUpToDate)
 
@@ -45,15 +45,10 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       console.info('- wait to sync more taxon species calls in the next round...')
       return
     }
-    // TODO: sync other tables
-    // recordings
-    // detections
-    // ...
 
     const isRecordingBySiteHourUpToDate = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
     console.info('> Recordings: up to date =', isRecordingBySiteHourUpToDate)
 
-    // wait til recording sync is done before sync project level data
     if (!isRecordingBySiteHourUpToDate) {
       console.info('- wait to sync more recordings in the next round...')
       return
