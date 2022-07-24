@@ -13,18 +13,16 @@ export interface DetectionArbimonQuery {
   present: number | null
   presentReview: number
   presentAed: number
-  updatedAt: number
+  updatedAt: Date
 }
 
 export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
-  const isMysqlSQL = sequelize.getDialect() === 'mysql'
+  const isMySql = sequelize.getDialect() === 'mysql'
 
   const sql = `
     SELECT
       rv.recording_validation_id idArbimon,
       r.datetime,
-      date(r.datetime) date,
-      ${isMysqlSQL ? 'hour(r.datetime)' : "strftime('%H', r.datetime)"} hour,
       r.site_id siteId,
       r.duration recordingDuration,
       rv.species_id speciesId,
@@ -44,15 +42,15 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
       syncBatchLimit
     }
-   })
+  })
 
   return results.map(row => ({
     ...row,
-    datetime: sequelize.getDialect() === 'mysql' ? row.datetime.toISOString() : row.datetime,
-    updatedAt: sequelize.getDialect() === 'mysql' ? row.date.toISOString() : row.date
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
   }))
 }

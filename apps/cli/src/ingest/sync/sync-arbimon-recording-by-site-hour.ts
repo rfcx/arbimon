@@ -17,7 +17,7 @@ import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Recording.id,
-  syncBatchLimit: 1000
+  syncBatchLimit: 10
 }
 
 export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
@@ -50,6 +50,7 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
     // sync error
     await Promise.all(inputsAndParsingErrors.map(async e => {
       const error = {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         externalId: `${e[0].lastUploaded.toString()}|${e[0].siteIdArbimon}|${e[0].firstRecordingIdArbimon}|${e[0].lastRecordingIdArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
         syncSourceId: updatedSyncStatus.syncSourceId,

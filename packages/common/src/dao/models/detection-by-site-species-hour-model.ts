@@ -12,7 +12,7 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
   {
     // PK
     timePrecisionHourLocal: { // '2021-03-18T11:00:00.000Z' (as date)
-      type: DataTypes.DATE(3),
+      type: DataTypes.DATE,
       primaryKey: true
     },
     locationSiteId: { // 123
@@ -32,7 +32,7 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
     count: DataTypes.INTEGER, // 1
     durationMinutes: DataTypes.INTEGER,
     detectionMinutes: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
       defaultValue: null
     }
   },

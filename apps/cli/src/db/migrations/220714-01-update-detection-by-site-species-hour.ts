@@ -8,7 +8,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     TABLE_NAME,
     'detection_minutes',
     {
-      type: DataTypes.STRING(255),
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
       defaultValue: null
     }
   )

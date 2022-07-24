@@ -160,8 +160,6 @@ describe('ingest > inputs > getArbimonDetections', async () => {
     const EXPECTED_PROPS = [
       'idArbimon',
       'datetime',
-      'date',
-      'hour',
       'siteId',
       'recordingDuration',
       'speciesId',
