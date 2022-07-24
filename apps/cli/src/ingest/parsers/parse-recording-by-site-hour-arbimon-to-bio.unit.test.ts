@@ -3,20 +3,18 @@ import { describe, expect, test } from 'vitest'
 import { parseRecordingBySiteHourToBio } from './parse-recording-by-site-hour-arbimon-to-bio'
 
 describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
-  const VALID_RECORDING_BY_SITE_HOUR = {
+  const VALID_RECORDING = {
     projectIdArbimon: 1,
     siteIdArbimon: 123,
-    timePrecisionHourLocal: '2022-07-06 07:00:00',
-    totalDurationInMinutes: 60.25,
-    recordedMinutes: '5,10',
-    firstRecordingIdArbimon: 222,
-    lastRecordingIdArbimon: 223,
-    lastUploaded: '2022-07-06 16:00:00'
+    datetime: '2022-07-06 07:00:00',
+    duration: 60.25,
+    idArbimon: 1001,
+    updatedAt: '2022-07-06 16:00:00'
   }
 
   test('succeeds for valid data', async () => {
     // Act
-    const actual = parseRecordingBySiteHourToBio(VALID_RECORDING_BY_SITE_HOUR)
+    const actual = parseRecordingBySiteHourToBio(VALID_RECORDING)
 
     // Assert
     expect(actual.success).toBe(true)
@@ -24,25 +22,21 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
 
   test('fails if required props are missing', async () => {
     // Arrange
-    const { projectIdArbimon, ...missingProjectIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
-    const { siteIdArbimon, ...missingSiteIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
-    const { timePrecisionHourLocal, ...missingTimePrecisionHourLocal } = VALID_RECORDING_BY_SITE_HOUR
-    const { totalDurationInMinutes, ...missingTotalDurationInMinutes } = VALID_RECORDING_BY_SITE_HOUR
-    const { recordedMinutes, ...missingRecordedMinutes } = VALID_RECORDING_BY_SITE_HOUR
-    const { firstRecordingIdArbimon, ...missingFirstRecordingIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
-    const { lastRecordingIdArbimon, ...missingLastRecordingIdArbimon } = VALID_RECORDING_BY_SITE_HOUR
-    const { lastUploaded, ...missingLastUploaded } = VALID_RECORDING_BY_SITE_HOUR
+    const { projectIdArbimon, ...missingProjectIdArbimon } = VALID_RECORDING
+    const { siteIdArbimon, ...missingSiteIdArbimon } = VALID_RECORDING
+    const { datetime, ...missingDatetime } = VALID_RECORDING
+    const { duration, ...missingDuration } = VALID_RECORDING
+    const { idArbimon, ...missingRecordingId } = VALID_RECORDING
+    const { updatedAt, ...missingUploadTime } = VALID_RECORDING
 
     // Act
     const actualMissing = [
       parseRecordingBySiteHourToBio(missingProjectIdArbimon),
       parseRecordingBySiteHourToBio(missingSiteIdArbimon),
-      parseRecordingBySiteHourToBio(missingTimePrecisionHourLocal),
-      parseRecordingBySiteHourToBio(missingTotalDurationInMinutes),
-      parseRecordingBySiteHourToBio(missingRecordedMinutes),
-      parseRecordingBySiteHourToBio(missingFirstRecordingIdArbimon),
-      parseRecordingBySiteHourToBio(missingLastRecordingIdArbimon),
-      parseRecordingBySiteHourToBio(missingLastUploaded)
+      parseRecordingBySiteHourToBio(missingDatetime),
+      parseRecordingBySiteHourToBio(missingDuration),
+      parseRecordingBySiteHourToBio(missingRecordingId),
+      parseRecordingBySiteHourToBio(missingUploadTime)
     ]
 
     // Assert
@@ -51,42 +45,34 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
 
   test('fails if non-nullish props are nullish', async () => {
     // Arrange
-    const nullProjectIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, projectIdArbimon: null }
-    const nullSiteIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, siteIdArbimon: null }
-    const nullTimePrecisionHourLocal = { ...VALID_RECORDING_BY_SITE_HOUR, timePrecisionHourLocal: null }
-    const nullTotalDurationInMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, totalDurationInMinutes: null }
-    const nullRecordedMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, recordedMinutes: null }
-    const nullFirstRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, firstRecordingIdArbimon: null }
-    const nullLastRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, lastRecordingIdArbimon: null }
-    const nullLastUploaded = { ...VALID_RECORDING_BY_SITE_HOUR, lastUploaded: null }
+    const nullProjectIdArbimon = { ...VALID_RECORDING, projectIdArbimon: null }
+    const nullSiteIdArbimon = { ...VALID_RECORDING, siteIdArbimon: null }
+    const nullDatetime = { ...VALID_RECORDING, datetime: null }
+    const nullDuration = { ...VALID_RECORDING, duration: null }
+    const nullRecordingId = { ...VALID_RECORDING, idArbimon: null }
+    const nullUploadTime = { ...VALID_RECORDING, updatedAt: null }
 
-    const undefinedProjectIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, projectIdArbimon: undefined }
-    const undefinedSiteIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, siteIdArbimon: undefined }
-    const undefinedTimePrecisionHourLocal = { ...VALID_RECORDING_BY_SITE_HOUR, timePrecisionHourLocal: undefined }
-    const undefinedTotalDurationInMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, totalDurationInMinutes: undefined }
-    const undefinedRecordedMinutes = { ...VALID_RECORDING_BY_SITE_HOUR, recordedMinutes: undefined }
-    const undefinedFirstRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, firstRecordingIdArbimon: undefined }
-    const undefinedLastRecordingIdArbimon = { ...VALID_RECORDING_BY_SITE_HOUR, lastRecordingIdArbimon: undefined }
-    const undefinedLastUploaded = { ...VALID_RECORDING_BY_SITE_HOUR, lastUploaded: undefined }
+    const undefinedProjectIdArbimon = { ...VALID_RECORDING, projectIdArbimon: undefined }
+    const undefinedSiteIdArbimon = { ...VALID_RECORDING, siteIdArbimon: undefined }
+    const undefinedDatetime = { ...VALID_RECORDING, datetime: undefined }
+    const undefinedDuration = { ...VALID_RECORDING, duration: undefined }
+    const undefinedRecordingId = { ...VALID_RECORDING, idArbimon: undefined }
+    const undefinedUploadTime = { ...VALID_RECORDING, updatedAt: undefined }
 
     // Act
     const actualMissing = [
       parseRecordingBySiteHourToBio(nullProjectIdArbimon),
       parseRecordingBySiteHourToBio(nullSiteIdArbimon),
-      parseRecordingBySiteHourToBio(nullTimePrecisionHourLocal),
-      parseRecordingBySiteHourToBio(nullTotalDurationInMinutes),
-      parseRecordingBySiteHourToBio(nullRecordedMinutes),
-      parseRecordingBySiteHourToBio(nullFirstRecordingIdArbimon),
-      parseRecordingBySiteHourToBio(nullLastRecordingIdArbimon),
-      parseRecordingBySiteHourToBio(nullLastUploaded),
+      parseRecordingBySiteHourToBio(nullDatetime),
+      parseRecordingBySiteHourToBio(nullDuration),
+      parseRecordingBySiteHourToBio(nullRecordingId),
+      parseRecordingBySiteHourToBio(nullUploadTime),
       parseRecordingBySiteHourToBio(undefinedProjectIdArbimon),
       parseRecordingBySiteHourToBio(undefinedSiteIdArbimon),
-      parseRecordingBySiteHourToBio(undefinedTimePrecisionHourLocal),
-      parseRecordingBySiteHourToBio(undefinedTotalDurationInMinutes),
-      parseRecordingBySiteHourToBio(undefinedRecordedMinutes),
-      parseRecordingBySiteHourToBio(undefinedFirstRecordingIdArbimon),
-      parseRecordingBySiteHourToBio(undefinedLastRecordingIdArbimon),
-      parseRecordingBySiteHourToBio(undefinedLastUploaded)
+      parseRecordingBySiteHourToBio(undefinedDatetime),
+      parseRecordingBySiteHourToBio(undefinedDuration),
+      parseRecordingBySiteHourToBio(undefinedRecordingId),
+      parseRecordingBySiteHourToBio(undefinedUploadTime)
     ]
 
     // Assert
