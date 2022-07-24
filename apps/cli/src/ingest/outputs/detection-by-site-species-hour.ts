@@ -1,12 +1,11 @@
 import { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
-import { DetectionBySiteSpeciesHour, SyncError } from '@rfcx-bio/common/dao/types'
+import { SyncError } from '@rfcx-bio/common/dao/types'
 
-import { DetectionArbimon, transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
+import { DetectionArbimon, DetectionBySiteSpeciesHourBio, transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
 
-const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHour[], detectionArbimon: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
+const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHourBio[], detectionArbimon: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const [dtIdx, dt] of detectionsBio.entries()) {
     try {
@@ -23,18 +22,9 @@ const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHour[], detection
   return failedToInsertItems
 }
 
-export const writeDetectionsToBio = async (detections: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[DetectionBySiteSpeciesHour[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
+export const writeDetectionsToBio = async (detections: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[DetectionBySiteSpeciesHourBio[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   const [itemsToInsertOrUpsert, itemsToReset] = await Promise.all(await transformDetectionArbimonToBio(detections, sequelize))
   try {
-    // Insert new or updated items
-    if (itemsToInsertOrUpsert.length) {
-      await ModelRepository.getInstance(sequelize)
-        .DetectionBySiteSpeciesHour
-        .bulkCreate(itemsToInsertOrUpsert, {
-          updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR,
-          transaction
-        })
-    }
     // Reset not validated items
     if (itemsToReset.length) {
       for (const d of itemsToReset) {
@@ -52,9 +42,17 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
           console.info(`> ${numberOfDeletedRows} detections reset successfully for time ${d.timePrecisionHourLocal.toISOString()}, site ${d.locationSiteId}, species ${d.taxonSpeciesId}`)
       }
     }
+    // Insert new or updated items
+    if (itemsToInsertOrUpsert.length) {
+      const rows = itemsToInsertOrUpsert.map(group => {
+        return { ...group, detectionMinutes: JSON.stringify([...new Set([...group.detectionMinutes])].sort((a, b) => a - b)).replace('[', '{').replace(']', '}') }
+      })
+      // @ts-expect-error
+      await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, { transaction })
+    }
     return [itemsToInsertOrUpsert, []]
   } catch (batchInsertError) {
-    console.info('⚠️ Batch insert `detections by site species hour` failed... try loop upsert')
+    console.info('⚠️ Batch insert `detections by site species hour` failed... try loop upsert', batchInsertError)
     const failedToInsertItems = await loopUpsert(itemsToInsertOrUpsert, detections, sequelize, transaction)
     return [[], failedToInsertItems]
   }

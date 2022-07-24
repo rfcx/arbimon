@@ -7,7 +7,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
     idArbimon: 2391043,
     datetime: '2020-12-06 10:06:19',
     date: '2020-12-06',
-    hour: '10',
+    hour: 10,
     siteId: 88529,
     recordingDuration: 90.24,
     speciesId: 3842,
@@ -32,7 +32,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
       parseDetectionArbimonToBio({ ...VALID_DETECTION, siteId: '88529' }),
       parseDetectionArbimonToBio({ ...VALID_DETECTION, presentReview: null }),
       parseDetectionArbimonToBio({ ...VALID_DETECTION, speciesId: '12345' }),
-      parseDetectionArbimonToBio({ ...VALID_DETECTION, hour: 12 }),
+      parseDetectionArbimonToBio({ ...VALID_DETECTION, hour: '12' }),
       parseDetectionArbimonToBio({ ...VALID_DETECTION, date: new Date('2022-03-22') })
     ]
     // Assert
