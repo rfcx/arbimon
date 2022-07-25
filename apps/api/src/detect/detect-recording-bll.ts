@@ -17,7 +17,7 @@ export interface DetectRecordingQuery {
   hours?: number[]
 }
 
-const DATE_FORMAT = 'YYYY-MM-DD'
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 
 export const getDetectRecording = async (locationProjectId: number, detectRecordingQueryParams: DetectRecordingQueryParams): Promise<DetectRecordingResponse> => {
   const sequelize = getSequelize()
@@ -30,7 +30,7 @@ export const getDetectRecording = async (locationProjectId: number, detectRecord
 
   const query: DetectRecordingQuery = {
     locationProjectId,
-    dateStartLocal: dayjs(dateStartLocal).startOf('day').format(DATE_FORMAT),
+    dateStartLocal: dayjs(dateStartLocal).utc().startOf('day').format(DATE_FORMAT),
     dateEndLocal: dayjs(dateEndLocal).endOf('day').format(DATE_FORMAT)
   }
 
@@ -43,7 +43,7 @@ export const getDetectRecording = async (locationProjectId: number, detectRecord
   }
 
   const [totalDurationInMinutes] = await Promise.all([
-    getDetectRecordingTotalDurationMinutes(sequelize, query)
+    getDetectRecordingTotalDurationMinutes(models, sequelize, query)
   ])
 
   return {
@@ -52,21 +52,22 @@ export const getDetectRecording = async (locationProjectId: number, detectRecord
 }
 
 export const getHoursFromQueryHours = (queryHour: string): number[] => {
-  const hourGroupString = queryHour.replaceAll(' ', '').split(',')
+  const hourGroupString = queryHour.split(',')
   const hours: number[] = []
   for (const hourString of hourGroupString) {
-    if (!Number.isNaN(hourString)) {
-      hours.push(Number(hourString))
-    } else {
-      const [number1, number2] = hourString.split('-').map(Number)
-      if (number1 < number2) {
+    const hourNumber = Number(hourString)
+    if (!Number.isNaN(hourNumber)) {
+      hours.push(hourNumber)
+      continue
+    }
+
+    const [number1, number2] = hourString.split('-').map(Number)
+      if (number1 <= number2) {
         hours.push(...range(number1, number2 + 1))
       } else {
         hours.push(...range(number1, 24), ...range(0, number2 + 1))
       }
-    }
   }
-
   return hours
 }
 

@@ -67,6 +67,6 @@ export const getSitesByNameQuery = async (models: AllModels, locationProjectId: 
 }
 
 // TODO: Move to somewhere related to project
-export const getProjectById = async (models: AllModels, projectId: number): Promise<Project | undefined> => {
-  return await models.LocationProject.findByPk(projectId) ?? undefined
+export const getProjectById = async (models: AllModels, locationProjectId: number): Promise<Project | undefined> => {
+  return await models.LocationProject.findByPk(locationProjectId) ?? undefined
 }
