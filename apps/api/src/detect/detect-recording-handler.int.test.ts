@@ -222,7 +222,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       const response = await app.inject({
         method: GET,
         url: '/projects/1/detect-recording',
-        query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-17', queryHoyrs: '1-9,11,13,14,16-22' }
+        query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-17', queryHours: '1-9,11,13,14,16-22' }
       })
 
       // Assert
