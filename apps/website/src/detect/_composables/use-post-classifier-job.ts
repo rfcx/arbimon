@@ -5,14 +5,14 @@ import { apiCorePostClassifierJobCreate, ClassifierJobCreateConfiguration, Class
 
 // Convert front params to api params
 export const convertClassifierCreateJobPayload = (jobConfiguration: ClassifierJobCreateConfiguration): ClassifierJobCreateConfigurationParams => {
-  const { classifierId, projectIdCore, queryStreams, queryStart, queryEnd, queryHour } = jobConfiguration
+  const { classifierId, projectIdCore, queryStreams, queryStart, queryEnd, queryHours } = jobConfiguration
   return {
     classifier_id: classifierId,
     project_id: projectIdCore ?? '',
     query_streams: queryStreams ?? undefined,
     query_start: queryStart ?? undefined,
     query_end: queryEnd ?? undefined,
-    query_hours: queryHour ?? undefined
+    query_hours: queryHours ?? undefined
   }
 }
 

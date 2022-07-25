@@ -74,7 +74,13 @@
         <h2 class="mb-4 text-md">
           Job size estimation
         </h2>
-        <span class="text-subtle">1,300 minutes of recordings</span>
+        <span v-if="isLoadingDetectRecording">Loading</span>
+        <span v-else-if="isErrorDetectRecording">Error</span>
+        <span v-else-if="recordingData === undefined">No response</span>
+        <span
+          v-else
+          class="text-subtle"
+        >{{ totalDurationInMinutes }} minutes of recordings</span>
       </li>
     </ol>
     <div class="flex flex-row items-center space-x-4">
@@ -114,27 +120,26 @@ import { AxiosInstance } from 'axios'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
+import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
 import { isDefined } from '@rfcx-bio/utils/predicates'
+import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
 import { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
-import { apiClientCoreKey } from '@/globals'
+import { apiClientBioKey, apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
+import { useDetectRecording } from '../_composables/use-detect-recording'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
-
-// External data
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
-const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Fields
 const job: ClassifierJobCreateConfiguration = reactive({
@@ -143,20 +148,42 @@ const job: ClassifierJobCreateConfiguration = reactive({
   queryStreams: null,
   queryStart: null,
   queryEnd: null,
-  queryHour: null
+  queryHours: null
+})
+
+const recordingQuery: DetectRecordingQueryParams = reactive({
+  dateStartLocal: '',
+  dateEndLocal: '',
+  querySites: '',
+  queryHours: ''
+})
+
+const project = reactive({
+  projectId: '-1'
 })
 
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
   job.projectIdCore = store.selectedProject?.idCore ?? null
+  project.projectId = store.selectedProject?.id.toString() ?? '-1'
   hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
 })
 
 watch(() => store.selectedProject, () => {
   job.projectIdCore = store.selectedProject?.idCore ?? null
+  project.projectId = store.selectedProject?.id.toString() ?? '-1'
   hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
 })
+
+// Internal data
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
+
+// External data
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Current projects
 const projectFilters = computed(() => store.projectFilters)
@@ -176,15 +203,19 @@ const onSelectClassifier = (classifierId: number) => {
 const onSelectQuerySites = (queryStreams: string) => {
   validated.value = false
   job.queryStreams = queryStreams
+  recordingQuery.querySites = queryStreams
 }
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
   validated.value = false
   job.queryStart = dateStartLocalIso
   job.queryEnd = dateEndLocalIso
+  recordingQuery.dateStartLocal = dateStartLocalIso
+  recordingQuery.dateEndLocal = dateEndLocalIso
 }
-const onSelectQueryHours = (queryHour: string) => {
+const onSelectQueryHours = (queryHours: string) => {
   validated.value = false
-  job.queryHour = queryHour
+  job.queryHours = queryHours
+  recordingQuery.queryHours = queryHours
 }
 
 // Validation
@@ -193,9 +224,13 @@ const validated = ref(false)
 const errorProject = computed(() => job.projectIdCore !== null && job.projectIdCore !== '' ? undefined : 'No project selected or project is invalid')
 const errorPermission = computed(() => hasProjectPermission.value ? undefined : 'You do not have permission to create jobs for this project')
 const errorClassifier = computed(() => job.classifierId > 0 ? undefined : 'Please select a classifier')
-const errorHours = computed(() => /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/g.test(job.queryHour ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
+const errorHours = computed(() => isValidQueryHours(job.queryHours ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
 
 const errors = computed(() => validated.value ? [errorProject.value, errorPermission.value, errorClassifier.value, errorHours.value].filter(isDefined) : [])
+
+const totalDurationInMinutes = computed(() => {
+  return recordingData.value?.totalDurationInMinutes ?? 0
+})
 
 // Create job (call API)
 const createJob = async (): Promise<void> => {
@@ -207,7 +242,10 @@ const createJob = async (): Promise<void> => {
 
   // Save
   mutatePostJob(job, {
-    onSuccess: () => router.push({ name: ROUTE_NAMES.cnnJobList })
+    onSuccess: async (response) => {
+      await apiCorePostClassifierJobUpdateStatus(apiClientCore, response.jobId, { minutes_total: totalDurationInMinutes.value })
+      router.push({ name: ROUTE_NAMES.cnnJobList })
+    }
   })
 }
 
