@@ -32,7 +32,7 @@ export const parseRecordingBySiteHourToBio = (recordingBySiteHourArbimon: unknow
   RecordingArbimonSchema.safeParse(recordingBySiteHourArbimon)
 
 const getTimePrecisionHourLocal = (datetime: string): string => {
-  return dayjs(datetime).format('YYYY-MM-DD HH:00:00') // string of date e.g. 2020-12-06 10:00:00
+  return dayjs(datetime).format('YYYY-MM-DD HH:00:00+00') // string of date e.g. 2020-12-06 10:00:00
 }
 
 function filterRecordedMinutes (group: RecordingArbimon[]): number[] {
