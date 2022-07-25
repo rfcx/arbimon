@@ -30,7 +30,7 @@ export const getDetectRecording = async (locationProjectId: number, detectRecord
 
   const query: DetectRecordingQuery = {
     locationProjectId,
-    dateStartLocal: dayjs(dateStartLocal).utc().startOf('day').format(DATE_FORMAT),
+    dateStartLocal: dayjs(dateStartLocal).startOf('day').format(DATE_FORMAT),
     dateEndLocal: dayjs(dateEndLocal).endOf('day').format(DATE_FORMAT)
   }
 
@@ -43,7 +43,7 @@ export const getDetectRecording = async (locationProjectId: number, detectRecord
   }
 
   const [totalDurationInMinutes] = await Promise.all([
-    getDetectRecordingTotalDurationMinutes(models, sequelize, query)
+    getDetectRecordingTotalDurationMinutes(sequelize, query)
   ])
 
   return {
