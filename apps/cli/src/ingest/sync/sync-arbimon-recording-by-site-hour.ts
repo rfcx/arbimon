@@ -4,15 +4,17 @@ import { Sequelize } from 'sequelize'
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { ArbimonRecordingBySiteHourQuery, getArbimonRecordingBySiteHour } from '../inputs/get-arbimon-recording-by-site-hour'
+import { getArbimonRecording } from '../inputs/get-arbimon-recording'
 import { writeRecordingBySiteHourToBio } from '../outputs/recording-by-site-hour'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
-import { mapRecordingBySiteHourArbimonWithBioFk, parseRecordingBySiteHourToBio, RecordingBySiteHourArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import { parseRecordingBySiteHourToBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
@@ -22,36 +24,35 @@ const SYNC_CONFIG: SyncConfig = {
 
 export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
   // =========== Input ==========
-  const arbimonRecordingBySiteHour = await getArbimonRecordingBySiteHour(arbimonSequelize, syncStatus)
+  const arbimonRecordingBySiteHour = await getArbimonRecording(arbimonSequelize, syncStatus)
   console.info('- syncArbimonRecordingBySiteHourBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
   console.info('- syncArbimonRecordingBySiteHourBatch: found %d recordings', arbimonRecordingBySiteHour.length)
   if (arbimonRecordingBySiteHour.length === 0) return syncStatus
 
-  const lastSyncRecordingBySiteHour = arbimonRecordingBySiteHour[arbimonRecordingBySiteHour.length - 1] // already last uploaded item because query order by it
+  const lastSyncRecording = arbimonRecordingBySiteHour[arbimonRecordingBySiteHour.length - 1] // already last uploaded item because query order by it
+  if (!isSyncable(lastSyncRecording)) throw new Error('Input does not contain needed sync-status data')
   // =========== Parser ==========
 
   // unknown to expected format
-  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray<ArbimonRecordingBySiteHourQuery, RecordingBySiteHourArbimon>(arbimonRecordingBySiteHour, parseRecordingBySiteHourToBio)
+  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonRecordingBySiteHour, parseRecordingBySiteHourToBio)
   const recordingDataBySiteHourArbimon = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
-  // convert to bio db
-  const recordingBySiteHourBio = await mapRecordingBySiteHourArbimonWithBioFk(recordingDataBySiteHourArbimon, biodiversitySequelize)
-
   // =========== Output ==========
-  const [insertSuccesses, insertErrors] = await writeRecordingBySiteHourToBio(recordingBySiteHourBio, biodiversitySequelize)
+  const [insertSuccesses, insertErrors] = await writeRecordingBySiteHourToBio(recordingDataBySiteHourArbimon, biodiversitySequelize)
+
   const transaction = await biodiversitySequelize.transaction()
 
   // =========== Sync Status ==========
   try {
     // sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncRecordingBySiteHour.lastUploaded, syncUntilId: lastSyncRecordingBySiteHour.lastRecordingIdArbimon.toString() }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs.utc(lastSyncRecording.updatedAt).toDate(), syncUntilId: lastSyncRecording.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     // sync error
     await Promise.all(inputsAndParsingErrors.map(async e => {
+      const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
       const error = {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        externalId: `${e[0].lastUploaded.toString()}|${e[0].siteIdArbimon}|${e[0].firstRecordingIdArbimon}|${e[0].lastRecordingIdArbimon}`,
+        externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
         syncSourceId: updatedSyncStatus.syncSourceId,
         syncDataTypeId: updatedSyncStatus.syncDataTypeId

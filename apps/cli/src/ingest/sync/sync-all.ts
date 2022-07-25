@@ -30,7 +30,7 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       return
     }
 
-    console.info('Project level data:')
+    console.info('\nProject level data:\n')
     const isSiteSyncedUpToDate = await syncArbimonSites(arbimonSequelize, biodiversitySequelize)
     console.info('> Sites: up to date =', isSiteSyncedUpToDate)
 
