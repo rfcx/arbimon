@@ -42,7 +42,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       ...TIMESTAMP_COLUMNS,
 
       // Facts
-      total_duration: DataTypes.FLOAT,
+      total_duration_in_minutes: DataTypes.FLOAT,
       recorded_minutes: DataTypes.ARRAY(DataTypes.INTEGER)
     }
   )
