@@ -55,7 +55,7 @@ function filterRepeatingDetectionMinutes (group: DetectionArbimon[]): RecordingD
 }
 
 const getTimePrecisionHourLocal = (datetime: string): string => {
-  return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00') // string of date e.g. 2020-12-06 10:00:00
+  return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00') // string of date e.g. 2020-12-06 10:00:00
 }
 
 const floorValue = (n: number): number => {
@@ -91,7 +91,7 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
       // Find existing detections in the bio db
       const biodiversityDetection = await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.findOne({
         where: {
-          timePrecisionHourLocal: dayjs.utc(timePrecisionHourLocal).toDate(),
+          timePrecisionHourLocal,
           locationSiteId,
           taxonSpeciesId
         },
