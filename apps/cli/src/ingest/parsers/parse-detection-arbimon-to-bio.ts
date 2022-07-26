@@ -119,7 +119,6 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
             detectionMinutes: recordingData.detectionMinutes // '10,25,55' - array of recordings datetime minutes (values), related to this group by site/species/date/hour
           })
         }
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       } else if (biodiversityDetection?.detectionMinutes !== undefined) {
         // detections to upsert
         const count = biodiversityDetection.count
