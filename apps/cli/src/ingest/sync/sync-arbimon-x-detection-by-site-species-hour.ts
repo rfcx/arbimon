@@ -5,43 +5,44 @@ import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 
-import { getArbimonSites } from '../inputs/get-arbimon-sites'
-import { writeSitesToBio } from '../outputs/sites'
+import { getSequelize } from '@/db/connections'
+import { getArbimonDetections } from '../inputs/get-arbimon-detections'
+import { writeDetectionsToBio } from '../outputs/detection-by-site-species-hour'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
-import { mapSitesArbimonWithBioFk, parseSiteArbimonToBio } from '../parsers/parse-site-arbimon-to-bio'
+import { parseDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
-  syncDataTypeId: masterSyncDataTypes.Site.id,
-  syncBatchLimit: 2000
+  syncDataTypeId: masterSyncDataTypes.Detection.id,
+  syncBatchLimit: 1000
 }
 
-export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
-  // Getter
-  const arbimonSites = await getArbimonSites(arbimonSequelize, syncStatus)
-  console.info('- syncArbimonSitesBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
-  console.info('- syncArbimonSitesBatch: found %d sites', arbimonSites.length)
-  if (arbimonSites.length === 0) return syncStatus
+// This batch works like a loop where all detections are in sync
+export const syncArbimonDetectionBySiteSpeciesHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
+  // Get detections by sync config parameters
+  const arbimonDetections = await getArbimonDetections(arbimonSequelize, syncStatus)
 
-  const lastSyncdSite = arbimonSites[arbimonSites.length - 1]
+  console.info('- syncArbimonDetectionBySiteSpeciesHourBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
+  console.info('- syncArbimonDetectionBySiteSpeciesHourBatch: found %d detections', arbimonDetections.length)
+
+  if (arbimonDetections.length === 0) return syncStatus
+
+  const lastSyncdSite = arbimonDetections[arbimonDetections.length - 1]
   if (!isSyncable(lastSyncdSite)) throw new Error('Input does not contain needed sync-status data')
 
   // Parser
 
   // unknown to expected format
-  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonSites, parseSiteArbimonToBio)
-  const siteDataArbimon = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
-
-  // add bio location project foreign key
-  const siteDataArbimonWithFk = await mapSitesArbimonWithBioFk(siteDataArbimon, biodiversitySequelize)
+  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonDetections, parseDetectionArbimonToBio)
+  const parsedDetections = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
   // Writer
-  const [insertSuccess, insertErrors] = await writeSitesToBio(siteDataArbimonWithFk, biodiversitySequelize)
+  const [insertSuccess, insertErrors] = await writeDetectionsToBio(parsedDetections, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
 
   try {
@@ -87,16 +88,14 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
   }
 }
 
-export const syncArbimonSites = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
-  const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+export const syncArbimonDetectionBySiteSpeciesHour = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
+  const syncStatus = await ModelRepository.getInstance(getSequelize())
     .SyncStatus
     .findOne({
       where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  const updatedSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+  const updatedSyncStatus = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
   return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)
-      // || numberOfItemsSynced < syncStatus.syncBatchLimit
-      // TODO: add number of syncd items as a response of syncArbimonProjectsBatch so that we can check the case above ☝️
 }
