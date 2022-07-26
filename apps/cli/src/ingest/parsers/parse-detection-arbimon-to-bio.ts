@@ -120,7 +120,7 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
           })
         }
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      } else if (biodiversityDetection?.detectionMinutes) {
+      } else if (biodiversityDetection?.detectionMinutes !== undefined) {
         // detections to upsert
         const count = biodiversityDetection.count
         const detectionMinutes = biodiversityDetection.detectionMinutes
