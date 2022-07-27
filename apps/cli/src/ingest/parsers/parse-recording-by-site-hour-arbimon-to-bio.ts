@@ -31,9 +31,12 @@ export type RecordingBySiteHourBio = z.infer<typeof RecordingBySiteHourBioSchema
 export const parseRecordingBySiteHourToBio = (recordingBySiteHourArbimon: unknown): SafeParseReturnType<unknown, RecordingArbimon> =>
   RecordingArbimonSchema.safeParse(recordingBySiteHourArbimon)
 
+/**
+ * Convert datetime to the local recording time
+ * @param datetime string of date e.g. 2020-12-06 10:00:00
+ * @returns dayjs.utc and +00
+ */
 const getTimePrecisionHourLocal = (datetime: string): string => {
-  // string of date e.g. 2020-12-06 10:00:00
-  // dayjs.utc and +00 - convert to the local recording time
   return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00')
 }
 
