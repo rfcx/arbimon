@@ -40,6 +40,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
 
   @Prop() tableData!: DetectedSpeciesItem[]
   @Prop() colors!: string[]
+  @Prop({ default: true }) isLocationRedacted!: boolean
 
   pageIndex = 1 // 1-based for humans
   pageSize = 10
