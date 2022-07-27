@@ -7,7 +7,7 @@ import { getSequelize } from '~/db'
 export const getSyncHistory = async (locationProjectId: number): Promise<SyncHistoryResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
-  const syncs = await getSyncs(models, locationProjectId)
+  const syncs = await getSyncs(models, sequelize, locationProjectId)
 
   return {
     syncs
