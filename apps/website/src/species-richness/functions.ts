@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash-es'
 
-import { RichnessDatasetResponse, RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
@@ -75,24 +75,22 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
 
 export function getTableData (datasets: RichnessDataset[]): DetectedSpeciesItem[] {
   const store = useStoreOutsideSetup()
-  const taxonClasses = store.projectFilters?.taxonClasses
+  const taxonClasses = store.projectFilters?.taxonClasses ?? []
 
   const richnessPresences = datasets.map(ds => ds.data.richnessPresence)
-  const allSpecies: { [speciesId: number]: RichnessPresence } = Object.assign({}, ...richnessPresences)
+  const allUniqueSpecies = richnessPresences.flat().filter((value, index, self) => self.findIndex(({ taxonSpeciesId }) => taxonSpeciesId === value.taxonSpeciesId) === index)
 
-  return Object.entries(allSpecies)
-    .map(([key, value]) => {
-      const { taxonClassId, taxonSpeciesId, taxonSpeciesSlug, commonName, scientificName } = value
-      const matchedClass = taxonClasses?.find(({ id }) => id === taxonClassId)
-      return {
-        taxonClassName: matchedClass?.commonName ?? 'Unknown',
-        taxonSpeciesId,
-        taxonSpeciesSlug,
-        commonName,
-        scientificName,
-        data: richnessPresences.map(sp => key in sp),
-        total: richnessPresences.filter(sp => key in sp).length
-      }
-    })
-    .sort((a, b) => b.total - a.total || a.scientificName.localeCompare(b.scientificName))
+  return allUniqueSpecies.map(({ taxonClassId, taxonSpeciesId, taxonSpeciesSlug, commonName, scientificName }) => {
+    const taxonClassName = taxonClasses.find(({ id }) => id === taxonClassId)?.commonName ?? 'Unknown'
+    const data = richnessPresences.map(pr => pr.find(sp => sp.taxonSpeciesId === taxonSpeciesId) !== undefined)
+    return {
+      taxonClassName,
+      taxonSpeciesId,
+      taxonSpeciesSlug,
+      commonName,
+      scientificName,
+      data,
+      total: data.filter(value => value).length
+    }
+  }).sort((a, b) => b.total - a.total || a.scientificName.localeCompare(b.scientificName))
 }
