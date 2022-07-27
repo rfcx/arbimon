@@ -31,8 +31,13 @@ export type RecordingBySiteHourBio = z.infer<typeof RecordingBySiteHourBioSchema
 export const parseRecordingBySiteHourToBio = (recordingBySiteHourArbimon: unknown): SafeParseReturnType<unknown, RecordingArbimon> =>
   RecordingArbimonSchema.safeParse(recordingBySiteHourArbimon)
 
+/**
+ * Convert datetime to the local recording time
+ * @param datetime string of date e.g. 2020-12-06 10:00:00
+ * @returns dayjs.utc and +00
+ */
 const getTimePrecisionHourLocal = (datetime: string): string => {
-  return dayjs(datetime).format('YYYY-MM-DD HH:00:00+00') // string of date e.g. 2020-12-06 10:00:00
+  return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00')
 }
 
 function filterRecordedMinutes (group: RecordingArbimon[]): number[] {
@@ -51,7 +56,6 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
 
   // group arbimon recordings by date, hour,site, species
   const arbimonRecordingBySiteHourGroup = Object.values(groupBy(recordingArbimon, r => `${getTimePrecisionHourLocal(r.datetime)}-${r.siteIdArbimon}`))
-
   const biodiversitySites = await ModelRepository.getInstance(sequelize).LocationSite.findAll({
     where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupBySites).map(Number) } },
     raw: true
