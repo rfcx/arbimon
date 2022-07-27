@@ -108,7 +108,7 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
   return mapValues(keyBy(result, 'date_unix'), 'richness')
 }
 
-export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<Record<number, RichnessPresence>> => {
+export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessPresence[]> => {
   const filterBase = datasetFilterWhereRaw(filter)
 
   const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating)` : filterBase.conditions
