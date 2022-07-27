@@ -1,20 +1,28 @@
+import { Sequelize } from 'sequelize'
+
 import { Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 
-export const getSyncs = async (models: AllModels, locationProjectId: number): Promise<Sync[]> => {
+export const getSyncs = async (models: AllModels, sequelize: Sequelize, locationProjectId: number): Promise<Sync[]> => {
   return await models.SyncLogByProject
     .findAll({
+      attributes: [
+        'id', 'createdAt', 'updatedAt', 'delta',
+        [sequelize.col('SyncSource.name'), 'sourceType'],
+        [sequelize.col('SyncDataType.name'), 'dataType']
+      ],
       where: { locationProjectId },
       include: [
         {
           model: models.SyncSource,
-          attributes: [['name', 'sourceType']]
+          attributes: []
         },
         {
           model: models.SyncDataType,
-          attributes: [['name', 'dataType']]
+          attributes: []
         }
       ],
-      order: [['updatedAt', 'DESC']]
+      order: [['updatedAt', 'DESC']],
+      raw: true
     }) as unknown as Sync[]
 }
