@@ -80,7 +80,7 @@ describe('ingest > output > recording by site hour', () => {
     expect(recordingBySiteHour.length).toBe(1)
     expect(recordingBySiteHour[0].totalDurationInMinutes).toBe(2.01)
     expect(recordingBySiteHour[0].recordedMinutes[0]).toBe(0)
-    expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06 07:00:00'))
+    expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
   })
 
   test('update recorded minutes if location project, location site, and time precision hour local are the same', async () => {
@@ -142,8 +142,8 @@ describe('ingest > output > recording by site hour', () => {
     // Assert
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
     expect(recordingBySiteHour.length).toBe(3)
-    expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06 07:00:00'))
-    expect(dayjs(recordingBySiteHour[1].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06 07:00:00'))
-    expect(dayjs(recordingBySiteHour[2].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06 19:00:00'))
+    expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
+    expect(dayjs(recordingBySiteHour[1].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
+    expect(dayjs(recordingBySiteHour[2].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T19:00:00.000Z'))
   })
 })
