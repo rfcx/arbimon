@@ -2,7 +2,7 @@
   <div>
     <section-title
       title="Species detected"
-      :note="isLocationRedacted ? '* Some species are protected.' : ''"
+      :note="hasTableData && isLocationRedacted ? '* Some species are protected.' : ''"
     />
     <no-data-panel
       v-if="!hasTableData"
