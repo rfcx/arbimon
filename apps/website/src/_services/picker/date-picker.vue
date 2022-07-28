@@ -6,6 +6,7 @@
     unlink-panels
     range-separator="to"
     size="large"
+    :clearable="false"
   />
   <!-- :shortcuts="dateShortcuts" -->
 </template>
