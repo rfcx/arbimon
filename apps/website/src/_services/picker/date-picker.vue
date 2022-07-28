@@ -7,6 +7,7 @@
     range-separator="to"
     size="large"
     :clearable="false"
+    :disabled-date="disableFutureDate"
   />
   <!-- :shortcuts="dateShortcuts" -->
 </template>
@@ -48,4 +49,7 @@ const emitSelectDateRange = (dateRange: [Date, Date]): void => {
 }
 
 watchEffect(() => { emitSelectDateRange(dateValues.value) })
+
+const disableFutureDate = (date: Date): boolean => date > dayjs().toDate()
+
 </script>
