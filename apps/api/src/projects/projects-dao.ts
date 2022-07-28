@@ -27,7 +27,8 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
     'las-balsas-jocotoco-foundation-project',
     'puerto-rico',
     'puerto-rico-island-wide',
-    'rfcx-guardians-madre-de-dios-peru'
+    'rfcx-guardians-madre-de-dios-peru',
+    'weforest-wildlife-corridors'
   ]
 
   const myProjectIds = projects.map(p => p.id)
