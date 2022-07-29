@@ -29,6 +29,12 @@ export interface ActivityOverviewDetectionDataBySite {
   occupancy: boolean
 }
 
+export interface ActivityOverviewRecordingDataBySite {
+  siteId: number
+  siteName: string
+  duration_minutes: number
+}
+
 export interface ActivityOverviewDetectionDataByTime {
   detection: Record<number, number>
   detectionFrequency: Record<number, number>

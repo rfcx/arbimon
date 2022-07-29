@@ -1,10 +1,10 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
-import { Op, QueryTypes, Sequelize } from 'sequelize'
+import { BindOrReplacements, Op, QueryTypes, Sequelize } from 'sequelize'
 
-import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime, ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
@@ -41,18 +41,34 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
   })
 }
 
-export function getRecordingDurationMinutes (detections: DetectionBySiteSpeciesHour[]): number {
+export async function getRecordingDurationMinutes (models: AllModels, detections: DetectionBySiteSpeciesHour[]): Promise<number> {
+  // group detections by date and site
   const detectionBySiteHour = Object.values(groupBy(detections, d => `${d.timePrecisionHourLocal.getTime()}-${d.locationSiteId}`))
-  return sum(detectionBySiteHour.map(speciesSummaries => speciesSummaries[0].durationMinutes))
+  let totalMinutes = 0
+  for (const group of detectionBySiteHour) {
+    // find recording group related to date and site
+    const bioRecordingBySiteHour = await models.RecordingBySiteHour.findOne({
+      where: {
+        timePrecisionHourLocal: group[0].timePrecisionHourLocal,
+        locationSiteId: group[0].locationSiteId
+      },
+      raw: true
+    }) as unknown as RecordingBySiteHour
+
+    totalMinutes = totalMinutes + (bioRecordingBySiteHour?.totalDurationInMinutes !== undefined
+      ? bioRecordingBySiteHour.totalDurationInMinutes
+      : sum(group.map(g => g.durationMinutes)))
+  }
+  return totalMinutes
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
   return sum(detections.map(({ count }) => count))
 }
 
-function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): number {
+function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingDurationCount: number): number {
   const detectionCount = calculateDetectionCount(detections)
-  return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+  return detectionCount === 0 ? 0 : detectionCount / totalRecordingDurationCount
 }
 
 export function calculateOccupancy (totalSiteCount: number, occupiedSites: number): number {
@@ -69,26 +85,23 @@ export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDa
   if (filter.siteIds.length > 0) { outerConditions.push('ls.id = ANY($siteIds)') }
 
   const sql = `
-    SELECT id                                 as "siteId",
-          name                                as "siteName",
-          latitude,
-          longitude,
-          detection,
-          detection::float / duration_minutes as "detectionFrequency",
-          detection > 0                       as occupancy
+    SELECT id siteId,
+        name siteName,
+        latitude,
+        longitude,
+        detection,
+        detection > 0 occupancy
     FROM (
         SELECT ls.id,
-              ls.name,
-              ls.latitude,
-              ls.longitude,
-              coalesce(sum(detection_by_site_hour.count), 0)::integer   as detection,
-              coalesce(sum(detection_by_site_hour.duration_minutes), 1) as duration_minutes
+            ls.name,
+            ls.latitude,
+            ls.longitude,
+            coalesce(sum(detection_by_site_hour.count), 0)::integer as detection
         FROM location_site as ls
         LEFT JOIN (
             SELECT time_precision_hour_local,
-                  location_site_id,
-                  sum(count)            as count,
-                  max(duration_minutes) as duration_minutes -- same recording
+                location_site_id,
+                sum(count) as count
             FROM detection_by_site_species_hour dbssh
             WHERE ${datasetConditions}
             GROUP BY dbssh.time_precision_hour_local, dbssh.location_site_id
@@ -102,8 +115,71 @@ export const getDetectionsBySite = async (sequelize: Sequelize, filter: FilterDa
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDetectionDataBySite[]
 }
 
+export const getRecordingsBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewRecordingDataBySite[]> => {
+  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
+
+  // Filter inner query by dataset filter
+  const datasetConditions = [
+    'location_project_id = $locationProjectId',
+    'time_precision_hour_local >= $startDateUtcInclusive',
+    'time_precision_hour_local < $endDateUtcExclusive'
+  ]
+  if (filter.siteIds.length > 0) { datasetConditions.push('location_site_id = ANY($siteIds)') }
+
+  // Filter outer query by project & site
+  const outerConditions = ['ls.location_project_id = $locationProjectId']
+  if (filter.siteIds.length > 0) { outerConditions.push('ls.id = ANY($siteIds)') }
+
+  const sql = `
+    SELECT id siteId,
+        name siteName,
+        duration_minutes
+    FROM (
+      SELECT ls.id,
+          ls.name,
+          sum(rbsh.total_duration_in_minutes) as duration_minutes
+    FROM location_site as ls
+    JOIN (
+        SELECT time_precision_hour_local,
+            location_site_id,
+            total_duration_in_minutes
+        FROM recording_by_site_hour
+        WHERE ${datasetConditions.join(' AND ')}
+        GROUP BY time_precision_hour_local, location_site_id, total_duration_in_minutes
+    ) as rbsh
+        ON ls.id = rbsh.location_site_id
+        WHERE ${outerConditions.join(' AND ')}
+        GROUP BY ls.id
+    ) recording_by_site
+  ;
+  `
+
+  const bind: BindOrReplacements = {
+    locationProjectId,
+    startDateUtcInclusive,
+    endDateUtcExclusive,
+    siteIds
+  }
+
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewRecordingDataBySite[]
+}
+
+export function getDetectionFrequency (detection: ActivityOverviewDetectionDataBySite, recordings: ActivityOverviewRecordingDataBySite[]): number {
+  const recording = recordings.find(rec => rec.siteId === detection.siteId)
+  const freq = detection.detection / (recording?.duration_minutes ?? 0)
+  return freq
+}
+
+export function parseDetectionsBySite (detections: ActivityOverviewDetectionDataBySite[], recordings: ActivityOverviewRecordingDataBySite[]): ActivityOverviewDetectionDataBySite[] {
+  const parsedDetections = detections.map(det => ({
+    ...det,
+    detectionFrequency: getDetectionFrequency(det, recordings)
+  }))
+  return parsedDetections
+}
+
 export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
-  const totalRecordingCount = getRecordingDurationMinutes(detections)
+  const totalRecordingDurationCount = await getRecordingDurationMinutes(models, detections)
   let filteredDetections = detections
 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
@@ -133,7 +209,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
   for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
     const detectionCount = calculateDetectionCount(speciesDetectedDetections)
-    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingCount)
+    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingDurationCount)
     const occupiedSites = new Set(speciesDetectedDetections.map(({ locationSiteId }) => locationSiteId)).size
     const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
 
@@ -153,35 +229,35 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   return activityOverviewDataBySpecies
 }
 
-export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationCount: number): ActivityOverviewDetectionDataByTime {
   const byHour = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).hour())
   return {
     detection: mapValues(byHour, calculateDetectionCount),
-    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingDurationCount))
   }
 }
 
-export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationCount: number): ActivityOverviewDetectionDataByTime {
   const byDay = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1)
   return {
     detection: mapValues(byDay, calculateDetectionCount),
-    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingDurationCount))
   }
 }
 
-export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationCount: number): ActivityOverviewDetectionDataByTime {
   const byMonth = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).month())
   return {
     detection: mapValues(byMonth, calculateDetectionCount),
-    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingDurationCount))
   }
 }
 
-export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationCount: number): ActivityOverviewDetectionDataByTime {
   const SECONDS_PER_DAY = 24 * 60 * 60
   const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
   return {
     detection: mapValues(byDateUnix, calculateDetectionCount),
-    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingDurationCount))
   }
 }
