@@ -1,5 +1,5 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
-import { BindOrReplacements, Op, QueryTypes, Sequelize } from 'sequelize'
+import { BindOrReplacements, QueryTypes, Sequelize } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime, ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
@@ -7,43 +7,19 @@ import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
+import { datasetFilterWhereRaw, FilterDatasetForSql, getDetectioonBySiteHourWhereRaw } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 
 // Similar logic with filterDetection in `controller-spotlight-dataset.ts`. Moving to common?
-export async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = getRecordingBySiteHourWhereRaw(projectId, filter)
+export async function filterDetections (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = getDetectioonBySiteHourWhereRaw(projectId, filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
     where,
     raw: true
   })
-}
-
-export function getRecordingBySiteHourWhereRaw (projectId: number, filter: FilterDataset): Where<DetectionBySiteSpeciesHour> {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
-
-  const where: Where<DetectionBySiteSpeciesHour> = {
-    timePrecisionHourLocal: {
-      [Op.and]: {
-        [Op.gte]: startDateUtcInclusive,
-        [Op.lt]: endDateUtcInclusive
-      }
-    },
-    locationProjectId: projectId
-  }
-
-  if (siteIds.length > 0) {
-    where.locationSiteId = siteIds
-  }
-
-  // ! Be careful
-  if (taxons.length > 0) {
-    where.taxonClassId = taxons
-  }
-  return where
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
@@ -195,7 +171,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
     filteredDetections = detections.filter(({ taxonSpeciesId }) => !protectedSpecies.find(s => s.taxonSpeciesId === taxonSpeciesId))
   }
 
-  if (filterDetecions.length === 0) return []
+  if (filterDetections.length === 0) return []
 
   const detectionsBySpecies = groupBy(filteredDetections, 'taxonSpeciesId')
   const totalSiteCount = new Set(filteredDetections.map(({ locationSiteId }) => locationSiteId)).size

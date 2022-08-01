@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { getSequelize } from '../_services/db'
-import { filterDetecions, getDetectionDataBySpecies, getDetectionsBySite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getRecordingsBySite, getRecordingTotalDurationMinutes, parseDetectionsBySite } from './activity-dataset-dao'
+import { filterDetections, getDetectionDataBySpecies, getDetectionsBySite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getRecordingsBySite, getRecordingTotalDurationMinutes, parseDetectionsBySite } from './activity-dataset-dao'
 
 export const getActivityOverviewData = async (filter: FilterDataset, isProjectMember: boolean): Promise<ActivityDatasetResponse> => {
   const sequelize = getSequelize()
@@ -15,7 +15,7 @@ export const getActivityOverviewData = async (filter: FilterDataset, isProjectMe
   const filterForSql = toFilterDatasetForSql(filter)
 
   // Filtering
-  const totalDetections = await filterDetecions(models, locationProjectId, filter)
+  const totalDetections = await filterDetections(models, locationProjectId, filter)
   const detectionsBySite = await getDetectionsBySite(sequelize, filterForSql)
   const recordingsBySite = await getRecordingsBySite(sequelize, filterForSql)
   const totalRecordingDuration = getRecordingTotalDurationMinutes(recordingsBySite)

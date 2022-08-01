@@ -8,6 +8,7 @@ import { DetectionBySiteSpeciesHour, Project, ProjectVersion, RecordingBySiteHou
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
+import { taxonSpeciesAndClassForId } from '@/db/seeders/_data/integration/test-taxon-species'
 
 // Mocked project, site, recordings, detections
 export const testProject: Project = {
@@ -135,8 +136,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001001,
-    taxonClassId: 300,
-    taxonSpeciesId: 1, // 2
+    ...taxonSpeciesAndClassForId(1),
     count: 2,
     durationMinutes: 120,
     detectionMinutes: [7, 9]
@@ -145,8 +145,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001001,
-    taxonClassId: 300,
-    taxonSpeciesId: 2,
+    ...taxonSpeciesAndClassForId(2),
     count: 2,
     durationMinutes: 120,
     detectionMinutes: [7, 9]
@@ -155,8 +154,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    taxonClassId: 300,
-    taxonSpeciesId: 2,
+    ...taxonSpeciesAndClassForId(2),
     count: 1,
     durationMinutes: 60,
     detectionMinutes: [55]
@@ -165,8 +163,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    taxonClassId: 300,
-    taxonSpeciesId: 1, // 1
+    ...taxonSpeciesAndClassForId(1),
     count: 1,
     durationMinutes: 60,
     detectionMinutes: [11]
@@ -175,8 +172,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    taxonClassId: 300,
-    taxonSpeciesId: 1, // 1
+    ...taxonSpeciesAndClassForId(1),
     count: 1,
     durationMinutes: 60,
     detectionMinutes: [1]
@@ -218,6 +214,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       .DetectionBySiteSpeciesHour
       .bulkCreate(rawDetectionBySiteSpeciesHour)
   } catch (err) {
-    console.error(errr)
+    console.error(err)
   }
 }

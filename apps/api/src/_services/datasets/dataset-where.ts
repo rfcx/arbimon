@@ -94,3 +94,26 @@ export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<D
 
   return where
 }
+
+export function getDetectioonBySiteHourWhereRaw (projectId: number, filter: FilterDataset): Where<DetectionBySiteSpeciesHour> {
+  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
+
+  const where: Where<DetectionBySiteSpeciesHour> = {
+    timePrecisionHourLocal: {
+      [Op.and]: {
+        [Op.gte]: startDateUtcInclusive,
+        [Op.lt]: endDateUtcInclusive
+      }
+    },
+    locationProjectId: projectId
+  }
+
+  if (siteIds.length > 0) {
+    where.locationSiteId = siteIds
+  }
+
+  if (taxons.length > 0) {
+    where.taxonClassId = taxons
+  }
+  return where
+}
