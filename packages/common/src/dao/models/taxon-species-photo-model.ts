@@ -21,7 +21,7 @@ export const TaxonSpeciesPhotoModel = defineWithDefaults<TaxonSpeciesPhoto>(
     },
 
     // Facts
-    photoUrl: DataTypes.TEXT, // https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg
+    photoUrl: DataTypes.STRING(511), // https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg/268px-Puerto_Rican_Sharp-shinned_hawk_sitting_on_tree_branch.jpg
     photoCaption: DataTypes.STRING(255), // Puerto Rican sharp-shinned hawk
     photoAuthor: DataTypes.STRING(255), // Mike Morel/U. S. Fish and Wildlife Service
     photoLicense: DataTypes.STRING(255), // Public domain
