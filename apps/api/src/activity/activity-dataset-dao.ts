@@ -14,6 +14,15 @@ import { dayjs } from '../_services/dayjs-initialized'
 
 // Similar logic with filterDetection in `controller-spotlight-dataset.ts`. Moving to common?
 export async function filterDetecions (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = getRecordingBySiteHourWhereRaw(projectId, filter)
+
+  return await models.DetectionBySiteSpeciesHour.findAll({
+    where,
+    raw: true
+  })
+}
+
+export function getRecordingBySiteHourWhereRaw (projectId: number, filter: FilterDataset): Where<DetectionBySiteSpeciesHour> {
   const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
@@ -34,11 +43,7 @@ export async function filterDetecions (models: AllModels, projectId: number, fil
   if (taxons.length > 0) {
     where.taxonClassId = taxons
   }
-
-  return await models.DetectionBySiteSpeciesHour.findAll({
-    where,
-    raw: true
-  })
+  return where
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
@@ -46,7 +51,7 @@ export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[
 }
 
 export function getRecordingTotalDurationMinutes (recordingsBySite: ActivityOverviewRecordingDataBySite[]): number {
-  return sum(recordingsBySite.map(({ totalMinsOfRecording }) => totalMinsOfRecording))
+  return sum(recordingsBySite.map(({ totalRecordingMinutes }) => totalRecordingMinutes))
 }
 
 function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingDuration: number): number {
@@ -132,12 +137,12 @@ export const getRecordingsBySite = async (sequelize: Sequelize, filter: FilterDa
   const sql = `
     SELECT id as "siteId",
         name as "siteName",
-        duration_minutes as "totalMinsOfRecording"
+        duration_minutes as "totalRecordingMinutes"
     FROM (
       SELECT ls.id,
           ls.name,
           sum(rbsh.total_duration_in_minutes) as duration_minutes
-    FROM location_site as ls
+      FROM location_site as ls
     JOIN (
         SELECT time_precision_hour_local,
             location_site_id,
@@ -163,10 +168,9 @@ export const getRecordingsBySite = async (sequelize: Sequelize, filter: FilterDa
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewRecordingDataBySite[]
 }
 
-export function getDetectionFrequencyBySite (detection: ActivityOverviewDetectionDataBySite, recordings: ActivityOverviewRecordingDataBySite[]): number {
-  const recording = recordings.find(rec => rec.siteId === detection.siteId)
-  const freq = detection.detection / (recording?.totalMinsOfRecording ?? 0)
-  return freq
+export function getDetectionFrequencyBySite (detectionBySite: ActivityOverviewDetectionDataBySite, allRecordings: ActivityOverviewRecordingDataBySite[]): number {
+  const recordingsBySite = allRecordings.find(rec => rec.siteId === detectionBySite.siteId)
+  return recordingsBySite?.totalRecordingMinutes !== undefined ? detectionBySite.detection / recordingsBySite.totalRecordingMinutes : 0
 }
 
 export function parseDetectionsBySite (detections: ActivityOverviewDetectionDataBySite[], recordings: ActivityOverviewRecordingDataBySite[]): ActivityOverviewDetectionDataBySite[] {
