@@ -7,14 +7,13 @@ import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { datasetFilterWhereRaw, FilterDatasetForSql, getDetectioonBySiteHourWhereRaw } from '~/datasets/dataset-where'
+import { datasetFilterWhereRaw, FilterDatasetForSql, getDetectionBySiteHourWhereRaw } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 
-// Similar logic with filterDetection in `controller-spotlight-dataset.ts`. Moving to common?
 export async function filterDetections (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = getDetectioonBySiteHourWhereRaw(projectId, filter)
+  const where: Where<DetectionBySiteSpeciesHour> = getDetectionBySiteHourWhereRaw(projectId, filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
     where,
@@ -157,8 +156,7 @@ export function parseDetectionsBySite (detections: ActivityOverviewDetectionData
   return parsedDetections
 }
 
-export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], totalRecordingDuration: number, isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
-  // const totalRecordingDuration = await getRecordingDurationMinutes(models, detections)
+export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number, isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
   let filteredDetections = detections
 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
@@ -188,7 +186,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
   for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
     const detectionCount = calculateDetectionCount(speciesDetectedDetections)
-    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingDuration)
+    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingMinutes)
     const occupiedSites = new Set(speciesDetectedDetections.map(({ locationSiteId }) => locationSiteId)).size
     const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
 
