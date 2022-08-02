@@ -1,0 +1,219 @@
+// @ts-nocheck
+// ignore because `recordedMinutes` is array and array symbol for sequelize is `{}`
+import { QueryInterface } from 'sequelize'
+import { MigrationFn } from 'umzug'
+
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { DetectionBySiteSpeciesHour, Project, ProjectVersion, RecordingBySiteHour, Site } from '@rfcx-bio/common/dao/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
+import { getSequelize } from '@/db/connections'
+import { taxonSpeciesAndClassForId } from '@/db/seeders/_data/integration/test-taxon-species'
+
+// Mocked project, site, recordings, detections
+export const testProject: Project = {
+  id: 30001001,
+  idCore: 'integration3',
+  idArbimon: 30001001,
+  slug: 'integration-test-project-30001001',
+  name: 'Integration Test Project 3',
+  latitudeNorth: 0,
+  latitudeSouth: 0,
+  longitudeEast: 0,
+  longitudeWest: 0
+}
+
+export const testProjectVersion: ProjectVersion = {
+  id: 3,
+  locationProjectId: 30001001,
+  isPublished: true,
+  isPublic: true
+}
+
+export const testSites: Site[] = [
+  {
+    id: 30001001,
+    idCore: 'testSite0003',
+    idArbimon: 2111223,
+    locationProjectId: 30001001,
+    name: 'Test Site 3',
+    latitude: 18.31307,
+    longitude: -65.24878,
+    altitude: 30.85246588
+  },
+  {
+    id: 30001002,
+    idCore: 'testSite0004',
+    idArbimon: 2111224,
+    locationProjectId: 30001001,
+    name: 'Test Site 4',
+    latitude: 18.31307,
+    longitude: -65.24878,
+    altitude: 30.85246588
+  }
+]
+
+export const testSource: any = {
+  id: 30001,
+  name: 'source-test-project-30001'
+}
+
+export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt' | 'updatedAt'>> = [
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001001,
+    totalDurationInMinutes: 120.5,
+    recordedMinutes: '{7, 9}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 120.5,
+    recordedMinutes: '{7, 9}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 11:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 60.25,
+    recordedMinutes: '{11}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 60.25,
+    recordedMinutes: '{11}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 180.75,
+    recordedMinutes: '{11, 14, 17}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 23:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 180.75,
+    recordedMinutes: '{11, 14, 17}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-16 23:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 60.25,
+    recordedMinutes: '{11}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-17 00:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 60.25,
+    recordedMinutes: '{11}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-17 12:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    totalDurationInMinutes: 60.25,
+    recordedMinutes: '{11}'
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001001,
+    totalDurationInMinutes: 180.75,
+    recordedMinutes: '{11, 14, 17}'
+  }
+]
+
+export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHour, 'createdAt' | 'updatedAt'>> = [
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001001,
+    ...taxonSpeciesAndClassForId(1),
+    count: 2,
+    durationMinutes: 120,
+    detectionMinutes: [7, 9]
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001001,
+    ...taxonSpeciesAndClassForId(2),
+    count: 2,
+    durationMinutes: 120,
+    detectionMinutes: [7, 9]
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    ...taxonSpeciesAndClassForId(2),
+    count: 1,
+    durationMinutes: 60,
+    detectionMinutes: [55]
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    ...taxonSpeciesAndClassForId(1),
+    count: 1,
+    durationMinutes: 60,
+    detectionMinutes: [11]
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
+    ...taxonSpeciesAndClassForId(1),
+    count: 1,
+    durationMinutes: 60,
+    detectionMinutes: [1]
+  }
+]
+
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  // Create mocked project
+  const projects: Project[] = [testProject]
+    await ModelRepository.getInstance(getSequelize())
+    .LocationProject
+    .bulkCreate(projects)
+
+  // Create mocked projects versions
+  const projectsVersions: ProjectVersion[] = [testProjectVersion]
+  await ModelRepository.getInstance(getSequelize())
+    .ProjectVersion
+    .bulkCreate(projectsVersions)
+
+  // Create mocked project sites
+  await ModelRepository.getInstance(getSequelize())
+    .LocationSite
+    .bulkCreate(testSites)
+
+  // Create mocked source
+  const source: [any] = [testSource]
+  await ModelRepository.getInstance(getSequelize())
+    .SyncSource
+    .bulkCreate(source)
+
+  // Create mocked recordings
+  await ModelRepository.getInstance(getSequelize())
+    .RecordingBySiteHour
+    .bulkCreate(rawRecordingBySiteHour)
+
+  // Create summary of mocked hourly validated detections
+  try {
+    await ModelRepository.getInstance(getSequelize())
+      .DetectionBySiteSpeciesHour
+      .bulkCreate(rawDetectionBySiteSpeciesHour)
+  } catch (err) {
+    console.error(err)
+  }
+}

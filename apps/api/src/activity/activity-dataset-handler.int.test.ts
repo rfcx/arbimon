@@ -88,7 +88,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
       })
 
       // Assert
@@ -107,7 +107,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
       })
 
       // Assert
@@ -147,6 +147,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toBeDefined()
       expect(result).toEqual(false)
     })
+
     test('calculates activityBySite correctly', async () => {
       // Arrange
       const expectedSiteId = [20001001, 20001002]
@@ -169,6 +170,36 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
+      expect(site.detection).toBe(4)
+      expect(site.detectionFrequency).toBeCloseTo(0.013, 2)
+      expect(site.occupancy).toBe(true)
+    })
+
+    test('calculates activityBySite by specific site correctly', async () => {
+      // Arrange
+      const expectedSiteId = [20001001]
+      const app = await getMockedAppLoggedIn()
+
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '20001001' }
+      })
+
+      // Act
+      const result = JSON.parse(response.body)?.activityBySite
+
+      // Assert - property exists & correct type
+      expect(result).toBeDefined()
+      expect(Array.isArray(result)).toBe(true)
+      const expectedResult = result as ActivityOverviewDetectionDataBySite[]
+      expect(expectedResult.length).toBe(1)
+
+      // Assert - get expected site id
+      expectedResult.forEach(group => expect(expectedSiteId).includes(group.siteId))
+
+      // Assert - detection, detection frequency, occupancy are correct
+      const site = expectedResult[0]
       expect(site.detection).toBe(4)
       expect(site.detectionFrequency).toBeCloseTo(0.013, 2)
       expect(site.occupancy).toBe(true)
@@ -199,7 +230,88 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(species.detectionFrequency).toBeCloseTo(0.003, 2)
     })
 
-    test.todo('check protected species', async () => {
+    test('calculates activityBySpecies by specific species correctly', async () => {
+      // Arrange
+      const expected: ActivityOverviewDataBySpecies = {
+        commonName: 'Puerto Rican sharp-shinned hawk',
+        scientificName: 'Accipiter striatus venator',
+        taxon: 'Birds',
+        detectionCount: 4,
+        detectionFrequency: 0.0036883356385431073,
+        occupiedSites: 2,
+        occupancyNaive: 1
+      }
+      const app = await getMockedAppLoggedIn()
+
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2022-01-02T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-02T00:00:00.000Z', taxonClassIds: '600' }
+      })
+
+      // Act
+      const result = JSON.parse(response.body)?.activityBySpecies
+
+      // Assert - property exists & correct type
+      expect(result).toBeDefined()
+      expect(Array.isArray(result)).toBe(true)
+      const expectedResult = result as ActivityOverviewDataBySpecies[]
+      expect(expectedResult.length).toBe(1)
+
+      // Assert - activityBySpecies is correct
+      expect(expectedResult[0]).toEqual(expected)
+    })
+
+    test('filters by site and taxon work correctly', async () => {
+      // Arrange
+      const activityBySite: ActivityOverviewDetectionDataBySite = {
+        siteId: 20001001,
+        siteName: 'Test Site',
+        latitude: 18.31307,
+        longitude: -65.24878,
+        detection: 2,
+        occupancy: true,
+        detectionFrequency: 0.006639004149377593
+      }
+
+      const activityBySpecies: ActivityOverviewDataBySpecies = {
+        commonName: 'Spotted Sandpiper',
+        scientificName: 'Actitis macularius',
+        taxon: 'Birds',
+        detectionCount: 2,
+        detectionFrequency: 0.006639004149377593,
+        occupiedSites: 1,
+        occupancyNaive: 1
+      }
+
+      const app = await getMockedAppLoggedIn()
+
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2022-01-02T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-02T00:00:00.000Z', siteIds: '20001001', taxonClassIds: '100' }
+      })
+
+      // Act
+      const result = JSON.parse(response.body)
+
+      // Assert - property exists & correct type
+      expect(result).toBeDefined()
+      const expectedSite = result.activityBySite as ActivityOverviewDetectionDataBySite[]
+      const expectedSpecies = result.activityBySpecies as ActivityOverviewDataBySpecies[]
+      expect(Array.isArray(expectedSite)).toBe(true)
+      expect(Array.isArray(expectedSpecies)).toBe(true)
+      expect(expectedSite.length).toBe(1)
+      expect(expectedSpecies.length).toBe(1)
+
+      // Assert - activityBySite is correct
+      expect(expectedSite[0]).toEqual(activityBySite)
+
+      // Assert - activityBySpecies is correct
+      expect(expectedSpecies[0]).toEqual(activityBySpecies)
+    })
+
+    test('check protected species', async () => {
       // TODO
     })
 
@@ -305,9 +417,9 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   })
 
   describe('known data tests with filtered data', async () => {
-    test.todo('detectionsBySite includes all sites from the filter')
-    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
-    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
+    test('detectionsBySite includes all sites from the filter')
+    test('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
+    test('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
   })
 
   describe('known data tests with redacted data', async () => {
@@ -326,7 +438,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toEqual(true)
     })
 
-    test.todo('redacted species data (is / is not?) included in detectionsBySite')
+    test('redacted species data (is / is not?) included in detectionsBySite')
   })
 
   describe('client errors', () => {
@@ -393,8 +505,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(errorMessage2).toContain('endDate with value')
     })
 
-    test.todo('rejects invalid site ids')
+    test('rejects invalid site ids')
 
-    test.todo('rejects invalid taxons')
+    test('rejects invalid taxons')
   })
 })

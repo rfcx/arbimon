@@ -1,7 +1,7 @@
 import { BindOrReplacements, Op } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
 import { FilterDataset } from './dataset-types'
@@ -75,7 +75,7 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
   return where
 }
 
-export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
+export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour | RecordingBySiteHour> => {
   const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
@@ -95,8 +95,8 @@ export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<D
   return where
 }
 
-export function getDetectioonBySiteHourWhereRaw (projectId: number, filter: FilterDataset): Where<DetectionBySiteSpeciesHour> {
-  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, taxons } = filter
+export function getDetectionBySiteHourWhereRaw (projectId: number, filter: FilterDataset): Where<DetectionBySiteSpeciesHour> {
+  const { startDateUtcInclusive, endDateUtcInclusive, siteIds, speciesId, taxons } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
@@ -110,6 +110,10 @@ export function getDetectioonBySiteHourWhereRaw (projectId: number, filter: Filt
 
   if (siteIds.length > 0) {
     where.locationSiteId = siteIds
+  }
+
+  if (speciesId !== undefined) {
+    where.taxonSpeciesId = speciesId
   }
 
   if (taxons.length > 0) {
