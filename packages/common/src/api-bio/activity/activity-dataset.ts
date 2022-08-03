@@ -32,7 +32,7 @@ export interface ActivityOverviewDetectionDataBySite {
 export interface ActivityOverviewRecordingDataBySite {
   siteId: number
   siteName: string
-  countRecordingMinutes: number
+  totalRecordingMinutes: number
 }
 
 export interface ActivityOverviewDetectionDataByTime {

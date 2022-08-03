@@ -15,7 +15,7 @@ export const getActivityOverviewData = async (filter: FilterDataset, isProjectMe
   const filterForSql = toFilterDatasetForSql(filter)
 
   // Filtering
-  const totalDetections = await filterDetections(models, locationProjectId, filter)
+  const totalDetections = await filterDetections(models, filterForSql)
   const detectionsBySite = await getDetectionBySite(sequelize, filterForSql)
   const recordingsBySite = await getRecordingBySite(sequelize, filterForSql)
   const totalRecordingDurationMinutes = getRecordingTotalDurationMinutes(recordingsBySite)
