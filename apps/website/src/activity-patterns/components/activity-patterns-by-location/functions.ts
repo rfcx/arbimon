@@ -3,7 +3,7 @@ import { MapSiteData } from '~/maps/map-bubble'
 
 const getFormattedValue = (value: number | boolean, dataKey: string): string => {
   switch (dataKey) {
-    case SPOTLIGHT_MAP_KEYS.detection: return (value as number).toString()
+    case SPOTLIGHT_MAP_KEYS.totalDetectionCount: return (value as number).toString()
     case SPOTLIGHT_MAP_KEYS.detectionFrequency: return (value as number).toFixed(3)
     default: return (value as boolean) ? 'Detected' : 'Not detected'
   }
