@@ -6,12 +6,11 @@ import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { getDetectionBySiteHourWhereRaw, whereInDatasetTimeLocation } from '~/datasets/dataset-where'
-import { FilterDataset } from '../_services/datasets/dataset-types'
+import { FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
 import { dayjs } from '../_services/dayjs-initialized'
 
-export async function filterDetections (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = getDetectionBySiteHourWhereRaw(projectId, filter)
+export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
     where,
@@ -19,8 +18,8 @@ export async function filterDetections (models: AllModels, projectId: number, fi
   })
 }
 
-export async function filterSpeciesDetection (models: AllModels, projectId: number, filter: FilterDataset, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = getDetectionBySiteHourWhereRaw(projectId, { ...filter, speciesId })
+export async function filterSpeciesDetection (models: AllModels, filter: FilterDatasetForSql, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
     where,
@@ -28,8 +27,8 @@ export async function filterSpeciesDetection (models: AllModels, projectId: numb
   })
 }
 
-export async function getRecordings (models: AllModels, locationProjectId: number, filter: FilterDataset): Promise<RecordingBySiteHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = whereInDatasetTimeLocation({ ...filter, endDateUtcExclusive: filter.endDateUtcInclusive, locationProjectId })
+export async function getRecordings (models: AllModels, filter: FilterDatasetForSql): Promise<RecordingBySiteHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
 
   return await models.RecordingBySiteHour.findAll({
     where,
@@ -54,9 +53,9 @@ export function calculateDetectionFrequency (detections: DetectionBySiteSpeciesH
   return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordingCount
 }
 
-export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDataset, speciesId: number): Promise<SpotlightDetectionDataBySite> {
+export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDatasetForSql): Promise<SpotlightDetectionDataBySite> {
   const summariesBySite: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(totalDetections, 'locationSiteId')
-  const projectId = totalDetections[0].locationProjectId || -1
+  const locationProjectId = totalDetections[0].locationProjectId || -1
   const siteIds = Object.keys(summariesBySite)
 
   const sites = await models.LocationSite.findAll({
@@ -66,8 +65,9 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
 
   const summariesRecordingBySite: { [siteId: number]: RecordingBySiteHour[] } = {}
 
+  // TODO: Improve the logic to get all sites recordings at once?
   for (const site of sites) {
-    const siteTotalRecording = await getRecordings(models, projectId, { ...filter, siteIds: [site.id] })
+    const siteTotalRecording = await getRecordings(models, { ...filter, locationProjectId, siteIds: [site.id] })
     summariesRecordingBySite[site.id] = siteTotalRecording
   }
 
@@ -77,7 +77,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
 
     const siteTotalRecordingCount = getRecordingTotalDurationMinutes(summariesRecordingBySite[siteId])
 
-    const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === speciesId)
+    const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.speciesId)
     const siteDetectionCount = sum(siteSpeciesSummaries.map(({ count }) => count))
     const siteDetectionMinutes = sum(siteSpeciesSummaries.map(({ durationMinutes }) => durationMinutes))
     const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionMinutes / siteTotalRecordingCount
