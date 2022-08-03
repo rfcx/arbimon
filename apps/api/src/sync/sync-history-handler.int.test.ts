@@ -142,10 +142,12 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates syncs correctly', async () => {
       // Arrange
       const EXPECTED_PROPS = [
-        'createdAt',
         'id',
-        'summaryText',
-        'updatedAt'
+        'createdAt',
+        'updatedAt',
+        'sourceType',
+        'dataType',
+        'delta'
       ]
 
       // Assert

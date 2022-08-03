@@ -2,7 +2,7 @@
   <div v-if="store.selectedProject">
     <!-- <draft-banner
       current-mode="Draft"
-      :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+      :sync-updated="store.projectFilters?.latestSync?.updatedAt ?? null"
       :project-slug="store.selectedProject?.slug"
     /> -->
     <div class="dashboard-wrapper">
