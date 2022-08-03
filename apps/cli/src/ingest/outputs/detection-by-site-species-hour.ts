@@ -52,7 +52,7 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
     }
     return [itemsToInsertOrUpsert, []]
   } catch (batchInsertError) {
-    console.info('⚠️ Batch insert `detections by site species hour` failed... try loop upsert', batchInsertError)
+    console.info('⚠️ Batch insert `detections by site species hour` failed... try loop upsert')
     const failedToInsertItems = await loopUpsert(itemsToInsertOrUpsert, detections, sequelize, transaction)
     return [[], failedToInsertItems]
   }

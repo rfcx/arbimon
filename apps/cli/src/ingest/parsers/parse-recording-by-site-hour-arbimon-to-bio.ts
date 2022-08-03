@@ -20,6 +20,7 @@ const RecordingBySiteHourBioSchema = z.object({
   locationSiteId: z.number(),
   totalDurationInMinutes: z.number(),
   recordedMinutes: z.array(z.number()),
+  recordingCount: z.number(),
   firstRecordingIdArbimon: z.number(), // to catch error recording id in a sync data
   lastRecordingIdArbimon: z.number(), // to catch error recording id in a sync data
   lastUploaded: z.string() // to catch error recording id in a sync data
@@ -78,18 +79,21 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
         raw: true
       }) as unknown as RecordingBySiteHourBio
 
-      const isExist = bioRecordingBySiteHour === null
+      const isNewRecording = bioRecordingBySiteHour === null
 
-      const totalDuration = isExist ? sum(group.map(item => item.duration)) / 60 : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
+      const totalDuration = isNewRecording ? sum(group.map(item => item.duration)) / 60 : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
 
-      const recordedMinutes = isExist ? filterRecordedMinutes(group) : [...new Set([...bioRecordingBySiteHour.recordedMinutes, ...filterRecordedMinutes(group)])]
+      const recordedMinutes = isNewRecording ? filterRecordedMinutes(group) : [...new Set([...bioRecordingBySiteHour.recordedMinutes, ...filterRecordedMinutes(group)])]
+
+      const recordingCount = isNewRecording ? group.length : bioRecordingBySiteHour.recordingCount + group.length
 
       itemsToInsertOrUpsert.push({
         timePrecisionHourLocal,
         locationProjectId: locationSite?.locationProjectId ?? -1,
         locationSiteId: locationSite?.id ?? -1,
-        totalDurationInMinutes: ceil(totalDuration, 2), // 3.20
-        recordedMinutes: recordedMinutes,
+        totalDurationInMinutes: ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
+        recordedMinutes: recordedMinutes, // [2, 4, 6] - recording minutes in the group
+        recordingCount: recordingCount, // 3 - recordings in the group
         firstRecordingIdArbimon: min(group.map(item => item.idArbimon)) ?? group[0].idArbimon,
         lastRecordingIdArbimon: max(group.map(item => item.idArbimon)) ?? group[group.length - 1].idArbimon,
         lastUploaded: max(group.map(item => item.datetime)) ?? group[group.length - 1].datetime

@@ -1,3 +1,4 @@
+import { sum } from 'lodash-es'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -80,6 +81,7 @@ describe('ingest > output > recording by site hour', () => {
     expect(recordingBySiteHour.length).toBe(1)
     expect(recordingBySiteHour[0].totalDurationInMinutes).toBe(2.01)
     expect(recordingBySiteHour[0].recordedMinutes[0]).toBe(0)
+    expect(recordingBySiteHour[0].recordingCount).toEqual(2)
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
   })
 
@@ -109,10 +111,14 @@ describe('ingest > output > recording by site hour', () => {
     // Act
     await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
     await writeRecordingBySiteHourToBio(NEW_RECORDS, biodiversitySequelize)
+
+    // Assert
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
+
     expect(recordingBySiteHour.length).toBe(2)
     expect(recordingBySiteHour[0].recordedMinutes).toEqual([0, 20])
     expect(recordingBySiteHour[0].recordedMinutes).toEqual(expect.arrayContaining([20]))
+    expect(sum(recordingBySiteHour.map(item => item.recordingCount))).toBe(4)
   })
 
   test('can write new recordings by site hour for different sites', async () => {
@@ -141,6 +147,7 @@ describe('ingest > output > recording by site hour', () => {
 
     // Assert
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
+
     expect(recordingBySiteHour.length).toBe(3)
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
     expect(dayjs(recordingBySiteHour[1].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))

@@ -64,70 +64,80 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 30001001,
     locationSiteId: 30001001,
     totalDurationInMinutes: 4,
-    recordedMinutes: '{7, 9, 11, 13}'
+    recordedMinutes: '{7, 9, 11, 13}',
+    recordingCount: 4
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 2,
-    recordedMinutes: '{45, 47}'
+    recordedMinutes: '{45, 47}',
+    recordingCount: 2
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 11:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}'
+    recordedMinutes: '{11}',
+    recordingCount: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}'
+    recordedMinutes: '{11}',
+    recordingCount: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}'
+    recordedMinutes: '{11, 14, 17}',
+    recordingCount: 3
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 23:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}'
+    recordedMinutes: '{11, 14, 17}',
+    recordingCount: 3
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-16 23:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}'
+    recordedMinutes: '{11}',
+    recordingCount: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 00:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}'
+    recordedMinutes: '{11}',
+    recordingCount: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 12:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}'
+    recordedMinutes: '{11}',
+    recordingCount: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
     locationProjectId: 30001001,
     locationSiteId: 30001001,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}'
+    recordedMinutes: '{11, 14, 17}',
+    recordingCount: 3
   }
 ]
 
