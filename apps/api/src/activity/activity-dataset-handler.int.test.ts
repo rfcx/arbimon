@@ -88,7 +88,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -170,20 +170,20 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
-      expect(site.detection).toBe(4)
-      expect(site.detectionFrequency).toBeCloseTo(0.013, 2)
+      expect(site.detection).toBe(3)
+      expect(site.detectionFrequency).toBeCloseTo(0.428, 2)
       expect(site.occupancy).toBe(true)
     })
 
     test('calculates activityBySite by specific site correctly', async () => {
       // Arrange
-      const expectedSiteId = [20001001]
+      const expectedSiteId = [20001002]
       const app = await getMockedAppLoggedIn()
 
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '20001001' }
+        query: { dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '20001002' }
       })
 
       // Act
@@ -200,15 +200,15 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - detection, detection frequency, occupancy are correct
       const site = expectedResult[0]
-      expect(site.detection).toBe(4)
-      expect(site.detectionFrequency).toBeCloseTo(0.013, 2)
+      expect(site.detection).toBe(3)
+      expect(site.detectionFrequency).toBeCloseTo(0.230, 2)
       expect(site.occupancy).toBe(true)
     })
 
     test('calculates activityBySpecies correctly', async () => {
       // Arrange
       const expectedSpecies = ['Accipiter striatus venator', 'Actitis macularius']
-      const expectedDetectionCount = [4, 3]
+      const expectedDetectionCount = [4, 2]
       const expectedProperties = ['commonName', 'scientificName', 'taxon', 'detectionCount', 'detectionFrequency', 'occupiedSites', 'occupancyNaive']
 
       // Act
@@ -227,7 +227,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Assert - scientific name, detection count, detection frequency are correct
       expectedResult.forEach(item => expect(expectedSpecies).includes(item.scientificName))
       expectedResult.forEach(item => expect(expectedDetectionCount).includes(item.detectionCount))
-      expect(species.detectionFrequency).toBeCloseTo(0.003, 2)
+      expect(species.detectionFrequency).toBe(0.2)
     })
 
     test('calculates activityBySpecies by specific species correctly', async () => {
@@ -237,7 +237,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         scientificName: 'Accipiter striatus venator',
         taxon: 'Birds',
         detectionCount: 4,
-        detectionFrequency: 0.0036883356385431073,
+        detectionFrequency: 0.2,
         occupiedSites: 2,
         occupancyNaive: 1
       }
@@ -269,17 +269,17 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         siteName: 'Test Site',
         latitude: 18.31307,
         longitude: -65.24878,
-        detection: 2,
+        detection: 1,
         occupancy: true,
-        detectionFrequency: 0.006639004149377593
+        detectionFrequency: 0.14285714285714285
       }
 
       const activityBySpecies: ActivityOverviewDataBySpecies = {
         commonName: 'Spotted Sandpiper',
         scientificName: 'Actitis macularius',
         taxon: 'Birds',
-        detectionCount: 2,
-        detectionFrequency: 0.006639004149377593,
+        detectionCount: 1,
+        detectionFrequency: 0.14285714285714285,
         occupiedSites: 1,
         occupancyNaive: 1
       }
@@ -311,18 +311,14 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(expectedSpecies[0]).toEqual(activityBySpecies)
     })
 
-    test('check protected species', async () => {
+    test.todo('check protected species', async () => {
       // TODO
     })
 
     test('calculates activityByTimeHour correctly', async () => {
       // Arrange
-      const expectedDetection = { 10: 4, 12: 2, 15: 1 }
-      const expectedDetectionFrequency = {
-        10: 0.0036883356385431073,
-        12: 0.0018441678192715537,
-        15: 0.0009220839096357768
-      }
+      const expectedDetection = { 10: 2, 12: 2, 15: 2 }
+      const expectedDetectionFrequency = { 10: 0.1, 12: 0.1, 15: 0.1 }
       const expectedProperties = ['detection', 'detectionFrequency']
 
       // Act
@@ -345,8 +341,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('calculate activityByTimeDay correctly', async () => {
       // Arrange
-      const expectedDetection = { 1: 7 }
-      const expectedDetectionFrequency = { 1: 0.006454587367450438 }
+      const expectedDetection = { 1: 5, 3: 1 }
+      const expectedDetectionFrequency = { 1: 0.25, 3: 0.05 }
       const expectedProperties = ['detection', 'detectionFrequency']
 
       // Act
@@ -369,8 +365,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('calculate activityByTimeMonth correctly', async () => {
       // Arrange
-      const expectedDetection = { 1: 7 }
-      const expectedDetectionFrequency = { 1: 0.006454587367450438 }
+      const expectedDetection = { 1: 5, 3: 1 }
+      const expectedDetectionFrequency = { 1: 0.25, 3: 0.05 }
       const expectedProperties = ['detection', 'detectionFrequency']
 
       // Act
@@ -393,8 +389,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('calculate activityByTimeDate correctly', async () => {
       // Arrange
-      const expectedDetection = { 19038: 7 }
-      const expectedDetectionFrequency = { 19038: 0.006454587367450438 }
+      const expectedDetection = { 19038: 5, 19040: 1 }
+      const expectedDetectionFrequency = { 19038: 0.25, 19040: 0.05 }
       const expectedProperties = ['detection', 'detectionFrequency']
 
       // Act
@@ -417,9 +413,9 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   })
 
   describe('known data tests with filtered data', async () => {
-    test('detectionsBySite includes all sites from the filter')
-    test('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
-    test('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
+    test.todo('detectionsBySite includes all sites from the filter')
+    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
+    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
   })
 
   describe('known data tests with redacted data', async () => {
@@ -428,17 +424,17 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     const response = await app.inject({
       method: GET,
-      url: '/projects/1/activity',
+      url: URL,
       query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
     })
 
-    test('calculates isLocationRedacted correctly', async () => {
+    test.todo('calculates isLocationRedacted correctly', async () => {
       const result = JSON.parse(response.body)?.isLocationRedacted
       expect(result).toBeDefined()
       expect(result).toEqual(true)
     })
 
-    test('redacted species data (is / is not?) included in detectionsBySite')
+    // test.todo('redacted species data (is / is not?) included in detectionsBySite')
   })
 
   describe('client errors', () => {
@@ -449,7 +445,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/activity'
+        url: URL
       })
 
       // Assert
@@ -481,13 +477,13 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Act
       const response1 = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
+        url: URL,
         query: { dateStartInclusiveLocalIso: 'abc', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z' }
       })
 
       const response2 = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
+        url: URL,
         query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: 'abc' }
       })
 
@@ -505,8 +501,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(errorMessage2).toContain('endDate with value')
     })
 
-    test('rejects invalid site ids')
+    test.todo('rejects invalid site ids')
 
-    test('rejects invalid taxons')
+    test.todo('rejects invalid taxons')
   })
 })
