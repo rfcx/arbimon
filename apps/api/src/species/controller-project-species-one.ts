@@ -1,5 +1,3 @@
-import { Op } from 'sequelize'
-
 import { PredictedOccupancyMap, ProjectSpeciesOneParams, ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
@@ -47,12 +45,7 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
 
   const speciesCalls = await models.TaxonSpeciesCall.findAll({
     attributes: ATTRIBUTES_TAXON_SPECIES_CALL.light,
-    where: {
-      [Op.and]: {
-        callProjectId: locationProjectId,
-        taxonSpeciesId
-      }
-    },
+    where: { callProjectId: locationProjectId, taxonSpeciesId },
     raw: true
   })
 

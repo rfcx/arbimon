@@ -1,5 +1,8 @@
+import { Sequelize } from 'sequelize'
+
+import { Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS, DataSource, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 
@@ -30,14 +33,26 @@ export const getTimeBounds = async (models: AllModels, id: number): Promise<[str
       metric?.maxDate ? dayjs(metric.maxDate).toISOString() : undefined
     ])
 
-export const getUpdatedProject = async (models: AllModels, locationProjectId: number): Promise<DataSource[]> =>
-  await models
-    .DataSource
-    .findAll({
-      attributes: ['id', ['created_at', 'createdAt'], ['updated_at', 'updatedAt'], ['summary_text', 'summaryText']],
-      where: {
-        locationProjectId: locationProjectId
-      },
+export const getLatestSync = async (models: AllModels, sequelize: Sequelize, locationProjectId: number): Promise<Sync | undefined> => {
+  return await models.SyncLogByProject
+    .findOne({
+      attributes: [
+        'id', 'createdAt', 'updatedAt', 'delta',
+        [sequelize.col('SyncSource.name'), 'sourceType'],
+        [sequelize.col('SyncDataType.name'), 'dataType']
+      ],
+      where: { locationProjectId },
+      include: [
+        {
+          model: models.SyncSource,
+          attributes: []
+        },
+        {
+          model: models.SyncDataType,
+          attributes: []
+        }
+      ],
       order: [['updatedAt', 'DESC']],
-      limit: 1 // TODO: We will want to remove this from this API (and create proper version(s) APIs)
-    })
+      raw: true
+    }) as unknown as Sync | undefined
+}
