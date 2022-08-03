@@ -151,7 +151,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates activityBySite correctly', async () => {
       // Arrange
       const expectedSiteId = [20001001, 20001002]
-      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
+      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'totalDetectionCount', 'totalDetectionMinute', 'detectionFrequency', 'occupancy']
 
       // Act
       const result = JSON.parse(response.body)?.activityBySite
@@ -170,7 +170,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
-      expect(site.detection).toBe(3)
+      expect(site.totalDetectionCount).toBe(3)
+      expect(site.totalDetectionMinute).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.428, 2)
       expect(site.occupancy).toBe(true)
     })
@@ -200,7 +201,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - detection, detection frequency, occupancy are correct
       const site = expectedResult[0]
-      expect(site.detection).toBe(3)
+      expect(site.totalDetectionCount).toBe(3)
+      expect(site.totalDetectionMinute).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.230, 2)
       expect(site.occupancy).toBe(true)
     })
@@ -269,7 +271,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         siteName: 'Test Site',
         latitude: 18.31307,
         longitude: -65.24878,
-        detection: 1,
+        totalDetectionCount: 1,
+        totalDetectionMinute: 1,
         occupancy: true,
         detectionFrequency: 0.14285714285714285
       }

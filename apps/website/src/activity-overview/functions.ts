@@ -9,7 +9,7 @@ import { ActivityOverviewDataBySpecies } from './types'
 export type ActivityOverviewDataBySite = ActivityDatasetResponse & DatasetParameters
 
 export const ACTIVITY_OVERVIEW_MAP_KEYS = {
-  detection: 'detection',
+  totalDetectionCount: 'totalDetectionCount',
   detectionFrequency: 'detectionFrequency',
   occupancy: 'occupancy'
 }
@@ -29,23 +29,23 @@ export interface CsvData {
 
 export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[]): MapDataSet[] {
   const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
-    const detectionCounts = activityBySite.map(({ detection }) => detection)
+    const detectionCounts = activityBySite.map(({ totalDetectionCount }) => totalDetectionCount)
     const detectionFrequencies = activityBySite.map(({ detectionFrequency }) => detectionFrequency)
     return [Math.max(0, ...detectionCounts), Math.max(0, ...detectionFrequencies)]
   })
 
   const maxValues = {
-    [ACTIVITY_OVERVIEW_MAP_KEYS.detection]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
+    [ACTIVITY_OVERVIEW_MAP_KEYS.totalDetectionCount]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
     [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
   return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
-    const data = activityBySite.map(({ siteName, latitude, longitude, detection, detectionFrequency, occupancy }) => ({
+    const data = activityBySite.map(({ siteName, latitude, longitude, totalDetectionCount, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,
       longitude,
       distinctSpecies: {
-        [ACTIVITY_OVERVIEW_MAP_KEYS.detection]: detection,
+        [ACTIVITY_OVERVIEW_MAP_KEYS.totalDetectionCount]: totalDetectionCount,
         [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency,
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }

@@ -66,6 +66,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       })
 
       // Assert
+
       expect(response.statusCode).toBe(200)
 
       const result = JSON.parse(response.body)
