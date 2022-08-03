@@ -37,7 +37,8 @@ export const syncWikiSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
     return {
       taxonSpeciesId: speciesNameToId[name],
       source: SOURCES.wiki,
-      photoUrl: data.thumbnailImage,
+      // WARNING: Temperary fix
+      photoUrl: data.thumbnailImage.length > 512 ? '' : data.thumbnailImage,
       photoCaption: data.title,
       photoAuthor: data.credit ?? '',
       photoLicense: data.license,
