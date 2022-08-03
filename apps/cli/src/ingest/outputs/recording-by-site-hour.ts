@@ -21,7 +21,7 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon:
       // @ts-expect-error
       successToInsertItems.push(newRecording)
     } catch (e: any) {
-      console.error('⚠️ Insert recording by site hour failed...', e.message)
+      console.error('⚠️ Insert recording by site hour failed...')
       const errorMessage = (e instanceof Error) ? e.message : ''
       // store insert errors
       failedToInsertItems.push({
