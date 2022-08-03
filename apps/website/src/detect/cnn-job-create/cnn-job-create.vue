@@ -200,10 +200,10 @@ const onSelectClassifier = (classifierId: number) => {
   validated.value = false
   job.classifierId = classifierId
 }
-const onSelectQuerySites = (queryStreams: string) => {
+const onSelectQuerySites = (queryStreams: string | null) => {
   validated.value = false
   job.queryStreams = queryStreams
-  recordingQuery.querySites = queryStreams
+  recordingQuery.querySites = queryStreams ?? undefined
 }
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
   validated.value = false
