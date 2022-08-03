@@ -5,7 +5,7 @@ import { FilterDataset } from '~/datasets/dataset-types'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getRecordingTotalDurationMinutes } from './spotlight-dataset-dao'
+import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getRecordingTotalCount, getRecordingTotalDurationMinutes } from './spotlight-dataset-dao'
 
 export async function getSpotlightDatasetData (filter: FilterDataset, speciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
@@ -34,9 +34,11 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
 
   // Metrics
   const recordings = await getRecordings(models, locationProjectId, filter)
+  // TODO: add recording_minutes to the recording_by_site_hour table to calculate count oof input recordings from Arbimon
+  const totalRecordingCount = getRecordingTotalCount(recordings)
   const totalRecordingMinutes = getRecordingTotalDurationMinutes(recordings)
   const detectionCount = calculateDetectionCount(specificSpeciesDetections)
-  const detectionFrequency = calculateDetectionFrequency(detectionCount, totalRecordingMinutes)
+  const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, totalRecordingMinutes)
 
   const totalSiteCount = new Set(totalDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteCount = new Set(specificSpeciesDetections.map(({ locationSiteId }) => locationSiteId)).size
@@ -53,7 +55,7 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
 
   return {
     totalSiteCount,
-    totalRecordingCount: totalRecordingMinutes,
+    totalRecordingCount,
     detectionCount,
     detectionFrequency,
     occupiedSiteCount,

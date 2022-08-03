@@ -30,8 +30,8 @@ export function getRecordingTotalDurationMinutes (recordingsBySite: ActivityOver
 }
 
 function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingDuration: number): number {
-  const countDetectionMinutes = sum(detections.map(({ durationMinutes }) => durationMinutes))
-  return countDetectionMinutes === 0 ? 0 : countDetectionMinutes / totalRecordingDuration
+  const totalDetectionsMinutes = sum(detections.map(({ durationMinutes }) => durationMinutes))
+  return totalDetectionsMinutes === 0 ? 0 : totalDetectionsMinutes / totalRecordingDuration
 }
 
 export function calculateOccupancy (totalSiteCount: number, occupiedSites: number): number {
