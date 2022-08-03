@@ -7,13 +7,12 @@ import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { datasetFilterWhereRaw, FilterDatasetForSql, getDetectionBySiteHourWhereRaw } from '~/datasets/dataset-where'
+import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
-import { FilterDataset } from '../_services/datasets/dataset-types'
 import { dayjs } from '../_services/dayjs-initialized'
 
-export async function filterDetections (models: AllModels, projectId: number, filter: FilterDataset): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = getDetectionBySiteHourWhereRaw(projectId, filter)
+export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
     where,

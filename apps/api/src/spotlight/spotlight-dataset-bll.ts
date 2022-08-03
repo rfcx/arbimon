@@ -2,26 +2,29 @@ import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spo
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { FilterDataset } from '~/datasets/dataset-types'
+import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getRecordingTotalCount, getRecordingTotalDurationMinutes } from './spotlight-dataset-dao'
 
-export async function getSpotlightDatasetData (filter: FilterDataset, speciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
+export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
   const species = await models.TaxonSpecies.findOne({
-    where: { id: speciesId },
+    where: { id: taxonSpeciesId },
     raw: true
   })
   if (!species) throw BioNotFoundError()
 
   const { locationProjectId } = filter
 
+  const filterForSql = toFilterDatasetForSql({ ...filter, taxonSpeciesId })
+
   const speciesIucn = await models.SpeciesInProject
     .findOne({
-      where: { locationProjectId, taxonSpeciesId: speciesId },
+      where: { locationProjectId, taxonSpeciesId },
       attributes: ['riskRatingId'],
       raw: true
     })
@@ -29,12 +32,12 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
   const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !isProjectMember
 
   // Filtering
-  const totalDetections = await filterDetections(models, locationProjectId, filter)
-  const specificSpeciesDetections = await filterSpeciesDetection(models, locationProjectId, filter, speciesId)
+  const totalDetections = await filterDetections(models, filterForSql)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, filterForSql, taxonSpeciesId)
 
   // Metrics
-  const recordings = await getRecordings(models, locationProjectId, filter)
   // TODO: add recording_minutes to the recording_by_site_hour table to calculate count oof input recordings from Arbimon
+  const recordings = await getRecordings(models, filterForSql)
   const totalRecordingCount = getRecordingTotalCount(recordings)
   const totalRecordingMinutes = getRecordingTotalDurationMinutes(recordings)
   const detectionCount = calculateDetectionCount(specificSpeciesDetections)
@@ -45,7 +48,7 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
   // By site
-  const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsByLocationSite(models, totalDetections, filter, speciesId)
+  const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsByLocationSite(models, totalDetections, filterForSql)
   const detectionsByTimeHour = getDetectionsByTimeHour(specificSpeciesDetections, totalRecordingMinutes)
   const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, totalRecordingMinutes)
   const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, totalRecordingMinutes)
