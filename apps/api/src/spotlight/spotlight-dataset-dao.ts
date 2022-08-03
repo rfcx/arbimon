@@ -28,8 +28,8 @@ export async function filterSpeciesDetection (models: AllModels, projectId: numb
   })
 }
 
-export async function getRecordings (models: AllModels, projectId: number, filter: FilterDataset): Promise<RecordingBySiteHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = whereInDatasetTimeLocation({ ...filter, endDateUtcExclusive: filter.endDateUtcInclusive, locationProjectId: projectId })
+export async function getRecordings (models: AllModels, locationProjectId: number, filter: FilterDataset): Promise<RecordingBySiteHour[]> {
+  const where: Where<DetectionBySiteSpeciesHour> = whereInDatasetTimeLocation({ ...filter, endDateUtcExclusive: filter.endDateUtcInclusive, locationProjectId })
 
   return await models.RecordingBySiteHour.findAll({
     where,
@@ -41,17 +41,17 @@ export function getRecordingTotalDurationMinutes (recordings: RecordingBySiteHou
   return sum(recordings.map(({ totalDurationInMinutes }) => totalDurationInMinutes))
 }
 
-export function calculateDetectionFrequency (detectionCount: number, totalRecordingDuration: number): number {
-  return detectionCount === 0 ? 0 : detectionCount / totalRecordingDuration
+export function getRecordingTotalCount (recordings: RecordingBySiteHour[]): number {
+  return sum(recordings.map(({ recordedMinutes }) => recordedMinutes.length ? recordedMinutes.length : 0))
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
   return sum(detections.map(({ count }) => count))
 }
 
-function calculateDetectionFrequencyActivity (detections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): number {
-  const detectionCount = sum(detections.map(d => d.count))
-  return detectionCount === 0 ? 0 : detectionCount / totalRecordingCount
+export function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): number {
+  const totalDetectionMinutes = sum(detections.map(d => d.durationMinutes))
+  return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordingCount
 }
 
 export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDataset, speciesId: number): Promise<SpotlightDetectionDataBySite> {
@@ -79,7 +79,8 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
 
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === speciesId)
     const siteDetectionCount = sum(siteSpeciesSummaries.map(({ count }) => count))
-    const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionCount / siteTotalRecordingCount
+    const siteDetectionMinutes = sum(siteSpeciesSummaries.map(({ durationMinutes }) => durationMinutes))
+    const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionMinutes / siteTotalRecordingCount
     const siteOccupied = siteSpeciesSummaries.length > 0
 
     return {
@@ -98,7 +99,7 @@ export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionByS
   const byHour = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).hour())
   return {
     detection: mapValues(byHour, calculateDetectionCount),
-    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
 
@@ -106,7 +107,7 @@ export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySi
   const byDay = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1)
   return {
     detection: mapValues(byDay, calculateDetectionCount),
-    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
 
@@ -114,7 +115,7 @@ export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBy
   const byMonth = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).month())
   return {
     detection: mapValues(byMonth, calculateDetectionCount),
-    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
 
@@ -122,7 +123,7 @@ export function getDetectionsByTimeYear (specificSpeciesDetections: DetectionByS
   const byYear = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).year())
   return {
     detection: mapValues(byYear, calculateDetectionCount),
-    detectionFrequency: mapValues(byYear, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detectionFrequency: mapValues(byYear, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
 
@@ -131,7 +132,7 @@ export function getDetectionsByTimeDateUnix (specificSpeciesDetections: Detectio
   const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
   return {
     detection: mapValues(byDateUnix, calculateDetectionCount),
-    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
 
@@ -139,6 +140,6 @@ export function getDetectionsByTimeMonthYear (specificSpeciesDetections: Detecti
   const byMonthYear = groupBy(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('month').format('MM/YYYY'))
   return {
     detection: mapValues(byMonthYear, calculateDetectionCount),
-    detectionFrequency: mapValues(byMonthYear, (data) => calculateDetectionFrequencyActivity(data, totalRecordingCount))
+    detectionFrequency: mapValues(byMonthYear, (data) => calculateDetectionFrequency(data, totalRecordingCount))
   }
 }
