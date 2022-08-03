@@ -63,70 +63,70 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001001,
-    totalDurationInMinutes: 120.5,
-    recordedMinutes: '{7, 9}'
+    totalDurationInMinutes: 4,
+    recordedMinutes: '{7, 9, 11, 13}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 120.5,
-    recordedMinutes: '{7, 9}'
+    totalDurationInMinutes: 2,
+    recordedMinutes: '{45, 47}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 11:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 60.25,
+    totalDurationInMinutes: 1,
     recordedMinutes: '{11}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 60.25,
+    totalDurationInMinutes: 1,
     recordedMinutes: '{11}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 180.75,
+    totalDurationInMinutes: 3,
     recordedMinutes: '{11, 14, 17}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 23:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 180.75,
+    totalDurationInMinutes: 3,
     recordedMinutes: '{11, 14, 17}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-16 23:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 60.25,
+    totalDurationInMinutes: 1,
     recordedMinutes: '{11}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 00:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 60.25,
+    totalDurationInMinutes: 1,
     recordedMinutes: '{11}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 12:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    totalDurationInMinutes: 60.25,
+    totalDurationInMinutes: 1,
     recordedMinutes: '{11}'
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001001,
-    totalDurationInMinutes: 180.75,
+    totalDurationInMinutes: 3,
     recordedMinutes: '{11, 14, 17}'
   }
 ]
@@ -138,16 +138,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     locationSiteId: 20001001,
     ...taxonSpeciesAndClassForId(1),
     count: 2,
-    durationMinutes: 120,
-    detectionMinutes: [7, 9]
-  },
-  {
-    timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
-    locationProjectId: 20001001,
-    locationSiteId: 20001001,
-    ...taxonSpeciesAndClassForId(2),
-    count: 2,
-    durationMinutes: 120,
+    durationMinutes: 2,
     detectionMinutes: [7, 9]
   },
   {
@@ -156,7 +147,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     locationSiteId: 20001002,
     ...taxonSpeciesAndClassForId(2),
     count: 1,
-    durationMinutes: 60,
+    durationMinutes: 1,
     detectionMinutes: [55]
   },
   {
@@ -165,7 +156,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     locationSiteId: 20001002,
     ...taxonSpeciesAndClassForId(1),
     count: 1,
-    durationMinutes: 60,
+    durationMinutes: 1,
     detectionMinutes: [11]
   },
   {
@@ -174,8 +165,17 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     locationSiteId: 20001002,
     ...taxonSpeciesAndClassForId(1),
     count: 1,
-    durationMinutes: 60,
+    durationMinutes: 1,
     detectionMinutes: [1]
+  },
+  {
+    timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
+    locationProjectId: 20001001,
+    locationSiteId: 20001001,
+    ...taxonSpeciesAndClassForId(2),
+    count: 1,
+    durationMinutes: 1,
+    detectionMinutes: [17]
   }
 ]
 
