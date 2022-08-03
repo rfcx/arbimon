@@ -61,18 +61,21 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
         name as "siteName",
         latitude,
         longitude,
-        detection,
+        count as "totalDetectionCount",
+        detection as "totalDetectionMinute",
         detection > 0 occupancy
     FROM (
         SELECT ls.id,
             ls.name,
             ls.latitude,
             ls.longitude,
+            coalesce(sum(detection_by_site_hour.count), 0)::integer as count,
             coalesce(sum(detection_by_site_hour.duration_minutes), 0)::integer as detection
         FROM location_site as ls
         LEFT JOIN (
             SELECT time_precision_hour_local,
                 location_site_id,
+                sum(count) as count,
                 sum(duration_minutes) as duration_minutes
             FROM detection_by_site_species_hour dbssh
             WHERE ${datasetConditions}
@@ -146,7 +149,7 @@ export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDat
 
 export function getDetectionFrequencyBySite (detectionData: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency, allRecordings: ActivityOverviewRecordingDataBySite[]): number {
   const recordingsBySite = allRecordings.find(rec => rec.siteId === detectionData.siteId)
-  return recordingsBySite?.totalRecordingMinutes === undefined ? 0 : detectionData.detection / recordingsBySite.totalRecordingMinutes
+  return recordingsBySite?.totalRecordingMinutes === undefined ? 0 : detectionData.totalDetectionMinute / recordingsBySite.totalRecordingMinutes
 }
 
 export function parseDetectionsBySite (detections: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[], recordings: ActivityOverviewRecordingDataBySite[]): ActivityOverviewDetectionDataBySite[] {
