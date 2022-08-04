@@ -1,7 +1,7 @@
 import { BindOrReplacements, Op } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
 import { FilterDataset } from './dataset-types'
@@ -16,7 +16,8 @@ export interface FilterDatasetForSql extends Record<string, unknown> {
   startDateUtcInclusive: string
   endDateUtcExclusive: string
   siteIds: number[]
-  taxons: number[]
+  taxons?: number[]
+  taxonSpeciesId?: number
 }
 
 export const toFilterDatasetForSql = ({ endDateUtcInclusive, ...rest }: FilterDataset): FilterDatasetForSql =>
@@ -43,7 +44,7 @@ export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition =>
     bind.siteIds = siteIds
   }
 
-  if (taxons.length > 0) {
+  if (taxons !== undefined && taxons.length > 0) {
     conditions.push('dbssh.taxon_class_id = ANY($taxons)')
     bind.taxons = taxons
   }
@@ -52,7 +53,7 @@ export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition =>
 }
 
 export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
+  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons, taxonSpeciesId } = filter
 
   const where: Where<DetectionBySiteSpeciesHour> = {
     timePrecisionHourLocal: {
@@ -68,29 +69,19 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
     where.locationSiteId = siteIds
   }
 
-  if (taxons.length > 0) {
+  if (taxons !== undefined && taxons.length > 0) {
     where.taxonClassId = taxons
+  }
+
+  if (taxonSpeciesId !== undefined) {
+    where.taxonSpeciesId = taxonSpeciesId
   }
 
   return where
 }
 
-export const whereInDatasetTimeLocation = (filter: FilterDatasetForSql): Where<DetectionBySiteSpeciesHour> => {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
-
-  const where: Where<DetectionBySiteSpeciesHour> = {
-    timePrecisionHourLocal: {
-      [Op.and]: {
-        [Op.gte]: startDateUtcInclusive,
-        [Op.lt]: endDateUtcExclusive
-      }
-    },
-    locationProjectId
-  }
-
-  if (siteIds.length > 0) {
-    where.locationSiteId = siteIds
-  }
-
-  return where
+export const whereRecordingBySiteHour = (filter: FilterDatasetForSql): Where<RecordingBySiteHour> => {
+  const { taxonSpeciesId, taxons, ...filterWithoutTaxonSpeciesIdAndtaxonClassId } = filter
+  // console.info('\n\n-----filterWithoutTaxonSpeciesId------', filterWithoutTaxonSpeciesIdAndtaxonClassId)
+  return whereInDataset(filterWithoutTaxonSpeciesIdAndtaxonClassId)
 }
