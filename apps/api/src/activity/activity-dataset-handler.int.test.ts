@@ -1,12 +1,15 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { ActivityOverviewDetectionDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
 
+const PROJECT_ID_BASIC = '20001001'
+
 const ROUTE = '/projects/:projectId/activity'
+const URL = `/projects/${PROJECT_ID_BASIC}/activity`
 
 const EXPECTED_PROPS = [
   'isLocationRedacted',
@@ -17,6 +20,10 @@ const EXPECTED_PROPS = [
   'activityByTimeMonth',
   'activityByTimeDate'
 ]
+
+const isObjectValueNumber = (obj: any): boolean => {
+  return Object.values(obj).every(o => typeof o === 'number')
+}
 
 const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
   const app = await fastify()
@@ -45,7 +52,7 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
   const fakeRequestContext = {
     get: (key: string) => ({
       IS_PROJECT_MEMBER: true,
-      MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
+      MEMBER_PROJECT_CORE_IDS: ['integration2']
     })[key],
     set: (key: string, value: any) => {}
   }
@@ -60,7 +67,7 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe('GET /projects/:projectId/activity (activity dataset)', () => {
+describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
     // Arrange
@@ -80,8 +87,8 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -99,8 +106,8 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '', taxonClassIds: '' }
       })
 
       // Assert
@@ -115,8 +122,8 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
-        query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -131,8 +138,8 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
     const response = await app.inject({
       method: GET,
-      url: '/projects/1/activity',
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+      url: URL,
+      query: { dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
     })
 
     test('calculates isLocationRedacted correctly', async () => {
@@ -143,61 +150,268 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
     test('calculates activityBySite correctly', async () => {
       // Arrange
-      const knownSiteId = 123
-      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'detection', 'detectionFrequency', 'occupancy']
+      const expectedSiteId = [20001001, 20001002]
+      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'totalDetectionCount', 'totalDetectionMinutes', 'detectionFrequency', 'occupancy']
 
       // Act
-      const maybeResult = JSON.parse(response.body)?.activityBySite
+      const result = JSON.parse(response.body)?.activityBySite
 
       // Assert - property exists & correct type
-      expect(maybeResult).toBeDefined()
-      expect(Array.isArray(maybeResult)).toBe(true)
-      const result = maybeResult as ActivityOverviewDetectionDataBySite[]
-      expect(result.length).toBe(877)
+      expect(result).toBeDefined()
+      expect(Array.isArray(result)).toBe(true)
+      const expectedResult = result as ActivityOverviewDetectionDataBySite[]
+      expect(expectedResult.length).toBe(2)
 
-      // Assert - first result is object
-      const maybeKnownSite = result.find(bySite => bySite.siteId === knownSiteId)
-      expect(maybeKnownSite).toBeTypeOf('object')
-      const knownSite = maybeKnownSite as Record<string, any>
+      // Assert - get expected site id
+      expectedResult.forEach(group => expect(expectedSiteId).includes(group.siteId))
 
-      // Assert - first result contains (only) expected props
-      expectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
-      Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+      // Assert - first result contains expected props
+      const site = expectedResult[0]
+      expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
-      expect(knownSite.detection).toBe(263)
-      expect(knownSite.detectionFrequency).toBeCloseTo(0.27058, 5)
-      expect(knownSite.occupancy).toBe(true)
+      expect(site.totalDetectionCount).toBe(3)
+      expect(site.totalDetectionMinutes).toBe(3)
+      expect(site.detectionFrequency).toBeCloseTo(0.428, 2)
+      expect(site.occupancy).toBe(true)
     })
 
-    test.todo('calculates activityBySpecies correctly', async () => {
+    test('calculates activityBySite by specific site correctly', async () => {
+      // Arrange
+      const expectedSiteId = [20001002]
+      const app = await getMockedAppLoggedIn()
+
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: '20001002' }
+      })
+
+      // Act
+      const result = JSON.parse(response.body)?.activityBySite
+
+      // Assert - property exists & correct type
+      expect(result).toBeDefined()
+      expect(Array.isArray(result)).toBe(true)
+      const expectedResult = result as ActivityOverviewDetectionDataBySite[]
+      expect(expectedResult.length).toBe(1)
+
+      // Assert - get expected site id
+      expectedResult.forEach(group => expect(expectedSiteId).includes(group.siteId))
+
+      // Assert - detection, detection frequency, occupancy are correct
+      const site = expectedResult[0]
+      expect(site.totalDetectionCount).toBe(3)
+      expect(site.totalDetectionMinutes).toBe(3)
+      expect(site.detectionFrequency).toBeCloseTo(0.230, 2)
+      expect(site.occupancy).toBe(true)
+    })
+
+    test('calculates activityBySpecies correctly', async () => {
+      // Arrange
+      const expectedSpecies = ['Accipiter striatus venator', 'Actitis macularius']
+      const expectedDetectionCount = [4, 2]
+      const expectedProperties = ['commonName', 'scientificName', 'taxon', 'detectionCount', 'detectionFrequency', 'occupiedSites', 'occupancyNaive']
+
+      // Act
       const result = JSON.parse(response.body)?.activityBySpecies
+
+      // Assert - property exists & correct type
       expect(result).toBeDefined()
-      // ...
+      expect(Array.isArray(result)).toBe(true)
+      const expectedResult = result as ActivityOverviewDataBySpecies[]
+      expect(expectedResult.length).toBe(2)
+
+      // Assert - first result contains expected props
+      const species = expectedResult[0]
+      expectedProperties.forEach(expectedProperty => expect(species).toHaveProperty(expectedProperty))
+
+      // Assert - scientific name, detection count, detection frequency are correct
+      expectedResult.forEach(item => expect(expectedSpecies).includes(item.scientificName))
+      expectedResult.forEach(item => expect(expectedDetectionCount).includes(item.detectionCount))
+      expect(species.detectionFrequency).toBe(0.2)
     })
 
-    test.todo('calculates activityByTimeHour correctly', async () => {
-      const result = JSON.parse(response.body)?.activityByTimeHour
+    test('calculates activityBySpecies by specific species correctly', async () => {
+      // Arrange
+      const expected: ActivityOverviewDataBySpecies = {
+        commonName: 'Puerto Rican sharp-shinned hawk',
+        scientificName: 'Accipiter striatus venator',
+        taxon: 'Birds',
+        detectionCount: 4,
+        detectionFrequency: 0.2,
+        occupiedSites: 2,
+        occupancyNaive: 1
+      }
+      const app = await getMockedAppLoggedIn()
+
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2022-01-02T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-02T00:00:00.000Z', taxonClassIds: '600' }
+      })
+
+      // Act
+      const result = JSON.parse(response.body)?.activityBySpecies
+
+      // Assert - property exists & correct type
       expect(result).toBeDefined()
-      // ...
+      expect(Array.isArray(result)).toBe(true)
+      const expectedResult = result as ActivityOverviewDataBySpecies[]
+      expect(expectedResult.length).toBe(1)
+
+      // Assert - activityBySpecies is correct
+      expect(expectedResult[0]).toEqual(expected)
     })
 
-    test.todo('calculate activityByTimeDay correctly', async () => {
-      const result = JSON.parse(response.body)?.activityByTimeDay
+    test('filters by site and taxon work correctly', async () => {
+      // Arrange
+      const activityBySite: ActivityOverviewDetectionDataBySite = {
+        siteId: 20001001,
+        siteName: 'Test Site',
+        latitude: 18.31307,
+        longitude: -65.24878,
+        totalDetectionCount: 1,
+        totalDetectionMinutes: 1,
+        occupancy: true,
+        detectionFrequency: 0.14285714285714285
+      }
+
+      const activityBySpecies: ActivityOverviewDataBySpecies = {
+        commonName: 'Spotted Sandpiper',
+        scientificName: 'Actitis macularius',
+        taxon: 'Birds',
+        detectionCount: 1,
+        detectionFrequency: 0.14285714285714285,
+        occupiedSites: 1,
+        occupancyNaive: 1
+      }
+
+      const app = await getMockedAppLoggedIn()
+
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2022-01-02T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-02T00:00:00.000Z', siteIds: '20001001', taxonClassIds: '100' }
+      })
+
+      // Act
+      const result = JSON.parse(response.body)
+
+      // Assert - property exists & correct type
       expect(result).toBeDefined()
-      // ...
+      const expectedSite = result.activityBySite as ActivityOverviewDetectionDataBySite[]
+      const expectedSpecies = result.activityBySpecies as ActivityOverviewDataBySpecies[]
+      expect(Array.isArray(expectedSite)).toBe(true)
+      expect(Array.isArray(expectedSpecies)).toBe(true)
+      expect(expectedSite.length).toBe(1)
+      expect(expectedSpecies.length).toBe(1)
+
+      // Assert - activityBySite is correct
+      expect(expectedSite[0]).toEqual(activityBySite)
+
+      // Assert - activityBySpecies is correct
+      expect(expectedSpecies[0]).toEqual(activityBySpecies)
     })
 
-    test.todo('calculate activityByTimeMonth correctly', async () => {
-      const result = JSON.parse(response.body)?.activityByTimeMonth
-      expect(result).toBeDefined()
-      // ...
+    test.todo('check protected species', async () => {
+      // TODO
     })
 
-    test.todo('calculate activityByTimeDate correctly', async () => {
-      const result = JSON.parse(response.body)?.activityByTimeDate
-      expect(result).toBeDefined()
-      // ...
+    test('calculates activityByTimeHour correctly', async () => {
+      // Arrange
+      const expectedDetection = { 10: 2, 12: 2, 15: 2 }
+      const expectedDetectionFrequency = { 10: 0.1, 12: 0.1, 15: 0.1 }
+      const expectedProperties = ['detection', 'detectionFrequency']
+
+      // Act
+      const activityByTimeHour = JSON.parse(response.body)?.activityByTimeHour
+
+      // Assert - property exists & correct type
+      expect(activityByTimeHour).toBeDefined()
+      expect(activityByTimeHour).toBeTypeOf('object')
+      const expectedResult = activityByTimeHour as ActivityOverviewDetectionDataByTime
+      expect(Object.keys(expectedResult).length).toBe(2)
+
+      // Assert - result contains expected props
+      expectedProperties.forEach(expectedProperty => expect(activityByTimeHour).toHaveProperty(expectedProperty))
+
+      // Assert - detection, detection frequency are correct
+      expect(isObjectValueNumber(activityByTimeHour.detection)).toBeTruthy()
+      expect(activityByTimeHour.detection).toEqual(expectedDetection)
+      expect(activityByTimeHour.detectionFrequency).toEqual(expectedDetectionFrequency)
+    })
+
+    test('calculate activityByTimeDay correctly', async () => {
+      // Arrange
+      const expectedDetection = { 1: 5, 3: 1 }
+      const expectedDetectionFrequency = { 1: 0.25, 3: 0.05 }
+      const expectedProperties = ['detection', 'detectionFrequency']
+
+      // Act
+      const activityByTimeDay = JSON.parse(response.body)?.activityByTimeDay
+
+      // Assert - property exists & correct type
+      expect(activityByTimeDay).toBeDefined()
+      expect(activityByTimeDay).toBeTypeOf('object')
+      const expectedResult = activityByTimeDay as ActivityOverviewDetectionDataByTime
+      expect(Object.keys(expectedResult).length).toBe(2)
+
+      // Assert - result contains expected props
+      expectedProperties.forEach(expectedProperty => expect(activityByTimeDay).toHaveProperty(expectedProperty))
+
+      // Assert - detection, detection frequency are correct
+      expect(isObjectValueNumber(activityByTimeDay.detection)).toBeTruthy()
+      expect(activityByTimeDay.detection).toEqual(expectedDetection)
+      expect(activityByTimeDay.detectionFrequency).toEqual(expectedDetectionFrequency)
+    })
+
+    test('calculate activityByTimeMonth correctly', async () => {
+      // Arrange
+      const expectedDetection = { 1: 5, 3: 1 }
+      const expectedDetectionFrequency = { 1: 0.25, 3: 0.05 }
+      const expectedProperties = ['detection', 'detectionFrequency']
+
+      // Act
+      const activityByTimeMonth = JSON.parse(response.body)?.activityByTimeDay
+
+      // Assert - property exists & correct type
+      expect(activityByTimeMonth).toBeDefined()
+      expect(activityByTimeMonth).toBeTypeOf('object')
+      const expectedResult = activityByTimeMonth as ActivityOverviewDetectionDataByTime
+      expect(Object.keys(expectedResult).length).toBe(2)
+
+      // Assert - result contains expected props
+      expectedProperties.forEach(expectedProperty => expect(activityByTimeMonth).toHaveProperty(expectedProperty))
+
+      // Assert - detection, detection frequency are correct
+      expect(isObjectValueNumber(activityByTimeMonth.detection)).toBeTruthy()
+      expect(activityByTimeMonth.detection).toEqual(expectedDetection)
+      expect(activityByTimeMonth.detectionFrequency).toEqual(expectedDetectionFrequency)
+    })
+
+    test('calculate activityByTimeDate correctly', async () => {
+      // Arrange
+      const expectedDetection = { 19038: 5, 19040: 1 }
+      const expectedDetectionFrequency = { 19038: 0.25, 19040: 0.05 }
+      const expectedProperties = ['detection', 'detectionFrequency']
+
+      // Act
+      const activityByTimeDate = JSON.parse(response.body)?.activityByTimeDate
+
+      // Assert - property exists & correct type
+      expect(activityByTimeDate).toBeDefined()
+      expect(activityByTimeDate).toBeTypeOf('object')
+      const expectedResult = activityByTimeDate as ActivityOverviewDetectionDataByTime
+      expect(Object.keys(expectedResult).length).toBe(2)
+
+      // Assert - result contains expected props
+      expectedProperties.forEach(expectedProperty => expect(activityByTimeDate).toHaveProperty(expectedProperty))
+
+      // Assert - detection, detection frequency are correct
+      expect(isObjectValueNumber(activityByTimeDate.detection)).toBeTruthy()
+      expect(activityByTimeDate.detection).toEqual(expectedDetection)
+      expect(activityByTimeDate.detectionFrequency).toEqual(expectedDetectionFrequency)
     })
   })
 
@@ -213,17 +427,17 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
 
     const response = await app.inject({
       method: GET,
-      url: '/projects/1/activity',
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2031-01-01T00:00:00.000Z' }
+      url: URL,
+      query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
     })
 
-    test('calculates isLocationRedacted correctly', async () => {
+    test.todo('calculates isLocationRedacted correctly', async () => {
       const result = JSON.parse(response.body)?.isLocationRedacted
       expect(result).toBeDefined()
       expect(result).toEqual(true)
     })
 
-    test.todo('redacted species data (is / is not?) included in detectionsBySite')
+    // test.todo('redacted species data (is / is not?) included in detectionsBySite')
   })
 
   describe('client errors', () => {
@@ -234,7 +448,7 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/activity'
+        url: URL
       })
 
       // Assert
@@ -266,14 +480,14 @@ describe('GET /projects/:projectId/activity (activity dataset)', () => {
       // Act
       const response1 = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
-        query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+        url: URL,
+        query: { dateStartInclusiveLocalIso: 'abc', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z' }
       })
 
       const response2 = await app.inject({
         method: GET,
-        url: '/projects/1/activity',
-        query: { startDate: '2021-01-01T00:00:00.000Z', endDate: 'abc' }
+        url: URL,
+        query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: 'abc' }
       })
 
       // Assert

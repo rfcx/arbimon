@@ -6,6 +6,7 @@ export interface RecordingBySiteHour extends WithDates {
   locationSiteId: number
   totalDurationInMinutes: number
   recordedMinutes: number[]
+  recordingCount: number
 }
 
 export const ATTRIBUTES_RECORDING_BY_SITE_HOUR = attributes<RecordingBySiteHour>()({
