@@ -28,7 +28,7 @@ export async function filterSpeciesDetection (models: AllModels, filter: FilterD
 }
 
 export async function getRecordings (models: AllModels, filter: FilterDatasetForSql): Promise<RecordingBySiteHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = whereRecordingBySiteHour(filter)
+  const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
 
   return await models.RecordingBySiteHour.findAll({
     where,
@@ -55,7 +55,6 @@ export function calculateDetectionFrequency (detections: DetectionBySiteSpeciesH
 
 export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDatasetForSql): Promise<SpotlightDetectionDataBySite> {
   const summariesBySite: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(totalDetections, 'locationSiteId')
-  const locationProjectId = totalDetections[0].locationProjectId || -1
   const siteIds = Object.keys(summariesBySite)
 
   const sites = await models.LocationSite.findAll({
@@ -67,6 +66,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
 
   // TODO: Improve the logic to get all sites recordings at once?
   for (const site of sites) {
+    const locationProjectId = filter.locationProjectId || -1
     const siteTotalRecording = await getRecordings(models, { ...filter, locationProjectId, siteIds: [site.id] })
     summariesRecordingBySite[site.id] = siteTotalRecording
   }

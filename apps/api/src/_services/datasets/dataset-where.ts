@@ -16,7 +16,7 @@ export interface FilterDatasetForSql extends Record<string, unknown> {
   startDateUtcInclusive: string
   endDateUtcExclusive: string
   siteIds: number[]
-  taxons: number[]
+  taxons?: number[]
   taxonSpeciesId?: number
 }
 
@@ -44,7 +44,7 @@ export const datasetFilterWhereRaw = (filter: FilterDatasetForSql): Condition =>
     bind.siteIds = siteIds
   }
 
-  if (taxons.length > 0) {
+  if (taxons !== undefined && taxons.length > 0) {
     conditions.push('dbssh.taxon_class_id = ANY($taxons)')
     bind.taxons = taxons
   }
@@ -69,7 +69,7 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
     where.locationSiteId = siteIds
   }
 
-  if (taxons.length > 0) {
+  if (taxons !== undefined && taxons.length > 0) {
     where.taxonClassId = taxons
   }
 
@@ -81,6 +81,7 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
 }
 
 export const whereRecordingBySiteHour = (filter: FilterDatasetForSql): Where<RecordingBySiteHour> => {
-  const { taxonSpeciesId, ...filterWithoutTaxonSpeciesId } = filter
-  return whereInDataset(filterWithoutTaxonSpeciesId)
+  const { taxonSpeciesId, taxons, ...filterWithoutTaxonSpeciesIdAndtaxonClassId } = filter
+  // console.info('\n\n-----filterWithoutTaxonSpeciesId------', filterWithoutTaxonSpeciesIdAndtaxonClassId)
+  return whereInDataset(filterWithoutTaxonSpeciesIdAndtaxonClassId)
 }
