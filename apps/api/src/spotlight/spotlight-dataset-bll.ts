@@ -36,7 +36,6 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
   const specificSpeciesDetections = await filterSpeciesDetection(models, filterForSql, taxonSpeciesId)
 
   // Metrics
-  // TODO: add recording_minutes to the recording_by_site_hour table to calculate count oof input recordings from Arbimon
   const recordings = await getRecordings(models, filterForSql)
   const totalRecordingCount = getRecordingTotalCount(recordings)
   const totalRecordingMinutes = getRecordingTotalDurationMinutes(recordings)

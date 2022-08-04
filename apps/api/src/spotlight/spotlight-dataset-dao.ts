@@ -48,9 +48,9 @@ export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[
   return sum(detections.map(({ count }) => count))
 }
 
-export function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): number {
+export function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): number {
   const totalDetectionMinutes = sum(detections.map(d => d.durationMinutes))
-  return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordingCount
+  return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordingMinutes
 }
 
 export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDatasetForSql): Promise<SpotlightDetectionDataBySite> {
@@ -72,15 +72,15 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   }
 
   return mapValues(summariesBySite, (siteSummaries, siteIdString) => {
-    const siteId = Number(siteIdString)
+    const siteId: number = Number(siteIdString)
     const matchedSite = sites.find(s => s.id === siteId)
 
-    const siteTotalRecordingCount = getRecordingTotalDurationMinutes(summariesRecordingBySite[siteId])
+    const siteTotalRecordingMinutes = getRecordingTotalDurationMinutes(summariesRecordingBySite[siteId])
 
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.speciesId)
     const siteDetectionCount = sum(siteSpeciesSummaries.map(({ count }) => count))
     const siteDetectionMinutes = sum(siteSpeciesSummaries.map(({ durationMinutes }) => durationMinutes))
-    const siteDetectionFrequency = siteTotalRecordingCount === 0 ? 0 : siteDetectionMinutes / siteTotalRecordingCount
+    const siteDetectionFrequency = siteTotalRecordingMinutes === 0 ? 0 : siteDetectionMinutes / siteTotalRecordingMinutes
     const siteOccupied = siteSpeciesSummaries.length > 0
 
     return {
@@ -95,51 +95,51 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   })
 }
 
-export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
+export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): SpotlightDetectionDataByTime {
   const byHour = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).hour())
   return {
     detection: mapValues(byHour, calculateDetectionCount),
-    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingMinutes))
   }
 }
 
-export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
+export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): SpotlightDetectionDataByTime {
   const byDay = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1)
   return {
     detection: mapValues(byDay, calculateDetectionCount),
-    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingMinutes))
   }
 }
 
-export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
+export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): SpotlightDetectionDataByTime {
   const byMonth = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).month())
   return {
     detection: mapValues(byMonth, calculateDetectionCount),
-    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingMinutes))
   }
 }
 
-export function getDetectionsByTimeYear (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
+export function getDetectionsByTimeYear (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): SpotlightDetectionDataByTime {
   const byYear = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).year())
   return {
     detection: mapValues(byYear, calculateDetectionCount),
-    detectionFrequency: mapValues(byYear, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byYear, (data) => calculateDetectionFrequency(data, totalRecordingMinutes))
   }
 }
 
-export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime {
+export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): SpotlightDetectionDataByTime {
   const SECONDS_PER_DAY = 24 * 60 * 60
   const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
   return {
     detection: mapValues(byDateUnix, calculateDetectionCount),
-    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingMinutes))
   }
 }
 
-export function getDetectionsByTimeMonthYear (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingCount: number): SpotlightDetectionDataByTime<string> {
+export function getDetectionsByTimeMonthYear (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number): SpotlightDetectionDataByTime<string> {
   const byMonthYear = groupBy(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('month').format('MM/YYYY'))
   return {
     detection: mapValues(byMonthYear, calculateDetectionCount),
-    detectionFrequency: mapValues(byMonthYear, (data) => calculateDetectionFrequency(data, totalRecordingCount))
+    detectionFrequency: mapValues(byMonthYear, (data) => calculateDetectionFrequency(data, totalRecordingMinutes))
   }
 }
