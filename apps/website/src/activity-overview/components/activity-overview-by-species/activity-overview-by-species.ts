@@ -71,6 +71,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
 
   @Prop() datasets!: SpeciesDataset[]
+  @Prop({ default: true }) isLocationRedacted!: boolean
 
   pageIndex = 1 // 1-based for humans
   sortColumn: SortableColumn = 'scientificName'
@@ -89,8 +90,8 @@ export default class ActivityOverviewBySpecies extends Vue {
     ]
   }
 
-  get notEmpty (): boolean {
-    return this.datasets.length > 0
+  get hasTableData (): boolean {
+    return this.datasets.length > 0 && this.datasets.some(dataset => dataset.data.length > 0)
   }
 
   get hasMoreThanOneDatasets (): boolean {
