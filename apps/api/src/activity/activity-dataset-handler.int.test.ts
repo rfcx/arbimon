@@ -151,7 +151,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates activityBySite correctly', async () => {
       // Arrange
       const expectedSiteId = [20001001, 20001002]
-      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'totalDetectionCount', 'totalDetectionMinute', 'detectionFrequency', 'occupancy']
+      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'totalDetectionCount', 'totalDetectionMinutes', 'detectionFrequency', 'occupancy']
 
       // Act
       const result = JSON.parse(response.body)?.activityBySite
