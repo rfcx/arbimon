@@ -171,7 +171,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - detection, detection frequency, occupancy are correct
       expect(site.totalDetectionCount).toBe(3)
-      expect(site.totalDetectionMinute).toBe(3)
+      expect(site.totalDetectionMinutes).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.428, 2)
       expect(site.occupancy).toBe(true)
     })
@@ -202,7 +202,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Assert - detection, detection frequency, occupancy are correct
       const site = expectedResult[0]
       expect(site.totalDetectionCount).toBe(3)
-      expect(site.totalDetectionMinute).toBe(3)
+      expect(site.totalDetectionMinutes).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.230, 2)
       expect(site.occupancy).toBe(true)
     })
@@ -272,7 +272,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         latitude: 18.31307,
         longitude: -65.24878,
         totalDetectionCount: 1,
-        totalDetectionMinute: 1,
+        totalDetectionMinutes: 1,
         occupancy: true,
         detectionFrequency: 0.14285714285714285
       }
