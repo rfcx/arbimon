@@ -25,7 +25,7 @@ export interface ActivityOverviewDetectionDataBySite {
   latitude: number
   longitude: number
   totalDetectionCount: number
-  totalDetectionMinute: number
+  totalDetectionMinutes: number
   detectionFrequency: number
   occupancy: boolean
 }
