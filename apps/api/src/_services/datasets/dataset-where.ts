@@ -1,7 +1,7 @@
 import { BindOrReplacements, Op } from 'sequelize'
 
 import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
 import { FilterDataset } from './dataset-types'
@@ -78,4 +78,9 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
   }
 
   return where
+}
+
+export const whereRecordingBySiteHour = (filter: FilterDatasetForSql): Where<RecordingBySiteHour> => {
+  const { taxonSpeciesId, ...filterWithoutTaxonSpeciesId } = filter
+  return whereInDataset(filterWithoutTaxonSpeciesId)
 }

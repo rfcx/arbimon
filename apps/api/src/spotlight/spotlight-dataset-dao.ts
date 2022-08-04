@@ -6,7 +6,7 @@ import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
 import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
+import { FilterDatasetForSql, whereInDataset, whereRecordingBySiteHour } from '~/datasets/dataset-where'
 import { dayjs } from '../_services/dayjs-initialized'
 
 export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
@@ -28,7 +28,7 @@ export async function filterSpeciesDetection (models: AllModels, filter: FilterD
 }
 
 export async function getRecordings (models: AllModels, filter: FilterDatasetForSql): Promise<RecordingBySiteHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
+  const where: Where<DetectionBySiteSpeciesHour> = whereRecordingBySiteHour(filter)
 
   return await models.RecordingBySiteHour.findAll({
     where,
