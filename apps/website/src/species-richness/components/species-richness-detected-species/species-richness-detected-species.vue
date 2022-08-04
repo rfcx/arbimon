@@ -1,9 +1,6 @@
 <template>
   <div>
-    <section-title
-      title="Species detected"
-      :note="hasTableData && isLocationRedacted ? '* Some species are protected.' : ''"
-    />
+    <section-title title="Species detected" />
     <no-data-panel
       v-if="!hasTableData"
       class="h-32 mt-2"
@@ -127,6 +124,12 @@
       <div class="flex justify-between items-center mt-3">
         <div class="text-subtle px-2">
           Total: {{ tableData.length }} species
+          <span
+            v-if="isLocationRedacted"
+            class="text-danger text-xs ml-1"
+          >
+            * Some species are protected.
+          </span>
         </div>
         <div class="flex justify-end items-center">
           <div>
