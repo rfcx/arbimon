@@ -1,6 +1,6 @@
-import { fastifyRequestContextPlugin } from '@fastify/request-context'
+import fastifyRoutes from '@fastify/routes'
 import fastify, { FastifyInstance } from 'fastify'
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
@@ -17,7 +17,7 @@ const EXPECTED_PROPS = [
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
-  await app.register(fastifyRequestContextPlugin)
+  await app.register(fastifyRoutes)
 
   routesProject
     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
@@ -27,7 +27,7 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
 }
 
 describe(`GET ${ROUTE}  contains valid project`, async () => {
-  describe('simple tests', () => {
+  describe('simple tests', async () => {
     test('exists', async () => {
       // Arrange
       const app = await getMockedApp()
