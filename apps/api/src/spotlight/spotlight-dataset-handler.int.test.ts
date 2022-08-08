@@ -62,7 +62,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -82,7 +82,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -98,7 +98,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -122,7 +122,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert
@@ -153,7 +153,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: SITE_ID_1 }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: SITE_ID_1 }
       })
 
       // Assert
@@ -184,7 +184,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '2', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', taxonClassIds: '100' }
+        query: { speciesId: '100002', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', taxonClassIds: '100' }
       })
 
       // Assert
@@ -215,7 +215,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', taxonClassIds: '100' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', taxonClassIds: '100' }
       })
 
       // Assert
@@ -246,7 +246,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '2', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: SITE_ID_1, taxonClassIds: '100' }
+        query: { speciesId: '100002', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: SITE_ID_1, taxonClassIds: '100' }
       })
 
       // Assert
@@ -277,7 +277,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: SITE_ID_1, taxonClassIds: '100' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z', siteIds: SITE_ID_1, taxonClassIds: '100' }
       })
 
       // Assert
@@ -300,7 +300,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
        // Assert
@@ -322,7 +322,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-23)
@@ -347,7 +347,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-6)
@@ -372,7 +372,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of 0-11)
@@ -397,7 +397,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of years)
@@ -422,7 +422,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of date unix)
@@ -443,7 +443,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const response = await app.inject({
         method: GET,
         url: URL,
-        query: { speciesId: '1', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
       })
 
       // Assert TODO: Make mock data for calcurating known result (detection and detection frequency have record of each month/years)
