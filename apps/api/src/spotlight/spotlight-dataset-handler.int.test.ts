@@ -1,4 +1,5 @@
 import { fastifyRequestContextPlugin } from '@fastify/request-context'
+import fastifyRoutes from '@fastify/routes'
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
@@ -32,6 +33,7 @@ const EXPECTED_PROPS = [
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
+  await app.register(fastifyRoutes)
   await app.register(fastifyRequestContextPlugin)
 
   routesSpotlight
@@ -48,7 +50,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
      const app = await getMockedApp()
 
      // Act
-     const routes = app.printRoutes()
+     const routes = [...app.routes.keys()]
 
      // Assert
      expect(routes).toContain(ROUTE)
