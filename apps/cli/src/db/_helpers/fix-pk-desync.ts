@@ -15,3 +15,9 @@ import { Sequelize } from 'sequelize'
 export const fixPkDesync = async (sequelize: Sequelize, tableName: string, pkName = 'id'): Promise<void> => {
   await sequelize.query(`SELECT setval('${tableName}_${pkName}_seq', (SELECT max(id) FROM ${tableName}), true);`)
 }
+
+export const fixPkDesyncs = async (sequelize: Sequelize, tableNames: string[]): Promise<void> => {
+  for (const tableName of tableNames) {
+    await fixPkDesync(sequelize, tableName)
+  }
+}

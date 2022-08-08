@@ -13,24 +13,32 @@ describe('TimeOfDayPicker', () => {
     cleanup()
   })
 
-  test('has all, dirunal, nocturnal options', async () => {
+  test('has all, dirunal, nocturnal, custom options', async () => {
     // Arrange
     const { getByRole } = render(component, DEFAULT_RENDER_OPTIONS)
 
     // Act
-    const buttonAll = getByRole('searchbox', { name: /all/i })
-    const buttonDiurnal = getByRole('searchbox', { name: /diurnal/i })
-    const buttonNocturnal = getByRole('searchbox', { name: /nocturnal/i })
+    const buttonAll = getByRole('button', { name: /all day/i })
+    const buttonDiurnal = getByRole('button', { name: /diurnal/i })
+    const buttonNocturnal = getByRole('button', { name: /nocturnal/i })
+    const buttonCustom = getByRole('button', { name: /custom/i })
 
     // Assert
     expect(buttonAll).toBeDefined()
-    expect((buttonAll as HTMLInputElement).value).toMatch(/all/i)
+    expect(buttonAll.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonAll.children[0].textContent).toMatch(/all day/i)
 
     expect(buttonDiurnal).toBeDefined()
-    expect((buttonDiurnal as HTMLInputElement).value).toMatch(/diurnal/i)
+    expect(buttonDiurnal.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonDiurnal.children[0].textContent).toMatch(/diurnal/i)
 
     expect(buttonNocturnal).toBeDefined()
-    expect((buttonNocturnal as HTMLInputElement).value).toMatch(/nocturnal/i)
+    expect(buttonNocturnal.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonNocturnal.children[0].textContent).toMatch(/nocturnal/i)
+
+    expect(buttonCustom).toBeDefined()
+    expect(buttonCustom.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonCustom.children[0].textContent).toMatch(/custom/i)
   })
 
   test.todo('emits null when "all" clicked', async () => {

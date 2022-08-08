@@ -194,12 +194,11 @@ jobs:
           key: '${{ github.event.sender.login }}'
           map: |
             {
-              "charles-allen": { "SLACK_MENTION_USERS": "U6LT2N3SS" },
               "Nutto55": { "SLACK_MENTION_USERS": "UC2NVRCAY" },
               "naluinui": { "SLACK_MENTION_USERS": "U19GA1FT2" },
               "antonyharfield": { "SLACK_MENTION_USERS": "U09HZUDUY" },
-              "Crave-dev": { "SLACK_MENTION_USERS": "U02NUJCUV99" },
-              ".*": { "SLACK_MENTION_USERS": "U6LT2N3SS,U19GA1FT2,UC2NVRCAY,U02NUJCUV99" }
+              "rassokhina-e": { "SLACK_MENTION_USER": "U73MLD3UP" },
+              ".*": { "SLACK_MENTION_USERS": "U19GA1FT2,U73MLD3UP,UC2NVRCAY" }
             }
 
       - name: 'Notify: Slack Failed'

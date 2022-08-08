@@ -17,7 +17,7 @@ export interface RichnessDatasetResponse {
   richnessByTimeDayOfWeek: Record<number, number> // dayOfWeek -> richness
   richnessByTimeMonthOfYear: Record<number, number> // monthOfYear -> richness
   richnessByTimeUnix: Record<number, number> // unix -> richness
-  richnessPresence: Record<number, RichnessPresence>
+  richnessPresence: RichnessPresence[]
 }
 
 export interface RichnessSiteData {

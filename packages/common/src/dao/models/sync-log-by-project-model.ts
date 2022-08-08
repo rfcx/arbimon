@@ -1,12 +1,12 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Optional } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
+import { defineWithDefaultsAutoPk, ModelForInterface } from '../model-factory-helpers/defaults'
 import { SyncLogByProject } from '../types'
 
 export const MODEL_SYNC_LOG_BY_PROJECT = 'SyncLogByProject'
 const TABLE_SYNC_LOG_BY_PROJECT = 'sync_log_by_project'
 
-export const SyncLogByProjectModel = defineWithDefaultsAutoPk<SyncLogByProject>(
+export const SyncLogByProjectModel = defineWithDefaultsAutoPk<SyncLogByProject, ModelForInterface<SyncLogByProject, Optional<SyncLogByProject, 'id' | 'createdAt' | 'updatedAt'>>>(
   MODEL_SYNC_LOG_BY_PROJECT,
   {
     // PK
@@ -15,6 +15,10 @@ export const SyncLogByProjectModel = defineWithDefaultsAutoPk<SyncLogByProject>(
       primaryKey: true,
       autoIncrement: true
     },
+
+    // Logging
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
 
     // FKs
     locationProjectId: DataTypes.INTEGER, // 1

@@ -8,6 +8,7 @@ export interface DetectionBySiteSpeciesHour {
   taxonClassId: number
   count: number
   durationMinutes: number
+  detectionMinutes?: number[]
 }
 
 export const ATTRIBUTES_DETECTION_BY_SITE_SPECIES_HOUR = attributes<DetectionBySiteSpeciesHour>()({

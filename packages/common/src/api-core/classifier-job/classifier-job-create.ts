@@ -1,7 +1,16 @@
 import { AxiosInstance } from 'axios'
 
+export interface ClassifierJobCreateConfiguration {
+  classifierId: number
+  projectIdCore: string | null
+  queryStreams: string | null
+  queryStart: string | null
+  queryEnd: string | null
+  queryHours: string | null
+}
+
 // Request types
-export interface ClassifierJobCreateParams {
+export interface ClassifierJobCreateConfigurationParams {
   classifier_id: number
   project_id: string
   query_streams?: string
@@ -16,7 +25,7 @@ export interface ClassifierJobCreateResponse {
 }
 
 // Service
-export const apiCorePostClassifierJobCreate = async (apiClient: AxiosInstance, payload: ClassifierJobCreateParams): Promise<ClassifierJobCreateResponse> => {
+export const apiCorePostClassifierJobCreate = async (apiClient: AxiosInstance, payload: ClassifierJobCreateConfigurationParams): Promise<ClassifierJobCreateResponse> => {
   const res = await apiClient.post('/classifier-jobs', payload)
   if (res.status === 201 && res.headers.location) {
     const regexResult = /\/classifier-jobs\/(\w+)$/.exec(res.headers.location)

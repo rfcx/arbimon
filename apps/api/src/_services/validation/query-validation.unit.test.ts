@@ -22,10 +22,10 @@ describe('ISO date format', () => {
     const date = isValidDate(invalidDate)
 
     // Assert
-    expect(date).toBe(false)
+    expect(date).toBeFalsy()
   })
 
-  test('Valid date', () => {
+  test('Valid ISO format date', () => {
     // Arrange
     const validDate = '2021-01-01T00:00:00.000Z'
 
@@ -33,6 +33,17 @@ describe('ISO date format', () => {
     const date = isValidDate(validDate)
 
     // Assert
-    expect(date).toBe(true)
+    expect(date).toBeTruthy()
+  })
+
+  test('Valid YYYY-MM-DD format date', () => {
+    // Arrange
+    const validDate = '2021-01-01'
+
+    // Act
+    const date = isValidDate(validDate)
+
+    // Assert
+    expect(date).toBeTruthy()
   })
 })

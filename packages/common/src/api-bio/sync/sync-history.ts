@@ -16,7 +16,9 @@ export interface Sync {
   id: number
   createdAt: Date
   updatedAt: Date
-  summaryText: string
+  sourceType: string
+  dataType: string
+  delta: number
 }
 
 // Route

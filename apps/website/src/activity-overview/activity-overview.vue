@@ -1,7 +1,7 @@
 <template>
   <!-- <draft-banner
     current-mode="Draft"
-    :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+    :sync-updated="store.projectFilters?.latestSync?.updatedAt ?? null"
     :project-slug="store.selectedProject?.slug"
   /> -->
   <page-title
@@ -37,7 +37,10 @@
     dom-id="activity-overview-by-time"
     :datasets="timeDatasets"
   />
-  <activity-overview-by-species :datasets="tableDatasets" />
+  <activity-overview-by-species
+    :datasets="tableDatasets"
+    :is-location-redacted="isLocationRedacted"
+  />
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
@@ -70,6 +73,7 @@ const mapDatasets = ref<MapDataSet[]>([])
 const timeDatasets = ref<ActivityOverviewTimeDataset[]>([])
 const tableDatasets = ref<SpeciesDataset[]>([])
 const exportDatasets = ref<ActivityOverviewDataBySpecies[][]>([])
+const isLocationRedacted = ref<boolean>(true)
 
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
@@ -112,6 +116,7 @@ const onDatasetChange = async () => {
 
   tableDatasets.value = datasets.map(({ color, activityBySpecies }) => ({ color, data: activityBySpecies }))
   exportDatasets.value = datasets.map(({ activityBySpecies }) => activityBySpecies)
+  isLocationRedacted.value = datasets[0].isLocationRedacted
 }
 
 const exportSpeciesData = async () => {

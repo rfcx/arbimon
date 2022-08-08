@@ -17,7 +17,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Project.id,
-  syncBatchLimit: 1000
+  syncBatchLimit: 2000
 }
 
 export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
@@ -51,7 +51,7 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
-        syncSourceId: updatedSyncStatus.syncDataTypeId,
+        syncSourceId: updatedSyncStatus.syncSourceId,
         syncDataTypeId: updatedSyncStatus.syncDataTypeId
       }
       await writeSyncError(error, biodiversitySequelize, transaction)

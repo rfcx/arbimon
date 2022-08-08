@@ -5,7 +5,7 @@
     value-key="value"
     multiple
     filterable
-    clearable
+    :clearable="!isAllSiteOptionSelected"
     placeholder="Search or select sites"
     no-data-text="No matching sites"
     class="site-picker w-full"
@@ -35,9 +35,12 @@ import { computed, ref, watch } from 'vue'
 
 import { Site } from '@rfcx-bio/common/dao/types'
 
-const ALL_SITES_OPTIONS = 'All sites in the project'
+const ALL_SITES_OPTIONS = {
+  value: '',
+  label: 'All sites in the project'
+}
 
-const emit = defineEmits<{(e: 'emitSelectSites', value: string): void}>()
+const emit = defineEmits<{(e: 'emitSelectSites', value: string | null): void}>()
 const props = defineProps<{
   initialSites?: Site[]
 }>()
@@ -76,10 +79,7 @@ const groupOptions = computed(() => {
   const optionAll = {
     value: 'Select all sites',
     label: 'Select all sites',
-    options: [{
-      value: ALL_SITES_OPTIONS,
-      label: ALL_SITES_OPTIONS
-    }]
+    options: [ALL_SITES_OPTIONS]
   }
   const optionFilter = {
     value: 'Filter sites',
@@ -90,13 +90,14 @@ const groupOptions = computed(() => {
 })
 
 // selected values
-const selectedOptions = ref<string[]>([ALL_SITES_OPTIONS])
-const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS))
+const selectedOptions = ref<string[]>([ALL_SITES_OPTIONS.value])
+const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS.value))
 
 // emit data to the parent component
 const selectedQuerySites = computed(() => {
-  return isAllSiteOptionSelected.value ? '' : selectedOptions.value.join(',')
+  return isAllSiteOptionSelected.value ? null : selectedOptions.value.join(',')
 })
+
 watch(selectedQuerySites, () => {
   emit('emitSelectSites', selectedQuerySites.value)
 })
@@ -106,14 +107,16 @@ const onFilter = (query: string) => {
 }
 
 const onSelectSites = (selectedOpts: string[]) => {
-  if (selectedOpts.length <= 1) return
+  if (selectedOpts.length === 0) {
+    selectedOptions.value.push(ALL_SITES_OPTIONS.value)
+  }
   const newlyAddedItem = selectedOpts.slice(-1)[0]
-  if (newlyAddedItem === ALL_SITES_OPTIONS && selectedOpts.length > 1) {
+  if (newlyAddedItem === ALL_SITES_OPTIONS.value && selectedOpts.length > 1) {
     // clear other selected sites, when all site option is selected
     selectedOptions.value = [newlyAddedItem]
-  } else if (isAllSiteOptionSelected.value && newlyAddedItem !== ALL_SITES_OPTIONS) {
+  } else if (isAllSiteOptionSelected.value && newlyAddedItem !== ALL_SITES_OPTIONS.value) {
     // remove all sites from the selected options when the user choose other sites
-    selectedOptions.value = selectedOpts.filter(o => o !== ALL_SITES_OPTIONS)
+    selectedOptions.value = selectedOpts.filter(o => o !== ALL_SITES_OPTIONS.value)
   }
   // TODO: remove matched selected options, when wildcard option is added
 }

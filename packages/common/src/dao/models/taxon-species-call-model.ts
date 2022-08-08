@@ -16,6 +16,11 @@ export const TaxonSpeciesCallModel = defineWithDefaultsAutoPk<TaxonSpeciesCall>(
       autoIncrement: true
     },
 
+    idArbimon: {
+      type: DataTypes.INTEGER,
+      unique: true
+    },
+
     // Dimensions
     taxonSpeciesId: DataTypes.INTEGER, // 1
     callProjectId: DataTypes.INTEGER, // ???

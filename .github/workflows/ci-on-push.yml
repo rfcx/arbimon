@@ -40,4 +40,3 @@ jobs:
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
-    

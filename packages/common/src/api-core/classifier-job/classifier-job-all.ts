@@ -47,7 +47,7 @@ export interface ClassifierJob {
   modelName: string
   input: ClassifierJobInput
   progress: ClassifierJobProgress
-  numberOfRecordings: number
+  totalDurationMinutes: number
   createdAt: Date
 }
 

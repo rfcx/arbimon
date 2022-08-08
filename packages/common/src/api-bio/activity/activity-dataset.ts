@@ -24,9 +24,16 @@ export interface ActivityOverviewDetectionDataBySite {
   siteName: string
   latitude: number
   longitude: number
-  detection: number
+  totalDetectionCount: number
+  totalDetectionMinutes: number
   detectionFrequency: number
   occupancy: boolean
+}
+
+export interface ActivityOverviewRecordingDataBySite {
+  siteId: number
+  siteName: string
+  totalRecordingMinutes: number
 }
 
 export interface ActivityOverviewDetectionDataByTime {
