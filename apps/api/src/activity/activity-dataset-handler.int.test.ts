@@ -1,3 +1,4 @@
+import fastifyRoutes from '@fastify/routes'
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
@@ -27,6 +28,7 @@ const isObjectValueNumber = (obj: any): boolean => {
 
 const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
   const app = await fastify()
+  await app.register(fastifyRoutes)
 
   const fakeRequestContext = {
     get: (key: string) => ({
@@ -48,6 +50,7 @@ const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
 
 const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
   const app = await fastify()
+  await app.register(fastifyRoutes)
 
   const fakeRequestContext = {
     get: (key: string) => ({
@@ -74,7 +77,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     const app = await getMockedAppLoggedOut()
 
     // Act
-    const routes = app.printRoutes()
+    const routes = [...app.routes.keys()]
 
     // Assert
     expect(routes).toContain(ROUTE)
