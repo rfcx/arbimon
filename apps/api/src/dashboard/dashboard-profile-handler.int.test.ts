@@ -45,7 +45,7 @@ describe(`GET ${ROUTE} (dashboard profile)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1'
+        url: '/projects/1/dashboard-profile'
       })
 
       // Assert
@@ -63,7 +63,7 @@ describe(`GET ${ROUTE} (dashboard profile)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1'
+        url: '/projects/1/dashboard-profile'
       })
 
       // Assert
