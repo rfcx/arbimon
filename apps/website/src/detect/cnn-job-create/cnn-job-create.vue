@@ -9,8 +9,8 @@
     show-icon
   />
   <form class="mt-5">
-    <ol class="relative border-l border-box-grey">
-      <li class="mb-8 ml-6">
+    <ol class="relative border-box-grey">
+      <li class="border-l-1 border-box-grey pb-8 pl-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           1
         </span>
@@ -26,7 +26,7 @@
           @selected-classifier="onSelectClassifier"
         />
       </li>
-      <li class="mb-8 ml-6">
+      <li class="border-l-1 border-box-grey pb-8 pl-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           2
         </span>
@@ -67,26 +67,36 @@
           <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
         </div>
       </li>
-      <!-- <li class="mb-8 ml-6">
+      <li class="pb-8 pl-6">
         <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
           3
         </span>
         <h2 class="mb-4 text-md">
-          Review job size
+          Job size estimation
         </h2>
-        <span class="text-subtle">1,300 recordings selected</span>
-      </li> -->
+        <span v-if="isLoadingDetectRecording">Loading</span>
+        <span v-else-if="isErrorDetectRecording">Error</span>
+        <span v-else-if="recordingData === undefined">No response</span>
+        <span
+          v-else
+          class="text-subtle"
+        >{{ totalDurationInMinutes }} minutes of recordings</span>
+      </li>
     </ol>
     <div class="flex flex-row items-center space-x-4">
       <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
-        <button class="btn">
+        <button
+          title="Cancel"
+          class="btn"
+        >
           Cancel
         </button>
       </router-link>
       <button
         :disabled="isLoadingPostJob || errors.length > 0"
+        title="Create"
         class="btn btn-primary"
-        @click.prevent="create"
+        @click.prevent="createJob"
       >
         <span v-if="isLoadingPostJob">Saving</span>
         <span v-else>Create</span>
@@ -107,24 +117,68 @@
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
+import { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
+import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
 import { isDefined } from '@rfcx-bio/utils/predicates'
+import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
 import { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
-import { apiClientCoreKey } from '@/globals'
+import { apiClientBioKey, apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
+import { useDetectRecording } from '../_composables/use-detect-recording'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
+
+// Fields
+const job: ClassifierJobCreateConfiguration = reactive({
+  classifierId: -1,
+  projectIdCore: null,
+  queryStreams: null,
+  queryStart: null,
+  queryEnd: null,
+  queryHours: null
+})
+
+const recordingQuery: DetectRecordingQueryParams = reactive({
+  dateStartLocal: '',
+  dateEndLocal: '',
+  querySites: '',
+  queryHours: ''
+})
+
+const project = reactive({
+  projectId: '-1'
+})
+
+const hasProjectPermission = ref(false)
+
+onMounted(() => {
+  job.projectIdCore = store.selectedProject?.idCore ?? null
+  project.projectId = store.selectedProject?.id.toString() ?? '-1'
+  hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
+})
+
+watch(() => store.selectedProject, () => {
+  job.projectIdCore = store.selectedProject?.idCore ?? null
+  project.projectId = store.selectedProject?.id.toString() ?? '-1'
+  hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
+})
+
+// Internal data
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
 
 // External data
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
@@ -132,8 +186,6 @@ const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: class
 const { isLoading: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Current projects
-const selectedProject = computed(() => store.selectedProject)
-const selectedProjectIdCore = computed(() => selectedProject.value?.idCore)
 const projectFilters = computed(() => store.projectFilters)
 const projectDateRange = computed(() => {
   const dateStartLocalIso = projectFilters.value?.dateStartInclusiveUtc
@@ -143,57 +195,58 @@ const projectDateRange = computed(() => {
   return { dateStartLocalIso, dateEndLocalIso }
 })
 
-// Fields
-const selectedClassifier = ref<number>(-1)
-const selectedQueryStreams = ref<string | null>(null) // null = all, 'AR' = filter only AR
-const selectedQueryStart = ref<string | null>(null)
-const selectedQueryEnd = ref<string | null>(null)
-const selectedQueryHours = ref<number[] | null>(null)
-
-// Watches & callbacks
-const onSelectClassifier = (value: number) => { selectedClassifier.value = value }
-const onSelectQuerySites = (value: string) => { selectedQueryStreams.value = value }
-const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
-  selectedQueryStart.value = dateStartLocalIso
-  selectedQueryEnd.value = dateEndLocalIso
+// Set job configuration and set validate to false every time data change
+const onSelectClassifier = (classifierId: number) => {
+  validated.value = false
+  job.classifierId = classifierId
 }
-const onSelectQueryHours = (value: number[] | null) => { selectedQueryHours.value = value }
+const onSelectQuerySites = (queryStreams: string | null) => {
+  validated.value = false
+  job.queryStreams = queryStreams
+  recordingQuery.querySites = queryStreams ?? undefined
+}
+const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  validated.value = false
+  job.queryStart = dateStartLocalIso
+  job.queryEnd = dateEndLocalIso
+  recordingQuery.dateStartLocal = dateStartLocalIso
+  recordingQuery.dateEndLocal = dateEndLocalIso
+}
+const onSelectQueryHours = (queryHours: string) => {
+  validated.value = false
+  job.queryHours = queryHours
+  recordingQuery.queryHours = queryHours
+}
 
 // Validation
-const shouldValidate = ref(false)
+const validated = ref(false)
 
-const errorProject = computed(() => selectedProjectIdCore.value !== '' ? undefined : 'No project selected or project is invalid')
-const errorPermission = computed(() => selectedProject.value?.isMyProject ?? false ? undefined : 'You do not have permission to create jobs for this project')
-const errorClassifier = computed(() => selectedClassifier.value > 0 ? undefined : 'Please select a classifier')
+const errorProject = computed(() => job.projectIdCore !== null && job.projectIdCore !== '' ? undefined : 'No project selected or project is invalid')
+const errorPermission = computed(() => hasProjectPermission.value ? undefined : 'You do not have permission to create jobs for this project')
+const errorClassifier = computed(() => job.classifierId > 0 ? undefined : 'Please select a classifier')
+const errorHours = computed(() => isValidQueryHours(job.queryHours ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
 
-const errors = computed(() => shouldValidate.value ? [errorProject.value, errorPermission.value, errorClassifier.value].filter(isDefined) : [])
+const errors = computed(() => validated.value ? [errorProject.value, errorPermission.value, errorClassifier.value, errorHours.value].filter(isDefined) : [])
 
-const job = computed(() => selectedProjectIdCore.value
-  ? {
-    classifier_id: selectedClassifier.value,
-    project_id: selectedProjectIdCore.value,
-    ...selectedQueryStreams.value && { query_streams: selectedQueryStreams.value },
-    ...selectedQueryStart.value && { query_start: selectedQueryStart.value },
-    ...selectedQueryEnd.value && { query_end: selectedQueryEnd.value },
-    ...selectedQueryHours.value && selectedQueryHours.value.length > 0 && { query_hours: selectedQueryHours.value.join(',') }
-  }
-  : undefined
-)
+const totalDurationInMinutes = computed(() => {
+  return recordingData.value?.totalDurationInMinutes ?? 0
+})
 
 // Create job (call API)
-const create = async (): Promise<void> => {
+const createJob = async (): Promise<void> => {
   // Enable validation on first submit
-  shouldValidate.value = true
+  validated.value = true
 
   // Reject if validation errors
   if (errors.value.length > 0) { return }
 
-  // Reject if invalid project
-  if (!job.value) { return }
-
   // Save
-  mutatePostJob(job.value, {
-    onSuccess: () => { router.push({ name: ROUTE_NAMES.cnnJobList }) }
+  mutatePostJob(job, {
+    onSuccess: async (response) => {
+      await apiCorePostClassifierJobUpdateStatus(apiClientCore, response.jobId, { minutes_total: totalDurationInMinutes.value })
+      router.push({ name: ROUTE_NAMES.cnnJobList })
+    }
   })
 }
+
 </script>

@@ -1,8 +1,11 @@
 import { Sequelize } from 'sequelize'
 
 import { syncArbimonProjects } from './sync-arbimon-project'
+import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'
 import { syncArbimonSites } from './sync-arbimon-site'
 import { syncArbimonSpecies } from './sync-arbimon-species'
+import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
+import { syncArbimonDetectionBySiteSpeciesHour } from './sync-arbimon-x-detection-by-site-species-hour'
 
 export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
@@ -27,21 +30,39 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       return
     }
 
-    console.info('Project level data:')
+    console.info('\nProject level data:\n')
     const isSiteSyncedUpToDate = await syncArbimonSites(arbimonSequelize, biodiversitySequelize)
     console.info('> Sites: up to date =', isSiteSyncedUpToDate)
 
-    // wait til taxon species sync is done before sync project level data
     if (!isSiteSyncedUpToDate) {
       console.info('- wait to sync more sites in the next round...')
       return
     }
 
-    // TODO: sync other tables
-    // species call
-    // recordings
-    // detections
-    // ...
+    const isTaxonSpeciesCallsSyncedUpToDate = await syncArbimonSpeciesCalls(arbimonSequelize, biodiversitySequelize)
+    console.info('> Taxon Species Calls: up to date =', isTaxonSpeciesSyncedUpToDate)
+
+    if (!isTaxonSpeciesCallsSyncedUpToDate) {
+      console.info('- wait to sync more taxon species calls in the next round...')
+      return
+    }
+
+    const isRecordingBySiteHourUpToDate = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Recordings: up to date =', isRecordingBySiteHourUpToDate)
+
+    if (!isRecordingBySiteHourUpToDate) {
+      console.info('- wait to sync more recordings in the next round...')
+      return
+    }
+
+    const isDetectionsBySiteSpeciesHourUpToDate = await syncArbimonDetectionBySiteSpeciesHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Detections: up to date =', isDetectionsBySiteSpeciesHourUpToDate)
+
+    if (!isDetectionsBySiteSpeciesHourUpToDate) {
+      console.info('- wait to sync more detections in the next round...')
+      return
+    }
+
     return
   } catch (e) {
     console.error('SYNC - Incremental failed', e)

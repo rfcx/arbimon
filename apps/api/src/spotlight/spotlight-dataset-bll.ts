@@ -1,29 +1,30 @@
-import { sum } from 'lodash-es'
-
 import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { FilterDataset } from '~/datasets/dataset-types'
+import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { filterDetecions, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordingCount } from './spotlight-dataset-dao'
+import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getRecordingTotalCount, getRecordingTotalDurationMinutes } from './spotlight-dataset-dao'
 
-export async function getSpotlightDatasetData (filter: FilterDataset, speciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
+export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
   const species = await models.TaxonSpecies.findOne({
-    where: { id: speciesId },
+    where: { id: taxonSpeciesId },
     raw: true
   })
   if (!species) throw BioNotFoundError()
 
   const { locationProjectId } = filter
 
+  const filterForSql = toFilterDatasetForSql({ ...filter, taxonSpeciesId })
+
   const speciesIucn = await models.SpeciesInProject
     .findOne({
-      where: { locationProjectId, taxonSpeciesId: speciesId },
+      where: { locationProjectId, taxonSpeciesId },
       attributes: ['riskRatingId'],
       raw: true
     })
@@ -31,26 +32,28 @@ export async function getSpotlightDatasetData (filter: FilterDataset, speciesId:
   const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !isProjectMember
 
   // Filtering
-  const totalDetections = await filterDetecions(models, locationProjectId, filter)
-  const specificSpeciesDetections = await filterSpeciesDetection(models, locationProjectId, filter, speciesId)
+  const totalDetections = await filterDetections(models, filterForSql)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, filterForSql, taxonSpeciesId)
 
   // Metrics
-  const totalRecordingCount = getRecordingCount(totalDetections)
-  const detectionCount = sum(specificSpeciesDetections.map(({ count }) => count)) // 1 recording = 1 detection
-  const detectionFrequency = totalRecordingCount === 0 ? 0 : detectionCount / totalRecordingCount
+  const recordings = await getRecordings(models, filterForSql)
+  const totalRecordingCount = getRecordingTotalCount(recordings)
+  const totalRecordingMinutes = getRecordingTotalDurationMinutes(recordings)
+  const detectionCount = calculateDetectionCount(specificSpeciesDetections)
+  const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, totalRecordingMinutes)
 
   const totalSiteCount = new Set(totalDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteCount = new Set(specificSpeciesDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
   // By site
-  const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsByLocationSite(models, totalDetections, speciesId)
-  const detectionsByTimeHour = getDetectionsByTimeHour(specificSpeciesDetections, totalRecordingCount)
-  const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, totalRecordingCount)
-  const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, totalRecordingCount)
-  const detectionsByTimeYear = getDetectionsByTimeYear(specificSpeciesDetections, totalRecordingCount)
-  const detectionsByTimeDate = getDetectionsByTimeDateUnix(specificSpeciesDetections, totalRecordingCount)
-  const detectionsByTimeMonthYear = getDetectionsByTimeMonthYear(specificSpeciesDetections, totalRecordingCount)
+  const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsByLocationSite(models, totalDetections, filterForSql)
+  const detectionsByTimeHour = getDetectionsByTimeHour(specificSpeciesDetections, totalRecordingMinutes)
+  const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, totalRecordingMinutes)
+  const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, totalRecordingMinutes)
+  const detectionsByTimeYear = getDetectionsByTimeYear(specificSpeciesDetections, totalRecordingMinutes)
+  const detectionsByTimeDate = getDetectionsByTimeDateUnix(specificSpeciesDetections, totalRecordingMinutes)
+  const detectionsByTimeMonthYear = getDetectionsByTimeMonthYear(specificSpeciesDetections, totalRecordingMinutes)
 
   return {
     totalSiteCount,

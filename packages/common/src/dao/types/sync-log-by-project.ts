@@ -1,6 +1,6 @@
-import { attributes, AttributeTypes } from '../type-helpers'
+import { attributes, AttributeTypes, WithDates } from '../type-helpers'
 
-export interface SyncLogByProject {
+export interface SyncLogByProject extends WithDates {
   id: number
   locationProjectId: number
   syncSourceId: number

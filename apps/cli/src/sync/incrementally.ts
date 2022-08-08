@@ -1,8 +1,7 @@
 import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
 import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { getSequelize } from '@/db/connections'
-import { syncAllForProject } from '@/sync/all'
-import { getNeedSyncingProjects } from '@/sync/data-source'
+import { syncAllIncrementally } from '@/ingest/sync/sync-all'
 import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 
@@ -12,13 +11,8 @@ const main = async (): Promise<void> => {
     const arbimonSequelize = getArbimonSequelize()
     const bioSequelize = getSequelize()
 
-    console.info('STEP: Get project lookups')
-    const syncingProjects = await getNeedSyncingProjects(bioSequelize, 15)
-
-    console.info('STEP: Sync site, species, and detections')
-    for (const project of syncingProjects) {
-      await syncAllForProject(arbimonSequelize, bioSequelize, project)
-    }
+    console.info('STEP: Get projects, species, sites, recordings, detections')
+    await syncAllIncrementally(arbimonSequelize, bioSequelize)
 
     console.info('STEP: Sync missing Wiki species')
     await syncOnlyMissingWikiSpeciesInfo(bioSequelize)

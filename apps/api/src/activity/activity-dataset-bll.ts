@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { FilterDataset } from '../_services/datasets/dataset-types'
 import { getSequelize } from '../_services/db'
-import { filterDetecions, getDetectionDataBySpecies, getDetectionsBySite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getRecordingDurationMinutes } from './activity-dataset-dao'
+import { filterDetections, getDetectionBySite, getDetectionDataBySpecies, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getRecordingBySite, getRecordingTotalDurationMinutes, parseDetectionsBySite } from './activity-dataset-dao'
 
 export const getActivityOverviewData = async (filter: FilterDataset, isProjectMember: boolean): Promise<ActivityDatasetResponse> => {
   const sequelize = getSequelize()
@@ -15,15 +15,16 @@ export const getActivityOverviewData = async (filter: FilterDataset, isProjectMe
   const filterForSql = toFilterDatasetForSql(filter)
 
   // Filtering
-  const totalDetections = await filterDetecions(models, locationProjectId, filter)
-  const totalRecordingCount = getRecordingDurationMinutes(totalDetections)
-
-  const activityBySite = await getDetectionsBySite(sequelize, filterForSql)
-  const activityBySpecies = await getDetectionDataBySpecies(models, totalDetections, isProjectMember, locationProjectId)
-  const activityByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingCount)
-  const activityByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingCount)
-  const activityByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingCount)
-  const activityByTimeDate = getDetectionsByTimeDateUnix(totalDetections, totalRecordingCount)
+  const totalDetections = await filterDetections(models, filterForSql)
+  const detectionsBySite = await getDetectionBySite(sequelize, filterForSql)
+  const recordingsBySite = await getRecordingBySite(sequelize, filterForSql)
+  const totalRecordingDurationMinutes = getRecordingTotalDurationMinutes(recordingsBySite)
+  const activityBySite = parseDetectionsBySite(detectionsBySite, recordingsBySite)
+  const activityBySpecies = await getDetectionDataBySpecies(models, totalDetections, totalRecordingDurationMinutes, isProjectMember, locationProjectId)
+  const activityByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordingDurationMinutes)
+  const activityByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordingDurationMinutes)
+  const activityByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordingDurationMinutes)
+  const activityByTimeDate = getDetectionsByTimeDateUnix(totalDetections, totalRecordingDurationMinutes)
 
   return {
     isLocationRedacted: !isProjectMember,

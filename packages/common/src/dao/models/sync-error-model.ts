@@ -19,12 +19,12 @@ export const SyncErrorModel = defineWithDefaults<SyncError>(
       primaryKey: true
     },
     externalId: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING(72),
       primaryKey: true
     },
 
     // Facts
-    error: DataTypes.STRING(255)
+    error: DataTypes.STRING(512)
   },
   {
     tableName: TABLE_SYNC_ERROR

@@ -1,7 +1,7 @@
 <template>
   <!-- <draft-banner
     current-mode="Draft"
-    :sync-updated="store.projectFilters?.updatedList[0]?.updatedAt ?? null"
+    :sync-updated="store.projectFilters?.latestSync?.updatedAt ?? null"
     :project-slug="store.selectedProject?.slug"
   /> -->
   <species-richness-introduction
@@ -29,6 +29,7 @@
   <species-richness-detected-species
     :table-data="detectedSpecies"
     :colors="colors"
+    :is-location-redacted="isLocationRedacted"
     class="mt-5"
   />
 </template>

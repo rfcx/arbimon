@@ -7,7 +7,6 @@
       </button>
     </router-link>
   </div>
-
   <job-filter
     :filter-options="filterOptions"
     @emit-select="onFilterChange"
@@ -75,21 +74,27 @@
 
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject, onBeforeUnmount, onMounted, reactive } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
 import { useQueryClient } from 'vue-query'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
 import { FETCH_CLASSIFIER_JOBS_KEY, useClassifierJobs } from '../_composables/use-classifier-jobs'
-import { JobFilterItem } from '../types'
+import { Job, JobFilterItem } from '../types'
 import JobFilter from './components/job-filter.vue'
 import JobItemRow from './components/job-item-row.vue'
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
-const params = reactive({ created_by: 'all' })
+const store = useStore()
+const params = reactive({ created_by: 'all', projects: [store.selectedProject?.idCore ?? ''] })
+
+watch(() => store.selectedProject, () => {
+  params.projects = [store.selectedProject?.idCore ?? '']
+})
 
 const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
 
@@ -98,7 +103,7 @@ const filterOptions: JobFilterItem[] = [
   { value: 'all', label: 'All jobs', checked: true }
 ]
 
-const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
+const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
   id: cj.id,
   modelName: cj.classifier.name,
   input: {
@@ -110,7 +115,7 @@ const jobs = computed(() => classifierJobs.value?.items?.map(cj => ({
     status: cj.status,
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
-  numberOfRecordings: 0,
+  totalDurationMinutes: cj.minutesTotal,
   createdAt: new Date(cj.created_at)
 })) ?? [])
 

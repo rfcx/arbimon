@@ -40,6 +40,7 @@ export default class SpeciesRichnessPage extends Vue {
   speciesByLocationDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
   detectedSpecies: DetectedSpeciesItem[] = []
+  isLocationRedacted = true
 
   get haveData (): boolean {
     return this.speciesByClassDatasets.length > 0
@@ -87,5 +88,6 @@ export default class SpeciesRichnessPage extends Vue {
         }
       })
     this.detectedSpecies = getTableData(datasets)
+    this.isLocationRedacted = datasets[0].data.isLocationRedacted
   }
 }

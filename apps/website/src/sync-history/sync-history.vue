@@ -25,31 +25,22 @@
       v-else
       class="lists-updated"
     >
-      <!-- Last sync -->
-      <ul v-if="syncs[0].createdAt !== syncs[0].updatedAt">
-        <li>{{ formatDateFull(syncs[0].updatedAt) }}</li>
-        <li class="mt-2 ml-4">
-          no new changes
-        </li>
-      </ul>
-
-      <!-- Previous syncs -->
       <div
-        v-for="sync of syncs"
-        :key="sync.id"
+        v-for="sync in syncs"
+        :key="'sync-history-' + sync.id"
         class="updated-list mb-4"
       >
         <ul>
           <li>
-            {{ formatDateFull(sync.createdAt) }}
+            {{ formatDateFull(sync.updatedAt) }}
           </li>
           <li class="mt-2 ml-4">
             <ul class="list-inside list-circle text-sm">
-              <li
-                v-for="entry in Object.entries(sync.summaryObject)"
-                :key="entry[0]"
-              >
-                +{{ entry[1] }} {{ entry[0] }}
+              <li>
+                Data type: {{ sync.dataType }}
+              </li>
+              <li>
+                delta: {{ sync.delta }}
               </li>
             </ul>
           </li>
@@ -71,7 +62,9 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 // Data
 const { isLoading, isError, data } = useSyncHistory(apiClientBio)
-const syncs = computed(() => data?.value?.syncs?.map(({ summaryText, ...list }) => ({ ...list, summaryObject: (JSON.parse(summaryText) as Record<string, number>) })) ?? [])
+const syncs = computed(() => {
+  return data.value?.syncs ?? []
+})
 
 // Formatters
 const { formatDateFull } = useDateFormat()
