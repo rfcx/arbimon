@@ -146,7 +146,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001001,
-    ...taxonSpeciesAndClassForId(1),
+    ...taxonSpeciesAndClassForId(100001),
     count: 2,
     durationMinutes: 2,
     detectionMinutes: [7, 9]
@@ -155,7 +155,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    ...taxonSpeciesAndClassForId(2),
+    ...taxonSpeciesAndClassForId(100002),
     count: 1,
     durationMinutes: 1,
     detectionMinutes: [55]
@@ -164,7 +164,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    ...taxonSpeciesAndClassForId(1),
+    ...taxonSpeciesAndClassForId(100001),
     count: 1,
     durationMinutes: 1,
     detectionMinutes: [11]
@@ -173,7 +173,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001002,
-    ...taxonSpeciesAndClassForId(1),
+    ...taxonSpeciesAndClassForId(100001),
     count: 1,
     durationMinutes: 1,
     detectionMinutes: [1]
@@ -182,7 +182,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
     locationProjectId: 20001001,
     locationSiteId: 20001001,
-    ...taxonSpeciesAndClassForId(2),
+    ...taxonSpeciesAndClassForId(100002),
     count: 1,
     durationMinutes: 1,
     detectionMinutes: [17]
