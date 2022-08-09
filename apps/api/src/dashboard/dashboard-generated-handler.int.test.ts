@@ -11,6 +11,7 @@ import { getSequelize } from '~/db'
 import { routesDashboard } from './index'
 
 const ROUTE = '/projects/:projectId/dashboard-generated'
+const url = '/projects/1/dashboard-generated'
 
 const EXPECTED_PROPS = [
   'detectionCount',
@@ -76,7 +77,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1'
+        url
       })
 
       // Assert
@@ -94,7 +95,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1'
+        url
       })
 
       // Assert
@@ -110,7 +111,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
 
     const response = await app.inject({
       method: GET,
-      url: '/projects/1'
+      url
     })
 
     test('species richness by site is correct', async () => {
