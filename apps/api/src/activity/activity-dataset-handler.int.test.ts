@@ -212,7 +212,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('calculates activityBySpecies correctly', async () => {
       // Arrange
-      const expectedSpecies = ['Accipiter striatus venator', 'Actitis macularius']
+      const expectedSpecies = ['Felis catus', 'Naja']
       const expectedDetectionCount = [4, 2]
       const expectedProperties = ['commonName', 'scientificName', 'taxon', 'detectionCount', 'detectionFrequency', 'occupiedSites', 'occupancyNaive']
 
@@ -238,9 +238,9 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates activityBySpecies by specific species correctly', async () => {
       // Arrange
       const expected: ActivityOverviewDataBySpecies = {
-        commonName: 'Puerto Rican sharp-shinned hawk',
-        scientificName: 'Accipiter striatus venator',
-        taxon: 'Birds',
+        commonName: '',
+        scientificName: 'Felis catus',
+        taxon: 'Mammals',
         detectionCount: 4,
         detectionFrequency: 0.2,
         occupiedSites: 2,
@@ -281,9 +281,9 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       }
 
       const activityBySpecies: ActivityOverviewDataBySpecies = {
-        commonName: 'Spotted Sandpiper',
-        scientificName: 'Actitis macularius',
-        taxon: 'Birds',
+        commonName: '',
+        scientificName: 'Naja',
+        taxon: 'Amphibians',
         detectionCount: 1,
         detectionFrequency: 0.14285714285714285,
         occupiedSites: 1,
