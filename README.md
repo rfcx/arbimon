@@ -1,17 +1,29 @@
 # Biodiversity Analytics
 
-Website for exploring biodiversity data; built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS.
+Website for exploring **biodiversity data**
+
+Built with:
+   - Vue 3
+   - Typescript
+   - Vite
+   - pnpm
+   - Pinia
+   - Windi CSS
+
+_Image 1: The screenshot of the Biodiversity website_
+
+<img src="https://user-images.githubusercontent.com/31901584/183742923-930ebc4c-9c44-4804-ae95-245d47724357.png" width="1680" alt="Biodiversity" />
 
 ## Contributing
 
-### _Sprint DoD_
+### _Sprint DoD (The Definition of Done)_
 
-The following must be true to consider a feature "DONE":
+The following must be true to consider a feature is **"DONE"**:
 
 - Code follows [CONTRIBUTING.md](./CONTRIBUTING.md)
-- Updated [CHANGELOG.md](./CHANGELOG.md)
-- Code deployed to staging
-- Demo video sent to #biodiversity-vision
+- Changelog at [CHANGELOG.md](./CHANGELOG.md)
+- Code deployed to [staging](https://staging-bio.rfcx.org/)
+- Demo video sent to [#biodiversity-vision](https://rfcx.slack.com/archives/C02DJUZLNCE)
 
 ### _Resources_
 
@@ -26,125 +38,134 @@ The following must be true to consider a feature "DONE":
 
 1. Install tools:
 
-   - node 16: [https://nodejs.org](https://nodejs.org)
-   - pnpm 6: `npm i -g pnpm@6`
-   - VSCode & extensions: `pnpm node init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
+   - **node 16**: [https://nodejs.org](https://nodejs.org)
+   - **pnpm 6**: `npm i -g pnpm@6`
+   - **VSCode & extensions**: `pnpm node init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
      - If you have Vetur installed, disable it for this workspace
-   - Docker Desktop: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+   - **Docker Desktop**: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 
-2. Install/update dependencies:
+2. Install/Update dependencies:
 
-   `pnpm i`
+   - `pnpm i`
 
 3. Create local environment:
 
-   - Copy `apps/api/.env.example` to `.env` (and fill missing variables)
+   - Copy `apps/api/.env.example` to `.env`, and fill missing variables
 
-4. (optional) Override default environment:
-   - Create `apps/cli/.env.local` (and override variables as necessary)
-   - Create `apps/website/.env.local` (and override variables as necessary)
+4. Override default environment (_optional_):
+   - Create `apps/cli/.env.local`, and override variables as necessary
+   - Create `apps/website/.env.local`, and override variables as necessary
 
 ## Run the App!
 
-1. Start **DB**, **API**, and **Website** in dev-mode:
+1. Start three applications: **DB**, **API**, and **Website** in dev-mode:
 
-   `pnpm serve` (from the monorepo root)  
+   - `pnpm serve` (_from the monorepo root_)  
    _or_  
-   `pnpm -w serve` (from anywhere in the project)
+   - `pnpm -w serve` (_from anywhere in the project_)
 
-2. After you finish, you might want to stop your db:
+2. Stop your db once you are finish:
 
-   `pnpm --filter=db stop`
+   - `pnpm --filter=db stop`
 
 ## More Commands
 
 ### _Resetting Workspace_
 
-If you encounter an issue, you may want to clean caches & artifacts, or reinstall dependencies.
+If you encounter an issue, you may want to clean caches and artifacts, or reinstall dependencies.
 
 - Delete all build and lint artifacts/caches:
 
-  `pnpm -r clean`
+   - `pnpm -r clean`
 
 - Delete all build and lint artifacts/caches AND dependencies (node_modules):
 
-  `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
+   - `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
 
 ### _Build_
 
 - Build any package (and it's dependencies):
 
-  `pnpm build`
+   - `pnpm build`
 
 - Use the pnpm arg `-r` to build all packages:
 
-  `pnpm -r build`
+   - `pnpm -r build`
 
 ### _Lint_
 
 - Run all linters, or only a single linter:
 
-  `pnpm lint` (all linters)  
-  `pnpm lint:eslint`  
-  `pnpm lint:prettier`  
-  `pnpm lint:stylelint`
+   - `pnpm lint` (_all linters_)  
+   - `pnpm lint:eslint`  
+   - `pnpm lint:prettier`  
+   - `pnpm lint:stylelint`
 
 - Lint is pretty heavy; use the helper to run it sequentially across all packages:
 
-  `pnpm -w lint-all`
+   - `pnpm -w lint-all`
 
 - Run linters with auto-fixes:
 
-  `pnpm lint-fix` (one package)  
-  `pnpm -w lint-fix-all` (all packages)
+   - `pnpm lint-fix` (_one package_)  
+   - `pnpm -w lint-fix-all` (_all packages_)
 
 ### _Test_
 
-- Before running `test:int`, you must start a local Postgres database:
+- Start a local Postgres database before running `test:int`:
 
-  `pnpm -w serve-int`
+   - `pnpm -w serve-int`
 
-- Each package has some of the following test scripts:
+- Use the following test scripts, which are located in each package:
 
-  `pnpm test:component` (unit tests for vue components)  
-  `pnpm test:int` (heavy tests or tests that require a database)  
-  `pnpm test:unit` (basic unit tests)  
-  `pnpm test-ui` (tests executed in a browser)
+   - `pnpm test:component` (_unit tests for vue components_)  
+   - `pnpm test:int` (_heavy tests or tests that require a database_)  
+   - `pnpm test:unit` (_basic unit tests_)  
+   - `pnpm test-ui` (_tests executed in a browser_)
 
-- For TDD, you probably want to execute a single file, `describe`, or `test`:
+- Execute a single test file, `describe`, or `test`; to follow TDD (Test-driven development):
 
-  `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test` (fast way to execute 1 file)  
-  `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test -t "has all, dirunal, nocturnal options"` (filter within the file; you should use this _in addition_ to file-path filtering)
+  - `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test` (_fast way to execute 1 file_)  
+  - `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test -t "has all, dirunal, nocturnal options"` (_filter within the file; you should use this **in addition** to file-path filtering_)
 
-- For TDD integration tests, you need a more complex command:
+- Run more complex command for TDD integration tests:
 
-  `pnpm exec cross-env BIO_DB_PORT=5434 vitest --no-threads src/sync/sync-history-handler.int.test`
+  - `pnpm exec cross-env BIO_DB_PORT=5434 vitest --no-threads src/sync/sync-history-handler.int.test`
 
-- You can also run all tests in a package, or across the entire project:
+- Run all tests in a package, or across the entire project:
 
-  `pnpm test` (all vitest-based tests; does not include Cypress-based tests)  
-  `pnpm -w test-all` (calls `test` in all packages sequentially, like `lint-all`)
+  - `pnpm test` (_all vitest-based tests; does not include Cypress-based tests_)  
+  - `pnpm -w test-all` (_calls `test` in all packages sequentially, like `lint-all`_)
 
 ### _Cheatsheet: pnpm_
 
-- `pnpm -w blah` => run in monorepo-root
-- `pnpm -r blah` => run in all packages
-- `pnpm -r --filter=./apps blah` => run in some packages
-- `pnpm --filter=website blah` => run in one package
-- `pnpm --filter=!rfcx-bio blah` => run in all packages, except root  
-  (or `pnpm --filter=\!rfcx-bio blah` in zsh)
+- Run in monorepo-root:
+  - `pnpm -w _COMMAND_NAME_`
+- Run in all packages:
+  - `pnpm -r _COMMAND_NAME_`
+- Run in some packages:
+  - `pnpm -r --filter=./apps _COMMAND_NAME_`
+- Run in one package:
+  - `pnpm --filter=website _COMMAND_NAME_`
+- Run in all packages, except root:
+  - `pnpm --filter=!rfcx-bio _COMMAND_NAME_`
+
+     _or_ 
+  - `pnpm --filter=\!rfcx-bio blah` (_in zsh_)
+
+Replace _COMMAND_NAME_ with a required command
 
 ## Deployment
 
 There are 3 shared deployments:
 
-- testing: for the DT to test features when deployed & collaborate
+- **testing**: for the DT to test features when deployed & collaborate
   - https://testing-bio.rfcx.org
   - https://testing-bio.rfcx.org/api
-- staging: for stakeholders to review & give early feedback
+- **staging**: for stakeholders to review & give early feedback
   - https://staging-bio.rfcx.org
   - https://staging-bio.rfcx.org/api
-- production: real public project
+- **production**: real public project
   - https://bio.rfcx.org
   - https://bio.rfcx.org/api
 
@@ -152,42 +173,40 @@ There are 3 shared deployments:
 
 Any branch can be deployed to the `testing` cluster:
 
-- Open the "Actions" tab on GitHub
-- Select the "Build-Deploy" action
-- Click "Run workflow" and select the branch you wish to deploy
+1. Open the "Actions" tab on GitHub
+2. Select the "Build-Deploy" action
+3. Click on "Run workflow", and select the branch you wish to deploy
 
-Note: `develop` branch is auto-deployed to `testing` daily.
+_Note: `develop` branch is auto-deployed to `testing` daily_
 
-### _Deployment: Staging & Deployment: Production_
+### _Deployment: Staging and Deployment: Production_
 
-`staging` & `production` are automatically deployed by GitHub Actions (CD):
+`staging` and `production` are automatically deployed by GitHub Actions (CD):
 
-- every push to `staging` branch => `staging` deploy
-- every push to `master` branch => `production` deploy
+- **staging deploy**: every push to `staging` branch
+- **production deploy**: every push to `master` branch
 
-## Environment (Config & Secrets)
+## Environment (Config and Secrets)
 
 ### _Local Environment_
 
-// TODO: Standardize this; I like that `website` is ready to go on fresh clones...
+Developers can override configuration and secrets locally using:
 
-- Developers can override configuration and secrets locally using:
+  - `/apps/api/.env` (_copy `.env.example` to get started_)
+  - `/apps/cli/.env.local` (_override any variable in `.env`_)
+  - `/apps/website/.env.local` (_override any variable in `.env`_)
 
-  - `/apps/api/.env` (copy `.env.example` to get started)
-  - `/apps/cli/.env.local` (override any variable in `.env`)
-  - `/apps/website/.env.local` (override any variable in `.env`)
+CLI and website also support "modes", which will load respective enviroments:
 
-- CLI and website also support "modes", which will load respective env:
-
-  `pnpm serve -- --mode=staging` (from their directories; not from the monorepo root)
+  - `pnpm serve -- --mode=staging` (_from their directories; not from the monorepo root_)
 
 ### _Deployed Environment_
 
-- _Config_ variables are committed to Git:
+- **Config** variables are committed to Git:
   - `/tools/deployment/api/<NAMESPACE>/config.yaml`
   - `/apps/website/.env`
-- _Secret_ variables must be manually configured:
+- **Secret** variables must be manually configured:
   - API secrets can be set manually via Kubernetes apply
   - // TODO: run Kubernetes apply from CD
   - Website secrets can be set manually as GitHub secrets
-  - **Secrets should never be committed to Git**
+  - **_Secrets should never be committed to Git_**
