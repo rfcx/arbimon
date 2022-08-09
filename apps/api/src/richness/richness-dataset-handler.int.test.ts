@@ -25,7 +25,7 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   await app.register(fastifyRequestContextPlugin)
 
   routesRichness
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
+    .map(({ preHandler, ...rest }) => ({ ...rest }))
     .forEach(route => app.route(route))
 
   return app
@@ -51,7 +51,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: '/projects/1/richness',
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -70,7 +70,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: '/projects/1/richness',
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z', siteIds: '', taxons: '' }
+      query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -86,7 +86,7 @@ describe('happy path', () => {
     const response = await app.inject({
       method: GET,
       url: '/projects/1/richness',
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -104,7 +104,7 @@ describe('validate known data', () => {
     const response = await app.inject({
       method: GET,
       url: '/projects/1/richness',
-      query: { startDate: '2001-01-01T00:00:00.000Z', endDate: '2002-01-01T00:00:00.000Z' }
+      query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2002-01-01T00:00:00.000Z' }
     })
 
     // Assert
@@ -160,7 +160,7 @@ describe('client errors', () => {
       const response = await app.inject({
       method: GET,
       url: '/projects/1/richness',
-      query: { startDate: 'abc', endDate: '2021-01-01T00:00:00.000Z' }
+      query: { dateStartInclusiveLocalIso: 'abc', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z' }
     })
 
     // Assert
