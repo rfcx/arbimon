@@ -3,12 +3,13 @@
 Website for exploring **biodiversity data**
 
 Built with:
-   - Vue 3
-   - Typescript
-   - Vite
-   - pnpm
-   - Pinia
-   - Windi CSS
+
+- Vue 3
+- Typescript
+- Vite
+- pnpm
+- Pinia
+- Windi CSS
 
 _Image 1: The screenshot of the Biodiversity website_
 
@@ -61,7 +62,7 @@ The following must be true to consider a feature is **"DONE"**:
 1. Start three applications: **DB**, **API**, and **Website** in dev-mode:
 
    - `pnpm serve` (_from the monorepo root_)  
-   _or_  
+     _or_
    - `pnpm -w serve` (_from anywhere in the project_)
 
 2. Stop your db once you are finish:
@@ -76,56 +77,56 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 
 - Delete all build and lint artifacts/caches:
 
-   - `pnpm -r clean`
+  - `pnpm -r clean`
 
 - Delete all build and lint artifacts/caches AND dependencies (node_modules):
 
-   - `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
+  - `pnpm -w clean-slate` (usually followed by `pnpm i` to reinstall a fresh copy)
 
 ### _Build_
 
 - Build any package (and it's dependencies):
 
-   - `pnpm build`
+  - `pnpm build`
 
 - Use the pnpm arg `-r` to build all packages:
 
-   - `pnpm -r build`
+  - `pnpm -r build`
 
 ### _Lint_
 
 - Run all linters, or only a single linter:
 
-   - `pnpm lint` (_all linters_)  
-   - `pnpm lint:eslint`  
-   - `pnpm lint:prettier`  
-   - `pnpm lint:stylelint`
+  - `pnpm lint` (_all linters_)
+  - `pnpm lint:eslint`
+  - `pnpm lint:prettier`
+  - `pnpm lint:stylelint`
 
 - Lint is pretty heavy; use the helper to run it sequentially across all packages:
 
-   - `pnpm -w lint-all`
+  - `pnpm -w lint-all`
 
 - Run linters with auto-fixes:
 
-   - `pnpm lint-fix` (_one package_)  
-   - `pnpm -w lint-fix-all` (_all packages_)
+  - `pnpm lint-fix` (_one package_)
+  - `pnpm -w lint-fix-all` (_all packages_)
 
 ### _Test_
 
 - Start a local Postgres database before running `test:int`:
 
-   - `pnpm -w serve-int`
+  - `pnpm -w serve-int`
 
 - Use the following test scripts, which are located in each package:
 
-   - `pnpm test:component` (_unit tests for vue components_)  
-   - `pnpm test:int` (_heavy tests or tests that require a database_)  
-   - `pnpm test:unit` (_basic unit tests_)  
-   - `pnpm test-ui` (_tests executed in a browser_)
+  - `pnpm test:component` (_unit tests for vue components_)
+  - `pnpm test:int` (_heavy tests or tests that require a database_)
+  - `pnpm test:unit` (_basic unit tests_)
+  - `pnpm test-ui` (_tests executed in a browser_)
 
 - Execute a single test file, `describe`, or `test`; to follow TDD (Test-driven development):
 
-  - `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test` (_fast way to execute 1 file_)  
+  - `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test` (_fast way to execute 1 file_)
   - `pnpm exec vitest src/_services/picker/time-of-day-picker.component.test -t "has all, dirunal, nocturnal options"` (_filter within the file; you should use this **in addition** to file-path filtering_)
 
 - Run more complex command for TDD integration tests:
@@ -134,7 +135,7 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 
 - Run all tests in a package, or across the entire project:
 
-  - `pnpm test` (_all vitest-based tests; does not include Cypress-based tests_)  
+  - `pnpm test` (_all vitest-based tests; does not include Cypress-based tests_)
   - `pnpm -w test-all` (_calls `test` in all packages sequentially, like `lint-all`_)
 
 ### _Cheatsheet: pnpm_
@@ -148,9 +149,11 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 - Run in one package:
   - `pnpm --filter=website _COMMAND_NAME_`
 - Run in all packages, except root:
+
   - `pnpm --filter=!rfcx-bio _COMMAND_NAME_`
 
-     _or_ 
+    _or_
+
   - `pnpm --filter=\!rfcx-bio blah` (_in zsh_)
 
 Replace _COMMAND_NAME_ with a required command
@@ -192,13 +195,13 @@ _Note: `develop` branch is auto-deployed to `testing` daily_
 
 Developers can override configuration and secrets locally using:
 
-  - `/apps/api/.env` (_copy `.env.example` to get started_)
-  - `/apps/cli/.env.local` (_override any variable in `.env`_)
-  - `/apps/website/.env.local` (_override any variable in `.env`_)
+- `/apps/api/.env` (_copy `.env.example` to get started_)
+- `/apps/cli/.env.local` (_override any variable in `.env`_)
+- `/apps/website/.env.local` (_override any variable in `.env`_)
 
 CLI and website also support "modes", which will load respective enviroments:
 
-  - `pnpm serve -- --mode=staging` (_from their directories; not from the monorepo root_)
+- `pnpm serve -- --mode=staging` (_from their directories; not from the monorepo root_)
 
 ### _Deployed Environment_
 
