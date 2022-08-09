@@ -86,7 +86,6 @@ export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }
   ]
 
   for (const { model, data, updateOnDuplicate } of masterData) {
-    console.info(`- ${model.name}`)
     await model.bulkCreate(data, { updateOnDuplicate })
   }
 
