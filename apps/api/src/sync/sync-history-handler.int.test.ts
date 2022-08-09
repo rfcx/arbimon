@@ -78,7 +78,7 @@ const getMockedAppLoggedInAndNoAccess = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe(`GET ${ROUTE} (activity dataset)`, () => {
+describe(`GET ${ROUTE} (sync history)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
     // Arrange
@@ -158,7 +158,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(Array.isArray(result)).toBe(true)
 
       const resultArray = result as DataSource[]
-      expect(resultArray.length).toEqual(1)
+      expect(resultArray.length).toEqual(3)
 
       const knownSync = resultArray[0]
       expect(knownSync).toBeTypeOf('object')
