@@ -53,11 +53,6 @@ export const testSites: Site[] = [
   }
 ]
 
-export const testSource: any = {
-  id: 20001,
-  name: 'source-test-project-20001'
-}
-
 export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt' | 'updatedAt'>> = [
   {
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
@@ -206,12 +201,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await ModelRepository.getInstance(getSequelize())
     .LocationSite
     .bulkCreate(testSites)
-
-  // Create mocked source
-  const source: [any] = [testSource]
-  await ModelRepository.getInstance(getSequelize())
-    .SyncSource
-    .bulkCreate(source)
 
   // Create mocked recordings
   await ModelRepository.getInstance(getSequelize())
