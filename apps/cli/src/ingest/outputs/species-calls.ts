@@ -7,12 +7,12 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 
-import { requireEnv } from '~/env'
+import { optionalEnv } from '~/env'
 import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
 
 dayjs.extend(utc)
 
-const { ARBIMON_BASE_URL, MEDIA_API_BASE_URL } = requireEnv('ARBIMON_BASE_URL', 'MEDIA_API_BASE_URL')
+const { ARBIMON_BASE_URL, MEDIA_API_BASE_URL } = optionalEnv('ARBIMON_BASE_URL', 'MEDIA_API_BASE_URL')
 
 const transformSpeciesCall = async (speciesCall: SpeciesCallArbimon, sequelize: Sequelize): Promise<Omit<TaxonSpeciesCall, 'id'>> => {
   const models = ModelRepository.getInstance(sequelize)
@@ -42,9 +42,9 @@ const transformSpeciesCall = async (speciesCall: SpeciesCallArbimon, sequelize: 
       callType: speciesCall.callType,
       callRecordedAt: dayjs.utc(speciesCall.callRecordedAt).toDate(),
       callTimezone: speciesCall.callTimezone,
-      callMediaRedirectUrl: `${ARBIMON_BASE_URL}/project/${speciesCall.projectSlugArbimon}/visualizer/rec/${speciesCall.recordingId}`,
-      callMediaWavUrl: `${MEDIA_API_BASE_URL}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_fwav.wav`,
-      callMediaSpecUrl: `${MEDIA_API_BASE_URL}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_d512.512_mtrue_fspec.png`
+      callMediaRedirectUrl: `${ARBIMON_BASE_URL ?? ''}/project/${speciesCall.projectSlugArbimon}/visualizer/rec/${speciesCall.recordingId}`,
+      callMediaWavUrl: `${MEDIA_API_BASE_URL ?? ''}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_fwav.wav`,
+      callMediaSpecUrl: `${MEDIA_API_BASE_URL ?? ''}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_d512.512_mtrue_fspec.png`
     }
  }
 
