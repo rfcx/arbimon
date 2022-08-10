@@ -9,9 +9,9 @@ import { GET } from '~/api-helpers/types'
 
 const ROUTE = '/projects/:projectId/sync-history'
 
-const PROJECT_ID_WITH_ACCESS = '1'
+const PROJECT_ID_WITH_ACCESS = '80001001'
 const PROJECT_ID_NO_ACCESS = '2'
-const CORE_ID_OF_PROJECT_WITH_ACCESS = 'zy5jbxx4cs9f'
+const CORE_ID_OF_PROJECT_WITH_ACCESS = 'integration8'
 
 // TODO: Extract `getMockedApp...`
 const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
@@ -78,7 +78,7 @@ const getMockedAppLoggedInAndNoAccess = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe(`GET ${ROUTE} (sync history)`, () => {
+describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
     // Arrange
@@ -158,7 +158,7 @@ describe(`GET ${ROUTE} (sync history)`, () => {
       expect(Array.isArray(result)).toBe(true)
 
       const resultArray = result as DataSource[]
-      expect(resultArray.length).toEqual(3)
+      expect(resultArray).toHaveLength(2)
 
       const knownSync = resultArray[0]
       expect(knownSync).toBeTypeOf('object')
