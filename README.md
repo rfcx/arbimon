@@ -43,6 +43,7 @@ The following must be true to consider a feature **"DONE"**:
    - Copy `apps/api/.env.example` to `.env`, and fill missing variables
 
 4. (optional) Override default environment:
+
    - Create `apps/cli/.env.local` (and override variables as necessary)
    - Create `apps/website/.env.local` (and override variables as necessary)
 
@@ -131,17 +132,17 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 ### _Cheatsheet: pnpm_
 
 - Run in monorepo root:
-  `pnpm -w blah` (can be run from anywhere)
+  `pnpm -w _command_` (can be run from anywhere)
 
 - Run in all packages:
-  `pnpm -r blah`
+  `pnpm -r _command_`
 
 - Run in some packages:
-  `pnpm -r --filter=./apps blah`
+  `pnpm -r --filter=./apps _command_`
 
 - Run in all packages, except root:
-  `pnpm --filter=!rfcx-bio blah`
-  (or `pnpm --filter=\!rfcx-bio blah` in zsh)
+  `pnpm --filter=!rfcx-bio _command_`
+  (or `pnpm --filter=\!rfcx-bio _command_` in zsh)
 
 ## Deployment
 
