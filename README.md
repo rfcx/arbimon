@@ -130,11 +130,17 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 
 ### _Cheatsheet: pnpm_
 
-- `pnpm -w blah` => run in monorepo-root
-- `pnpm -r blah` => run in all packages
-- `pnpm -r --filter=./apps blah` => run in some packages
-- `pnpm --filter=website blah` => run in one package
-- `pnpm --filter=!rfcx-bio blah` => run in all packages, except root  
+- Run in monorepo root:
+  `pnpm -w blah` (can be run from anywhere)
+
+- Run in all packages:
+  `pnpm -r blah`
+
+- Run in some packages:
+  `pnpm -r --filter=./apps blah`
+
+- Run in all packages, except root:
+  `pnpm --filter=!rfcx-bio blah`
   (or `pnpm --filter=\!rfcx-bio blah` in zsh)
 
 ## Deployment
@@ -163,7 +169,7 @@ _Note: `develop` branch is auto-deployed to `testing` daily_
 
 ### _Deployment: Staging and Deployment: Production_
 
-`staging` and `production` are automatically deployed by GitHub Actions (CD):
+Environments `staging` and `production` are automatically deployed by GitHub Actions (CD):
 
 - every push to `staging` branch => `staging` deploy
 - every push to `master` branch => `production` deploy
@@ -171,8 +177,6 @@ _Note: `develop` branch is auto-deployed to `testing` daily_
 ## Environment (Config and Secrets)
 
 ### _Local Environment_
-
-// TODO: Standardize this; I like that `website` is ready to go on fresh clones...
 
 - Developers can override configuration and secrets locally using:
 
@@ -190,7 +194,6 @@ _Note: `develop` branch is auto-deployed to `testing` daily_
   - `/tools/deployment/api/<NAMESPACE>/config.yaml`
   - `/apps/website/.env`
 - _Secret_ variables must be manually configured:
-  - API secrets can be set manually via Kubernetes apply
-  - // TODO: run Kubernetes apply from CD
+  - API secrets can be set manually via `kubectl apply tools/deployment/api/production/secrets.yaml` (make a copy of `tools/deployment/api/secrets.example.yaml`)
   - Website secrets can be set manually as GitHub secrets
   - **Secrets should never be committed to Git**
