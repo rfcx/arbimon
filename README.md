@@ -124,7 +124,7 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 
 - You can also run all tests in a package, or across the entire project:
 
-  `pnpm ci-all-test-component` (unit tests for vue components) 
+  `pnpm ci-all-test-component` (unit tests for vue components)
   `pnpm ci-all-test-unit` (basic unit tests)  
   `pnpm -w test-all` (calls `test` in all packages sequentially, like `lint-all`)
 
