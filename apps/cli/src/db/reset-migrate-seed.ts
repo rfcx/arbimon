@@ -27,10 +27,10 @@ const main = async (): Promise<void> => {
     // Reset, migrate, seed, refresh mviews
     await dropTables(sequelize1)
     await execMigrations(sequelize1, verbose)
+    await updateMasterData(sequelize2)
     for (const seederPath of seederPaths.split(',')) {
       await execSeeders(sequelize2, seederPath, verbose)
     }
-    await updateMasterData(sequelize2)
     await refreshMviews(sequelize2)
 
     // Teardown
