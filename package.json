@@ -22,10 +22,10 @@
   "type": "module",
   "scripts": {
     "build-all": "pnpm -r build",
-    "ci-all-test-component": "pnpm -r test:component",
-    "ci-all-test-int": "pnpm -r ci-test-int --stream --workspace-concurrency 1",
+    "ci-all-test-component": "pnpm -r test:component -- --run",
+    "ci-all-test-int": "pnpm -r ci-test-int --stream --workspace-concurrency 1 -- --run",
     "ci-all-test-ui": "pnpm -r test:ui --stream --workspace-concurrency 1",
-    "ci-all-test-unit": "pnpm -r test:unit",
+    "ci-all-test-unit": "pnpm -r test:unit -- --run",
     "clean": "rimraf \"./.eslintcache\"",
     "clean-sheet": "pnpm clean-slate",
     "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
