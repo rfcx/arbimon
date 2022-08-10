@@ -135,8 +135,9 @@ If you encounter an issue, you may want to clean caches and artifacts, or reinst
 
 - Run all tests in a package, or across the entire project:
 
-  - `pnpm test` (_all vitest-based tests; does not include Cypress-based tests_)
-  - `pnpm -w test-all` (_calls `test` in all packages sequentially, like `lint-all`_)
+  - `pnpm ci-all-test-component` (unit tests for vue components) 
+  - `pnpm ci-all-test-unit` (basic unit tests)  
+  - `pnpm -w test-all` (calls `test` in all packages sequentially, like `lint-all`)
 
 ### _Cheatsheet: pnpm_
 
