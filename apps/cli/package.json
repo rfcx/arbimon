@@ -22,7 +22,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "ci-test-int": "vitest --no-threads .int.test.",
+    "ci-test-int": "vitest --no-threads .int.test. --silent",
     "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
