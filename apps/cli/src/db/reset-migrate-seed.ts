@@ -5,7 +5,6 @@ import { dropTables, execMigrations } from './actions'
 import { getSequelize } from './connections'
 
 const DEFAULT_LOCAL_SEEDER_PATHS = [
-  '01-master-data',
   '02-integration-test-data',
   '03-external-data-mock',
   '05-preload',
