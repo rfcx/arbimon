@@ -30,7 +30,7 @@ export const defineWithDefaultsAutoPk = <
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
   defineWithDefaults<DomainType, SequelizeModel>(modelName, attributes, options)
 
-// TODO: This only adds `allowNull: false` to the model 
+// TODO: This only adds `allowNull: false` to the model
 // - might be better to remove this func and manually add it to the models
 // - would also be consistent with migrations
 export const attributesWithDefaults = <
