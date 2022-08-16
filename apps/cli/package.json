@@ -27,7 +27,7 @@
     "db-migrate": "pnpm serve lib/db/migrate",
     "db-reset": "pnpm clean && pnpm serve lib/db/reset",
     "db-rms": "pnpm serve lib/db/reset-migrate-seed",
-    "db-rms-int": "cross-env BIO_DB_PORT=5434 pnpm serve lib/db/reset-migrate-seed -- --path=02-integration-test-data",
+    "db-rms-int": "cross-env BIO_DB_PORT=5434 pnpm serve lib/db/reset-migrate-seed -- --path=01-integration-test-data",
     "db-seed": "pnpm serve lib/db/seed",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
