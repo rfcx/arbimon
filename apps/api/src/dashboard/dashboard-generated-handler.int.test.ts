@@ -3,15 +3,15 @@ import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Site } from '@rfcx-bio/common/dao/types'
 
 import { GET } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { routesDashboard } from './index'
 
+const PROJECT_ID_BASIC = '40001001'
+
 const ROUTE = '/projects/:projectId/dashboard-generated'
-const url = '/projects/1/dashboard-generated'
+const url = `/projects/${PROJECT_ID_BASIC}/dashboard-generated`
 
 const EXPECTED_PROPS = [
   'detectionCount',
@@ -39,22 +39,6 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
     .forEach(route => app.route(route))
 
   return app
-}
-
-const createMockEmptySite = async (): Promise<Site> => {
-  const sequelize = getSequelize()
-  const models = ModelRepository.getInstance(sequelize)
-  const site = await models.LocationSite.create({
-    id: 999999,
-    idCore: 'MockEmpty',
-    idArbimon: 999999,
-    locationProjectId: 1,
-    name: 'Mock empty',
-    latitude: 70,
-    longitude: 70,
-    altitude: 30
-  })
-  return site
 }
 
 describe(`GET ${ROUTE}  (dashboard generated)`, () => {
@@ -116,9 +100,9 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
 
     test('species richness by site is correct', async () => {
       // Arrange
-      const knownSiteName = 'SA09'
+      const knownSiteName = 'Test Site Dashboard Basic'
       const expectedProperties = ['name', 'latitude', 'longitude', 'value']
-      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 6 }
+      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 2 }
 
       // Act
       const maybeResult = JSON.parse(response.body)?.richnessBySite
@@ -128,7 +112,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       expect(Array.isArray(maybeResult)).toBe(true)
 
       const result = maybeResult as ApiMap
-      expect(result.length).toBe(877)
+      expect(result.length).toBe(1)
 
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
@@ -145,10 +129,9 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
 
     test.todo('species richness by site is empty', async () => {
       // Arrange
-      const emptySite = await createMockEmptySite()
-      const knownSiteName = emptySite.name
+      const knownSiteName = 'Test Site Dashboard Empty'
       const expectedProperties = ['name', 'latitude', 'longitude', 'value']
-      const expectedKnownSite = { name: knownSiteName, latitude: emptySite.latitude, longitude: emptySite.longitude, value: 0 }
+      const expectedKnownSite = { name: knownSiteName, latitude: 18.31307, longitude: -65.24878, value: 0 }
 
       // Act
       const maybeResult = JSON.parse(response.body)?.richnessBySite
@@ -158,7 +141,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       expect(Array.isArray(maybeResult)).toBe(true)
 
       const result = maybeResult as ApiMap
-      expect(result.length).toBe(878)
+      expect(result.length).toBe(1)
 
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
