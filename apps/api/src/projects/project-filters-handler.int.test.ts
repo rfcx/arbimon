@@ -5,7 +5,10 @@ import { describe, expect, test } from 'vitest'
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
 
+const PROJECT_ID_BASIC = '50001001'
+
 const ROUTE = '/projects/:projectId/filters'
+const url = `/projects/${PROJECT_ID_BASIC}/filters`
 
 const EXPECTED_PROPS = [
   'locationSites',
@@ -26,7 +29,7 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe(`GET ${ROUTE}  contains valid project`, async () => {
+describe(`GET ${ROUTE} (project filters dataset)`, async () => {
   describe('simple tests', async () => {
     test('exists', async () => {
       // Arrange
@@ -46,7 +49,7 @@ describe(`GET ${ROUTE}  contains valid project`, async () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/filters'
+        url
       })
 
       // Assert
@@ -64,7 +67,7 @@ describe(`GET ${ROUTE}  contains valid project`, async () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/filters'
+        url
       })
 
       // Assert
@@ -79,13 +82,13 @@ describe(`GET ${ROUTE}  contains valid project`, async () => {
 
     const response = await app.inject({
       method: GET,
-      url: '/projects/1/filters'
+      url
     })
 
     const result = JSON.parse(response.body)
 
     test('return all sites in project', async () => {
-      expect(result.locationSites.length).toEqual(877)
+      expect(result.locationSites.length).toEqual(2)
     })
   })
 })

@@ -32,7 +32,7 @@ test('GET /projects contains valid project', async () => {
   expect(response.statusCode).toBe(200)
 
   const result = JSON.parse(response.body)
-  const bciProject = result.find((p: any) => p.slug === 'bci-panama-2018')
-  expect(bciProject).toBeDefined()
-  expect(bciProject.name).toBe('BCI-Panama_2018')
+  const expectedProject = result.find((p: any) => p.slug === 'integration-test-project-50001001')
+  expect(expectedProject).toBeDefined()
+  expect(expectedProject.name).toBe('Integration Test Project 5')
 })
