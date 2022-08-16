@@ -42,7 +42,7 @@
     "s:api": "pnpm --filter=db serve && pnpm --filter=cli db-rms && pnpm --filter=api serve",
     "s:website": "wait-port -o silent 3000 && pnpm --filter=website serve",
     "serve": "concurrently --kill-others-on-fail \"pnpm:s:*\"",
-    "serve-int": "pnpm --filter=db serve-int && pnpm --filter=cli db-rms-int",
+    "serve-int": "pnpm --filter=db serve-int && pnpm --filter=cli db-rms-int-local",
     "test-all": "pnpm -r test --stream --workspace-concurrency 1"
   },
   "devDependencies": {

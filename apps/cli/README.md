@@ -120,4 +120,4 @@ Run seeders (inserts fake data)
 Run reset, migrate, and seed (as 1 script):
 
 - `pnpm db-rms`
-- `pnpm db-rms-int`
+- `pnpm db-rms-int-local`
