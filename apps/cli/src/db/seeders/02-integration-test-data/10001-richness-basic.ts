@@ -9,7 +9,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 
-// Mocked project, site, recordings, detections
+// Mocked project, site, recordings
 export const testProject: Project = {
   id: 10001001,
   idCore: 'integration1',
