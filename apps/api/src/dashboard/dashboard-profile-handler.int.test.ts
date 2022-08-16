@@ -5,9 +5,13 @@ import { describe, expect, test } from 'vitest'
 import { GET } from '~/api-helpers/types'
 import { routesDashboard } from './index'
 
+const PROJECT_ID_BASIC = '40001001'
+
 const ROUTE = '/projects/:projectId/dashboard-profile'
+const url = `/projects/${PROJECT_ID_BASIC}/dashboard-profile`
 
 const EXPECTED_PROPS = [
+  'locationProjectId',
   'summary',
   'readme',
   'speciesHighlighted'
@@ -45,7 +49,7 @@ describe(`GET ${ROUTE} (dashboard profile)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/dashboard-profile'
+        url
       })
 
       // Assert
@@ -63,7 +67,7 @@ describe(`GET ${ROUTE} (dashboard profile)`, () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/dashboard-profile'
+        url
       })
 
       // Assert
