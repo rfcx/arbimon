@@ -5,6 +5,8 @@ import { describe, expect, test } from 'vitest'
 import { GET } from '~/api-helpers/types'
 import { routesDetectRecording } from './index'
 
+const fakeProjectId = 201
+
 const ROUTE = '/projects/:projectId/detect-recording'
 
 const EXPECTED_PROPS = [
@@ -53,7 +55,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2001-01-01', dateEndLocal: '2031-01-01' }
       })
 
@@ -72,7 +74,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2001-01-01', dateEndLocal: '2031-01-01' }
       })
 
@@ -88,7 +90,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2001-01-01', dateEndLocal: '2031-01-01' }
       })
 
@@ -106,7 +108,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2001-01-01', dateEndLocal: '2031-01-01' }
       })
 
@@ -119,7 +121,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2001-01-01', dateEndLocal: '2031-01-01', queryHours: '0-23' }
       })
 
@@ -132,7 +134,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15T00:00:00.000Z', dateEndLocal: '2022-02-15T00:00:00.000Z' }
       })
 
@@ -145,7 +147,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-15' }
       })
 
@@ -158,7 +160,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-15', queryHours: '0-23' }
       })
 
@@ -171,7 +173,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-15', queryHours: '10,12-15' }
       })
 
@@ -184,7 +186,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-15', querySites: 'CU26' }
       })
 
@@ -197,7 +199,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-17', querySites: 'CU*' }
       })
 
@@ -210,7 +212,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-14', dateEndLocal: '2022-02-14' }
       })
 
@@ -223,7 +225,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2022-02-15', dateEndLocal: '2022-02-17', queryHours: '1-9,11,13,14,16-22' }
       })
 
@@ -241,7 +243,7 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording'
+        url: `/projects/${fakeProjectId}/detect-recording`
       })
 
       // Assert
@@ -288,13 +290,13 @@ describe('GET /project/:projectId/detect-recording', () => {
       // Act
       const response1 = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: 'abc', dateEndLocal: '2021-01-01' }
       })
 
       const response2 = await app.inject({
         method: GET,
-        url: '/projects/1/detect-recording',
+        url: `/projects/${fakeProjectId}/detect-recording`,
         query: { dateStartLocal: '2021-01-01', dateEndLocal: 'abc' }
       })
 
