@@ -19,7 +19,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Detection.id,
-  syncBatchLimit: 1000
+  syncBatchLimit: 20000
 }
 
 // This batch works like a loop where all detections are in sync
