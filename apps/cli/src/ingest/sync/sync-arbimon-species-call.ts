@@ -20,7 +20,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.SpeciesCall.id,
-  syncBatchLimit: 2000
+  syncBatchLimit: 10000
 }
 
 export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
