@@ -471,4 +471,64 @@ describe('ingest > outputs > detection by site species hour', async () => {
   // duration minutes based on detection minutes which we filter by duplicate values
   // detection minutes '0,30'
   // duration minutes 90 + 90 / 60
+
+  test('transformDetectionArbimonToBio works correct', async () => {
+    // Arrange
+    const TEST_DETECTIONS = [
+      {
+        idArbimon: 147132,
+        datetime: '2008-03-11T18:44:00Z',
+        siteId: 88528,
+        recordingDuration: 60.0,
+        speciesId: 1050,
+        present: 1,
+        presentReview: 1,
+        presentAed: 0,
+        updatedAt: '2022-06-23T18:03:47Z'
+      },
+      {
+        idArbimon: 147133,
+        datetime: '2008-03-11T18:54:00Z',
+        siteId: 88528,
+        recordingDuration: 60.0,
+        speciesId: 1050,
+        present: 1,
+        presentReview: 1,
+        presentAed: 0,
+        updatedAt: '2022-06-23T18:03:47Z'
+      },
+      {
+        idArbimon: 147134,
+        datetime: '2008-03-11T19:04:00Z',
+        siteId: 88528,
+        recordingDuration: 17.29,
+        speciesId: 1050,
+        present: 1,
+        presentReview: 1,
+        presentAed: 0,
+        updatedAt: '2022-06-23T18:03:47Z'
+      },
+      {
+        idArbimon: 147135,
+        datetime: '2008-03-11T20:09:00Z',
+        siteId: 88528,
+        recordingDuration: 60.0,
+        speciesId: 1050,
+        present: 1,
+        presentReview: 1,
+        presentAed: 0,
+        updatedAt: '2022-06-23T18:03:47Z'
+      }
+    ]
+
+    // Act
+    await writeDetectionsToBio(TEST_DETECTIONS, biodiversitySequelize)
+    const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
+
+    // Assert
+    expect(detections).toHaveLength(3)
+    expect(detections[0].count).toBe(2)
+    expect(detections[0].durationMinutes).toBe(2)
+    expect(detections[0].detectionMinutes).toEqual([44, 54]) // {44,54}
+  })
 })
