@@ -14,6 +14,7 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
   const sql = `
     SELECT 
       sip.common_name as name,
+      sip.scientific_name as scientific_name,
       ls.name as site,
       ls.latitude as latitude,
       ls.longitude as longitude,
