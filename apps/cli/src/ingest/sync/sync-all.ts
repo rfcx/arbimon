@@ -47,10 +47,10 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       return
     }
 
-    const isRecordingBySiteHourUpToDateOrMaxLimit = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
-    console.info('> Recordings: up to date or max limit =', isRecordingBySiteHourUpToDateOrMaxLimit)
+    const isRecordingBySiteHourLessThanMaxLimit = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Recordings: less than max limit =', isRecordingBySiteHourLessThanMaxLimit)
 
-    if (!isRecordingBySiteHourUpToDateOrMaxLimit) {
+    if (!isRecordingBySiteHourLessThanMaxLimit) {
       console.info('- wait to sync more recordings in the next round...')
       return
     }
