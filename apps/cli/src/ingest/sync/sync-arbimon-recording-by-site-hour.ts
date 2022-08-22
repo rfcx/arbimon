@@ -22,13 +22,13 @@ const SYNC_CONFIG: SyncConfig = {
   syncBatchLimit: 2000
 }
 
-export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<[SyncStatus, number]> => {
+export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<[number, SyncStatus]> => {
   // =========== Input ==========
   const arbimonRecordingBySiteHour = await getArbimonRecording(arbimonSequelize, syncStatus)
   const totalArbimonRecordingBySiteHour = arbimonRecordingBySiteHour.length
   console.info('- syncArbimonRecordingBySiteHourBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
   console.info('- syncArbimonRecordingBySiteHourBatch: found %d recordings', totalArbimonRecordingBySiteHour)
-  if (totalArbimonRecordingBySiteHour === 0) return [syncStatus, totalArbimonRecordingBySiteHour]
+  if (totalArbimonRecordingBySiteHour === 0) return [totalArbimonRecordingBySiteHour, syncStatus]
 
   const lastSyncRecording = arbimonRecordingBySiteHour[arbimonRecordingBySiteHour.length - 1] // already last uploaded item because query order by it
   if (!isSyncable(lastSyncRecording)) throw new Error('Input does not contain needed sync-status data')
@@ -79,7 +79,7 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
     }))
 
     await transaction.commit()
-    return [updatedSyncStatus, totalArbimonRecordingBySiteHour]
+    return [totalArbimonRecordingBySiteHour, updatedSyncStatus]
   } catch (error) {
     await transaction.rollback()
     throw error
@@ -94,6 +94,6 @@ export const syncArbimonRecordingBySiteHour = async (arbimonSequelize: Sequelize
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  const [updatedSyncStatus, totalArbimonRecordingBySiteHour] = await syncArbimonRecordingBySiteHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
-  return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate) && (syncStatus.syncUntilId === updatedSyncStatus.syncUntilId) && (totalArbimonRecordingBySiteHour === SYNC_CONFIG.syncBatchLimit)
+  const [totalArbimonRecordingBySiteHour] = await syncArbimonRecordingBySiteHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+  return totalArbimonRecordingBySiteHour < SYNC_CONFIG.syncBatchLimit
 }
