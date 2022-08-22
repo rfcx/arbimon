@@ -98,6 +98,12 @@ Get all data (incremental) from Arbimon and write it to a bio
 pnpm serve lib/ingest/sync/incremental.js
 ```
 
+### Reset & Resync data by project manually
+
+```
+pnpm serve lib/sync/reset-and-resync.js -- --slug=rfcx-th --mode=staging
+```
+
 ### Database Migrations
 
 If you're targeting a local database, you must first start it:
