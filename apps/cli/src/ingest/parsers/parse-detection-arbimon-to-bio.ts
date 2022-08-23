@@ -84,10 +84,10 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
   for (const group of arbimonDetectionGroupByDateHourSiteSpecies) {
     const timePrecisionHourLocal = getTimePrecisionHourLocal(group[0].datetime)
     const locationSiteId = biodiversitySites.find(site => site.idArbimon === group[0].siteId)?.id
+    const taxonSpeciesId = biodiversitySpecies.find(species => species.idArbimon === group[0].speciesId)?.id
 
     // Skip recordings with haven't synced site (validation issue)
-    if (locationSiteId !== undefined) {
-      const taxonSpeciesId = biodiversitySpecies.find(species => species.idArbimon === group[0].speciesId)?.id
+    if (locationSiteId !== undefined && taxonSpeciesId !== undefined) {
       // Find existing detections in the bio db
       const biodiversityDetection = await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.findOne({
         where: {
@@ -118,6 +118,8 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
             durationMinutes: floorValue(recordingData.durationMinutes / 60), // 3 - duration of recordings datetime minutes, related to this group by site/species/date/hour
             detectionMinutes: recordingData.detectionMinutes // '10,25,55' - array of recordings datetime minutes (values), related to this group by site/species/date/hour
           })
+          // TEMPORARY LOG
+          console.info('itemsToInsertOrUpsert', itemsToInsertOrUpsert, 'filteredArbimonDetectionsByValidation', filteredArbimonDetectionsByValidation)
         }
       } else if (biodiversityDetection?.detectionMinutes !== undefined) {
         // detections to upsert
