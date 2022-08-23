@@ -84,6 +84,7 @@ export const syncArbimonDetectionBySiteSpeciesHourBatch = async (arbimonSequeliz
     return updatedSyncStatus
   } catch (error) {
     await transaction.rollback()
+    console.error(error)
     throw error
   }
 }
