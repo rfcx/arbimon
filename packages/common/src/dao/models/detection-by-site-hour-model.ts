@@ -24,7 +24,7 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
 
     // Facts
     count: DataTypes.INTEGER, // 1
-    durationMinutes: DataTypes.INTEGER // 12
+    durationMinutes: DataTypes.FLOAT // 12
   },
   {
     tableName: TABLE_DETECTION_BY_SITE_HOUR

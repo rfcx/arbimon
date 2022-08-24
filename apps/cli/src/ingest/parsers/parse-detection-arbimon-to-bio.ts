@@ -1,4 +1,4 @@
-import { floor, groupBy } from 'lodash-es'
+import { ceil, groupBy } from 'lodash-es'
 import { Op, Sequelize } from 'sequelize'
 import { SafeParseReturnType, z } from 'zod'
 
@@ -59,7 +59,7 @@ const getTimePrecisionHourLocal = (datetime: string): string => {
 }
 
 const floorValue = (n: number): number => {
-  return floor(n, 0)
+  return ceil(n, 2)
 }
 
 export const transformDetectionArbimonToBio = async (detectionArbimon: DetectionArbimon[], sequelize: Sequelize): Promise<DetectionBySiteSpeciesHourBio[][]> => {
