@@ -1,6 +1,4 @@
 export const ROUTE_NAMES = {
-  cnnJobCreate: 'cnn_job_create',
-  cnnJobList: 'cnn_job_list',
   home: 'home',
   dashboard: 'dashboard',
   speciesRichness: 'species_richness',
@@ -9,7 +7,10 @@ export const ROUTE_NAMES = {
   info: 'info',
   preferences: 'preferences',
   error: 'error',
-  syncHistory: 'sync_history'
+  syncHistory: 'sync_history',
+  cnnJobCreate: 'cnn_job_create',
+  cnnJobList: 'cnn_job_list',
+  cnnJobDetail: 'cnn_job_detail'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES
