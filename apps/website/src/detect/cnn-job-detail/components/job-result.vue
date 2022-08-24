@@ -1,0 +1,28 @@
+<template>
+  <div class="job-result-wrapper">
+    <section-title>
+      <template #title>
+        <div class="flex justify-between items-center">
+          <span class="text-lg font-semibold">Results</span>
+        </div>
+      </template>
+      <template #controls>
+        <job-result-filter />
+      </template>
+    </section-title>
+    <div class="grid grid-cols-4 gap-4 pt-2">
+      <div class="col-span-3 border-1 border-box-grey rounded-md p-2 w-full">
+        <job-result-detection-summary />
+      </div>
+      <div class="col-span-1 border-1 border-box-grey rounded-md p-2 w-full">
+        <job-result-validation-status />
+      </div>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import JobResultDetectionSummary from './job-result-detection-summary.vue'
+import JobResultFilter from './job-result-filter.vue'
+import JobResultValidationStatus from './job-result-validation-status.vue'
+
+</script>

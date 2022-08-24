@@ -44,6 +44,11 @@ const routes: RouteRecordRaw[] = [
         path: 'cnn/create',
         name: ROUTE_NAMES.cnnJobCreate,
         component: PAGES.CnnJobCreate
+      },
+      {
+        path: 'cnn/detail/:jobId',
+        name: ROUTE_NAMES.cnnJobDetail,
+        component: PAGES.CnnJobDetail
       }
     ]
   },

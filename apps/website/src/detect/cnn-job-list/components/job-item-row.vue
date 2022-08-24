@@ -1,11 +1,19 @@
 <template>
   <tr class="border-b border-box-grey">
-    <th
+    <td
       scope="row"
       class="w-2/10 px-6 py-4 align-text-top"
     >
-      {{ props.job.modelName }}
-    </th>
+      <router-link
+        :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId: props.job.id }}"
+        class="hover:underline"
+      >
+        {{ props.job.modelName }} <br>
+        <span class="text-subtle text-sm">
+          Job#{{ props.job.id }}
+        </span>
+      </router-link>
+    </td>
     <td class="w-3/10 px-6 py-4 align-text-top w-80">
       <job-input
         :total-duration-minutes="props.job.totalDurationMinutes"
@@ -46,6 +54,7 @@ import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/
 
 import { apiClientCoreKey } from '@/globals'
 import useDateFormat from '~/hooks/use-date-format'
+import { ROUTE_NAMES } from '~/router'
 import { FETCH_CLASSIFIER_JOBS_KEY } from '../../_composables/use-classifier-jobs'
 import { usePostClassifierJobStatus } from '../../_composables/use-post-classifier-job-status'
 import { Job } from '../../types'
