@@ -69,7 +69,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         allowNull: false
       },
       duration_minutes: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.INTEGER,
         allowNull: false
       }
     }
