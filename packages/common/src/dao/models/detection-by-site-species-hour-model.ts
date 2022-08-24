@@ -30,7 +30,7 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
 
     // Facts
     count: DataTypes.INTEGER, // 1
-    durationMinutes: DataTypes.INTEGER,
+    durationMinutes: DataTypes.FLOAT,
     detectionMinutes: {
       type: DataTypes.ARRAY(DataTypes.INTEGER),
       defaultValue: null

@@ -112,7 +112,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(2)
-    expect(detections[0].durationMinutes).toBe(2)
+    expect(detections[0].durationMinutes).toBe(3.02)
     expect(detections[0].detectionMinutes).toEqual([6, 30])
   })
 
@@ -296,7 +296,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(3) // 3 detections in the group
-    expect(detections[0].durationMinutes).toBe(3)
+    expect(detections[0].durationMinutes).toBe(3.01)
     expect(detections[0].detectionMinutes).toEqual([6, 7])
     // TODO: fix this case - how to catch/calculate repeating datetime (2 recordings in the one site with the same datetime OR)
   })
@@ -336,7 +336,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(2)
-    expect(detections[0].durationMinutes).toBe(3)
+    expect(detections[0].durationMinutes).toBe(3.01)
     expect(detections[0].detectionMinutes).toEqual([6, 30])
   })
 
@@ -384,7 +384,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(3)
-    expect(detections[0].durationMinutes).toBe(4)
+    expect(detections[0].durationMinutes).toBe(4.51)
     expect(detections[0].detectionMinutes).toEqual([0, 30, 20])
   })
 
@@ -451,13 +451,13 @@ describe('ingest > outputs > detection by site species hour', async () => {
     // Expected results for insert-upsert
     expect(detections.length).toBe(1)
     expect(detections[0].count).toBe(3)
-    expect(detections[0].durationMinutes).toBe(4)
+    expect(detections[0].durationMinutes).toBe(4.52)
     expect(detections[0].detectionMinutes).toEqual([0, 20, 30])
 
     // Expected result for reset
     expect(detections2.length).toBe(1)
     expect(detections2[0].count).toBe(2)
-    expect(detections2[0].durationMinutes).toBe(2)
+    expect(detections2[0].durationMinutes).toBe(3.02)
     expect(detections2[0].detectionMinutes).toEqual([0, 30])
   })
 
