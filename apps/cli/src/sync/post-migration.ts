@@ -1,9 +1,9 @@
-import { wait } from '@rfcx-bio/utils/async'
+// import { wait } from '@rfcx-bio/utils/async'
 
-import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
-import { syncAllForProject } from '@/sync/all'
-import { syncProjects } from '@/sync/arbimon'
-import { getNeedSyncingProjects } from '@/sync/data-source'
+// import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
+// import { syncAllForProject } from '@/sync/all'
+// import { syncProjects } from '@/sync/arbimon'
+// import { getNeedSyncingProjects } from '@/sync/data-source'
 import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 import { refreshMviews } from '../db/actions/refresh-mviews'
@@ -13,18 +13,18 @@ const main = async (): Promise<void> => {
   console.info('Post migration - sync start')
   try {
     const bioSequelize = getSequelize()
-    const arbimonSequelize = getArbimonSequelize()
+    // const arbimonSequelize = getArbimonSequelize()
 
-    console.info('STEP: Sync projects')
-    await syncProjects(arbimonSequelize, bioSequelize)
+    // console.info('STEP: Sync projects')
+    // await syncProjects(arbimonSequelize, bioSequelize)
 
     // get syncing projects
-    const syncingProjects = await getNeedSyncingProjects(bioSequelize, 2000)
+    // const syncingProjects = await getNeedSyncingProjects(bioSequelize, 2000)
 
-    console.info('STEP: Sync site, species, and detections')
-    for (const project of syncingProjects) {
-      await Promise.all([syncAllForProject(arbimonSequelize, bioSequelize, project), wait(5000)])
-    }
+    // console.info('STEP: Sync site, species, and detections')
+    // for (const project of syncingProjects) {
+    //   await Promise.all([syncAllForProject(arbimonSequelize, bioSequelize, project), wait(5000)])
+    // }
 
     console.info('STEP: Sync species description - only for missing or outdated')
     await syncOnlyMissingWikiSpeciesInfo(bioSequelize)
