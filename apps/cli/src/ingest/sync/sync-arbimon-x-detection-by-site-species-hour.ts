@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
-import { getArbimonDetections } from '../inputs/get-arbimon-detections'
+import { getArbimonDetections } from '../inputs/get-arbimon-detection'
 import { writeDetectionsToBio } from '../outputs/detection-by-site-species-hour'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
@@ -19,7 +19,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Detection.id,
-  syncBatchLimit: 20000
+  syncBatchLimit: 200000
 }
 
 // This batch works like a loop where all detections are in sync

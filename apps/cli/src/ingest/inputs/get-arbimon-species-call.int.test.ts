@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { getArbimonSpeciesCalls } from '@/ingest/inputs/get-arbimon-species-calls'
+import { getArbimonSpeciesCalls } from '@/ingest/inputs/get-arbimon-species-call'
 import { SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -149,5 +149,27 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     expect(item).toBeDefined()
     EXPECTED_PROPS.forEach(prop => expect(item).toHaveProperty(prop))
     expect(Object.keys(item as any).length).toBe(EXPECTED_PROPS.length)
+  })
+
+  test('can not get species calls which are not enabled', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1921, reportsEnabled: 0 } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1921, siteId: 88529, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1921, siteId: 88530, createdAt: '2022-01-02 01:00:00', updatedAt: '2022-01-05 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047506, siteId: 88529 } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047507, siteId: 88530 } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 990, projectId: 1921, recordingId: 7047506, dateCreated: '2022-08-23 03:05:37' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 991, projectId: 1921, recordingId: 7047507, dateCreated: '2022-08-23 03:05:37' } })
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 10
+    }
+
+    // Act
+    const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(1)
   })
 })
