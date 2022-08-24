@@ -4,6 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonSites } from '@/ingest/inputs/get-arbimon-sites'
+import { SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
 const SQL_INSERT_PROJECT = `
@@ -17,23 +18,22 @@ const SQL_INSERT_SITE = `
 `
 
 const DEFAULT_PROJECT = { projectId: 1920, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', deletedAt: null, name: 'RFCx 1', url: 'rfcx-1', description: 'A test project for testing', projectTypeId: 1, isPrivate: 1, isEnabled: 1, currentPlan: 846, storageUsage: 0.0, processingUsage: 0.0, patternMatchingEnabled: 1, citizenScientistEnabled: 0, cnnEnabled: 0, aedEnabled: 0, clusteringEnabled: 0, externalId: '807cuoi3cvw0', featured: 0, image: null, reportsEnabled: 1 }
-const DEFAULT_SITE = { projectId: 1920, siteId: 88528, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok' }
+const DEFAULT_SITE = { projectId: 1920, siteId: 123, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok' }
 
 describe('ingest > inputs > getArbimonSites', async () => {
   beforeEach(async () => {
     await arbimonSequelize.query('DELETE FROM projects')
     await arbimonSequelize.query('DELETE FROM sites')
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
   })
 
   const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
   test('can get oldest sites', async () => {
     // Arrange
-    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
-    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 123, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 124, createdAt: '2022-01-02 01:00:00', updatedAt: '2022-01-05 01:00:00' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 125, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00' } })
-
     const leastRecentlyUpdatedId = 125
     const secondLeastRecentlyUpdatedId = 124
 
@@ -44,11 +44,30 @@ describe('ingest > inputs > getArbimonSites', async () => {
     }
 
     // Act
-    const actual = await getArbimonSites(arbimonSequelize, params)
+    const actual = await getArbimonSites(arbimonSequelize, params) as unknown as SiteArbimon[]
 
     // Assert
     expect(actual.length).toBe(params.syncBatchLimit)
     expect(actual[0].idArbimon).toBe(leastRecentlyUpdatedId)
     expect(actual[1].idArbimon).toBe(secondLeastRecentlyUpdatedId)
+  })
+
+  test('can not get sites which are not enabled', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1921, reportsEnabled: 0 } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1921, siteId: 126, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1921, siteId: 127, createdAt: '2022-01-02 01:00:00', updatedAt: '2022-01-05 01:00:00' } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 10
+    }
+
+    // Act
+    const actual = await getArbimonSites(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(1)
   })
 })

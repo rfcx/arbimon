@@ -45,7 +45,7 @@ function isValidated (val: DetectionArbimon): boolean {
 
 function filterRepeatingDetectionMinutes (group: DetectionArbimon[]): RecordingData {
   return group.reduce((acc, cur) => {
-    const minute = Number(dayjs(cur.datetime).minute().toString())
+    const minute = dayjs(cur.datetime).minute()
       if (!acc.detectionMinutes.includes(minute)) {
         acc.detectionMinutes.push(minute)
         acc.durationMinutes += cur.recordingDuration
@@ -132,7 +132,7 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
           durationMinutes
         }
         group.forEach(dt => {
-          const dtMinutes = Number(dayjs(dt.datetime).minute().toString())
+          const dtMinutes = dayjs(dt.datetime).minute()
 
           // filter repeating recordings detectionMinutes to avoid inserting duplicate of it
           const existing = detectionCountMinutes?.detectionMinutes.includes(dtMinutes)

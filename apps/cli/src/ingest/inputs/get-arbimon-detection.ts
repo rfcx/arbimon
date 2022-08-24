@@ -32,7 +32,9 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
       rv.updated_at updatedAt
     FROM recording_validations rv
     JOIN recordings r ON rv.recording_id = r.recording_id
-    WHERE rv.updated_at > $syncUntilDate OR (rv.updated_at = $syncUntilDate AND rv.recording_validation_id > $syncUntilId)
+    JOIN projects p ON rv.project_id = p.project_id
+    WHERE (rv.updated_at > $syncUntilDate OR (rv.updated_at = $syncUntilDate AND rv.recording_validation_id > $syncUntilId))
+      AND p.reports_enabled = 1
     ORDER BY rv.updated_at, rv.recording_validation_id
     LIMIT $syncBatchLimit
   ;

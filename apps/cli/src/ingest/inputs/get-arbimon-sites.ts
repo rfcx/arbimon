@@ -18,8 +18,9 @@ export const getArbimonSites = async (sequelize: Sequelize, params: SyncQueryPar
           s.alt AS altitude,
           s.updated_at AS updatedAt
     FROM sites s
-    WHERE s.updated_at > $syncUntilDate 
-      OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId)
+    JOIN projects p ON s.project_id = p.project_id
+    WHERE (s.updated_at > $syncUntilDate OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId))
+      AND p.reports_enabled = 1
     ORDER BY s.updated_at, s.site_id
     LIMIT $syncBatchLimit
     ;

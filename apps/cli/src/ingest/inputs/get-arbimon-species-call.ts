@@ -24,8 +24,8 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
       JOIN projects p ON s.project_id = p.project_id
       JOIN songtypes st ON t.songtype_id = st.songtype_id
     WHERE t.deleted=0 AND r.datetime_utc IS NOT NULL
-      AND t.date_created > $syncUntilDate
-      OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId)
+      AND (t.date_created > $syncUntilDate OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId))
+      AND p.reports_enabled = 1
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
     ;

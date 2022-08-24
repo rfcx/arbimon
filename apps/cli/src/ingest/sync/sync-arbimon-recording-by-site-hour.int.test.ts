@@ -97,8 +97,7 @@ describe('ingest > sync > sync recording by site hour', async () => {
           where: { syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
           raw: true
         })
-
-      expect(syncStatusInDB?.syncUntilId).toBe(updatedSyncStatus.syncUntilId)
+      expect(syncStatusInDB?.syncUntilId).toBe(updatedSyncStatus[1].syncUntilId)
     })
 
     test('project sync log is created', async () => {

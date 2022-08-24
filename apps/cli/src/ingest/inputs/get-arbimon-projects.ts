@@ -24,7 +24,8 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
       GROUP BY project_id 
     ) s
     ON p.project_id = s.project_id
-    WHERE p.updated_at > $syncUntilDate OR (p.updated_at = $syncUntilDate AND p.project_id > $syncUntilId)
+    WHERE (p.updated_at > $syncUntilDate OR (p.updated_at = $syncUntilDate AND p.project_id > $syncUntilId))
+      AND p.reports_enabled = 1
     ORDER BY p.updated_at, p.project_id
     LIMIT $syncBatchLimit
     ;

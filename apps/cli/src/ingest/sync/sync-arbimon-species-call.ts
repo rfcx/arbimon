@@ -8,7 +8,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { writeSpeciesCallsToBio } from '@/ingest/outputs/species-calls'
-import { getArbimonSpeciesCalls } from '../inputs/get-arbimon-species-calls'
+import { getArbimonSpeciesCalls } from '../inputs/get-arbimon-species-call'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
