@@ -23,6 +23,25 @@
         </div>
       </template>
     </div>
+    <div
+      v-if="details.length > displayItemNumber"
+      class="flex justify-end items-center mt-2"
+    >
+      <button
+        class="btn btn-icon ml-4"
+        :disabled="displayIndex === 0"
+        @click="previousPage()"
+      >
+        <icon-fas-chevron-left class="w-3 h-3" />
+      </button>
+      <button
+        class="btn btn-icon ml-2"
+        :disabled="displayIndex === Math.ceil(details.length / displayItemNumber) - 1"
+        @click="nextPage()"
+      >
+        <icon-fas-chevron-right class="w-3 h-3" />
+      </button>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -33,7 +52,7 @@ import { displayValue } from '@rfcx-bio/utils/number'
 const details = computed(() => {
   const species: { name: string, value: number }[] = []
   const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Pongo pygmaeus', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii, Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
-  for (let index = 0; index < 15; index++) {
+  for (let index = 0; index < 27; index++) {
     species.push({
       name: speciesNames[Math.floor(Math.random() * speciesNames.length)],
       value: Math.random() * 10000
@@ -43,11 +62,20 @@ const details = computed(() => {
   return species.sort((a, b) => b.value - a.value)
 })
 
+const displayItemNumber = 10
 const displayIndex = ref(0)
 
-const displaySpecies = computed(() => details.value.slice(displayIndex.value * 10, (displayIndex.value * 10) + 11))
+const displaySpecies = computed(() => details.value.slice(displayIndex.value * displayItemNumber, (displayIndex.value * displayItemNumber) + 11))
 
-const displaySpeciesColumn1 = computed(() => displaySpecies.value.slice(0, 5))
-const displaySpeciesColumn2 = computed(() => displaySpecies.value.slice(6))
+const displaySpeciesColumn1 = computed(() => displaySpecies.value.slice(0, displayItemNumber / 2))
+const displaySpeciesColumn2 = computed(() => displaySpecies.value.slice((displayItemNumber / 2) + 1))
+
+const previousPage = () => {
+  displayIndex.value -= 1
+}
+
+const nextPage = () => {
+  displayIndex.value += 1
+}
 
 </script>
