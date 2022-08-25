@@ -11,10 +11,10 @@
       </template>
     </section-title>
     <div class="grid grid-cols-4 gap-4 pt-2">
-      <div class="col-span-3 border-1 border-box-grey rounded-md p-2 w-full">
+      <div class="col-span-3 border-1 border-box-grey rounded-md px-6 py-4 w-full">
         <job-result-detection-summary />
       </div>
-      <div class="col-span-1 border-1 border-box-grey rounded-md p-2 w-full">
+      <div class="col-span-1 border-1 border-box-grey rounded-md px-6 py-4 w-full">
         <job-result-validation-status />
       </div>
     </div>
