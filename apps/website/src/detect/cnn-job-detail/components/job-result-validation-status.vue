@@ -1,7 +1,7 @@
 <template>
   <div class="job-result-validation-status-wrapper">
     <span class="job-result-validation-status-header text-subtle text-sm">Validation status</span>
-    <div class="job-result-validation-status-detail grid grid-cols-4 gap-2">
+    <div class="job-result-validation-status-detail mt-2 grid grid-cols-4 gap-2">
       <template
         v-for="item in details"
         :key="'validation-status-' + item.label"
