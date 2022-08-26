@@ -3,12 +3,21 @@
     <!-- ================= dynamic navbar ============== -->
     <!-- URGENT 44 - Move navbar to App.vue -->
     <navbar-component :is-report="true" />
+
     <!-- ================== page content =============== -->
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
       <div
         v-if="store.selectedProject"
-        class="page_content"
+        class="page-content"
       >
+        <el-alert
+          v-if="displayWarningProjectSyncing"
+          title="Syncing project"
+          type="warning"
+          :closable="false"
+          show-icon
+          class="mb-2"
+        />
         <router-view />
         <div class="mt-5 py-2 grid sm:grid-cols-2 text-xs text-subtle border-t-1 border-l-0 border-r-0 border-b-0 border-solid opacity-50">
           <last-sync
