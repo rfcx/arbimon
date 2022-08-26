@@ -7,7 +7,7 @@
       v-if="store.selectedProject"
       class="page-content lg:flex"
     >
-      <side-bar class="hidden lg:flex w-64 flex-initial items-stretch min-h-[calc(100vh-3.25rem)]" />
+      <sidebar class="hidden lg:flex w-64 flex-initial items-stretch min-h-[calc(100vh-3.25rem)]" />
       <div class="w-full p-6">
         <router-view />
       </div>
@@ -21,7 +21,8 @@
   import { useStoreOutsideSetup } from '../../_services/store'
   import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
   import NavbarComponent from '../components/navbar/nav-bar.vue'
+  import Sidebar from '../components/side-bar/side-bar.vue'
 
-const store = useStoreOutsideSetup()
+  const store = useStoreOutsideSetup()
 
 </script>
