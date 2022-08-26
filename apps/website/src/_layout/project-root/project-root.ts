@@ -18,7 +18,12 @@ export default class ProjectRoot extends Vue {
   @Inject({ from: togglesKey }) readonly toggles!: FeatureToggles
 
   get displayWarningProjectSyncing (): boolean {
-    const syncingProjects: string[] = []
+    const syncingProjects: string[] = [
+      'weforest-wildlife-corridors',
+      'habitat-potencial-coqui-llanero',
+      '2022-gibbons-in-laos',
+      'puerto-rico-island-wide'
+    ]
     return this.toggles.warningModal && this.store.selectedProject !== undefined && syncingProjects.includes(this.store.selectedProject?.slug)
   }
 }
