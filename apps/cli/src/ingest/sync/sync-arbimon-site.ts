@@ -5,7 +5,7 @@ import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 
-import { getArbimonSites } from '../inputs/get-arbimon-sites'
+import { getArbimonSites } from '../inputs/get-arbimon-site'
 import { writeSitesToBio } from '../outputs/sites'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
@@ -18,7 +18,7 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Site.id,
-  syncBatchLimit: 20000
+  syncBatchLimit: 10000
 }
 
 export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
@@ -46,7 +46,7 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
 
   try {
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdSite.updatedAt, syncUntilId: lastSyncdSite.idArbimon.toString() }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdSite.updatedAt, syncUntilId: lastSyncdSite.idArbimon.toString(), projectId: syncStatus.projectId }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndParsingErrors.map(async e => {
@@ -87,13 +87,15 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
   }
 }
 
-export const syncArbimonSites = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
+export const syncArbimonSites = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projectId: number): Promise<boolean> => {
   const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
     .SyncStatus
     .findOne({
-      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId, projectId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
+
+  if (syncStatus.projectId === null) syncStatus.projectId = projectId
 
   const updatedSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
   return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)

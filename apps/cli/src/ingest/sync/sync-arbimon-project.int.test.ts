@@ -19,20 +19,11 @@ const SYNC_CONFIG: SyncConfig = {
   syncBatchLimit: 2
 }
 
-const INITIAL_INSERT_SQL = `
-  INSERT INTO projects (
-    project_id, name, url, description, project_type_id, is_private, is_enabled,
-    current_plan, storage_usage, processing_usage, pattern_matching_enabled,
-    citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
-    external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
-  )
-  VALUES 
-    (1920, 'RFCx 1', 'rfcx-1', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuodd', 0, '2021-03-20T12:01:00.000Z', '2021-03-20T15:00:00.000Z', NULL, NULL, 1),
-    (1921, 'RFCx 2', 'rfcx-2', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cdd', 0, '2021-03-20T12:01:00.000Z', '2021-03-20T15:00:00.000Z', NULL, NULL, 1)
-  ;
+const SQL_INSERT_PROJECT = `
+  INSERT INTO projects (project_id, name, url, description, project_type_id, is_private, is_enabled, current_plan, storage_usage, processing_usage, pattern_matching_enabled, citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled, external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled)
+  VALUES ($projectId, $name, $url, $description, $projectTypeId, $isPrivate, $isEnabled, $currentPlan, $storageUsage, $processingUsage, $patternMatchingEnabled, $citizenScientistEnabled, $cnnEnabled, $aedEnabled, $clusteringEnabled, $externalId, $featured, $createdAt, $updatedAt, $deletedAt, $image, $reportsEnabled);
 `
-
-const idsArbimonObject = (ids: number[]): Record<string, number> => ids.reduce((acc, id, index) => { return { ...acc, [`idArbimon${index + 1}`]: id } }, {})
+const DEFAULT_PROJECT = { projectId: 1920, createdAt: '2021-03-20T12:01:00.000Z', updatedAt: '2021-03-20T15:00:00.000Z', deletedAt: null, name: 'RFCx 1', url: 'rfcx-1', description: 'A test project for testing', projectTypeId: 1, isPrivate: 1, isEnabled: 1, currentPlan: 846, storageUsage: 0.0, processingUsage: 0.0, patternMatchingEnabled: 1, citizenScientistEnabled: 0, cnnEnabled: 0, aedEnabled: 0, clusteringEnabled: 0, externalId: '807cuodd', featured: 0, image: null, reportsEnabled: 1 }
 
 const expectLastSyncIdInSyncStatusToBe = async (expectedSyncUntilId: number): Promise<void> => {
   // - Assert sync status time and id are updated to the latest
@@ -63,7 +54,8 @@ describe('ingest > sync', () => {
         }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
       const idsArbimon = [1920, 1921]
-      await arbimonSequelize.query(INITIAL_INSERT_SQL)
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1921, name: 'RFCx 2', url: 'rfcx-2', externalId: '807cuoi3cdd' } })
 
       // Act
       const updatedSyncStatus = await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
@@ -93,7 +85,9 @@ describe('ingest > sync', () => {
       // Arrange
       const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
       const idArbimons = [1920, 1921]
-      await arbimonSequelize.query(INITIAL_INSERT_SQL)
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1921, name: 'RFCx 2', url: 'rfcx-2', externalId: '807cuoi3cdd' } })
+      // await arbimonSequelize.query(INITIAL_INSERT_SQL)
 
       // Act
       // Run the same batch twice
@@ -117,19 +111,9 @@ describe('ingest > sync', () => {
         where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
         raw: true
       }) ?? getDefaultSyncStatus(SYNC_CONFIG)
-      const insertNewRowWithTooLongIdCoreSqlStatement = `
-      INSERT INTO projects (
-        project_id, name, url, description, project_type_id, is_private, is_enabled,
-        current_plan, storage_usage, processing_usage, pattern_matching_enabled,
-        citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
-        external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
-      )
-      VALUES 
-        ($idArbimon1, 'RFCx 8', 'rfcx-8', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvwdkkk', 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1),
-        ($idArbimon2, 'RFCx 9', 'rfcx-9', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvw', 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1)
-      ;
-      `
-      await arbimonSequelize.query(insertNewRowWithTooLongIdCoreSqlStatement, { bind: idsArbimonObject(idsArbimon) })
+
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1931, name: 'RFCx 8', url: 'rfcx-8', externalId: '807cuoi3cvwdkkk', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T12:01:00.000Z' } })
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1932, name: 'RFCx 9', url: 'rfcx-9', externalId: '807cuoi3cvw', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T15:00:00.000Z' } })
 
       // Act
       await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
@@ -162,19 +146,9 @@ describe('ingest > sync', () => {
         where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
         raw: true
       }) ?? getDefaultSyncStatus(SYNC_CONFIG)
-      const insertNewRowWithTooLongIdCoreSqlStatement = `
-      INSERT INTO projects (
-        project_id, name, url, description, project_type_id, is_private, is_enabled,
-        current_plan, storage_usage, processing_usage, pattern_matching_enabled,
-        citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled,
-        external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled
-      )
-      VALUES 
-        ($idArbimon1, 'RFCx 8', 'rfcx-8', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, '807cuoi3cvwdkkk', 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1),
-        ($idArbimon2, 'RFCx 9', 'rfcx-9', 'A test project for testing', 1, 1, 1, 846, 0.0, 0.0, 1, 0, 0, 0, 0, NULL, 0, '2021-04-20T12:01:00.000Z', '2021-04-20T15:00:00.000Z', NULL, NULL, 1)
-      ;
-      `
-      await arbimonSequelize.query(insertNewRowWithTooLongIdCoreSqlStatement, { bind: idsArbimonObject(idsArbimon) })
+
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1931, name: 'RFCx 8', url: 'rfcx-8', externalId: '807cuoi3cvwdkkk', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T12:01:00.000Z' } })
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1932, name: 'RFCx 9', url: 'rfcx-9', externalId: null, createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T15:00:00.000Z' } })
 
       // Act
       await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
@@ -198,20 +172,65 @@ describe('ingest > sync', () => {
       // - Assert sync status time and id are updated to the latest
       await expectLastSyncIdInSyncStatusToBe(idsArbimon[idsArbimon.length - 1])
     })
+
+    test('do not sync project which is not enabled', async () => {
+      // Arrange
+      const idsArbimon = [1931, 1932]
+      const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+      .SyncStatus
+      .findOne({
+        where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+        raw: true
+      }) ?? getDefaultSyncStatus(SYNC_CONFIG)
+
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1931, name: 'RFCx 8', url: 'rfcx-8', externalId: '807cuoi3cdd', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T12:01:00.000Z', reportsEnabled: 1 } })
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1932, name: 'RFCx 9', url: 'rfcx-9', externalId: '807cuoi3cdf', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T15:00:00.000Z', reportsEnabled: 0 } })
+
+      // Act
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+
+      // Assert
+      // - Assert 1 project is added in Bio projects table
+      const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
+        where: { idArbimon: { [Op.in]: idsArbimon } }
+      })
+      expect(projects.length).toBe(1)
+
+      // - Assert sync status time and id are updated only for the eabled project
+      await expectLastSyncIdInSyncStatusToBe(idsArbimon[0])
+    })
   })
 
-  describe('syncArbimonProjects', () => {
-    test.todo('can sync all projects', async () => { })
-    test.todo('can sync all projects when some invalid', async () => { })
-  })
+  test('do not sync if all projects are not enabled', async () => {
+    // Arrange
+    const idsArbimon = [1931, 1932]
+    const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+    .SyncStatus
+    .findOne({
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+      raw: true
+    }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  describe('syncArbimonProjectsByIds', () => {
-    test.todo('can sync valid projects', async () => { })
-    test.todo('can sync invalid projects', async () => { })
-    test.todo('removes sync errors on successful sync', async () => { })
-  })
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1931, name: 'RFCx 8', url: 'rfcx-8', externalId: '807cuoi3cdd', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T12:01:00.000Z', reportsEnabled: 0 } })
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1932, name: 'RFCx 9', url: 'rfcx-9', externalId: '807cuoi3cdf', createdAt: '2021-04-20T12:01:00.000Z', updatedAt: '2021-04-20T15:00:00.000Z', reportsEnabled: 0 } })
 
-  describe('syncArbimonProjectsThatFailed', () => {
-    test.todo('can sync valid projects', async () => { })
+    // Act
+    await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+    const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
+      where: { idArbimon: { [Op.in]: idsArbimon } }
+    })
+    const updatedSyncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+    .SyncStatus
+    .findOne({
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+      raw: true
+    })
+
+    // Assert
+
+    // - Assert 0 project added in Bio projects table
+    expect(projects.length).toBe(0)
+    // - Assert not any project statuses in the syc status table
+    expect(updatedSyncStatus).toBeNull()
   })
 })
