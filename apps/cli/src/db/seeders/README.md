@@ -6,26 +6,43 @@ If you update the schema via a migration, and you want to continue using a relat
 
 There is no reason to keep historical versions of seeders.
 
-## Local
+## Local development
 
-Seeders in `auto` will be automatically run as part of `serve`. You can also run them manually:
+Seeders in several folders will be automatically run as part of global `serve` (see `default-seeders.ts`)
 
-`pnpm serve lib/db/seed -- --path=auto`
-OR
-`pnpm db-seed`
+The same seeders can be executed manually using:
 
-Seeders in `optional` can be individually run using:
+- `pnpm db-rms` (reset-migrate-seed)  
+- `pnpm db-seed`
 
-`pnpm serve lib/db/seed -- --path=optional/name-of-seeder.ts`
+You can also run specific seeders manually:
+
+- `pnpm serve lib/db/seed -- --path=01-integration-test-data,03-preload-external-data`  
+- `pnpm serve lib/db/seed -- --path=03-preload/001-preload-taxon-species-rfcx.js`
 
 ## Testing/Staging
 
-You can run any seeder in `auto` or `optional` on `testing`/`staging` using:
+You can run any seeder manually on `testing`/`staging` using `--mode`:
 
-`TODO`
+- `pnpm serve lib/db/seed -- --mode=testing --path=directory/name-of-seeder.js`
 
 ## Production
 
 **Do not commit production data/seeders.**
 
-You can run seeders in `production` using the same process as `testing`/`staging`.
+You can run seeders in `production` using the same process as `testing`/`staging`
+
+## Writing new seeds
+
+### For integration tests
+
+Use the folder `01-integration-test-data`.
+
+// TODO Scenarios
+
+### Others
+
+There are predefined folders for:
+- `02-arbimon-mock-data`: mock data imported from Arbimon
+- `03-preload-external-data`: loaded from IUCN and Wikipedia to avoid heavy initial imports
+- `04-user-data-mock`: // TODO Describe
