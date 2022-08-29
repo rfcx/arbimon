@@ -44,5 +44,8 @@
     "lodash-es": "^4.17.21",
     "numeral": "^2.0.6",
     "xlsx": "^0.17.3"
+  },
+  "devDependencies": {
+    "@types/numeral": "^2.0.2"
   }
 }

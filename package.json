@@ -28,7 +28,7 @@
     "ci-all-test-unit": "pnpm -r test:unit -- --run",
     "clean": "rimraf \"./.eslintcache\"",
     "clean-sheet": "pnpm clean-slate",
-    "clean-slate": "pnpm add -DW rimraf && pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
+    "clean-slate": "pnpm -r clean && pnpm -r --filter=./apps --filter=./packages exec rimraf \"node_modules\" && rimraf \"node_modules\"",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-all": "pnpm -r lint --stream --workspace-concurrency 1",
     "lint-diff": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint-diff:*\"",
