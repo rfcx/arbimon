@@ -2,14 +2,20 @@
   <div class="detection-item-container relative w-18 h-18 border-1 border-box-grey">
     <div
       v-if="spectrogramLoading"
-      class="w-full h-full flex justify-center items-center"
+      class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
     >
       <icon-fas-spinner class="animate-spin" />
     </div>
     <img
-      v-if="spectrogram"
+      v-else-if="spectrogram"
       :src="spectrogram"
     >
+    <div
+      v-else
+      class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
+    >
+      <icon-fa-close class="text-danger" />
+    </div>
     <div
       v-if="!spectrogramLoading && spectrogram"
       class="absolute bottom-2 right-2"
