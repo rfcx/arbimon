@@ -4,7 +4,7 @@ import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncStatus } from '@rfcx-bio/common/dao/types'
 
-import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-projects'
+import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-project'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
 import { createProjectVersionIfNeeded } from '../outputs/project-version'
 import { writeSyncError } from '../outputs/sync-error'

@@ -53,7 +53,8 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 2
+      syncBatchLimit: 2,
+      projectId: DEFAULT_PROJECT.projectId
     }
 
     // Act
@@ -72,7 +73,8 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-03-22T07:31:11.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 2
+      syncBatchLimit: 2,
+      projectId: DEFAULT_PROJECT.projectId
     }
 
     // Act
@@ -91,7 +93,8 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-03-23T03:05:37.000Z').toDate(),
       syncUntilId: '3842',
-      syncBatchLimit: 2
+      syncBatchLimit: 2,
+      projectId: DEFAULT_PROJECT.projectId
     }
 
     // Act
@@ -108,7 +111,8 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-03-23T03:05:37.000Z').toDate(),
       syncUntilId: '3842',
-      syncBatchLimit: 2
+      syncBatchLimit: 2,
+      projectId: DEFAULT_PROJECT.projectId
     }
 
     // Act
@@ -123,7 +127,8 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 1
+      syncBatchLimit: 1,
+      projectId: DEFAULT_PROJECT.projectId
     }
     const EXPECTED_PROPS = [
       'taxonSpeciesId',
@@ -151,25 +156,100 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     expect(Object.keys(item as any).length).toBe(EXPECTED_PROPS.length)
   })
 
-  test('can not get species calls which are not enabled', async () => {
+  test('can get first species calls for the old project', async () => {
     // Arrange
-    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1921, reportsEnabled: 0 } })
-    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1921, siteId: 88529, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00' } })
-    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1921, siteId: 88530, createdAt: '2022-01-02 01:00:00', updatedAt: '2022-01-05 01:00:00' } })
-    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047506, siteId: 88529 } })
-    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047507, siteId: 88530 } })
-    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 990, projectId: 1921, recordingId: 7047506, dateCreated: '2022-08-23 03:05:37' } })
-    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 991, projectId: 1921, recordingId: 7047507, dateCreated: '2022-08-23 03:05:37' } })
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88501, createdAt: '2020-03-20 01:00:00', updatedAt: '2020-03-20 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047500, siteId: 88500, datetime: '2019-12-06 10:06:19' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047501, siteId: 88501, datetime: '2019-12-06 10:06:19' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 900, projectId: 1910, recordingId: 7047500, dateCreated: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 901, projectId: 1910, recordingId: 7047501, dateCreated: '2020-03-20 01:00:00' } })
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 10
+      syncBatchLimit: 10,
+      projectId: 1910
+    }
+
+    const IDS_SPECIES_CALLS = [900, 901]
+
+    // Act
+    const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(2)
+    IDS_SPECIES_CALLS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+  })
+
+  test('can get next species calls for the old project', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88501, createdAt: '2020-03-20 01:00:00', updatedAt: '2020-03-20 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047500, siteId: 88500, datetime: '2019-12-06 10:06:19' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047501, siteId: 88501, datetime: '2019-12-06 10:06:19' } })
+    // first batch species calls
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 900, projectId: 1910, recordingId: 7047500, dateCreated: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 901, projectId: 1910, recordingId: 7047501, dateCreated: '2020-03-20 01:00:00' } })
+    // next batch species calls
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 902, projectId: 1910, recordingId: 7047501, dateCreated: '2020-03-21 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 903, projectId: 1910, recordingId: 7047501, dateCreated: '2020-03-22 01:00:00' } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2020-03-20 01:00:00').toDate(),
+      syncUntilId: '901',
+      syncBatchLimit: 10,
+      projectId: 1910
+    }
+
+    const IDS_SPECIES_CALLS = [902, 903]
+
+    // Act
+    const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(2)
+    IDS_SPECIES_CALLS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+  })
+
+  test('can not get species calls if the project id is not valid', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047500, siteId: 88500, datetime: '2019-12-06 10:06:19' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 900, projectId: 1910, recordingId: 7047500, dateCreated: '2020-03-18 01:00:00' } })
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 10,
+      projectId: 19100
     }
 
     // Act
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual).toHaveLength(1)
+    expect(actual).toHaveLength(0)
+  })
+
+  test('can not get sites if the syncUntilDate is not valid', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047500, siteId: 88500, datetime: '2019-12-06 10:06:19' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 900, projectId: 1910, recordingId: 7047500, dateCreated: '2020-03-18 01:00:00' } })
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('0000-00-00T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 10,
+      projectId: 1910
+    }
+
+    // Act
+    const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(0)
   })
 })

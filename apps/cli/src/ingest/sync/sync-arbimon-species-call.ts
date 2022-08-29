@@ -45,7 +45,7 @@ export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, b
   const transaction = await biodiversitySequelize.transaction()
   try {
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs.utc(lastSyncedTaxonSpeciesCall.updatedAt).toDate(), syncUntilId: lastSyncedTaxonSpeciesCall.idArbimon.toString() }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs.utc(lastSyncedTaxonSpeciesCall.updatedAt).toDate(), syncUntilId: lastSyncedTaxonSpeciesCall.idArbimon.toString(), projectId: syncStatus.projectId }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndParsingErrors.map(async e => {
@@ -86,13 +86,15 @@ export const syncArbimonSpeciesCallBatch = async (arbimonSequelize: Sequelize, b
   }
 }
 
-export const syncArbimonSpeciesCalls = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
+export const syncArbimonSpeciesCalls = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projectId: number): Promise<boolean> => {
   const syncStatus = await ModelRepository.getInstance(getSequelize())
     .SyncStatus
     .findOne({
-      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId, projectId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
+
+  if (syncStatus.projectId === null) syncStatus.projectId = projectId
 
   const updatedSyncStatus = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
   return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)

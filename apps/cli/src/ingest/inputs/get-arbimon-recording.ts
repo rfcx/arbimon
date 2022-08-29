@@ -1,5 +1,7 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { SyncQueryParams } from './sync-query-params'
 
 export interface ArbimonRecordingQuery {
@@ -11,7 +13,10 @@ export interface ArbimonRecordingQuery {
   updatedAt: Date
 }
 
-export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit, projectId }: SyncQueryParams): Promise<unknown[]> => {
+  // Do not process query if the date is not valid
+  if (!dayjs(syncUntilDate).isValid()) return []
+
   const sql = `
     SELECT  s.project_id projectIdArbimon,
       r.site_id siteIdArbimon,
@@ -21,9 +26,8 @@ export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate,
       r.upload_time updatedAt
     FROM recordings r
     JOIN sites s ON r.site_id = s.site_id
-    JOIN projects p ON s.project_id = p.project_id
     WHERE (r.upload_time > $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id > $syncUntilId))
-      AND p.reports_enabled = 1
+      AND s.project_id = $projectId
     ORDER BY r.upload_time, r.recording_id
     LIMIT $syncBatchLimit
     ;
@@ -37,7 +41,8 @@ export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate,
     bind: {
       syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit,
+      projectId
     }
   })
 
