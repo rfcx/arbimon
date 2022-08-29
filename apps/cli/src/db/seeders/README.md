@@ -12,12 +12,12 @@ Seeders in several folders will be automatically run as part of global `serve` (
 
 The same seeders can be executed manually using:
 
-- `pnpm db-rms` (reset-migrate-seed)  
+- `pnpm db-rms` (reset-migrate-seed)
 - `pnpm db-seed`
 
 You can also run specific seeders manually:
 
-- `pnpm serve lib/db/seed -- --path=01-integration-test-data,03-preload-external-data`  
+- `pnpm serve lib/db/seed -- --path=01-integration-test-data,03-preload-external-data`
 - `pnpm serve lib/db/seed -- --path=03-preload/001-preload-taxon-species-rfcx.js`
 
 ## Testing/Staging
@@ -43,6 +43,7 @@ Use the folder `01-integration-test-data`.
 ### Others
 
 There are predefined folders for:
+
 - `02-arbimon-mock-data`: mock data imported from Arbimon
 - `03-preload-external-data`: loaded from IUCN and Wikipedia to avoid heavy initial imports
 - `04-user-data-mock`: // TODO Describe
