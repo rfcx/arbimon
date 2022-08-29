@@ -3,18 +3,12 @@ import { refreshMviews } from '@/db/actions/refresh-mviews'
 import { updateMasterData } from './_helpers/update-master-data'
 import { dropTables, execMigrations } from './actions'
 import { getSequelize } from './connections'
-
-const DEFAULT_LOCAL_SEEDER_PATHS = [
-  '01-integration-test-data',
-  '03-external-data-mock',
-  '05-preload',
-  '06-user-data-mock'
-].join(',')
+import { defaultSeederPaths } from './seeders/default-seeders'
 
 const verbose = process.argv.some(arg => arg === '--verbose')
 const seederPaths = process.argv
   .find(arg => arg.startsWith('--path='))
-  ?.split('=')[1] ?? DEFAULT_LOCAL_SEEDER_PATHS
+  ?.split('=')[1] ?? defaultSeederPaths.join(',')
 
 const main = async (): Promise<void> => {
   try {
