@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
@@ -10,17 +10,11 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
 import { BiodiversityStore } from '~/store'
-import AudioController from './audio-controller.vue'
 
 type ScrollDirection = 'left' | 'right'
 
 const SCROLL_STEP = 150
 
-@Options({
-  components: {
-    AudioController
-  }
-})
 export default class SpotlightPlayer extends Vue {
   @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
