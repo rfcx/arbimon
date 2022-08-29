@@ -13,3 +13,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     }
   )
 }
+
+export const down: MigrationFn<QueryInterface> = async (params) => {
+  return await params.context.removeColumn(TABLE_NAME, 'project_id')
+}
