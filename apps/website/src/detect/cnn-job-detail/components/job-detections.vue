@@ -17,14 +17,10 @@
           :audio-url="media.audioUrl"
         />
       </div>
-      <!-- <router-link
-        v-if="species.media.length > MAX_DISPLAY_PER_EACH_SPECIES"
-        :to="{ name: ROUTE_NAMES.detectionDetails, params: { speciesSlug:  } }"
-      > -->
       <router-link
         v-if="species.media.length > MAX_DISPLAY_PER_EACH_SPECIES"
         class="block font-weight-bold hover:(text-subtle cursor-pointer)"
-        to="/"
+        :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: species.speciesSlug } }"
       >
         SEE MORE+
       </router-link>
@@ -33,10 +29,15 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
+import { ROUTE_NAMES } from '~/router'
 import DetectionItem from './detections-item.vue'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
+
+const route = useRoute()
+const jobId = computed(() => route.params.jobId)
 
 const allSpecies = computed(() => {
   const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Pongo pygmaeus', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii, Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
@@ -50,8 +51,10 @@ const allSpecies = computed(() => {
         audioUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav'
       })
     }
+    const speciesName = speciesNames[Math.floor(Math.random() * speciesNames.length)]
     species.push({
-      speciesName: speciesNames[Math.floor(Math.random() * speciesNames.length)],
+      speciesSlug: speciesName,
+      speciesName,
       media
     })
   }
