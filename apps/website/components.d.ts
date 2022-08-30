@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     IconCustomChevronLeft: typeof import('~icons/custom-icons/chevron-left')['default']
     IconCustomChevronRight: typeof import('~icons/custom-icons/chevron-right')['default']
     IconCustomDownload: typeof import('~icons/custom-icons/download')['default']
+    IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
     IconCustomLinkout: typeof import('~icons/custom-icons/linkout')['default']
     IconFaBars: typeof import('~icons/fa/bars')['default']
     IconFaCheck: typeof import('~icons/fa/check')['default']
