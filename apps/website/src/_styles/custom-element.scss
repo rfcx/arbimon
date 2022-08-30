@@ -14,8 +14,11 @@
 }
 
 .el-popover .el-popper__arrow::before {
-  border: none !important;
   background: $color-box-grey !important;
+}
+
+.el-popper.is-light .el-popper__arrow::before, .el-popover.el-popper {
+  background: $color-mirage-grey !important;
 }
 
 .el-input .el-input__inner {
@@ -42,8 +45,16 @@
   right: 12px;
 }
 
-.el-popper.is-light .el-popper__arrow::before {
-  background: $color-mirage-grey;
+.el-slider__bar {
+  background-color: $color-white !important;
+}
+
+.el-slider__runway {
+  background-color: $color-box-grey !important;
+}
+
+.el-slider__button {
+  border-color: $color-white !important;
 }
 
 .el-tag .el-select__tags-text {

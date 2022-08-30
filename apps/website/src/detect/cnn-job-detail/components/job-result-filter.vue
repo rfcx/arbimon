@@ -1,11 +1,32 @@
 <template>
   <div class="flex flex-row items-center">
-    <div
-      v-for="filter in jobResultFilters"
-      :key="'job-result-filter-' + filter.label"
-      class="ml-6"
+    <el-popover
+      placement="bottom"
+      :width="200"
+      trigger="click"
     >
-      <el-dropdown>
+      <template #reference>
+        <span
+          class="flex items-center text-sm text-subtle <lg:hidden"
+          label="Threshold"
+          role="button"
+        >
+          Threshold >= {{ formatThreshold(filterConfigs.threshold) }}
+          <icon-custom-el-angle-down class="text-xxs ml-1" />
+        </span>
+      </template>
+      <el-slider
+        v-model="filterConfigs.threshold"
+        :format-tooltip="formatThreshold"
+      />
+    </el-popover>
+    <div
+      v-for="filter in mobJobResultFilters"
+      :key="'job-result-filter-' + filter.label"
+      :label="filter.label"
+      class="ml-4 <lg:hidden"
+    >
+      <el-dropdown trigger="click">
         <span class="flex items-center text-sm text-subtle">
           {{ filter.label }}
           <icon-fa-chevron-down class="ml-2 text-xxs" />
@@ -22,41 +43,76 @@
         </template>
       </el-dropdown>
     </div>
-    <div class="display-controls ml-6">
-      <button class="btn btn-icon rounded-r-none">
+    <div class="display-controls ml-4">
+      <button
+        class="btn btn-icon lg:hidden"
+        label="Filter"
+        @click="displayFilterModal = true"
+      >
+        <icon-fa-filter class="text-xs" />
+      </button>
+      <button
+        class="btn btn-icon rounded-r-none ml-2"
+        :class="{ 'bg-brand-primary': displayType === 'list' }"
+        label="List view"
+        @click="displayType = 'list'"
+      >
         <icon-fa-bars class="text-xs" />
       </button>
-      <button class="btn btn-icon border-l-2 rounded-l-none">
+      <button
+        class="btn btn-icon border-l-2 rounded-l-none"
+        :class="{ 'bg-brand-primary': displayType === 'grid' }"
+        label="Grid view"
+        @click="displayType = 'grid'"
+      >
         <icon-fa-th-large class="text-xs" />
       </button>
     </div>
   </div>
+  <filter-modal
+    v-if="displayFilterModal"
+    @emit-close="displayFilterModal = false"
+    @emit-config="onFilterConfigChange"
+  />
 </template>
 <script setup lang="ts">
+import { reactive, ref } from 'vue'
 
-const jobResultFilters = [
-  {
-    label: 'Threshold ≥ 0.5',
-    items: [
-      {
-        label: '> 0.5',
-        value: '> 0.5'
-      }
-    ]
-  },
+import FilterModal from './job-result-filter-modal.vue'
+import { ValidationFilterConfig } from './types'
+
+const displayFilterModal = ref(false)
+const displayType = ref<'list' | 'grid'>('list')
+const filterConfigs = reactive<ValidationFilterConfig>({
+  threshold: 50, // slider return in percentage
+  validationStatus: '',
+  taxonClass: '',
+  siteIds: [],
+  sortBy: ''
+})
+
+const mobJobResultFilters = [
   {
     label: 'Validation status',
     items: [
       {
-        label: 'Confirmed',
+        label: 'All',
+        value: 3
+      },
+      {
+        label: 'Unvalidated',
+        value: 2
+      },
+      {
+        label: 'Present',
         value: 1
       },
       {
-        label: 'Rejected',
+        label: 'Not present',
         value: -1
       },
       {
-        label: 'Unvalidate',
+        label: 'Unknown',
         value: 0
       }
     ]
@@ -65,8 +121,12 @@ const jobResultFilters = [
     label: 'Class',
     items: [
       {
-        label: 'Dog',
-        value: 'dog'
+        label: 'Mammals',
+        value: 'mammals'
+      },
+      {
+        label: 'Birds',
+        value: 'birds'
       }
     ]
   },
@@ -84,10 +144,32 @@ const jobResultFilters = [
     items: [
       {
         label: 'Low to high',
-        value: 'High to low'
+        value: 'low to high'
+      },
+      {
+        label: 'High to low',
+        value: 'high to low'
       }
     ]
   }
 ]
+
+const formatThreshold = (val: number) => {
+  return val / 100
+}
+
+const getFilterDetections = () => {
+  // Call API
+  //  params: { threshold: formatThreshold(threshold), ...filterConfigs }
+}
+
+const onFilterConfigChange = (config: ValidationFilterConfig) => {
+  filterConfigs.threshold = config.threshold
+  filterConfigs.validationStatus = config.validationStatus
+  filterConfigs.taxonClass = config.taxonClass
+  filterConfigs.siteIds = config.siteIds
+  filterConfigs.sortBy = config.sortBy
+  getFilterDetections()
+}
 
 </script>
