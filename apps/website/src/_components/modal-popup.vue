@@ -11,7 +11,10 @@
         class="hidden sm:(inline-block align-middle h-screen)"
         aria-hidden="true"
       />
-      <div class="inline-block bg-steel-grey rounded text-left overflow-hidden shadow-xl transform transition-al sm:(my-8 align-middle max-w-2xl w-full)">
+      <div
+        class="inline-block bg-steel-grey rounded text-left overflow-hidden shadow-xl transform transition-al"
+        :class="modalBody"
+      >
         <div class="bg-steel-grey">
           <on-click-outside @trigger="emitClose">
             <slot />
@@ -33,6 +36,7 @@ import { Emit, Prop } from 'vue-property-decorator'
 
 export default class ModalPopup extends Vue {
   @Prop({ default: 'modal' }) title!: string
+  @Prop({ default: 'sm:(my-8 align-middle max-w-2xl w-full)' }) modalBody!: string
   @Emit() emitClose (): boolean { return false }
 }
 </script>
