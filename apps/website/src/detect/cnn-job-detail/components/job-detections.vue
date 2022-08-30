@@ -17,13 +17,15 @@
           :audio-url="media.audioUrl"
         />
       </div>
-      <router-link
-        v-if="species.media.length > MAX_DISPLAY_PER_EACH_SPECIES"
-        class="block font-weight-bold hover:(text-subtle cursor-pointer)"
-        :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: species.speciesSlug } }"
-      >
-        SEE MORE+
-      </router-link>
+      <div class="flex">
+        <router-link
+          v-if="species.media.length > MAX_DISPLAY_PER_EACH_SPECIES"
+          class="block font-weight-bold hover:(text-subtle cursor-pointer)"
+          :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: species.speciesSlug } }"
+        >
+          SEE MORE+
+        </router-link>
+      </div>
     </template>
   </div>
 </template>
@@ -32,7 +34,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
-import DetectionItem from './detections-item.vue'
+import DetectionItem from './detection-item.vue'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 

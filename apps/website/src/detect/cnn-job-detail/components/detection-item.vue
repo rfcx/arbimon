@@ -14,7 +14,7 @@
       v-else
       class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
     >
-      <icon-fa-close class="text-danger" />
+      <icon-custom-image-slash class="text-white" />
     </div>
     <div
       v-if="!spectrogramLoading && spectrogram"
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
-import { inject, onMounted, ref, withDefaults } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, withDefaults } from 'vue'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
@@ -61,6 +61,12 @@ onMounted(async () => {
     spectrogram.value = window.URL.createObjectURL(spectrogramBlob)
   }
   spectrogramLoading.value = false
+})
+
+onBeforeUnmount(() => {
+  if (spectrogram.value) {
+    window.URL.revokeObjectURL(spectrogram.value)
+  }
 })
 
 const setAudio = (audioBlob: Blob) => {
