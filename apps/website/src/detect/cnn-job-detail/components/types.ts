@@ -5,3 +5,8 @@ export interface ValidationFilterConfig {
   siteIds: string[]
   sortBy: string
 }
+
+export interface DetectionMedia {
+  spectrogramUrl: string | null
+  audioUrl: string | null
+}

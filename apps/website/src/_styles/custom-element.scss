@@ -17,7 +17,8 @@
   background: $color-box-grey !important;
 }
 
-.el-popper.is-light .el-popper__arrow::before, .el-popover.el-popper {
+.el-popper.is-light .el-popper__arrow::before,
+.el-popover.el-popper {
   background: $color-mirage-grey !important;
 }
 

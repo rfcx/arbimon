@@ -37,11 +37,9 @@ import { inject, onBeforeUnmount, onMounted, ref, withDefaults } from 'vue'
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
 import { apiClientBioKey } from '@/globals'
+import { DetectionMedia } from './types'
 
-const props = withDefaults(defineProps<{
-  spectrogramUrl: string | null
-  audioUrl: string | null
-}>(), {
+const props = withDefaults(defineProps<DetectionMedia>(), {
   spectrogramUrl: null,
   audioUrl: null
 })

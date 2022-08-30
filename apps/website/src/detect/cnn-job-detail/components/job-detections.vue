@@ -35,6 +35,7 @@ import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
 import DetectionItem from './detection-item.vue'
+import { DetectionMedia } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
@@ -64,7 +65,7 @@ const allSpecies = computed(() => {
   return species
 })
 
-const displaySpecies = (media: any[]) => {
+const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
