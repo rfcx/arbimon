@@ -10,7 +10,8 @@ export const ROUTE_NAMES = {
   syncHistory: 'sync_history',
   cnnJobCreate: 'cnn_job_create',
   cnnJobList: 'cnn_job_list',
-  cnnJobDetail: 'cnn_job_detail'
+  cnnJobDetail: 'cnn_job_detail',
+  cnnJobDetailBySpecies: 'cnn_job_detail_by_species'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES
