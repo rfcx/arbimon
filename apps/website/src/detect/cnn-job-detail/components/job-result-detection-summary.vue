@@ -45,9 +45,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { AxiosInstance } from 'axios'
+import { computed, inject, ref } from 'vue'
 
 import { displayValue } from '@rfcx-bio/utils/number'
+
+import { useGetJobSummary } from '@/detect/_composables/use-get-job-summary'
+import { apiClientCoreKey } from '@/globals'
+
+const props = defineProps<{
+  jobId: string | string[]
+  projectId: string
+}>()
 
 const details = computed(() => {
   const species: { name: string, value: number }[] = []
@@ -77,5 +86,10 @@ const previousPage = () => {
 const nextPage = () => {
   displayIndex.value += 1
 }
+
+// External data
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobSummary(apiClientCore, { projectId: props.projectId }, { jobId: props.jobId, limit: 10, offset: displayIndex.value })
+console.info(isLoadingJobSummary, isErrorJobSummary, jobSummaryData)
 
 </script>
