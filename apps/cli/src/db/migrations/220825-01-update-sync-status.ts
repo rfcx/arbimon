@@ -11,7 +11,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       'project_id',
       {
         type: DataTypes.INTEGER,
-        primaryKey: true,
         allowNull: true
       }
     )
