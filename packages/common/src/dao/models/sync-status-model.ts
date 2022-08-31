@@ -1,22 +1,20 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
+import { defineWithDefaultsNoPk } from '../model-factory-helpers/defaults'
 import { SyncStatus } from '../types'
 
 export const MODEL_SYNC_STATUS = 'SyncStatus'
 const TABLE_SYNC_STATUS = 'sync_status'
 
-export const SyncStatusModel = defineWithDefaults<SyncStatus>(
+export const SyncStatusModel = defineWithDefaultsNoPk<SyncStatus>(
   MODEL_SYNC_STATUS,
   {
     // PK
     syncSourceId: { // 1
-      type: DataTypes.INTEGER,
-      primaryKey: true
+      type: DataTypes.INTEGER
     },
     syncDataTypeId: { // 1
-      type: DataTypes.INTEGER,
-      primaryKey: true
+      type: DataTypes.INTEGER
     },
 
     // Facts

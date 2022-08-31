@@ -22,6 +22,17 @@ export const defineWithDefaults = <
 > (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
   sequelize => sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), optionsWithDefaults(modelName, options))
 
+export const defineWithDefaultsNoPk = <
+  DomainType,
+  SequelizeModel extends Model = ModelForInterface<DomainType>,
+  SequelizeAttributes = SequelizeModel['_attributes']
+> (modelName: string, attributes: ModelAttributes<SequelizeModel, SequelizeAttributes>, options?: ModelOptions): ModelFactory<SequelizeModel> =>
+  sequelize => {
+    const model = sequelize.define<SequelizeModel>(modelName, attributesWithDefaults(attributes), optionsWithDefaults(modelName, options))
+    model.removeAttribute('id')
+    return model
+  }
+
 // TODO: Can probably add the PK to attributes automatically
 export const defineWithDefaultsAutoPk = <
   DomainType extends WithAutoPk,

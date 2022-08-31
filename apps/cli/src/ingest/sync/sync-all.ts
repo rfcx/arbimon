@@ -3,6 +3,7 @@ import { Op, Sequelize } from 'sequelize'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types/location-project'
 
+import { allEnabledProjects, getAllEnabledProjects } from '@/ingest/inputs/get-arbimon-project'
 import { syncArbimonProjects } from './sync-arbimon-project'
 import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'
 import { syncArbimonSites } from './sync-arbimon-site'
@@ -35,9 +36,11 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
 
     console.info('\nProject level data:\n')
 
+    const arbimonProjects = await getAllEnabledProjects(arbimonSequelize) as unknown as allEnabledProjects[]
+    const idArbimon = arbimonProjects.map(project => project.idArbimon)
     const bioProjects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
       where: {
-        idArbimon: { [Op.in]: [1556] }
+        idArbimon: { [Op.in]: idArbimon }
       }
     }) as unknown as Project[]
 

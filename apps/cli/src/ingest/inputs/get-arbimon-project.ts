@@ -2,6 +2,11 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { SyncQueryParams } from './sync-query-params'
 
+export interface allEnabledProjects {
+  idArbimon: number
+  name: string
+}
+
 export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit, projectId }: SyncQueryParams): Promise<unknown[]> => {
   const sql = `
     SELECT p.project_id AS idArbimon,
@@ -39,5 +44,20 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
       syncUntilId,
       syncBatchLimit
     }
+  })
+}
+
+export const getAllEnabledProjects = async (sequelize: Sequelize): Promise<unknown[]> => {
+  const sql = `
+    SELECT p.project_id AS idArbimon, p.name
+    FROM projects p
+    WHERE p.reports_enabled = 1
+    ORDER BY p.updated_at, p.project_id
+    ;
+    `
+
+  return await sequelize.query(sql, {
+    type: QueryTypes.SELECT,
+    raw: true
   })
 }
