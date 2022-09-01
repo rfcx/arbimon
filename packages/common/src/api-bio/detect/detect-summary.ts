@@ -21,7 +21,7 @@ export interface SpeciesDetectionSummary {
 export interface DetectionSummaryResponse {
   total: number
   currentPage: number
-  result: SpeciesDetectionSummary[]
+  results: SpeciesDetectionSummary[]
 }
 
 // Route
@@ -34,7 +34,7 @@ export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, proje
   return {
     total: 9,
     currentPage: 0,
-    result: [
+    results: [
       {
         speciesSlug: 'panthera-pardus-orientalis',
         speciesName: 'Panthera pardus orientalis',
