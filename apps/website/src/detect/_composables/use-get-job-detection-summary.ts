@@ -5,7 +5,7 @@ import { apiBioGetDetectSummaryData, DetectionSummaryResponse, DetectSummaryPara
 
 export const FETCH_DETECT_SUMMARY = 'fetch-detect-summary'
 
-export const useGetJobSummary = (apiClient: AxiosInstance, project: DetectSummaryParams, params: DetectSummaryQueryParams): UseQueryReturnType<DetectionSummaryResponse | undefined, unknown> => {
+export const useGetJobDetectionSummary = (apiClient: AxiosInstance, project: DetectSummaryParams, params: DetectSummaryQueryParams): UseQueryReturnType<DetectionSummaryResponse | undefined, unknown> => {
   return useQuery(
     [FETCH_DETECT_SUMMARY, params],
     async () => await apiBioGetDetectSummaryData(apiClient, project.projectId, params)

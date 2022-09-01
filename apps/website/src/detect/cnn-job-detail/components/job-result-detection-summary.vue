@@ -50,7 +50,7 @@ import { computed, inject, ref } from 'vue'
 
 import { displayValue } from '@rfcx-bio/utils/number'
 
-import { useGetJobSummary } from '@/detect/_composables/use-get-job-summary'
+import { useGetJobDetectionSummary } from '@/detect/_composables/use-get-job-detection-summary'
 import { apiClientCoreKey } from '@/globals'
 
 const props = defineProps<{
@@ -89,7 +89,7 @@ const nextPage = () => {
 
 // External data
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobSummary(apiClientCore, { projectId: props.projectId }, { jobId: props.jobId, limit: 10, offset: displayIndex.value })
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiClientCore, { projectId: props.projectId }, { jobId: props.jobId, limit: 10, offset: displayIndex.value })
 console.info(isLoadingJobSummary, isErrorJobSummary, jobSummaryData)
 
 </script>
