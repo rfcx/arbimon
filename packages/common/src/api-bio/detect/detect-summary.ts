@@ -31,9 +31,8 @@ export const detectSummaryRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/detect-summa
 export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, projectId: string, params: DetectSummaryQueryParams): Promise<DetectionSummaryResponse | undefined> => {
   // return await apiGetOrUndefined(apiClient, `/projects/${projectId}/detect-summary/${params.jobId}`)
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return {
-    total: 10,
+    total: 9,
     currentPage: 0,
     result: [
       {
@@ -82,5 +81,5 @@ export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, proje
         numberOfDetections: 1
       }
     ]
-  } as DetectionSummaryResponse
+  }
 }
