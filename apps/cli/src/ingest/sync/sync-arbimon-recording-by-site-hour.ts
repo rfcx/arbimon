@@ -46,7 +46,7 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
   // =========== Sync Status ==========
   try {
     // sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs.utc(lastSyncRecording.updatedAt).toDate(), syncUntilId: lastSyncRecording.idArbimon.toString(), projectId: syncStatus.projectId }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs.utc(lastSyncRecording.updatedAt).toDate(), syncUntilId: lastSyncRecording.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     // sync error
@@ -86,15 +86,13 @@ export const syncArbimonRecordingBySiteHourBatch = async (arbimonSequelize: Sequ
   }
 }
 
-export const syncArbimonRecordingBySiteHour = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projectId: number): Promise<boolean> => {
+export const syncArbimonRecordingBySiteHour = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
   const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
     .SyncStatus
     .findOne({
-      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId, projectId },
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
-
-  if (syncStatus.projectId === null) syncStatus.projectId = projectId
 
   const [totalArbimonRecordingBySiteHour] = await syncArbimonRecordingBySiteHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
   return totalArbimonRecordingBySiteHour < SYNC_CONFIG.syncBatchLimit

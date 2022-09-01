@@ -173,7 +173,7 @@ describe('ingest > sync', () => {
       await expectLastSyncIdInSyncStatusToBe(idsArbimon[idsArbimon.length - 1])
     })
 
-    test('do not sync project which is not enabled', async () => {
+    test('can sync project which is reports_enabled=true', async () => {
       // Arrange
       const idsArbimon = [1931, 1932]
       const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
@@ -190,18 +190,18 @@ describe('ingest > sync', () => {
       await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
 
       // Assert
-      // - Assert 1 project is added in Bio projects table
+      // - Assert 2 project is added in Bio projects table
       const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
         where: { idArbimon: { [Op.in]: idsArbimon } }
       })
-      expect(projects.length).toBe(1)
+      expect(projects.length).toBe(2)
 
-      // - Assert sync status time and id are updated only for the eabled project
-      await expectLastSyncIdInSyncStatusToBe(idsArbimon[0])
+      // - Assert sync status time and id are updated for both projects
+      await expectLastSyncIdInSyncStatusToBe(idsArbimon[1])
     })
   })
 
-  test('do not sync if all projects are not enabled', async () => {
+  test('can sync all projects which is reports_enabled=true', async () => {
     // Arrange
     const idsArbimon = [1931, 1932]
     const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
@@ -219,18 +219,11 @@ describe('ingest > sync', () => {
     const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
       where: { idArbimon: { [Op.in]: idsArbimon } }
     })
-    const updatedSyncStatus = await ModelRepository.getInstance(biodiversitySequelize)
-    .SyncStatus
-    .findOne({
-      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
-      raw: true
-    })
 
     // Assert
-
-    // - Assert 0 project added in Bio projects table
-    expect(projects.length).toBe(0)
+    // - Assert 2 project added in Bio projects table
+    expect(projects.length).toBe(2)
     // - Assert not any project statuses in the syc status table
-    expect(updatedSyncStatus).toBeNull()
+    await expectLastSyncIdInSyncStatusToBe(idsArbimon[1])
   })
 })

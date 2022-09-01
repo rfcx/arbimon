@@ -6,7 +6,6 @@ export interface SyncStatus {
   syncUntilDate: Date
   syncUntilId: string
   syncBatchLimit: number
-  projectId: number | null
 }
 
 export const ATTRIBUTES_SYNC_STATUS = attributes<SyncStatus>()({

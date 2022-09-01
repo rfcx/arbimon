@@ -5,7 +5,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { SpeciesCallArbimonRow } from '../parsers/parse-species-call-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit, projectId }: SyncQueryParams): Promise<unknown[]> => {
+export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
@@ -29,8 +29,7 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
       JOIN projects p ON s.project_id = p.project_id
       JOIN songtypes st ON t.songtype_id = st.songtype_id
     WHERE t.deleted=0 AND r.datetime_utc IS NOT NULL
-      AND (t.date_created > $syncUntilDate OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId))
-      AND p.project_id = $projectId
+      AND t.date_created > $syncUntilDate OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId)
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
     ;
@@ -41,8 +40,7 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
     bind: {
       syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit,
-      projectId
+      syncBatchLimit
     }
   })
 

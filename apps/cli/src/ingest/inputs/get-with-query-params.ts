@@ -4,7 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { SyncQueryParams } from './sync-query-params'
 
-export const getWithQueryParams = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit, projectId }: SyncQueryParams, sql: string): Promise<unknown[]> => {
+export const getWithQueryParams = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams, sql: string): Promise<unknown[]> => {
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
@@ -14,8 +14,7 @@ export const getWithQueryParams = async (sequelize: Sequelize, { syncUntilDate, 
     bind: {
       syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit,
-      projectId
+      syncBatchLimit
     }
   })
 }

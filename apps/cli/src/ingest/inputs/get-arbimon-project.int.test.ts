@@ -40,8 +40,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 2,
-      projectId: null
+      syncBatchLimit: 2
     }
 
     // Act
@@ -58,8 +57,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-19T11:00:00.000Z').toDate(),
       syncUntilId: '1921',
-      syncBatchLimit: 2,
-      projectId: null
+      syncBatchLimit: 2
     }
 
     // Act
@@ -76,8 +74,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-20T11:00:00.000Z').toDate(),
       syncUntilId: '1923',
-      syncBatchLimit: 2,
-      projectId: null
+      syncBatchLimit: 2
     }
 
     // Act
@@ -93,8 +90,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-20T12:00:00.000Z').toDate(),
       syncUntilId: '1924',
-      syncBatchLimit: 2,
-      projectId: null
+      syncBatchLimit: 2
     }
 
     // Act
@@ -111,8 +107,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2021-03-20T12:00:00.000Z').toDate(),
       syncUntilId: '1924',
-      syncBatchLimit: 2,
-      projectId: null
+      syncBatchLimit: 2
     }
 
     // Act
@@ -128,8 +123,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 1,
-      projectId: null
+      syncBatchLimit: 1
     }
     const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'updatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 
@@ -148,8 +142,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 1,
-      projectId: null
+      syncBatchLimit: 1
     }
     await arbimonSequelize.query('DELETE FROM sites')
 
@@ -164,21 +157,20 @@ describe('ingest > inputs > getArbimonProjects', () => {
     expect(item.longitudeWest).toBe(0)
   })
 
-  test('do not get projects which are not enabled', async () => {
+  test('can get projects which are `reports_enabled = true`', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1926, name: 'RFCx 7', url: 'rfcx-6', externalId: '807cuoi3cvwi7', createdAt: '2022-08-23T12:00:00.000Z', updatedAt: '2022-08-23T12:00:00.000Z', reportsEnabled: 0 } })
 
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 100,
-      projectId: null
+      syncBatchLimit: 100
     }
 
     // Act
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual).toHaveLength(5)
+    expect(actual).toHaveLength(6)
   })
 })

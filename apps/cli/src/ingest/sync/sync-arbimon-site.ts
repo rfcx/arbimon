@@ -46,7 +46,7 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
 
   try {
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdSite.updatedAt, syncUntilId: lastSyncdSite.idArbimon.toString(), projectId: syncStatus.projectId }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdSite.updatedAt, syncUntilId: lastSyncdSite.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndParsingErrors.map(async e => {
@@ -87,15 +87,13 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
   }
 }
 
-export const syncArbimonSites = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, projectId: number): Promise<boolean> => {
+export const syncArbimonSites = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<boolean> => {
   const syncStatus = await ModelRepository.getInstance(biodiversitySequelize)
     .SyncStatus
     .findOne({
-      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId, projectId },
+      where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
-
-  if (syncStatus.projectId === null) syncStatus.projectId = projectId
 
   const updatedSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
   return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)

@@ -118,8 +118,6 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
             durationMinutes: floorValue(recordingData.durationMinutes / 60), // 3 - duration of recordings datetime minutes, related to this group by site/species/date/hour
             detectionMinutes: recordingData.detectionMinutes // '10,25,55' - array of recordings datetime minutes (values), related to this group by site/species/date/hour
           })
-          // TEMPORARY LOG
-          console.info('itemsToInsertOrUpsert', itemsToInsertOrUpsert, 'filteredArbimonDetectionsByValidation', filteredArbimonDetectionsByValidation)
         }
       } else if (biodiversityDetection?.detectionMinutes !== undefined) {
         // detections to upsert

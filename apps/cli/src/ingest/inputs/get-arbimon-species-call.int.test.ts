@@ -33,12 +33,16 @@ const DEFAULT_SITE = { projectId: 1920, siteId: 88528, createdAt: '2022-01-03 01
 const DEFAULT_RECORDING = { recordingId: 7047505, siteId: 88528, uri: '2020/12/06/cm1n9bvgn0jr/dfd0cc07-856a-41b9-9bf2-b1a6efd4b1da.flac', datetime: '2020-12-06 10:06:19', mic: 'Unknown', recorder: 'Unknown', version: 'Unknown', sampleRate: 48000, precision: 0, duration: 90.24, samples: 4331520, fileSize: 1913060, bitRate: '170321', sampleEncoding: 'flac', uploadTime: '2022-03-22 06:31:32', meta: '{"artist":"AudioMoth 2495F303562DE118","comment":"Recorded at 10:06:19 06/12/2020 (UTC) during deployment EEC909D42565A5F0 at medium gain setting while battery state was 4.2V and temperature was 19.6C.","encoder":"Lavf58.24.101","filename":"20201206_100619.WAV"}', datetimeUtc: '2020-12-06 03:06:19' }
 const DEFAULT_TEMPLATE = { templateId: 980, projectId: DEFAULT_PROJECT.projectId, recordingId: DEFAULT_RECORDING.recordingId, speciesId: 1050, songtypeId: 1, name: 'Falco', uri: 'project_1920/templates/970.png', x1: 75.24309455587392, y1: 469.36114732724906, x2: 80.86693409742121, y2: 2252.9335071707956, dateCreated: '2022-03-22 07:31:11', deleted: 0, sourceProjectId: null, userId: 1017 }
 
-describe('ingest > inputs > getArbimonSpeciesCalls', () => {
-  beforeEach(async () => {
-    await arbimonSequelize.query('DELETE FROM templates')
+const deleteProjectData = async (): Promise<void> => {
+  await arbimonSequelize.query('DELETE FROM templates')
     await arbimonSequelize.query('DELETE FROM recordings')
     await arbimonSequelize.query('DELETE FROM sites')
     await arbimonSequelize.query('DELETE FROM projects')
+}
+
+describe('ingest > inputs > getArbimonSpeciesCalls', () => {
+  beforeEach(async () => {
+    await deleteProjectData()
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
     await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING })
@@ -53,8 +57,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 2,
-      projectId: DEFAULT_PROJECT.projectId
+      syncBatchLimit: 2
     }
 
     // Act
@@ -73,8 +76,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-03-22T07:31:11.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 2,
-      projectId: DEFAULT_PROJECT.projectId
+      syncBatchLimit: 2
     }
 
     // Act
@@ -93,8 +95,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-03-23T03:05:37.000Z').toDate(),
       syncUntilId: '3842',
-      syncBatchLimit: 2,
-      projectId: DEFAULT_PROJECT.projectId
+      syncBatchLimit: 2
     }
 
     // Act
@@ -111,8 +112,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2022-03-23T03:05:37.000Z').toDate(),
       syncUntilId: '3842',
-      syncBatchLimit: 2,
-      projectId: DEFAULT_PROJECT.projectId
+      syncBatchLimit: 2
     }
 
     // Act
@@ -127,8 +127,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 1,
-      projectId: DEFAULT_PROJECT.projectId
+      syncBatchLimit: 1
     }
     const EXPECTED_PROPS = [
       'taxonSpeciesId',
@@ -156,7 +155,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     expect(Object.keys(item as any).length).toBe(EXPECTED_PROPS.length)
   })
 
-  test('can get first species calls for the old project', async () => {
+  test('can get species calls for multiple projects', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
@@ -168,21 +167,20 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 10,
-      projectId: 1910
+      syncBatchLimit: 10
     }
 
-    const IDS_SPECIES_CALLS = [900, 901]
+    const IDS_SPECIES_CALLS = [900, 901, 980]
 
     // Act
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual).toHaveLength(2)
+    expect(actual).toHaveLength(3)
     IDS_SPECIES_CALLS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
   })
 
-  test('can get next species calls for the old project', async () => {
+  test('can get next species calls for multiple projects', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
@@ -199,31 +197,30 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('2020-03-20 01:00:00').toDate(),
       syncUntilId: '901',
-      syncBatchLimit: 10,
-      projectId: 1910
+      syncBatchLimit: 10
     }
 
-    const IDS_SPECIES_CALLS = [902, 903]
+    const IDS_SPECIES_CALLS = [902, 903, 980]
 
     // Act
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual).toHaveLength(2)
+    expect(actual).toHaveLength(3)
     IDS_SPECIES_CALLS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
   })
 
-  test('can not get species calls if the project id is not valid', async () => {
+  test('can not get species call if species call date created is not valid', async () => {
     // Arrange
+    await deleteProjectData()
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
     await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: { ...DEFAULT_RECORDING, recordingId: 7047500, siteId: 88500, datetime: '2019-12-06 10:06:19' } })
-    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 900, projectId: 1910, recordingId: 7047500, dateCreated: '2020-03-18 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, templateId: 900, projectId: 1910, recordingId: 7047500, dateCreated: '0000-00-00 00:00:00' } })
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 10,
-      projectId: 19100
+      syncBatchLimit: 10
     }
 
     // Act
@@ -233,7 +230,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     expect(actual).toHaveLength(0)
   })
 
-  test('can not get sites if the syncUntilDate is not valid', async () => {
+  test('can not get species call if the syncUntilDate is not valid', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
@@ -242,8 +239,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const params: SyncQueryParams = {
       syncUntilDate: dayjs.utc('0000-00-00T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 10,
-      projectId: 1910
+      syncBatchLimit: 10
     }
 
     // Act
