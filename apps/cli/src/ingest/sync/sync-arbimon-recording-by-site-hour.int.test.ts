@@ -68,7 +68,7 @@ describe('ingest > sync > sync recording by site hour', async () => {
   await config()
   describe('sync recording by site hour (happy path)', async () => {
     // Arrange
-    const syncStatus = { ...SYNC_CONFIG, syncUntilDate: dayjs('2022-04-01T00:00:00.000Z').toDate(), syncUntilId: '1000000', projectId: 1920 }
+    const syncStatus = { ...SYNC_CONFIG, syncUntilDate: dayjs('2022-04-01T00:00:00.000Z').toDate(), syncUntilId: '1000000' }
 
     // Act
     await deleteOutputProjects(biodiversitySequelize)
@@ -130,7 +130,6 @@ describe('ingest > sync > sync recording by site hour', async () => {
       }
 
       const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
-      if (syncStatus.projectId === null) syncStatus.projectId = 1940
 
       // Act
       const updatedSyncStatus = await syncArbimonRecordingBySiteHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)

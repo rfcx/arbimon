@@ -18,7 +18,7 @@ export interface DetectionArbimonQuery {
   updatedAt: Date
 }
 
-export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit, projectId }: SyncQueryParams): Promise<unknown[]> => {
+export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
@@ -37,8 +37,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
       rv.updated_at updatedAt
     FROM recording_validations rv
     JOIN recordings r ON rv.recording_id = r.recording_id
-    WHERE (rv.updated_at > $syncUntilDate OR (rv.updated_at = $syncUntilDate AND rv.recording_validation_id > $syncUntilId))
-      AND rv.project_id = $projectId
+    WHERE rv.updated_at > $syncUntilDate OR (rv.updated_at = $syncUntilDate AND rv.recording_validation_id > $syncUntilId)
     ORDER BY rv.updated_at, rv.recording_validation_id
     LIMIT $syncBatchLimit
   ;
@@ -50,8 +49,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
     bind: {
       syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit,
-      projectId
+      syncBatchLimit
     }
   })
 

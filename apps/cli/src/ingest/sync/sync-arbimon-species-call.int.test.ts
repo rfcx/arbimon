@@ -74,8 +74,6 @@ const getSyncStatus = async (): Promise<SyncStatus> => {
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  if (syncStatus.projectId === null) syncStatus.projectId = 1920
-
   return syncStatus
 }
 
@@ -203,7 +201,6 @@ describe('ingest > sync', () => {
     test('where sync is up-to-date', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 7 })
-      if (SYNC_STATUS.projectId === null) SYNC_STATUS.projectId = 1920
       const IDS_ARBIMON_FULL_BATCH = [...IDS_ARBIMON_FIRST_BATCH, ...IDS_ARBIMON_SECOND_BATCH]
 
       // Act
@@ -230,7 +227,6 @@ describe('ingest > sync', () => {
     test('sync status is updated', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
-      if (SYNC_STATUS.projectId === null) SYNC_STATUS.projectId = 1920
 
       // Act
       const UPDATED_SYNC_STATUS = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
@@ -249,7 +245,6 @@ describe('ingest > sync', () => {
     test('species calls sync log is created', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus(SYNC_CONFIG)
-      if (SYNC_STATUS.projectId === null) SYNC_STATUS.projectId = 1920
       await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
 
       // Act
@@ -264,7 +259,7 @@ describe('ingest > sync', () => {
       expect(SYNC_LOG?.delta).toBe(IDS_ARBIMON_FIRST_BATCH.length)
     })
 
-    test('can sync species calls for new enabled projects', async () => {
+    test('can sync species calls for multiple projects', async () => {
       // Act
       // Batch the arbimon data
       await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
@@ -285,10 +280,9 @@ describe('ingest > sync', () => {
       await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate([{ ...SITE_INPUT, locationProjectId: ID_PROJECT, idCore: 'cydwrzz91cby', idArbimon: 88529 }])
 
       const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
-      if (syncStatus.projectId === null) syncStatus.projectId = 1940
 
       // Act
-      const UPDATED_SYNC_STATUS = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+      const UPDATED_SYNC_STATUS = await syncArbimonSpeciesCallBatch(arbimonSequelize, biodiversitySequelize, { ...syncStatus, syncBatchLimit: 10 })
 
       // Assert
       // - Assert write species calls bio is returning sync status of a first batch

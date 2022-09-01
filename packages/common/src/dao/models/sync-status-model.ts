@@ -28,10 +28,6 @@ export const SyncStatusModel = defineWithDefaults<SyncStatus>(
         isInt: true,
         min: 1
       }
-    },
-    projectId: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     }
   },
   {

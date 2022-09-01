@@ -35,47 +35,36 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
 
     console.info('\nProject level data:\n')
 
-    const bioProjects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({
-      where: {
-        idArbimon: { [Op.in]: [1556] }
-      }
-    }) as unknown as Project[]
+    const isSiteSyncedUpToDate = await syncArbimonSites(arbimonSequelize, biodiversitySequelize)
+    console.info('> Sites for the project: up to date =', isSiteSyncedUpToDate)
 
-    for (const project of bioProjects) {
-      const idArbimon = project.idArbimon
-      const projectName = project.name
+    if (!isSiteSyncedUpToDate) {
+      console.info('- wait to sync more sites in the next round...')
+      return
+    }
 
-      const isSiteSyncedUpToDate = await syncArbimonSites(arbimonSequelize, biodiversitySequelize, idArbimon)
-      console.info(`> Sites for the project ${projectName}: up to date =`, isSiteSyncedUpToDate)
+    const isTaxonSpeciesCallsSyncedUpToDate = await syncArbimonSpeciesCalls(arbimonSequelize, biodiversitySequelize)
+    console.info('> Taxon Species Calls: up to date =', isTaxonSpeciesSyncedUpToDate)
 
-      if (!isSiteSyncedUpToDate) {
-        console.info(`- wait to sync more sites for the project ${projectName} in the next round...`)
-        continue
-      }
+    if (!isTaxonSpeciesCallsSyncedUpToDate) {
+      console.info('- wait to sync more taxon species calls in the next round...')
+      return
+    }
 
-      const isTaxonSpeciesCallsSyncedUpToDate = await syncArbimonSpeciesCalls(arbimonSequelize, biodiversitySequelize, idArbimon)
-      console.info(`> Taxon Species Calls for the project ${projectName}: up to date =`, isTaxonSpeciesSyncedUpToDate)
+    const isRecordingBySiteHourLessThanMaxLimit = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Recordings: less than max limit =', isRecordingBySiteHourLessThanMaxLimit)
 
-      if (!isTaxonSpeciesCallsSyncedUpToDate) {
-        console.info(`- wait to sync more taxon species calls for the project ${projectName} in the next round...`)
-        continue
-      }
+    if (!isRecordingBySiteHourLessThanMaxLimit) {
+      console.info('- wait to sync more recordings in the next round...')
+      return
+    }
 
-      const isRecordingBySiteHourLessThanMaxLimit = await syncArbimonRecordingBySiteHour(arbimonSequelize, biodiversitySequelize, idArbimon)
-      console.info(`> Recordings for the project ${projectName}: less than max limit =`, isRecordingBySiteHourLessThanMaxLimit)
+    const isDetectionsBySiteSpeciesHourUpToDate = await syncArbimonDetectionBySiteSpeciesHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Detections: up to date =', isDetectionsBySiteSpeciesHourUpToDate)
 
-      if (!isRecordingBySiteHourLessThanMaxLimit) {
-        console.info(`- wait to sync more recordings  for the project ${projectName} in the next round...`)
-        continue
-      }
-
-      const isDetectionsBySiteSpeciesHourUpToDate = await syncArbimonDetectionBySiteSpeciesHour(arbimonSequelize, biodiversitySequelize, idArbimon)
-      console.info(`> Detections for the project ${projectName}: up to date =`, isDetectionsBySiteSpeciesHourUpToDate)
-
-      if (!isDetectionsBySiteSpeciesHourUpToDate) {
-        console.info(`- wait to sync more detections for the project ${projectName} in the next round...`)
-        continue
-      }
+    if (!isDetectionsBySiteSpeciesHourUpToDate) {
+      console.info('- wait to sync more detections in the next round...')
+      return
     }
 
     return

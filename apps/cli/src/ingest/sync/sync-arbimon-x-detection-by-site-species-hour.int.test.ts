@@ -78,8 +78,6 @@ const getSyncStatus = async (): Promise<SyncStatus> => {
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  if (syncStatus.projectId === null) syncStatus.projectId = 1920
-
   return syncStatus
 }
 
@@ -159,7 +157,6 @@ describe('ingest > sync', () => {
     await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate(SPECIES_INPUT)
 
     // Delete project level data
-    await biodiversitySequelize.query('DELETE FROM detection_by_site_species_hour')
     await deleteOutputProjects(biodiversitySequelize)
     await biodiversitySequelize.query('DELETE FROM sync_status')
     await biodiversitySequelize.query('DELETE FROM sync_error')
@@ -230,7 +227,7 @@ describe('ingest > sync', () => {
     test('where sync is up-to-date', async () => {
       // Arrange
       const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 100 })
-      if (SYNC_STATUS.projectId === null) SYNC_STATUS.projectId = 1920
+
       // Act
       const UPDATED_SYNC_STATUS_FIRST_BATCH = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
       const SYNC_STATUS_SECOND_BATCH = await getSyncStatus()
@@ -257,7 +254,7 @@ describe('ingest > sync', () => {
       await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 12675, updatedAt: '2022-07-17T11:10:00.000Z' } })
       // Get sync status
       const SYNC_STATUS = getDefaultSyncStatus({ ...SYNC_CONFIG, syncBatchLimit: 2 })
-      if (SYNC_STATUS.projectId === null) SYNC_STATUS.projectId = 1920
+
       // Act
       const UPDATED_SYNC_STATUS = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, SYNC_STATUS)
       // 2. Update present review count in the synced detection
@@ -292,7 +289,7 @@ describe('ingest > sync', () => {
       expect(detections2.length).toBe(2)
     })
 
-    test('can sync detections for new enabled projects', async () => {
+    test('can sync detections for multiple projects', async () => {
       // Act
       await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
       await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
@@ -305,17 +302,16 @@ describe('ingest > sync', () => {
       }
 
       const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
-      if (syncStatus.projectId === null) syncStatus.projectId = 1940
 
       // Act
-      const updatedSyncStatus = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+      const updatedSyncStatus = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, { ...syncStatus, syncBatchLimit: 100 })
       const actual = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
         raw: true
       })
 
       // Assert
       expect(updatedSyncStatus).toBeTypeOf('object')
-      expect(actual).toHaveLength(1)
+      expect(actual).toHaveLength(3)
     })
   })
 })

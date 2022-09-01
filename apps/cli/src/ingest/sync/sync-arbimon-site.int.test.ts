@@ -40,7 +40,6 @@ describe('ingest > sync > site', () => {
     await arbimonSequelize.query('DELETE FROM projects')
 
     const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
-    if (syncStatus.projectId === null) syncStatus.projectId = DEFAULT_BIO_PROJECT.idArbimon
 
     const sites = [DEFAULT_SITE, { projectId: 1920, siteId: 88527, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 02:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cba', timezone: 'Asia/Bangkok' }]
 
@@ -68,7 +67,7 @@ describe('ingest > sync > site', () => {
       const syncStatusInDB = await ModelRepository.getInstance(biodiversitySequelize)
         .SyncStatus
         .findOne({
-          where: { syncDataTypeId: SYNC_CONFIG.syncDataTypeId, projectId: DEFAULT_BIO_PROJECT.idArbimon },
+          where: { syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
           raw: true
         })
       expect(syncStatusInDB?.syncUntilId).toBe(updatedSyncStatus.syncUntilId)
@@ -84,7 +83,7 @@ describe('ingest > sync > site', () => {
       expect(syncLogInDB?.delta).toBe(sites.length)
     })
 
-    test('can sync sites for new enabled projects', async () => {
+    test('can sync sites for multiple projects', async () => {
       // Act
       await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_ARB_PROJECT, projectId: 1940, createdAt: '2022-03-20T11:00:00.000Z', updatedAt: '2022-03-20T11:00:00.000Z', externalId: '807cuoi3cvw5', reportsEnabled: 1 } })
       await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1940, siteId: 88540, createdAt: '2022-03-23 01:00:00', updatedAt: '2022-03-23 01:00:00', name: 'Site 40', externalId: 'cydwrzz91c40' } })
@@ -92,10 +91,9 @@ describe('ingest > sync > site', () => {
       await ModelRepository.getInstance(biodiversitySequelize).LocationProject.create({ ...DEFAULT_BIO_PROJECT, id: 2, idArbimon: 1940, idCore: '807cuoi3cvw5', slug: 'rfcx-2' })
 
       const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
-      if (syncStatus.projectId === null) syncStatus.projectId = 1940
 
       // Act
-      await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+      await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, { ...syncStatus, syncBatchLimit: 10 })
 
       const actual = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.findOne({
         where: { idArbimon: 88540 },
