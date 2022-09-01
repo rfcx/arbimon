@@ -1,7 +1,4 @@
-import { Op, Sequelize } from 'sequelize'
-
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types/location-project'
+import { Sequelize } from 'sequelize'
 
 import { syncArbimonProjects } from './sync-arbimon-project'
 import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'
