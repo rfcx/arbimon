@@ -29,7 +29,7 @@ The following must be true to consider a feature **"DONE"**:
 1. Install tools:
 
    - node 16: [https://nodejs.org](https://nodejs.org)
-   - pnpm 6: `npm i -g pnpm@6`
+   - pnpm 7: `npm i -g pnpm@7`
    - VSCode & extensions: `pnpm node init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
      - If you have Vetur installed, disable it for this workspace
    - Docker Desktop: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
