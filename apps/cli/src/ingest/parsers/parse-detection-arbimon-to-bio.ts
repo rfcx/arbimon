@@ -14,7 +14,7 @@ const DetectionArbimonSchema = z.object({
   idArbimon: z.number(),
   datetime: z.string(), // recording datetime
   siteId: z.number(),
-  recordingDuration: z.number(),
+  recordingDuration: z.number(), // TODO Remove
   speciesId: z.number(),
   present: z.number().nullable(),
   presentReview: z.number(),
