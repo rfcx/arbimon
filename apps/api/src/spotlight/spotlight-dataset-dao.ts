@@ -41,7 +41,7 @@ export function getRecordingTotalDurationMinutes (recordings: RecordingBySiteHou
 }
 
 export function getRecordingTotalCount (recordings: RecordingBySiteHour[]): number {
-  return sum(recordings.map(({ recordingCount }) => recordingCount ?? 0))
+  return sum(recordings.map(({ count }) => count ?? 0))
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {

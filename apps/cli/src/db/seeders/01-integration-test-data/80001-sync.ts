@@ -1,5 +1,5 @@
 // @ts-nocheck
-// ignore because `recordedMinutes` is array and array symbol for sequelize is `{}`
+// ignore because `countsByMinute` is array and array symbol for sequelize is `{}`
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 

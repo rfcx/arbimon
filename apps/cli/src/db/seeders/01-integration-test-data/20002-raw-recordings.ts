@@ -1,7 +1,7 @@
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
-import { RecordingBySiteHourModel } from '@rfcx-bio/common/dao/models/recording-by-site-hour'
+import { RecordingBySiteHourModel } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
 
 import { rawRecordingBySiteHour } from '../_data/integration/raw-recordings'
 
