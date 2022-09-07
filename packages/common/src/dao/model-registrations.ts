@@ -15,7 +15,7 @@ import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './m
 import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
-import { MODEL_RECORDING_BY_SITE_HOUR, RecordingBySiteHourModel } from './models/recording-by-site-hour'
+import { MODEL_RECORDING_BY_SITE_HOUR, RecordingBySiteHourModel } from './models/recording-by-site-hour-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
 import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/species-in-project-model'
 import { MODEL_SYNC_DATA_TYPE, SyncDataTypeModel } from './models/sync-data-type-model'

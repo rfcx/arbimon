@@ -42,8 +42,18 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       ...TIMESTAMP_COLUMNS,
 
       // Facts
-      total_duration_in_minutes: DataTypes.FLOAT,
-      recorded_minutes: DataTypes.ARRAY(DataTypes.INTEGER)
+      count: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      counts_by_minute: {
+        type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)),
+        allowNull: false
+      },
+      total_duration_in_minutes: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      }
     }
   )
   await setTimestampDefaults(sequelize, TABLE_NAME)
