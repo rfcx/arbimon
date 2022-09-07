@@ -80,8 +80,8 @@ describe('ingest > output > recording by site hour', () => {
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
     expect(recordingBySiteHour.length).toBe(1)
     expect(recordingBySiteHour[0].totalDurationInMinutes).toBe(2.01)
-    expect(recordingBySiteHour[0].recordedMinutes[0]).toBe(0)
-    expect(recordingBySiteHour[0].recordingCount).toEqual(2)
+    expect(recordingBySiteHour[0].countsByMinute[0]).toBe(0)
+    expect(recordingBySiteHour[0].count).toEqual(2)
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
   })
 
@@ -116,9 +116,9 @@ describe('ingest > output > recording by site hour', () => {
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
 
     expect(recordingBySiteHour.length).toBe(2)
-    expect(recordingBySiteHour[0].recordedMinutes).toEqual([0, 20])
-    expect(recordingBySiteHour[0].recordedMinutes).toEqual(expect.arrayContaining([20]))
-    expect(sum(recordingBySiteHour.map(item => item.recordingCount))).toBe(4)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([0, 20])
+    expect(recordingBySiteHour[0].countsByMinute).toEqual(expect.arrayContaining([20]))
+    expect(sum(recordingBySiteHour.map(item => item.count))).toBe(4)
   })
 
   test('can write new recordings by site hour for different sites', async () => {

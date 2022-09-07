@@ -1,5 +1,5 @@
 // @ts-nocheck
-// ignore because `recordedMinutes` is array and array symbol for sequelize is `{}`
+// ignore because `countsByMinute` is array and array symbol for sequelize is `{}`
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
@@ -58,80 +58,80 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 10001001,
     locationSiteId: 10001001,
     totalDurationInMinutes: 2,
-    recordedMinutes: '{7, 9}',
-    recordingCount: 2
+    countsByMinute: '{{7,1}, {9,1}}',
+    count: 2
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 2,
-    recordedMinutes: '{45, 47}',
-    recordingCount: 2
+    countsByMinute: '{{45,1}, {47,1}}',
+    count: 2
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001001,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}',
-    recordingCount: 1
+    countsByMinute: '{{11,1}}',
+    count: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}',
-    recordingCount: 1
+    countsByMinute: '{{11,1}}',
+    count: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}',
-    recordingCount: 3
+    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    count: 3
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 23:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}',
-    recordingCount: 3
+    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    count: 3
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-16 23:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}',
-    recordingCount: 1
+    countsByMinute: '{{11,1}}',
+    count: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 00:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}',
-    recordingCount: 1
+    countsByMinute: '{{11,1}}',
+    count: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 12:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001002,
     totalDurationInMinutes: 1,
-    recordedMinutes: '{11}',
-    recordingCount: 1
+    countsByMinute: '{{11,1}}',
+    count: 1
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
     locationProjectId: 10001001,
     locationSiteId: 10001001,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}',
-    recordingCount: 3
+    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    count: 3
   }
 ]
 

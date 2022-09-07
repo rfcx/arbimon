@@ -45,7 +45,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       locationProjectId: puertoRicoProjectId,
       locationSiteId: siteArbimonToBio[d.arbimon_site_id] ?? -1, // TODO: Throw error
       count: d.num_of_recordings,
-      durationMinutes: 12
+      countsByMinute: [] // TODO: build array from `d`
     }))
 
   await DataSourceModel(sequelize)

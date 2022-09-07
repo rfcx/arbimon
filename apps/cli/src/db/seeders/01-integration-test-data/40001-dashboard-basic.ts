@@ -1,5 +1,5 @@
 // @ts-nocheck
-// ignore because `recordedMinutes` is array and array symbol for sequelize is `{}`
+// ignore because `countsByMinute` is array and array symbol for sequelize is `{}`
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
@@ -59,16 +59,16 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 40001001,
     locationSiteId: 40001001,
     totalDurationInMinutes: 4,
-    recordedMinutes: '{7, 9, 11, 13}',
-    recordingCount: 4
+    countsByMinute: '{{7,1}, {9,1}, {11,1}, {13,1}}',
+    count: 4
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
     locationProjectId: 40001001,
     locationSiteId: 40001001,
     totalDurationInMinutes: 3,
-    recordedMinutes: '{11, 14, 17}',
-    recordingCount: 3
+    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    count: 3
   }
 ]
 
@@ -79,8 +79,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     locationSiteId: 40001001,
     ...taxonSpeciesAndClassForId(100001),
     count: 2,
-    durationMinutes: 2,
-    detectionMinutes: [7, 9]
+    countsByMinute: [[7, 1], [9, 1]]
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
@@ -88,8 +87,7 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
     locationSiteId: 40001001,
     ...taxonSpeciesAndClassForId(100002),
     count: 1,
-    durationMinutes: 1,
-    detectionMinutes: [17]
+    countsByMinute: [[17, 1]]
   }
 ]
 
