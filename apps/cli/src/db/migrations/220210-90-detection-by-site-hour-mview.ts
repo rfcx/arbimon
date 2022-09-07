@@ -16,8 +16,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     SELECT d.location_project_id,
            d.location_site_id,
            d.time_precision_hour_local,
-           sum(d.count) as count,
-           max(d.duration_minutes) as duration_minutes
+           sum(d.count) as count
     FROM detection_by_site_species_hour d
     GROUP BY d.location_project_id,
              d.location_site_id,
