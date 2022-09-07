@@ -41,16 +41,6 @@ const getTimePrecisionHourLocal = (datetime: string): string => {
   return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00')
 }
 
-function filterRecordedMinutes (group: RecordingArbimon[]): number[] {
-  return group.reduce<number[]>((acc, cur) => {
-      const minute = dayjs(cur.datetime).minute().toString()
-      if (!acc.includes(Number(minute))) {
-        acc.push(Number(minute))
-      }
-      return acc
-    }, [])
-}
-
 export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: RecordingArbimon[], sequelize: Sequelize): Promise<RecordingBySiteHourBio[]> => {
   const itemsToInsertOrUpsert: RecordingBySiteHourBio[] = []
   const arbimonRecordingBySiteHourGroupBySites = groupBy(recordingArbimon, 'siteIdArbimon')
@@ -83,7 +73,7 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
 
       const totalDuration = isNewRecording ? sum(group.map(item => item.duration)) / 60 : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
 
-      // TODO Replace logic of `recordedMinutes` 1D array with `countsByMinute` 2D array
+      // TODO count logic: Replace logic of `recordedMinutes` 1D array with `countsByMinute` 2D array
       const countsByMinute: number[][] = [] // isNewRecording ? filterRecordedMinutes(group) : [...new Set([...bioRecordingBySiteHour.countsByMinute, ...filterRecordedMinutes(group)])]
 
       const count = countsByMinute.length

@@ -14,7 +14,7 @@ const ROUTE = '/projects/:projectId/dashboard-generated'
 const url = `/projects/${PROJECT_ID_BASIC}/dashboard-generated`
 
 const EXPECTED_PROPS = [
-  'detectionCount',
+  'detectionMinutesCount',
   'siteCount',
   'speciesCount',
   'speciesThreatenedCount',

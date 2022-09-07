@@ -12,8 +12,8 @@ export type SpotlightDatasetQuery = DatasetQueryParamsSerialized & { speciesId: 
 export interface SpotlightDatasetResponse {
   isLocationRedacted: boolean
   totalSiteCount: number
-  totalRecordingCount: number
-  detectionCount: number
+  recordedMinutesCount: number
+  detectionMinutesCount: number
   detectionFrequency: number
   occupiedSiteCount: number
   occupiedSiteFrequency: number
@@ -32,7 +32,7 @@ export interface SpotlightDetectionDataBySite {
     siteName: string
     latitude: number
     longitude: number
-    siteDetectionCount: number
+    siteDetectionMinutesCount: number
     siteDetectionFrequency: number
     siteOccupied: boolean
   }

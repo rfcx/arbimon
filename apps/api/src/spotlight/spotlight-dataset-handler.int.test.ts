@@ -17,8 +17,8 @@ const URL = `/projects/${PROJECT_ID_BASIC}/spotlight`
 const EXPECTED_PROPS = [
   'isLocationRedacted',
   'totalSiteCount',
-  'totalRecordingCount',
-  'detectionCount',
+  'recordedMinutesCount',
+  'detectionMinutesCount',
   'detectionFrequency',
   'occupiedSiteCount',
   'occupiedSiteFrequency',
@@ -113,8 +113,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const app = await getMockedApp()
       const expected = {
         totalSiteCount: 2,
-        totalRecordingCount: 20,
-        detectionCount: 4,
+        recordedMinutesCount: 20,
+        detectionMinutesCount: 4,
         detectionFrequency: 0.2,
         occupiedSiteCount: 2,
         occupiedSiteFrequency: 1
@@ -132,8 +132,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result.totalSiteCount).toBe(expected.totalSiteCount)
-      expect(result.totalRecordingCount).toBe(expected.totalRecordingCount)
-      expect(result.detectionCount).toBe(expected.detectionCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
       expect(result.detectionFrequency).toBe(expected.detectionFrequency)
       expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
@@ -144,8 +144,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const app = await getMockedApp()
       const expected = {
         totalSiteCount: 1,
-        totalRecordingCount: 7,
-        detectionCount: 2,
+        recordedMinutesCount: 7,
+        detectionMinutesCount: 2,
         detectionFrequency: 0.2857142857142857,
         occupiedSiteCount: 1,
         occupiedSiteFrequency: 1
@@ -163,8 +163,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result.totalSiteCount).toBe(expected.totalSiteCount)
-      expect(result.totalRecordingCount).toBe(expected.totalRecordingCount)
-      expect(result.detectionCount).toBe(expected.detectionCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
       expect(result.detectionFrequency).toBe(expected.detectionFrequency)
       expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
@@ -175,8 +175,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const app = await getMockedApp()
       const expected = {
         totalSiteCount: 2,
-        totalRecordingCount: 20,
-        detectionCount: 2,
+        recordedMinutesCount: 20,
+        detectionMinutesCount: 2,
         detectionFrequency: 0.1,
         occupiedSiteCount: 2,
         occupiedSiteFrequency: 1
@@ -194,8 +194,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result.totalSiteCount).toBe(expected.totalSiteCount)
-      expect(result.totalRecordingCount).toBe(expected.totalRecordingCount)
-      expect(result.detectionCount).toBe(expected.detectionCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
       expect(result.detectionFrequency).toBe(expected.detectionFrequency)
       expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
@@ -206,8 +206,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const app = await getMockedApp()
       const expected = {
         totalSiteCount: 0,
-        totalRecordingCount: 20,
-        detectionCount: 0,
+        recordedMinutesCount: 20,
+        detectionMinutesCount: 0,
         detectionFrequency: 0,
         occupiedSiteCount: 0,
         occupiedSiteFrequency: 0
@@ -225,8 +225,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result.totalSiteCount).toBe(expected.totalSiteCount)
-      expect(result.totalRecordingCount).toBe(expected.totalRecordingCount)
-      expect(result.detectionCount).toBe(expected.detectionCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
       expect(result.detectionFrequency).toBe(expected.detectionFrequency)
       expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
@@ -237,8 +237,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const app = await getMockedApp()
       const expected = {
         totalSiteCount: 1,
-        totalRecordingCount: 7,
-        detectionCount: 1,
+        recordedMinutesCount: 7,
+        detectionMinutesCount: 1,
         detectionFrequency: 0.14285714285714285,
         occupiedSiteCount: 1,
         occupiedSiteFrequency: 1
@@ -256,8 +256,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result.totalSiteCount).toBe(expected.totalSiteCount)
-      expect(result.totalRecordingCount).toBe(expected.totalRecordingCount)
-      expect(result.detectionCount).toBe(expected.detectionCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
       expect(result.detectionFrequency).toBe(expected.detectionFrequency)
       expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
@@ -268,8 +268,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const app = await getMockedApp()
       const expected = {
         totalSiteCount: 0,
-        totalRecordingCount: 7,
-        detectionCount: 0,
+        recordedMinutesCount: 7,
+        detectionMinutesCount: 0,
         detectionFrequency: 0,
         occupiedSiteCount: 0,
         occupiedSiteFrequency: 0
@@ -287,8 +287,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result.totalSiteCount).toBe(expected.totalSiteCount)
-      expect(result.totalRecordingCount).toBe(expected.totalRecordingCount)
-      expect(result.detectionCount).toBe(expected.detectionCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
       expect(result.detectionFrequency).toBe(expected.detectionFrequency)
       expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)

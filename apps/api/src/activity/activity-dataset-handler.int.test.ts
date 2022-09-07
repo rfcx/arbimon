@@ -214,7 +214,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Arrange
       const expectedSpecies = ['Felis catus', 'Naja']
       const expectedDetectionCount = [4, 2]
-      const expectedProperties = ['commonName', 'scientificName', 'taxon', 'detectionCount', 'detectionFrequency', 'occupiedSites', 'occupancyNaive']
+      const expectedProperties = ['commonName', 'scientificName', 'taxon', 'detectionMinutesCount', 'detectionFrequency', 'occupiedSites', 'occupancyNaive']
 
       // Act
       const result = JSON.parse(response.body)?.activityBySpecies
@@ -231,7 +231,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - scientific name, detection count, detection frequency are correct
       expectedResult.forEach(item => expect(expectedSpecies).includes(item.scientificName))
-      expectedResult.forEach(item => expect(expectedDetectionCount).includes(item.detectionCount))
+      expectedResult.forEach(item => expect(expectedDetectionCount).includes(item.detectionMinutesCount))
       expect(species.detectionFrequency).toBe(0.2)
     })
 
@@ -241,7 +241,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         commonName: '',
         scientificName: 'Felis catus',
         taxon: 'Mammals',
-        detectionCount: 4,
+        detectionMinutesCount: 4,
         detectionFrequency: 0.2,
         occupiedSites: 2,
         occupancyNaive: 1
@@ -284,7 +284,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         commonName: '',
         scientificName: 'Naja',
         taxon: 'Amphibians',
-        detectionCount: 1,
+        detectionMinutesCount: 1,
         detectionFrequency: 0.14285714285714285,
         occupiedSites: 1,
         occupancyNaive: 1

@@ -15,7 +15,7 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon:
 
   for (const recording of recordingsBySiteHourBio) {
     try {
-      const newRecording = { ...recording, countsByMinute: JSON.stringify([...new Set([...recording.countsByMinute, ...recording?.countsByMinute ?? []])].sort((a, b) => a - b)).replace('[', '{').replace(']', '}') }
+      const newRecording = { ...recording, countsByMinute: JSON.stringify([...new Set([...recording.countsByMinute, ...recording?.countsByMinute ?? []])].sort((a, b) => a[0] - b[0])).replace('[', '{').replace(']', '}') }
       // @ts-expect-error
       await ModelRepository.getInstance(sequelize).RecordingBySiteHour.upsert(newRecording)
       // @ts-expect-error

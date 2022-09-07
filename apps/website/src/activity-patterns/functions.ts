@@ -31,10 +31,10 @@ export function transformToMetricsDatasets (datasets: SpotlightDataset[]): Metri
   ]
 
   datasets.forEach(dataset => {
-    const { totalRecordingCount, totalSiteCount, detectionCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset
+    const { recordedMinutesCount, totalSiteCount, detectionMinutesCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset
     metrics[0].datasets.push({
       value: detectionFrequency.toFixed(3),
-      description: `Found in ${detectionCount.toLocaleString()} out of ${totalRecordingCount.toLocaleString()} recordings`
+      description: `Found in ${detectionMinutesCount.toLocaleString()} out of ${recordedMinutesCount.toLocaleString()} recorded minutes`
     })
     metrics[1].datasets.push({
       value: occupiedSiteFrequency.toFixed(3),
@@ -52,9 +52,9 @@ function getPrettyMax (max: number): number {
 export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapDataSet[] {
   const maximumNumbers: Array<[number, number]> = datasets.map(({ detectionsByLocationSite }) => {
     const detectionsByLocationSiteValues = Object.values(detectionsByLocationSite)
-    const siteDetectionCounts = detectionsByLocationSiteValues.map(({ siteDetectionCount }) => siteDetectionCount)
+    const siteDetectionMinutesCounts = detectionsByLocationSiteValues.map(({ siteDetectionMinutesCount }) => siteDetectionMinutesCount)
     const siteDetectionFrequencies = detectionsByLocationSiteValues.map(({ siteDetectionFrequency }) => siteDetectionFrequency)
-    return [Math.max(0, ...siteDetectionCounts), Math.max(0, ...siteDetectionFrequencies)]
+    return [Math.max(0, ...siteDetectionMinutesCounts), Math.max(0, ...siteDetectionFrequencies)]
   })
 
   const maxValues = {
@@ -64,12 +64,12 @@ export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapData
 
   return datasets.map(({ startDate, endDate, sites, detectionsByLocationSite }) => {
     const detectionsByLocationSiteValues = Object.values(detectionsByLocationSite)
-    const data = detectionsByLocationSiteValues.map(({ siteName, latitude, longitude, siteDetectionCount, siteDetectionFrequency, siteOccupied }) => ({
+    const data = detectionsByLocationSiteValues.map(({ siteName, latitude, longitude, siteDetectionMinutesCount, siteDetectionFrequency, siteOccupied }) => ({
       siteName,
       latitude,
       longitude,
       distinctSpecies: {
-        [SPOTLIGHT_MAP_KEYS.totalDetectionCount]: siteDetectionCount,
+        [SPOTLIGHT_MAP_KEYS.totalDetectionCount]: siteDetectionMinutesCount,
         [SPOTLIGHT_MAP_KEYS.detectionFrequency]: siteDetectionFrequency,
         [SPOTLIGHT_MAP_KEYS.occupancy]: siteOccupied
       }
@@ -181,7 +181,7 @@ export async function getSiteCSVData (dataset: SpotlightDetectionDataBySite): Pr
       return {
         site: site.siteName,
         site_id: siteId,
-        detections: site.siteDetectionCount,
+        detections: site.siteDetectionMinutesCount,
         detection_frequency: site.siteDetectionFrequency
       }
     })
