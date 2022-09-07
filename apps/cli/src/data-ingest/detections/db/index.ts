@@ -27,7 +27,7 @@ export const writeDetections = async (sequelize: Sequelize, detections: ArbimonH
       locationProjectId: project.id,
       locationSiteId: siteArbimonToBio[d.site_id] ?? -1, // TODO: Throw error
       count: d.detection_count,
-      durationMinutes: d.duration_in_minutes
+      countsByMinute: [] // TODO count logic
     }))
 
   await DetectionBySiteSpeciesHourModel(sequelize).bulkCreate(data, {

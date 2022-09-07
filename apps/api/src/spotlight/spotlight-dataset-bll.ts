@@ -6,7 +6,7 @@ import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getRecordingTotalCount, getRecordingTotalDurationMinutes } from './spotlight-dataset-dao'
+import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getTotalRecordedMinutes } from './spotlight-dataset-dao'
 
 export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
@@ -37,10 +37,9 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
 
   // Metrics
   const recordings = await getRecordings(models, filterForSql)
-  const totalRecordingCount = getRecordingTotalCount(recordings)
-  const totalRecordingMinutes = getRecordingTotalDurationMinutes(recordings)
-  const detectionCount = calculateDetectionCount(specificSpeciesDetections)
-  const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, totalRecordingMinutes)
+  const recordedMinutesCount = getTotalRecordedMinutes(recordings)
+  const detectionMinutesCount = calculateDetectionCount(specificSpeciesDetections)
+  const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, recordedMinutesCount)
 
   const totalSiteCount = new Set(totalDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteCount = new Set(specificSpeciesDetections.map(({ locationSiteId }) => locationSiteId)).size
@@ -48,17 +47,17 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
 
   // By site
   const detectionsByLocationSite = isLocationRedacted ? {} : await getDetectionsByLocationSite(models, totalDetections, filterForSql)
-  const detectionsByTimeHour = getDetectionsByTimeHour(specificSpeciesDetections, totalRecordingMinutes)
-  const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, totalRecordingMinutes)
-  const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, totalRecordingMinutes)
-  const detectionsByTimeYear = getDetectionsByTimeYear(specificSpeciesDetections, totalRecordingMinutes)
-  const detectionsByTimeDate = getDetectionsByTimeDateUnix(specificSpeciesDetections, totalRecordingMinutes)
-  const detectionsByTimeMonthYear = getDetectionsByTimeMonthYear(specificSpeciesDetections, totalRecordingMinutes)
+  const detectionsByTimeHour = getDetectionsByTimeHour(specificSpeciesDetections, recordedMinutesCount)
+  const detectionsByTimeDay = getDetectionsByTimeDay(specificSpeciesDetections, recordedMinutesCount)
+  const detectionsByTimeMonth = getDetectionsByTimeMonth(specificSpeciesDetections, recordedMinutesCount)
+  const detectionsByTimeYear = getDetectionsByTimeYear(specificSpeciesDetections, recordedMinutesCount)
+  const detectionsByTimeDate = getDetectionsByTimeDateUnix(specificSpeciesDetections, recordedMinutesCount)
+  const detectionsByTimeMonthYear = getDetectionsByTimeMonthYear(specificSpeciesDetections, recordedMinutesCount)
 
   return {
     totalSiteCount,
-    totalRecordingCount,
-    detectionCount,
+    recordedMinutesCount,
+    detectionMinutesCount,
     detectionFrequency,
     occupiedSiteCount,
     occupiedSiteFrequency,

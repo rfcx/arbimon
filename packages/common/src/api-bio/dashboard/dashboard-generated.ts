@@ -11,7 +11,7 @@ export type DashboardGeneratedParams = ProjectRouteParamsSerialized
 // Response types
 export interface DashboardGeneratedResponse {
   // Metrics
-  detectionCount: number
+  detectionMinutesCount: number
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number

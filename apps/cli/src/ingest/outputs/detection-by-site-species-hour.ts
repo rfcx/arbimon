@@ -45,7 +45,7 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
     // Insert new or updated items
     if (itemsToInsertOrUpsert.length) {
       const rows = itemsToInsertOrUpsert.map(group => {
-        return { ...group, detectionMinutes: JSON.stringify([...new Set([...group.detectionMinutes])].sort((a, b) => a - b)).replace('[', '{').replace(']', '}') }
+        return { ...group, countsByMinute: JSON.stringify([...new Set([...group.countsByMinute])].sort((a, b) => a[0] - b[0])).replace('[', '{').replace(']', '}') }
       })
       // @ts-expect-error
       await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, { transaction })
