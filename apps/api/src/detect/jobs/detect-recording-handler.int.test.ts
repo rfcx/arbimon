@@ -3,7 +3,7 @@ import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
-import { routesDetectRecording } from './index'
+import { routesDetect } from './index'
 
 const fakeProjectId = 201
 
@@ -28,7 +28,7 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
   app.decorate('requestContext', fakeRequestContext)
   app.decorateRequest('requestContext', fakeRequestContext)
 
-  routesDetectRecording
+  routesDetect
     .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
     .forEach(route => app.route(route))
 
