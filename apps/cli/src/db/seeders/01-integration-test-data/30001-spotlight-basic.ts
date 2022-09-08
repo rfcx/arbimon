@@ -137,40 +137,40 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
 export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHour, 'createdAt' | 'updatedAt'>> = [
   {
     timePrecisionHourLocal: dayjs('2022-02-15 10:00:00+00').toDate(),
-    locationProjectId: 20001001,
-    locationSiteId: 20001001,
+    locationProjectId: 30001001,
+    locationSiteId: 30001001,
     ...taxonSpeciesAndClassForId(100001),
     count: 2,
     countsByMinute: [[7, 1], [9, 1]]
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
-    locationProjectId: 20001001,
-    locationSiteId: 20001002,
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
     ...taxonSpeciesAndClassForId(100002),
     count: 1,
     countsByMinute: [[55, 1]]
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 12:00:00+00').toDate(),
-    locationProjectId: 20001001,
-    locationSiteId: 20001002,
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
     ...taxonSpeciesAndClassForId(100001),
     count: 1,
     countsByMinute: [[11, 1]]
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-15 15:00:00+00').toDate(),
-    locationProjectId: 20001001,
-    locationSiteId: 20001002,
+    locationProjectId: 30001001,
+    locationSiteId: 30001002,
     ...taxonSpeciesAndClassForId(100001),
     count: 1,
     countsByMinute: [[1, 1]]
   },
   {
     timePrecisionHourLocal: dayjs('2022-02-17 15:00:00+00').toDate(),
-    locationProjectId: 20001001,
-    locationSiteId: 20001001,
+    locationProjectId: 30001001,
+    locationSiteId: 30001001,
     ...taxonSpeciesAndClassForId(100002),
     count: 1,
     countsByMinute: [[17, 1]]
