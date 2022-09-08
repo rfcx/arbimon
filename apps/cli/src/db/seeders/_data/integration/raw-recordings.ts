@@ -12,7 +12,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[0].id, // CU26
     totalDurationInMinutes: 120.5,
-    countsByMinute: '{{7,1}, {9,1}}',
+    countsByMinute: [[7, 1], [9, 1]],
     count: 2
   },
   {
@@ -20,7 +20,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[3].id, // AR01
     totalDurationInMinutes: 120.5,
-    countsByMinute: '{{7,1}, {9,1}}',
+    countsByMinute: [[7, 1], [9, 1]],
     count: 2
   },
   {
@@ -28,7 +28,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 60.25,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     count: 1
   },
   {
@@ -36,7 +36,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 60.25,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     count: 1
   },
   {
@@ -44,7 +44,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 180.75,
-    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    countsByMinute: [[11, 1], [14, 1], [17, 1]],
     count: 3
   },
   {
@@ -52,7 +52,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 180.75,
-    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    countsByMinute: [[11, 1], [14, 1], [17, 1]],
     count: 3
   },
   {
@@ -60,7 +60,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 60.25,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     count: 1
   },
   {
@@ -68,7 +68,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 60.25,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     count: 1
   },
   {
@@ -76,7 +76,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[1].id, // CU24
     totalDurationInMinutes: 60.25,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     count: 1
   },
   {
@@ -84,7 +84,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: fakeProject.id,
     locationSiteId: sites[2].id, // CU33
     totalDurationInMinutes: 180.75,
-    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    countsByMinute: [[11, 1], [14, 1], [17, 1]],
     count: 3
   }
 ]

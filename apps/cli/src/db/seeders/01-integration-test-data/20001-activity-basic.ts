@@ -1,5 +1,3 @@
-// @ts-nocheck
-// ignore because `countsByMinute` is array and array symbol for sequelize is `{}`
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
@@ -7,8 +5,8 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { DetectionBySiteSpeciesHour, Project, ProjectVersion, RecordingBySiteHour, Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { getSequelize } from '@/db/connections'
 import { taxonSpeciesAndClassForId } from '@/db/seeders/_data/integration/test-taxon-species'
+import { literalizeCountsByMinute } from '../_helpers/sequelize-literal-integer-array-2d'
 
 // Mocked project, site, recordings, detections
 export const testProject: Project = {
@@ -59,7 +57,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001001,
     count: 4,
-    countsByMinute: '{{7,1}, {9,1}, {11,1}, {13,1}}',
+    countsByMinute: [[7, 1], [9, 1], [11, 1], [13, 1]],
     totalDurationInMinutes: 4
   },
   {
@@ -67,7 +65,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 2,
-    countsByMinute: '{{45,1}, {47,1}}',
+    countsByMinute: [[45, 1], [47, 1]],
     totalDurationInMinutes: 2
   },
   {
@@ -75,7 +73,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 1,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     totalDurationInMinutes: 1
   },
   {
@@ -83,7 +81,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 1,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     totalDurationInMinutes: 1
   },
   {
@@ -91,7 +89,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 3,
-    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    countsByMinute: [[11, 1], [14, 1], [17, 1]],
     totalDurationInMinutes: 3
   },
   {
@@ -99,7 +97,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 3,
-    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    countsByMinute: [[11, 1], [14, 1], [17, 1]],
     totalDurationInMinutes: 3
   },
   {
@@ -107,7 +105,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 1,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     totalDurationInMinutes: 1
   },
   {
@@ -115,7 +113,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 1,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     totalDurationInMinutes: 1
   },
   {
@@ -123,7 +121,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001002,
     count: 1,
-    countsByMinute: '{{11,1}}',
+    countsByMinute: [[11, 1]],
     totalDurationInMinutes: 1
   },
   {
@@ -131,7 +129,7 @@ export const rawRecordingBySiteHour: Array<Omit<RecordingBySiteHour, 'createdAt'
     locationProjectId: 20001001,
     locationSiteId: 20001001,
     count: 3,
-    countsByMinute: '{{11,1}, {14,1}, {17,1}}',
+    countsByMinute: [[11, 1], [14, 1], [17, 1]],
     totalDurationInMinutes: 3
   }
 ]
@@ -179,35 +177,25 @@ export const rawDetectionBySiteSpeciesHour: Array<Omit<DetectionBySiteSpeciesHou
   }
 ]
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
   // Create mocked project
   const projects: Project[] = [testProject]
-    await ModelRepository.getInstance(getSequelize())
-    .LocationProject
-    .bulkCreate(projects)
+  await models.LocationProject.bulkCreate(projects)
 
   // Create mocked projects versions
   const projectsVersions: ProjectVersion[] = [testProjectVersion]
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectVersion
-    .bulkCreate(projectsVersions)
+  await models.ProjectVersion.bulkCreate(projectsVersions)
 
   // Create mocked project sites
-  await ModelRepository.getInstance(getSequelize())
-    .LocationSite
-    .bulkCreate(testSites)
+  await models.LocationSite.bulkCreate(testSites)
 
   // Create mocked recordings
-  await ModelRepository.getInstance(getSequelize())
-    .RecordingBySiteHour
-    .bulkCreate(rawRecordingBySiteHour)
+  await models.RecordingBySiteHour
+    .bulkCreate(rawRecordingBySiteHour.map(r => literalizeCountsByMinute(r, sequelize)))
 
   // Create summary of mocked hourly validated detections
-  try {
-    await ModelRepository.getInstance(getSequelize())
-      .DetectionBySiteSpeciesHour
-      .bulkCreate(rawDetectionBySiteSpeciesHour)
-  } catch (err) {
-    console.error(err)
-  }
+  await models.DetectionBySiteSpeciesHour
+    .bulkCreate(rawDetectionBySiteSpeciesHour.map(r => literalizeCountsByMinute(r, sequelize)))
 }
