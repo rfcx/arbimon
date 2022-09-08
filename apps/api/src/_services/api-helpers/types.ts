@@ -1,33 +1,33 @@
-import { FastifyReply, FastifySchema, HTTPMethods, preValidationHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
+import { FastifyReply, FastifySchema, HTTPMethods, preValidationHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestBodyDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
 import { ReplyDefault } from 'fastify/types/utils'
 
 import { NoExtraProps } from '@rfcx-bio/utils/utility-types'
 
 // For declaring handlers
-type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> = RouteHandlerMethod<
+type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault, Body = RequestBodyDefault> = RouteHandlerMethod<
   RawServerDefault,
   RawRequestDefaultExpression<RawServerDefault>,
   RawReplyDefaultExpression<RawServerDefault>,
-  { Params: Params, Reply: Response, Querystring: Querystring },
+  { Params: Params, Reply: Response, Querystring: Querystring, Body: Body },
   unknown
 >
 
-type FastifyHandlerRequest<Response, Params, Querystring> = Parameters<FastifyHandler<Response, Params, Querystring>>[0]
+type FastifyHandlerRequest<Response, Params, Querystring, Body> = Parameters<FastifyHandler<Response, Params, Querystring, Body>>[0]
 
-export type Handler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> =
-  (req: FastifyHandlerRequest<Response, Params, Querystring>, res: FastifyReply) => Promise<NoExtraProps<Response>>
+export type Handler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault, Body = RequestBodyDefault> =
+  (req: FastifyHandlerRequest<Response, Params, Querystring, Body>, res: FastifyReply) => Promise<NoExtraProps<Response>>
 
-export type Middleware<Params = RequestParamsDefault, Querystring = RequestQuerystringDefault> =
-  (req: FastifyHandlerRequest<void, Params, Querystring>, res: FastifyReply) => Promise<void>
+export type Middleware<Params = RequestParamsDefault, Querystring = RequestQuerystringDefault, Body = RequestBodyDefault> =
+  (req: FastifyHandlerRequest<void, Params, Querystring, Body>, res: FastifyReply) => Promise<void>
 
 // For exporting routes
-export interface RouteRegistration<Response = any, Params = any, Querystring = any> {
+export interface RouteRegistration<Response = any, Params = any, Querystring = any, Body = any> {
   method: HTTPMethods
   url: string
   schema?: FastifySchema
   preValidation?: preValidationHookHandler[]
   preHandler?: Array<Middleware<Params, Querystring>>
-  handler: Handler<Response, Params, Querystring>
+  handler: Handler<Response, Params, Querystring, Body>
 }
 
 // Export convenient aliases
