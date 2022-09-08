@@ -4,6 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncError } from '@rfcx-bio/common/dao/types'
 
 import { DetectionArbimon, DetectionBySiteSpeciesHourBio, transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
+import { literalIntegerArray2D, literalizeCountsByMinute, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
 
 const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHourBio[], detectionArbimon: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
@@ -45,7 +46,7 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
     // Insert new or updated items
     if (itemsToInsertOrUpsert.length) {
       const rows = itemsToInsertOrUpsert.map(group => {
-        return { ...group, countsByMinute: JSON.stringify([...new Set([...group.countsByMinute])].sort((a, b) => a[0] - b[0])).replace('[', '{').replace(']', '}') }
+        return { ...group, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(group.countsByMinute), sequelize) }
       })
       // @ts-expect-error
       await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, { transaction })

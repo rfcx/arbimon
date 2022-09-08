@@ -305,12 +305,10 @@ describe('ingest > sync', () => {
 
       // Act
       const updatedSyncStatus = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, { ...syncStatus, syncBatchLimit: 100 })
-      const actual = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({
-        raw: true
-      })
 
       // Assert
       expect(updatedSyncStatus).toBeTypeOf('object')
+      const actual = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({ raw: true })
       expect(actual).toHaveLength(3)
     })
   })
