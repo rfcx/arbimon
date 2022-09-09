@@ -11,7 +11,8 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     latitudeNorth: 0,
     latitudeSouth: 0,
     longitudeEast: 0,
-    longitudeWest: 0
+    longitudeWest: 0,
+    deletedAt: null
   }
 
   test('succeeds for valid data', async () => {

@@ -5,12 +5,18 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-project'
 import { SyncQueryParams } from './sync-query-params'
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
 const SQL_INSERT_PROJECT = `
   INSERT INTO projects (project_id, name, url, description, project_type_id, is_private, is_enabled, current_plan, storage_usage, processing_usage, pattern_matching_enabled, citizen_scientist_enabled, cnn_enabled, aed_enabled, clustering_enabled, external_id, featured, created_at, updated_at, deleted_at, image, reports_enabled)
   VALUES ($projectId, $name, $url, $description, $projectTypeId, $isPrivate, $isEnabled, $currentPlan, $storageUsage, $processingUsage, $patternMatchingEnabled, $citizenScientistEnabled, $cnnEnabled, $aedEnabled, $clusteringEnabled, $externalId, $featured, $createdAt, $updatedAt, $deletedAt, $image, $reportsEnabled);
+`
+
+const SQL_UPDATE_PROJECT = `
+  UPDATE projects SET is_private = $isPrivate, updated_at = $updatedAt, deleted_at = $deletedAt
+  WHERE project_id = $projectId
 `
 
 const SQL_INSERT_SITE = `
@@ -125,7 +131,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
       syncUntilId: '0',
       syncBatchLimit: 1
     }
-    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'updatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'updatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest', 'deletedAt']
 
     // Act
     const actual = await getArbimonProjects(arbimonSequelize, params)
@@ -172,5 +178,26 @@ describe('ingest > inputs > getArbimonProjects', () => {
 
     // Assert
     expect(actual).toHaveLength(6)
+  })
+
+  test('can get deleted projects', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1927, name: 'RFCx 8', url: 'rfcx-8', externalId: '807cuoi3cvwi8', createdAt: '2022-08-28T12:00:00.000Z', updatedAt: '2022-08-29T12:00:00.000Z', deletedAt: null } })
+
+    await arbimonSequelize.query(SQL_UPDATE_PROJECT, { bind: { projectId: 1927, isPrivate: 0, updatedAt: '2022-08-29T16:00:00.000Z', deletedAt: '2022-08-29T16:00:00.000Z' } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 100
+    }
+
+    // Act
+    const actual = await getArbimonProjects(arbimonSequelize, params) as ProjectArbimon[]
+    const [project] = actual.filter(project => project.idArbimon === 1927)
+
+    // Assert
+    expect(project).toBeDefined()
+    expect(project.deletedAt).toBe('2022-08-29T16:00:00.000Z')
   })
 })
