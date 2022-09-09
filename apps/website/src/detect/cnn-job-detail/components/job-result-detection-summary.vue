@@ -1,6 +1,6 @@
 <template>
   <div class="job-result-detection-summary-wrapper">
-    <span class="job-result-detection-summary-header text-subtle text-sm">Detection summary</span>
+    <h3 class="job-result-detection-summary-header text-subtle text-sm mb-2">Detection summary</h3>
     <div class="job-result-detection-summary-detail mt-2 grid grid-cols-12 gap-2">
       <template
         v-for="(column, idx) in [displaySpeciesColumn1, displaySpeciesColumn2]"
@@ -12,7 +12,7 @@
               v-for="item in column"
               :key="'validation-status-' + item.label"
             >
-              <div class="col-span-1 justify-self-center">
+              <div class="col-span-1 justify-self-start font-semibold text-right">
                 {{ displayValue(item.value) }}
               </div>
               <div class="col-span-5 truncate">

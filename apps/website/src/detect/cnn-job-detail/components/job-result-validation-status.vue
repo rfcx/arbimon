@@ -1,17 +1,15 @@
 <template>
   <div class="job-result-validation-status-wrapper">
-    <span class="job-result-validation-status-header text-subtle text-sm">Validation status</span>
-    <div class="job-result-validation-status-detail mt-2 grid grid-cols-4 <lg:grid-cols-9 <sm:grid-cols-6 gap-2">
+    <h3 class="job-result-validation-status-header text-subtle text-sm mb-2">
+      Validation status
+    </h3>
+    <div class="grid grid-cols-6 gap-2">
       <template
         v-for="item in details"
         :key="'validation-status-' + item.label"
       >
-        <div class="col-span-1 <lg:col-span-3 <md:col-span-1 <sm:col-span-1 justify-self-end">
-          {{ displayValue(item.value) }}
-        </div>
-        <div class="col-span-3 <lg:col-span-6 <md:col-span-8 <sm:col-span-5">
-          {{ item.label }}
-        </div>
+        <span class="font-semibold col-span-1 <md:col-span-1 <lg:col-span-2">{{ displayValue(item.value) }}</span>
+        <span class="ml-2 col-span-5 <md:col-span-5 <lg:col-span-4">{{ item.label }}</span>
       </template>
     </div>
   </div>

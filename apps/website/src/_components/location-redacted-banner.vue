@@ -3,13 +3,11 @@
     <div>
       <icon-fa-exclamation-triangle class="text-lg text-warning" />
     </div>
-    <div class="text-lg ml-4">
-      <div>
+    <p class="text-lg ml-4">
         The location data for this species is protected.
-      </div>
       <!-- <div class="text-xs">
         If you are a project team member, you must login to access this data.
       </div> -->
-    </div>
+    </p>
   </div>
 </template>
