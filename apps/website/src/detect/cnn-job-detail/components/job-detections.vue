@@ -4,9 +4,9 @@
       v-for="species in allSpecies"
       :key="'job-detections-' + species.speciesName"
     >
-      <div class="species-title text-lg">
+      <h3 class="species-title text-lg mt-4">
         {{ species.speciesName }}
-      </div>
+      </h3>
       <div
         v-for="(media, idx) in displaySpecies(species.media)"
         :key="'job-detection-media-' + species.speciesName + idx"
@@ -43,7 +43,7 @@ const route = useRoute()
 const jobId = computed(() => route.params.jobId)
 
 const allSpecies = computed(() => {
-  const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Pongo pygmaeus', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii, Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
+  const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii', 'Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
   const species = []
   for (let index = 0; index < 2; index++) {
     const rd = Math.floor(Math.random() * 30)
