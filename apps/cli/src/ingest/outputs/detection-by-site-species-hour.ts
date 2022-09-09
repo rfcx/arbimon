@@ -3,8 +3,8 @@ import { Sequelize, Transaction } from 'sequelize'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { SyncError } from '@rfcx-bio/common/dao/types'
 
+import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
 import { DetectionArbimon, DetectionBySiteSpeciesHourBio, transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
-import { literalIntegerArray2D, literalizeCountsByMinute, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
 
 const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHourBio[], detectionArbimon: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []

@@ -1,7 +1,8 @@
 import { Op, Sequelize } from 'sequelize'
+import { SafeParseReturnType, z } from 'zod'
+
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
-import { SafeParseReturnType, z } from 'zod'
 
 const ProjectArbimonSchema = z.object({
   idArbimon: z.number(),
@@ -35,5 +36,5 @@ export const getTransformedProjects = async (projects: ProjectArbimon[], sequeli
     raw: true
   }) as unknown as Project[]
 
-  return [ itemsToInsertOrUpsert, itemsToDelete ]
+  return [itemsToInsertOrUpsert, itemsToDelete]
 }

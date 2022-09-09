@@ -4,8 +4,8 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-project'
-import { SyncQueryParams } from './sync-query-params'
 import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
