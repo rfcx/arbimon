@@ -5,7 +5,7 @@ import { apiPostOrUndefined } from '@rfcx-bio/utils/api'
 // Request type
 export interface DetectValidation {
   dateStart: string
-  streamId: string
+  siteId: string
   classificationId: number
   statusId: number
 }
