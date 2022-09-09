@@ -66,7 +66,7 @@ import FilterModal from './job-result-filter-modal.vue'
 import { ValidationFilterConfig } from './types'
 
 const displayFilterModal = ref(false)
-const displayType = ref<'list' | 'grid'>('list')
+// const displayType = ref<'list' | 'grid'>('list')
 const filterConfigs = reactive<ValidationFilterConfig>({
   threshold: 50, // slider return in percentage
   validationStatus: '',
