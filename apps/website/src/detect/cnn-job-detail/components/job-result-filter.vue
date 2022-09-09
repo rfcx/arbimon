@@ -51,22 +51,6 @@
       >
         <icon-fa-filter class="text-xs" />
       </button>
-      <button
-        class="btn btn-icon rounded-r-none ml-2"
-        :class="{ 'bg-brand-primary': displayType === 'list' }"
-        label="List view"
-        @click="displayType = 'list'"
-      >
-        <icon-fa-bars class="text-xs" />
-      </button>
-      <button
-        class="btn btn-icon border-l-2 rounded-l-none"
-        :class="{ 'bg-brand-primary': displayType === 'grid' }"
-        label="Grid view"
-        @click="displayType = 'grid'"
-      >
-        <icon-fa-th-large class="text-xs" />
-      </button>
     </div>
   </div>
   <filter-modal
