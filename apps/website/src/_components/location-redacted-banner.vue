@@ -4,7 +4,7 @@
       <icon-fa-exclamation-triangle class="text-lg text-warning" />
     </div>
     <p class="text-lg ml-4">
-        The location data for this species is protected.
+      The location data for this species is protected.
       <!-- <div class="text-xs">
         If you are a project team member, you must login to access this data.
       </div> -->

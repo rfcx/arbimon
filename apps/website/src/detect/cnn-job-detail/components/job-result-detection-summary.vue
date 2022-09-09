@@ -1,6 +1,8 @@
 <template>
   <div class="job-result-detection-summary-wrapper">
-    <h3 class="job-result-detection-summary-header text-subtle text-sm mb-2">Detection summary</h3>
+    <h3 class="job-result-detection-summary-header text-subtle text-sm mb-2">
+      Detection summary
+    </h3>
     <div class="job-result-detection-summary-detail mt-2 grid grid-cols-12 gap-2">
       <template
         v-for="(column, idx) in [displaySpeciesColumn1, displaySpeciesColumn2]"

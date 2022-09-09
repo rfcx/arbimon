@@ -12,8 +12,7 @@
         :id="mapId"
         class="w-full text-black"
         :style="{ height: `${mapHeight}px` }"
-      >
-      </div>
+      />
       <div
         v-if="dataset.title"
         class="absolute text-lg bg-white top-2 left-2"
