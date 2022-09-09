@@ -30,7 +30,7 @@ export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: 
   await deleteProjects(itemsToReset as Project[], sequelize)
   // Insert/upsert projects
   try {
-    if ((itemsToInsertOrUpsert as Omit<Project, "id">[]).length) {
+    if ((itemsToInsertOrUpsert as Array<Omit<Project, 'id'>>).length > 0) {
       await ModelRepository.getInstance(sequelize)
         .LocationProject
         .bulkCreate(itemsToInsertOrUpsert, {
@@ -62,8 +62,8 @@ const deleteProjects = async (projects: Project[], sequelize: Sequelize, transac
     }
   } catch (err) {
     // TODO: Inform about the issue to the bio dev slack channel?
-    const ids = projects.map(project => project.id).map(String)
-    console.error(`> Error when deleting projects ${ids}`, err)
+    const ids = projects.map(project => project.id)
+    console.error('> Error when deleting projects', ids, err as Error)
   }
 }
 
