@@ -2,12 +2,12 @@ import { Op } from 'sequelize'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { Project, ProjectVersion, Site, SyncLogByProject } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
-import { writeProjectsToBio } from './projects'
 import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
-import { Project, ProjectVersion, Site, SyncLogByProject } from '@rfcx-bio/common/dao/types'
+import { writeProjectsToBio } from './projects'
 
 const biodiversitySequelize = await getSequelize()
 
@@ -146,7 +146,7 @@ describe('ingest > outputs > projects', () => {
     // Act
     await writeProjectsToBio([
       { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx 10000' },
-      { ...projectInput, idCore: '807cuoi3cv12', idArbimon: 10001, slug: 'rfcx-10001', name: 'RFCx 10001'}
+      { ...projectInput, idCore: '807cuoi3cv12', idArbimon: 10001, slug: 'rfcx-10001', name: 'RFCx 10001' }
     ], biodiversitySequelize)
 
     // Assert
@@ -155,7 +155,7 @@ describe('ingest > outputs > projects', () => {
 
     await writeProjectsToBio([
       { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx project deleted', deletedAt: '2022-08-29T16:00:00.000Z' },
-      { ...projectInput, idCore: '807cuoi3cv12', idArbimon: 10001, slug: 'rfcx-10001', name: 'RFCx project updated'}
+      { ...projectInput, idCore: '807cuoi3cv12', idArbimon: 10001, slug: 'rfcx-10001', name: 'RFCx project updated' }
     ], biodiversitySequelize)
 
     const [result] = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({ where })
