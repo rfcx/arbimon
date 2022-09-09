@@ -27,5 +27,6 @@ export const envKeysRequired = [
 export const envKeysOptional = [
   'NODE_ENV',
   'FASTIFY_PORT',
-  'FASTIFY_ADDRESS'
+  'FASTIFY_ADDRESS',
+  'IN_DEVELOP'
 ] as const
