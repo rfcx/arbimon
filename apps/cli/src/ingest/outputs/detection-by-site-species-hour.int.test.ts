@@ -120,14 +120,12 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     // Act
     await writeDetectionsToBio([
-      { ...DETECTION_INPUT, idArbimon: 2391044, datetime: '2020-12-06 11:30:19' },
       { ...DETECTION_INPUT, present: null } // Remove
     ], biodiversitySequelize)
 
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
-    expect(detections).toHaveLength(1)
-    expect(detections[0].countsByMinute).toEqual([[30, 1]])
+    expect(detections).toHaveLength(0)
   })
 
   test('can remove a detection hour (without removing the row)', async () => {
@@ -140,6 +138,22 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     // Act
     await writeDetectionsToBio([
+      { ...DETECTION_INPUT, present: null } // Remove
+    ], biodiversitySequelize)
+
+    // Assert
+    const detections = await DetectionBySiteSpeciesHour.findAll()
+    expect(detections).toHaveLength(1)
+    expect(detections[0].countsByMinute).toEqual([[30, 1]])
+  })
+
+  test('can remove a detection hour (and remove the row) and insert a new detection hour', async () => {
+    // Arrange
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+
+    // Act
+    await writeDetectionsToBio([
+      { ...DETECTION_INPUT, idArbimon: 2391044, datetime: '2020-12-06 11:30:19' },
       { ...DETECTION_INPUT, present: null } // Remove
     ], biodiversitySequelize)
 
@@ -217,18 +231,40 @@ describe('ingest > outputs > detection by site species hour', async () => {
     detections.forEach(item => expect(item.countsByMinute).toEqual([[6, 1]]))
   })
 
-  test('can count duplicate/overlapping detections', async () => {
-    // Act
-    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
-    const duplicateDetection = { ...DETECTION_INPUT, idArbimon: 2391044 }
+  test('can count overlapping detections in the same batch', async () => {
+    // there are several site's recordings with the same datetime
+    // and the user added overlapping validation on another recording with the same datetime like on the existing recording
+
+    // Arrange
+    const overlappingDetection = { ...DETECTION_INPUT, idArbimon: 2391044 }
 
     // Act
-    await writeDetectionsToBio([duplicateDetection], biodiversitySequelize)
+    await writeDetectionsToBio([DETECTION_INPUT, overlappingDetection], biodiversitySequelize)
 
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(1)
     expect(detections[0].count).toBe(1)
     expect(detections[0].countsByMinute).toEqual([[6, 2]])
+  })
+
+  test('can not count duplicate/overlapping detections in the different batches', async () => {
+    // Why do we get this detection again?
+    // 1. the user increased/decreased present_review column
+    // 2. there are several site's recordings with the same datetime
+    // and the user added overlapping validation on another recording with the same datetime like on the existing recording
+
+    // Arrange
+    const overlappingDetection = { ...DETECTION_INPUT, idArbimon: 2391044 }
+
+    // Act
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+    await writeDetectionsToBio([overlappingDetection], biodiversitySequelize)
+
+    // Assert
+    const detections = await DetectionBySiteSpeciesHour.findAll()
+    expect(detections).toHaveLength(1)
+    expect(detections[0].count).toBe(1)
+    expect(detections[0].countsByMinute).toEqual([[6, 1]])
   })
 })
