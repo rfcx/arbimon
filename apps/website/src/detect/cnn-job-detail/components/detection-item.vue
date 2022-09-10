@@ -57,10 +57,10 @@ const playing = ref(false)
 onMounted(async () => {
   spectrogramLoading.value = true
   const spectrogramBlob = props.spectrogramUrl ? await apiBioGetCoreMedia(apiClientBio, props.spectrogramUrl) : null
-  if (spectrogramBlob) {
-    spectrogram.value = window.URL.createObjectURL(spectrogramBlob)
-  }
   spectrogramLoading.value = false
+
+  if (!spectrogramBlob) return
+  spectrogram.value = window.URL.createObjectURL(spectrogramBlob)
 })
 
 onBeforeUnmount(() => {
@@ -92,10 +92,10 @@ const play = async () => {
   if (!audio.value) {
     audioLoading.value = true
     const audioBlob = props.audioUrl ? await apiBioGetCoreMedia(apiClientBio, props.audioUrl) : null
-    if (audioBlob) {
-      setAudio(audioBlob)
-    }
     audioLoading.value = false
+
+    if (!audioBlob) return
+    setAudio(audioBlob)
   }
   audio.value?.play()
 }
