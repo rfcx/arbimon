@@ -51,22 +51,6 @@
       >
         <icon-fa-filter class="text-xs" />
       </button>
-      <button
-        class="btn btn-icon rounded-r-none ml-2"
-        :class="{ 'bg-brand-primary': displayType === 'list' }"
-        label="List view"
-        @click="displayType = 'list'"
-      >
-        <icon-fa-bars class="text-xs" />
-      </button>
-      <button
-        class="btn btn-icon border-l-2 rounded-l-none"
-        :class="{ 'bg-brand-primary': displayType === 'grid' }"
-        label="Grid view"
-        @click="displayType = 'grid'"
-      >
-        <icon-fa-th-large class="text-xs" />
-      </button>
     </div>
   </div>
   <filter-modal
@@ -82,7 +66,7 @@ import FilterModal from './job-result-filter-modal.vue'
 import { ValidationFilterConfig } from './types'
 
 const displayFilterModal = ref(false)
-const displayType = ref<'list' | 'grid'>('list')
+// const displayType = ref<'list' | 'grid'>('list')
 const filterConfigs = reactive<ValidationFilterConfig>({
   threshold: 50, // slider return in percentage
   validationStatus: '',

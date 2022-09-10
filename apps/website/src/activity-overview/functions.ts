@@ -29,9 +29,9 @@ export interface CsvData {
 
 export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[]): MapDataSet[] {
   const maximumNumbers: Array<[number, number]> = datasets.map(({ activityBySite }) => {
-    const detectionCounts = activityBySite.map(({ totalDetectionCount }) => totalDetectionCount)
+    const detectionMinutesCounts = activityBySite.map(d => d.count)
     const detectionFrequencies = activityBySite.map(({ detectionFrequency }) => detectionFrequency)
-    return [Math.max(0, ...detectionCounts), Math.max(0, ...detectionFrequencies)]
+    return [Math.max(0, ...detectionMinutesCounts), Math.max(0, ...detectionFrequencies)]
   })
 
   const maxValues = {
@@ -40,12 +40,12 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
   }
 
   return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
-    const data = activityBySite.map(({ siteName, latitude, longitude, totalDetectionCount, detectionFrequency, occupancy }) => ({
+    const data = activityBySite.map(({ siteName, latitude, longitude, count, detectionFrequency, occupancy }) => ({
       siteName,
       latitude,
       longitude,
       distinctSpecies: {
-        [ACTIVITY_OVERVIEW_MAP_KEYS.totalDetectionCount]: totalDetectionCount,
+        [ACTIVITY_OVERVIEW_MAP_KEYS.totalDetectionCount]: count,
         [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency,
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }
@@ -58,7 +58,7 @@ export async function exportCSV (filters: ColoredFilter[], datasets: ActivityOve
   const sortedDatasets = datasets.map(dataset => {
     return dataset.sort((a, b) => a.scientificName.localeCompare(b.scientificName) ||
       a.taxon.localeCompare(b.taxon) ||
-      a.detectionCount - b.detectionCount ||
+      a.detectionMinutesCount - b.detectionMinutesCount ||
       a.occupiedSites - b.occupiedSites)
   })
 
@@ -85,10 +85,10 @@ export async function getCSVData (dataset: ActivityOverviewDataBySpecies[]): Pro
 }
 
 function getJsonForDataset (dataset: ActivityOverviewDataBySpecies[]): CsvData[] {
-  return dataset.map(({ scientificName, taxon, detectionCount, detectionFrequency, occupiedSites, occupancyNaive }) => ({
+  return dataset.map(({ scientificName, taxon, detectionMinutesCount, detectionFrequency, occupiedSites, occupancyNaive }) => ({
     'species name': scientificName,
     'taxonomy class': taxon,
-    'number of detections': detectionCount,
+    'number of detections': detectionMinutesCount,
     'detection frequency': detectionFrequency,
     'number of occupied sites': occupiedSites,
     'naive occupancy': occupancyNaive

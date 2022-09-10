@@ -24,8 +24,7 @@ export interface ActivityOverviewDetectionDataBySite {
   siteName: string
   latitude: number
   longitude: number
-  totalDetectionCount: number
-  totalDetectionMinutes: number
+  count: number
   detectionFrequency: number
   occupancy: boolean
 }
@@ -33,7 +32,7 @@ export interface ActivityOverviewDetectionDataBySite {
 export interface ActivityOverviewRecordingDataBySite {
   siteId: number
   siteName: string
-  totalRecordingMinutes: number
+  count: number
 }
 
 export interface ActivityOverviewDetectionDataByTime {
@@ -45,7 +44,7 @@ export interface ActivityOverviewDataBySpecies {
   scientificName: string
   commonName: string
   taxon: string
-  detectionCount: number
+  detectionMinutesCount: number
   detectionFrequency: number
   occupiedSites: number
   occupancyNaive: number

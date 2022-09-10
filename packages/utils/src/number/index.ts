@@ -13,7 +13,7 @@ export const firstDiffDigit = (newVal: number, oldVal: number): number => {
 }
 
 export const displayValue = (value: number): string => {
-  if (value > 99_999) return numeral(value).format('0 a')
+  if (value > 99_999) return numeral(value).format('0a')
 
   return numeral(value).format('0,0')
 }

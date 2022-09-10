@@ -19,7 +19,7 @@ export interface SpeciesDataset {
 }
 
 type SortableColumn = 'scientificName'| 'taxon' | SortableDetail
-type SortableDetail = 'detectionCount' | 'detectionFrequency' | 'occupiedSites' | 'occupancyNaive'
+type SortableDetail = 'detectionMinutesCount' | 'detectionFrequency' | 'occupiedSites' | 'occupancyNaive'
 type SortDirection = 1 | -1
 
 const SORT_ASC: SortDirection = 1
@@ -33,11 +33,11 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
     defaultDirection: SORT_ASC,
     sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon) || e1.scientificName.localeCompare(e2.scientificName)
   },
-  detectionCount: {
+  detectionMinutesCount: {
     defaultDirection: SORT_DESC,
     sortFunction: (e1, e2) => {
-      const details1 = Math.max(...e1.details.map(({ detectionCount }) => detectionCount))
-      const details2 = Math.max(...e2.details.map(({ detectionCount }) => detectionCount))
+      const details1 = Math.max(...e1.details.map(({ detectionMinutesCount }) => detectionMinutesCount))
+      const details2 = Math.max(...e2.details.map(({ detectionMinutesCount }) => detectionMinutesCount))
       return details2 - details1 || e1.scientificName.localeCompare(e2.scientificName)
     }
   },
@@ -75,7 +75,7 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   pageIndex = 1 // 1-based for humans
   sortColumn: SortableColumn = 'scientificName'
-  sortDetail: SortableDetail = 'detectionCount'
+  sortDetail: SortableDetail = 'detectionMinutesCount'
   sortDirection: SortDirection = SORTABLE_COLUMNS.scientificName.defaultDirection
   formattedDatasets: ActivityOverviewBySpeciesDataset[] = []
 
@@ -83,7 +83,7 @@ export default class ActivityOverviewBySpecies extends Vue {
     return [
       { title: 'Species name', key: 'scientificName' },
       { title: 'Class', key: 'taxon' },
-      { title: 'Detection', key: 'detectionCount' },
+      { title: 'Detection', key: 'detectionMinutesCount' },
       { title: 'Detection frequency', key: 'detectionFrequency' },
       { title: 'Occupied sites', key: 'occupiedSites' },
       { title: 'Naive Occupancy', key: 'occupancyNaive' }

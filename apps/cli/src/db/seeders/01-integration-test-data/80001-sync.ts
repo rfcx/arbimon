@@ -1,13 +1,9 @@
-// @ts-nocheck
-// ignore because `recordedMinutes` is array and array symbol for sequelize is `{}`
 import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project, ProjectVersion, Site, SyncLogByProject } from '@rfcx-bio/common/dao/types'
-
-import { getSequelize } from '@/db/connections'
 
 // Mocked project, site, recordings, detections
 export const testProject: Project = {
@@ -52,7 +48,7 @@ export const testSites: Site[] = [
   }
 ]
 
-export const testSyncLogProject: SyncLogByProject = {
+export const testSyncLogProject: Omit<SyncLogByProject, 'createdAt' | 'updatedAt'> = {
   id: 1,
   locationProjectId: testProject.id,
   syncSourceId: masterSources.Arbimon.id,
@@ -60,7 +56,7 @@ export const testSyncLogProject: SyncLogByProject = {
   delta: 1
 }
 
-export const testSyncLogSites: SyncLogByProject = {
+export const testSyncLogSites: Omit<SyncLogByProject, 'createdAt' | 'updatedAt'> = {
   id: 2,
   locationProjectId: testProject.id,
   syncSourceId: masterSources.Arbimon.id,
@@ -68,25 +64,19 @@ export const testSyncLogSites: SyncLogByProject = {
   delta: 2
 }
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  const models = ModelRepository.getInstance(sequelize)
+
   // Create projects and versions
   const projects: Project[] = [testProject]
-    await ModelRepository.getInstance(getSequelize())
-    .LocationProject
-    .bulkCreate(projects)
+  await models.LocationProject.bulkCreate(projects)
   const projectsVersions: ProjectVersion[] = [testProjectVersion]
-  await ModelRepository.getInstance(getSequelize())
-    .ProjectVersion
-    .bulkCreate(projectsVersions)
+  await models.ProjectVersion.bulkCreate(projectsVersions)
 
   // Create sites
-  await ModelRepository.getInstance(getSequelize())
-    .LocationSite
-    .bulkCreate(testSites)
+  await models.LocationSite.bulkCreate(testSites)
 
   // Create sync logs for projects and sites
-  const logs: [any] = [testSyncLogProject, testSyncLogSites]
-  await ModelRepository.getInstance(getSequelize())
-    .SyncLogByProject
-    .bulkCreate(logs)
+  const logs: any[] = [testSyncLogProject, testSyncLogSites]
+  await models.SyncLogByProject.bulkCreate(logs)
 }

@@ -80,7 +80,7 @@
                   {{ row.taxon }}
                 </td>
                 <td class="p-2 text-center">
-                  {{ getFormattedNumber(row.details[0].detectionCount) }}
+                  {{ getFormattedNumber(row.details[0].detectionMinutesCount) }}
                 </td>
                 <td class="p-2 text-center">
                   {{ getThreeDecimalNumber(row.details[0].detectionFrequency) }}
@@ -113,7 +113,7 @@
                   {{ row.taxon }}
                 </td>
                 <td class="p-2 text-center">
-                  {{ getFormattedNumber(speciesData.detectionCount) }}
+                  {{ getFormattedNumber(speciesData.detectionMinutesCount) }}
                 </td>
                 <td class="p-2 text-center">
                   {{ getThreeDecimalNumber(speciesData.detectionFrequency) }}

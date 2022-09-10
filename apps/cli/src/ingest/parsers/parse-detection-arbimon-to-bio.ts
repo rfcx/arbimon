@@ -1,4 +1,4 @@
-import { ceil, groupBy } from 'lodash-es'
+import { groupBy } from 'lodash-es'
 import { Op, Sequelize } from 'sequelize'
 import { SafeParseReturnType, z } from 'zod'
 
@@ -6,15 +6,14 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 interface RecordingData {
-  detectionMinutes: number[]
-  durationMinutes: number
+  countsByMinute: number[][]
 }
 
 const DetectionArbimonSchema = z.object({
   idArbimon: z.number(),
   datetime: z.string(), // recording datetime
   siteId: z.number(),
-  recordingDuration: z.number(), // TODO Remove
+  recordingDuration: z.number(),
   speciesId: z.number(),
   present: z.number().nullable(),
   presentReview: z.number(),
@@ -29,8 +28,7 @@ const DetectionBySiteSpeciesHourBioSchema = z.object({
   locationProjectId: z.number(),
   taxonClassId: z.number(),
   count: z.number(),
-  durationMinutes: z.number(),
-  detectionMinutes: z.array(z.number())
+  countsByMinute: z.array(z.array(z.number()))
 })
 
 export type DetectionArbimon = z.infer<typeof DetectionArbimonSchema>
@@ -46,20 +44,19 @@ function isValidated (val: DetectionArbimon): boolean {
 function filterRepeatingDetectionMinutes (group: DetectionArbimon[]): RecordingData {
   return group.reduce((acc, cur) => {
     const minute = dayjs(cur.datetime).minute()
-      if (!acc.detectionMinutes.includes(minute)) {
-        acc.detectionMinutes.push(minute)
-        acc.durationMinutes += cur.recordingDuration
+      // TODO check counts logic by unit testing
+      const index = acc.countsByMinute.findIndex((pair) => pair[0] === minute)
+      if (index === -1) {
+        acc.countsByMinute.push([minute, 1])
+      } else {
+        acc.countsByMinute[index][1] = acc.countsByMinute[index][1] + 1
       }
       return acc
-    }, { detectionMinutes: [] as number[], durationMinutes: 0 })
+    }, { countsByMinute: [] as number[][] })
 }
 
 const getTimePrecisionHourLocal = (datetime: string): string => {
   return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00') // string of date e.g. 2020-12-06 10:00:00
-}
-
-const floorValue = (n: number): number => {
-  return ceil(n, 2)
 }
 
 export const transformDetectionArbimonToBio = async (detectionArbimon: DetectionArbimon[], sequelize: Sequelize): Promise<DetectionBySiteSpeciesHourBio[][]> => {
@@ -104,8 +101,6 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
         if (filteredArbimonDetectionsByValidation.length) {
           const site = biodiversitySites.find(site => site.idArbimon === group[0].siteId)
 
-          // filter repeating recordings datetime to avoid inserting duplicate of
-          // recordings durationMinutes and detectionMinutes
           const recordingData = filterRepeatingDetectionMinutes(filteredArbimonDetectionsByValidation)
 
           itemsToInsertOrUpsert.push({
@@ -114,45 +109,41 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
             locationSiteId: site?.id ?? -1,
             taxonSpeciesId: taxonSpeciesId ?? -1,
             taxonClassId: biodiversitySpecies.find(species => species.idArbimon === group[0].speciesId)?.taxonClassId ?? -1,
-            count: filteredArbimonDetectionsByValidation.length, // 1 - count of detection in the group
-            durationMinutes: floorValue(recordingData.durationMinutes / 60), // 3 - duration of recordings datetime minutes, related to this group by site/species/date/hour
-            detectionMinutes: recordingData.detectionMinutes // '10,25,55' - array of recordings datetime minutes (values), related to this group by site/species/date/hour
+            count: recordingData.countsByMinute.length, // 3 - count of detection in the group
+            countsByMinute: recordingData.countsByMinute // '{{10,1},{25,1},{55,1}}' - array of recordings datetime minutes (values), related to this group by site/species/date/hour
           })
         }
-      } else if (biodiversityDetection?.detectionMinutes !== undefined) {
+      } else if (biodiversityDetection?.countsByMinute !== undefined) {
         // detections to upsert
-        const count = biodiversityDetection.count
-        const detectionMinutes = biodiversityDetection.detectionMinutes
-        const durationMinutes = biodiversityDetection.durationMinutes
-        const detectionCountMinutes = {
-          count,
-          detectionMinutes,
-          durationMinutes
-        }
+        const countsByMinute = biodiversityDetection.countsByMinute
+
         group.forEach(dt => {
           const dtMinutes = dayjs(dt.datetime).minute()
+          const existingIndex = countsByMinute.findIndex(pair => pair[0] === dtMinutes)
+          const existing = existingIndex > -1
 
-          // filter repeating recordings detectionMinutes to avoid inserting duplicate of it
-          const existing = detectionCountMinutes?.detectionMinutes.includes(dtMinutes)
-
-          // If new detection exists and validated -> do nothing
-          // If new detection does not exist and not validated -> do nothing
-          // If new detection exists and not validated -> remove it
-          // If new detection do not exist and validated -> add it
+          // If a new detection exists and validated -> do nothing
+          // Why do we get this detection again?
+          // 1. the user increased/decreased present_review column
+          // 2. there are several site's recordings with the same datetime and the user added overlapping validation on another recording with the same datetime like on the existing recording
           if (existing && isValidated(dt)) return
+
+          // If new detection does not exist and not validated -> do nothing
           if (!existing && !isValidated(dt)) return
+
+          // If new detection exists and not validated -> remove it
           if (existing && !isValidated(dt)) {
-            detectionCountMinutes.count = detectionCountMinutes.count - 1
-            const index = detectionCountMinutes.detectionMinutes.findIndex(min => min === dtMinutes)
-            detectionCountMinutes.detectionMinutes.splice(index, 1)
-            detectionCountMinutes.durationMinutes = floorValue(detectionCountMinutes.durationMinutes - (dt.recordingDuration / 60))
+            countsByMinute[existingIndex][1] = countsByMinute[existingIndex][1] - 1
           }
+
+           // If new detection do not exist and validated -> add it
           if (!existing && isValidated(dt)) {
-            detectionCountMinutes.count = detectionCountMinutes.count + 1
-            detectionCountMinutes.detectionMinutes.push(dtMinutes)
-            detectionCountMinutes.durationMinutes = floorValue(detectionCountMinutes.durationMinutes + (dt.recordingDuration / 60))
+            countsByMinute.push([dtMinutes, 1])
           }
         })
+
+        // Keep the detections with count is not equal `0` in the countsByMinute: [[6, 0], [30, 1]] => [[30, 1]]
+        const filteredDetections = countsByMinute.filter(group => group[1] !== 0)
 
         const upsertOrDeleteGroup = {
           timePrecisionHourLocal: biodiversityDetection.timePrecisionHourLocal,
@@ -160,12 +151,14 @@ export const transformDetectionArbimonToBio = async (detectionArbimon: Detection
           taxonSpeciesId: biodiversityDetection.taxonSpeciesId,
           locationProjectId: biodiversityDetection.locationProjectId,
           taxonClassId: biodiversityDetection.taxonClassId,
-          durationMinutes: detectionCountMinutes.durationMinutes,
-          count: detectionCountMinutes.count,
-          detectionMinutes: detectionCountMinutes.detectionMinutes
+          count: filteredDetections.length,
+          countsByMinute: filteredDetections
         }
 
-        if (detectionCountMinutes.count === 0) itemsToDelete.push(upsertOrDeleteGroup)
+        // If a detection count is `0` in the countsByMinute -> remove this detection
+        const isDeletedDetection = upsertOrDeleteGroup.count === 0
+
+        if (isDeletedDetection) itemsToDelete.push(upsertOrDeleteGroup)
         else itemsToInsertOrUpsert.push(upsertOrDeleteGroup)
       }
     }

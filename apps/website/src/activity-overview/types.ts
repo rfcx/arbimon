@@ -16,7 +16,7 @@ export interface ActivityOverviewDataBySpecies {
   scientificName: string
   commonName: string
   taxon: string
-  detectionCount: number
+  detectionMinutesCount: number
   detectionFrequency: number
   occupiedSites: number
   occupancyNaive: number

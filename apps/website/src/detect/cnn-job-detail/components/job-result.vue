@@ -3,7 +3,9 @@
     <section-title>
       <template #title>
         <div class="flex justify-between items-center">
-          <span class="text-lg font-semibold">Results</span>
+          <h2 class="text-lg font-semibold">
+            Results
+          </h2>
         </div>
       </template>
       <template #controls>

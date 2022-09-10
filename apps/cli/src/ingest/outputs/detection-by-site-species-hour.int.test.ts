@@ -78,7 +78,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
     expect(detections).toHaveLength(1)
     expect(dayjs(detections[0]?.timePrecisionHourLocal).toDate()).toEqual(dayjs('2020-12-06T10:00:00.000Z').toDate())
     expect(detections[0].count).toBe(1)
-    expect(detections[0].detectionMinutes).toEqual([6])
+    expect(detections[0].countsByMinute).toEqual([[6, 1]])
   })
 
   test('can add a detection in an existing hour', async () => {
@@ -92,7 +92,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(1)
     expect(detections[0].count).toBe(2)
-    expect(detections[0].detectionMinutes).toEqual([6, 30])
+    expect(detections[0].countsByMinute).toEqual([[6, 1], [30, 1]])
   })
 
   test('can update the detections in an existing hour and insert a new detection hour', async () => {
@@ -110,8 +110,8 @@ describe('ingest > outputs > detection by site species hour', async () => {
     expect(detections).toHaveLength(2)
     expect(detections[0].count).toBe(2)
     expect(detections[1].count).toBe(1)
-    expect(detections[0].detectionMinutes).toEqual([6, 30])
-    expect(detections[1].detectionMinutes).toEqual([35])
+    expect(detections[0].countsByMinute).toEqual([[6, 1], [30, 1]])
+    expect(detections[1].countsByMinute).toEqual([[35, 1]])
   })
 
   test('can remove a detection hour (and remove the row)', async () => {
@@ -120,14 +120,12 @@ describe('ingest > outputs > detection by site species hour', async () => {
 
     // Act
     await writeDetectionsToBio([
-      { ...DETECTION_INPUT, idArbimon: 2391044, datetime: '2020-12-06 11:30:19' },
       { ...DETECTION_INPUT, present: null } // Remove
     ], biodiversitySequelize)
 
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
-    expect(detections).toHaveLength(1)
-    expect(detections[0].detectionMinutes).toEqual([30])
+    expect(detections).toHaveLength(0)
   })
 
   test('can remove a detection hour (without removing the row)', async () => {
@@ -146,7 +144,23 @@ describe('ingest > outputs > detection by site species hour', async () => {
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(1)
-    expect(detections[0].detectionMinutes).toEqual([30])
+    expect(detections[0].countsByMinute).toEqual([[30, 1]])
+  })
+
+  test('can remove a detection hour (and remove the row) and insert a new detection hour', async () => {
+    // Arrange
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+
+    // Act
+    await writeDetectionsToBio([
+      { ...DETECTION_INPUT, idArbimon: 2391044, datetime: '2020-12-06 11:30:19' },
+      { ...DETECTION_INPUT, present: null } // Remove
+    ], biodiversitySequelize)
+
+    // Assert
+    const detections = await DetectionBySiteSpeciesHour.findAll()
+    expect(detections).toHaveLength(1)
+    expect(detections[0].countsByMinute).toEqual([[30, 1]])
   })
 
   test('can update presentReview without removal (when present=1)', async () => {
@@ -160,7 +174,7 @@ describe('ingest > outputs > detection by site species hour', async () => {
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(1)
-    expect(detections[0].detectionMinutes).toEqual([6])
+    expect(detections[0].countsByMinute).toEqual([[6, 1]])
   })
 
   test('can ignore new not present and null validations', async () => {
@@ -214,253 +228,43 @@ describe('ingest > outputs > detection by site species hour', async () => {
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(2)
     detections.forEach(item => expect(item.count).toBe(1))
-    detections.forEach(item => expect(item.detectionMinutes).toEqual([6]))
+    detections.forEach(item => expect(item.countsByMinute).toEqual([[6, 1]]))
   })
 
-  test('ignore duplicate/overlapping detections', async () => {
-    // Act
-    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
-    const duplicateDetection = { ...DETECTION_INPUT, idArbimon: 2391044 }
+  test('can count overlapping detections in the same batch', async () => {
+    // there are several site's recordings with the same datetime
+    // and the user added overlapping validation on another recording with the same datetime like on the existing recording
+
+    // Arrange
+    const overlappingDetection = { ...DETECTION_INPUT, idArbimon: 2391044 }
 
     // Act
-    await writeDetectionsToBio([duplicateDetection], biodiversitySequelize)
+    await writeDetectionsToBio([DETECTION_INPUT, overlappingDetection], biodiversitySequelize)
 
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(1)
     expect(detections[0].count).toBe(1)
-    expect(detections[0].detectionMinutes).toEqual([6])
+    expect(detections[0].countsByMinute).toEqual([[6, 2]])
   })
 
-  // TODO Remove?
-  test('do not calculate the same durationMinutes and detectionMinutes - next batch', async () => {
+  test('can not count duplicate/overlapping detections in the different batches', async () => {
+    // Why do we get this detection again?
+    // 1. the user increased/decreased present_review column
+    // 2. there are several site's recordings with the same datetime
+    // and the user added overlapping validation on another recording with the same datetime like on the existing recording
+
     // Arrange
-    const DETECTION_INPUT_2: DetectionArbimon[] = [{
-      idArbimon: 2391043,
-      datetime: '2020-12-06 10:06:19', // repeating datetime
-      siteId: 88528,
-      recordingDuration: 90.24,
-      speciesId: 1050,
-      present: 1,
-      presentReview: 2,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    },
-    {
-      idArbimon: 2391044,
-      datetime: '2020-12-06 10:30:19',
-      siteId: 88528,
-      recordingDuration: 90.24,
-      speciesId: 1050,
-      present: 1,
-      presentReview: 0,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    }]
-    await writeDetectionsToBio([DETECTION_INPUT, DETECTION_INPUT_2[1]], biodiversitySequelize)
+    const overlappingDetection = { ...DETECTION_INPUT, idArbimon: 2391044 }
 
     // Act
-    await writeDetectionsToBio([DETECTION_INPUT, DETECTION_INPUT_2[0]], biodiversitySequelize)
+    await writeDetectionsToBio([DETECTION_INPUT], biodiversitySequelize)
+    await writeDetectionsToBio([overlappingDetection], biodiversitySequelize)
 
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(1)
-    expect(detections[0].count).toBe(2)
-    expect(detections[0].durationMinutes).toBe(3.01)
-    expect(detections[0].detectionMinutes).toEqual([6, 30])
-  })
-
-  // TODO Remove?
-  test('check logic with detections from the one "site/species/date/hour" group, but different songtypes', async () => {
-    // Arrange
-    const DETECTION_INPUT_2: DetectionArbimon[] = [{
-      idArbimon: 2391043,
-      datetime: '2020-12-06 10:00:19',
-      siteId: 88528,
-      recordingDuration: 90.24,
-      speciesId: 1050,
-      present: 1,
-      presentReview: 2,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    },
-    {
-      idArbimon: 2391044,
-      datetime: '2020-12-06 10:30:19',
-      siteId: 88528,
-      recordingDuration: 90.24,
-      speciesId: 1050,
-      present: 1,
-      presentReview: 0,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    },
-    {
-      idArbimon: 2391045,
-      datetime: '2020-12-06 10:20:50',
-      siteId: 88528,
-      recordingDuration: 90,
-      speciesId: 1050,
-      present: 0,
-      presentReview: 1,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    }]
-
-    // Act
-    await writeDetectionsToBio(DETECTION_INPUT_2, biodiversitySequelize)
-
-    // Assert
-    const detections = await DetectionBySiteSpeciesHour.findAll()
-    expect(detections).toHaveLength(1)
-    expect(detections[0].count).toBe(3)
-    expect(detections[0].durationMinutes).toBe(4.51)
-    expect(detections[0].detectionMinutes).toEqual([0, 30, 20])
-  })
-
-  // TODO Remove?
-  test('check logic with detections from the the one group, but different songtypes - insert, upsert and delete', async () => {
-    // Act
-    const DETECTION_INPUT_2: DetectionArbimon[] = [{
-      idArbimon: 2391043,
-      datetime: '2020-12-06 10:00:19',
-      siteId: 88528,
-      recordingDuration: 90.24,
-      speciesId: 1050,
-      present: 1,
-      presentReview: 2,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    },
-    {
-      idArbimon: 2391044,
-      datetime: '2020-12-06 10:30:19',
-      siteId: 88528,
-      recordingDuration: 90.24,
-      speciesId: 1050,
-      present: 1,
-      presentReview: 0,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    },
-    {
-      idArbimon: 2391045,
-      datetime: '2020-12-06 10:20:50',
-      siteId: 88528,
-      recordingDuration: 90,
-      speciesId: 1050,
-      present: 0,
-      presentReview: 1,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    },
-    {
-      idArbimon: 2391045,
-      datetime: '2020-12-06 10:20:50',
-      siteId: 88528,
-      recordingDuration: 90,
-      speciesId: 1050,
-      present: 0,
-      presentReview: 1,
-      presentAed: 0,
-      updatedAt: '2022-01-03T01:00:00.000Z'
-    }]
-
-    // Write first detections
-    await writeDetectionsToBio([DETECTION_INPUT_2[0], DETECTION_INPUT_2[2]], biodiversitySequelize)
-
-    // Write a final detection
-    await writeDetectionsToBio([DETECTION_INPUT_2[1]], biodiversitySequelize)
-    const detections = await DetectionBySiteSpeciesHour.findAll()
-
-    // Reset one detection from the group
-    await writeDetectionsToBio([{ ...DETECTION_INPUT_2[2], presentReview: 0, updatedAt: '2022-01-03T01:10:00.000Z' }], biodiversitySequelize)
-    const detections2 = await DetectionBySiteSpeciesHour.findAll()
-
-    // Assert
-
-    // Expected results for insert-upsert
-    expect(detections).toHaveLength(1)
-    expect(detections[0].count).toBe(3)
-    expect(detections[0].durationMinutes).toBe(4.52)
-    expect(detections[0].detectionMinutes).toEqual([0, 20, 30])
-
-    // Expected result for reset
-    expect(detections2).toHaveLength(1)
-    expect(detections2[0].count).toBe(2)
-    expect(detections2[0].durationMinutes).toBe(3.02)
-    expect(detections2[0].detectionMinutes).toEqual([0, 30])
-  })
-
-  // TODO: fix this case - how to catch/calculate repeating datetime (2 recordings in the one site with the same datetime)
-  // (2391015,7047504,1920,1017,12675,1,1,0,'2022-07-14 10:00:00'),
-  // (2391016,7047505,1920,1017,12675,2,1,0,'2022-07-14 10:30:00'),
-  // (2391017,7047506,1920,1017,12675,1,0,1,'2022-07-14 10:00:00'),
-
-  // site 123, species 12675, date 2022-07-14, hour 10 <- group
-  // count - 3
-  // duration minutes based on detection minutes which we filter by duplicate values
-  // detection minutes '0,30'
-  // duration minutes 90 + 90 / 60
-
-  // TODO Remove?
-  test('transformDetectionArbimonToBio works correct', async () => {
-    // Arrange
-    const TEST_DETECTIONS = [
-      {
-        idArbimon: 147132,
-        datetime: '2008-03-11T18:44:00Z',
-        siteId: 88528,
-        recordingDuration: 60.0,
-        speciesId: 1050,
-        present: 1,
-        presentReview: 1,
-        presentAed: 0,
-        updatedAt: '2022-06-23T18:03:47Z'
-      },
-      {
-        idArbimon: 147133,
-        datetime: '2008-03-11T18:54:00Z',
-        siteId: 88528,
-        recordingDuration: 60.0,
-        speciesId: 1050,
-        present: 1,
-        presentReview: 1,
-        presentAed: 0,
-        updatedAt: '2022-06-23T18:03:47Z'
-      },
-      {
-        idArbimon: 147134,
-        datetime: '2008-03-11T19:04:00Z',
-        siteId: 88528,
-        recordingDuration: 17.29,
-        speciesId: 1050,
-        present: 1,
-        presentReview: 1,
-        presentAed: 0,
-        updatedAt: '2022-06-23T18:03:47Z'
-      },
-      {
-        idArbimon: 147135,
-        datetime: '2008-03-11T20:09:00Z',
-        siteId: 88528,
-        recordingDuration: 60.0,
-        speciesId: 1050,
-        present: 1,
-        presentReview: 1,
-        presentAed: 0,
-        updatedAt: '2022-06-23T18:03:47Z'
-      }
-    ]
-
-    // Act
-    await writeDetectionsToBio(TEST_DETECTIONS, biodiversitySequelize)
-    const detections = await DetectionBySiteSpeciesHour.findAll()
-
-    // Assert
-    expect(detections).toHaveLength(3)
-    expect(detections[0].count).toBe(2)
-    expect(detections[0].durationMinutes).toBe(2)
-    expect(detections[0].detectionMinutes).toEqual([44, 54]) // {44,54}
+    expect(detections[0].count).toBe(1)
+    expect(detections[0].countsByMinute).toEqual([[6, 1]])
   })
 })

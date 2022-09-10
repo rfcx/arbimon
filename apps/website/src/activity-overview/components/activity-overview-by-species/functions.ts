@@ -9,7 +9,7 @@ export interface ActivityOverviewBySpeciesDataset {
 
 export interface ActivityOverviewBySpeciesDetail {
   datasetIdx: number
-  detectionCount: number
+  detectionMinutesCount: number
   detectionFrequency: number
   occupiedSites: number
   occupancyNaive: number
@@ -45,7 +45,7 @@ export function getFormatSpeciesDataset (rawSpeciesDataset: SpeciesDataset[]): A
     if (details.length < numberOfDatasets) {
       const addedIdxs = details.map(({ datasetIdx }) => datasetIdx)
       const missingIdxs = Array.from({ length: numberOfDatasets }, (_, idx) => idx).filter(n => !addedIdxs.includes(n))
-      missingIdxs.forEach(datasetIdx => details.push({ datasetIdx, detectionCount: 0, detectionFrequency: 0, occupiedSites: 0, occupancyNaive: 0 }))
+      missingIdxs.forEach(datasetIdx => details.push({ datasetIdx, detectionMinutesCount: 0, detectionFrequency: 0, occupiedSites: 0, occupancyNaive: 0 }))
     }
     details.sort((a, b) => a.datasetIdx - b.datasetIdx)
   }

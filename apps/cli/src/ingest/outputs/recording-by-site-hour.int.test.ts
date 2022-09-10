@@ -2,11 +2,12 @@ import { sum } from 'lodash-es'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, Site } from '@rfcx-bio/common/dao/types'
+import { Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { writeRecordingBySiteHourToBio } from './recording-by-site-hour'
 
 const biodiversitySequelize = await getSequelize()
@@ -17,7 +18,7 @@ describe('ingest > output > recording by site hour', () => {
     await deleteOutputProjects(biodiversitySequelize)
 
     // Batch project data before tests
-    const PROJECT_INPUT: Omit<Project, 'id'> = {
+    const PROJECT_INPUT: Omit<ProjectArbimon, 'id'> = {
       idArbimon: 1920,
       idCore: '807cuoi3cvw0',
       slug: 'rfcx-1',
@@ -25,7 +26,8 @@ describe('ingest > output > recording by site hour', () => {
       latitudeNorth: 0,
       latitudeSouth: 0,
       longitudeEast: 0,
-      longitudeWest: 0
+      longitudeWest: 0,
+      deletedAt: null
     }
     await ModelRepository.getInstance(biodiversitySequelize).LocationProject.bulkCreate([PROJECT_INPUT])
 
@@ -80,8 +82,8 @@ describe('ingest > output > recording by site hour', () => {
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
     expect(recordingBySiteHour.length).toBe(1)
     expect(recordingBySiteHour[0].totalDurationInMinutes).toBe(2.01)
-    expect(recordingBySiteHour[0].recordedMinutes[0]).toBe(0)
-    expect(recordingBySiteHour[0].recordingCount).toEqual(2)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2]])
+    expect(recordingBySiteHour[0].count).toEqual(1)
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
   })
 
@@ -116,9 +118,8 @@ describe('ingest > output > recording by site hour', () => {
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
 
     expect(recordingBySiteHour.length).toBe(2)
-    expect(recordingBySiteHour[0].recordedMinutes).toEqual([0, 20])
-    expect(recordingBySiteHour[0].recordedMinutes).toEqual(expect.arrayContaining([20]))
-    expect(sum(recordingBySiteHour.map(item => item.recordingCount))).toBe(4)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([0, 3])
+    expect(sum(recordingBySiteHour.map(item => item.count))).toBe(2)
   })
 
   test('can write new recordings by site hour for different sites', async () => {
