@@ -5,7 +5,7 @@ import { DetectionBySiteSpeciesHour } from '../types'
 
 export const MODEL_DETECTION_BY_SITE_SPECIES_HOUR = 'DetectionBySiteSpeciesHour'
 export const TABLE_DETECTION_BY_SITE_SPECIES_HOUR = 'detection_by_site_species_hour'
-export const UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR: Array<keyof DetectionBySiteSpeciesHour> = ['locationProjectId', 'taxonClassId', 'count', 'durationMinutes', 'detectionMinutes']
+export const UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR: Array<keyof DetectionBySiteSpeciesHour> = ['locationProjectId', 'taxonClassId', 'count', 'countsByMinute']
 
 export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySiteSpeciesHour>(
   MODEL_DETECTION_BY_SITE_SPECIES_HOUR,
@@ -29,12 +29,12 @@ export const DetectionBySiteSpeciesHourModel = defineWithDefaults<DetectionBySit
     taxonClassId: DataTypes.INTEGER,
 
     // Facts
-    count: DataTypes.INTEGER, // 1
-    durationMinutes: DataTypes.FLOAT,
-    detectionMinutes: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      defaultValue: null
-    }
+    // Count of the minutes where detections are present
+    count: DataTypes.INTEGER,
+    // Array of `(index,count)` pairs where `count` is the number of recordings at minute `index`
+    // Example: {{0,1},{5,2},{10,1}} => 1 recording in 0th minute, 2 recordings in the 5th minute, 1 recording in the 10th minute
+    // `index` is between 0 and 59, `count` is a positive integer
+    countsByMinute: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER))
   },
   {
     tableName: TABLE_DETECTION_BY_SITE_SPECIES_HOUR

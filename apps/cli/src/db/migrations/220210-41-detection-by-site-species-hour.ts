@@ -6,6 +6,8 @@
 import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
+import { TIMESTAMP_COLUMNS } from './_helpers/220331-timestamps'
+
 const TABLE_NAME = 'detection_by_site_species_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
@@ -36,14 +38,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       },
 
       // Logging
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
+      ...TIMESTAMP_COLUMNS,
 
       // Dimensions
       location_project_id: {
@@ -68,8 +63,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      duration_minutes: {
-        type: DataTypes.INTEGER,
+      counts_by_minute: {
+        type: DataTypes.ARRAY(DataTypes.ARRAY(DataTypes.INTEGER)),
         allowNull: false
       }
     }

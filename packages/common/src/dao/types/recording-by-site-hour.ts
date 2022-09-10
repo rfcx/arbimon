@@ -1,12 +1,12 @@
-import { attributes, AttributeTypes, WithDates } from '../type-helpers'
+import { attributes, AttributeTypes } from '../type-helpers'
 
-export interface RecordingBySiteHour extends WithDates {
+export interface RecordingBySiteHour {
   timePrecisionHourLocal: Date
   locationProjectId: number
   locationSiteId: number
+  count: number
+  countsByMinute: number[][]
   totalDurationInMinutes: number
-  recordedMinutes: number[]
-  recordingCount: number
 }
 
 export const ATTRIBUTES_RECORDING_BY_SITE_HOUR = attributes<RecordingBySiteHour>()({

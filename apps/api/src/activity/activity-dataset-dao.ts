@@ -23,16 +23,16 @@ export async function filterDetections (models: AllModels, filter: FilterDataset
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
-  return sum(detections.map(({ count }) => count))
+  return sum(detections.map(d => d.count))
 }
 
-export function getRecordingTotalDurationMinutes (recordingsBySite: ActivityOverviewRecordingDataBySite[]): number {
-  return sum(recordingsBySite.map(({ totalRecordingMinutes }) => totalRecordingMinutes))
+export function getTotalRecordedMinutes (recordingsBySite: ActivityOverviewRecordingDataBySite[]): number {
+  return sum(recordingsBySite.map(r => r.count))
 }
 
-function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordingDuration: number): number {
-  const totalDetectionsMinutes = sum(detections.map(({ durationMinutes }) => durationMinutes))
-  return totalDetectionsMinutes === 0 ? 0 : totalDetectionsMinutes / totalRecordingDuration
+function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): number {
+  const totalDetectionMinutes = calculateDetectionCount(detections)
+  return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordedMinutes
 }
 
 export function calculateOccupancy (totalSiteCount: number, occupiedSites: number): number {
@@ -62,21 +62,18 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
         latitude,
         longitude,
         total_detection_count as "totalDetectionCount",
-        total_detection_minutes as "totalDetectionMinutes",
         total_detection_count > 0 occupancy
     FROM (
         SELECT ls.id,
             ls.name,
             ls.latitude,
             ls.longitude,
-            coalesce(sum(detection_by_site_hour.count), 0)::integer as total_detection_count,
-            coalesce(sum(detection_by_site_hour.duration_minutes), 0)::integer as total_detection_minutes
+            coalesce(sum(detection_by_site_hour.count), 0)::integer as total_detection_count
         FROM location_site as ls
         LEFT JOIN (
             SELECT time_precision_hour_local,
                 location_site_id,
-                sum(count) as count,
-                sum(duration_minutes) as duration_minutes
+                sum(count) as count
             FROM detection_by_site_species_hour dbssh
             WHERE ${datasetConditions}
             GROUP BY dbssh.time_precision_hour_local, dbssh.location_site_id
@@ -91,7 +88,7 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
 }
 
 /**
- * Gets recordingsa by site based on input params
+ * Gets recordings by site based on input params
  * @param {number} filters.locationProjectId
  * @param {string} filters.startDateUtcInclusive
  * @param {string} filters.endDateUtcExclusive
@@ -116,7 +113,7 @@ export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDat
   const sql = `
     SELECT id as "siteId",
         name as "siteName",
-        duration_minutes as "totalRecordingMinutes"
+        count
     FROM (
         SELECT ls.id,
             ls.name,
@@ -149,7 +146,7 @@ export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDat
 
 export function getDetectionFrequencyBySite (detectionData: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency, allRecordings: ActivityOverviewRecordingDataBySite[]): number {
   const recordingsBySite = allRecordings.find(rec => rec.siteId === detectionData.siteId)
-  return recordingsBySite?.totalRecordingMinutes === undefined ? 0 : detectionData.totalDetectionMinutes / recordingsBySite.totalRecordingMinutes
+  return recordingsBySite?.count === undefined ? 0 : detectionData.count / recordingsBySite.count
 }
 
 export function parseDetectionsBySite (detections: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[], recordings: ActivityOverviewRecordingDataBySite[]): ActivityOverviewDetectionDataBySite[] {
@@ -159,7 +156,7 @@ export function parseDetectionsBySite (detections: ActivityOverviewDetectionData
   }))
 }
 
-export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], totalRecordingMinutes: number, isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
+export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number, isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
   let filteredDetections = detections
 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
@@ -188,9 +185,9 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
 
   const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
   for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
-    const detectionCount = calculateDetectionCount(speciesDetectedDetections)
+    const detectionMinutesCount = calculateDetectionCount(speciesDetectedDetections)
     // Frequency detection for specific species
-    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordingMinutes)
+    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordedMinutes)
     const occupiedSites = new Set(speciesDetectedDetections.map(({ locationSiteId }) => locationSiteId)).size
     const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
 
@@ -200,7 +197,7 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
       commonName: matchedSpecies?.commonName ?? '',
       scientificName: matchedSpecies?.scientificName ?? '',
       taxon: taxonClasses.find(({ slug }) => matchedSpecies?.taxonClassSlug === slug)?.commonName ?? '',
-      detectionCount,
+      detectionMinutesCount,
       detectionFrequency,
       occupiedSites,
       occupancyNaive
@@ -210,35 +207,35 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
   return activityOverviewDataBySpecies
 }
 
-export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationMinutes: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): ActivityOverviewDetectionDataByTime {
   const byHour = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).hour())
   return {
     detection: mapValues(byHour, calculateDetectionCount),
-    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordingDurationMinutes))
+    detectionFrequency: mapValues(byHour, (data) => calculateDetectionFrequency(data, totalRecordedMinutes))
   }
 }
 
-export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationMinutes: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeDay (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): ActivityOverviewDetectionDataByTime {
   const byDay = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).isoWeekday() - 1)
   return {
     detection: mapValues(byDay, calculateDetectionCount),
-    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordingDurationMinutes))
+    detectionFrequency: mapValues(byDay, (data) => calculateDetectionFrequency(data, totalRecordedMinutes))
   }
 }
 
-export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationMinutes: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeMonth (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): ActivityOverviewDetectionDataByTime {
   const byMonth = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).month())
   return {
     detection: mapValues(byMonth, calculateDetectionCount),
-    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordingDurationMinutes))
+    detectionFrequency: mapValues(byMonth, (data) => calculateDetectionFrequency(data, totalRecordedMinutes))
   }
 }
 
-export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordingDurationMinutes: number): ActivityOverviewDetectionDataByTime {
+export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): ActivityOverviewDetectionDataByTime {
   const SECONDS_PER_DAY = 24 * 60 * 60
   const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
   return {
     detection: mapValues(byDateUnix, calculateDetectionCount),
-    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordingDurationMinutes))
+    detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordedMinutes))
   }
 }

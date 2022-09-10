@@ -2,7 +2,7 @@ import { attributes, AttributeTypes } from '../type-helpers'
 
 export interface LocationProjectMetric {
   locationProjectId: number
-  detectionCount: number
+  detectionMinutesCount: number
   siteCount: number
   speciesCount: number
   maxDate: Date | null
@@ -10,7 +10,7 @@ export interface LocationProjectMetric {
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT_METRIC = attributes<LocationProjectMetric>()({
-  light: ['detectionCount', 'siteCount', 'speciesCount', 'maxDate', 'minDate']
+  light: ['detectionMinutesCount', 'siteCount', 'speciesCount', 'maxDate', 'minDate']
 })
 
 export type LocationProjectMetricTypes = AttributeTypes< LocationProjectMetric, typeof ATTRIBUTES_LOCATION_PROJECT_METRIC>

@@ -5,6 +5,8 @@ import { SafeParseReturnType, z } from 'zod'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { filterRepeatingDetectionMinutes } from './parse-array'
+
 const RecordingArbimonSchema = z.object({
   projectIdArbimon: z.number(),
   siteIdArbimon: z.number(),
@@ -19,8 +21,8 @@ const RecordingBySiteHourBioSchema = z.object({
   locationProjectId: z.number(),
   locationSiteId: z.number(),
   totalDurationInMinutes: z.number(),
-  recordedMinutes: z.array(z.number()),
-  recordingCount: z.number(),
+  countsByMinute: z.array(z.array(z.number())),
+  count: z.number(),
   firstRecordingIdArbimon: z.number(), // to catch error recording id in a sync data
   lastRecordingIdArbimon: z.number(), // to catch error recording id in a sync data
   lastUploaded: z.string() // to catch error recording id in a sync data
@@ -39,16 +41,6 @@ export const parseRecordingBySiteHourToBio = (recordingBySiteHourArbimon: unknow
  */
 const getTimePrecisionHourLocal = (datetime: string): string => {
   return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00')
-}
-
-function filterRecordedMinutes (group: RecordingArbimon[]): number[] {
-  return group.reduce<number[]>((acc, cur) => {
-      const minute = dayjs(cur.datetime).minute().toString()
-      if (!acc.includes(Number(minute))) {
-        acc.push(Number(minute))
-      }
-      return acc
-    }, [])
 }
 
 export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: RecordingArbimon[], sequelize: Sequelize): Promise<RecordingBySiteHourBio[]> => {
@@ -83,17 +75,15 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
 
       const totalDuration = isNewRecording ? sum(group.map(item => item.duration)) / 60 : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
 
-      const recordedMinutes = isNewRecording ? filterRecordedMinutes(group) : [...new Set([...bioRecordingBySiteHour.recordedMinutes, ...filterRecordedMinutes(group)])]
-
-      const recordingCount = isNewRecording ? group.length : bioRecordingBySiteHour.recordingCount + group.length
+      const recordingData = filterRepeatingDetectionMinutes(group)
 
       itemsToInsertOrUpsert.push({
         timePrecisionHourLocal,
         locationProjectId: locationSite?.locationProjectId ?? -1,
         locationSiteId: locationSite?.id ?? -1,
         totalDurationInMinutes: ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
-        recordedMinutes: recordedMinutes, // [2, 4, 6] - recording minutes in the group
-        recordingCount: recordingCount, // 3 - recordings in the group
+        countsByMinute: recordingData.countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
+        count: recordingData.countsByMinute.length, // 3 - length
         firstRecordingIdArbimon: min(group.map(item => item.idArbimon)) ?? group[0].idArbimon,
         lastRecordingIdArbimon: max(group.map(item => item.idArbimon)) ?? group[group.length - 1].idArbimon,
         lastUploaded: max(group.map(item => item.datetime)) ?? group[group.length - 1].datetime

@@ -5,7 +5,6 @@ import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-proje
 
 import { projects } from '../_data/integration/projects'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await LocationProjectModel(params.context.sequelize)
-    .bulkCreate(projects)
+export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
+  await LocationProjectModel(sequelize).bulkCreate(projects)
 }

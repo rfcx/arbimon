@@ -1,7 +1,7 @@
 <template>
   <div class="metric_wrapper <sm:text-center">
     <numeric-metric
-      :value="props.metrics.detectionCount"
+      :value="props.metrics.detectionMinutesCount"
       subtitle="detections"
       class="detections_metric"
     />
@@ -29,7 +29,7 @@
 import useDateFormat from '../../../_services/hooks/use-date-format'
 
 const props = defineProps<{ metrics: {
-  detectionCount: number
+  detectionMinutesCount: number
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number

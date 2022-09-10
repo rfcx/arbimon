@@ -16,7 +16,7 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Loca
       raw: true
     })
 
-  return result ?? { detectionCount: 0, siteCount: 0, speciesCount: 0, maxDate: null, minDate: null }
+  return result ?? { detectionMinutesCount: 0, siteCount: 0, speciesCount: 0, maxDate: null, minDate: null }
 }
 
 export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpecies[]> => {

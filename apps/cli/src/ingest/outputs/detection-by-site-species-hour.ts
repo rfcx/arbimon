@@ -1,8 +1,10 @@
 import { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { SyncError } from '@rfcx-bio/common/dao/types'
 
+import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
 import { DetectionArbimon, DetectionBySiteSpeciesHourBio, transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
 
 const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHourBio[], detectionArbimon: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
@@ -24,36 +26,47 @@ const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHourBio[], detect
 
 export const writeDetectionsToBio = async (detections: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[DetectionBySiteSpeciesHourBio[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   const [itemsToInsertOrUpsert, itemsToReset] = await Promise.all(await transformDetectionArbimonToBio(detections, sequelize))
+  // Reset not validated items
+  await deleteDetections(itemsToReset, sequelize, transaction)
   try {
-    // Reset not validated items
-    if (itemsToReset.length) {
-      for (const d of itemsToReset) {
-        const numberOfDeletedRows = await ModelRepository
-          .getInstance(sequelize)
-          .DetectionBySiteSpeciesHour
-          .destroy({
-            where: {
-              timePrecisionHourLocal: d.timePrecisionHourLocal,
-              locationSiteId: d.locationSiteId,
-              taxonSpeciesId: d.taxonSpeciesId
-            },
-            transaction
-          })
-          console.info(`> ${numberOfDeletedRows} detections reset successfully for time ${d.timePrecisionHourLocal.toISOString()}, site ${d.locationSiteId}, species ${d.taxonSpeciesId}`)
-      }
-    }
     // Insert new or updated items
     if (itemsToInsertOrUpsert.length) {
       const rows = itemsToInsertOrUpsert.map(group => {
-        return { ...group, detectionMinutes: JSON.stringify([...new Set([...group.detectionMinutes])].sort((a, b) => a - b)).replace('[', '{').replace(']', '}') }
+        return { ...group, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(group.countsByMinute), sequelize) }
       })
       // @ts-expect-error
-      await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, { transaction })
+      await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, {
+        updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR,
+        ...transaction && { transaction }
+      })
     }
     return [itemsToInsertOrUpsert, []]
   } catch (batchInsertError) {
     console.info('⚠️ Batch insert `detections by site species hour` failed... try loop upsert')
     const failedToInsertItems = await loopUpsert(itemsToInsertOrUpsert, detections, sequelize, transaction)
     return [[], failedToInsertItems]
+  }
+}
+
+const deleteDetections = async (detections: DetectionBySiteSpeciesHourBio[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<void> => {
+  if (!detections.length) return
+  try {
+    for (const d of detections) {
+      const numberOfDeletedRows = await ModelRepository
+        .getInstance(sequelize)
+        .DetectionBySiteSpeciesHour
+        .destroy({
+          where: {
+            timePrecisionHourLocal: d.timePrecisionHourLocal,
+            locationSiteId: d.locationSiteId,
+            taxonSpeciesId: d.taxonSpeciesId
+          },
+          transaction
+        })
+        console.info(`> ${numberOfDeletedRows} detections reset successfully for time ${d.timePrecisionHourLocal.toISOString()}, site ${d.locationSiteId}, species ${d.taxonSpeciesId}`)
+    }
+  } catch (err) {
+    // TODO: Inform about the issue to the bio dev slack channel?
+    console.error('> Error when deleting detections', detections, err as Error)
   }
 }
