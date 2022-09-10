@@ -8,8 +8,3 @@ export interface SpeciesDetection {
   confidence: number
   statusId: number | null
 }
-
-export interface ValidationStatus {
-  id: number
-  name: string
-}
