@@ -5,6 +5,8 @@ import { SafeParseReturnType, z } from 'zod'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { filterRepeatingDetectionMinutes } from './parse-array'
+
 const RecordingArbimonSchema = z.object({
   projectIdArbimon: z.number(),
   siteIdArbimon: z.number(),
@@ -73,18 +75,15 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
 
       const totalDuration = isNewRecording ? sum(group.map(item => item.duration)) / 60 : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
 
-      // TODO count logic: Replace logic of `recordedMinutes` 1D array with `countsByMinute` 2D array
-      const countsByMinute: number[][] = [] // isNewRecording ? filterRecordedMinutes(group) : [...new Set([...bioRecordingBySiteHour.countsByMinute, ...filterRecordedMinutes(group)])]
-
-      const count = countsByMinute.length
+      const recordingData = filterRepeatingDetectionMinutes(group)
 
       itemsToInsertOrUpsert.push({
         timePrecisionHourLocal,
         locationProjectId: locationSite?.locationProjectId ?? -1,
         locationSiteId: locationSite?.id ?? -1,
         totalDurationInMinutes: ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
-        countsByMinute: countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
-        count: count, // 3 - length
+        countsByMinute: recordingData.countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
+        count: recordingData.countsByMinute.length, // 3 - length
         firstRecordingIdArbimon: min(group.map(item => item.idArbimon)) ?? group[0].idArbimon,
         lastRecordingIdArbimon: max(group.map(item => item.idArbimon)) ?? group[group.length - 1].idArbimon,
         lastUploaded: max(group.map(item => item.datetime)) ?? group[group.length - 1].datetime
