@@ -27,13 +27,9 @@ export interface ClassifierJobCreateResponse {
 // Service
 export const apiCorePostClassifierJobCreate = async (apiClient: AxiosInstance, payload: ClassifierJobCreateConfigurationParams): Promise<ClassifierJobCreateResponse> => {
   const res = await apiClient.post('/classifier-jobs', payload)
-  if (res.status === 201 && res.headers.location) {
-    const regexResult = /\/classifier-jobs\/(\w+)$/.exec(res.headers.location)
-    if (regexResult) {
-      const result = { jobId: Number(regexResult[1]) }
-      return result
-    }
-    throw new Error(`Unable to parse location header: ${res.headers.location}`)
-  }
-  throw new Error(`Unexpected status code or location header: ${res.status} ${res.headers.location}`)
+  if (res.status !== 201 || !res.headers.location) throw new Error(`Unexpected status code or location header: ${res.status} ${res.headers.location}`)
+
+  const regexResult = /\/classifier-jobs\/(\w+)$/.exec(res.headers.location)
+  if (!regexResult) throw new Error(`Unable to parse location header: ${res.headers.location}`)
+  return { jobId: Number(regexResult[1]) }
 }
