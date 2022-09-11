@@ -5,6 +5,7 @@ import { SyncError } from '@rfcx-bio/common/dao/types'
 
 import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
 import { mapRecordingBySiteHourArbimonWithBioFk, RecordingArbimon, RecordingBySiteHourBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import { UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
 
 export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon: RecordingArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[RecordingBySiteHourBio[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   // convert to bio db
@@ -18,7 +19,8 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon:
     try {
       const newRecording = { ...recording, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(recording.countsByMinute), sequelize) }
       // @ts-expect-error
-      await ModelRepository.getInstance(sequelize).RecordingBySiteHour.upsert(newRecording, {
+      await ModelRepository.getInstance(sequelize).RecordingBySiteHour.bulkCreate([newRecording], {
+        updateOnDuplicate: UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR,
         ...transaction && { transaction }
       })
       // @ts-expect-error

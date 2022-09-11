@@ -41,7 +41,7 @@ export const modelRegistrations = {
   [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
-  [MODEL_RECORDING_BY_SITE_HOUR]: [RecordingBySiteHourModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_LOCATION_SITE] }],
+  [MODEL_RECORDING_BY_SITE_HOUR]: [RecordingBySiteHourModel, { manyToOne: [MODEL_LOCATION_SITE] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
   [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
   [MODEL_TAXON_SPECIES]: [TaxonSpeciesModel, { manyToOne: [MODEL_TAXON_CLASS] }],
