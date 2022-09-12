@@ -87,7 +87,7 @@ describe('ingest > output > recording by site hour', () => {
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
   })
 
-  test('update recorded minutes if location project, location site, and time precision hour local are the same', async () => {
+  test('can update countsByMinute with a new recording time', async () => {
     // Arrange
     const NEW_RECORDS = [
       // recording to update existing row
@@ -95,7 +95,43 @@ describe('ingest > output > recording by site hour', () => {
         projectIdArbimon: 1,
         siteIdArbimon: 88528,
         datetime: '2022-07-06 07:20:00',
-        duration: 60,
+        duration: 20,
+        idArbimon: 1003,
+        updatedAt: '2022-07-06 18:00:00'
+      },
+      // new row
+      {
+        projectIdArbimon: 1,
+        siteIdArbimon: 88528,
+        datetime: '2022-07-06 19:20:00',
+        duration: 20,
+        idArbimon: 1004,
+        updatedAt: '2022-07-06 18:30:00'
+      }
+    ]
+
+    // Act
+    // Write the first batch of recordings
+    await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
+    // Write the secod batch of recordings with updating the existing recording row
+    await writeRecordingBySiteHourToBio(NEW_RECORDS, biodiversitySequelize)
+    const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
+
+    // Assert
+    expect(recordingBySiteHour.length).toBe(2)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2], [20, 1]])
+    expect(sum(recordingBySiteHour.map(item => item.count))).toBe(3)
+  })
+
+  test('can update/increase countsByMinute with the same/existing recording time', async () => {
+    // Arrange
+    const NEW_RECORDS = [
+      // recording to update existing row
+      {
+        projectIdArbimon: 1,
+        siteIdArbimon: 88528,
+        datetime: '2022-07-06 07:00:00',
+        duration: 20,
         idArbimon: 1003,
         updatedAt: '2022-07-06 18:00:00'
       },
@@ -111,18 +147,19 @@ describe('ingest > output > recording by site hour', () => {
     ]
 
     // Act
+    // Write the first batch of recordings
     await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
+    // Write the secod batch of recordings with updating the existing recording row
     await writeRecordingBySiteHourToBio(NEW_RECORDS, biodiversitySequelize)
-
-    // Assert
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
 
+    // Assert
     expect(recordingBySiteHour.length).toBe(2)
-    expect(recordingBySiteHour[0].countsByMinute).toEqual([0, 3])
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 3]])
     expect(sum(recordingBySiteHour.map(item => item.count))).toBe(2)
   })
 
-  test('can write new recordings by site hour for different sites', async () => {
+  test.todo('can write new recordings by site hour for different sites', async () => {
     // Arrange
     const NEW_RECORDS = [
       {

@@ -59,10 +59,11 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
     const timePrecisionHourLocal = getTimePrecisionHourLocal(group[0].datetime)
     const locationSiteId = biodiversitySites.find(site => site.idArbimon === group[0].siteIdArbimon)?.id
 
-    // Skip recordings with haven't synced site (validation issue)
+    // skip recordings with haven't synced site (validation issue)
     if (locationSiteId !== undefined) {
       const locationSite = biodiversitySites.find(site => site.idArbimon === group[0].siteIdArbimon)
 
+      // find existing recordings in the bio db
       const bioRecordingBySiteHour = await ModelRepository.getInstance(sequelize).RecordingBySiteHour.findOne({
         where: {
           timePrecisionHourLocal,
@@ -73,17 +74,42 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
 
       const isNewRecording = bioRecordingBySiteHour === null
 
-      const totalDuration = isNewRecording ? sum(group.map(item => item.duration)) / 60 : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
+      const totalDuration = isNewRecording
+        ? sum(group.map(item => item.duration)) / 60
+        : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
 
+      // create a correct countsByMinute array (number[][]) for a new recording
       const recordingData = filterRepeatingDetectionMinutes(group)
+
+      const countsByMinute = isNewRecording ? recordingData.countsByMinute : bioRecordingBySiteHour.countsByMinute
+
+      if (!isNewRecording) {
+          group.forEach(dt => {
+          const dtMinutes = dayjs(dt.datetime).minute()
+          const existingIndex = countsByMinute.findIndex(pair => pair[0] === dtMinutes)
+          const existing = existingIndex > -1
+
+          // if a new recording exists -> increase the recording count in the existing array
+          // why do we get this recording again?
+          // 1. there are several site's recordings with the same datetime
+          if (existing) {
+            countsByMinute[existingIndex][1] = countsByMinute[existingIndex][1] + 1
+          }
+
+          // if new recording does not exist -> add it
+          if (!existing) {
+            countsByMinute.push([dtMinutes, 1])
+          }
+        })
+      }
 
       itemsToInsertOrUpsert.push({
         timePrecisionHourLocal,
         locationProjectId: locationSite?.locationProjectId ?? -1,
         locationSiteId: locationSite?.id ?? -1,
         totalDurationInMinutes: ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
-        countsByMinute: recordingData.countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
-        count: recordingData.countsByMinute.length, // 3 - length
+        countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
+        count: countsByMinute.length, // 3 - length
         firstRecordingIdArbimon: min(group.map(item => item.idArbimon)) ?? group[0].idArbimon,
         lastRecordingIdArbimon: max(group.map(item => item.idArbimon)) ?? group[group.length - 1].idArbimon,
         lastUploaded: max(group.map(item => item.datetime)) ?? group[group.length - 1].datetime
