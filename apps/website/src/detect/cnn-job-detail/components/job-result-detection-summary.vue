@@ -1,5 +1,10 @@
 <template>
-  <div class="job-result-detection-summary-wrapper">
+  <div v-if="isLoadingJobSummary" />
+  <div v-else-if="isErrorJobSummary" />
+  <div
+    v-else
+    class="job-result-detection-summary-wrapper"
+  >
     <h3 class="job-result-detection-summary-header text-subtle text-sm mb-2">
       Detection summary
     </h3>
@@ -15,10 +20,10 @@
               :key="'validation-status-' + item.label"
             >
               <div class="col-span-1 justify-self-start font-semibold text-right">
-                {{ displayValue(item.value) }}
+                {{ displayValue(item.numberOfDetections) }}
               </div>
               <div class="col-span-5 truncate">
-                {{ item.name }}
+                {{ item.speciesName }}
               </div>
             </template>
           </div>
@@ -53,30 +58,23 @@ import { computed, inject, ref } from 'vue'
 import { displayValue } from '@rfcx-bio/utils/number'
 
 import { useGetJobDetectionSummary } from '@/detect/_composables/use-get-job-detection-summary'
-import { apiClientCoreKey } from '@/globals'
+import { apiClientBioKey } from '@/globals'
 
 const props = defineProps<{
-  jobId: string | string[]
+  jobId: number
   projectId: string
 }>()
-
-const details = computed(() => {
-  const species: { name: string, value: number }[] = []
-  const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Pongo pygmaeus', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii, Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
-  for (let index = 0; index < 27; index++) {
-    species.push({
-      name: speciesNames[Math.floor(Math.random() * speciesNames.length)],
-      value: Math.random() * 10000
-    })
-  }
-
-  return species.sort((a, b) => b.value - a.value)
-})
 
 const displayItemNumber = 10
 const displayIndex = ref(0)
 
-const displaySpecies = computed(() => details.value.slice(displayIndex.value * displayItemNumber, (displayIndex.value * displayItemNumber) + 11))
+// External data
+const apiBio = inject(apiClientBioKey) as AxiosInstance
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiBio, props.jobId, { limit: displayItemNumber.toString(), offset: displayIndex.value.toString() })
+
+const details = computed(() => jobSummaryData.value?.results ?? [])
+
+const displaySpecies = computed(() => details.value.slice(displayIndex.value * displayItemNumber, (displayIndex.value * displayItemNumber) + displayItemNumber + 1))
 
 const displaySpeciesColumn1 = computed(() => displaySpecies.value.slice(0, displayItemNumber / 2))
 const displaySpeciesColumn2 = computed(() => displaySpecies.value.slice((displayItemNumber / 2) + 1))
@@ -88,10 +86,5 @@ const previousPage = () => {
 const nextPage = () => {
   displayIndex.value += 1
 }
-
-// External data
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiClientCore, { projectId: props.projectId }, { jobId: props.jobId, limit: 10, offset: displayIndex.value })
-console.info(isLoadingJobSummary, isErrorJobSummary, jobSummaryData)
 
 </script>

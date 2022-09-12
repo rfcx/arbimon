@@ -3,7 +3,7 @@ import { DetectValidation, DetectValidationParams, DetectValidationResponse } fr
 import { Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { validateDetections } from './detect-validation-bll'
+import { validateDetections } from './detect-bll'
 
 export const detectValidationHandler: Handler<DetectValidationResponse, DetectValidationParams, unknown, DetectValidation[]> = async (req) => {
   // Inputs & validation
