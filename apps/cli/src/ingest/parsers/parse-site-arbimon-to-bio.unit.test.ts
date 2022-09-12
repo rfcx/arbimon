@@ -10,7 +10,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     name: 'Site 123',
     latitude: 0,
     longitude: 0,
-    altitude: 0
+    altitude: 0,
+    deletedAt: null
   }
 
   test('succeeds for valid data', async () => {
