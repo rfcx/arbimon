@@ -1,18 +1,13 @@
 import { DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { DetectValidation, DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
 import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
 import { env } from '~/env'
-import { updateInMemoryDetectValidation } from './detect-validation-dao'
+import { BaseQuery } from '~/query/base'
+import { getSummary, updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
-
-export interface DetectionFilter {
-  jobId: number
-  siteIds: string[]
-  statusId?: string
-  classifierId?: string
-  confidence?: string
-}
+import { DetectionFilter } from './types'
 
 const mockData = mockDetections
 
@@ -42,6 +37,19 @@ export const getDetections = async (filter: DetectionFilter): Promise<DetectDete
 
   return {
     detections: filteredMockData
+  }
+}
+
+export const getDetectionSummary = async (query: BaseQuery): Promise<DetectSummaryResponse> => {
+  if (env.IN_DEVELOP) {
+    return await getSummary(mockData, query)
+  }
+
+  // TODO: Connect to core API
+  return {
+    total: 0,
+    currentPage: 0,
+    results: []
   }
 }
 

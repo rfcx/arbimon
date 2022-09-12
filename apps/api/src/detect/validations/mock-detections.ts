@@ -27,7 +27,7 @@ export const mockDetections: SpeciesDetection[] = [
     dateStart: '2022-01-14T17:30:22.04Z',
     dateEnd: '2022-01-14T17:30:24.04Z',
     classifierId: 1,
-    classificationId: 1,
+    classificationId: 2,
     confidence: 0.975,
     statusId: 0
   },
@@ -37,7 +37,7 @@ export const mockDetections: SpeciesDetection[] = [
     dateStart: '2022-01-14T17:35:00.04Z',
     dateEnd: '2022-01-14T17:35:02.04Z',
     classifierId: 1,
-    classificationId: 1,
+    classificationId: 2,
     confidence: 0.75,
     statusId: 0
   }
