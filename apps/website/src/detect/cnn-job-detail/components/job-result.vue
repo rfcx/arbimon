@@ -15,7 +15,6 @@
     <div class="grid grid-cols-4 gap-4 <lg:grid-cols-7 pt-2">
       <div class="col-span-3 <lg:col-span-5 <md:col-span-7 border-1 border-box-grey rounded-md px-6 py-4 w-full">
         <job-result-detection-summary
-          :job-id="jobId"
           :project-id="project.projectId"
         />
       </div>
@@ -26,16 +25,12 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { computed, onMounted, reactive } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { onMounted, reactive } from 'vue'
 
-  import { useStore } from '~/store'
+import { useStore } from '~/store'
   import JobResultDetectionSummary from './job-result-detection-summary.vue'
   import JobResultFilter from './job-result-filter.vue'
   import JobResultValidationStatus from './job-result-validation-status.vue'
-
-  const route = useRoute()
-  const jobId = computed(() => parseInt(route.params.jobId))
 
   const store = useStore()
 

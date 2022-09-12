@@ -27,7 +27,6 @@ export const updateInMemoryDetectValidation = async (mockData: SpeciesDetection[
       matchedDetection.statusId = item.statusId
     }
   }
-
   return {
     message: 'ok'
   }
