@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isLoadingJobSummary" />
-  <div v-else-if="isErrorJobSummary" />
+  <div v-if="isLoading" />
+  <div v-else-if="isError" />
   <div
     v-else
     class="job-result-detection-summary-wrapper"
@@ -52,27 +52,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref } from 'vue'
 
+import { SpeciesDetectionSummary } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { displayValue } from '@rfcx-bio/utils/number'
 
-import { useGetJobDetectionSummary } from '@/detect/_composables/use-get-job-detection-summary'
-import { apiClientBioKey } from '@/globals'
+const props = withDefaults(defineProps<{
+  isLoading: boolean,
+  isError: boolean,
+  details: SpeciesDetectionSummary[]
+}>(), {
+  isLoading: false,
+  isError: false,
+  details: () => []
+})
 
-const route = useRoute()
-const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const displayItemNumber = 10
 const displayIndex = ref(0)
 
-// External data
-const apiBio = inject(apiClientBioKey) as AxiosInstance
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiBio, jobId.value, { limit: displayItemNumber.toString(), offset: displayIndex.value.toString() })
-
-const details = computed(() => jobSummaryData.value?.results ?? [])
-
-const displaySpecies = computed(() => details.value.slice(displayIndex.value * displayItemNumber, (displayIndex.value * displayItemNumber) + displayItemNumber + 1))
+const displaySpecies = computed(() => props.details.slice(displayIndex.value * displayItemNumber, (displayIndex.value * displayItemNumber) + displayItemNumber + 1))
 
 const displaySpeciesColumn1 = computed(() => displaySpecies.value.slice(0, displayItemNumber / 2))
 const displaySpeciesColumn2 = computed(() => displaySpecies.value.slice((displayItemNumber / 2) + 1))

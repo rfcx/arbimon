@@ -4,8 +4,7 @@ import { DetectValidation, DetectValidationResponse } from '@rfcx-bio/common/api
 import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
 import { env } from '~/env'
-import { BaseQuery } from '~/query/base'
-import { getSummary, updateInMemoryDetectValidation } from './detect-dao'
+import { getInMemoryDetectValidationStatus, getInMemorySpeciesDetectionSummary, updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
 import { DetectionFilter } from './types'
 
@@ -40,16 +39,18 @@ export const getDetections = async (filter: DetectionFilter): Promise<DetectDete
   }
 }
 
-export const getDetectionSummary = async (query: BaseQuery): Promise<DetectSummaryResponse> => {
+export const getDetectionSummary = async (): Promise<DetectSummaryResponse> => {
   if (env.IN_DEVELOP) {
-    return await getSummary(mockData, query)
+    return {
+      validationSummary: await getInMemoryDetectValidationStatus(mockData),
+      speciesSummary: await getInMemorySpeciesDetectionSummary(mockData)
+    }
   }
 
   // TODO: Connect to core API
   return {
-    total: 0,
-    currentPage: 0,
-    results: []
+    validationSummary: { 0: 0, 1: 0, 2: 0, 3: 0 },
+    speciesSummary: []
   }
 }
 
