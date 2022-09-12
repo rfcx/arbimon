@@ -7,11 +7,6 @@ export interface DetectSummaryParams {
   jobId: string // string of number
 }
 
-export interface DetectSummaryQueryParams {
-  limit?: string // string of number
-  offset?: string // string of number
-}
-
 // Response type
 export interface SpeciesDetectionSummary {
   speciesSlug: string
@@ -19,16 +14,22 @@ export interface SpeciesDetectionSummary {
   numberOfDetections: number
 }
 
+export interface SpeciesValidationSummary {
+  0: number
+  1: number
+  2: number
+  3: number
+}
+
 export interface DetectSummaryResponse {
-  total: number
-  currentPage: number
-  results: SpeciesDetectionSummary[]
+  validationSummary: SpeciesValidationSummary
+  speciesSummary: SpeciesDetectionSummary[]
 }
 
 // Route
 export const detectSummaryRoute = '/jobs/:jobId/detect/summary'
 
 // Service
-export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number, params: DetectSummaryQueryParams): Promise<DetectSummaryResponse | undefined> => {
-  return await apiGetOrUndefined(apiClient, `/jobs/${jobId}/detect/summary`, { params })
+export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number): Promise<DetectSummaryResponse | undefined> => {
+  return await apiGetOrUndefined(apiClient, `/jobs/${jobId}/detect/summary`)
 }
