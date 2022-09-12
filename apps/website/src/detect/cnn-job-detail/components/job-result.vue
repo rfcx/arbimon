@@ -35,7 +35,7 @@
   import JobResultValidationStatus from './job-result-validation-status.vue'
 
   const route = useRoute()
-  const jobId = computed(() => route.params.jobId)
+  const jobId = computed(() => parseInt(route.params.jobId))
 
   const store = useStore()
 
