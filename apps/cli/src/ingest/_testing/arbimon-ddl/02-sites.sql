@@ -11,5 +11,6 @@ create table sites (
   external_id varchar(255) default null,
   created_at timestamp null default current_timestamp,
   timezone varchar(255) not null,
-  updated_at datetime not null default current_timestamp
+  updated_at datetime not null default current_timestamp,
+  deleted_at datetime default null
 );
