@@ -19,7 +19,7 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon:
     try {
       const newRecording = { ...recording, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(recording.countsByMinute), sequelize) }
       // @ts-expect-error
-      await ModelRepository.getInstance(sequelize).RecordingBySiteHour.bulkCreate([newRecording], {
+      await ModelRepository.getInstance(sequelize).RecordingBySiteHour.upsert(newRecording, {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR,
         ...transaction && { transaction }
       })

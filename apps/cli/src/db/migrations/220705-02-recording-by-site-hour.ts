@@ -21,19 +21,21 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         type: DataTypes.DATE,
         primaryKey: true
       },
-      location_project_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: { tableName: 'location_project' },
-          key: 'id'
-        }
-      },
       location_site_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
           model: { tableName: 'location_site' },
+          key: 'id'
+        }
+      },
+
+      // Dimensions
+      location_project_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: { tableName: 'location_project' },
           key: 'id'
         }
       },

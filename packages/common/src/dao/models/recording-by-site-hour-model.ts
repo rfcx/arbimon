@@ -4,8 +4,8 @@ import { defineWithDefaults } from '../model-factory-helpers/defaults'
 import { RecordingBySiteHour } from '../types'
 
 export const MODEL_RECORDING_BY_SITE_HOUR = 'RecordingBySiteHour'
-const TABLE_RECORDING_BY_SITE_HOUR = 'recording_by_site_hour'
-export const UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR: Array<keyof RecordingBySiteHour> = ['count', 'countsByMinute', 'totalDurationInMinutes']
+export const TABLE_RECORDING_BY_SITE_HOUR = 'recording_by_site_hour'
+export const UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR: Array<keyof RecordingBySiteHour> = ['locationProjectId', 'count', 'countsByMinute', 'totalDurationInMinutes']
 
 export const RecordingBySiteHourModel = defineWithDefaults<RecordingBySiteHour>(
   MODEL_RECORDING_BY_SITE_HOUR,
