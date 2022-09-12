@@ -14,7 +14,7 @@
         v-for="key in Object.keys(props.summary).map(Number)"
         :key="'validation-status-' + key"
       >
-        <span class="font-semibold col-span-1 <md:col-span-1 <lg:col-span-2">{{ displayValue(props.summary[key]) }}</span>
+        <span class="font-semibold col-span-1 <md:col-span-1 <lg:col-span-2">{{ getValidationStatusValue(key) }}</span>
         <span class="ml-2 col-span-5 <md:col-span-5 <lg:col-span-4">{{ getValidationStatusLabel(key) }}</span>
       </template>
     </div>
@@ -39,5 +39,10 @@ const props = withDefaults(defineProps<{
 
 const getValidationStatusLabel = (key: number) => {
   return VALIDATION_STATUS_BY_ID[key].label
+}
+
+const getValidationStatusValue = (key: number) => {
+  const validKey = key as unknown as 0 | 1 | 2 | 3
+  return props.summary ? displayValue(props.summary[validKey]) : 0
 }
 </script>
