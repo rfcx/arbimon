@@ -54,23 +54,21 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { displayValue } from '@rfcx-bio/utils/number'
 
 import { useGetJobDetectionSummary } from '@/detect/_composables/use-get-job-detection-summary'
 import { apiClientBioKey } from '@/globals'
 
-const props = defineProps<{
-  jobId: number
-  projectId: string
-}>()
-
+const route = useRoute()
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const displayItemNumber = 10
 const displayIndex = ref(0)
 
 // External data
 const apiBio = inject(apiClientBioKey) as AxiosInstance
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiBio, props.jobId, { limit: displayItemNumber.toString(), offset: displayIndex.value.toString() })
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiBio, jobId.value, { limit: displayItemNumber.toString(), offset: displayIndex.value.toString() })
 
 const details = computed(() => jobSummaryData.value?.results ?? [])
 
