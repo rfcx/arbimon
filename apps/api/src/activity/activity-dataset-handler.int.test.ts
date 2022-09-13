@@ -154,7 +154,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates activityBySite correctly', async () => {
       // Arrange
       const expectedSiteId = [20001001, 20001002]
-      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'totalDetectionCount', 'totalDetectionMinutes', 'detectionFrequency', 'occupancy']
+      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'count', 'detectionFrequency', 'occupancy']
 
       // Act
       const result = JSON.parse(response.body)?.activityBySite
@@ -173,8 +173,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
 
       // Assert - detection, detection frequency, occupancy are correct
-      expect(site.totalDetectionCount).toBe(3)
-      expect(site.totalDetectionMinutes).toBe(3)
+      expect(site.count).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.428, 2)
       expect(site.occupancy).toBe(true)
     })
@@ -204,8 +203,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - detection, detection frequency, occupancy are correct
       const site = expectedResult[0]
-      expect(site.totalDetectionCount).toBe(3)
-      expect(site.totalDetectionMinutes).toBe(3)
+      expect(site.count).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.230, 2)
       expect(site.occupancy).toBe(true)
     })
@@ -274,8 +272,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         siteName: 'Test Site',
         latitude: 18.31307,
         longitude: -65.24878,
-        totalDetectionCount: 1,
-        totalDetectionMinutes: 1,
+        count: 1,
         occupancy: true,
         detectionFrequency: 0.14285714285714285
       }
@@ -317,7 +314,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(expectedSpecies[0]).toEqual(activityBySpecies)
     })
 
-    test.todo('check protected species', async () => {
+    test('check protected species', async () => {
       // TODO
     })
 
@@ -419,9 +416,9 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   })
 
   describe('known data tests with filtered data', async () => {
-    test.todo('detectionsBySite includes all sites from the filter')
-    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
-    test.todo('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
+    test('detectionsBySite includes all sites from the filter')
+    test('detectionsBySite calculates detectionFrequency correctly when a site has 0 detections')
+    test('detectionsBySite calculates detectionFrequency correctly when a site has some hours with 0 detections')
   })
 
   describe('known data tests with redacted data', async () => {
@@ -434,13 +431,13 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       query: { dateStartInclusiveLocalIso: '2001-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
     })
 
-    test.todo('calculates isLocationRedacted correctly', async () => {
+    test('calculates isLocationRedacted correctly', async () => {
       const result = JSON.parse(response.body)?.isLocationRedacted
       expect(result).toBeDefined()
       expect(result).toEqual(true)
     })
 
-    // test.todo('redacted species data (is / is not?) included in detectionsBySite')
+    // test('redacted species data (is / is not?) included in detectionsBySite')
   })
 
   describe('client errors', () => {
@@ -507,8 +504,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(errorMessage2).toContain('endDate with value')
     })
 
-    test.todo('rejects invalid site ids')
+    test('rejects invalid site ids')
 
-    test.todo('rejects invalid taxons')
+    test('rejects invalid taxons')
   })
 })

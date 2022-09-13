@@ -61,14 +61,14 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
         name as "siteName",
         latitude,
         longitude,
-        total_detection_count as "totalDetectionCount",
-        total_detection_count > 0 occupancy
+        count,
+        count > 0 occupancy
     FROM (
         SELECT ls.id,
             ls.name,
             ls.latitude,
             ls.longitude,
-            coalesce(sum(detection_by_site_hour.count), 0)::integer as total_detection_count
+            coalesce(sum(detection_by_site_hour.count), 0)::integer as count
         FROM location_site as ls
         LEFT JOIN (
             SELECT time_precision_hour_local,
@@ -117,7 +117,7 @@ export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDat
     FROM (
         SELECT ls.id,
             ls.name,
-            sum(rbsh.total_duration_in_minutes) as duration_minutes
+            sum(rbsh.total_duration_in_minutes) as count
         FROM location_site as ls
     JOIN (
         SELECT time_precision_hour_local,
