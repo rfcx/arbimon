@@ -3,7 +3,6 @@ import { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-su
 import { DetectValidation, DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
 import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
-import { env } from '~/env'
 import { getInMemoryDetectValidationStatus, getInMemorySpeciesDetectionSummary, updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
 import { DetectionFilter } from './types'
@@ -40,25 +39,12 @@ export const getDetections = async (filter: DetectionFilter): Promise<DetectDete
 }
 
 export const getDetectionSummary = async (): Promise<DetectSummaryResponse> => {
-  if (env.IN_DEVELOP) {
-    return {
-      validationSummary: await getInMemoryDetectValidationStatus(mockData),
-      speciesSummary: await getInMemorySpeciesDetectionSummary(mockData)
-    }
-  }
-
-  // TODO: Connect to core API
   return {
-    validationSummary: { 0: 0, 1: 0, 2: 0, 3: 0 },
-    speciesSummary: []
+    validationSummary: await getInMemoryDetectValidationStatus(mockData),
+    speciesSummary: await getInMemorySpeciesDetectionSummary(mockData)
   }
 }
 
 export const validateDetections = async (validationList: DetectValidation[]): Promise<DetectValidationResponse> => {
-  if (env.IN_DEVELOP) {
-    return await updateInMemoryDetectValidation(mockData, validationList)
-  }
-
-  // TODO: Connect to core API
-  return { message: 'ok' }
+  return await updateInMemoryDetectValidation(mockData, validationList)
 }
