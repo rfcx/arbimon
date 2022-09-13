@@ -1,6 +1,7 @@
 import { DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { DetectValidation, DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
+import { DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
 import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
 import { getInMemoryDetectValidationStatus, getInMemorySpeciesDetectionSummary, updateInMemoryDetectValidation } from './detect-dao'
@@ -40,9 +41,12 @@ export const getDetections = async (filter: DetectionFilter): Promise<DetectDete
 
 export const getDetectionSummary = async (): Promise<DetectSummaryResponse> => {
   return {
-    validationSummary: await getInMemoryDetectValidationStatus(mockData),
     speciesSummary: await getInMemorySpeciesDetectionSummary(mockData)
   }
+}
+
+export const getValidationStatus = async (): Promise<DetectValidationStatusResponse> => {
+  return await getInMemoryDetectValidationStatus(mockData)
 }
 
 export const validateDetections = async (validationList: DetectValidation[]): Promise<DetectValidationResponse> => {

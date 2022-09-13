@@ -3,15 +3,15 @@
     <h3 class="job-result-validation-status-header text-subtle text-sm mb-2">
       Validation status
     </h3>
-    <div v-if="props.isLoading" />
-    <div v-else-if="props.isError" />
-    <div v-else-if="!props.summary" />
+    <div v-if="isLoadingValidationStatus" />
+    <div v-else-if="isErrorValidationStatus" />
+    <div v-else-if="!validationStatusData" />
     <div
       v-else
       class="grid grid-cols-6 gap-2"
     >
       <template
-        v-for="key in Object.keys(props.summary).map(Number)"
+        v-for="key in Object.keys(validationStatusData).map(Number)"
         :key="'validation-status-' + key"
       >
         <span class="font-semibold col-span-1 <md:col-span-1 <lg:col-span-2">{{ getValidationStatusValue(key) }}</span>
@@ -21,28 +21,27 @@
   </div>
 </template>
 <script setup lang="ts">
+  import { AxiosInstance } from 'axios'
+import { computed, inject } from 'vue'
+import { useRoute } from 'vue-router'
 
-import { SpeciesValidationSummary } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { displayValue } from '@rfcx-bio/utils/number'
 
+import { useGetValidationStatus } from '@/detect/_composables/use-get-validation-status'
+import { apiClientBioKey } from '@/globals'
 import { VALIDATION_STATUS_BY_ID } from '~/validation'
 
-const props = withDefaults(defineProps<{
-  isLoading: boolean,
-  isError: boolean,
-  summary: SpeciesValidationSummary | null
-}>(), {
-  isLoading: false,
-  isError: false,
-  summary: null
-})
+const route = useRoute()
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
-const getValidationStatusLabel = (key: number) => {
-  return VALIDATION_STATUS_BY_ID[key].label
-}
+// External data
+const apiBio = inject(apiClientBioKey) as AxiosInstance
+const { isLoading: isLoadingValidationStatus, isError: isErrorValidationStatus, data: validationStatusData } = useGetValidationStatus(apiBio, jobId.value)
+
+const getValidationStatusLabel = (key: number) => VALIDATION_STATUS_BY_ID[key].label
 
 const getValidationStatusValue = (key: number) => {
   const validKey = key as unknown as 0 | 1 | 2 | 3
-  return props.summary ? displayValue(props.summary[validKey]) : 0
+  return validationStatusData.value ? displayValue(validationStatusData.value[validKey]) : 0
 }
 </script>
