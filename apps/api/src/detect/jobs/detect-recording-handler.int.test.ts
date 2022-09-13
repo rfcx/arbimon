@@ -3,7 +3,7 @@ import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
-import { routesDetect } from './index'
+import { routesDetect } from '../index'
 
 const fakeProjectId = 201
 
