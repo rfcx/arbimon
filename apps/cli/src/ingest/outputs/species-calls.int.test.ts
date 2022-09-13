@@ -1,9 +1,10 @@
 import { afterAll, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
 import { writeProjectsToBio } from './projects'
 import { writeSpeciesCallsToBio } from './species-calls'
@@ -18,7 +19,7 @@ describe('ingest > outputs > species calls', async () => {
   })
 
   // Batch project data before tests
-  const PROJECT_INPUT: Omit<Project, 'id'> = {
+  const PROJECT_INPUT: ProjectArbimon = {
     idArbimon: 1920,
     idCore: '807cuoi3cvw0',
     slug: 'rfcx-1',
@@ -26,7 +27,8 @@ describe('ingest > outputs > species calls', async () => {
     latitudeNorth: 0,
     latitudeSouth: 0,
     longitudeEast: 0,
-    longitudeWest: 0
+    longitudeWest: 0,
+    deletedAt: null
   }
   await writeProjectsToBio([PROJECT_INPUT], biodiversitySequelize)
   const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: PROJECT_INPUT.idArbimon } })

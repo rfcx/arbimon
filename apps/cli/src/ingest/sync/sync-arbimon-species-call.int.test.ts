@@ -3,12 +3,13 @@ import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, Site, SyncStatus, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { Site, SyncStatus, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
 import { deleteOutputProjects } from '../_testing/helper'
 import { writeProjectsToBio } from '../outputs/projects'
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { syncArbimonSpeciesCallBatch } from './sync-arbimon-species-call'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 
@@ -40,7 +41,7 @@ const SQL_INSERT_TEMPLATE = `
   INSERT INTO templates (template_id, project_id, recording_id, species_id, songtype_id, name, uri, x1, y1, x2, y2, date_created, deleted, source_project_id, user_id)
   VALUES ($templateId, $projectId, $recordingId, $speciesId, $songtypeId, $name, $uri, $x1, $y1, $x2, $y2, $dateCreated, $deleted, $sourceProjectId, $userId);
 `
-const PROJECT_INPUT: Omit<Project, 'id'> = {
+const PROJECT_INPUT: ProjectArbimon = {
   idArbimon: 1920,
   idCore: '807cuoi3cvw0',
   slug: 'rfcx-1',
@@ -48,7 +49,8 @@ const PROJECT_INPUT: Omit<Project, 'id'> = {
   latitudeNorth: 0,
   latitudeSouth: 0,
   longitudeEast: 0,
-  longitudeWest: 0
+  longitudeWest: 0,
+  deletedAt: null
 }
 
 const SITE_INPUT: Omit<Site, 'id'> = {
