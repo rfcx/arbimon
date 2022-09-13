@@ -2,34 +2,26 @@ import { AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
+import { DETECT_SPECIFIC_ROUTE_PREFIX, DetectRouteParamsSerialized, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
+
 // Request type
-export interface DetectSummaryParams {
-  jobId: string // string of number
-}
+export type DetectSummaryParams = DetectRouteParamsSerialized
 
 // Response type
 export interface SpeciesDetectionSummary {
-  speciesSlug: string
-  speciesName: string
+  classificationId: number
+  classificationName: string
   numberOfDetections: number
 }
 
-export interface SpeciesValidationSummary {
-  0: number
-  1: number
-  2: number
-  3: number
-}
-
 export interface DetectSummaryResponse {
-  validationSummary: SpeciesValidationSummary
   speciesSummary: SpeciesDetectionSummary[]
 }
 
 // Route
-export const detectSummaryRoute = '/jobs/:jobId/detect/summary'
+export const detectSummaryRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/summary`
 
 // Service
 export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number): Promise<DetectSummaryResponse | undefined> => {
-  return await apiGetOrUndefined(apiClient, `/jobs/${jobId}/detect/summary`)
+  return await apiGetOrUndefined(apiClient, detectSpecificRoutePrefix(jobId) + '/summary')
 }

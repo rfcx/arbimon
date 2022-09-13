@@ -6,5 +6,5 @@ export interface SpeciesDetection {
   classifierId: number
   classificationId: number
   confidence: number
-  statusId: number | null
+  statusId: number
 }

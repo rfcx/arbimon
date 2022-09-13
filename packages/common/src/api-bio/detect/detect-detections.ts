@@ -2,18 +2,16 @@ import { AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
+import { DetectRouteParamsSerialized } from '../_helpers/detect-specific-route'
 import { SpeciesDetection } from './types'
 
 // Request type
+export type DetectDetectionParams = DetectRouteParamsSerialized
 export interface DetectDetectionQueryParams {
   siteIds?: string[]
   statusId?: string
   classifierId?: string
   confidence?: string
-}
-
-export interface DetectDetectionParams {
-  jobId: string
 }
 
 // Response type
