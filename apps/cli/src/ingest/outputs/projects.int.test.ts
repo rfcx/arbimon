@@ -162,4 +162,32 @@ describe('ingest > outputs > projects', () => {
     expect([result]).toHaveLength(1)
     expect(result.name).toBe('RFCx project updated')
   })
+
+  test('can remove the project and does not invoke the issue if the deleted project is synced again', async () => {
+    // Arrange
+    const where = { idArbimon: { [Op.in]: [10000] } }
+
+    // Act
+    await writeProjectsToBio([
+      { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx 10000' }
+    ], biodiversitySequelize)
+
+    const newProjects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({ where })
+    expect(newProjects).toHaveLength(1)
+
+    await writeProjectsToBio([
+      { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx project deleted', deletedAt: '2022-08-29T16:00:00.000Z' }
+    ], biodiversitySequelize)
+
+    const result = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll()
+    expect(result).toHaveLength(0)
+
+    await writeProjectsToBio([
+      { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx project deleted', deletedAt: '2022-08-29T19:00:00.000Z' }
+    ], biodiversitySequelize)
+
+    // Assert
+    const result2 = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll()
+    expect(result2).toHaveLength(0)
+  })
 })

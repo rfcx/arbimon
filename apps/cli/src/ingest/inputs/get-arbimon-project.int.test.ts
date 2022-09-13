@@ -200,4 +200,26 @@ describe('ingest > inputs > getArbimonProjects', () => {
     expect(project).toBeDefined()
     expect(project.deletedAt).toBe('2022-08-29T16:00:00.000Z')
   })
+
+  test('can get deleted projects again', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1927, name: 'RFCx 8', url: 'rfcx-8', externalId: '807cuoi3cvwi8', createdAt: '2022-08-28T12:00:00.000Z', updatedAt: '2022-08-29T12:00:00.000Z', deletedAt: null } })
+
+    await arbimonSequelize.query(SQL_UPDATE_PROJECT, { bind: { projectId: 1927, isPrivate: 0, updatedAt: '2022-08-29T16:00:00.000Z', deletedAt: '2022-08-29T16:00:00.000Z' } })
+    await arbimonSequelize.query(SQL_UPDATE_PROJECT, { bind: { projectId: 1927, isPrivate: 0, updatedAt: '2022-08-29T19:00:00.000Z', deletedAt: '2022-08-29T19:00:00.000Z' } })
+
+    const params: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 100
+    }
+
+    // Act
+    const actual = await getArbimonProjects(arbimonSequelize, params) as ProjectArbimon[]
+    const [project] = actual.filter(project => project.idArbimon === 1927)
+
+    // Assert
+    expect(project).toBeDefined()
+    expect(project.deletedAt).toBe('2022-08-29T19:00:00.000Z')
+  })
 })
