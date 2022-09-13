@@ -9,7 +9,7 @@ import { ActivityOverviewDataBySpecies } from './types'
 export type ActivityOverviewDataBySite = ActivityDatasetResponse & DatasetParameters
 
 export const ACTIVITY_OVERVIEW_MAP_KEYS = {
-  totalDetectionCount: 'totalDetectionCount',
+  count: 'count',
   detectionFrequency: 'detectionFrequency',
   occupancy: 'occupancy'
 }
@@ -35,7 +35,7 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
   })
 
   const maxValues = {
-    [ACTIVITY_OVERVIEW_MAP_KEYS.totalDetectionCount]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
+    [ACTIVITY_OVERVIEW_MAP_KEYS.count]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
     [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
@@ -45,7 +45,7 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
       latitude,
       longitude,
       distinctSpecies: {
-        [ACTIVITY_OVERVIEW_MAP_KEYS.totalDetectionCount]: count,
+        [ACTIVITY_OVERVIEW_MAP_KEYS.count]: count,
         [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency,
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
       }

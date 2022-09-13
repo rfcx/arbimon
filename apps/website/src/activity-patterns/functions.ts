@@ -11,7 +11,7 @@ import { Metrics } from './types'
 export type SpotlightDataset = SpotlightDatasetResponse & DatasetParameters
 
 export const SPOTLIGHT_MAP_KEYS = {
-  totalDetectionCount: 'totalDetectionCount',
+  count: 'count',
   detectionFrequency: 'detectionFrequency',
   occupancy: 'occupancy'
 }
@@ -69,7 +69,7 @@ export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapData
       latitude,
       longitude,
       distinctSpecies: {
-        [SPOTLIGHT_MAP_KEYS.totalDetectionCount]: siteDetectionMinutesCount,
+        [SPOTLIGHT_MAP_KEYS.count]: siteDetectionMinutesCount,
         [SPOTLIGHT_MAP_KEYS.detectionFrequency]: siteDetectionFrequency,
         [SPOTLIGHT_MAP_KEYS.occupancy]: siteOccupied
       }

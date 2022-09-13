@@ -40,7 +40,7 @@ export default class ActivityPatternsByLocation extends Vue {
   selectedType = SPOTLIGHT_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [
     { label: 'Detection Frequency', value: SPOTLIGHT_MAP_KEYS.detectionFrequency },
-    { label: 'Detections (raw)', value: SPOTLIGHT_MAP_KEYS.totalDetectionCount },
+    { label: 'Detections (raw)', value: SPOTLIGHT_MAP_KEYS.count },
     { label: 'Naive Occupancy', value: SPOTLIGHT_MAP_KEYS.occupancy }
   ]
 
