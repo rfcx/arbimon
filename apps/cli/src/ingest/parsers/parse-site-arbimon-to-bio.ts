@@ -13,8 +13,8 @@ const SiteArbimonSchema = z.object({
   name: z.string(),
   latitude: z.number(),
   longitude: z.number(),
-  altitude: z.number(),
-  deletedAt: z.string().nullable()
+  altitude: z.number()
+  //  deletedAt: z.string().nullable()
 })
 
 export type SiteArbimon = z.infer<typeof SiteArbimonSchema>

@@ -1,5 +1,6 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
+import { ProjectArbimonRow } from '../parsers/parse-project-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
 export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
@@ -31,7 +32,7 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
     ;
     `
 
-  return await sequelize.query(sql, {
+    const results = await sequelize.query<ProjectArbimonRow>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -40,4 +41,9 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
       syncBatchLimit
     }
   })
+
+  return results.map(row => ({
+    ...row,
+    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
+  }))
 }
