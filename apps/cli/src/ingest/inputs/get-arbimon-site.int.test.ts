@@ -165,23 +165,23 @@ describe('ingest > inputs > getArbimonSites', async () => {
     expect(actual).toHaveLength(0)
   })
 
-  test('can get deleted sites', async () => {
-    // Arrange
-    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
-    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 120, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00', deletedAt: '2022-08-29T16:00:00.000Z' } })
+  // test('can get deleted sites', async () => {
+  //   // Arrange
+  //   await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
+  //   await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 120, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00', deletedAt: '2022-08-29T16:00:00.000Z' } })
 
-    const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
-      syncUntilId: '0',
-      syncBatchLimit: 100
-    }
+  //   const params: SyncQueryParams = {
+  //     syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+  //     syncUntilId: '0',
+  //     syncBatchLimit: 100
+  //   }
 
-    // Act
-    const actual = await getArbimonSites(arbimonSequelize, params) as SiteArbimon[]
-    const [site] = actual.filter(s => s.idArbimon === 120)
+  //   // Act
+  //   const actual = await getArbimonSites(arbimonSequelize, params) as SiteArbimon[]
+  //   const [site] = actual.filter(s => s.idArbimon === 120)
 
-    // Assert
-    expect(site).toBeDefined()
-    expect(site.deletedAt).toBe('2022-08-29T16:00:00.000Z')
-  })
+  //   // Assert
+  //   expect(site).toBeDefined()
+  //   expect(site.deletedAt).toBe('2022-08-29T16:00:00.000Z')
+  // })
 })
