@@ -33,7 +33,18 @@ const transformSpeciesCall = async (speciesCall: SpeciesCallArbimon, sequelize: 
 
   const start = dayjs(speciesCall.callRecordedAt).add(speciesCall.start, 'seconds')
   const end = dayjs(speciesCall.callRecordedAt).add(speciesCall.end, 'seconds')
-
+  console.info('\n\n------item to insert------', {
+    idArbimon: speciesCall.idArbimon,
+    taxonSpeciesId: taxonSpeciesId,
+    callProjectId: callProjectId,
+    callSiteId: callSiteId,
+    callType: speciesCall.callType,
+    callRecordedAt: dayjs.utc(speciesCall.callRecordedAt).toDate(),
+    callTimezone: speciesCall.callTimezone,
+    callMediaRedirectUrl: `${ARBIMON_BASE_URL ?? ''}/project/${speciesCall.projectSlugArbimon}/visualizer/rec/${speciesCall.recordingId}`,
+    callMediaWavUrl: `${MEDIA_API_BASE_URL ?? ''}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_fwav.wav`,
+    callMediaSpecUrl: `${MEDIA_API_BASE_URL ?? ''}/internal/assets/streams/${speciesCall.siteIdCore}_t${dateQueryParamify(start.toISOString())}.${dateQueryParamify(end.toISOString())}_d512.512_mtrue_fspec.png`
+  })
   return {
       idArbimon: speciesCall.idArbimon,
       taxonSpeciesId: taxonSpeciesId,
@@ -69,8 +80,10 @@ export const writeSpeciesCallsToBio = async (speciesCalls: SpeciesCallArbimon[],
   const calls = await Promise.all(speciesCalls.map(async (call) => {
     return await transformSpeciesCall(call, sequelize)
   }))
+  console.info('\n\n------calls------', calls)
   const filteredCalls = calls.filter(isDefined)
   try {
+    console.info('\n\n------filteredCalls------', filteredCalls)
     await ModelRepository.getInstance(sequelize)
       .TaxonSpeciesCall
       .bulkCreate(filteredCalls, {
