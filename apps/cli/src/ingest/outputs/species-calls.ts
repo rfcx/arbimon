@@ -10,7 +10,6 @@ const loopUpsert = async (speciesCalls: Array<Omit<TaxonSpeciesCall, 'id'>>, seq
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const sp of speciesCalls) {
     try {
-      console.error('\n\n------species to upsert------', sp)
       await ModelRepository.getInstance(sequelize).TaxonSpeciesCall.upsert(transformTemplateArbimonToSpeciesCallBio(sp))
     } catch (e: any) {
       // store insert errors
@@ -25,10 +24,8 @@ const loopUpsert = async (speciesCalls: Array<Omit<TaxonSpeciesCall, 'id'>>, seq
 
 export const writeSpeciesCallsToBio = async (speciesCalls: SpeciesCallArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[Array<Omit<TaxonSpeciesCall, 'id'>>, Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   const calls = await Promise.all(await mapSpeciesCallArbimonWithBioFk(speciesCalls, sequelize))
-  console.info('\n\n------calls------', calls)
   const filteredCalls = calls.filter(isDefined)
   try {
-    console.info('\n\n------filteredCalls------', filteredCalls)
     await ModelRepository.getInstance(sequelize)
       .TaxonSpeciesCall
       .bulkCreate(filteredCalls.map(transformTemplateArbimonToSpeciesCallBio), {
