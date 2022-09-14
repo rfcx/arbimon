@@ -4,6 +4,19 @@ import { SafeParseReturnType, z } from 'zod'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { Project } from '@rfcx-bio/common/dao/types'
 
+const ProjectArbimonRowSchema = z.object({
+  idArbimon: z.number(),
+  idCore: z.string(),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  name: z.string(),
+  updatedAt: z.date(),
+  latitudeNorth: z.number(),
+  latitudeSouth: z.number(),
+  longitudeEast: z.number(),
+  longitudeWest: z.number(),
+  deletedAt: z.date().nullable()
+})
+
 const ProjectArbimonSchema = z.object({
   idArbimon: z.number(),
   idCore: z.string(),
@@ -16,6 +29,7 @@ const ProjectArbimonSchema = z.object({
   deletedAt: z.string().nullable()
 })
 
+export type ProjectArbimonRow = z.infer<typeof ProjectArbimonRowSchema>
 export type ProjectArbimon = z.infer<typeof ProjectArbimonSchema>
 
 export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseReturnType<unknown, ProjectArbimon> =>
