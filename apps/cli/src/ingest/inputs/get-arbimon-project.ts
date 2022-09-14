@@ -32,7 +32,7 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
     ;
     `
 
-    const results = await sequelize.query<ProjectArbimonRow>(sql, {
+  const results = await sequelize.query<ProjectArbimonRow>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
