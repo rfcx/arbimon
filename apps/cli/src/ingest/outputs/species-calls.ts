@@ -52,6 +52,7 @@ const loopUpsert = async (speciesCalls: Array<Omit<TaxonSpeciesCall, 'id'>>, seq
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const sp of speciesCalls) {
     try {
+      console.error('\n\n------species to upsert------', sp)
       await ModelRepository.getInstance(sequelize).TaxonSpeciesCall.upsert(sp)
     } catch (e: any) {
       // store insert errors
@@ -77,7 +78,7 @@ export const writeSpeciesCallsToBio = async (speciesCalls: SpeciesCallArbimon[],
       })
     return [filteredCalls, []]
   } catch (batchInsertError) {
-    console.error('⚠️ Batch insert of species calls failed... try loop insert', (batchInsertError as any).errors)
+    console.info('⚠️ Batch insert of species calls failed... try loop insert', (batchInsertError as any).errors)
     const failedToInsertItems = await loopUpsert(filteredCalls, sequelize)
     return [
       filteredCalls.filter(call => !failedToInsertItems.find(error => error.externalId === `${call.idArbimon}`)),
