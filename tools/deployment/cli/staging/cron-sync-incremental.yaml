@@ -6,7 +6,8 @@ metadata:
 spec:
   # at every 7 minute
   schedule: '*/7 * * * *'
-  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
@@ -23,4 +24,4 @@ spec:
               - configMapRef:
                   name: biodiversity-cli-config
           restartPolicy: Never
-      backoffLimit: 1
+      backoffLimit: 0
