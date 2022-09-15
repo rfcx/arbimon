@@ -5,7 +5,6 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { SyncQueryParams } from './sync-query-params'
 
 export interface ArbimonRecordingQuery {
-  projectIdArbimon: number
   siteIdArbimon: number
   datetime: Date
   duration: number
@@ -17,16 +16,15 @@ export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate,
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
-  const sql = `
-    SELECT  s.project_id projectIdArbimon,
-      r.site_id siteIdArbimon,
+  const sql = `SELECT r.site_id siteIdArbimon,
       r.datetime datetime,
       r.duration duration,
       r.recording_id idArbimon,
       r.upload_time updatedAt
     FROM recordings r
-    JOIN sites s ON r.site_id = s.site_id
     WHERE r.upload_time > $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id > $syncUntilId)
+      AND r.datetime is not null
+      AND r.upload_time is not null
     ORDER BY r.upload_time, r.recording_id
     LIMIT $syncBatchLimit
     ;
