@@ -13,7 +13,8 @@ export const getNeedSyncingProjects = async (sequelize: Sequelize, limit = 10): 
       ...rawEnvToProjectAndProfile[BIO_ENVIRONMENT].map(project => project.slug),
       'destinos-awake',
       'las-balsas-jocotoco-foundation-project',
-      'weforest-wildlife-corridors'
+      'weforest-wildlife-corridors',
+      'tech4nature-mexico'
     ]
     .map(s => `'${s}'`)
     .join(',')
