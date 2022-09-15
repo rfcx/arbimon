@@ -18,7 +18,8 @@
                 alt="Rainforest connection logo"
               >
               <div class="font-semibold text-primary ml-2 <md:hidden">
-                Bio<span :class="{ pride: isPride }">diversity</span>
+                <span class="<lg:hidden">Arbimon </span>
+                <span :class="{ pride: isPride }">Insights</span>
                 <sup
                   class="font-extralight"
                   style="font-size: 10px"
