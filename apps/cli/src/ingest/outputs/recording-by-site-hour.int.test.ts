@@ -58,7 +58,6 @@ describe('ingest > output > recording by site hour', () => {
 
   const RECORDING_INPUT = [
     {
-      projectIdArbimon: 1,
       siteIdArbimon: 88528,
       datetime: '2022-07-06 07:00:00',
       duration: 60.25,
@@ -66,7 +65,6 @@ describe('ingest > output > recording by site hour', () => {
       updatedAt: '2022-07-06 16:00:00'
     },
     {
-      projectIdArbimon: 1,
       siteIdArbimon: 88528,
       datetime: '2022-07-06 07:00:00',
       duration: 60.25,
@@ -92,7 +90,6 @@ describe('ingest > output > recording by site hour', () => {
     const NEW_RECORDS = [
       // recording to update existing row
       {
-        projectIdArbimon: 1,
         siteIdArbimon: 88528,
         datetime: '2022-07-06 07:20:00',
         duration: 20,
@@ -101,7 +98,6 @@ describe('ingest > output > recording by site hour', () => {
       },
       // new row
       {
-        projectIdArbimon: 1,
         siteIdArbimon: 88528,
         datetime: '2022-07-06 19:20:00',
         duration: 20,
@@ -128,7 +124,6 @@ describe('ingest > output > recording by site hour', () => {
     const NEW_RECORDS = [
       // recording to update existing row
       {
-        projectIdArbimon: 1,
         siteIdArbimon: 88528,
         datetime: '2022-07-06 07:00:00',
         duration: 20,
@@ -137,7 +132,6 @@ describe('ingest > output > recording by site hour', () => {
       },
       // new row
       {
-        projectIdArbimon: 1,
         siteIdArbimon: 88528,
         datetime: '2022-07-06 19:20:00',
         duration: 60,
@@ -163,7 +157,6 @@ describe('ingest > output > recording by site hour', () => {
     // Arrange
     const NEW_RECORDS = [
       {
-        projectIdArbimon: 1,
         siteIdArbimon: 88530,
         datetime: '2022-07-06 07:20:00',
         duration: 60,
@@ -171,7 +164,6 @@ describe('ingest > output > recording by site hour', () => {
         updatedAt: '2022-07-06 18:00:00'
       },
       {
-        projectIdArbimon: 1,
         siteIdArbimon: 88530,
         datetime: '2022-07-06 19:20:00',
         duration: 60,

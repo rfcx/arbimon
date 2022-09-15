@@ -8,7 +8,6 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { filterRepeatingDetectionMinutes } from './parse-array'
 
 const RecordingArbimonSchema = z.object({
-  projectIdArbimon: z.number(),
   siteIdArbimon: z.number(),
   datetime: z.string(),
   duration: z.number(),

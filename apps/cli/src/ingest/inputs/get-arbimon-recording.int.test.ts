@@ -59,7 +59,7 @@ describe('ingest > input > getArbimonRecordings', () => {
 
     }
 
-    const expectedProps = ['projectIdArbimon', 'siteIdArbimon', 'datetime', 'duration', 'idArbimon', 'updatedAt']
+    const expectedProps = ['siteIdArbimon', 'datetime', 'duration', 'idArbimon', 'updatedAt']
 
     // Act
     const actual = await getArbimonRecording(arbimonSequelize, params)
