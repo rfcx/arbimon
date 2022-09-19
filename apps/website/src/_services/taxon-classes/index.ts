@@ -6,7 +6,7 @@ export interface TaxonClassUi {
 /**
  * WARNING: IDs must match master-data in Bio DB
  */
-export const DEFAULT_TAXON_ID = -1
+export const DEFAULT_TAXON_ID = 999
 export const TAXON_CLASSES_BY_ID: Record<number, TaxonClassUi> = {
   [DEFAULT_TAXON_ID]: { symbol: '❔', color: '#B177FC' },
   100: { symbol: '🐸', color: '#02A84F' },
