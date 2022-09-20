@@ -5,7 +5,7 @@ export const rawRiskRatings: RiskRatingIucn[] = [
   { id: 0, code: 'NA', isThreatened: false },
   { id: 100, code: 'DD', isThreatened: false },
   { id: 200, code: 'LC', isThreatened: false },
-  { id: 300, code: 'NT', isThreatened: false },
+  { id: 300, code: 'NT', isThreatened: true },
   { id: 400, code: 'VU', isThreatened: true },
   { id: 500, code: 'EN', isThreatened: true },
   { id: 600, code: 'CR', isThreatened: true },
