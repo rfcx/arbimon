@@ -37,10 +37,11 @@ const DEFAULT_SITES = [DEFAULT_SITE, { ...DEFAULT_SITE, siteId: 88527, name: 'Si
 
 describe('ingest > sync > site', () => {
   beforeEach(async () => {
-    await deleteOutputProjects(biodiversitySequelize)
+    await arbimonSequelize.query('DELETE FROM sites')
     await arbimonSequelize.query('DELETE FROM projects')
     await biodiversitySequelize.query('DELETE FROM sync_status')
     await biodiversitySequelize.query('DELETE FROM sync_error')
+    await deleteOutputProjects(biodiversitySequelize)
 
     // write mock data to arbimon database
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_ARB_PROJECT })
