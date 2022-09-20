@@ -7,7 +7,7 @@ export const masterRiskRatings = {
   NA: { id: 0, code: 'NA', isThreatened: false, isProtected: false },
   DD: { id: 100, code: 'DD', isThreatened: false, isProtected: false },
   LC: { id: 200, code: 'LC', isThreatened: false, isProtected: false },
-  NT: { id: 300, code: 'NT', isThreatened: false, isProtected: false },
+  NT: { id: 300, code: 'NT', isThreatened: true, isProtected: false },
   VU: { id: 400, code: 'VU', isThreatened: true, isProtected: false },
   EN: { id: 500, code: 'EN', isThreatened: true, isProtected: false },
   CR: { id: 600, code: 'CR', isThreatened: true, isProtected: true },
