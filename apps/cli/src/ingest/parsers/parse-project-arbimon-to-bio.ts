@@ -35,7 +35,7 @@ export type ProjectArbimon = z.infer<typeof ProjectArbimonSchema>
 export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseReturnType<unknown, ProjectArbimon> =>
   ProjectArbimonSchema.safeParse(projectArbimon)
 
-export const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id'> => ({ ...project })
+const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id'> => ({ ...project })
 
 export const getTransformedProjects = async (projects: ProjectArbimon[], sequelize: Sequelize): Promise<any[]> => {
   const notDeletedProjects = projects.filter(project => project.deletedAt === null)

@@ -9,36 +9,31 @@ const SiteArbimonSchema = z.object({
   idArbimon: z.number(),
   idCore: z.string(),
   projectIdArbimon: z.number(),
-  locationProjectId: z.optional(z.number()),
   name: z.string(),
   latitude: z.number(),
   longitude: z.number(),
-  altitude: z.number()
-  //  deletedAt: z.string().nullable()
+  altitude: z.number(),
+  deletedAt: z.string().nullable()
 })
 
 export type SiteArbimon = z.infer<typeof SiteArbimonSchema>
 
-export const parseSiteArbimonToBio = (siteArbimon: unknown): SafeParseReturnType<unknown, SiteArbimon> =>
-SiteArbimonSchema.safeParse(siteArbimon)
+export const parseSiteArbimon = (siteArbimon: unknown): SafeParseReturnType<unknown, SiteArbimon> =>
+  SiteArbimonSchema.safeParse(siteArbimon)
 
-export const mapSitesArbimonWithBioFk = async (siteDataArbimon: SiteArbimon[], sequelize: Sequelize): Promise<SiteArbimon[]> => {
-  const arbimonSitesGroupByProject = groupBy(siteDataArbimon, 'projectIdArbimon')
+export const transformArbimonSites = async (sites: SiteArbimon[], sequelize: Sequelize): Promise<Array<Omit<Site, 'id'>>> => {
+  const arbimonSitesGroupByProject = groupBy(sites, 'projectIdArbimon')
 
   // get distinct bio project ids
-  const biodiversityProjects = (await ModelRepository.getInstance(sequelize).LocationProject.findAll({
+  const bioProjects = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
     where: { idArbimon: { [Op.in]: Object.keys(arbimonSitesGroupByProject) } },
+    attributes: ['id', 'idArbimon'],
     raw: true
-  }))
+  }).then(results => Object.fromEntries(results.map(p => [p.idArbimon, p.id])))
 
   // map bio project id into site object
-  return siteDataArbimon.map(site => ({
+  return sites.map(site => ({
     ...site,
-    locationProjectId: biodiversityProjects.find(project => project.idArbimon === site.projectIdArbimon)?.id ?? undefined
+    locationProjectId: bioProjects[site.projectIdArbimon]
   }))
 }
-
-export const transformSiteArbimonToSiteBio = (siteArbimon: SiteArbimon): Omit<Site, 'id'> => ({
-  ...siteArbimon,
-  locationProjectId: siteArbimon.locationProjectId ?? -1
-})

@@ -11,7 +11,7 @@ import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
-import { mapSitesArbimonWithBioFk, parseSiteArbimonToBio } from '../parsers/parse-site-arbimon-to-bio'
+import { parseSiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { getDefaultSyncStatus, SyncConfig } from './sync-config'
 import { isSyncable } from './syncable'
 
@@ -21,27 +21,24 @@ const SYNC_CONFIG: SyncConfig = {
   syncBatchLimit: 20000
 }
 
-export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
+export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus, verbose: boolean = true): Promise<SyncStatus> => {
   // Getter
-  const arbimonSites = await getArbimonSites(arbimonSequelize, syncStatus)
-  console.info('- syncArbimonSitesBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
-  console.info('- syncArbimonSitesBatch: found %d sites', arbimonSites.length)
-  if (arbimonSites.length === 0) return syncStatus
+  const rawArbimonSites = await getArbimonSites(arbimonSequelize, syncStatus)
+  if (verbose) {
+    console.info('- syncArbimonSitesBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
+    console.info('- syncArbimonSitesBatch: found %d sites', rawArbimonSites.length)
+  }
+  if (rawArbimonSites.length === 0) return syncStatus
 
-  const lastSyncdSite = arbimonSites[arbimonSites.length - 1]
+  const lastSyncdSite = rawArbimonSites[rawArbimonSites.length - 1]
   if (!isSyncable(lastSyncdSite)) throw new Error('Input does not contain needed sync-status data')
 
   // Parser
-
-  // unknown to expected format
-  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonSites, parseSiteArbimonToBio)
-  const siteDataArbimon = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
-
-  // add bio location project foreign key
-  const siteDataArbimonWithFk = await mapSitesArbimonWithBioFk(siteDataArbimon, biodiversitySequelize)
+  const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(rawArbimonSites, parseSiteArbimon)
+  const arbimonSites = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
   // Writer
-  const [insertSuccess, insertErrors] = await writeSitesToBio(siteDataArbimonWithFk, biodiversitySequelize)
+  const [writtenSites, writeErrors] = await writeSitesToBio(arbimonSites, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
 
   try {
@@ -60,13 +57,13 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
       await writeSyncError(error, biodiversitySequelize, transaction)
     }))
 
-    await Promise.all(insertErrors.map(async e => {
+    await Promise.all(writeErrors.map(async e => {
       const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
       await writeSyncError(error, biodiversitySequelize, transaction)
     }))
 
     // log project sync
-    const groupedByProject = groupBy(insertSuccess, 'locationProjectId')
+    const groupedByProject = groupBy(writtenSites, 'locationProjectId')
     await Promise.all(Object.keys(groupedByProject).map(async projectId => {
       const log = {
         locationProjectId: parseInt(projectId),
