@@ -3,7 +3,6 @@ import { Sequelize } from 'sequelize'
 import { getWithQueryParams } from './get-with-query-params'
 import { SyncQueryParams } from './sync-query-params'
 
-// TODO
 export const getArbimonSites = async (sequelize: Sequelize, params: SyncQueryParams): Promise<unknown[]> => {
   return await getWithQueryParams(
     sequelize,
@@ -16,7 +15,8 @@ export const getArbimonSites = async (sequelize: Sequelize, params: SyncQueryPar
           s.lat AS latitude,
           s.lon AS longitude,
           s.alt AS altitude,
-          s.updated_at AS updatedAt
+          s.updated_at AS updatedAt,
+          s.deleted_at AS deletedAt
     FROM sites s
     WHERE s.updated_at > $syncUntilDate OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId)
     ORDER BY s.updated_at, s.site_id

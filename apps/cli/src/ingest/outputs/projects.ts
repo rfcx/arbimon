@@ -4,13 +4,13 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
 import { Project, SyncError } from '@rfcx-bio/common/dao/types'
 
-import { getTransformedProjects, ProjectArbimon, transformProjectArbimonToProjectBio } from '../parsers/parse-project-arbimon-to-bio'
+import { getTransformedProjects, ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 
 const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const project of projects) {
     try {
-      await ModelRepository.getInstance(sequelize).LocationProject.upsert(transformProjectArbimonToProjectBio(project))
+      await ModelRepository.getInstance(sequelize).LocationProject.upsert(project)
     } catch (e: any) {
       const errorMessage = (e instanceof Error) ? e.message : ''
       // store insert errors
@@ -24,7 +24,7 @@ const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, tran
 }
 
 export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
-  const [itemsToInsertOrUpsert, itemsToReset] = await Promise.all(await getTransformedProjects(projects, sequelize))
+  const [itemsToInsertOrUpsert, itemsToReset] = await getTransformedProjects(projects, sequelize)
 
   // Remove deleted projects
   await deleteProjects(itemsToReset as Project[], sequelize)
@@ -41,7 +41,7 @@ export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: 
     return []
   } catch (batchInsertError) {
     console.info('⚠️ Batch insert failed... try loop upsert')
-    return await loopUpsert(projects, sequelize)
+    return await loopUpsert(itemsToInsertOrUpsert, sequelize)
   }
 }
 

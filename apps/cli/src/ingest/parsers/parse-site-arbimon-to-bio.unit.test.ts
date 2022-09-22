@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { parseSiteArbimonToBio } from './parse-site-arbimon-to-bio'
+import { parseSiteArbimon } from './parse-site-arbimon-to-bio'
 
 describe('ingest > parsers > parseSiteArbimonToBio', () => {
   const VALID_SITE = {
@@ -16,7 +16,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
 
   test('succeeds for valid data', async () => {
     // Act
-    const actual = parseSiteArbimonToBio(VALID_SITE)
+    const actual = parseSiteArbimon(VALID_SITE)
 
     // Assert
     expect(actual.success).toBe(true)
@@ -34,13 +34,13 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
 
     // Act
     const actualMissing = [
-      parseSiteArbimonToBio(missingIdArbimon),
-      parseSiteArbimonToBio(missingIdCore),
-      parseSiteArbimonToBio(missingProjectId),
-      parseSiteArbimonToBio(missingName),
-      parseSiteArbimonToBio(missingLatiude),
-      parseSiteArbimonToBio(missingLongitude),
-      parseSiteArbimonToBio(missingAltitude)
+      parseSiteArbimon(missingIdArbimon),
+      parseSiteArbimon(missingIdCore),
+      parseSiteArbimon(missingProjectId),
+      parseSiteArbimon(missingName),
+      parseSiteArbimon(missingLatiude),
+      parseSiteArbimon(missingLongitude),
+      parseSiteArbimon(missingAltitude)
     ]
 
     // Assert
@@ -67,20 +67,20 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
 
     // Act
     const actualMissing = [
-      parseSiteArbimonToBio(nullIdArbimon),
-      parseSiteArbimonToBio(nullIdCore),
-      parseSiteArbimonToBio(nullProjectId),
-      parseSiteArbimonToBio(nullName),
-      parseSiteArbimonToBio(nullLatitude),
-      parseSiteArbimonToBio(nullLongitude),
-      parseSiteArbimonToBio(nullAltitude),
-      parseSiteArbimonToBio(undefinedIdArbimon),
-      parseSiteArbimonToBio(undefinedIdCore),
-      parseSiteArbimonToBio(undefinedProjectId),
-      parseSiteArbimonToBio(undefinedName),
-      parseSiteArbimonToBio(undefinedLatitude),
-      parseSiteArbimonToBio(undefinedLongitude),
-      parseSiteArbimonToBio(undefinedAltitude)
+      parseSiteArbimon(nullIdArbimon),
+      parseSiteArbimon(nullIdCore),
+      parseSiteArbimon(nullProjectId),
+      parseSiteArbimon(nullName),
+      parseSiteArbimon(nullLatitude),
+      parseSiteArbimon(nullLongitude),
+      parseSiteArbimon(nullAltitude),
+      parseSiteArbimon(undefinedIdArbimon),
+      parseSiteArbimon(undefinedIdCore),
+      parseSiteArbimon(undefinedProjectId),
+      parseSiteArbimon(undefinedName),
+      parseSiteArbimon(undefinedLatitude),
+      parseSiteArbimon(undefinedLongitude),
+      parseSiteArbimon(undefinedAltitude)
     ]
 
     // Assert
@@ -94,8 +94,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
 
     // Act
     const actualMissing = [
-      parseSiteArbimonToBio(idCoreNumber),
-      parseSiteArbimonToBio(idArbimonString)
+      parseSiteArbimon(idCoreNumber),
+      parseSiteArbimon(idArbimonString)
     ]
 
     // Assert
