@@ -1,4 +1,4 @@
-import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
+import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { addProjectCoreIdInArbimon } from '@/integrity/sync-arbimon-projects-to-core/add-project-core-id-in-arbimon'
 import { createProjectInCore } from '@/integrity/sync-arbimon-projects-to-core/create-project-in-core'
 import { getDesyncedProjects } from '@/integrity/sync-arbimon-projects-to-core/get-desynced-projects'

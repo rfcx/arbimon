@@ -1,6 +1,6 @@
 // import { wait } from '@rfcx-bio/utils/async'
 
-// import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
+// import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 // import { syncAllForProject } from '@/sync/all'
 // import { syncProjects } from '@/sync/arbimon'
 // import { getNeedSyncingProjects } from '@/sync/data-source'
