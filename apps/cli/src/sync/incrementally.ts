@@ -1,5 +1,5 @@
-import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { getSequelize } from '@/db/connections'
+import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { syncAllIncrementally } from '@/ingest/sync/sync-all'
 
 const main = async (): Promise<void> => {
