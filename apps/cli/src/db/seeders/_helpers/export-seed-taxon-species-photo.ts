@@ -1,8 +1,8 @@
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { attributesExceptIdAndDates } from '@rfcx-bio/common/dao/query-helpers/attributes'
 
-import { toTaxonSpeciesPhotoSeed } from '@/data-ingest/species/output-seed-data/to-taxon-species-photo-seed'
 import { getSequelize } from '@/db/connections'
+import { toTaxonSpeciesPhotoSeed } from '@/sync/_refactor/output-seed-data/to-taxon-species-photo-seed'
 
 const main = async (): Promise<void> => {
   const models = ModelRepository.getInstance(getSequelize())
