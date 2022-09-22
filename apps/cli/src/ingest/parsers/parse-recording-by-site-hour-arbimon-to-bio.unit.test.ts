@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { parseRecordingBySiteHourToBio } from './parse-recording-by-site-hour-arbimon-to-bio'
+import { parseRecordingBySiteHourToBio, parseRecordingDeleted } from './parse-recording-by-site-hour-arbimon-to-bio'
 
 describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
   const VALID_RECORDING = {
@@ -9,6 +9,14 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     duration: 60.25,
     idArbimon: 1001,
     updatedAt: '2022-07-06 16:00:00'
+  }
+
+  const VALID_RECORDING_DELETED = {
+    siteIdArbimon: 123,
+    datetime: '2022-07-06 07:00:00',
+    duration: 60.25,
+    idArbimon: 1001,
+    deletedAt: '2022-07-06 16:00:00'
   }
 
   test('succeeds for valid data', async () => {
@@ -70,5 +78,13 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
 
     // Assert
     actualMissing.forEach(actual => expect(actual.success).toBe(false))
+  })
+
+  test('succeeds for valid deleted recording', async () => {
+    // Act
+    const actual = parseRecordingDeleted(VALID_RECORDING_DELETED)
+
+    // Assert
+    expect(actual.success).toBe(true)
   })
 })

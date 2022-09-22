@@ -8,7 +8,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
 import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
-import { writeRecordingBySiteHourToBio } from './recording-by-site-hour'
+import { deleteRecordingFromBio, writeRecordingBySiteHourToBio } from './recording-by-site-hour'
 
 const biodiversitySequelize = await getSequelize()
 
@@ -72,6 +72,24 @@ describe('ingest > output > recording by site hour', () => {
       updatedAt: '2022-07-06 16:00:00'
     }
   ]
+
+  const RECORDING_DELETED_INPUT = [
+    {
+      siteIdArbimon: 88528,
+      datetime: '2022-07-06 07:00:00',
+      duration: 60.25,
+      idArbimon: 1001,
+      deletedAt: '2022-08-16 16:00:00'
+    },
+    {
+      siteIdArbimon: 88528,
+      datetime: '2022-07-06 07:00:00',
+      duration: 60.25,
+      idArbimon: 1002,
+      deletedAt: '2022-08-16 16:00:00'
+    }
+  ]
+
   test('can write new recording by site hour', async () => {
     // Act
     await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
@@ -153,7 +171,7 @@ describe('ingest > output > recording by site hour', () => {
     expect(sum(recordingBySiteHour.map(item => item.count))).toBe(2)
   })
 
-  test.todo('can write new recordings by site hour for different sites', async () => {
+  test('can write new recordings by site hour for different sites', async () => {
     // Arrange
     const NEW_RECORDS = [
       {
@@ -182,5 +200,65 @@ describe('ingest > output > recording by site hour', () => {
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
     expect(dayjs(recordingBySiteHour[1].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
     expect(dayjs(recordingBySiteHour[2].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T19:00:00.000Z'))
+  })
+
+  test('can delete recording', async () => {
+    // Arrange
+    await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
+    const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
+
+    // Act
+    await deleteRecordingFromBio(RECORDING_DELETED_INPUT, biodiversitySequelize)
+    const result = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
+
+    // Assert
+    expect(recordingBySiteHour).toHaveLength(1)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2]])
+    expect(recordingBySiteHour[0].count).toEqual(1)
+
+    expect(result).toHaveLength(0)
+  })
+
+  test('can delete one recording from a group', async () => {
+    // Arrange
+    await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
+    const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
+
+    // Act
+    await deleteRecordingFromBio([RECORDING_DELETED_INPUT[0]], biodiversitySequelize)
+    const result = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
+
+    // Assert
+    expect(recordingBySiteHour).toHaveLength(1)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2]])
+    expect(recordingBySiteHour[0].count).toEqual(1)
+
+    expect(result).toHaveLength(1)
+    expect(result[0].countsByMinute).toEqual([[0, 1]])
+    expect(result[0].count).toEqual(1)
+  })
+
+  test('can delete several recordings from several groups', async () => {
+    // Arrange
+    await writeRecordingBySiteHourToBio(RECORDING_INPUT, biodiversitySequelize)
+    await writeRecordingBySiteHourToBio([{ ...RECORDING_INPUT[0], datetime: '2022-07-06 07:30:00' }, { ...RECORDING_INPUT[1], datetime: '2022-07-06 17:30:00' }], biodiversitySequelize)
+    const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
+
+    // Act
+    await deleteRecordingFromBio([{ ...RECORDING_DELETED_INPUT[0], datetime: '2022-07-06 07:30:00' }], biodiversitySequelize)
+    const result = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true, order: [['timePrecisionHourLocal', 'ASC']] })
+
+    // Assert
+    expect(recordingBySiteHour).toHaveLength(2)
+    expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2], [30, 1]])
+    expect(recordingBySiteHour[1].countsByMinute).toEqual([[30, 1]])
+    expect(recordingBySiteHour[0].count).toEqual(2)
+    expect(recordingBySiteHour[1].count).toEqual(1)
+
+    expect(result).toHaveLength(2)
+    expect(result[0].countsByMinute).toEqual([[0, 2]])
+    expect(result[1].countsByMinute).toEqual([[30, 1]])
+    expect(result[0].count).toEqual(1)
+    expect(result[1].count).toEqual(1)
   })
 })

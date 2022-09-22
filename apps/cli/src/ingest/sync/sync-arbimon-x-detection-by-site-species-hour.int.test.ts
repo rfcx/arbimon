@@ -193,9 +193,9 @@ describe('ingest > sync', () => {
 
       // - Assert write detections bio is returning sync status of a first batch
       expect(UPDATED_SYNC_STATUS).toBeTypeOf('object')
-      expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(2)
-      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('2391016')
-      expect(new Date(UPDATED_SYNC_STATUS.syncUntilDate)).greaterThan(new Date('1980-01-01T00:00:00.000Z'))
+      expect(UPDATED_SYNC_STATUS[1].syncBatchLimit).toBe(2)
+      expect(UPDATED_SYNC_STATUS[1].syncUntilId).toBe('2391016')
+      expect(new Date(UPDATED_SYNC_STATUS[1].syncUntilDate)).greaterThan(new Date('1980-01-01T00:00:00.000Z'))
 
       // - Assert valid detections count in Bio taxon species table of the first batch
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
@@ -223,7 +223,7 @@ describe('ingest > sync', () => {
       expect(detections.length).toBe(4)
 
       // - Assert update sync status of the new batch
-      expect(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilId).toBe(expectedIds[expectedIds.length - 1].toString())
+      expect(UPDATED_SYNC_STATUS_SECOND_BATCH[1].syncUntilId).toBe(expectedIds[expectedIds.length - 1].toString())
     })
 
     test('where sync is up-to-date', async () => {
@@ -278,13 +278,13 @@ describe('ingest > sync', () => {
       expect(UPDATED_SYNC_STATUS).toBeTypeOf('object')
       expect(UPDATED_SYNC_STATUS_SECOND_BATCH).toBeTypeOf('object')
       expect(UPDATED_SYNC_STATUS_THIRD_BATCH).toBeTypeOf('object')
-      expect(UPDATED_SYNC_STATUS.syncBatchLimit).toBe(2)
+      expect(UPDATED_SYNC_STATUS[1].syncBatchLimit).toBe(2)
       // Check last sync id for the 1st batch
-      expect(UPDATED_SYNC_STATUS.syncUntilId).toBe('2391041')
+      expect(UPDATED_SYNC_STATUS[1].syncUntilId).toBe('2391041')
       // Check last sync id for the 2nd batch
-      expect(UPDATED_SYNC_STATUS_SECOND_BATCH.syncUntilId).toBe('2391030')
+      expect(UPDATED_SYNC_STATUS_SECOND_BATCH[1].syncUntilId).toBe('2391030')
       // Check last sync id for the 3d batch
-      expect(UPDATED_SYNC_STATUS_THIRD_BATCH.syncUntilId).toBe('2391030')
+      expect(UPDATED_SYNC_STATUS_THIRD_BATCH[1].syncUntilId).toBe('2391030')
       // Check count of updated detections after 2nd batch
       expect(detections.length).toBe(3)
       // Check count of updated detections after reseting detection on the 3d batch

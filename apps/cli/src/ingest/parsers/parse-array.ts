@@ -4,7 +4,7 @@ import { SafeParseError, SafeParseReturnType, SafeParseSuccess } from 'zod'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { DetectionArbimon } from './parse-detection-arbimon-to-bio'
-import { RecordingArbimon } from './parse-recording-by-site-hour-arbimon-to-bio'
+import { RecordingArbimon, RecordingDeletedArbimon } from './parse-recording-by-site-hour-arbimon-to-bio'
 
 interface RecordingData {
   countsByMinute: number[][]
@@ -20,7 +20,7 @@ export const parseArray = <In, Out>(items: In[], parser: (item: In) => SafeParse
   return result as [Array<[In, SafeParseSuccess<Out>]>, Array<[In, SafeParseError<In>]>]
 }
 
-export const filterRepeatingDetectionMinutes = (group: Array<(RecordingArbimon | DetectionArbimon)>): RecordingData => {
+export const filterRepeatingDetectionMinutes = (group: Array<(RecordingArbimon | DetectionArbimon | RecordingDeletedArbimon)>): RecordingData => {
   return group.reduce((acc: any, cur: any) => {
     const minute = dayjs(cur.datetime).minute()
       // TODO check counts logic by unit testing
