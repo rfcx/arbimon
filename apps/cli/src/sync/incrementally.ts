@@ -1,4 +1,4 @@
-import { getArbimonSequelize } from '@/data-ingest/_connections/arbimon'
+import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { getSequelize } from '@/db/connections'
 import { syncAllIncrementally } from '@/ingest/sync/sync-all'
 
