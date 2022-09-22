@@ -3,6 +3,7 @@ import { Op, Sequelize } from 'sequelize'
 import { SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { RecordingBySiteHour, Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { filterRepeatingDetectionMinutes } from './parse-array'
@@ -13,6 +14,14 @@ const RecordingArbimonSchema = z.object({
   duration: z.number(),
   idArbimon: z.number(),
   updatedAt: z.string()
+})
+
+const RecordingDeletedArbimonSchema = z.object({
+  idArbimon: z.number(),
+  siteIdArbimon: z.number(),
+  datetime: z.string(),
+  duration: z.number(),
+  deletedAt: z.string()
 })
 
 const RecordingBySiteHourBioSchema = z.object({
@@ -28,10 +37,14 @@ const RecordingBySiteHourBioSchema = z.object({
 })
 
 export type RecordingArbimon = z.infer<typeof RecordingArbimonSchema>
+export type RecordingDeletedArbimon = z.infer<typeof RecordingDeletedArbimonSchema>
 export type RecordingBySiteHourBio = z.infer<typeof RecordingBySiteHourBioSchema>
 
 export const parseRecordingBySiteHourToBio = (recordingBySiteHourArbimon: unknown): SafeParseReturnType<unknown, RecordingArbimon> =>
   RecordingArbimonSchema.safeParse(recordingBySiteHourArbimon)
+
+export const parseRecordingDeleted = (recordingDeletedArbimon: unknown): SafeParseReturnType<unknown, RecordingDeletedArbimon> =>
+  RecordingDeletedArbimonSchema.safeParse(recordingDeletedArbimon)
 
 /**
  * Convert datetime to the local recording time
@@ -46,7 +59,7 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
   const itemsToInsertOrUpsert: RecordingBySiteHourBio[] = []
   const arbimonRecordingBySiteHourGroupBySites = groupBy(recordingArbimon, 'siteIdArbimon')
 
-  // group arbimon recordings by date, hour,site, species
+  // group arbimon recordings by date, hour, site
   const arbimonRecordingBySiteHourGroup = Object.values(groupBy(recordingArbimon, r => `${getTimePrecisionHourLocal(r.datetime)}-${r.siteIdArbimon}`))
   const biodiversitySites = await ModelRepository.getInstance(sequelize).LocationSite.findAll({
     where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupBySites).map(Number) } },
@@ -56,64 +69,125 @@ export const mapRecordingBySiteHourArbimonWithBioFk = async (recordingArbimon: R
   // group recordings
   for (const group of arbimonRecordingBySiteHourGroup) {
     const timePrecisionHourLocal = getTimePrecisionHourLocal(group[0].datetime)
-    const locationSiteId = biodiversitySites.find(site => site.idArbimon === group[0].siteIdArbimon)?.id
+    const locationSite = biodiversitySites.find(site => site.idArbimon === group[0].siteIdArbimon)
+    const locationSiteId = locationSite?.id
+    if (locationSiteId === undefined) {
+      // skip recordings with haven't synced site (validation issue)
+      continue
+    }
+    // find existing recordings in the bio db
+    const bioRecordingBySiteHour = await ModelRepository.getInstance(sequelize).RecordingBySiteHour.findOne({
+      where: { timePrecisionHourLocal, locationSiteId },
+      raw: true
+    }) as unknown as RecordingBySiteHourBio
 
-    // skip recordings with haven't synced site (validation issue)
-    if (locationSiteId !== undefined) {
-      const locationSite = biodiversitySites.find(site => site.idArbimon === group[0].siteIdArbimon)
+    const isNewRecording = bioRecordingBySiteHour === null
 
-      // find existing recordings in the bio db
-      const bioRecordingBySiteHour = await ModelRepository.getInstance(sequelize).RecordingBySiteHour.findOne({
-        where: {
-          timePrecisionHourLocal,
-          locationSiteId
-        },
-        raw: true
-      }) as unknown as RecordingBySiteHourBio
+    const totalDuration = isNewRecording
+      ? sum(group.map(item => item.duration)) / 60
+      : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
 
-      const isNewRecording = bioRecordingBySiteHour === null
+    // create a correct countsByMinute array (number[][]) for a new recording
+    const recordingData = filterRepeatingDetectionMinutes(group)
 
-      const totalDuration = isNewRecording
-        ? sum(group.map(item => item.duration)) / 60
-        : bioRecordingBySiteHour.totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
+    const countsByMinute = isNewRecording ? recordingData.countsByMinute : bioRecordingBySiteHour.countsByMinute
 
-      // create a correct countsByMinute array (number[][]) for a new recording
-      const recordingData = filterRepeatingDetectionMinutes(group)
+    if (!isNewRecording) {
+      group.forEach(dt => {
+        const dtMinutes = dayjs(dt.datetime).minute()
+        const existingIndex = countsByMinute.findIndex(pair => pair[0] === dtMinutes)
+        const existing = existingIndex > -1
 
-      const countsByMinute = isNewRecording ? recordingData.countsByMinute : bioRecordingBySiteHour.countsByMinute
-
-      if (!isNewRecording) {
-          group.forEach(dt => {
-          const dtMinutes = dayjs(dt.datetime).minute()
-          const existingIndex = countsByMinute.findIndex(pair => pair[0] === dtMinutes)
-          const existing = existingIndex > -1
-
-          // if a new recording exists -> increase the recording count in the existing array
-          // why do we get this recording again?
-          // 1. there are several site's recordings with the same datetime
-          if (existing) {
-            countsByMinute[existingIndex][1] = countsByMinute[existingIndex][1] + 1
-          }
-
+        // if a new recording exists -> increase the recording count in the existing array
+        // why do we get this recording again?
+        // 1. there are several site's recordings with the same datetime
+        if (existing) {
+          countsByMinute[existingIndex][1] = countsByMinute[existingIndex][1] + 1
+        } else {
           // if new recording does not exist -> add it
-          if (!existing) {
-            countsByMinute.push([dtMinutes, 1])
-          }
-        })
-      }
-
-      itemsToInsertOrUpsert.push({
-        timePrecisionHourLocal,
-        locationProjectId: locationSite?.locationProjectId ?? -1,
-        locationSiteId: locationSite?.id ?? -1,
-        totalDurationInMinutes: ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
-        countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
-        count: countsByMinute.length, // 3 - length
-        firstRecordingIdArbimon: min(group.map(item => item.idArbimon)) ?? group[0].idArbimon,
-        lastRecordingIdArbimon: max(group.map(item => item.idArbimon)) ?? group[group.length - 1].idArbimon,
-        lastUploaded: max(group.map(item => item.datetime)) ?? group[group.length - 1].datetime
+          countsByMinute.push([dtMinutes, 1])
+        }
       })
     }
+
+    itemsToInsertOrUpsert.push({
+      timePrecisionHourLocal,
+      locationProjectId: locationSite?.locationProjectId ?? -1,
+      locationSiteId: locationSite?.id ?? -1,
+      totalDurationInMinutes: ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
+      countsByMinute, // [[2,1], [4,1], [6,1]] - recording minutes in the group
+      count: countsByMinute.length, // 3 - length
+      firstRecordingIdArbimon: min(group.map(item => item.idArbimon)) ?? group[0].idArbimon,
+      lastRecordingIdArbimon: max(group.map(item => item.idArbimon)) ?? group[group.length - 1].idArbimon,
+      lastUploaded: max(group.map(item => item.datetime)) ?? group[group.length - 1].datetime
+    })
   }
   return itemsToInsertOrUpsert
+}
+
+export const transformDeletedRecordingToBio = async (recordingDeletedArbimon: RecordingDeletedArbimon[], sequelize: Sequelize): Promise<RecordingBySiteHour[][]> => {
+  const itemsToUpsert: RecordingBySiteHour[] = []
+  const itemsToDelete: RecordingBySiteHour[] = []
+
+  const arbimonRecordingBySiteHourGroupBySites = groupBy(recordingDeletedArbimon, 'siteIdArbimon')
+  // group arbimon recordings by date, hour, site
+  const arbimonRecordingBySiteHourGroup = Object.values(groupBy(recordingDeletedArbimon, r => `${getTimePrecisionHourLocal(r.datetime)}-${r.siteIdArbimon}`))
+  const biodiversitySites = await ModelRepository.getInstance(sequelize).LocationSite.findAll({
+    where: { idArbimon: { [Op.in]: Object.keys(arbimonRecordingBySiteHourGroupBySites).map(Number) } },
+    raw: true
+  }) as Site[]
+  // process each group of deleted recordings
+  for (const group of arbimonRecordingBySiteHourGroup) {
+    const timePrecisionHourLocal = getTimePrecisionHourLocal(group[0].datetime)
+    const locationSite = biodiversitySites.find(site => site.idArbimon === group[0].siteIdArbimon)
+    const locationSiteId = locationSite?.id
+    if (locationSiteId === undefined) {
+      // skip recordings with haven't synced site (validation issue)
+      continue
+    }
+    // find existing recordings in the bio db
+    const bioRecordingBySiteHour = await ModelRepository.getInstance(sequelize).RecordingBySiteHour.findOne({
+      where: { timePrecisionHourLocal, locationSiteId },
+      raw: true
+    }) as unknown as RecordingBySiteHourBio
+
+    const isExist = bioRecordingBySiteHour !== null
+
+    if (isExist) {
+      const totalDuration = bioRecordingBySiteHour.totalDurationInMinutes - sum(group.map(item => item.duration)) / 60
+      const countsByMinute = bioRecordingBySiteHour.countsByMinute
+
+      group.forEach(dt => {
+        const dtMinutes = dayjs(dt.datetime).minute()
+        const existingIndex = countsByMinute.findIndex(pair => pair[0] === dtMinutes)
+        const existing = existingIndex > -1
+
+        // if recording exists -> decrease the recording count in the existing array
+        if (existing) {
+          const reducedValue = countsByMinute[existingIndex][1] - 1
+          countsByMinute[existingIndex][1] = reducedValue <= 0 ? 0 : reducedValue
+        }
+      })
+
+      // Keep the recordings with count is not equal `0` in the countsByMinute: [[6, 0], [30, 1]] => [[30, 1]]
+      const filteredRecordings = countsByMinute.filter(group => group[1] !== 0)
+
+      const upsertOrDeleteGroup = {
+        timePrecisionHourLocal: dayjs.utc(timePrecisionHourLocal).toDate(),
+        locationProjectId: locationSite?.locationProjectId ?? -1,
+        locationSiteId: locationSite?.id ?? -1,
+        totalDurationInMinutes: totalDuration < 0 ? 0 : ceil(totalDuration, 2), // 3.20 - total recordings duration in minutes in the group
+        countsByMinute: filteredRecordings, // [[2,1], [4,1], [6,1]] - recording minutes in the group
+        count: filteredRecordings.length // 3 - length
+      }
+
+      // If a recording count is `0` in the countsByMinute -> remove this recording
+      const isDeletedRecording = upsertOrDeleteGroup.count === 0
+
+      if (isDeletedRecording) itemsToDelete.push(upsertOrDeleteGroup)
+      else itemsToUpsert.push(upsertOrDeleteGroup)
+    }
+  }
+
+  return [itemsToUpsert, itemsToDelete]
 }

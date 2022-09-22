@@ -19,32 +19,32 @@ import { isSyncable } from './syncable'
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Detection.id,
-  syncBatchLimit: 100000
+  syncBatchLimit: 200000
 }
 
 // This batch works like a loop where all detections are in sync
-export const syncArbimonDetectionBySiteSpeciesHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<SyncStatus> => {
-  // Get detections by sync config parameters
+export const syncArbimonDetectionBySiteSpeciesHourBatch = async (arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, syncStatus: SyncStatus): Promise<[number, SyncStatus]> => {
+  // =========== Input ==========
   const arbimonDetections = await getArbimonDetections(arbimonSequelize, syncStatus)
-
+  const totalArbimonDetection = arbimonDetections.length
   console.info('- syncArbimonDetectionBySiteSpeciesHourBatch: from', syncStatus.syncUntilId, syncStatus.syncUntilDate)
   console.info('- syncArbimonDetectionBySiteSpeciesHourBatch: found %d detections', arbimonDetections.length)
 
-  if (arbimonDetections.length === 0) return syncStatus
+  if (totalArbimonDetection === 0) return [totalArbimonDetection, syncStatus]
 
   const lastSyncdSite = arbimonDetections[arbimonDetections.length - 1]
   if (!isSyncable(lastSyncdSite)) throw new Error('Input does not contain needed sync-status data')
-
-  // Parser
+  // =========== Parser ==========
 
   // unknown to expected format
   const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonDetections, parseDetectionArbimonToBio)
   const parsedDetections = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
 
-  // Writer
+  // =========== Output ==========
   const [insertSuccess, insertErrors] = await writeDetectionsToBio(parsedDetections, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
 
+  // =========== Sync Status ==========
   try {
     // Update sync status
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdSite.updatedAt, syncUntilId: lastSyncdSite.idArbimon.toString() }
@@ -80,8 +80,7 @@ export const syncArbimonDetectionBySiteSpeciesHourBatch = async (arbimonSequeliz
 
     // commit transactions
     await transaction.commit()
-    // return sync status
-    return updatedSyncStatus
+    return [totalArbimonDetection, updatedSyncStatus]
   } catch (error) {
     await transaction.rollback()
     console.error(error)
@@ -97,6 +96,6 @@ export const syncArbimonDetectionBySiteSpeciesHour = async (arbimonSequelize: Se
       raw: true
     }) ?? getDefaultSyncStatus(SYNC_CONFIG)
 
-  const updatedSyncStatus = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
-  return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)
+  const [totalArbimonDetection] = await syncArbimonDetectionBySiteSpeciesHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+  return totalArbimonDetection < SYNC_CONFIG.syncBatchLimit
 }

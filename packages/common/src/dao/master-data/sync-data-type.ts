@@ -8,7 +8,8 @@ export const masterSyncDataTypes = {
   Species: { id: 300, name: 'Species' },
   SpeciesCall: { id: 400, name: 'Species Call' },
   Recording: { id: 500, name: 'Recording' },
-  Detection: { id: 600, name: 'Detection' }
+  Detection: { id: 600, name: 'Detection' },
+  RecordingDeleted: { id: 700, name: 'Recording Deleted' }
 } as const
 
 export type SyncTypesId = ValueOf<typeof masterSyncDataTypes>['id']

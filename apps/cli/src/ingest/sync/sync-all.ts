@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize'
 
 import { syncArbimonProjects } from './sync-arbimon-project'
 import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'
+import { syncArbimonRecordingDeleted } from './sync-arbimon-recording-deleted'
 import { syncArbimonSites } from './sync-arbimon-site'
 import { syncArbimonSpecies } from './sync-arbimon-species'
 import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
@@ -56,11 +57,19 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
       return
     }
 
-    const isDetectionsBySiteSpeciesHourUpToDate = await syncArbimonDetectionBySiteSpeciesHour(arbimonSequelize, biodiversitySequelize)
-    console.info('> Detections: up to date =', isDetectionsBySiteSpeciesHourUpToDate)
+    const isDetectionsBySiteSpeciesHourLessThanMaxLimit = await syncArbimonDetectionBySiteSpeciesHour(arbimonSequelize, biodiversitySequelize)
+    console.info('> Detections: less than max limit =', isDetectionsBySiteSpeciesHourLessThanMaxLimit)
 
-    if (!isDetectionsBySiteSpeciesHourUpToDate) {
+    if (!isDetectionsBySiteSpeciesHourLessThanMaxLimit) {
       console.info('- wait to sync more detections in the next round...')
+      return
+    }
+
+    const isRecordingDeletedUpToDate = await syncArbimonRecordingDeleted(arbimonSequelize, biodiversitySequelize)
+    console.info('> Recording Deleted: up to date =', isRecordingDeletedUpToDate)
+
+    if (!isRecordingDeletedUpToDate) {
+      console.info('- wait to sync more deleted recordings in the next round...')
       return
     }
 
