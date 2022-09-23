@@ -15,7 +15,7 @@ const SQL_INSERT_PROJECT = `
   VALUES ($id, $idCore, $idArbimon, $name, $slug, $latitudeNorth, $latitudeSouth, $longitudeEast, $longitudeWest, $createdAt, $updatedAt);
 `
 
-const DEFAULT_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: 1920, name: 'RFCx 1', slug: 'rfcx-1', latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z' }
+const DEFAULT_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: 1920, name: 'My Project', slug: 'my-project-1', latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z' }
 const DEFAULT_ARB_SITE = { idCore: '807cuoi3uopi', idArbimon: 9999, projectIdArbimon: DEFAULT_PROJECT.idArbimon, name: 'RFCx 99', latitude: 1, longitude: 1, altitude: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', deletedAt: null }
 
 describe('ingest > outputs > sites', () => {
@@ -64,6 +64,26 @@ describe('ingest > outputs > sites', () => {
     expect(updatedSite?.latitude).toBe(updatedArbimonSite.latitude)
     expect(updatedSite?.longitude).toBe(updatedArbimonSite.longitude)
     expect(updatedSite?.altitude).toBe(updatedArbimonSite.altitude)
+  })
+
+  test('can move site to another project', async () => {
+    // Arrange
+    const newProject = { ...DEFAULT_PROJECT, id: 2, idCore: '807cuoi3cvwx', idArbimon: 1921, slug: 'my-project-2' }
+    await biodiversitySequelize.query(SQL_INSERT_PROJECT, { bind: newProject })
+    await writeSitesToBio([DEFAULT_ARB_SITE], biodiversitySequelize)
+    const updatedArbimonSite = {
+      ...DEFAULT_ARB_SITE,
+      projectIdArbimon: newProject.idArbimon
+    }
+
+    // Act
+    await writeSitesToBio([updatedArbimonSite], biodiversitySequelize)
+
+    // Assert
+    const updatedSite = await ModelRepository.getInstance(biodiversitySequelize).LocationSite
+      .findOne({ where: { idArbimon: updatedArbimonSite.idArbimon } })
+    expect(updatedSite?.locationProjectId).toBe(newProject.id)
+    // TODO Check that recordings and detections are moved too
   })
 
   test('log error when project does not exist', async () => {
