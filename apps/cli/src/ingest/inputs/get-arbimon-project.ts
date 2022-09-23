@@ -1,9 +1,14 @@
 import { QueryTypes, Sequelize } from 'sequelize'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { ProjectArbimonRow } from '../parsers/parse-project-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
 export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+  // Do not process query if the date is not valid
+  if (!dayjs(syncUntilDate).isValid()) return []
+
   const sql = `
     SELECT p.project_id AS idArbimon,
            p.external_id AS idCore,
