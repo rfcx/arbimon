@@ -46,4 +46,4 @@ There are predefined folders for:
 
 - `02-arbimon-mock-data`: mock data imported from Arbimon
 - `03-preload-external-data`: loaded from IUCN and Wikipedia to avoid heavy initial imports
-- `04-user-data-mock`: // TODO Describe
+- `04-user-data`: // TODO Describe
