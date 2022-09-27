@@ -6,7 +6,7 @@ import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordings, getTotalRecordedMinutes } from './spotlight-dataset-dao'
+import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordedMinutesCount } from './spotlight-dataset-dao'
 
 export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
@@ -36,8 +36,7 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
   const specificSpeciesDetections = await filterSpeciesDetection(models, filterForSql, taxonSpeciesId)
 
   // Metrics
-  const recordings = await getRecordings(models, filterForSql)
-  const recordedMinutesCount = getTotalRecordedMinutes(recordings)
+  const recordedMinutesCount = await getRecordedMinutesCount(models, filterForSql)
   const detectionMinutesCount = calculateDetectionCount(specificSpeciesDetections)
   const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, recordedMinutesCount)
 
