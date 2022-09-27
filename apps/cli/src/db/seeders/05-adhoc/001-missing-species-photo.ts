@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize'
 import { MigrationFn } from 'umzug'
 
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { TaxonSpeciesPhotoModel } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
+import { TaxonSpeciesPhotoModel, UPDATE_ON_DUPLICATE_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
 import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
@@ -28,5 +28,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       }
     }).filter(isDefined)
 
-  await TaxonSpeciesPhotoModel(sequelize).bulkCreate(data)
+  await TaxonSpeciesPhotoModel(sequelize).bulkCreate(data, {
+    updateOnDuplicate: UPDATE_ON_DUPLICATE_TAXON_SPECIES_PHOTO
+  })
 }
