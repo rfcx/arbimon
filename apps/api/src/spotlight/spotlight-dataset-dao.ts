@@ -33,10 +33,6 @@ export async function getRecordedMinutesCount (models: AllModels, filter: Filter
   return await models.RecordingBySiteHour.sum('count', { where })
 }
 
-export function getRecordingTotalDurationMinutes (recordings: RecordingBySiteHour[]): number {
-  return sum(recordings.map(({ totalDurationInMinutes }) => totalDurationInMinutes))
-}
-
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
   return sum(detections.map(({ count }) => count))
 }
@@ -55,7 +51,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
     raw: true
   })
 
-  const summariesRecordingBySite: { [siteId: number]: RecordingBySiteHour[] } = {}
+  const summariesRecordingBySite: { [siteId: number]: number } = {}
 
   // TODO: Improve the logic to get all sites recordings at once?
   for (const site of sites) {
@@ -68,7 +64,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
     const siteId: number = Number(siteIdString)
     const matchedSite = sites.find(s => s.id === siteId)
 
-    const siteTotalRecordedMinutes = getRecordingTotalDurationMinutes(summariesRecordingBySite[siteId])
+    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId]
 
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.speciesId)
     const siteDetectionMinutesCount = sum(siteSpeciesSummaries.map(({ count }) => count))
