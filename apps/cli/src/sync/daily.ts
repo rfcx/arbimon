@@ -1,7 +1,7 @@
-import { syncOnlyMissingIUCNSpeciesInfo } from '@/sync/species-info/iucn'
 import { syncOnlyMissingWikiSpeciesInfo } from '@/sync/species-info/wiki'
 import { refreshMviews } from '../db/actions/refresh-mviews'
 import { getSequelize } from '../db/connections'
+import { syncOnlyMissingIUCNSpeciesInfo } from './species-info/iucn'
 
 const main = async (): Promise<void> => {
   console.info('Daily sync start')
