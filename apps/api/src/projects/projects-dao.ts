@@ -28,7 +28,8 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
     'puerto-rico',
     'puerto-rico-island-wide',
     'rfcx-guardians-madre-de-dios-peru',
-    'weforest-wildlife-corridors'
+    'weforest-wildlife-corridors',
+    'mangrove-finch-galapagos'
   ]
 
   const myProjectIds = projects.map(p => p.id)
