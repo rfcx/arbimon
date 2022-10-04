@@ -26,11 +26,16 @@ export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Prom
 export const syncWikiSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>): Promise<void> => {
   const newData = Object.entries(await getSequentially(Object.keys(speciesNameToId), getWikiSummary))
 
-  await writeWikiSpeciesDataToPostgres(sequelize, newData.map(([name, data]) => ({
-    taxonSpeciesId: speciesNameToId[name],
-    description: data.content,
-    descriptionSourceUrl: data.contentUrls.desktop
-  })))
+  await writeWikiSpeciesDataToPostgres(sequelize, newData.map(([name, data]) => {
+    // Ignore not support species name and sub species name wiki information
+    if (name.split(' ').length > 2) return undefined
+
+    return {
+      taxonSpeciesId: speciesNameToId[name],
+      description: data.content,
+      descriptionSourceUrl: data.contentUrls.desktop
+    }
+  }).filter(isDefined))
 
   const speciesPhotos = newData.map(([name, data]) => {
     if (!data.thumbnailImage || !data.license) return undefined
