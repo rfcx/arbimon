@@ -34,8 +34,16 @@ const PHOTO_LICENSES_ALLOWED = new Set([
 const PHOTO_LICENSES_DISALLOWED = new Set<string>([])
 
 export const getWikiSummary = async (scientificName: string): Promise<WikiSummary | undefined> => {
+  // Rename not support species name and sub species name to species name
+  const words = scientificName.split(' ')
+  const speciesName = words.length <= 2 ? scientificName : words.slice(0, 2).join(' ')
+
+  if (words.length > 2) {
+    console.info(`WIKI: Rename '${scientificName}' to '${speciesName}'`)
+  }
+
   // Call Wiki API
-  const wikiSpecies = await getWikiSpecies(scientificName)
+  const wikiSpecies = await getWikiSpecies(speciesName)
   if (!wikiSpecies) return undefined
 
   const wikiSpeciesData: WikiSummary = {
