@@ -32,8 +32,9 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
   const isLocationRedacted = isProtectedSpecies(speciesIucn?.riskRatingId) && !isProjectMember
 
   // Filtering
-  const totalDetections = await filterDetections(models, filterForSql)
-  const specificSpeciesDetections = await filterSpeciesDetection(models, filterForSql, taxonSpeciesId)
+  const filterForSqlWithoutTaxonSpeciesId = toFilterDatasetForSql(filter)
+  const totalDetections = await filterDetections(models, filterForSqlWithoutTaxonSpeciesId)
+  const specificSpeciesDetections = await filterSpeciesDetection(models, filterForSql)
 
   // Metrics
   const recordedMinutesCount = await getRecordedMinutesCount(models, filterForSql)
