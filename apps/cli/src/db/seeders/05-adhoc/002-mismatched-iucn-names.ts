@@ -1,0 +1,38 @@
+import { Op, QueryInterface } from 'sequelize'
+import { MigrationFn } from 'umzug'
+
+import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
+import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+
+import { syncIucnSpeciesInfo } from '@/sync/species-info/iucn'
+
+const mismatchedNames: Record<string, string> = {
+  // Arbimon name : IUCN name
+  'Camarhynchus pallidus': 'Geospiza pallida',
+  'Camarhynchus heliobates': 'Geospiza heliobates'
+}
+
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  const sequelize = params.context.sequelize
+
+  // Lookups
+  const iucnNameToSpeciesId: Record<string, number> = await TaxonSpeciesModel(sequelize)
+    .findAll({ attributes: ['id', 'scientificName'], where: { scientificName: { [Op.in]: Object.keys(mismatchedNames) } } })
+    .then(species => Object.fromEntries(species.map(s => [mismatchedNames[s.scientificName], s.id]).filter(s => s[0] !== undefined)))
+  const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
+    .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
+
+  // Explain update plan
+  console.info('Plan:')
+  for (const name in mismatchedNames) {
+    const speciesId = iucnNameToSpeciesId[mismatchedNames[name]]
+    if (speciesId) {
+      console.info(`${name} (id=${speciesId}) will be matched to IUCN data for ${mismatchedNames[name]}`)
+    } else {
+      console.info(`${name} not found`)
+    }
+  }
+
+  // Get IUCN data and insert
+  await syncIucnSpeciesInfo(sequelize, iucnNameToSpeciesId, iucnCodeToId).catch(err => console.error(err.message))
+}
