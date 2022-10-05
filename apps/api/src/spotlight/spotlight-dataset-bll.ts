@@ -6,7 +6,7 @@ import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getRecordedMinutesCount } from './spotlight-dataset-dao'
+import { calculateDetectionCount, calculateDetectionFrequency, filterDetections, filterSpeciesDetection, getDetectionsByLocationSite, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getDetectionsByTimeMonthYear, getDetectionsByTimeYear, getProjectTotalSiteCount, getRecordedMinutesCount } from './spotlight-dataset-dao'
 
 export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeciesId: number, isProjectMember: boolean): Promise<SpotlightDatasetResponse> {
   const sequelize = getSequelize()
@@ -41,7 +41,8 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
   const detectionMinutesCount = calculateDetectionCount(specificSpeciesDetections)
   const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, recordedMinutesCount)
 
-  const totalSiteCount = new Set(totalDetections.map(({ locationSiteId }) => locationSiteId)).size
+  // const totalSiteCount = new Set(totalDetections.map(({ locationSiteId }) => locationSiteId)).size
+  const totalSiteCount = await getProjectTotalSiteCount(models, locationProjectId)
   const occupiedSiteCount = new Set(specificSpeciesDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
