@@ -32,6 +32,16 @@ export async function getRecordedMinutesCount (models: AllModels, filter: Filter
   return await models.RecordingBySiteHour.sum('count', { where, logging: console.info }) ?? 0
 }
 
+export async function getProjectTotalSiteCount (models: AllModels, locationProjectId: number): Promise<number> {
+  const project = await models.LocationProjectMetric.findOne({
+    where: { locationProjectId },
+    attributes: [['site_count', 'siteCount']],
+    raw: true
+  }) as unknown as { siteCount: number }
+
+  return project?.siteCount ?? 0
+}
+
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
   return sum(detections.map(({ count }) => count))
 }
