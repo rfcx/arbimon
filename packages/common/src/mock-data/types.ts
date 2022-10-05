@@ -15,3 +15,14 @@ export interface MockHourlyDetectionSummary {
   'num_of_recordings': number
   'detection_frequency': number
 }
+
+export interface MockHourlyRecordingSummary {
+  'time_precision_hour_local': string
+  'location_project_id': number
+  'location_site_id': number
+  'created_at': string
+  'updated_at': string
+  'count': number
+  'counts_by_minute': string
+  'total_duration_in_minutes': number
+}
