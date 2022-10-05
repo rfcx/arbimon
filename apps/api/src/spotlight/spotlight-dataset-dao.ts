@@ -18,7 +18,7 @@ export async function filterDetections (models: AllModels, filter: FilterDataset
   })
 }
 
-export async function filterSpeciesDetection (models: AllModels, filter: FilterDatasetForSql, speciesId: number): Promise<DetectionBySiteSpeciesHour[]> {
+export async function filterSpeciesDetection (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
   const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
@@ -29,8 +29,7 @@ export async function filterSpeciesDetection (models: AllModels, filter: FilterD
 
 export async function getRecordedMinutesCount (models: AllModels, filter: FilterDatasetForSql): Promise<number> {
   const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
-
-  return await models.RecordingBySiteHour.sum('count', { where })
+  return await models.RecordingBySiteHour.sum('count', { where, logging: console.info }) ?? 0
 }
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
