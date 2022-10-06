@@ -29,7 +29,7 @@ export async function filterSpeciesDetection (models: AllModels, filter: FilterD
 
 export async function getRecordedMinutesCount (models: AllModels, filter: FilterDatasetForSql): Promise<number> {
   const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
-  return await models.RecordingBySiteHour.sum('count', { where, logging: console.info }) ?? 0
+  return await models.RecordingBySiteHour.sum('count', { where }) ?? 0
 }
 
 export async function getRecordedSitesCount (models: AllModels, filter: FilterDatasetForSql): Promise<number> {
@@ -70,7 +70,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
 
     const siteTotalRecordedMinutes = summariesRecordingBySite[siteId]
 
-    const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.speciesId)
+    const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.taxonSpeciesId)
     const siteDetectionMinutesCount = sum(siteSpeciesSummaries.map(({ count }) => count))
     const siteDetectionFrequency = siteTotalRecordedMinutes === 0 ? 0 : siteDetectionMinutesCount / siteTotalRecordedMinutes
     const siteOccupied = siteSpeciesSummaries.length > 0
