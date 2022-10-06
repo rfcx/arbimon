@@ -16,11 +16,22 @@ export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Prom
     ORDER BY ts.id
   `
   // Lookups
-  const speciesNameToId: Record<string, number> = await sequelize
+  const speciesNameAndIds = await sequelize
     .query<{ id: number, scientific_name: string }>(sql, { type: QueryTypes.SELECT, raw: true })
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, s.id])))
-  console.info('| syncOnlyMissingWikiSpeciesInfo =', Object.entries(speciesNameToId).length)
-  await syncWikiSpeciesInfo(sequelize, speciesNameToId)
+    .then(allSpecies => allSpecies)
+
+  let offset = 0
+  const batchSize = 1000
+  const batch = Math.ceil(speciesNameAndIds.length / batchSize)
+
+  for (let i = 0; i < batch; i++) {
+    const speciesNameToId = Object.fromEntries(speciesNameAndIds
+        .slice(offset, Math.min(offset + batchSize, speciesNameAndIds.length))
+        .map(s => [s.scientific_name, s.id]))
+    console.info('| syncOnlyMissingWikiSpeciesInfo =', Object.entries(speciesNameToId).length)
+    await syncWikiSpeciesInfo(sequelize, speciesNameToId)
+    offset = offset + batchSize
+  }
 }
 
 export const syncWikiSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>): Promise<void> => {
