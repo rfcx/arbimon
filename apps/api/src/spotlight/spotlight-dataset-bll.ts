@@ -41,7 +41,8 @@ export async function getSpotlightDatasetData (filter: FilterDataset, taxonSpeci
   const detectionMinutesCount = calculateDetectionCount(specificSpeciesDetections)
   const detectionFrequency = calculateDetectionFrequency(specificSpeciesDetections, recordedMinutesCount)
 
-  const totalSiteCount = await getRecordedSitesCount(models, filterForSql)
+  // All site in project that have recordings
+  const totalSiteCount = await getRecordedSitesCount(models, filterForSqlWithoutTaxonSpeciesId)
   const occupiedSiteCount = new Set(specificSpeciesDetections.map(({ locationSiteId }) => locationSiteId)).size
   const occupiedSiteFrequency = totalSiteCount === 0 ? 0 : occupiedSiteCount / totalSiteCount
 
