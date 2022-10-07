@@ -205,7 +205,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       // Arrange
       const app = await getMockedApp()
       const expected = {
-        totalSiteCount: 0,
+        totalSiteCount: 2,
         recordedMinutesCount: 20,
         detectionMinutesCount: 0,
         detectionFrequency: 0,
@@ -267,7 +267,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       // Arrange
       const app = await getMockedApp()
       const expected = {
-        totalSiteCount: 0,
+        totalSiteCount: 1,
         recordedMinutesCount: 7,
         detectionMinutesCount: 0,
         detectionFrequency: 0,
