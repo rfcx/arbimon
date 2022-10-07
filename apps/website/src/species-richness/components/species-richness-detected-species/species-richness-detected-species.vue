@@ -1,9 +1,6 @@
 <template>
   <div>
-    <section-title
-      title="Species detected"
-      :note="hasTableData && isLocationRedacted ? '* Some species are protected.' : ''"
-    />
+    <section-title title="Species detected" />
     <no-data-panel
       v-if="!hasTableData"
       class="h-32 mt-2"

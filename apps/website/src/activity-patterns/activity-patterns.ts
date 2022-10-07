@@ -25,7 +25,7 @@ import SpeciesBackgroundInformation from './components/species-background-inform
 import SpeciesImages from './components/species-images/species-images.vue'
 import SpeciesSelector from './components/species-selector/species-selector.vue'
 import SpeciesTitle from './components/species-title/species-title.vue'
-import ActivityPatternsMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
+import SpotlightMetrics from './components/spotlight-metrics/spotlight-metrics.vue'
 import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
 
 const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
@@ -34,7 +34,7 @@ const DEFAULT_PREFIX = 'Spotlight-Raw-Data'
   components: {
     ActivityPatternsByLocation,
     ActivityPatternsByTime,
-    ActivityPatternsMetrics,
+    SpotlightMetrics,
     ActivityPatternsPredictedOccupancy,
     ComparisonListComponent,
     SpeciesBackgroundInformation,

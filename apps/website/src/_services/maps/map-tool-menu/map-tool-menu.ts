@@ -1,17 +1,17 @@
-import { Vue } from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import { Emit, Prop } from 'vue-property-decorator'
 
-import { MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-// import cartoonIcon from './icons/cartoon-two-way-sight.svg'
+import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import MapStyleOptions from './map-style-options.vue'
 
-interface MapOptions {
-  style: MapboxStyle
-  name: string
-  icon: string
-}
-
+@Options({
+  components: {
+    MapStyleOptions
+  }
+})
 export default class MapToolMenuComponent extends Vue {
-  @Prop() mapStyle!: MapboxStyle
+  @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapGroundStyle!: MapboxStyle
+  @Prop({ default: MAPBOX_STYLE_HEATMAP }) mapStatisticsStyle!: MapboxStyle
 
   @Emit()
   emitShowLabelsToggle (): boolean {
@@ -24,9 +24,15 @@ export default class MapToolMenuComponent extends Vue {
     return style
   }
 
+  @Emit()
+  emitMapGroundStyle (style: MapboxStyle): MapboxStyle {
+    return style
+  }
+
+  @Emit()
+  emitMapStatisticsStyle (style: MapboxStyle): MapboxStyle {
+    return style
+  }
+
   isShowLabels = true
-  mapStyleOptions: MapOptions[] = [
-    { style: MAPBOX_STYLE_SATELLITE_STREETS, name: 'Satellite', icon: new URL('./icons/satellite.svg', import.meta.url).toString() },
-    { style: MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, name: 'Simple', icon: new URL('./icons/global.svg', import.meta.url).toString() }
-  ]
 }
