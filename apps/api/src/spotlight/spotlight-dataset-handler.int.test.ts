@@ -430,7 +430,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
         latitude: 18.31307,
         longitude: -65.24878,
         siteDetectionMinutesCount: 2,
-        siteDetectionFrequency: 0.2857142857142857,
+        siteDetectionFrequency: 0.2857,
         siteOccupied: true
       }
 
@@ -445,9 +445,10 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')
+
       const actualResult = result[siteId]
       expect(actualResult.siteDetectionMinutesCount).toEqual(expectedResult.siteDetectionMinutesCount)
-      expect(actualResult.siteDetectionFrequency).toEqual(expectedResult.siteDetectionFrequency)
+      expect(actualResult.siteDetectionFrequency).toBeCloseTo(expectedResult.siteDetectionFrequency)
     })
 
     test('calculate correct detection count and detection frequency for hourly', async () => {
