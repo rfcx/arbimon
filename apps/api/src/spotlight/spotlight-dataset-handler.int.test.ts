@@ -3,7 +3,7 @@ import fastifyRoutes from '@fastify/routes'
 import fastify, { FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesSpotlight } from './index'
@@ -29,6 +29,16 @@ const EXPECTED_PROPS = [
   'detectionsByTimeYear',
   'detectionsByTimeDate',
   'detectionsByTimeMonthYear'
+]
+
+const DETECTION_BY_SITE_DATA_EXPECTED_PROPS = [
+  'siteId',
+  'siteName',
+  'latitude',
+  'longitude',
+  'siteDetectionMinutesCount',
+  'siteDetectionFrequency',
+  'siteOccupied'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
@@ -106,6 +116,42 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       // Assert
       const result = JSON.parse(response.body)
       Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+    })
+
+    test('detectionByLocationSite contain all expected props', async () => {
+      // Arrange
+      const app = await getMockedApp()
+
+      // Act
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+      })
+
+      // Assert
+      const result = JSON.parse(response.body)?.detectionsByLocationSite
+
+      const actualProps = Object.values(result)[0]
+      DETECTION_BY_SITE_DATA_EXPECTED_PROPS.forEach(expectedProp => expect(actualProps).toHaveProperty(expectedProp))
+    })
+
+    test('detectionByLocationSite does not contain any additional props', async () => {
+      // Arrange
+      const app = await getMockedApp()
+
+      // Act
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+      })
+
+      // Assert
+      const result = JSON.parse(response.body)?.detectionsByLocationSite
+
+      const actualProps = Object.values(result)[0] as SpotlightDetectionDataBySite
+      Object.keys(actualProps).forEach(actualProp => expect(DETECTION_BY_SITE_DATA_EXPECTED_PROPS).toContain(actualProp))
     })
 
     test('calculate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency', async () => {
@@ -201,6 +247,37 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
     })
 
+    test('calculate empty detection count, detection frequency, and naive occupancy by taxon and species id on empty date', async () => {
+      // Arrange
+      const app = await getMockedApp()
+      const expected = {
+        totalSiteCount: 0,
+        recordedMinutesCount: 0,
+        detectionMinutesCount: 0,
+        detectionFrequency: 0,
+        occupiedSiteCount: 0,
+        occupiedSiteFrequency: 0
+      }
+
+      // Act
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2021-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2022-01-01T00:00:00.000Z', taxonClassIds: '100' }
+      })
+
+      // Assert
+      const result = JSON.parse(response.body)
+
+      expect(result).toBeDefined()
+      expect(result.totalSiteCount).toBe(expected.totalSiteCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
+      expect(result.detectionFrequency).toBe(expected.detectionFrequency)
+      expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
+      expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
+    })
+
     test('calculate empty detection count, detection frequency, and naive occupancy by taxon and not correct species id', async () => {
       // Arrange
       const app = await getMockedApp()
@@ -263,6 +340,37 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
     })
 
+    test('calculate empty detection count, detection frequency, and naive occupancy by taxon, site id and species id on empty date', async () => {
+      // Arrange
+      const app = await getMockedApp()
+      const expected = {
+        totalSiteCount: 0,
+        recordedMinutesCount: 0,
+        detectionMinutesCount: 0,
+        detectionFrequency: 0,
+        occupiedSiteCount: 0,
+        occupiedSiteFrequency: 0
+      }
+
+      // Act
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2021-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2021-01-01T00:00:00.000Z', siteIds: SITE_ID_1, taxonClassIds: '100' }
+      })
+
+      // Assert
+      const result = JSON.parse(response.body)
+
+      expect(result).toBeDefined()
+      expect(result.totalSiteCount).toBe(expected.totalSiteCount)
+      expect(result.recordedMinutesCount).toBe(expected.recordedMinutesCount)
+      expect(result.detectionMinutesCount).toBe(expected.detectionMinutesCount)
+      expect(result.detectionFrequency).toBe(expected.detectionFrequency)
+      expect(result.occupiedSiteCount).toBe(expected.occupiedSiteCount)
+      expect(result.occupiedSiteFrequency).toBe(expected.occupiedSiteFrequency)
+    })
+
     test('calculate empty detection count, detection frequency, and naive occupancy by taxon, site id and not correct species id', async () => {
       // Arrange
       const app = await getMockedApp()
@@ -310,6 +418,36 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       expect(result).toBeDefined()
       expect(result).toEqual(false)
+    })
+
+    test('calculate correct detection by location site', async () => {
+      // Arrange
+      const app = await getMockedApp()
+      const siteId = 30001001
+      const expectedResult = {
+        siteId: 30001001,
+        siteName: 'Test Site 3',
+        latitude: 18.31307,
+        longitude: -65.24878,
+        siteDetectionMinutesCount: 2,
+        siteDetectionFrequency: 0.2857142857142857,
+        siteOccupied: true
+      }
+
+      // Act
+      const response = await app.inject({
+        method: GET,
+        url: URL,
+        query: { speciesId: '100001', dateStartInclusiveLocalIso: '2022-01-01T00:00:00.000Z', dateEndInclusiveLocalIso: '2031-01-01T00:00:00.000Z' }
+      })
+
+      const result = JSON.parse(response.body)?.detectionsByLocationSite
+
+      expect(result).toBeDefined()
+      expect(result).toBeTypeOf('object')
+      const actualResult = result[siteId]
+      expect(actualResult.siteDetectionMinutesCount).toEqual(expectedResult.siteDetectionMinutesCount)
+      expect(actualResult.siteDetectionFrequency).toEqual(expectedResult.siteDetectionFrequency)
     })
 
     test('calculate correct detection count and detection frequency for hourly', async () => {
