@@ -35,7 +35,7 @@ export default class ActivityOverviewByLocation extends Vue {
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   isShowLabels = true
-  mapStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
   selectedType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
@@ -75,7 +75,7 @@ export default class ActivityOverviewByLocation extends Vue {
   }
 
   propagateMapMove (mapMoveEvent: MapMoveEvent): void { this.mapMoveEvent = mapMoveEvent }
-  propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
+  propagateMapStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {

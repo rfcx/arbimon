@@ -35,7 +35,7 @@ export default class MapBubbleComponent extends Vue {
 
   // Styles (optional)
   @Prop({ default: 576 }) mapHeight!: number
-  @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapStyle!: string
+  @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapGroundStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: DEFAULT_NON_ZERO_STYLE }) circleStyleNonZero!: CircleStyle
   @Prop({ default: DEFAULT_ZERO_STYLE }) circleStyleZero!: CircleStyle
@@ -58,7 +58,7 @@ export default class MapBubbleComponent extends Vue {
   override mounted (): void {
     const mapConfig: MapboxOptions = {
       container: this.mapId,
-      style: this.mapStyle,
+      style: this.mapGroundStyle,
       bounds: this.mapInitialBounds ?? [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
       attributionControl: false,
       preserveDrawingBuffer: true
@@ -84,7 +84,7 @@ export default class MapBubbleComponent extends Vue {
 
   @Watch('dataset', { deep: true }) onDataChange (): void { this.generateChartNextTick() }
   @Watch('dataKey') onDataKeyChange (): void { this.generateChartNextTick(false) }
-  @Watch('mapStyle') onStyleChange (currentStyle: string): void { this.map.setStyle(currentStyle) }
+  @Watch('mapGroundStyle') onStyleChange (currentStyle: string): void { this.map.setStyle(currentStyle) }
   @Watch('isShowLabels') onShowLabelsChange (): void { this.updateLabels() }
 
   @Watch('mapMoveEvent')

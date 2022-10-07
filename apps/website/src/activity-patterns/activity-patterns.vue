@@ -54,7 +54,7 @@
         />
       </div>
       <div class="col-span-full sm:col-span-3">
-        <activity-patterns-metrics
+        <spotlight-metrics
           :metrics="metrics"
           class="mt-6"
         />

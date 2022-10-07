@@ -24,8 +24,9 @@
       </template>
       <template #controls>
         <map-tool-menu-component
-          :map-style="mapStyle"
-          @emit-map-style="propagateMapStyle"
+          :map-ground-style="mapGroundStyle"
+          @emit-map-ground-style="propagateMapStyle"
+          @emit-map-statistics-style="() => {}"
           @emit-show-labels-toggle="propagateToggleLabels"
         />
       </template>
@@ -49,7 +50,7 @@
         :map-id="`activity-patterns-by-location-${idx}`"
         :map-initial-bounds="mapInitialBounds"
         :circle-formatter="circleFormatter"
-        :map-style="mapStyle"
+        :map-ground-style="mapGroundStyle"
         :is-show-labels="isShowLabels"
         :circle-style-non-zero="circleStyles[idx]"
         :map-move-event="mapMoveEvent"

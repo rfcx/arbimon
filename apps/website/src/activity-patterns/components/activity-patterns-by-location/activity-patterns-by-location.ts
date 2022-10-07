@@ -45,7 +45,7 @@ export default class ActivityPatternsByLocation extends Vue {
   ]
 
   isShowLabels = true
-  mapStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapGroundStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
   mapMoveEvent: MapMoveEvent | null = null
@@ -78,7 +78,7 @@ export default class ActivityPatternsByLocation extends Vue {
   }
 
   propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
-  propagateMapStyle (style: MapboxStyle): void { this.mapStyle = style }
+  propagateMapStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
