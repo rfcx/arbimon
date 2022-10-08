@@ -1,10 +1,15 @@
 <template>
   <div class="flex">
     <map-style-options
-      :map-ground-style="props.mapGroundStyle"
-      :map-statistics-style="props.mapStatisticsStyle"
-      @emit-map-ground-style="emitMapGroundStyle"
-      @emit-map-statistics-style="emitMapStatisticsStyle"
+      :map-options="mapStatisticsDisplayStyleOptions"
+      :map-style="props.mapStatisticsStyle"
+      @emit-map-style="emitMapStatisticsStyle"
+    />
+    <map-style-options
+      :map-options="mapGroundStyleOptions"
+      :map-style="props.mapGroundStyle"
+      class="ml-2"
+      @emit-map-style="emitMapGroundStyle"
     />
     <button
       class="btn ml-2"
@@ -28,8 +33,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { MapboxStyle } from '~/maps'
+import { MAPBOX_STYLE_BUBBLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import MapStyleOptions from './map-style-options.vue'
+import { MapOptions } from './types'
 
 const isShowLabel = ref<boolean>(true)
 
@@ -55,5 +61,15 @@ const emitShowLabelsToggle = () => {
   isShowLabel.value = !isShowLabel.value
   emit('emitShowLabelsToggle', isShowLabel.value)
 }
+
+const mapGroundStyleOptions: MapOptions[] = [
+  { style: MAPBOX_STYLE_SATELLITE_STREETS, name: 'Satellite', icon: new URL('./icons/satellite.svg', import.meta.url).toString() },
+  { style: MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, name: 'Simple', icon: new URL('./icons/global.svg', import.meta.url).toString() }
+]
+
+const mapStatisticsDisplayStyleOptions: MapOptions[] = [
+  { style: MAPBOX_STYLE_HEATMAP, name: 'Heatmap', icon: new URL('./icons/satellite.svg', import.meta.url).toString() },
+  { style: MAPBOX_STYLE_BUBBLE, name: 'Bubble', icon: new URL('./icons/global.svg', import.meta.url).toString() }
+]
 
 </script>
