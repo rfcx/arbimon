@@ -26,7 +26,7 @@
         >
         Labels
       </div>
-      <div class="2xl:hidden md:hidden">
+      <div class="2xl:hidden">
         <icon-fas-tag class="text-xs" />
       </div>
     </button>
