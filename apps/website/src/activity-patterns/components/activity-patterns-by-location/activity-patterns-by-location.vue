@@ -25,8 +25,9 @@
       <template #controls>
         <map-tool-menu-component
           :map-ground-style="mapGroundStyle"
-          @emit-map-ground-style="propagateMapStyle"
-          @emit-map-statistics-style="() => {}"
+          :map-statistics-style="mapStatisticsStyle"
+          @emit-map-ground-style="propagateMapGroundStyle"
+          @emit-map-statistics-style="propagateMapStatisticsStyle"
           @emit-show-labels-toggle="propagateToggleLabels"
         />
       </template>
@@ -51,6 +52,7 @@
         :map-initial-bounds="mapInitialBounds"
         :circle-formatter="circleFormatter"
         :map-ground-style="mapGroundStyle"
+        :map-statistics-style="mapStatisticsStyle"
         :is-show-labels="isShowLabels"
         :circle-style-non-zero="circleStyles[idx]"
         :map-move-event="mapMoveEvent"

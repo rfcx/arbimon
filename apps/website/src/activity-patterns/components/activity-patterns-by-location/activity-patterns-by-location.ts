@@ -8,7 +8,7 @@ import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activ
 import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
 import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
-import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
@@ -46,6 +46,7 @@ export default class ActivityPatternsByLocation extends Vue {
 
   isShowLabels = true
   mapGroundStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapStatisticsStyle: MapboxStyle = MAPBOX_STYLE_HEATMAP // TODO: Encapsulate this under BubbleMapGroup
   getPopupHtml = generateDetectionHtmlPopup
 
   mapMoveEvent: MapMoveEvent | null = null
@@ -78,7 +79,8 @@ export default class ActivityPatternsByLocation extends Vue {
   }
 
   propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
-  propagateMapStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
+  propagateMapGroundStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
+  propagateMapStatisticsStyle (style: MapboxStyle): void { this.mapStatisticsStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
