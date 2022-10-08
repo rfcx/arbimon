@@ -39,7 +39,7 @@
       :species="speciesInformation"
     />
     <div class="grid grid-cols-5 gap-x-2rem">
-      <div class="col-span-full sm:col-span-2">
+      <div class="col-span-full lg:col-span-2">
         <species-images
           v-if="speciesPhotos.length > 0"
           :species-photos="speciesPhotos"
@@ -53,7 +53,7 @@
           :species-information="speciesInformation"
         />
       </div>
-      <div class="col-span-full sm:col-span-3">
+      <div class="col-span-full lg:col-span-3">
         <spotlight-metrics
           :metrics="metrics"
           class="mt-6"

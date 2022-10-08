@@ -5,7 +5,8 @@
       :key="'map-statistics-style-' + item.name"
     >
       <button
-        class="btn <md:(btn-icon)"
+        :title="item.name"
+        class="btn <2xl:(btn-icon)"
         :class="{
           'bg-brand-primary': props.mapStyle === item.style,
           'rounded-r-none': idx !== props.mapOptions.length - 1,
@@ -13,12 +14,12 @@
         }"
         @click="$emit('emitMapStyle', item.style)"
       >
-        <div class="<lg:hidden">
+        <div class="<2xl:hidden">
           {{ item.name }}
         </div>
         <div>
           <img
-            class="lg:hidden <lg:visible"
+            class="2xl:hidden <2xl:visible"
             :src="item.icon"
             width="16"
             height="16"
