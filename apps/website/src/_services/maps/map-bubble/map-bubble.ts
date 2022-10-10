@@ -7,7 +7,7 @@ import { withFileName, zipAndDownload } from '@rfcx-bio/utils/file'
 import { asPromise } from '@rfcx-bio/utils/fp'
 
 import { canvasToPngBlob, svgToCanvas } from '~/charts'
-import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_MAP_HEIGHT, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { generateMapLegend } from '~/maps/map-legend/export-legend'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
@@ -34,7 +34,7 @@ export default class MapBubbleComponent extends Vue {
   @Prop() circleFormatter!: CircleFormatter
 
   // Styles (optional)
-  @Prop({ default: 576 }) mapHeight!: number
+  @Prop({ default: DEFAULT_MAP_HEIGHT }) mapHeight!: number
   @Prop({ default: MAPBOX_STYLE_SATELLITE_STREETS }) mapGroundStyle!: string
   @Prop({ default: true }) isShowLabels!: boolean
   @Prop({ default: DEFAULT_NON_ZERO_STYLE }) circleStyleNonZero!: CircleStyle
