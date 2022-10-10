@@ -8,6 +8,7 @@ export const createMap = (config: MapboxOptions): MapboxMap => new MapboxMap({ a
 // Defaults
 export const DEFAULT_LONGITUDE = -122.41818313563101
 export const DEFAULT_LATITUDE = 37.750884708892286
+export const DEFAULT_MAP_HEIGHT = 576
 
 // Ground Styles
 export const MAPBOX_STYLE_SATELLITE_STREETS = 'mapbox://styles/mapbox/satellite-streets-v11'
