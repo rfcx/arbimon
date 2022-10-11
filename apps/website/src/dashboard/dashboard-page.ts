@@ -16,10 +16,11 @@ import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizo
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
-import { MapBubbleComponent, MapDataSet, MapSiteData } from '~/maps/map-bubble'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
+import { MapBaseComponent } from '~/maps/map-base'
+import { MapDataSet, MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
-import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { RouteNames } from '~/router'
@@ -64,7 +65,7 @@ const getDefaultPhoto = (taxonSlug: string): string =>
     DashboardThreatenedSpecies,
     LineChartComponent,
     HorizontalStackedDistribution,
-    MapBubbleComponent
+    MapBaseComponent
   }
 })
 export default class DashboardPage extends Vue {
@@ -79,7 +80,7 @@ export default class DashboardPage extends Vue {
   tabs = tabs
   selectedTab = tabs[0].value
 
-  getPopupHtml = (data: MapSiteData, dataKey: string) => data.distinctSpecies[dataKey]
+  getPopupHtml = (data: MapSiteData, dataKey: string) => data.values[dataKey]
 
   get color (): string {
     return this.store.datasetColors[0] ?? '#EFEFEF'
@@ -136,7 +137,7 @@ export default class DashboardPage extends Vue {
           siteName,
           latitude,
           longitude,
-          distinctSpecies: {
+          values: {
             [MAP_KEY_THAT_SHOULD_NOT_EXIST]: value
           }
         })),
