@@ -5,7 +5,7 @@ import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
-import { MapDataSet } from '~/maps/map-bubble'
+import { MapDataSet } from '~/maps/types'
 import { Metrics } from './types'
 
 export type SpotlightDataset = SpotlightDatasetResponse & DatasetParameters
@@ -68,7 +68,7 @@ export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapData
       siteName,
       latitude,
       longitude,
-      distinctSpecies: {
+      values: {
         [SPOTLIGHT_MAP_KEYS.count]: siteDetectionMinutesCount,
         [SPOTLIGHT_MAP_KEYS.detectionFrequency]: siteDetectionFrequency,
         [SPOTLIGHT_MAP_KEYS.occupancy]: siteOccupied
