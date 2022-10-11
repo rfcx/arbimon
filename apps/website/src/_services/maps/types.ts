@@ -51,3 +51,5 @@ export interface MapBaseFormatter {
   getRadius: (value: number) => number
   getLegendEntires: (styleNonZero: MapBaseStyle, styleZero: MapBaseStyle) => MapBaseLegendEntry[]
 }
+
+export type StyleToPaint<T, R = unknown> = (style: MapBaseStyle, options?: R) => T
