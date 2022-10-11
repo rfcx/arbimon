@@ -23,9 +23,10 @@
       <template #controls>
         <map-tool-menu-component
           :map-ground-style="mapGroundStyle"
-          @emit-map-ground-style="propagateMapStyle"
+          :map-statistics-style="mapStatisticsStyle"
+          @emit-map-ground-style="propagateMapGroundStyle"
+          @emit-map-statistics-style="propagateMapStatisticsStyle"
           @emit-show-labels-toggle="propagateToggleLabels"
-          @emit-map-statistics-style="() => {}"
         />
       </template>
     </section-title>
@@ -39,19 +40,20 @@
         class="grid gap-2 mt-2"
         :class="{ [`md:grid-cols-${columnCount}`]: true }"
       >
-        <map-bubble-component
+        <map-base-component
           v-for="(dataset, idx) in datasets"
-          :key="idx"
+          :key="'activity-overview-by-location-' + idx"
           :dataset="dataset"
           :data-key="selectedType"
           :get-popup-html="getPopupHtml"
           :map-export-name="mapExportName(dataset, selectedType, idx)"
-          :map-id="`activity-patterns-detection-by-location-${idx}`"
+          :map-id="`activity-overview-by-location-${idx}`"
           :map-initial-bounds="mapInitialBounds"
-          :circle-formatter="circleFormatter"
+          :map-base-formatter="circleFormatter"
           :map-ground-style="mapGroundStyle"
+          :map-statistics-style="mapStatisticsStyle"
           :is-show-labels="isShowLabels"
-          :circle-style-non-zero="circleStyles[idx]"
+          :style-non-zero="circleStyles[idx]"
           :map-move-event="mapMoveEvent"
           class="w-full"
           @emit-map-moved="propagateMapMove"

@@ -1,5 +1,5 @@
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
-import { MapSiteData } from '~/maps/map-bubble'
+import { MapSiteData } from '~/maps/types'
 
 const getFormattedValue = (value: number | boolean, dataKey: string): string => {
   switch (dataKey) {
@@ -10,6 +10,6 @@ const getFormattedValue = (value: number | boolean, dataKey: string): string => 
 }
 
 export const generateDetectionHtmlPopup = (datum: MapSiteData, dataKey: string): string => {
-  const value = datum.distinctSpecies[dataKey]
+  const value = datum.values[dataKey]
   return `<span>${getFormattedValue(value, dataKey)}</span>`
 }

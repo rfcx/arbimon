@@ -3,7 +3,7 @@ import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { getCSVDatasetMetadata } from '~/export'
 import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
-import { MapDataSet } from '~/maps/map-bubble'
+import { MapDataSet } from '~/maps/types'
 import { ActivityOverviewDataBySpecies } from './types'
 
 export type ActivityOverviewDataBySite = ActivityDatasetResponse & DatasetParameters
@@ -44,7 +44,7 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
       siteName,
       latitude,
       longitude,
-      distinctSpecies: {
+      values: {
         [ACTIVITY_OVERVIEW_MAP_KEYS.count]: count,
         [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency,
         [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
