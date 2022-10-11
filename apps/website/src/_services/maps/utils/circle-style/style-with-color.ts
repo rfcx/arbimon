@@ -1,4 +1,4 @@
-import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from './constants'
+import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { CircleStyle } from './types'
 
 export const nonZeroStyleWithColor = (color: string): CircleStyle =>

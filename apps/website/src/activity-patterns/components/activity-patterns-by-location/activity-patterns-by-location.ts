@@ -9,8 +9,9 @@ import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
 import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
 import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
+import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { MapDataSet, MapMoveEvent } from '~/maps/types'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
@@ -27,7 +28,7 @@ const DEFAULT_PREFIX = 'Spotlight-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent,
+    MapBaseComponent,
     MapToolMenuComponent
   }
 })
