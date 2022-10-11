@@ -4,7 +4,7 @@ import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richn
 
 import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import { ColoredFilter } from '~/filters'
-import { MapDataSet } from '~/maps/map-bubble'
+import { MapDataSet } from '~/maps/types'
 import { useStoreOutsideSetup } from '~/store'
 import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 
@@ -53,7 +53,7 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
         siteName: matchedSite?.name ?? '',
         latitude: matchedSite?.latitude ?? 0,
         longitude: matchedSite?.longitude ?? 0,
-        distinctSpecies: {
+        values: {
           ...toRichnessTaxonObject,
           [MAP_KEY_RICHNESS_TOTAL]: Object.values<number>(toRichnessTaxonObject).reduce((sum, val) => sum + val, 0)
         }
@@ -63,8 +63,8 @@ export function getMapDataset (datasets: RichnessDataset[]): MapDataSet[] {
   })
 
   // TODO: Do this natively in the API instead of after the fact
-  const classes = new Set(intermediate.flatMap(i => Object.keys(i.data.map(d => d.distinctSpecies))))
-  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.distinctSpecies[MAP_KEY_RICHNESS_TOTAL]))))
+  const classes = new Set(intermediate.flatMap(i => Object.keys(i.data.map(d => d.values))))
+  const maxAll = Math.max(...intermediate.map(ds => Math.max(...ds.data.map(d => d.values[MAP_KEY_RICHNESS_TOTAL]))))
   const maxValues = Object.fromEntries([...classes, MAP_KEY_RICHNESS_TOTAL].map(name => [name, maxAll]))
 
   return intermediate.map(ds => ({
