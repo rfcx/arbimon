@@ -7,12 +7,13 @@ import { storeKey } from '@/globals'
 import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
 import { MAP_KEY_RICHNESS_TOTAL } from '@/species-richness/functions'
 import { getExportFilterName } from '~/filters'
-import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
+import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
+import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { MapDataSet, MapMoveEvent } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
-import { DEFAULT_NON_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { BiodiversityStore } from '~/store'
 
@@ -20,7 +21,7 @@ const DEFAULT_PREFIX = 'Species-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent,
+    MapBaseComponent,
     MapToolMenuComponent
   }
 })
@@ -30,7 +31,8 @@ export default class SpeciesRichnessByLocation extends Vue {
   @Prop({ default: [] }) public datasets!: MapDataSet[]
 
   isShowLabels = true
-  mapGroundStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_HEATMAP
   getPopupHtml = generateHtmlPopup
 
   mapMoveEvent: MapMoveEvent | null = null
@@ -74,7 +76,8 @@ export default class SpeciesRichnessByLocation extends Vue {
   }
 
   propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
-  propagateMapStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
+  propagateMapGroundStyle (style: MapboxGroundStyle): void { this.mapGroundStyle = style }
+  propagateMapStatisticsStyle (style: MapboxStatisticsStyle): void { this.mapStatisticsStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, datasetIndex: number): string {
