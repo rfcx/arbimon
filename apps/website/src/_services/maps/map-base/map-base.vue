@@ -36,9 +36,9 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } 
 import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_MAP_HEIGHT, LABEL_LAYER_IDS, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { downloadMapPng } from '~/maps/functions'
-import { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData } from '~/maps/types'
+import { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData, StyleToPaint } from '~/maps/types'
 import { circleStyleToPaint } from '../utils/circle-style/style-to-paint'
-import { heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
+import { HeatmapOption, heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
 const DATA_LAYER_ZERO_ID = 'species-information-zero'
@@ -58,17 +58,17 @@ const props = withDefaults(defineProps<{
   mapBaseFormatter: MapBaseFormatter,
 
   // Styles (optional)
-  mapHeight: number,
-  mapInitialBounds: LngLatBoundsLike,
-  mapGroundStyle: MapboxGroundStyle,
-  mapStatisticsStyle: MapboxStatisticsStyle,
+  mapHeight?: number,
+  mapInitialBounds?: LngLatBoundsLike,
+  mapGroundStyle?: MapboxGroundStyle,
+  mapStatisticsStyle?: MapboxStatisticsStyle,
 
-  styleNonZero: MapBaseStyle,
-  styleZero: MapBaseStyle,
-  isShowLabels: boolean,
+  styleNonZero?: MapBaseStyle,
+  styleZero?: MapBaseStyle,
+  isShowLabels?: boolean,
 
   // Events
-  mapMoveEvent: MapMoveEvent | null
+  mapMoveEvent?: MapMoveEvent | null
 }>(), {
   mapHeight: DEFAULT_MAP_HEIGHT,
   mapInitialBounds: () => [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
@@ -84,7 +84,7 @@ const emit = defineEmits<{(e: 'emitMapMoved', mapMoveEvent: MapMoveEvent): void}
 
 const mapIsLoading = ref(true)
 const isSynchronizingMapPosition = ref(false)
-const styleToPaint = ref(heatmapStyleToPaint)
+const styleToPaint = ref<StyleToPaint<AnyPaint, HeatmapOption>>(heatmapStyleToPaint)
 let map!: MapboxMap
 
 const hasData = computed(() => {
@@ -202,7 +202,8 @@ const generateChart = (rezoom = true) => {
 const updateDataSourcesAndLayers = () => {
   const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || d.values[props.dataKey] > 0)
 
-  updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero) })
+  const zeroStyleOptions = props.mapStatisticsStyle === MAPBOX_STYLE_HEATMAP ? { heatmapRadius: 5 } : undefined
+  updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero, zeroStyleOptions) })
   updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
 }
 
