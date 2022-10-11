@@ -57,7 +57,7 @@ import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functi
 import { apiClientBioKey } from '@/globals'
 import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
-import { MapDataSet } from '~/maps/map-bubble'
+import { MapDataSet } from '~/maps/type'
 import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 

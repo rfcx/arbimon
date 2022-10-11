@@ -6,9 +6,10 @@ import { generateDetectionHtmlPopup } from '@/activity-overview/components/activ
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
-import { MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
-import { MapBubbleComponent, MapDataSet, MapMoveEvent } from '~/maps/map-bubble'
+import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
+import { MapDataSet, MapMoveEvent } from '~/maps/types'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
@@ -25,7 +26,7 @@ const DEFAULT_PREFIX = 'Overview-By-Site'
 
 @Options({
   components: {
-    MapBubbleComponent,
+    MapBaseComponent,
     MapToolMenuComponent
   }
 })
@@ -35,7 +36,8 @@ export default class ActivityOverviewByLocation extends Vue {
   @Prop({ default: [] }) datasets!: MapDataSet[]
 
   isShowLabels = true
-  mapGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapGroundStyle: MapboxStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
+  mapStatisticsStyle: MapboxStyle = MAPBOX_STYLE_HEATMAP
   getPopupHtml = generateDetectionHtmlPopup
 
   selectedType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
@@ -75,7 +77,8 @@ export default class ActivityOverviewByLocation extends Vue {
   }
 
   propagateMapMove (mapMoveEvent: MapMoveEvent): void { this.mapMoveEvent = mapMoveEvent }
-  propagateMapStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
+  propagateMapGroundStyle (style: MapboxStyle): void { this.mapGroundStyle = style }
+  propagateMapStatisticsStyle (style: MapboxStyle): void { this.mapStatisticsStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
   mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
