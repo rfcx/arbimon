@@ -88,11 +88,12 @@ describe('ingest > sync > sync deleted recording', async () => {
     }
   })
 
-  const syncStatusRecordingDeleted = { ...SYNC_CONFIG_RECORDING_DELETED, syncUntilDate: dayjs.utc().subtract(30, 'days').toDate(), syncUntilId: '0' }
+  const syncUntilDate = dayjs.utc('1980-01-01T00:00:00.000Z').toDate()
+  const syncStatusRecordingDeleted = { ...SYNC_CONFIG_RECORDING_DELETED, syncUntilDate, syncUntilId: '0' }
 
   test('can sync deleted recording', async () => {
     // Act
-    const syncStatus = { ...SYNC_CONFIG_RECORDING, syncUntilDate: dayjs('2022-04-01T00:00:00.000Z').toDate(), syncUntilId: '1000000' }
+    const syncStatus = { ...SYNC_CONFIG_RECORDING, syncUntilDate, syncUntilId: '0' }
     await syncArbimonRecordingBySiteHourBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
     await syncArbimonRecordingDeletedBatch(arbimonSequelize, biodiversitySequelize, syncStatusRecordingDeleted)
     const recordingBySiteHourInBioDB = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { RecordingArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import { RecordingArbimon, RecordingDeletedArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 import { getArbimonRecording, getArbimonRecordingDeleted } from './get-arbimon-recording'
 import { SyncQueryParams } from './sync-query-params'
 
@@ -260,22 +260,61 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(actual).toHaveLength(0)
   })
 
-  test('can get deleted recordings', async () => {
+  test('can get deleted recordings; check syncUntilDate', async () => {
     // Arrange
     await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
+    // recording to delete
     await arbimonSequelize.query(SQL_INSERT_RECORDING_DELETED, { bind: { ...DEFAULT_RECORDING_DELETED, recordingId: 900, siteId: 88500, datetime: '2019-07-06 07:30:00', deletedAt: '2020-03-18 01:10:00' } })
-    await arbimonSequelize.query(SQL_INSERT_RECORDING_DELETED, { bind: { ...DEFAULT_RECORDING_DELETED, recordingId: 901, siteId: 88500, datetime: '2019-07-06 07:30:00', deletedAt: '2022-03-18 01:10:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING_DELETED, { bind: { ...DEFAULT_RECORDING_DELETED, recordingId: 901, siteId: 88500, datetime: '2019-07-06 07:30:00', deletedAt: '2022-03-18 01:00:00' } })
     const params: SyncQueryParams = {
-      syncUntilDate: dayjs.utc('2022-03-18 01:10:00').subtract(30, 'days').toDate(),
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
       syncUntilId: '0',
-      syncBatchLimit: 10
+      syncBatchLimit: 100
     }
 
     // Act
-    const actual = await getArbimonRecordingDeleted(arbimonSequelize, params)
+    const deletedRecordings = await getArbimonRecordingDeleted(arbimonSequelize, params) as unknown as RecordingDeletedArbimon[]
 
     // Assert
-    expect(actual).toHaveLength(1)
+    expect(deletedRecordings).toHaveLength(2)
+  })
+
+  test('can get deleted recordings; check syncBatchLimit and syncUntilId', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: { ...DEFAULT_PROJECT, projectId: 1910, createdAt: '2020-03-18T11:00:00.000Z', updatedAt: '2020-03-18T11:00:00.000Z' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, projectId: 1910, siteId: 88500, createdAt: '2020-03-18 01:00:00', updatedAt: '2020-03-18 01:00:00' } })
+    // recording to delete
+    await arbimonSequelize.query(SQL_INSERT_RECORDING_DELETED, { bind: { ...DEFAULT_RECORDING_DELETED, recordingId: 900, siteId: 88500, datetime: '2019-07-06 07:30:00', deletedAt: '2022-01-10 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING_DELETED, { bind: { ...DEFAULT_RECORDING_DELETED, recordingId: 901, siteId: 88500, datetime: '2019-07-06 07:30:00', deletedAt: '2022-01-12 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING_DELETED, { bind: { ...DEFAULT_RECORDING_DELETED, recordingId: 902, siteId: 88500, datetime: '2019-07-06 07:30:00', deletedAt: '2022-01-14 01:00:00' } })
+    const syncStatus1: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('1980-01-01T00:00:00.000Z').toDate(),
+      syncUntilId: '0',
+      syncBatchLimit: 1
+    }
+    const syncStatus2: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-10 01:00:00').toDate(),
+      syncUntilId: '900',
+      syncBatchLimit: 1
+    }
+    const syncStatus3: SyncQueryParams = {
+      syncUntilDate: dayjs.utc('2022-01-12 01:00:00').toDate(),
+      syncUntilId: '901',
+      syncBatchLimit: 1
+    }
+
+    // Act
+    const result1 = await getArbimonRecordingDeleted(arbimonSequelize, syncStatus1) as unknown as RecordingDeletedArbimon[]
+    const result2 = await getArbimonRecordingDeleted(arbimonSequelize, syncStatus2) as unknown as RecordingDeletedArbimon[]
+    const result3 = await getArbimonRecordingDeleted(arbimonSequelize, syncStatus3) as unknown as RecordingDeletedArbimon[]
+
+    // Assert
+    expect(result1).toHaveLength(1)
+    expect(result2).toHaveLength(1)
+    expect(result3).toHaveLength(1)
+    expect(result1[0].idArbimon).toBe(900)
+    expect(result2[0].idArbimon).toBe(901)
+    expect(result3[0].idArbimon).toBe(902)
   })
 })
