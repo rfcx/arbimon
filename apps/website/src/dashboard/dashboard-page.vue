@@ -58,16 +58,16 @@
           </p>
         </div>
         <div class="dashboard-graphic-content inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
-          <map-bubble-component
+          <map-base-component
             :dataset="mapDataset"
             data-key="refactorThis"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
             :map-id="`dashboard-by-site`"
             :map-initial-bounds="mapInitialBounds"
-            :circle-formatter="circleFormatter"
+            :map-base-formatter="circleFormatter"
             :map-height="tabHeight"
-            :circle-style-non-zero="circleStyle"
+            :style-non-zero="circleStyle"
             class="map-bubble w-full"
           />
           <div class="line-chart relative">
