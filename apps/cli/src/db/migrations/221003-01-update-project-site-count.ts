@@ -16,11 +16,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       CREATE VIEW ${VIEW_NAME} AS
       SELECT d.location_project_id,
             SUM(d.count)                       AS detection_minutes_count,
-            (
-              SELECT COUNT(s.id)
-              FROM location_site s
-              WHERE s.location_project_id = d.location_project_id
-            ) AS site_count,
             COUNT(distinct d.taxon_species_id) AS species_count,
             MAX(d.time_precision_hour_local)   AS max_date,
             MIN(d.time_precision_hour_local)   AS min_date
