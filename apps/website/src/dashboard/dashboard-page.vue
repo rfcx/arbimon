@@ -100,7 +100,7 @@
   </div>
 </template>
 <script src="./dashboard-page" lang="ts">
- </script>
+</script>
 <style lang="scss">
 @import './dashboard-page.scss';
 </style>
