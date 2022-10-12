@@ -5,7 +5,7 @@ import { LocationProjectMetricTypes } from '@rfcx-bio/common/dao/types/location-
 
 import { getSequelize } from '../_services/db'
 
-export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetricTypes['light']> => {
+export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetricTypes['light'] & { siteCount: number }> => {
   const { LocationProjectMetric, LocationSite } = ModelRepository.getInstance(getSequelize())
   const siteCount = await LocationSite.count({ where: { locationProjectId } })
   const metric = await LocationProjectMetric.findOne({
