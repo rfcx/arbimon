@@ -219,6 +219,7 @@ importers:
       '@rfcx-bio/utils': workspace:^0.0.1
       '@types/color-string': ^1.5.0
       '@types/d3': ^7.1.0
+      '@types/geojson': ^7946.0.10
       '@types/howler': ^2.2.4
       '@types/mapbox-gl': ^2.4.2
       '@types/markdown-it': ^12.2.3
@@ -255,6 +256,7 @@ importers:
       '@auth0/auth0-spa-js': 1.22.1
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
+      '@types/geojson': 7946.0.10
       '@types/markdown-it': 12.2.3
       '@vueuse/components': 6.9.2_vue@3.2.37
       '@vueuse/core': 6.9.2_vue@3.2.37
@@ -2270,7 +2272,7 @@ packages:
     resolution: {integrity: sha512-C3zfBrhHZvrpAAK3YXqLWVAGo87A4SvJ83Q/zVJ8rFWJdKejUnDYaWZPkA8K84kb2vDA/g90LTQAz7etXcgoQQ==}
     dependencies:
       '@types/d3-array': 3.0.3
-      '@types/geojson': 7946.0.8
+      '@types/geojson': 7946.0.10
     dev: true
 
   /@types/d3-delaunay/6.0.1:
@@ -2312,7 +2314,7 @@ packages:
   /@types/d3-geo/3.0.2:
     resolution: {integrity: sha512-DbqK7MLYA8LpyHQfv6Klz0426bQEf7bRTvhMy44sNGVyZoWn//B0c+Qbeg8Osi2Obdc9BLLXYAKpyWege2/7LQ==}
     dependencies:
-      '@types/geojson': 7946.0.8
+      '@types/geojson': 7946.0.10
     dev: true
 
   /@types/d3-hierarchy/3.1.0:
@@ -2455,9 +2457,8 @@ packages:
       '@types/node': 18.0.0
     dev: true
 
-  /@types/geojson/7946.0.8:
-    resolution: {integrity: sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==}
-    dev: true
+  /@types/geojson/7946.0.10:
+    resolution: {integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==}
 
   /@types/glob/7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
@@ -2503,7 +2504,7 @@ packages:
   /@types/mapbox-gl/2.7.3:
     resolution: {integrity: sha512-XdveeJptNNZw7ZoeiAJ2/dupNtWaV6qpBG/SOFEpQNQAc+oiO6qUznX85n+W1XbLeD8SVRVfVORKuR+I4CHDZw==}
     dependencies:
-      '@types/geojson': 7946.0.8
+      '@types/geojson': 7946.0.10
     dev: true
 
   /@types/markdown-it/12.2.3:
