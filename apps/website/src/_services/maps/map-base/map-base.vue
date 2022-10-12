@@ -110,7 +110,7 @@ onMounted(() => {
       generateChartNextTick(false)
     })
     .on('move', () => {
-      emitMapMoved()
+      if (!isSynchronizingMapPosition.value) emitMapMoved()
     })
     .addControl(new NavigationControl({ showCompass: false }), 'bottom-right')
   map.scrollZoom.disable()
