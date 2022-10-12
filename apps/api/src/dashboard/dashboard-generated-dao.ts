@@ -6,17 +6,15 @@ import { LocationProjectMetricTypes } from '@rfcx-bio/common/dao/types/location-
 import { getSequelize } from '../_services/db'
 
 export const getProjectMetrics = async (locationProjectId: number): Promise<LocationProjectMetricTypes['light']> => {
-  const result = await ModelRepository.getInstance(getSequelize())
-    .LocationProjectMetric
-    .findOne({
-      attributes: {
-        exclude: ['locationProjectId']
-      },
+  const { LocationProjectMetric, LocationSite } = ModelRepository.getInstance(getSequelize())
+  const siteCount = await LocationSite.count({ where: { locationProjectId } })
+  const metric = await LocationProjectMetric.findOne({
+      attributes: { exclude: ['locationProjectId'] },
       where: { locationProjectId },
       raw: true
-    })
+    }) ?? { detectionMinutesCount: 0, speciesCount: 0, maxDate: null, minDate: null }
 
-  return result ?? { detectionMinutesCount: 0, siteCount: 0, speciesCount: 0, maxDate: null, minDate: null }
+  return { ...metric, siteCount }
 }
 
 export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpecies[]> => {
