@@ -233,6 +233,7 @@ importers:
       d3: ^7.1.1
       dayjs: ^1.10.7
       element-plus: ^2.2.2
+      geojson: ^0.5.0
       happy-dom: ^5.3.1
       howler: ^2.2.3
       jszip: ^3.7.1
@@ -264,6 +265,7 @@ importers:
       d3: 7.4.4
       dayjs: 1.11.3
       element-plus: 2.2.6_vue@3.2.37
+      geojson: 0.5.0
       howler: 2.2.3
       jszip: 3.10.0
       lodash-es: 4.17.21
@@ -6335,6 +6337,11 @@ packages:
 
   /geojson-vt/3.2.1:
     resolution: {integrity: sha512-EvGQQi/zPrDA6zr6BnJD/YhwAkBP8nnJ9emh3EnHQKVMfg/MRVtPbMYdgVy/IaEmn4UfagD2a6fafPDL5hbtwg==}
+    dev: false
+
+  /geojson/0.5.0:
+    resolution: {integrity: sha512-/Bx5lEn+qRF4TfQ5aLu6NH+UKtvIv7Lhc487y/c8BdludrCTpiWf9wyI0RTyqg49MFefIAvFDuEi5Dfd/zgNxQ==}
+    engines: {node: '>= 0.10'}
     dev: false
 
   /get-caller-file/2.0.5:
