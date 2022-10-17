@@ -7,6 +7,7 @@ import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/commo
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { FilterDatasetForSql, whereInDataset, whereRecordingBySiteHour } from '~/datasets/dataset-where'
+import { getSequelize } from '~/db'
 import { dayjs } from '../_services/dayjs-initialized'
 
 export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
@@ -46,6 +47,19 @@ export function calculateDetectionFrequency (detections: DetectionBySiteSpeciesH
   return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordedMinutes
 }
 
+export const getRecordedMinutesCountGroupBySite = async (models: AllModels, filter: FilterDatasetForSql): Promise<any> => {
+  const sequelize = getSequelize()
+  const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
+  return await models
+    .RecordingBySiteHour
+    .findAll({
+      attributes: ['locationSiteId', [sequelize.literal('COUNT(count)::integer'), 'count']],
+      where,
+      group: 'location_site_id',
+      raw: true
+    }) as unknown as Array<{ locationSiteId: number, count: number }>
+}
+
 export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDatasetForSql): Promise<SpotlightDetectionDataBySite> {
   const summariesBySite: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(totalDetections, 'locationSiteId')
   const siteIds = Object.keys(summariesBySite)
@@ -57,19 +71,17 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
 
   const summariesRecordingBySite: { [siteId: number]: number } = {}
 
-  // TODO: Improve the logic to get all sites recordings at once?
-  for (const site of sites) {
-    const locationProjectId = filter.locationProjectId || -1
-    const siteTotalRecording = await getRecordedMinutesCount(models, { ...filter, locationProjectId, siteIds: [site.id] })
-    summariesRecordingBySite[site.id] = siteTotalRecording
+  // get all sites recordings at once
+  const locationProjectId = filter.locationProjectId || -1
+  const recordedMinutesCountBySites = await getRecordedMinutesCountGroupBySite(models, { ...filter, locationProjectId, siteIds: siteIds.map(Number) })
+  for (const site of recordedMinutesCountBySites) {
+    summariesRecordingBySite[site.locationSiteId] = site.count
   }
 
   return mapValues(summariesBySite, (siteSummaries, siteIdString) => {
     const siteId: number = Number(siteIdString)
     const matchedSite = sites.find(s => s.id === siteId)
-
-    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId]
-
+    const siteTotalRecordedMinutes = summariesRecordingBySite !== undefined ? summariesRecordingBySite[siteId] : 0
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.taxonSpeciesId)
     const siteDetectionMinutesCount = calculateDetectionMinutesCount(siteSpeciesSummaries)
     const siteDetectionFrequency = siteTotalRecordedMinutes === 0 ? 0 : siteDetectionMinutesCount / siteTotalRecordedMinutes
