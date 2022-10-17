@@ -1,12 +1,12 @@
-import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '../circle-style/constants'
-import { CircleFormatter, CircleLegendEntry } from './types'
+import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
+import { MapBaseFormatter, MapBaseLegendEntry } from '~/maps/types'
 
 export const DEFAULT_MAX_VALUE_RAW = 1.0
 export const DEFAULT_LEGEND_COUNT = 4
 export const DEFAULT_RADIUS_IN_PIXELS = 10.0
 export const DEFAULT_FORMAT_FUNCTION = (value: number): string => value.toPrecision(3)
 
-export class CircleFormatterNormalized implements CircleFormatter {
+export class CircleFormatterNormalized implements MapBaseFormatter {
   protected readonly stepValue: number
   protected readonly stepPixels: number
   protected readonly maxValue: number
@@ -46,7 +46,7 @@ export class CircleFormatterNormalized implements CircleFormatter {
     return value / this.maxValue * this.maxPixels
   }
 
-  getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): CircleLegendEntry[] {
+  getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): MapBaseLegendEntry[] {
     return Array.from({ length: this.legendEntryCount }, (_, idx) => ({
         label: this.formatFunction(this.stepValue * (idx + 1)),
         radiusPx: this.stepPixels * (idx + 1),

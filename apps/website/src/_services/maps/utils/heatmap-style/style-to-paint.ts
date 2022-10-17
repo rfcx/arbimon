@@ -12,7 +12,7 @@ export const heatmapStyleToPaint = (_: MapBaseStyle): AnyPaint => ({
   'heatmap-weight': [
     'interpolate',
     ['linear'],
-    ['get', 'mag'],
+    ['get', 'radius'],
     0, 0,
     6, 1
   ],

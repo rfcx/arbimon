@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { MAPBOX_STYLE_BUBBLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import { MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
 import MapStyleOptions from './map-style-options.vue'
 import { MapOptions } from './types'
 
@@ -71,7 +71,7 @@ const mapGroundStyleOptions: MapOptions[] = [
 
 const mapStatisticsDisplayStyleOptions: MapOptions[] = [
   { style: MAPBOX_STYLE_HEATMAP, name: 'Heatmap', icon: new URL('./icons/heatmap.svg', import.meta.url).toString() },
-  { style: MAPBOX_STYLE_BUBBLE, name: 'Bubble', icon: new URL('./icons/bubble.svg', import.meta.url).toString() }
+  { style: MAPBOX_STYLE_CIRCLE, name: 'Point', icon: new URL('./icons/bubble.svg', import.meta.url).toString() }
 ]
 
 </script>
