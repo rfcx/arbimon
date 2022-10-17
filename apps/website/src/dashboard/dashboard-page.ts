@@ -18,9 +18,8 @@ import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeri
 import { getExportGroupName } from '~/filters'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
-import { MapDataSet, MapSiteData } from '~/maps/types'
+import { MapBaseFormatter, MapDataSet, MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
-import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { RouteNames } from '~/router'
@@ -92,7 +91,7 @@ export default class DashboardPage extends Vue {
     return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }
 
-  get circleFormatter (): CircleFormatter {
+  get circleFormatter (): MapBaseFormatter {
     return new CircleFormatterNormalizedWithMin({ maxValueRaw: this.mapDataset.maxValues[MAP_KEY_THAT_SHOULD_NOT_EXIST] })
   }
 

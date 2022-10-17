@@ -1,5 +1,5 @@
-import { CircleFormatter, CircleLegendEntry } from '~/maps/utils/circle-formatter/types'
-import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/utils/circle-style/constants'
+import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
+import { MapBaseFormatter, MapBaseLegendEntry } from '~/maps/types'
 
 const DEFAULT_RADIUS_BINARY_MAX = 6.0
 const DEFAULT_RADIUS_BINARY_MIN = 3.0
@@ -7,7 +7,7 @@ const DEFAULT_RADIUS_BINARY_MIN = 3.0
 const DEFAULT_LABEL_NON_ZERO = 'Detected'
 const DEFAULT_LABEL_ZERO = 'Not detected'
 
-export class CircleFormatterBinary implements CircleFormatter {
+export class CircleFormatterBinary implements MapBaseFormatter {
   protected readonly maxPixels: number
   protected readonly minPixels: number
   protected readonly labelNonZero: string
@@ -36,7 +36,7 @@ export class CircleFormatterBinary implements CircleFormatter {
       : this.maxPixels
   }
 
-  getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): CircleLegendEntry[] {
+  getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): MapBaseLegendEntry[] {
     return [
       { label: this.labelZero || DEFAULT_LABEL_ZERO, radiusPx: this.minPixels, style: styleZero },
       { label: this.labelNonZero || DEFAULT_LABEL_NON_ZERO, radiusPx: this.maxPixels, style: styleNonZero }

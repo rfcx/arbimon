@@ -260,7 +260,7 @@ const removeLayer = (id: string) => {
 }
 
 const downloadMapPngInternal = async () => {
-  const legendEntry = props.mapBaseFormatter.getLegendEntires(props.styleNonZero, props.styleZero)
+  const legendEntry = props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero)
   await downloadMapPng(map, `${props.mapExportName}-${props.mapStatisticsStyle}`, legendEntry)
 }
 </script>

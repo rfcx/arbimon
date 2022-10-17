@@ -10,10 +10,9 @@ import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { MapDataSet, MapMoveEvent } from '~/maps/types'
+import { MapBaseFormatter, MapDataSet, MapMoveEvent } from '~/maps/types'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
-import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { BiodiversityStore } from '~/store'
 
@@ -66,7 +65,7 @@ export default class ActivityOverviewByLocation extends Vue {
     return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }
 
-  get circleFormatter (): CircleFormatter {
+  get circleFormatter (): MapBaseFormatter {
     return this.selectedType === ACTIVITY_OVERVIEW_MAP_KEYS.occupancy
       ? new CircleFormatterBinary()
       : new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })

@@ -1,11 +1,11 @@
-import { CircleFormatter, CircleLegendEntry } from './types'
+import { MapBaseFormatter, MapBaseLegendEntry } from '~/maps/types'
 
-export class CircleFormatterRawValue implements CircleFormatter {
+export class CircleFormatterRawValue implements MapBaseFormatter {
   getRadius (value: number): number {
     return value
   }
 
-  getLegendEntries (): CircleLegendEntry[] {
+  getLegendEntries (): MapBaseLegendEntry[] {
     return []
   }
 }

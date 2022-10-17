@@ -11,9 +11,8 @@ import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { MapDataSet, MapMoveEvent } from '~/maps/types'
+import { MapBaseFormatter, MapDataSet, MapMoveEvent } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
-import { CircleFormatter } from '~/maps/utils/circle-formatter/types'
 import { CircleStyle } from '~/maps/utils/circle-style/types'
 import { BiodiversityStore } from '~/store'
 
@@ -59,7 +58,7 @@ export default class SpeciesRichnessByLocation extends Vue {
     return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }
 
-  get circleFormatter (): CircleFormatter {
+  get circleFormatter (): MapBaseFormatter {
     // ! After connect to the api, there is a case where `maxValueRaw` = -Infinity
     // ! Have to investigate more
     return new CircleFormatterNormalizedWithMin({ maxValueRaw: Math.max(0, this.datasets[0].maxValues[this.mapDataKey]) })

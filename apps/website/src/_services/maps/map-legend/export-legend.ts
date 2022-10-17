@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { CircleLegendEntry } from '~/maps/utils/circle-formatter/types'
+import { MapBaseLegendEntry } from '../types'
 
 const CONTAINER_DEFAULT_WIDTH = 160
 const DEFAULT_ROW_HEIGHT = 16
@@ -11,12 +11,12 @@ const DEFAULT_GAP_Y = 5
 
 const TITLE_HEIGHT = DEFAULT_ROW_HEIGHT + DEFAULT_GAP_Y
 
-export const generateMapLegend = (legendEntries: CircleLegendEntry[], title?: string): SVGSVGElement => {
+export const generateMapLegend = (legendEntries: MapBaseLegendEntry[], title?: string): SVGSVGElement => {
   const maxRadiusPixels = legendEntries[legendEntries.length - 1].radiusPx
   const legendEntriesHeight = (maxRadiusPixels * 2) * DEFAULT_GAP_Y // TODO: This looks wrong
   const containerHeight = (CONTAINER_PADDING_Y * 2) + (title ? legendEntriesHeight + TITLE_HEIGHT : legendEntriesHeight)
 
-  const calculateYPosition = (d: CircleLegendEntry, idx: number): number => {
+  const calculateYPosition = (d: MapBaseLegendEntry, idx: number): number => {
     return CONTAINER_PADDING_Y + (title ? TITLE_HEIGHT : 0) + (2 * maxRadiusPixels + DEFAULT_GAP_Y) * idx
   }
 

@@ -1,6 +1,6 @@
-import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '../circle-style/constants'
+import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
+import { MapBaseLegendEntry } from '~/maps/types'
 import { CircleFormatterNormalized, DEFAULT_FORMAT_FUNCTION, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
-import { CircleLegendEntry } from './types'
 
 export const DEFAULT_SHOW_IN_LEGEND = true
 export const DEFAULT_LABEL_ZERO = 'No detections'
@@ -29,7 +29,7 @@ export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized 
     return super.getRadius(value)
   }
 
-  override getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): CircleLegendEntry[] {
+  override getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): MapBaseLegendEntry[] {
     const [head, ...tail] = super.getLegendEntries(styleNonZero, styleZero)
 
     const zeroEntry = this.showZeroInLegend
