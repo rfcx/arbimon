@@ -12,18 +12,17 @@
         :id="props.mapId"
         class="w-full text-black"
         :style="{ height: `${props.mapHeight}px` }"
+      />
+      <div
+        v-if="dataset.title"
+        class="absolute text-lg bg-white top-2 left-2"
       >
-        <div
-          v-if="dataset.title"
-          class="absolute text-lg bg-white top-2 left-2"
-        >
-          {{ dataset.title }}
-        </div>
-        <export-button
-          class="absolute top-2 right-2"
-          @click="downloadMapPngInternal()"
-        />
+        {{ dataset.title }}
       </div>
+      <export-button
+        class="absolute top-2 right-2"
+        @click="downloadMapPngInternal()"
+      />
     </div>
   </div>
 </template>
