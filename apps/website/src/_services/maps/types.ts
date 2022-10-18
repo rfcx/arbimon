@@ -52,4 +52,4 @@ export interface MapBaseFormatter {
   getLegendEntries: (styleNonZero: MapBaseStyle, styleZero: MapBaseStyle) => MapBaseLegendEntry[]
 }
 
-export type StyleToPaint<T, R = unknown> = (style: MapBaseStyle, options?: R) => T
+export type StyleToPaint<T = unknown, R = unknown> = (style: MapBaseStyle, options?: R) => T

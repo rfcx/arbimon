@@ -23,6 +23,127 @@
         class="absolute top-2 right-2"
         @click="downloadMapPngInternal()"
       />
+      <!-- ! To be remove -->
+      <div>
+        <div class="absolute top-12 right-2">
+          <label for="weight">weight:</label>
+          <input
+            id="weight"
+            v-model.number="heatmapWeight[0]"
+            title="first zoom"
+            type="number"
+            step="1"
+            min="0"
+            max="16"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          <input
+            v-model.number="heatmapWeight[1]"
+            title="first weight"
+            type="number"
+            min="0"
+            max="99"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          :
+          <input
+            v-model.number="heatmapWeight[2]"
+            title="last zoom"
+            type="number"
+            step="1"
+            min="0"
+            max="16"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          <input
+            v-model.number="heatmapWeight[3]"
+            title="last weight"
+            type="number"
+            min="0"
+            max="99"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+        </div>
+        <div class="absolute top-20 right-2">
+          <label for="intensity">intensity:</label>
+          <input
+            id="intensity"
+            v-model.number="heatmapIntensity[0]"
+            title="first zoom"
+            type="number"
+            step="1"
+            min="0"
+            max="16"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          <input
+            v-model.number="heatmapIntensity[1]"
+            title="first intensity"
+            type="number"
+            min="0"
+            max="99"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          :
+          <input
+            v-model.number="heatmapIntensity[2]"
+            title="last zoom"
+            type="number"
+            step="1"
+            min="0"
+            max="16"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          <input
+            v-model.number="heatmapIntensity[3]"
+            title="last intensity"
+            type="number"
+            min="0"
+            max="99"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+        </div>
+        <div class="absolute top-28 right-2">
+          <label for="radius">radius:</label>
+          <input
+            id="radius"
+            v-model.number="heatmapRadius[0]"
+            title="first zoom"
+            type="number"
+            step="1"
+            min="0"
+            max="16"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          <input
+            v-model.number="heatmapRadius[1]"
+            title="first radius"
+            type="number"
+            min="0"
+            max="99"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          :
+          <input
+            v-model.number="heatmapRadius[2]"
+            title="last zoom"
+            type="number"
+            step="1"
+            min="0"
+            max="16"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+          <input
+            v-model.number="heatmapRadius[3]"
+            title="last radius"
+            type="number"
+            min="0"
+            max="99"
+            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+          >
+        </div>
+      </div>
+      <!-- ! To be remove -->
     </div>
   </div>
 </template>
@@ -37,7 +158,7 @@ import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { downloadMapPng } from '~/maps/functions'
 import { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData, StyleToPaint } from '~/maps/types'
 import { circleStyleToPaint } from '../utils/circle-style/style-to-paint'
-import { HeatmapOption, heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
+import { HeatmapCustomByZoom, HeatmapOption, heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
 const DATA_LAYER_ZERO_ID = 'species-information-zero'
@@ -123,6 +244,31 @@ onUnmounted(() => {
   map.remove()
 })
 
+// ! to be remove
+const dataChanged = ref(true)
+const heatmapWeight = ref<HeatmapCustomByZoom>([0, 0, 10, 2])
+const heatmapIntensity = ref<HeatmapCustomByZoom>([7, 0.1, 9, 1])
+const heatmapRadius = ref<HeatmapCustomByZoom>([0, 1, 10, 20])
+watch(() => heatmapWeight.value, () => {
+  dataChanged.value = true
+  removeLayer(DATA_LAYER_ZERO_ID)
+  removeLayer(DATA_LAYER_NONZERO_ID)
+  generateChartNextTick(false)
+}, { deep: true })
+watch(() => heatmapIntensity.value, () => {
+  dataChanged.value = true
+  removeLayer(DATA_LAYER_ZERO_ID)
+  removeLayer(DATA_LAYER_NONZERO_ID)
+  generateChartNextTick(false)
+}, { deep: true })
+watch(() => heatmapRadius.value, () => {
+  dataChanged.value = true
+  removeLayer(DATA_LAYER_ZERO_ID)
+  removeLayer(DATA_LAYER_NONZERO_ID)
+  generateChartNextTick(false)
+}, { deep: true })
+// ! to be remove
+
 watch(() => props.mapHeight, () => generateChartNextTick())
 watch(() => props.dataset, () => generateChartNextTick(), { deep: true })
 watch(() => props.dataKey, () => generateChartNextTick(false))
@@ -190,12 +336,13 @@ const generateChartNextTick = (rezoom = true) => {
 }
 
 const generateChart = (rezoom = true) => {
-  if (mapIsLoading.value || !hasData.value) return
+  if (mapIsLoading.value || !hasData.value || !dataChanged.value) return
 
   map.resize()
   updateDataSourcesAndLayers()
   updateLabels()
   if (rezoom) { void nextTick(() => zoomMap()) }
+  dataChanged.value = false
 }
 
 const updateDataSourcesAndLayers = () => {
@@ -204,7 +351,7 @@ const updateDataSourcesAndLayers = () => {
   if (props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP) {
     updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero) })
   }
-  updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
+  updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero, { heatmapIntensity: heatmapIntensity.value, heatmapWeight: heatmapWeight.value, heatmapRadius: heatmapRadius.value }) })
 }
 
 const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: AnyPaint) => {
@@ -259,7 +406,7 @@ const removeLayer = (id: string) => {
 }
 
 const downloadMapPngInternal = async () => {
-  const legendEntry = props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero)
+  const legendEntry = props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP ? props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero) : undefined
   await downloadMapPng(map, `${props.mapExportName}-${props.mapStatisticsStyle}`, legendEntry)
 }
 </script>
