@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { Options, Vue } from 'vue-class-component'
-import { Inject, Watch } from 'vue-property-decorator'
-import { RouteLocationNormalized } from 'vue-router'
+import { Inject } from 'vue-property-decorator'
 
 import { apiBioGetRichnessDataset } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -44,13 +43,6 @@ export default class SpeciesRichnessPage extends Vue {
 
   get haveData (): boolean {
     return this.speciesByClassDatasets.length > 0
-  }
-
-  @Watch('$route')
-  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
-    if (to.params.projectSlug !== from.params.projectSlug) {
-      await this.onDatasetChange()
-    }
   }
 
   async onFilterChange (filters: ColoredFilter[]): Promise<void> {
