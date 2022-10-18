@@ -50,6 +50,10 @@ export default class SpeciesSelector extends Vue {
     if (to.params.projectSlug !== from.params.projectSlug) {
       this.selectedSpeciesSlug = ''
       this.allSpecies = await this.getAllSpecies()
+      // reset not-exists species slug in the url.
+      if (from.name === to.name && !this.allSpecies.length) {
+        void this.$router.replace({ params: { speciesSlug: '' } })
+      }
     }
   }
 
@@ -64,6 +68,10 @@ export default class SpeciesSelector extends Vue {
       if (this.speciesSlug) {
         const matchedSlug = allSpecies.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === this.speciesSlug)
         this.selectedSpeciesSlug = matchedSlug ? this.speciesSlug : ''
+        if (!matchedSlug) {
+          // not-exists spesies; select a first species from the species list.
+          this.selectedSpeciesSlug = allSpecies[0].taxonSpeciesSlug
+        }
       } else {
         this.selectedSpeciesSlug = allSpecies[0].taxonSpeciesSlug
       }
