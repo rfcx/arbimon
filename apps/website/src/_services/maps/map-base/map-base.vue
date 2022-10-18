@@ -244,7 +244,7 @@ onUnmounted(() => {
   map.remove()
 })
 
-// ! to be remove
+// ! Remove
 const dataChanged = ref(true)
 const heatmapWeight = ref<HeatmapCustomByZoom>([0, 0, 10, 2])
 const heatmapIntensity = ref<HeatmapCustomByZoom>([7, 0.1, 9, 1])
@@ -267,19 +267,21 @@ watch(() => heatmapRadius.value, () => {
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
 }, { deep: true })
-// ! to be remove
+// ! Remove
 
-watch(() => props.mapHeight, () => generateChartNextTick())
-watch(() => props.dataset, () => generateChartNextTick(), { deep: true })
-watch(() => props.dataKey, () => generateChartNextTick(false))
+watch(() => props.mapHeight, () => { generateChartNextTick(); dataChanged.value = true })
+watch(() => props.dataset, () => { generateChartNextTick(); dataChanged.value = true }, { deep: true })
+watch(() => props.dataKey, () => { generateChartNextTick(false); dataChanged.value = true })
 watch(() => props.mapGroundStyle, (currentStyle: MapboxGroundStyle) => map.setStyle(currentStyle))
 watch(() => props.mapStatisticsStyle, (currentStyle: MapboxStatisticsStyle) => {
+  dataChanged.value = true
   styleToPaint.value = setupPaintStyle(currentStyle)
   removeLayer(DATA_LAYER_ZERO_ID)
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
 })
 watch(() => props.mapMoveEvent, () => {
+  dataChanged.value = true
   if (!props.mapMoveEvent || props.mapMoveEvent.sourceMapId === props.mapId) return // don't react to self
   isSynchronizingMapPosition.value = true // don't emit for sync'd moves
   map.setCenter(props.mapMoveEvent.center)
