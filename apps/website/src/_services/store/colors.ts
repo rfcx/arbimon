@@ -50,3 +50,14 @@ export const COLORS_UNIVERSAL_DESIGN = [
   '#d55c00',
   '#cc79a7'
 ]
+
+/**
+ * https://personal.sron.nl/~pault/#sec:qualitative
+ */
+export const COLOR_HEATMAP = [
+  '#4A7BB7',
+  '#98CAE1',
+  '#EAECCC',
+  '#FDB366',
+  '#DD3D2D'
+]
