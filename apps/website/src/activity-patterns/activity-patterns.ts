@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { Options, Vue } from 'vue-class-component'
-import { Inject, Watch } from 'vue-property-decorator'
-import { RouteLocationNormalized } from 'vue-router'
+import { Inject } from 'vue-property-decorator'
 
 import { apiBioGetProjectSpeciesOne, PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { apiBioGetSpotlightDataset, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
@@ -121,13 +120,6 @@ export default class ActivityPatternsPage extends Vue {
     this.exportDatasets = datasets
       .map(({ detectionsByLocationSite, detectionsByTimeHour, detectionsByTimeMonthYear, detectionsByTimeYear }) =>
         ({ sites: detectionsByLocationSite, hour: detectionsByTimeHour, month: detectionsByTimeMonthYear, year: detectionsByTimeYear }))
-  }
-
-  @Watch('$route')
-  async onRouterChange (to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<void> {
-    if (to.params.projectSlug !== from.params.projectSlug) {
-      this.resetData()
-    }
   }
 
   resetData (): void {

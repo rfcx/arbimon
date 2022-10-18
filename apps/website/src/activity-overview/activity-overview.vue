@@ -44,8 +44,7 @@
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, inject, ref } from 'vue'
 
 import { ActivityOverviewDataBySpecies, apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -63,7 +62,6 @@ import { SpeciesDataset } from './components/activity-overview-by-species/activi
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
-const route = useRoute()
 const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
@@ -77,12 +75,6 @@ const isLocationRedacted = ref<boolean>(true)
 
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
-
-watch(() => route.params.projectSlug, async (toProjectSlug, fromProjectSlug) => {
-  if (toProjectSlug !== fromProjectSlug) {
-    await onDatasetChange()
-  }
-})
 
 const onFilterChange = async (newFilters: ColoredFilter[]): Promise<void> => {
   filters.value = newFilters
