@@ -53,7 +53,7 @@ export const getRecordedMinutesCountGroupBySite = async (models: AllModels, filt
   return await models
     .RecordingBySiteHour
     .findAll({
-      attributes: ['locationSiteId', [sequelize.literal('COUNT(count)::integer'), 'count']],
+      attributes: ['locationSiteId', [sequelize.literal('SUM(count)::integer'), 'count']],
       where,
       group: 'location_site_id',
       raw: true
