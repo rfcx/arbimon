@@ -23,127 +23,32 @@
         class="absolute top-2 right-2"
         @click="downloadMapPngInternal()"
       />
-      <!-- ! To be remove -->
-      <div>
-        <div class="absolute top-12 right-2">
-          <label for="weight">weight:</label>
-          <input
-            id="weight"
-            v-model.number="heatmapWeight[0]"
-            title="first zoom"
-            type="number"
-            step="1"
-            min="0"
-            max="16"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          <input
-            v-model.number="heatmapWeight[1]"
-            title="first weight"
-            type="number"
-            min="0"
-            max="99"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          :
-          <input
-            v-model.number="heatmapWeight[2]"
-            title="last zoom"
-            type="number"
-            step="1"
-            min="0"
-            max="16"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          <input
-            v-model.number="heatmapWeight[3]"
-            title="last weight"
-            type="number"
-            min="0"
-            max="99"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-        </div>
-        <div class="absolute top-20 right-2">
-          <label for="intensity">intensity:</label>
-          <input
-            id="intensity"
-            v-model.number="heatmapIntensity[0]"
-            title="first zoom"
-            type="number"
-            step="1"
-            min="0"
-            max="16"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          <input
-            v-model.number="heatmapIntensity[1]"
-            title="first intensity"
-            type="number"
-            min="0"
-            max="99"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          :
-          <input
-            v-model.number="heatmapIntensity[2]"
-            title="last zoom"
-            type="number"
-            step="1"
-            min="0"
-            max="16"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          <input
-            v-model.number="heatmapIntensity[3]"
-            title="last intensity"
-            type="number"
-            min="0"
-            max="99"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-        </div>
-        <div class="absolute top-28 right-2">
-          <label for="radius">radius:</label>
-          <input
-            id="radius"
-            v-model.number="heatmapRadius[0]"
-            title="first zoom"
-            type="number"
-            step="1"
-            min="0"
-            max="16"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          <input
-            v-model.number="heatmapRadius[1]"
-            title="first radius"
-            type="number"
-            min="0"
-            max="99"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          :
-          <input
-            v-model.number="heatmapRadius[2]"
-            title="last zoom"
-            type="number"
-            step="1"
-            min="0"
-            max="16"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-          <input
-            v-model.number="heatmapRadius[3]"
-            title="last radius"
-            type="number"
-            min="0"
-            max="99"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-          >
-        </div>
+      <div v-if="isAllowHeatmapConfig">
+        <heatmap-config
+          label="weight"
+          :min-value="0"
+          :max-value="9"
+          :default-config="heatmapWeight"
+          class="absolute top-12 right-2"
+          @emit-config-change="setupHeatmapWeightValue"
+        />
+        <heatmap-config
+          label="intensity"
+          :min-value="0"
+          :max-value="9"
+          :default-config="heatmapIntensity"
+          class="absolute top-20 right-2"
+          @emit-config-change="setupHeatmapIntensityValue"
+        />
+        <heatmap-config
+          label="radius"
+          :min-value="0"
+          :max-value="9"
+          :default-config="heatmapRadius"
+          class="absolute top-28 right-2"
+          @emit-config-change="setupHeatmapRadiusValue"
+        />
       </div>
-      <!-- ! To be remove -->
     </div>
   </div>
 </template>
@@ -151,12 +56,14 @@
 import GeoJSON from 'geojson'
 import { partition } from 'lodash-es'
 import { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBounds, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, NavigationControl, Popup } from 'mapbox-gl'
-import { computed, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue'
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue'
 
+import { togglesKey } from '@/globals'
 import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_MAP_HEIGHT, LABEL_LAYER_IDS, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { downloadMapPng } from '~/maps/functions'
 import { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData, StyleToPaint } from '~/maps/types'
+import HeatmapConfig from '../heatmap-config/heatmap-config.vue'
 import { circleStyleToPaint } from '../utils/circle-style/style-to-paint'
 import { HeatmapCustomByZoom, HeatmapOption, heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
 
@@ -166,6 +73,7 @@ const DATA_LAYERS = [DATA_LAYER_ZERO_ID, DATA_LAYER_NONZERO_ID]
 
 type popupHtmlFunc = (data: MapSiteData, dataKey: string) => string
 
+const toggles = inject(togglesKey)
 const props = withDefaults(defineProps<{
   // Data
   dataset: MapDataSet,
@@ -244,11 +152,13 @@ onUnmounted(() => {
   map.remove()
 })
 
-// ! Remove
+// ! Feature toggle
 const dataChanged = ref(true)
 const heatmapWeight = ref<HeatmapCustomByZoom>([0, 0, 10, 2])
 const heatmapIntensity = ref<HeatmapCustomByZoom>([7, 0.1, 9, 1])
 const heatmapRadius = ref<HeatmapCustomByZoom>([0, 1, 10, 20])
+const isAllowHeatmapConfig = computed(() => toggles?.heatmapConfig === true)
+
 watch(() => heatmapWeight.value, () => {
   dataChanged.value = true
   removeLayer(DATA_LAYER_ZERO_ID)
@@ -267,12 +177,17 @@ watch(() => heatmapRadius.value, () => {
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
 }, { deep: true })
-// ! Remove
+
+const setupHeatmapWeightValue = (value: HeatmapCustomByZoom) => { heatmapWeight.value = value }
+const setupHeatmapIntensityValue = (value: HeatmapCustomByZoom) => { heatmapIntensity.value = value }
+const setupHeatmapRadiusValue = (value: HeatmapCustomByZoom) => { heatmapRadius.value = value }
+// ! Feature toggle
 
 watch(() => props.mapHeight, () => { generateChartNextTick(); dataChanged.value = true })
 watch(() => props.dataset, () => { generateChartNextTick(); dataChanged.value = true }, { deep: true })
 watch(() => props.dataKey, () => { generateChartNextTick(false); dataChanged.value = true })
 watch(() => props.mapGroundStyle, (currentStyle: MapboxGroundStyle) => map.setStyle(currentStyle))
+watch(() => props.isShowLabels, () => updateLabels())
 watch(() => props.mapStatisticsStyle, (currentStyle: MapboxStatisticsStyle) => {
   dataChanged.value = true
   styleToPaint.value = setupPaintStyle(currentStyle)
