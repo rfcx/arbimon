@@ -207,4 +207,4 @@ Environments `staging` and `production` are automatically deployed by GitHub Act
   2. Add the toggle key inside `website/src/_services/feature-toggles`
   3. Use `inject()` to get feature toggles for using inside the component
 
-_Note: The feature toggle value can be override following the override env file level from [Modes](./apps/cli/README.md#local-environment)_
+_Note: The feature toggle value can be override following the override env file level from [Modes](./apps/cli/README.md#modes)_
