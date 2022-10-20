@@ -1,8 +1,8 @@
 import { keyBy, mapValues } from 'lodash-es'
-import { QueryTypes, Sequelize } from 'sequelize'
+import { Op, QueryTypes, Sequelize } from 'sequelize'
 
 import { RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
@@ -109,25 +109,19 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
 }
 
 export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessPresence[]> => {
-  const filterBase = datasetFilterWhereRaw(filter)
-
-  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating) AND NOT sip.risk_rating_local_id = ANY ($protectedRiskRating)` : filterBase.conditions
-  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
-
-  const sql = `
-    SELECT 
-      sip.taxon_class_id as "taxonClassId",
-      sip.taxon_species_id as "taxonSpeciesId",
-      sip.taxon_species_slug as "taxonSpeciesSlug",
-      sip.common_name as "commonName",
-      sip.scientific_name as "scientificName"
-    FROM
-      detection_by_site_species_hour dbssh
-      LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
-    WHERE ${conditions}
-    GROUP BY
-      sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
-  `
-
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, taxons } = filter // ignore siteIds
+  const commonWhere = {
+    locationProjectId,
+    detectionMinHourLocal: startDateUtcInclusive,
+    detectionMaxHourLocal: endDateUtcExclusive,
+    taxonClassId: taxons
+  }
+  const nonProjectMemberWhere = {
+    riskRatingGlobalId: { [Op.notIn]: RISK_RATING_PROTECTED_IDS },
+    riskRatingLocalId: { [Op.notIn]: RISK_RATING_PROTECTED_IDS }
+  }
+  const where = isProjectMember ? commonWhere : { ...commonWhere, ...nonProjectMemberWhere }
+  const attributes = ['taxonClassId', 'taxonSpeciesId', 'taxonSpeciesSlug', 'commonName', 'scientificName']
+  const { SpeciesInProject } = ModelRepository.getInstance(sequelize)
+  return await SpeciesInProject.findAll({ where, attributes, raw: true })
 }

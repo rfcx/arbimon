@@ -13,8 +13,10 @@ export interface SpeciesInProject {
   riskRatingId: number
   riskRatingGlobalId: number
   riskRatingLocalId: number
-  commonName?: string
+  commonName: string
   photoUrl?: string
+  detectionMinHourLocal: Date
+  detectionMaxHourLocal: Date
 }
 
 export const ATTRIBUTES_SPECIES_IN_PROJECT = attributes<SpeciesInProject>()({

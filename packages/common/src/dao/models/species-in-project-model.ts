@@ -38,7 +38,9 @@ export const SpeciesInProjectModel = defineWithDefaults<SpeciesInProject>(
     riskRatingId: DataTypes.INTEGER,
     riskRatingGlobalId: DataTypes.INTEGER,
     riskRatingLocalId: DataTypes.INTEGER,
-    photoUrl: DataTypes.STRING(511)
+    photoUrl: DataTypes.STRING(511),
+    detectionMinHourLocal: DataTypes.DATE,
+    detectionMaxHourLocal: DataTypes.DATE
   },
   {
     tableName: TABLE_SPECIES_IN_PROJECT,
