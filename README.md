@@ -198,3 +198,13 @@ Environments `staging` and `production` are automatically deployed by GitHub Act
   - API secrets can be set manually via `kubectl apply tools/deployment/api/production/secrets.yaml` (make a copy of `tools/deployment/api/secrets.example.yaml`)
   - Website secrets can be set manually as GitHub secrets
   - **Secrets should never be committed to Git**
+
+### _Feature toggle_
+
+- Developers can add a feature toggle environments to control component displayment by following this step:
+
+  1. Add vite environment inside `.env`
+  2. Add the toggle key inside `website/src/_services/feature-toggles`
+  3. Use `inject()` to get feature toggles for using inside the component
+
+_Note: The feature toggle value can be override following the override env file level from [Local Environment](#local-environment)_
