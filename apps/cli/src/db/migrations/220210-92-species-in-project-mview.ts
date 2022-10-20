@@ -14,12 +14,16 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await params.context.sequelize.query(
     `
     create view ${VIEW_NAME} as
-    SELECT species.*,
+    SELECT species.location_project_id, species.taxon_class_id, species.taxon_class_slug, species.taxon_species_id,
+           species.taxon_species_slug, species.scientific_name, species.common_name, species.risk_rating_global_id,
+           species.photo_url, species.description, species.source_url, species.source_cite,
            COALESCE(lps.risk_rating_local_level, -1) AS risk_rating_local_id,
            CASE
                WHEN (lps.risk_rating_local_level > species.risk_rating_global_id) THEN lps.risk_rating_local_level
                ELSE species.risk_rating_global_id
-           END                         AS risk_rating_id
+           END AS risk_rating_id,
+           species.detection_min_hour_local,
+           species.detection_max_hour_local
     FROM (
           SELECT d.location_project_id,
                 ts.taxon_class_id,
@@ -51,7 +55,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
                     WHEN MAX(tsi.description) <> '' THEN 'IUCN Red List'
                     WHEN MAX(tsw.description) <> '' THEN 'Wikipedia'
                     ELSE ''
-                    END                                    AS source_cite
+                    END                                    AS source_cite,
+                MIN(d.time_precision_hour_local) detection_min_hour_local,
+                MAX(d.time_precision_hour_local) detection_max_hour_local
           FROM detection_by_site_species_hour d
                   JOIN taxon_species ts ON d.taxon_species_id = ts.id
                   JOIN taxon_class tc ON ts.taxon_class_id = tc.id
@@ -63,8 +69,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       ) species
       LEFT JOIN location_project_species lps
           ON species.location_project_id = lps.location_project_id
-          AND species.taxon_species_id = lps.taxon_species_id
-    `
+          AND species.taxon_species_id = lps.taxon_species_id`
   )
 
   // for (const indexCol of INDEX_COLS) {
