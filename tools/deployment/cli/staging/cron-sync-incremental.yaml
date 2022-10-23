@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-sync-incremental
   namespace: staging
 spec:
-  # at every 5 minute
-  schedule: '*/5 * * * *'
+  # once per hour
+  schedule: '47 * * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
