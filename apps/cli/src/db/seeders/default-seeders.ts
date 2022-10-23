@@ -2,6 +2,5 @@
 export const defaultSeederPaths = [
   '02-arbimon-data-mock',
   '03-preload-external-data',
-  '04-user-data',
-  '05-adhoc'
+  '04-user-data'
 ]
