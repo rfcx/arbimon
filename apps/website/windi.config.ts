@@ -15,11 +15,11 @@ export default defineConfig({
   plugins: [
     plugin(({ addComponents }) => {
       const navbarItems = {
-        '.navbar-menu-item.router-link-exact-active': {
+        '.navbar-menu-item.router-link-active': {
           'box-shadow': 'inset 0 -3px 0 #31984f'
         },
         '@media (max-width: 699px)': {
-          '.navbar-menu-item.router-link-exact-active': {
+          '.navbar-menu-item.router-link-active': {
             'box-shadow': 'inset 5px 0 0 #31984f'
           }
         },
