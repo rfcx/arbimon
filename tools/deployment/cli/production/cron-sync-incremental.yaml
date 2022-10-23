@@ -4,9 +4,10 @@ metadata:
   name: biodiversity-cli-sync-incremental
   namespace: production
 spec:
-  # every hours
-  schedule: '47 * * * *'
-  successfulJobsHistoryLimit: 3
+  # at every 5 minute
+  schedule: '*/5 * * * *'
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
@@ -23,3 +24,4 @@ spec:
               - configMapRef:
                   name: biodiversity-cli-config
           restartPolicy: Never
+      backoffLimit: 0
