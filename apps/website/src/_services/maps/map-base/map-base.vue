@@ -135,6 +135,9 @@ onMounted(() => {
       setupMapPopup()
     })
     .on('style.load', () => {
+      dataChanged.value = true
+      removeLayer(DATA_LAYER_ZERO_ID)
+      removeLayer(DATA_LAYER_NONZERO_ID)
       generateChartNextTick(false)
     })
     .on('move', () => {
@@ -186,8 +189,8 @@ const setupHeatmapRadiusValue = (value: HeatmapCustomByZoom) => { heatmapRadius.
 watch(() => props.mapHeight, () => { generateChartNextTick(); dataChanged.value = true })
 watch(() => props.dataset, () => { generateChartNextTick(); dataChanged.value = true }, { deep: true })
 watch(() => props.dataKey, () => { generateChartNextTick(false); dataChanged.value = true })
-watch(() => props.mapGroundStyle, (currentStyle: MapboxGroundStyle) => map.setStyle(currentStyle))
 watch(() => props.isShowLabels, () => updateLabels())
+watch(() => props.mapGroundStyle, (currentStyle: MapboxGroundStyle) => map.setStyle(currentStyle))
 watch(() => props.mapStatisticsStyle, (currentStyle: MapboxStatisticsStyle) => {
   dataChanged.value = true
   styleToPaint.value = setupPaintStyle(currentStyle)
