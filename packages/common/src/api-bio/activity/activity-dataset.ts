@@ -31,7 +31,6 @@ export interface ActivityOverviewDetectionDataBySite {
 
 export interface ActivityOverviewRecordingDataBySite {
   siteId: number
-  siteName: string
   count: number
 }
 

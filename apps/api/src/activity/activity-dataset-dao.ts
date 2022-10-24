@@ -11,7 +11,7 @@ import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/da
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 import { dayjs } from '../_services/dayjs-initialized'
 
-export type ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency = Omit<ActivityOverviewDetectionDataBySite, 'detectionFrequency'>
+type ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency = Omit<ActivityOverviewDetectionDataBySite, 'detectionFrequency'>
 
 export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
   const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
@@ -49,42 +49,21 @@ export function calculateOccupancy (totalSiteCount: number, occupiedSites: numbe
  */
 export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[]> => {
   // Filter inner query by dataset filter
-  const { conditions: datasetConditions, bind } = datasetFilterWhereRaw(filter)
-
-  // Filter outer query by project & site
-  // Note: all `bind` values already defined by dataset filter
-  const outerConditions = ['ls.location_project_id = $locationProjectId']
-  if (filter.siteIds.length > 0) { outerConditions.push('ls.id = ANY($siteIds)') }
+  const { conditions, bind } = datasetFilterWhereRaw(filter)
 
   const sql = `
-    SELECT id as "siteId",
-        name as "siteName",
-        latitude,
-        longitude,
-        count,
-        count > 0 occupancy
-    FROM (
-        SELECT ls.id,
-            ls.name,
-            ls.latitude,
-            ls.longitude,
-            coalesce(sum(detection_by_site_hour.count), 0)::integer as count
-        FROM location_site as ls
-        LEFT JOIN (
-            SELECT time_precision_hour_local,
-                location_site_id,
-                sum(count) as count
-            FROM detection_by_site_species_hour dbssh
-            WHERE ${datasetConditions}
-            GROUP BY dbssh.time_precision_hour_local, dbssh.location_site_id
-        ) as detection_by_site_hour
-            ON ls.id = detection_by_site_hour.location_site_id
-        WHERE ${outerConditions.join(' AND ')}
-        GROUP BY ls.id
-    ) detection_by_site
+    SELECT ls.id as "siteId",
+      ls.name as "siteName",
+      ls.latitude,
+      ls.longitude,
+      coalesce(sum(dbssh.count), 0)::integer as count
+    FROM location_site ls LEFT JOIN detection_by_site_species_hour dbssh ON ls.id = dbssh.location_site_id
+    WHERE ${conditions}
+    GROUP BY 1;
   `
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[]
+  const results = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as Array<Omit<ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency, 'occupancy'>>
+  return results.map(r => ({ ...r, occupancy: r.count > 0 }))
 }
 
 /**
@@ -95,7 +74,7 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
  * @param {number[]} filters.siteIds
  * @returns {ActivityOverviewRecordingDataBySite[]} total recording duration in minutes grouped by sites
  */
-export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewRecordingDataBySite[]> => {
+export const getTotalRecordingsBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewRecordingDataBySite[]> => {
   const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
 
   const conditions = [
@@ -106,10 +85,9 @@ export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDat
   if (filter.siteIds.length > 0) { conditions.push('rbsh.location_site_id = ANY($siteIds)') }
 
   const sql = `
-    SELECT ls.id as "siteId",
-      ls.name as "siteName",
-      sum(rbsh.count) count
-    FROM recording_by_site_hour rbsh JOIN location_site ls on rbsh.location_site_id = ls.id
+    SELECT rbsh.location_site_id as "siteId",
+    sum(rbsh.count)::integer as count
+    FROM recording_by_site_hour rbsh
     WHERE ${conditions.join(' AND ')}
     GROUP BY 1;
   `
@@ -124,15 +102,11 @@ export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDat
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewRecordingDataBySite[]
 }
 
-export function getDetectionFrequencyBySite (detectionData: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency, allRecordings: ActivityOverviewRecordingDataBySite[]): number {
-  const recordingsBySite = allRecordings.find(rec => rec.siteId === detectionData.siteId)
-  return recordingsBySite?.count === undefined ? 0 : detectionData.count / recordingsBySite.count
-}
-
-export function parseDetectionsBySite (detections: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[], recordings: ActivityOverviewRecordingDataBySite[]): ActivityOverviewDetectionDataBySite[] {
+export function combineDetectionsAndRecordings (detections: ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[], recordings: ActivityOverviewRecordingDataBySite[]): ActivityOverviewDetectionDataBySite[] {
+  const recordingsMap = Object.fromEntries(recordings.map(r => [r.siteId, r.count]))
   return detections.map(detection => ({
     ...detection,
-    detectionFrequency: getDetectionFrequencyBySite(detection, recordings)
+    detectionFrequency: recordingsMap[detection.siteId] ? detection.count / recordingsMap[detection.siteId] : 0
   }))
 }
 
