@@ -74,7 +74,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const recording = actual[0]
     expect(recording).toBeDefined()
     expectedProps.forEach(prop => expect(recording).toHaveProperty(prop))
-    expect(Object.keys(recording as any).length).toBe(expectedProps.length)
+    expect(Object.keys(recording as any)).toHaveLength(expectedProps.length)
   })
 
   test('can get first batch of recordings', async () => {
@@ -92,7 +92,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
+    expect(actual).toHaveLength(params.syncBatchLimit)
 
     expectIds.forEach(id => expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy())
   })
@@ -112,7 +112,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
+    expect(actual).toHaveLength(params.syncBatchLimit)
 
     expectIds.forEach(id => expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy())
   })
@@ -148,7 +148,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     const actual = await getArbimonRecording(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(0)
+    expect(actual).toHaveLength(0)
   })
 
   test('does not miss recordings with the same upload_time as previously synced', async () => {

@@ -179,7 +179,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
     const item = actual[0]
     expect(item).toBeDefined()
     EXPECTED_PROPS.forEach(prop => expect(item).toHaveProperty(prop))
-    expect(Object.keys(item as any).length).toBe(EXPECTED_PROPS.length)
+    expect(Object.keys(item as any)).toHaveLength(EXPECTED_PROPS.length)
   })
 
   test('can get detections for multiple projects', async () => {

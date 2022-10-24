@@ -25,19 +25,19 @@ describe('TimeOfDayPicker', () => {
 
     // Assert
     expect(buttonAll).toBeDefined()
-    expect(buttonAll.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonAll.children).toHaveLength(1) // element plus button wrap text in span
     expect(buttonAll.children[0].textContent).toMatch(/all day/i)
 
     expect(buttonDiurnal).toBeDefined()
-    expect(buttonDiurnal.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonDiurnal.children).toHaveLength(1) // element plus button wrap text in span
     expect(buttonDiurnal.children[0].textContent).toMatch(/diurnal/i)
 
     expect(buttonNocturnal).toBeDefined()
-    expect(buttonNocturnal.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonNocturnal.children).toHaveLength(1) // element plus button wrap text in span
     expect(buttonNocturnal.children[0].textContent).toMatch(/nocturnal/i)
 
     expect(buttonCustom).toBeDefined()
-    expect(buttonCustom.children.length).toBe(1) // element plus button wrap text in span
+    expect(buttonCustom.children).toHaveLength(1) // element plus button wrap text in span
     expect(buttonCustom.children[0].textContent).toMatch(/custom/i)
   })
 

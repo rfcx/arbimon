@@ -199,7 +199,7 @@ describe('ingest > sync', () => {
 
       // - Assert valid detections count in Bio taxon species table of the first batch
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
-      expect(detections.length).toBe(2)
+      expect(detections).toHaveLength(2)
     })
 
     test('where syncUntilId = latest id of a new batch', async () => {
@@ -220,7 +220,7 @@ describe('ingest > sync', () => {
 
       // - Assert valid detections are in Bio table of the new batch
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll()
-      expect(detections.length).toBe(4)
+      expect(detections).toHaveLength(4)
 
       // - Assert update sync status of the new batch
       expect(UPDATED_SYNC_STATUS_SECOND_BATCH[1].syncUntilId).toBe(expectedIds[expectedIds.length - 1].toString())
@@ -243,7 +243,7 @@ describe('ingest > sync', () => {
 
       // - Assert valid species are in Bio taxon species table of the new batch
       const detections = await ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour.findAll({ raw: true })
-      expect(detections.length).toBe(14)
+      expect(detections).toHaveLength(14)
     })
 
     test('can sync next detection batch: update, insert and remove rows', async () => {
@@ -286,9 +286,9 @@ describe('ingest > sync', () => {
       // Check last sync id for the 3d batch
       expect(UPDATED_SYNC_STATUS_THIRD_BATCH[1].syncUntilId).toBe('2391030')
       // Check count of updated detections after 2nd batch
-      expect(detections.length).toBe(3)
+      expect(detections).toHaveLength(3)
       // Check count of updated detections after reseting detection on the 3d batch
-      expect(detections2.length).toBe(2)
+      expect(detections2).toHaveLength(2)
     })
 
     test('can sync detections for multiple projects', async () => {

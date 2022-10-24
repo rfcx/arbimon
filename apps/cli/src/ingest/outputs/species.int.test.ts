@@ -37,7 +37,7 @@ describe('ingest > outputs > taxon species', () => {
         idArbimon: { [Op.in]: INPUT.map(i => i.idArbimon) }
       }
     })
-    expect(species.length).toBe(INPUT.length)
+    expect(species).toHaveLength(INPUT.length)
   })
 
   test('can update taxon species (slug, taxonClassId, scientificName)', async () => {
@@ -89,6 +89,6 @@ describe('ingest > outputs > taxon species', () => {
 
     // Assert
     const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({ where: { idArbimon: IDS_ARBIMON } })
-    expect(species.length).toBe(1)
+    expect(species).toHaveLength(1)
   })
 })

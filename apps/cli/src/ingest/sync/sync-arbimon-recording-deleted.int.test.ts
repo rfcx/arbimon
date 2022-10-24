@@ -99,7 +99,7 @@ describe('ingest > sync > sync deleted recording', async () => {
     const recordingBySiteHourInBioDB = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
 
     // Assert
-    expect(recordingBySiteHourInBioDB.length).toBe(1)
+    expect(recordingBySiteHourInBioDB).toHaveLength(1)
   })
 
   test('sync status is updated', async () => {

@@ -70,7 +70,7 @@ describe('legend', () => {
     const entries = formatter.getLegendEntries()
 
     // Assert
-    expect(entries.length).toBe(2)
+    expect(entries).toHaveLength(2)
   })
 
   test('legend entry values should given min and max', () => {

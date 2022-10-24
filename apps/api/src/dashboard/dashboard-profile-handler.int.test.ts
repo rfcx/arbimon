@@ -73,7 +73,7 @@ describe(`GET ${ROUTE} (dashboard profile)`, () => {
       // Assert
       const result = JSON.parse(response.body)
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-      expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
+      expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
 })

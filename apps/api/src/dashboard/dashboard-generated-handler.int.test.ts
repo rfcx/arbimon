@@ -85,7 +85,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       // Assert
       const result = JSON.parse(response.body)
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-      expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
+      expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
 
@@ -112,7 +112,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       expect(Array.isArray(maybeResult)).toBe(true)
 
       const result = maybeResult as ApiMap
-      expect(result.length).toBe(1)
+      expect(result).toHaveLength(1)
 
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
@@ -141,7 +141,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       expect(Array.isArray(maybeResult)).toBe(true)
 
       const result = maybeResult as ApiMap
-      expect(result.length).toBe(1)
+      expect(result).toHaveLength(1)
 
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)

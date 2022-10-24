@@ -71,7 +71,7 @@ describe('legend', () => {
     const entries = formatter.getLegendEntries()
 
     // Assert
-    expect(entries.length).toBe(legendEntryCount)
+    expect(entries).toHaveLength(legendEntryCount)
   })
 
   test('legend entries should be positive', () => {

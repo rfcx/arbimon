@@ -90,7 +90,7 @@ describe('ingest > outputs > species calls', async () => {
         callProjectId: ID_PROJECT
       }
     })
-    expect(calls.length).toBe(SPECIES_CALL_INPUT.length)
+    expect(calls).toHaveLength(SPECIES_CALL_INPUT.length)
   })
 
   test('fail for duplicate species calls', async () => {
@@ -103,6 +103,6 @@ describe('ingest > outputs > species calls', async () => {
         callProjectId: ID_PROJECT
       }
     })
-    expect(calls.length).toBe(SPECIES_CALL_INPUT.length)
+    expect(calls).toHaveLength(SPECIES_CALL_INPUT.length)
   })
 })

@@ -96,7 +96,7 @@ describe('ingest > output > recording by site hour', () => {
 
     // Assert
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
-    expect(recordingBySiteHour.length).toBe(1)
+    expect(recordingBySiteHour).toHaveLength(1)
     expect(recordingBySiteHour[0].totalDurationInMinutes).toBe(2.01)
     expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2]])
     expect(recordingBySiteHour[0].count).toEqual(1)
@@ -132,7 +132,7 @@ describe('ingest > output > recording by site hour', () => {
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
 
     // Assert
-    expect(recordingBySiteHour.length).toBe(2)
+    expect(recordingBySiteHour).toHaveLength(2)
     expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 2], [20, 1]])
     expect(sum(recordingBySiteHour.map(item => item.count))).toBe(3)
   })
@@ -166,7 +166,7 @@ describe('ingest > output > recording by site hour', () => {
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll({ raw: true })
 
     // Assert
-    expect(recordingBySiteHour.length).toBe(2)
+    expect(recordingBySiteHour).toHaveLength(2)
     expect(recordingBySiteHour[0].countsByMinute).toEqual([[0, 3]])
     expect(sum(recordingBySiteHour.map(item => item.count))).toBe(2)
   })
@@ -196,7 +196,7 @@ describe('ingest > output > recording by site hour', () => {
     // Assert
     const recordingBySiteHour = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
 
-    expect(recordingBySiteHour.length).toBe(3)
+    expect(recordingBySiteHour).toHaveLength(3)
     expect(dayjs(recordingBySiteHour[0].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
     expect(dayjs(recordingBySiteHour[1].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T07:00:00.000Z'))
     expect(dayjs(recordingBySiteHour[2].timePrecisionHourLocal)).toEqual(dayjs('2022-07-06T19:00:00.000Z'))

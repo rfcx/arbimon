@@ -64,7 +64,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(2)
+    expect(actual).toHaveLength(2)
     IDS_SPECIES.forEach(expectedProp => expect(actual.map((item: any) => item.taxonSpeciesId)).toContain(expectedProp))
   })
 
@@ -83,7 +83,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(2)
+    expect(actual).toHaveLength(2)
     IDS_SPECIES.forEach(expectedProp => expect(actual.map((item: any) => item.taxonSpeciesId)).toContain(expectedProp))
   })
 
@@ -102,7 +102,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(1)
+    expect(actual).toHaveLength(1)
     expect((actual[0] as any).taxonSpeciesId).toBe(ID_SPECIES)
   })
 
@@ -119,7 +119,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(0)
+    expect(actual).toHaveLength(0)
   })
 
   test('includes expected props (& no more)', async () => {
@@ -152,7 +152,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     const item = actual[0]
     expect(item).toBeDefined()
     EXPECTED_PROPS.forEach(prop => expect(item).toHaveProperty(prop))
-    expect(Object.keys(item as any).length).toBe(EXPECTED_PROPS.length)
+    expect(Object.keys(item as any)).toHaveLength(EXPECTED_PROPS.length)
   })
 
   test('can get species calls for multiple projects', async () => {

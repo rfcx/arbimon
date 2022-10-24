@@ -81,6 +81,6 @@ describe('legend', () => {
     const entriesWithZero = formatterWithZero.getLegendEntries()
 
     // Assert
-    expect(entriesWithZero.length).toBe(entriesNoZero.length + 1)
+    expect(entriesWithZero).toHaveLength(entriesNoZero.length + 1)
   })
 })
