@@ -127,7 +127,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Assert
       const result = JSON.parse(response.body)
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-      expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
+      expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
 
@@ -163,7 +163,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const knownSync = resultArray[0]
       expect(knownSync).toBeTypeOf('object')
       EXPECTED_PROPS.forEach(expectedProp => expect(knownSync).toHaveProperty(expectedProp))
-      expect(Object.keys(knownSync).length).toBe(EXPECTED_PROPS.length)
+      expect(Object.keys(knownSync)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
 

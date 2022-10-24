@@ -73,14 +73,14 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
 describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
-    // Arrange
-    const app = await getMockedAppLoggedOut()
+      // Arrange
+      const app = await getMockedAppLoggedOut()
 
-    // Act
-    const routes = [...app.routes.keys()]
+      // Act
+      const routes = [...app.routes.keys()]
 
-    // Assert
-    expect(routes).toContain(ROUTE)
+      // Assert
+      expect(routes).toContain(ROUTE)
     })
 
     test('returns successfully', async () => {
@@ -163,7 +163,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toBeDefined()
       expect(Array.isArray(result)).toBe(true)
       const expectedResult = result as ActivityOverviewDetectionDataBySite[]
-      expect(expectedResult.length).toBe(2)
+      expect(expectedResult).toHaveLength(2)
 
       // Assert - get expected site id
       expectedResult.forEach(group => expect(expectedSiteId).includes(group.siteId))
@@ -196,7 +196,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toBeDefined()
       expect(Array.isArray(result)).toBe(true)
       const expectedResult = result as ActivityOverviewDetectionDataBySite[]
-      expect(expectedResult.length).toBe(1)
+      expect(expectedResult).toHaveLength(1)
 
       // Assert - get expected site id
       expectedResult.forEach(group => expect(expectedSiteId).includes(group.siteId))
@@ -221,7 +221,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toBeDefined()
       expect(Array.isArray(result)).toBe(true)
       const expectedResult = result as ActivityOverviewDataBySpecies[]
-      expect(expectedResult.length).toBe(2)
+      expect(expectedResult).toHaveLength(2)
 
       // Assert - first result contains expected props
       const species = expectedResult[0]
@@ -259,7 +259,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(result).toBeDefined()
       expect(Array.isArray(result)).toBe(true)
       const expectedResult = result as ActivityOverviewDataBySpecies[]
-      expect(expectedResult.length).toBe(1)
+      expect(expectedResult).toHaveLength(1)
 
       // Assert - activityBySpecies is correct
       expect(expectedResult[0]).toEqual(expected)
@@ -304,8 +304,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const expectedSpecies = result.activityBySpecies as ActivityOverviewDataBySpecies[]
       expect(Array.isArray(expectedSite)).toBe(true)
       expect(Array.isArray(expectedSpecies)).toBe(true)
-      expect(expectedSite.length).toBe(1)
-      expect(expectedSpecies.length).toBe(1)
+      expect(expectedSite).toHaveLength(1)
+      expect(expectedSpecies).toHaveLength(1)
 
       // Assert - activityBySite is correct
       expect(expectedSite[0]).toEqual(activityBySite)
@@ -331,7 +331,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(activityByTimeHour).toBeDefined()
       expect(activityByTimeHour).toBeTypeOf('object')
       const expectedResult = activityByTimeHour as ActivityOverviewDetectionDataByTime
-      expect(Object.keys(expectedResult).length).toBe(2)
+      expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
       expectedProperties.forEach(expectedProperty => expect(activityByTimeHour).toHaveProperty(expectedProperty))
@@ -355,7 +355,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(activityByTimeDay).toBeDefined()
       expect(activityByTimeDay).toBeTypeOf('object')
       const expectedResult = activityByTimeDay as ActivityOverviewDetectionDataByTime
-      expect(Object.keys(expectedResult).length).toBe(2)
+      expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
       expectedProperties.forEach(expectedProperty => expect(activityByTimeDay).toHaveProperty(expectedProperty))
@@ -379,7 +379,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(activityByTimeMonth).toBeDefined()
       expect(activityByTimeMonth).toBeTypeOf('object')
       const expectedResult = activityByTimeMonth as ActivityOverviewDetectionDataByTime
-      expect(Object.keys(expectedResult).length).toBe(2)
+      expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
       expectedProperties.forEach(expectedProperty => expect(activityByTimeMonth).toHaveProperty(expectedProperty))
@@ -403,7 +403,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(activityByTimeDate).toBeDefined()
       expect(activityByTimeDate).toBeTypeOf('object')
       const expectedResult = activityByTimeDate as ActivityOverviewDetectionDataByTime
-      expect(Object.keys(expectedResult).length).toBe(2)
+      expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
       expectedProperties.forEach(expectedProperty => expect(activityByTimeDate).toHaveProperty(expectedProperty))

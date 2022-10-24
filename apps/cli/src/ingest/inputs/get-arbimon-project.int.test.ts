@@ -53,7 +53,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
+    expect(actual).toHaveLength(params.syncBatchLimit)
     expect((actual[0] as any).idArbimon).toBe(1920)
     expect((actual[1] as any).idArbimon).toBe(1921)
   })
@@ -70,7 +70,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
+    expect(actual).toHaveLength(params.syncBatchLimit)
     expect((actual[0] as any).idArbimon).toBe(1922)
     expect((actual[1] as any).idArbimon).toBe(1923)
   })
@@ -87,7 +87,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(1)
+    expect(actual).toHaveLength(1)
     expect((actual[0] as any).idArbimon).toBe(1924)
   })
 
@@ -103,7 +103,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(0)
+    expect(actual).toHaveLength(0)
   })
 
   test('does not miss projects with the same updated_at as previously synced', async () => {
@@ -120,7 +120,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const actual = await getArbimonProjects(arbimonSequelize, params)
 
     // Assert
-    expect(actual.length).toBe(1)
+    expect(actual).toHaveLength(1)
     expect((actual[0] as any).idArbimon).toBe(1925)
   })
 
@@ -140,7 +140,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     const item: any = actual[0]
     expect(item).toBeDefined()
     expectedProps.forEach(prop => expect(item).toHaveProperty(prop))
-    expect(Object.keys(item).length).toBe(expectedProps.length)
+    expect(Object.keys(item)).toHaveLength(expectedProps.length)
   })
 
   test('can get project coordinates, even when there is no sites in the project', async () => {

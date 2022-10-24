@@ -35,7 +35,7 @@ describe('ingest > outputs > projects', () => {
 
     // Assert
     const projects = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll()
-    expect(projects.length).toBe(input.length)
+    expect(projects).toHaveLength(input.length)
   })
 
   test('can write new project', async () => {
@@ -54,7 +54,7 @@ describe('ingest > outputs > projects', () => {
         idArbimon: { [Op.in]: idsArbimon }
       }
     })
-    expect(projects.length).toBe(idsArbimon.length)
+    expect(projects).toHaveLength(idsArbimon.length)
   })
 
   test('can update project (Name, Slug, IdCore)', async () => {

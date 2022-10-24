@@ -51,7 +51,7 @@ describe('ingest > inputs > getArbimonSites', async () => {
     const actual = await getArbimonSites(arbimonSequelize, params) as unknown as SiteArbimon[]
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
+    expect(actual).toHaveLength(params.syncBatchLimit)
     expect(actual[0].idArbimon).toBe(leastRecentlyUpdatedId)
     expect(actual[1].idArbimon).toBe(secondLeastRecentlyUpdatedId)
   })
@@ -73,7 +73,7 @@ describe('ingest > inputs > getArbimonSites', async () => {
     const actual = await getArbimonSites(arbimonSequelize, params) as unknown as SiteArbimon[]
 
     // Assert
-    expect(actual.length).toBe(params.syncBatchLimit)
+    expect(actual).toHaveLength(params.syncBatchLimit)
     expect(actual[0].idArbimon).toBe(leastRecentlyUpdatedId)
     expect(actual[1].idArbimon).toBe(secondLeastRecentlyUpdatedId)
   })

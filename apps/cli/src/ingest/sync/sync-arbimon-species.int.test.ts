@@ -78,7 +78,7 @@ describe('ingest > sync', () => {
       const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_FIRST_BATCH } }
       })
-      expect(species.length).toBe(2)
+      expect(species).toHaveLength(2)
 
       // - Assert update sync status of the first batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FIRST_BATCH[IDS_ARBIMON_FIRST_BATCH.length - 1])
@@ -104,7 +104,7 @@ describe('ingest > sync', () => {
       const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_SECOND_BATCH } }
       })
-      expect(species.length).toBe(2)
+      expect(species).toHaveLength(2)
 
       // - Assert update sync status of the new batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_SECOND_BATCH[IDS_ARBIMON_SECOND_BATCH.length - 1])
@@ -126,7 +126,7 @@ describe('ingest > sync', () => {
       const expectedSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_FULL_BATCH } }
       })
-      expect(expectedSpecies.length).toBe(4)
+      expect(expectedSpecies).toHaveLength(4)
 
       // - Assert update sync status of the same batch twice
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])
@@ -155,7 +155,7 @@ describe('ingest > sync', () => {
     const notExpectedSpecies = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findAll({
       where: { idArbimon: { [Op.eq]: ID_ARBIMON } }
     })
-    expect(notExpectedSpecies.length).toBe(0)
+    expect(notExpectedSpecies).toHaveLength(0)
   })
 
   test.todo('write sync error when a slug is not unique', async () => {
@@ -186,7 +186,7 @@ describe('ingest > sync', () => {
         externalId: IDS_ARBIMON[1].toString()
       }
     })
-    expect(species.length).toBe(1)
+    expect(species).toHaveLength(1)
     expect(syncError).toBeInstanceOf(Object)
   })
 })

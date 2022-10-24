@@ -169,7 +169,7 @@ describe('ingest > sync', () => {
       const speciesCalls = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_FIRST_BATCH } }
       })
-      expect(speciesCalls.length).toBe(4)
+      expect(speciesCalls).toHaveLength(4)
 
       // - Assert update sync status of the first batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FIRST_BATCH[IDS_ARBIMON_FIRST_BATCH.length - 1])
@@ -194,7 +194,7 @@ describe('ingest > sync', () => {
       const calls = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_SECOND_BATCH } }
       })
-      expect(calls.length).toBe(3)
+      expect(calls).toHaveLength(3)
 
       // - Assert update sync status of the new batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_SECOND_BATCH[IDS_ARBIMON_SECOND_BATCH.length - 1])
@@ -220,7 +220,7 @@ describe('ingest > sync', () => {
       const calls = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findAll({
         where: { idArbimon: { [Op.in]: IDS_ARBIMON_FULL_BATCH } }
       })
-      expect(calls.length).toBe(7)
+      expect(calls).toHaveLength(7)
 
       // - Assert update sync status of the new batch
       await expectLastSyncIdInSyncStatusToBe(IDS_ARBIMON_FULL_BATCH[IDS_ARBIMON_FULL_BATCH.length - 1])

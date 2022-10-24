@@ -73,7 +73,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
       // Assert
       const result = JSON.parse(response.body)
       EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
-      expect(Object.keys(result).length).toBe(EXPECTED_PROPS.length)
+      expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
   describe('known data tests', async () => {

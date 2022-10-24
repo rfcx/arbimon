@@ -84,7 +84,7 @@ describe('ingest > sync > sync recording by site hour', async () => {
       const recordingBySiteHourInBioDB = await ModelRepository.getInstance(biodiversitySequelize).RecordingBySiteHour.findAll()
 
       // Assert
-      expect(recordingBySiteHourInBioDB.length).toBe(3)
+      expect(recordingBySiteHourInBioDB).toHaveLength(3)
     })
 
     test('sync status is updated', async () => {
