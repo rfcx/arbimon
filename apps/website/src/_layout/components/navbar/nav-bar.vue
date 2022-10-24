@@ -49,6 +49,7 @@
           :key="'nav-menus-' + idx"
           :to="item.destination"
           class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
+          :class="item.isParent ? 'router-link-needs-exact' : ''"
           @click="hasToggledMobileMenu = false"
         >
           {{ item.label }}
