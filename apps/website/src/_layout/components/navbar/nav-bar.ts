@@ -14,6 +14,7 @@ export interface NavMenu {
   label: string
   destination: RouteLocationRaw
   role?: string[]
+  isParent?: boolean
 }
 
 @Options({
@@ -46,7 +47,8 @@ export default class NavbarComponent extends Vue {
       ? [
           {
             label: 'Dashboard',
-            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } }
+            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } },
+            isParent: true
           },
           {
             label: 'Richness',
