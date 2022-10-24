@@ -135,9 +135,7 @@ onMounted(() => {
       setupMapPopup()
     })
     .on('style.load', () => {
-      dataChanged.value = true
-      removeLayer(DATA_LAYER_ZERO_ID)
-      removeLayer(DATA_LAYER_NONZERO_ID)
+      styleChange.value = true
       generateChartNextTick(false)
     })
     .on('move', () => {
@@ -156,26 +154,26 @@ onUnmounted(() => {
 })
 
 // ! Feature toggle
-const dataChanged = ref(true)
+const styleChange = ref(true)
 const heatmapWeight = ref<HeatmapCustomByZoom>([0, 0, 10, 2])
 const heatmapIntensity = ref<HeatmapCustomByZoom>([7, 0.1, 9, 1])
 const heatmapRadius = ref<HeatmapCustomByZoom>([0, 1, 10, 20])
 const isAllowHeatmapConfig = computed(() => toggles?.heatmapConfig === true)
 
 watch(() => heatmapWeight.value, () => {
-  dataChanged.value = true
+  styleChange.value = true
   removeLayer(DATA_LAYER_ZERO_ID)
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
 }, { deep: true })
 watch(() => heatmapIntensity.value, () => {
-  dataChanged.value = true
+  styleChange.value = true
   removeLayer(DATA_LAYER_ZERO_ID)
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
 }, { deep: true })
 watch(() => heatmapRadius.value, () => {
-  dataChanged.value = true
+  styleChange.value = true
   removeLayer(DATA_LAYER_ZERO_ID)
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
@@ -186,20 +184,20 @@ const setupHeatmapIntensityValue = (value: HeatmapCustomByZoom) => { heatmapInte
 const setupHeatmapRadiusValue = (value: HeatmapCustomByZoom) => { heatmapRadius.value = value }
 // ! Feature toggle
 
-watch(() => props.mapHeight, () => { generateChartNextTick(); dataChanged.value = true })
-watch(() => props.dataset, () => { generateChartNextTick(); dataChanged.value = true }, { deep: true })
-watch(() => props.dataKey, () => { generateChartNextTick(false); dataChanged.value = true })
+watch(() => props.mapHeight, () => { generateChartNextTick(); styleChange.value = true })
+watch(() => props.dataset, () => { generateChartNextTick(); styleChange.value = true }, { deep: true })
+watch(() => props.dataKey, () => { generateChartNextTick(false); styleChange.value = true })
 watch(() => props.isShowLabels, () => updateLabels())
 watch(() => props.mapGroundStyle, (currentStyle: MapboxGroundStyle) => map.setStyle(currentStyle))
 watch(() => props.mapStatisticsStyle, (currentStyle: MapboxStatisticsStyle) => {
-  dataChanged.value = true
+  styleChange.value = true
   styleToPaint.value = setupPaintStyle(currentStyle)
   removeLayer(DATA_LAYER_ZERO_ID)
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
 })
 watch(() => props.mapMoveEvent, () => {
-  dataChanged.value = true
+  styleChange.value = true
   if (!props.mapMoveEvent || props.mapMoveEvent.sourceMapId === props.mapId) return // don't react to self
   isSynchronizingMapPosition.value = true // don't emit for sync'd moves
   map.setCenter(props.mapMoveEvent.center)
@@ -256,13 +254,13 @@ const generateChartNextTick = (rezoom = true) => {
 }
 
 const generateChart = (rezoom = true) => {
-  if (mapIsLoading.value || !hasData.value || !dataChanged.value) return
+  if (mapIsLoading.value || !hasData.value || !styleChange.value) return
 
   map.resize()
   updateDataSourcesAndLayers()
   updateLabels()
   if (rezoom) { void nextTick(() => zoomMap()) }
-  dataChanged.value = false
+  styleChange.value = false
 }
 
 const updateDataSourcesAndLayers = () => {
