@@ -98,40 +98,20 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
 export const getRecordingBySite = async (sequelize: Sequelize, filter: FilterDatasetForSql): Promise<ActivityOverviewRecordingDataBySite[]> => {
   const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
 
-  // Filter inner query by dataset filter
-  const datasetConditions = [
-    'location_project_id = $locationProjectId',
-    'time_precision_hour_local >= $startDateUtcInclusive',
-    'time_precision_hour_local < $endDateUtcExclusive'
+  const conditions = [
+    'rbsh.location_project_id = $locationProjectId',
+    'rbsh.time_precision_hour_local >= $startDateUtcInclusive',
+    'rbsh.time_precision_hour_local < $endDateUtcExclusive'
   ]
-  if (filter.siteIds.length > 0) { datasetConditions.push('location_site_id = ANY($siteIds)') }
-
-  // Filter outer query by project & site
-  const outerConditions = ['ls.location_project_id = $locationProjectId']
-  if (filter.siteIds.length > 0) { outerConditions.push('ls.id = ANY($siteIds)') }
+  if (filter.siteIds.length > 0) { conditions.push('rbsh.location_site_id = ANY($siteIds)') }
 
   const sql = `
-    SELECT id as "siteId",
-        name as "siteName",
-        count
-    FROM (
-        SELECT ls.id,
-            ls.name,
-            sum(rbsh.total_duration_in_minutes) as count
-        FROM location_site as ls
-    JOIN (
-        SELECT time_precision_hour_local,
-            location_site_id,
-            total_duration_in_minutes
-        FROM recording_by_site_hour
-        WHERE ${datasetConditions.join(' AND ')}
-        GROUP BY time_precision_hour_local, location_site_id, total_duration_in_minutes
-    ) as rbsh
-        ON ls.id = rbsh.location_site_id
-        WHERE ${outerConditions.join(' AND ')}
-        GROUP BY ls.id
-    ) recording_by_site
-  ;
+    SELECT ls.id as "siteId",
+      ls.name as "siteName",
+      sum(rbsh.count) count
+    FROM recording_by_site_hour rbsh JOIN location_site ls on rbsh.location_site_id = ls.id
+    WHERE ${conditions.join(' AND ')}
+    GROUP BY 1;
   `
 
   const bind: BindOrReplacements = {
