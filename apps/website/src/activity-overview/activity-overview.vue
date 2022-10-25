@@ -108,7 +108,7 @@ const onDatasetChange = async () => {
 
   tableDatasets.value = datasets.map(({ color, activityBySpecies }) => ({ color, data: activityBySpecies }))
   exportDatasets.value = datasets.map(({ activityBySpecies }) => activityBySpecies)
-  isLocationRedacted.value = datasets[0].isLocationRedacted
+  isLocationRedacted.value = datasets[0]?.isLocationRedacted ?? true
 }
 
 const exportSpeciesData = async () => {
