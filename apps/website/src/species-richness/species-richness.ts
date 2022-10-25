@@ -80,6 +80,6 @@ export default class SpeciesRichnessPage extends Vue {
         }
       })
     this.detectedSpecies = getTableData(datasets)
-    this.isLocationRedacted = datasets[0].data.isLocationRedacted
+    this.isLocationRedacted = datasets[0]?.data.isLocationRedacted ?? true
   }
 }
