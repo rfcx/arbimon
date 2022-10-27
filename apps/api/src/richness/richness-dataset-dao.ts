@@ -1,8 +1,8 @@
 import { keyBy, mapValues } from 'lodash-es'
-import { Op, QueryTypes, Sequelize } from 'sequelize'
+import { BindOrReplacements, QueryTypes, Sequelize } from 'sequelize'
 
 import { RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { AllModels } from '@rfcx-bio/common/dao/model-repository'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
@@ -110,18 +110,28 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
 
 export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessPresence[]> => {
   const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, taxons } = filter // ignore siteIds
-  const commonWhere = {
+  const conditions = [
+    'location_project_id = $locationProjectId',
+    '(detection_min_hour_local, detection_max_hour_local) OVERLAPS ($startDateUtcInclusive, $endDateUtcExclusive)'
+  ]
+  const bind: BindOrReplacements = {
     locationProjectId,
-    detectionMinHourLocal: startDateUtcInclusive,
-    detectionMaxHourLocal: endDateUtcExclusive,
-    taxonClassId: taxons
+    startDateUtcInclusive,
+    endDateUtcExclusive
   }
-  const nonProjectMemberWhere = {
-    riskRatingGlobalId: { [Op.notIn]: RISK_RATING_PROTECTED_IDS },
-    riskRatingLocalId: { [Op.notIn]: RISK_RATING_PROTECTED_IDS }
+  if (taxons !== undefined && taxons.length > 0) {
+    conditions.push('sip.taxon_class_id = ANY($taxons)')
+    bind.taxons = taxons
   }
-  const where = isProjectMember ? commonWhere : { ...commonWhere, ...nonProjectMemberWhere }
-  const attributes = ['taxonClassId', 'taxonSpeciesId', 'taxonSpeciesSlug', 'commonName', 'scientificName']
-  const { SpeciesInProject } = ModelRepository.getInstance(sequelize)
-  return await SpeciesInProject.findAll({ where, attributes, raw: true })
+  if (!isProjectMember) {
+    conditions.push('NOT risk_rating_global_id = ANY($protectedIds) AND NOT risk_rating_local_id = ANY($protectedIds)')
+    bind.protectedIds = RISK_RATING_PROTECTED_IDS
+  }
+  const sql = `
+    SELECT taxon_class_id "taxonClassId", taxon_species_id "taxonSpeciesId", taxon_species_slug "taxonSpeciesSlug",
+      common_name "commonName", scientific_name "scientificName"
+    FROM species_in_project
+    WHERE ${conditions.join(' AND ')}
+  `
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
 }
