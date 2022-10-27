@@ -1,4 +1,4 @@
-import { groupBy, mapValues, sum } from 'lodash-es'
+import { mapValues, sum } from 'lodash-es'
 import { BindOrReplacements, QueryTypes, Sequelize } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime, ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
@@ -110,7 +110,9 @@ export function combineDetectionsAndRecordings (detections: ActivityOverviewDete
   }))
 }
 
-export async function getDetectionDataBySpecies (models: AllModels, detections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number, isProjectMember: boolean, locationProjectId: number): Promise<ActivityOverviewDataBySpecies[]> {
+export async function getDetectionDataBySpecies (sequelize: Sequelize, models: AllModels, filter: FilterDatasetForSql, detections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number, isProjectMember: boolean): Promise<ActivityOverviewDataBySpecies[]> {
+  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
+
   let filteredDetections = detections
 
   // Filter the protected species out if the user don't have permission to protect the location when user filtering by site
@@ -125,40 +127,46 @@ export async function getDetectionDataBySpecies (models: AllModels, detections: 
 
   if (filterDetections.length === 0) return []
 
-  const detectionsBySpecies = groupBy(filteredDetections, 'taxonSpeciesId')
   const totalSiteCount = new Set(filteredDetections.map(({ locationSiteId }) => locationSiteId)).size
 
-  // TODO ???: Move query to somewhere more global
-  const taxonClasses = await models.TaxonClass.findAll({ raw: true })
+  const conditions = [
+    'location_project_id = $locationProjectId',
+    'time_precision_hour_local >= $startDateUtcInclusive',
+    'time_precision_hour_local < $endDateUtcExclusive'
+  ]
+  if (filter.siteIds.length > 0) { conditions.push('location_site_id = ANY($siteIds)') }
 
-  const speciesIds = Object.keys(detectionsBySpecies)
-  const species = await models.SpeciesInProject.findAll({
-    where: { taxonSpeciesId: speciesIds },
-    raw: true
-  })
+  const sql = `
+    SELECT sip.common_name "commonName",
+      sip.scientific_name "scientificName",
+      tc.common_name taxon,
+      d."detectionMinutesCount",
+      d."detectionFrequency",
+      d."occupiedSites",
+      d."occupancyNaive"
+    FROM species_in_project sip
+    JOIN taxon_class tc ON tc.id = sip.taxon_class_id
+    JOIN (SELECT taxon_species_id,
+          sum(count)::integer "detectionMinutesCount",
+          sum(count)::float / ${totalRecordedMinutes} as "detectionFrequency",
+          count(distinct location_site_id)::integer "occupiedSites",
+          count(distinct location_site_id)::float / ${totalSiteCount} as "occupancyNaive"
+        FROM detection_by_site_species_hour
+        WHERE ${conditions.join(' AND ')}
+        GROUP BY 1
+    ) d ON sip.taxon_species_id = d.taxon_species_id
+    WHERE sip.location_project_id = $locationProjectId
+      AND sip.risk_rating_id NOT IN (${RISK_RATING_PROTECTED_IDS.join(',')});
+  `
 
-  const activityOverviewDataBySpecies: ActivityOverviewDataBySpecies[] = []
-  for (const [speciesId, speciesDetectedDetections] of Object.entries(detectionsBySpecies)) {
-    const detectionMinutesCount = calculateDetectionCount(speciesDetectedDetections)
-    // Frequency detection for specific species
-    const detectionFrequency = calculateDetectionFrequency(speciesDetectedDetections, totalRecordedMinutes)
-    const occupiedSites = new Set(speciesDetectedDetections.map(({ locationSiteId }) => locationSiteId)).size
-    const occupancyNaive = calculateOccupancy(totalSiteCount, occupiedSites)
-
-    const matchedSpecies = species.find(({ taxonSpeciesId }) => taxonSpeciesId === Number(speciesId))
-
-    activityOverviewDataBySpecies.push({
-      commonName: matchedSpecies?.commonName ?? '',
-      scientificName: matchedSpecies?.scientificName ?? '',
-      taxon: taxonClasses.find(({ slug }) => matchedSpecies?.taxonClassSlug === slug)?.commonName ?? '',
-      detectionMinutesCount,
-      detectionFrequency,
-      occupiedSites,
-      occupancyNaive
-    })
+  const bind: BindOrReplacements = {
+    locationProjectId,
+    startDateUtcInclusive,
+    endDateUtcExclusive,
+    siteIds
   }
 
-  return activityOverviewDataBySpecies
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDataBySpecies[]
 }
 
 export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): ActivityOverviewDetectionDataByTime {

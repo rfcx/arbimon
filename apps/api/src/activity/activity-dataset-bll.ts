@@ -10,8 +10,6 @@ export const getActivityOverviewData = async (filter: FilterDataset, isProjectMe
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
-  const { locationProjectId } = filter
-
   const filterForSql = toFilterDatasetForSql(filter)
 
   const detectionsBySite = await getDetectionBySite(sequelize, filterForSql)
@@ -20,7 +18,7 @@ export const getActivityOverviewData = async (filter: FilterDataset, isProjectMe
   const activityBySite = combineDetectionsAndRecordings(detectionsBySite, recordingsBySite)
   // TODO Refactor all activity* below to perform data processing in the db (and not by returning all detections)
   const totalDetections = await filterDetections(models, filterForSql)
-  const activityBySpecies = await getDetectionDataBySpecies(models, totalDetections, totalRecordedMinutes, isProjectMember, locationProjectId)
+  const activityBySpecies = await getDetectionDataBySpecies(sequelize, models, filterForSql, totalDetections, totalRecordedMinutes, isProjectMember)
   const activityByTimeHour = getDetectionsByTimeHour(totalDetections, totalRecordedMinutes)
   const activityByTimeDay = getDetectionsByTimeDay(totalDetections, totalRecordedMinutes)
   const activityByTimeMonth = getDetectionsByTimeMonth(totalDetections, totalRecordedMinutes)
