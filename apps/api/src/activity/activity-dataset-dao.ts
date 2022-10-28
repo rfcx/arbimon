@@ -141,16 +141,12 @@ export async function getDetectionDataBySpecies (sequelize: Sequelize, models: A
       sip.scientific_name "scientificName",
       tc.common_name taxon,
       d."detectionMinutesCount",
-      d."detectionFrequency",
-      d."occupiedSites",
-      d."occupancyNaive"
+      d."occupiedSites"
     FROM species_in_project sip
     JOIN taxon_class tc ON tc.id = sip.taxon_class_id
     JOIN (SELECT taxon_species_id,
           sum(count)::integer "detectionMinutesCount",
-          sum(count)::float / ${totalRecordedMinutes} as "detectionFrequency",
-          count(distinct location_site_id)::integer "occupiedSites",
-          count(distinct location_site_id)::float / ${totalSiteCount} as "occupancyNaive"
+          count(distinct location_site_id)::integer "occupiedSites"
         FROM detection_by_site_species_hour
         WHERE ${conditions.join(' AND ')}
         GROUP BY 1
@@ -166,7 +162,12 @@ export async function getDetectionDataBySpecies (sequelize: Sequelize, models: A
     siteIds
   }
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDataBySpecies[]
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDataBySpecies[]
+  return result.map(r => ({
+    ...r,
+    detectionFrequency: r.detectionMinutesCount / totalRecordedMinutes,
+    occupancyNaive: r.occupiedSites / totalSiteCount
+  }))
 }
 
 export function getDetectionsByTimeHour (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): ActivityOverviewDetectionDataByTime {
