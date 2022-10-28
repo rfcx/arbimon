@@ -10,8 +10,8 @@ import { projectSpeciesAllHandler } from './controller-project-species-all'
 import { projectSpeciesOneHandler } from './controller-project-species-one'
 import { projectSpeciesPredictedOccupancyHandler } from './controller-project-species-predicted-occupancy'
 
-export const mockPredictionsFolderName = 'predicted-occupancy/puerto-rico'
-export const mockPredictionsFolderPath = resolve('./public', mockPredictionsFolderName)
+export const mockPredictionsFolderName = (projectSlug: string): string => `predicted-occupancy/${projectSlug}`
+export const mockPredictionsFolderPath = (projectSlug: string): string => resolve('./public', mockPredictionsFolderName(projectSlug))
 
 export const routesSpecies: RouteRegistration[] = [
   {

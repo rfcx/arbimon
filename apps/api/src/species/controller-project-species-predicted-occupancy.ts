@@ -17,22 +17,25 @@ export const projectSpeciesPredictedOccupancyHandler: Handler<FastifyReply, Proj
   const { projectId, speciesSlug, filenameWithoutExtension } = req.params
   assertPathParamsExist({ projectId, speciesSlug, filenameWithoutExtension })
 
-  // Query species
-  const species = await ModelRepository.getInstance(getSequelize())
-    .SpeciesInProject
-    .findOne({
-      where: { taxonSpeciesSlug: speciesSlug }
-    })
+  const { SpeciesInProject, LocationProject } = ModelRepository.getInstance(getSequelize())
 
+  // Query species
+  const species = await SpeciesInProject.findOne({
+      where: { locationProjectId: projectId, taxonSpeciesSlug: speciesSlug }
+    })
   if (!species) throw BioNotFoundError()
 
   const isLocationRedacted = isProtectedSpecies(species.riskRatingId) && !getIsProjectMember(req)
   if (isLocationRedacted) throw BioForbiddenError()
 
+  // Query project
+  const project = await LocationProject.findByPk(projectId)
+  if (!project) throw BioNotFoundError()
+
   // Query file
-  const resolvedFilename = resolve(mockPredictionsFolderPath, filenameWithoutExtension)
-  if (!resolvedFilename.startsWith(mockPredictionsFolderPath)) throw BioInvalidPathParamError({ filenameWithoutExtension })
+  const resolvedFilename = resolve(mockPredictionsFolderPath(project.slug), filenameWithoutExtension)
+  if (!resolvedFilename.startsWith(mockPredictionsFolderPath(project.slug))) throw BioInvalidPathParamError({ filenameWithoutExtension })
 
   // Response
-  return await res.sendFile(`${mockPredictionsFolderName}/${filenameWithoutExtension}.png`)
+  return await res.sendFile(`${mockPredictionsFolderName(project.slug)}/${filenameWithoutExtension}.png`)
 }
