@@ -39,7 +39,7 @@ export const getSequelizeBase = ({ host, port, databaseName, user, password, isS
       timestamps: true,
       underscored: true
     },
-    logging: verbose
+    logging: verbose ? console.info : false
   }
 
   return new Sequelize(
