@@ -101,7 +101,7 @@ const onDatasetChange = async () => {
       hourOfDay: activityByTimeHour,
       dayOfWeek: activityByTimeDay,
       monthOfYear: activityByTimeMonth,
-      dateSeries: activityByTimeDate
+      date: activityByTimeDate
     }
     return { color, data }
   })

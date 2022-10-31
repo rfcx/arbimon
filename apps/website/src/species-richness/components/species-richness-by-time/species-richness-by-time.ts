@@ -1,4 +1,3 @@
-import { mapKeys } from 'lodash-es'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
@@ -10,8 +9,6 @@ import { downloadSvgAsPng } from '~/charts'
 import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
-
-const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
 
 @Options({
   components: { LineChartComponent }
@@ -36,20 +33,14 @@ export default class SpeciesRichnessByTime extends Vue {
       xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       yTitle: 'Number of species',
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
-      xLabelFormatter: this.selectedBucket === 'dateSeries'
-        ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
+      xLabelFormatter: this.selectedBucket === 'date'
+        ? n => dayjs.unix(n).format('MMM-DD YY')
         : TIME_LABEL_FORMATTERS[this.selectedBucket],
       yLabelFormatter: (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''
     }
   }
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
-    if (this.selectedBucket === 'dateSeries') {
-      return this.datasets.map(({ color, data }) => {
-        const dateSeriesData = mapKeys(data[this.selectedBucket], (value, key) => Number(key) / SECONDS_PER_DAY) ?? []
-        return { color, data: dateSeriesData }
-      })
-    }
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket] ?? [] }))
   }
 

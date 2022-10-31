@@ -23,8 +23,6 @@ interface DropDownOption {
   value: ActivityOverviewDataByTimeType
 }
 
-const SECONDS_PER_DAY = 86400 // 24 * 60 * 60
-
 const DATASET_LABELS = {
   [ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency]: 'Detection Frequency',
   [ACTIVITY_OVERVIEW_TIME_KEYS.detection]: 'Detections (raw)'
@@ -55,8 +53,8 @@ export default class ActivityOverviewByTime extends Vue {
       xTitle: TIME_BUCKET_LABELS[this.selectedBucket],
       yTitle: DATASET_LABELS[this.selectedType],
       xBounds: TIME_BUCKET_BOUNDS[this.selectedBucket],
-      xLabelFormatter: this.selectedBucket === 'dateSeries'
-        ? n => dayjs.unix(n * SECONDS_PER_DAY).format('MMM-DD YY')
+      xLabelFormatter: this.selectedBucket === 'date'
+        ? n => dayjs.unix(n).format('MMM-DD YY')
         : TIME_LABEL_FORMATTERS[this.selectedBucket],
       yLabelFormatter: this.displayWholeNumber
         ? (n) => Number.isInteger(n) ? numeral(n).format('0,0') : ''

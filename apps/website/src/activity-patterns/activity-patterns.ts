@@ -113,7 +113,7 @@ export default class ActivityPatternsPage extends Vue {
         hourOfDay: detectionsByTimeHour,
         dayOfWeek: detectionsByTimeDay,
         monthOfYear: detectionsByTimeMonth,
-        dateSeries: detectionsByTimeDate
+        date: detectionsByTimeDate
       }
       return { color, data }
     })

@@ -1,12 +1,12 @@
 import { mapValues } from 'lodash-es'
 
-export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear' | 'dateSeries'
+export type TimeBucket = 'hourOfDay' | 'dayOfWeek' | 'monthOfYear' | 'date'
 
 export const TIME_BUCKET_LABELS: Record<TimeBucket, string> = {
   hourOfDay: 'hour of day',
   dayOfWeek: 'day of week',
   monthOfYear: 'month of year',
-  dateSeries: 'date'
+  date: 'date'
 }
 
 export const TIME_BUCKET_BOUNDS: Partial<Record<TimeBucket, [number, number]>> = {

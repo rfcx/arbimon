@@ -1,5 +1,7 @@
 import * as d3 from 'd3'
 
+import { gcd } from '@rfcx-bio/utils/number'
+
 import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
 import { LineChartConfig, LineChartSeries } from './types'
 
@@ -18,12 +20,13 @@ export const generateChart = (datasets: LineChartSeries[], config: LineChartConf
   // Prepare data
   const yBounds = [0, datasets.reduce((acc, cur) => Math.max(acc, Math.max(...Object.values(cur.data))), 0)]
   const xBounds = config.xBounds ?? getXBoundsFromDatasets(datasets)
-  const xValues = Array.from({ length: xBounds[1] - xBounds[0] + 1 }, (_, i) => i + xBounds[0])
+  const xIncrement = xBounds[1] - xBounds[0] < 100 ? 1 : gcd(xBounds[0], xBounds[1])
+  const xValues = Array.from({ length: (xBounds[1] - xBounds[0]) / xIncrement + 1 }, (_, i) => i * xIncrement + xBounds[0])
   const xLabelFormatter = config.xLabelFormatter
   const yLabelFormatter = config.yLabelFormatter
 
   // Calculate how many ticks will fit
-  const xTickCount = xBounds[1] - xBounds[0]
+  const xTickCount = (xBounds[1] - xBounds[0]) / xIncrement
   const xLabelWidth = (xLabelFormatter?.(xBounds[1]).length ?? xBounds[1].toString().length) * PIXELS_PER_CHAR
   const xTickInterval = Math.ceil(xTickCount * xLabelWidth / config.width)
 
