@@ -3,6 +3,7 @@ import { BindOrReplacements, QueryTypes, Sequelize } from 'sequelize'
 
 import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime, ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { toPrecisionNumber } from '@rfcx-bio/utils/number'
 
 import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
@@ -11,11 +12,6 @@ type ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency = Omit<Activit
 
 export function calculateDetectionCount (detections: DetectionBySiteSpeciesHour[]): number {
   return sum(detections.map(d => d.count))
-}
-
-function calculateDetectionFrequency (detections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): number {
-  const totalDetectionMinutes = calculateDetectionCount(detections)
-  return totalDetectionMinutes === 0 ? 0 : totalDetectionMinutes / totalRecordedMinutes
 }
 
 export function calculateOccupancy (totalSiteCount: number, occupiedSites: number): number {
@@ -88,7 +84,7 @@ export function combineDetectionsAndRecordings (detections: ActivityOverviewDete
   const recordingsMap = Object.fromEntries(recordings.map(r => [r.siteId, r.count]))
   return detections.map(detection => ({
     ...detection,
-    detectionFrequency: recordingsMap[detection.siteId] ? detection.count / recordingsMap[detection.siteId] : 0
+    detectionFrequency: recordingsMap[detection.siteId] ? toPrecisionNumber(detection.count / recordingsMap[detection.siteId], 3) : 0
   }))
 }
 
@@ -138,8 +134,8 @@ export async function getDetectionDataBySpecies (sequelize: Sequelize, filter: F
   const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDataBySpecies[]
   return result.map(r => ({
     ...r,
-    detectionFrequency: r.detectionMinutesCount / totalRecordedMinutes,
-    occupancyNaive: r.occupiedSites / totalSiteCount
+    detectionFrequency: toPrecisionNumber(r.detectionMinutesCount / totalRecordedMinutes, 3),
+    occupancyNaive: toPrecisionNumber(r.occupiedSites / totalSiteCount, 3)
   }))
 }
 
@@ -157,7 +153,7 @@ async function getDetectionsByPeriod (periodColumn: string, sequelize: Sequelize
   const results = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as Array<{period: number, count: number}>
   return {
     detection: Object.fromEntries(results.map(r => [r.period, r.count])),
-    detectionFrequency: Object.fromEntries(results.map(r => [r.period, r.count / totalRecordedMinutes]))
+    detectionFrequency: Object.fromEntries(results.map(r => [r.period, toPrecisionNumber(r.count / totalRecordedMinutes, 3)]))
   }
 }
 
