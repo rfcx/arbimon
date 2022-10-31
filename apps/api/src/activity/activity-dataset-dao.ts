@@ -45,8 +45,7 @@ export const getDetectionBySite = async (sequelize: Sequelize, filter: FilterDat
     GROUP BY 1;
   `
 
-  const results = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as Array<Omit<ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency, 'occupancy'>>
-  return results.map(r => ({ ...r, occupancy: r.count > 0 }))
+  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency[]
 }
 
 /**
