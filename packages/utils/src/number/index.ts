@@ -29,3 +29,7 @@ export const gcd = (a: number, b: number): number => {
       b %= a
   }
 }
+
+export const toPrecisionNumber = (value: number, precision?: number | undefined): number => {
+  return parseFloat(value.toPrecision(precision))
+}
