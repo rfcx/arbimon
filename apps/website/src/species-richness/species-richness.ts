@@ -75,7 +75,7 @@ export default class SpeciesRichnessPage extends Vue {
             hourOfDay: richnessByTimeHourOfDay,
             dayOfWeek: richnessByTimeDayOfWeek,
             monthOfYear: richnessByTimeMonthOfYear,
-            dateSeries: richnessByTimeUnix
+            date: richnessByTimeUnix
           }
         }
       })

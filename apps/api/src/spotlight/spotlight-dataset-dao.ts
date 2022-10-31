@@ -132,8 +132,7 @@ export function getDetectionsByTimeYear (specificSpeciesDetections: DetectionByS
 }
 
 export function getDetectionsByTimeDateUnix (specificSpeciesDetections: DetectionBySiteSpeciesHour[], totalRecordedMinutes: number): SpotlightDetectionDataByTime {
-  const SECONDS_PER_DAY = 24 * 60 * 60
-  const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix() / SECONDS_PER_DAY)
+  const byDateUnix = groupByNumber(specificSpeciesDetections, d => dayjs.utc(d.timePrecisionHourLocal).startOf('day').unix())
   return {
     detection: mapValues(byDateUnix, calculateDetectionMinutesCount),
     detectionFrequency: mapValues(byDateUnix, (data) => calculateDetectionFrequency(data, totalRecordedMinutes))
