@@ -40,14 +40,14 @@ export function transformToBySiteDatasets (datasets: ActivityOverviewDataBySite[
   }
 
   return datasets.map(({ startDate, endDate, sites, activityBySite }) => {
-    const data = activityBySite.map(({ siteName, latitude, longitude, count, detectionFrequency, occupancy }) => ({
+    const data = activityBySite.map(({ siteName, latitude, longitude, count, detectionFrequency }) => ({
       siteName,
       latitude,
       longitude,
       values: {
         [ACTIVITY_OVERVIEW_MAP_KEYS.count]: count,
         [ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency]: detectionFrequency,
-        [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: occupancy
+        [ACTIVITY_OVERVIEW_MAP_KEYS.occupancy]: count > 0
       }
     }))
     return { startDate, endDate, sites, data, maxValues }

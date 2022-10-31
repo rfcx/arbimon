@@ -26,7 +26,6 @@ export interface ActivityOverviewDetectionDataBySite {
   longitude: number
   count: number
   detectionFrequency: number
-  occupancy: boolean
 }
 
 export interface ActivityOverviewRecordingDataBySite {
