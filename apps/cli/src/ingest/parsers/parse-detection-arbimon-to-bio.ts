@@ -36,7 +36,7 @@ export const parseDetectionArbimonToBio = (detectionArbimon: unknown): SafeParse
 DetectionArbimonSchema.safeParse(detectionArbimon)
 
 function isValidated (val: DetectionArbimon): boolean {
-  return (val.present !== null && val.present > 0) || val.presentReview > 0
+  return (val.present !== null && val.present > 0) || val.presentReview > 0 || val.presentAed > 0
 }
 
 const getTimePrecisionHourLocal = (datetime: string): string => {

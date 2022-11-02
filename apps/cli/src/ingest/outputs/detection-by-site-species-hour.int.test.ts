@@ -267,4 +267,20 @@ describe('ingest > outputs > detection by site species hour', async () => {
     expect(detections[0].count).toBe(1)
     expect(detections[0].countsByMinute).toEqual([[6, 1]])
   })
+
+  test('can write AED detection', async () => {
+    // Act
+    await writeDetectionsToBio([{
+      ...DETECTION_INPUT,
+      present: null,
+      presentReview: 0,
+      presentAed: 1
+    }], biodiversitySequelize)
+
+    // Assert
+    const detections = await DetectionBySiteSpeciesHour.findAll()
+    expect(detections).toHaveLength(1)
+    expect(detections[0].count).toBe(1)
+    expect(detections[0].countsByMinute).toEqual([[6, 1]])
+  })
 })
