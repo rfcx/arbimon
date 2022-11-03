@@ -175,7 +175,6 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       // Assert - detection, detection frequency, occupancy are correct
       expect(site.count).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.428, 2)
-      expect(site.occupancy).toBe(true)
     })
 
     test('calculates activityBySite by specific site correctly', async () => {
@@ -205,7 +204,6 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const site = expectedResult[0]
       expect(site.count).toBe(3)
       expect(site.detectionFrequency).toBeCloseTo(0.230, 2)
-      expect(site.occupancy).toBe(true)
     })
 
     test('calculates activityBySpecies correctly', async () => {
@@ -273,7 +271,6 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         latitude: 18.31307,
         longitude: -65.24878,
         count: 1,
-        occupancy: true,
         detectionFrequency: 0.14285714285714285
       }
 
