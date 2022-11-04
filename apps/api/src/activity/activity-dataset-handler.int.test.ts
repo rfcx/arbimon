@@ -154,7 +154,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates activityBySite correctly', async () => {
       // Arrange
       const expectedSiteId = [20001001, 20001002]
-      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'count', 'detectionFrequency', 'occupancy']
+      const expectedProperties = ['siteId', 'siteName', 'latitude', 'longitude', 'count', 'detectionFrequency']
 
       // Act
       const result = JSON.parse(response.body)?.activityBySite
@@ -271,7 +271,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         latitude: 18.31307,
         longitude: -65.24878,
         count: 1,
-        detectionFrequency: 0.14285714285714285
+        detectionFrequency: 0.143
       }
 
       const activityBySpecies: ActivityOverviewDataBySpecies = {
@@ -279,7 +279,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         scientificName: 'Naja',
         taxon: 'Amphibians',
         detectionMinutesCount: 1,
-        detectionFrequency: 0.14285714285714285,
+        detectionFrequency: 0.143,
         occupiedSites: 1,
         occupancyNaive: 1
       }
@@ -389,8 +389,8 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('calculate activityByTimeDate correctly', async () => {
       // Arrange
-      const expectedDetection = { 19038: 5, 19040: 1 }
-      const expectedDetectionFrequency = { 19038: 0.25, 19040: 0.05 }
+      const expectedDetection = { 1644883200: 5, 1645056000: 1 }
+      const expectedDetectionFrequency = { 1644883200: 0.25, 1645056000: 0.05 }
       const expectedProperties = ['detection', 'detectionFrequency']
 
       // Act

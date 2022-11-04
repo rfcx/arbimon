@@ -555,8 +555,8 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       // Arrange
       const app = await getMockedApp()
       const detectionsByTimeDate: SpotlightDetectionDataByTime = {
-        detection: { 19038: 4 },
-        detectionFrequency: { 19038: 0.2 }
+        detection: { 1644883200: 4 },
+        detectionFrequency: { 1644883200: 0.2 }
       }
 
       // Act
