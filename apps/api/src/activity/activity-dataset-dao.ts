@@ -89,12 +89,13 @@ export function combineDetectionsAndRecordings (detections: ActivityOverviewDete
 }
 
 export async function getDetectionDataBySpecies (sequelize: Sequelize, filter: FilterDatasetForSql, totalRecordedMinutes: number, totalSiteCount: number, isProjectMember: boolean): Promise<ActivityOverviewDataBySpecies[]> {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds } = filter
+  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, siteIds, taxons } = filter
   const bind: BindOrReplacements = {
     locationProjectId,
     startDateUtcInclusive,
     endDateUtcExclusive,
-    siteIds
+    siteIds,
+    taxons
   }
 
   const conditions = [
@@ -104,6 +105,9 @@ export async function getDetectionDataBySpecies (sequelize: Sequelize, filter: F
   ]
   if (filter.siteIds.length > 0) {
     conditions.push('location_site_id = ANY($siteIds)')
+  }
+  if (taxons !== undefined && taxons.length > 0) {
+    conditions.push('taxon_class_id = ANY($taxons)')
   }
 
   const speciesConditions = [
