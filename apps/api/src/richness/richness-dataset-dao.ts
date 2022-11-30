@@ -120,7 +120,7 @@ export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDa
     endDateUtcExclusive
   }
   if (taxons !== undefined && taxons.length > 0) {
-    conditions.push('sip.taxon_class_id = ANY($taxons)')
+    conditions.push('taxon_class_id = ANY($taxons)')
     bind.taxons = taxons
   }
   if (!isProjectMember) {
