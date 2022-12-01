@@ -1,15 +1,37 @@
 <template>
-  <div class="detection-item-container relative w-18 h-18 border-1 border-box-grey">
+  <div
+    class="detection-item-container relative w-18 h-18 border-box-grey bg-box-grey"
+    :class="{'border-0': isSelected, 'border-1': !isSelected}"
+  >
     <div
       v-if="spectrogramLoading"
       class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
     >
       <icon-fas-spinner class="animate-spin" />
     </div>
-    <img
+    <div
       v-else-if="spectrogram"
-      :src="spectrogram"
+      class="relative"
+      :class="{'selected': isSelected}"
+      @mouseenter="showCheck = true"
+      @mouseleave="showCheck = false"
     >
+      <img :src="spectrogram">
+      <div
+        v-if="(showCheck || isSelected)"
+        class="absolute text-xs top-1 left-1"
+        style="line-height: .5rem"
+      >
+        <input
+          type="checkbox"
+          name=""
+          class="checkbox w-3 h-3 border-white rounded-full bg-transparent outline-none ring-0 focus:(border-transparent ring-0 ring-offset-0 outline-none)"
+          :class="{'checkbox-selected': isSelected}"
+          :checked="isSelected"
+          @click="toggleDetection()"
+        >
+      </div>
+    </div>
     <div
       v-else
       class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
@@ -41,13 +63,19 @@ import { apiClientBioKey } from '@/globals'
 const props = withDefaults(defineProps<{
   spectrogramUrl: string | null
   audioUrl: string | null
+  id: number | null
 }>(), {
   spectrogramUrl: null,
-  audioUrl: null
+  audioUrl: null,
+  id: null
 })
+
+const emit = defineEmits<{(e: 'emitDetection', detectionId: number): void}>()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
+const showCheck = ref(false)
+const isSelected = ref<boolean>(false)
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const audio = ref<Howl | null>(null)
@@ -104,4 +132,16 @@ const stop = () => {
   audio.value?.stop()
 }
 
+const toggleDetection = () => {
+  isSelected.value = !isSelected.value
+  if (props.id === null) return
+  emit('emitDetection', props.id)
+}
+
 </script>
+<style lang="scss">
+  .selected {
+    padding: 3px;
+    border-color: transparent;
+  }
+</style>
