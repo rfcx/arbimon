@@ -31,6 +31,12 @@
           @click="toggleDetection()"
         >
       </div>
+      <div class="absolute text-xs top-0.5 right-0">
+        <validation-status
+          :value="props.validation"
+          :hide-unvalidated="true"
+        />
+      </div>
     </div>
     <div
       v-else
@@ -54,16 +60,18 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
-import { inject, onBeforeUnmount, onMounted, ref, withDefaults } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vue'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
 import { apiClientBioKey } from '@/globals'
+import ValidationStatus from './validation-status.vue'
 
 const props = withDefaults(defineProps<{
   spectrogramUrl: string | null
   audioUrl: string | null
-  id: number | null
+  id: number | null,
+  validation: string
 }>(), {
   spectrogramUrl: null,
   audioUrl: null,
@@ -95,6 +103,10 @@ onBeforeUnmount(() => {
   if (spectrogram.value) {
     window.URL.revokeObjectURL(spectrogram.value)
   }
+})
+
+watch(() => props.validation, () => {
+  isSelected.value = false
 })
 
 const setAudio = (audioBlob: Blob) => {
