@@ -16,6 +16,7 @@
           :id="media.id"
           :spectrogram-url="media.spectrogramUrl"
           :audio-url="media.audioUrl"
+          :validation="media.validation"
           @emit-detection="updateSelectedDetections"
         />
       </div>
@@ -29,19 +30,34 @@
         </router-link>
       </div>
     </template>
+    <detection-validator
+      v-if="validationCount"
+      :detection-count="validationCount"
+      :filter-options="filterOptions"
+      @emit-validation="validateDetection"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
 import DetectionItem from './detection-item.vue'
-import { DetectionMedia } from './types'
+import DetectionValidator from './detection-validator.vue'
+import { DetectionMedia, DetectionValidationStatus } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
+let selectedDetections: number[] = []
 
-const selectedDetections: number[] = []
+const filterOptions: DetectionValidationStatus[] = [
+  { value: 'present', label: 'Present', checked: false },
+  { value: 'not_present', label: 'Not Present', checked: false },
+  { value: 'unknown', label: 'Unknown', checked: false },
+  { value: 'unvalidated', label: 'Unvalidated', checked: true }
+]
+
+const validationCount = ref<number | null>(null)
 
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
@@ -56,7 +72,8 @@ const allSpecies = computed(() => {
       media.push({
         spectrogramUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d120.120_mtrue_fspec.png',
         audioUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
-        id: rd + j
+        id: rd + j,
+        validation: 'unvalidated'
       })
     }
     const speciesName = speciesNames[Math.floor(Math.random() * speciesNames.length)]
@@ -81,6 +98,20 @@ const updateSelectedDetections = (detectionId: number) => {
   } else {
     selectedDetections.splice(detectionsIdx, 1)
   }
+  validationCount.value = selectedDetections.length
+}
+
+const validateDetection = (validation: string) => {
+  allSpecies.value.forEach(species => {
+    species.media.forEach((det: DetectionMedia) => {
+      if (selectedDetections.includes(det.id)) {
+        det.validation = validation
+        det.checked = false
+      }
+    })
+  })
+  validationCount.value = null
+  selectedDetections = []
 }
 
 </script>
