@@ -5,7 +5,7 @@ metadata:
   namespace: staging
 spec:
   # temporarily - at every 8 minute
-  schedule: '/8 * * * *'
+  schedule: '*/8 * * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
