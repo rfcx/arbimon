@@ -25,7 +25,7 @@ export function transformToMetricsDatasets (datasets: SpotlightDataset[]): Metri
     },
     {
       title: 'Naive Occupancy',
-      information: 'Number of sites with detections ÷ \nTotal number of sites',
+      information: 'Number of sites with detections ÷ \nNumber of sites with recordings',
       datasets: []
     }
   ]
