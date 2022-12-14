@@ -1,7 +1,6 @@
 <template>
-  <router-link
+  <div
     class="w-full rounded-2xl bg-steel-grey p-4 flex justify-between"
-    :to="route"
   >
     <div class="font-semibold">
       {{ title }}
@@ -10,8 +9,8 @@
       <template v-if="subtitle">
         {{ subtitle }}
       </template>
-      <icon-fas-angle-right class="font-semibold self-center" />
+      <icon-fa-chevron-down class="text-xxs self-center" />
     </div>
-  </router-link>
+  </div>
 </template>
 <script lang="ts" src="./dashboard-sidebar-title.ts"></script>
