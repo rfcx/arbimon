@@ -16,7 +16,6 @@
         <div class="dashboard-richness">
           <dashboard-sidebar-title
             title="Species highlights"
-            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug } }"
           />
           <horizontal-stacked-distribution
             :dataset="richnessByTaxon"
