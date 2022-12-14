@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     IconFaMapMarker: typeof import('~icons/fa/map-marker')['default']
     IconFaPause: typeof import('~icons/fa/pause')['default']
     IconFaPlay: typeof import('~icons/fa/play')['default']
+    IconFasAngleBottom: typeof import('~icons/fa-solid/angle-bottom')['default']
     IconFasAngleRight: typeof import('~icons/fa-solid/angle-right')['default']
     IconFasCaretRight: typeof import('~icons/fa-solid/caret-right')['default']
     IconFasChevronLeft: typeof import('~icons/fa-solid/chevron-left')['default']
