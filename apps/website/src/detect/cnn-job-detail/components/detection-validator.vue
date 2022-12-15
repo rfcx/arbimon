@@ -6,7 +6,11 @@
       role="alert"
     >
       <div class="text-base flex items-center">
-        <icon-fa-close class="cursor-pointer h-8 inline mr-2" />
+        <button
+          @click="close()"
+        >
+          <icon-fa-close class="cursor-pointer h-8 inline mr-2" />
+        </button>
         {{ props.detectionCount }} selected
       </div>
       <div class="flex items-center ml-auto ml-0 text-sm">
@@ -48,13 +52,19 @@ const props = defineProps<{
   filterOptions: DetectionValidationStatus[]
 }>()
 
-const emit = defineEmits<{(e: 'emitValidation', validation: string): void}>()
+const emit = defineEmits<{(e: 'emitValidation', validation: string): void,
+  (e: 'emitClose'): void
+}>()
 const selectedFilter = ref('unvalidated')
 
 watch(selectedFilter, () => {
   const value = selectedFilter.value
   emit('emitValidation', value)
 })
+
+const close = () => {
+  emit('emitClose')
+}
 
 </script>
 <style lang="scss">
