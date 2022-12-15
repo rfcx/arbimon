@@ -17,6 +17,7 @@
           :spectrogram-url="media.spectrogramUrl"
           :audio-url="media.audioUrl"
           :validation="media.validation"
+          :checked="media.checked"
           @emit-detection="updateSelectedDetections"
         />
       </div>
@@ -40,7 +41,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
@@ -49,7 +50,6 @@ import DetectionValidator from './detection-validator.vue'
 import { DetectionMedia, DetectionValidationStatus } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
-let selectedDetections: number[] = []
 
 const filterOptions: DetectionValidationStatus[] = [
   { value: 'present', label: 'Present', checked: false },
@@ -60,9 +60,18 @@ const filterOptions: DetectionValidationStatus[] = [
 
 const validationCount = ref<number | null>(null)
 const isOpen = ref<boolean | null>(null)
+const isShiftKeyHolding = ref<boolean>(false)
+const currentDetectionId = ref<number | undefined>(undefined)
 
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
+
+watch(() => isShiftKeyHolding.value, (newVal, oldVal) => {
+  if (newVal !== oldVal && isShiftKeyHolding.value === false) {
+    resetSelection(currentDetectionId.value)
+    validationCount.value = getValidationCount()
+  }
+})
 
 const allSpecies = computed(() => {
   const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii', 'Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
@@ -93,28 +102,95 @@ const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
-const updateSelectedDetections = (detectionId: number) => {
-  const detectionsIdx = selectedDetections.findIndex(d => d === detectionId)
-  if (detectionsIdx === -1) {
-    selectedDetections.push(detectionId)
-  } else {
-    selectedDetections.splice(detectionsIdx, 1)
+const updateSelectedDetections = (detectionId: number, isSelected: boolean, isShiftHolding: boolean) => {
+  selectDetection(detectionId, isSelected)
+  currentDetectionId.value = detectionId
+  isShiftKeyHolding.value = isShiftHolding
+  if (isShiftKeyHolding.value) {
+    const combinedDetections = getCombinedDetections()
+    const selectedDetectionIds = getSelectedDetectionIds()
+    const firstInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[0])
+    const secondInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[selectedDetectionIds.length - 1])
+    const arrayOfIndx = [firstInx, secondInx].sort((a, b) => a - b)
+    const filteredDetections = combinedDetections.filter((_det, index) => index >= arrayOfIndx[0] && index <= arrayOfIndx[1])
+    const ids = filteredDetections.map(det => det.id)
+    allSpecies.value.forEach(species => {
+      species.media.forEach((det: DetectionMedia) => {
+        if (ids.includes(det.id)) {
+          det.checked = true
+        }
+      })
+    })
   }
-  validationCount.value = selectedDetections.length
+  validationCount.value = getValidationCount()
   isOpen.value = true
 }
 
-const validateDetection = (validation: string) => {
+const resetSelection = (skippedId?: number) => {
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
-      if (selectedDetections.includes(det.id)) {
+      if (skippedId !== undefined && det.id === skippedId) return
+      det.checked = false
+    })
+  })
+}
+
+const selectDetection = (detectionId: number, checked: boolean) => {
+  allSpecies.value.forEach(species => {
+    species.media.forEach((det: DetectionMedia) => {
+      if (detectionId === det.id) {
+        det.checked = checked
+      }
+    })
+  })
+}
+
+const getSelectedDetectionIds = () => {
+  const selectedDetectionIds = [] as number[]
+  allSpecies.value.forEach(species => {
+    species.media.forEach((det: DetectionMedia) => {
+      if (det.checked === true) {
+        selectedDetectionIds.push(det.id)
+      }
+    })
+  })
+
+  return selectedDetectionIds.sort((a, b) => a - b)
+}
+
+const getValidationCount = () => {
+  let count = 0
+  allSpecies.value.forEach(species => {
+    species.media.forEach((det: DetectionMedia) => {
+      if (det.checked === true) {
+        count++
+      }
+    })
+  })
+
+  return count
+}
+
+const getCombinedDetections = () => {
+  let combinedDetections = [] as DetectionMedia[]
+  allSpecies.value.forEach(species => {
+    combinedDetections = combinedDetections.concat(species.media)
+  })
+
+  return combinedDetections
+}
+
+const validateDetection = (validation: string) => {
+  const selectedDetectionIds = getSelectedDetectionIds()
+  allSpecies.value.forEach(species => {
+    species.media.forEach((det: DetectionMedia) => {
+      if (selectedDetectionIds.includes(det.id)) {
         det.validation = validation
-        det.checked = false
       }
     })
   })
   validationCount.value = null
-  selectedDetections = []
+  resetSelection()
   isOpen.value = false
 }
 
