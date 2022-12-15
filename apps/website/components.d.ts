@@ -39,6 +39,8 @@ declare module '@vue/runtime-core' {
     IconFaCheck: typeof import('~icons/fa/check')['default']
     IconFaChevronDown: typeof import('~icons/fa/chevron-down')['default']
     IconFaChevronUp: typeof import('~icons/fa/chevron-up')['default']
+    IconFaCircle: typeof import('~icons/fa/circle')['default']
+    IconFaCircleThin: typeof import('~icons/fa/circle-thin')['default']
     IconFaClose: typeof import('~icons/fa/close')['default']
     IconFaCubes: typeof import('~icons/fa/cubes')['default']
     IconFaEllipsisH: typeof import('~icons/fa/ellipsis-h')['default']
