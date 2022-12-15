@@ -9,7 +9,6 @@
       <template v-if="subtitle">
         {{ subtitle }}
       </template>
-      <icon-fa-chevron-down class="text-xxs self-center" />
     </div>
   </div>
 </template>
