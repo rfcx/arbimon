@@ -16,7 +16,10 @@
       @mouseenter="showCheck = true"
       @mouseleave="showCheck = false"
     >
-      <img :src="spectrogram">
+      <img
+        :src="spectrogram"
+        @click="toggleDetection()"
+      >
       <div
         v-if="(showCheck || isSelected)"
         class="absolute text-xs top-1 left-1"

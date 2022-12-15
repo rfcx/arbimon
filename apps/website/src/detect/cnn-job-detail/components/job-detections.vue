@@ -31,10 +31,11 @@
       </div>
     </template>
     <detection-validator
-      v-if="validationCount"
+      v-if="validationCount && isOpen"
       :detection-count="validationCount"
       :filter-options="filterOptions"
       @emit-validation="validateDetection"
+      @emit-close="closeValidator"
     />
   </div>
 </template>
@@ -58,6 +59,7 @@ const filterOptions: DetectionValidationStatus[] = [
 ]
 
 const validationCount = ref<number | null>(null)
+const isOpen = ref<boolean | null>(null)
 
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
@@ -99,6 +101,7 @@ const updateSelectedDetections = (detectionId: number) => {
     selectedDetections.splice(detectionsIdx, 1)
   }
   validationCount.value = selectedDetections.length
+  isOpen.value = true
 }
 
 const validateDetection = (validation: string) => {
@@ -112,6 +115,11 @@ const validateDetection = (validation: string) => {
   })
   validationCount.value = null
   selectedDetections = []
+  isOpen.value = false
+}
+
+const closeValidator = () => {
+  isOpen.value = false
 }
 
 </script>
