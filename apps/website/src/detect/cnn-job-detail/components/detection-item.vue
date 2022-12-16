@@ -18,7 +18,7 @@
     >
       <img
         :src="spectrogram"
-        @click="toggleDetection()"
+        @click="toggleDetection($event)"
       >
       <div
         v-if="(showCheck || isSelected)"
@@ -31,7 +31,7 @@
           class="checkbox w-3 h-3 border-white rounded-full bg-transparent outline-none ring-0 focus:(border-transparent ring-0 ring-offset-0 outline-none)"
           :class="{'checkbox-selected': isSelected}"
           :checked="isSelected"
-          @click="toggleDetection()"
+          @click="toggleDetection($event)"
         >
       </div>
       <div class="absolute text-xs top-0.5 right-0">
@@ -74,14 +74,16 @@ const props = withDefaults(defineProps<{
   spectrogramUrl: string | null
   audioUrl: string | null
   id: number | null,
-  validation: string
+  validation: string,
+  checked: boolean | null
 }>(), {
   spectrogramUrl: null,
   audioUrl: null,
-  id: null
+  id: null,
+  checked: null
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: number): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: number, isSelected: boolean, isShiftKeyHolding: boolean): void}>()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
@@ -110,6 +112,11 @@ onBeforeUnmount(() => {
 
 watch(() => props.validation, () => {
   isSelected.value = false
+})
+
+watch(() => props.checked, () => {
+  if (props.checked === null) return
+  isSelected.value = props.checked
 })
 
 const setAudio = (audioBlob: Blob) => {
@@ -147,10 +154,11 @@ const stop = () => {
   audio.value?.stop()
 }
 
-const toggleDetection = () => {
+const toggleDetection = (event: MouseEvent) => {
   isSelected.value = !isSelected.value
   if (props.id === null) return
-  emit('emitDetection', props.id)
+  const isShiftKeyHolding = event.shiftKey
+  emit('emitDetection', props.id, isSelected.value, isShiftKeyHolding)
 }
 
 </script>
