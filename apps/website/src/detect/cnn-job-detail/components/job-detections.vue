@@ -47,7 +47,7 @@ import { useRoute } from 'vue-router'
 import { ROUTE_NAMES } from '~/router'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
-import { DetectionMedia, DetectionValidationStatus } from './types'
+import { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
@@ -60,14 +60,22 @@ const filterOptions: DetectionValidationStatus[] = [
 
 const validationCount = ref<number | null>(null)
 const isOpen = ref<boolean | null>(null)
-const isShiftKeyHolding = ref<boolean>(false)
+const isShiftHolding = ref<boolean>(false)
+const isCtrlHolding = ref<boolean>(false)
 const currentDetectionId = ref<number | undefined>(undefined)
 
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
 
-watch(() => isShiftKeyHolding.value, (newVal, oldVal) => {
-  if (newVal !== oldVal && isShiftKeyHolding.value === false) {
+watch(() => isShiftHolding.value, (newVal, oldVal) => {
+  if (newVal !== oldVal && isShiftHolding.value === false) {
+    resetSelection(currentDetectionId.value)
+    validationCount.value = getValidationCount()
+  }
+})
+
+watch(() => isCtrlHolding.value, (newVal, oldVal) => {
+  if (newVal !== oldVal && isCtrlHolding.value === false) {
     resetSelection(currentDetectionId.value)
     validationCount.value = getValidationCount()
   }
@@ -102,11 +110,13 @@ const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
-const updateSelectedDetections = (detectionId: number, isSelected: boolean, isShiftHolding: boolean) => {
+const updateSelectedDetections = (detectionId: number, event: DetectionEvent) => {
+  const { isSelected, isShiftKeyHolding, isCtrlKeyHolding } = event
   selectDetection(detectionId, isSelected)
   currentDetectionId.value = detectionId
-  isShiftKeyHolding.value = isShiftHolding
-  if (isShiftKeyHolding.value) {
+  isShiftHolding.value = isShiftKeyHolding
+  isCtrlHolding.value = isCtrlKeyHolding
+  if (isShiftHolding.value) {
     const combinedDetections = getCombinedDetections()
     const selectedDetectionIds = getSelectedDetectionIds()
     const firstInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[0])

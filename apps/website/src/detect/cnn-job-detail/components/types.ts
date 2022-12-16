@@ -19,3 +19,9 @@ export interface DetectionValidationStatus {
   label: string
   checked: boolean
 }
+
+export interface DetectionEvent {
+  isSelected: boolean
+  isShiftKeyHolding: boolean
+  isCtrlKeyHolding: boolean
+}
