@@ -90,10 +90,10 @@ import JobItemRow from './components/job-item-row.vue'
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
 const store = useStore()
-const params = reactive({ created_by: 'all', projects: [store.selectedProject?.idCore ?? ''] })
+const params = reactive({ created_by: 'all', projects: ['zy5jbxx4cs9f' ?? ''] }) // store.selectedProject?.idCore
 
 watch(() => store.selectedProject, () => {
-  params.projects = [store.selectedProject?.idCore ?? '']
+  params.projects = ['zy5jbxx4cs9f' ?? ''] // store.selectedProject?.idCore
 })
 
 const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
