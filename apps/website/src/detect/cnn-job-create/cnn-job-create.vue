@@ -165,13 +165,13 @@ const project = reactive({
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
-  job.projectIdCore = store.selectedProject?.idCore ?? null
+  job.projectIdCore = 'zy5jbxx4cs9f' ?? null// store.selectedProject?.idCore
   project.projectId = store.selectedProject?.id.toString() ?? '-1'
   hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
 })
 
 watch(() => store.selectedProject, () => {
-  job.projectIdCore = store.selectedProject?.idCore ?? null
+  job.projectIdCore = 'zy5jbxx4cs9f' ?? null// store.selectedProject?.idCore
   project.projectId = store.selectedProject?.id.toString() ?? '-1'
   hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
 })
