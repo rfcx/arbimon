@@ -42,7 +42,7 @@
 </template>
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
-import { computed, inject, reactive, ref } from 'vue'
+import { computed, inject, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useGetDetection } from '@/detect/_composables/use-get-detection'
@@ -51,7 +51,7 @@ import { ROUTE_NAMES } from '~/router'
 // import { useStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
-import { DetectionMedia, DetectionValidationStatus } from './types'
+import { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
@@ -66,7 +66,8 @@ const filterOptions: DetectionValidationStatus[] = [
 
 const validationCount = ref<number | null>(null)
 const isOpen = ref<boolean | null>(null)
-const isShiftKeyHolding = ref<boolean>(false)
+const isShiftHolding = ref<boolean>(false)
+const isCtrlHolding = ref<boolean>(false)
 const currentDetectionId = ref<number | undefined>(undefined)
 
 const route = useRoute()
@@ -80,6 +81,20 @@ const { isLoading: isLoadingDetectionDetails, isError: isErrorDetectionDetails, 
 console.info('\n\n-------isLoadingDetectionDetails-----', isLoadingDetectionDetails)
 console.info('\n\n-------isErrorDetectionDetails-----', isErrorDetectionDetails)
 console.info('\n\n-------detectionData-----', detectionData)
+
+watch(() => isShiftHolding.value, (newVal, oldVal) => {
+  if (newVal !== oldVal && isShiftHolding.value === false) {
+    resetSelection(currentDetectionId.value)
+    validationCount.value = getValidationCount()
+  }
+})
+
+watch(() => isCtrlHolding.value, (newVal, oldVal) => {
+  if (newVal !== oldVal && isCtrlHolding.value === false) {
+    resetSelection(currentDetectionId.value)
+    validationCount.value = getValidationCount()
+  }
+})
 
 const allSpecies = computed(() => {
   const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii', 'Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
@@ -110,11 +125,13 @@ const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
-const updateSelectedDetections = (detectionId: number, isSelected: boolean, isShiftHolding: boolean) => {
+const updateSelectedDetections = (detectionId: number, event: DetectionEvent) => {
+  const { isSelected, isShiftKeyHolding, isCtrlKeyHolding } = event
   selectDetection(detectionId, isSelected)
   currentDetectionId.value = detectionId
-  isShiftKeyHolding.value = isShiftHolding
-  if (isShiftKeyHolding.value) {
+  isShiftHolding.value = isShiftKeyHolding
+  isCtrlHolding.value = isCtrlKeyHolding
+  if (isShiftHolding.value) {
     const combinedDetections = getCombinedDetections()
     const selectedDetectionIds = getSelectedDetectionIds()
     const firstInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[0])
