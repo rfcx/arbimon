@@ -68,6 +68,7 @@ import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vu
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
 import { apiClientBioKey } from '@/globals'
+import { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
 
 const props = withDefaults(defineProps<{
@@ -83,7 +84,7 @@ const props = withDefaults(defineProps<{
   checked: null
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: number, isSelected: boolean, isShiftKeyHolding: boolean): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
@@ -157,8 +158,11 @@ const stop = () => {
 const toggleDetection = (event: MouseEvent) => {
   isSelected.value = !isSelected.value
   if (props.id === null) return
-  const isShiftKeyHolding = event.shiftKey
-  emit('emitDetection', props.id, isSelected.value, isShiftKeyHolding)
+  emit('emitDetection', props.id, {
+    isSelected: isSelected.value,
+    isShiftKeyHolding: event.shiftKey,
+    isCtrlKeyHolding: event.ctrlKey || event.metaKey
+  })
 }
 
 </script>
