@@ -41,13 +41,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { AxiosInstance } from 'axios'
+import { computed, inject, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { useGetDetection } from '@/detect/_composables/use-get-detection'
+import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+// import { useStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import { DetectionMedia, DetectionValidationStatus } from './types'
+
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
@@ -66,12 +72,14 @@ const currentDetectionId = ref<number | undefined>(undefined)
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
 
-watch(() => isShiftKeyHolding.value, (newVal, oldVal) => {
-  if (newVal !== oldVal && isShiftKeyHolding.value === false) {
-    resetSelection(currentDetectionId.value)
-    validationCount.value = getValidationCount()
-  }
-})
+// const store = useStore()
+const params = reactive({ queryStart: '123', queryEnd: '123', queryStreams: 'asd', classifierId: '123' })
+
+const { isLoading: isLoadingDetectionDetails, isError: isErrorDetectionDetails, data: detectionData } = useGetDetection(apiClientCore, params)
+
+console.info('\n\n-------isLoadingDetectionDetails-----', isLoadingDetectionDetails)
+console.info('\n\n-------isErrorDetectionDetails-----', isErrorDetectionDetails)
+console.info('\n\n-------detectionData-----', detectionData)
 
 const allSpecies = computed(() => {
   const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii', 'Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
