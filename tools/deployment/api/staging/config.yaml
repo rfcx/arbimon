@@ -15,5 +15,5 @@ metadata:
 data:
   ## Config
 
-  CORE_API_BASE_URL: https://api.rfcx.org
+  CORE_API_BASE_URL: https://staging-api.rfcx.org
 
