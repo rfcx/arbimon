@@ -43,12 +43,13 @@
 <script setup lang="ts">
 import { AxiosInstance } from 'axios'
 import { computed, inject, reactive, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 
+import { useClassifierJobs } from '@/detect/_composables/use-classifier-jobs'
 import { useGetDetection } from '@/detect/_composables/use-get-detection'
 import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-// import { useStore } from '~/store'
+import { useStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
@@ -70,17 +71,32 @@ const isShiftHolding = ref<boolean>(false)
 const isCtrlHolding = ref<boolean>(false)
 const currentDetectionId = ref<number | undefined>(undefined)
 
+const store = useStore()
 const route = useRoute()
-const jobId = computed(() => route.params.jobId)
 
-// const store = useStore()
-const params = reactive({ queryStart: '123', queryEnd: '123', queryStreams: 'asd', classifierId: '123' })
+const paramsGetJobs = reactive({ created_by: 'all', projects: [store.selectedProject?.idCore ?? ''] })
 
-const { isLoading: isLoadingDetectionDetails, isError: isErrorDetectionDetails, data: detectionData } = useGetDetection(apiClientCore, params)
+const jobId = computed(() => route.fullPath.split('/').pop())
+const siteIds = computed(() => store.projectFilters?.locationSites.map(site => { return site.id }))
+console.info(siteIds.value)
 
-console.info('\n\n-------isLoadingDetectionDetails-----', isLoadingDetectionDetails)
-console.info('\n\n-------isErrorDetectionDetails-----', isErrorDetectionDetails)
-console.info('\n\n-------detectionData-----', detectionData)
+const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, paramsGetJobs)
+
+const currentJob = computed(() => classifierJobs.value?.items.find(job => job.id.toString() === jobId.value))
+// TODO: add logic to combine datetime, streams params
+const paramsDetections = reactive({ start: '2021-04-08T00:00:00.000Z', end: '2022-12-22T00:00:00.000Z', streams: null, classifiers: ((currentJob.value?.classifierId) != null) ? [currentJob.value.classifierId.toString()] : null })
+const { isLoading: isLoadingDetectionDetails, isError: isErrorDetectionDetails, mutate: mutateDetections } = useGetDetection(apiClientCore)
+console.info(isLoadingClassifierJobs, isLoadingDetectionDetails)
+console.info(isErrorClassifierJobs, isErrorDetectionDetails)
+
+watch(() => currentJob.value, () => {
+  paramsDetections.classifiers = currentJob.value?.classifierId != null ? [currentJob.value.classifierId.toString()] : null
+  mutateDetections(paramsDetections, {
+    onSuccess: async (detectionData) => {
+      console.info(detectionData)
+    }
+  })
+})
 
 watch(() => isShiftHolding.value, (newVal, oldVal) => {
   if (newVal !== oldVal && isShiftHolding.value === false) {

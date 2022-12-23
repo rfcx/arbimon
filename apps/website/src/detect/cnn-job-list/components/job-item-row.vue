@@ -5,6 +5,7 @@
       class="w-2/10 px-6 py-4 align-text-top"
     >
       <router-link
+        v-if="props.job.progress.status === 30"
         :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId: props.job.id }}"
         class="hover:underline"
       >
@@ -13,6 +14,14 @@
           Job#{{ props.job.id }}
         </span>
       </router-link>
+      <div
+        v-else
+        class="text-subtle text-sm"
+        title="In Progress"
+      >
+        <div>{{ props.job.modelName }}</div>
+        Job#{{ props.job.id }}
+      </div>
     </td>
     <td class="w-3/10 px-6 py-4 align-text-top w-80">
       <job-input
