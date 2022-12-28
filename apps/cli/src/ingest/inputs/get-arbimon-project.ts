@@ -19,7 +19,8 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
            (CASE WHEN s.south IS NULL THEN 0 ELSE s.south END) latitudeSouth,
            (CASE WHEN s.east IS NULL THEN 0 ELSE s.east END) longitudeEast,
            (CASE WHEN s.west IS NULL THEN 0 ELSE s.west END) longitudeWest,
-           p.deleted_at AS deletedAt
+           p.deleted_at AS deletedAt,
+           p.description as description
     FROM projects p 
     LEFT JOIN (
       SELECT project_id,

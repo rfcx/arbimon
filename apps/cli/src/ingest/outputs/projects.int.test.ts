@@ -24,7 +24,8 @@ describe('ingest > outputs > projects', () => {
     latitudeSouth: 1,
     longitudeEast: 1,
     longitudeWest: 1,
-    deletedAt: null
+    deletedAt: null,
+    description: null
   }
   test('can perform with 0 project', async () => {
     // Arrange
@@ -68,6 +69,45 @@ describe('ingest > outputs > projects', () => {
     expect(updatedProject?.name).toBe('RFCx 99-1')
     expect(updatedProject?.slug).toBe('rfcx-99-1')
     expect(updatedProject?.idCore).toBe('807cuoi3cvwx')
+  })
+
+  test('can write project profile', async () => {
+    // Act
+    await writeProjectsToBio([{ ...projectInput, description: 'new description' }], biodiversitySequelize)
+
+    // Assert
+    const [project] = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({ where: { idArbimon: 9999 } }) as Project[]
+    const [locationProjectProfile] = await ModelRepository.getInstance(biodiversitySequelize).LocationProjectProfile.findAll({ where: { locationProjectId: project.id } })
+
+    expect([project]).toHaveLength(1)
+    expect([locationProjectProfile]).toHaveLength(1)
+    expect(locationProjectProfile?.readme).toBe('new description')
+  })
+
+  test('can write project profile when description is null', async () => {
+    // Act
+    await writeProjectsToBio([projectInput], biodiversitySequelize)
+
+    // Assert
+    const [project] = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({ where: { idArbimon: 9999 } }) as Project[]
+    const [locationProjectProfile] = await ModelRepository.getInstance(biodiversitySequelize).LocationProjectProfile.findAll({ where: { locationProjectId: project.id } })
+
+    expect([project]).toHaveLength(1)
+    expect([locationProjectProfile]).toHaveLength(1)
+    expect(locationProjectProfile?.readme).toBe('')
+  })
+
+  test('can update project profile (readme)', async () => {
+    // Act
+    await writeProjectsToBio([{ ...projectInput, description: 'new description 1' }], biodiversitySequelize)
+    await writeProjectsToBio([{ ...projectInput, description: 'new description 2' }], biodiversitySequelize)
+    // Assert
+    const [project] = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findAll({ where: { idArbimon: 9999 } }) as Project[]
+    const [locationProjectProfile] = await ModelRepository.getInstance(biodiversitySequelize).LocationProjectProfile.findAll({ where: { locationProjectId: project.id } })
+
+    expect([project]).toHaveLength(1)
+    expect([locationProjectProfile]).toHaveLength(1)
+    expect(locationProjectProfile?.readme).toBe('new description 2')
   })
 
   test('can remove project data', async () => {

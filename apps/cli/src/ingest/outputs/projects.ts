@@ -2,9 +2,10 @@ import { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
+import { UPDATE_ON_DUPLICATE_LOCATION_PROJECT_PROFILE } from '@rfcx-bio/common/dao/models/location-project-profile-model'
 import { Project, SyncError } from '@rfcx-bio/common/dao/types'
 
-import { getTransformedProjects, ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { getLocationProjectProfile, getTransformedProjects, ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 
 const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
@@ -37,10 +38,18 @@ export const writeProjectsToBio = async (projects: ProjectArbimon[], sequelize: 
           updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_PROJECT,
           ...transaction && { transaction }
         })
+      // Update project profile
+      const locationProjectProfile = await getLocationProjectProfile(projects, sequelize)
+      await ModelRepository.getInstance(sequelize)
+        .LocationProjectProfile
+        .bulkCreate(locationProjectProfile, {
+          updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_PROJECT_PROFILE,
+          ...transaction && { transaction }
+        })
     }
     return []
   } catch (batchInsertError) {
-    console.info('⚠️ Batch insert failed... try loop upsert')
+    console.info('⚠️ Batch insert failed... try loop upsert', batchInsertError)
     return await loopUpsert(itemsToInsertOrUpsert, sequelize)
   }
 }

@@ -5,6 +5,7 @@ import { LocationProjectProfile } from '../types/location-project-profile'
 
 export const MODEL_LOCATION_PROJECT_PROFILE = 'LocationProjectProfile'
 export const TABLE_LOCATION_PROJECTS_PROFILE = 'location_project_profile'
+export const UPDATE_ON_DUPLICATE_LOCATION_PROJECT_PROFILE: Array<keyof LocationProjectProfile> = ['summary', 'readme']
 
 export const LocationProjectProfileModel = defineWithDefaults<LocationProjectProfile>(
   MODEL_LOCATION_PROJECT_PROFILE,
