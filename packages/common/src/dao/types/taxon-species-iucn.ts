@@ -6,6 +6,8 @@ export interface TaxonSpeciesIucn {
   riskRatingIucnId: number
   description: string
   descriptionSourceUrl: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_IUCN = attributes<TaxonSpeciesIucn>()({
