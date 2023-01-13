@@ -5,7 +5,7 @@ import { TaxonSpeciesWiki } from '../types/taxon-species-wiki'
 
 export const MODEL_TAXON_SPECIES_WIKI = 'TaxonSpeciesWiki'
 export const TABLE_TAXON_SPECIES_WIKI = 'taxon_species_wiki'
-export const UPDATE_ON_DUPLICATE_TAXON_SPECIES_WIKI: Array<keyof TaxonSpeciesWiki> = ['description', 'descriptionSourceUrl']
+export const UPDATE_ON_DUPLICATE_TAXON_SPECIES_WIKI: Array<keyof TaxonSpeciesWiki> = ['description', 'descriptionSourceUrl', 'updatedAt']
 
 export const TaxonSpeciesWikiModel = defineWithDefaults<TaxonSpeciesWiki>(
   MODEL_TAXON_SPECIES_WIKI,

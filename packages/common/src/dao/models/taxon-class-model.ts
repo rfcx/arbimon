@@ -5,7 +5,7 @@ import { TaxonClass } from '../types'
 
 export const MODEL_TAXON_CLASS = 'TaxonClass'
 export const TABLE_TAXON_CLASS = 'taxon_class'
-export const UPDATE_ON_DUPLICATE_TAXON_CLASS: Array<(keyof TaxonClass)> = ['slug', 'commonName']
+export const UPDATE_ON_DUPLICATE_TAXON_CLASS: Array<(keyof TaxonClass)> = ['slug', 'commonName', 'updatedAt']
 
 export const TaxonClassModel = defineWithDefaults<TaxonClass>(
   MODEL_TAXON_CLASS,

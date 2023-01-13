@@ -7,6 +7,8 @@ export interface RecordingBySiteHour {
   count: number
   countsByMinute: number[][]
   totalDurationInMinutes: number
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const ATTRIBUTES_RECORDING_BY_SITE_HOUR = attributes<RecordingBySiteHour>()({

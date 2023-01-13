@@ -5,6 +5,8 @@ export interface TaxonClass {
   idArbimon: number
   slug: string
   commonName: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const ATTRIBUTES_TAXON_CLASS = attributes<TaxonClass>()({
