@@ -31,7 +31,10 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
     'weforest-wildlife-corridors',
     'mangrove-finch-galapagos',
     'coal-road-hutan-harapan-p4f',
-    'hutan-indo'
+    'hutan-indo',
+    'cratere-degli-astroni-rns',
+    'tech4nature-mexico',
+    'similajau'
   ]
 
   const myProjectIds = projects.map(p => p.id)
