@@ -9,6 +9,8 @@ export interface Site {
   latitude: number
   longitude: number
   altitude: number
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const ATTRIBUTES_LOCATION_SITE = attributes<Site>()({

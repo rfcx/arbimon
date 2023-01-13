@@ -4,4 +4,6 @@ export interface RiskRatingIucn {
   id: number
   code: RiskCode
   isThreatened: boolean
+  createdAt?: Date
+  updatedAt?: Date
 }

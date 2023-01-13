@@ -9,6 +9,8 @@ export interface TaxonSpeciesPhoto {
   photoAuthor: string
   photoLicense: string
   photoLicenseUrl?: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const ATTRIBUTES_TAXON_SPECIES_PHOTO = attributes<TaxonSpeciesPhoto>()({

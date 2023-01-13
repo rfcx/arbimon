@@ -6,6 +6,8 @@ export interface TaxonSpecies {
   slug: string
   taxonClassId: number
   scientificName: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const ATTRIBUTES_TAXON_SPECIES = attributes<TaxonSpecies>()({

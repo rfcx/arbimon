@@ -5,7 +5,7 @@ import { RecordingBySiteHour } from '../types'
 
 export const MODEL_RECORDING_BY_SITE_HOUR = 'RecordingBySiteHour'
 export const TABLE_RECORDING_BY_SITE_HOUR = 'recording_by_site_hour'
-export const UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR: Array<keyof RecordingBySiteHour> = ['locationProjectId', 'count', 'countsByMinute', 'totalDurationInMinutes']
+export const UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR: Array<keyof RecordingBySiteHour> = ['locationProjectId', 'count', 'countsByMinute', 'totalDurationInMinutes', 'updatedAt']
 
 export const RecordingBySiteHourModel = defineWithDefaults<RecordingBySiteHour>(
   MODEL_RECORDING_BY_SITE_HOUR,
