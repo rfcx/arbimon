@@ -79,7 +79,6 @@
   </modal-popup>
 </template>
 <script lang="ts" setup>
-import { partition } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -95,7 +94,8 @@ const store = useStore()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
 // Tabs
-const tabProjects = computed(() => partition(store.projects, p => p.isMyProject))
+const myProjects = computed(() => store.projects.filter(p => p.isMyProject))
+const showcaseProjects = computed(() => store.projects.filter(p => p.isShowcaseProject))
 
 const tabIds = {
   myProjects: 'myProjects',
@@ -106,13 +106,13 @@ const tabs = computed(() => ([
   {
     id: tabIds.myProjects,
     label: 'My projects',
-    projects: tabProjects.value[0],
+    projects: myProjects,
     noProjectsMessage: store.user ? 'You don\'t own any projects' : 'Please login to see your projects'
   },
   {
     id: tabIds.showcaseProjects,
     label: 'Showcase projects',
-    projects: tabProjects.value[1],
+    projects: showcaseProjects,
     noProjectsMessage: 'No projects found'
   }
 ]))
