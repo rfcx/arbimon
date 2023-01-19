@@ -12,8 +12,7 @@ export type LocationProjectForUser =
   LocationProjectTypes['light'] &
   {
     isMyProject: boolean
-    hasPublishedVersions: boolean
-    hasPublicVersions: boolean
+    isShowcaseProject: boolean
   }
 
 export type ProjectsResponse = LocationProjectForUser[]
