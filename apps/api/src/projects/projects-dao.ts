@@ -7,7 +7,8 @@ import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 import { getSequelize } from '~/db'
 
 export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
-  const models = ModelRepository.getInstance(getSequelize())
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
 
   const projects = memberProjectCoreIds.length === 0
     ? []
@@ -18,10 +19,10 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
         attributes: ATTRIBUTES_LOCATION_PROJECT.light,
         raw: true
       })
+  const myProjectIds = projects.map(p => p.id)
 
-  // Temporarily hard-code public projects
-  // TODO: Remove this hack & use ProjectVersion data
-  const publicSlugs = [
+  // Temporarily hard-code showcase projects
+  const showcaseSlugs = [
     'bci-panama-2018',
     'birds-of-madeira-flooded-habitats',
     'las-balsas-jocotoco-foundation-project',
@@ -37,28 +38,30 @@ export const getMemberProjects = async (memberProjectCoreIds: string[]): Promise
     'similajau'
   ]
 
-  const myProjectIds = projects.map(p => p.id)
   const publicProjects = await models.LocationProject
     .findAll({
       where: {
-        id: { [Op.notIn]: myProjectIds },
-        slug: publicSlugs
+        [Op.and]: [
+          { id: { [Op.notIn]: myProjectIds } },
+          { id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_public = true)') } }
+        ]
       },
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
       raw: true
     })
+  const publicSlugs = publicProjects.map(p => p.slug)
 
   return [
     ...projects.map(p => ({
       ...p,
       isMyProject: true,
-      hasPublishedVersions: publicSlugs.includes(p.slug),
+      hasPublishedVersions: showcaseSlugs.includes(p.slug),
       hasPublicVersions: publicSlugs.includes(p.slug)
     })),
     ...publicProjects.map(p => ({
       ...p,
       isMyProject: false,
-      hasPublishedVersions: true,
+      hasPublishedVersions: showcaseSlugs.includes(p.slug),
       hasPublicVersions: true
     }))
   ]
