@@ -13,6 +13,7 @@ const ProjectArbimonSchema = z.object({
   latitudeSouth: z.number(),
   longitudeEast: z.number(),
   longitudeWest: z.number(),
+  isPrivate: z.number().nonnegative().lte(1),
   updatedAt: z.union([z.date(), z.string()]),
   deletedAt: z.union([z.date(), z.string()]).nullable()
 })

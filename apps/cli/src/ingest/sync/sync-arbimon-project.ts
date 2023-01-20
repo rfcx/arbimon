@@ -6,7 +6,6 @@ import { SyncStatus } from '@rfcx-bio/common/dao/types'
 
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-project'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
-import { createProjectVersionIfNeeded } from '../outputs/project-version'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
@@ -39,9 +38,6 @@ export const syncArbimonProjectsBatch = async (arbimonSequelize: Sequelize, biod
   const insertErrors = await writeProjectsToBio(projectData, biodiversitySequelize)
   const transaction = await biodiversitySequelize.transaction()
   try {
-    // Create all missing project versions
-    await createProjectVersionIfNeeded(biodiversitySequelize, transaction)
-
     // Update sync status
     const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdProject.updatedAt, syncUntilId: lastSyncdProject.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
