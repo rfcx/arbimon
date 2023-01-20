@@ -33,6 +33,7 @@ export const getTransformedProjects = async (projects: ProjectArbimon[], sequeli
 
   const deletedProjects = projects.filter(project => project.deletedAt !== null)
   const idsArbimon = deletedProjects.map(project => project.idArbimon)
+  // TODO: There should NOT be a call to the database here
   const itemsToDelete = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
     where: {
       idArbimon: { [Op.in]: idsArbimon }
