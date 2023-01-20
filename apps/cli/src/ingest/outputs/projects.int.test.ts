@@ -12,7 +12,7 @@ import { writeProjectsToBio } from './projects'
 import { writeSpeciesCallsToBio } from './species-calls'
 
 const biodiversitySequelize = await getSequelize()
-const { LocationProject, LocationSite, ProjectVersion, TaxonSpecies, TaxonSpeciesCall, SyncLogByProject } = ModelRepository.getInstance(biodiversitySequelize)
+const models = ModelRepository.getInstance(biodiversitySequelize)
 
 describe('ingest > outputs > projects', () => {
   beforeEach(async () => {
@@ -39,7 +39,7 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio(input, biodiversitySequelize)
 
     // Assert
-    const projects = await LocationProject.findAll()
+    const projects = await models.LocationProject.findAll()
     expect(projects).toHaveLength(input.length)
   })
 
@@ -54,7 +54,7 @@ describe('ingest > outputs > projects', () => {
     ], biodiversitySequelize)
 
     // Assert
-    const projects = await LocationProject.findAll({
+    const projects = await models.LocationProject.findAll({
       where: {
         idArbimon: { [Op.in]: idsArbimon }
       }
@@ -67,7 +67,7 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([{ ...projectInput, idCore: '807cuoi3cvwx', idArbimon: 9999, slug: 'rfcx-99-1', name: 'RFCx 99-1' }], biodiversitySequelize)
 
     // Assert
-    const [updatedProject] = await LocationProject.findAll({ where: { idArbimon: 9999 } })
+    const [updatedProject] = await models.LocationProject.findAll({ where: { idArbimon: 9999 } })
 
     expect([updatedProject]).toHaveLength(1)
     expect(updatedProject?.name).toBe('RFCx 99-1')
@@ -83,7 +83,7 @@ describe('ingest > outputs > projects', () => {
     ], biodiversitySequelize)
 
     // Check project
-    const newProject = await LocationProject.findOne({ where: { idArbimon: 10000 } }) as Project
+    const newProject = await models.LocationProject.findOne({ where: { idArbimon: 10000 } }) as Project
     expect(newProject).toBeDefined()
 
     // Write project data
@@ -131,9 +131,9 @@ describe('ingest > outputs > projects', () => {
       scientificName: 'Falco amurensis'
     }
 
-    const species = await TaxonSpecies.findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
+    const species = await models.TaxonSpecies.findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
 
-    if (!species) await TaxonSpecies.bulkCreate([SPECIES_INPUT])
+    if (!species) await models.TaxonSpecies.bulkCreate([SPECIES_INPUT])
 
     const SPECIES_CALL_INPUT: SpeciesCallArbimon[] = [{
       taxonSpeciesId: 1050,
@@ -153,8 +153,8 @@ describe('ingest > outputs > projects', () => {
 
     await writeSpeciesCallsToBio(SPECIES_CALL_INPUT, biodiversitySequelize)
 
-    const newVersion = await ProjectVersion.bulkCreate([testProjectVersion])
-    const newLog = await SyncLogByProject.bulkCreate([testSyncLogProject])
+    const newVersion = await models.ProjectVersion.bulkCreate([testProjectVersion])
+    const newLog = await models.SyncLogByProject.bulkCreate([testSyncLogProject])
     const newProjectSites = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate(testSites)
     expect(newVersion).toBeDefined()
     expect(newLog).toBeDefined()
@@ -165,11 +165,11 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([{ ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx 10000', deletedAt: '2022-08-29T16:00:00.000Z' }], biodiversitySequelize)
 
     // Assert
-    const deletedVersion = await ProjectVersion.findOne({ where: { locationProjectId: newProject.id } })
-    const deletedLog = await SyncLogByProject.findOne({ where: { locationProjectId: newProject.id } })
-    const deletedSpeciesCall = await TaxonSpeciesCall.findOne({ where: { callProjectId: newProject.id } })
-    const deletedProjectSites = await LocationSite.findAll({ where: { locationProjectId: newProject.id } })
-    const deletedProject = await LocationProject.findOne({ where: { idArbimon: 10000 } })
+    const deletedVersion = await models.ProjectVersion.findOne({ where: { locationProjectId: newProject.id } })
+    const deletedLog = await models.SyncLogByProject.findOne({ where: { locationProjectId: newProject.id } })
+    const deletedSpeciesCall = await models.TaxonSpeciesCall.findOne({ where: { callProjectId: newProject.id } })
+    const deletedProjectSites = await models.LocationSite.findAll({ where: { locationProjectId: newProject.id } })
+    const deletedProject = await models.LocationProject.findOne({ where: { idArbimon: 10000 } })
     expect(deletedVersion).toBe(null)
     expect(deletedLog).toBe(null)
     expect(deletedSpeciesCall).toBe(null)
@@ -188,7 +188,7 @@ describe('ingest > outputs > projects', () => {
     ], biodiversitySequelize)
 
     // Assert
-    const newProjects = await LocationProject.findAll({ where })
+    const newProjects = await models.LocationProject.findAll({ where })
     expect(newProjects).toHaveLength(2)
 
     await writeProjectsToBio([
@@ -196,7 +196,7 @@ describe('ingest > outputs > projects', () => {
       { ...projectInput, idCore: '807cuoi3cv12', idArbimon: 10001, slug: 'rfcx-10001', name: 'RFCx project updated' }
     ], biodiversitySequelize)
 
-    const [result] = await LocationProject.findAll({ where })
+    const [result] = await models.LocationProject.findAll({ where })
     expect([result]).toHaveLength(1)
     expect(result.name).toBe('RFCx project updated')
   })
@@ -210,14 +210,14 @@ describe('ingest > outputs > projects', () => {
       { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx 10000' }
     ], biodiversitySequelize)
 
-    const newProjects = await LocationProject.findAll({ where })
+    const newProjects = await models.LocationProject.findAll({ where })
     expect(newProjects).toHaveLength(1)
 
     await writeProjectsToBio([
       { ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx project deleted', deletedAt: '2022-08-29T16:00:00.000Z' }
     ], biodiversitySequelize)
 
-    const result = await LocationProject.findAll()
+    const result = await models.LocationProject.findAll()
     expect(result).toHaveLength(0)
 
     await writeProjectsToBio([
@@ -225,7 +225,7 @@ describe('ingest > outputs > projects', () => {
     ], biodiversitySequelize)
 
     // Assert
-    const result2 = await LocationProject.findAll()
+    const result2 = await models.LocationProject.findAll()
     expect(result2).toHaveLength(0)
   })
 
@@ -237,9 +237,9 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([arbimonProject], biodiversitySequelize)
 
     // Assert
-    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
     expect(project).not.toBeNull()
-    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
     expect(versions).toHaveLength(1)
     expect(versions[0].isPublic).toBe(true)
   })
@@ -252,9 +252,9 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([arbimonProject], biodiversitySequelize)
 
     // Assert
-    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
     expect(project).not.toBeNull()
-    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
     expect(versions).toHaveLength(1)
     expect(versions[0].isPublic).toBe(false)
   })
@@ -268,8 +268,8 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([{ ...arbimonProject, isPrivate: 0 }], biodiversitySequelize)
 
     // Assert
-    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
-    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
     expect(versions).toHaveLength(1)
     expect(versions[0].isPublic).toBe(true)
   })
@@ -283,8 +283,8 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([{ ...arbimonProject, isPrivate: 1 }], biodiversitySequelize)
 
     // Assert
-    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
-    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
     expect(versions).toHaveLength(1)
     expect(versions[0].isPublic).toBe(false)
   })
