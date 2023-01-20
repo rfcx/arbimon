@@ -9,8 +9,9 @@ import { getTransformedProjects, ProjectArbimon } from '../parsers/parse-project
 const loopUpsert = async (projects: ProjectArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const project of projects) {
+    const { updatedAt, deletedAt, ...minimalProject } = project
     try {
-      await ModelRepository.getInstance(sequelize).LocationProject.upsert(project)
+      await ModelRepository.getInstance(sequelize).LocationProject.upsert(minimalProject)
     } catch (e: any) {
       const errorMessage = (e instanceof Error) ? e.message : ''
       // store insert errors

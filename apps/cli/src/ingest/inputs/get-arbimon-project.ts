@@ -2,10 +2,10 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { ProjectArbimonRow } from '../parsers/parse-project-arbimon-to-bio'
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<ProjectArbimon[]> => {
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
@@ -37,7 +37,7 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
     ;
     `
 
-  const results = await sequelize.query<ProjectArbimonRow>(sql, {
+  return await sequelize.query<ProjectArbimon>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -46,9 +46,4 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
       syncBatchLimit
     }
   })
-
-  return results.map(row => ({
-    ...row,
-    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
-  }))
 }
