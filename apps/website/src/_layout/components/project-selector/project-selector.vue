@@ -106,13 +106,13 @@ const tabs = computed(() => ([
   {
     id: tabIds.myProjects,
     label: 'My projects',
-    projects: myProjects,
+    projects: myProjects.value,
     noProjectsMessage: store.user ? 'You don\'t own any projects' : 'Please login to see your projects'
   },
   {
     id: tabIds.showcaseProjects,
     label: 'Showcase projects',
-    projects: showcaseProjects,
+    projects: showcaseProjects.value,
     noProjectsMessage: 'No projects found'
   }
 ]))
