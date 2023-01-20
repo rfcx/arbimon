@@ -26,6 +26,7 @@ describe('ingest > outputs > projects', () => {
     latitudeSouth: 1,
     longitudeEast: 1,
     longitudeWest: 1,
+    updatedAt: new Date(),
     deletedAt: null
   }
   test('can perform with 0 project', async () => {

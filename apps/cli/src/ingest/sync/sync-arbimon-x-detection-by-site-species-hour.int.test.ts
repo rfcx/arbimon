@@ -30,6 +30,7 @@ const PROJECT_INPUT: Omit<ProjectArbimon, 'id'> = {
   latitudeSouth: 0,
   longitudeEast: 0,
   longitudeWest: 0,
+  updatedAt: new Date(),
   deletedAt: null
 }
 

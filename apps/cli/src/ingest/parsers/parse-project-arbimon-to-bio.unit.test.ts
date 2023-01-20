@@ -12,6 +12,7 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     latitudeSouth: 0,
     longitudeEast: 0,
     longitudeWest: 0,
+    updatedAt: new Date(),
     deletedAt: null
   }
 
