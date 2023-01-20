@@ -2,12 +2,14 @@ import { Op } from 'sequelize'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, ProjectVersion, Site, SyncLogByProject } from '@rfcx-bio/common/dao/types'
+import { Project, ProjectVersion, Site, SyncLogByProject, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
 import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
 import { writeProjectsToBio } from './projects'
+import { writeSpeciesCallsToBio } from './species-calls'
 
 const biodiversitySequelize = await getSequelize()
 
@@ -70,7 +72,7 @@ describe('ingest > outputs > projects', () => {
     expect(updatedProject?.idCore).toBe('807cuoi3cvwx')
   })
 
-  test('can remove project data', async () => {
+  test('can remove related project data - version, log, sites, species calls', async () => {
     // Arrange
     // Write project
     await writeProjectsToBio([
@@ -118,6 +120,36 @@ describe('ingest > outputs > projects', () => {
       }
     ]
 
+    // Batch species if it takes
+    const SPECIES_INPUT: Omit<TaxonSpecies, 'id'> = {
+      idArbimon: 1050,
+      slug: 'falco-amurensis',
+      taxonClassId: 300,
+      scientificName: 'Falco amurensis'
+    }
+
+    const species = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
+
+    if (!species) await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
+
+    const SPECIES_CALL_INPUT: SpeciesCallArbimon[] = [{
+      taxonSpeciesId: 1050,
+      callProjectId: newProject.id,
+      projectSlugArbimon: 'rfcx-1',
+      callSiteId: testSites[1].id,
+      callRecordedAt: '2020-12-06 03:06:19',
+      start: 75.24309455587392,
+      end: 80.86693409742121,
+      siteIdCore: 'cydwrzz91cbz',
+      callType: 'Common Song',
+      recordingId: 7047505,
+      callTimezone: 'Asia/Bangkok',
+      updatedAt: '2022-03-22 07:31:11',
+      idArbimon: 980
+    }]
+
+    await writeSpeciesCallsToBio(SPECIES_CALL_INPUT, biodiversitySequelize)
+
     const newVersion = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.bulkCreate([testProjectVersion])
     const newLog = await ModelRepository.getInstance(biodiversitySequelize).SyncLogByProject.bulkCreate([testSyncLogProject])
     const newProjectSites = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate(testSites)
@@ -126,15 +158,18 @@ describe('ingest > outputs > projects', () => {
     expect(newProjectSites).toBeDefined()
 
     // Act
+    // Add project deleted_at attribute
     await writeProjectsToBio([{ ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx 10000', deletedAt: '2022-08-29T16:00:00.000Z' }], biodiversitySequelize)
 
     // Assert
     const deletedVersion = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.findOne({ where: { locationProjectId: newProject.id } })
     const deletedLog = await ModelRepository.getInstance(biodiversitySequelize).SyncLogByProject.findOne({ where: { locationProjectId: newProject.id } })
+    const deletedSpeciesCall = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesCall.findOne({ where: { callProjectId: newProject.id } })
     const deletedProjectSites = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.findAll({ where: { locationProjectId: newProject.id } })
     const deletedProject = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: 10000 } })
     expect(deletedVersion).toBe(null)
     expect(deletedLog).toBe(null)
+    expect(deletedSpeciesCall).toBe(null)
     expect(deletedProjectSites).toHaveLength(0)
     expect(deletedProject).toBe(null)
   })

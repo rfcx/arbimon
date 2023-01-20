@@ -70,10 +70,11 @@ const deleteProjects = async (projects: Project[], sequelize: Sequelize, transac
 // TODO: Make this function universal for use with sites
 const deleteProjectData = async (projectId: number, sequelize: Sequelize, transaction: Transaction | null = null): Promise<void> => {
   await ModelRepository.getInstance(sequelize).SyncLogByProject.destroy({ where: { locationProjectId: projectId }, transaction })
-  await ModelRepository.getInstance(sequelize).LocationProjectSpecies.destroy({ where: { locationProjectId: projectId }, transaction })
   await ModelRepository.getInstance(sequelize).DataSource.destroy({ where: { locationProjectId: projectId }, transaction })
-  await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.destroy({ where: { locationProjectId: projectId }, transaction })
   await ModelRepository.getInstance(sequelize).RecordingBySiteHour.destroy({ where: { locationProjectId: projectId }, transaction })
+  await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.destroy({ where: { locationProjectId: projectId }, transaction })
+  await ModelRepository.getInstance(sequelize).TaxonSpeciesCall.destroy({ where: { callProjectId: projectId }, transaction })
+  await ModelRepository.getInstance(sequelize).LocationProjectSpecies.destroy({ where: { locationProjectId: projectId }, transaction })
   await ModelRepository.getInstance(sequelize).LocationSite.destroy({ where: { locationProjectId: projectId }, transaction })
   await ModelRepository.getInstance(sequelize).LocationProjectProfile.destroy({ where: { locationProjectId: projectId }, transaction })
   await ModelRepository.getInstance(sequelize).ProjectVersion.destroy({ where: { locationProjectId: projectId }, transaction })
