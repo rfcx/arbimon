@@ -27,6 +27,7 @@ describe('ingest > outputs > projects', () => {
     latitudeSouth: 1,
     longitudeEast: 1,
     longitudeWest: 1,
+    isPrivate: 1,
     updatedAt: new Date(),
     deletedAt: null
   }
@@ -61,7 +62,7 @@ describe('ingest > outputs > projects', () => {
     expect(projects).toHaveLength(idsArbimon.length)
   })
 
-  test('can update project (Name, Slug, IdCore)', async () => {
+  test('can update project (name, slug, idCore)', async () => {
     // Act
     await writeProjectsToBio([{ ...projectInput, idCore: '807cuoi3cvwx', idArbimon: 9999, slug: 'rfcx-99-1', name: 'RFCx 99-1' }], biodiversitySequelize)
 
@@ -226,5 +227,65 @@ describe('ingest > outputs > projects', () => {
     // Assert
     const result2 = await LocationProject.findAll()
     expect(result2).toHaveLength(0)
+  })
+
+  test('can write new project with public version', async () => {
+    // Arrange
+    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv97', idArbimon: 9997, slug: 'rfcx-97', name: 'RFCx 97', isPrivate: 0 }
+
+    // Act
+    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
+
+    // Assert
+    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    expect(project).not.toBeNull()
+    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    expect(versions).toHaveLength(1)
+    expect(versions[0].isPublic).toBe(true)
+  })
+
+  test('can write new project with private version', async () => {
+    // Arrange
+    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv96', idArbimon: 9996, slug: 'rfcx-96', name: 'RFCx 96' }
+
+    // Act
+    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
+
+    // Assert
+    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    expect(project).not.toBeNull()
+    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    expect(versions).toHaveLength(1)
+    expect(versions[0].isPublic).toBe(false)
+  })
+
+  test('can update project from private to public', async () => {
+    // Arrange
+    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv95', idArbimon: 9995, slug: 'rfcx-95', name: 'RFCx 95' }
+    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
+
+    // Act
+    await writeProjectsToBio([{ ...arbimonProject, isPrivate: 0 }], biodiversitySequelize)
+
+    // Assert
+    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    expect(versions).toHaveLength(1)
+    expect(versions[0].isPublic).toBe(true)
+  })
+
+  test('can update project from public to private', async () => {
+    // Arrange
+    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv94', idArbimon: 9994, slug: 'rfcx-94', name: 'RFCx 94', isPrivate: 0 }
+    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
+
+    // Act
+    await writeProjectsToBio([{ ...arbimonProject, isPrivate: 1 }], biodiversitySequelize)
+
+    // Assert
+    const project = await LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    const versions = await ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
+    expect(versions).toHaveLength(1)
+    expect(versions[0].isPublic).toBe(false)
   })
 })

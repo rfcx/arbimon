@@ -4,7 +4,6 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-project'
-import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -131,7 +130,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
       syncUntilId: '0',
       syncBatchLimit: 1
     }
-    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'updatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest', 'deletedAt']
+    const expectedProps = ['idArbimon', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest', 'isPrivate', 'updatedAt', 'deletedAt']
 
     // Act
     const actual = await getArbimonProjects(arbimonSequelize, params)
@@ -193,7 +192,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     }
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, params) as ProjectArbimon[]
+    const actual = await getArbimonProjects(arbimonSequelize, params)
     const [project] = actual.filter(project => project.idArbimon === 1927)
 
     // Assert
@@ -215,7 +214,7 @@ describe('ingest > inputs > getArbimonProjects', () => {
     }
 
     // Act
-    const actual = await getArbimonProjects(arbimonSequelize, params) as ProjectArbimon[]
+    const actual = await getArbimonProjects(arbimonSequelize, params)
     const [project] = actual.filter(project => project.idArbimon === 1927)
 
     // Assert
