@@ -30,9 +30,7 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async logout (): Promise<void> {
-    // Auth0 logout forces a full refresh
-    await this.auth.logout({ returnTo: window.location.origin })
-    // If we could avoid the refresh, we would need to update the user:
-    // await this.updateUser(this.clientAuth0)
+    // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
+    await this.auth.logout({ returnTo: import.meta.env.VITE_ARBIMON_BASE_URL })
   }
 }
