@@ -6,6 +6,8 @@ import { authClientKey, storeKey } from '@/globals'
 import { BiodiversityStore } from '~/store'
 import VersionControl from './version-control.vue'
 
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+
 @Options({
   components: {
     VersionControl
@@ -26,11 +28,13 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async login (): Promise<void> {
-    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
+    // Temporary fix to "double login" on Arbimon, previously:
+    // await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
+    await this.auth.loginWithRedirect({ redirect_uri: `${ARBIMON_BASE_URL}/login?redirect=${window.location.href}` })
   }
 
   async logout (): Promise<void> {
     // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
-    await this.auth.logout({ returnTo: import.meta.env.VITE_ARBIMON_BASE_URL })
+    await this.auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
   }
 }
