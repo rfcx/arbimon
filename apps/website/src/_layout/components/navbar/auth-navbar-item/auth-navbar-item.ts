@@ -28,9 +28,7 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async login (): Promise<void> {
-    // Temporary fix to "double login" on Arbimon, previously:
-    // await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
-    await this.auth.loginWithRedirect({ redirect_uri: `${ARBIMON_BASE_URL}/login?redirect=${window.location.href}` })
+    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
 
   async logout (): Promise<void> {
