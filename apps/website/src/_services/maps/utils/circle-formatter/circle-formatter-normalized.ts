@@ -43,7 +43,7 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
   }
 
   getRadius (value: number): number {
-    return value / (this.maxValue * this.maxPixels)
+    return (value / this.maxValue) * this.maxPixels
   }
 
   getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): MapBaseLegendEntry[] {

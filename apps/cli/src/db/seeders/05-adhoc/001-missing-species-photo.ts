@@ -20,7 +20,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const data: TaxonSpeciesPhoto[] = rawMissingTaxonSpeciesPhoto
     .map(({ slug, ...rest }) => {
       const taxonSpeciesId = speciesSlugToId[slug]
-      if (taxonSpeciesId) return undefined
+      if (!taxonSpeciesId) return undefined
 
       return {
         taxonSpeciesId,

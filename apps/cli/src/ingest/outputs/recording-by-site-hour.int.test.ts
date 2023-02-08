@@ -27,6 +27,7 @@ describe('ingest > output > recording by site hour', () => {
       latitudeSouth: 0,
       longitudeEast: 0,
       longitudeWest: 0,
+      updatedAt: new Date(),
       deletedAt: null
     }
     await ModelRepository.getInstance(biodiversitySequelize).LocationProject.bulkCreate([PROJECT_INPUT])

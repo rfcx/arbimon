@@ -58,8 +58,8 @@ export function transformToBySiteDataset (datasets: SpotlightDataset[]): MapData
   })
 
   const maxValues = {
-    detection: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
-    detectionFrequency: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
+    [SPOTLIGHT_MAP_KEYS.count]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[0]))),
+    [SPOTLIGHT_MAP_KEYS.detectionFrequency]: getPrettyMax(Math.max(0, ...maximumNumbers.map(m => m[1])))
   }
 
   return datasets.map(({ startDate, endDate, sites, detectionsByLocationSite }) => {
