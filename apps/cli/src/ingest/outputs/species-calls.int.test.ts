@@ -28,6 +28,7 @@ describe('ingest > outputs > species calls', async () => {
     latitudeSouth: 0,
     longitudeEast: 0,
     longitudeWest: 0,
+    updatedAt: new Date(),
     deletedAt: null
   }
   await writeProjectsToBio([PROJECT_INPUT], biodiversitySequelize)

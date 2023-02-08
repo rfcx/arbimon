@@ -2,10 +2,10 @@ import { QueryTypes, Sequelize } from 'sequelize'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { ProjectArbimonRow } from '../parsers/parse-project-arbimon-to-bio'
+import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { SyncQueryParams } from './sync-query-params'
 
-export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
+export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<ProjectArbimon[]> => {
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
@@ -14,11 +14,12 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
            p.external_id AS idCore,
            p.url AS slug,
            p.name,
-           p.updated_at AS updatedAt,
            (CASE WHEN s.north IS NULL THEN 0 ELSE s.north END) latitudeNorth,
            (CASE WHEN s.south IS NULL THEN 0 ELSE s.south END) latitudeSouth,
            (CASE WHEN s.east IS NULL THEN 0 ELSE s.east END) longitudeEast,
            (CASE WHEN s.west IS NULL THEN 0 ELSE s.west END) longitudeWest,
+           p.is_private AS isPrivate,
+           p.updated_at AS updatedAt,
            p.deleted_at AS deletedAt
     FROM projects p 
     LEFT JOIN (
@@ -37,7 +38,7 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
     ;
     `
 
-  const results = await sequelize.query<ProjectArbimonRow>(sql, {
+  return await sequelize.query<ProjectArbimon>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -46,9 +47,4 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
       syncBatchLimit
     }
   })
-
-  return results.map(row => ({
-    ...row,
-    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
-  }))
 }

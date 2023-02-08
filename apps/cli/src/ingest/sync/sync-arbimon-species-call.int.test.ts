@@ -50,6 +50,7 @@ const PROJECT_INPUT: ProjectArbimon = {
   latitudeSouth: 0,
   longitudeEast: 0,
   longitudeWest: 0,
+  updatedAt: new Date(),
   deletedAt: null
 }
 

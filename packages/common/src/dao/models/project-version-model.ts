@@ -5,6 +5,7 @@ import { ProjectVersion } from '../types'
 
 export const MODEL_PROJECT_VERSION = 'ProjectVersion'
 export const TABLE_PROJECT_VERSION = 'project_version'
+export const UPDATE_ON_DUPLICATE_LOCATION_PROJECT_VERSION: Array<keyof ProjectVersion> = ['isPublished', 'isPublic']
 
 export const ProjectVersionModel = defineWithDefaultsAutoPk<ProjectVersion>(
   MODEL_PROJECT_VERSION,
