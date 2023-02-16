@@ -4,7 +4,7 @@
     page-subtitle="Diversity of detected species"
     :topic="infoTopic"
   >
-    <export-button
+    <!-- <export-button
       :disabled="!haveData || loading"
       :loading="loading"
       :title=" haveData ? '' : 'No data selected'"
@@ -18,7 +18,7 @@
           Source
         </div>
       </template>
-    </export-button>
+    </export-button> -->
   </page-title>
 </template>
 <script lang="ts" src="./species-richness-introduction.ts"></script>

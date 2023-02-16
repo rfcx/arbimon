@@ -9,7 +9,7 @@
     page-subtitle="Temporal and spatial activity trends for all species"
     :topic="infoTopic"
   >
-    <export-button
+    <!-- <export-button
       :disabled="!hasData"
       :title="hasData ? '' : 'No data selected'"
       @click="exportSpeciesData()"
@@ -22,7 +22,7 @@
           Source
         </div>
       </template>
-    </export-button>
+    </export-button> -->
   </page-title>
   <comparison-list-component
     class="mt-5"
