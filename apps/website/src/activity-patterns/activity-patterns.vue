@@ -10,7 +10,8 @@
       page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
       :topic="infoTopic"
     >
-      <!-- <export-button
+      <export-button
+        v-if="false"
         :disabled="!hasExportData"
         :title="hasExportData ? '' : 'No data selected'"
         @click="exportDetectionsData()"
@@ -23,7 +24,7 @@
             Source
           </div>
         </template>
-      </export-button> -->
+      </export-button>
     </page-title>
     <comparison-list-component
       class="mt-5"
