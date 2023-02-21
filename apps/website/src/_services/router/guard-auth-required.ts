@@ -9,7 +9,6 @@ export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to, 
   if (store.user !== undefined) return next()
 
   // Redirect to login
-  next(false)
   const auth0Client = await useAuth0Client()
   await auth0Client.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
 }
