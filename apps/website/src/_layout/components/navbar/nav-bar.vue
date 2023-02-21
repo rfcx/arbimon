@@ -1,8 +1,5 @@
 <template>
-  <nav
-    class="bg-steel-grey"
-    :class="{'border-b-1 border-box-grey': !isReport}"
-  >
+  <nav class="bg-steel-grey">
     <div class="sm:(relative flex justify-between) items-center">
       <div class="justify-between flex-row relative flex items-center h-13">
         <div class="flex items-center">
@@ -11,30 +8,17 @@
             @toggle-mobile-menu="toggleMobileMenu()"
           />
           <router-link to="/">
-            <div class="flex-shrink-0 flex items-center ml-4 <sm:(mx-2)">
+            <div class="flex-shrink-0 flex items-center ml-4 mr-4 <sm:(mx-2)">
               <img
                 class="h-9 w-9 <sm:(h-7 w-7)"
                 src="/src/_services/assets/rfcx-logo.svg"
-                alt="Rainforest connection logo"
+                alt="Rainforest Connection logo"
               >
               <div class="font-semibold text-primary ml-2 <md:hidden">
-                <span class="<lg:hidden">Arbimon </span>
-                <span :class="{ pride: isPride }">Insights</span>
-                <sup
-                  class="font-extralight"
-                  style="font-size: 10px"
-                >BETA</sup>
+                <span :class="{ pride: isPride }">Arbimon</span>
               </div>
             </div>
           </router-link>
-          <button
-            v-if="store.projects.length > 0"
-            class="navbar-item text-sm h-9 mx-2 sm:(px-2 hover:bg-box-grey rounded-md cursor-pointer)"
-            @click="toggleProjectSelector(true)"
-          >
-            <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
-            <icon-custom-angle-down class="ml-1 text-xs" />
-          </button>
         </div>
         <div class="flex items-center mx-4 sm:hidden">
           <auth-navbar-item-component dom-id="navbar-auth-mobile" />
@@ -45,7 +29,7 @@
         :class="hasToggledMobileMenu ? 'visible' : 'hidden' "
       >
         <router-link
-          v-for="(item, idx) in navMenus"
+          v-for="(item, idx) in topLevelMenuItems"
           :key="'nav-menus-' + idx"
           :to="item.destination"
           class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
@@ -54,17 +38,40 @@
         >
           {{ item.label }}
         </router-link>
-        <a
-          v-if="arbimonLink"
-          :href="arbimonLink"
-          class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
-        >
-          Arbimon
-          <icon-custom-linkout class="text-xs ml-1" />
-        </a>
       </div>
       <div class="flex items-center mx-2 <sm:hidden">
         <auth-navbar-item-component dom-id="navbar-auth-desktop" />
+      </div>
+    </div>
+  </nav>
+  <nav class="bg-steel-grey-light">
+    <div class="sm:(relative flex justify-between) items-center">
+      <div class="justify-between flex-row relative flex items-center h-13">
+        <div class="flex items-center">
+          <button
+            v-if="store.projects.length > 0"
+            class="navbar-item text-sm h-9 mx-2 px-4 sm:(hover:bg-steel-grey rounded-md cursor-pointer)"
+            @click="toggleProjectSelector(true)"
+          >
+            <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
+            <icon-custom-angle-down class="ml-1 text-xs" />
+          </button>
+        </div>
+      </div>
+      <div
+        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-grey border-t-1)"
+        :class="hasToggledMobileMenu ? 'visible' : 'hidden' "
+      >
+        <router-link
+          v-for="(item, idx) in projectMenuItems"
+          :key="'nav-menus-' + idx"
+          :to="item.destination"
+          class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
+          :class="item.isParent ? 'router-link-needs-exact' : ''"
+          @click="hasToggledMobileMenu = false"
+        >
+          {{ item.label }}
+        </router-link>
       </div>
     </div>
   </nav>

@@ -36,20 +36,31 @@ export default class NavbarComponent extends Vue {
     return this.store.selectedProject?.name ?? 'Select Project'
   }
 
-  get navMenus (): NavMenu[] {
-    if (this.isReport) return this.reportMenus
-    return this.globalNavMenus
+  get topLevelMenuItems (): NavMenu[] {
+    return [
+      {
+        label: 'Featured',
+        destination: { name: ROUTE_NAMES.home }
+      },
+      {
+        label: 'Explore',
+        destination: { name: ROUTE_NAMES.home }
+      },
+      {
+        label: 'How It Works',
+        destination: { name: ROUTE_NAMES.home }
+      },
+      {
+        label: 'Support',
+        destination: { name: ROUTE_NAMES.home }
+      }
+    ]
   }
 
-  get reportMenus (): NavMenu[] {
+  get insightMenuItems (): NavMenu[] {
     const projectSlug = this.store.selectedProject?.slug
     return projectSlug !== undefined
       ? [
-          {
-            label: 'Dashboard',
-            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } },
-            isParent: true
-          },
           {
             label: 'Richness',
             destination: { name: ROUTE_NAMES.speciesRichness, params: { projectSlug } }
@@ -66,10 +77,15 @@ export default class NavbarComponent extends Vue {
       : []
   }
 
-  get globalNavMenus (): NavMenu[] {
+  get projectMenuItems (): NavMenu[] {
     const projectSlug = this.store.selectedProject?.slug
     return projectSlug !== undefined
       ? [
+          {
+            label: 'Overview',
+            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } },
+            isParent: true
+          },
           {
             label: 'Deploy',
             destination: { name: ROUTE_NAMES.home }
@@ -83,7 +99,7 @@ export default class NavbarComponent extends Vue {
             destination: { name: ROUTE_NAMES.cnnJobList, params: { projectSlug } }
           },
           {
-            label: 'Explore',
+            label: 'Insights',
             destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } }
           }
         ]
