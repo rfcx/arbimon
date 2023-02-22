@@ -6,6 +6,7 @@ import pluginFilter from 'windicss/plugin/filters'
 import pluginForms from 'windicss/plugin/forms'
 import pluginLineClamp from 'windicss/plugin/line-clamp'
 import pluginScrollSnap from 'windicss/plugin/scroll-snap'
+import pluginTypography from 'windicss/plugin/typography'
 
 const range = (length: number, startAt = 1): number[] =>
   Array.from({ length }, (_, idx) => idx + startAt)
@@ -34,7 +35,8 @@ export default defineConfig({
     pluginFilter,
     pluginForms,
     pluginLineClamp,
-    pluginScrollSnap
+    pluginScrollSnap,
+    pluginTypography({ dark: true })
   ],
   theme: {
     extend: {
