@@ -17,14 +17,12 @@
     </div>
     <div>
       <h2>Dashboard</h2>
-      <p>
+      <p class="mb-0">
         The home page presents an overview of the project, including background information, objectives, funding, and stakeholders. General results are also presented, such as the total number of detections, sampling sites, species detected, and the number of species in each threat category, according to the International Union for Conservation of Nature (IUCN). This page also features a map with all sampling sites, the number of species detected in each site, and a graph showing the number of species detected per hour.
       </p>
     </div>
-    <div :class="selectedTopic === topics.activity ? 'selected' : ''">
-      <h2>
-        Richness (species richness perspective)
-      </h2>
+    <div :class="selectedTopic === topics.richness ? 'selected' : ''">
+      <h2>Richness (species richness perspective)</h2>
       <p>
         This page focuses on the spatial and temporal patterns of species richness (i.e., the total number of detected species), and results can be filtered and compared by region/site, date, and taxonomic group (e.g., birds). This page has three main components:
         <ul class="list-disc list-inside">
@@ -36,10 +34,8 @@
         Species richness is the number of species of a given taxon in a sample, location or time period. It is one of the simplest, most common, and for many, most intuitive metrics to summarize biodiversity (Magurran 2004). Although a simple count of species exhibits several limitations when considering species composition, including essential characteristics of biological communities such as evolutionary history and functional diversity, it is widely used for ecological and conservation issues. For example, species richness has been used for a long time when identifying global hotspots of biodiversity, establishing priority areas for conservation, and assessing how biodiversity varies along environmental gradients.
       </p>
     </div>
-    <div :class="selectedTopic === topics.richness ? 'selected' : ''">
-      <h2>
-        Activity (species community perspective)
-      </h2>
+    <div :class="selectedTopic === topics.activity ? 'selected' : ''">
+      <h2>Activity (species community perspective)</h2>
       <p>
         This page overviews temporal and spatial vocal activity patterns. It can be used to summarize either detection frequency (i.e., number of detections of taxonomic groups divided by the total number of detections), number of detections (raw), or naive occupancy results (i.e., the proportion of occupied sites), with a focus given to general patterns at the community level. Occupancy models are explained further below. As with the Richness page, the user can use the filters to select results from taxonomic groups, sampling sites, or specific periods and visualize the results in a map or graphs that present the results according to the hour, day of the week, or month. The species list at the bottom of the page shows detection frequency data, the number of detections, occupied sites, and naive occupancy. If the user selects a species, they will be directed to the Spotlight menu.
       </p>
@@ -78,3 +74,28 @@
   </article>
 </template>
 <script lang="ts" src="./info-page.ts"></script>
+<style lang="scss" scoped>
+.selected {
+  padding: 0;
+  animation: shake 0.72s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+</style>

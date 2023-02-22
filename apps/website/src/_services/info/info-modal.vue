@@ -11,7 +11,7 @@
       <icon-fa-close class="cursor-pointer h-8 inline" />
     </button>
     <div class="p-4">
-      <InfoPage />
+      <InfoPage :selected-topic="topic" />
     </div>
   </modal-popup>
 </template>
@@ -19,4 +19,8 @@
 import InfoPage from './info-page.vue'
 
 const emit = defineEmits<{(e: 'close'): void}>()
+
+defineProps<{
+  topic?: string
+}>()
 </script>

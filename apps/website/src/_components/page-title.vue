@@ -22,6 +22,7 @@
   </div>
   <InfoModal
     v-if="showLearnMoreModal"
+    :topic="topic"
     @close="showLearnMoreModal = false"
   />
 </template>
