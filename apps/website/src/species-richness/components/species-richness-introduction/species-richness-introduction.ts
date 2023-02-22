@@ -6,9 +6,9 @@ import { apiBioGetRichnessExport } from '@rfcx-bio/common/api-bio/richness/richn
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
-import { INFO_TOPICS } from '~/info/info-page'
 import { downloadCsvReports } from '@/species-richness/csv'
 import { ColoredFilter, filterToQuery } from '~/filters'
+import { INFO_TOPICS } from '~/info/info-page'
 import { BiodiversityStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'

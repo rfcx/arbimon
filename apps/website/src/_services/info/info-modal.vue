@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import InfoPage from './info-page.vue'
 
-const emit = defineEmits<{(e: 'close'): void}>()
+defineEmits<{(e: 'close'): void}>()
 
 defineProps<{
   topic?: string
