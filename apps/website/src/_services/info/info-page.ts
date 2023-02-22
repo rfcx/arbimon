@@ -1,4 +1,5 @@
 import { Vue } from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
 
 export const INFO_TOPICS = {
   richness: 'richness',
@@ -7,10 +8,11 @@ export const INFO_TOPICS = {
 }
 
 export default class InfoPage extends Vue {
-  selectedTopic = ''
+  @Prop({ default: '' }) selectedTopic!: string
+
   topics = INFO_TOPICS
 
   override created (): void {
-    this.selectedTopic = this.$route.hash
+    console.info('selectedTopic', this.selectedTopic)
   }
 }
