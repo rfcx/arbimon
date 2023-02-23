@@ -1,5 +1,9 @@
 export const ROUTE_NAMES = {
-  home: 'home',
+  explore: 'explore',
+  landingHome: 'landing_home',
+  landingFeatured: 'landing_featured',
+  landingHowItWorks: 'landing_how_it_works',
+  landingFAQ: 'landing_faq',
   dashboard: 'dashboard',
   speciesRichness: 'species_richness',
   activityOverview: 'activity_overview',

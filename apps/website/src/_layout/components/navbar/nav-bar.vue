@@ -38,7 +38,47 @@
         >
           {{ item.label }}
         </router-link>
+
+        <el-dropdown
+          :popper-options="{modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 0],
+              },
+            },
+          ],}"
+        >
+          <span class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)">
+            Resources <icon-custom-angle-down class="ml-1 text-xs" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item
+                v-for="(item, idx) in resourcesMenuItems"
+                :key="'nav-menus-resources-' + idx"
+              >
+                <router-link
+                  :to="item.destination"
+                  @click="hasToggledMobileMenu = false"
+                >
+                  {{ item.label }}
+                </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item disabled>
+                Forum
+              </el-dropdown-item>
+              <el-dropdown-item disabled>
+                Publications
+              </el-dropdown-item>
+              <el-dropdown-item disabled>
+                Newsroom
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
+
       <div class="flex items-center mx-2 <sm:hidden">
         <auth-navbar-item-component dom-id="navbar-auth-desktop" />
       </div>
@@ -80,7 +120,8 @@
     @emit-close="toggleProjectSelector(false)"
   />
 </template>
-<script src="./nav-bar" lang="ts"></script>
+<script src="./nav-bar" lang="ts">
+</script>
 <style lang="scss">
 .pride {
   background-image: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 145, 0), rgb(255, 234, 0), rgb(0, 255, 0), rgb(0, 238, 255), rgb(30, 100, 255), rgb(200, 70, 255), rgb(255, 50, 255), rgb(255, 44, 104));
