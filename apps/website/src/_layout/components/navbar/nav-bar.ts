@@ -39,20 +39,29 @@ export default class NavbarComponent extends Vue {
   get topLevelMenuItems (): NavMenu[] {
     return [
       {
-        label: 'Featured',
-        destination: { name: ROUTE_NAMES.home }
+        label: 'Our Work',
+        destination: { name: ROUTE_NAMES.landingFeatured }
       },
       {
         label: 'Explore',
-        destination: { name: ROUTE_NAMES.home }
+        destination: { name: ROUTE_NAMES.explore }
       },
       {
         label: 'How It Works',
-        destination: { name: ROUTE_NAMES.home }
+        destination: { name: ROUTE_NAMES.landingHowItWorks }
+      }
+    ]
+  }
+
+  get resourcesMenuItems (): NavMenu[] {
+    return [
+      {
+        label: 'FAQ',
+        destination: { name: ROUTE_NAMES.landingFAQ }
       },
       {
-        label: 'Support',
-        destination: { name: ROUTE_NAMES.home }
+        label: 'Support & Tutorials',
+        destination: 'https://support.rfcx.org'
       }
     ]
   }

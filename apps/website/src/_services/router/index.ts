@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import { useStoreOutsideSetup } from '~/store'
 import { authRequiredGuard } from './guard-auth-required'
 import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
@@ -11,13 +10,28 @@ export * from './route-names'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: ROUTE_NAMES.home,
-    component: PAGES.Home,
-    beforeEnter: (to, from, next) => {
-      const store = useStoreOutsideSetup()
-      if (store.selectedProject) return next({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } })
-      next()
-    }
+    name: ROUTE_NAMES.landingHome,
+    component: PAGES.LandingHome
+  },
+  {
+    path: '/featured',
+    name: ROUTE_NAMES.landingFeatured,
+    component: PAGES.LandingFeatured
+  },
+  {
+    path: '/explore',
+    name: ROUTE_NAMES.explore,
+    component: PAGES.Explore
+  },
+  {
+    path: '/howitworks',
+    name: ROUTE_NAMES.landingHowItWorks,
+    component: PAGES.LandingHowItWorks
+  },
+  {
+    path: '/faq',
+    name: ROUTE_NAMES.landingFAQ,
+    component: PAGES.LandingFAQ
   },
   {
     path: '/preferences',
