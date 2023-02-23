@@ -18,12 +18,16 @@ export default class SpeciesRichnessIntroduction extends Vue {
   @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
 
   @Prop() filters!: ColoredFilter[]
-  @Prop() haveData!: boolean
+  @Prop() hasData!: boolean
 
   loading = false
 
   get infoTopic (): string {
     return INFO_TOPICS.richness
+  }
+
+  get isProjectMember (): boolean {
+    return this.store?.selectedProject?.isMyProject ?? false
   }
 
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)

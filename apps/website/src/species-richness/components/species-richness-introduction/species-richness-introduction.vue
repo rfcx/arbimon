@@ -5,10 +5,9 @@
     :topic="infoTopic"
   >
     <export-button
-      v-if="false"
-      :disabled="!haveData || loading"
+      :disabled="loading || !hasData || !isProjectMember"
       :loading="loading"
-      :title=" haveData ? '' : 'No data selected'"
+      :title="isProjectMember ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportCsvReports()"
     >
       <template #label>

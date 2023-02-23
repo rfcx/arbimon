@@ -10,9 +10,8 @@
     :topic="infoTopic"
   >
     <export-button
-      v-if="false"
-      :disabled="!hasData"
-      :title="hasData ? '' : 'No data selected'"
+      :disabled="!hasData || !isProjectMember"
+      :title="isProjectMember ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportSpeciesData()"
     >
       <template #label>
@@ -74,6 +73,7 @@ const tableDatasets = ref<SpeciesDataset[]>([])
 const exportDatasets = ref<ActivityOverviewDataBySpecies[][]>([])
 const isLocationRedacted = ref<boolean>(true)
 
+const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
 

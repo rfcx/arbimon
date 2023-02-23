@@ -62,6 +62,10 @@ export default class ActivityPatternsPage extends Vue {
   speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']> = []
   isLocationRedacted = false
 
+  get isProjectMember (): boolean {
+    return this.store?.selectedProject?.isMyProject ?? false
+  }
+
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0
   }
