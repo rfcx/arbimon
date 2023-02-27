@@ -2,6 +2,8 @@ import { sum } from 'lodash-es'
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
+import { roundedPercentage } from '../helper'
+
 export interface HorizontalStack {
   name: string
   count: number
@@ -40,9 +42,11 @@ export default class HorizontalStackedDistribution extends Vue {
     let width = 0
     const outputs: Bar[] = []
 
-    inputs.forEach(({ name, count, color }) => {
-      const percentage = count / totalCount * 100
-      width += percentage
+    const arrOfPercentages = roundedPercentage(x => x, inputs.map(item => { return item.count / totalCount * 100 }))
+
+    inputs.forEach(({ name, count, color }, ind) => {
+      const percentage = arrOfPercentages[ind][1]
+      width += arrOfPercentages[ind][0]
 
       outputs.push({
         name,
