@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component'
-import { Inject, Prop } from 'vue-property-decorator'
+import { Inject } from 'vue-property-decorator'
 import { RouteLocationRaw } from 'vue-router'
 
 import ProjectSelector from '@/_layout/components/project-selector/project-selector.vue'
@@ -27,10 +27,13 @@ export interface NavMenu {
 export default class NavbarComponent extends Vue {
   @Inject({ from: togglesKey }) readonly toggles!: FeatureToggles
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
-  @Prop({ default: false }) isReport!: boolean
 
   hasToggledMobileMenu = false
   hasOpenedProjectSelector = false
+
+  get isProjectLevel (): boolean {
+    return this.$route.path.startsWith('/p/')
+  }
 
   get selectedProjectName (): string {
     return this.store.selectedProject?.name ?? 'Select Project'
@@ -39,7 +42,7 @@ export default class NavbarComponent extends Vue {
   get topLevelMenuItems (): NavMenu[] {
     return [
       {
-        label: 'Our Work',
+        label: 'Featured Work',
         destination: { name: ROUTE_NAMES.landingFeatured }
       },
       {
@@ -117,7 +120,7 @@ export default class NavbarComponent extends Vue {
 
   get arbimonLink (): string {
     const selectedProjectSlug = this.store.selectedProject?.slug
-    if (selectedProjectSlug === undefined || !this.isReport) return ''
+    if (selectedProjectSlug === undefined) return ''
     else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectSlug}`
   }
 

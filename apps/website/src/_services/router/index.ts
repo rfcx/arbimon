@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Info
   },
   {
-    path: '/:projectSlug/detect',
+    path: '/p/:projectSlug/detect',
     component: PAGES.AppGlobalRoot,
     redirect: { name: ROUTE_NAMES.cnnJobList },
     beforeEnter: [authRequiredGuard, storeProjectGuard],
@@ -72,7 +72,7 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/:projectSlug',
+    path: '/p/:projectSlug',
     component: PAGES.ProjectRoot,
     beforeEnter: [storeProjectGuard],
     children: [

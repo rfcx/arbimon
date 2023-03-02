@@ -27,6 +27,10 @@ export default class AuthNavbarItemComponent extends Vue {
     return this.store.selectedProject?.isMyProject ?? false
   }
 
+  async signup (): Promise<void> {
+    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath }, screen_hint: 'signup' })
+  }
+
   async login (): Promise<void> {
     await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
   }
