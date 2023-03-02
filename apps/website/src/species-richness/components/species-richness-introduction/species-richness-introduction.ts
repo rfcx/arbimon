@@ -6,9 +6,9 @@ import { apiBioGetRichnessExport } from '@rfcx-bio/common/api-bio/richness/richn
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
-import { INFO_TOPICS } from '@/info/info-page'
 import { downloadCsvReports } from '@/species-richness/csv'
 import { ColoredFilter, filterToQuery } from '~/filters'
+import { INFO_TOPICS } from '~/info/info-page'
 import { BiodiversityStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
@@ -18,12 +18,16 @@ export default class SpeciesRichnessIntroduction extends Vue {
   @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
 
   @Prop() filters!: ColoredFilter[]
-  @Prop() haveData!: boolean
+  @Prop() hasData!: boolean
 
   loading = false
 
   get infoTopic (): string {
     return INFO_TOPICS.richness
+  }
+
+  get isProjectMember (): boolean {
+    return this.store?.selectedProject?.isMyProject ?? false
   }
 
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)

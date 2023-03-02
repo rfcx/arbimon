@@ -9,27 +9,37 @@
       <p class="text-sm">
         {{ pageSubtitle }}
         <span v-if="topic">&nbsp;·&nbsp;</span>
-        <router-link
+        <button
           v-if="topic"
-          :to="learnmoreRoute"
           class="text-subtle inline hover:(underline text-white cursor-pointer)"
+          @click="showLearnMoreModal = true"
         >
           Learn more
-        </router-link>
+        </button>
       </p>
     </div>
     <slot />
   </div>
+  <InfoModal
+    v-if="showLearnMoreModal"
+    :topic="topic"
+    @close="showLearnMoreModal = false"
+  />
 </template>
 
 <script lang="ts">
 import { Vue } from 'vue-class-component'
-import { Inject, Prop } from 'vue-property-decorator'
-import { RouteLocationRaw } from 'vue-router'
+import { Inject, Options, Prop } from 'vue-property-decorator'
 
 import { routeNamesKey } from '@/globals'
+import InfoModal from '~/info/info-modal.vue'
 import { RouteNames } from '~/router'
 
+@Options({
+  components: {
+    InfoModal
+  }
+})
 export default class PageTitle extends Vue {
   @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
 
@@ -38,28 +48,6 @@ export default class PageTitle extends Vue {
   @Prop() pageInformation!: string
   @Prop() topic!: string
 
-  get learnmoreRoute (): RouteLocationRaw {
-    return {
-      name: this.ROUTE_NAMES.info,
-      params: {
-        topic: this.topic
-      },
-      hash: `#${this.topic}`
-    }
-  }
-
-  get popoverPlacement (): string {
-    return screen.width > 640 ? 'right' : 'bottom'
-  }
+  showLearnMoreModal = false
 }
 </script>
-
-<style lang="scss">
-.info-popover {
-  width: 360px !important;
-  word-break: normal !important;
-  @media (max-width: 640px) {
-    width: 120px !important;
-  }
-}
-</style>

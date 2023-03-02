@@ -11,9 +11,8 @@
       :topic="infoTopic"
     >
       <export-button
-        v-if="false"
-        :disabled="!hasExportData"
-        :title="hasExportData ? '' : 'No data selected'"
+        :disabled="!hasExportData || !isProjectMember"
+        :title="isProjectMember ? (hasExportData ? '' : 'No data selected') : 'Only available to project members'"
         @click="exportDetectionsData()"
       >
         <template #label>

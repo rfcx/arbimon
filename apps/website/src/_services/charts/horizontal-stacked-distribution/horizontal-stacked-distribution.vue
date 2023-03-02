@@ -25,7 +25,7 @@
             :style="{ backgroundColor: bar.color }"
           />
           {{ bar.name }}
-          <span class="ml-1 text-subtle font-light">{{ bar.percentage < 5 ? bar.percentage.toFixed(1) : bar.percentage.toFixed(0) }}%</span>
+          <span class="ml-1 text-subtle font-light">{{ bar.percentage.toFixed(1) }}%</span>
         </li>
       </ul>
     </div>
