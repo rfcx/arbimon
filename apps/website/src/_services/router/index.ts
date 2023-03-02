@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Preferences
   },
   {
-    path: '/info/:topic',
+    path: '/info',
     name: ROUTE_NAMES.info,
     component: PAGES.Info
   },

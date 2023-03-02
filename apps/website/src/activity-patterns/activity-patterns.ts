@@ -11,8 +11,8 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/activity-patterns/functions'
 import { Metrics } from '@/activity-patterns/types'
 import { apiClientBioKey, storeKey } from '@/globals'
-import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
+import { INFO_TOPICS } from '~/info/info-page'
 import { MapDataSet } from '~/maps/types'
 import { ROUTE_NAMES } from '~/router'
 import { BiodiversityStore } from '~/store'
@@ -61,6 +61,10 @@ export default class ActivityPatternsPage extends Vue {
   speciesCalls: Array<TaxonSpeciesCallTypes['light']> = []
   speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']> = []
   isLocationRedacted = false
+
+  get isProjectMember (): boolean {
+    return this.store?.selectedProject?.isMyProject ?? false
+  }
 
   get hasExportData (): boolean {
     return this.timeDatasets.length > 0

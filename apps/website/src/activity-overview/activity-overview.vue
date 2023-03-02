@@ -10,9 +10,8 @@
     :topic="infoTopic"
   >
     <export-button
-      v-if="false"
-      :disabled="!hasData"
-      :title="hasData ? '' : 'No data selected'"
+      :disabled="!hasData || !isProjectMember"
+      :title="isProjectMember ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportSpeciesData()"
     >
       <template #label>
@@ -55,8 +54,8 @@ import ActivityOverviewBySpecies from '@/activity-overview/components/activity-o
 import ActivityOverviewByTime, { ActivityOverviewTimeDataset } from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { apiClientBioKey } from '@/globals'
-import { INFO_TOPICS } from '@/info/info-page'
 import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
+import { INFO_TOPICS } from '~/info/info-page'
 import { MapDataSet } from '~/maps/types'
 import { useStore } from '~/store'
 import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
@@ -74,6 +73,7 @@ const tableDatasets = ref<SpeciesDataset[]>([])
 const exportDatasets = ref<ActivityOverviewDataBySpecies[][]>([])
 const isLocationRedacted = ref<boolean>(true)
 
+const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
 
