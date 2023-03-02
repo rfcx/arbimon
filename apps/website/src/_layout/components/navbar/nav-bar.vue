@@ -84,7 +84,10 @@
       </div>
     </div>
   </nav>
-  <nav class="bg-steel-grey-light">
+  <nav
+    v-if="isProjectLevel"
+    class="bg-steel-grey-light"
+  >
     <div class="sm:(relative flex justify-between) items-center">
       <div class="justify-between flex-row relative flex items-center h-13">
         <div class="flex items-center">

@@ -1,10 +1,5 @@
 <template>
   <div class="page-container">
-    <!-- ================= dynamic navbar ============== -->
-    <!-- URGENT 44 - Move navbar to App.vue -->
-    <navbar-component :is-report="true" />
-
-    <!-- ================== page content =============== -->
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
       <div
         v-if="store.selectedProject"

@@ -1,7 +1,4 @@
 <template>
-  <!-- ================= dynamic navbar ============== -->
-  <navbar-component :is-report="false" />
-  <!-- ================== page content =============== -->
   <div class="w-full">
     <div
       v-if="store.selectedProject"
@@ -18,11 +15,10 @@
 
 <script setup lang="ts">
 
-  import { useStoreOutsideSetup } from '../../_services/store'
-  import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
-  import NavbarComponent from '../components/navbar/nav-bar.vue'
-  import Sidebar from '../components/side-bar/side-bar.vue'
+import { useStoreOutsideSetup } from '../../_services/store'
+import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
+import Sidebar from '../components/side-bar/side-bar.vue'
 
-  const store = useStoreOutsideSetup()
+const store = useStoreOutsideSetup()
 
 </script>

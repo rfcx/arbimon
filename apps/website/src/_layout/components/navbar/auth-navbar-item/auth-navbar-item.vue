@@ -1,11 +1,21 @@
 <template>
-  <button
+  <div
     v-if="!store.user"
-    class="btn btn-primary"
-    @click="login"
+    class="flex flex-row items-center"
   >
-    Sign In
-  </button>
+    <button
+      class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
+      @click="login"
+    >
+      Login
+    </button>
+    <button
+      class="btn btn-primary"
+      @click="signup"
+    >
+      Sign Up
+    </button>
+  </div>
   <div
     v-else
     class="flex flex-row"
