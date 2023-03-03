@@ -69,50 +69,26 @@ export default class NavbarComponent extends Vue {
     ]
   }
 
-  get insightMenuItems (): NavMenu[] {
-    const projectSlug = this.store.selectedProject?.slug
-    return projectSlug !== undefined
-      ? [
-          {
-            label: 'Richness',
-            destination: { name: ROUTE_NAMES.speciesRichness, params: { projectSlug } }
-          },
-          {
-            label: 'Activity',
-            destination: { name: ROUTE_NAMES.activityOverview, params: { projectSlug } }
-          },
-          {
-            label: 'Spotlight',
-            destination: { name: ROUTE_NAMES.activityPatterns, params: { projectSlug } }
-          }
-        ]
-      : []
-  }
-
   get projectMenuItems (): NavMenu[] {
     const projectSlug = this.store.selectedProject?.slug
     return projectSlug !== undefined
       ? [
           {
             label: 'Overview',
-            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } },
+            destination: { name: ROUTE_NAMES.overview, params: { projectSlug } },
             isParent: true
           },
           {
-            label: 'Deploy',
-            destination: { name: ROUTE_NAMES.home }
+            label: 'Import',
+            destination: { name: ROUTE_NAMES.import, params: { projectSlug } }
           },
           {
-            label: 'Upload',
-            destination: { name: ROUTE_NAMES.home }
-          },
-          {
-            label: 'Detect',
+            label: 'Acoustic Analyses',
             destination: { name: ROUTE_NAMES.cnnJobList, params: { projectSlug } }
           },
           {
             label: 'Insights',
-            destination: { name: ROUTE_NAMES.dashboard, params: { projectSlug } }
+            destination: { name: ROUTE_NAMES.speciesRichness, params: { projectSlug } }
           }
         ]
       : []

@@ -1,5 +1,7 @@
-export { default as AppGlobalRoot } from '@/_layout/app-global-root'
+export { default as AnalyseRoot } from '@/_layout/analyse-root'
 export { default as Error } from '@/_layout/error'
+export { default as ImportRoot } from '@/_layout/import-root'
+export { default as InsightsRoot } from '@/_layout/insights-root'
 export { default as ProjectRoot } from '@/_layout/project-root'
 export { default as ActivityOverview } from '@/activity-overview'
 export { default as ActivityPatterns } from '@/activity-patterns'

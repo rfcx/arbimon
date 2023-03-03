@@ -8,7 +8,7 @@ import { BiodiversityStore } from '~/store'
 export default class HomePage extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
-  get dashboardRoutename (): string {
-    return ROUTE_NAMES.dashboard
+  get projectRoutename (): string {
+    return ROUTE_NAMES.overview
   }
 }

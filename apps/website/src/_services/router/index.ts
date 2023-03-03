@@ -44,62 +44,77 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Info
   },
   {
-    path: '/p/:projectSlug/detect',
-    component: PAGES.AppGlobalRoot,
-    redirect: { name: ROUTE_NAMES.cnnJobList },
-    beforeEnter: [authRequiredGuard, storeProjectGuard],
-    children: [
-      {
-        path: 'cnn',
-        name: ROUTE_NAMES.cnnJobList,
-        component: PAGES.CnnJobList
-      },
-      {
-        path: 'cnn/create',
-        name: ROUTE_NAMES.cnnJobCreate,
-        component: PAGES.CnnJobCreate
-      },
-      {
-        path: 'cnn/detail/:jobId',
-        name: ROUTE_NAMES.cnnJobDetail,
-        component: PAGES.CnnJobDetail
-      },
-      {
-        path: 'cnn/detail/:jobId/:speciesSlug',
-        name: ROUTE_NAMES.cnnJobDetailBySpecies,
-        component: PAGES.CnnJobDetailBySpecies
-      }
-    ]
-  },
-  {
     path: '/p/:projectSlug',
     component: PAGES.ProjectRoot,
     beforeEnter: [storeProjectGuard],
     children: [
       {
         path: '',
-        name: ROUTE_NAMES.dashboard,
+        name: ROUTE_NAMES.overview,
         component: PAGES.Dashboard
       },
       {
-        path: 'richness',
-        name: ROUTE_NAMES.speciesRichness,
-        component: PAGES.SpeciesRichness
+        path: 'insights',
+        component: PAGES.InsightsRoot,
+        redirect: { name: ROUTE_NAMES.speciesRichness },
+        children: [
+          {
+            path: 'richness',
+            name: ROUTE_NAMES.speciesRichness,
+            component: PAGES.SpeciesRichness
+          },
+          {
+            path: 'activity',
+            name: ROUTE_NAMES.activityOverview,
+            component: PAGES.ActivityOverview
+          },
+          {
+            path: 'spotlight/:speciesSlug?',
+            name: ROUTE_NAMES.activityPatterns,
+            component: PAGES.ActivityPatterns
+          },
+          {
+            path: 'sync-history',
+            name: ROUTE_NAMES.syncHistory,
+            component: PAGES.SyncHistory
+          }
+        ]
       },
       {
-        path: 'activity',
-        name: ROUTE_NAMES.activityOverview,
-        component: PAGES.ActivityOverview
+        path: 'analyse',
+        component: PAGES.AnalyseRoot,
+        redirect: { name: ROUTE_NAMES.cnnJobList },
+        beforeEnter: [authRequiredGuard],
+        children: [
+          {
+            path: 'cnn',
+            name: ROUTE_NAMES.cnnJobList,
+            component: PAGES.CnnJobList
+          },
+          {
+            path: 'cnn/create',
+            name: ROUTE_NAMES.cnnJobCreate,
+            component: PAGES.CnnJobCreate
+          },
+          {
+            path: 'cnn/detail/:jobId',
+            name: ROUTE_NAMES.cnnJobDetail,
+            component: PAGES.CnnJobDetail
+          },
+          {
+            path: 'cnn/detail/:jobId/:speciesSlug',
+            name: ROUTE_NAMES.cnnJobDetailBySpecies,
+            component: PAGES.CnnJobDetailBySpecies
+          }
+        ]
       },
       {
-        path: 'spotlight/:speciesSlug?',
-        name: ROUTE_NAMES.activityPatterns,
-        component: PAGES.ActivityPatterns
-      },
-      {
-        path: 'sync-history',
-        name: ROUTE_NAMES.syncHistory,
-        component: PAGES.SyncHistory
+        path: 'import',
+        name: ROUTE_NAMES.import,
+        component: PAGES.ImportRoot,
+        beforeEnter: [authRequiredGuard],
+        children: [
+        ]
       }
     ]
   },
