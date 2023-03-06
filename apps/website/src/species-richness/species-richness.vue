@@ -26,6 +26,7 @@
   <species-richness-by-time
     dom-id="species-by-time"
     :datasets="speciesByTimeDatasets"
+    :loading="loading"
     class="mt-5"
   />
   <species-richness-detected-species

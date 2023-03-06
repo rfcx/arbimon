@@ -36,7 +36,7 @@ export default class ActivityPatternsByLocation extends Vue {
 
   @Prop() species!: SpeciesInProjectTypes['light']
   @Prop({ default: [] }) datasets!: MapDataSet[]
-  @Prop({ default: true }) loading!: boolean
+  @Prop({ default: false }) loading!: boolean
 
   selectedType = SPOTLIGHT_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [

@@ -31,11 +31,13 @@
   <activity-overview-by-location
     class="mt-5"
     :datasets="mapDatasets"
+    :loading="loading"
   />
   <activity-overview-by-time
     class="mt-5"
     dom-id="activity-overview-by-time"
     :datasets="timeDatasets"
+    :loading="loading"
   />
   <activity-overview-by-species
     :datasets="tableDatasets"
@@ -72,6 +74,7 @@ const timeDatasets = ref<ActivityOverviewTimeDataset[]>([])
 const tableDatasets = ref<SpeciesDataset[]>([])
 const exportDatasets = ref<ActivityOverviewDataBySpecies[][]>([])
 const isLocationRedacted = ref<boolean>(true)
+const loading = ref<boolean>(true)
 
 const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
 const hasData = computed(() => exportDatasets.value.length > 0)
@@ -85,6 +88,9 @@ const onFilterChange = async (newFilters: ColoredFilter[]): Promise<void> => {
 const onDatasetChange = async () => {
   const projectId = store.selectedProject?.id
   if (projectId === undefined) return
+
+  loading.value = true
+  mapDatasets.value = filters.value.map(filter => ({ ...filter, sites: [], data: [], maxValues: {} }))
 
   const datasets = (await Promise.all(
     filters.value.map(async (filter) => {
@@ -110,6 +116,7 @@ const onDatasetChange = async () => {
   tableDatasets.value = datasets.map(({ color, activityBySpecies }) => ({ color, data: activityBySpecies }))
   exportDatasets.value = datasets.map(({ activityBySpecies }) => activityBySpecies)
   isLocationRedacted.value = datasets[0]?.isLocationRedacted ?? true
+  loading.value = false
 }
 
 const exportSpeciesData = async () => {

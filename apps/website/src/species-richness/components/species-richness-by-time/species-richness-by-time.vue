@@ -31,6 +31,8 @@
       :dom-id="domId"
       :config="config"
       :datasets="datasetsForSelectedBucket"
+      :loading="loading"
+      class="mt-2"
     />
   </div>
 </template>

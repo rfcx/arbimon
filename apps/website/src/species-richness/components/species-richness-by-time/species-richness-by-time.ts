@@ -16,6 +16,7 @@ import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBuck
 export default class SpeciesRichnessByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}>
+  @Prop({ default: false }) loading!: boolean
 
   selectedBucket: TimeBucket = 'hourOfDay'
   buckets: Record<TimeBucket, string> = TIME_BUCKET_LABELS
