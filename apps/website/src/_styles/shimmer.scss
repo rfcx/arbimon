@@ -1,0 +1,17 @@
+@import "./variables";
+
+.loading-shimmer {
+  animation-duration: 1.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: loadingShimmerKeyframes;
+  animation-timing-function: linear;
+  background: $color-steel-grey;
+  background: linear-gradient(to right, $color-steel-grey 8%, lighten($color-steel-grey,5%) 38%, $color-steel-grey 54%);
+  background-size: 1000px 640px;
+}
+
+@keyframes loadingShimmerKeyframes {
+  0% { background-position: -468px 0 }
+  100% { background-position: 468px 0 }
+}

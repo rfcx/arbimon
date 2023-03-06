@@ -12,6 +12,7 @@
       dom-id="species-by-class"
       :config="config"
       :chart-data="chartData"
+      :loading="loading"
     />
   </div>
 </template>

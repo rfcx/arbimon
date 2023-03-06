@@ -46,6 +46,7 @@
         :key="'activity-patterns-by-location-' + idx"
         :dataset="dataset"
         :data-key="selectedType"
+        :loading="loading"
         :get-popup-html="getPopupHtml"
         :map-export-name="mapExportName(dataset, selectedType, idx)"
         :map-id="`activity-patterns-by-location-${idx}`"

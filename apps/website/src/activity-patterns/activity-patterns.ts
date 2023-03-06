@@ -50,6 +50,7 @@ export default class ActivityPatternsPage extends Vue {
   // Dataset definitions
   species: SpeciesInProjectTypes['light'] | null = null
   filters: ColoredFilter[] = []
+  loading: boolean = true
 
   // Data for children
   predictedOccupancyMaps: PredictedOccupancyMap[] = []
@@ -99,6 +100,8 @@ export default class ActivityPatternsPage extends Vue {
     const speciesId = this.species?.taxonSpeciesId ?? NaN
     if (!speciesId) return
 
+    this.loading = true
+
     const filters = this.filters
 
     const datasets = (await Promise.all(
@@ -124,6 +127,8 @@ export default class ActivityPatternsPage extends Vue {
     this.exportDatasets = datasets
       .map(({ detectionsByLocationSite, detectionsByTimeHour, detectionsByTimeMonthYear, detectionsByTimeYear }) =>
         ({ sites: detectionsByLocationSite, hour: detectionsByTimeHour, month: detectionsByTimeMonthYear, year: detectionsByTimeYear }))
+
+    this.loading = false
   }
 
   resetData (): void {

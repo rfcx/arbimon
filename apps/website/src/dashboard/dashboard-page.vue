@@ -8,7 +8,7 @@
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
-          v-if="generated"
+          :loading="generated === null"
           :metrics="generated"
         />
       </div>
@@ -60,6 +60,7 @@
           <map-base-component
             :dataset="mapDataset"
             data-key="refactorThis"
+            :loading="generated === null"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
             :map-id="`dashboard-by-site`"

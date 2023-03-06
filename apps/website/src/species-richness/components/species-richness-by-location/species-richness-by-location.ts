@@ -28,6 +28,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop({ default: [] }) public datasets!: MapDataSet[]
+  @Prop({ default: true }) loading!: boolean
 
   isShowLabels = true
   mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
@@ -38,7 +39,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   mapHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 576 : 288
 
   get hasData (): boolean {
-    return this.datasets.length > 0
+    return !this.loading && this.datasets.length > 0
   }
 
   get columnCount (): number {

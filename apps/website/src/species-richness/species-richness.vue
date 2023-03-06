@@ -6,7 +6,7 @@
   /> -->
   <species-richness-introduction
     :filters="filters"
-    :have-data="haveData"
+    :has-data="hasData"
   />
   <comparison-list-component
     class="mt-5"
@@ -15,10 +15,12 @@
   <species-richness-by-class
     dom-id="species-by-class"
     :chart-data="speciesByClassDatasets"
+    :loading="loading"
     class="mt-5"
   />
   <species-richness-by-location
     :datasets="speciesByLocationDatasets"
+    :loading="loading"
     class="mt-5"
   />
   <species-richness-by-time
