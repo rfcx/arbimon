@@ -1,11 +1,11 @@
 @import "./variables";
 
 .loading-shimmer {
-  background: linear-gradient(90deg,#0000 33%,rgba(255,255,255,0.025) 50%,#0000 66%) $color-steel-grey;
+  animation: loading-shimmer-keyframes 1.5s infinite;
+  background: linear-gradient(90deg, #0000 33%, rgb(255 255 255 / 2.5%) 50%, #0000 66%) $color-steel-grey;
   background-size: 300% 100%;
-  animation: loadingShimmerKeyframes 1.5s infinite;
 }
 
-@keyframes loadingShimmerKeyframes {
-  0% { background-position: right }
+@keyframes loading-shimmer-keyframes {
+  0% { background-position: right; }
 }
