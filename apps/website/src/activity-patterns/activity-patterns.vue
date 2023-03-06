@@ -59,7 +59,7 @@
           class="mt-6"
         />
         <location-redacted-banner
-          v-if="isLocationRedacted"
+          v-if="isLocationRedacted && !loading"
           class="mt-5"
         />
         <activity-patterns-by-location

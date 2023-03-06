@@ -52,10 +52,6 @@ export default class ActivityPatternsByLocation extends Vue {
 
   mapMoveEvent: MapMoveEvent | null = null
 
-  get hasData (): boolean {
-    return !this.loading && this.datasets.length > 0
-  }
-
   get columnCount (): number {
     switch (this.datasets.length) {
       case 1: return 1
