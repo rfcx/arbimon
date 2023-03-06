@@ -9,9 +9,10 @@ export default class LineChartComponent extends Vue {
   @Prop() domId!: string
   @Prop() config!: Omit<LineChartConfig, 'width'>
   @Prop() datasets!: LineChartSeries[]
+  @Prop({ default: false }) loading!: boolean
 
   get hasData (): boolean {
-    return this.datasets.some(ds => Object.values(ds.data).some(val => val > 0))
+    return !this.loading && this.datasets.some(ds => Object.values(ds.data).some(val => val > 0))
   }
 
   override mounted (): void {

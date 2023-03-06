@@ -28,7 +28,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop({ default: [] }) public datasets!: MapDataSet[]
-  @Prop({ default: true }) loading!: boolean
+  @Prop({ default: false }) loading!: boolean
 
   isShowLabels = true
   mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup

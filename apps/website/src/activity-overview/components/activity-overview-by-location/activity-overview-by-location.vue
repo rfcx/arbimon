@@ -31,12 +31,7 @@
       </template>
     </section-title>
     <div class="mt-2">
-      <no-data-panel
-        v-if="hasNoData"
-        class="h-144"
-      />
       <div
-        v-else
         class="grid gap-2 mt-2"
         :class="{ [`md:grid-cols-${columnCount}`]: true }"
       >

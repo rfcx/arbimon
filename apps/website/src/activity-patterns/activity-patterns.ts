@@ -100,9 +100,9 @@ export default class ActivityPatternsPage extends Vue {
     const speciesId = this.species?.taxonSpeciesId ?? NaN
     if (!speciesId) return
 
-    this.loading = true
-
     const filters = this.filters
+    this.loading = true
+    this.mapDatasets = filters.map(filter => ({ ...filter, sites: [], data: [], maxValues: {} }))
 
     const datasets = (await Promise.all(
       filters.map(async (filter) => {

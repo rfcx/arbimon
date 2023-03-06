@@ -19,6 +19,7 @@
           />
           <horizontal-stacked-distribution
             :dataset="richnessByTaxon"
+            :loading="generated === null"
             :known-total-count="generated?.speciesCount ?? 0"
             class="mt-4"
           />
@@ -35,6 +36,7 @@
           />
           <horizontal-stacked-distribution
             :dataset="richnessByRisk"
+            :loading="generated === null"
             :known-total-count="generated?.speciesCount ?? 0"
             class="mt-4"
           />
@@ -75,6 +77,7 @@
               dom-id="dashboard-line-chart"
               :config="lineChartConfig"
               :datasets="lineChartSeries"
+              :loading="generated === null"
             />
             <export-button
               v-if="hasLineChartData"

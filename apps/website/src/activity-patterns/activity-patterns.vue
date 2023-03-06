@@ -78,6 +78,7 @@
           dom-id="activity-by-time"
           :species="species"
           :datasets="timeDatasets"
+          :loading="loading"
           class="my-5"
         />
       </div>

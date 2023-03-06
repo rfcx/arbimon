@@ -1,6 +1,10 @@
 <template>
+  <div
+    v-if="loading"
+    class="h-20"
+  />
   <no-data-panel
-    v-if="!hasData"
+    v-else-if="!hasData"
     class="h-20"
   />
   <div v-else>
