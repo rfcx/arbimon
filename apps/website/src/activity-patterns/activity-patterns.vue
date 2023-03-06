@@ -65,6 +65,7 @@
         <activity-patterns-by-location
           v-else
           :datasets="mapDatasets"
+          :loading="loading"
           :species="species"
           class="mt-5"
         />
