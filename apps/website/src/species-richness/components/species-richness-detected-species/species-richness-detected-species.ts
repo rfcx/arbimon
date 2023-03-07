@@ -39,6 +39,7 @@ export default class SpeciesRichnessDetectedSpecies extends Vue {
   @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
 
   @Prop() tableData!: DetectedSpeciesItem[]
+  @Prop({ default: false }) loading!: boolean
   @Prop() colors!: string[]
   @Prop({ default: true }) isLocationRedacted!: boolean
 

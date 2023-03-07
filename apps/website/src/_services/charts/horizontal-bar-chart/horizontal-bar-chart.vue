@@ -3,9 +3,13 @@
     :id="`wrapper-${domId}`"
     class="w-full"
   >
+    <div
+      v-if="loading"
+      class="loading-shimmer h-16 mt-2"
+    />
     <no-data-panel
-      v-if="!hasData"
-      class="h-32 mt-2"
+      v-else-if="!hasData"
+      class="h-16 mt-2"
     />
     <div
       v-show="hasData"

@@ -36,6 +36,7 @@ export default class ActivityPatternsByLocation extends Vue {
 
   @Prop() species!: SpeciesInProjectTypes['light']
   @Prop({ default: [] }) datasets!: MapDataSet[]
+  @Prop({ default: false }) loading!: boolean
 
   selectedType = SPOTLIGHT_MAP_KEYS.detectionFrequency
   datasetTypes: DatasetType[] = [
@@ -50,10 +51,6 @@ export default class ActivityPatternsByLocation extends Vue {
   getPopupHtml = generateDetectionHtmlPopup
 
   mapMoveEvent: MapMoveEvent | null = null
-
-  get hasData (): boolean {
-    return this.datasets.length > 0
-  }
 
   get columnCount (): number {
     switch (this.datasets.length) {

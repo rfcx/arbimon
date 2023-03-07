@@ -1,5 +1,5 @@
 import { keyBy, mapValues } from 'lodash-es'
-import { BindOrReplacements, QueryTypes, Sequelize } from 'sequelize'
+import { QueryTypes, Sequelize } from 'sequelize'
 
 import { RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { AllModels } from '@rfcx-bio/common/dao/model-repository'
@@ -109,29 +109,25 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
 }
 
 export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessPresence[]> => {
-  const { locationProjectId, startDateUtcInclusive, endDateUtcExclusive, taxons } = filter // ignore siteIds
-  const conditions = [
-    'location_project_id = $locationProjectId',
-    '(detection_min_hour_local, detection_max_hour_local) OVERLAPS ($startDateUtcInclusive, $endDateUtcExclusive)'
-  ]
-  const bind: BindOrReplacements = {
-    locationProjectId,
-    startDateUtcInclusive,
-    endDateUtcExclusive
-  }
-  if (taxons !== undefined && taxons.length > 0) {
-    conditions.push('taxon_class_id = ANY($taxons)')
-    bind.taxons = taxons
-  }
-  if (!isProjectMember) {
-    conditions.push('NOT risk_rating_global_id = ANY($protectedIds) AND NOT risk_rating_local_id = ANY($protectedIds)')
-    bind.protectedIds = RISK_RATING_PROTECTED_IDS
-  }
+  const filterBase = datasetFilterWhereRaw(filter)
+
+  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating) AND NOT sip.risk_rating_local_id = ANY ($protectedRiskRating)` : filterBase.conditions
+  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+
   const sql = `
-    SELECT taxon_class_id "taxonClassId", taxon_species_id "taxonSpeciesId", taxon_species_slug "taxonSpeciesSlug",
-      common_name "commonName", scientific_name "scientificName"
-    FROM species_in_project
-    WHERE ${conditions.join(' AND ')}
+    SELECT 
+      sip.taxon_class_id as "taxonClassId",
+      sip.taxon_species_id as "taxonSpeciesId",
+      sip.taxon_species_slug as "taxonSpeciesSlug",
+      sip.common_name as "commonName",
+      sip.scientific_name as "scientificName"
+    FROM
+      detection_by_site_species_hour dbssh
+      JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
+    WHERE ${conditions}
+    GROUP BY
+      sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
   `
+
   return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
 }

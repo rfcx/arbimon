@@ -10,9 +10,10 @@ export default class HorizontalBarChartComponent extends Vue {
   @Prop() domId!: string
   @Prop() config!: Omit<BarChartConfig, 'width'>
   @Prop() chartData!: GroupedBarChartItem[]
+  @Prop({ default: false }) loading!: boolean
 
   get hasData (): boolean {
-    return this.chartData.length > 0
+    return !this.loading && this.chartData.length > 0
   }
 
   override mounted (): void {

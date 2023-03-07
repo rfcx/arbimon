@@ -32,12 +32,7 @@
         />
       </template>
     </section-title>
-    <no-data-panel
-      v-if="!hasData"
-      class="h-32 mt-2"
-    />
     <div
-      v-show="hasData"
       class="grid gap-2 mt-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
@@ -46,6 +41,7 @@
         :key="'activity-patterns-by-location-' + idx"
         :dataset="dataset"
         :data-key="selectedType"
+        :loading="loading"
         :get-popup-html="getPopupHtml"
         :map-export-name="mapExportName(dataset, selectedType, idx)"
         :map-id="`activity-patterns-by-location-${idx}`"

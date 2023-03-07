@@ -36,6 +36,7 @@ const DATASET_LABELS = {
 export default class ActivityOverviewByTime extends Vue {
   @Prop() domId!: string
   @Prop() datasets!: ActivityOverviewTimeDataset[]
+  @Prop({ default: false }) loading!: boolean
 
   selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
