@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO #188 #189 Handle loading and error case -->
+  <!-- TODO #189 Handle error case -->
   <h3 class="text-lg text-subtle border-b-1 border-subtle pb-1">
     Description
   </h3>
