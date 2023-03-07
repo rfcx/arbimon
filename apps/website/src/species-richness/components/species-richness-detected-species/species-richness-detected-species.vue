@@ -1,8 +1,12 @@
 <template>
   <div>
     <section-title title="Species detected" />
+    <div
+      v-if="loading"
+      class="loading-shimmer h-32 mt-2"
+    />
     <no-data-panel
-      v-if="!hasTableData"
+      v-else-if="!hasTableData"
       class="h-32 mt-2"
     />
     <div

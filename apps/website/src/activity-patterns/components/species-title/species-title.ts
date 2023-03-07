@@ -7,6 +7,7 @@ import { DEFAULT_RISK_RATING_ID, RiskRatingUi, RISKS_BY_ID } from '~/risk-rating
 
 export default class SpeciesTitle extends Vue {
   @Prop() species!: SpeciesInProject
+  @Prop({ default: false }) loading!: boolean
 
   get riskInformation (): RiskRatingUi {
     return RISKS_BY_ID[this.species?.riskRatingId ?? DEFAULT_RISK_RATING_ID]

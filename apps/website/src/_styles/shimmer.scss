@@ -4,6 +4,7 @@
   animation: loading-shimmer-keyframes 1.5s infinite;
   background: linear-gradient(90deg, #0000 33%, rgb(255 255 255 / 2.5%) 50%, #0000 66%) $color-steel-grey;
   background-size: 300% 100%;
+  cursor: wait;
 }
 
 @keyframes loading-shimmer-keyframes {

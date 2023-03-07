@@ -94,8 +94,8 @@
           :page-subtitle="profile?.summary"
         />
         <dashboard-project-profile
-          v-if="profile?.readme"
           :information="profile?.readme"
+          :loading="profile === null"
           class="mt-5"
         />
       </div>

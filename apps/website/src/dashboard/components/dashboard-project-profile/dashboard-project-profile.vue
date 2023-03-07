@@ -1,5 +1,17 @@
 <template>
+  <div v-if="loading">
+    <span
+      class="inline-block min-h-[1em] w-5/12 loading-shimmer"
+    />
+    <span
+      class="inline-block min-h-[1em] w-9/12 loading-shimmer"
+    />
+    <span
+      class="inline-block min-h-[1em] w-4/12 loading-shimmer"
+    />
+  </div>
   <markdown
+    v-else
     :source="information"
     class="markdown-container"
   />

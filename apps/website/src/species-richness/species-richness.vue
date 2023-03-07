@@ -31,6 +31,7 @@
   />
   <species-richness-detected-species
     :table-data="detectedSpecies"
+    :loading="loading"
     :colors="colors"
     :is-location-redacted="isLocationRedacted"
     class="mt-5"

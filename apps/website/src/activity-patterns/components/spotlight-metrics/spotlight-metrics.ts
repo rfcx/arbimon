@@ -15,4 +15,5 @@ import MetricsSingle from './single-metrics.vue'
 })
 export default class ActivityPatternsMetrics extends Vue {
   @Prop() metrics!: Metrics[]
+  @Prop({ default: false }) loading!: boolean
 }

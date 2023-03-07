@@ -18,6 +18,7 @@ interface SpeciesInformation {
 })
 export default class SpeciesBackgroundInformation extends Vue {
   @Prop() speciesInformation!: SpeciesInProject | null
+  @Prop({ default: false }) loading!: boolean
 
   /**
    * Clean up html tag from raw content
