@@ -15,9 +15,10 @@ const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
 export default class SpeciesRichnessByClass extends Vue {
   @Prop() domId!: string
   @Prop() chartData!: GroupedBarChartItem[]
+  @Prop() loading!: boolean
 
   get hasData (): boolean {
-    return this.chartData.length > 0
+    return !this.loading && this.chartData.length > 0
   }
 
   get config (): Omit<BarChartConfig, 'width'> {

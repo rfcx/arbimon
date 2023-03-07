@@ -21,7 +21,7 @@ export default class SpotlightPlayer extends Vue {
 
   @Prop() speciesCalls!: Array<TaxonSpeciesCallTypes['light']>
 
-  loading = false
+  loading = true
 
   spectrograms: string[] = []
   audioList: Howl[] = []
@@ -37,10 +37,6 @@ export default class SpotlightPlayer extends Vue {
 
   get displayPlayedTime (): string {
     return `${dayjs.duration(this.playedTime, 'seconds').format('m:ss')}`
-  }
-
-  override async created (): Promise<void> {
-    await this.getSpeciesCallAssets()
   }
 
   @Watch('speciesCalls')

@@ -31,12 +31,7 @@
       </template>
     </section-title>
     <div class="mt-2">
-      <no-data-panel
-        v-if="hasNoData"
-        class="h-144"
-      />
       <div
-        v-else
         class="grid gap-2 mt-2"
         :class="{ [`md:grid-cols-${columnCount}`]: true }"
       >
@@ -45,6 +40,7 @@
           :key="'activity-overview-by-location-' + idx"
           :dataset="dataset"
           :data-key="selectedType"
+          :loading="loading"
           :get-popup-html="getPopupHtml"
           :map-export-name="mapExportName(dataset, selectedType, idx)"
           :map-id="`activity-overview-by-location-${idx}`"

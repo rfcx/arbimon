@@ -1,8 +1,13 @@
 <template>
   <div>
+    <div
+      v-if="loading"
+      class="loading-shimmer"
+      :style="{ height: `${props.mapHeight}px` }"
+    />
     <no-data-panel
-      v-if="!hasData"
-      :style="{ height: `${mapHeight}px` }"
+      v-else-if="!hasData"
+      :style="{ height: `${props.mapHeight}px` }"
     />
     <div
       v-show="hasData"
@@ -78,6 +83,7 @@ const props = withDefaults(defineProps<{
   // Data
   dataset: MapDataSet,
   dataKey: string,
+  loading: boolean,
   getPopupHtml: popupHtmlFunc,
   mapExportName: string,
 
@@ -116,7 +122,7 @@ const styleToPaint = ref<StyleToPaint<AnyPaint, HeatmapOption>>(heatmapStyleToPa
 let map!: MapboxMap
 
 const hasData = computed(() => {
-  return props.dataset.data.length > 0
+  return !props.loading && props.dataset.data.length > 0
 })
 
 const mapConfig: MapboxOptions = {

@@ -33,6 +33,7 @@ export default class ActivityOverviewByLocation extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop({ default: [] }) datasets!: MapDataSet[]
+  @Prop({ default: false }) loading!: boolean
 
   isShowLabels = true
   mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup

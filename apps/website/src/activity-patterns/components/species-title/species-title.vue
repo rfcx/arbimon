@@ -1,5 +1,23 @@
 <template>
-  <div class="flex items-center mb-4">
+  <div
+    v-if="loading"
+    class="mb-4"
+  >
+    <div>
+      <span
+        class="inline-block min-h-[1em] w-2/12 text-lg loading-shimmer"
+      />
+    </div>
+    <div>
+      <span
+        class="inline-block min-h-[1em] w-1/12 text-lg loading-shimmer"
+      />
+    </div>
+  </div>
+  <div
+    v-else
+    class="flex items-center mb-4"
+  >
     <div>
       <h3
         class="text-lg"

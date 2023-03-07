@@ -35,49 +35,53 @@
       @emit-selected-species-changed="onSelectedSpeciesChange"
     />
     <species-title
-      v-if="speciesInformation"
       :species="speciesInformation"
+      :loading="loadingSpecies"
     />
     <div class="grid grid-cols-5 gap-x-2rem">
       <div class="col-span-full lg:col-span-2">
         <species-images
-          v-if="speciesPhotos.length > 0"
           :species-photos="speciesPhotos"
-          class="my-4"
+          :loading="loadingSpecies"
         />
         <spotlight-player
-          v-if="speciesCalls"
           :species-calls="speciesCalls"
+          :loading="loadingSpecies"
+          class="mt-4"
         />
         <species-background-information
           :species-information="speciesInformation"
+          :loading="loadingSpecies"
+          class="my-4"
         />
       </div>
       <div class="col-span-full lg:col-span-3">
         <spotlight-metrics
           :metrics="metrics"
-          class="mt-6"
+          :loading="loadingDatasets"
         />
         <location-redacted-banner
-          v-if="isLocationRedacted"
-          class="mt-5"
+          v-if="isLocationRedacted && !loadingDatasets"
+          class="mt-4"
         />
         <activity-patterns-by-location
           v-else
           :datasets="mapDatasets"
+          :loading="loadingDatasets"
           :species="species"
-          class="mt-5"
+          class="mt-4"
         />
         <activity-patterns-predicted-occupancy
           :species-slug="$route.params.speciesSlug"
           :predicted-occupancy-maps="predictedOccupancyMaps"
-          class="mt-5"
+          class="mt-4"
         />
         <activity-patterns-by-time
           dom-id="activity-by-time"
           :species="species"
           :datasets="timeDatasets"
-          class="my-5"
+          :loading="loadingDatasets"
+          class="my-4"
         />
       </div>
     </div>

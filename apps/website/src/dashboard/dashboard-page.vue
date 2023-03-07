@@ -8,7 +8,7 @@
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
-          v-if="generated"
+          :loading="generated === null"
           :metrics="generated"
         />
       </div>
@@ -19,6 +19,7 @@
           />
           <horizontal-stacked-distribution
             :dataset="richnessByTaxon"
+            :loading="generated === null"
             :known-total-count="generated?.speciesCount ?? 0"
             class="mt-4"
           />
@@ -35,6 +36,7 @@
           />
           <horizontal-stacked-distribution
             :dataset="richnessByRisk"
+            :loading="generated === null"
             :known-total-count="generated?.speciesCount ?? 0"
             class="mt-4"
           />
@@ -60,6 +62,7 @@
           <map-base-component
             :dataset="mapDataset"
             data-key="refactorThis"
+            :loading="generated === null"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-map"
             :map-id="`dashboard-by-site`"
@@ -74,6 +77,7 @@
               dom-id="dashboard-line-chart"
               :config="lineChartConfig"
               :datasets="lineChartSeries"
+              :loading="generated === null"
             />
             <export-button
               v-if="hasLineChartData"
@@ -90,8 +94,8 @@
           :page-subtitle="profile?.summary"
         />
         <dashboard-project-profile
-          v-if="profile?.readme"
           :information="profile?.readme"
+          :loading="profile === null"
           class="mt-5"
         />
       </div>

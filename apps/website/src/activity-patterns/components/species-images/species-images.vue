@@ -1,6 +1,10 @@
 <template>
   <div>
-    <no-data-panel v-if="speciesPhotos.length === 0" />
+    <div
+      v-if="loading"
+      class="loading-shimmer h-40"
+    />
+    <no-data-panel v-else-if="speciesPhotos.length === 0" />
     <el-carousel
       v-else
       indicator-position="none"

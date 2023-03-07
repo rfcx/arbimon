@@ -9,4 +9,5 @@ import Markdown from 'vue3-markdown-it'
 })
 export default class DashboardProjectProfile extends Vue {
   @Prop() information!: string
+  @Prop() loading!: boolean
 }

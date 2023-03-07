@@ -35,13 +35,14 @@ export default class SpeciesRichnessPage extends Vue {
 
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ColoredFilter[] = []
+  loading: boolean = true
   speciesByClassDatasets: GroupedBarChartItem[] = []
   speciesByLocationDatasets: MapDataSet[] = []
   speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
   detectedSpecies: DetectedSpeciesItem[] = []
   isLocationRedacted = true
 
-  get haveData (): boolean {
+  get hasData (): boolean {
     return this.speciesByClassDatasets.length > 0
   }
 
@@ -53,6 +54,9 @@ export default class SpeciesRichnessPage extends Vue {
   async onDatasetChange (): Promise<void> {
     const projectId = this.store.selectedProject?.id
     if (projectId === undefined) return
+
+    this.loading = true
+    this.speciesByLocationDatasets = this.filters.map(filter => ({ ...filter, sites: [], data: [], maxValues: {} }))
 
     // TODO 117 - Only update the changed dataset
     const datasets = await (await Promise.all(
@@ -81,5 +85,7 @@ export default class SpeciesRichnessPage extends Vue {
       })
     this.detectedSpecies = getTableData(datasets)
     this.isLocationRedacted = datasets[0]?.data.isLocationRedacted ?? true
+
+    this.loading = false
   }
 }

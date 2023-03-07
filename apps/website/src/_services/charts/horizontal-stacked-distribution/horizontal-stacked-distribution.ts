@@ -17,6 +17,7 @@ interface Bar {
 
 export default class HorizontalStackedDistribution extends Vue {
   @Prop() dataset!: HorizontalStack[]
+  @Prop({ default: false }) loading!: boolean
   @Prop({ default: undefined }) knownTotalCount!: number | undefined
 
   get hasData (): boolean {

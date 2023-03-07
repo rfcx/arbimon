@@ -39,6 +39,7 @@ export default class ActivityPatternsByTime extends Vue {
   @Prop() domId!: string
   @Prop() species!: SpeciesInProjectTypes['light']
   @Prop() datasets!: SpotlightTimeDataset[]
+  @Prop({ default: false }) loading!: boolean
 
   selectedType: ActivityPatternsDataByTimeType = ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
@@ -74,7 +75,7 @@ export default class ActivityPatternsByTime extends Vue {
   }
 
   get hasData (): boolean {
-    return this.datasetsForSelectedBucket
+    return !this.loading && this.datasetsForSelectedBucket
       .some(ds => Object.values(ds.data).some(val => val > 0))
   }
 

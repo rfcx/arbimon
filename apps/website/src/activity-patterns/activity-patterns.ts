@@ -52,6 +52,8 @@ export default class ActivityPatternsPage extends Vue {
   filters: ColoredFilter[] = []
 
   // Data for children
+  loadingDatasets: boolean = true
+  loadingSpecies: boolean = true
   predictedOccupancyMaps: PredictedOccupancyMap[] = []
   metrics: Metrics[] = []
   mapDatasets: MapDataSet[] = []
@@ -100,6 +102,8 @@ export default class ActivityPatternsPage extends Vue {
     if (!speciesId) return
 
     const filters = this.filters
+    this.loadingDatasets = true
+    this.mapDatasets = filters.map(filter => ({ ...filter, sites: [], data: [], maxValues: {} }))
 
     const datasets = (await Promise.all(
       filters.map(async (filter) => {
@@ -124,6 +128,8 @@ export default class ActivityPatternsPage extends Vue {
     this.exportDatasets = datasets
       .map(({ detectionsByLocationSite, detectionsByTimeHour, detectionsByTimeMonthYear, detectionsByTimeYear }) =>
         ({ sites: detectionsByLocationSite, hour: detectionsByTimeHour, month: detectionsByTimeMonthYear, year: detectionsByTimeYear }))
+
+    this.loadingDatasets = false
   }
 
   resetData (): void {
@@ -142,6 +148,8 @@ export default class ActivityPatternsPage extends Vue {
     const projectId = this.store.selectedProject?.id
     if (projectId === undefined) return
 
+    this.loadingSpecies = true
+
     const species = this.species
     if (!species) return
 
@@ -158,6 +166,7 @@ export default class ActivityPatternsPage extends Vue {
     } catch (e) {
       // TODO 167: Error handling
     }
+    this.loadingSpecies = false
   }
 
   async exportDetectionsData (): Promise<void> {

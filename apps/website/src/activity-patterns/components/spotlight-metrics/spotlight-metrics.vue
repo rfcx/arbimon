@@ -1,5 +1,12 @@
 <template>
-  <div class="grid grid-cols-2 gap-x-6 <sm:grid-cols-1">
+  <div
+    v-if="loading"
+    class="loading-shimmer h-16"
+  />
+  <div
+    v-else
+    class="grid grid-cols-2 gap-x-6 <sm:grid-cols-1"
+  >
     <template
       v-for="(item, idx) in metrics"
       :key="'metrics-info-' + idx"
