@@ -34,10 +34,12 @@
     />
   </div>
   <div
-    v-if="!props.loading && (props.metrics.minDate || props.metrics.maxDate)"
     class="text-center text-subtle sm:(mt-3 text-left)"
   >
-    Recording dates: {{ formatDateRange(props.metrics.minDate, props.metrics.maxDate) }}
+    Recording dates:
+    <span v-if="props.loading" />
+    <span v-else-if="props.metrics.minDate || props.metrics.maxDate">{{ formatDateRange(props.metrics.minDate, props.metrics.maxDate) }}</span>
+    <span v-else>-</span>
   </div>
 </template>
 

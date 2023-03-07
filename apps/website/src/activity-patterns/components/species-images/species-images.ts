@@ -5,6 +5,7 @@ import { TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
 
 export default class SpeciesImage extends Vue {
   @Prop() speciesPhotos!: Array<TaxonSpeciesPhotoTypes['light']>
+  @Prop({ default: false }) loading!: boolean
 
   handleImageUrl (url: string): string {
     const isValidUrl = /^https:\/\/./i.test(url)

@@ -41,6 +41,7 @@
   />
   <activity-overview-by-species
     :datasets="tableDatasets"
+    :loading="loading"
     :is-location-redacted="isLocationRedacted"
   />
 </template>

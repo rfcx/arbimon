@@ -71,6 +71,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
 
   @Prop() datasets!: SpeciesDataset[]
+  @Prop({ default: false }) loading!: boolean
   @Prop({ default: true }) isLocationRedacted!: boolean
 
   pageIndex = 1 // 1-based for humans
