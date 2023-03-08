@@ -1,7 +1,7 @@
-import { JsZipFile, toCsv } from '@rfcx-bio/utils/file'
+import { type JsZipFile, toCsv } from '@rfcx-bio/utils/file'
 
-import { ColoredFilter } from '~/filters'
-import { DatasetMetadata } from './types'
+import { type ColoredFilter } from '~/filters'
+import { type DatasetMetadata } from './types'
 
 const META_DATE_FORMAT = 'YYYY/MM/DD'
 

@@ -1,12 +1,12 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
 
-import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import { type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type Where } from '@rfcx-bio/common/dao/query-helpers/types'
+import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
-import { FilterDatasetForSql, whereInDataset, whereRecordingBySiteHour } from '~/datasets/dataset-where'
+import { type FilterDatasetForSql, whereInDataset, whereRecordingBySiteHour } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { dayjs } from '../_services/dayjs-initialized'
 
@@ -61,7 +61,7 @@ export const getRecordedMinutesCountGroupBySite = async (models: AllModels, filt
 }
 
 export async function getDetectionsByLocationSite (models: AllModels, totalDetections: DetectionBySiteSpeciesHour[], filter: FilterDatasetForSql): Promise<SpotlightDetectionDataBySite> {
-  const summariesBySite: { [siteId: number]: DetectionBySiteSpeciesHour[] } = groupBy(totalDetections, 'locationSiteId')
+  const summariesBySite: Record<number, DetectionBySiteSpeciesHour[]> = groupBy(totalDetections, 'locationSiteId')
   const siteIds = Object.keys(summariesBySite)
 
   const sites = await models.LocationSite.findAll({
@@ -69,7 +69,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
     raw: true
   })
 
-  const summariesRecordingBySite: { [siteId: number]: number } = {}
+  const summariesRecordingBySite: Record<number, number> = {}
 
   // get all sites recordings at once
   const locationProjectId = filter.locationProjectId || -1

@@ -1,9 +1,9 @@
-import { FastifyRequest } from 'fastify'
+import { type FastifyRequest } from 'fastify'
 
 import { getMemberProjectCoreIdsFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
-import { Middleware } from '~/api-helpers/types'
-import { Auth0UserInfo } from '~/auth0'
+import { type Middleware } from '~/api-helpers/types'
+import { type Auth0UserInfo } from '~/auth0'
 import { getMemberProjectCoreIdsFromCache, updateMemberProjectCoreIds } from '~/cache/user-project-cache'
 
 const MEMBER_PROJECT_CORE_IDS = 'MEMBER_PROJECT_CORE_IDS'

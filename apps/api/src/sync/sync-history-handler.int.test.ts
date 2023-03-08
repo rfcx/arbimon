@@ -1,8 +1,8 @@
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { DataSource } from '@rfcx-bio/common/dao/types'
+import { type DataSource } from '@rfcx-bio/common/dao/types'
 
 import { routesSync } from '@/sync'
 import { GET } from '~/api-helpers/types'
@@ -126,7 +126,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
       expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
@@ -162,7 +162,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       const knownSync = resultArray[0]
       expect(knownSync).toBeTypeOf('object')
-      EXPECTED_PROPS.forEach(expectedProp => expect(knownSync).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(knownSync).toHaveProperty(expectedProp) })
       expect(Object.keys(knownSync)).toHaveLength(EXPECTED_PROPS.length)
     })
   })

@@ -1,9 +1,9 @@
-import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
-import { TaxonClass } from '@rfcx-bio/common/dao/types'
-import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+import { type RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { getCSVDatasetMetadata } from '~/export'
-import { ColoredFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
+import { type ColoredFilter, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
 
 export const downloadCsvReports = async (filters: ColoredFilter[], datasets: RichnessByExportReportRow[][], reportPrefix: string, taxonClasses: TaxonClass[]): Promise<void> => {
   const exportDateTime = getExportDateTime()

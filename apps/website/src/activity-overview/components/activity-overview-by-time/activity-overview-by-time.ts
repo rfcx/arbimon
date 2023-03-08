@@ -5,10 +5,10 @@ import { Prop } from 'vue-property-decorator'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { downloadSvgAsPng } from '~/charts'
-import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { type LineChartConfig, type LineChartSeries, DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
-import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
-import { ACTIVITY_OVERVIEW_TIME_KEYS, ActivityOverviewDataByTime, ActivityOverviewDataByTimeBucket } from '../../types'
+import { type TimeBucket, TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS } from '~/time-buckets'
+import { type ActivityOverviewDataByTime, type ActivityOverviewDataByTimeBucket, ACTIVITY_OVERVIEW_TIME_KEYS } from '../../types'
 
 type ActivityOverviewDataByTimeType = keyof ActivityOverviewDataByTimeBucket
 

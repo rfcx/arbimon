@@ -1,7 +1,7 @@
-import { SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { type SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { FilterDataset } from '~/datasets/dataset-types'
+import { type FilterDataset } from '~/datasets/dataset-types'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'

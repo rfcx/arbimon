@@ -1,8 +1,8 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
-import { Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
-import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS, Site, TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
+import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 

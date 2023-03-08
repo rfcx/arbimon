@@ -2,12 +2,12 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { Site } from '@rfcx-bio/common/dao/types'
+import { type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { storeKey } from '@/globals'
-import { ComparisonFilter, FilterPropertyEquals, SiteGroup } from '~/filters'
-import { BiodiversityStore } from '~/store'
+import { type ComparisonFilter, type FilterPropertyEquals, type SiteGroup } from '~/filters'
+import { type BiodiversityStore } from '~/store'
 import DateRangePicker from './date-range-picker/date-range-picker.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 

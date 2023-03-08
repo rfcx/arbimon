@@ -1,5 +1,5 @@
 import { createTestingPinia } from '@pinia/testing'
-import { MountingOptions } from '@vue/test-utils'
+import { type MountingOptions } from '@vue/test-utils'
 import { vi } from 'vitest'
 
 type VueTestUtilsRenderOptions = Omit<MountingOptions<Record<string, any>>, 'attachTo' | 'propsData' | 'shallow'>

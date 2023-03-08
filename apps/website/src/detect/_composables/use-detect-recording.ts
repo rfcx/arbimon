@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios'
-import { useQuery, UseQueryReturnType } from 'vue-query'
+import { type AxiosInstance } from 'axios'
+import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiBioGetDetectRecordingData, DetectRecordingParams, DetectRecordingQueryParams, DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
+import { type DetectRecordingParams, type DetectRecordingQueryParams, type DetectRecordingResponse, apiBioGetDetectRecordingData } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 
 export const FETCH_DETECT_RECORDINGS = 'fetch-detect-recordings'
 

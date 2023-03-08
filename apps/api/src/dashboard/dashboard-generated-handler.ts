@@ -1,7 +1,7 @@
-import { DashboardGeneratedParams, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { type DashboardGeneratedParams, type DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
 
 import { getDetectionByHour, getDetectionBySite, getProjectMetrics, getRichnessByHour, getRichnessByRisk, getRichnessBySite, getRichnessByTaxon, getSpeciesThreatened } from '@/dashboard/dashboard-generated-dao'
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { BioInvalidPathParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 

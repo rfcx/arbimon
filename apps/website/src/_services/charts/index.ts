@@ -7,10 +7,11 @@ const EACH_LEGEND_WIDTH = 100
 const GAP_BETWEEN_CIRCLE_AND_LEGEND = 15
 const GAP_BETWEEN_LEGEND = 20
 
-export const downloadSvgAsPng = async (svg: SVGSVGElement, filename: string): Promise<void> =>
-  await svgToCanvas(svg)
+export const downloadSvgAsPng = async (svg: SVGSVGElement, filename: string): Promise<void> => {
+ await svgToCanvas(svg)
     .then(canvasToPngDataUrl)
-    .then(async pngDataUrl => downloadPng(pngDataUrl, filename))
+    .then(async pngDataUrl => { downloadPng(pngDataUrl, filename) })
+}
 
 export const svgToCanvas = async (svg: SVGSVGElement): Promise<HTMLCanvasElement> => {
   return await new Promise(resolve => {
@@ -45,15 +46,16 @@ export const canvasToPngDataUrl = async (canvas: HTMLCanvasElement, mimetype = '
   canvas.toDataURL(mimetype, quality)
 
 export const canvasToPngBlob = async (canvas: HTMLCanvasElement, mimetype = 'image/png', quality = 0.92): Promise<Blob> =>
-  await new Promise((resolve, reject) =>
-    canvas.toBlob(
+  await new Promise((resolve, reject) => {
+ canvas.toBlob(
       (result: Blob | null): void => {
         if (result) resolve(result)
         else reject(new Error('Failed to convert canvas to blob'))
       },
       mimetype,
       quality
-    ))
+    )
+})
 
 export const clearChart = (id: string): void => {
   d3.select(`#${id}`).selectAll('*').remove()

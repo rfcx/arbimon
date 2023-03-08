@@ -1,4 +1,4 @@
-import { MapboxStyle } from '~/maps'
+import { type MapboxStyle } from '~/maps'
 
 export interface MapOptions {
   style: MapboxStyle

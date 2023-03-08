@@ -1,8 +1,8 @@
-import { SpotlightDatasetParams, SpotlightDatasetQuery, SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { type SpotlightDatasetParams, type SpotlightDatasetQuery, type SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
-import { Handler } from '../_services/api-helpers/types'
-import { FilterDataset } from '../_services/datasets/dataset-types'
+import { type Handler } from '../_services/api-helpers/types'
+import { type FilterDataset } from '../_services/datasets/dataset-types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'

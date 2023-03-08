@@ -2,7 +2,7 @@ import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-fi
 import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { setMemberProjectCoreIds } from '@/_middleware/get-member-projects'
-import { GET, RouteRegistration } from '../_services/api-helpers/types'
+import { type RouteRegistration, GET } from '../_services/api-helpers/types'
 import { projectFiltersHandler } from './project-filters-handler'
 import { projectsAllHandler } from './projects-handler'
 

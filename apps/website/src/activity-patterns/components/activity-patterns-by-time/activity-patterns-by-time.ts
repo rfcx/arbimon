@@ -2,15 +2,15 @@ import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
+import { type SpotlightDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { downloadSvgAsPng } from '~/charts'
-import { DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { type LineChartConfig, type LineChartSeries, DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
-import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
-import { ACTIVITY_PATTERN_TIME_KEYS, ActivityPatternsDataByTimeBucket } from '../../types'
+import { type TimeBucket, TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS } from '~/time-buckets'
+import { type ActivityPatternsDataByTimeBucket, ACTIVITY_PATTERN_TIME_KEYS } from '../../types'
 
 type ActivityPatternsDataByTimeType = keyof ActivityPatternsDataByTimeBucket
 

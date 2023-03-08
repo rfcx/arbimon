@@ -1,9 +1,9 @@
 import { sum } from 'lodash-es'
 
-import { ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { type ActivityDatasetResponse } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
-import { FilterDataset } from '../_services/datasets/dataset-types'
+import { type FilterDataset } from '../_services/datasets/dataset-types'
 import { getSequelize } from '../_services/db'
 import { combineDetectionsAndRecordings, getDetectionBySite, getDetectionDataBySpecies, getDetectionsByTimeDateUnix, getDetectionsByTimeDay, getDetectionsByTimeHour, getDetectionsByTimeMonth, getTotalRecordingsBySite } from './activity-dataset-dao'
 

@@ -26,9 +26,9 @@
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { MetricsDataset } from '@/activity-patterns/types'
+import type { MetricsDataset } from '@/activity-patterns/types'
 import { storeKey } from '@/globals'
-import { BiodiversityStore } from '~/store'
+import type { BiodiversityStore } from '~/store'
 
 export default class SingleDatasetComponent extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore

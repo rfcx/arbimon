@@ -1,12 +1,12 @@
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 
-import { SpotlightDatasetResponse, SpotlightDetectionDataBySite, SpotlightDetectionDataByTime, SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
+import { type SpotlightDatasetResponse, type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime, type SpotlightExportData } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { type JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { getCSVDatasetMetadata } from '~/export'
-import { ColoredFilter, DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
-import { MapDataSet } from '~/maps/types'
-import { Metrics } from './types'
+import { type ColoredFilter, type DatasetParameters, getExportDateTime, getExportFilterName, getExportGroupName } from '~/filters'
+import { type MapDataSet } from '~/maps/types'
+import { type Metrics } from './types'
 
 export type SpotlightDataset = SpotlightDatasetResponse & DatasetParameters
 
@@ -130,7 +130,7 @@ export async function getHourCSVData (dataset: SpotlightDetectionDataByTime): Pr
   return await toCsv(dataAsJson)
 }
 
-export function getDateRange (startRange: Dayjs, endRange: Dayjs, unit: 'month'|'year', format: string): string[] {
+export function getDateRange (startRange: Dayjs, endRange: Dayjs, unit: 'month' | 'year', format: string): string[] {
   let currentDate = startRange
   const ranges: string[] = []
   while (currentDate.isBefore(endRange) || currentDate.isSame(endRange)) {

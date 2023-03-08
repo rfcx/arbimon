@@ -1,6 +1,6 @@
 import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
@@ -79,7 +79,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
     })
 
     test('does not contain any additional props', async () => {
@@ -95,7 +95,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      Object.keys(result).forEach(actualProp => { expect(EXPECTED_PROPS).toContain(actualProp) })
     })
   })
 
@@ -113,7 +113,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      Object.keys(result).forEach(actualProp => { expect(EXPECTED_PROPS).toContain(actualProp) })
 
       expect(result.richnessBySite).toEqual([])
       expect(result.richnessByTaxon).toEqual({})

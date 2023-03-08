@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import { MapBaseLegendEntry } from '../types'
+import { type MapBaseLegendEntry } from '../types'
 
 const CONTAINER_DEFAULT_WIDTH = 160
 const DEFAULT_ROW_HEIGHT = 16

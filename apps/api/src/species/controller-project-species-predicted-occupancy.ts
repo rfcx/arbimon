@@ -1,13 +1,13 @@
-import { FastifyReply } from 'fastify'
+import { type FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
-import { ProjectSpeciesPredictedOccupancyParams } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
+import { type ProjectSpeciesPredictedOccupancyParams } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { getSequelize } from '~/db'
 import { isProtectedSpecies } from '~/security/protected-species'
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 import { mockPredictionsFolderName, mockPredictionsFolderPath } from './index'

@@ -4,9 +4,9 @@ import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { routeNamesKey } from '@/globals'
-import { RouteNames } from '~/router'
-import { ActivityOverviewDataBySpecies } from '../../types'
-import { ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from './functions'
+import { type RouteNames } from '~/router'
+import { type ActivityOverviewDataBySpecies } from '../../types'
+import { type ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from './functions'
 
 interface Header {
   title: string
@@ -18,7 +18,7 @@ export interface SpeciesDataset {
   data: ActivityOverviewDataBySpecies[]
 }
 
-type SortableColumn = 'scientificName'| 'taxon' | SortableDetail
+type SortableColumn = 'scientificName' | 'taxon' | SortableDetail
 type SortableDetail = 'detectionMinutesCount' | 'detectionFrequency' | 'occupiedSites' | 'occupancyNaive'
 type SortDirection = 1 | -1
 

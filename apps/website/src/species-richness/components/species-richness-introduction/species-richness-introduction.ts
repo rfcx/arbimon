@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
@@ -7,9 +7,9 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
 import { downloadCsvReports } from '@/species-richness/csv'
-import { ColoredFilter, filterToQuery } from '~/filters'
+import { type ColoredFilter, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
-import { BiodiversityStore } from '~/store'
+import { type BiodiversityStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 

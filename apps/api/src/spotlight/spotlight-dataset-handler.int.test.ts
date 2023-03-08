@@ -1,9 +1,9 @@
 import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { SpotlightDetectionDataBySite, SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesSpotlight } from './index'
@@ -99,7 +99,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
     })
 
     test('does not contain any additional props', async () => {
@@ -115,7 +115,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      Object.keys(result).forEach(actualProp => { expect(EXPECTED_PROPS).toContain(actualProp) })
     })
 
     test('detectionByLocationSite contain all expected props', async () => {
@@ -133,7 +133,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const result = JSON.parse(response.body)?.detectionsByLocationSite
 
       const actualProps = Object.values(result)[0]
-      DETECTION_BY_SITE_DATA_EXPECTED_PROPS.forEach(expectedProp => expect(actualProps).toHaveProperty(expectedProp))
+      DETECTION_BY_SITE_DATA_EXPECTED_PROPS.forEach(expectedProp => { expect(actualProps).toHaveProperty(expectedProp) })
     })
 
     test('detectionByLocationSite does not contain any additional props', async () => {
@@ -151,7 +151,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
       const result = JSON.parse(response.body)?.detectionsByLocationSite
 
       const actualProps = Object.values(result)[0] as SpotlightDetectionDataBySite
-      Object.keys(actualProps).forEach(actualProp => expect(DETECTION_BY_SITE_DATA_EXPECTED_PROPS).toContain(actualProp))
+      Object.keys(actualProps).forEach(actualProp => { expect(DETECTION_BY_SITE_DATA_EXPECTED_PROPS).toContain(actualProp) })
     })
 
     test('calculate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency', async () => {

@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { FastifyLoggerInstance } from 'fastify'
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import { type FastifyLoggerInstance } from 'fastify'
 
 import { env } from '../env'
 

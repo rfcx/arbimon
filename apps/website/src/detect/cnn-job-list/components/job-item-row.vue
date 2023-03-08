@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
 import { computed, inject } from 'vue'
 import { useQueryClient } from 'vue-query'
@@ -57,7 +57,7 @@ import useDateFormat from '~/hooks/use-date-format'
 import { ROUTE_NAMES } from '~/router'
 import { FETCH_CLASSIFIER_JOBS_KEY } from '../../_composables/use-classifier-jobs'
 import { usePostClassifierJobStatus } from '../../_composables/use-post-classifier-job-status'
-import { Job } from '../../types'
+import type { Job } from '../../types'
 import JobInput from './job-input.vue'
 import JobProgress from './job-progress.vue'
 

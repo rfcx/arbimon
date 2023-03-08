@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 
-import { ValidationFilterConfig } from './types'
+import type { ValidationFilterConfig } from './types'
 
 const emit = defineEmits<{(e: 'emitClose'): void, (e: 'emitConfig', value: ValidationFilterConfig): void}>()
 const filterConfigs = reactive({

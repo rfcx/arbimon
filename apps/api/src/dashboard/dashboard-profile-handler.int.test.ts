@@ -1,5 +1,5 @@
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
@@ -72,7 +72,7 @@ describe(`GET ${ROUTE} (dashboard profile)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
       expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })

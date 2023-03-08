@@ -1,11 +1,11 @@
 // Handler for fake detections
-import { DetectDetectionParams, DetectDetectionQueryParams, DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type DetectDetectionParams, type DetectDetectionQueryParams, type DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
-import { Handler } from '~/api-helpers/types'
+import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { getDetections } from './detect-bll'
-import { DetectionFilter } from './types'
+import { type DetectionFilter } from './types'
 
 export const detectDetectionHandler: Handler<DetectDetectionResponse, DetectDetectionParams, DetectDetectionQueryParams> = async (req) => {
   // Inputs & validation

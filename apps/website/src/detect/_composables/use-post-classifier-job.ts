@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios'
-import { useMutation, UseMutationReturnType } from 'vue-query'
+import { type AxiosInstance } from 'axios'
+import { type UseMutationReturnType, useMutation } from 'vue-query'
 
-import { apiCorePostClassifierJobCreate, ClassifierJobCreateConfiguration, ClassifierJobCreateConfigurationParams, ClassifierJobCreateResponse } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
+import { type ClassifierJobCreateConfiguration, type ClassifierJobCreateConfigurationParams, type ClassifierJobCreateResponse, apiCorePostClassifierJobCreate } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
 
 // Convert front params to api params
 export const convertClassifierCreateJobPayload = (jobConfiguration: ClassifierJobCreateConfiguration): ClassifierJobCreateConfigurationParams => {

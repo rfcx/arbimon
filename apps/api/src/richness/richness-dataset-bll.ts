@@ -1,7 +1,7 @@
-import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { type RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { FilterDataset } from '~/datasets/dataset-types'
+import { type FilterDataset } from '~/datasets/dataset-types'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '../_services/db'
 import { getRichnessBySite, getRichnessByTaxonClass, getRichnessByTimeDayOfWeek, getRichnessByTimeHourOfDay, getRichnessByTimeMonthOfYear, getRichnessByTimeUnix, getRichnessPresence } from './richness-dataset-dao'

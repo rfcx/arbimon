@@ -2,7 +2,7 @@ import { syncHistoryRoute } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
 import { syncHistoryHandler } from '@/sync/sync-history-handler'
-import { GET, RouteRegistration } from '~/api-helpers/types'
+import { type RouteRegistration, GET } from '~/api-helpers/types'
 
 export const routesSync: RouteRegistration[] = [
   {

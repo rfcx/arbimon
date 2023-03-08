@@ -116,19 +116,19 @@
   </el-alert>
 </template>
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
-import { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
+import type { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
+import type { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
 import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
-import { DateRange } from '@/_services/picker/date-range-picker-interface'
+import type { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientBioKey, apiClientCoreKey } from '@/globals'

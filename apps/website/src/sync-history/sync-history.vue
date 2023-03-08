@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
 import { apiClientBioKey } from '@/globals'

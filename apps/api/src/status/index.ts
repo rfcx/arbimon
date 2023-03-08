@@ -1,4 +1,4 @@
-import { GET, RouteRegistration } from '../_services/api-helpers/types'
+import { type RouteRegistration, GET } from '../_services/api-helpers/types'
 
 export const routesStatus: RouteRegistration[] = [
   {
