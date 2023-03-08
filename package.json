@@ -111,5 +111,12 @@
     "vue-tsc": "^1.2.0",
     "wait-port": "^0.2.9",
     "webpack": "^5.61.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react"
+      ]
+    }
   }
 }
