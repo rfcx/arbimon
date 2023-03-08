@@ -6,16 +6,16 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { LAYOUT_BREAKPOINT } from '@/_layout/config'
 import { downloadSvgAsPng } from '~/charts'
-import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { type LineChartConfig, type LineChartSeries, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
-import { TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS, TimeBucket } from '~/time-buckets'
+import { type TimeBucket, TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS } from '~/time-buckets'
 
 @Options({
   components: { LineChartComponent }
 })
 export default class SpeciesRichnessByTime extends Vue {
   @Prop() domId!: string
-  @Prop() datasets!: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}>
+  @Prop() datasets!: Array<{ color: string, data: Record<TimeBucket, Record<number, number>> }>
   @Prop({ default: false }) loading!: boolean
 
   selectedBucket: TimeBucket = 'hourOfDay'

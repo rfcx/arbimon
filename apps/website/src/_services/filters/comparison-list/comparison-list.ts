@@ -4,8 +4,8 @@ import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { storeKey } from '@/globals'
-import { BiodiversityStore } from '~/store'
-import { ColoredFilter, ComparisonFilter } from '..'
+import { type BiodiversityStore } from '~/store'
+import { type ColoredFilter, type ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 

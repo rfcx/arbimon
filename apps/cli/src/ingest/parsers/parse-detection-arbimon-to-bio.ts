@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash-es'
-import { Op, Sequelize } from 'sequelize'
-import { SafeParseReturnType, z } from 'zod'
+import { type Sequelize, Op } from 'sequelize'
+import { type SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'

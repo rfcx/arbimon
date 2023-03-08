@@ -1,11 +1,11 @@
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 
-import { DatasetQueryParams } from '@rfcx-bio/common/api-bio/_helpers'
+import { type DatasetQueryParams } from '@rfcx-bio/common/api-bio/_helpers'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { SiteGroup } from '~/filters'
+import { type SiteGroup } from '~/filters'
 import { useStore } from '~/store'
-import { ComparisonFilter } from './types'
+import { type ComparisonFilter } from './types'
 
 export function filterToQuery ({ startDate, endDate, sites, otherFilters }: ComparisonFilter): DatasetQueryParams {
   return {

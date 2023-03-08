@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { TaxonSpeciesRfcx } from '../types/taxon-species-rfcx'
+import { type TaxonSpeciesRfcx } from '../types/taxon-species-rfcx'
 
 export const MODEL_TAXON_SPECIES_RFCX = 'TaxonSpeciesRfcx'
 export const TABLE_TAXON_SPECIES_RFCX = 'taxon_species_rfcx'

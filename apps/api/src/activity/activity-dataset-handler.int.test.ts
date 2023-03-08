@@ -1,8 +1,8 @@
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { type ActivityOverviewDataBySpecies, type ActivityOverviewDetectionDataBySite, type ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
@@ -115,7 +115,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
     })
 
     test('does not contain any additional props', async () => {
@@ -131,7 +131,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      Object.keys(result).forEach(actualProp => { expect(EXPECTED_PROPS).toContain(actualProp) })
     })
   })
 
@@ -170,7 +170,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - first result contains expected props
       const site = expectedResult[0]
-      expectedProperties.forEach(expectedProperty => expect(site).toHaveProperty(expectedProperty))
+      expectedProperties.forEach(expectedProperty => { expect(site).toHaveProperty(expectedProperty) })
 
       // Assert - detection, detection frequency, occupancy are correct
       expect(site.count).toBe(3)
@@ -223,7 +223,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
       // Assert - first result contains expected props
       const species = expectedResult[0]
-      expectedProperties.forEach(expectedProperty => expect(species).toHaveProperty(expectedProperty))
+      expectedProperties.forEach(expectedProperty => { expect(species).toHaveProperty(expectedProperty) })
 
       // Assert - scientific name, detection count, detection frequency are correct
       expectedResult.forEach(item => expect(expectedSpecies).includes(item.scientificName))
@@ -331,7 +331,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
-      expectedProperties.forEach(expectedProperty => expect(activityByTimeHour).toHaveProperty(expectedProperty))
+      expectedProperties.forEach(expectedProperty => { expect(activityByTimeHour).toHaveProperty(expectedProperty) })
 
       // Assert - detection, detection frequency are correct
       expect(isObjectValueNumber(activityByTimeHour.detection)).toBeTruthy()
@@ -355,7 +355,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
-      expectedProperties.forEach(expectedProperty => expect(activityByTimeDay).toHaveProperty(expectedProperty))
+      expectedProperties.forEach(expectedProperty => { expect(activityByTimeDay).toHaveProperty(expectedProperty) })
 
       // Assert - detection, detection frequency are correct
       expect(isObjectValueNumber(activityByTimeDay.detection)).toBeTruthy()
@@ -379,7 +379,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
-      expectedProperties.forEach(expectedProperty => expect(activityByTimeMonth).toHaveProperty(expectedProperty))
+      expectedProperties.forEach(expectedProperty => { expect(activityByTimeMonth).toHaveProperty(expectedProperty) })
 
       // Assert - detection, detection frequency are correct
       expect(isObjectValueNumber(activityByTimeMonth.detection)).toBeTruthy()
@@ -403,7 +403,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       expect(Object.keys(expectedResult)).toHaveLength(2)
 
       // Assert - result contains expected props
-      expectedProperties.forEach(expectedProperty => expect(activityByTimeDate).toHaveProperty(expectedProperty))
+      expectedProperties.forEach(expectedProperty => { expect(activityByTimeDate).toHaveProperty(expectedProperty) })
 
       // Assert - detection, detection frequency are correct
       expect(isObjectValueNumber(activityByTimeDate.detection)).toBeTruthy()

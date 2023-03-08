@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { DashboardSpeciesThreatened } from '../types/dashboard-species-threatened'
+import { type DashboardSpeciesThreatened } from '../types/dashboard-species-threatened'
 
 export const MODEL_DASHBOARD_SPECIES_THREATENED = 'DashboardSpeciesThreatened'
 export const TABLE_DASHBOARD_SPECIES_THREATENED = 'dashboard_species_threatened'

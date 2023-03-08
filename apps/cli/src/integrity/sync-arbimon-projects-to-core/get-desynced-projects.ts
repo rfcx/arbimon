@@ -1,4 +1,4 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 export interface ArbimonProject {
   project_id: number

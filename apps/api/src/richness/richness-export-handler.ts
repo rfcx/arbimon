@@ -1,8 +1,8 @@
-import { RichnessExportParams, RichnessExportQuery, RichnessExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { type RichnessExportParams, type RichnessExportQuery, type RichnessExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 import { getRichnessExport } from './richness-export-bll'

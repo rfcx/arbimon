@@ -1,9 +1,9 @@
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 
 import { formatDateRange } from '@rfcx-bio/utils/dates'
 
-import { SiteGroup } from '~/filters'
-import { ComparisonFilter, FilterPropertyEquals } from './types'
+import { type SiteGroup } from '~/filters'
+import { type ComparisonFilter, type FilterPropertyEquals } from './types'
 
 export class FilterImpl implements ComparisonFilter {
   sites: SiteGroup[] = []

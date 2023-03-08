@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
 
 export default class SpeciesImage extends Vue {
   @Prop() speciesPhotos!: Array<TaxonSpeciesPhotoTypes['light']>

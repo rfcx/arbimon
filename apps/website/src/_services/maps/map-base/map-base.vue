@@ -58,19 +58,22 @@
   </div>
 </template>
 <script setup lang="ts">
-import GeoJSON from 'geojson'
+import type GeoJSON from 'geojson'
 import { partition } from 'lodash-es'
-import { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBounds, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, NavigationControl, Popup } from 'mapbox-gl'
+import type { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBoundsLike, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
+import { LngLatBounds, NavigationControl, Popup } from 'mapbox-gl'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue'
 
 import { togglesKey } from '@/globals'
-import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_MAP_HEIGHT, LABEL_LAYER_IDS, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
+import type { MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
+import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_MAP_HEIGHT, LABEL_LAYER_IDS, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { downloadMapPng } from '~/maps/functions'
-import { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData, StyleToPaint } from '~/maps/types'
+import type { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData, StyleToPaint } from '~/maps/types'
 import HeatmapConfig from '../heatmap-config/heatmap-config.vue'
 import { circleStyleToPaint } from '../utils/circle-style/style-to-paint'
-import { HeatmapCustomByZoom, HeatmapOption, heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
+import type { HeatmapCustomByZoom, HeatmapOption } from '../utils/heatmap-style/style-to-paint'
+import { heatmapStyleToPaint } from '../utils/heatmap-style/style-to-paint'
 
 const DATA_LAYER_NONZERO_ID = 'species-information-nonzero'
 const DATA_LAYER_ZERO_ID = 'species-information-zero'
@@ -305,7 +308,7 @@ const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: Any
   const layer = map.getLayer(id) as CircleLayer | HeatmapLayer | undefined
   if (layer !== undefined) return
 
-  // @ts-expect-error map type and paint not matched
+  // @ts-expect-error: map type and paint not matched
   map.addLayer({ id, type: props.mapStatisticsStyle, source: id, paint })
 }
 

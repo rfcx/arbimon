@@ -1,10 +1,10 @@
-import { DataTypes, QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface, DataTypes } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 const TABLE_NAME = 'taxon_species_call'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> => {
-  return await params.context.addColumn(
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  await params.context.addColumn(
     TABLE_NAME,
     'id_arbimon',
     {
@@ -16,5 +16,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) => {
-  return await params.context.removeColumn(TABLE_NAME, 'id_arbimon')
+  await params.context.removeColumn(TABLE_NAME, 'id_arbimon')
 }

@@ -1,5 +1,5 @@
-import { attributes, AttributeTypes } from '../type-helpers'
-import { Source } from './source'
+import { type AttributeTypes, attributes } from '../type-helpers'
+import { type Source } from './source'
 
 export interface TaxonSpeciesPhoto {
   taxonSpeciesId: number

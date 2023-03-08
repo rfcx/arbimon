@@ -1,8 +1,8 @@
-import { ProjectSpeciesAllParams, ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
+import { type ProjectSpeciesAllParams, type ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
 import { assertPathParamsExist } from '../_services/validation'
 

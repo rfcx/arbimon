@@ -1,5 +1,5 @@
 import pg from 'pg'
-import { Options, Sequelize } from 'sequelize'
+import { type Options, Sequelize } from 'sequelize'
 
 /**
  * PG return bigint value which will convert to string of number (Not pure number type)

@@ -6,7 +6,7 @@ export const CLASSIFIER_JOB_STATUS = {
   CANCELLED: 50
 }
 
-export const CLASSIFIER_JOB_LABELS: { [key: number]: string } = {
+export const CLASSIFIER_JOB_LABELS: Record<number, string> = {
   0: 'Queued',
   20: 'Processing',
   30: 'Done',

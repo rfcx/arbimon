@@ -1,8 +1,8 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { SyncQueryParams } from './sync-query-params'
+import { type SyncQueryParams } from './sync-query-params'
 
 export const getWithQueryParams = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams, sql: string): Promise<unknown[]> => {
   // Do not process query if the date is not valid

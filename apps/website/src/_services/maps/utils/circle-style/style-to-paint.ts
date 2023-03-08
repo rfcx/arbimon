@@ -1,6 +1,6 @@
-import { AnyPaint } from 'mapbox-gl'
+import { type AnyPaint } from 'mapbox-gl'
 
-import { MapBaseStyle } from '~/maps/types'
+import { type MapBaseStyle } from '~/maps/types'
 
 export const circleStyleToPaint = ({ color, strokeColor, strokeWidth, opacity }: MapBaseStyle): AnyPaint =>
 ({

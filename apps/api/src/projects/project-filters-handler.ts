@@ -1,8 +1,8 @@
-import { ProjectFiltersParams, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type ProjectFiltersParams, type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 
 import { getProjectFilters } from '@/projects/project-filters-bll'
 import { ApiServerError, BioInvalidPathParamError } from '~/errors'
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 
 export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFiltersParams> = async (req) => {

@@ -1,15 +1,15 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { Howl } from 'howler'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
-import { TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
-import { BiodiversityStore } from '~/store'
+import { type BiodiversityStore } from '~/store'
 
 type ScrollDirection = 'left' | 'right'
 

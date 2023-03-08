@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue'
 
-import { HeatmapCustomByZoom } from '../utils/heatmap-style/style-to-paint'
+import type { HeatmapCustomByZoom } from '../utils/heatmap-style/style-to-paint'
 import HeatmapConfigInput from './config-input.vue'
 
 const props = withDefaults(defineProps<{

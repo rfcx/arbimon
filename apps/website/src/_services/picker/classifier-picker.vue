@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 
-import { ClassifierAllResponse } from '@rfcx-bio/common/api-core/classifier/classifier-all'
+import type { ClassifierAllResponse } from '@rfcx-bio/common/api-core/classifier/classifier-all'
 
 const props = defineProps<{
   classifierModels: ClassifierAllResponse

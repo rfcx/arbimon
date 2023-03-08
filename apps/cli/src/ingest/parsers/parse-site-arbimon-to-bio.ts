@@ -1,9 +1,9 @@
 import { groupBy } from 'lodash-es'
-import { Op, Sequelize } from 'sequelize'
-import { SafeParseReturnType, z } from 'zod'
+import { type Sequelize, Op } from 'sequelize'
+import { type SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Site } from '@rfcx-bio/common/dao/types'
+import { type Site } from '@rfcx-bio/common/dao/types'
 
 const SiteArbimonRowSchema = z.object({
   idArbimon: z.number(),

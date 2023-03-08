@@ -63,7 +63,7 @@
 import { reactive, ref } from 'vue'
 
 import FilterModal from './job-result-filter-modal.vue'
-import { ValidationFilterConfig } from './types'
+import type { ValidationFilterConfig } from './types'
 
 const displayFilterModal = ref(false)
 // const displayType = ref<'list' | 'grid'>('list')

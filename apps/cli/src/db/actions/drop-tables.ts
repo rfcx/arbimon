@@ -1,4 +1,4 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { SCHEMA_SEQUELIZE, TABLE_SEQUELIZE_MIGRATIONS, TABLE_SEQUELIZE_SEEDERS } from '@/db/connections/table-names'
 

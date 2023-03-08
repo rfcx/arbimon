@@ -61,14 +61,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
 import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vue'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
 import { apiClientBioKey } from '@/globals'
-import { DetectionEvent } from './types'
+import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
 
 const props = withDefaults(defineProps<{

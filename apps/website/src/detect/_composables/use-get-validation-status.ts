@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios'
-import { useQuery, UseQueryReturnType } from 'vue-query'
+import { type AxiosInstance } from 'axios'
+import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiBioGetValidationStatusData, DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { type DetectValidationStatusResponse, apiBioGetValidationStatusData } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
 
 export const FETCH_VALIDATION_STATUS = 'fetch-validation-status'
 

@@ -1,5 +1,5 @@
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
-import { MapBaseFormatter, MapBaseLegendEntry } from '~/maps/types'
+import { type MapBaseFormatter, type MapBaseLegendEntry } from '~/maps/types'
 
 export const DEFAULT_MAX_VALUE_RAW = 1.0
 export const DEFAULT_LEGEND_COUNT = 4

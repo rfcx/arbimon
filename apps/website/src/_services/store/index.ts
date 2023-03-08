@@ -1,8 +1,8 @@
-import { User } from '@auth0/auth0-spa-js'
+import { type User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
-import { apiBioGetProjectFilters, ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { apiBioGetProjects, LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
+import { type ProjectFiltersResponse, apiBioGetProjectFilters } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type LocationProjectForUser, apiBioGetProjects } from '@rfcx-bio/common/api-bio/project/projects'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'

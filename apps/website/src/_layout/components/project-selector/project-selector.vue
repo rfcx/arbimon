@@ -82,7 +82,7 @@
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
+import type { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { useStore } from '~/store'
 import projectList from './project-list.vue'

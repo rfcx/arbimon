@@ -1,4 +1,4 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { SOURCES } from '@rfcx-bio/common/dao/types/source'
 import { getSequentially } from '@rfcx-bio/utils/async'

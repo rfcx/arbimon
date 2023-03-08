@@ -1,4 +1,4 @@
-import { ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getLatestSync, getSites, getTaxonClasses, getTimeBounds } from '@/projects/project-filters-dao'

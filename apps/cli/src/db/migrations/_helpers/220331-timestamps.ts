@@ -1,4 +1,5 @@
-import { DataTypes, ModelAttributes, QueryTypes, Sequelize } from 'sequelize'
+import type { ModelAttributes, Sequelize } from 'sequelize'
+import { DataTypes, QueryTypes } from 'sequelize'
 
 export const TIMESTAMP_COLUMNS: ModelAttributes = {
   created_at: {
@@ -11,7 +12,7 @@ export const TIMESTAMP_COLUMNS: ModelAttributes = {
   }
 }
 
-export const setTimestampDefaults = async (sequelize: Sequelize, tableName: string): Promise<unknown> =>
+export const setTimestampDefaults = async (sequelize: Sequelize, tableName: string): Promise<void> => {
   await sequelize.query(
     `
       ALTER TABLE ${tableName}
@@ -21,3 +22,4 @@ export const setTimestampDefaults = async (sequelize: Sequelize, tableName: stri
     `,
     { type: QueryTypes.RAW }
   )
+}

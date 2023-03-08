@@ -1,8 +1,8 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 import { apiPostOrUndefined } from '@rfcx-bio/utils/api'
 
-import { DETECT_SPECIFIC_ROUTE_PREFIX, DetectRouteParamsSerialized, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
+import { type DetectRouteParamsSerialized, DETECT_SPECIFIC_ROUTE_PREFIX, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
 
 // Request type
 export type DetectValidationParams = DetectRouteParamsSerialized

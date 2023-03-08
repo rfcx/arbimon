@@ -1,4 +1,4 @@
-import { NavigationGuardWithThis } from 'vue-router'
+import { type NavigationGuardWithThis } from 'vue-router'
 
 import { useAuth0Client } from '~/auth-client'
 import { useStore } from '~/store'

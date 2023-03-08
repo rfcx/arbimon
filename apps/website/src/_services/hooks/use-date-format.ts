@@ -1,6 +1,6 @@
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { Dayjs } from '@/../../../packages/utils/node_modules/dayjs'
+import { type Dayjs } from '@/../../../packages/utils/node_modules/dayjs'
 
 type DateParam = string | Date | Dayjs | undefined
 

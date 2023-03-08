@@ -1,4 +1,4 @@
-import { ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { getViewableProjects } from '@/projects/projects-dao'
 

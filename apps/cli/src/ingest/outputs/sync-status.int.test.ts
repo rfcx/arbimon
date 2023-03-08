@@ -7,7 +7,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { getSequelize } from '@/db/connections'
 import { writeSyncResult } from './sync-status'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 describe('ingest > outputs > sync status', () => {
   const STATUS_LOG = {

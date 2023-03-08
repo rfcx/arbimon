@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { computed, inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
 import { useQueryClient } from 'vue-query'
 
@@ -83,7 +83,7 @@ import { apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { FETCH_CLASSIFIER_JOBS_KEY, useClassifierJobs } from '../_composables/use-classifier-jobs'
-import { Job, JobFilterItem } from '../types'
+import type { Job, JobFilterItem } from '../types'
 import JobFilter from './components/job-filter.vue'
 import JobItemRow from './components/job-item-row.vue'
 

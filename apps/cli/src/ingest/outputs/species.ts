@@ -1,10 +1,10 @@
-import { Sequelize, Transaction } from 'sequelize'
+import { type Sequelize, type Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_TAXON_SPECIES } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { SyncError, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type SyncError, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
-import { SpeciesArbimon } from '../parsers/parse-species-arbimon-to-bio'
+import { type SpeciesArbimon } from '../parsers/parse-species-arbimon-to-bio'
 
 const transformSpeciesArbimonToTaxonSpeciesBio = (species: SpeciesArbimon): Omit<TaxonSpecies, 'id'> => ({ ...species })
 

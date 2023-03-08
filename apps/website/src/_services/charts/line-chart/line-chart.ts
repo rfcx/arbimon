@@ -3,7 +3,7 @@ import { Prop, Watch } from 'vue-property-decorator'
 
 import { clearChart } from '..'
 import { generateChartInternal } from './functions'
-import { LineChartConfig, LineChartSeries } from './types'
+import { type LineChartConfig, type LineChartSeries } from './types'
 
 export default class LineChartComponent extends Vue {
   @Prop() domId!: string

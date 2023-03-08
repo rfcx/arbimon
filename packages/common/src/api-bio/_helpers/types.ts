@@ -1,4 +1,4 @@
-import { Site } from '../../dao/types'
+import { type Site } from '../../dao/types'
 
 export type ApiLine = Record<number, number>
 export type ApiMap = Array<Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }>

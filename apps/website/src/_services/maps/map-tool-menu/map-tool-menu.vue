@@ -35,9 +35,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS, MapboxStyle } from '~/maps'
+import type { MapboxStyle } from '~/maps'
+import { MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import MapStyleOptions from './map-style-options.vue'
-import { MapOptions } from './types'
+import type { MapOptions } from './types'
 
 const isShowLabel = ref<boolean>(true)
 

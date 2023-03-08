@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { FastifyLoggerInstance } from 'fastify'
+import { type FastifyLoggerInstance } from 'fastify'
 
-import { CoreProject, CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
+import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'

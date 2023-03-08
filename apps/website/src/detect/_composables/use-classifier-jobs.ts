@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios'
-import { useQuery, UseQueryReturnType } from 'vue-query'
+import { type AxiosInstance } from 'axios'
+import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiCoreGetClassifierJobAll, ClassifierJobAll, ClassifierJobAllParams } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-all'
+import { type ClassifierJobAll, type ClassifierJobAllParams, apiCoreGetClassifierJobAll } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-all'
 
 export const FETCH_CLASSIFIER_JOBS_KEY = 'fetch-classifier-jobs'
 

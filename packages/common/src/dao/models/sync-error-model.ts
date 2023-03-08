@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { SyncError } from '../types'
+import { type SyncError } from '../types'
 
 export const MODEL_SYNC_ERROR = 'SyncError'
 const TABLE_SYNC_ERROR = 'sync_error'

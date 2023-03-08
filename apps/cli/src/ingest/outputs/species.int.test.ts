@@ -2,13 +2,13 @@ import { Op } from 'sequelize'
 import { describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { rawTaxonClasses } from '@/db/seeders/_data/taxon-class'
 import { writeSpeciesToBio } from './species'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 describe('ingest > outputs > taxon species', () => {
   const BIRDS_ID = rawTaxonClasses[3].id

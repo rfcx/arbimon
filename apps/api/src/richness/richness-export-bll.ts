@@ -1,6 +1,6 @@
-import { RichnessExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { type RichnessExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
-import { FilterDataset } from '~/datasets/dataset-types'
+import { type FilterDataset } from '~/datasets/dataset-types'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'
 import { getSequelize } from '../_services/db'
 import { getRichnessExportData } from './richness-export-dao'

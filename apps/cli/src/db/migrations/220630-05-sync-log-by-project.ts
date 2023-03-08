@@ -3,8 +3,8 @@
  * Do not depend on imported code which may change
  */
 
-import { DataTypes, QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface, DataTypes } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { setTimestampDefaults, TIMESTAMP_COLUMNS } from './_helpers/220331-timestamps'
 
@@ -58,5 +58,4 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   await setTimestampDefaults(sequelize, TABLE_NAME)
 }
 
-export const down: MigrationFn<QueryInterface> = async (params) =>
-  await params.context.dropTable(TABLE_NAME)
+export const down: MigrationFn<QueryInterface> = async (params) => { await params.context.dropTable(TABLE_NAME) }

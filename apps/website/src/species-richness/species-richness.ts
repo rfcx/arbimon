@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
@@ -6,16 +6,17 @@ import { apiBioGetRichnessDataset } from '@rfcx-bio/common/api-bio/richness/rich
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
-import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
-import { MapDataSet } from '~/maps/types'
-import { BiodiversityStore } from '~/store'
-import { TimeBucket } from '~/time-buckets'
+import type { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
+import type { ColoredFilter } from '~/filters'
+import { ComparisonListComponent, filterToQuery } from '~/filters'
+import type { MapDataSet } from '~/maps/types'
+import type { BiodiversityStore } from '~/store'
+import type { TimeBucket } from '~/time-buckets'
 import SpeciesRichnessByClass from './components/species-richness-by-class/species-richness-by-class.vue'
 import SpeciesRichnessByLocation from './components/species-richness-by-location/species-richness-by-location.vue'
 import SpeciesRichnessByTime from './components/species-richness-by-time/species-richness-by-time.vue'
 import SpeciesRichnessDetectedSpecies from './components/species-richness-detected-species/species-richness-detected-species.vue'
-import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
+import type { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 import SpeciesRichnessIntroduction from './components/species-richness-introduction/species-richness-introduction.vue'
 import { getBarChartDataset, getMapDataset, getTableData } from './functions'
 
@@ -38,7 +39,7 @@ export default class SpeciesRichnessPage extends Vue {
   loading: boolean = true
   speciesByClassDatasets: GroupedBarChartItem[] = []
   speciesByLocationDatasets: MapDataSet[] = []
-  speciesByTimeDatasets: Array<{color: string, data: Record<TimeBucket, Record<number, number>>}> = []
+  speciesByTimeDatasets: Array<{ color: string, data: Record<TimeBucket, Record<number, number>> }> = []
   detectedSpecies: DetectedSpeciesItem[] = []
   isLocationRedacted = true
 
@@ -59,7 +60,7 @@ export default class SpeciesRichnessPage extends Vue {
     this.speciesByLocationDatasets = this.filters.map(filter => ({ ...filter, sites: [], data: [], maxValues: {} }))
 
     // TODO 117 - Only update the changed dataset
-    const datasets = await (await Promise.all(
+    const datasets = (await Promise.all(
       this.filters.map(async (filter) => {
         const { startDate, endDate, sites, color, otherFilters } = filter
         const data = await apiBioGetRichnessDataset(this.apiClientBio, projectId, filterToQuery(filter))

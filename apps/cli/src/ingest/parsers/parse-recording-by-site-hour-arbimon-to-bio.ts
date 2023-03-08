@@ -1,9 +1,9 @@
 import { ceil, groupBy, max, min, sum } from 'lodash-es'
-import { Op, Sequelize } from 'sequelize'
-import { SafeParseReturnType, z } from 'zod'
+import { type Sequelize, Op } from 'sequelize'
+import { type SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { RecordingBySiteHour, Site } from '@rfcx-bio/common/dao/types'
+import { type RecordingBySiteHour, type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { filterRepeatingDetectionMinutes } from './parse-array'

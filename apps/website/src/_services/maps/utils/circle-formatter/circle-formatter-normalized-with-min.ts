@@ -1,5 +1,5 @@
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
-import { MapBaseLegendEntry } from '~/maps/types'
+import { type MapBaseLegendEntry } from '~/maps/types'
 import { CircleFormatterNormalized, DEFAULT_FORMAT_FUNCTION, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
 
 export const DEFAULT_SHOW_IN_LEGEND = true

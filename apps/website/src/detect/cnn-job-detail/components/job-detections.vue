@@ -47,7 +47,7 @@ import { useRoute } from 'vue-router'
 import { ROUTE_NAMES } from '~/router'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
-import { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
+import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 

@@ -5,10 +5,10 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
-import { SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
+import type { SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { writeSitesToBio } from './sites'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 const SQL_INSERT_PROJECT = `
   INSERT INTO location_project (id, id_core, id_arbimon, name, slug, latitude_north, latitude_south, longitude_east, longitude_west, created_at, updated_at)

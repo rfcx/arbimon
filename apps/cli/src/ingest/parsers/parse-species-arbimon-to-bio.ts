@@ -1,4 +1,4 @@
-import { SafeParseReturnType, z } from 'zod'
+import { type SafeParseReturnType, z } from 'zod'
 
 const SpeciesArbimonSchema = z.object({
   idArbimon: z.number(),

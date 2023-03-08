@@ -1,4 +1,4 @@
-import { SpeciesDataset } from './activity-overview-by-species'
+import { type SpeciesDataset } from './activity-overview-by-species'
 
 export interface ActivityOverviewBySpeciesDataset {
   scientificName: string

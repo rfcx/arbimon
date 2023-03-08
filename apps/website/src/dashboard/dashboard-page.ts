@@ -1,37 +1,37 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { max } from 'lodash-es'
-import { LngLatBoundsLike } from 'mapbox-gl'
+import { type LngLatBoundsLike } from 'mapbox-gl'
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
-import { RouteLocationNormalized } from 'vue-router'
+import { type RouteLocationNormalized } from 'vue-router'
 
-import { apiBioGetDashboardGeneratedData, DashboardGeneratedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
-import { apiBioGetDashboardProfileData, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { type DashboardGeneratedResponse, apiBioGetDashboardGeneratedData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { type DashboardProfileResponse, apiBioGetDashboardProfileData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
 import { downloadSvgAsPng } from '~/charts'
-import { HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
+import { type HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'
 import HorizontalStackedDistribution from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution.vue'
-import { generateChartExport, LineChartComponent, LineChartConfig, LineChartSeries } from '~/charts/line-chart'
+import { type LineChartConfig, type LineChartSeries, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
-import { MapBaseFormatter, MapDataSet, MapSiteData } from '~/maps/types'
+import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
-import { CircleStyle } from '~/maps/utils/circle-style/types'
+import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
-import { RouteNames } from '~/router'
-import { BiodiversityStore } from '~/store'
+import { type RouteNames } from '~/router'
+import { type BiodiversityStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { TIME_BUCKET_LABELS } from '~/time-buckets'
-import { HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
+import { type HighlightedSpeciesRow } from './components/dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectProfile from './components/dashboard-project-profile/dashboard-project-profile.vue'
 import DashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
-import { ThreatenedSpeciesRow } from './components/dashboard-threatened-species/dashboard-threatened-species'
+import { type ThreatenedSpeciesRow } from './components/dashboard-threatened-species/dashboard-threatened-species'
 import DashboardThreatenedSpecies from './components/dashboard-threatened-species/dashboard-threatened-species.vue'
 
 interface Tab {
@@ -79,7 +79,7 @@ export default class DashboardPage extends Vue {
   tabs = tabs
   selectedTab = tabs[0].value
 
-  getPopupHtml = (data: MapSiteData, dataKey: string) => data.values[dataKey]
+  getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean => data.values[dataKey]
 
   get color (): string {
     return this.store.datasetColors[0] ?? '#EFEFEF'
@@ -156,7 +156,7 @@ export default class DashboardPage extends Vue {
       slug,
       taxonSlug,
       scientificName,
-      commonName: commonName,
+      commonName,
       photoUrl: photoUrl ?? getDefaultPhoto(taxonSlug),
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }))
@@ -169,7 +169,7 @@ export default class DashboardPage extends Vue {
       slug,
       taxonSlug,
       scientificName,
-      commonName: commonName,
+      commonName,
       photoUrl: photoUrl ?? getDefaultPhoto(taxonSlug),
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }))

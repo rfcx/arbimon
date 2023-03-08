@@ -1,4 +1,4 @@
-import { TimeBucket } from '~/time-buckets'
+import { type TimeBucket } from '~/time-buckets'
 
 export type ActivityOverviewDataByTime = Record<TimeBucket, ActivityOverviewDataByTimeBucket>
 

@@ -1,12 +1,12 @@
 import { beforeEach, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpecies, TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpecies, type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { writeIucnSpeciesDataToPostgres } from './taxon-species-iucn'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 const taxonSpecies1: TaxonSpecies = {
   id: 1050001,
