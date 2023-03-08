@@ -90,7 +90,7 @@
       <div class="dashboard-content">
         <page-title
           class="dashboard-title mt-5"
-          :page-title="store.selectedProject.name"
+          :page-title="store.selectedProject?.name ?? ''"
           :page-subtitle="profile?.summary"
         />
         <dashboard-project-profile
