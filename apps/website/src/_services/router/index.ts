@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
 import { useStoreOutsideSetup } from '~/store'
 import { authRequiredGuard } from './guard-auth-required'
@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Home,
     beforeEnter: (to, from, next) => {
       const store = useStoreOutsideSetup()
-      if (store.selectedProject) return next({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } })
+      if (store.selectedProject) { next({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } }); return }
       next()
     }
   },

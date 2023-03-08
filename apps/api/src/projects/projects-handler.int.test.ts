@@ -1,10 +1,10 @@
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/common/dao/types'
 
 import { GET } from '~/api-helpers/types'
 import { getSequelize } from '~/db'
@@ -12,11 +12,11 @@ import { routesProject } from './index'
 
 function makeProject (id: number, name: string): Project {
   return {
-    id: id,
+    id,
     idCore: id.toString(),
     idArbimon: id,
     slug: name.toLowerCase().replace(' ', '-'),
-    name: name,
+    name,
     latitudeNorth: 0,
     latitudeSouth: 0,
     longitudeEast: 0,

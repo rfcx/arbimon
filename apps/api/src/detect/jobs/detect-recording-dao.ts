@@ -1,10 +1,10 @@
-import { BindOrReplacements, QueryTypes, Sequelize, WhereOperators } from 'sequelize'
+import { type BindOrReplacements, type Sequelize, type WhereOperators, QueryTypes } from 'sequelize'
 
-import { AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { Project } from '@rfcx-bio/common/dao/types'
+import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type Project } from '@rfcx-bio/common/dao/types'
 
-import { Condition } from '~/datasets/dataset-where'
-import { DetectRecordingQuery } from './detect-recording-bll'
+import { type Condition } from '~/datasets/dataset-where'
+import { type DetectRecordingQuery } from './detect-recording-bll'
 
 export type QuerySiteName = string[] | WhereOperators
 export interface TotalDurationInMinutes { totalDurationInMinutes: number }

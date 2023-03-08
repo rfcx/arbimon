@@ -1,7 +1,7 @@
-import { DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { type DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { LocationProjectProfile } from '@rfcx-bio/common/dao/types'
-import { DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboard-species-highlighted'
+import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
+import { type DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboard-species-highlighted'
 
 import { getSequelize } from '../_services/db'
 

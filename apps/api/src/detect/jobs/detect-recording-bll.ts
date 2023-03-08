@@ -1,8 +1,8 @@
 import { range } from 'lodash-es'
 import { Op } from 'sequelize'
 
-import { DetectRecordingQueryParams, DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
-import { AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { type DetectRecordingQueryParams, type DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
+import { type AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { dayjs } from '~/dayjs-initialized'
 import { getSequelize } from '~/db'

@@ -1,4 +1,4 @@
-import { FastifyRequest } from 'fastify'
+import { type FastifyRequest } from 'fastify'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { isValidToken } from '~/api-helpers/is-valid-token'
@@ -10,10 +10,11 @@ import { BioForbiddenError, BioMissingPathParamError, BioMissingQueryParamError,
  * @throws ```ApiMissingParam(key)```
  * @example assertParamsExist({ projectId })
  */
-export const assertPathParamsExist = (params: Record<string, string | undefined>): void =>
-  Object.entries(params).forEach(
+export const assertPathParamsExist = (params: Record<string, string | undefined>): void => {
+ Object.entries(params).forEach(
     ([key, value]) => { if (!value) throw BioMissingPathParamError(key) }
   )
+}
 
 /**
  * Validates multiple parameters at once, throwing an error if any of them are undefined.
@@ -21,10 +22,11 @@ export const assertPathParamsExist = (params: Record<string, string | undefined>
  * @throws ```ApiMissingParam(key)```
  * @example assertParamsExist({ projectId })
  */
-export const assertQueryParamsExist = (params: Record<string, string | undefined>): void =>
-  Object.entries(params).forEach(
+export const assertQueryParamsExist = (params: Record<string, string | undefined>): void => {
+ Object.entries(params).forEach(
     ([key, value]) => { if (!value) throw BioMissingQueryParamError(key) }
   )
+}
 
 /**
  * Validated both the presence of a valid token & the access it grants

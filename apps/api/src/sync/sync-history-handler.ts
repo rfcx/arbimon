@@ -1,7 +1,7 @@
-import { SyncHistoryParams, SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
+import { type SyncHistoryParams, type SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { getSyncHistory } from '@/sync/sync-history-bll'
-import { Handler } from '~/api-helpers/types'
+import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertAuthorizedForProject, assertPathParamsExist } from '~/validation'
 

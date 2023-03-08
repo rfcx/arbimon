@@ -1,8 +1,8 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
+import { type RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
-import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
+import { type FilterDatasetForSql, datasetFilterWhereRaw } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 
 export const getRichnessExportData = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessByExportReportRow[]> => {

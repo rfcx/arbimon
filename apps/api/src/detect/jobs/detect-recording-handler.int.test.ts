@@ -1,5 +1,5 @@
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { GET } from '~/api-helpers/types'
@@ -80,7 +80,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
     })
 
     test('does not contain any additional props', async () => {
@@ -96,7 +96,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      Object.keys(result).forEach(actualProp => expect(EXPECTED_PROPS).toContain(actualProp))
+      Object.keys(result).forEach(actualProp => { expect(EXPECTED_PROPS).toContain(actualProp) })
     })
   })
 

@@ -1,7 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
-import { SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
+import { type SpeciesInProject } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import SpeciesInformationContent from './species-information-content.vue'
 

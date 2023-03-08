@@ -4,8 +4,8 @@ import { Inject, Prop, Watch } from 'vue-property-decorator'
 import { firstDiffDigit } from '@rfcx-bio/utils/number'
 
 import { routeNamesKey } from '@/globals'
-import { RouteNames } from '~/router'
-import { DetectedSpeciesItem } from './types'
+import { type RouteNames } from '~/router'
+import { type DetectedSpeciesItem } from './types'
 
 type SortableColumn = Extract<keyof DetectedSpeciesItem, 'scientificName' | 'taxonClassName' | 'total'>
 type SortDirection = 1 | -1

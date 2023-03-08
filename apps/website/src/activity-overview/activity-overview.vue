@@ -46,22 +46,25 @@
   />
 </template>
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 
-import { ActivityOverviewDataBySpecies, apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import type { ActivityOverviewDataBySpecies } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import ActivityOverviewByLocation from '@/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
 import ActivityOverviewBySpecies from '@/activity-overview/components/activity-overview-by-species/activity-overview-by-species.vue'
-import ActivityOverviewByTime, { ActivityOverviewTimeDataset } from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
+import type { ActivityOverviewTimeDataset } from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
+import ActivityOverviewByTime from '@/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
 import { exportCSV, transformToBySiteDatasets } from '@/activity-overview/functions'
 import { apiClientBioKey } from '@/globals'
-import { ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
+import type { ColoredFilter } from '~/filters'
+import { ComparisonListComponent, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
-import { MapDataSet } from '~/maps/types'
+import type { MapDataSet } from '~/maps/types'
 import { useStore } from '~/store'
-import { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
+import type { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 

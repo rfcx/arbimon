@@ -1,10 +1,10 @@
 import { keyBy, mapValues } from 'lodash-es'
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
 
-import { datasetFilterWhereRaw, FilterDatasetForSql, whereInDataset } from '~/datasets/dataset-where'
+import { type FilterDatasetForSql, datasetFilterWhereRaw, whereInDataset } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 
 export const getRichnessByTaxonClass = async (models: AllModels, sequelize: Sequelize, filter: FilterDatasetForSql): Promise<Record<number, number>> => {

@@ -1,4 +1,4 @@
-import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
+import { type SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
 export const mockDetections: SpeciesDetection[] = [
   {

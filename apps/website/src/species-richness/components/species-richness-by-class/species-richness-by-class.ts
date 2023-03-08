@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 
 import { downloadSvgAsPng } from '~/charts'
-import { BarChartConfig, generateChartExport, GroupedBarChartItem, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
+import { type BarChartConfig, type GroupedBarChartItem, generateChartExport, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { getExportGroupName } from '~/filters'
 
 const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'

@@ -3,7 +3,7 @@ import { Inject } from 'vue-property-decorator'
 
 import NavbarComponent from '@/_layout/components/navbar/nav-bar.vue'
 import { storeKey } from '@/globals'
-import { BiodiversityStore } from '~/store'
+import { type BiodiversityStore } from '~/store'
 
 @Options({
   components: { NavbarComponent }

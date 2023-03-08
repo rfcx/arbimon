@@ -1,7 +1,7 @@
-import { FastifyReply, FastifySchema, HTTPMethods, preValidationHookHandler, RawReplyDefaultExpression, RawRequestDefaultExpression, RawServerDefault, RequestBodyDefault, RequestParamsDefault, RequestQuerystringDefault, RouteHandlerMethod } from 'fastify'
-import { ReplyDefault } from 'fastify/types/utils'
+import { type FastifyReply, type FastifySchema, type HTTPMethods, type preValidationHookHandler, type RawReplyDefaultExpression, type RawRequestDefaultExpression, type RawServerDefault, type RequestBodyDefault, type RequestParamsDefault, type RequestQuerystringDefault, type RouteHandlerMethod } from 'fastify'
+import { type ReplyDefault } from 'fastify/types/utils'
 
-import { NoExtraProps } from '@rfcx-bio/utils/utility-types'
+import { type NoExtraProps } from '@rfcx-bio/utils/utility-types'
 
 // For declaring handlers
 type FastifyHandler<Response = ReplyDefault, Params = RequestParamsDefault, Querystring = RequestQuerystringDefault, Body = RequestBodyDefault> = RouteHandlerMethod<

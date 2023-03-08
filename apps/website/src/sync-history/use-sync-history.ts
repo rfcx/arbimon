@@ -1,8 +1,8 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { computed } from 'vue'
-import { useQuery, UseQueryReturnType } from 'vue-query'
+import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiBioGetSyncHistory, SyncHistoryParams, SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
+import { type SyncHistoryParams, type SyncHistoryResponse, apiBioGetSyncHistory } from '@rfcx-bio/common/api-bio/sync/sync-history'
 
 import { useStoreOutsideSetup } from '~/store'
 

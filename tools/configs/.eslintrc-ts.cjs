@@ -6,6 +6,7 @@ module.exports = {
   rules: {
     // Disable rules
     '@typescript-eslint/indent': 'off', // This rule is totally broken: https://github.com/typescript-eslint/typescript-eslint/issues/1824
+    '@typescript-eslint/consistent-type-imports': 'warn', // TODO Fix all places where should be using `import type` and remove this line
 
     // Add/override rules
     '@typescript-eslint/space-before-function-paren': [

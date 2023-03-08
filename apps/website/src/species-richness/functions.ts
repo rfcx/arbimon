@@ -1,12 +1,12 @@
 import { groupBy } from 'lodash-es'
 
-import { RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { type RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
-import { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
-import { ColoredFilter } from '~/filters'
-import { MapDataSet } from '~/maps/types'
+import { type GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
+import { type ColoredFilter } from '~/filters'
+import { type MapDataSet } from '~/maps/types'
 import { useStoreOutsideSetup } from '~/store'
-import { DetectedSpeciesItem } from './components/species-richness-detected-species/types'
+import { type DetectedSpeciesItem } from './components/species-richness-detected-species/types'
 
 interface RichnessDataset extends ColoredFilter {
   data: RichnessDatasetResponse

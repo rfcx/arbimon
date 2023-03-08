@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 import { getSequelizeBase } from '@rfcx-bio/common/dao/connections'
 

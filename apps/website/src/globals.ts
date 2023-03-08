@@ -1,10 +1,10 @@
-import { Auth0Client } from '@auth0/auth0-spa-js'
-import { AxiosInstance } from 'axios'
-import { InjectionKey } from 'vue'
+import { type Auth0Client } from '@auth0/auth0-spa-js'
+import { type AxiosInstance } from 'axios'
+import { type InjectionKey } from 'vue'
 
-import { FeatureToggles } from '~/feature-toggles'
-import { ROUTE_NAMES } from '~/router'
-import { BiodiversityStore } from '~/store'
+import { type FeatureToggles } from '~/feature-toggles'
+import { type ROUTE_NAMES } from '~/router'
+import { type BiodiversityStore } from '~/store'
 
 export const authClientKey = Symbol('authClientKey') as InjectionKey<Auth0Client>
 export const apiClientBioKey = Symbol('apiClientBioKey') as InjectionKey<AxiosInstance>

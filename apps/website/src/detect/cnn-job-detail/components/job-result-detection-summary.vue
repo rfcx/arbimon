@@ -52,7 +52,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 

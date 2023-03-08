@@ -1,4 +1,4 @@
-import { MapBaseStyle } from './types'
+import { type MapBaseStyle } from './types'
 
 export const DEFAULT_NON_ZERO_STYLE: MapBaseStyle = {
   color: '#F9F9F9',

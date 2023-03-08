@@ -17,7 +17,7 @@ import { ref, watchEffect } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { DateRange } from './date-range-picker-interface'
+import type { DateRange } from './date-range-picker-interface'
 
 // Interface
 const emit = defineEmits<{(e: 'emitSelectDateRange', value: DateRange): void}>()

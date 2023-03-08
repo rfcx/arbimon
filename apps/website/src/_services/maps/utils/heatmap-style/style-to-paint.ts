@@ -1,6 +1,6 @@
-import { AnyPaint } from 'mapbox-gl'
+import { type AnyPaint } from 'mapbox-gl'
 
-import { MapBaseStyle, StyleToPaint } from '~/maps/types'
+import { type MapBaseStyle, type StyleToPaint } from '~/maps/types'
 import { COLOR_HEATMAP } from '~/store/colors'
 
 export type HeatmapCustomByZoom = [number, number, number, number]

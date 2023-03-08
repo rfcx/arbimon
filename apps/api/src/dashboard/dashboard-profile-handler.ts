@@ -1,7 +1,7 @@
-import { DashboardProfileParams, DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { type DashboardProfileParams, type DashboardProfileResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 
 import { getDashboardProfile } from '@/dashboard/dashboard-profile-dao'
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { BioInvalidPathParamError } from '../_services/errors'
 import { assertPathParamsExist } from '../_services/validation'
 

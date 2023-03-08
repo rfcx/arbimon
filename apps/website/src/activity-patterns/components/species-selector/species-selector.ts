@@ -1,14 +1,14 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
-import { RouteLocationNormalized } from 'vue-router'
+import { type RouteLocationNormalized } from 'vue-router'
 
 import { apiBioGetProjectSpeciesAll } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
+import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
-import { RouteNames } from '~/router'
-import { BiodiversityStore } from '~/store'
+import { type RouteNames } from '~/router'
+import { type BiodiversityStore } from '~/store'
 
 export default class SpeciesSelector extends Vue {
   @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance

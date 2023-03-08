@@ -1,12 +1,12 @@
-import { Map as MapboxMap } from 'mapbox-gl'
+import { type Map as MapboxMap } from 'mapbox-gl'
 
-import { JsZipFile, withFileName, zipAndDownload } from '@rfcx-bio/utils/file'
+import { type JsZipFile, withFileName, zipAndDownload } from '@rfcx-bio/utils/file'
 import { asPromise } from '@rfcx-bio/utils/fp'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { canvasToPngBlob, svgToCanvas } from '~/charts'
 import { generateMapLegend } from './map-legend'
-import { MapBaseLegendEntry } from './types'
+import { type MapBaseLegendEntry } from './types'
 
 export const downloadMapPng = async (map: MapboxMap, filename: string, legendEntry?: MapBaseLegendEntry[]): Promise<void> => {
   const mapBlobPromise = canvasToPngBlob(map.getCanvas())
@@ -21,5 +21,5 @@ export const downloadMapPng = async (map: MapboxMap, filename: string, legendEnt
     : undefined
 
   await Promise.all([mapBlobPromise, legendBlobPromise].filter(isDefined))
-    .then(async files => await zipAndDownload(files, filename))
+    .then(async files => { await zipAndDownload(files, filename) })
 }

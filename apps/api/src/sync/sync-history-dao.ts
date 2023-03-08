@@ -1,7 +1,7 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
-import { Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
-import { AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
+import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
 
 export const getSyncs = async (models: AllModels, sequelize: Sequelize, locationProjectId: number): Promise<Sync[]> => {
   return await models.SyncLogByProject

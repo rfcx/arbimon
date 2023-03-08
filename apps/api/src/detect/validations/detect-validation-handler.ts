@@ -1,6 +1,6 @@
-import { DetectValidation, DetectValidationParams, DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
+import { type DetectValidation, type DetectValidationParams, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
 
-import { Handler } from '~/api-helpers/types'
+import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { validateDetections } from './detect-bll'

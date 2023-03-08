@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import { JobFilterItem } from '../../types'
+import type { JobFilterItem } from '../../types'
 
 const props = defineProps<{
   filterOptions: JobFilterItem[]

@@ -5,7 +5,7 @@ import { detectValidationRoute } from '@rfcx-bio/common/api-bio/detect/detect-va
 import { detectValidationStatusRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
-import { GET, POST, RouteRegistration } from '~/api-helpers/types'
+import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
 import { detectRecordingHandler } from './jobs/detect-recording-handler'
 import { detectDetectionHandler } from './validations/detect-detection-handler'
 import { detectSummaryHandler } from './validations/detect-summary-handler'

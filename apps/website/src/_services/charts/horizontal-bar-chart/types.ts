@@ -1,4 +1,4 @@
-import { ChartMargin } from '../types'
+import { type ChartMargin } from '../types'
 
 export interface BarChartItem {
   category: string

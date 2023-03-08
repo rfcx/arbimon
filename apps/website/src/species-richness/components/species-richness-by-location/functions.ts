@@ -1,5 +1,5 @@
 import { MAP_KEY_RICHNESS_TOTAL } from '@/species-richness/functions'
-import { MapSiteData } from '~/maps/types'
+import { type MapSiteData } from '~/maps/types'
 
 export const generateHtmlPopup = (datum: MapSiteData, _?: string): string => {
   const speciesCounts = Object.keys(datum.values)

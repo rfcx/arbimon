@@ -1,11 +1,11 @@
 import { sum } from 'lodash-es'
-import { BindOrReplacements, QueryTypes, Sequelize } from 'sequelize'
+import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 
-import { ActivityOverviewDataBySpecies, ActivityOverviewDetectionDataBySite, ActivityOverviewDetectionDataByTime, ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
-import { DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { type ActivityOverviewDataBySpecies, type ActivityOverviewDetectionDataBySite, type ActivityOverviewDetectionDataByTime, type ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
 import { toPrecisionNumber } from '@rfcx-bio/utils/number'
 
-import { datasetFilterWhereRaw, FilterDatasetForSql } from '~/datasets/dataset-where'
+import { type FilterDatasetForSql, datasetFilterWhereRaw } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'
 
 type ActivityOverviewDetectionDataBySiteWithoutDetectionFrequency = Omit<ActivityOverviewDetectionDataBySite, 'detectionFrequency'>
@@ -154,7 +154,7 @@ async function getDetectionsByPeriod (periodColumn: string, sequelize: Sequelize
     GROUP BY 1;
   `
 
-  const results = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as Array<{period: number, count: number}>
+  const results = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as Array<{ period: number, count: number }>
   return {
     detection: Object.fromEntries(results.map(r => [r.period, r.count])),
     detectionFrequency: Object.fromEntries(results.map(r => [r.period, toPrecisionNumber(r.count / totalRecordedMinutes, 3)]))

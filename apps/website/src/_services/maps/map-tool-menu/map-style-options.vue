@@ -30,8 +30,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { MapboxStyle } from '~/maps'
-import { MapOptions } from './types'
+import type { MapboxStyle } from '~/maps'
+import type { MapOptions } from './types'
 
 const props = defineProps<{
   readonly mapOptions: MapOptions[]

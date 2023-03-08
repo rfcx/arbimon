@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import { DetectionValidationStatus } from './types'
+import type { DetectionValidationStatus } from './types'
 import ValidationStatus from './validation-status.vue'
 
 const props = defineProps<{
