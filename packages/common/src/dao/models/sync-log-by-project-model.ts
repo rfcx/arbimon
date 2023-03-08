@@ -1,7 +1,7 @@
-import { DataTypes, Optional } from 'sequelize'
+import { type Optional, DataTypes } from 'sequelize'
 
-import { defineWithDefaultsAutoPk, ModelForInterface } from '../model-factory-helpers/defaults'
-import { SyncLogByProject } from '../types'
+import { type ModelForInterface, defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
+import { type SyncLogByProject } from '../types'
 
 export const MODEL_SYNC_LOG_BY_PROJECT = 'SyncLogByProject'
 const TABLE_SYNC_LOG_BY_PROJECT = 'sync_log_by_project'

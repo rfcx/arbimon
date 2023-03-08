@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { DashboardDetectionBySite } from '@/dao/types/dashboard-detection-by-site'
+import { type DashboardDetectionBySite } from '@/dao/types/dashboard-detection-by-site'
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
 
 export const MODEL_DASHBOARD_DETECTION_BY_SITE = 'DashboardDetectionBySite'

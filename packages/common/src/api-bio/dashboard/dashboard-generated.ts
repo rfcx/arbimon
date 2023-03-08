@@ -1,9 +1,9 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { ApiLine, ApiMap, ApiStack, PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
-import { DashboardSpecies } from './common'
+import { type ApiLine, type ApiMap, type ApiStack, type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
+import { type DashboardSpecies } from './common'
 
 // Request types
 export type DashboardGeneratedParams = ProjectRouteParamsSerialized

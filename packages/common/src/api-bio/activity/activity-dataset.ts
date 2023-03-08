@@ -1,8 +1,9 @@
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { DataByTime, DatasetQueryParams, DatasetQueryParamsSerialized, datasetQueryParamsToString, PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
+import type { DataByTime, DatasetQueryParams, DatasetQueryParamsSerialized, ProjectRouteParamsSerialized } from '../_helpers'
+import { datasetQueryParamsToString, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request types
 export type ActivityDatasetParams = ProjectRouteParamsSerialized

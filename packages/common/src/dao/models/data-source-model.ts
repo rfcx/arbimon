@@ -1,7 +1,7 @@
-import { DataTypes, Optional } from 'sequelize'
+import { type Optional, DataTypes } from 'sequelize'
 
-import { DataSource } from '@/dao/types'
-import { defineWithDefaults, ModelForInterface } from '../model-factory-helpers/defaults'
+import { type DataSource } from '@/dao/types'
+import { type ModelForInterface, defineWithDefaults } from '../model-factory-helpers/defaults'
 
 export const MODEL_DATA_SOURCE = 'DataSource'
 export const TABLE_MODEL_DATA_SOURCE = 'data_source'

@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { SyncDataType } from '../types'
+import { type SyncDataType } from '../types'
 
 export const MODEL_SYNC_DATA_TYPE = 'SyncDataType'
 const TABLE_SYNC_DATA_TYPE = 'sync_data_type'

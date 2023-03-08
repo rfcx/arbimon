@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { LocationProjectSpeciesFile } from '../types'
+import { type LocationProjectSpeciesFile } from '../types'
 
 export const MODEL_LOCATION_PROJECT_SPECIES_FILE = 'LocationProjectSpeciesFile'
 export const TABLE_LOCATION_PROJECT_SPECIES_FILE = 'location_project_species_file'

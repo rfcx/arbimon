@@ -1,8 +1,8 @@
-import { Model, ModelAttributes, ModelCtor, ModelOptions, Optional, Sequelize } from 'sequelize'
+import { type Model, type ModelAttributes, type ModelCtor, type ModelOptions, type Optional, type Sequelize } from 'sequelize'
 
-import { ValueOf } from '@rfcx-bio/utils/utility-types'
+import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { WithAutoPk } from '../type-helpers'
+import { type WithAutoPk } from '../type-helpers'
 import { modelAttributeToColumn } from './utils'
 
 // TODO: Update return type when they fix `sequelize.define`

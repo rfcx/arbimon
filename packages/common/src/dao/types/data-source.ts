@@ -1,4 +1,4 @@
-import { attributes, AttributeTypes, WithDates } from '../type-helpers'
+import { type AttributeTypes, type WithDates, attributes } from '../type-helpers'
 
 export interface DataSource extends WithDates {
   id: string
