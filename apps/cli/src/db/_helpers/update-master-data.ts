@@ -1,4 +1,4 @@
-import { ModelCtor, Sequelize } from 'sequelize'
+import { type ModelCtor, type Sequelize } from 'sequelize'
 
 import { riskRatings, sources, syncTypes, taxonClasses } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'

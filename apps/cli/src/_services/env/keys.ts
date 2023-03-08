@@ -9,7 +9,7 @@
  * - `apps/cli/src/_services/env/keys.ts` -- CONFIG & SECRETS
  */
 
-import { BIO_ENVIRONMENT_VALUES, BioEnvironment, Protection, PROTECTION_VALUES } from './types'
+import { type BioEnvironment, type Protection, BIO_ENVIRONMENT_VALUES, PROTECTION_VALUES } from './types'
 
 // Getters
 type Getter<T> = (env: Record<string, string>, key: string) => T | undefined

@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 /**
  * This script resets a PostgreSQL sequence based on the current max `id`

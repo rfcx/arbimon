@@ -38,7 +38,7 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, updatedAt: new Date('2022-03-22 07:31:11') })
     ]
     // Assert
-    res.forEach(r => expect(r.success).toBe(false))
+    res.forEach(r => { expect(r.success).toBe(false) })
   })
 
   test('fails if required props are missing', async () => {
@@ -55,7 +55,7 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 
   test('fails if non-nullish props are nullish', async () => {
@@ -75,6 +75,6 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 })

@@ -8,10 +8,10 @@ import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
 import { deleteOutputProjects } from '../_testing/helper'
 import { syncArbimonSitesBatch } from './sync-arbimon-site'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 const { LocationProject, LocationSite, SyncStatus, SyncLogByProject } = ModelRepository.getInstance(biodiversitySequelize)
 
 const SYNC_CONFIG: SyncConfig = {

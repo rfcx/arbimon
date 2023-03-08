@@ -1,4 +1,4 @@
-import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { type SyncStatus } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 export type SyncConfig = Pick<SyncStatus, 'syncSourceId' | 'syncDataTypeId' | 'syncBatchLimit'>

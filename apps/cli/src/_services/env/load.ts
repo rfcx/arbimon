@@ -67,7 +67,7 @@ const warnIfProtected = async (): Promise<void> => {
   if (PROTECTION !== PROTECTION_VALUES.OFF) {
     // Request confirmation to proceed
     const ui = readline.createInterface({ input: process.stdin, output: process.stdout })
-    const result = await new Promise<string>(resolve => ui.question('This is a protected mode - are you sure you want to continue? (y|N)', answer => resolve(answer)))
+    const result = await new Promise<string>(resolve => { ui.question('This is a protected mode - are you sure you want to continue? (y|N)', answer => { resolve(answer) }) })
     ui.close()
 
     // Kill if no confirmation

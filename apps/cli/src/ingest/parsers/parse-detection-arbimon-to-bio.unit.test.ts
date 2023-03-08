@@ -33,7 +33,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
       parseDetectionArbimonToBio({ ...VALID_DETECTION, datetime: new Date('2020-12-06 10:06:19') })
     ]
     // Assert
-    res.forEach(r => expect(r.success).toBe(false))
+    res.forEach(r => { expect(r.success).toBe(false) })
   })
 
   test('fails if required props are missing', async () => {
@@ -50,7 +50,7 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 
   test('fails if non-nullish props are nullish', async () => {
@@ -70,6 +70,6 @@ describe('ingest > parsers > parseDetectionArbimonToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 })

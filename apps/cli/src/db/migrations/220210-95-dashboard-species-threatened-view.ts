@@ -3,8 +3,8 @@
  * Do not depend on imported code which may change
  */
 
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'dashboard_species_threatened'
 

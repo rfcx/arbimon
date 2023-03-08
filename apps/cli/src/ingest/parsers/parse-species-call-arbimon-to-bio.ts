@@ -1,9 +1,9 @@
 import utc from 'dayjs/plugin/utc'
-import { Sequelize } from 'sequelize'
-import { SafeParseReturnType, z } from 'zod'
+import { type Sequelize } from 'sequelize'
+import { type SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { dateQueryParamify } from '@rfcx-bio/utils/url-helpers'
 

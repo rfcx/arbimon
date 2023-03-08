@@ -3,8 +3,8 @@
  * Do not depend on imported code which may change
  */
 
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'detection_by_site_hour'
 // const INDEX_COLS = ['location_project_id', 'location_site_id', 'time_precision_hour_local']

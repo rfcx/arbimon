@@ -1,6 +1,6 @@
-import { AxiosResponse } from 'axios'
+import { type AxiosResponse } from 'axios'
 
-import { ApiCoreClient } from '~/api-core/api-core-client'
+import { type ApiCoreClient } from '~/api-core/api-core-client'
 
 export interface CoreProjectNew {
   id?: string // this is ignored by core (overidden)

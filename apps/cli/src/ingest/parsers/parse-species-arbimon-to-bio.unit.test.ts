@@ -33,7 +33,7 @@ describe('ingest > parsers > parseSpeciesArbimonToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 
   test('fails if non-nullish props are nullish', async () => {
@@ -57,6 +57,6 @@ describe('ingest > parsers > parseSpeciesArbimonToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 })

@@ -1,5 +1,5 @@
-import { Op, QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface, Op } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
@@ -34,5 +34,5 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   }
 
   // Get IUCN data and insert
-  await syncIucnSpeciesInfo(sequelize, iucnNameToSpeciesId, iucnCodeToId).catch(err => console.error(err.message))
+  await syncIucnSpeciesInfo(sequelize, iucnNameToSpeciesId, iucnCodeToId).catch(err => { console.error(err.message) })
 }

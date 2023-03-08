@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import type { Project, Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
-import { DetectionArbimon } from '../parsers/parse-detection-arbimon-to-bio'
+import type { DetectionArbimon } from '../parsers/parse-detection-arbimon-to-bio'
 import { writeDetectionsToBio } from './detection-by-site-species-hour'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 const DetectionBySiteSpeciesHour = ModelRepository.getInstance(biodiversitySequelize).DetectionBySiteSpeciesHour
 
 const PROJECT_INPUT: Omit<Project, 'id'> = {
@@ -227,8 +227,8 @@ describe('ingest > outputs > detection by site species hour', async () => {
     // Assert
     const detections = await DetectionBySiteSpeciesHour.findAll()
     expect(detections).toHaveLength(2)
-    detections.forEach(item => expect(item.count).toBe(1))
-    detections.forEach(item => expect(item.countsByMinute).toEqual([[6, 1]]))
+    detections.forEach(item => { expect(item.count).toBe(1) })
+    detections.forEach(item => { expect(item.countsByMinute).toEqual([[6, 1]]) })
   })
 
   test('can count overlapping detections in the same batch', async () => {

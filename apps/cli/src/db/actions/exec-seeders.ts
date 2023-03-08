@@ -1,5 +1,5 @@
 import { dirname, resolve } from 'path'
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 import { fileURLToPath } from 'url'
 
 import { TABLE_SEQUELIZE_SEEDERS } from '@/db/connections/table-names'
@@ -21,6 +21,6 @@ export const execSeeders = async (sequelize: Sequelize, seederPath: string, verb
   const previouslyExecuted = await umzug.executed().then(previousSeeders => previousSeeders.length)
   await umzug.up().then(newSeeders => {
     console.info(`Executed ${newSeeders.length} needed seeders in ${seederPath} (${previouslyExecuted} previously executed)`)
-    newSeeders.forEach(r => console.info(`- ${r.name}`))
+    newSeeders.forEach(r => { console.info(`- ${r.name}`) })
   })
 }

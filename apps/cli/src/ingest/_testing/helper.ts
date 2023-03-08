@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 export const deleteOutputProjects = async (biodiversitySequelize: Sequelize): Promise<void> => {
   await biodiversitySequelize.query('DELETE FROM sync_log_by_project')

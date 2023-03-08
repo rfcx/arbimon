@@ -1,6 +1,6 @@
 import { dirname, resolve } from 'path'
-import { QueryInterface, Sequelize } from 'sequelize'
-import { RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
+import { type QueryInterface, type Sequelize } from 'sequelize'
+import { type RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
 import { fileURLToPath, pathToFileURL } from 'url'
 
 import { getSequelizeBase } from '@rfcx-bio/common/dao/connections'

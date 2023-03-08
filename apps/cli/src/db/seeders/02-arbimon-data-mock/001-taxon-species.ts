@@ -1,8 +1,8 @@
-import { Optional, QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type Optional, type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {

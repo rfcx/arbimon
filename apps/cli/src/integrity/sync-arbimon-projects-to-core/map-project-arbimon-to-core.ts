@@ -1,5 +1,5 @@
-import { CoreProjectNew } from './create-project-in-core'
-import { ArbimonProject } from './get-desynced-projects'
+import { type CoreProjectNew } from './create-project-in-core'
+import { type ArbimonProject } from './get-desynced-projects'
 
 export const mapProjectArbimonToCore = (ap: ArbimonProject): CoreProjectNew => ({
   name: ap.name,

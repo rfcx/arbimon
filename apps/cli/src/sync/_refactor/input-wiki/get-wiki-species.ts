@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 
 import { logError } from '~/axios'
 import { requireEnv } from '~/env'
@@ -56,7 +56,7 @@ export interface WikiSummaryResponse {
 // TODO: This should be injected by the script controller
 const { WIKI_BASE_URL } = requireEnv('WIKI_BASE_URL')
 
-export async function getWikiSpecies (scientificName: string): Promise<WikiSummaryResponse| undefined> {
+export async function getWikiSpecies (scientificName: string): Promise<WikiSummaryResponse | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
     url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`

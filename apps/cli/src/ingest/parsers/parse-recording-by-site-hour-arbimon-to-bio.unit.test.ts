@@ -45,7 +45,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 
   test('fails if non-nullish props are nullish', async () => {
@@ -77,7 +77,7 @@ describe('ingest > parser > parseRecordingBySiteHourToBio', () => {
     ]
 
     // Assert
-    actualMissing.forEach(actual => expect(actual.success).toBe(false))
+    actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
   })
 
   test('succeeds for valid deleted recording', async () => {

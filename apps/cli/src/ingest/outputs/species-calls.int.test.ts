@@ -1,15 +1,15 @@
 import { afterAll, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import type { Site, TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
-import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
-import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
+import type { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import type { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
 import { writeProjectsToBio } from './projects'
 import { writeSpeciesCallsToBio } from './species-calls'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 describe('ingest > outputs > species calls', async () => {
   afterAll(async () => {

@@ -3,13 +3,13 @@
  * Do not depend on imported code which may change
  */
 
-import { DataTypes, QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface, DataTypes } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 const TABLE_NAME = 'location_project_species'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
-  await params.context.createTable(
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+ await params.context.createTable(
     TABLE_NAME,
     {
       // PK
@@ -61,6 +61,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
       }
     }
   )
+}
 
-export const down: MigrationFn<QueryInterface> = async (params) =>
-  await params.context.dropTable(TABLE_NAME)
+export const down: MigrationFn<QueryInterface> = async (params) => { await params.context.dropTable(TABLE_NAME) }

@@ -4,7 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonSpecies } from '@/ingest/inputs/get-arbimon-species'
-import { SyncQueryParams } from './sync-query-params'
+import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
@@ -106,7 +106,7 @@ describe('ingest > inputs > getArbimonSpecies', () => {
     // Assert
     const item = actual[0]
     expect(item).toBeDefined()
-    expectedProps.forEach(prop => expect(item).toHaveProperty(prop))
+    expectedProps.forEach(prop => { expect(item).toHaveProperty(prop) })
     expect(Object.keys(item)).toHaveLength(expectedProps.length)
   })
 })

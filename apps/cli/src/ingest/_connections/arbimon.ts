@@ -1,4 +1,4 @@
-import { Options, Sequelize } from 'sequelize'
+import { type Options, Sequelize } from 'sequelize'
 
 import { requireEnv } from '~/env'
 

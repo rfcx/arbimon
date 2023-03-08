@@ -3,9 +3,9 @@ import { afterAll, beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { DetectionArbimon } from '../parsers/parse-detection-arbimon-to-bio'
+import { type DetectionArbimon } from '../parsers/parse-detection-arbimon-to-bio'
 import { getArbimonDetections } from './get-arbimon-detection'
-import { SyncQueryParams } from './sync-query-params'
+import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
@@ -70,7 +70,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
 
     // Assert
     expect(actual).toHaveLength(2)
-    IDS_DETECTION.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_DETECTION.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can get batch when updated_at is greater', async () => {
@@ -92,7 +92,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
 
     // Assert
     expect(actual).toHaveLength(2)
-    IDS_DETECTION.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_DETECTION.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can get batch when updated_at and sync until id are greater', async () => {
@@ -115,7 +115,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
 
     // Assert
     expect(actual).toHaveLength(2)
-    IDS_DETECTION.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_DETECTION.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('does not miss recording validation with the same updated_at as previously synced', async () => {
@@ -178,7 +178,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
     // Assert
     const item = actual[0]
     expect(item).toBeDefined()
-    EXPECTED_PROPS.forEach(prop => expect(item).toHaveProperty(prop))
+    EXPECTED_PROPS.forEach(prop => { expect(item).toHaveProperty(prop) })
     expect(Object.keys(item as any)).toHaveLength(EXPECTED_PROPS.length)
   })
 
@@ -205,7 +205,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
 
     // Assert
     expect(actual).toHaveLength(4)
-    IDS_DETECTIONS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_DETECTIONS.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can get next batch of recordings for multiple projects', async () => {
@@ -235,7 +235,7 @@ describe('ingest > inputs > getArbimonDetections', async () => {
 
     // Assert
     expect(actual).toHaveLength(4)
-    IDS_DETECTIONS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_DETECTIONS.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can not get detections if updated at is not valid', async () => {

@@ -1,4 +1,4 @@
-import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 
 export const rawTaxonSpeciesIucn: Array<TaxonSpeciesIucn & { 'TaxonSpecies.slug': string }> = [
   {

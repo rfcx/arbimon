@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 import type { Literal } from 'sequelize/types/lib/utils'
 
 export function literalIntegerArray2D (array: number[][], sequelize: Sequelize): Literal {
