@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { RecordingArbimon, RecordingDeletedArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import { type RecordingArbimon, type RecordingDeletedArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 import { getArbimonRecording, getArbimonRecordingDeleted } from './get-arbimon-recording'
-import { SyncQueryParams } from './sync-query-params'
+import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
@@ -73,7 +73,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     // Assert
     const recording = actual[0]
     expect(recording).toBeDefined()
-    expectedProps.forEach(prop => expect(recording).toHaveProperty(prop))
+    expectedProps.forEach(prop => { expect(recording).toHaveProperty(prop) })
     expect(Object.keys(recording as any)).toHaveLength(expectedProps.length)
   })
 
@@ -94,7 +94,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     // Assert
     expect(actual).toHaveLength(params.syncBatchLimit)
 
-    expectIds.forEach(id => expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy())
+    expectIds.forEach(id => { expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy() })
   })
 
   test('can get next batch of recordings', async () => {
@@ -114,7 +114,7 @@ describe('ingest > input > getArbimonRecordings', () => {
     // Assert
     expect(actual).toHaveLength(params.syncBatchLimit)
 
-    expectIds.forEach(id => expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy())
+    expectIds.forEach(id => { expect(actual.map(item => (item as any).idArbimon).includes(id)).toBeTruthy() })
   })
 
   test('can get last incomplete batch of recordings', async () => {
@@ -190,7 +190,7 @@ describe('ingest > input > getArbimonRecordings', () => {
 
     // Assert
     expect(actual).toHaveLength(8)
-    IDS_RECORDINGS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_RECORDINGS.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can get next batch of recordings for multiple projects', async () => {
@@ -218,7 +218,7 @@ describe('ingest > input > getArbimonRecordings', () => {
 
     // Assert
     expect(actual).toHaveLength(8)
-    IDS_RECORDINGS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_RECORDINGS.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can not get recordings if recording upload time is not valid', async () => {

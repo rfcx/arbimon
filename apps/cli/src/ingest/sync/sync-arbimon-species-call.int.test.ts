@@ -3,18 +3,18 @@ import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Site, SyncStatus, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type Site, type SyncStatus, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
 import { deleteOutputProjects } from '../_testing/helper'
 import { writeProjectsToBio } from '../outputs/projects'
-import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { type ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { syncArbimonSpeciesCallBatch } from './sync-arbimon-species-call'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,

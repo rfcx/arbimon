@@ -1,9 +1,9 @@
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, ProjectVersion, Site, SyncLogByProject } from '@rfcx-bio/common/dao/types'
+import { type Project, type ProjectVersion, type Site, type SyncLogByProject } from '@rfcx-bio/common/dao/types'
 
 // Mocked project, site, recordings, detections
 export const testProject: Project = {

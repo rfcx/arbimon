@@ -1,10 +1,10 @@
-import { Model, Op, Optional, Sequelize, Transaction } from 'sequelize'
+import { type Model, type Optional, type Sequelize, type Transaction, Op } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_LOCATION_PROJECT } from '@rfcx-bio/common/dao/models/location-project-model'
-import { Project, SyncError } from '@rfcx-bio/common/dao/types'
+import { type Project, type SyncError } from '@rfcx-bio/common/dao/types'
 
-import { getTransformedProjects, ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { type ProjectArbimon, getTransformedProjects } from '../parsers/parse-project-arbimon-to-bio'
 
 const loopUpsert = async (projects: Array<Omit<Project, 'id'>>, sequelize: Sequelize, transaction: Transaction | null = null): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []

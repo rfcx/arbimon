@@ -1,7 +1,7 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
-import { TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 import { getSequentially } from '@rfcx-bio/utils/async'
 
 import { getIucnSpecies } from '@/sync/_refactor/input-iucn/iucn-species'

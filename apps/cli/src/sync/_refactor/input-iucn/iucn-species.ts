@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 
 import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'

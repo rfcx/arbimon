@@ -1,9 +1,9 @@
 import { groupBy } from 'lodash-es'
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { type SyncStatus } from '@rfcx-bio/common/dao/types'
 
 import { getArbimonSites } from '../inputs/get-arbimon-site'
 import { writeSitesToBio } from '../outputs/sites'
@@ -12,7 +12,7 @@ import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
 import { parseSiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {

@@ -2,15 +2,15 @@ import { sum } from 'lodash-es'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Site } from '@rfcx-bio/common/dao/types'
+import { type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
-import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { type ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
 import { deleteRecordingFromBio, writeRecordingBySiteHourToBio } from './recording-by-site-hour'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 describe('ingest > output > recording by site hour', () => {
   beforeEach(async () => {

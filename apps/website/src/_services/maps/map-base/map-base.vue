@@ -308,7 +308,7 @@ const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: Any
   const layer = map.getLayer(id) as CircleLayer | HeatmapLayer | undefined
   if (layer !== undefined) return
 
-  // @ts-expect-error map type and paint not matched
+  // @ts-expect-error: map type and paint not matched
   map.addLayer({ id, type: props.mapStatisticsStyle, source: id, paint })
 }
 

@@ -3,15 +3,16 @@
  * Do not depend on imported code which may change
  */
 
-import { DataTypes, QueryInterface, QueryTypes } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import type { QueryInterface } from 'sequelize'
+import { DataTypes, QueryTypes } from 'sequelize'
+import type { MigrationFn } from 'umzug'
 
 import { TIMESTAMP_COLUMNS } from './_helpers/220331-timestamps'
 
 const TABLE_NAME = 'detection_by_site_species_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
 
-export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> =>
+export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.createTable(
     TABLE_NAME,
     {
@@ -73,6 +74,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<unknown> 
     `SELECT create_hypertable('${TABLE_NAME}', '${COLUMN_TIME_HOUR_LOCAL}');`,
     { type: QueryTypes.RAW }
   ))
+}
 
-export const down: MigrationFn<QueryInterface> = async (params) =>
+export const down: MigrationFn<QueryInterface> = async (params) => {
   await params.context.dropTable(TABLE_NAME)
+}

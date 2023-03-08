@@ -1,4 +1,4 @@
-import { Project } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/common/dao/types'
 
 export const fakeProject: Project = {
   id: 201,

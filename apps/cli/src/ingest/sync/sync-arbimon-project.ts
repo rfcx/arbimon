@@ -1,8 +1,8 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { type SyncStatus } from '@rfcx-bio/common/dao/types'
 
 import { getArbimonProjects } from '@/ingest/inputs/get-arbimon-project'
 import { writeProjectsToBio } from '@/ingest/outputs/projects'
@@ -10,7 +10,7 @@ import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
 import { parseProjectArbimonToBio } from '../parsers/parse-project-arbimon-to-bio'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {

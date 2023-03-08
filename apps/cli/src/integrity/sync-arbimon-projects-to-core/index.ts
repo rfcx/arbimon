@@ -18,7 +18,7 @@ const main = async (): Promise<void> => {
   // Get projects
   const desyncedProjects = await getDesyncedProjects(sequelize, SYNC_BATCH_LIMIT)
 
-  if (desyncedProjects.length === 0) return console.info(SCRIPT_NAME, 'No desynced projects')
+  if (desyncedProjects.length === 0) { console.info(SCRIPT_NAME, 'No desynced projects'); return }
 
   console.info(SCRIPT_NAME, `Found ${desyncedProjects.length} desynced projects, including: Arbimon ID ${desyncedProjects[0].project_id}: ${desyncedProjects[0].name}`)
   if (desyncedProjects.length === SYNC_BATCH_LIMIT) { console.warn(SCRIPT_NAME, `Sync hit batch limit of ${SYNC_BATCH_LIMIT}; run this script again to synchronize more`) }

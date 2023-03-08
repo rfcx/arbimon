@@ -1,4 +1,4 @@
-import { ConnectionOptions, createConnection } from 'mysql2/promise'
+import { type ConnectionOptions, createConnection } from 'mysql2/promise'
 
 export const mysqlSelect = async <T>(config: ConnectionOptions, sql: string, values: any | null = null): Promise<T[]> => {
   const connection = await createConnection(config)

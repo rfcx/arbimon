@@ -1,6 +1,6 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { SyncQueryParams } from './sync-query-params'
+import { type SyncQueryParams } from './sync-query-params'
 
 export const getArbimonSpecies = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<Array<Record<string, any>>> => {
   const sql = `

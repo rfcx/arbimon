@@ -1,9 +1,9 @@
 import { groupBy } from 'lodash-es'
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { SyncStatus } from '@rfcx-bio/common/dao/types'
+import { type SyncStatus } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getArbimonRecordingDeleted } from '../inputs/get-arbimon-recording'
@@ -13,7 +13,7 @@ import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { writeSyncResult } from '../outputs/sync-status'
 import { parseArray } from '../parsers/parse-array'
 import { parseRecordingDeleted } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
@@ -61,7 +61,7 @@ export const syncArbimonRecordingDeletedBatch = async (arbimonSequelize: Sequeli
 
     await Promise.all(insertErrors.map(async e => {
       const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
-      return await writeSyncError(error, biodiversitySequelize, transaction)
+      await writeSyncError(error, biodiversitySequelize, transaction)
     }))
 
     // sync project log
@@ -73,7 +73,7 @@ export const syncArbimonRecordingDeletedBatch = async (arbimonSequelize: Sequeli
         syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
         delta: groupedByProjectId[projectId].length
       }
-      return await writeSyncLogByProject(log, biodiversitySequelize, transaction)
+      await writeSyncLogByProject(log, biodiversitySequelize, transaction)
     }))
 
     await transaction.commit()

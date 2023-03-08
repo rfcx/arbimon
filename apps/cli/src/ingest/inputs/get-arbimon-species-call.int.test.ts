@@ -4,7 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonSpeciesCalls } from '@/ingest/inputs/get-arbimon-species-call'
-import { SyncQueryParams } from './sync-query-params'
+import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
@@ -65,7 +65,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
 
     // Assert
     expect(actual).toHaveLength(2)
-    IDS_SPECIES.forEach(expectedProp => expect(actual.map((item: any) => item.taxonSpeciesId)).toContain(expectedProp))
+    IDS_SPECIES.forEach(expectedProp => { expect(actual.map((item: any) => item.taxonSpeciesId)).toContain(expectedProp) })
   })
 
   test('can get next batch when date_created is greater', async () => {
@@ -84,7 +84,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
 
     // Assert
     expect(actual).toHaveLength(2)
-    IDS_SPECIES.forEach(expectedProp => expect(actual.map((item: any) => item.taxonSpeciesId)).toContain(expectedProp))
+    IDS_SPECIES.forEach(expectedProp => { expect(actual.map((item: any) => item.taxonSpeciesId)).toContain(expectedProp) })
   })
 
   test.todo('can get next batch when date_created is equal and id is greater', async () => {
@@ -151,7 +151,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
     // Assert
     const item = actual[0]
     expect(item).toBeDefined()
-    EXPECTED_PROPS.forEach(prop => expect(item).toHaveProperty(prop))
+    EXPECTED_PROPS.forEach(prop => { expect(item).toHaveProperty(prop) })
     expect(Object.keys(item as any)).toHaveLength(EXPECTED_PROPS.length)
   })
 
@@ -177,7 +177,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
 
     // Assert
     expect(actual).toHaveLength(3)
-    IDS_SPECIES_CALLS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_SPECIES_CALLS.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can get next species calls for multiple projects', async () => {
@@ -207,7 +207,7 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
 
     // Assert
     expect(actual).toHaveLength(3)
-    IDS_SPECIES_CALLS.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_SPECIES_CALLS.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can not get species call if species call date created is not valid', async () => {

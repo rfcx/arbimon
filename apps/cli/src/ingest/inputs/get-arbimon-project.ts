@@ -1,9 +1,9 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
-import { SyncQueryParams } from './sync-query-params'
+import { type ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { type SyncQueryParams } from './sync-query-params'
 
 export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<ProjectArbimon[]> => {
   // Do not process query if the date is not valid

@@ -1,9 +1,9 @@
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { LocationProjectSpeciesModel } from '@rfcx-bio/common/dao/models/location-project-species-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { LocationProjectSpecies } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectSpecies } from '@rfcx-bio/common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'

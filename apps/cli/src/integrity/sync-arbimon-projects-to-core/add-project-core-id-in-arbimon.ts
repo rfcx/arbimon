@@ -1,4 +1,4 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 export const addProjectCoreIdInArbimon = async (sequelize: Sequelize, idArbimon: number, idCore: string): Promise<void> => {
   const sql = `
