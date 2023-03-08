@@ -144,7 +144,7 @@ importers:
       '@rfcx-bio/common': workspace:^0.0.1
       '@rfcx-bio/utils': workspace:^0.0.1
       axios: ^0.27.2
-      dayjs: ^1.10.7
+      dayjs: ^1.11.7
       fastify: ^3.23.1
       fastify-auth0-verify: ^0.7.0
       fastify-plugin: ^3.0.0
@@ -160,7 +160,7 @@ importers:
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.27.2
-      dayjs: 1.11.3
+      dayjs: 1.11.7
       fastify: 3.29.0
       fastify-auth0-verify: 0.7.4
       fastify-plugin: 3.0.1
@@ -177,7 +177,7 @@ importers:
       '@types/object-hash': ^2.2.1
       '@types/validator': ^13.7.0
       axios: ^0.27.2
-      dayjs: ^1.10.7
+      dayjs: ^1.11.7
       dotenv: ^10.0.0
       lodash-es: ^4.17.21
       mysql2: ^2.3.3
@@ -192,7 +192,7 @@ importers:
       '@rfcx-bio/common': link:../../packages/common
       '@rfcx-bio/utils': link:../../packages/utils
       axios: 0.27.2
-      dayjs: 1.11.3
+      dayjs: 1.11.7
       dotenv: 10.0.0
       lodash-es: 4.17.21
       mysql2: 2.3.3
@@ -231,7 +231,7 @@ importers:
       axios: ^0.27.2
       c8: ^7.10.0
       d3: ^7.1.1
-      dayjs: ^1.10.7
+      dayjs: ^1.11.7
       element-plus: ^2.2.2
       geojson: ^0.5.0
       happy-dom: ^5.3.1
@@ -263,7 +263,7 @@ importers:
       '@vueuse/core': 6.9.2_vue@3.2.37
       axios: 0.27.2
       d3: 7.4.4
-      dayjs: 1.11.3
+      dayjs: 1.11.7
       element-plus: 2.2.6_vue@3.2.37
       geojson: 0.5.0
       howler: 2.2.3
@@ -304,7 +304,7 @@ importers:
       '@rfcx-bio/utils': workspace:^0.0.1
       '@types/pg': ^8.6.4
       axios: ^0.27.2
-      dayjs: ^1.10.7
+      dayjs: ^1.11.7
       lodash-es: ^4.17.21
       pg: ^8.7.1
       pg-hstore: ^2.3.4
@@ -313,7 +313,7 @@ importers:
       '@rfcx-bio/utils': link:../utils
       '@types/pg': 8.6.5
       axios: 0.27.2
-      dayjs: 1.11.3
+      dayjs: 1.11.7
       lodash-es: 4.17.21
       pg: 8.7.3
       pg-hstore: 2.3.4
@@ -323,14 +323,14 @@ importers:
     specifiers:
       '@types/numeral': ^2.0.2
       axios: ^0.27.2
-      dayjs: ^1.10.7
+      dayjs: ^1.11.7
       jszip: ^3.7.1
       lodash-es: ^4.17.21
       numeral: ^2.0.6
       xlsx: ^0.17.3
     dependencies:
       axios: 0.27.2
-      dayjs: 1.11.3
+      dayjs: 1.11.7
       jszip: 3.10.0
       lodash-es: 4.17.21
       numeral: 2.0.6
@@ -4707,6 +4707,11 @@ packages:
 
   /dayjs/1.11.3:
     resolution: {integrity: sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A==}
+    dev: true
+
+  /dayjs/1.11.7:
+    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+    dev: false
 
   /de-indent/1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
@@ -5036,7 +5041,7 @@ packages:
       '@types/lodash-es': 4.17.6
       '@vueuse/core': 8.7.4_vue@3.2.37
       async-validator: 4.2.5
-      dayjs: 1.11.3
+      dayjs: 1.11.7
       escape-html: 1.0.3
       lodash: 4.17.21
       lodash-es: 4.17.21
