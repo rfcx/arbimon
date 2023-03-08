@@ -1,9 +1,9 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
-import { DashboardSpecies } from './common'
+import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
+import { type DashboardSpecies } from './common'
 
 // Request types
 export type DashboardProfileParams = ProjectRouteParamsSerialized

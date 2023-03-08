@@ -1,4 +1,4 @@
-import { attributes, AttributeTypes } from '../type-helpers'
+import { type AttributeTypes, attributes } from '../type-helpers'
 
 export interface TaxonSpeciesCall {
   id: number

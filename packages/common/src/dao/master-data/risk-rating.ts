@@ -1,6 +1,6 @@
-import { ValueOf } from '@rfcx-bio/utils/utility-types'
+import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { RiskRatingIucn } from '@/dao/types'
+import { type RiskRatingIucn } from '@/dao/types'
 
 export const masterRiskRatings = {
   NE: { id: -1, code: 'NE', isThreatened: false, isProtected: false },

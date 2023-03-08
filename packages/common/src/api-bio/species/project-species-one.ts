@@ -1,10 +1,10 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { TaxonSpeciesCallTypes, TaxonSpeciesPhotoTypes } from '../../dao/types'
-import { SpeciesInProject } from '../../dao/types/species-in-project'
-import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
+import { type TaxonSpeciesCallTypes, type TaxonSpeciesPhotoTypes } from '../../dao/types'
+import { type SpeciesInProject } from '../../dao/types/species-in-project'
+import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request types
 export type ProjectSpeciesOneParams = ProjectRouteParamsSerialized & {

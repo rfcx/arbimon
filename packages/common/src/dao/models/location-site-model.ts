@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
-import { Site } from '../types'
+import { type Site } from '../types'
 
 export const MODEL_LOCATION_SITE = 'LocationSite'
 export const TABLE_LOCATION_SITE = 'location_site'

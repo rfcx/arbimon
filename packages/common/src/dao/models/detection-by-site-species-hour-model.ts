@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { DetectionBySiteSpeciesHour } from '../types'
+import { type DetectionBySiteSpeciesHour } from '../types'
 
 export const MODEL_DETECTION_BY_SITE_SPECIES_HOUR = 'DetectionBySiteSpeciesHour'
 export const TABLE_DETECTION_BY_SITE_SPECIES_HOUR = 'detection_by_site_species_hour'

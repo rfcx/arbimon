@@ -1,8 +1,8 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { LocationProjectTypes } from '../../dao/types'
+import { type LocationProjectTypes } from '../../dao/types'
 
 // Request types
 // nothing specific...
