@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.11.7",
     "jszip": "^3.7.1",
     "lodash-es": "^4.17.21",
     "numeral": "^2.0.6",
