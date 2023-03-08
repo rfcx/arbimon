@@ -1,11 +1,11 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type TaxonClass } from '@rfcx-bio/common/dao/types'
 
 import { storeKey } from '@/globals'
-import { FilterPropertyEquals } from '~/filters'
-import { BiodiversityStore } from '~/store'
+import { type FilterPropertyEquals } from '~/filters'
+import { type BiodiversityStore } from '~/store'
 
 export default class FilterTaxon extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore

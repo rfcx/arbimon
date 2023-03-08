@@ -1,11 +1,12 @@
-import { Sequelize, Transaction } from 'sequelize'
+import type { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
-import { RecordingBySiteHour, SyncError } from '@rfcx-bio/common/dao/types'
+import type { RecordingBySiteHour, SyncError } from '@rfcx-bio/common/dao/types'
 
 import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
-import { mapRecordingBySiteHourArbimonWithBioFk, RecordingArbimon, RecordingBySiteHourBio, RecordingDeletedArbimon, transformDeletedRecordingToBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import type { RecordingArbimon, RecordingBySiteHourBio, RecordingDeletedArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
+import { mapRecordingBySiteHourArbimonWithBioFk, transformDeletedRecordingToBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 
 export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon: RecordingArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[RecordingBySiteHourBio[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   // convert to bio db
@@ -18,12 +19,12 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourArbimon:
   for (const recording of recordingsBySiteHourBio) {
     try {
       const newRecording = { ...recording, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(recording.countsByMinute), sequelize) }
-      // @ts-expect-error
+      // @ts-expect-error: countsByMinute in rows has incompatible type
       await ModelRepository.getInstance(sequelize).RecordingBySiteHour.upsert(newRecording, {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR,
         ...transaction && { transaction }
       })
-      // @ts-expect-error
+      // @ts-expect-error: countsByMinute in rows has incompatible type
       successToInsertItems.push(newRecording)
     } catch (e: any) {
       console.error('⚠️ Insert recording by site hour failed...', e)
@@ -49,7 +50,7 @@ export const deleteRecordingFromBio = async (recordings: RecordingDeletedArbimon
       const rows = itemsToUpsert.map(group => {
         return { ...group, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(group.countsByMinute), sequelize) }
       })
-      // @ts-expect-error
+      // @ts-expect-error: countsByMinute in rows has incompatible type
       await ModelRepository.getInstance(sequelize).RecordingBySiteHour.bulkCreate(rows, {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR,
         ...transaction && { transaction }

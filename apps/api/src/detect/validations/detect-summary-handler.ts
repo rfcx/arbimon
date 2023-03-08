@@ -1,6 +1,6 @@
-import { DetectSummaryParams, DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectSummaryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 
-import { Handler } from '~/api-helpers/types'
+import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { getDetectionSummary } from './detect-bll'

@@ -33,7 +33,7 @@
 
 import { computed, ref, watch } from 'vue'
 
-import { Site } from '@rfcx-bio/common/dao/types'
+import type { Site } from '@rfcx-bio/common/dao/types'
 
 const ALL_SITES_OPTIONS = {
   value: '',

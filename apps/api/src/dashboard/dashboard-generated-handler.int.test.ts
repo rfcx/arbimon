@@ -1,9 +1,9 @@
 import fastifyRoutes from '@fastify/routes'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
-import { ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { Site } from '@rfcx-bio/common/dao/types'
+import { type ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
+import { type Site } from '@rfcx-bio/common/dao/types'
 
 import { GET } from '~/api-helpers/types'
 import { routesDashboard } from './index'
@@ -84,7 +84,7 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
 
       // Assert
       const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => expect(result).toHaveProperty(expectedProp))
+      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
       expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
     })
   })
@@ -120,8 +120,8 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }
 
       // Assert - first result contains (only) expected props
-      expectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
-      Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+      expectedProperties.forEach(expectedProperty => { expect(knownSite).toHaveProperty(expectedProperty) })
+      Object.keys(knownSite).forEach(actualProperty => { expect(expectedProperties).toContain(actualProperty) })
 
       // Assert - latitude, longitude, and value are correct
       expect(knownSite).toStrictEqual(expectedKnownSite)
@@ -149,8 +149,8 @@ describe(`GET ${ROUTE}  (dashboard generated)`, () => {
       const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }
 
       // Assert - first result contains (only) expected props
-      expectedProperties.forEach(expectedProperty => expect(knownSite).toHaveProperty(expectedProperty))
-      Object.keys(knownSite).forEach(actualProperty => expect(expectedProperties).toContain(actualProperty))
+      expectedProperties.forEach(expectedProperty => { expect(knownSite).toHaveProperty(expectedProperty) })
+      Object.keys(knownSite).forEach(actualProperty => { expect(expectedProperties).toContain(actualProperty) })
 
       // Assert - latitude, longitude, and value are correct
       expect(knownSite.latitude).toStrictEqual(expectedKnownSite)

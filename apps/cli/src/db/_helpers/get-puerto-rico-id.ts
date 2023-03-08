@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 

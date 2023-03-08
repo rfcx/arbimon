@@ -6,7 +6,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getSequelize } from '@/db/connections'
 import { writeSyncError } from './sync-error'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 describe('ingest > outputs > sync error', () => {
   const ERROR_LOG = {

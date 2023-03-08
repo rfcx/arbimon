@@ -1,8 +1,8 @@
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, ProjectVersion, RecordingBySiteHour, Site } from '@rfcx-bio/common/dao/types'
+import { type Project, type ProjectVersion, type RecordingBySiteHour, type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { literalizeCountsByMinute } from '../_helpers/sequelize-literal-integer-array-2d'

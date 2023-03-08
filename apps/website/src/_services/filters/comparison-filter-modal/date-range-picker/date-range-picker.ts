@@ -1,4 +1,4 @@
-import { IDatePickerType } from 'element-plus/es/components/date-picker/src/date-picker.type'
+import { type IDatePickerType } from 'element-plus/es/components/date-picker/src/date-picker.type'
 import { Vue } from 'vue-class-component'
 import { Emit, Prop, Watch } from 'vue-property-decorator'
 
@@ -11,7 +11,7 @@ export interface DateRangeShortcut {
   value: () => [Date, Date]
 }
 
-const DATE_PICKER_TYPE: { [key: string]: IDatePickerType } = {
+const DATE_PICKER_TYPE: Record<string, IDatePickerType> = {
   date: 'daterange',
   month: 'monthrange'
 }

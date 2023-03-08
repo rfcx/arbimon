@@ -1,12 +1,12 @@
-import { FastifyReply } from 'fastify'
+import type { FastifyReply } from 'fastify'
 
-import { CoreMediaQuery } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
+import type { CoreMediaQuery } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 
 import { getMedia } from '../_services/api-core/api-core'
-import { Handler } from '../_services/api-helpers/types'
+import type { Handler } from '../_services/api-helpers/types'
 import { assertQueryParamsExist } from '../_services/validation'
 
-export const coreMediaHandler: Handler<FastifyReply, {}, CoreMediaQuery> = async (req, res) => {
+export const coreMediaHandler: Handler<FastifyReply, unknown, CoreMediaQuery> = async (req, res) => {
   // Input & validation
   const { url } = req.query
   assertQueryParamsExist({ url })

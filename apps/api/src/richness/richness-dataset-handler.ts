@@ -1,8 +1,8 @@
-import { RichnessDatasetParams, RichnessDatasetQuery, RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { type RichnessDatasetParams, type RichnessDatasetQuery, type RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
 import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
-import { Handler } from '../_services/api-helpers/types'
+import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
 import { getRichnessDataset } from './richness-dataset-bll'

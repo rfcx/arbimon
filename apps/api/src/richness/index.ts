@@ -2,7 +2,7 @@ import { richnessDatasetRoute } from '@rfcx-bio/common/api-bio/richness/richness
 import { richnessExportRoute } from '@rfcx-bio/common/api-bio/richness/richness-export'
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
-import { GET, RouteRegistration } from '../_services/api-helpers/types'
+import { type RouteRegistration, GET } from '../_services/api-helpers/types'
 import { richnessDatasetHandler } from './richness-dataset-handler'
 import { richnessExportHandler } from './richness-export-handler'
 

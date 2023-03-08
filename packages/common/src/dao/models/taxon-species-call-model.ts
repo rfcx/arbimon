@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
-import { TaxonSpeciesCall } from '../types/taxon-species-call'
+import { type TaxonSpeciesCall } from '../types/taxon-species-call'
 
 export const MODEL_TAXON_SPECIES_CALL = 'TaxonSpeciesCall'
 export const TABLE_TAXON_SPECIES_CALL = 'taxon_species_call'

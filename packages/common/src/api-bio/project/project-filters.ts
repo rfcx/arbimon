@@ -1,10 +1,10 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { Site, TaxonClass } from '../../dao/types'
-import { PROJECT_SPECIFIC_ROUTE_PREFIX, ProjectRouteParamsSerialized } from '../_helpers'
-import { Sync } from '../sync/sync-history'
+import { type Site, type TaxonClass } from '../../dao/types'
+import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
+import { type Sync } from '../sync/sync-history'
 
 // Request types
 export type ProjectFiltersParams = ProjectRouteParamsSerialized

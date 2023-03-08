@@ -33,7 +33,7 @@ import { Inject, Options, Prop } from 'vue-property-decorator'
 
 import { routeNamesKey } from '@/globals'
 import InfoModal from '~/info/info-modal.vue'
-import { RouteNames } from '~/router'
+import type { RouteNames } from '~/router'
 
 @Options({
   components: {

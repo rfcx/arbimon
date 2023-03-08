@@ -1,10 +1,10 @@
-import { Sequelize, Transaction } from 'sequelize'
+import { type Sequelize, type Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_LOCATION_SITE } from '@rfcx-bio/common/dao/models/location-site-model'
-import { Site, SyncError } from '@rfcx-bio/common/dao/types'
+import { type Site, type SyncError } from '@rfcx-bio/common/dao/types'
 
-import { SiteArbimon, transformArbimonSites } from '../parsers/parse-site-arbimon-to-bio'
+import { type SiteArbimon, transformArbimonSites } from '../parsers/parse-site-arbimon-to-bio'
 
 const loopUpsert = async (sites: Array<Omit<Site, 'id'>>, sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failed: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []

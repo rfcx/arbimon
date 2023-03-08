@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 
 // Request type
 export interface ClassifierJobUpdateStatusParams {

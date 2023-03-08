@@ -49,7 +49,7 @@
 import { OnClickOutside } from '@vueuse/components'
 import { inject, ref } from 'vue'
 
-import { BiodiversityStore } from '../../../../_services/store'
+import type { BiodiversityStore } from '../../../../_services/store'
 
 interface ProjectVersion {
     label: string

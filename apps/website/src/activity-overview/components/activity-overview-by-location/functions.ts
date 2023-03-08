@@ -1,5 +1,5 @@
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
-import { MapSiteData } from '~/maps/types'
+import { type MapSiteData } from '~/maps/types'
 
 const getFormattedValue = (value: number | boolean, dataKey: string): string => {
   switch (dataKey) {

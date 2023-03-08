@@ -1,10 +1,10 @@
-import { BindOrReplacements, Op } from 'sequelize'
+import { type BindOrReplacements, Op } from 'sequelize'
 
-import { Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { DetectionBySiteSpeciesHour, RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import { type Where } from '@rfcx-bio/common/dao/query-helpers/types'
+import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
-import { FilterDataset } from './dataset-types'
+import { type FilterDataset } from './dataset-types'
 
 export interface Condition {
   conditions: string

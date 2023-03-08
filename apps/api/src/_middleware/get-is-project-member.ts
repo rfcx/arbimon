@@ -1,12 +1,12 @@
-import { FastifyRequest } from 'fastify'
+import { type FastifyRequest } from 'fastify'
 
-import { ProjectRouteParamsSerialized } from '@rfcx-bio/common/api-bio/_helpers'
+import { type ProjectRouteParamsSerialized } from '@rfcx-bio/common/api-bio/_helpers'
 import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
 
 import { getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
-import { Middleware } from '~/api-helpers/types'
-import { Auth0UserInfo } from '~/auth0'
+import { type Middleware } from '~/api-helpers/types'
+import { type Auth0UserInfo } from '~/auth0'
 import { getMemberProjectCoreIdsFromCache } from '~/cache/user-project-cache'
 import { getSequelize } from '~/db'
 import { BioPublicError, ERROR_STATUS_CODE } from '~/errors'

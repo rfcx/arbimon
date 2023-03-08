@@ -1,9 +1,9 @@
 import { groupBy, mapValues } from 'lodash-es'
 
-import { SpeciesDetectionSummary } from '@rfcx-bio/common/api-bio/detect/detect-summary'
-import { DetectValidation, DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
-import { DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
-import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
+import { type SpeciesDetectionSummary } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectValidation, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
+import { type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { type SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
 export const getInMemorySpeciesDetectionSummary = async (mockData: SpeciesDetection[]): Promise<SpeciesDetectionSummary[]> => {
   const detectionsBySpecies = groupBy(mockData, 'classificationId')

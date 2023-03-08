@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import { gcd } from '@rfcx-bio/utils/number'
 
 import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
-import { LineChartConfig, LineChartSeries } from './types'
+import { type LineChartConfig, type LineChartSeries } from './types'
 
 type Formatter<Domain> = (domainValue: Domain, index: number) => string
 

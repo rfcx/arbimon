@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { type Sequelize } from 'sequelize'
 
 import { syncArbimonProjects } from './sync-arbimon-project'
 import { syncArbimonRecordingBySiteHour } from './sync-arbimon-recording-by-site-hour'

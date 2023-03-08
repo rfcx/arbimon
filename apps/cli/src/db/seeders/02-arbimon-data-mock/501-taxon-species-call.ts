@@ -1,8 +1,8 @@
 // TODO: fix species call seeder data into new type format
 
 // import { Optional, QueryInterface } from 'sequelize'
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 // import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 // import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'

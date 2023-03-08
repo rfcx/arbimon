@@ -1,10 +1,10 @@
 import { Vue } from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 
-import { BarChartConfig } from '~/charts/horizontal-bar-chart'
+import { type BarChartConfig } from '~/charts/horizontal-bar-chart'
 import { clearChart } from '..'
 import { generateChartInternal } from './functions'
-import { GroupedBarChartItem } from './types'
+import { type GroupedBarChartItem } from './types'
 
 export default class HorizontalBarChartComponent extends Vue {
   @Prop() domId!: string

@@ -1,7 +1,7 @@
 import fastifyCors from '@fastify/cors'
 import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastifyStatic from '@fastify/static'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { type FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { resolve } from 'path'
 

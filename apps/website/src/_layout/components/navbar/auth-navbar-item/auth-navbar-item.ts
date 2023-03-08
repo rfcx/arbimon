@@ -1,9 +1,9 @@
-import { Auth0Client } from '@auth0/auth0-spa-js'
+import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
 import { authClientKey, storeKey } from '@/globals'
-import { BiodiversityStore } from '~/store'
+import { type BiodiversityStore } from '~/store'
 import VersionControl from './version-control.vue'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL

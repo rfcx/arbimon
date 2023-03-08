@@ -1,4 +1,4 @@
-import { LngLatBoundsLike } from 'mapbox-gl'
+import { type LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
@@ -6,15 +6,15 @@ import { generateDetectionHtmlPopup } from '@/activity-overview/components/activ
 import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
 import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
-import { MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS, MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
+import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
-import { MapBaseFormatter, MapDataSet, MapMoveEvent } from '~/maps/types'
+import { type MapBaseFormatter, type MapDataSet, type MapMoveEvent } from '~/maps/types'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
-import { CircleStyle } from '~/maps/utils/circle-style/types'
-import { BiodiversityStore } from '~/store'
+import { type CircleStyle } from '~/maps/utils/circle-style/types'
+import { type BiodiversityStore } from '~/store'
 
 interface DropdownOption {
   label: string

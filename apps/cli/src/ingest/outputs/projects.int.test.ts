@@ -2,16 +2,16 @@ import { Op } from 'sequelize'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Project, ProjectVersion, Site, SyncLogByProject, TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type Project, type ProjectVersion, type Site, type SyncLogByProject, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
-import { ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
-import { SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
+import { type ProjectArbimon } from '../parsers/parse-project-arbimon-to-bio'
+import { type SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
 import { writeProjectsToBio } from './projects'
 import { writeSpeciesCallsToBio } from './species-calls'
 
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 const models = ModelRepository.getInstance(biodiversitySequelize)
 
 describe('ingest > outputs > projects', () => {

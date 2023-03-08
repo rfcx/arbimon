@@ -1,10 +1,10 @@
 import { partition } from 'lodash-es'
-import { SafeParseError, SafeParseReturnType, SafeParseSuccess } from 'zod'
+import { type SafeParseError, type SafeParseReturnType, type SafeParseSuccess } from 'zod'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { DetectionArbimon } from './parse-detection-arbimon-to-bio'
-import { RecordingArbimon, RecordingDeletedArbimon } from './parse-recording-by-site-hour-arbimon-to-bio'
+import { type DetectionArbimon } from './parse-detection-arbimon-to-bio'
+import { type RecordingArbimon, type RecordingDeletedArbimon } from './parse-recording-by-site-hour-arbimon-to-bio'
 
 interface RecordingData {
   countsByMinute: number[][]

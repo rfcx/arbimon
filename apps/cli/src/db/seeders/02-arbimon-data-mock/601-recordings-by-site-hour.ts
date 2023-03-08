@@ -1,5 +1,5 @@
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { RecordingBySiteHourModel } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'

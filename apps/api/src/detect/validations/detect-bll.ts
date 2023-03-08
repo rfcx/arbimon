@@ -1,12 +1,12 @@
-import { DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
-import { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
-import { DetectValidation, DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
-import { DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
-import { SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
+import { type DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectValidation, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
+import { type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { type SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
 import { getInMemoryDetectValidationStatus, getInMemorySpeciesDetectionSummary, updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
-import { DetectionFilter } from './types'
+import { type DetectionFilter } from './types'
 
 const mockData = mockDetections
 

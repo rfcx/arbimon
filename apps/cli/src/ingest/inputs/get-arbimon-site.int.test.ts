@@ -4,8 +4,8 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getArbimonSites } from '@/ingest/inputs/get-arbimon-site'
-import { SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
-import { SyncQueryParams } from './sync-query-params'
+import { type SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
+import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 
@@ -97,7 +97,7 @@ describe('ingest > inputs > getArbimonSites', async () => {
 
     // Assert
     expect(actual).toHaveLength(3)
-    IDS_SITES.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_SITES.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can get next batch of sites for multiple projects', async () => {
@@ -123,7 +123,7 @@ describe('ingest > inputs > getArbimonSites', async () => {
 
     // Assert
     expect(actual).toHaveLength(3)
-    IDS_SITES.forEach(expectedProp => expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp))
+    IDS_SITES.forEach(expectedProp => { expect(actual.map((item: any) => item.idArbimon)).toContain(expectedProp) })
   })
 
   test('can not get sites if sites updated at date is not valid', async () => {

@@ -8,10 +8,10 @@ import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
 import { deleteOutputProjects } from '../_testing/helper'
 import { syncArbimonProjectsBatch } from './sync-arbimon-project'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,

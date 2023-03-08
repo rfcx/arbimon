@@ -1,4 +1,4 @@
-import { QueryTypes, Sequelize } from 'sequelize'
+import { type Sequelize, QueryTypes } from 'sequelize'
 
 export const refreshMviews = async (sequelize: Sequelize): Promise<void> => {
   // Prioritize views that have dependencies

@@ -5,10 +5,10 @@ import pluginIconsResolver from 'unplugin-icons/resolver'
 import pluginIcons from 'unplugin-icons/vite'
 import { ElementPlusResolver as pluginElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import pluginComponents from 'unplugin-vue-components/vite'
-import { defineConfig, UserConfig as UserConfigVite } from 'vite'
+import { type UserConfig as UserConfigVite, defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
-import { UserConfig as UserConfigVitest } from 'vitest'
+import { type UserConfig as UserConfigVitest } from 'vitest'
 
 // https://vitejs.dev/config/
 const config: UserConfigVite & { test: UserConfigVitest } = {

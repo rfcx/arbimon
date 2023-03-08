@@ -1,5 +1,5 @@
 // This is the one place we import & configure mapbox
-import { Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
+import { type MapboxOptions, Map as MapboxMap } from 'mapbox-gl'
 
 // Mapbox Auth
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicmZjeCIsImEiOiJoMEptMnlJIn0.LPKrjG_3AeYB5cqsyLpcrg'

@@ -1,7 +1,7 @@
 import { mapValues } from 'lodash-es'
-import { Model, ModelCtor, Sequelize } from 'sequelize'
+import { type Model, type ModelCtor, type Sequelize } from 'sequelize'
 
-import { ModelRegistrations, modelRegistrations } from './model-registrations'
+import { type ModelRegistrations, modelRegistrations } from './model-registrations'
 
 export type AllModels = { [K in keyof ModelRegistrations]: ReturnType<ModelRegistrations[K][0]> }
 type UnknownModel = ModelCtor<Model<any, any>> | undefined

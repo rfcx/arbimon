@@ -1,13 +1,13 @@
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { LocationProjectSpeciesFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
+import { type LocationProjectSpeciesFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 import { requireEnv } from '~/env'
-import { BioEnvironment } from '~/env/types'
+import { type BioEnvironment } from '~/env/types'
 import { rawFilenames } from '../_data/location-project-species-file'
 
 const { BIO_ENVIRONMENT } = requireEnv('BIO_ENVIRONMENT')

@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
 import { DATASET_LEGEND_GAP, generateHorizontalLegend, getLegendGroupNames } from '..'
-import { BarChartConfig, GroupedBarChartItem } from './types'
+import { type BarChartConfig, type GroupedBarChartItem } from './types'
 
 const GROUP_MARGIN = 20
 const BAR_MARGIN = 2

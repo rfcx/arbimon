@@ -1,6 +1,6 @@
-import { LocationProjectProfile, Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
 
-import { BioEnvironment } from '~/env/types'
+import { type BioEnvironment } from '~/env/types'
 
 const summaryPr = 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities'
 const summaryBci = 'This is a project of Marconi Campos-Cerqueira. The objective is to record anurans, birds, and bats during the transition between the dry and wet seasons.'

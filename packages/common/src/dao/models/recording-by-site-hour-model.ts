@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { RecordingBySiteHour } from '../types'
+import { type RecordingBySiteHour } from '../types'
 
 export const MODEL_RECORDING_BY_SITE_HOUR = 'RecordingBySiteHour'
 export const TABLE_RECORDING_BY_SITE_HOUR = 'recording_by_site_hour'

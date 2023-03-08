@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
-import { CacheUserProject } from '../types'
+import { type CacheUserProject } from '../types'
 
 export const MODEL_CACHE_USER_PROJECT = 'CacheUserProject'
 export const TABLE_CACHE_USER_PROJECT = 'cache_user_project'

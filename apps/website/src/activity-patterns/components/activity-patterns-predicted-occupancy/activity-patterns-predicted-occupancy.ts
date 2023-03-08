@@ -1,8 +1,8 @@
-import { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
-import { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
+import { type PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/project-species-one'
 import { apiBioGetProjectSpeciesPredictedOccupancy } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
 import { downloadPng } from '@rfcx-bio/utils/file'
 

@@ -2,7 +2,7 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 
 import { storeKey } from '@/globals'
-import { BiodiversityStore } from '~/store'
+import { type BiodiversityStore } from '~/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 
 @Options({

@@ -13,7 +13,7 @@
 
 import { computed } from 'vue'
 
-import { JobInput } from '../../types'
+import type { JobInput } from '../../types'
 
 const props = defineProps<{
   totalDurationMinutes: number,

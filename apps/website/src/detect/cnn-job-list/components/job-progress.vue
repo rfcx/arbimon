@@ -15,7 +15,7 @@ import { computed } from 'vue'
 
 import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
-import { JobProgress } from '../../types'
+import type { JobProgress } from '../../types'
 
 const props = defineProps<{
   jobProgress: JobProgress

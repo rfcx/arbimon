@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { DashboardRichnessByHour } from '@/dao/types/dashboard-richness-by-hour'
+import { type DashboardRichnessByHour } from '@/dao/types/dashboard-richness-by-hour'
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
 
 export const MODEL_DASHBOARD_RICHNESS_BY_HOUR = 'DashboardRichnessByHour'

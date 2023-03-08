@@ -2,9 +2,9 @@ import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
 import { routeNamesKey, storeKey } from '@/globals'
-import { RiskRatingUi } from '~/risk-ratings'
-import { RouteNames } from '~/router'
-import { BiodiversityStore } from '~/store'
+import { type RiskRatingUi } from '~/risk-ratings'
+import { type RouteNames } from '~/router'
+import { type BiodiversityStore } from '~/store'
 
 export interface HighlightedSpeciesRow {
   slug: string

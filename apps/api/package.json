@@ -48,7 +48,7 @@
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.27.2",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.11.7",
     "fastify": "^3.23.1",
     "fastify-auth0-verify": "^0.7.0",
     "fastify-plugin": "^3.0.0",

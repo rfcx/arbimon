@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize'
 
-import { DashboardRichnessBySite } from '@/dao/types/dashboard-richness-by-site'
+import { type DashboardRichnessBySite } from '@/dao/types/dashboard-richness-by-site'
 import { defineWithDefaults } from '../model-factory-helpers/defaults'
 
 export const MODEL_DASHBOARD_RICHNESS_BY_SITE = 'DashboardRichnessBySite'

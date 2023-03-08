@@ -1,4 +1,4 @@
-import { SPECIES_SOURCE_PROJECT, SpeciesSource } from '@rfcx-bio/common/api-bio/species/types'
+import { type SpeciesSource, SPECIES_SOURCE_PROJECT } from '@rfcx-bio/common/api-bio/species/types'
 
 export interface RfcxSpeciesData {
   commonName?: string

@@ -1,4 +1,4 @@
-import { MockHourlyRecordingSummary } from './types'
+import { type MockHourlyRecordingSummary } from './types'
 
 export const rawRecordings: MockHourlyRecordingSummary[] = [
     {

@@ -1,11 +1,12 @@
-import { Sequelize, Transaction } from 'sequelize'
+import type { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
-import { SyncError } from '@rfcx-bio/common/dao/types'
+import type { SyncError } from '@rfcx-bio/common/dao/types'
 
 import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
-import { DetectionArbimon, DetectionBySiteSpeciesHourBio, transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
+import type { DetectionArbimon, DetectionBySiteSpeciesHourBio } from '../parsers/parse-detection-arbimon-to-bio'
+import { transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
 
 const loopUpsert = async (detectionsBio: DetectionBySiteSpeciesHourBio[], detectionArbimon: DetectionArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
@@ -34,7 +35,7 @@ export const writeDetectionsToBio = async (detections: DetectionArbimon[], seque
       const rows = itemsToInsertOrUpsert.map(group => {
         return { ...group, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(group.countsByMinute), sequelize) }
       })
-      // @ts-expect-error
+      // @ts-expect-error: countsByMinute in rows has incompatible type (but it seems to be accepted by sequelize)
       await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR,
         ...transaction && { transaction }

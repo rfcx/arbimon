@@ -2,17 +2,17 @@ import { describe, expect, test } from 'vitest'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { Site } from '@rfcx-bio/common/dao/types'
+import { type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { deleteOutputProjects } from '../_testing/helper'
 import { syncArbimonRecordingBySiteHourBatch } from './sync-arbimon-recording-by-site-hour'
-import { getDefaultSyncStatus, SyncConfig } from './sync-config'
+import { type SyncConfig, getDefaultSyncStatus } from './sync-config'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
-const biodiversitySequelize = await getSequelize()
+const biodiversitySequelize = getSequelize()
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,

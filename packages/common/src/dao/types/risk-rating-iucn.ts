@@ -1,4 +1,4 @@
-type RiskCode = 'NE'| 'NA'| 'DD'| 'LC'| 'NT'| 'VU'| 'EN'| 'CR'| 'RE'| 'EW'| 'EX'
+type RiskCode = 'NE' | 'NA' | 'DD' | 'LC' | 'NT' | 'VU' | 'EN' | 'CR' | 'RE' | 'EW' | 'EX'
 
 export interface RiskRatingIucn {
   id: number

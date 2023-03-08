@@ -3,8 +3,8 @@
  * Do not depend on imported code which may change
  */
 
-import { QueryInterface } from 'sequelize'
-import { MigrationFn } from 'umzug'
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 const VIEW_NAME = 'species_in_project'
 // const INDEX_COLS = ['location_project_id', 'taxon_class_id', 'taxon_species_id']

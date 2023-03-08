@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 
 import { authRequiredGuard } from './guard-auth-required'
 import { storeProjectGuard } from './guard-store-project'

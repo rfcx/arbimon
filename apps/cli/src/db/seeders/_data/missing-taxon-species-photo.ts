@@ -1,4 +1,4 @@
-import { TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
 
 export const rawMissingTaxonSpeciesPhoto: Array<Omit<TaxonSpeciesPhoto, 'taxonSpeciesId'> & { slug: string }> = [
   {

@@ -1,12 +1,12 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 
 import { logError } from '~/axios'
 import { requireEnv } from '~/env'
 
 export interface WikiMediaImageInfo {
   descriptionurl: string
-  extmetadata: Record<'LicenseShortName' | 'Artist' | 'Copyrighted', {value: string, source: string, hidden?: string}> & { LicenseUrl?:
-    {value: string, source: string, hidden?: string}
+  extmetadata: Record<'LicenseShortName' | 'Artist' | 'Copyrighted', { value: string, source: string, hidden?: string }> & { LicenseUrl?:
+    { value: string, source: string, hidden?: string }
   }
 }
 

@@ -1,14 +1,14 @@
-import { Dayjs } from 'dayjs'
-import { AnyPaint, LngLatLike } from 'mapbox-gl'
+import type { Dayjs } from 'dayjs'
+import type { AnyPaint, LngLatLike } from 'mapbox-gl'
 
-import { Site } from '@rfcx-bio/common/dao/types'
+import type { Site } from '@rfcx-bio/common/dao/types'
 
 export interface MapDataSet {
   startDate: Dayjs
   endDate: Dayjs
   sites: Site[]
   data: MapSiteData[]
-  maxValues: { [key: string]: number }
+  maxValues: Record<string, number>
   title?: string
 }
 
@@ -16,9 +16,7 @@ export interface MapSiteData {
   siteName: string
   latitude: number
   longitude: number
-  values: {
-    [key: string]: number | boolean
-  }
+  values: Record<string, number | boolean>
 }
 
 export interface MapMoveEvent {
@@ -30,8 +28,8 @@ export interface MapMoveEvent {
 export interface MapBase {
   styleNonZero: AnyPaint
   styleZero: AnyPaint
-  styleToPaint: () => {}
-  downloadMapPng: () => {}
+  styleToPaint: () => unknown
+  downloadMapPng: () => unknown
 }
 
 export interface MapBaseStyle {

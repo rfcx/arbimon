@@ -1,7 +1,7 @@
-import { AxiosInstance } from 'axios'
-import { useQuery, UseQueryReturnType } from 'vue-query'
+import { type AxiosInstance } from 'axios'
+import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiBioGetDetectSummaryData, DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectSummaryResponse, apiBioGetDetectSummaryData } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 
 export const FETCH_DETECT_SUMMARY = 'fetch-detect-summary'
 

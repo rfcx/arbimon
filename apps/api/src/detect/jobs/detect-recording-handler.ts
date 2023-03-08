@@ -1,7 +1,7 @@
-import { DetectRecordingParams, DetectRecordingQueryParams, DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
+import { type DetectRecordingParams, type DetectRecordingQueryParams, type DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
-import { Handler } from '~/api-helpers/types'
+import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { isValidDate } from '~/validation/query-validation'
