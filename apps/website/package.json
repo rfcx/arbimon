@@ -76,6 +76,7 @@
     "@types/howler": "^2.2.4",
     "@types/mapbox-gl": "^2.4.2",
     "@types/numeral": "^2.0.2",
+    "@vueuse/head": "^1.1.19",
     "@windicss/plugin-animations": "^1.0.9",
     "@windicss/plugin-interaction-variants": "^1.0.0",
     "c8": "^7.10.0",
@@ -83,6 +84,8 @@
     "unplugin-auto-import": "^0.15.1",
     "unplugin-icons": "^0.15.3",
     "unplugin-vue-components": "^0.24.1",
+    "vite": "^4.1.4",
+    "vite-ssg": "^0.22.1",
     "windicss": "^3.2.1"
   },
   "engines": {
