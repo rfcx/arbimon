@@ -1,4 +1,5 @@
 import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
+import pluginFlowbite from 'flowbite-windicss-plugin'
 import { defineConfig } from 'windicss/helpers'
 import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
@@ -12,7 +13,10 @@ const range = (length: number, startAt = 1): number[] =>
   Array.from({ length }, (_, idx) => idx + startAt)
 
 export default defineConfig({
-  darkMode: false,
+  darkMode: 'class',
+  content: [
+    './node_modules/flowbite/**/*.js'
+  ],
   plugins: [
     plugin(({ addComponents }) => {
       const navbarItems = {
@@ -36,7 +40,8 @@ export default defineConfig({
     pluginForms,
     pluginLineClamp,
     pluginScrollSnap,
-    pluginTypography({ dark: true })
+    pluginTypography({ dark: true }),
+    pluginFlowbite
   ],
   theme: {
     extend: {
@@ -46,6 +51,9 @@ export default defineConfig({
         lg: '1024px',
         xl: '1280px',
         '2xl': '1536px'
+      },
+      fontFamily: {
+        sans: ['Lato', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
       },
       fontSize: {
         xxs: '0.5rem'
