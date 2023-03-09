@@ -1,4 +1,4 @@
-import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw, RouterOptions } from 'vue-router'
 
 import { authRequiredGuard } from './guard-auth-required'
 import { storeProjectGuard } from './guard-store-project'
@@ -125,8 +125,7 @@ const routes: RouteRecordRaw[] = [
   }
 ]
 
-const router = createRouter({
-  history: createWebHistory(),
+const routerOptions: Omit<RouterOptions, 'history'> = {
   routes,
   scrollBehavior (to, from, savedPosition) {
     if (!to.hash) return { top: 0 }
@@ -135,6 +134,6 @@ const router = createRouter({
       behavior: 'smooth'
     }
   }
-})
+}
 
-export default router
+export default routerOptions

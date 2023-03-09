@@ -5,10 +5,20 @@ import pluginIconsResolver from 'unplugin-icons/resolver'
 import pluginIcons from 'unplugin-icons/vite'
 import { ElementPlusResolver as pluginElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import pluginComponents from 'unplugin-vue-components/vite'
-import { type UserConfig as UserConfigVite, defineConfig } from 'vite'
+import type { UserConfig as UserConfigVite } from 'vite'
+import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
-import { type UserConfig as UserConfigVitest } from 'vitest'
+import type { UserConfig as UserConfigVitest } from 'vitest'
+
+import { ROUTE_NAMES } from './src/_services/router/route-names'
+
+const STATIC_ROUTES = [
+  ROUTE_NAMES.landingHome,
+  ROUTE_NAMES.landingFeatured,
+  ROUTE_NAMES.landingHowItWorks,
+  ROUTE_NAMES.landingFAQ
+]
 
 // https://vitejs.dev/config/
 const config: UserConfigVite & { test: UserConfigVitest } = {
@@ -41,7 +51,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
           prefix: 'icon',
           alias: { fas: 'fa-solid', far: 'fa-regular', custom: 'custom-icons' }
         }),
-        pluginElementPlusResolver({ importStyle: 'sass' })
+        pluginElementPlusResolver({ importStyle: 'sass', ssr: true })
       ]
     }),
     pluginIcons({
@@ -67,6 +77,15 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   server: {
     port: 8101, // Bio-1
     open: false
+  },
+  ssgOptions: {
+    script: 'async',
+    includedRoutes (paths, routes) {
+      return routes.filter(r => (STATIC_ROUTES as string[]).includes(r.name?.toString() ?? '')).map(r => r.path)
+    }
+  },
+  ssr: {
+    noExternal: ['mapbox-gl']
   },
   test: {
     deps: { inline: ['element-plus'] },

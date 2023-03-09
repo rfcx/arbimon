@@ -24,3 +24,4 @@ lib
 
 # OS
 .DS_Store
+.vite-ssg-temp

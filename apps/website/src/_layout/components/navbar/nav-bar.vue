@@ -21,7 +21,9 @@
           </router-link>
         </div>
         <div class="flex items-center mx-4 sm:hidden">
-          <auth-navbar-item-component dom-id="navbar-auth-mobile" />
+          <client-only>
+            <auth-navbar-item-component dom-id="navbar-auth-mobile" />
+          </client-only>
         </div>
       </div>
       <div
@@ -39,48 +41,52 @@
           {{ item.label }}
         </router-link>
 
-        <el-dropdown
-          :popper-options="{modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 0],
+        <client-only>
+          <el-dropdown
+            :popper-options="{modifiers: [
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, 0],
+                },
               },
-            },
-          ],}"
-        >
-          <span class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)">
-            Resources <icon-custom-angle-down class="ml-1 text-xs" />
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item
-                v-for="(item, idx) in resourcesMenuItems"
-                :key="'nav-menus-resources-' + idx"
-              >
-                <router-link
-                  :to="item.destination"
-                  @click="hasToggledMobileMenu = false"
+            ],}"
+          >
+            <span class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)">
+              Resources <icon-custom-angle-down class="ml-1 text-xs" />
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                  v-for="(item, idx) in resourcesMenuItems"
+                  :key="'nav-menus-resources-' + idx"
                 >
-                  {{ item.label }}
-                </router-link>
-              </el-dropdown-item>
-              <el-dropdown-item disabled>
-                Forum
-              </el-dropdown-item>
-              <el-dropdown-item disabled>
-                Publications
-              </el-dropdown-item>
-              <el-dropdown-item disabled>
-                Newsroom
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+                  <router-link
+                    :to="item.destination"
+                    @click="hasToggledMobileMenu = false"
+                  >
+                    {{ item.label }}
+                  </router-link>
+                </el-dropdown-item>
+                <el-dropdown-item disabled>
+                  Forum
+                </el-dropdown-item>
+                <el-dropdown-item disabled>
+                  Publications
+                </el-dropdown-item>
+                <el-dropdown-item disabled>
+                  Newsroom
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </client-only>
       </div>
 
       <div class="flex items-center mx-2 <sm:hidden">
-        <auth-navbar-item-component dom-id="navbar-auth-desktop" />
+        <client-only>
+          <auth-navbar-item-component dom-id="navbar-auth-desktop" />
+        </client-only>
       </div>
     </div>
   </nav>
