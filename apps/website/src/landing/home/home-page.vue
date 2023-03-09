@@ -1,8 +1,18 @@
 <template>
-  <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
-    <h1 class="text-white text-4xl capitalize">
-      Homepage
-    </h1>
-  </div>
+  <Hero />
 </template>
-<script src="./home-page" lang="ts"></script>
+<script lang="ts" setup>
+import { useHead } from '@vueuse/head'
+
+import Hero from './blocks/hero.vue'
+
+useHead({
+  title: 'Arbimon - Empower your wildlife research',
+  meta: [
+    {
+      name: 'description',
+      content: 'Website and page description'
+    }
+  ]
+})
+</script>
