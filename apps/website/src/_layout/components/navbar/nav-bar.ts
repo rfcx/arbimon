@@ -77,7 +77,6 @@ export default class NavbarComponent extends Vue {
   }
 
   override mounted (): void {
-    console.info('here')
     initDropdowns()
   }
 
