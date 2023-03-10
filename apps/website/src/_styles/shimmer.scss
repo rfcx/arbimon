@@ -2,7 +2,7 @@
 
 .loading-shimmer {
   animation: loading-shimmer-keyframes 1.5s infinite;
-  background: linear-gradient(90deg, #0000 33%, rgb(255 255 255 / 2.5%) 50%, #0000 66%) $color-steel-grey;
+  background: linear-gradient(90deg, #0000 33%, rgb(255 255 255 / 2.5%) 50%, #0000 66%) $color-steel-gray;
   background-size: 300% 100%;
   cursor: wait;
 }

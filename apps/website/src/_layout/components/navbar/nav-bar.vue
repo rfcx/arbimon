@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-steel-grey">
+    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-steel-gray">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <router-link
           to="/"
@@ -136,14 +136,14 @@
 
   <nav
     v-if="isProjectLevel"
-    class="bg-steel-grey-light"
+    class="bg-steel-gray-light"
   >
     <div class="sm:(relative flex justify-between) items-center">
       <div class="justify-between flex-row relative flex items-center h-13">
         <div class="flex items-center">
           <button
             v-if="store.projects.length > 0"
-            class="navbar-item text-sm h-9 mx-2 px-4 sm:(hover:bg-steel-grey rounded-md cursor-pointer)"
+            class="navbar-item text-sm h-9 mx-2 px-4 sm:(hover:bg-steel-gray rounded-md cursor-pointer)"
             @click="toggleProjectSelector(true)"
           >
             <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
@@ -152,7 +152,7 @@
         </div>
       </div>
       <div
-        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-grey border-t-1)"
+        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-gray border-t-1)"
         :class="hasToggledMobileMenu ? 'visible' : 'hidden' "
       >
         <router-link

@@ -35,12 +35,12 @@
       <ul
         :aria-labelledby="domId"
         aria-orientation="vertical"
-        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-grey border-t-1 bg-steel-grey rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
+        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-gray border-t-1 bg-steel-gray rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
         role="menu"
         tabindex="-1"
       >
         <li
-          class="p-4 rounded-b-md hover:(bg-box-grey cursor-pointer)"
+          class="p-4 rounded-b-md hover:(bg-box-gray cursor-pointer)"
           @click="logout"
         >
           Sign out

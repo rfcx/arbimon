@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full rounded-2xl bg-steel-grey p-4 flex justify-between"
+    class="w-full rounded-2xl bg-steel-gray p-4 flex justify-between"
   >
     <div class="font-semibold">
       {{ title }}

@@ -35,7 +35,7 @@
     class="w-full text-sm text-left mt-5"
   >
     <thead class="text-xs text-subtle uppercase">
-      <tr class="border-b border-box-grey">
+      <tr class="border-b border-box-gray">
         <th
           scope="col"
           class="px-6 py-3"

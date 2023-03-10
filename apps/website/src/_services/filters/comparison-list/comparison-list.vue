@@ -56,7 +56,7 @@
       </div>
       <div
         v-if="showAddButton"
-        class="flex justify-center items-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-mirage-grey text-white border-2 border-dashed hover:bg-steel-grey"
+        class="flex justify-center items-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-mirage-gray text-white border-2 border-dashed hover:bg-steel-gray"
         @click="addFilterConfig"
       >
         <div class="uppercase">

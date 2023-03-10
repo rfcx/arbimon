@@ -16,7 +16,7 @@
         class="h-2 rounded-xl z-5 opacity-80 group-hover:(opacity-100)"
         :style="{ width: getWidth(item.value) + '%', backgroundColor: store.datasetColors[idx] }"
       />
-      <p class="absolute min-w-36 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
+      <p class="absolute min-w-36 z-10 mx-auto bg-box-gray mt-2 py-2 px-4 invisible group-hover:visible rounded-md">
         {{ item.description }}
       </p>
     </div>

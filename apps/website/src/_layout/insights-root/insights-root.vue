@@ -1,8 +1,8 @@
 <template>
-  <nav class="bg-steel-grey">
+  <nav class="bg-steel-gray">
     <div class="sm:(relative flex justify-between) items-center">
       <div
-        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-grey border-t-1)"
+        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-gray border-t-1)"
       >
         <router-link
           v-for="(item, idx) in menuItems"

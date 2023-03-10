@@ -95,16 +95,16 @@ export default defineConfig({
         info: {
           DEFAULT: '#45485D'
         },
-        'box-grey': {
+        'box-gray': {
           DEFAULT: '#45485D',
           dark: '#2f3140'
         },
-        'steel-grey': {
+        'steel-gray': {
           DEFAULT: '#232436',
           light: '#4a4c72',
           dark: '#202031'
         },
-        'mirage-grey': {
+        'mirage-gray': {
           DEFAULT: '#141525',
           light: '#E3E3E5',
           dark: '#06060D'
@@ -118,7 +118,7 @@ export default defineConfig({
   ],
   shortcuts: {
     // button
-    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none) disabled:(bg-box-grey cursor-not-allowed opacity-50)',
+    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-gray hover:bg-box-gray-dark focus:(ring-0 outline-none) disabled:(bg-box-gray cursor-not-allowed opacity-50)',
     'btn-primary': 'bg-primary hover:bg-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark',
@@ -128,6 +128,6 @@ export default defineConfig({
     'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
     'navbar-menu-item': 'px-4',
     // input
-    'input-field': 'bg-box-grey border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-grey text-white'
+    'input-field': 'bg-box-gray border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-gray text-white'
   }
 })

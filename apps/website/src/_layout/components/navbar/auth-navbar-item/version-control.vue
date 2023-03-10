@@ -2,7 +2,7 @@
   <on-click-outside @trigger="isOpenDropdown = false">
     <div class="relative">
       <div
-        class="flex items-center bg-box-grey px-4 py-1 rounded-full min-w-28 cursor-pointer select-none"
+        class="flex items-center bg-box-gray px-4 py-1 rounded-full min-w-28 cursor-pointer select-none"
         @click="openDropdown()"
       >
         <div
@@ -16,13 +16,13 @@
       </div>
       <div
         v-if="isOpenDropdown"
-        class="absolute right-0 top-0 mt-12 bg-box-grey rounded-lg min-w-48"
+        class="absolute right-0 top-0 mt-12 bg-box-gray rounded-lg min-w-48"
       >
         <div
           v-for="version in versions"
           :key="'version-selector-' + version.value"
           class="flex items-center px-4 py-2 select-none first:(rounded-t-lg) last:(rounded-b-lg)"
-          :class="version.disabled ? 'text-subtle cursor-not-allowed hover:(bg-box-grey)' : 'cursor-pointer hover:(bg-steel-grey)' "
+          :class="version.disabled ? 'text-subtle cursor-not-allowed hover:(bg-box-gray)' : 'cursor-pointer hover:(bg-steel-gray)' "
           @click="setCurrentVersion(version)"
         >
           <div

@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="w-64 border-r-1 border-box-grey bg-steel-grey"
+    class="w-64 border-r-1 border-box-gray bg-steel-gray"
     aria-label="Sidebar"
   >
     <div class="overflow-y-auto py-4 rounded">

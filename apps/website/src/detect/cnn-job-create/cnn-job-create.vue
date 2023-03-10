@@ -9,9 +9,9 @@
     show-icon
   />
   <form class="mt-5">
-    <ol class="relative border-box-grey">
-      <li class="border-l-1 border-box-grey pb-8 pl-6">
-        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
+    <ol class="relative border-box-gray">
+      <li class="border-l-1 border-box-gray pb-8 pl-6">
+        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
           1
         </span>
         <h2 class="mb-4 text-md">
@@ -26,8 +26,8 @@
           @selected-classifier="onSelectClassifier"
         />
       </li>
-      <li class="border-l-1 border-box-grey pb-8 pl-6">
-        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
+      <li class="border-l-1 border-box-gray pb-8 pl-6">
+        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
           2
         </span>
         <h2 class="mb-4 text-md">
@@ -68,7 +68,7 @@
         </div>
       </li>
       <li class="pb-8 pl-6">
-        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-grey rounded-full ring-1 ring-box-grey">
+        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
           3
         </span>
         <h2 class="mb-4 text-md">

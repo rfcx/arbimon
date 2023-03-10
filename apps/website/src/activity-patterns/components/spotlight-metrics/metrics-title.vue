@@ -7,7 +7,7 @@
       <icon-fa-info-circle />
     </div>
     <p
-      class="absolute min-w-70 -top-20 z-10 mx-auto bg-box-grey mt-2 py-2 px-4 invisible whitespace-pre-wrap group-hover:visible rounded-md"
+      class="absolute min-w-70 -top-20 z-10 mx-auto bg-box-gray mt-2 py-2 px-4 invisible whitespace-pre-wrap group-hover:visible rounded-md"
     >
       {{ information }}
     </p>
