@@ -13,7 +13,7 @@
         </p>
         <a
           href="#"
-          class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-brand-primary hover:bg-brand-primary-dark focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+          class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
         >
           Get started
           <svg

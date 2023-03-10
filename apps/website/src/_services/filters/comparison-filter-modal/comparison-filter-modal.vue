@@ -12,7 +12,7 @@
           v-for="(menu) in menus"
           :key="'menu-' + menu.id"
           class="text-white px-4 py-2 border-b-1"
-          :class="{ 'border-l-4 border-l-brand-primary': isCurrentActive(menu.id) }"
+          :class="{ 'border-l-4 border-l-primary': isCurrentActive(menu.id) }"
           @click="setActiveMenuId(menu.id)"
         >
           {{ menu.name }}
@@ -28,7 +28,7 @@
           <input
             type="text"
             placeholder="Search"
-            class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-brand-primary hidden"
+            class="rounded-lg w-full bg-gray-200 focus:outline-none focus:bg-white focus:border-primary hidden"
           >
         </div>
         <div class="max-h-md">

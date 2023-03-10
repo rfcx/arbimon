@@ -68,7 +68,7 @@ const versions: ProjectVersion[] = [
   {
     label: 'publish',
     value: 'publish',
-    colorClass: 'bg-brand-primary',
+    colorClass: 'bg-primary',
     disabled: true
   }
 ]

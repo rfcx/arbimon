@@ -8,7 +8,7 @@
         :title="item.name"
         class="btn <2xl:(btn-icon)"
         :class="{
-          'bg-brand-primary': props.mapStyle === item.style,
+          'bg-primary': props.mapStyle === item.style,
           'rounded-r-none': idx !== props.mapOptions.length - 1,
           'rounded-l-none': idx !== 0
         }"

@@ -67,10 +67,20 @@ export default defineConfig({
         placeholder: '#999',
         faded: '#333',
         subtle: '#ffffff90',
-        'brand-primary': {
-          DEFAULT: '#31984F',
-          light: '#E6F3EA',
-          dark: '#25713b'
+        primary: {
+          DEFAULT: '#31984f',
+          light: '#3daa5d',
+          dark: '#276e3b',
+          50: '#f2fbf4',
+          100: '#e1f7e7',
+          200: '#c5edd0',
+          300: '#97deab',
+          400: '#62c67f',
+          500: '#3daa5d',
+          600: '#31984f',
+          700: '#276e3b',
+          800: '#235833',
+          900: '#1e492c'
         },
         danger: {
           DEFAULT: '#D46767',
@@ -109,7 +119,7 @@ export default defineConfig({
   shortcuts: {
     // button
     btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-grey hover:bg-box-grey-dark focus:(ring-0 outline-none) disabled:(bg-box-grey cursor-not-allowed opacity-50)',
-    'btn-primary': 'bg-brand-primary hover:bg-brand-primary-dark',
+    'btn-primary': 'bg-primary hover:bg-primary-dark',
     'btn-warning': 'bg-warning hover:bg-warning-dark',
     'btn-danger': 'bg-danger hover:bg-danger-dark',
     'btn-icon': 'py-2 px-3',
@@ -118,6 +128,6 @@ export default defineConfig({
     'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
     'navbar-menu-item': 'px-4',
     // input
-    'input-field': 'bg-box-grey border text-sm rounded-lg block w-full p-2.5 focus:border-brand-primary bg-mirage-grey text-white'
+    'input-field': 'bg-box-grey border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-grey text-white'
   }
 })

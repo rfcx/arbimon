@@ -1,95 +1,139 @@
 <template>
-  <nav class="bg-steel-grey">
-    <div class="sm:(relative flex justify-between) items-center">
-      <div class="justify-between flex-row relative flex items-center h-13">
-        <div class="flex items-center">
-          <mobile-menu-toggle-button
-            v-model:isToggled="hasToggledMobileMenu"
-            @toggle-mobile-menu="toggleMobileMenu()"
-          />
-          <router-link to="/">
-            <div class="flex-shrink-0 flex items-center ml-4 mr-4 <sm:(mx-2)">
-              <img
-                class="h-9 w-9 <sm:(h-7 w-7)"
-                src="/src/_services/assets/rfcx-logo.svg"
-                alt="Rainforest Connection logo"
-              >
-              <div class="font-semibold text-primary ml-2 <md:hidden">
-                <span :class="{ pride: isPride }">Arbimon</span>
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="flex items-center mx-4 sm:hidden">
-          <client-only>
-            <auth-navbar-item-component dom-id="navbar-auth-mobile" />
-          </client-only>
-        </div>
-      </div>
-      <div
-        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-grey border-t-1)"
-        :class="hasToggledMobileMenu ? 'visible' : 'hidden' "
-      >
+  <header>
+    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-steel-grey">
+      <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <router-link
-          v-for="(item, idx) in topLevelMenuItems"
-          :key="'nav-menus-' + idx"
-          :to="item.destination"
-          class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
-          :class="item.isParent ? 'router-link-needs-exact' : ''"
-          @click="hasToggledMobileMenu = false"
+          to="/"
+          class="flex items-center"
         >
-          {{ item.label }}
-        </router-link>
-
-        <client-only>
-          <el-dropdown
-            :popper-options="{modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, 0],
-                },
-              },
-            ],}"
+          <img
+            src="/src/_services/assets/rfcx-logo.svg"
+            class="mr-3 h-6 sm:h-9"
+            alt="Arbimon Logo"
           >
-            <span class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)">
-              Resources <icon-custom-angle-down class="ml-1 text-xs" />
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item
-                  v-for="(item, idx) in resourcesMenuItems"
-                  :key="'nav-menus-resources-' + idx"
+          <span
+            class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
+            :class="{ pride: isPride }"
+          >Arbimon</span>
+        </router-link>
+        <div class="flex items-center lg:order-2">
+          <client-only>
+            <auth-navbar-item-component dom-id="navbar-auth-desktop" />
+          </client-only>
+          <button
+            data-collapse-toggle="mobile-menu-2"
+            type="button"
+            class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-controls="mobile-menu-2"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open main menu</span>
+            <svg
+              class="w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            ><path
+              fill-rule="evenodd"
+              d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+              clip-rule="evenodd"
+            /></svg>
+            <svg
+              class="hidden w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            ><path
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            /></svg>
+          </button>
+        </div>
+        <div
+          id="mobile-menu-2"
+          class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
+        >
+          <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+            <li>
+              <a
+                href="/"
+                class="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
+                aria-current="page"
+              >Home</a>
+            </li>
+            <li>
+              <a
+                href="/featured-work"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >Featured Work</a>
+            </li>
+            <li>
+              <a
+                href="/how-it-works"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >How It Works</a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >About</a>
+            </li>
+            <li>
+              <button
+                id="dropdownResourcesButton"
+                data-dropdown-toggle="dropdownResources"
+                class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+              >
+                Resources <svg
+                  class="w-4 h-4 ml-1"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                ><path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                /></svg>
+              </button>
+              <!-- Dropdown menu -->
+              <div
+                id="dropdownResources"
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+              >
+                <ul
+                  class="py-2 text-sm text-gray-700 dark:text-gray-400"
+                  aria-labelledby="dropdownResourcesButton"
                 >
-                  <router-link
-                    :to="item.destination"
-                    @click="hasToggledMobileMenu = false"
-                  >
-                    {{ item.label }}
-                  </router-link>
-                </el-dropdown-item>
-                <el-dropdown-item disabled>
-                  Forum
-                </el-dropdown-item>
-                <el-dropdown-item disabled>
-                  Publications
-                </el-dropdown-item>
-                <el-dropdown-item disabled>
-                  Newsroom
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </client-only>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >FAQ</a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >Publications</a>
+                  </li>
+                </ul>
+                <div class="py-2">
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                  >Help &amp; Support</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
+    </nav>
+  </header>
 
-      <div class="flex items-center mx-2 <sm:hidden">
-        <client-only>
-          <auth-navbar-item-component dom-id="navbar-auth-desktop" />
-        </client-only>
-      </div>
-    </div>
-  </nav>
   <nav
     v-if="isProjectLevel"
     class="bg-steel-grey-light"
