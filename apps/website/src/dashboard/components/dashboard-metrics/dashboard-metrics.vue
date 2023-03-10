@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="loading"
+    v-if="loading || metrics === null"
     class="metric_wrapper"
   >
     <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24">
@@ -17,19 +17,19 @@
     class="metric_wrapper <sm:text-center"
   >
     <numeric-metric
-      :value="props.metrics.detectionMinutesCount"
+      :value="metrics.detectionMinutesCount"
       subtitle="detections"
       class="detections_metric"
     />
     <numeric-metric
       class="sites_metric"
-      :value="props.metrics.siteCount"
+      :value="metrics.siteCount"
       subtitle="sites"
     />
     <numeric-metric
       class="threatened_metric"
-      :value="props.metrics.speciesThreatenedCount"
-      :total-value="props.metrics.speciesCount"
+      :value="metrics.speciesThreatenedCount"
+      :total-value="metrics.speciesCount"
       subtitle="threatened"
     />
   </div>
@@ -37,8 +37,8 @@
     class="text-center text-subtle sm:(mt-3 text-left)"
   >
     Recording dates:
-    <span v-if="props.loading" />
-    <span v-else-if="props.metrics.minDate || props.metrics.maxDate">{{ formatDateRange(props.metrics.minDate, props.metrics.maxDate) }}</span>
+    <span v-if="loading" />
+    <span v-else-if="metrics && (metrics.minDate || metrics.maxDate)">{{ formatDateRange(metrics.minDate, metrics.maxDate) }}</span>
     <span v-else>-</span>
   </div>
 </template>
@@ -46,14 +46,15 @@
 <script setup lang="ts">
 import useDateFormat from '../../../_services/hooks/use-date-format'
 
-const props = defineProps<{ loading: boolean; metrics: {
+defineProps<{ loading: boolean; metrics: {
   detectionMinutesCount: number
   siteCount: number
   speciesCount: number
   speciesThreatenedCount: number
   maxDate?: Date
   minDate?: Date
-}}>()
+} | null}>()
+
 const { formatDateRange } = useDateFormat()
 </script>
 

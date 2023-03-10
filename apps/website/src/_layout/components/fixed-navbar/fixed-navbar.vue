@@ -31,9 +31,39 @@
           >
             <brand-logo />
           </router-link>
+          <button
+            v-if="store?.projects.length"
+            class="navbar-item h-9 mx-6 px-4 hover:bg-gray-700 rounded-md cursor-pointer"
+            @click="toggleProjectSelector(true)"
+          >
+            <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
+            <icon-custom-angle-down class="ml-1 text-xs" />
+          </button>
         </div>
         <div class="flex items-center">
-          <div class="flex items-center ml-3">
+          <div
+            class="hidden justify-between items-center lg:flex lg:w-auto"
+          >
+            <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+              <li v-if="toggles?.explore">
+                <router-link
+                  :to="{ name: ROUTE_NAMES.explore }"
+                  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                >
+                  Explore
+                </router-link>
+              </li>
+              <li>
+                <router-link
+                  :to="{ name: ROUTE_NAMES.explore }"
+                  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                >
+                  My Projects
+                </router-link>
+              </li>
+            </ul>
+          </div>
+          <div class="flex items-center ml-8">
             <div>
               <button
                 type="button"
@@ -109,8 +139,34 @@
       </div>
     </div>
   </nav>
+  <project-selector
+    v-if="hasOpenedProjectSelector"
+    @emit-close="toggleProjectSelector(false)"
+  />
 </template>
 <script setup lang="ts">
+import { initDropdowns } from 'flowbite'
+import { computed, inject, onMounted, ref } from 'vue'
+
+import { storeKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import ProjectSelector from '../project-selector/project-selector.vue'
 import BrandLogo from './brand-logo.vue'
+
+const store = inject(storeKey)
+const toggles = inject(togglesKey)
+
+const hasOpenedProjectSelector = ref(false)
+
+const selectedProjectName = computed(() => {
+  return store?.selectedProject?.name ?? 'Select Project'
+})
+
+function toggleProjectSelector (isOpened: boolean): void {
+  hasOpenedProjectSelector.value = isOpened
+}
+
+onMounted(() => {
+  initDropdowns()
+})
 </script>

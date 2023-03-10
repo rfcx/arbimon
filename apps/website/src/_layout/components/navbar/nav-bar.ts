@@ -1,4 +1,4 @@
-import { initDropdowns } from 'flowbite'
+import { initCollapses, initDropdowns } from 'flowbite'
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 import type { RouteLocationRaw } from 'vue-router'
@@ -79,6 +79,7 @@ export default class NavbarComponent extends Vue {
   }
 
   override mounted (): void {
+    initCollapses()
     initDropdowns()
   }
 
