@@ -6,15 +6,7 @@
           :to="{ name: ROUTE_NAMES.landingHome }"
           class="flex items-center"
         >
-          <img
-            src="/src/_services/assets/rfcx-logo.svg"
-            class="mr-3 h-6 sm:h-9"
-            alt="Arbimon Logo"
-          >
-          <span
-            class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
-            :class="{ pride: isPride }"
-          >Arbimon</span>
+          <brand-logo />
         </router-link>
         <div class="flex items-center lg:order-2">
           <client-only>

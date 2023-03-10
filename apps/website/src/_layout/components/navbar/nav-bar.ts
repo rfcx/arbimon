@@ -8,6 +8,7 @@ import { storeKey, togglesKey } from '@/globals'
 import type { FeatureToggles } from '~/feature-toggles'
 import { ROUTE_NAMES } from '~/router'
 import type { BiodiversityStore } from '~/store'
+import BrandLogo from '../fixed-navbar/brand-logo.vue'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
 
@@ -22,7 +23,8 @@ export interface NavMenu {
   components: {
     AuthNavbarItemComponent,
     MobileMenuToggleButton,
-    ProjectSelector
+    ProjectSelector,
+    BrandLogo
   }
 })
 export default class NavbarComponent extends Vue {

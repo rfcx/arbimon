@@ -1,4 +1,4 @@
-import type { RouteRecordRaw, RouterOptions } from 'vue-router'
+import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
 import { authRequiredGuard } from './guard-auth-required'
 import { storeProjectGuard } from './guard-store-project'
@@ -10,38 +10,44 @@ export * from './route-names'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: ROUTE_NAMES.landingHome,
-    component: PAGES.LandingHome
-  },
-  {
-    path: '/featured',
-    name: ROUTE_NAMES.landingFeatured,
-    component: PAGES.LandingFeatured
-  },
-  {
-    path: '/explore',
-    name: ROUTE_NAMES.explore,
-    component: PAGES.Explore
-  },
-  {
-    path: '/howitworks',
-    name: ROUTE_NAMES.landingHowItWorks,
-    component: PAGES.LandingHowItWorks
-  },
-  {
-    path: '/faq',
-    name: ROUTE_NAMES.landingFAQ,
-    component: PAGES.LandingFAQ
-  },
-  {
-    path: '/preferences',
-    name: ROUTE_NAMES.preferences,
-    component: PAGES.Preferences
-  },
-  {
-    path: '/info',
-    name: ROUTE_NAMES.info,
-    component: PAGES.Info
+    component: PAGES.LandingRoot,
+    children: [
+      {
+        path: '',
+        name: ROUTE_NAMES.landingHome,
+        component: PAGES.LandingHome
+      },
+      {
+        path: '/featured',
+        name: ROUTE_NAMES.landingFeatured,
+        component: PAGES.LandingFeatured
+      },
+      {
+        path: '/explore',
+        name: ROUTE_NAMES.explore,
+        component: PAGES.Explore
+      },
+      {
+        path: '/howitworks',
+        name: ROUTE_NAMES.landingHowItWorks,
+        component: PAGES.LandingHowItWorks
+      },
+      {
+        path: '/faq',
+        name: ROUTE_NAMES.landingFAQ,
+        component: PAGES.LandingFAQ
+      },
+      {
+        path: '/preferences',
+        name: ROUTE_NAMES.preferences,
+        component: PAGES.Preferences
+      },
+      {
+        path: '/info',
+        name: ROUTE_NAMES.info,
+        component: PAGES.Info
+      }
+    ]
   },
   {
     path: '/p/:projectSlug',
@@ -55,7 +61,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'insights',
-        component: PAGES.InsightsRoot,
+        component: RouterView,
         redirect: { name: ROUTE_NAMES.speciesRichness },
         children: [
           {
@@ -82,7 +88,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'analyse',
-        component: PAGES.AnalyseRoot,
+        component: RouterView,
         redirect: { name: ROUTE_NAMES.cnnJobList },
         beforeEnter: [authRequiredGuard],
         children: [
