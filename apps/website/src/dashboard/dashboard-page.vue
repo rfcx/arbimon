@@ -87,9 +87,8 @@
           </div>
         </div>
       </div>
-      <div class="dashboard-content">
+      <div class="dashboard-content mt-5">
         <page-title
-          class="dashboard-title mt-5"
           :page-title="store.selectedProject?.name ?? ''"
           :page-subtitle="profile?.summary"
         />

@@ -136,53 +136,6 @@
       </div>
     </nav>
   </header>
-
-  <nav
-    v-if="isProjectLevel"
-    class="bg-steel-gray-light"
-  >
-    <div class="sm:(relative flex justify-between) items-center">
-      <div class="justify-between flex-row relative flex items-center h-13">
-        <div class="flex items-center">
-          <button
-            v-if="store.projects.length > 0"
-            class="navbar-item text-sm h-9 mx-2 px-4 sm:(hover:bg-steel-gray rounded-md cursor-pointer)"
-            @click="toggleProjectSelector(true)"
-          >
-            <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
-            <icon-custom-angle-down class="ml-1 text-xs" />
-          </button>
-        </div>
-      </div>
-      <div
-        class="flex-col sm:(flex-1 flex flex-row items-center) <sm:(border-t-box-gray border-t-1)"
-        :class="hasToggledMobileMenu ? 'visible' : 'hidden' "
-      >
-        <router-link
-          v-for="(item, idx) in projectMenuItems"
-          :key="'nav-menus-' + idx"
-          :to="item.destination"
-          class="navbar-item navbar-menu-item <sm:(h-10 justify-start pl-4)"
-          :class="item.isParent ? 'router-link-needs-exact' : ''"
-          @click="hasToggledMobileMenu = false"
-        >
-          {{ item.label }}
-        </router-link>
-      </div>
-    </div>
-  </nav>
-  <project-selector
-    v-if="hasOpenedProjectSelector"
-    @emit-close="toggleProjectSelector(false)"
-  />
 </template>
 <script src="./nav-bar" lang="ts">
 </script>
-<style lang="scss">
-.pride {
-  background-image: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 145, 0), rgb(255, 234, 0), rgb(0, 255, 0), rgb(0, 238, 255), rgb(30, 100, 255), rgb(200, 70, 255), rgb(255, 50, 255), rgb(255, 44, 104));
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-</style>
