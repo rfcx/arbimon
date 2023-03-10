@@ -13,10 +13,10 @@
       </template>
     </section-title>
     <div class="grid grid-cols-4 gap-4 <lg:grid-cols-7 pt-2">
-      <div class="col-span-3 <lg:col-span-5 <md:col-span-7 border-1 border-box-grey rounded-md px-6 py-4 w-full">
+      <div class="col-span-3 <lg:col-span-5 <md:col-span-7 border-1 border-box-gray rounded-md px-6 py-4 w-full">
         <job-result-detection-summary />
       </div>
-      <div class="col-span-1 <lg:col-span-2 <md:col-span-7 border-1 border-box-grey rounded-md px-6 py-4 w-full">
+      <div class="col-span-1 <lg:col-span-2 <md:col-span-7 border-1 border-box-gray rounded-md px-6 py-4 w-full">
         <job-result-validation-status />
       </div>
     </div>

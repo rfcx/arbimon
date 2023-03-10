@@ -20,7 +20,7 @@
               <th
                 v-for="(item, idx) in tableHeader"
                 :key="'species-table-header-' + item.title"
-                class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
+                class="font-bold capitalize pt-2 px-1 bg-mirage-gray select-none"
                 :class="{
                   'text-left': idx < 2,
                   'w-52 lg:w-66': idx < 1,
@@ -59,7 +59,7 @@
               v-for="row in pageData"
               :key="'species-table-row-' + row.scientificName"
             >
-              <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
+              <td class="pt-2 px-1 sticky left-0 bg-mirage-gray z-10">
                 <router-link
                   :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: row.taxonSpeciesSlug }}"
                   class="text-subtle hover:(underline text-white)"
@@ -80,7 +80,7 @@
                   </p>
                 </router-link>
               </td>
-              <td class="p-2 sticky left-52 lg:left-66 bg-mirage-grey z-10">
+              <td class="p-2 sticky left-52 lg:left-66 bg-mirage-gray z-10">
                 {{ row.taxonClassName }}
               </td>
               <template

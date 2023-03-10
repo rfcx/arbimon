@@ -168,6 +168,6 @@ const confirmSelectedProject = async () => {
 }
 
 :deep(.el-tabs__nav-wrap::after) {
-  border-bottom: 2px solid $color-box-grey !important;
+  border-bottom: 2px solid $color-box-gray !important;
 }
 </style>

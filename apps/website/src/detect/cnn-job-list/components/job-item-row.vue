@@ -1,5 +1,5 @@
 <template>
-  <tr class="border-b border-box-grey">
+  <tr class="border-b border-box-gray">
     <td
       scope="row"
       class="w-2/10 px-6 py-4 align-text-top"

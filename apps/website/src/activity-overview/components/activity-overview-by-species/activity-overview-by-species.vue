@@ -12,14 +12,14 @@
     v-else
     class="mt-2"
   >
-    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-grey scrollbar-track-box-grey-300">
+    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-gray scrollbar-track-box-gray-300">
       <table class="w-full table-fixed">
         <thead class="h-10">
           <tr>
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
-              class="font-bold capitalize pt-2 px-1 bg-mirage-grey select-none"
+              class="font-bold capitalize pt-2 px-1 bg-mirage-gray select-none"
               :class="{
                 'text-left': idx < 2,
                 'w-52 lg:w-66': idx < 1,
@@ -58,7 +58,7 @@
             :key="'species-table-row-' + row.scientificName + idx"
           >
             <tr>
-              <td class="pt-2 px-1 sticky left-0 bg-mirage-grey z-10">
+              <td class="pt-2 px-1 sticky left-0 bg-mirage-gray z-10">
                 <router-link
                   :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) } }"
                   class="text-subtle hover:(underline text-white)"
@@ -102,7 +102,7 @@
                 v-for="speciesData in row.details"
                 :key="'species-details-row-' + row.scientificName + speciesData.datasetIdx"
               >
-                <td class="px-1 sticky left-0 bg-mirage-grey z-10">
+                <td class="px-1 sticky left-0 bg-mirage-gray z-10">
                   <div class="flex items-center">
                     <div
                       class="rounded-full w-1.5 h-1.5"

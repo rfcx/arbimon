@@ -13,7 +13,7 @@
           @click="$emit('emitClose')"
         />
       </div>
-      <hr class="border-box-grey-light mt-2">
+      <hr class="border-box-gray-light mt-2">
       <div class="text-md font-weight-bold mt-2">
         Threshold
         <el-slider

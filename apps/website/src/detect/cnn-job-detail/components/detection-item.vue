@@ -1,6 +1,6 @@
 <template>
   <div
-    class="detection-item-container relative w-18 h-18 border-box-grey bg-box-grey"
+    class="detection-item-container relative w-18 h-18 border-box-gray bg-box-gray"
     :class="{'border-0': isSelected, 'border-1': !isSelected}"
   >
     <div

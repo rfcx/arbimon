@@ -2,7 +2,7 @@
   <p class="inline-flex pb-2">
     {{ totalDurationMinutes }}
   </p>
-  <div class="border-l-3 border-box-grey pl-2 text-subtle">
+  <div class="border-l-3 border-box-gray pl-2 text-subtle">
     <p>Sites: {{ props.jobInput.sites }}</p>
     <p>Date: {{ props.jobInput.dateRange }}</p>
     <p>Time: {{ props.jobInput.timeOfDay }}</p>

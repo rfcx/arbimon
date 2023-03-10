@@ -2,7 +2,7 @@
   <el-select
     v-model="selectedFilter"
     filterable
-    class="species-input bg-steel-grey rounded my-6 focus:(border-box-grey ring-0 outline-none) min-w-64"
+    class="species-input bg-steel-gray rounded my-6 focus:(border-box-gray ring-0 outline-none) min-w-64"
   >
     <el-option
       v-for="option in props.filterOptions"
