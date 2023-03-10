@@ -15,13 +15,13 @@
     </div>
     <button
       class="btn ml-2"
-      :class="{ '<2xl:(bg-brand-primary btn-icon)': isShowLabel }"
+      :class="{ '<2xl:(bg-primary btn-icon)': isShowLabel }"
       @click="emitShowLabelsToggle"
     >
       <div class="flex items-center <2xl:hidden">
         <input
           type="checkbox"
-          class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
+          class="mr-2 text-primary focus:(ring-0 outline-none) rounded"
           :checked="isShowLabel"
         >
         Labels

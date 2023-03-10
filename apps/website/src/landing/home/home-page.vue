@@ -4,7 +4,7 @@
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head'
 
-import Hero from './blocks/hero.vue'
+import Hero from './blocks/home-hero.vue'
 
 useHead({
   title: 'Arbimon - Empower your wildlife research',

@@ -1,12 +1,13 @@
+import { initModals } from 'flowbite'
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
-import { type RouteLocationRaw } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
 
 import ProjectSelector from '@/_layout/components/project-selector/project-selector.vue'
 import { storeKey, togglesKey } from '@/globals'
-import { type FeatureToggles } from '~/feature-toggles'
+import type { FeatureToggles } from '~/feature-toggles'
 import { ROUTE_NAMES } from '~/router'
-import { type BiodiversityStore } from '~/store'
+import type { BiodiversityStore } from '~/store'
 import AuthNavbarItemComponent from './auth-navbar-item/auth-navbar-item.vue'
 import MobileMenuToggleButton from './mobile-menu-toggle-button/mobile-menu-toggle-button.vue'
 
@@ -104,8 +105,8 @@ export default class NavbarComponent extends Vue {
     return this.toggles.logoPride && new Date().getMonth() === 5 // June
   }
 
-  toggleMobileMenu (): void {
-    this.hasToggledMobileMenu = !this.hasToggledMobileMenu
+  override mounted (): void {
+    initModals()
   }
 
   toggleProjectSelector (isOpened: boolean): void {

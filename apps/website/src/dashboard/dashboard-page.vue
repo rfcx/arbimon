@@ -52,7 +52,7 @@
             v-for="tab in tabs"
             :key="'dashboard-data-display-' + tab.value"
             class="text-lg capitalize py-2 px-4 cursor-pointer"
-            :class="tab.value === selectedTab ? 'border-b-4 border-brand-primary' : 'border-b-1 border-steel-grey'"
+            :class="tab.value === selectedTab ? 'border-b-4 border-primary' : 'border-b-1 border-steel-grey'"
             @click="selectedTab = tab.value"
           >
             {{ tab.label }}
