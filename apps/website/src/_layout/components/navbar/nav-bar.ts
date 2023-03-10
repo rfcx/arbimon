@@ -1,4 +1,4 @@
-import { initModals } from 'flowbite'
+import { initDropdowns } from 'flowbite'
 import { Options, Vue } from 'vue-class-component'
 import { Inject } from 'vue-property-decorator'
 import type { RouteLocationRaw } from 'vue-router'
@@ -31,6 +31,7 @@ export default class NavbarComponent extends Vue {
 
   hasToggledMobileMenu = false
   hasOpenedProjectSelector = false
+  readonly ROUTE_NAMES = ROUTE_NAMES
 
   get isProjectLevel (): boolean {
     return this.$route.path.startsWith('/p/')
@@ -38,36 +39,6 @@ export default class NavbarComponent extends Vue {
 
   get selectedProjectName (): string {
     return this.store.selectedProject?.name ?? 'Select Project'
-  }
-
-  get topLevelMenuItems (): NavMenu[] {
-    return [
-      {
-        label: 'Featured Work',
-        destination: { name: ROUTE_NAMES.landingFeatured }
-      },
-      {
-        label: 'Explore',
-        destination: { name: ROUTE_NAMES.explore }
-      },
-      {
-        label: 'How It Works',
-        destination: { name: ROUTE_NAMES.landingHowItWorks }
-      }
-    ]
-  }
-
-  get resourcesMenuItems (): NavMenu[] {
-    return [
-      {
-        label: 'FAQ',
-        destination: { name: ROUTE_NAMES.landingFAQ }
-      },
-      {
-        label: 'Support & Tutorials',
-        destination: 'https://support.rfcx.org'
-      }
-    ]
   }
 
   get projectMenuItems (): NavMenu[] {
@@ -106,7 +77,8 @@ export default class NavbarComponent extends Vue {
   }
 
   override mounted (): void {
-    initModals()
+    console.info('here')
+    initDropdowns()
   }
 
   toggleProjectSelector (isOpened: boolean): void {

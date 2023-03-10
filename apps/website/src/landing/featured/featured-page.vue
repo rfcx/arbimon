@@ -1,8 +1,29 @@
 <template>
-  <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
-    <h1 class="text-white text-4xl capitalize">
-      Featured Work
-    </h1>
-  </div>
+  <section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+      <div class="grid grid-cols-3 grid-flow-row gap-4">
+        <div class="row-span-2">
+          <Card />
+        </div>
+        <div class="col-span-2">
+          <Card />
+        </div>
+        <div class="col-span-2">
+          <Card />
+        </div>
+        <div class="col-span-2">
+          <Card />
+        </div>
+        <div class="row-span-2">
+          <Card />
+        </div>
+        <div class="col-span-2">
+          <Card />
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
-<script src="./featured-page" lang="ts"></script>
+<script lang="ts" setup>
+import Card from './components/featured-card.vue'
+</script>

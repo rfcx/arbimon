@@ -3,7 +3,7 @@
     <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-steel-gray">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <router-link
-          to="/"
+          :to="{ name: ROUTE_NAMES.landingHome }"
           class="flex items-center"
         >
           <img
@@ -56,34 +56,35 @@
         >
           <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
             <li>
-              <a
-                href="/"
+              <router-link
+                :to="{ name: ROUTE_NAMES.landingHome }"
                 class="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
                 aria-current="page"
-              >Home</a>
+              >
+                Home
+              </router-link>
             </li>
             <li>
-              <a
-                href="/featured-work"
+              <router-link
+                :to="{ name: ROUTE_NAMES.landingFeatured }"
                 class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-              >Featured Work</a>
+              >
+                Featured Work
+              </router-link>
             </li>
             <li>
-              <a
-                href="/how-it-works"
+              <router-link
+                :to="{ name: ROUTE_NAMES.landingHowItWorks }"
                 class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-              >How It Works</a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-              >About</a>
+              >
+                How It Works
+              </router-link>
             </li>
             <li>
               <button
                 id="dropdownResourcesButton"
                 data-dropdown-toggle="dropdownResources"
+                data-dropdown-trigger="hover"
                 class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
               >
                 Resources <svg
@@ -108,23 +109,25 @@
                   aria-labelledby="dropdownResourcesButton"
                 >
                   <li>
-                    <a
-                      href="#"
+                    <router-link
+                      :to="{ name: ROUTE_NAMES.landingFAQ }"
                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >FAQ</a>
+                    >
+                      FAQ
+                    </router-link>
                   </li>
                   <li>
                     <a
                       href="#"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      class="disabled block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >Publications</a>
                   </li>
                 </ul>
                 <div class="py-2">
                   <a
-                    href="#"
+                    href="https://support.rfcx.org"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-                  >Help &amp; Support</a>
+                  >Help &amp; Support <icon-custom-linkout class="inline ml-1" /></a>
                 </div>
               </div>
             </li>
