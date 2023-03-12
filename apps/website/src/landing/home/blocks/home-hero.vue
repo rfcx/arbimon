@@ -1,19 +1,19 @@
 <template>
-  <section class="bg-white dark:bg-mirage-gray">
+  <section class="bg-white dark:bg-steel-gray">
     <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
       <div class="mr-auto place-self-center lg:col-span-7">
         <h1 class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
           Empower your wildlife research with Arbimon
         </h1>
-        <p class="max-w-2xl mb-4 font-light text-gray-500 md:text-lg lg:text-xl dark:text-gray-400">
+        <p class="max-w-2xl mb-4 text-gray-500 md:text-lg lg:text-xl dark:text-gray-400">
           Unleash the full potential of your acoustic data and gain unprecedented biodiveristy insights into the natural world.
         </p>
-        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+        <p class="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
           Join the global community of scientists, conservationists, and nature enthusiasts who use Arbimon to drive impactful and sustainable change.
         </p>
         <a
           href="#"
-          class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+          class="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-300 dark:bg-primary-light dark:hover:bg-primary dark:focus:ring-primary-900"
         >
           Start Analyzing
           <svg
