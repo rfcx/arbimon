@@ -117,7 +117,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'import',
         name: ROUTE_NAMES.import,
-        component: PAGES.ImportRoot,
+        component: RouterView,
         beforeEnter: [authRequiredGuard],
         children: [
         ]

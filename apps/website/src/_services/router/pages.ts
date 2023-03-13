@@ -1,7 +1,4 @@
-export { default as AnalyseRoot } from '@/_layout/analyse-root'
 export { default as Error } from '@/_layout/error'
-export { default as ImportRoot } from '@/_layout/import-root'
-export { default as InsightsRoot } from '@/_layout/insights-root'
 export { default as LandingRoot } from '@/_layout/landing-root'
 export { default as ProjectRoot } from '@/_layout/project-root'
 export { default as ActivityOverview } from '@/activity-overview'
