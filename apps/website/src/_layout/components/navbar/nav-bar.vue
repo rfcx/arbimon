@@ -50,7 +50,8 @@
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.landingHome }"
-                class="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
+                exact-active-class="!text-gray-900 !dark:text-white"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                 aria-current="page"
               >
                 Home
@@ -59,6 +60,7 @@
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.landingFeatured }"
+                exact-active-class="!text-gray-900 !dark:text-white"
                 class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Featured Work
@@ -67,6 +69,7 @@
             <li v-if="toggles.explore">
               <router-link
                 :to="{ name: ROUTE_NAMES.explore }"
+                exact-active-class="!text-gray-900 !dark:text-white"
                 class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Explore
@@ -75,6 +78,7 @@
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.landingHowItWorks }"
+                exact-active-class="!text-gray-900 !dark:text-white"
                 class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
               >
                 How It Works
@@ -111,6 +115,7 @@
                   <li>
                     <router-link
                       :to="{ name: ROUTE_NAMES.landingFAQ }"
+                      exact-active-class="!text-gray-900 !dark:text-white"
                       class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       FAQ

@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-mirage-gray">
     <div
       v-if="showcaseProjects.length > 0"
-      class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-4"
+      class="grid grid-cols-2 gap-4 max-w-screen-xl px-4 py-8 mx-auto lg:gap-6 lg:py-16 lg:grid-cols-4"
     >
       <ProjectCard
         v-for="project in showcaseProjects"
