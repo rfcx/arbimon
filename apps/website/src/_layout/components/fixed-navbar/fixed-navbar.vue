@@ -36,7 +36,7 @@
             class="navbar-item h-9 mx-6 px-4 hover:bg-gray-700 rounded-md cursor-pointer text-gray-700 lg:hover:text-primary-700 dark:text-gray-400 dark:hover:text-white lg:dark:hover:text-white"
             @click="toggleProjectSelector(true)"
           >
-            <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
+            <span class="max-w-96 truncate">{{ selectedProjectName }}</span>
             <icon-custom-angle-down class="ml-1 text-xs" />
           </button>
         </div>
