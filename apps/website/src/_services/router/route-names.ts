@@ -3,6 +3,7 @@ export const ROUTE_NAMES = {
   explore: 'explore',
   landingHome: 'landing_home',
   landingFeatured: 'landing_featured',
+  landingFeaturedDetail: 'landing_featured_detail',
   landingHowItWorks: 'landing_how_it_works',
   landingFAQ: 'landing_faq',
   // Project

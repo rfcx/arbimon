@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingFeatured
       },
       {
+        path: '/featured/:slug',
+        name: ROUTE_NAMES.landingFeaturedDetail,
+        component: PAGES.LandingFeaturedDetail
+      },
+      {
         path: '/explore',
         name: ROUTE_NAMES.explore,
         component: PAGES.Explore
