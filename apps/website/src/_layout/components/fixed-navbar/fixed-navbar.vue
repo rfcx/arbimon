@@ -151,7 +151,7 @@ import { computed, inject, onMounted, ref } from 'vue'
 import { storeKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import ProjectSelector from '../project-selector/project-selector.vue'
-import BrandLogo from './brand-logo.vue'
+import BrandLogo from '../brand-logo.vue'
 
 const store = inject(storeKey)
 const toggles = inject(togglesKey)
