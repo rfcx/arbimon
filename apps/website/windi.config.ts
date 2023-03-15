@@ -1,7 +1,6 @@
 import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 import pluginFlowbite from 'flowbite-windicss-plugin'
 import { defineConfig } from 'windicss/helpers'
-import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginFilter from 'windicss/plugin/filters'
 import pluginForms from 'windicss/plugin/forms'
@@ -18,22 +17,6 @@ export default defineConfig({
     './node_modules/flowbite/**/*.js'
   ],
   plugins: [
-    plugin(({ addComponents }) => {
-      const navbarItems = {
-        '.navbar-menu-item.router-link-exact-active,.navbar-menu-item.router-link-active:not(.router-link-needs-exact)': {
-          'box-shadow': 'inset 0 -3px 0 #31984f'
-        },
-        '@media (max-width: 699px)': {
-          '.navbar-menu-item.router-link-exact-active,.navbar-menu-item.router-link-active:not(.router-link-needs-exact)': {
-            'box-shadow': 'inset 5px 0 0 #31984f'
-          }
-        },
-        '.router-link-active > a > span': {
-          'font-weight': '700'
-        }
-      }
-      addComponents(navbarItems)
-    }),
     pluginInteractionVariants,
     pluginAspectRatio,
     pluginFilter,
@@ -120,13 +103,7 @@ export default defineConfig({
     // button
     btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-gray hover:bg-box-gray-dark focus:(ring-0 outline-none) disabled:(bg-box-gray cursor-not-allowed opacity-50)',
     'btn-primary': 'bg-primary hover:bg-primary-dark',
-    'btn-warning': 'bg-warning hover:bg-warning-dark',
-    'btn-danger': 'bg-danger hover:bg-danger-dark',
     'btn-icon': 'py-2 px-3',
-    // nav;
-    'navbar-container': 'box-content text-primary flex items-center justify-center h-13',
-    'navbar-item': 'box-content text-primary flex items-center justify-center h-13',
-    'navbar-menu-item': 'px-4',
     // input
     'input-field': 'bg-box-gray border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-gray text-white'
   }
