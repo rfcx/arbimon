@@ -33,7 +33,7 @@
           </router-link>
           <button
             v-if="store?.projects.length"
-            class="navbar-item h-9 mx-6 px-4 hover:bg-gray-700 rounded-md cursor-pointer text-gray-700 lg:hover:text-primary-700 dark:text-gray-400 dark:hover:text-white lg:dark:hover:text-white"
+            class="box-content flex items-center justify-center h-9 mx-6 px-4 hover:bg-gray-700 rounded-md cursor-pointer text-gray-700 lg:hover:text-primary-700 dark:text-gray-400 dark:hover:text-white lg:dark:hover:text-white"
             @click="toggleProjectSelector(true)"
           >
             <span class="max-w-96 truncate">{{ selectedProjectName }}</span>
@@ -150,8 +150,8 @@ import { computed, inject, onMounted, ref } from 'vue'
 
 import { storeKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import ProjectSelector from '../project-selector/project-selector.vue'
 import BrandLogo from '../brand-logo.vue'
+import ProjectSelector from '../project-selector/project-selector.vue'
 
 const store = inject(storeKey)
 const toggles = inject(togglesKey)
