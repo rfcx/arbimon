@@ -10,7 +10,7 @@
         </router-link>
         <div class="flex items-center lg:order-2">
           <client-only>
-            <auth-navbar-item-component dom-id="navbar-auth-desktop" />
+            <auth-navbar-item dom-id="navbar-auth-desktop" />
           </client-only>
           <button
             data-collapse-toggle="mobile-menu-2"
@@ -66,7 +66,7 @@
                 Featured Work
               </router-link>
             </li>
-            <li v-if="toggles.explore">
+            <li v-if="toggles?.explore">
               <router-link
                 :to="{ name: ROUTE_NAMES.explore }"
                 exact-active-class="!text-gray-900 !dark:text-white"
@@ -133,6 +133,13 @@
                     href="https://support.rfcx.org"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                   >Help &amp; Support <icon-custom-linkout class="inline ml-1" /></a>
+                  <router-link
+                    :to="{ name: ROUTE_NAMES.landingContact }"
+                    exact-active-class="!text-gray-900 !dark:text-white"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                  >
+                    Contact Us
+                  </router-link>
                 </div>
               </div>
             </li>
@@ -142,5 +149,19 @@
     </nav>
   </header>
 </template>
-<script src="./nav-bar" lang="ts">
+<script setup lang="ts">
+import { initCollapses, initDropdowns } from 'flowbite'
+import { inject, onMounted } from 'vue'
+
+import { togglesKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
+import BrandLogo from '../brand-logo.vue'
+import AuthNavbarItem from './auth-navbar-item/auth-navbar-item.vue'
+
+const toggles = inject(togglesKey)
+
+onMounted(() => {
+  initCollapses()
+  initDropdowns()
+})
 </script>

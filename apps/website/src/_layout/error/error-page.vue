@@ -6,4 +6,6 @@
     </div>
   </div>
 </template>
-<script src="./error-page" lang="ts"></script>
+<script setup lang="ts">
+import NavbarComponent from '@/_layout/components/navbar/nav-bar.vue'
+</script>

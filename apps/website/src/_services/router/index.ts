@@ -43,6 +43,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingFAQ
       },
       {
+        path: '/contact',
+        name: ROUTE_NAMES.landingContact,
+        component: PAGES.LandingContact
+      },
+      {
         path: '/preferences',
         name: ROUTE_NAMES.preferences,
         component: PAGES.Preferences
