@@ -4,6 +4,6 @@
   <footer-component />
 </template>
 <script setup lang="ts">
-import FooterComponent from '../components/footer.vue'
+import FooterComponent from '../components/footer-bar.vue'
 import NavbarComponent from '../components/navbar/nav-bar.vue'
 </script>

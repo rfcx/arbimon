@@ -6,6 +6,7 @@ export const ROUTE_NAMES = {
   landingFeaturedDetail: 'landing_featured_detail',
   landingHowItWorks: 'landing_how_it_works',
   landingFAQ: 'landing_faq',
+  landingContact: 'landing_contact',
   // Project
   overview: 'overview',
   // Project - Insights
