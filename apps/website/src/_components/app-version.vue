@@ -5,7 +5,7 @@
   </p>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'

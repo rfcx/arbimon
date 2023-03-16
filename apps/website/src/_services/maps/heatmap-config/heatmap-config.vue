@@ -28,7 +28,7 @@
     />
   </div>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 
 import type { HeatmapCustomByZoom } from '../utils/heatmap-style/style-to-paint'

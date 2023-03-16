@@ -16,7 +16,7 @@
   </p>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, inject } from 'vue'
 
 import { storeKey } from '@/globals'

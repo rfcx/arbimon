@@ -54,7 +54,7 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 
 import type { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'

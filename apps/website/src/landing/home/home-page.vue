@@ -1,7 +1,7 @@
 <template>
   <hero />
   <client-only>
-  <impact />
+    <impact />
   </client-only>
   <what-we-do />
   <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
@@ -9,7 +9,7 @@
   <how-it-works />
   <testimonials-partners />
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useHead } from '@vueuse/head'
 
 import Features from './blocks/home-features.vue'

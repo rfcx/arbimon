@@ -45,7 +45,7 @@
     </div>
   </on-click-outside>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import { OnClickOutside } from '@vueuse/components'
 import { inject, ref } from 'vue'
 
