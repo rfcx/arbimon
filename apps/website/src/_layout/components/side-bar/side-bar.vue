@@ -71,7 +71,7 @@
             v-if="item.children"
             :id="itemId(item.title)"
             class="py-2 space-y-2"
-            :class="{ hidden: !isParent(item) }"
+            :class="{ hidden: !isParent(item) && items.length > 4 }"
           >
             <li
               v-for="childItem in item.children"
@@ -147,7 +147,12 @@ const arbimonLink = computed(() => {
 
 type Item = { title: string, iconRaw?: string, public?: boolean, route?: RouteLocationRaw, legacyPath?: string, children?: Item[] }
 
-const items: Item[] = [
+const items = computed(() => {
+  // TODO Correctly identify my projects
+  return (store.selectedProject?.slug === 'puerto-rico-island-wide' || (store.selectedProject?.isMyProject ?? false)) ? allItems : allItems.filter(i => i.public)
+})
+
+const allItems: Item[] = [
   {
     title: 'Overview',
     iconRaw: '<svg aria-hidden="true" class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" /><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" /></svg>',
@@ -266,7 +271,6 @@ function isParent (item: Item): boolean {
   const childRouteNames = (item.children ?? []).map(i => {
     return i.route !== undefined && typeof i.route !== 'string' && 'name' in i.route ? i.route?.name : undefined
   }).filter(isDefined)
-  console.info('route', item.route !== undefined && typeof item.route !== 'string' && 'name' in item.route ? item.route?.name : '-', route.matched, childRouteNames)
   return route.matched.some(r => childRouteNames.includes(r.name ?? ''))
 }
 
