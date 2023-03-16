@@ -10,6 +10,7 @@ import { defineConfig } from 'vite'
 import pluginWindiCSS from 'vite-plugin-windicss'
 import pluginTsConfigPaths from 'vite-tsconfig-paths'
 import type { UserConfig as UserConfigVitest } from 'vitest'
+import { type RouteRecordRaw } from 'vue-router'
 
 import { ROUTE_NAMES } from './src/_services/router/route-names'
 
@@ -19,6 +20,9 @@ const STATIC_ROUTES = [
   ROUTE_NAMES.landingHowItWorks,
   ROUTE_NAMES.landingFAQ
 ]
+
+const flattenRoutes = (route: RouteRecordRaw, pathPrefix = ''): Array<{ path: string, name: string | symbol | undefined }> =>
+  [{ path: pathPrefix + route.path, name: route.name }].concat(route.children?.flatMap(r => flattenRoutes(r, pathPrefix + route.path)) ?? [])
 
 // https://vitejs.dev/config/
 const config: UserConfigVite & { test: UserConfigVitest } = {
@@ -81,11 +85,12 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   ssgOptions: {
     script: 'async',
     includedRoutes (paths, routes) {
-      return routes.filter(r => (STATIC_ROUTES as string[]).includes(r.name?.toString() ?? '')).map(r => r.path)
+      const allRoutes = routes.flatMap(r => flattenRoutes(r))
+      return allRoutes.filter(r => (STATIC_ROUTES as string[]).includes(r.name?.toString() ?? '')).map(r => r.path)
     }
   },
   ssr: {
-    noExternal: ['mapbox-gl']
+    noExternal: ['mapbox-gl', 'globe.gl']
   },
   test: {
     deps: { inline: ['element-plus'] },
