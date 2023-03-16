@@ -18,42 +18,42 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingHome
       },
       {
-        path: '/featured',
+        path: 'featured',
         name: ROUTE_NAMES.landingFeatured,
         component: PAGES.LandingFeatured
       },
       {
-        path: '/featured/:slug',
+        path: 'featured/:slug',
         name: ROUTE_NAMES.landingFeaturedDetail,
         component: PAGES.LandingFeaturedDetail
       },
       {
-        path: '/explore',
+        path: 'explore',
         name: ROUTE_NAMES.explore,
         component: PAGES.Explore
       },
       {
-        path: '/howitworks',
+        path: 'howitworks',
         name: ROUTE_NAMES.landingHowItWorks,
         component: PAGES.LandingHowItWorks
       },
       {
-        path: '/faq',
+        path: 'faq',
         name: ROUTE_NAMES.landingFAQ,
         component: PAGES.LandingFAQ
       },
       {
-        path: '/contact',
+        path: 'contact',
         name: ROUTE_NAMES.landingContact,
         component: PAGES.LandingContact
       },
       {
-        path: '/preferences',
+        path: 'preferences',
         name: ROUTE_NAMES.preferences,
         component: PAGES.Preferences
       },
       {
-        path: '/info',
+        path: 'info',
         name: ROUTE_NAMES.info,
         component: PAGES.Info
       }
@@ -70,7 +70,7 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.Dashboard
       },
       {
-        path: 'insights',
+        path: 'insights/',
         component: RouterView,
         redirect: { name: ROUTE_NAMES.speciesRichness },
         children: [
@@ -97,7 +97,7 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
-        path: 'analyse',
+        path: 'analyse/',
         component: RouterView,
         redirect: { name: ROUTE_NAMES.cnnJobList },
         beforeEnter: [authRequiredGuard],
