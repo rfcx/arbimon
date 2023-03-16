@@ -63,7 +63,7 @@
     </div>
   </section>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ROUTE_NAMES } from '~/router'
 import Card from './components/featured-card.vue'
 </script>
