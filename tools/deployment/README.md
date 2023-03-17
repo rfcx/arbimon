@@ -67,3 +67,24 @@ Secrets must be defined in 4 locations:
 - `1password vault` -- value to use on testing/staging/production
 
 **After updating secrets in 1password you must ask a team member with Kubernetes access to apply your update**
+
+## Deploy a branch manually to testing
+
+For website only:
+
+1. Build it
+   ```
+   docker build -t 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-website/testing -f tools/deployment/Dockerfile --target website .
+   ```
+
+2. Push it
+   ```
+   docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) 887044485231.dkr.ecr.eu-west-1.amazonaws.com
+   docker image push 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-website/testing:latest
+   ```
+
+3. Deploy it
+   ```
+   kubectl apply -f ./tools/deployment/website/testing
+   ```
+
