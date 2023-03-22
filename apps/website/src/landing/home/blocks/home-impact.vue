@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import ImpactGlobe from '../components/impact-globe-v1.vue'
+import ImpactGlobe from '../components/impact-globe.vue'
 
 type GlobeVisualization = 'species' | 'countries' | 'projects' | undefined
 const selectedGlobeVisualization = ref<GlobeVisualization>()
