@@ -84,6 +84,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import type { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
+import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import projectList from './project-list.vue'
 
@@ -148,6 +149,8 @@ const confirmSelectedProject = async () => {
   // If current route uses projectSlug, update it (guard will update store)
   if (route.params.projectSlug !== undefined) {
     await router.push({ params: { projectSlug: selectedProject.value.slug } })
+  } else {
+    await router.push({ name: ROUTE_NAMES.overview, params: { projectSlug: selectedProject.value.slug } })
   }
 
   emit('emitClose')
