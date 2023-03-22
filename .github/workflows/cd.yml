@@ -1,9 +1,6 @@
 name: 'CD'
 on:
   workflow_dispatch:
-  schedule:
-    # Every weekday at 02:19 UTC (09:19 in Thailand, to avoid GitHub Actions peak) https://crontab.guru
-    - cron:  '19 2 * * 1-5'
   push:
     branches:
       - master

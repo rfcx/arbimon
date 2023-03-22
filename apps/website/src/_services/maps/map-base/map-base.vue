@@ -233,7 +233,7 @@ const setupMapPopup = () => {
   })
 
   DATA_LAYERS.forEach(layerId => {
-    map.on('mouseenter', layerId, (e) => {
+    map.on('mousemove', layerId, (e) => {
       const coordinates = (e.features?.[0].geometry as GeoJSON.Point | undefined)?.coordinates.slice() as [number, number] | undefined
       const description = e.features?.[0].properties?.popup as string | undefined
       if (!coordinates || !description) return
