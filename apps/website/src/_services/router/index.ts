@@ -67,7 +67,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: ROUTE_NAMES.overview,
-        component: PAGES.Dashboard
+        component: PAGES.ProjectOverview
       },
       {
         path: 'insights/',
@@ -77,22 +77,22 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'richness',
             name: ROUTE_NAMES.speciesRichness,
-            component: PAGES.SpeciesRichness
+            component: PAGES.InsightsSpeciesRichness
           },
           {
             path: 'activity',
             name: ROUTE_NAMES.activityOverview,
-            component: PAGES.ActivityOverview
+            component: PAGES.InsightsActivityOverview
           },
           {
             path: 'spotlight/:speciesSlug?',
             name: ROUTE_NAMES.activityPatterns,
-            component: PAGES.ActivityPatterns
+            component: PAGES.InsightsActivityPatterns
           },
           {
             path: 'sync-history',
             name: ROUTE_NAMES.syncHistory,
-            component: PAGES.SyncHistory
+            component: PAGES.InsightsSyncHistory
           }
         ]
       },

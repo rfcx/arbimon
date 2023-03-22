@@ -2,21 +2,26 @@ import { type LngLatBoundsLike } from 'mapbox-gl'
 import { Options, Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
-import { LAYOUT_BREAKPOINT } from '@/_layout/config'
 import { storeKey } from '@/globals'
-import { generateHtmlPopup } from '@/species-richness/components/species-richness-by-location/functions'
-import { MAP_KEY_RICHNESS_TOTAL } from '@/species-richness/functions'
+import { generateDetectionHtmlPopup } from '@/insights/activity-overview/components/activity-overview-by-location/functions'
+import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/insights/activity-overview/functions'
 import { getExportFilterName } from '~/filters'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { type MapBaseFormatter, type MapDataSet, type MapMoveEvent } from '~/maps/types'
+import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { type BiodiversityStore } from '~/store'
 
-const DEFAULT_PREFIX = 'Species-By-Site'
+interface DropdownOption {
+  label: string
+  value: string
+}
+
+const DEFAULT_PREFIX = 'Overview-By-Site'
 
 @Options({
   components: {
@@ -24,22 +29,28 @@ const DEFAULT_PREFIX = 'Species-By-Site'
     MapToolMenuComponent
   }
 })
-export default class SpeciesRichnessByLocation extends Vue {
+export default class ActivityOverviewByLocation extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
-  @Prop({ default: [] }) public datasets!: MapDataSet[]
+  @Prop({ default: [] }) datasets!: MapDataSet[]
   @Prop({ default: false }) loading!: boolean
 
   isShowLabels = true
   mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS // TODO: Encapsulate this under BubbleMapGroup
   mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_HEATMAP
-  getPopupHtml = generateHtmlPopup
+  getPopupHtml = generateDetectionHtmlPopup
+
+  selectedType = ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency
+  datasetTypes: DropdownOption[] = [
+    { label: 'Detection Frequency', value: ACTIVITY_OVERVIEW_MAP_KEYS.detectionFrequency },
+    { label: 'Detections (raw)', value: ACTIVITY_OVERVIEW_MAP_KEYS.count },
+    { label: 'Naive Occupancy', value: ACTIVITY_OVERVIEW_MAP_KEYS.occupancy }
+  ]
 
   mapMoveEvent: MapMoveEvent | null = null
-  mapHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 576 : 288
 
-  get hasData (): boolean {
-    return !this.loading && this.datasets.length > 0
+  get hasNoData (): boolean {
+    return this.datasets.length === 0
   }
 
   get columnCount (): number {
@@ -49,10 +60,6 @@ export default class SpeciesRichnessByLocation extends Vue {
     }
   }
 
-  get mapDataKey (): string {
-    return MAP_KEY_RICHNESS_TOTAL
-  }
-
   get mapInitialBounds (): LngLatBoundsLike | null {
     const project = this.store.selectedProject
     if (!project) return null
@@ -60,30 +67,24 @@ export default class SpeciesRichnessByLocation extends Vue {
   }
 
   get circleFormatter (): MapBaseFormatter {
-    // ! After connect to the api, there is a case where `maxValueRaw` = -Infinity
-    // ! Have to investigate more
-    return new CircleFormatterNormalizedWithMin({ maxValueRaw: Math.max(0, this.datasets[0].maxValues[this.mapDataKey]) })
+    return this.selectedType === ACTIVITY_OVERVIEW_MAP_KEYS.occupancy
+      ? new CircleFormatterBinary()
+      : new CircleFormatterNormalizedWithMin({ maxValueRaw: this.datasets[0].maxValues[this.selectedType] })
   }
 
   get circleStyles (): CircleStyle[] {
     return this.datasets.map((d, idx) => ({ ...DEFAULT_NON_ZERO_STYLE, color: this.store.datasetColors[idx] }))
   }
 
-  override created (): void {
-    window.addEventListener('resize', () => {
-      this.mapHeight = screen.width > LAYOUT_BREAKPOINT.sm ? 576 : 288
-    })
-  }
-
-  propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
+  propagateMapMove (mapMoveEvent: MapMoveEvent): void { this.mapMoveEvent = mapMoveEvent }
   propagateMapGroundStyle (style: MapboxGroundStyle): void { this.mapGroundStyle = style }
   propagateMapStatisticsStyle (style: MapboxStatisticsStyle): void { this.mapStatisticsStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
 
-  mapExportName (dataset: MapDataSet, datasetIndex: number): string {
+  mapExportName (dataset: MapDataSet, type: string, datasetIndex: number): string {
     const { startDate, endDate, sites } = dataset
     const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
 
-    return getExportFilterName(startDate, endDate, DEFAULT_PREFIX, datasetIndex, undefined, siteGroup)
+    return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}`, datasetIndex, undefined, siteGroup)
   }
 }

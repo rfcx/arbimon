@@ -1,4 +1,4 @@
-import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
+import { SPOTLIGHT_MAP_KEYS } from '@/insights/activity-patterns/functions'
 import { type MapSiteData } from '~/maps/types'
 
 const getFormattedValue = (value: number | boolean, dataKey: string): string => {

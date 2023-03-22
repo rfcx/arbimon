@@ -4,8 +4,8 @@ import { Inject, Prop } from 'vue-property-decorator'
 
 import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import { generateDetectionHtmlPopup } from '@/activity-patterns/components/activity-patterns-by-location/functions'
-import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
+import { generateDetectionHtmlPopup } from '@/insights/activity-patterns/components/activity-patterns-by-location/functions'
+import { SPOTLIGHT_MAP_KEYS } from '@/insights/activity-patterns/functions'
 import { storeKey } from '@/globals'
 import { getExportFilterName } from '~/filters'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
