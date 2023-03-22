@@ -1,4 +1,4 @@
-import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/activity-overview/functions'
+import { ACTIVITY_OVERVIEW_MAP_KEYS } from '@/insights/activity-overview/functions'
 import { type MapSiteData } from '~/maps/types'
 
 const getFormattedValue = (value: number | boolean, dataKey: string): string => {

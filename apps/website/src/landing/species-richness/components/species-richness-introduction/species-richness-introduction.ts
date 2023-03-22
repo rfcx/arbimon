@@ -6,7 +6,7 @@ import { apiBioGetRichnessExport } from '@rfcx-bio/common/api-bio/richness/richn
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientBioKey, storeKey } from '@/globals'
-import { downloadCsvReports } from '@/species-richness/csv'
+import { downloadCsvReports } from '@/landing/species-richness/csv'
 import { type ColoredFilter, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
 import { type BiodiversityStore } from '~/store'
