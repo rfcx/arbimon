@@ -141,6 +141,11 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/callback',
+    name: ROUTE_NAMES.callback,
+    component: PAGES.Callback
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: ROUTE_NAMES.error,
     component: PAGES.Error

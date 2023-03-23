@@ -10,6 +10,6 @@ const getAuth0Client = async (redirectUri: string): Promise<Auth0Client> => awai
 
 let auth0Client: Auth0Client
 export const useAuth0Client = async (): Promise<Auth0Client> => {
-  auth0Client ??= await getAuth0Client(window.location.origin)
+  auth0Client ??= await getAuth0Client(window.location.origin + '/callback')
   return auth0Client
 }

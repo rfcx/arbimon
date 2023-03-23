@@ -23,6 +23,7 @@ export const ROUTE_NAMES = {
   cnnJobDetail: 'cnn_job_detail',
   cnnJobDetailBySpecies: 'cnn_job_detail_by_species',
   // Other
+  callback: 'callback',
   info: 'info',
   preferences: 'preferences',
   error: 'error'

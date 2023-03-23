@@ -20,7 +20,7 @@ export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, 
         await store.updateSelectedProject(undefined)
       } else {
         // Might need to login
-        await auth0Client.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
+        await auth0Client.loginWithRedirect({ appState: { target: to.fullPath } })
       }
     }
   }
