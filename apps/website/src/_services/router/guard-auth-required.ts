@@ -10,5 +10,5 @@ export const authRequiredGuard: NavigationGuardWithThis<undefined> = async (to, 
 
   // Redirect to login
   const auth0Client = await useAuth0Client()
-  await auth0Client.loginWithRedirect({ appState: { redirectPath: to.fullPath } })
+  await auth0Client.loginWithRedirect({ appState: { target: to.fullPath } })
 }

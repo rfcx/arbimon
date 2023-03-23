@@ -5,6 +5,7 @@ import { Inject, Prop } from 'vue-property-decorator'
 import { authClientKey, storeKey } from '@/globals'
 import { type BiodiversityStore } from '~/store'
 import VersionControl from './version-control.vue'
+import { ROUTE_NAMES } from '~/router'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
 
@@ -28,11 +29,12 @@ export default class AuthNavbarItemComponent extends Vue {
   }
 
   async signup (): Promise<void> {
-    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath }, screen_hint: 'signup' })
+    // TODO redirect to create your first project /create-project?first=1
+    await this.auth.loginWithRedirect({ appState: { target: '/my-projects' }, screen_hint: 'signup' })
   }
 
   async login (): Promise<void> {
-    await this.auth.loginWithRedirect({ appState: { redirectPath: this.$route.fullPath } })
+    await this.auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } } })
   }
 
   async logout (): Promise<void> {
