@@ -3,6 +3,7 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 import { SOURCES } from '@rfcx-bio/common/dao/types/source'
 import { getSequentially } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
+import { truncateEllipsis } from '@rfcx-bio/utils/string'
 
 import { getWikiSummary } from '@/sync/_refactor/input-wiki'
 import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/sync/_refactor/output-bio-db/taxon-species-wiki'
@@ -56,7 +57,7 @@ export const syncWikiSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
       source: SOURCES.wiki,
       photoUrl: decodeURI(data.thumbnailImage),
       photoCaption: data.title,
-      photoAuthor: data.credit ?? '',
+      photoAuthor: truncateEllipsis(data.credit ?? '', 1023),
       photoLicense: data.license,
       photoLicenseUrl: data.licenseUrl ? decodeURI(data.licenseUrl) : undefined
     }
