@@ -50,7 +50,7 @@ jobs:
             {
               "sync-daily": {
                 "JOB_NAME": "biodiversity-cli-sync-db-daily-user",
-                "NODE_COMMAND": "apps/cli/lib/sync/daily.js",
+                "NODE_COMMAND": "apps/cli/lib/sync/daily.js"
               },
               "sync-incremental": {
                 "JOB_NAME": "biodiversity-cli-sync-db-incremental-user",
