@@ -92,4 +92,4 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: apply -f job.yaml -n ${{ env.NAMESPACE }}
+          args: apply -f job.yaml -n ${{ inputs.environment }}
