@@ -1,0 +1,95 @@
+name: 'Create CLI job'
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: Job
+        type: choice
+        options:
+        - 'sync-daily'
+        - 'sync-incremental'
+        required: true
+      environment:
+        description: Environment (namespace)
+        type: choice
+        default: 'production'
+        options:
+        - 'production'
+        - 'staging'
+        - 'testing'
+        required: true
+jobs:
+  create-job:
+    runs-on: ubuntu-20.04
+    env:
+      ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
+    steps:
+      - name: 'Setup: ENV environment'
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        with:
+          key: '${{ inputs.environment }}'
+          map: |
+            {
+              "production": {
+                "ECR_REPO": "biodiversity-cli"
+              },
+              "staging": {
+                "ECR_REPO": "biodiversity-cli/staging"
+              },
+              "testing": {
+                "ECR_REPO": "biodiversity-cli/testing"
+              }
+            }
+      - name: 'Setup: ENV job'
+        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        with:
+          key: '${{ inputs.job }}'
+          map: |
+            {
+              "sync-daily": {
+                "JOB_NAME": "biodiversity-cli-sync-db-daily-user",
+                "NODE_COMMAND": "apps/cli/lib/sync/daily.js",
+              },
+              "sync-incremental": {
+                "JOB_NAME": "biodiversity-cli-sync-db-incremental-user",
+                "NODE_COMMAND": "apps/cli/lib/ingest/sync/incremental.js"
+              }
+            }
+
+      - name: 'Setup: Generate job unique number'
+        run: echo "JOB_NUMBER=$(date +%s)" >> $GITHUB_ENV
+    
+      - name: 'Deploy: Generate job definition file'
+        run: |
+          cat <<EOF > job.yaml
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: ${{ env.JOB_NAME }}-${{ env.JOB_NUMBER }}
+          spec:
+            template:
+              spec:
+                containers:
+                - name: ${{ env.JOB_NAME }}
+                  command: ["node", "--experimental-specifier-resolution=node", "${{ env.NODE_COMMAND }}"]
+                  image: ${{ env.ECR_REGISTRY }}/{{ env.ECR_REPO }}:latest
+                  imagePullPolicy: IfNotPresent
+                  envFrom:
+                    - secretRef:
+                        name: biodiversity-cli-secrets
+                    - configMapRef:
+                        name: biodiversity-cli-config
+                restartPolicy: Never
+            backoffLimit: 0
+          EOF
+          cat job.yaml
+
+      - name: 'Deploy: Create job'
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f job.yaml -n ${{ env.NAMESPACE }}
