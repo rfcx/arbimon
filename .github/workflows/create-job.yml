@@ -74,7 +74,7 @@ jobs:
                 containers:
                 - name: ${{ env.JOB_NAME }}
                   command: ["node", "--experimental-specifier-resolution=node", "${{ env.NODE_COMMAND }}"]
-                  image: ${{ env.ECR_REGISTRY }}/{{ env.ECR_REPO }}:latest
+                  image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
                   imagePullPolicy: IfNotPresent
                   envFrom:
                     - secretRef:
