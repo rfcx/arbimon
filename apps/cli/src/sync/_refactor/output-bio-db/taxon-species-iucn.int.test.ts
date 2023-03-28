@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from 'vitest'
+import { afterEach, beforeEach, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type TaxonSpecies, type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
@@ -24,10 +24,12 @@ const taxonSpecies2: TaxonSpecies = {
 }
 
 beforeEach(async () => {
+  await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([taxonSpecies1, taxonSpecies2])
+})
+
+afterEach(async () => {
   await biodiversitySequelize.query('DELETE FROM taxon_species_iucn')
   await biodiversitySequelize.query(`DELETE FROM taxon_species WHERE id in (${taxonSpecies1.id}, ${taxonSpecies2.id})`)
-
-  await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([taxonSpecies1, taxonSpecies2])
 })
 
 test('can insert and update (including updatedAt)', async () => {
