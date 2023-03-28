@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { beforeEach, expect, test, vi } from 'vitest'
+import { afterEach, expect, test, vi } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { truncateEllipsis } from '@rfcx-bio/utils/string'
@@ -21,7 +21,7 @@ vi.mock('@/sync/_refactor/input-wiki', () => {
 })
 
 const DEFAULT_SPECIES = {
-  idArbimon: 2757,
+  idArbimon: 10795,
   slug: 'bogus-malogus',
   taxonClassId: BIRDS_ID,
   scientificName: 'Bogus Malogus'
@@ -40,7 +40,7 @@ const DEFAULT_WIKI_INFO = {
   licenseUrl: 'https://en.wikipedia.org/wiki/Bogus_malogus#/media/File:Bogus_Malogus_-_MG_9666.jpg'
 }
 
-beforeEach(async () => {
+afterEach(async () => {
   const species = await TaxonSpecies.findAll({ attributes: ['id'], where: { slug: DEFAULT_SPECIES.slug } })
   await TaxonSpeciesWiki.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
   await TaxonSpeciesPhoto.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
