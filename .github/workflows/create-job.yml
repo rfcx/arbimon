@@ -69,6 +69,7 @@ jobs:
           metadata:
             name: ${{ env.JOB_NAME }}-${{ env.JOB_NUMBER }}
           spec:
+            ttlSecondsAfterFinished: 86400
             template:
               spec:
                 containers:
