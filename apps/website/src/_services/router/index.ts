@@ -28,11 +28,6 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingFeaturedDetail
       },
       {
-        path: 'explore',
-        name: ROUTE_NAMES.explore,
-        component: PAGES.Explore
-      },
-      {
         path: 'howitworks',
         name: ROUTE_NAMES.landingHowItWorks,
         component: PAGES.LandingHowItWorks
@@ -58,6 +53,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.Info
       }
     ]
+  },
+  {
+    path: '/explore',
+    name: ROUTE_NAMES.explore,
+    component: PAGES.Explore
   },
   {
     path: '/my-projects',

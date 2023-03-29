@@ -88,10 +88,17 @@
         </div>
       </div>
       <div class="dashboard-content mt-5">
-        <page-title
-          :page-title="store.selectedProject?.name ?? ''"
-          :page-subtitle="profile?.summary"
-        />
+        <div class="flex items-center">
+          <page-title
+            :page-title="store.selectedProject?.name ?? ''"
+            :page-subtitle="profile?.summary"
+            class="!w-min"
+          />
+          <version-control
+            v-if="isProjectMember"
+            class="mr-2"
+          />
+        </div>
         <dashboard-project-profile
           :information="profile?.readme"
           :loading="profile === null"
@@ -104,5 +111,5 @@
 <script src="./dashboard-page" lang="ts">
 </script>
 <style lang="scss">
-@import './dashboard-page.scss';
+@import './dashboard-page.scss'
 </style>
