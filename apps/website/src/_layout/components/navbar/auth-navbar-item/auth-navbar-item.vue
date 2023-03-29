@@ -22,7 +22,6 @@
     aria-expanded="true"
     aria-haspopup="true"
   >
-    <!-- <version-control v-if="isProjectMember" class="mr-2" /> -->
     <div
       :id="domId"
       type="button"
@@ -35,7 +34,7 @@
       <ul
         :aria-labelledby="domId"
         aria-orientation="vertical"
-        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-gray border-t-1 bg-steel-gray rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
+        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 dark:border-gray-700 border-t-1 bg-steel-gray rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
         role="menu"
         tabindex="-1"
       >

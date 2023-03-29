@@ -1,19 +1,13 @@
 import { type Auth0Client } from '@auth0/auth0-spa-js'
-import { Options, Vue } from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
 
 import { authClientKey, storeKey } from '@/globals'
-import { type BiodiversityStore } from '~/store'
-import VersionControl from './version-control.vue'
 import { ROUTE_NAMES } from '~/router'
+import { type BiodiversityStore } from '~/store'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
 
-@Options({
-  components: {
-    VersionControl
-  }
-})
 export default class AuthNavbarItemComponent extends Vue {
   @Inject({ from: authClientKey }) readonly auth!: Auth0Client
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
@@ -22,10 +16,6 @@ export default class AuthNavbarItemComponent extends Vue {
 
   get userImage (): string {
     return this.store.user?.picture ?? '' // TODO 156 - Add a default picture
-  }
-
-  get isProjectMember (): boolean {
-    return this.store.selectedProject?.isMyProject ?? false
   }
 
   async signup (): Promise<void> {
