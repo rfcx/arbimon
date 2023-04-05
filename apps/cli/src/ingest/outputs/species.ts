@@ -11,7 +11,6 @@ const transformSpeciesArbimonToTaxonSpeciesBio = (species: SpeciesArbimon): Omit
 const loopUpsert = async (species: Array<Omit<TaxonSpecies, 'id'>>, sequelize: Sequelize): Promise< Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const sp of species) {
-    console.info('➡️ Upsert of taxon species', JSON.stringify(sp))
     try {
       await ModelRepository.getInstance(sequelize).TaxonSpecies.upsert(sp)
     } catch (e: any) {
