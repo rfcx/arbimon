@@ -58,3 +58,24 @@ async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number
     return unpackAxiosError(e)
   }
 }
+
+export async function createProject (project: Pick<CoreProject, 'name' | 'is_public'>, token: string): Promise<string> {
+  const response = await axios.request<unknown>({
+    method: 'POST',
+    url: `${CORE_API_BASE_URL}/projects`,
+    headers: { authorization: token },
+    data: project
+  }).catch(unpackAxiosError)
+  const id = response.headers.location.split('/').pop()
+  if (id === undefined) throw new Error('Create project failed: no core id')
+  return id
+}
+
+export async function getProject (id: string, token: string): Promise<Pick<CoreProjectLight, 'external_id'>> {
+  const response = await axios.request<Pick<CoreProjectLight, 'external_id'>>({
+    method: 'GET',
+    url: `${CORE_API_BASE_URL}/projects/${id}?fields=external_id`,
+    headers: { authorization: token }
+  }).catch(unpackAxiosError)
+  return response.data
+}
