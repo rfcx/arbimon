@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-x-auto scrollbar-hide">
     <h2 class="text-white">
-      Click "Add comparison" below to compare between date ranges, sites, or taxonomies
+      Click "Add comparison" below to compare between date ranges, sites {{ canFilterByTaxon ? ', or taxonomies' : '' }}
     </h2>
     <div class="flex mt-5">
       <div
@@ -43,6 +43,7 @@
           </div>
         </div>
         <div
+          v-if="canFilterByTaxon"
           class="flex items-center py-2 px-4"
           :style="{ 'border-top': `solid 1px ${getFilterColor(idx)}`}"
         >
