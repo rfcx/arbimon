@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-x-auto scrollbar-hide">
     <h2 class="text-white">
-      Click "Add comparison" below to compare between date ranges, sites {{ canFilterByTaxon ? ', or taxonomies' : '' }}
+      Click "Add comparison" below to compare between date ranges {{ canFilterByTaxon ? ', sites , or taxonomies' : 'or sites' }}
     </h2>
     <div class="flex mt-5">
       <div
