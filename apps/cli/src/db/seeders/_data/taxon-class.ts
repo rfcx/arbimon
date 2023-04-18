@@ -7,5 +7,5 @@ export const rawTaxonClasses: TaxonClass[] = [
   { id: 300, idArbimon: 1, slug: 'birds', commonName: 'Birds' },
   { id: 400, idArbimon: 8, slug: 'fish', commonName: 'Fish' },
   { id: 500, idArbimon: 3, slug: 'insects', commonName: 'Insects' },
-  { id: 600, idArbimon: 5, slug: 'mammals', commonName: 'Mammals' }
+  { id: 600, idArbimon: 5, slug: 'mammals', commonName: 'Non-flying mammals' }
 ]
