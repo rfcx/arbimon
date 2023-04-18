@@ -7,6 +7,7 @@ export const ROUTE_NAMES = {
   landingFAQ: 'landing_faq',
   landingContact: 'landing_contact',
   // Projects
+  createProject: 'create_project',
   explore: 'explore',
   myProjects: 'my_projects',
   overview: 'overview',
