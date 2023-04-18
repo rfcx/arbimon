@@ -105,7 +105,7 @@ const mobJobResultFilters = [
     label: 'Class',
     items: [
       {
-        label: 'Mammals',
+        label: 'Non-flying mammals',
         value: 'mammals'
       },
       {
