@@ -66,6 +66,12 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: [storeProjectGuard, authRequiredGuard]
   },
   {
+    path: '/create-project',
+    name: ROUTE_NAMES.createProject,
+    component: PAGES.CreateProject,
+    beforeEnter: [storeProjectGuard, authRequiredGuard]
+  },
+  {
     path: '/p/:projectSlug',
     component: PAGES.ProjectRoot,
     beforeEnter: [storeProjectGuard],
