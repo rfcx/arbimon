@@ -26,7 +26,7 @@
           Results
         </h2>
         <p class="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">
-          We collected over 1 million minutes of recordings, which is equal to 694 days! We detected 178 species, including threatened species such as the black lion tamarin and bare-throated bellbird found only in the Atlantic Forest! We've found that restoration sites are able to host a similar number of bird species as forests. However, restoration and forest sites did have slightly different types of bird species (known as species composition), with forested sites having more large-bodied, fruit-eating species and restoration sites having more generalist species.
+          We collected over 1 million minutes of recordings, which is equal to 694 days! We detected 178 species, including threatened species such as the black lion tamarin and bare-throated bellbird found only in the Atlantic Forest! We've found that restoration sites are able to host a similar number of bird species as forests. However, restoration and forest sites did have slightly different types of bird species (known as species composition), with forested sites having more large-bodied, fruit-eating species and restoration sites having more generalist species.
         </p>
         <router-link
           to="/p/sounds-of-atlantic-forest"
