@@ -1,6 +1,19 @@
 name: 'CD'
 on:
   workflow_dispatch:
+    inputs:
+      deploy_cli:
+        description: Deploy CLI
+        type: boolean
+        default: true
+      deploy_api:
+        description: Deploy API
+        type: boolean
+        default: true
+      deploy_web:
+        description: Deploy Website
+        type: boolean
+        default: true
   push:
     branches:
       - master
@@ -148,7 +161,8 @@ jobs:
           find tools/deployment -name "*.yaml" -exec sed -i s/:latest/:${{ github.run_number }}/g {} +
           find tools/deployment -name "*.yaml" -exec sed -i s/JOB_NUMBER/${{ github.run_number }}/g {} +
 
-      - name: 'Deploy: Start migrate'
+      - name: 'Deploy: Kubernetes apply CLI (starts migrate)'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
@@ -157,6 +171,7 @@ jobs:
           args: apply -f ./tools/deployment/cli/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Wait for migrate to complete successfully'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
@@ -165,6 +180,7 @@ jobs:
           args: wait --for=condition=complete --timeout=300s -n ${{ env.NAMESPACE }} job/biodiversity-cli-migrate-${{ github.run_number }}
 
       - name: 'Deploy: Kubernetes apply API'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_api }}
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:
@@ -173,6 +189,7 @@ jobs:
           args: apply -f ./tools/deployment/api/${{ env.NAMESPACE }}
 
       - name: 'Deploy: Kubernetes apply WEB'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_web }}
         # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
         uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
         env:

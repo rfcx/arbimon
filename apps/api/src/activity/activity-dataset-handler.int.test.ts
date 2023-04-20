@@ -236,7 +236,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const expected: ActivityOverviewDataBySpecies = {
         commonName: '',
         scientificName: 'Felis catus',
-        taxon: 'Mammals',
+        taxon: 'Non-flying mammals',
         detectionMinutesCount: 4,
         detectionFrequency: 0.2,
         occupiedSites: 2,
