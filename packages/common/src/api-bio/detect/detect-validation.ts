@@ -1,7 +1,5 @@
 import { type AxiosInstance } from 'axios'
 
-import { apiPostOrUndefined } from '@rfcx-bio/utils/api'
-
 import { type DetectRouteParamsSerialized, DETECT_SPECIFIC_ROUTE_PREFIX, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
 
 // Request type
@@ -23,4 +21,4 @@ export const detectValidationRoute = DETECT_SPECIFIC_ROUTE_PREFIX
 
 // Service
 export const apiBioPostDetectValidation = async (apiClient: AxiosInstance, jobId: number, payload: DetectValidation[]): Promise<string | undefined> =>
-  await apiPostOrUndefined(apiClient, detectSpecificRoutePrefix(jobId), payload, { headers: { 'Content-Type': 'application/json' } })
+  await apiClient.post(detectSpecificRoutePrefix(jobId), payload, { headers: { 'Content-Type': 'application/json' } }).then(res => res.data)
