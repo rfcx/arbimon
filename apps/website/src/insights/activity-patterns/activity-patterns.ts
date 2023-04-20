@@ -8,9 +8,9 @@ import { type TaxonSpeciesCallTypes, type TaxonSpeciesPhotoTypes } from '@rfcx-b
 import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
+import { apiClientBioKey, storeKey } from '@/globals'
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from '@/insights/activity-patterns/functions'
 import { type Metrics } from '@/insights/activity-patterns/types'
-import { apiClientBioKey, storeKey } from '@/globals'
 import { type ColoredFilter, ComparisonListComponent, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
 import { type MapDataSet } from '~/maps/types'
