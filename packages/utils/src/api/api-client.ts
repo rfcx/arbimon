@@ -27,9 +27,3 @@ export const apiGetOrUndefined = async <T> (apiClient: AxiosInstance, url: strin
     .then(res => res.data)
     .catch(() => undefined)
 }
-
-export const apiPostOrUndefined = async <T> (apiClient: AxiosInstance, url: string, data?: any, config?: AxiosRequestConfig): Promise<T | undefined> => {
-  return await apiClient.post<T>(url, data, config)
-    .then(res => res.data)
-    .catch(() => undefined)
-}

@@ -1,11 +1,9 @@
 import { type AxiosInstance } from 'axios'
 
-import { apiPostOrUndefined } from '@rfcx-bio/utils/api'
-
 // Request type
 export interface ProjectCreateRequest {
   name: string
-  associatedOrganizations: string
+  associatedOrganizations?: string
 }
 
 // Response type
@@ -17,5 +15,5 @@ export interface ProjectCreateResponse {
 export const projectCreateRoute = '/projects'
 
 // Service
-export const apiBioPostProjectCreate = async (apiClient: AxiosInstance, payload: ProjectCreateRequest): Promise<ProjectCreateResponse | undefined> =>
-  await apiPostOrUndefined(apiClient, projectCreateRoute, payload, { headers: { 'Content-Type': 'application/json' } })
+export const apiBioPostProjectCreate = async (apiClient: AxiosInstance, payload: ProjectCreateRequest): Promise<ProjectCreateResponse> =>
+  await apiClient.post(projectCreateRoute, payload, { headers: { 'Content-Type': 'application/json' } }).then(res => res.data)
