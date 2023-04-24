@@ -119,8 +119,10 @@ import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/projec
 import FixedNavbar from '@/_layout/components/fixed-navbar/fixed-navbar.vue'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
 
 const router = useRouter()
+const store = useStore()
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
@@ -136,7 +138,8 @@ async function create () {
   const project = { name: name.value }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
-    router.push({ name: ROUTE_NAMES.overview, params: { slug: response?.slug } })
+    await store.refreshProjects()
+    await router.push({ name: ROUTE_NAMES.overview, params: { projectSlug: response?.slug } })
   } catch (e) {
     if (e instanceof Error) console.error(e.message)
     hasFailed.value = true

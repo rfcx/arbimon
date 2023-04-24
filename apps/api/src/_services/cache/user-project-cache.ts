@@ -22,3 +22,11 @@ export const updateMemberProjectCoreIds = async (userIdAuth0: string, projectCor
     .CacheUserProject
     .upsert({ userIdAuth0, projectCoreIds, expiredAt })
 }
+
+export const clearMemberProjectCoreIds = async (userIdAuth0: string): Promise<void> =>
+  await ModelRepository.getInstance(getSequelize())
+    .CacheUserProject
+    .destroy({
+      where: { userIdAuth0, expiredAt: { [Op.gt]: dayjs().toISOString() } }
+    })
+    .then(() => undefined)
