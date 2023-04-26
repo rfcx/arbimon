@@ -33,6 +33,7 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
+    this.addSelectionToTheQuery()
     return {
       sites: this.selectedSiteGroups,
       startDate: dayjs.utc(this.startDate),
@@ -52,8 +53,8 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Dates
   readonly today = dayjs().format(DATE_FORMAT)
-  startDate: string | null = dayjs().format(DATE_FORMAT)
-  endDate: string | null = dayjs().format(DATE_FORMAT)
+  startDate: string | null = ''
+  endDate: string | null = ''
 
   // Other filters
   otherFilters: FilterPropertyEquals[] = []
@@ -98,6 +99,9 @@ export default class ComparisonFilterModalComponent extends Vue {
       this.startDate = this.initialValues.startDate?.format(DATE_FORMAT)
       this.endDate = this.initialValues.endDate?.format(DATE_FORMAT)
       this.otherFilters = this.initialValues.otherFilters.map(f => ({ ...f }))
+    } else {
+      this.startDate = dayjs().format(DATE_FORMAT)
+      this.endDate = dayjs().format(DATE_FORMAT)
     }
   }
 
@@ -135,6 +139,25 @@ export default class ComparisonFilterModalComponent extends Vue {
   onRemoveSiteTags (item: SiteGroup): void {
     const index = this.selectedSiteGroups.findIndex(sg => sg.label === item.label)
     this.selectedSiteGroups.splice(index, 1)
+  }
+
+  addSelectionToTheQuery (): void {
+    const query = {
+      startDate: this.startDate,
+      endDate: this.endDate
+    }
+    void this.$router.replace({ query })
+    if (this.selectedSiteGroups.length) {
+      void this.$router.replace({ query: { ...this.$route.query, 'sites[]': this.getSelectedSiteIds() } })
+    }
+  }
+
+  getSelectedSiteIds (): string[] {
+    const siteIds: string[] = []
+    this.selectedSiteGroups.forEach((group: SiteGroup) => {
+      group.value.forEach(site => siteIds.push(site.id.toString()))
+    })
+    return siteIds
   }
 
   setDefaultSelectedSites (): void {
