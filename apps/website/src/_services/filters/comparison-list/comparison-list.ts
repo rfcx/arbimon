@@ -23,6 +23,8 @@ export default class ComparisonListComponent extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop({ default: true }) canFilterByTaxon!: boolean
+  @Prop() dateStart!: string | undefined
+  @Prop() dateEnd!: string | undefined
 
   @Emit() emitSelect (): ColoredFilter[] {
     return this.filters.map((f, i) => ({
@@ -32,6 +34,8 @@ export default class ComparisonListComponent extends Vue {
   }
 
   selectedFilterId = -1
+  selectedDateStart = this.dateStart ?? ''
+  selectedDateEnd = this.dateEnd ?? ''
   isAddSelected = false
   isFilterOpen = false
   filters: FilterImpl[] = [defaultFilter]
@@ -49,25 +53,26 @@ export default class ComparisonListComponent extends Vue {
   // Trigger when project change
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
+    const startDate = this.selectedDateStart ? dayjs.utc(this.selectedDateStart) : this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START
+    const endDate = this.selectedDateEnd ? dayjs.utc(this.selectedDateEnd) : this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
     this.filters = [new FilterImpl(
-      this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
-      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
+      startDate,
+      endDate
     )]
     if (this.store.projectFilters === undefined) return
     this.emitSelect()
   }
 
   addFilterConfig (): void {
-    // Copy previous filter
+    // Copy previous filter if there are not date range selection in the router
     const previousFilter = this.filters[this.filters.length - 1]
     this.modalFilter = new FilterImpl(
-      previousFilter.startDate,
-      previousFilter.endDate,
+      this.selectedDateStart ? dayjs(this.selectedDateStart) : previousFilter.startDate,
+      this.selectedDateEnd ? dayjs(this.selectedDateEnd) : previousFilter.endDate,
       previousFilter.sites.map(s => ({ ...s })),
       previousFilter.otherFilters.map(f => ({ ...f })),
       previousFilter.color
     )
-
     // Open modal
     this.isAddSelected = true
     this.isFilterOpen = true
