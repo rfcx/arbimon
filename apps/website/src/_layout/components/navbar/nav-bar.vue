@@ -134,6 +134,13 @@
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
                   >Help &amp; Support <icon-custom-linkout class="inline ml-1" /></a>
                   <router-link
+                    :to="{ name: ROUTE_NAMES.landingTeam }"
+                    exact-active-class="!text-gray-900 !dark:text-white"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                  >
+                    Meet The Team
+                  </router-link>
+                  <router-link
                     :to="{ name: ROUTE_NAMES.landingContact }"
                     exact-active-class="!text-gray-900 !dark:text-white"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
