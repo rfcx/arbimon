@@ -19,6 +19,8 @@ const STATIC_ROUTES = [
   ROUTE_NAMES.landingFeatured,
   ROUTE_NAMES.landingHowItWorks,
   ROUTE_NAMES.landingFAQ,
+  ROUTE_NAMES.landingTeam,
+  ROUTE_NAMES.landingContact,
   ROUTE_NAMES.callback
 ]
 

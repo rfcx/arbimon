@@ -30,5 +30,20 @@
   </nav>
 </template>
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+
 import BrandLogo from '@/_layout/components/brand-logo.vue'
+
+const router = useRouter()
+let timeoutId: number
+
+onMounted(() => {
+  // In case a user navigates to /callback not from auth, redirect them home
+  timeoutId = setTimeout(() => router.push({ path: '/' }), 5000) as unknown as number
+})
+
+onUnmounted(() => {
+  clearTimeout(timeoutId)
+})
 </script>
