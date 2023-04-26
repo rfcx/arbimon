@@ -39,6 +39,7 @@ ENV VITE_RELEASE_DATE=${release_date}
 
 RUN pnpm --filter=!website build
 RUN pnpm --filter=website build -- --mode ${mode}
+RUN if [["${mode}" != "production"]] ; then mv apps/website/dist/robots.disallow.txt apps/website/dist/robots.txt ; else rm apps/website/dist/robots.disallow.txt ; fi
 
 ENV NODE_ENV=development
 RUN pnpm -r pack-api
