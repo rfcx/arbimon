@@ -28,8 +28,6 @@
     <!-- Filter -->
     <comparison-list-component
       class="mt-5"
-      :date-start="$route.query.dateStart"
-      :date-end="$route.query.dateEnd"
       :can-filter-by-taxon="false"
       @emit-select="onFilterChange"
     />

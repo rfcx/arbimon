@@ -1,11 +1,13 @@
+import { isArray } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
+import { type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { storeKey } from '@/globals'
 import { type BiodiversityStore } from '~/store'
-import { type ColoredFilter, type ComparisonFilter } from '..'
+import { type ColoredFilter, type ComparisonFilter, type FilterPropertyEquals } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
 
@@ -23,8 +25,6 @@ export default class ComparisonListComponent extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop({ default: true }) canFilterByTaxon!: boolean
-  @Prop() dateStart!: string | undefined
-  @Prop() dateEnd!: string | undefined
 
   @Emit() emitSelect (): ColoredFilter[] {
     return this.filters.map((f, i) => ({
@@ -34,8 +34,10 @@ export default class ComparisonListComponent extends Vue {
   }
 
   selectedFilterId = -1
-  selectedDateStart = this.dateStart ?? ''
-  selectedDateEnd = this.dateEnd ?? ''
+  selectedDateStart: string = ''
+  selectedDateEnd: string = ''
+  selectedSiteIds: number[] = []
+  selectedTaxonIds: number[] = []
   isAddSelected = false
   isFilterOpen = false
   filters: FilterImpl[] = [defaultFilter]
@@ -50,14 +52,34 @@ export default class ComparisonListComponent extends Vue {
     return this.filters.length < 5
   }
 
+  get filteredSites (): Site[] {
+    return (this.store.projectFilters?.locationSites ?? [])
+      .filter(site => this.selectedSiteIds.includes(site.id))
+  }
+
+  get filteredTaxons (): FilterPropertyEquals[] {
+    return (this.store.projectFilters?.taxonClasses ?? [])
+      .filter(taxon => this.selectedTaxonIds.includes(taxon.id)).map(item => { return { propertyName: 'taxon', value: item.id } })
+  }
+
   // Trigger when project change
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
+    // Parse query url
+    this.selectedDateStart = this.$route.query.startDate as string
+    this.selectedDateEnd = this.$route.query.endDate as string
+    this.selectedSiteIds = this.$route.query['site[]'] as string ? (this.$route.query['site[]'] as string[]).map(item => Number(item)) : []
+    const isMultipleTaxons = isArray(this.$route.query['taxon[]'])
+    this.selectedTaxonIds = isMultipleTaxons ? (this.$route.query['taxon[]'] as string[]).map(item => Number(item)) : [Number(this.$route.query['taxon[]'])]
     const startDate = this.selectedDateStart ? dayjs.utc(this.selectedDateStart) : this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START
     const endDate = this.selectedDateEnd ? dayjs.utc(this.selectedDateEnd) : this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
+    const sites = this.filteredSites.map(s => ({ label: s.name, value: [s] }))
+    const taxons = this.filteredTaxons
     this.filters = [new FilterImpl(
       startDate,
-      endDate
+      endDate,
+      sites,
+      taxons
     )]
     if (this.store.projectFilters === undefined) return
     this.emitSelect()

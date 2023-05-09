@@ -142,14 +142,11 @@ export default class ComparisonFilterModalComponent extends Vue {
   }
 
   addSelectionToTheQuery (): void {
-    const query = {
+    const query: any = {
       startDate: this.startDate,
       endDate: this.endDate
     }
-    void this.$router.replace({ query })
-    if (this.selectedSiteGroups.length) {
-      void this.$router.replace({ query: { ...this.$route.query, 'sites[]': this.getSelectedSiteIds() } })
-    }
+    void this.$router.replace({ query: { ...query, 'site[]': this.getSelectedSiteIds(), 'taxon[]': this.selectedTaxons } })
   }
 
   getSelectedSiteIds (): string[] {
