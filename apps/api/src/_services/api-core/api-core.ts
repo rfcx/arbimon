@@ -49,7 +49,7 @@ async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number
   try {
     const resp = await axios.request<CoreProjectLight[]>({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/projects?fields=id&limit=${limit} &offset=${offset}`,
+      url: `${CORE_API_BASE_URL}/projects?fields=id&limit=${limit}&offset=${offset}`,
       headers: { authorization: token }
     })
 
