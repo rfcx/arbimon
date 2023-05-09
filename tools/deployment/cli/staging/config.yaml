@@ -20,8 +20,8 @@ data:
 
   WIKI_BASE_URL: https://en.wikipedia.org
   WIKI_MEDIA_BASE_URL: https://www.mediawiki.org
-  ARBIMON_BASE_URL: https://arbimon.rfcx.org
-  MEDIA_API_BASE_URL: https://media-api.rfcx.org
+  ARBIMON_BASE_URL: https://staging-arbimon.rfcx.org
+  MEDIA_API_BASE_URL: https://staging-api.rfcx.org
 
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_S3_BUCKET_NAME: arbimon-exports
