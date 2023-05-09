@@ -176,7 +176,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
-          args: wait --for=condition=complete --timeout=500s -n ${{ env.NAMESPACE }} job/biodiversity-cli-migrate-${{ github.run_number }}
+          args: wait --for=condition=complete --timeout=300s -n ${{ env.NAMESPACE }} job/biodiversity-cli-migrate-${{ github.run_number }}
 
       - name: 'Deploy: Kubernetes apply API'
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_api }}
