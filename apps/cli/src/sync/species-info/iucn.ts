@@ -12,23 +12,22 @@ const DEFAULT_RISK_RATING = -1
 
 export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
   const sql = `
-    SELECT DISTINCT ts.id, ts.scientific_name
+    SELECT DISTINCT ts.id, ts.scientific_name, tsi.risk_rating_iucn_id
     FROM taxon_species ts
     LEFT JOIN taxon_species_iucn tsi ON ts.id = tsi.taxon_species_id
     WHERE tsi.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, ts.updated_at)) >= 1 
     ORDER BY ts.id
   `
   const speciesNameToId = await sequelize
-    .query<{ id: number, scientific_name: string }>(sql, { type: QueryTypes.SELECT, raw: true })
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, s.id])))
-
+    .query<{ id: number, scientific_name: string, risk_rating_iucn_id: number }>(sql, { type: QueryTypes.SELECT, raw: true })
+    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, { id: s.id, risk_rating_iucn_id: s.risk_rating_iucn_id }])))
   const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
     .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
   console.info('| syncOnlyMissingIUCNSpeciesInfo =', Object.entries(speciesNameToId).length)
   await syncIucnSpeciesInfo(sequelize, speciesNameToId, iucnCodeToId)
 }
 
-export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, number>, iucnCodeToId: Record<string, number>): Promise<void> => {
+export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, any>, iucnCodeToId: Record<string, number>): Promise<void> => {
   const speciesNames = Object.keys(speciesNameToId)
   const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
 
@@ -37,9 +36,9 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
     const iucnSpeciesNarrativeData = iucnSpeciesNarrative[speciesName]
 
     return {
-      taxonSpeciesId: speciesNameToId[speciesName],
+      taxonSpeciesId: speciesNameToId[speciesName].id,
       commonName: iucnSpeciesData?.main_common_name ?? '',
-      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? DEFAULT_RISK_RATING,
+      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? speciesNameToId[speciesName].risk_rating_iucn_id ?? DEFAULT_RISK_RATING,
       description: iucnSpeciesNarrativeData?.habitat ?? '',
       descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
     }
