@@ -66,15 +66,10 @@ export default class ComparisonListComponent extends Vue {
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
     // Parse query url
-    const routerSites = this.$route.query['site[]']
-    const routerTaxons = this.$route.query['taxon[]']
-    const isMultipleSites = isArray(routerSites)
-    const isMultipleTaxons = isArray(routerTaxons)
-    this.selectedSiteIds = isMultipleSites ? (routerSites as string[]).map(item => Number(item)) : [Number(routerSites)]
-    this.selectedTaxonIds = isMultipleTaxons ? (routerTaxons as string[]).map(item => Number(item)) : [Number(routerTaxons)]
     this.selectedDateStart = this.$route.query.startDate as string
     this.selectedDateEnd = this.$route.query.endDate as string
-    // Filter data combine
+    this.selectedSiteIds = (isArray(this.$route.query['site[]']) ? this.$route.query['site[]'] : [this.$route.query['site[]']]).map(item => Number(item))
+    this.selectedTaxonIds = (isArray(this.$route.query['taxon[]']) ? this.$route.query['taxon[]'] : [this.$route.query['taxon[]']]).map(item => Number(item))
     const startDate = this.selectedDateStart ? dayjs.utc(this.selectedDateStart) : this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START
     const endDate = this.selectedDateEnd ? dayjs.utc(this.selectedDateEnd) : this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
     const sites = this.filteredSites.map(s => ({ label: s.name, value: [s] }))
