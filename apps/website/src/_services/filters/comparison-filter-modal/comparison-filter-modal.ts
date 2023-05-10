@@ -33,7 +33,6 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   @Emit() emitApply (): ComparisonFilter {
     this.emitClose()
-    this.addSelectionToTheQuery()
     return {
       sites: this.selectedSiteGroups,
       startDate: dayjs.utc(this.startDate),
@@ -136,24 +135,6 @@ export default class ComparisonFilterModalComponent extends Vue {
   onRemoveSiteTags (item: SiteGroup): void {
     const index = this.selectedSiteGroups.findIndex(sg => sg.label === item.label)
     this.selectedSiteGroups.splice(index, 1)
-  }
-
-  addSelectionToTheQuery (): void {
-    const query: any = {
-      startDate: this.startDate,
-      endDate: this.endDate
-    }
-    void this.$router.replace({ query: { ...query, sites: this.getSelectedSiteIdsAndLabels(), taxons: this.selectedTaxons } })
-  }
-
-  getSelectedSiteIdsAndLabels (): string[] {
-    const siteIds: string[] = []
-    this.selectedSiteGroups.forEach((group: SiteGroup) => {
-      if (group.value.length > 1) {
-        siteIds.push(group.label)
-      } else group.value.forEach(site => siteIds.push(site.id.toString()))
-    })
-    return siteIds
   }
 
   setDefaultSelectedSites (): void {

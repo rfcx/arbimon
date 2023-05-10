@@ -1,4 +1,5 @@
-import { isArray } from 'lodash-es'
+import { type Dayjs } from 'dayjs'
+import { isArray, isEmpty } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
@@ -13,6 +14,8 @@ import ComparisonFilterModalComponent from '../comparison-filter-modal/compariso
 const DEFAULT_START = dayjs.utc('1990-01-01T00:00:00.000Z').startOf('day')
 const DEFAULT_END = dayjs().utc().startOf('day')
 const defaultFilter = new FilterImpl(DEFAULT_START, DEFAULT_END)
+
+const DATE_FORMAT = 'YYYY-MM-DD'
 
 @Options({
   components: {
@@ -33,10 +36,6 @@ export default class ComparisonListComponent extends Vue {
   }
 
   selectedFilterId = -1
-  selectedDateStart: string = ''
-  selectedDateEnd: string = ''
-  selectedSiteIds: string[] = []
-  selectedTaxonIds: number[] = []
   isAddSelected = false
   isFilterOpen = false
   filters: FilterImpl[] = [defaultFilter]
@@ -51,46 +50,67 @@ export default class ComparisonListComponent extends Vue {
     return this.filters.length < 5
   }
 
-  get filteredTaxons (): FilterPropertyEquals[] {
-    return (this.store.projectFilters?.taxonClasses ?? [])
-      .filter(taxon => this.selectedTaxonIds.includes(taxon.id)).map(item => { return { propertyName: 'taxon', value: item.id } })
+  get getDefaultProjectDate (): [Dayjs, Dayjs] {
+    return [
+      this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
+      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
+    ]
   }
 
   // Trigger when project change
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
-    this.selectedDateStart = this.$route.query.startDate as string
-    this.selectedDateEnd = this.$route.query.endDate as string
-    this.selectedSiteIds = (isArray(this.$route.query.sites) ? this.$route.query.sites : [this.$route.query.sites]) as string[]
-    this.selectedTaxonIds = isArray(this.$route.query.taxons) ? this.$route.query.taxons.map(item => Number(item)) : [Number(this.$route.query.taxons)]
-    const startDate = this.selectedDateStart ? dayjs.utc(this.selectedDateStart) : this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START
-    const endDate = this.selectedDateEnd ? dayjs.utc(this.selectedDateEnd) : this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
-    const taxons = this.filteredTaxons
-    this.filters = [new FilterImpl(
-      startDate,
-      endDate,
-      this.filterSiteGroup(),
-      taxons
-    )]
+    this.filters = this.extractFilters()
     if (this.store.projectFilters === undefined) return
+    this.fillQueryFromComparison()
     this.emitSelect()
   }
 
-  filterSiteGroup (): SiteGroup[] {
+  extractFilters (): FilterImpl[] {
+    const query = this.$route.query
+    if (isEmpty(query.dss)) {
+      return [new FilterImpl(this.getDefaultProjectDate[0], this.getDefaultProjectDate[1])]
+    }
+    const numberOfDatasets = Number(query.dss)
+    const results: FilterImpl[] = []
+    for (let i = 0; i < numberOfDatasets; i++) {
+      const datasetPrefix = String.fromCharCode(97 + i)
+      const queryStartDate = (query[`${datasetPrefix}b`] as string | null) ?? this.getDefaultProjectDate[0]
+      const queryEndDate = query[`${datasetPrefix}e`] as string | null ?? this.getDefaultProjectDate[1]
+      const querySites = query[`${datasetPrefix}s`] as string[] | undefined
+      const queryTaxons = query[`${datasetPrefix}t`] as string | string[] | undefined
+      const startDate = dayjs.utc(queryStartDate).startOf('day')
+      const endDate = dayjs.utc(queryEndDate).startOf('day')
+
+      const sites = this.filterSiteGroup(querySites)
+      const taxons = this.filteredTaxons(queryTaxons)
+      results.push(new FilterImpl(startDate, endDate, sites, taxons))
+    }
+    return results
+  }
+
+  filteredTaxons (queryTaxons: string[] | string | undefined): FilterPropertyEquals[] | undefined {
+    if (queryTaxons === undefined) return undefined
+    let taxons: number[]
+    if (!isArray(queryTaxons)) taxons = [Number(queryTaxons)]
+    else taxons = queryTaxons.map(taxon => Number(taxon))
+    return (this.store.projectFilters?.taxonClasses ?? [])
+      .filter(taxon => taxons.includes(taxon.id)).map(item => { return { propertyName: 'taxon', value: item.id } })
+  }
+
+  filterSiteGroup (querySites: string[] | string | undefined): SiteGroup[] | undefined {
+    if (querySites === undefined) return undefined
     const siteGroup: SiteGroup[] = []
+    if (!isArray(querySites)) querySites = [querySites]
     const existingIds: number[] = []
-    this.selectedSiteIds.forEach((label: string) => {
-      console.info(existingIds)
+    querySites.forEach((label: string) => {
       if (Number(label)) {
-        const [site] = (this.store.projectFilters?.locationSites ?? [])
-        .filter(site => site.id === Number(label))
+        const [site] = (this.store.projectFilters?.locationSites ?? []).filter(site => site.id === Number(label))
         siteGroup.push({ label: site.name, value: [site] })
         existingIds.push(site.id)
       } else {
         const prefix = label.toLocaleLowerCase().substring(0, label.length - 1)
-        const sites = (this.store.projectFilters?.locationSites ?? [])
-          .filter(site => site.name.toLocaleLowerCase().startsWith(prefix) && !existingIds.includes(site.id))
-        console.info(sites, this.store.projectFilters?.locationSites)
+        const sites = (this.store.projectFilters?.locationSites ?? []).filter(site => site.name.toLocaleLowerCase().startsWith(prefix) && !existingIds.includes(site.id))
         siteGroup.push({ label, value: sites })
       }
     })
@@ -147,6 +167,7 @@ export default class ComparisonListComponent extends Vue {
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
     }
+    this.fillQueryFromComparison()
     this.emitSelect()
   }
 
@@ -159,6 +180,40 @@ export default class ComparisonListComponent extends Vue {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
       this.selectedFilterId = -1
     }
+    this.fillQueryFromComparison()
     this.emitSelect()
+  }
+
+  fillQueryFromComparison (): void {
+    if (this.filters.length === 0) {
+      void this.$router.replace({ query: undefined })
+    } else {
+      const prefixes: string[] = ['a', 'b', 'c', 'd', 'e']
+      const query: any = {
+        dss: this.filters.length
+      }
+      this.filters.forEach((filter: FilterImpl, ind: number) => {
+        const startDate = prefixes[ind] + 'b'
+        const endDate = prefixes[ind] + 'e'
+        const sites = prefixes[ind] + 's'
+        const taxons = prefixes[ind] + 't'
+        query[startDate] = dayjs(filter.startDate).format(DATE_FORMAT)
+        query[endDate] = dayjs(filter.endDate).format(DATE_FORMAT)
+        query[sites] = this.getSelectedSiteIdsAndLabels(filter.sites)
+        const selectedTaxons = filter.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value) as number[]
+        query[taxons] = selectedTaxons
+      })
+      void this.$router.replace({ query: { ...query } })
+    }
+  }
+
+  getSelectedSiteIdsAndLabels (selectedSiteGroups: SiteGroup[]): string[] {
+    const siteIds: string[] = []
+    selectedSiteGroups.forEach((group: SiteGroup) => {
+      if (group.value.length > 1) {
+        siteIds.push(group.label)
+      } else group.value.forEach(site => siteIds.push(site.id.toString()))
+    })
+    return siteIds
   }
 }

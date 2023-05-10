@@ -9,6 +9,30 @@ export interface FilterPropertyEquals {
   value: string | number
 }
 
+export interface UrlQueryType {
+  dss: number
+  ab?: string
+  ae?: string
+  as?: string[]
+  at?: number[]
+  bb?: string
+  be?: string
+  bs?: string[]
+  bt?: number[]
+  cb?: string
+  ce?: string
+  cs?: string[]
+  ct?: number[]
+  eb?: string
+  ee?: string
+  es?: string[]
+  et?: number[]
+  db?: string
+  de?: string
+  ds?: string[]
+  dt?: number[]
+}
+
 export interface SiteGroup {
   label: string
   value: Site[]
