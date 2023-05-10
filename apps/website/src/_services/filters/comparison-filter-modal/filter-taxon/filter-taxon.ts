@@ -14,7 +14,6 @@ export default class FilterTaxon extends Vue {
 
   @Emit() emitSelectedTaxons (): FilterPropertyEquals[] {
     if (this.selectedTaxons.length === this.taxons.length) return [] // select all === no filter
-    void this.$router.replace({ query: { ...this.$route.query, taxons: this.selectedTaxons } })
     return this.selectedTaxons.map(i => { return { propertyName: 'taxon', value: i } })
   }
 
