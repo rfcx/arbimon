@@ -20,14 +20,14 @@ export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Prom
   `
   const speciesNameToId = await sequelize
     .query<{ id: number, scientific_name: string, risk_rating_iucn_id: number }>(sql, { type: QueryTypes.SELECT, raw: true })
-    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, { id: s.id, risk_rating_iucn_id: s.risk_rating_iucn_id }])))
+    .then(allSpecies => Object.fromEntries(allSpecies.map(s => [s.scientific_name, { id: s.id, riskRatingIucnId: s.risk_rating_iucn_id }])))
   const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
     .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
   console.info('| syncOnlyMissingIUCNSpeciesInfo =', Object.entries(speciesNameToId).length)
   await syncIucnSpeciesInfo(sequelize, speciesNameToId, iucnCodeToId)
 }
 
-export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, any>, iucnCodeToId: Record<string, number>): Promise<void> => {
+export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId: Record<string, { id: number, riskRatingIucnId: number }>, iucnCodeToId: Record<string, number>): Promise<void> => {
   const speciesNames = Object.keys(speciesNameToId)
   const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
 
@@ -38,7 +38,7 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
     return {
       taxonSpeciesId: speciesNameToId[speciesName].id,
       commonName: iucnSpeciesData?.main_common_name ?? '',
-      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? speciesNameToId[speciesName].risk_rating_iucn_id ?? DEFAULT_RISK_RATING,
+      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? speciesNameToId[speciesName].riskRatingIucnId ?? DEFAULT_RISK_RATING,
       description: iucnSpeciesNarrativeData?.habitat ?? '',
       descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
     }
