@@ -2,7 +2,6 @@ import { isArray } from 'lodash-es'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
-// import { type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { storeKey } from '@/globals'
