@@ -41,6 +41,7 @@
     "test:unit": "vitest .unit.test."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.329.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.27.2",
