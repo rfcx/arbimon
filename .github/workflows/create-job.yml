@@ -8,6 +8,7 @@ on:
         options:
         - 'sync-daily'
         - 'sync-incremental'
+        - 'export-csv'
         required: true
       environment:
         description: Environment (namespace)
@@ -55,6 +56,10 @@ jobs:
               "sync-incremental": {
                 "JOB_NAME": "biodiversity-cli-sync-db-incremental-user",
                 "NODE_COMMAND": "apps/cli/lib/ingest/sync/incremental.js"
+              },
+              "export-csv": {
+                "JOB_NAME": "biodiversity-cli-export-csv",
+                "NODE_COMMAND": "apps/cli/lib/sync/export-csv.js"
               }
             }
 
