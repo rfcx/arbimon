@@ -13,7 +13,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="@/_assets/landing/team/marconi.png"
+            src="@/_assets/landing/team/marconi.jpg"
             alt="Bonnie Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -90,7 +90,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png"
+            src="@/_assets/landing/team/kris.jpg"
             alt="Helene Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -167,7 +167,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
+            src="@/_assets/landing/team/carly.jpg"
             alt="Jese Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -244,7 +244,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png"
+            src="@/_assets/landing/team/jack.jpg"
             alt="Joseph Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -321,7 +321,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/sofia-mcguire.png"
+            src="@/_assets/landing/team/jose.jpg"
             alt="Sofia Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -398,7 +398,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/thomas-lean.png"
+            src="@/_assets/landing/team/gabriel.jpg"
             alt="Leslie Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -475,7 +475,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png"
+            src="@/_assets/landing/team/tomaz.jpg"
             alt="Michael Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -552,7 +552,7 @@
         <div class="text-center text-gray-500 dark:text-gray-400">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png"
+            src="@/_assets/landing/team/nelson.jpg"
             alt="Neil Avatar"
           >
           <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
