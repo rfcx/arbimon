@@ -25,13 +25,11 @@
         </template>
       </export-button>
     </page-title>
-    <!-- Filter -->
     <comparison-list-component
       class="mt-5"
       :can-filter-by-taxon="false"
       @emit-select="onFilterChange"
     />
-    <!-- Species -->
     <species-selector
       :species-slug="$route.params.speciesSlug"
       @emit-selected-species-changed="onSelectedSpeciesChange"

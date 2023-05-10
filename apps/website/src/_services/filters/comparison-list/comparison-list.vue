@@ -65,7 +65,6 @@
         </div>
       </div>
     </div>
-    <!-- Filter -->
     <comparison-filter-modal-component
       v-if="isFilterOpen"
       :initial-values="modalFilter"
