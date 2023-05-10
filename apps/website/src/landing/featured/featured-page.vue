@@ -12,7 +12,7 @@
       <div class="grid grid-cols-3 grid-flow-row gap-5">
         <router-link
           class="row-span-2"
-          :to="{ name: ROUTE_NAMES.landingFeaturedDetail, params: { slug: 'reforestation' } }"
+          :to="{ name: ROUTE_NAMES.landingFeaturedReforestation }"
         >
           <card
             title="Reforestation"
@@ -20,18 +20,21 @@
             background-image="https://images.unsplash.com/photo-1574068468668-a05a11f871da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80"
           />
         </router-link>
+        <router-link
+          class="col-span-2"
+          :to="{ name: ROUTE_NAMES.landingFeaturedEndangeredSpecies }"
+        >
+          <card
+            class="h-86"
+            title="Endangered Species Monitoring"
+            subtitle="Charles Darwin Foundation"
+            background-image="https://images.unsplash.com/photo-1542202229-7d93c33f5d07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+          />
+        </router-link>
         <div class="col-span-2">
           <card
             class="h-86"
             title="Establish Biodiversity Baseline"
-            subtitle="Charles Darwin Foundation"
-            background-image="https://images.unsplash.com/photo-1542202229-7d93c33f5d07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
-          />
-        </div>
-        <div class="col-span-2">
-          <card
-            class="h-86"
-            title="Endangered Species Monitoring"
             subtitle="WWF"
             background-image="https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
           />
