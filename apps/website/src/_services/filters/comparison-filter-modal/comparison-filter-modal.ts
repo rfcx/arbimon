@@ -99,9 +99,6 @@ export default class ComparisonFilterModalComponent extends Vue {
       this.startDate = this.initialValues.startDate?.format(DATE_FORMAT)
       this.endDate = this.initialValues.endDate?.format(DATE_FORMAT)
       this.otherFilters = this.initialValues.otherFilters.map(f => ({ ...f }))
-    } else {
-      this.startDate = dayjs().format(DATE_FORMAT)
-      this.endDate = dayjs().format(DATE_FORMAT)
     }
   }
 
@@ -146,13 +143,15 @@ export default class ComparisonFilterModalComponent extends Vue {
       startDate: this.startDate,
       endDate: this.endDate
     }
-    void this.$router.replace({ query: { ...query, 'site[]': this.getSelectedSiteIds(), 'taxon[]': this.selectedTaxons } })
+    void this.$router.replace({ query: { ...query, sites: this.getSelectedSiteIdsAndLabels(), taxons: this.selectedTaxons } })
   }
 
-  getSelectedSiteIds (): string[] {
+  getSelectedSiteIdsAndLabels (): string[] {
     const siteIds: string[] = []
     this.selectedSiteGroups.forEach((group: SiteGroup) => {
-      group.value.forEach(site => siteIds.push(site.id.toString()))
+      if (group.value.length > 1) {
+        siteIds.push(group.label)
+      } else group.value.forEach(site => siteIds.push(site.id.toString()))
     })
     return siteIds
   }
