@@ -78,6 +78,30 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     .style('color', config.fontColor)
     .style('font-size', '14px')
 
+  // transform y scale text
+  svg.selectAll('.y-axis-scale g text').remove()
+  svg.selectAll('.y-axis-scale g').append('text')
+    .attr('dy', '0.32em')
+    .attr('x', -5)
+    .attr('fill', 'currentColor')
+    .style('color', 'white')
+    .style('font-size', '14px')
+  svg.selectAll('.y-axis-scale g text')
+    .each(function (d, i) {
+      const group = d3.map(data, (d) => d.group)
+      if (!group[i]) return
+      const lines = textSplit(group[i])
+      const isShortText = lines.length === 1
+      for (let i = 0; i < lines.length; i++) {
+        d3.select(this).append('tspan')
+        .attr('dy', isShortText ? 1 : i === 0 ? -5 : i * 13)
+        .attr('x', function (d) {
+          return -5
+        })
+        .text(lines[i])
+      }
+    })
+
   // select all x and y matched `line` tag name and set scale line color to be none (invisible)
   svg.selectAll('line')
     .style('color', 'none')
@@ -130,6 +154,11 @@ export const generateChart = (data: GroupedBarChartItem[], config: BarChartConfi
     })
 
   return { svg, fullHeight }
+}
+
+function textSplit (text: string): string[] {
+  const lines = text.split(' ')
+  return lines
 }
 
 export function generateXAxisTitle <T extends d3.BaseType> (svg: d3.Selection<T, undefined, null, undefined>, config: BarChartConfig, height: number, xTitleDistance: number): void {

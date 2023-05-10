@@ -47,6 +47,8 @@ The following must be true to consider a feature **"DONE"**:
    - Create `apps/cli/.env.local` (and override variables as necessary)
    - Create `apps/website/.env.local` (and override variables as necessary)
 
+5. (recommended) Add yourself to an example project. Ask another developer to invite you to Puerto Rico project on staging (needed because local Bio/Arbimon still uses staging Core for projects/permissions).
+
 ## Run the App!
 
 1. Start **DB**, **API**, and **Website** in dev-mode:
@@ -54,6 +56,8 @@ The following must be true to consider a feature **"DONE"**:
    `pnpm serve` (from the monorepo root)  
    _or_  
    `pnpm -w serve` (from anywhere in the project)
+
+   If you followed step 5 above then you'll find a fully hydrated project if you navigate to http://localhost:8101/puerto-rico.
 
 2. After you finish, you might want to stop your db:
 
