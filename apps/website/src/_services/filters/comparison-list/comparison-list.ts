@@ -47,16 +47,17 @@ export default class ComparisonListComponent extends Vue {
     return this.filters.length < 5
   }
 
-  // Trigger when project change
+  // Trigger on first load and when project change
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
     if (this.store.projectFilters === undefined) return
-    this.filters = fromQuery(this.$route.query, this.store.projectFilters)
-    if (this.filters.length === 0) {
-      this.filters = [new FilterImpl(
+    let filters = fromQuery(this.$route.query, this.store.projectFilters)
+    if (filters.length === 0) {
+      filters = [new FilterImpl(
         this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
         this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END)]
     }
+    this.filters = filters
     this.emitSelect()
   }
 
