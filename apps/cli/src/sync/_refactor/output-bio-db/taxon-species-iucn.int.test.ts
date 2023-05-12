@@ -28,7 +28,7 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await biodiversitySequelize.query('DELETE FROM taxon_species_iucn')
+  await biodiversitySequelize.query(`DELETE FROM taxon_species_iucn WHERE taxon_species_id in (${taxonSpecies1.id}, ${taxonSpecies2.id})`)
   await biodiversitySequelize.query(`DELETE FROM taxon_species WHERE id in (${taxonSpecies1.id}, ${taxonSpecies2.id})`)
 })
 
