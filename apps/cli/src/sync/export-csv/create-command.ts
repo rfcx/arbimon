@@ -1,4 +1,4 @@
-import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 import { type Dayjs } from 'dayjs'
 
 import { getFilename } from './get-filename'
@@ -8,13 +8,22 @@ import { getFilename } from './get-filename'
  */
 export type Filetype = 'projects' | 'sites' | 'species' | 'occurences_by_month' | 'recordings_by_month'
 
-export const createCommand = (startTime: Dayjs, filetype: Filetype, bucket: string, body: string): PutObjectCommand => {
+export const createPutCommand = (startTime: Dayjs, filetype: Filetype, bucket: string, body: string): [PutObjectCommand, string] => {
   const filename = getFilename(startTime, filetype)
 
-  return new PutObjectCommand({
+  return [new PutObjectCommand({
     Bucket: bucket,
     Key: filename,
     Body: body,
     ContentType: 'text/csv'
+  }), filename]
+}
+
+export const createGetCommand = (filename: string, bucket: string): GetObjectCommand => {
+  return new GetObjectCommand({
+    Bucket: bucket,
+    Key: filename
   })
 }
+
+// stride: basically python range()
