@@ -19,7 +19,7 @@ const ONE_WEEK_IN_SECONDS = 86400 * 7
 const main = async (): Promise<void> => {
   console.info('CSV Export start')
 
-  const startTime = dayjs()
+  const startTime = dayjs().utc()
 
   const {
     AWS_S3_BUCKET_REGION: region,
@@ -110,11 +110,11 @@ const main = async (): Promise<void> => {
       channel: '#arbimon-dev',
       text: [
         '✅ export-csv job runs successfully',
-        `projects: ${projectsS3Url}`,
-        `sites: ${sitesS3Url}`,
-        `species: ${speciesS3Url}`,
-        `occurences by month: ${occurencesS3Url}`,
-        `recordings by month: ${recordingsS3Url}`,
+        `projects: <${projectsS3Url}|projects.csv>`,
+        `sites: <${sitesS3Url}|sites.csv>`,
+        `species: <${speciesS3Url}|species.csv>`,
+        `occurences by month: <${occurencesS3Url}|occurences_by_month.csv>`,
+        `recordings by month: <${recordingsS3Url}|recordings_by_month.csv>`,
         '',
         'link expires in 7 days'
       ].join('\n')
