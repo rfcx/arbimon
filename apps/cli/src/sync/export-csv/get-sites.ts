@@ -1,17 +1,19 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
 export interface ExportedSite {
-  id: number
-  name: string
-  lat: number
-  lng: number
   project_id: string
+  site_id: number
+  name: string
+  latitude: number
+  longitude: number
+  altitude: number
 }
 
 export const getSites = async (sequelize: Sequelize): Promise<ExportedSite[]> => {
   const sql = `
-    select id, name, latitude as lat, longitude as lng, location_project_id as project_id
+    select location_project_id as project_id, id as site_id, name, latitude, longitude, altitude
     from location_site
+    order by project_id, site_id asc
   `
 
   const sites = await sequelize.query<ExportedSite>(sql, { type: QueryTypes.SELECT, raw: true })
