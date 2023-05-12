@@ -145,3 +145,17 @@ test('risk rating not updated when IUCN data not found', async () => {
   const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
   expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.category])
 })
+
+test('risk rating not updated when getting IUCN data is rejected', async () => {
+  // Arrange
+  await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
+  ;(getIucnSpecies as any).mockRejectedValue(new Error('Unexpected'))
+  ;(getIucnSpeciesNarrative as any).mockRejectedValue(new Error('Unexpected'))
+
+  // Act
+  await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize).catch(() => { })
+
+  // Assert
+  const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
+  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.category])
+})
