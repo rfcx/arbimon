@@ -148,6 +148,8 @@ test('risk rating not updated when IUCN data not found', async () => {
 
 test('risk rating not updated when getting IUCN data is rejected', async () => {
   // Arrange
+  ;(getIucnSpecies as any).mockRestore()
+  ;(getIucnSpeciesNarrative as any).mockRestore()
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
   ;(getIucnSpecies as any).mockRejectedValue(new Error('Unexpected'))
   ;(getIucnSpeciesNarrative as any).mockRejectedValue(new Error('Unexpected'))
