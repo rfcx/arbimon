@@ -52,8 +52,8 @@ export default class ComparisonFilterModalComponent extends Vue {
 
   // Dates
   readonly today = dayjs().format(DATE_FORMAT)
-  startDate: string | null = ''
-  endDate: string | null = ''
+  startDate: string | null = dayjs().format(DATE_FORMAT)
+  endDate: string | null = dayjs().format(DATE_FORMAT)
 
   // Other filters
   otherFilters: FilterPropertyEquals[] = []
