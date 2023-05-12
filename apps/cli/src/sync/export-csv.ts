@@ -27,7 +27,7 @@ const main = async (): Promise<void> => {
     AWS_S3_BUCKET_SECRET_ACCESS_KEY: secretAccessKey,
     AWS_S3_BUCKET_NAME: bucketName,
     SLACK_TOKEN: slackToken,
-    BIO_ENVIRONMENT: bioEnvironment,
+    BIO_ENVIRONMENT: bioEnvironment
   } = requireEnv('AWS_S3_BUCKET_REGION', 'AWS_S3_BUCKET_SECRET_ACCESS_KEY', 'AWS_S3_BUCKET_ACCESS_KEY_ID', 'AWS_S3_BUCKET_NAME', 'SLACK_TOKEN', 'BIO_ENVIRONMENT')
 
   const s3 = new S3Client({
