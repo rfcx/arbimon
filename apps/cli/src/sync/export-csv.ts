@@ -108,7 +108,7 @@ const main = async (): Promise<void> => {
 
     console.info('STEP: Notifying in slack channel')
     await web.chat.postMessage({
-      channel: '#arbimon-dev',
+      channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
       text: [
         `✅ export-csv in ${bioEnvironment} job runs successfully`,
         `projects: <${projectsS3Url}|projects.csv>`,
@@ -127,7 +127,7 @@ const main = async (): Promise<void> => {
     process.exitCode = 1
     console.info('CSV Export end: failed while querying and saving the data')
     await web.chat.postMessage({
-      channel: '#arbimon-dev',
+      channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
       text: '❌ export-csv job failed to run'
     })
   }
