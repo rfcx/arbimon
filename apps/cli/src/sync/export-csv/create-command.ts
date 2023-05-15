@@ -1,5 +1,6 @@
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 import { type Dayjs } from 'dayjs'
+import { parse } from 'path'
 
 import { getFilename } from './get-filename'
 
@@ -20,10 +21,11 @@ export const createPutCommand = (startTime: Dayjs, filetype: Filetype, bucket: s
 }
 
 export const createGetCommand = (filename: string, bucket: string): GetObjectCommand => {
+  const parsedPath = parse(filename)
+
   return new GetObjectCommand({
     Bucket: bucket,
-    Key: filename
+    Key: filename,
+    ResponseContentDisposition: `attachment; filename=${parsedPath.base}`
   })
 }
-
-// stride: basically python range()

@@ -128,7 +128,7 @@ const main = async (): Promise<void> => {
     console.info('CSV Export end: failed while querying and saving the data')
     await web.chat.postMessage({
       channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
-      text: '❌ export-csv job failed to run'
+      text: '❌ export-csv job failed to run. Please contact Engineering team for more info.'
     })
   }
 }
