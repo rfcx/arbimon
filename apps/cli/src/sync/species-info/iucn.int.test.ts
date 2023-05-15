@@ -104,6 +104,7 @@ beforeEach(async () => {
 afterEach(async () => {
   await models.TaxonSpeciesIucn.destroy({ where: { taxonSpeciesId: [SPECIES_1, SPECIES_2, SPECIES_3, SPECIES_4].map(s => s.id) } })
   await models.TaxonSpecies.destroy({ where: { id: [SPECIES_1, SPECIES_2, SPECIES_3, SPECIES_4].map(s => s.id) } })
+  vi.restoreAllMocks()
 })
 
 test('rows created for 2 matching species', async () => {
@@ -148,16 +149,16 @@ test('risk rating not updated when IUCN data not found', async () => {
 
 test('risk rating not updated when getting IUCN data is rejected', async () => {
   // Arrange
-  ;(getIucnSpecies as any).mockRestore()
-  ;(getIucnSpeciesNarrative as any).mockRestore()
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
   ;(getIucnSpecies as any).mockRejectedValue(new Error('Unexpected'))
   ;(getIucnSpeciesNarrative as any).mockRejectedValue(new Error('Unexpected'))
+  const catchCall = vi.fn()
 
   // Act
-  await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize).catch(() => { })
+  await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize).catch(catchCall)
 
   // Assert
+  expect(catchCall).toHaveBeenCalledOnce()
   const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
   expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.category])
 })
