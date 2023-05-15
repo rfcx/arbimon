@@ -26,6 +26,7 @@ export const createGetCommand = (filename: string, bucket: string): GetObjectCom
   return new GetObjectCommand({
     Bucket: bucket,
     Key: filename,
+    // parsedPath.base gives out the filename with extension e.g. `projects.csv`
     ResponseContentDisposition: `attachment; filename=${parsedPath.base}`
   })
 }
