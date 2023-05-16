@@ -57,8 +57,8 @@ describe('comparison-list > query-string > toQuery', () => {
       dss: '1',
       ab: '1990-01-01',
       ae: '2023-05-16',
-      as: ['111111'],
-      at: ['200']
+      as: '111111',
+      at: '200'
     }
     // Act
     const query = toQuery(filters)
@@ -67,7 +67,7 @@ describe('comparison-list > query-string > toQuery', () => {
     expect(query).toBeDefined()
     EXPECTED_PROPS.forEach(expectedProp => { expect(query).toHaveProperty(expectedProp) })
     expect(Object.keys(query)).toHaveLength(5)
-    expect(query.dss).toBeTypeOf('string')
+    Object.values(query).forEach(value => { expect(value).toBeTypeOf('string') })
     expect(query).toEqual(EXPECTED_QUERY)
   })
 })
@@ -129,8 +129,8 @@ describe('comparison-list > query-string > fromQuery', () => {
       dss: '1',
       ab: '2021-01-01',
       ae: '2023-01-01',
-      as: ['111111'],
-      at: ['200']
+      as: '111111',
+      at: '200'
     }
     // Act
     const filters = fromQuery(QUERY, projectFilter)

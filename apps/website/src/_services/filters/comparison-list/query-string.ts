@@ -1,5 +1,5 @@
-import { isArray, isEmpty } from 'lodash-es'
-import { type LocationQuery, type LocationQueryValue } from 'vue-router'
+import { isEmpty } from 'lodash-es'
+import { type LocationQuery } from 'vue-router'
 
 import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type Site, type TaxonClass } from '@rfcx-bio/common/dao/types'
@@ -22,7 +22,7 @@ export function toQuery (filters: FilterImpl[]): LocationQuery {
     query[`${datasetPrefix}b`] = filter.startDate.format(DATE_FORMAT)
     query[`${datasetPrefix}e`] = filter.endDate.format(DATE_FORMAT)
     query[`${datasetPrefix}s`] = formatSites(filter.sites)
-    query[`${datasetPrefix}t`] = filter.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value.toString())
+    query[`${datasetPrefix}t`] = filter.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value.toString()).join(',')
   })
   return query
 }
@@ -37,8 +37,8 @@ export function fromQuery (query: LocationQuery, projectFilters: ProjectFiltersR
     const datasetPrefix = String.fromCharCode(97 + i)
     const queryStartDate = (query[`${datasetPrefix}b`] as string | null) ?? projectFilters?.dateStartInclusiveUtc
     const queryEndDate = query[`${datasetPrefix}e`] as string | null ?? projectFilters?.dateEndInclusiveUtc
-    const querySites = query[`${datasetPrefix}s`] as string[] | undefined
-    const queryTaxons = query[`${datasetPrefix}t`] as LocationQueryValue
+    const querySites = query[`${datasetPrefix}s`] as string | undefined
+    const queryTaxons = query[`${datasetPrefix}t`] as string | undefined // as LocationQueryValue
 
     const startDate = dayjs.utc(queryStartDate).startOf('day')
     const endDate = dayjs.utc(queryEndDate).startOf('day')
@@ -50,20 +50,19 @@ export function fromQuery (query: LocationQuery, projectFilters: ProjectFiltersR
   return results
 }
 
-function parseTaxons (queryTaxons: LocationQueryValue, allTaxons: TaxonClass[] | undefined): FilterPropertyEquals[] | undefined {
+function parseTaxons (queryTaxons: string | undefined, allTaxons: TaxonClass[] | undefined): FilterPropertyEquals[] | undefined {
   if (queryTaxons === undefined) return undefined
-  let taxons: number[]
-  if (!isArray(queryTaxons)) taxons = [Number(queryTaxons)]
-  else taxons = queryTaxons.map(taxon => Number(taxon))
+  const querySitesArr = queryTaxons.split(',')
+  const taxons = querySitesArr.map(taxon => Number(taxon))
   return (allTaxons ?? []).filter(taxon => taxons.includes(taxon.id)).map(item => { return { propertyName: 'taxon', value: item.id } })
 }
 
-function parseSiteGroups (querySites: string[] | string | undefined, allSites: Site[] | undefined): SiteGroup[] | undefined {
+function parseSiteGroups (querySites: string | undefined, allSites: Site[] | undefined): SiteGroup[] | undefined {
   if (querySites === undefined) return undefined
   const siteGroup: SiteGroup[] = []
-  if (!isArray(querySites)) querySites = [querySites]
+  const querySitesArr = querySites.split(',')
   const existingIds: number[] = []
-  querySites.forEach((label: string) => {
+  querySitesArr.forEach((label: string) => {
     if (Number(label)) {
       const [site] = (allSites ?? []).filter(site => site.id === Number(label))
       siteGroup.push({ label: site.name, value: [site] })
@@ -77,12 +76,12 @@ function parseSiteGroups (querySites: string[] | string | undefined, allSites: S
   return siteGroup
 }
 
-function formatSites (siteGroups: SiteGroup[]): string[] {
+function formatSites (siteGroups: SiteGroup[]): string {
   const siteIds: string[] = []
   siteGroups.forEach((group: SiteGroup) => {
     if (group.value.length > 1) {
       siteIds.push(group.label)
     } else group.value.forEach(site => siteIds.push(site.id.toString()))
   })
-  return siteIds
+  return siteIds.join(',')
 }
