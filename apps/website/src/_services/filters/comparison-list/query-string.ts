@@ -21,8 +21,10 @@ export function toQuery (filters: FilterImpl[]): LocationQuery {
     const datasetPrefix = String.fromCharCode(97 + i)
     query[`${datasetPrefix}b`] = filter.startDate.format(DATE_FORMAT)
     query[`${datasetPrefix}e`] = filter.endDate.format(DATE_FORMAT)
-    query[`${datasetPrefix}s`] = formatSites(filter.sites)
-    query[`${datasetPrefix}t`] = filter.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value.toString()).join(',')
+    const sites = formatSites(filter.sites)
+    const taxons = filter.otherFilters.filter(f => f.propertyName === 'taxon').map(f => f.value.toString()).join(',')
+    if (sites) query[`${datasetPrefix}s`] = sites
+    if (taxons) query[`${datasetPrefix}t`] = taxons
   })
   return query
 }
@@ -38,7 +40,7 @@ export function fromQuery (query: LocationQuery, projectFilters: ProjectFiltersR
     const queryStartDate = (query[`${datasetPrefix}b`] as string | null) ?? projectFilters?.dateStartInclusiveUtc
     const queryEndDate = query[`${datasetPrefix}e`] as string | null ?? projectFilters?.dateEndInclusiveUtc
     const querySites = query[`${datasetPrefix}s`] as string | undefined
-    const queryTaxons = query[`${datasetPrefix}t`] as string | undefined // as LocationQueryValue
+    const queryTaxons = query[`${datasetPrefix}t`] as string | undefined
 
     const startDate = dayjs.utc(queryStartDate).startOf('day')
     const endDate = dayjs.utc(queryEndDate).startOf('day')
