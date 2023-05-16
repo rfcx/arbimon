@@ -59,7 +59,7 @@ jobs:
               },
               "export-csv": {
                 "JOB_NAME": "biodiversity-cli-export-csv",
-                "NODE_COMMAND": "apps/cli/lib/sync/export-csv.js"
+                "NODE_COMMAND": "apps/cli/lib/export/export-csv.js"
               }
             }
 
