@@ -118,7 +118,8 @@ const main = async (): Promise<void> => {
         `recordings by month: <${recordingsS3Url}|recordings_by_month.csv>`,
         '',
         'link expires in 7 days'
-      ].join('\n')
+      ].join('\n'),
+      icon_emoji: ':evergreen_tree:'
     })
 
     console.info('CSV Export end: successful')
@@ -128,7 +129,8 @@ const main = async (): Promise<void> => {
     console.info('CSV Export end: failed while querying and saving the data')
     await web.chat.postMessage({
       channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
-      text: '❌ export-csv job failed to run. Please contact Engineering team for more info.'
+      text: '❌ export-csv job failed to run. Please contact Engineering team for more info.',
+      icon_emoji: ':evergreen_tree:'
     })
   }
 }
