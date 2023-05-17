@@ -110,7 +110,7 @@ const main = async (): Promise<void> => {
     await web.chat.postMessage({
       channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
       text: [
-        `✅ export-csv in ${bioEnvironment} job runs successfully`,
+        '✅ export-csv job runs successfully',
         `projects: <${projectsS3Url}|projects.csv>`,
         `sites: <${sitesS3Url}|sites.csv>`,
         `species: <${speciesS3Url}|species.csv>`,
