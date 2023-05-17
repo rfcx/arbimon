@@ -1,8 +1,8 @@
 import { type RiskRatingIucn } from '@rfcx-bio/common/dao/types'
 
 export const rawRiskRatings: RiskRatingIucn[] = [
-  { id: -1, code: 'NE', isThreatened: false },
-  { id: 0, code: 'NA', isThreatened: false },
+  { id: -1, code: 'NA', isThreatened: false },
+  { id: 0, code: 'NE', isThreatened: false },
   { id: 100, code: 'DD', isThreatened: false },
   { id: 200, code: 'LC', isThreatened: false },
   { id: 300, code: 'NT', isThreatened: true },

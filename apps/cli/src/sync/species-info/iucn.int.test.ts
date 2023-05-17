@@ -130,7 +130,7 @@ test('rows created for non-matching species', async () => {
   // Assert
   const iucnSpecies3 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_3.id } })
   expect(iucnSpecies3).toBeTruthy()
-  expect(iucnSpecies3?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId.NE) // TODO: should be 'unknown' instead of NE
+  expect(iucnSpecies3?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId.NA)
 })
 
 test('risk rating not updated when IUCN data not found', async () => {
