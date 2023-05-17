@@ -119,7 +119,8 @@ const main = async (): Promise<void> => {
         '',
         'link expires in 7 days'
       ].join('\n'),
-      icon_emoji: ':evergreen_tree:'
+      icon_emoji: ':rocket:',
+      username: 'Arbimon job notifier'
     })
 
     console.info('CSV Export end: successful')
@@ -130,7 +131,8 @@ const main = async (): Promise<void> => {
     await web.chat.postMessage({
       channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
       text: '❌ export-csv job failed to run. Please contact Engineering team for more info.',
-      icon_emoji: ':evergreen_tree:'
+      icon_emoji: ':rocket:',
+      username: 'Arbimon job notifier'
     })
   }
 }
