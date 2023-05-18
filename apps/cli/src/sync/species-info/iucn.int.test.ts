@@ -133,9 +133,26 @@ test('rows created for non-matching species', async () => {
   expect(iucnSpecies3?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId.NA)
 })
 
+test('risk rating updated after 1 month', async () => {
+  // Arrange
+  await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
+  await biodiversitySequelize.query(`UPDATE taxon_species_iucn SET updated_at = date_trunc('day', updated_at - interval '1 month') WHERE taxon_species_id = ${SPECIES_1.id}`)
+  ;(getIucnSpecies as any).mockResolvedValue(undefined)
+  ;(getIucnSpeciesNarrative as any).mockResolvedValue(undefined)
+
+  // Act
+  await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
+
+  // Assert
+  const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
+  const aMinuteAgo = new Date(Date.now() - 1000 * 60)
+  expect(iucnSpecies1?.updatedAt?.getTime()).toBeGreaterThan(aMinuteAgo.getTime())
+})
+
 test('risk rating not updated when IUCN data not found', async () => {
   // Arrange
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
+  await biodiversitySequelize.query(`UPDATE taxon_species_iucn SET updated_at = date_trunc('day', updated_at - interval '1 month') WHERE taxon_species_id = ${SPECIES_1.id}`)
   ;(getIucnSpecies as any).mockResolvedValue(undefined)
   ;(getIucnSpeciesNarrative as any).mockResolvedValue(undefined)
 
@@ -150,6 +167,7 @@ test('risk rating not updated when IUCN data not found', async () => {
 test('risk rating not updated when getting IUCN data is rejected', async () => {
   // Arrange
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
+  await biodiversitySequelize.query(`UPDATE taxon_species_iucn SET updated_at = date_trunc('day', updated_at - interval '1 month') WHERE taxon_species_id = ${SPECIES_1.id}`)
   ;(getIucnSpecies as any).mockRejectedValue(new Error('Unexpected'))
   ;(getIucnSpeciesNarrative as any).mockRejectedValue(new Error('Unexpected'))
   const catchCall = vi.fn()
