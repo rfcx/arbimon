@@ -15,7 +15,7 @@ export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Prom
     SELECT DISTINCT ts.id, ts.scientific_name, tsi.risk_rating_iucn_id
     FROM taxon_species ts
     LEFT JOIN taxon_species_iucn tsi ON ts.id = tsi.taxon_species_id
-    WHERE tsi.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, ts.updated_at)) >= 1 
+    WHERE tsi.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsi.updated_at)) >= 1 
     ORDER BY ts.id
   `
   const speciesNameToId = await sequelize
