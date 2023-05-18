@@ -50,11 +50,11 @@ jobs:
           map: |
             {
               "sync-daily": {
-                "JOB_NAME": "biodiversity-cli-sync-db-daily-user",
+                "JOB_NAME": "biodiversity-cli-sync-daily-user",
                 "NODE_COMMAND": "apps/cli/lib/sync/daily.js"
               },
               "sync-incremental": {
-                "JOB_NAME": "biodiversity-cli-sync-db-incremental-user",
+                "JOB_NAME": "biodiversity-cli-sync-incremental-user",
                 "NODE_COMMAND": "apps/cli/lib/ingest/sync/incremental.js"
               },
               "export-csv": {
@@ -81,7 +81,7 @@ jobs:
                 - name: ${{ env.JOB_NAME }}
                   command: ["node", "--experimental-specifier-resolution=node", "${{ env.NODE_COMMAND }}"]
                   image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
-                  imagePullPolicy: IfNotPresent
+                  imagePullPolicy: Always
                   envFrom:
                     - secretRef:
                         name: biodiversity-cli-secrets
