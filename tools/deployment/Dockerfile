@@ -38,7 +38,7 @@ ENV VITE_RELEASE_COMMIT=${release_commit}
 ENV VITE_RELEASE_DATE=${release_date}
 
 RUN pnpm --filter=!website build
-RUN pnpm --filter=website build -- --mode ${mode}
+RUN pnpm --filter=website build --mode ${mode}
 
 ENV NODE_ENV=development
 RUN pnpm -r pack-api
