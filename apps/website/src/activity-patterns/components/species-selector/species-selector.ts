@@ -52,7 +52,7 @@ export default class SpeciesSelector extends Vue {
       this.allSpecies = await this.getAllSpecies()
       // reset not-exists species slug in the url.
       if (from.name === to.name && !this.allSpecies.length) {
-        void this.$router.replace({ params: { speciesSlug: '' } })
+        void this.$router.replace({ params: { speciesSlug: '' }, query: this.$route.query })
       }
     }
   }
