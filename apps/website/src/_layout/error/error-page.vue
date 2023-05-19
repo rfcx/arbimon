@@ -1,11 +1,11 @@
 <template>
   <div>
-    <navbar-component />
+    <navbar />
     <div class="text-subtle">
       Page not found
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import NavbarComponent from '@/_layout/components/navbar/nav-bar.vue'
+import Navbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 </script>

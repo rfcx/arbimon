@@ -10,7 +10,7 @@ import { type DashboardGeneratedResponse, apiBioGetDashboardGeneratedData } from
 import { type DashboardProfileResponse, apiBioGetDashboardProfileData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import VersionControl from '@/_layout/components/navbar/auth-navbar-item/version-control.vue'
+import VersionControl from '@/_layout/components/landing-navbar/auth-navbar-item/version-control.vue'
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
 import { downloadSvgAsPng } from '~/charts'
 import { type HorizontalStack } from '~/charts/horizontal-stacked-distribution/horizontal-stacked-distribution'

@@ -1,9 +1,9 @@
 <template>
-  <navbar-component />
+  <navbar />
   <router-view />
-  <footer-component />
+  <footerbar />
 </template>
 <script setup lang="ts">
-import FooterComponent from '../components/footer-bar.vue'
-import NavbarComponent from '../components/navbar/nav-bar.vue'
+import Footerbar from '../components/landing-footer.vue'
+import Navbar from '../components/landing-navbar/landing-navbar.vue'
 </script>

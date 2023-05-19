@@ -87,17 +87,22 @@ const routes: RouteRecordRaw[] = [
     path: '/p/:projectSlug',
     component: PAGES.ProjectRoot,
     beforeEnter: [storeProjectGuard],
+    redirect: { name: ROUTE_NAMES.overview },
     children: [
       {
-        path: '',
-        name: ROUTE_NAMES.overview,
-        component: PAGES.ProjectOverview
+        path: 'dashboard',
+        name: ROUTE_NAMES.dashboard,
+        component: PAGES.Dashboard
       },
       {
-        path: 'insights/',
-        component: RouterView,
-        redirect: { name: ROUTE_NAMES.speciesRichness },
+        path: 'insights',
+        component: PAGES.InsightsRoot,
         children: [
+          {
+            path: '',
+            name: ROUTE_NAMES.overview,
+            component: PAGES.ProjectOverview
+          },
           {
             path: 'richness',
             name: ROUTE_NAMES.speciesRichness,
@@ -121,7 +126,7 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
-        path: 'analyse/',
+        path: 'analyse',
         component: RouterView,
         redirect: { name: ROUTE_NAMES.cnnJobList },
         beforeEnter: [authRequiredGuard],

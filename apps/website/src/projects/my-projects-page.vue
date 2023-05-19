@@ -1,5 +1,5 @@
 <template>
-  <fixed-navbar />
+  <project-navbar />
   <section class="pt-16 bg-white dark:bg-mirage-gray">
     <div class="py-8 mx-auto max-w-screen-md <lg:mx-8 lg:py-24">
       <h2 class="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import FixedNavbar from '@/_layout/components/fixed-navbar/fixed-navbar.vue'
+import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
