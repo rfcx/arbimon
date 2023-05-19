@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-steel-gray dark:border-gray-700">
+  <nav class="w-full bg-white border-b border-gray-200 dark:bg-steel-gray dark:border-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
@@ -82,8 +82,8 @@ import { computed, inject, onMounted, ref } from 'vue'
 import { storeKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import BrandLogo from '../brand-logo.vue'
-import AuthNavbarItem from '../navbar/auth-navbar-item/auth-navbar-item.vue'
-import ProjectSelector from '../project-selector/project-selector.vue'
+import AuthNavbarItem from '../landing-navbar/auth-navbar-item/auth-navbar-item.vue'
+import ProjectSelector from './project-selector/project-selector.vue'
 
 const store = inject(storeKey)
 const toggles = inject(togglesKey)

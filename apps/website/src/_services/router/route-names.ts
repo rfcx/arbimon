@@ -12,8 +12,9 @@ export const ROUTE_NAMES = {
   createProject: 'create_project',
   explore: 'explore',
   myProjects: 'my_projects',
-  overview: 'overview',
+  dashboard: 'dashboard',
   // Project - Insights
+  overview: 'overview',
   speciesRichness: 'species_richness',
   activityOverview: 'activity_overview',
   activityPatterns: 'activity_patterns',

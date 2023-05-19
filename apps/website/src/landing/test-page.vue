@@ -1,5 +1,5 @@
 <template>
-  <navbar-component />
+  <project-navbar />
   <nav
     class="bg-gray-50 dark:bg-steel-gray-light"
   >
@@ -62,5 +62,5 @@
   </section>
 </template>
 <script setup lang="ts">
-import NavbarComponent from '@/_layout/components/navbar/nav-bar.vue'
+import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
 </script>

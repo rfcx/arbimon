@@ -1,5 +1,5 @@
 <template>
-  <fixed-navbar />
+  <project-navbar />
   <section class="pt-16 bg-white dark:bg-mirage-gray">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-24">
       <h2 class="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -116,7 +116,7 @@ import { useRouter } from 'vue-router'
 
 import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/project-create'
 
-import FixedNavbar from '@/_layout/components/fixed-navbar/fixed-navbar.vue'
+import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
