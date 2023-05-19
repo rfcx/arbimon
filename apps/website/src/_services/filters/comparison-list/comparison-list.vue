@@ -1,9 +1,6 @@
 <template>
   <div class="overflow-x-auto scrollbar-hide">
-    <h2 class="text-white">
-      Click "Add comparison" below to compare between date ranges {{ canFilterByTaxon ? ', sites , or taxonomies' : 'or sites' }}
-    </h2>
-    <div class="flex mt-5">
+    <div class="flex">
       <div
         v-for="(filter, idx) in filters"
         :key="'site-card' + idx"
