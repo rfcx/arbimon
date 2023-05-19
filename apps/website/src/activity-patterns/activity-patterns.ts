@@ -78,7 +78,7 @@ export default class ActivityPatternsPage extends Vue {
 
   async onSelectedSpeciesChange (species: SpeciesInProjectTypes['light'] | undefined): Promise<void> {
     const speciesSlug = species?.taxonSpeciesSlug
-    void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug } })
+    void this.$router.replace({ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug }, query: this.$route.query })
 
     this.species = species ?? null
 
