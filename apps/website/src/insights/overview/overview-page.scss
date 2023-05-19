@@ -33,10 +33,6 @@ $sc-xl: 1280px;
       align-items: center;
     }
   }
-
-  .dashboard-content {
-    grid-area: content;
-  }
 }
 
 @media (max-width: $sc-sm) {

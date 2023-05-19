@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import useDateFormat from '../../../_services/hooks/use-date-format'
+import useDateFormat from '~/hooks/use-date-format'
 
 defineProps<{ loading: boolean; metrics: {
   detectionMinutesCount: number

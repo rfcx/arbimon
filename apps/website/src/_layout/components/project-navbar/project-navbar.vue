@@ -1,6 +1,6 @@
 <template>
-  <nav class="w-full bg-white border-b border-gray-200 dark:bg-steel-gray dark:border-gray-700">
-    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+  <nav class="w-full bg-white dark:bg-steel-gray">
+    <div class="px-3 py-3 lg:pr-5">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
           <button
@@ -27,7 +27,7 @@
           </button>
           <router-link
             :to="{ name: ROUTE_NAMES.landingHome }"
-            class="flex items-center"
+            class="flex items-center min-w-58"
           >
             <brand-logo />
           </router-link>

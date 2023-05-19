@@ -101,7 +101,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: '',
             name: ROUTE_NAMES.overview,
-            component: PAGES.ProjectOverview
+            component: PAGES.InsightsOverview
           },
           {
             path: 'richness',
