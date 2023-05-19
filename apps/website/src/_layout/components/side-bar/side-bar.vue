@@ -1,11 +1,25 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed top-17 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-steel-gray dark:border-gray-700"
+    class="fixed top-0 left-0 w-64 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-steel-gray"
     aria-label="Sidebar"
   >
     <div class="h-full px-3 pb-4 overflow-y-auto">
-      <ul class="space-y-2">
+      <div
+        class="flex pb-3"
+      >
+        <brand-logo />
+      </div>
+      <div class="pt-5 border-t border-gray-200 dark:border-gray-700">
+        <version-control />
+        <router-link
+          :to="{ name: ROUTE_NAMES.overview}"
+          class="px-3 py-2 text-xs font-bold rounded-lg bg-gray-500"
+        >
+          Preview
+        </router-link>
+      </div>
+      <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
         <li
           v-for="item in items"
           :key="item.title"
@@ -135,6 +149,8 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import BrandLogo from '../brand-logo.vue'
+import VersionControl from '../landing-navbar/auth-navbar-item/version-control.vue'
 
 const store = useStore()
 
@@ -154,11 +170,11 @@ const items = computed(() => {
 
 const allItems: Item[] = [
   {
-    title: 'Overview',
+    title: 'Dashboard',
     iconRaw: '<svg aria-hidden="true" class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" /><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" /></svg>',
     public: true,
     route: {
-      name: ROUTE_NAMES.overview
+      name: ROUTE_NAMES.dashboard
     }
   },
   {
@@ -232,27 +248,9 @@ const allItems: Item[] = [
   {
     title: 'Insights',
     iconRaw: '<svg aria-hidden="true" class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" /></svg>',
-    public: true,
-    children: [
-      {
-        title: 'Species Richness',
-        route: {
-          name: ROUTE_NAMES.speciesRichness
-        }
-      },
-      {
-        title: 'Activity Overview',
-        route: {
-          name: ROUTE_NAMES.activityOverview
-        }
-      },
-      {
-        title: 'Species Spotlight',
-        route: {
-          name: ROUTE_NAMES.activityPatterns
-        }
-      }
-    ]
+    route: {
+      name: ROUTE_NAMES.overview
+    }
   },
   {
     title: 'Project Settings',
