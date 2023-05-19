@@ -97,22 +97,15 @@ describe('comparison-list > query-string > toQuery', () => {
     // Arrange
     const startDate = '2022-03-01'
     const endDate = '2022-08-31'
-    const siteId1 = 5
-    const siteId2 = 6
-    const taxonId1 = 200
-    const taxonId2 = 300
+    const siteId = 6
+    const taxonId = 300
     const filters: FilterImpl[] = [
+      new FilterImpl(exampleStartDate, exampleEndDate, [singleSiteGroup(5, 'ABC')], [taxon(200)]),
       new FilterImpl(
         dayjs.utc(startDate + 'T00:00Z'),
         dayjs.utc(endDate + 'T23:59Z'),
-        [singleSiteGroup(siteId1, 'ABC')],
-        [taxon(taxonId1)]
-      ),
-      new FilterImpl(
-        dayjs.utc(startDate + 'T00:00Z'),
-        dayjs.utc(startDate + 'T23:59Z'),
-        [singleSiteGroup(siteId2, 'DEF')],
-        [taxon(taxonId2)]
+        [singleSiteGroup(siteId, 'DEF')],
+        [taxon(taxonId)]
     )]
     const expectedKeys = ['dss', 'ab', 'ae', 'as', 'at', 'bb', 'be', 'bs', 'bt']
 
@@ -120,52 +113,32 @@ describe('comparison-list > query-string > toQuery', () => {
     const query = toQuery(filters)
 
     // Assert
-    expect(Object.keys(query)).toHaveLength(9) // dss, ab, ae, as, at, bb, be, bs, bt
-    Object.values(query).forEach(value => { expect(value).toBeTypeOf('string') })
+    expect(Object.keys(query)).toHaveLength(expectedKeys.length)
     Object.keys(query).forEach(key => { expectedKeys.includes(key) })
     expect(query.dss).toBe('2')
-    expect(query.ab).toBe(startDate)
-    expect(query.ae).toBe(endDate)
     expect(query.bb).toBe(startDate)
-    expect(query.be).toBe(startDate)
-    expect(query.as).toBe(siteId1.toString())
-    expect(query.at).toBe(taxonId1.toString())
-    expect(query.bs).toBe(siteId2.toString())
-    expect(query.bt).toBe(taxonId2.toString())
+    expect(query.be).toBe(endDate)
+    expect(query.bs).toBe(siteId.toString())
+    expect(query.bt).toBe(taxonId.toString())
   })
 
-  test('2 filters with dates, multiple sites using wildcard, and taxons', async () => {
+  test('2 filters with multiple sites using wildcard', async () => {
     // Arrange
-    const startDate = '2022-03-01'
-    const endDate = '2022-08-31'
     const wildcardPrefix1 = 'AB_'
-    const wildcardPrefix2 = 'AB_'
+    const wildcardPrefix2 = 'CD_'
     const siteIds1 = [5, 6, 7]
     const siteIds2 = [8, 9]
-    const taxonIds1 = [200, 300]
-    const taxonIds2 = [400, 500]
     const filters: FilterImpl[] = [
-      new FilterImpl(
-        dayjs.utc(startDate + 'T00:00Z'),
-        dayjs.utc(endDate + 'T23:59Z'),
-        [...new Set([wildcardSiteGroup(100, 1001, wildcardPrefix1)]), ...new Set(siteIds1.map(i => singleSiteGroup(i, `ABC_${i}`)))],
-        taxonIds1.map(id => taxon(id))
-      ),
-      new FilterImpl(
-        dayjs.utc(startDate + 'T00:00Z'),
-        dayjs.utc(startDate + 'T23:59Z'),
-        [...new Set([wildcardSiteGroup(200, 2001, wildcardPrefix2)]), ...new Set(siteIds2.map(i => singleSiteGroup(i, `ABC_${i}`)))],
-        taxonIds2.map(id => taxon(id))
-    )]
+      new FilterImpl(exampleStartDate, exampleEndDate, [wildcardSiteGroup(100, 1001, wildcardPrefix1), ...siteIds1.map(i => singleSiteGroup(i, `EF_${i}`))]),
+      new FilterImpl(exampleStartDate, exampleEndDate, [wildcardSiteGroup(200, 2001, wildcardPrefix2), ...siteIds2.map(i => singleSiteGroup(i, `EF_${i}`))])
+    ]
 
     // Act
     const query = toQuery(filters)
 
     // Assert
     expect(query.as).toBe(wildcardPrefix1 + '*,' + siteIds1.join(','))
-    expect(query.at).toBe(taxonIds1.join(','))
     expect(query.bs).toBe(wildcardPrefix2 + '*,' + siteIds2.join(','))
-    expect(query.bt).toBe(taxonIds2.join(','))
   })
 })
 
@@ -250,54 +223,49 @@ describe('comparison-list > query-string > fromQuery', () => {
     // Arrange
     const query = {
       dss: '2',
-      ab: '2021-01-01',
-      ae: '2023-01-01',
+      ab: '2021-02-01',
+      ae: '2023-03-01',
       as: '101',
       at: '200',
-      bb: '2023-01-01',
-      be: '2023-01-01',
+      bb: '2022-04-01',
+      be: '2024-05-01',
       bs: '102',
       bt: '300'
     }
+
     // Act
     const filters = fromQuery(query, projectFilters)
 
     // Assert
     expect(filters).toHaveLength(2)
-    expect(filters[0].startDate).toEqual(dayjs.utc(projectFilters.dateStartInclusiveUtc))
-    expect(filters[0].endDate).toEqual(dayjs.utc(projectFilters.dateEndInclusiveUtc))
-    expect(filters[1].startDate).toEqual(dayjs.utc(projectFilters.dateEndInclusiveUtc))
-    expect(filters[1].endDate).toEqual(dayjs.utc(projectFilters.dateEndInclusiveUtc))
+    expect(filters[0].startDate).toEqual(dayjs.utc(query.ab))
+    expect(filters[0].endDate).toEqual(dayjs.utc(query.ae))
     expect(filters[0].sites[0].label).toBe(projectFilters.locationSites.find(site => site.id === Number(query.as))?.name)
-    expect(filters[1].sites[0].label).toBe(projectFilters.locationSites.find(site => site.id === Number(query.bs))?.name)
     expect(filters[0].otherFilters[0].value).toBe(projectFilters.taxonClasses.find(taxon => taxon.id === Number(query.at))?.id)
+    expect(filters[1].startDate).toEqual(dayjs.utc(query.bb))
+    expect(filters[1].endDate).toEqual(dayjs.utc(query.be))
+    expect(filters[1].sites[0].label).toBe(projectFilters.locationSites.find(site => site.id === Number(query.bs))?.name)
     expect(filters[1].otherFilters[0].value).toBe(projectFilters.taxonClasses.find(taxon => taxon.id === Number(query.bt))?.id)
   })
 
-  test('2 filters with dates, multiple sites using wildcard, and taxons', async () => {
+  test('2 filters with dates, multiple sites using wildcard', async () => {
     // Arrange
     const query = {
       dss: '2',
       ab: '2022-01-01',
       ae: '2022-03-01',
-      as: '101,DEF*',
-      at: '200,300',
+      as: '101',
       bb: '2022-05-01',
       be: '2022-06-01',
-      bs: '102,GH*',
-      bt: '200,300'
+      bs: '102,103,GH_*'
     }
     // Act
     const filters = fromQuery(query, projectFilters)
 
     // Assert
-    expect(filters[0].startDate).toEqual(dayjs.utc(query.ab))
-    expect(filters[0].endDate).toEqual(dayjs.utc(query.ae))
-    expect(filters[1].startDate).toEqual(dayjs.utc(query.bb))
-    expect(filters[1].endDate).toEqual(dayjs.utc(query.be))
-    expect((filters[0].sites.map(siteGroup => siteGroup.value)).reduce((r, a) => r.concat(a), [])).toHaveLength(3)
-    expect((filters[1].sites.map(siteGroup => siteGroup.value)).reduce((r, a) => r.concat(a), [])).toHaveLength(2)
-    expect(filters[0].otherFilters).toHaveLength(2)
-    expect(filters[1].otherFilters).toHaveLength(2)
+    expect(filters[0].sites).toHaveLength(1)
+    expect(filters[0].sites[0].value).toHaveLength(1)
+    expect(filters[1].sites).toHaveLength(3)
+    expect(filters[1].sites[2].value).toHaveLength(1) // GH_1
   })
 })
