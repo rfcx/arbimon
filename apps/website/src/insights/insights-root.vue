@@ -2,7 +2,7 @@
   <nav
     class="bg-gray-50 dark:bg-steel-gray-light"
   >
-    <div class="max-w-screen-xl mx-auto text-gray-900 dark:text-white">
+    <div class="max-w-screen-xl mx-auto px-2 sm:px-8 text-gray-900 dark:text-white">
       <h1 class="text-4xl pt-16 pb-1 font-bold">
         {{ store.selectedProject?.name }}
       </h1>
@@ -28,7 +28,7 @@
     </div>
   </nav>
   <nav class="sticky top-0 z-50 bg-gray-50 dark:bg-steel-gray-light">
-    <div class="max-w-screen-xl mx-auto">
+    <div class="max-w-screen-xl mx-auto px-2 sm:px-8">
       <div class="font-medium text-center text-gray-500 dark:text-gray-300">
         <ul class="flex flex-wrap -mb-px">
           <li
@@ -49,7 +49,9 @@
       </div>
     </div>
   </nav>
-  <div class="max-w-screen-xl mx-auto my-8">
+  <div
+    class="max-w-screen-xl mx-auto px-2 sm:px-8 py-8"
+  >
     <router-view />
   </div>
 </template>
