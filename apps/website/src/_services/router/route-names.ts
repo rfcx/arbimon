@@ -26,10 +26,12 @@ export const ROUTE_NAMES = {
   cnnJobList: 'cnn_job_list',
   cnnJobDetail: 'cnn_job_detail',
   cnnJobDetailBySpecies: 'cnn_job_detail_by_species',
+  // User
+  userCompleteRegistration: 'user_complete_registration',
+  userPreferences: 'user_preferences',
   // Other
   callback: 'callback',
   info: 'info',
-  preferences: 'preferences',
   error: 'error'
 } as const
 
