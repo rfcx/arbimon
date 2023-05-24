@@ -56,8 +56,8 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'preferences',
-        name: ROUTE_NAMES.preferences,
-        component: PAGES.Preferences
+        name: ROUTE_NAMES.userPreferences,
+        component: PAGES.UserPreferences
       },
       {
         path: 'info',
@@ -162,6 +162,12 @@ const routes: RouteRecordRaw[] = [
         ]
       }
     ]
+  },
+  {
+    path: '/complete-registration',
+    name: ROUTE_NAMES.userCompleteRegistration,
+    component: PAGES.UserCompleteRegistration,
+    beforeEnter: [authRequiredGuard]
   },
   {
     path: '/callback',
