@@ -1,0 +1,7052 @@
+[
+  {
+    "latitude": -84.5,
+    "longitude": 33.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": -83.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 58,
+    "total_species": 1
+  },
+  {
+    "latitude": -80.5,
+    "longitude": 44.5,
+    "total_recorded_minutes": 127,
+    "total_species": 0
+  },
+  {
+    "latitude": -76.5,
+    "longitude": -44.5,
+    "total_recorded_minutes": 89,
+    "total_species": 2
+  },
+  {
+    "latitude": -48.5,
+    "longitude": -24.5,
+    "total_recorded_minutes": 200,
+    "total_species": 0
+  },
+  {
+    "latitude": -47.5,
+    "longitude": 167.5,
+    "total_recorded_minutes": 30,
+    "total_species": 0
+  },
+  {
+    "latitude": -46.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": -45.5,
+    "longitude": 166.5,
+    "total_recorded_minutes": 45,
+    "total_species": 1
+  },
+  {
+    "latitude": -45.5,
+    "longitude": 167.5,
+    "total_recorded_minutes": 45,
+    "total_species": 0
+  },
+  {
+    "latitude": -44.5,
+    "longitude": 167.5,
+    "total_recorded_minutes": 375,
+    "total_species": 1
+  },
+  {
+    "latitude": -43.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 1200,
+    "total_species": 1
+  },
+  {
+    "latitude": -43.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 1890,
+    "total_species": 3
+  },
+  {
+    "latitude": -43.5,
+    "longitude": 172.5,
+    "total_recorded_minutes": 22888,
+    "total_species": 7
+  },
+  {
+    "latitude": -43.5,
+    "longitude": 173.5,
+    "total_recorded_minutes": 151,
+    "total_species": 0
+  },
+  {
+    "latitude": -42.5,
+    "longitude": 147.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": -41.5,
+    "longitude": 175.5,
+    "total_recorded_minutes": 149,
+    "total_species": 2
+  },
+  {
+    "latitude": -40.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 5070,
+    "total_species": 0
+  },
+  {
+    "latitude": -40.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 35481,
+    "total_species": 2
+  },
+  {
+    "latitude": -40.5,
+    "longitude": 174.5,
+    "total_recorded_minutes": 149,
+    "total_species": 1
+  },
+  {
+    "latitude": -39.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 301308,
+    "total_species": 20
+  },
+  {
+    "latitude": -39.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 58781,
+    "total_species": 0
+  },
+  {
+    "latitude": -39.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 72,
+    "total_species": 1
+  },
+  {
+    "latitude": -39.5,
+    "longitude": -34.5,
+    "total_recorded_minutes": 90,
+    "total_species": 0
+  },
+  {
+    "latitude": -39.5,
+    "longitude": -33.5,
+    "total_recorded_minutes": 136,
+    "total_species": 6
+  },
+  {
+    "latitude": -39.5,
+    "longitude": 176.5,
+    "total_recorded_minutes": 15,
+    "total_species": 0
+  },
+  {
+    "latitude": -38.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 1196,
+    "total_species": 0
+  },
+  {
+    "latitude": -38.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 110556,
+    "total_species": 10
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 379,
+    "total_species": 33
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 141.5,
+    "total_recorded_minutes": 378925,
+    "total_species": 104
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 272659,
+    "total_species": 93
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 143.5,
+    "total_recorded_minutes": 135943,
+    "total_species": 1
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 146756,
+    "total_species": 0
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 146.5,
+    "total_recorded_minutes": 59525,
+    "total_species": 2
+  },
+  {
+    "latitude": -38.5,
+    "longitude": 147.5,
+    "total_recorded_minutes": 1198,
+    "total_species": 0
+  },
+  {
+    "latitude": -37.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 466010,
+    "total_species": 11
+  },
+  {
+    "latitude": -37.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 450625,
+    "total_species": 0
+  },
+  {
+    "latitude": -37.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": -37.5,
+    "longitude": -58.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -37.5,
+    "longitude": -57.5,
+    "total_recorded_minutes": 16,
+    "total_species": 0
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 363504,
+    "total_species": 42
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 141.5,
+    "total_recorded_minutes": 279141,
+    "total_species": 71
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 409694,
+    "total_species": 113
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 143.5,
+    "total_recorded_minutes": 146935,
+    "total_species": 22
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 858620,
+    "total_species": 12
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 145.5,
+    "total_recorded_minutes": 685534,
+    "total_species": 43
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 147.5,
+    "total_recorded_minutes": 305432,
+    "total_species": 8
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 148.5,
+    "total_recorded_minutes": 350669,
+    "total_species": 4
+  },
+  {
+    "latitude": -37.5,
+    "longitude": 149.5,
+    "total_recorded_minutes": 87184,
+    "total_species": 3
+  },
+  {
+    "latitude": -36.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 18873,
+    "total_species": 28
+  },
+  {
+    "latitude": -36.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 3479,
+    "total_species": 1
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 143.5,
+    "total_recorded_minutes": 340106,
+    "total_species": 1
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 7009770,
+    "total_species": 4
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 145.5,
+    "total_recorded_minutes": 74005,
+    "total_species": 1
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 146.5,
+    "total_recorded_minutes": 213045,
+    "total_species": 1
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 148.5,
+    "total_recorded_minutes": 6135,
+    "total_species": 0
+  },
+  {
+    "latitude": -36.5,
+    "longitude": 149.5,
+    "total_recorded_minutes": 2,
+    "total_species": 1
+  },
+  {
+    "latitude": -35.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 3572,
+    "total_species": 1
+  },
+  {
+    "latitude": -35.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": -35.5,
+    "longitude": 141.5,
+    "total_recorded_minutes": 85841,
+    "total_species": 36
+  },
+  {
+    "latitude": -35.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 261996,
+    "total_species": 55
+  },
+  {
+    "latitude": -35.5,
+    "longitude": 143.5,
+    "total_recorded_minutes": 2593168,
+    "total_species": 2
+  },
+  {
+    "latitude": -35.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 2809,
+    "total_species": 0
+  },
+  {
+    "latitude": -34.5,
+    "longitude": -58.5,
+    "total_recorded_minutes": 84,
+    "total_species": 0
+  },
+  {
+    "latitude": -34.5,
+    "longitude": -55.5,
+    "total_recorded_minutes": 46,
+    "total_species": 1
+  },
+  {
+    "latitude": -34.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 4249,
+    "total_species": 0
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 19.5,
+    "total_recorded_minutes": 12622,
+    "total_species": 0
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 116.5,
+    "total_recorded_minutes": 1620,
+    "total_species": 33
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 117.5,
+    "total_recorded_minutes": 2580,
+    "total_species": 31
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 118.5,
+    "total_recorded_minutes": 32280,
+    "total_species": 40
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 139.5,
+    "total_recorded_minutes": 1426,
+    "total_species": 11
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 141.5,
+    "total_recorded_minutes": 379217,
+    "total_species": 26
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 197588,
+    "total_species": 60
+  },
+  {
+    "latitude": -34.5,
+    "longitude": 145.5,
+    "total_recorded_minutes": 423518,
+    "total_species": 1
+  },
+  {
+    "latitude": -33.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 27669,
+    "total_species": 0
+  },
+  {
+    "latitude": -33.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 3331,
+    "total_species": 3
+  },
+  {
+    "latitude": -33.5,
+    "longitude": -53.5,
+    "total_recorded_minutes": 2989,
+    "total_species": 0
+  },
+  {
+    "latitude": -33.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 17075,
+    "total_species": 1
+  },
+  {
+    "latitude": -33.5,
+    "longitude": 19.5,
+    "total_recorded_minutes": 15137,
+    "total_species": 0
+  },
+  {
+    "latitude": -33.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 7910,
+    "total_species": 0
+  },
+  {
+    "latitude": -33.5,
+    "longitude": 122.5,
+    "total_recorded_minutes": 2040,
+    "total_species": 24
+  },
+  {
+    "latitude": -33.5,
+    "longitude": 151.5,
+    "total_recorded_minutes": 27222,
+    "total_species": 2
+  },
+  {
+    "latitude": -32.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -32.5,
+    "longitude": -53.5,
+    "total_recorded_minutes": 1733,
+    "total_species": 0
+  },
+  {
+    "latitude": -32.5,
+    "longitude": -52.5,
+    "total_recorded_minutes": 12360,
+    "total_species": 0
+  },
+  {
+    "latitude": -32.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 1982,
+    "total_species": 0
+  },
+  {
+    "latitude": -32.5,
+    "longitude": 115.5,
+    "total_recorded_minutes": 8910,
+    "total_species": 41
+  },
+  {
+    "latitude": -32.5,
+    "longitude": 148.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -32.5,
+    "longitude": 151.5,
+    "total_recorded_minutes": 117317,
+    "total_species": 3
+  },
+  {
+    "latitude": -32.5,
+    "longitude": 152.5,
+    "total_recorded_minutes": 15868,
+    "total_species": 3
+  },
+  {
+    "latitude": -31.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 18,
+    "total_species": 0
+  },
+  {
+    "latitude": -31.5,
+    "longitude": 116.5,
+    "total_recorded_minutes": 11550,
+    "total_species": 33
+  },
+  {
+    "latitude": -31.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 1442494,
+    "total_species": 1
+  },
+  {
+    "latitude": -31.5,
+    "longitude": 141.5,
+    "total_recorded_minutes": 109586,
+    "total_species": 13
+  },
+  {
+    "latitude": -31.5,
+    "longitude": 152.5,
+    "total_recorded_minutes": 28011,
+    "total_species": 1
+  },
+  {
+    "latitude": -29.5,
+    "longitude": -50.5,
+    "total_recorded_minutes": 787016,
+    "total_species": 4
+  },
+  {
+    "latitude": -29.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 19,
+    "total_species": 0
+  },
+  {
+    "latitude": -29.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 2400,
+    "total_species": 1
+  },
+  {
+    "latitude": -28.5,
+    "longitude": 143.5,
+    "total_recorded_minutes": 8,
+    "total_species": 5
+  },
+  {
+    "latitude": -28.5,
+    "longitude": 151.5,
+    "total_recorded_minutes": 63,
+    "total_species": 0
+  },
+  {
+    "latitude": -27.5,
+    "longitude": -144.5,
+    "total_recorded_minutes": 3232,
+    "total_species": 0
+  },
+  {
+    "latitude": -27.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 430,
+    "total_species": 0
+  },
+  {
+    "latitude": -27.5,
+    "longitude": -69.5,
+    "total_recorded_minutes": 74,
+    "total_species": 0
+  },
+  {
+    "latitude": -27.5,
+    "longitude": -54.5,
+    "total_recorded_minutes": 93,
+    "total_species": 6
+  },
+  {
+    "latitude": -27.5,
+    "longitude": -53.5,
+    "total_recorded_minutes": 2842,
+    "total_species": 28
+  },
+  {
+    "latitude": -27.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 5618,
+    "total_species": 3
+  },
+  {
+    "latitude": -27.5,
+    "longitude": 152.5,
+    "total_recorded_minutes": 4706,
+    "total_species": 19
+  },
+  {
+    "latitude": -27.5,
+    "longitude": 153.5,
+    "total_recorded_minutes": 337,
+    "total_species": 1
+  },
+  {
+    "latitude": -26.5,
+    "longitude": -55.5,
+    "total_recorded_minutes": 18244,
+    "total_species": 0
+  },
+  {
+    "latitude": -26.5,
+    "longitude": -49.5,
+    "total_recorded_minutes": 50,
+    "total_species": 0
+  },
+  {
+    "latitude": -26.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 2165,
+    "total_species": 0
+  },
+  {
+    "latitude": -26.5,
+    "longitude": 32.5,
+    "total_recorded_minutes": 30,
+    "total_species": 0
+  },
+  {
+    "latitude": -26.5,
+    "longitude": 152.5,
+    "total_recorded_minutes": 14056,
+    "total_species": 1
+  },
+  {
+    "latitude": -26.5,
+    "longitude": 153.5,
+    "total_recorded_minutes": 93,
+    "total_species": 10
+  },
+  {
+    "latitude": -25.5,
+    "longitude": -54.5,
+    "total_recorded_minutes": 331277,
+    "total_species": 67
+  },
+  {
+    "latitude": -25.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 160,
+    "total_species": 1
+  },
+  {
+    "latitude": -25.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 425,
+    "total_species": 0
+  },
+  {
+    "latitude": -25.5,
+    "longitude": 27.5,
+    "total_recorded_minutes": 22408,
+    "total_species": 0
+  },
+  {
+    "latitude": -25.5,
+    "longitude": 152.5,
+    "total_recorded_minutes": 16,
+    "total_species": 1
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -65.5,
+    "total_recorded_minutes": 39,
+    "total_species": 0
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 33677,
+    "total_species": 18
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -55.5,
+    "total_recorded_minutes": 24993,
+    "total_species": 50
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -54.5,
+    "total_recorded_minutes": 376012,
+    "total_species": 130
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -50.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -49.5,
+    "total_recorded_minutes": 3754,
+    "total_species": 2
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 339234,
+    "total_species": 30
+  },
+  {
+    "latitude": -24.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 10176,
+    "total_species": 10
+  },
+  {
+    "latitude": -24.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 970,
+    "total_species": 0
+  },
+  {
+    "latitude": -24.5,
+    "longitude": 150.5,
+    "total_recorded_minutes": 8508,
+    "total_species": 1
+  },
+  {
+    "latitude": -23.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 174395,
+    "total_species": 31
+  },
+  {
+    "latitude": -23.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 10726,
+    "total_species": 6
+  },
+  {
+    "latitude": -23.5,
+    "longitude": -46.5,
+    "total_recorded_minutes": 349609,
+    "total_species": 114
+  },
+  {
+    "latitude": -23.5,
+    "longitude": -45.5,
+    "total_recorded_minutes": 3563,
+    "total_species": 0
+  },
+  {
+    "latitude": -23.5,
+    "longitude": -44.5,
+    "total_recorded_minutes": 490,
+    "total_species": 2
+  },
+  {
+    "latitude": -23.5,
+    "longitude": 47.5,
+    "total_recorded_minutes": 3963,
+    "total_species": 0
+  },
+  {
+    "latitude": -23.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 43921,
+    "total_species": 0
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -52.5,
+    "total_recorded_minutes": 2529122,
+    "total_species": 221
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -51.5,
+    "total_recorded_minutes": 459421,
+    "total_species": 127
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -49.5,
+    "total_recorded_minutes": 380928,
+    "total_species": 18
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 2195,
+    "total_species": 4
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -46.5,
+    "total_recorded_minutes": 555510,
+    "total_species": 85
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -45.5,
+    "total_recorded_minutes": 86666,
+    "total_species": 4
+  },
+  {
+    "latitude": -22.5,
+    "longitude": -42.5,
+    "total_recorded_minutes": 563,
+    "total_species": 1
+  },
+  {
+    "latitude": -22.5,
+    "longitude": 44.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": -22.5,
+    "longitude": 46.5,
+    "total_recorded_minutes": 22268,
+    "total_species": 64
+  },
+  {
+    "latitude": -22.5,
+    "longitude": 47.5,
+    "total_recorded_minutes": 277144,
+    "total_species": 0
+  },
+  {
+    "latitude": -22.5,
+    "longitude": 113.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": -22.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 574436,
+    "total_species": 1
+  },
+  {
+    "latitude": -21.5,
+    "longitude": 47.5,
+    "total_recorded_minutes": 950737,
+    "total_species": 10
+  },
+  {
+    "latitude": -21.5,
+    "longitude": 55.5,
+    "total_recorded_minutes": 27539,
+    "total_species": 1
+  },
+  {
+    "latitude": -20.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 493,
+    "total_species": 0
+  },
+  {
+    "latitude": -20.5,
+    "longitude": -43.5,
+    "total_recorded_minutes": 7701,
+    "total_species": 0
+  },
+  {
+    "latitude": -20.5,
+    "longitude": -42.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": -20.5,
+    "longitude": 44.5,
+    "total_recorded_minutes": 152211,
+    "total_species": 32
+  },
+  {
+    "latitude": -20.5,
+    "longitude": 55.5,
+    "total_recorded_minutes": 586647,
+    "total_species": 1
+  },
+  {
+    "latitude": -20.5,
+    "longitude": 57.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": -19.5,
+    "longitude": -43.5,
+    "total_recorded_minutes": 21303,
+    "total_species": 1
+  },
+  {
+    "latitude": -19.5,
+    "longitude": 44.5,
+    "total_recorded_minutes": 1797,
+    "total_species": 0
+  },
+  {
+    "latitude": -18.5,
+    "longitude": 48.5,
+    "total_recorded_minutes": 866,
+    "total_species": 2
+  },
+  {
+    "latitude": -17.5,
+    "longitude": -56.5,
+    "total_recorded_minutes": 10651,
+    "total_species": 0
+  },
+  {
+    "latitude": -16.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 1,
+    "total_species": 1
+  },
+  {
+    "latitude": -16.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 6929,
+    "total_species": 29
+  },
+  {
+    "latitude": -16.5,
+    "longitude": -54.5,
+    "total_recorded_minutes": 11,
+    "total_species": 1
+  },
+  {
+    "latitude": -16.5,
+    "longitude": 145.5,
+    "total_recorded_minutes": 480,
+    "total_species": 0
+  },
+  {
+    "latitude": -15.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 630,
+    "total_species": 0
+  },
+  {
+    "latitude": -15.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 80018,
+    "total_species": 0
+  },
+  {
+    "latitude": -15.5,
+    "longitude": -40.5,
+    "total_recorded_minutes": 45794,
+    "total_species": 3
+  },
+  {
+    "latitude": -15.5,
+    "longitude": -39.5,
+    "total_recorded_minutes": 68689,
+    "total_species": 3
+  },
+  {
+    "latitude": -15.5,
+    "longitude": 46.5,
+    "total_recorded_minutes": 154890,
+    "total_species": 11
+  },
+  {
+    "latitude": -15.5,
+    "longitude": 49.5,
+    "total_recorded_minutes": 46231,
+    "total_species": 0
+  },
+  {
+    "latitude": -14.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": -14.5,
+    "longitude": -45.5,
+    "total_recorded_minutes": 26556,
+    "total_species": 17
+  },
+  {
+    "latitude": -13.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 2
+  },
+  {
+    "latitude": -13.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 41547,
+    "total_species": 9
+  },
+  {
+    "latitude": -13.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 2070,
+    "total_species": 6
+  },
+  {
+    "latitude": -13.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 5646,
+    "total_species": 9
+  },
+  {
+    "latitude": -13.5,
+    "longitude": -52.5,
+    "total_recorded_minutes": 3387,
+    "total_species": 1
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 2332,
+    "total_species": 10
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 10671,
+    "total_species": 11
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 103372,
+    "total_species": 125
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 175852,
+    "total_species": 256
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -69.5,
+    "total_recorded_minutes": 86464,
+    "total_species": 189
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -41.5,
+    "total_recorded_minutes": 327,
+    "total_species": 0
+  },
+  {
+    "latitude": -12.5,
+    "longitude": -38.5,
+    "total_recorded_minutes": 1436,
+    "total_species": 1
+  },
+  {
+    "latitude": -12.5,
+    "longitude": 131.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": -12.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 2786,
+    "total_species": 0
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 4104,
+    "total_species": 9
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 2323,
+    "total_species": 10
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 80,
+    "total_species": 1
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 34683,
+    "total_species": 9
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 54124,
+    "total_species": 221
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -69.5,
+    "total_recorded_minutes": 48312,
+    "total_species": 229
+  },
+  {
+    "latitude": -11.5,
+    "longitude": -37.5,
+    "total_recorded_minutes": 28472,
+    "total_species": 0
+  },
+  {
+    "latitude": -10.5,
+    "longitude": -69.5,
+    "total_recorded_minutes": 2214,
+    "total_species": 0
+  },
+  {
+    "latitude": -10.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 3659,
+    "total_species": 0
+  },
+  {
+    "latitude": -10.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 875,
+    "total_species": 0
+  },
+  {
+    "latitude": -10.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": -10.5,
+    "longitude": -39.5,
+    "total_recorded_minutes": 6163,
+    "total_species": 39
+  },
+  {
+    "latitude": -9.5,
+    "longitude": -36.5,
+    "total_recorded_minutes": 58154,
+    "total_species": 24
+  },
+  {
+    "latitude": -9.5,
+    "longitude": -35.5,
+    "total_recorded_minutes": 119913,
+    "total_species": 13
+  },
+  {
+    "latitude": -8.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 4105,
+    "total_species": 0
+  },
+  {
+    "latitude": -8.5,
+    "longitude": -40.5,
+    "total_recorded_minutes": 15848,
+    "total_species": 0
+  },
+  {
+    "latitude": -8.5,
+    "longitude": -36.5,
+    "total_recorded_minutes": 1600,
+    "total_species": 0
+  },
+  {
+    "latitude": -8.5,
+    "longitude": -35.5,
+    "total_recorded_minutes": 22650,
+    "total_species": 3
+  },
+  {
+    "latitude": -8.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 5946,
+    "total_species": 32
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 7317,
+    "total_species": 140
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -63.5,
+    "total_recorded_minutes": 205,
+    "total_species": 0
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -49.5,
+    "total_recorded_minutes": 22,
+    "total_species": 2
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -36.5,
+    "total_recorded_minutes": 87,
+    "total_species": 0
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -35.5,
+    "total_recorded_minutes": 63417,
+    "total_species": 27
+  },
+  {
+    "latitude": -7.5,
+    "longitude": -34.5,
+    "total_recorded_minutes": 24833,
+    "total_species": 21
+  },
+  {
+    "latitude": -7.5,
+    "longitude": 110.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 185,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -63.5,
+    "total_recorded_minutes": 740,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 1665,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 10169,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -35.5,
+    "total_recorded_minutes": 219476,
+    "total_species": 31
+  },
+  {
+    "latitude": -6.5,
+    "longitude": -34.5,
+    "total_recorded_minutes": 4179,
+    "total_species": 5
+  },
+  {
+    "latitude": -6.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 16,
+    "total_species": 0
+  },
+  {
+    "latitude": -6.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 643,
+    "total_species": 0
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 71533,
+    "total_species": 151
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -66.5,
+    "total_recorded_minutes": 7326,
+    "total_species": 47
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 63453,
+    "total_species": 0
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 5948,
+    "total_species": 0
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 55,
+    "total_species": 0
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 224,
+    "total_species": 24
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -36.5,
+    "total_recorded_minutes": 88,
+    "total_species": 0
+  },
+  {
+    "latitude": -5.5,
+    "longitude": -35.5,
+    "total_recorded_minutes": 41950,
+    "total_species": 14
+  },
+  {
+    "latitude": -5.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 31,
+    "total_species": 0
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 389744,
+    "total_species": 15
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 300,
+    "total_species": 0
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -66.5,
+    "total_recorded_minutes": 113191,
+    "total_species": 119
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 185,
+    "total_species": 0
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -54.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -47.5,
+    "total_recorded_minutes": 2711,
+    "total_species": 1
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -42.5,
+    "total_recorded_minutes": 23799,
+    "total_species": 12
+  },
+  {
+    "latitude": -4.5,
+    "longitude": -38.5,
+    "total_recorded_minutes": 31,
+    "total_species": 1
+  },
+  {
+    "latitude": -4.5,
+    "longitude": 29.5,
+    "total_recorded_minutes": 591220,
+    "total_species": 96
+  },
+  {
+    "latitude": -4.5,
+    "longitude": 55.5,
+    "total_recorded_minutes": 3,
+    "total_species": 1
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 86656,
+    "total_species": 0
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 1294,
+    "total_species": 0
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 237,
+    "total_species": 4
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 42023,
+    "total_species": 22
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -59.5,
+    "total_recorded_minutes": 29821,
+    "total_species": 27
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -58.5,
+    "total_recorded_minutes": 13190,
+    "total_species": 12
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -52.5,
+    "total_recorded_minutes": 22429,
+    "total_species": 89
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -51.5,
+    "total_recorded_minutes": 11963,
+    "total_species": 0
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -46.5,
+    "total_recorded_minutes": 207043,
+    "total_species": 93
+  },
+  {
+    "latitude": -3.5,
+    "longitude": -32.5,
+    "total_recorded_minutes": 8743,
+    "total_species": 0
+  },
+  {
+    "latitude": -3.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 156,
+    "total_species": 0
+  },
+  {
+    "latitude": -3.5,
+    "longitude": 39.5,
+    "total_recorded_minutes": 310,
+    "total_species": 2
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 204989,
+    "total_species": 107
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -65.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 40287,
+    "total_species": 107
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -59.5,
+    "total_recorded_minutes": 95303,
+    "total_species": 169
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -52.5,
+    "total_recorded_minutes": 4028,
+    "total_species": 12
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -51.5,
+    "total_recorded_minutes": 56,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": -46.5,
+    "total_recorded_minutes": 1595172,
+    "total_species": 213
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 34985,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 37.5,
+    "total_recorded_minutes": 161831,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 39.5,
+    "total_recorded_minutes": 11554,
+    "total_species": 5
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 2544627,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 102.5,
+    "total_recorded_minutes": 11947,
+    "total_species": 19
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 103.5,
+    "total_recorded_minutes": 1469017,
+    "total_species": 124
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 104.5,
+    "total_recorded_minutes": 26,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 113.5,
+    "total_recorded_minutes": 421,
+    "total_species": 0
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 139.5,
+    "total_recorded_minutes": 10333,
+    "total_species": 53
+  },
+  {
+    "latitude": -2.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 6194,
+    "total_species": 39
+  },
+  {
+    "latitude": -1.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 107395,
+    "total_species": 78
+  },
+  {
+    "latitude": -1.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 1006,
+    "total_species": 0
+  },
+  {
+    "latitude": -1.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 62185,
+    "total_species": 61
+  },
+  {
+    "latitude": -1.5,
+    "longitude": -59.5,
+    "total_recorded_minutes": 960,
+    "total_species": 1
+  },
+  {
+    "latitude": -1.5,
+    "longitude": -48.5,
+    "total_recorded_minutes": 313,
+    "total_species": 1
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 29.5,
+    "total_recorded_minutes": 24361,
+    "total_species": 2
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 237342,
+    "total_species": 43
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 3300115,
+    "total_species": 95
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 103.5,
+    "total_recorded_minutes": 5512,
+    "total_species": 27
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 109.5,
+    "total_recorded_minutes": 31,
+    "total_species": 6
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 110.5,
+    "total_recorded_minutes": 38170,
+    "total_species": 4
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 113.5,
+    "total_recorded_minutes": 47599,
+    "total_species": 3
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 119.5,
+    "total_recorded_minutes": 48833,
+    "total_species": 0
+  },
+  {
+    "latitude": -1.5,
+    "longitude": 138.5,
+    "total_recorded_minutes": 7717,
+    "total_species": 31
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -179.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 105607,
+    "total_species": 2
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 1496497,
+    "total_species": 21
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 23246,
+    "total_species": 1
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 18213,
+    "total_species": 14
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 100,
+    "total_species": 31
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 73008,
+    "total_species": 19
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 9976,
+    "total_species": 129
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 3261,
+    "total_species": 6
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 2051,
+    "total_species": 0
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -63.5,
+    "total_recorded_minutes": 15820,
+    "total_species": 40
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 4960,
+    "total_species": 22
+  },
+  {
+    "latitude": -0.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 90,
+    "total_species": 0
+  },
+  {
+    "latitude": -0.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 284,
+    "total_species": 14
+  },
+  {
+    "latitude": -0.5,
+    "longitude": 51.5,
+    "total_recorded_minutes": 959,
+    "total_species": 0
+  },
+  {
+    "latitude": -0.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 1855389,
+    "total_species": 70
+  },
+  {
+    "latitude": -0.5,
+    "longitude": 132.5,
+    "total_recorded_minutes": 3712,
+    "total_species": 35
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -179.5,
+    "total_recorded_minutes": 97,
+    "total_species": 1
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 51,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 58761,
+    "total_species": 83
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 1830714,
+    "total_species": 123
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 19639,
+    "total_species": 5
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 387255,
+    "total_species": 142
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 98,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 11,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 29296,
+    "total_species": 159
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 725,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": -50.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 1967,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 1649,
+    "total_species": 2
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 34.5,
+    "total_recorded_minutes": 8,
+    "total_species": 6
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 37.5,
+    "total_recorded_minutes": 419938,
+    "total_species": 124
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 442,
+    "total_species": 1
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 114.5,
+    "total_recorded_minutes": 816,
+    "total_species": 0
+  },
+  {
+    "latitude": 0.5,
+    "longitude": 179.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 13536,
+    "total_species": 1
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 203096,
+    "total_species": 41
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 17,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 8549,
+    "total_species": 8
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 1016,
+    "total_species": 1
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 48649,
+    "total_species": 5
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 14897,
+    "total_species": 5
+  },
+  {
+    "latitude": 1.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 7,
+    "total_species": 1
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 10165,
+    "total_species": 10
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 6,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 1615,
+    "total_species": 5
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 40030,
+    "total_species": 39
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 15.5,
+    "total_recorded_minutes": 7,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 16.5,
+    "total_recorded_minutes": 2860980,
+    "total_species": 1
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 103.5,
+    "total_recorded_minutes": 763,
+    "total_species": 1
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 104.5,
+    "total_recorded_minutes": 217,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 109.5,
+    "total_recorded_minutes": 176,
+    "total_species": 0
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 110.5,
+    "total_recorded_minutes": 145131,
+    "total_species": 19
+  },
+  {
+    "latitude": 1.5,
+    "longitude": 112.5,
+    "total_recorded_minutes": 4300,
+    "total_species": 16
+  },
+  {
+    "latitude": 2.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 74931,
+    "total_species": 60
+  },
+  {
+    "latitude": 2.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 258709,
+    "total_species": 68
+  },
+  {
+    "latitude": 2.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 36484,
+    "total_species": 54
+  },
+  {
+    "latitude": 2.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 268871,
+    "total_species": 43
+  },
+  {
+    "latitude": 2.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 215,
+    "total_species": 1
+  },
+  {
+    "latitude": 2.5,
+    "longitude": 16.5,
+    "total_recorded_minutes": 6309062,
+    "total_species": 2
+  },
+  {
+    "latitude": 2.5,
+    "longitude": 110.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 2.5,
+    "longitude": 113.5,
+    "total_recorded_minutes": 95934,
+    "total_species": 23
+  },
+  {
+    "latitude": 3.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 282953,
+    "total_species": 144
+  },
+  {
+    "latitude": 3.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 5002,
+    "total_species": 2
+  },
+  {
+    "latitude": 3.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 1364889,
+    "total_species": 104
+  },
+  {
+    "latitude": 3.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 38,
+    "total_species": 0
+  },
+  {
+    "latitude": 3.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 11115,
+    "total_species": 0
+  },
+  {
+    "latitude": 3.5,
+    "longitude": -55.5,
+    "total_recorded_minutes": 211,
+    "total_species": 0
+  },
+  {
+    "latitude": 3.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 257,
+    "total_species": 3
+  },
+  {
+    "latitude": 3.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 2
+  },
+  {
+    "latitude": 3.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 838,
+    "total_species": 0
+  },
+  {
+    "latitude": 3.5,
+    "longitude": 98.5,
+    "total_recorded_minutes": 131987,
+    "total_species": 7
+  },
+  {
+    "latitude": 3.5,
+    "longitude": 102.5,
+    "total_recorded_minutes": 81,
+    "total_species": 1
+  },
+  {
+    "latitude": 3.5,
+    "longitude": 113.5,
+    "total_recorded_minutes": 872319,
+    "total_species": 81
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 5288,
+    "total_species": 16
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 89381,
+    "total_species": 9
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 61725,
+    "total_species": 8
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 90735,
+    "total_species": 84
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 53332,
+    "total_species": 105
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 12929,
+    "total_species": 50
+  },
+  {
+    "latitude": 4.5,
+    "longitude": -52.5,
+    "total_recorded_minutes": 1685,
+    "total_species": 7
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 85,
+    "total_species": 2
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 82,
+    "total_species": 0
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 360,
+    "total_species": 1
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 73.5,
+    "total_recorded_minutes": 1124,
+    "total_species": 1
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 74.5,
+    "total_recorded_minutes": 24,
+    "total_species": 1
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 97.5,
+    "total_recorded_minutes": 54529,
+    "total_species": 0
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 102.5,
+    "total_recorded_minutes": 16,
+    "total_species": 4
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 114.5,
+    "total_recorded_minutes": 56277,
+    "total_species": 0
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 116.5,
+    "total_recorded_minutes": 34464,
+    "total_species": 48
+  },
+  {
+    "latitude": 4.5,
+    "longitude": 117.5,
+    "total_recorded_minutes": 213944,
+    "total_species": 100
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 1470,
+    "total_species": 1
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 83908,
+    "total_species": 44
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 72,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 38880,
+    "total_species": 63
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 1452,
+    "total_species": 2
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 106626,
+    "total_species": 69
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 15895,
+    "total_species": 46
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -68.5,
+    "total_recorded_minutes": 81122,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 156,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 148,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 657,
+    "total_species": 0
+  },
+  {
+    "latitude": 5.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 50,
+    "total_species": 12
+  },
+  {
+    "latitude": 5.5,
+    "longitude": 117.5,
+    "total_recorded_minutes": 112091,
+    "total_species": 74
+  },
+  {
+    "latitude": 5.5,
+    "longitude": 118.5,
+    "total_recorded_minutes": 137709,
+    "total_species": 74
+  },
+  {
+    "latitude": 6.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 334461,
+    "total_species": 8
+  },
+  {
+    "latitude": 6.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 43546,
+    "total_species": 61
+  },
+  {
+    "latitude": 6.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 1561,
+    "total_species": 7
+  },
+  {
+    "latitude": 6.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 107354,
+    "total_species": 8
+  },
+  {
+    "latitude": 6.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 6.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 15243,
+    "total_species": 5
+  },
+  {
+    "latitude": 6.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 75,
+    "total_species": 1
+  },
+  {
+    "latitude": 6.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 6.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 129,
+    "total_species": 1
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 30465,
+    "total_species": 3
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -81.5,
+    "total_recorded_minutes": 238459,
+    "total_species": 2
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 29960,
+    "total_species": 3
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 28656,
+    "total_species": 0
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 233654,
+    "total_species": 9
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 26354,
+    "total_species": 65
+  },
+  {
+    "latitude": 7.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 10974,
+    "total_species": 19
+  },
+  {
+    "latitude": 7.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 20,
+    "total_species": 1
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -83.5,
+    "total_recorded_minutes": 249175,
+    "total_species": 8
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 7707,
+    "total_species": 2
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 131796,
+    "total_species": 5
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 36365,
+    "total_species": 4
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 22,
+    "total_species": 1
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 55,
+    "total_species": 0
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -13.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -11.5,
+    "total_recorded_minutes": 161,
+    "total_species": 0
+  },
+  {
+    "latitude": 8.5,
+    "longitude": -9.5,
+    "total_recorded_minutes": 1019,
+    "total_species": 0
+  },
+  {
+    "latitude": 8.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 40,
+    "total_species": 0
+  },
+  {
+    "latitude": 8.5,
+    "longitude": 53.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -83.5,
+    "total_recorded_minutes": 5656,
+    "total_species": 0
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 50478,
+    "total_species": 3
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 950939,
+    "total_species": 209
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 3545,
+    "total_species": 1
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 42,
+    "total_species": 0
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 51,
+    "total_species": 0
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 14,
+    "total_species": 0
+  },
+  {
+    "latitude": 9.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 2,
+    "total_species": 1
+  },
+  {
+    "latitude": 9.5,
+    "longitude": 118.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -85.5,
+    "total_recorded_minutes": 9814,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 219156,
+    "total_species": 28
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -83.5,
+    "total_recorded_minutes": 201728,
+    "total_species": 42
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 1222,
+    "total_species": 1
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 216065,
+    "total_species": 104
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 4595,
+    "total_species": 26
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 19233,
+    "total_species": 1
+  },
+  {
+    "latitude": 10.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 30,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 138,
+    "total_species": 2
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 60.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 1
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 61.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 76.5,
+    "total_recorded_minutes": 472235,
+    "total_species": 6
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 77.5,
+    "total_recorded_minutes": 24,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 84.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 424,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 106.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 119.5,
+    "total_recorded_minutes": 141615,
+    "total_species": 0
+  },
+  {
+    "latitude": 10.5,
+    "longitude": 124.5,
+    "total_recorded_minutes": 6,
+    "total_species": 0
+  },
+  {
+    "latitude": 11.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 2794,
+    "total_species": 9
+  },
+  {
+    "latitude": 11.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 9248,
+    "total_species": 31
+  },
+  {
+    "latitude": 11.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 2145,
+    "total_species": 6
+  },
+  {
+    "latitude": 11.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 6,
+    "total_species": 0
+  },
+  {
+    "latitude": 11.5,
+    "longitude": 76.5,
+    "total_recorded_minutes": 32418,
+    "total_species": 0
+  },
+  {
+    "latitude": 11.5,
+    "longitude": 105.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 11.5,
+    "longitude": 119.5,
+    "total_recorded_minutes": 174313,
+    "total_species": 0
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 1007,
+    "total_species": 8
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 1
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 0
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 32.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 56.5,
+    "total_recorded_minutes": 1002,
+    "total_species": 2
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 75.5,
+    "total_recorded_minutes": 1668,
+    "total_species": 5
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 76.5,
+    "total_recorded_minutes": 231069,
+    "total_species": 1
+  },
+  {
+    "latitude": 12.5,
+    "longitude": 77.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 13575,
+    "total_species": 3
+  },
+  {
+    "latitude": 13.5,
+    "longitude": -89.5,
+    "total_recorded_minutes": 19056,
+    "total_species": 4
+  },
+  {
+    "latitude": 13.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 2206,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": -81.5,
+    "total_recorded_minutes": 1974,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": -16.5,
+    "total_recorded_minutes": 959,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 7,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": 70.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 2
+  },
+  {
+    "latitude": 13.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 159,
+    "total_species": 0
+  },
+  {
+    "latitude": 13.5,
+    "longitude": 110.5,
+    "total_recorded_minutes": 349,
+    "total_species": 2
+  },
+  {
+    "latitude": 14.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 706401,
+    "total_species": 1
+  },
+  {
+    "latitude": 14.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 157,
+    "total_species": 2
+  },
+  {
+    "latitude": 14.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 64,
+    "total_species": 0
+  },
+  {
+    "latitude": 14.5,
+    "longitude": -24.5,
+    "total_recorded_minutes": 9,
+    "total_species": 1
+  },
+  {
+    "latitude": 14.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 19,
+    "total_species": 0
+  },
+  {
+    "latitude": 14.5,
+    "longitude": 90.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": 14.5,
+    "longitude": 99.5,
+    "total_recorded_minutes": 7740,
+    "total_species": 0
+  },
+  {
+    "latitude": 14.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 35,
+    "total_species": 0
+  },
+  {
+    "latitude": 14.5,
+    "longitude": 108.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 15.5,
+    "longitude": -89.5,
+    "total_recorded_minutes": 8,
+    "total_species": 7
+  },
+  {
+    "latitude": 15.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 54179,
+    "total_species": 5
+  },
+  {
+    "latitude": 15.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 16367,
+    "total_species": 0
+  },
+  {
+    "latitude": 15.5,
+    "longitude": -23.5,
+    "total_recorded_minutes": 42,
+    "total_species": 1
+  },
+  {
+    "latitude": 15.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 15.5,
+    "longitude": 76.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 15.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 93480,
+    "total_species": 0
+  },
+  {
+    "latitude": 16.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 15,
+    "total_species": 8
+  },
+  {
+    "latitude": 16.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 16.5,
+    "longitude": -61.5,
+    "total_recorded_minutes": 90,
+    "total_species": 0
+  },
+  {
+    "latitude": 16.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 0
+  },
+  {
+    "latitude": 16.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 0
+  },
+  {
+    "latitude": 16.5,
+    "longitude": 99.5,
+    "total_recorded_minutes": 33,
+    "total_species": 0
+  },
+  {
+    "latitude": 16.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 35969,
+    "total_species": 4
+  },
+  {
+    "latitude": 16.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 9,
+    "total_species": 0
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -93.5,
+    "total_recorded_minutes": 3624,
+    "total_species": 1
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 10532,
+    "total_species": 0
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -89.5,
+    "total_recorded_minutes": 206,
+    "total_species": 0
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 43631,
+    "total_species": 1
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 741,
+    "total_species": 0
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 8939,
+    "total_species": 2
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 92673,
+    "total_species": 52
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -66.5,
+    "total_recorded_minutes": 1246486,
+    "total_species": 65
+  },
+  {
+    "latitude": 17.5,
+    "longitude": -65.5,
+    "total_recorded_minutes": 15989,
+    "total_species": 27
+  },
+  {
+    "latitude": 17.5,
+    "longitude": 73.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 17.5,
+    "longitude": 78.5,
+    "total_recorded_minutes": 6,
+    "total_species": 1
+  },
+  {
+    "latitude": 17.5,
+    "longitude": 105.5,
+    "total_recorded_minutes": 178527,
+    "total_species": 1
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 13221,
+    "total_species": 0
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 867499,
+    "total_species": 27
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 9,
+    "total_species": 0
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -67.5,
+    "total_recorded_minutes": 888126,
+    "total_species": 74
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -66.5,
+    "total_recorded_minutes": 8414764,
+    "total_species": 108
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -65.5,
+    "total_recorded_minutes": 1912477,
+    "total_species": 93
+  },
+  {
+    "latitude": 18.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 122252,
+    "total_species": 48
+  },
+  {
+    "latitude": 18.5,
+    "longitude": 98.5,
+    "total_recorded_minutes": 2,
+    "total_species": 1
+  },
+  {
+    "latitude": 19.5,
+    "longitude": -155.5,
+    "total_recorded_minutes": 316,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 111775,
+    "total_species": 2
+  },
+  {
+    "latitude": 19.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": -96.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 1149,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 1028,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 19.5,
+    "longitude": 82.5,
+    "total_recorded_minutes": 7,
+    "total_species": 0
+  },
+  {
+    "latitude": 20.5,
+    "longitude": -156.5,
+    "total_recorded_minutes": 40,
+    "total_species": 5
+  },
+  {
+    "latitude": 20.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 999,
+    "total_species": 0
+  },
+  {
+    "latitude": 20.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 55035,
+    "total_species": 1
+  },
+  {
+    "latitude": 20.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 15,
+    "total_species": 0
+  },
+  {
+    "latitude": 20.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 20,
+    "total_species": 0
+  },
+  {
+    "latitude": 20.5,
+    "longitude": 50.5,
+    "total_recorded_minutes": 204,
+    "total_species": 1
+  },
+  {
+    "latitude": 21.5,
+    "longitude": -103.5,
+    "total_recorded_minutes": 1279,
+    "total_species": 5
+  },
+  {
+    "latitude": 21.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 6272,
+    "total_species": 5
+  },
+  {
+    "latitude": 21.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 568815,
+    "total_species": 85
+  },
+  {
+    "latitude": 21.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 2340,
+    "total_species": 0
+  },
+  {
+    "latitude": 21.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 1751,
+    "total_species": 0
+  },
+  {
+    "latitude": 21.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 54,
+    "total_species": 0
+  },
+  {
+    "latitude": 21.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 21.5,
+    "longitude": 39.5,
+    "total_recorded_minutes": 255,
+    "total_species": 0
+  },
+  {
+    "latitude": 22.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 994,
+    "total_species": 0
+  },
+  {
+    "latitude": 22.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 5186,
+    "total_species": 0
+  },
+  {
+    "latitude": 22.5,
+    "longitude": 22.5,
+    "total_recorded_minutes": 1034,
+    "total_species": 0
+  },
+  {
+    "latitude": 22.5,
+    "longitude": 78.5,
+    "total_recorded_minutes": 30,
+    "total_species": 0
+  },
+  {
+    "latitude": 22.5,
+    "longitude": 94.5,
+    "total_recorded_minutes": 34531,
+    "total_species": 0
+  },
+  {
+    "latitude": 22.5,
+    "longitude": 105.5,
+    "total_recorded_minutes": 78,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": -105.5,
+    "total_recorded_minutes": 1836,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 1008,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 33.5,
+    "total_recorded_minutes": 21,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 76.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 94.5,
+    "total_recorded_minutes": 70511,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 111.5,
+    "total_recorded_minutes": 1299,
+    "total_species": 26
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 113.5,
+    "total_recorded_minutes": 984,
+    "total_species": 0
+  },
+  {
+    "latitude": 23.5,
+    "longitude": 121.5,
+    "total_recorded_minutes": 84,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 9,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 21.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 64.5,
+    "total_recorded_minutes": 5304,
+    "total_species": 1
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 76.5,
+    "total_recorded_minutes": 5,
+    "total_species": 1
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 118.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 24.5,
+    "longitude": 123.5,
+    "total_recorded_minutes": 4695,
+    "total_species": 2
+  },
+  {
+    "latitude": 25.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 13,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 36,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 1150,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 21.5,
+    "total_recorded_minutes": 1248,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 107,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 27.5,
+    "total_recorded_minutes": 249,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 200,
+    "total_species": 1
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 33.5,
+    "total_recorded_minutes": 811,
+    "total_species": 0
+  },
+  {
+    "latitude": 25.5,
+    "longitude": 95.5,
+    "total_recorded_minutes": 38258,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": -104.5,
+    "total_recorded_minutes": 1144,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 428,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": -55.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 14,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 12,
+    "total_species": 0
+  },
+  {
+    "latitude": 26.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 1029,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 8445,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 126397,
+    "total_species": 6
+  },
+  {
+    "latitude": 27.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 23,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 811,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 383,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 1150,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 121,
+    "total_species": 13
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 91,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 13,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 621,
+    "total_species": 9
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 19.5,
+    "total_recorded_minutes": 2856,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 21.5,
+    "total_recorded_minutes": 1029,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 22.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 501,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 87.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 96.5,
+    "total_recorded_minutes": 82,
+    "total_species": 0
+  },
+  {
+    "latitude": 27.5,
+    "longitude": 153.5,
+    "total_recorded_minutes": 2,
+    "total_species": 1
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 659,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -104.5,
+    "total_recorded_minutes": 2115,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 11736,
+    "total_species": 1
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -96.5,
+    "total_recorded_minutes": 83279,
+    "total_species": 5
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -95.5,
+    "total_recorded_minutes": 123068,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -80.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -16.5,
+    "total_recorded_minutes": 423595,
+    "total_species": 1
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -15.5,
+    "total_recorded_minutes": 40,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": -13.5,
+    "total_recorded_minutes": 1,
+    "total_species": 1
+  },
+  {
+    "latitude": 28.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 24,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": 19.5,
+    "total_recorded_minutes": 333,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 9,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": 31.5,
+    "total_recorded_minutes": 14,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": 77.5,
+    "total_recorded_minutes": 4320,
+    "total_species": 0
+  },
+  {
+    "latitude": 28.5,
+    "longitude": 119.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 29.5,
+    "longitude": -104.5,
+    "total_recorded_minutes": 1705,
+    "total_species": 1
+  },
+  {
+    "latitude": 29.5,
+    "longitude": -98.5,
+    "total_recorded_minutes": 9,
+    "total_species": 0
+  },
+  {
+    "latitude": 29.5,
+    "longitude": -96.5,
+    "total_recorded_minutes": 40,
+    "total_species": 1
+  },
+  {
+    "latitude": 29.5,
+    "longitude": -95.5,
+    "total_recorded_minutes": 29797,
+    "total_species": 0
+  },
+  {
+    "latitude": 29.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 329645,
+    "total_species": 3
+  },
+  {
+    "latitude": 29.5,
+    "longitude": -13.5,
+    "total_recorded_minutes": 11340,
+    "total_species": 1
+  },
+  {
+    "latitude": 29.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 29.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 25,
+    "total_species": 0
+  },
+  {
+    "latitude": 29.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 11,
+    "total_species": 0
+  },
+  {
+    "latitude": 29.5,
+    "longitude": 108.5,
+    "total_recorded_minutes": 5553,
+    "total_species": 1
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -127.5,
+    "total_recorded_minutes": 3601,
+    "total_species": 1
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 420,
+    "total_species": 0
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 134,
+    "total_species": 1
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 302507,
+    "total_species": 14
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -96.5,
+    "total_recorded_minutes": 25,
+    "total_species": 0
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -95.5,
+    "total_recorded_minutes": 31,
+    "total_species": 1
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 28207,
+    "total_species": 0
+  },
+  {
+    "latitude": 30.5,
+    "longitude": -8.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 30.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 500,
+    "total_species": 0
+  },
+  {
+    "latitude": 30.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 8506,
+    "total_species": 7
+  },
+  {
+    "latitude": 30.5,
+    "longitude": 77.5,
+    "total_recorded_minutes": 152,
+    "total_species": 1
+  },
+  {
+    "latitude": 30.5,
+    "longitude": 104.5,
+    "total_recorded_minutes": 13,
+    "total_species": 0
+  },
+  {
+    "latitude": 30.5,
+    "longitude": 108.5,
+    "total_recorded_minutes": 5389,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": -98.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": -96.5,
+    "total_recorded_minutes": 77,
+    "total_species": 2
+  },
+  {
+    "latitude": 31.5,
+    "longitude": -6.5,
+    "total_recorded_minutes": 840,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 287,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 23,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 3864,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 22,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 238,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 34.5,
+    "total_recorded_minutes": 11,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 125285,
+    "total_species": 6
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 36.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 31.5,
+    "longitude": 55.5,
+    "total_recorded_minutes": 1066,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -117.5,
+    "total_recorded_minutes": 1177,
+    "total_species": 3
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -116.5,
+    "total_recorded_minutes": 21051,
+    "total_species": 1
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -115.5,
+    "total_recorded_minutes": 1348,
+    "total_species": 3
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -110.5,
+    "total_recorded_minutes": 60,
+    "total_species": 1
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 35,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -93.5,
+    "total_recorded_minutes": 16080,
+    "total_species": 1
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -92.5,
+    "total_recorded_minutes": 11040,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 1562,
+    "total_species": 1
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -17.5,
+    "total_recorded_minutes": 84,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -6.5,
+    "total_recorded_minutes": 1161,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 1150,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 112,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 16.5,
+    "total_recorded_minutes": 833,
+    "total_species": 0
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 34.5,
+    "total_recorded_minutes": 12702,
+    "total_species": 3
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 123131,
+    "total_species": 4
+  },
+  {
+    "latitude": 32.5,
+    "longitude": 36.5,
+    "total_recorded_minutes": 103,
+    "total_species": 0
+  },
+  {
+    "latitude": 33.5,
+    "longitude": -117.5,
+    "total_recorded_minutes": 6163,
+    "total_species": 3
+  },
+  {
+    "latitude": 33.5,
+    "longitude": -116.5,
+    "total_recorded_minutes": 3184,
+    "total_species": 2
+  },
+  {
+    "latitude": 33.5,
+    "longitude": -111.5,
+    "total_recorded_minutes": 1000,
+    "total_species": 0
+  },
+  {
+    "latitude": 33.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 1837,
+    "total_species": 1
+  },
+  {
+    "latitude": 33.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 12,
+    "total_species": 1
+  },
+  {
+    "latitude": 33.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 23,
+    "total_species": 0
+  },
+  {
+    "latitude": 33.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 226,
+    "total_species": 0
+  },
+  {
+    "latitude": 33.5,
+    "longitude": 33.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 33.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 113233,
+    "total_species": 0
+  },
+  {
+    "latitude": 33.5,
+    "longitude": 151.5,
+    "total_recorded_minutes": 1188,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 11644,
+    "total_species": 2
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -119.5,
+    "total_recorded_minutes": 24540,
+    "total_species": 1
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -118.5,
+    "total_recorded_minutes": 89,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -116.5,
+    "total_recorded_minutes": 609,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 419783,
+    "total_species": 6
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -95.5,
+    "total_recorded_minutes": 3962,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -93.5,
+    "total_recorded_minutes": 180,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 3697,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 89559,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 24784,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 1062,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 84,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 386,
+    "total_species": 1
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 37.5,
+    "total_recorded_minutes": 15,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 38.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 43.5,
+    "total_recorded_minutes": 114,
+    "total_species": 1
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 98.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 104.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 34.5,
+    "longitude": 117.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -118.5,
+    "total_recorded_minutes": 55246,
+    "total_species": 1
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -111.5,
+    "total_recorded_minutes": 229,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 50,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 26,
+    "total_species": 10
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 25296,
+    "total_species": 4
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -95.5,
+    "total_recorded_minutes": 19680,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 74288,
+    "total_species": 11
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -85.5,
+    "total_recorded_minutes": 36913,
+    "total_species": 9
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 48277,
+    "total_species": 5
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -83.5,
+    "total_recorded_minutes": 55384,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 15738,
+    "total_species": 3
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 68939,
+    "total_species": 4
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 1389,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 243327,
+    "total_species": 1
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 51396,
+    "total_species": 1
+  },
+  {
+    "latitude": 35.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 32906,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 332,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 32.5,
+    "total_recorded_minutes": 36642,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 101.5,
+    "total_recorded_minutes": 812,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 129.5,
+    "total_recorded_minutes": 172,
+    "total_species": 0
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 135.5,
+    "total_recorded_minutes": 1219,
+    "total_species": 1
+  },
+  {
+    "latitude": 35.5,
+    "longitude": 139.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 52176,
+    "total_species": 5
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 27052,
+    "total_species": 3
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -118.5,
+    "total_recorded_minutes": 1957,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -117.5,
+    "total_recorded_minutes": 5457,
+    "total_species": 1
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -95.5,
+    "total_recorded_minutes": 22560,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -94.5,
+    "total_recorded_minutes": 554,
+    "total_species": 1
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -89.5,
+    "total_recorded_minutes": 7773,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 2545,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 4192,
+    "total_species": 1
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -85.5,
+    "total_recorded_minutes": 93817,
+    "total_species": 9
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 183864,
+    "total_species": 10
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -81.5,
+    "total_recorded_minutes": 33145,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 8552,
+    "total_species": 1
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 36067,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 2043,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 876,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": 79.5,
+    "total_recorded_minutes": 227,
+    "total_species": 0
+  },
+  {
+    "latitude": 36.5,
+    "longitude": 137.5,
+    "total_recorded_minutes": 11715,
+    "total_species": 1
+  },
+  {
+    "latitude": 36.5,
+    "longitude": 140.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 30434,
+    "total_species": 15
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 14724,
+    "total_species": 1
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 7405,
+    "total_species": 1
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -119.5,
+    "total_recorded_minutes": 18077,
+    "total_species": 2
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -118.5,
+    "total_recorded_minutes": 4147,
+    "total_species": 1
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -116.5,
+    "total_recorded_minutes": 1702,
+    "total_species": 2
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -113.5,
+    "total_recorded_minutes": 1000,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -89.5,
+    "total_recorded_minutes": 305602,
+    "total_species": 100
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 296290,
+    "total_species": 6
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 2940,
+    "total_species": 1
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -8.5,
+    "total_recorded_minutes": 33,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -6.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 6,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 26695,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": 21.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 37.5,
+    "longitude": 142.5,
+    "total_recorded_minutes": 985,
+    "total_species": 1
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 11,
+    "total_species": 1
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 66019,
+    "total_species": 6
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 210991,
+    "total_species": 5
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 66021,
+    "total_species": 3
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -119.5,
+    "total_recorded_minutes": 16064,
+    "total_species": 8
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -107.5,
+    "total_recorded_minutes": 40110,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 234,
+    "total_species": 2
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -89.5,
+    "total_recorded_minutes": 20880,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 8640,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 125,
+    "total_species": 1
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 11584,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 13,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 29,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -8.5,
+    "total_recorded_minutes": 40,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -7.5,
+    "total_recorded_minutes": 824,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -6.5,
+    "total_recorded_minutes": 178,
+    "total_species": 3
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 7,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 7380,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 1918,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 115,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 21.5,
+    "total_recorded_minutes": 209,
+    "total_species": 1
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 22.5,
+    "total_recorded_minutes": 200,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 29.5,
+    "total_recorded_minutes": 794,
+    "total_species": 0
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 32.5,
+    "total_recorded_minutes": 1,
+    "total_species": 1
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 34.5,
+    "total_recorded_minutes": 205,
+    "total_species": 1
+  },
+  {
+    "latitude": 38.5,
+    "longitude": 40.5,
+    "total_recorded_minutes": 178,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 618,
+    "total_species": 13
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 42541,
+    "total_species": 9
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 31511,
+    "total_species": 1
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 45266,
+    "total_species": 2
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -116.5,
+    "total_recorded_minutes": 370,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 824,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -105.5,
+    "total_recorded_minutes": 106750,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -104.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 115,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 1275,
+    "total_species": 12
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 184790,
+    "total_species": 1
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 5200,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 13,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 193,
+    "total_species": 1
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 202,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 144,
+    "total_species": 1
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 900,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 1440,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 631,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 520,
+    "total_species": 2
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 112558,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 21.5,
+    "total_recorded_minutes": 1218,
+    "total_species": 1
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 61,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 28.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 30.5,
+    "total_recorded_minutes": 23,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 31.5,
+    "total_recorded_minutes": 869,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 34.5,
+    "total_recorded_minutes": 211,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 2071,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 36.5,
+    "total_recorded_minutes": 933,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 41.5,
+    "total_recorded_minutes": 901,
+    "total_species": 0
+  },
+  {
+    "latitude": 39.5,
+    "longitude": 116.5,
+    "total_recorded_minutes": 562,
+    "total_species": 2
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -124.5,
+    "total_recorded_minutes": 585,
+    "total_species": 11
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 2476,
+    "total_species": 22
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 1530,
+    "total_species": 14
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 720,
+    "total_species": 21
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 885,
+    "total_species": 21
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -113.5,
+    "total_recorded_minutes": 1150,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -111.5,
+    "total_recorded_minutes": 25,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -109.5,
+    "total_recorded_minutes": 957,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -98.5,
+    "total_recorded_minutes": 1221,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -92.5,
+    "total_recorded_minutes": 1644,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 1644,
+    "total_species": 1
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 120,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 90,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 385,
+    "total_species": 2
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 9141,
+    "total_species": 1
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 9245,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 3840,
+    "total_species": 1
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 35,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 123,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -8.5,
+    "total_recorded_minutes": 3333,
+    "total_species": 2
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 952,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 45009,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 5617,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 6858,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 4515,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 23,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 255850,
+    "total_species": 32
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 15.5,
+    "total_recorded_minutes": 17,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 15198,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 996908,
+    "total_species": 1
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 313,
+    "total_species": 1
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 25.5,
+    "total_recorded_minutes": 619,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 2079,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 34.5,
+    "total_recorded_minutes": 1000,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 1608,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 74.5,
+    "total_recorded_minutes": 316,
+    "total_species": 0
+  },
+  {
+    "latitude": 40.5,
+    "longitude": 105.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -124.5,
+    "total_recorded_minutes": 690,
+    "total_species": 8
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 7861,
+    "total_species": 22
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 1496,
+    "total_species": 20
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 1670,
+    "total_species": 22
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 1679,
+    "total_species": 22
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -112.5,
+    "total_recorded_minutes": 1839,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -110.5,
+    "total_recorded_minutes": 1130,
+    "total_species": 1
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -108.5,
+    "total_recorded_minutes": 2545,
+    "total_species": 1
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -107.5,
+    "total_recorded_minutes": 1454,
+    "total_species": 3
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -105.5,
+    "total_recorded_minutes": 104586,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -104.5,
+    "total_recorded_minutes": 14,
+    "total_species": 1
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -101.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -92.5,
+    "total_recorded_minutes": 3205,
+    "total_species": 2
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 1644,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -82.5,
+    "total_recorded_minutes": 44473,
+    "total_species": 1
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -81.5,
+    "total_recorded_minutes": 12833,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 201802,
+    "total_species": 2
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 118058,
+    "total_species": 2
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -77.5,
+    "total_recorded_minutes": 121210,
+    "total_species": 1
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 60235,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 26012,
+    "total_species": 1
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -74.5,
+    "total_recorded_minutes": 22443,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 635,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 12,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 1976,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 102059,
+    "total_species": 10
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 690930,
+    "total_species": 10
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 7466,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 12,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 1236,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 552,
+    "total_species": 6
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 24.5,
+    "total_recorded_minutes": 645,
+    "total_species": 2
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 28.5,
+    "total_recorded_minutes": 45,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 29.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 123.5,
+    "total_recorded_minutes": 12,
+    "total_species": 0
+  },
+  {
+    "latitude": 41.5,
+    "longitude": 174.5,
+    "total_recorded_minutes": 201,
+    "total_species": 2
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -110.5,
+    "total_recorded_minutes": 1755,
+    "total_species": 2
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -109.5,
+    "total_recorded_minutes": 2655,
+    "total_species": 2
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -100.5,
+    "total_recorded_minutes": 91910,
+    "total_species": 3
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -94.5,
+    "total_recorded_minutes": 1644,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -93.5,
+    "total_recorded_minutes": 5518,
+    "total_species": 2
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -92.5,
+    "total_recorded_minutes": 1629,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -91.5,
+    "total_recorded_minutes": 1651,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -87.5,
+    "total_recorded_minutes": 754,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 55,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 13487,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 93653,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 161,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 1404,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 185,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 59,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 1,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 6780,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 94582,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 29303,
+    "total_species": 5
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 13,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 21,
+    "total_species": 1
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 903890,
+    "total_species": 40
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 1385,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 52240,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 42.5,
+    "longitude": 24.5,
+    "total_recorded_minutes": 15761,
+    "total_species": 4
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -110.5,
+    "total_recorded_minutes": 2049,
+    "total_species": 1
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -93.5,
+    "total_recorded_minutes": 7707,
+    "total_species": 1
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -92.5,
+    "total_recorded_minutes": 3117,
+    "total_species": 3
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -79.5,
+    "total_recorded_minutes": 4251,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 4860,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 1146,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -70.5,
+    "total_recorded_minutes": 6,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -69.5,
+    "total_recorded_minutes": 23564,
+    "total_species": 14
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -66.5,
+    "total_recorded_minutes": 90,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -65.5,
+    "total_recorded_minutes": 510,
+    "total_species": 5
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -9.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -8.5,
+    "total_recorded_minutes": 248,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -7.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 3122,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 1310,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 1523,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 13,
+    "total_species": 1
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 92,
+    "total_species": 1
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 9290,
+    "total_species": 12
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 55,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 25328,
+    "total_species": 2
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 27706,
+    "total_species": 1
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 131.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 132.5,
+    "total_recorded_minutes": 51,
+    "total_species": 0
+  },
+  {
+    "latitude": 43.5,
+    "longitude": 144.5,
+    "total_recorded_minutes": 24,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 7373,
+    "total_species": 1
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -120.5,
+    "total_recorded_minutes": 5785,
+    "total_species": 1
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 32904,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -105.5,
+    "total_recorded_minutes": 11431,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -76.5,
+    "total_recorded_minutes": 532,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 36501,
+    "total_species": 4
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -72.5,
+    "total_recorded_minutes": 1833,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -71.5,
+    "total_recorded_minutes": 62,
+    "total_species": 1
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -65.5,
+    "total_recorded_minutes": 9509,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 290,
+    "total_species": 4
+  },
+  {
+    "latitude": 44.5,
+    "longitude": -63.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 4113,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 15559,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 259517,
+    "total_species": 6
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 14073,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 36.5,
+    "total_recorded_minutes": 6,
+    "total_species": 0
+  },
+  {
+    "latitude": 44.5,
+    "longitude": 44.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 3464,
+    "total_species": 6
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 38,
+    "total_species": 1
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -75.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 1754,
+    "total_species": 2
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -68.5,
+    "total_recorded_minutes": 997,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 60,
+    "total_species": 1
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 989,
+    "total_species": 2
+  },
+  {
+    "latitude": 45.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 10,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 241,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 67,
+    "total_species": 2
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 4,
+    "total_species": 1
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 58,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 28,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 38661,
+    "total_species": 1
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 44333,
+    "total_species": 7
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 47,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 12414,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 104370,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 1754,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 24.5,
+    "total_recorded_minutes": 1995,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 710015,
+    "total_species": 0
+  },
+  {
+    "latitude": 45.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 1795,
+    "total_species": 1
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 610,
+    "total_species": 2
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -119.5,
+    "total_recorded_minutes": 4754,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -118.5,
+    "total_recorded_minutes": 7989,
+    "total_species": 1
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -103.5,
+    "total_recorded_minutes": 4200,
+    "total_species": 2
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -102.5,
+    "total_recorded_minutes": 3299,
+    "total_species": 2
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 48,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -88.5,
+    "total_recorded_minutes": 422,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -78.5,
+    "total_recorded_minutes": 30,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -66.5,
+    "total_recorded_minutes": 66,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -64.5,
+    "total_recorded_minutes": 81,
+    "total_species": 2
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -62.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 510,
+    "total_species": 4
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 121,
+    "total_species": 1
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 26700,
+    "total_species": 9
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 51862,
+    "total_species": 8
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 33776,
+    "total_species": 2
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 204,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 8174,
+    "total_species": 1
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 70,
+    "total_species": 1
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 15.5,
+    "total_recorded_minutes": 90,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 16.5,
+    "total_recorded_minutes": 83665,
+    "total_species": 3
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 25.5,
+    "total_recorded_minutes": 221349,
+    "total_species": 0
+  },
+  {
+    "latitude": 46.5,
+    "longitude": 38.5,
+    "total_recorded_minutes": 7,
+    "total_species": 0
+  },
+  {
+    "latitude": 47.5,
+    "longitude": -122.5,
+    "total_recorded_minutes": 138094,
+    "total_species": 21
+  },
+  {
+    "latitude": 47.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 290779,
+    "total_species": 3
+  },
+  {
+    "latitude": 47.5,
+    "longitude": -90.5,
+    "total_recorded_minutes": 243,
+    "total_species": 1
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 37,
+    "total_species": 0
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 12311,
+    "total_species": 1
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 24505,
+    "total_species": 0
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 197015,
+    "total_species": 3
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 70755,
+    "total_species": 3
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 13796,
+    "total_species": 1
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 8392,
+    "total_species": 1
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 16.5,
+    "total_recorded_minutes": 2087628,
+    "total_species": 36
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 28.5,
+    "total_recorded_minutes": 111961,
+    "total_species": 0
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 38.5,
+    "total_recorded_minutes": 245,
+    "total_species": 3
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 39.5,
+    "total_recorded_minutes": 9,
+    "total_species": 0
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 40.5,
+    "total_recorded_minutes": 1925,
+    "total_species": 1
+  },
+  {
+    "latitude": 47.5,
+    "longitude": 41.5,
+    "total_recorded_minutes": 7,
+    "total_species": 0
+  },
+  {
+    "latitude": 48.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 1901669,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": -119.5,
+    "total_recorded_minutes": 17416,
+    "total_species": 0
+  },
+  {
+    "latitude": 48.5,
+    "longitude": -114.5,
+    "total_recorded_minutes": 90881,
+    "total_species": 0
+  },
+  {
+    "latitude": 48.5,
+    "longitude": -113.5,
+    "total_recorded_minutes": 878293,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 362,
+    "total_species": 0
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 3479,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 4,
+    "total_species": 0
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 30,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 9,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 17374,
+    "total_species": 3
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 1723,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 50,
+    "total_species": 1
+  },
+  {
+    "latitude": 48.5,
+    "longitude": 50.5,
+    "total_recorded_minutes": 1729,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": -124.5,
+    "total_recorded_minutes": 359489,
+    "total_species": 1
+  },
+  {
+    "latitude": 49.5,
+    "longitude": -123.5,
+    "total_recorded_minutes": 524589,
+    "total_species": 11
+  },
+  {
+    "latitude": 49.5,
+    "longitude": -121.5,
+    "total_recorded_minutes": 120,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": -99.5,
+    "total_recorded_minutes": 58,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 20,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 23646,
+    "total_species": 10
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 40,
+    "total_species": 1
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 4,
+    "total_species": 2
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 101,
+    "total_species": 7
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 686,
+    "total_species": 1
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 41,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 38121,
+    "total_species": 1
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 16601,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 5369,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 24.5,
+    "total_recorded_minutes": 5276,
+    "total_species": 11
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 31.5,
+    "total_recorded_minutes": 1752,
+    "total_species": 0
+  },
+  {
+    "latitude": 49.5,
+    "longitude": 38.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 50.5,
+    "longitude": -104.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 50.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 2466,
+    "total_species": 0
+  },
+  {
+    "latitude": 50.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 1866,
+    "total_species": 3
+  },
+  {
+    "latitude": 50.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 99,
+    "total_species": 1
+  },
+  {
+    "latitude": 50.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 128,
+    "total_species": 0
+  },
+  {
+    "latitude": 50.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 1670,
+    "total_species": 1
+  },
+  {
+    "latitude": 50.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 22180,
+    "total_species": 1
+  },
+  {
+    "latitude": 50.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 180,
+    "total_species": 0
+  },
+  {
+    "latitude": 50.5,
+    "longitude": 49.5,
+    "total_recorded_minutes": 1902,
+    "total_species": 0
+  },
+  {
+    "latitude": 50.5,
+    "longitude": 126.5,
+    "total_recorded_minutes": 48,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -114.5,
+    "total_recorded_minutes": 1823,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -86.5,
+    "total_recorded_minutes": 350,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -73.5,
+    "total_recorded_minutes": 1180,
+    "total_species": 1
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -9.5,
+    "total_recorded_minutes": 25313,
+    "total_species": 5
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 172,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 133743,
+    "total_species": 8
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 592,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 219046,
+    "total_species": 17
+  },
+  {
+    "latitude": 51.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 27,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": 2.5,
+    "total_recorded_minutes": 24,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 69,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 481,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 120,
+    "total_species": 0
+  },
+  {
+    "latitude": 51.5,
+    "longitude": 9.5,
+    "total_recorded_minutes": 19445,
+    "total_species": 3
+  },
+  {
+    "latitude": 52.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": -5.5,
+    "total_recorded_minutes": 640,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 1835,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 977,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 3839,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 0.5,
+    "total_recorded_minutes": 4459,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 1.5,
+    "total_recorded_minutes": 74,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 4.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 5.5,
+    "total_recorded_minutes": 64765,
+    "total_species": 1
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 56332,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 8.5,
+    "total_recorded_minutes": 1,
+    "total_species": 1
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 2310,
+    "total_species": 1
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 13.5,
+    "total_recorded_minutes": 249,
+    "total_species": 1
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 2092669,
+    "total_species": 0
+  },
+  {
+    "latitude": 52.5,
+    "longitude": 25.5,
+    "total_recorded_minutes": 510,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": -113.5,
+    "total_recorded_minutes": 95,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": -60.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 654,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 15,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": -1.5,
+    "total_recorded_minutes": 31082,
+    "total_species": 1
+  },
+  {
+    "latitude": 53.5,
+    "longitude": -0.5,
+    "total_recorded_minutes": 90501,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": 6.5,
+    "total_recorded_minutes": 126886,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": 7.5,
+    "total_recorded_minutes": 1,
+    "total_species": 1
+  },
+  {
+    "latitude": 53.5,
+    "longitude": 11.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 53.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 13,
+    "total_species": 1
+  },
+  {
+    "latitude": 54.5,
+    "longitude": -125.5,
+    "total_recorded_minutes": 1148,
+    "total_species": 0
+  },
+  {
+    "latitude": 54.5,
+    "longitude": -124.5,
+    "total_recorded_minutes": 20,
+    "total_species": 0
+  },
+  {
+    "latitude": 54.5,
+    "longitude": -111.5,
+    "total_recorded_minutes": 41,
+    "total_species": 0
+  },
+  {
+    "latitude": 54.5,
+    "longitude": -105.5,
+    "total_recorded_minutes": 300,
+    "total_species": 0
+  },
+  {
+    "latitude": 54.5,
+    "longitude": -11.5,
+    "total_recorded_minutes": 543,
+    "total_species": 0
+  },
+  {
+    "latitude": 54.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 1358567,
+    "total_species": 3
+  },
+  {
+    "latitude": 54.5,
+    "longitude": 22.5,
+    "total_recorded_minutes": 1951,
+    "total_species": 1
+  },
+  {
+    "latitude": 54.5,
+    "longitude": 32.5,
+    "total_recorded_minutes": 15,
+    "total_species": 0
+  },
+  {
+    "latitude": 54.5,
+    "longitude": 87.5,
+    "total_recorded_minutes": 200,
+    "total_species": 0
+  },
+  {
+    "latitude": 55.5,
+    "longitude": -106.5,
+    "total_recorded_minutes": 1144,
+    "total_species": 0
+  },
+  {
+    "latitude": 55.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 39,
+    "total_species": 0
+  },
+  {
+    "latitude": 55.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 556,
+    "total_species": 1
+  },
+  {
+    "latitude": 55.5,
+    "longitude": 10.5,
+    "total_recorded_minutes": 1420,
+    "total_species": 0
+  },
+  {
+    "latitude": 55.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 1080,
+    "total_species": 0
+  },
+  {
+    "latitude": 55.5,
+    "longitude": 37.5,
+    "total_recorded_minutes": 120,
+    "total_species": 0
+  },
+  {
+    "latitude": 56.5,
+    "longitude": -132.5,
+    "total_recorded_minutes": 2795,
+    "total_species": 4
+  },
+  {
+    "latitude": 56.5,
+    "longitude": -115.5,
+    "total_recorded_minutes": 300,
+    "total_species": 0
+  },
+  {
+    "latitude": 56.5,
+    "longitude": -97.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 56.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 166,
+    "total_species": 0
+  },
+  {
+    "latitude": 56.5,
+    "longitude": 22.5,
+    "total_recorded_minutes": 10,
+    "total_species": 6
+  },
+  {
+    "latitude": 56.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 54,
+    "total_species": 0
+  },
+  {
+    "latitude": 56.5,
+    "longitude": 39.5,
+    "total_recorded_minutes": 57,
+    "total_species": 0
+  },
+  {
+    "latitude": 57.5,
+    "longitude": -111.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 57.5,
+    "longitude": -6.5,
+    "total_recorded_minutes": 15284,
+    "total_species": 1
+  },
+  {
+    "latitude": 57.5,
+    "longitude": -4.5,
+    "total_recorded_minutes": 17,
+    "total_species": 0
+  },
+  {
+    "latitude": 57.5,
+    "longitude": -3.5,
+    "total_recorded_minutes": 287,
+    "total_species": 0
+  },
+  {
+    "latitude": 57.5,
+    "longitude": -2.5,
+    "total_recorded_minutes": 12,
+    "total_species": 0
+  },
+  {
+    "latitude": 57.5,
+    "longitude": 12.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 57.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 2,
+    "total_species": 1
+  },
+  {
+    "latitude": 57.5,
+    "longitude": 22.5,
+    "total_recorded_minutes": 3,
+    "total_species": 2
+  },
+  {
+    "latitude": 58.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 3,
+    "total_species": 3
+  },
+  {
+    "latitude": 59.5,
+    "longitude": -139.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 59.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 60,
+    "total_species": 0
+  },
+  {
+    "latitude": 59.5,
+    "longitude": 18.5,
+    "total_recorded_minutes": 1392,
+    "total_species": 0
+  },
+  {
+    "latitude": 59.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 831,
+    "total_species": 4
+  },
+  {
+    "latitude": 60.5,
+    "longitude": -135.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 60.5,
+    "longitude": 17.5,
+    "total_recorded_minutes": 16,
+    "total_species": 0
+  },
+  {
+    "latitude": 60.5,
+    "longitude": 24.5,
+    "total_recorded_minutes": 38,
+    "total_species": 0
+  },
+  {
+    "latitude": 61.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 3385,
+    "total_species": 2
+  },
+  {
+    "latitude": 61.5,
+    "longitude": 26.5,
+    "total_recorded_minutes": 1,
+    "total_species": 0
+  },
+  {
+    "latitude": 62.5,
+    "longitude": -134.5,
+    "total_recorded_minutes": 450,
+    "total_species": 0
+  },
+  {
+    "latitude": 63.5,
+    "longitude": 20.5,
+    "total_recorded_minutes": 16525,
+    "total_species": 0
+  },
+  {
+    "latitude": 63.5,
+    "longitude": 23.5,
+    "total_recorded_minutes": 529,
+    "total_species": 1
+  },
+  {
+    "latitude": 64.5,
+    "longitude": 16.5,
+    "total_recorded_minutes": 812,
+    "total_species": 0
+  },
+  {
+    "latitude": 64.5,
+    "longitude": 102.5,
+    "total_recorded_minutes": 50,
+    "total_species": 0
+  },
+  {
+    "latitude": 66.5,
+    "longitude": -133.5,
+    "total_recorded_minutes": 117,
+    "total_species": 0
+  },
+  {
+    "latitude": 66.5,
+    "longitude": 66.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 68.5,
+    "longitude": -159.5,
+    "total_recorded_minutes": 2236,
+    "total_species": 0
+  },
+  {
+    "latitude": 68.5,
+    "longitude": -154.5,
+    "total_recorded_minutes": 25,
+    "total_species": 1
+  },
+  {
+    "latitude": 68.5,
+    "longitude": 14.5,
+    "total_recorded_minutes": 610,
+    "total_species": 0
+  },
+  {
+    "latitude": 68.5,
+    "longitude": 45.5,
+    "total_recorded_minutes": 823,
+    "total_species": 0
+  },
+  {
+    "latitude": 69.5,
+    "longitude": -146.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 74.5,
+    "longitude": -41.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 75.5,
+    "longitude": 3.5,
+    "total_recorded_minutes": 1329,
+    "total_species": 4
+  },
+  {
+    "latitude": 77.5,
+    "longitude": 77.5,
+    "total_recorded_minutes": 5,
+    "total_species": 0
+  },
+  {
+    "latitude": 78.5,
+    "longitude": 35.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  },
+  {
+    "latitude": 85.5,
+    "longitude": -84.5,
+    "total_recorded_minutes": 8,
+    "total_species": 0
+  },
+  {
+    "latitude": 85.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 3,
+    "total_species": 0
+  },
+  {
+    "latitude": 90.5,
+    "longitude": 100.5,
+    "total_recorded_minutes": 2,
+    "total_species": 0
+  }
+]
