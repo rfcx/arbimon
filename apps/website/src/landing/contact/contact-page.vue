@@ -4,8 +4,21 @@
       <div class="flex flex-row items-center gap-16">
         <div class="basis-3/5">
           <div v-if="isSubmitted">
-            <div class="flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-              <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+            <div
+              class="flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+              role="alert"
+            >
+              <svg
+                aria-hidden="true"
+                class="flex-shrink-0 inline w-5 h-5 mr-3"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              ><path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd"
+              /></svg>
               <span class="sr-only">Info</span>
               <div>
                 <span class="font-medium">Submitted!</span> Thank you for contacting us.
@@ -14,7 +27,8 @@
           </div>
           <form
             v-else
-            action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST"
+            action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
+            method="POST"
             class="p-8 rounded-lg bg-gray-700 dark:bg-gray-200 space-y-8"
           >
             <div class="grid grid-cols-2 gap-8">
@@ -27,7 +41,7 @@
                   id="name"
                   name="name"
                   type="text"
-                  maxlength="80" 
+                  maxlength="80"
                   class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
                   placeholder="David Attenborough"
                   required
@@ -59,7 +73,7 @@
                   id="phone"
                   name="phone"
                   type="text"
-                  maxlength="40" 
+                  maxlength="40"
                   class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
                   placeholder="+1 (123) 456-789"
                 >
@@ -73,7 +87,7 @@
                   id="company"
                   name="company"
                   type="text"
-                  maxlength="80" 
+                  maxlength="80"
                   class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
                   placeholder="Arbimon"
                 >
@@ -109,10 +123,28 @@
               />
             </div>
             <div>
-              <input type=hidden name="orgid" value="00D36000000uBYX">
-              <input type=hidden name="retURL" :value="returnUrl">
-              <input v-if="isTestForm" type="hidden" name="debug" value="1">
-              <input v-if="isTestForm" type="hidden" name="debugEmail" value="bourhan@rfcx.org">
+              <input
+                type="hidden"
+                name="orgid"
+                value="00D36000000uBYX"
+              >
+              <input
+                type="hidden"
+                name="retURL"
+                :value="returnUrl"
+              >
+              <input
+                v-if="isTestForm"
+                type="hidden"
+                name="debug"
+                value="1"
+              >
+              <input
+                v-if="isTestForm"
+                type="hidden"
+                name="debugEmail"
+                value="bourhan@rfcx.org"
+              >
               <button
                 type="submit"
                 class="py-3 px-5 font-semibold text-center text-white rounded-lg bg-primary sm:w-fit hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -123,16 +155,24 @@
           </form>
         </div>
         <div class="basis-2/5 text-gray-500 dark:text-gray-400">
-          <h2 class="mb-4 text-sm">CONTACT US</h2>
+          <h2 class="mb-4 text-sm">
+            CONTACT US
+          </h2>
           <h3 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             Get in touch today
           </h3>
           <p class="mb-16 font-light sm:text-xl">
             Got a technical issue? Want to send feedback about a beta feature? Need details about our Business plan? Let us know.
           </p>
-          <p class="mb-4">contact@arbimon.org</p>
-          <p class="mb-4">+1 (415) 792-9472</p>
-          <p class="mb-4">440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA</p>
+          <p class="mb-4">
+            contact@arbimon.org
+          </p>
+          <p class="mb-4">
+            +1 (415) 792-9472
+          </p>
+          <p class="mb-4">
+            440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA
+          </p>
         </div>
       </div>
     </div>
@@ -144,6 +184,6 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const isTestForm = import.meta.env.DEV
-const returnUrl = window.location.origin + '?submitted=true'
+const returnUrl = typeof window !== 'undefined' ? window.location.origin + '?submitted=true' : ''
 const isSubmitted = route.query.submitted === 'true'
 </script>
