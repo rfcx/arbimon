@@ -9,75 +9,122 @@
         <p class="mb-4 font-light">
           As well as providing the Arbimon platform for free, we have additional opportunities for partnering on projects and providing support.
         </p>
-        <p class="mb-4 font-medium">
+        <p class="font-medium">
           Please tell us a bit more about your Arbimon needs
         </p>
       </div>
 
-      <div class="mt-4 grid gap-4 sm:grid-cols-2 sm:gap-6">
-        <div class="sm:col-span-2">
-          <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            1. How do you plan to use Arbimon?
-          </p>
-          <ul>
-            <li
+      <form
+        class="py-8 space-y-4 md:space-y-8"
+        action="#"
+      >
+        <div>
+          <label
+            for="email"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >1. How do you plan to use Arbimon?</label>
+          <div class="space-y-2">
+            <div
               v-for="option in purposeOptions"
               :key="'purpose-list-' + option.id"
-              class="px-4 pb-2 align-middle list-item"
+              class="items-center"
             >
               <input
                 type="checkbox"
-                class="rounded dark:bg-gray-700 dark:border-gray-300"
+                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                 :checked="isSelectedPurpose(option.id)"
                 @click="updateSelectedPurpose(option.id)"
               >
-              <label class="text-white ml-2">{{ option.label }}</label>
+              <label class="font-light text-gray-500 dark:text-gray-300 ml-2">{{ option.label }}</label>
+            </div>
+            <div class="items-center">
               <input
-                v-if="option.id === 6"
+                type="checkbox"
+                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+              >
+              <label class="font-light text-gray-500 dark:text-gray-300 ml-2">Other</label>
+              <input
                 id="extra"
                 v-model="extraPurpose"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-primary-600 focus:border-primary-600 ml-3 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="(please specify)"
+                class="ml-2 w-1/2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
-        <div class="sm:col-span-2">
-          <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            2. What taxonomic groups are you interested in?
-          </p>
+        <div>
           <label
-            v-for="taxon in taxons"
-            :key="'taxon-list-' + taxon.value"
-            class="px-2 pb-2 align-middle"
-          >
-            <input
-              type="checkbox"
-              class="rounded dark:bg-gray-700 dark:border-gray-300"
-              :checked="isSelectedTaxon(taxon.value)"
-              @click="updateSelectedTaxon(taxon.value)"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >2. What taxonomic groups are you interested in?</label>
+          <div class="items-center">
+            <label
+              v-for="taxon in taxons"
+              :key="'taxon-list-' + taxon.value"
+              class="mr-4"
             >
-            <span class="text-white ml-2">{{ taxon.label }}</span>
-          </label>
+              <input
+                type="checkbox"
+                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                name="taxonomicgroups"
+                :checked="isSelectedTaxon(taxon.value)"
+                @click="updateSelectedTaxon(taxon.value)"
+              >
+              <span class="font-light text-gray-500 dark:text-gray-300 ml-2">{{ taxon.label }}</span>
+            </label>
+          </div>
         </div>
-        <div class="sm:col-span-2">
-          <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            3. What is your affiliation or associated organizations?
-          </p>
-          <textarea
-            id="message"
-            rows="2"
-            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Write organizations here..."
-          />
+
+        <div>
+          <label
+            for="organizations"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >3. What is your affiliation or associated organization(s)?</label>
+          <input
+            id="organizations"
+            type="text"
+            name="organizations"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
         </div>
+
+        <div>
+          <label
+            for="occupation"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >4. Which of these best describes you?</label>
+          <select
+            id="occupation"
+            name="occupation"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option>Ecologist</option>
+            <option>Conservationist</option>
+            <option>Data scientist</option>
+            <option>Citizen scientist</option>
+            <option>Researcher</option>
+            <option>Advocate</option>
+            <option>Project funder</option>
+            <option>Student</option>
+            <option>None of these</option>
+          </select>
+        </div>
+      </form>
+
+      <div>
+        <button
+          class="px-5 py-2.5 font-medium text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+          :disabled="isProcessing"
+          @click.prevent="next"
+        >
+          Continue
+        </button>
+        <router-link
+          :to="{ name: ROUTE_NAMES.createProject, query: { first: 1 } }"
+          class="ml-4 px-5 py-2.5 text-gray-600 dark:text-gray-500 hover:underline font-light"
+        >
+          Skip
+        </router-link>
       </div>
-      <button
-        class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-        :disabled="isProcessing"
-        @click.prevent="next"
-      >
-        Continue
-      </button>
     </div>
   </section>
 </template>
@@ -88,34 +135,20 @@ import { useRouter } from 'vue-router'
 import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
 import { ROUTE_NAMES } from '~/router'
 
-export interface PurposeType {
-  id: number
-  label: string
-  extra?: string
-  checked: boolean
-}
-
-export interface TaxonType {
-  value: string
-  label: string
-  checked: boolean
-}
-
 const router = useRouter()
 
 const isProcessing = ref<boolean>(false)
 const extraPurpose = ref<string>('')
 
-const purposeOptions: PurposeType[] = [
+const purposeOptions = [
   { id: 1, label: 'Create baseline biodiversity', checked: false },
   { id: 2, label: 'Detect and monitor endangered/rare species', checked: false },
   { id: 3, label: 'Detect and monitor illegal activity', checked: false },
   { id: 4, label: 'Evaluate impact of human activities on biodiversity', checked: false },
-  { id: 5, label: 'Evaluate impact of conservation initiatives on biodiversity', checked: false },
-  { id: 6, label: 'Others:', checked: false }
+  { id: 5, label: 'Evaluate impact of conservation initiatives on biodiversity', checked: false }
 ]
 
-const taxons: TaxonType[] = [
+const taxons = [
   { value: 'anurans', label: 'Anurans', checked: false },
   { value: 'bats', label: 'Bats', checked: false },
   { value: 'insects', label: 'Insects', checked: false },
