@@ -2,12 +2,18 @@
   <project-navbar />
   <section class="bg-white dark:bg-mirage-gray">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-24">
-      <h2 class="text-xl tracking-tight text-gray-900 dark:text-white">
-        Almost there
-      </h2>
-      <p class="text-light-500">
-        Tell us a bit more about your Arbimon needs
-      </p>
+      <div class="text-gray-500 sm:text-lg dark:text-gray-400">
+        <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">
+          Get started
+        </h2>
+        <p class="mb-4 font-light">
+          As well as providing the Arbimon platform for free, we have additional opportunities for partnering on projects and providing support.
+        </p>
+        <p class="mb-4 font-medium">
+          Please tell us a bit more about your Arbimon needs
+        </p>
+      </div>
+
       <div class="mt-4 grid gap-4 sm:grid-cols-2 sm:gap-6">
         <div class="sm:col-span-2">
           <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
