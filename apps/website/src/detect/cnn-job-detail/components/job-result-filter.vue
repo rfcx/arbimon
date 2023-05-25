@@ -60,10 +60,14 @@
   />
 </template>
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { inject, reactive, ref } from 'vue'
 
+import { apiClientBioKey } from '@/globals'
 import FilterModal from './job-result-filter-modal.vue'
 import type { ValidationFilterConfig } from './types'
+
+const apiBio = inject(apiClientBioKey) as AxiosInstance
 
 const displayFilterModal = ref(false)
 // const displayType = ref<'list' | 'grid'>('list')
@@ -143,6 +147,8 @@ const formatThreshold = (val: number) => {
 }
 
 const getFilterDetections = () => {
+  // call GET https://staging-api.rfcx.org/detections
+
   // Call API
   //  params: { threshold: formatThreshold(threshold), ...filterConfigs }
 }
