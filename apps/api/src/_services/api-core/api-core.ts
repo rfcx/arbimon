@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
+import { type DetectCnnDetectionsQueryParams, type DetectCnnDetectionsResponse } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 
 import { ApiClient } from '../api-helpers/api-client'
@@ -24,6 +25,19 @@ export async function getIsProjectMemberFromApi (projectId: string, token: strin
 export async function getMedia (logger: FastifyLoggerInstance, url: string): Promise<ArrayBuffer | undefined> {
   // ! `blob` is a "browser only" option. read more here: https://stackoverflow.com/a/60461828
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
+}
+
+export async function getDetections (token: string, params: DetectCnnDetectionsQueryParams): Promise<DetectCnnDetectionsResponse[]> {
+  return await axios.request<DetectCnnDetectionsResponse[]>({
+    method: 'POST',
+    url: `${CORE_API_BASE_URL}/detections`,
+    headers: {
+      authorization: token
+    },
+    params
+  })
+  .then(r => r.data)
+  .catch(unpackAxiosError)
 }
 
 export async function getMemberProjectCoreIdsFromApi (token: string): Promise<string[]> {
