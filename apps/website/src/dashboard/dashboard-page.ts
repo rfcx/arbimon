@@ -6,8 +6,8 @@ import { Options, Vue } from 'vue-class-component'
 import { Inject, Watch } from 'vue-property-decorator'
 import { type RouteLocationNormalized } from 'vue-router'
 
-import { type DashboardGeneratedResponse, apiBioGetDashboardGeneratedData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
-import { type DashboardProfileResponse, apiBioGetDashboardProfileData } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { type ApiLine, type ApiMap, type ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
+import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
@@ -55,6 +55,15 @@ const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const getDefaultPhoto = (taxonSlug: string): string =>
   new URL('../_assets/default-species-image.jpg', import.meta.url).toString()
 
+interface Metrics {
+  detectionMinutesCount: number
+  siteCount: number
+  speciesCount: number
+  speciesThreatenedCount: number
+  maxDate?: Date
+  minDate?: Date
+}
+
 @Options({
   components: {
     DashboardHighlightedSpecies,
@@ -72,8 +81,14 @@ export default class DashboardPage extends Vue {
   @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
-  generated: DashboardGeneratedResponse | null = null
-  profile: DashboardProfileResponse | null = null
+  // new api calls for testing
+  metrics: Metrics | null = null
+  content: { summary: string, readme: string } | null = null
+  richnesses: { richnessByTaxon: ApiStack, richnessByRisk: ApiStack } | null = null
+  map: { richnessBySite: ApiMap, detectionBySite: ApiMap } | null = null
+  byHour: { richnessByHour: ApiLine, detectionByHour: ApiLine } | null = null
+  threatened: { speciesThreatened: DashboardSpecies[] } | null = null
+  highlighted: { speciesHighlighted: DashboardSpecies[] } | null = null
 
   tabHeight = 360
   tabs = tabs
@@ -105,8 +120,8 @@ export default class DashboardPage extends Vue {
 
   get lineChartData (): Record<number, number> | null {
     return this.selectedTab === TAB_VALUES.richness
-      ? this.generated?.richnessByHour ?? null
-      : this.generated?.detectionByHour ?? null
+      ? this.byHour?.richnessByHour ?? null
+      : this.byHour?.detectionByHour ?? null
   }
 
   get lineChartSeries (): LineChartSeries[] {
@@ -131,7 +146,7 @@ export default class DashboardPage extends Vue {
       startDate: dayjs(),
       endDate: dayjs(),
       sites: this.store.projectFilters?.locationSites ?? [],
-      data: ((this.selectedTab === TAB_VALUES.richness ? this.generated?.richnessBySite : this.generated?.detectionBySite) ?? [])
+      data: ((this.selectedTab === TAB_VALUES.richness ? this.map?.richnessBySite : this.map?.detectionBySite) ?? [])
         .map(({ name: siteName, latitude, longitude, value }) => ({
           siteName,
           latitude,
@@ -142,17 +157,17 @@ export default class DashboardPage extends Vue {
         })),
       maxValues: {
         [MAP_KEY_THAT_SHOULD_NOT_EXIST]: max(this.selectedTab === TAB_VALUES.richness
-          ? this.generated?.richnessBySite.map(d => d.value)
-          : this.generated?.detectionBySite.map(d => d.value)
+          ? this.map?.richnessBySite.map(d => d.value)
+          : this.map?.detectionBySite.map(d => d.value)
         ) ?? 0
       }
     }
   }
 
   get speciesHighlighted (): HighlightedSpeciesRow[] {
-    if (!this.profile) return []
+    if (!this.highlighted) return []
 
-    return this.profile.speciesHighlighted.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
+    return this.highlighted.speciesHighlighted.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
       slug,
       taxonSlug,
       scientificName,
@@ -163,9 +178,9 @@ export default class DashboardPage extends Vue {
   }
 
   get speciesThreatened (): ThreatenedSpeciesRow[] {
-    if (!this.generated) return []
+    if (!this.threatened) return []
 
-    return this.generated.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
+    return this.threatened.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => ({
       slug,
       taxonSlug,
       scientificName,
@@ -176,7 +191,7 @@ export default class DashboardPage extends Vue {
   }
 
   get richnessByTaxon (): HorizontalStack[] {
-    return (this.generated?.richnessByTaxon ?? [])
+    return (this.richnesses?.richnessByTaxon ?? [])
       .map(([taxonId, count]) => {
         const name = this.store.projectFilters?.taxonClasses.find(tc => tc.id === taxonId)?.commonName ?? '-'
         const color = TAXON_CLASSES_BY_ID[taxonId].color
@@ -185,7 +200,7 @@ export default class DashboardPage extends Vue {
   }
 
   get richnessByRisk (): HorizontalStack[] {
-    return (this.generated?.richnessByRisk ?? [])
+    return (this.richnesses?.richnessByRisk ?? [])
       .map(([taxonId, count]) => {
         const taxonClass = RISKS_BY_ID[taxonId]
         return { name: taxonClass.label, color: taxonClass.color, count }
@@ -207,13 +222,28 @@ export default class DashboardPage extends Vue {
     const projectId = this.store.selectedProject?.id
     if (projectId === undefined) return
 
-    const [generated, profile] = await Promise.all([
-      apiBioGetDashboardGeneratedData(this.apiClientBio, projectId),
-      apiBioGetDashboardProfileData(this.apiClientBio, projectId)
+    const c = await this.apiClientBio.get<{ summary: string, readme: string }>(`/projects/${projectId}/dashboard-profile/content`)
+    this.content = c.data ?? null
+
+    const r = await this.apiClientBio.get<{ richnessByTaxon: ApiStack, richnessByRisk: ApiStack }>(`/projects/${projectId}/dashboard-generated/sidebar`)
+    this.richnesses = r.data ?? null
+
+    const [mapApi, b, h] = await Promise.all([
+      this.apiClientBio.get<{ richnessBySite: ApiMap, detectionBySite: ApiMap }>(`/projects/${projectId}/dashboard-generated/map-dataset`),
+      this.apiClientBio.get<{ richnessByHour: ApiLine, detectionByHour: ApiLine }>(`/projects/${projectId}/dashboard-generated/richness-by-hour`),
+      this.apiClientBio.get<{ speciesHighlighted: DashboardSpecies[] }>(`/projects/${projectId}/dashboard-generated/species-highlighted`)
     ])
 
-    this.generated = generated ?? null
-    this.profile = profile ?? null
+    this.byHour = b.data ?? null
+    this.highlighted = h.data ?? null
+
+    const m = await this.apiClientBio.get<Metrics>(`/projects/${projectId}/dashboard-generated/project-metrics`)
+    this.metrics = m.data ?? null
+
+    const t = await this.apiClientBio.get<{ speciesThreatened: DashboardSpecies[] }>(`/projects/${projectId}/dashboard-generated/species-threatened`)
+    this.threatened = t.data ?? null
+
+    this.map = mapApi.data ?? null
   }
 
   async downloadLineChart (): Promise<void> {
