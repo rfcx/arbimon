@@ -8,8 +8,8 @@
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
         <dashboard-metrics
-          :loading="generated === null"
-          :metrics="generated"
+          :loading="metrics === null"
+          :metrics="metrics"
         />
       </div>
       <div class="dashboard-species">
@@ -19,8 +19,8 @@
           />
           <horizontal-stacked-distribution
             :dataset="richnessByTaxon"
-            :loading="generated === null"
-            :known-total-count="generated?.speciesCount ?? 0"
+            :loading="richnesses?.richnessByTaxon == null"
+            :known-total-count="metrics?.speciesCount ?? 0"
             class="mt-4"
           />
           <dashboard-highlighted-species
@@ -36,8 +36,8 @@
           />
           <horizontal-stacked-distribution
             :dataset="richnessByRisk"
-            :loading="generated === null"
-            :known-total-count="generated?.speciesCount ?? 0"
+            :loading="richnesses?.richnessByRisk === null"
+            :known-total-count="metrics?.speciesCount ?? 0"
             class="mt-4"
           />
           <dashboard-threatened-species
@@ -91,11 +91,11 @@
         <page-title
           class="dashboard-title mt-5"
           :page-title="store.selectedProject.name"
-          :page-subtitle="profile?.summary"
+          :page-subtitle="content?.summary"
         />
         <dashboard-project-profile
-          :information="profile?.readme"
-          :loading="profile === null"
+          :information="content?.readme"
+          :loading="content === null"
           class="mt-5"
         />
       </div>

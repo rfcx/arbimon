@@ -30,14 +30,22 @@ const getProjectProfile = async (locationProjectId: number): Promise<LocationPro
     .findOne({
       where: { locationProjectId },
       attributes: ['summary', 'readme'],
-      raw: true
+      raw: true,
+      benchmark: true,
+      logging: (sql, timing) => {
+        console.info('dashboard-profile', sql, timing)
+      }
     }) ?? { locationProjectId, summary: '', readme: '' }
 
-const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>
+export const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>
   await ModelRepository.getInstance(getSequelize())
     .DashboardSpeciesHighlighted
     .findAll({
       where: { locationProjectId: projectId },
       order: [['highlightedOrder', 'ASC']],
-      raw: true
+      raw: true,
+      benchmark: true,
+      logging: (sql, timing) => {
+        console.info('dashboard-profile', sql, timing)
+      }
     })
