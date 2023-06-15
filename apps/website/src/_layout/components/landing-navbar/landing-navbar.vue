@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-steel-gray">
+    <nav class="bg-white border-frequency border-b-4 px-4 lg:px-6 py-2.5 dark:bg-echo">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <router-link
           :to="{ name: ROUTE_NAMES.landingHome }"
@@ -50,8 +50,8 @@
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.landingHome }"
-                exact-active-class="!text-gray-900 !dark:text-white"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                exact-active-class="!text-gray-900 !dark:text-insight"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-insight dark:hover:bg-gray-700 dark:hover:text-insight lg:dark:hover:bg-transparent dark:border-gray-700"
                 aria-current="page"
               >
                 Home
@@ -60,8 +60,8 @@
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.landingFeatured }"
-                exact-active-class="!text-gray-900 !dark:text-white"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                exact-active-class="!text-gray-900 !dark:text-insight"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-insight dark:hover:bg-gray-700 dark:hover:text-insight lg:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Featured Work
               </router-link>
@@ -69,8 +69,8 @@
             <li v-if="toggles?.explore">
               <router-link
                 :to="{ name: ROUTE_NAMES.explore }"
-                exact-active-class="!text-gray-900 !dark:text-white"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                exact-active-class="!text-gray-900 !dark:text-insight"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-insight dark:hover:bg-gray-700 dark:hover:text-insight lg:dark:hover:bg-transparent dark:border-gray-700"
               >
                 Explore
               </router-link>
@@ -78,8 +78,8 @@
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.landingHowItWorks }"
-                exact-active-class="!text-gray-900 !dark:text-white"
-                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                exact-active-class="!text-gray-900 !dark:text-insight"
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-insight dark:hover:bg-gray-700 dark:hover:text-insight lg:dark:hover:bg-transparent dark:border-gray-700"
               >
                 How It Works
               </router-link>
@@ -89,7 +89,7 @@
                 id="dropdownResourcesButton"
                 data-dropdown-toggle="dropdownResources"
                 data-dropdown-trigger="hover"
-                class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+                class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-insight dark:focus:text-insight dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
               >
                 Resources <svg
                   class="w-4 h-4 ml-1"
@@ -115,8 +115,8 @@
                   <li>
                     <router-link
                       :to="{ name: ROUTE_NAMES.landingFAQ }"
-                      exact-active-class="!text-gray-900 !dark:text-white"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      exact-active-class="!text-gray-900 !dark:text-insight"
+                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-insight"
                     >
                       FAQ
                     </router-link>
@@ -124,26 +124,26 @@
                   <li>
                     <a
                       href="#"
-                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-insight"
                     >Publications</a>
                   </li>
                 </ul>
                 <div class="py-2">
                   <a
                     href="https://support.rfcx.org"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-insight"
                   >Help &amp; Support <icon-custom-linkout class="inline ml-1" /></a>
                   <router-link
                     :to="{ name: ROUTE_NAMES.landingTeam }"
-                    exact-active-class="!text-gray-900 !dark:text-white"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                    exact-active-class="!text-gray-900 !dark:text-insight"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-insight"
                   >
                     Meet The Team
                   </router-link>
                   <router-link
                     :to="{ name: ROUTE_NAMES.landingContact }"
-                    exact-active-class="!text-gray-900 !dark:text-white"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                    exact-active-class="!text-gray-900 !dark:text-insight"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-insight"
                   >
                     Contact Us
                   </router-link>

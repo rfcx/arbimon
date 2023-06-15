@@ -47,6 +47,21 @@ export default defineConfig({
         danger: '#D46767'
       },
       colors: {
+        // Primary
+        frequency: '#ADFF2C',
+        moss: '#1E1C13',
+        echo: '#14130D',
+        pitch: '#060508',
+        //Secondary
+        spoonbill: '#FFAFAF',
+        flamingo: '#FF6868',
+        palm: '#008059',
+        chirp: '#D2FF8A',
+        // Neutrals
+        insight: '#FFFEFC',
+        cloud: '#F9F6F2',
+        fog: '#E9E6E1',
+        // Olds
         placeholder: '#999',
         faded: '#333',
         subtle: '#ffffff90',
