@@ -4,13 +4,13 @@
     class="flex items-center"
   >
     <button
-      class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+      class="text-gray-800 dark:text-insight hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-full px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
       @click="login"
     >
       Log In
     </button>
     <button
-      class="text-white bg-primary hover:bg-primary-dark focus:ring-4 focus:ring-primary-300 font-medium rounded-lg px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-light dark:hover:bg-primary focus:outline-none dark:focus:ring-primary-800"
+      class="text-pitch bg-frequency hover:bg-frequency-dark focus:ring-4 focus:ring-frequency-300 font-medium rounded-full px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:bg-frequency-light dark:hover:bg-frequency focus:outline-none dark:focus:ring-frequency-800"
       @click="signup"
     >
       Sign Up
@@ -34,7 +34,7 @@
       <ul
         :aria-labelledby="domId"
         aria-orientation="vertical"
-        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 dark:border-gray-700 border-t-1 bg-steel-gray rounded-b-md text-primary invisible group-hover:visible focus:outline-none transition-all"
+        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 dark:border-gray-700 border-t-1 bg-steel-gray rounded-b-md text-frequency invisible group-hover:visible focus:outline-none transition-all"
         role="menu"
         tabindex="-1"
       >
