@@ -55,6 +55,7 @@ declare module '@vue/runtime-core' {
     IconFaMapMarker: typeof import('~icons/fa/map-marker')['default']
     IconFaMicrophone: typeof import('~icons/fa/microphone')['default']
     IconFaPause: typeof import('~icons/fa/pause')['default']
+    IconFaPaw: typeof import('~icons/fa/paw')['default']
     IconFaPlay: typeof import('~icons/fa/play')['default']
     IconFaPlus: typeof import('~icons/fa/plus')['default']
     IconFasCaretRight: typeof import('~icons/fa-solid/caret-right')['default']
