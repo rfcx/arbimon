@@ -1,10 +1,19 @@
+import { dashboardContentRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
+import { dashboardDataByHourRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-data-by-hour'
+import { dashboardDataBySiteRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-data-by-site'
 import { dashboardGeneratedRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
+import { dashboardMetricsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { dashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 
 import { type RouteRegistration, GET } from '../_services/api-helpers/types'
+import { dashboardContentHandler } from './dashboard-content-handler'
+import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
+import { dashboardDataBySiteHandler } from './dashboard-data-by-site-handler'
 import { dashboardGeneratedHandler } from './dashboard-generated-handler'
-import { contentHandler, mapDatasetHandler, projectMetricsHandler, richnessByHourHandler, sidebarHandler, speciesHighlightedHandler, speciesThreatenedHandler } from './dashboard-multiple-routes'
+import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardProfileHandler } from './dashboard-profile-handler'
+import { dashboardSpeciesDataHandler } from './dashboard-species-data-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
@@ -19,37 +28,27 @@ export const routesDashboard: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: '/projects/:projectId/dashboard-generated/project-metrics',
-    handler: projectMetricsHandler
+    url: dashboardMetricsRoute,
+    handler: dashboardMetricsHandler
   },
   {
     method: GET,
-    url: '/projects/:projectId/dashboard-generated/sidebar',
-    handler: sidebarHandler
+    url: dashboardDataByHourRoute,
+    handler: dashboardDataByHourHandler
   },
   {
     method: GET,
-    url: '/projects/:projectId/dashboard-profile/content',
-    handler: contentHandler
+    url: dashboardContentRoute,
+    handler: dashboardContentHandler
   },
   {
     method: GET,
-    url: '/projects/:projectId/dashboard-generated/map-dataset',
-    handler: mapDatasetHandler
+    url: dashboardDataBySiteRoute,
+    handler: dashboardDataBySiteHandler
   },
   {
     method: GET,
-    url: '/projects/:projectId/dashboard-generated/richness-by-hour',
-    handler: richnessByHourHandler
-  },
-  {
-    method: GET,
-    url: '/projects/:projectId/dashboard-generated/species-threatened',
-    handler: speciesThreatenedHandler
-  },
-  {
-    method: GET,
-    url: '/projects/:projectId/dashboard-generated/species-highlighted',
-    handler: speciesHighlightedHandler
+    url: dashboardSpeciesDataRoute,
+    handler: dashboardSpeciesDataHandler
   }
 ]

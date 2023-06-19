@@ -24,17 +24,13 @@ export const getDashboardProfile = async (projectId: number): Promise<DashboardP
   }
 }
 
-const getProjectProfile = async (locationProjectId: number): Promise<LocationProjectProfile> =>
+export const getProjectProfile = async (locationProjectId: number): Promise<LocationProjectProfile> =>
   await ModelRepository.getInstance(getSequelize())
     .LocationProjectProfile
     .findOne({
       where: { locationProjectId },
       attributes: ['summary', 'readme'],
-      raw: true,
-      benchmark: true,
-      logging: (sql, timing) => {
-        console.info('dashboard-profile', sql, timing)
-      }
+      raw: true
     }) ?? { locationProjectId, summary: '', readme: '' }
 
 export const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>
@@ -43,9 +39,5 @@ export const getHighlightedSpecies = async (projectId: number): Promise<Dashboar
     .findAll({
       where: { locationProjectId: projectId },
       order: [['highlightedOrder', 'ASC']],
-      raw: true,
-      benchmark: true,
-      logging: (sql, timing) => {
-        console.info('dashboard-profile', sql, timing)
-      }
+      raw: true
     })
