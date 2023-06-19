@@ -3,10 +3,14 @@
     <div class="flex justify-between rounded-t items-center">
       <a
         class="text-xl underline text-cyan-600 cursor-pointer"
+        :href="analysis.link"
+        target="_blank"
       >
         {{ analysis.title }}
       </a>
-      <icon-fas-info-circle class="h-4 w-4 mr-2 text-gray-300 cursor-pointer" />
+      <button :title="analysis.title">
+        <icon-fas-info-circle class="h-4 w-4 mr-2 text-gray-300 cursor-pointer" />
+      </button>
     </div>
     <div class="flex items-center space-x-2 sm:space-x-3 text-xl text-gray-300">
       <span>{{ analysis.label }}:</span>

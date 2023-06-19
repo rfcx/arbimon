@@ -22,13 +22,20 @@
         <h2 class="text-3xl pt-8 pb-6">
           Analyses
         </h2>
-        <button
+        <a
           class="btn btn-icon flex items-center space-x-3"
+          :title="'Create New Analysis Job'"
+          :href="ANALYSIS_URL"
+          target="_blank"
         >
           <span sclass="sm:hidden">Create new Analysis</span>
           <icon-fa-plus class="h-3 w-3" />
+        </a>
+        <button :title="'Create New Analysis Job'">
+          <icon-fas-info-circle
+            class="h-4 w-4 mr-2 text-gray-300 cursor-pointer"
+          />
         </button>
-        <icon-fas-info-circle class="h-4 w-4 mr-2 text-gray-300 cursor-pointer" />
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mb-4">
         <DashboardAnalyses
@@ -60,41 +67,51 @@
   </section>
 </template>
 <script setup lang="ts">
+import type { AxiosInstance } from 'axios'
 import { type LngLatBoundsLike } from 'mapbox-gl'
+import { inject } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { apiClientArbimonKey } from '@/globals'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useStore } from '~/store'
+import { useSiteCount } from './_composables/use-site-count'
 import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
+const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const ANALYSIS_URL = `${BASE_URL}/project/${store.selectedProject?.slug}/analysis`
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const tabHeight = 360
 
 const stats = [
-  { value: 'site', title: 'Sites created', count: 0, label: 'Create new sites' },
-  { value: 'recording', title: 'Recordings uploaded', count: 0, label: 'Upload new recordings' },
-  { value: 'species', title: 'Species added to library', count: 0, label: 'Add a new species' },
-  { value: 'playlist', title: 'Playlists created', count: 0, label: 'Create a new playlist' }
+  { value: 'site', title: 'Sites created', count: 0, label: 'Create new sites', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/sites` },
+  { value: 'recording', title: 'Recordings uploaded', count: 0, label: 'Upload new recordings', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/recordings` },
+  { value: 'species', title: 'Species added to library', count: 0, label: 'Add a new species', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/species` },
+  { value: 'playlist', title: 'Playlists created', count: 0, label: 'Create a new playlist', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/playlists` }
 ]
 
 const analyses = [
-  { value: 'pm', title: 'Pattern Matching', count: 0, label: 'Jobs', countTemplate: 0 },
-  { value: 'rfm', title: 'Random Forest Models', count: 0, label: 'Models', countTemplate: 0 },
-  { value: 'aed', title: 'Audio Event Detections', count: 0, label: 'Jobs', countTemplate: 0 },
-  { value: 'clustering', title: 'Clustering', count: 0, label: 'Jobs', countTemplate: 0 },
-  { value: 'soundscapes', title: 'Soundscapes', count: 0, label: 'Jobs', countTemplate: 0 }
+  { value: 'pm', title: 'Pattern Matching', count: 0, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/patternmatching` },
+  { value: 'rfm', title: 'Random Forest Models', count: 0, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/random-forest-models/models` },
+  { value: 'aed', title: 'AED and Clustering', count: 0, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'soundscapes', title: 'Soundscapes', count: 0, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/soundscapes` }
 ]
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean => data.values[dataKey]
 
+// External data
+const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
+const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, { slug: store.selectedProject?.slug })
+console.info(isLoadingSiteCount, isErrorSiteCount, siteCount)
+console.info(store.selectedProject)
 function color (): string {
   return store.datasetColors[0] ?? '#EFEFEF'
 }
@@ -104,7 +121,6 @@ function circleStyle (): CircleStyle {
 }
 
 function mapDataset (): MapDataSet {
-  console.info(store.projectFilters?.locationSites)
   return {
     startDate: dayjs(),
     endDate: dayjs(),

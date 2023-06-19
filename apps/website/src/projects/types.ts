@@ -4,6 +4,7 @@ export interface Analysis {
   count: number
   label: string
   countTemplate: number
+  link: string
 }
 
 export interface Stat {
@@ -11,4 +12,5 @@ export interface Stat {
   title: string
   count: number
   label: string
+  link: string
 }

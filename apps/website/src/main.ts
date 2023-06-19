@@ -11,7 +11,7 @@ import { FEATURE_TOGGLES } from '~/feature-toggles'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
-import { apiClientBioKey, apiClientCoreKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
+import { apiClientArbimonKey, apiClientBioKey, apiClientCoreKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
@@ -53,12 +53,14 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
     const getToken = user ? async () => await getIdToken(authClient) : undefined
     const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, getToken)
     const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
+    const apiClientArbimon = getApiClient(import.meta.env.VITE_ARBIMON_BASE_URL, getToken)
 
     // Inject globals
     app
       .provide(authClientKey, authClient)
       .provide(apiClientBioKey, apiClientBio)
       .provide(apiClientCoreKey, apiClientCore)
+      .provide(apiClientArbimonKey, apiClientArbimon)
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
 
     // Handle redirects
