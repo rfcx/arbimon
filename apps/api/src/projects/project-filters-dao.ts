@@ -12,11 +12,7 @@ export const getSites = async (models: AllModels, locationProjectId: number): Pr
     .findAll({
       where: { locationProjectId },
       attributes: ATTRIBUTES_LOCATION_SITE.light,
-      order: [['name', 'ASC']],
-      benchmark: true,
-      logging: (sql, timing) => {
-        console.info('project-filters', sql, timing)
-      }
+      order: [['name', 'ASC']]
     })
 
 // TODO: Filter to get only classes that exist in the project
@@ -25,22 +21,13 @@ export const getTaxonClasses = async (models: AllModels, locationProjectId: numb
     .TaxonClass
     .findAll({
       attributes: ATTRIBUTES_TAXON_CLASS.light,
-      order: [['id', 'ASC']],
-      benchmark: true,
-      logging: (sql, timing) => {
-        console.info('project-filters', sql, timing)
-      }
+      order: [['id', 'ASC']]
     })
 
 export const getTimeBounds = async (models: AllModels, id: number): Promise<[string?, string?]> =>
   await models
     .LocationProjectMetric
-    .findByPk(id, {
-      benchmark: true,
-      logging: (sql, timing) => {
-        console.info('project-filters', sql, timing)
-      }
-    })
+    .findByPk(id)
     .then(metric => [
       metric?.minDate ? dayjs(metric.minDate).toISOString() : undefined,
       metric?.maxDate ? dayjs(metric.maxDate).toISOString() : undefined
@@ -66,10 +53,6 @@ export const getLatestSync = async (models: AllModels, sequelize: Sequelize, loc
         }
       ],
       order: [['updatedAt', 'DESC']],
-      raw: true,
-      benchmark: true,
-      logging: (sql, timing) => {
-        console.info('project-filters', sql, timing)
-      }
+      raw: true
     }) as unknown as Sync | undefined
 }
