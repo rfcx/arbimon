@@ -5,7 +5,7 @@
     alt="Arbimon Logo"
   >
   <span
-    class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
+    class="self-center uppercase font-base whitespace-nowrap dark:text-insight"
     :class="{ pride: toggles?.logoPride }"
   >Arbimon</span>
 </template>
