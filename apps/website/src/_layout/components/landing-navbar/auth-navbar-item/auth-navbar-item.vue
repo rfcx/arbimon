@@ -4,13 +4,13 @@
     class="flex items-center"
   >
     <button
-      class="text-gray-800 dark:text-insight hover:bg-moss focus:ring-4 focus:ring-moss font-medium rounded-full px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:bg-moss focus:outline-none dark:focus:ring-moss"
+      class="text-gray-800 dark:text-insight px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:text-frequency"
       @click="login"
     >
       Log In
     </button>
     <button
-      class="text-pitch bg-frequency hover:bg-frequency-dark focus:ring-4 focus:ring-frequency-300 font-medium rounded-full px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:bg-frequency-light dark:hover:bg-frequency focus:outline-none dark:focus:ring-frequency-800"
+      class="btn btn-primary"
       @click="signup"
     >
       Sign Up

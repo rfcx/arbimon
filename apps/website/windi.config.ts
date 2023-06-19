@@ -52,7 +52,7 @@ export default defineConfig({
         moss: '#1E1C13',
         echo: '#14130D',
         pitch: '#060508',
-        //Secondary
+        // Secondary
         spoonbill: '#FFAFAF',
         flamingo: '#FF6868',
         palm: '#008059',
@@ -115,10 +115,13 @@ export default defineConfig({
     range(12).map(i => `md:grid-cols-${i}`)
   ],
   shortcuts: {
+    // tab
+    tab: 'py-2 pr-4 pl-3 text-gray-700 border-b-2 border-transparent lg:hover:bg-transparent lg:p-0 dark:text-insight dark:hover:text-frequency dark:hover:border-b-2 dark:hover:border-b-frequency',
+    'tab-active': '!text-insight !dark:text-frequency !border-b-2 !border-b-frequency',
     // button
-    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-gray hover:bg-box-gray-dark focus:(ring-0 outline-none) disabled:(bg-box-gray cursor-not-allowed opacity-50)',
-    'btn-primary': 'bg-primary hover:bg-primary-dark',
-    'btn-icon': 'py-2 px-3',
+    btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full',
+    'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
+    'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
     // input
     'input-field': 'bg-box-gray border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-gray text-white'
   }
