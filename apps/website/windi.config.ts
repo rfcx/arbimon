@@ -115,6 +115,9 @@ export default defineConfig({
     range(12).map(i => `md:grid-cols-${i}`)
   ],
   shortcuts: {
+    // tab
+    tab: 'py-2 pr-4 pl-3 text-gray-700 border-b-2 border-transparent lg:hover:bg-transparent lg:p-0 dark:text-insight dark:hover:text-frequency dark:hover:border-b-2 dark:hover:border-b-frequency',
+    'tab-active': '!text-insight !dark:text-frequency !border-b-2 !border-b-frequency',
     // button
     btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
