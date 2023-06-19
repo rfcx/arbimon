@@ -52,7 +52,7 @@ export default defineConfig({
         moss: '#1E1C13',
         echo: '#14130D',
         pitch: '#060508',
-        //Secondary
+        // Secondary
         spoonbill: '#FFAFAF',
         flamingo: '#FF6868',
         palm: '#008059',
@@ -116,9 +116,9 @@ export default defineConfig({
   ],
   shortcuts: {
     // button
-    btn: 'py-2 px-4 text-primary rounded-lg shadow-md cursor-pointer bg-box-gray hover:bg-box-gray-dark focus:(ring-0 outline-none) disabled:(bg-box-gray cursor-not-allowed opacity-50)',
-    'btn-primary': 'bg-primary hover:bg-primary-dark',
-    'btn-icon': 'py-2 px-3',
+    btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full',
+    'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
+    'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
     // input
     'input-field': 'bg-box-gray border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-gray text-white'
   }
