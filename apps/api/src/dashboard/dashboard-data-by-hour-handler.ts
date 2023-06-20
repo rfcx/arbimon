@@ -3,7 +3,7 @@ import { type DashboardDataByHourParams, type DashboardDataByHourResponse } from
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getDetectionByHour, getRichnessByHour } from './dashboard-generated-dao'
+import { getDetectionByHour, getRichnessByHour } from './dashboard-data-by-hour-dao'
 
 export const dashboardDataByHourHandler: Handler<DashboardDataByHourResponse, DashboardDataByHourParams> = async (req) => {
   // Inputs & validation
