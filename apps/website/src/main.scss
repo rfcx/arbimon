@@ -1,13 +1,22 @@
-@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:wght@400;500&display=swap');
 @import "@/_styles/custom-element";
 @import "@/_styles/shimmer";
 
 @font-face {
-  font-family: 'ABCFavoritExtended';
+  font-family: 'ABCFavorit';
+  font-display: auto;
   src: url("@/_services/assets/ABCFavoritExtended-Regular.woff") format('woff'), /* Modern Browsers */
        url("@/_services/assets/ABCFavoritExtendedVariable.ttf")  format('truetype') /* Safari, Android, iOS */
 }
 
 body {
-  font-family: 'ABCFavoritExtended', sans-serif;
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2 {
+  font-family: 'ABCFavorit'
+}
+
+.btn {
+  font-family: 'ABCFavorit'
 }
