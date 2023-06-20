@@ -2,6 +2,7 @@ export interface Analysis {
   value: string
   title: string
   count: number
+  isLoading: boolean
   label: string
   countTemplate: number
   link: string

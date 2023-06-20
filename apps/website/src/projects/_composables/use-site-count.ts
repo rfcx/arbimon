@@ -1,7 +1,7 @@
 import { type AxiosInstance } from 'axios'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiArbimonGetSiteCount, SiteCountParams } from '@rfcx-bio/common/api-arbimon/metrics/site-count'
+import { type SiteCountParams, apiArbimonGetSiteCount } from '@rfcx-bio/common/api-arbimon/metrics/site-count'
 
 export const useSiteCount = (apiClient: AxiosInstance, params: SiteCountParams): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
