@@ -2,9 +2,8 @@
   <hero />
   <impact />
   <what-we-do />
-  <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
-  <features />
   <how-it-works />
+  <features />
   <testimonials-partners />
 </template>
 <script setup lang="ts">
