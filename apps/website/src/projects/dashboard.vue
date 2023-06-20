@@ -80,7 +80,10 @@ import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useStore } from '~/store'
+import { usePlaylistCount } from './_composables/use-playlist-count'
+import { useRecordingCount } from './_composables/use-recording-count'
 import { useSiteCount } from './_composables/use-site-count'
+import { useSpeciesCount } from './_composables/use-species-count'
 import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
@@ -91,11 +94,18 @@ const ANALYSIS_URL = `${BASE_URL}/project/${store.selectedProject?.slug}/analysi
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const tabHeight = 360
 
+// External data
+const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
+const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, { slug: store.selectedProject?.slug })
+const { isLoading: isLoadingRecCount, data: recordingCount } = useRecordingCount(apiClientArbimon, { slug: store.selectedProject?.slug })
+const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, { slug: store.selectedProject?.slug })
+const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, { slug: store.selectedProject?.slug })
+
 const stats = [
-  { value: 'site', title: 'Sites created', count: 0, label: 'Create new sites', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings uploaded', count: 0, label: 'Upload new recordings', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/recordings` },
-  { value: 'species', title: 'Species added to library', count: 0, label: 'Add a new species', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/species` },
-  { value: 'playlist', title: 'Playlists created', count: 0, label: 'Create a new playlist', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/playlists` }
+  { value: 'site', title: 'Sites created', count: siteCount, isLoading: isLoadingSiteCount, label: 'Create new sites', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/sites` },
+  { value: 'recording', title: 'Recordings uploaded', count: recordingCount, isLoading: isLoadingRecCount, label: 'Upload new recordings', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/recordings` },
+  { value: 'species', title: 'Species added to library', count: speciesCount, isLoading: isLoadingSpeciesCount, label: 'Add a new species', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/species` },
+  { value: 'playlist', title: 'Playlists created', count: playlistCount, isLoading: isLoadingPlaylistCount, label: 'Create a new playlist', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/playlists` }
 ]
 
 const analyses = [
@@ -107,11 +117,6 @@ const analyses = [
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean => data.values[dataKey]
 
-// External data
-const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
-const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, { slug: store.selectedProject?.slug })
-console.info(isLoadingSiteCount, isErrorSiteCount, siteCount)
-console.info(store.selectedProject)
 function color (): string {
   return store.datasetColors[0] ?? '#EFEFEF'
 }
