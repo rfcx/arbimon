@@ -1,9 +1,9 @@
 <template>
-  <section class="bg-white dark:bg-mirage-gray">
+  <section class="bg-white dark:bg-pitch">
     <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-24 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-          What our customers say...
+        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-frequency">
+          What our partners have to say
         </h2>
       </div>
       <figure class="py-12 px-64 rounded-xl bg-gray-100 dark:bg-gray-300">
@@ -19,7 +19,7 @@
           />
         </svg>
         <blockquote>
-          <p class="text-2xl font-medium text-gray-800 dark:text-gray-900">
+          <p class="text-2xl text-gray-800 dark:text-gray-900">
             "Arbimon has revolutionized the way we conduct acoustic research. With its user-friendly interface, we can now easily collect, analyze, and collaborate on biodiversity data to drive meaningful change and protect our planet's precious ecosystems."
           </p>
         </blockquote>
@@ -30,7 +30,7 @@
             alt="profile picture"
           >
           <div class="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
-            <div class="pr-3 font-medium text-gray-800 dark:text-gray-900">
+            <div class="pr-3 text-gray-800 dark:text-gray-900">
               Andry Ford
             </div>
             <div class="pl-3 font-light text-gray-700 dark:text-gray-800">
@@ -41,7 +41,7 @@
       </figure>
     </div>
   </section>
-  <section class="bg-white dark:bg-steel-gray">
+  <section class="bg-hero-testimonial bg-cover bg-no-repeat">
     <div class="py-8 lg:py-24 mx-auto max-w-screen-xl px-4">
       <h2 class="mb-8 lg:mb-16 text-3xl font-extrabold tracking-tight leading-tight text-center text-gray-900 dark:text-white md:text-4xl">
         Trusted by 100+ organizations<br> around the world

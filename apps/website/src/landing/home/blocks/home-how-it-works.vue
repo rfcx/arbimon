@@ -5,7 +5,7 @@
         <h2 class="mb-2 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
           How it works
         </h2>
-        <p class="mb-6 text-gray-500 md:text-lg dark:text-gray-400 max-w-3xl mx-auto text-lg">
+        <p class="mb-6 text-gray-500 md:text-lg dark:text-insight max-w-3xl mx-auto text-lg">
           Getting started is easy.
         </p>
       </div>
