@@ -2,15 +2,15 @@
   <section class="bg-white bg-gradient-to-b from-moss from-70% to-black to-30%">
     <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-24 lg:px-6">
       <div class="text-center px-8">
-        <h2 class="mb-4 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
+        <h2 class="mb-2 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
           How it works
         </h2>
-        <p class="mb-6 text-gray-500 md:text-lg dark:text-gray-400 mt-6 max-w-3xl mx-auto text-lg">
+        <p class="mb-6 text-gray-500 md:text-lg dark:text-gray-400 max-w-3xl mx-auto text-lg">
           Getting started is easy.
         </p>
       </div>
       <div class="flex flex-col items-center gap-y-8">
-        <div class="">
+        <div>
           <img
             :src="activeData.imageSrc"
             class="w-full"
@@ -32,7 +32,7 @@
               @click="active = index"
             >
               <button>
-                <span class="block text-2xl md:text-3xl lg:text-4xl">
+                <span class="block text-2xl md:text-3xl lg:text-4xl font-display">
                   {{ index + 1 }}
                 </span>
                 <span>{{ item.title }}</span>

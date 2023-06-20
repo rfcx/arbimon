@@ -12,7 +12,7 @@ import { ROUTE_NAMES } from '~/router';
     </div>
     <div class="py-8 px-4 items-center mx-auto max-w-screen-xl grid grid-rows-3 grid-flow-col gap-2 lg:py-24 lg:px-6">
       <div class="col-span-1 bg-red">
-        <h3 class="mb-2 text-md">
+        <h3 class="mb-2 text-md font-medium">
           The service
         </h3>
         <p class="mb-4">
@@ -26,7 +26,7 @@ import { ROUTE_NAMES } from '~/router';
         </a>
       </div>
       <div class="row-span-1 col-span-1 bg-red">
-        <h3 class="mb-2 text-md">
+        <h3 class="mb-2 text-md font-medium">
           The platform
         </h3>
         <p class="mb-4">
@@ -42,7 +42,7 @@ import { ROUTE_NAMES } from '~/router';
       <div class="row-span-4 col-span-2 bg-red">
         <img
           class="w-full"
-          src="@/_services/assets/what-we-do.png"
+          src="@/_assets/landing/what-we-do.png"
           alt="dashboard image"
         >
       </div>
