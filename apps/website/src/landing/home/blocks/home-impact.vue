@@ -1,5 +1,5 @@
 <template>
-  <section class="relative h-168 bg-white dark:bg-mirage-gray">
+  <section class="relative h-168 bg-white dark:bg-pitch">
     <client-only>
       <impact-globe
         :selected-visualization="selectedGlobeVisualization"
@@ -7,12 +7,12 @@
       />
     </client-only>
     <div class="absolute w-3/12 inset-y-0 right-0 py-8 sm:py-24 px-4 mr-75 lg:px-6 pointer-events-none">
-      <div class="text-right">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-          Impact at a Glance
+      <div class="text-left">
+        <h2 class="mb-4 text-2xl tracking-tight font-extrabold text-pitch dark:text-insight md:text-3xl lg:text-4xl">
+          Arbimon’s Impact at-a-Glance
         </h2>
-        <p class="text-gray-500 sm:text-xl dark:text-gray-400">
-          With more than 100 million recordings, Arbimon uncovers the behaviour of some of the world's most endangered species, paving the way for a better understanding of our planet.
+        <p class="text-pitch dark:text-insight">
+          With more than 110 million minutes of acoustic recordings uploaded, Arbimon has made it possible to uncover critical insights into the behavior and conservation of some of the world’s most endangered species, paving the way to transformative action and a better understanding of our planet.
         </p>
 
         <div
