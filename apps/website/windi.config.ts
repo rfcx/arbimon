@@ -36,6 +36,8 @@ export default defineConfig({
         '2xl': '1536px'
       },
       fontFamily: {
+        display: ['ABCFavorit'],
+        body: ['Poppins'],
         sans: ['Lato', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
       },
       fontSize: {
