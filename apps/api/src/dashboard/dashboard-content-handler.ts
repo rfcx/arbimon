@@ -3,7 +3,7 @@ import { type DashboardContentParams, type DashboardContentResponse } from '@rfc
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectProfile } from './dashboard-profile-dao'
+import { getDashboardContent } from './dashboard-content-dao'
 
 export const dashboardContentHandler: Handler<DashboardContentResponse, DashboardContentParams> = async (req) => {
   // Inputs & validation
@@ -15,6 +15,6 @@ export const dashboardContentHandler: Handler<DashboardContentResponse, Dashboar
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const projectContent = await getProjectProfile(projectIdInteger)
+  const projectContent = await getDashboardContent(projectIdInteger)
   return projectContent
 }
