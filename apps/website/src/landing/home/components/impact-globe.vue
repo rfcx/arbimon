@@ -81,9 +81,9 @@ const mapConfig: Omit<MapboxOptions, 'container'> = {
 
 const fog = {
   color: 'rgb(186, 210, 235)', // Lower atmosphere
-  'high-color': '#243c84', // Upper atmosphere
+  'high-color': '#060508', // Upper atmosphere
   'horizon-blend': 0.02, // Atmosphere thickness (default 0.2 at low zooms)
-  'space-color': '#141525', // Background color
+  'space-color': '#060508', // Background color
   'star-intensity': 0 // Background star brightness (default 0.35 at low zoooms)
 }
 
