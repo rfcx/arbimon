@@ -109,6 +109,9 @@ export default defineConfig({
           light: '#E3E3E5',
           dark: '#06060D'
         }
+      },
+      backgroundImage: {
+        'hero-testimonial': 'url("@/_assets/landing/testimonials/bg-hero.png")'
       }
     }
   },
