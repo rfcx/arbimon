@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-1 gap-2 xl:gap-4 bg-gray-300 border-2 border-gray-300 rounded-md p-6 dark:border-gray-600 h-46">
     <div class="flex justify-between rounded-t items-center h-7">
-      <h3 class="text-md text-gray-900">
+      <h3 class="text-sm xl:text-md text-gray-900">
         {{ stat.title }}
       </h3>
       <button :title="stat.title">
@@ -29,7 +29,7 @@
     </div>
     <div>
       <a
-        class="text-xl underline text-cyan-600 cursor-pointer focus:text-cyan-800 focus:bg-gray-300"
+        class="text-l underline text-cyan-600 cursor-pointer focus:text-cyan-800 focus:bg-gray-300"
         :href="stat.link"
         target="_blank"
       >

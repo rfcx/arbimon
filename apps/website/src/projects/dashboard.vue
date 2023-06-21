@@ -23,7 +23,7 @@
           Analyses
         </h2>
         <a
-          class="btn btn-icon flex items-center space-x-3"
+          class="btn btn-icon flex items-center space-x-3 px-3 py-2 text-xs font-bold rounded-lg bg-gray-500"
           :title="'Create New Analysis Job'"
           :href="ANALYSIS_URL"
           target="_blank"
@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { type LngLatBoundsLike } from 'mapbox-gl'
-import { inject } from 'vue'
+import { inject, onMounted, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -80,16 +80,21 @@ import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useStore } from '~/store'
+import { useAedCount } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
+import { usePmCount } from './_composables/use-pm-count'
 import { useRecordingCount } from './_composables/use-recording-count'
+import { useRfmCount } from './_composables/use-rfm-count'
 import { useSiteCount } from './_composables/use-site-count'
+import { useSoundscapeCount } from './_composables/use-soundscape-count'
 import { useSpeciesCount } from './_composables/use-species-count'
 import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
+let selectedProject = store.selectedProject
 const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
-const ANALYSIS_URL = `${BASE_URL}/project/${store.selectedProject?.slug}/analysis`
+const ANALYSIS_URL = `${BASE_URL}/project/${selectedProject?.slug}/analysis`
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const tabHeight = 360
@@ -100,22 +105,48 @@ const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClien
 const { isLoading: isLoadingRecCount, data: recordingCount } = useRecordingCount(apiClientArbimon, { slug: store.selectedProject?.slug })
 const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, { slug: store.selectedProject?.slug })
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, { slug: store.selectedProject?.slug })
+const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmCount(apiClientArbimon, { slug: selectedProject?.slug })
+const { isLoading: isLoadingAedCount, data: aedCount } = useAedCount(apiClientArbimon, { slug: selectedProject?.slug })
+const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, { slug: selectedProject?.slug })
+const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbimon, { slug: selectedProject?.slug })
 
 const stats = [
-  { value: 'site', title: 'Sites created', count: siteCount, isLoading: isLoadingSiteCount, label: 'Create new sites', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings uploaded', count: recordingCount, isLoading: isLoadingRecCount, label: 'Upload new recordings', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/recordings` },
-  { value: 'species', title: 'Species added to library', count: speciesCount, isLoading: isLoadingSpeciesCount, label: 'Add a new species', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/species` },
-  { value: 'playlist', title: 'Playlists created', count: playlistCount, isLoading: isLoadingPlaylistCount, label: 'Create a new playlist', link: `${BASE_URL}/project/${store.selectedProject?.slug}/audiodata/playlists` }
+  { value: 'site', title: 'Sites created', count: siteCount, isLoading: isLoadingSiteCount, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/sites` },
+  { value: 'recording', title: 'Recordings uploaded', count: recordingCount, isLoading: isLoadingRecCount, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/recordings` },
+  { value: 'species', title: 'Species added to library', count: speciesCount, isLoading: isLoadingSpeciesCount, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/species` },
+  { value: 'playlist', title: 'Playlists created', count: playlistCount, isLoading: isLoadingPlaylistCount, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/playlists` }
 ]
 
 const analyses = [
-  { value: 'pm', title: 'Pattern Matching', count: 0, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/patternmatching` },
-  { value: 'rfm', title: 'Random Forest Models', count: 0, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/random-forest-models/models` },
-  { value: 'aed', title: 'AED and Clustering', count: 0, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'soundscapes', title: 'Soundscapes', count: 0, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${store.selectedProject?.slug}/analysis/soundscapes` }
+  { value: 'pm', title: 'Pattern Matching', count: rfmCount, isLoading: isLoadingRFMCount, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/patternmatching` },
+  { value: 'rfm', title: 'Random Forest Models', count: aedCount, isLoading: isLoadingAedCount, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/random-forest-models/models` },
+  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount, isLoadimg: isLoadingSoundscapeCount, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'soundscapes', title: 'Soundscapes', count: pmCount, isLoading: isLoadingPmtCount, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/soundscapes` }
 ]
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean => data.values[dataKey]
+
+onMounted(() => {
+  selectedProject = store.selectedProject
+  updatePage()
+})
+
+watch(() => store.selectedProject, () => {
+  selectedProject = store.selectedProject
+  updatePage()
+})
+
+function updatePage (): void {
+  const projectId = store.selectedProject?.id
+  if (projectId === undefined) return
+
+  // TODO: update dashboard data on selecting the different project
+  // External data
+  // const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
+  // const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, { slug: selectedProject?.slug })
+  // stats[0].count = Number(siteCount) ?? 0
+  // stats[0].isLoading = Boolean(isLoadingSiteCount) ?? false
+}
 
 function color (): string {
   return store.datasetColors[0] ?? '#EFEFEF'
