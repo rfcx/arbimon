@@ -27,9 +27,9 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getDetections (token: string, params: DetectCnnDetectionsQueryParams): Promise<DetectCnnDetectionsResponse[]> {
+export async function getDetectionsFromApi (token: string, params: DetectCnnDetectionsQueryParams): Promise<DetectCnnDetectionsResponse[]> {
   return await axios.request<DetectCnnDetectionsResponse[]>({
-    method: 'POST',
+    method: 'GET',
     url: `${CORE_API_BASE_URL}/detections`,
     headers: {
       authorization: token
