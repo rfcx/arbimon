@@ -1,7 +1,7 @@
 export interface Analysis {
   value: string
   title: string
-  count: number
+  count: number | undefined
   isLoading: boolean
   label: string
   countTemplate: number
@@ -11,7 +11,8 @@ export interface Analysis {
 export interface Stat {
   value: string
   title: string
-  count: number
+  count: number | undefined
+  isLoading: boolean
   label: string
   link: string
 }
