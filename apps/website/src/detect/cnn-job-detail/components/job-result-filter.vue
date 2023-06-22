@@ -109,6 +109,8 @@ const displayFilterModal = ref(false)
 </script>
 
 <style lang="scss">
+// this style is to mimic the el-dropdown element.
+// affects both the modal and the filter here.
 .job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by {
   div.el-input__wrapper {
     background-color: transparent;
