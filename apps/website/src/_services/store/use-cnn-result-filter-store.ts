@@ -1,7 +1,8 @@
-import { ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+
+import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { useStoreOutsideSetup } from './index'
 
 export interface ResultFilterInner {
@@ -9,7 +10,7 @@ export interface ResultFilterInner {
   value: string
 }
 
-export type ResultFilterList = Array<{ label: string, items: Array<ResultFilterInner> }>
+export type ResultFilterList = Array<{ label: string, items: ResultFilterInner[] }>
 
 export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
   const store = useStoreOutsideSetup()
@@ -26,12 +27,12 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
   const updateResultFilter = (value: ValidationFilterConfig): void => {
     filter.value.threshold = value.threshold
     filter.value.validationStatus = value.validationStatus
-    filter.value.taxonClass= value.taxonClass
+    filter.value.taxonClass = value.taxonClass
     filter.value.siteIds = value.siteIds
     filter.value.sortBy = value.sortBy
   }
 
-  const formatThreshold = (value: number) => {
+  const formatThreshold = (value: number): number => {
     return value / 100
   }
 
@@ -48,7 +49,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     }
   })
 
-  const validationStatusFilterOptions = computed<Array<ResultFilterInner>>(() => {
+  const validationStatusFilterOptions = computed<ResultFilterInner[]>(() => {
     return [
       {
         label: 'All',
@@ -73,7 +74,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     ]
   })
 
-  const classFilterOptions = computed<Array<ResultFilterInner>>(() => {
+  const classFilterOptions = computed<ResultFilterInner[]>(() => {
     return store.projectFilters?.taxonClasses.map(tc => {
       return {
         label: tc.commonName,
@@ -82,7 +83,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     }) ?? []
   })
 
-  const sitesFilterOptions = computed<Array<ResultFilterInner>>(() => {
+  const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
     return store.projectFilters?.locationSites.map(ls => {
       return {
         label: `${ls.name} (${ls.id})`,
@@ -91,7 +92,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     }) ?? []
   })
 
-  const sortByFilterOptions = computed<Array<ResultFilterInner>>(() => {
+  const sortByFilterOptions = computed<ResultFilterInner[]>(() => {
     return [
       {
         label: 'Low to high',

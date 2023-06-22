@@ -27,14 +27,16 @@
         <div class="text-md font-weight-bold">
           Validation status
         </div>
-        <el-select class="mt-2" v-model="cnnResultFilterStore.filter.validationStatus">
+        <el-select
+          v-model="cnnResultFilterStore.filter.validationStatus"
+          class="mt-2"
+        >
           <el-option
             v-for="status in cnnResultFilterStore.validationStatusFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
-          >
-          </el-option>
+          />
         </el-select>
       </div>
 
@@ -42,14 +44,16 @@
         <div class="text-md font-weight-bold">
           Class
         </div>
-        <el-select class="mt-2" v-model="cnnResultFilterStore.filter.taxonClass">
+        <el-select
+          v-model="cnnResultFilterStore.filter.taxonClass"
+          class="mt-2"
+        >
           <el-option
             v-for="status in cnnResultFilterStore.classFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
-          >
-          </el-option>
+          />
         </el-select>
       </div>
 
@@ -57,14 +61,18 @@
         <div class="text-md font-weight-bold">
           Sites
         </div>
-        <el-select class="mt-2" multiple collapse-tags v-model="cnnResultFilterStore.filter.siteIds">
+        <el-select
+          v-model="cnnResultFilterStore.filter.siteIds"
+          class="mt-2"
+          multiple
+          collapse-tags
+        >
           <el-option
             v-for="status in cnnResultFilterStore.sitesFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
-          >
-          </el-option>
+          />
         </el-select>
       </div>
 
@@ -72,14 +80,16 @@
         <div class="text-md font-weight-bold">
           Sort by
         </div>
-        <el-select class="mt-2" v-model="cnnResultFilterStore.filter.sortBy">
+        <el-select
+          v-model="cnnResultFilterStore.filter.sortBy"
+          class="mt-2"
+        >
           <el-option
             v-for="status in cnnResultFilterStore.sortByFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
-          >
-          </el-option>
+          />
         </el-select>
       </div>
 

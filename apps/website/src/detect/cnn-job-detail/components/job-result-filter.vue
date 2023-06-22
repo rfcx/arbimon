@@ -25,14 +25,16 @@
       class="job-result-filter-validation-status ml-4 <lg:hidden"
       label="validation-status"
     >
-      <el-select v-model="cnnResultFilterStore.resultFilter.validationStatus" placeholder="Validation status">
+      <el-select
+        v-model="cnnResultFilterStore.resultFilter.validationStatus"
+        placeholder="Validation status"
+      >
         <el-option
           v-for="status in cnnResultFilterStore.validationStatusFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
-        >
-        </el-option>
+        />
       </el-select>
     </div>
 
@@ -40,14 +42,16 @@
       class="job-result-filter-taxon-class ml-4 <lg:hidden"
       label="taxon-class"
     >
-      <el-select v-model="cnnResultFilterStore.resultFilter.taxonClass" placeholder="Class">
+      <el-select
+        v-model="cnnResultFilterStore.resultFilter.taxonClass"
+        placeholder="Class"
+      >
         <el-option
           v-for="status in cnnResultFilterStore.classFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
-        >
-        </el-option>
+        />
       </el-select>
     </div>
 
@@ -55,14 +59,18 @@
       class="job-result-filter-sites ml-4 <lg:hidden"
       label="sites"
     >
-      <el-select v-model="cnnResultFilterStore.resultFilter.siteIds" multiple collapse-tags placeholder="Sites">
+      <el-select
+        v-model="cnnResultFilterStore.resultFilter.siteIds"
+        multiple
+        collapse-tags
+        placeholder="Sites"
+      >
         <el-option
           v-for="status in cnnResultFilterStore.sitesFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
-        >
-        </el-option>
+        />
       </el-select>
     </div>
 
@@ -70,14 +78,16 @@
       class="job-result-filter-sort-by ml-4 <lg:hidden"
       label="sort-by"
     >
-      <el-select v-model="cnnResultFilterStore.resultFilter.sortBy" placeholder="Sort by">
+      <el-select
+        v-model="cnnResultFilterStore.resultFilter.sortBy"
+        placeholder="Sort by"
+      >
         <el-option
           v-for="status in cnnResultFilterStore.sortByFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
-        >
-        </el-option>
+        />
       </el-select>
     </div>
 
@@ -98,8 +108,8 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useCnnResultFilterStore } from '~/store'
 
+import { useCnnResultFilterStore } from '~/store'
 import FilterModal from './job-result-filter-modal.vue'
 
 const cnnResultFilterStore = useCnnResultFilterStore()
