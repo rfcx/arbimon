@@ -37,7 +37,7 @@
     </div>
 
     <div
-      class="job-result-filter-class ml-4 <lg:hidden"
+      class="job-result-filter-taxon-class ml-4 <lg:hidden"
       label="taxon-class"
     >
       <el-select v-model="cnnResultFilterStore.resultFilter.taxonClass" placeholder="Class">
@@ -107,3 +107,34 @@ const displayFilterModal = ref(false)
 
 // const displayType = ref<'list' | 'grid'>('list')
 </script>
+
+<style lang="scss">
+.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by {
+  div.el-input__wrapper {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  div.el-select {
+    div.el-input__wrapper:hover {
+      box-shadow: none;
+    }
+
+    div.el-input.is-focus {
+      div.el-input__wrapper {
+        box-shadow: none !important;
+      }
+    }
+
+    div.el-input {
+      div.el-input__wrapper.is-focus {
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  input.el-input__inner {
+    @apply text-subtle;
+  }
+}
+</style>
