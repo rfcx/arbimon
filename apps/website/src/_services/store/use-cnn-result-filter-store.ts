@@ -1,6 +1,7 @@
 import { ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useStoreOutsideSetup } from './index'
 
 export interface ResultFilterInner {
@@ -12,6 +13,8 @@ export type ResultFilterList = Array<{ label: string, items: Array<ResultFilterI
 
 export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
   const store = useStoreOutsideSetup()
+  const route = useRoute()
+
   const filter = ref<ValidationFilterConfig>({
     threshold: 50,
     validationStatus: '',
@@ -28,8 +31,21 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     filter.value.sortBy = value.sortBy
   }
 
-  const formatThreshold = computed(() => {
-    return filter.value.threshold / 100
+  const formatThreshold = (value: number) => {
+    return value / 100
+  }
+
+  // reset all settings when job change.
+  watch(() => route.params.jobId, () => {
+    filter.value.threshold = 50
+    filter.value.validationStatus = ''
+    filter.value.taxonClass = ''
+    filter.value.sortBy = ''
+
+    // "drain" all values out of the array
+    while (filter.value.siteIds.length > 0) {
+      filter.value.siteIds.pop()
+    }
   })
 
   const validationStatusFilterOptions = computed<Array<ResultFilterInner>>(() => {
