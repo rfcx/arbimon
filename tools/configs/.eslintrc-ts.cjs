@@ -9,7 +9,7 @@ module.exports = {
     '@typescript-eslint/consistent-type-imports': 'warn', // TODO Fix all places where should be using `import type` and remove this line
 
     // Disabling this rule so any type based `defineEmits` types can safely be put on newline without error
-    // 
+    //
     // For example:
     //
     // ```ts
@@ -19,9 +19,15 @@ module.exports = {
     // ```
     //
     // If this rule does not allow new lines, it will error out forcing you to put the function call type next to
-    // the open curly bracket on the same line.
+    // the open curly bracket on the same line. Which will force you to do this
+    //
+    // ```ts
+    // const emit = defineEmits<{(e: 'change', value: number): void, (e: 'success', value: string)}>()
+    // ```
+    //
+    // hideous...
     'func-call-spacing': 'off',
-    '@typescript-eslint/func-call-spacing': ['error', { allowNewLines: true }],
+    '@typescript-eslint/func-call-spacing': 'error',
 
     // Add/override rules
     '@typescript-eslint/space-before-function-paren': [
