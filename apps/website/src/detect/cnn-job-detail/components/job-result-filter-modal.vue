@@ -114,7 +114,7 @@
 import { useCnnResultFilterStore } from '~/store'
 
 const cnnResultFilterStore = useCnnResultFilterStore()
-const emit = defineEmits<{(e: 'emitClose'): void}>()
+const emit = defineEmits(['emitClose'])
 
 const confirmFilterConfig = () => {
   emit('emitClose')
