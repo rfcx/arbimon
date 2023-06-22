@@ -1,14 +1,14 @@
 <template>
   <section class="bg-white dark:bg-pitch py-8 lg:py-24">
     <div class="px-4 flex justify-between items-center lg:px-6">
-      <div>
+      <div class="px-8 md:px-4">
         <button
           type="button"
           @click="currentFeedbackIndex = (currentFeedbackIndex !== 0) ? currentFeedbackIndex - 1 : feedbacks.length - 1"
         >
           <svg
             aria-hidden="true"
-            class="w-8 h-8 text-frequency sm:w-6 sm:h-6 dark:text-frequency"
+            class="w-8 h-8 text-frequency sm:w-10 sm:h-10 dark:text-frequency"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -22,11 +22,11 @@
           <span class="sr-only">Previous</span>
         </button>
       </div>
-      <div class="flex gap-4">
+      <div class="flex items-start gap-4 flex-col md:flex-row">
         <img
           src="@/_assets/landing/testimonials/fi_quote.svg"
           alt="Quote"
-          class="p-4 m-4"
+          class="px-4 mx-auto md:mx-4"
         >
         <div class="max-w-screen-sm">
           <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-frequency">
@@ -35,16 +35,34 @@
           <p>
             {{ feedbacks[currentFeedbackIndex].text }}
           </p>
+          <div class="mt-4 flex">
+            <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+              <span class="font-medium text-gray-600 dark:text-gray-300"> {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
+            </div>
+            <div class="flex flex-col">
+              <div class="mb-2">
+                <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
+                  {{ feedbacks[currentFeedbackIndex].user.name }}
+                </span>
+                <span class="px-2 rounded-full text-sm uppercase bg-gray-700 text-spoonbill font-['Roboto_Mono']">
+                  {{ feedbacks[currentFeedbackIndex].user.role }}
+                </span>
+              </div>
+              <span class="text-gray-500 block text-sm dark:text-insight">
+                {{ feedbacks[currentFeedbackIndex].user.title }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
+      <div class="px-8 md:px-4">
         <button
           type="button"
           @click="currentFeedbackIndex = (currentFeedbackIndex + 1 !== feedbacks.length) ? currentFeedbackIndex + 1 : 0"
         >
           <svg
             aria-hidden="true"
-            class="w-8 h-8 text-frequency sm:w-6 sm:h-6 dark:text-frequency"
+            class="w-8 h-8 text-frequency sm:w-10 sm:h-10 dark:text-frequency"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
