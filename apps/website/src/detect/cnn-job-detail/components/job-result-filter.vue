@@ -11,38 +11,76 @@
           label="Threshold"
           role="button"
         >
-          Threshold >= {{ formatThreshold(filterConfigs.threshold) }}
+          Threshold >= {{ cnnResultFilterStore.formatThreshold }}
           <icon-custom-el-angle-down class="text-xxs ml-1" />
         </span>
       </template>
       <el-slider
-        v-model="filterConfigs.threshold"
-        :format-tooltip="formatThreshold"
+        v-model="cnnResultFilterStore.filter.threshold"
+        :format-tooltip="cnnResultFilterStore.formatThreshold"
       />
     </el-popover>
+
     <div
-      v-for="filter in mobJobResultFilters"
-      :key="'job-result-filter-' + filter.label"
-      :label="filter.label"
-      class="ml-4 <lg:hidden"
+      class="job-result-filter-validation-status ml-4 <lg:hidden"
+      label="validation-status"
     >
-      <el-dropdown trigger="click">
-        <span class="flex items-center text-sm text-subtle">
-          {{ filter.label }}
-          <icon-fa-chevron-down class="ml-2 text-xxs" />
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item
-              v-for="(item, idx) in filter.items"
-              :key="'job-result-filter-item-' + filter.label + idx"
-            >
-              {{ item.label }}
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <el-select v-model="cnnResultFilterStore.resultFilter.validationStatus" placeholder="Validation status">
+        <el-option
+          v-for="status in cnnResultFilterStore.validationStatusFilterOptions"
+          :key="status.value"
+          :label="status.label"
+          :value="status.value"
+        >
+        </el-option>
+      </el-select>
     </div>
+
+    <div
+      class="job-result-filter-class ml-4 <lg:hidden"
+      label="taxon-class"
+    >
+      <el-select v-model="cnnResultFilterStore.resultFilter.taxonClass" placeholder="Class">
+        <el-option
+          v-for="status in cnnResultFilterStore.classFilterOptions"
+          :key="status.value"
+          :label="status.label"
+          :value="status.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
+
+    <div
+      class="job-result-filter-sites ml-4 <lg:hidden"
+      label="sites"
+    >
+      <el-select v-model="cnnResultFilterStore.resultFilter.siteIds" multiple collapse-tags placeholder="Sites">
+        <el-option
+          v-for="status in cnnResultFilterStore.sitesFilterOptions"
+          :key="status.value"
+          :label="status.label"
+          :value="status.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
+
+    <div
+      class="job-result-filter-sort-by ml-4 <lg:hidden"
+      label="sort-by"
+    >
+      <el-select v-model="cnnResultFilterStore.resultFilter.sortBy" placeholder="Sort by">
+        <el-option
+          v-for="status in cnnResultFilterStore.sortByFilterOptions"
+          :key="status.value"
+          :label="status.label"
+          :value="status.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
+
     <div class="display-controls ml-4">
       <button
         class="btn btn-icon lg:hidden"
@@ -56,110 +94,16 @@
   <filter-modal
     v-if="displayFilterModal"
     @emit-close="displayFilterModal = false"
-    @emit-config="onFilterConfigChange"
   />
 </template>
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
-import { inject, reactive, ref } from 'vue'
+import { ref } from 'vue'
+import { useCnnResultFilterStore } from '~/store'
 
-import { apiClientBioKey } from '@/globals'
 import FilterModal from './job-result-filter-modal.vue'
-import type { ValidationFilterConfig } from './types'
 
-const apiBio = inject(apiClientBioKey) as AxiosInstance
-
+const cnnResultFilterStore = useCnnResultFilterStore()
 const displayFilterModal = ref(false)
+
 // const displayType = ref<'list' | 'grid'>('list')
-const filterConfigs = reactive<ValidationFilterConfig>({
-  threshold: 50, // slider return in percentage
-  validationStatus: '',
-  taxonClass: '',
-  siteIds: [],
-  sortBy: ''
-})
-
-const mobJobResultFilters = [
-  {
-    label: 'Validation status',
-    items: [
-      {
-        label: 'All',
-        value: 3
-      },
-      {
-        label: 'Unvalidated',
-        value: 2
-      },
-      {
-        label: 'Present',
-        value: 1
-      },
-      {
-        label: 'Not present',
-        value: -1
-      },
-      {
-        label: 'Unknown',
-        value: 0
-      }
-    ]
-  },
-  {
-    label: 'Class',
-    items: [
-      {
-        label: 'Non-flying mammals',
-        value: 'mammals'
-      },
-      {
-        label: 'Birds',
-        value: 'birds'
-      }
-    ]
-  },
-  {
-    label: 'Site',
-    items: [
-      {
-        label: 'PPP',
-        value: 'ppp'
-      }
-    ]
-  },
-  {
-    label: 'Sort by score',
-    items: [
-      {
-        label: 'Low to high',
-        value: 'low to high'
-      },
-      {
-        label: 'High to low',
-        value: 'high to low'
-      }
-    ]
-  }
-]
-
-const formatThreshold = (val: number) => {
-  return val / 100
-}
-
-const getFilterDetections = () => {
-  // call GET https://staging-api.rfcx.org/detections
-
-  // Call API
-  //  params: { threshold: formatThreshold(threshold), ...filterConfigs }
-}
-
-const onFilterConfigChange = (config: ValidationFilterConfig) => {
-  filterConfigs.threshold = config.threshold
-  filterConfigs.validationStatus = config.validationStatus
-  filterConfigs.taxonClass = config.taxonClass
-  filterConfigs.siteIds = config.siteIds
-  filterConfigs.sortBy = config.sortBy
-  getFilterDetections()
-}
-
 </script>
