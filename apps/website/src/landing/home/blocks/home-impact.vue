@@ -8,7 +8,7 @@
         class="absolute w-full lg:w-9/12 inset-y-0 left-0"
       />
     </client-only>
-    <div class="absolute w-full right-auto bottom-0 lg:w-3/12 lg:inset-y-0 lg:right-0 py-8 sm:py-24 px-4 lg:mr-24 xl:mr-48 2xl:mr-75 lg:px-6 pointer-events-none">
+    <div class="absolute w-full right-auto bottom-0 lg:w-3/12 lg:inset-y-0 lg:right-0 py-8 sm:py-24 px-4 lg:mr-12 xl:mr-48 2xl:mr-75 lg:px-6 xl:px-12 2xl:px-24 pointer-events-none">
       <div class="text-left">
         <h2 class="mb-4 text-2xl tracking-tight font-bold text-pitch dark:text-insight md:text-3xl lg:text-4xl">
           Arbimon’s Impact at-a-Glance
