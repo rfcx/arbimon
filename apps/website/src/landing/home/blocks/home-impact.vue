@@ -1,49 +1,50 @@
 <template>
-  <section class="relative h-168 bg-white dark:bg-pitch">
+  <section
+    class="relative min-h-168 md:h-168 bg-white dark:bg-pitch"
+  >
     <client-only>
       <impact-globe
         :selected-visualization="selectedGlobeVisualization"
-        class="absolute w-9/12 inset-y-0 left-0"
+        class="absolute w-full lg:w-9/12 inset-y-0 left-0"
       />
     </client-only>
-    <div class="absolute w-3/12 inset-y-0 right-0 py-8 sm:py-24 px-4 mr-75 lg:px-6 pointer-events-none">
+    <div class="absolute w-full right-auto bottom-0 lg:w-3/12 lg:inset-y-0 lg:right-0 py-8 sm:py-24 px-4 lg:mr-24 xl:mr-48 2xl:mr-75 lg:px-6 pointer-events-none">
       <div class="text-left">
-        <h2 class="mb-4 text-2xl tracking-tight font-extrabold text-pitch dark:text-insight md:text-3xl lg:text-4xl">
+        <h2 class="mb-4 text-2xl tracking-tight font-bold text-pitch dark:text-insight md:text-3xl lg:text-4xl">
           Arbimon’s Impact at-a-Glance
         </h2>
         <p class="text-pitch dark:text-insight">
           With more than 110 million minutes of acoustic recordings uploaded, Arbimon has made it possible to uncover critical insights into the behavior and conservation of some of the world’s most endangered species, paving the way to transformative action and a better understanding of our planet.
         </p>
-
-        <div
-          class="inline-flex rounded-md shadow-sm mt-12 ml-auto pointer-events-auto"
-          role="group"
+        <ol
+          role="tab"
+          class="inline-flex mt-4 pointer-events-auto"
         >
-          <button
-            type="button"
-            class="px-4 py-2 text-sm font-medium text-gray-900  border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-            :class="{ 'bg-gray-200 dark:bg-gray-600': selectedGlobeVisualization === 'species' }"
+          <li
+            class="inline-block p-2.5 border-b-2 text-sm hover:text-frequency hover:border-frequency"
+            :class="{ 'text-frequency border-frequency border-b-2': selectedGlobeVisualization === 'species' }"
+            :aria-selected="selectedGlobeVisualization === 'species'"
             @click="selectedGlobeVisualization = 'species'"
           >
-            Species
-          </button>
-          <button
-            type="button"
-            class="px-4 py-2 text-sm font-medium text-gray-900 border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700  dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-            :class="{ 'bg-gray-200 dark:bg-gray-600': selectedGlobeVisualization === 'countries' }"
+            <button>Species</button>
+          </li>
+          <li
+            class="inline-block p-2.5 border-b-2 text-sm hover:text-frequency hover:border-frequency"
+            :class="{ 'text-frequency border-frequency border-b-2': selectedGlobeVisualization === 'countries' }"
+            :aria-selected="selectedGlobeVisualization === 'countries'"
             @click="selectedGlobeVisualization = 'countries'"
           >
-            Countries
-          </button>
-          <button
-            type="button"
-            class="px-4 py-2 text-sm font-medium text-gray-900 border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700  dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-            :class="{ 'bg-gray-200 dark:bg-gray-600': selectedGlobeVisualization === 'projects' }"
+            <button>Countries</button>
+          </li>
+          <li
+            class="inline-block p-2.5 border-b-2 text-sm hover:text-frequency hover:border-frequency"
+            :class="{ 'text-frequency border-frequency border-b-2': selectedGlobeVisualization === 'projects' }"
+            :aria-selected="selectedGlobeVisualization === 'projects'"
             @click="selectedGlobeVisualization = 'projects'"
           >
-            Projects
-          </button>
-        </div>
+            <button>Projects</button>
+          </li>
+        </ol>
       </div>
     </div>
   </section>
@@ -54,5 +55,5 @@ import { ref } from 'vue'
 import ImpactGlobe from '../components/impact-globe.vue'
 
 type GlobeVisualization = 'species' | 'countries' | 'projects' | undefined
-const selectedGlobeVisualization = ref<GlobeVisualization>()
+const selectedGlobeVisualization = ref<GlobeVisualization>('species')
 </script>
