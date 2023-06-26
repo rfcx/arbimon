@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white bg-gradient-to-b from-moss from-70% to-black to-30%">
-    <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-24 lg:px-6">
+    <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-24 lg:px-6 mt-20">
       <div class="text-center px-8">
         <h2 class="mb-2 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
           How it works
@@ -10,10 +10,10 @@
         </p>
       </div>
       <div class="flex flex-col items-center gap-y-8">
-        <div>
+        <div class="max-w-screen-lg mx-auto max-h-min">
           <img
             :src="activeData.imageSrc"
-            class="w-full"
+            class="w-full h-auto"
           >
         </div>
         <div class="pr-16 w-full p-4 text-center align-middle items-center">
@@ -56,24 +56,26 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import uploadImage from '@/_assets/landing/home-how-upload.png'
+import detectSpeciesImage from '@/_assets/landing/how-it-works/detect-species.png'
+import gainInsightsImage from '@/_assets/landing/how-it-works/gain-insights.png'
+import uploadAudioImage from '@/_assets/landing/how-it-works/upload-audio.png'
 import { ROUTE_NAMES } from '~/router'
 
 const config = [
   {
     title: 'Upload audio',
-    description: 'Use your preferred method to capture audio recordings of wildlife activity and upload them to Arbimon for further analysis.',
-    imageSrc: uploadImage
+    description: 'Upload recordings from any audio recording device and manage/organize your files with ease.',
+    imageSrc: uploadAudioImage
   },
   {
-    title: 'Perform analysis',
-    description: 'Efficiently identify species in your audio with Arbimon\'s AI capabilities',
-    imageSrc: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg'
+    title: 'Detect species',
+    description: 'Utilize Arbimon’s AI-powered detection algorithms, user-friendly tools, and no-code interface to analyze, visualize, and explore your data recordings.',
+    imageSrc: detectSpeciesImage
   },
   {
-    title: 'Gain insights',
-    description: 'Explore the analysis results via maps and graphs, export the results for your research',
-    imageSrc: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup-dark.svg'
+    title: 'Automate biodiversity insights',
+    description: 'Collaborate with your team by sharing your results and automatically generating custom visualizations that demonstrate the impact of your research project.',
+    imageSrc: gainInsightsImage
   }
 ]
 
