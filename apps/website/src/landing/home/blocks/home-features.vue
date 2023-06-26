@@ -7,7 +7,7 @@
           Intuitive & powerful features
         </h2>
       </div>
-      <div class="text-center space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+      <div class="text-center space-y-8 grid grid-cols-2 lg:grid-cols-3 gap-12 space-y-0">
         <div
           v-for="(item, index) in config"
           :key="index"
