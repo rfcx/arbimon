@@ -13,20 +13,6 @@ import { ROUTE_NAMES } from '~/router';
     <div class="flex flex-col gap-2 lg:flex-row py-4 px-4 items-center mx-auto max-w-screen-xl gap-2 lg:py-8 lg:px-6">
       <div class="w-full max-w-240 lg:w-168 xl:w-200">
         <div class="p-4">
-          <h3 class="text-md font-medium">
-            The service
-          </h3>
-          <p class="mb-4">
-            We’re also a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
-          </p>
-          <a
-            href="#"
-            class="inline-flex items-center justify-center btn btn-primary"
-          >
-            Partner with us
-          </a>
-        </div>
-        <div class="p-4">
           <h3 class="mb-2 text-md font-medium">
             The platform
           </h3>
@@ -35,9 +21,23 @@ import { ROUTE_NAMES } from '~/router';
           </p>
           <a
             href="#"
-            class="inline-flex items-center justify-center btn btn-secondary"
+            class="inline-flex items-center justify-center btn btn-primary"
           >
             Start analyzing
+          </a>
+        </div>
+        <div class="p-4">
+          <h3 class="mb-2 text-md font-medium">
+            The service
+          </h3>
+          <p class="mb-4">
+            We’re also a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
+          </p>
+          <a
+            href="#"
+            class="inline-flex items-center justify-center btn btn-secondary"
+          >
+            See our featured projects
           </a>
         </div>
       </div>
