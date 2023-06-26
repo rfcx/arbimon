@@ -89,7 +89,7 @@
                 id="dropdownResourcesButton"
                 data-dropdown-toggle="dropdownResources"
                 data-dropdown-trigger="hover"
-                class="flex items-center justify-between w-full m-2 py-2 pl-4 pr-4 lg:m-0 font-medium text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-insight dark:hover:text-frequency dark:focus:text-insight dark:border-moss dark:hover:bg-moss md:dark:hover:bg-transparent"
+                class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 md:m-2 md:p-0 md:w-auto lg:m-0 dark:text-insight dark:hover:text-frequency"
               >
                 Resources <svg
                   class="w-4 h-4 ml-1"
