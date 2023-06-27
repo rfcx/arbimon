@@ -30,16 +30,6 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingFeaturedDetail
       },
       {
-        path: 'featured/reforestation',
-        name: ROUTE_NAMES.landingFeaturedReforestation,
-        component: PAGES.LandingFeaturedReforestation
-      },
-      {
-        path: 'featured/endangered-species',
-        name: ROUTE_NAMES.landingFeaturedEndangeredSpecies,
-        component: PAGES.LandingFeaturedEndangeredSpecies
-      },
-      {
         path: 'howitworks',
         name: ROUTE_NAMES.landingHowItWorks,
         component: PAGES.LandingHowItWorks

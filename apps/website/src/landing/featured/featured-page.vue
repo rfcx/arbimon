@@ -14,29 +14,29 @@
       <aside class="basis-1/4 sticky h-screen top-4">
         <ul>
           <li
-            v-for="item in contents"
+            v-for="item in projects"
             :key="item.id"
             class="p-2"
           >
             <router-link
-              :to="'#' + item.categoryId"
-              :class="currenRoute.hash === '#' + item.categoryId ? 'text-frequency font-bold border-b-2 border-b-frequency' : 'text-gray-500 dark:text-insight'"
+              :to="'#' + item.category.id"
+              :class="currenRoute.hash === '#' + item.category.id ? 'text-frequency font-bold border-b-2 border-b-frequency' : 'text-gray-500 dark:text-insight'"
             >
-              {{ item.categoryDisplay }}
+              {{ item.category.name }}
             </router-link>
           </li>
         </ul>
       </aside>
       <div class="md:basis-3/4 flex flex-col flex-nowrap flex-grow items-stretch gap-8 overflow-y-auto px-8 lg:pb-64">
         <card
-          v-for="item in contents"
-          :id="item.categoryId"
+          v-for="item in projects"
+          :id="item.category.id"
           :key="item.id"
           :title="item.title"
-          :subtitle="item.description"
+          :subtitle="item.descriptiveText"
           :location="item.location"
-          :link="item.link"
-          :background-image="item.imageUrl"
+          :link="'/featured/' + item.category.id"
+          :background-image="item.featuredImage"
         />
       </div>
     </div>
@@ -46,59 +46,8 @@
 import { useRoute } from 'vue-router'
 
 import Card from './components/featured-card.vue'
+import { projects } from './data'
 
 const currenRoute = useRoute()
 
-const contents = [
-  {
-    id: 1,
-    title: 'Establishing Biodiversity Baselines',
-    location: 'Gombe Stream National Park, Tanzania',
-    description: 'Developing baseline biodiversity metrics in partnership with the Jane Goodall Institute',
-    imageUrl: 'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
-    categoryDisplay: 'Biodiversity Baselines',
-    categoryId: 'biodiversity-baselines',
-    link: '#'
-  },
-  {
-    id: 2,
-    title: 'Endangered Species Protection',
-    location: 'Isabela Island, Galapagos',
-    description: 'Monitoring the critically endangered mangrove finch',
-    imageUrl: 'https://images.unsplash.com/photo-1542202229-7d93c33f5d07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
-    categoryDisplay: 'Endangered Species',
-    categoryId: 'endangered-species',
-    link: '#'
-  },
-  {
-    id: 3,
-    title: 'Reforestation & Restoration',
-    location: 'Pontal do Paranapanema, Brazil',
-    description: 'Assessment of restoration sites in supporting native fauna',
-    imageUrl: 'https://images.unsplash.com/photo-1574068468668-a05a11f871da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
-    categoryDisplay: 'Restoration',
-    categoryId: 'restoration',
-    link: '#'
-  },
-  {
-    id: 4,
-    title: 'Climate Change Impact',
-    location: 'Puerto Rico island-wide',
-    description: 'Assessing animal communities’ responses to climate change',
-    imageUrl: 'https://images.unsplash.com/photo-1533004597346-abf021591221?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1828&q=80',
-    categoryDisplay: 'Climate Change Impact',
-    categoryId: 'climate-change-impact',
-    link: '#'
-  },
-  {
-    id: 5,
-    title: 'Sustainable Supply Chain Monitoring',
-    location: 'Borneo, Malaysia',
-    description: 'Species specific and soundscape approaches to map biodiversity levels across land use categories',
-    imageUrl: '',
-    categoryDisplay: 'Sustainable Supply Chain',
-    categoryId: 'sustainable-supply-chain',
-    link: '#'
-  }
-]
 </script>
