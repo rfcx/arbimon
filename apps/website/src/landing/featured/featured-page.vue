@@ -10,7 +10,7 @@
         </p>
       </div>
     </div>
-    <div class="py-8 px-2 lg:py-24 lg:px-4 flex flex-col md:flex-row">
+    <div class="max-w-screen-2xl py-8 px-2 lg:pt-24 lg:px-20 flex flex-col md:flex-row">
       <aside class="basis-1/4 sticky h-screen top-4">
         <ul>
           <li
@@ -18,13 +18,19 @@
             :key="item.id"
             class="p-2"
           >
-            {{ item.category }}
+            <router-link
+              :to="'#' + item.categoryId"
+              :class="currenRoute.hash === '#' + item.categoryId ? 'text-frequency font-bold border-b-2 border-b-frequency' : 'text-gray-500 dark:text-insight'"
+            >
+              {{ item.categoryDisplay }}
+            </router-link>
           </li>
         </ul>
       </aside>
-      <div class="md:basis-3/4 px-8 flex flex-col flex-nowrap flex-grow items-stretch gap-8 lg:px-32 overflow-y-auto">
+      <div class="md:basis-3/4 flex flex-col flex-nowrap flex-grow items-stretch gap-8 overflow-y-auto px-8 lg:pb-64">
         <card
           v-for="item in contents"
+          :id="item.categoryId"
           :key="item.id"
           :title="item.title"
           :subtitle="item.description"
@@ -37,7 +43,11 @@
   </section>
 </template>
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
+
 import Card from './components/featured-card.vue'
+
+const currenRoute = useRoute()
 
 const contents = [
   {
@@ -46,7 +56,8 @@ const contents = [
     location: 'Gombe Stream National Park, Tanzania',
     description: 'Developing baseline biodiversity metrics in partnership with the Jane Goodall Institute',
     imageUrl: 'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
-    category: 'Biodiversity Baselines',
+    categoryDisplay: 'Biodiversity Baselines',
+    categoryId: 'biodiversity-baselines',
     link: '#'
   },
   {
@@ -55,7 +66,8 @@ const contents = [
     location: 'Isabela Island, Galapagos',
     description: 'Monitoring the critically endangered mangrove finch',
     imageUrl: 'https://images.unsplash.com/photo-1542202229-7d93c33f5d07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
-    category: 'Endangered Species',
+    categoryDisplay: 'Endangered Species',
+    categoryId: 'endangered-species',
     link: '#'
   },
   {
@@ -64,7 +76,8 @@ const contents = [
     location: 'Pontal do Paranapanema, Brazil',
     description: 'Assessment of restoration sites in supporting native fauna',
     imageUrl: 'https://images.unsplash.com/photo-1574068468668-a05a11f871da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80',
-    category: 'Restoration',
+    categoryDisplay: 'Restoration',
+    categoryId: 'restoration',
     link: '#'
   },
   {
@@ -73,7 +86,8 @@ const contents = [
     location: 'Puerto Rico island-wide',
     description: 'Assessing animal communities’ responses to climate change',
     imageUrl: 'https://images.unsplash.com/photo-1533004597346-abf021591221?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1828&q=80',
-    category: 'Climate Change Impact',
+    categoryDisplay: 'Climate Change Impact',
+    categoryId: 'climate-change-impact',
     link: '#'
   },
   {
@@ -82,7 +96,8 @@ const contents = [
     location: 'Borneo, Malaysia',
     description: 'Species specific and soundscape approaches to map biodiversity levels across land use categories',
     imageUrl: '',
-    category: 'Sustainable Supply Chain',
+    categoryDisplay: 'Sustainable Supply Chain',
+    categoryId: 'sustainable-supply-chain',
     link: '#'
   }
 ]
