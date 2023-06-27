@@ -53,10 +53,12 @@
       <p class="text-insight pb-2 line-clamp-2 text-sm lg:text-base">
         {{ subtitle }}
       </p>
-      <a
-        :href="link"
+      <router-link
+        :to="link"
         class="text-frequency hover:border-b hover:border-b-frequency my-2 font-display"
-      >Learn more</a>
+      >
+        Learn more
+      </router-link>
     </div>
   </div>
 </template>

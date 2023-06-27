@@ -3,7 +3,7 @@
     <div class="px-4 flex justify-between items-center lg:px-6">
       <div class="px-8 md:px-4">
         <button
-          v-show="feedbacks.length > 1"
+          v-show="props.feedbacks.length > 1"
           type="button"
           @click="currentFeedbackIndex = (currentFeedbackIndex !== 0) ? currentFeedbackIndex - 1 : feedbacks.length - 1"
         >
@@ -25,29 +25,26 @@
       </div>
       <div class="max-w-screen-sm">
         <h2 class="text-bold text-frequency text-lg">
-          {{ feedbacks[currentFeedbackIndex].text }}
+          {{ props.feedbacks[currentFeedbackIndex]?.text }}
         </h2>
         <div class="mt-4 flex">
           <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-            <span class="font-medium text-gray-600 dark:text-gray-300"> {{ feedbacks[currentFeedbackIndex].partner.name.charAt(0) }}</span>
+            <span class="font-medium text-gray-600 dark:text-gray-300"> {{ props.feedbacks[currentFeedbackIndex]?.partnerName.charAt(0) }}</span>
           </div>
           <div class="flex flex-col">
             <div class="mb-2">
               <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
-                {{ feedbacks[currentFeedbackIndex].partner.name }}
+                {{ props.feedbacks[currentFeedbackIndex]?.partnerName }}
               </span>
             </div>
-            <span class="text-gray-500 block text-sm dark:text-insight">
-              {{ feedbacks[currentFeedbackIndex].partner.title }}
-            </span>
           </div>
         </div>
       </div>
       <div class="px-8 md:px-4">
         <button
-          v-show="feedbacks.length > 1"
+          v-show="props.feedbacks.length > 1"
           type="button"
-          @click="currentFeedbackIndex = (currentFeedbackIndex + 1 !== feedbacks.length) ? currentFeedbackIndex + 1 : 0"
+          @click="currentFeedbackIndex = (currentFeedbackIndex + 1 !== props.feedbacks.length) ? currentFeedbackIndex + 1 : 0"
         >
           <svg
             aria-hidden="true"
@@ -68,16 +65,16 @@
     </div>
     <!-- Slider indicators -->
     <div
-      v-show="feedbacks.length > 1"
+      v-show="props.feedbacks.length > 1"
       class="flex space-x-3 -translate-x-1/2 bottom-5 left-1/2 p-10 m-auto justify-center"
     >
       <button
-        v-for="(feedback, index) in feedbacks"
+        v-for="(feedback, index) in props.feedbacks"
         :key="index"
         type="button"
         class="w-2 h-2 rounded-full border-frequency border-1"
         :aria-current="currentFeedbackIndex === index"
-        :aria-label="'Feedback ' + (index + 1) + ' of ' + feedbacks.length"
+        :aria-label="'Feedback ' + (index + 1) + ' of ' + props.feedbacks.length"
         :data-carousel-slide-to="index"
         :class="{ 'bg-frequency': currentFeedbackIndex === index }"
         @click="currentFeedbackIndex = index"
@@ -88,17 +85,13 @@
 
 <script setup lang="ts">
 
-import type { PropType } from 'vue'
 import { ref } from 'vue'
 
-import { type PartnerFeedback } from '../types'
+import { type ProjectFeedback } from '../../featured/data/types'
 
-defineProps({
-  feedbacks: {
-    type: Array as PropType<PartnerFeedback[]>,
-    required: true
-  }
-})
+const props = defineProps<{
+  readonly feedbacks: ProjectFeedback[] | []
+}>()
 
 const currentFeedbackIndex = ref<number>(0)
 

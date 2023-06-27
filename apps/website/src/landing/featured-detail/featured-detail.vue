@@ -1,24 +1,28 @@
 <template>
-  <hero />
-  <content subheader="Partnering with the Charles Darwin Foundation, Arbimon is facilitating important work to understand where the Critically Endangered mangrove finch is present using automated detections of their calls." />
-  <gallery />
-  <feedback :feedbacks="feedbacks" />
+  <div v-if="currentProject">
+    <hero
+      :image="currentProject.featuredImage"
+      :info="currentProject.header"
+    />
+    <content :content="currentProject.content" />
+    <gallery />
+    <feedback :feedbacks="currentProject.feedback" />
+  </div>
 </template>
 
 <script setup lang="ts">
+// TODO: handle when currentProject is undefined
+import { useRoute } from 'vue-router'
 
+import { projects } from '../featured/data'
 import Content from './blocks/content.vue'
 import Feedback from './blocks/feedback.vue'
 import Gallery from './blocks/gallery.vue'
 import Hero from './blocks/hero.vue'
 
-const feedbacks = [
-  {
-    text: 'Arbimon has revolutionized the way we conduct acoustic research. With its user-friendly interface, we can now easily collect, analyze, and collaborate on biodiversity data to drive meaningful change and protect our planet’s precious ecosystems.',
-    partner: {
-      name: 'Charles Darwin Foundation'
-    }
-  }
-]
+const currenRoute = useRoute()
+const currentProject = projects.find(
+  (project) => project.category.id === currenRoute.params.slug
+)
 
 </script>

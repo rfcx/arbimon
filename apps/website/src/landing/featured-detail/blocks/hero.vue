@@ -32,10 +32,10 @@
           <span class="ml-1 hover:text-frequency">Back to featured work</span>
         </router-link>
         <h2 class="mt-12 my-4 text-4xl capitalize font-extrabold text-gray-900 dark:text-insight">
-          {{ project.catName }}
+          {{ props.info?.title }}
         </h2>
         <p class="mb-12 text-md">
-          {{ project.introText }}
+          {{ props.info?.description }}
         </p>
         <div class="grid md:grid-cols-2 gap-8 mb-8">
           <div class="flex flex-col justify-between">
@@ -44,18 +44,17 @@
                 FEATURED PROJECT
               </div>
               <p class="mb-8 font-extrabold text-gray-900 dark:text-insight">
-                <!-- TODO: bind project name -->
-                Monitoring the critically endangered mangrove finch
+                {{ props.info?.projectName }}
               </p>
               <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
                 APPLICATION
               </div>
-              <p class="mb-2 text-gray-500 dark:text-insight">
-                <!-- TODO: bind application -->
-                High-accuracy CNN (>90%) is facilitating ongoing automated detection and monitoring of endangered species across the archipelago.
-              </p>
-              <p class="mb-8 text-gray-500 dark:text-insight">
-                Results are being utilized to inform current finch distribution across all  potential mangrove habitats to inform action.
+              <p
+                v-for="(application, index) in props.info?.applications"
+                :key="index"
+                class="mb-2 text-gray-500 dark:text-insight"
+              >
+                {{ application }}
               </p>
             </div>
             <a
@@ -63,50 +62,62 @@
               class="btn btn-primary w-40"
             >Work with us</a>
           </div>
-          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-cols-2">
+          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 lg:grid-cols-2">
             <div class="text-xs uppercase text-spoonbill font-eyebrow">
               TIMELINE
             </div>
             <p class="mb-4 text-gray-900 dark:text-insight">
-              <!-- TODO: bind timeline -->
-              2022 - ongoing
+              {{ props.info?.timeline }}
             </p>
             <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-              <!-- TODO: bind scope -->
               SCOPE
             </div>
             <p class="mb-4 text-gray-900 dark:text-insight">
-              <!-- TODO: bind scope -->
-              34 sites, 2 species
+              {{ props.info?.scope }}
             </p>
             <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
               PARTNERS
             </div>
             <p class="mb-4 text-gray-900 dark:text-insight">
-              <!-- TODO: bind partner name -->
-              Charles Darwin Foundation
+              <ul>
+                <li
+                  v-for="(partner, index) in props.info?.partners"
+                  :key="index"
+                >
+                  {{ partner }}
+                </li>
+              </ul>
             </p>
             <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
               SERVICES
             </div>
             <p class="mb-4 text-gray-900 dark:text-insight">
-              <!-- TODO: bind services -->
-              Survey design<br>Expert species validation<br>Ecological analyses<br>AI model development
+              <ul>
+                <li
+                  v-for="(service, index) in props.info?.services"
+                  :key="index"
+                >
+                  {{ service }}
+                </li>
+              </ul>
             </p>
             <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
               sustainable development goals
             </div>
             <p class="mb-4 text-gray-900 dark:text-insight">
-              <!-- TODO: bind services -->
-              13, 15
+              <span
+                v-for="(goal, index) in props.info?.sdgs"
+                :key="index"
+              >{{ goal }}</span>
             </p>
           </div>
         </div>
       </div>
-      <div>
+      <div class="h-screen-sm">
         <img
-          class="w-full rounded-lg"
-          src="@/_assets/landing/featured/mangrove-finch.jpg"
+          class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
+          :src="image"
+          :alt="image"
         >
       </div>
     </div>
@@ -115,19 +126,11 @@
 
 <script setup lang="ts">
 
-export interface FeaturedProject {
-  catName: string
-  introText: string
-  // projectName: string
-  // timeline: string
-  // scope: string
-  // services: [string]
-  // images: [string]
-  // goals: [string]
-}
+import { type ProjectHeader } from '../../featured/data/types'
 
-const project = withDefaults(defineProps<FeaturedProject>(), {
-  catName: 'Endangered species protection',
-  introText: 'Utilizing ecoacoustic data, Arbimon isolates the calls of endangered species to map presence over time. This enables implementation of more targeted habitat restoration, areas, and breeding programs.'
-})
+const props = defineProps<{
+  readonly info: ProjectHeader | null
+  readonly image: string
+}>()
+
 </script>

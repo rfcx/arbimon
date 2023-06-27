@@ -2,8 +2,6 @@ export const ROUTE_NAMES = {
   // Landing
   landingHome: 'landing_home',
   landingFeatured: 'landing_featured',
-  landingFeaturedReforestation: 'landing_featured_reforestation',
-  landingFeaturedEndangeredSpecies: 'landing_featured_endangered_species',
   landingFeaturedDetail: 'landing_featured_detail',
   landingHowItWorks: 'landing_how_it_works',
   landingFAQ: 'landing_faq',
