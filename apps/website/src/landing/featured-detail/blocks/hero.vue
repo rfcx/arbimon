@@ -63,22 +63,13 @@
             >Work with us</a>
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 lg:grid-cols-2">
-            <div class="text-xs uppercase text-spoonbill font-eyebrow">
-              TIMELINE
-            </div>
-            <p class="mb-4 text-gray-900 dark:text-insight">
+            <stat title="timeline">
               {{ props.info?.timeline }}
-            </p>
-            <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-              SCOPE
-            </div>
-            <p class="mb-4 text-gray-900 dark:text-insight">
+            </stat>
+            <stat title="scope">
               {{ props.info?.scope }}
-            </p>
-            <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-              PARTNERS
-            </div>
-            <p class="mb-4 text-gray-900 dark:text-insight">
+            </stat>
+            <stat title="partners">
               <ul>
                 <li
                   v-for="(partner, index) in props.info?.partners"
@@ -87,11 +78,8 @@
                   {{ partner }}
                 </li>
               </ul>
-            </p>
-            <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-              SERVICES
-            </div>
-            <p class="mb-4 text-gray-900 dark:text-insight">
+            </stat>
+            <stat title="services">
               <ul>
                 <li
                   v-for="(service, index) in props.info?.services"
@@ -100,16 +88,18 @@
                   {{ service }}
                 </li>
               </ul>
-            </p>
-            <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-              sustainable development goals
-            </div>
-            <p class="mb-4 text-gray-900 dark:text-insight">
+            </stat>
+            <stat
+              v-if="props.info?.sdgs && props.info?.sdgs.length > 0"
+              title="sustainable development goals"
+            >
               <span
                 v-for="(goal, index) in props.info?.sdgs"
                 :key="index"
-              >{{ goal }}</span>
-            </p>
+              >
+                {{ goal }}
+              </span>
+            </stat>
           </div>
         </div>
       </div>
@@ -127,6 +117,7 @@
 <script setup lang="ts">
 
 import { type ProjectHeader } from '../../featured/data/types'
+import Stat from './components/stat.vue'
 
 const props = defineProps<{
   readonly info: ProjectHeader | null

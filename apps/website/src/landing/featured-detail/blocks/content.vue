@@ -4,7 +4,7 @@
       <p class="mb-8 text-lg text-bold">
         {{ props.content?.subtitle }}
       </p>
-      <div class="flex flex-row gap-8">
+      <div class="flex flex-col gap-8 lg:flex-row">
         <p>{{ props.content?.paragraphs[0] ?? '' }}</p>
         <p>{{ props.content?.paragraphs[1] ?? '' }}</p>
       </div>
