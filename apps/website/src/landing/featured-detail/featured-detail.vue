@@ -11,6 +11,7 @@
       title="Impact Goals"
       :text="currentProject.impact?.text ?? ''"
     />
+    <featured-explorer :projects="projects" />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import { useRoute } from 'vue-router'
 
 import { projects } from '../featured/data'
 import FeaturedContent from './blocks/featured-content.vue'
+import FeaturedExplorer from './blocks/featured-explorer.vue'
 import FeaturedFeedback from './blocks/featured-feedback.vue'
 import FeaturedGallery from './blocks/featured-gallery.vue'
 import FeaturedHero from './blocks/featured-hero.vue'
