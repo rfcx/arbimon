@@ -6,7 +6,7 @@ import { ROUTE_NAMES } from '~/router';
       <h2 class="mb-4 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
         What we do
       </h2>
-      <p class="mb-6 text-gray-500 md:text-lg dark:text-gray-400 mt-6 max-w-3xl mx-auto text-lg">
+      <p class="mb-6 text-gray-500 dark:text-insight mt-6 max-w-3xl mx-auto">
         At Arbimon, our mission is to empower scientists and conservationists with innovative AI-powered ecoacoustic tools and data-driven insights to better understand and protect the world's biodiversity.
       </p>
     </div>

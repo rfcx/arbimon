@@ -32,8 +32,8 @@
           <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-frequency">
             What our partners have to say
           </h2>
-          <p>
-            {{ feedbacks[currentFeedbackIndex].text }}
+          <p class="text-xl">
+            "{{ feedbacks[currentFeedbackIndex].text }}"
           </p>
           <div class="mt-4 flex">
             <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -44,7 +44,7 @@
                 <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
                   {{ feedbacks[currentFeedbackIndex].user.name }}
                 </span>
-                <span class="px-2 rounded-full text-sm uppercase bg-gray-700 text-spoonbill font-['Roboto_Mono']">
+                <span class="px-2 py-1 rounded-full text-sm uppercase bg-gray-600 text-spoonbill font-eyebrow tracking-wide">
                   {{ feedbacks[currentFeedbackIndex].user.role }}
                 </span>
               </div>
