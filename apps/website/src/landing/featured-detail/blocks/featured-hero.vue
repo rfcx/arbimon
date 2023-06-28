@@ -114,7 +114,7 @@
 <script setup lang="ts">
 
 import { type ProjectHeader } from '../../featured/data/types'
-import FeaturedStat from './components/featured-stat.vue'
+import FeaturedStat from '../components/featured-stat.vue'
 
 const props = defineProps<{
   readonly info: ProjectHeader | null
