@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 // TODO: handle when currentProject is undefined
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { projects } from '../featured/data'
@@ -28,8 +29,8 @@ import FeaturedHero from './blocks/featured-hero.vue'
 import FeaturedImpactGoal from './blocks/featured-impact-goal.vue'
 
 const currenRoute = useRoute()
-const currentProject = projects.find(
+const currentProject = computed(() => projects.find(
   (project) => project.category.id === currenRoute.params.slug
-)
+))
 
 </script>
