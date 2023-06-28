@@ -1,12 +1,12 @@
 <template>
   <div v-if="currentProject">
-    <hero
+    <featured-hero
       :image="currentProject.featuredImage"
       :info="currentProject.header"
     />
-    <content :content="currentProject.content" />
-    <gallery />
-    <feedback :feedbacks="currentProject.feedback" />
+    <featured-content :content="currentProject.content" />
+    <featured-gallery />
+    <featured-feedback :feedbacks="currentProject.feedback" />
   </div>
 </template>
 
@@ -15,10 +15,10 @@
 import { useRoute } from 'vue-router'
 
 import { projects } from '../featured/data'
-import Content from './blocks/content.vue'
-import Feedback from './blocks/feedback.vue'
-import Gallery from './blocks/gallery.vue'
-import Hero from './blocks/hero.vue'
+import FeaturedContent from './blocks/featured-content.vue'
+import FeaturedFeedback from './blocks/featured-feedback.vue'
+import FeaturedGallery from './blocks/featured-gallery.vue'
+import FeaturedHero from './blocks/featured-hero.vue'
 
 const currenRoute = useRoute()
 const currentProject = projects.find(
