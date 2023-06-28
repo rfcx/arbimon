@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-pitch">
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-        <span class="text-sm text-spoonbill mb-4 uppercase font-['Roboto Mono']">END-TO-END WORKFLOW</span>
+        <span class="text-sm text-spoonbill mb-4 uppercase font-eyebrow">END-TO-END WORKFLOW</span>
         <h2 class="my-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
           Intuitive & powerful features
         </h2>
@@ -16,7 +16,7 @@
           <div class="flex justify-start align-start mb-2 w-12 h-12 lg:h-18 lg:w-18">
             <img :src="item.icon">
           </div>
-          <h3 class="mb-2 text-md font-medium dark:text-insight text-left">
+          <h3 class="mb-2 text-lg font-medium dark:text-insight text-left">
             {{ item.title }}
           </h3>
           <p class="max-w-72 text-gray-500 dark:text-insight text-left">
