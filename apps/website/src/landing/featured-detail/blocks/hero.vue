@@ -63,13 +63,13 @@
             >Work with us</a>
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 lg:grid-cols-2">
-            <stat title="timeline">
+            <project-stat title="timeline">
               {{ props.info?.timeline }}
-            </stat>
-            <stat title="scope">
+            </project-stat>
+            <project-stat title="scope">
               {{ props.info?.scope }}
-            </stat>
-            <stat title="partners">
+            </project-stat>
+            <project-stat title="partners">
               <ul>
                 <li
                   v-for="(partner, index) in props.info?.partners"
@@ -78,8 +78,8 @@
                   {{ partner }}
                 </li>
               </ul>
-            </stat>
-            <stat title="services">
+            </project-stat>
+            <project-stat title="services">
               <ul>
                 <li
                   v-for="(service, index) in props.info?.services"
@@ -88,8 +88,8 @@
                   {{ service }}
                 </li>
               </ul>
-            </stat>
-            <stat
+            </project-stat>
+            <project-stat
               v-if="props.info?.sdgs && props.info?.sdgs.length > 0"
               title="sustainable development goals"
             >
@@ -99,7 +99,7 @@
               >
                 {{ goal }}
               </span>
-            </stat>
+            </project-stat>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@
 <script setup lang="ts">
 
 import { type ProjectHeader } from '../../featured/data/types'
-import Stat from './components/stat.vue'
+import ProjectStat from './components/project-stat.vue'
 
 const props = defineProps<{
   readonly info: ProjectHeader | null
