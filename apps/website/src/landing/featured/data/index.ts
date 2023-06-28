@@ -38,7 +38,10 @@ export const projects: ProjectDetail[] = [
     feedback: [{
       text: 'Listening to inform action has been something important to JGI since the beginning of our work. Nowe, in collaboration with the Arbimon platform, we are beginning to uncover a previously undocumented world within Gombe Stream National Park. Using acoustics to establish a baseline from which we will proceed is game changing',
       partnerName: 'XXX, JGI'
-    }]
+    }],
+    impact: {
+      text: 'This collaboration will result in an establishment of a biodiversity baseline to assess how animal communities change over time and under different conservation practices. Simultaneously, partners and local organizations will be trained on all activities and empowered to lead both the management of the project as well as continued biodiversity analyses to create the building blocks for a long-term project. The next steps are to establish permanent monitoring stations and use new datasets collected to answer critical questions that will inform the management of the park, create value, and inform community health programs.'
+    }
   },
   {
     id: 2,
@@ -77,7 +80,10 @@ export const projects: ProjectDetail[] = [
     feedback: [{
       text: 'The Arbimon platform has enabled us to use finch vocalizations to track their presence at time scales previously inaccessible. We essentially have tens of “researchers” stationed across Galapagos mangroves permanently listening for the presence of one of the world’s most range-restricted birds.',
       partnerName: 'XXX, Charles Darwin Foundation'
-    }]
+    }],
+    impact: {
+      text: 'Historically, the mangrove finch was distributed across the mangroves in the Galapagos - its current range is restricted to only 30 ha on North West Isabela Island. For the past four years, the Charles Darwin Foundation has started to find success in implementing rat control practices (to reduce predation) and through artificial incubation programs. With this success, the next question that has lingered is - are there any other small populations that we don’t know about? And what are the best mangroves to repopulate first? We are starting to answer these questions with our partnership. The known existing population was recorded in 2022 to create models and better understand their communications. In 2023, devices are being deployed across the remaining 13 mangroves. This will inform how to proceed with the current breeding program and if there are other fragmented small populations that can be linked with the known population to create greater genetic diversity and expand their range. '
+    }
   },
   {
     id: 3,
@@ -123,7 +129,10 @@ export const projects: ProjectDetail[] = [
     feedback: [{
       text: 'Arbimon has provided valuable insights into how WeForest reforestation is impacting the ecosystem. Additionally, it creates an easily accessible transparency dashboard that can be utilized by a variety of stakeholders.',
       partnerName: 'XXX, WeForest'
-    }]
+    }],
+    impact: {
+      text: 'Year-over-year data collection is providing insights on how biodiversity is returning to reforested sites across the Atlantic Forest in Brazil. WeForest supports local communities planting trees in critical regions to restore. Arbimon is monitoring both within and outside restoration sites to understand the health of the forest and which regions need to prioritize being linked and which corridors need to be widened - areas have been directly selected as a result of this study. The data is not only actively informing how WeForest is expanding their corridors to connect the large fragments and protected areas in the region, but it is providing content to drive funding to this cause. Nike has supported their efforts to plant 1 million trees, and the acoustic data is fueling the communications campaign incentivizing Nike to support these activities.'
+    }
   },
   {
     id: 4,
@@ -172,7 +181,10 @@ export const projects: ProjectDetail[] = [
     feedback: [{
       text: 'With Arbimon, we have created the first-ever standardized island-wide maps of biodiversity presence using data from across the island. We are hopeful in how this will inform our ability to fight extinction across this important archipelago.',
       partnerName: 'XXX, USFWS'
-    }]
+    }],
+    impact: {
+      text: 'Some important findings include that Puerto Rico will be drier under current climate change scenarios, but animal populations are positively correlated with rainfall and forest cover. There is a mismatch between current protected areas and remaining suitable bird habitats under climate change scenarios, demonstrating the need for larger, more connected protected areas and buffer zones. As a result, USFWS, Departamento de Recursos Naturales y Ambientales de Puerto Rico, and the Para la Naturaleza Foundation are utilizing project results to inform action. They are determining land acquisition priorities by using the maps of species of interest and analyzing community change in the restoration areas. Additionally, this data is being used to  update the distribution status of resident species on the island, as well as species in Greater Conservation Need (SGCN of the State Wildlife Action Plan, SWAP). With the information collected and the recommendations in Arbimon reports, they are about to start other projects focused on the areas and species that need additional conservation actions, particularly birds. They have as a long-term goal to use the digitized data to continue identifying gaps in biodiversity information, carry out an updated distribution of species and generate important habitat layers. In addition, they seek to create connectivity and buffer zones from the impact of sea level rise.'
+    }
   },
   {
     id: 5,
@@ -222,6 +234,9 @@ export const projects: ProjectDetail[] = [
     feedback: [{
       text: 'Arbimon has made it possible to holistically track species presence in a way we have not been able to before. This data is extremely valuable to inform how we prioritize local initiatives to support biodiversity moving forward',
       partnerName: 'XXX, Ecoculture'
-    }]
+    }],
+    impact: {
+      text: 'Ecoculture’s mission is to develop landscape restoration projects that promote a culture of conservation. By working closely with local communities, they are able to create value for the ecosystems, including the people calling them home. These results will be used to prioritize highest-value land management approaches and arm Ecoculture with the data required to measure impact across their projects. It was found that soundscapes from primary forest and restoration sites are similar, suggesting that restoration sites are able to maintain high biodiversity levels. Therefore, it is important to continue forward with these high-value projects.'
+    }
   }
 ]

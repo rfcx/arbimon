@@ -14,6 +14,7 @@ export interface ProjectDetail {
   content: ProjectOverviewContent
   gallery: ProjectGallery | null
   feedback: ProjectFeedback[] | []
+  impact: ProjectImpactContent | null
 }
 
 export interface ProjectHeader {
@@ -43,5 +44,5 @@ export interface ProjectFeedback {
 }
 
 export interface ProjectImpactContent {
-  paragraphs: string[]
+  text: string
 }
