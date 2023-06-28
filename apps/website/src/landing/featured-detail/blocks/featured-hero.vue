@@ -40,11 +40,11 @@
         <div class="grid md:grid-cols-2 gap-8 mb-8">
           <div class="flex flex-col justify-between">
             <div>
-              <project-stat title="FEATURED PROJECT">
+              <featured-stat title="FEATURED PROJECT">
                 {{ props.info?.projectName }}
-              </project-stat>
+              </featured-stat>
 
-              <project-stat title="APPLICATION">
+              <featured-stat title="APPLICATION">
                 <p
                   v-for="(application, index) in props.info?.applications"
                   :key="index"
@@ -52,7 +52,7 @@
                 >
                   {{ application }}
                 </p>
-              </project-stat>
+              </featured-stat>
             </div>
             <a
               href="#"
@@ -60,13 +60,13 @@
             >Work with us</a>
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-2">
-            <project-stat title="timeline">
+            <featured-stat title="timeline">
               {{ props.info?.timeline }}
-            </project-stat>
-            <project-stat title="scope">
+            </featured-stat>
+            <featured-stat title="scope">
               {{ props.info?.scope }}
-            </project-stat>
-            <project-stat title="partners">
+            </featured-stat>
+            <featured-stat title="partners">
               <ul class="list-disc ml-4">
                 <li
                   v-for="(partner, index) in props.info?.partners"
@@ -75,8 +75,8 @@
                   {{ partner }}
                 </li>
               </ul>
-            </project-stat>
-            <project-stat title="services">
+            </featured-stat>
+            <featured-stat title="services">
               <ul class="list-disc ml-4">
                 <li
                   v-for="(service, index) in props.info?.services"
@@ -85,8 +85,8 @@
                   {{ service }}
                 </li>
               </ul>
-            </project-stat>
-            <project-stat
+            </featured-stat>
+            <featured-stat
               v-if="props.info?.sdgs && props.info?.sdgs.length > 0"
               title="sustainable development goals"
             >
@@ -96,7 +96,7 @@
               >
                 {{ goal }}
               </span>
-            </project-stat>
+            </featured-stat>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@
 <script setup lang="ts">
 
 import { type ProjectHeader } from '../../featured/data/types'
-import ProjectStat from './components/project-stat.vue'
+import FeaturedStat from './components/featured-stat.vue'
 
 const props = defineProps<{
   readonly info: ProjectHeader | null
