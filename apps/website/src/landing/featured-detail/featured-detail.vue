@@ -7,6 +7,10 @@
     <featured-content :content="currentProject.content" />
     <featured-gallery />
     <featured-feedback :feedbacks="currentProject.feedback" />
+    <featured-impact-goal
+      title="Impact Goals"
+      :text="currentProject.impact?.text ?? ''"
+    />
   </div>
 </template>
 
@@ -19,6 +23,7 @@ import FeaturedContent from './blocks/featured-content.vue'
 import FeaturedFeedback from './blocks/featured-feedback.vue'
 import FeaturedGallery from './blocks/featured-gallery.vue'
 import FeaturedHero from './blocks/featured-hero.vue'
+import FeaturedImpactGoal from './blocks/featured-impact-goal.vue'
 
 const currenRoute = useRoute()
 const currentProject = projects.find(
