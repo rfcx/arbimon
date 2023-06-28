@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-2xl lg:grid lg:grid-cols-3 lg:px-6">
+    <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-3 xl:px-6">
       <div class="text-gray-500 dark:text-insight col-span-2">
         <router-link
           to="/featured"
@@ -40,29 +40,26 @@
         <div class="grid md:grid-cols-2 gap-8 mb-8">
           <div class="flex flex-col justify-between">
             <div>
-              <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-                FEATURED PROJECT
-              </div>
-              <p class="mb-8 font-extrabold text-gray-900 dark:text-insight">
+              <project-stat title="FEATURED PROJECT">
                 {{ props.info?.projectName }}
-              </p>
-              <div class="mb-2 text-xs uppercase text-spoonbill font-eyebrow">
-                APPLICATION
-              </div>
-              <p
-                v-for="(application, index) in props.info?.applications"
-                :key="index"
-                class="mb-2 text-gray-500 dark:text-insight"
-              >
-                {{ application }}
-              </p>
+              </project-stat>
+
+              <project-stat title="APPLICATION">
+                <p
+                  v-for="(application, index) in props.info?.applications"
+                  :key="index"
+                  class="mb-2 text-gray-500 dark:text-insight"
+                >
+                  {{ application }}
+                </p>
+              </project-stat>
             </div>
             <a
               href="#"
               class="btn btn-primary w-40"
             >Work with us</a>
           </div>
-          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 lg:grid-cols-2">
+          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-2">
             <project-stat title="timeline">
               {{ props.info?.timeline }}
             </project-stat>
@@ -70,7 +67,7 @@
               {{ props.info?.scope }}
             </project-stat>
             <project-stat title="partners">
-              <ul>
+              <ul class="list-disc ml-4">
                 <li
                   v-for="(partner, index) in props.info?.partners"
                   :key="index"
@@ -80,7 +77,7 @@
               </ul>
             </project-stat>
             <project-stat title="services">
-              <ul>
+              <ul class="list-disc ml-4">
                 <li
                   v-for="(service, index) in props.info?.services"
                   :key="index"
@@ -103,7 +100,7 @@
           </div>
         </div>
       </div>
-      <div class="h-screen-sm">
+      <div class="h-sm xl:h-screen-sm">
         <img
           class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"
