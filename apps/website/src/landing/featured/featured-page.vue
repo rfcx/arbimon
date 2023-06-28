@@ -10,13 +10,46 @@
         </p>
       </div>
     </div>
-    <div class="max-w-screen-2xl py-8 px-2 lg:pt-24 lg:px-20 flex flex-col md:flex-row">
-      <aside class="basis-1/4 sticky h-screen top-4">
-        <ul>
+    <div class="max-w-screen-2xl mx-auto py-8 px-2 lg:pt-24 lg:px-20 flex flex-col md:flex-row">
+      <aside class="w-full px-8 md:px-0 md:sticky md:h-screen md:top-4 md:basis-1/4">
+        <button
+          data-collapse-toggle="category-menu"
+          type="button"
+          class="w-full items-center py-4 dark:text-insight md:hidden dark:hover:ring-moss"
+          aria-controls="category-menu"
+          aria-expanded="false"
+        >
+          <div class="flex flex-row justify-between items-start">
+            <span>Jump to</span>
+            <svg
+              width="25"
+              height="24"
+              viewBox="0 0 25 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-insight"
+            >
+              <g id="fi:chevron-down">
+                <path
+                  id="Vector"
+                  d="M6.91992 9L12.9199 15L18.9199 9"
+                  stroke="#FFFEFC"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </g>
+            </svg>
+          </div>
+        </button>
+        <ul
+          id="category-menu"
+          class="hidden mb-4 md:block"
+        >
           <li
             v-for="item in projects"
             :key="item.id"
-            class="p-2"
+            class="py-2 px-0 md:px-2"
           >
             <router-link
               :to="'#' + item.category.id"
@@ -43,11 +76,17 @@
   </section>
 </template>
 <script setup lang="ts">
+import { initCollapses } from 'flowbite'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import Card from './components/featured-card.vue'
 import { projects } from './data'
 
 const currenRoute = useRoute()
+
+onMounted(() => {
+  initCollapses()
+})
 
 </script>
