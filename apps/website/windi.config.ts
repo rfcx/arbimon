@@ -113,7 +113,8 @@ export default defineConfig({
       },
       backgroundImage: {
         'hero-testimonial': "url('@/_assets/landing/testimonials/bg-hero.png')",
-        'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.png')"
+        'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.png')",
+        'hero-contact': "url('@/_assets/landing/contact/fauna.png')"
       }
     }
   },
