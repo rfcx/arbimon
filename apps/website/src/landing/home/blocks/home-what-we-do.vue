@@ -10,7 +10,7 @@ import { ROUTE_NAMES } from '~/router';
         At Arbimon, our mission is to empower scientists and conservationists with innovative AI-powered ecoacoustic tools and data-driven insights to better understand and protect the world's biodiversity.
       </p>
     </div>
-    <div class="flex flex-col gap-2 lg:flex-row py-4 px-4 items-center mx-auto max-w-screen-xl gap-2 lg:py-8 lg:px-6">
+    <div class="flex flex-col gap-2 flex-col-reverse md:(flex-row py-8 px-6) py-4 px-4 items-center mx-auto max-w-screen-xl gap-2">
       <div class="w-full max-w-240 lg:w-168 xl:w-200">
         <div class="p-4">
           <h3 class="mb-2 text-md font-medium">

@@ -16,11 +16,11 @@
             class="w-full h-auto"
           >
         </div>
-        <div class="pr-16 w-full p-4 text-center align-middle items-center">
+        <div class="w-full p-4 text-center align-middle items-center">
           <ol
             role="tab"
             aria-label="steps to get started"
-            class="flex flex-wrap -mb-px justify-center"
+            class="flex flex-row -mb-px justify-center md:(flex-wrap)"
           >
             <li
               v-for="(item, index) in config"
@@ -32,10 +32,10 @@
               @click="active = index"
             >
               <button>
-                <span class="block text-2xl md:text-3xl lg:text-4xl font-display">
+                <span class="block text-2xl font-display md:text-3xl lg:text-4xl">
                   {{ index + 1 }}
                 </span>
-                <span>{{ item.title }}</span>
+                <span class="text-sm md:text-base">{{ item.title }}</span>
               </button>
             </li>
           </ol>
