@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
-import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 

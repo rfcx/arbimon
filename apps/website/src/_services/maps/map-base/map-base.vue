@@ -62,7 +62,7 @@ import type GeoJSON from 'geojson'
 import { partition } from 'lodash-es'
 import type { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBoundsLike, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 import { LngLatBounds, NavigationControl, Popup } from 'mapbox-gl'
-import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue'
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { togglesKey } from '@/globals'
 import type { MapboxGroundStyle, MapboxStatisticsStyle } from '~/maps'
