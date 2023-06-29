@@ -8,7 +8,12 @@
       <div
         class="flex pb-3"
       >
-        <brand-logo />
+        <router-link
+          :to="{ name: ROUTE_NAMES.landingHome }"
+          class="flex items-center min-w-58"
+        >
+          <brand-logo />
+        </router-link>
       </div>
       <div class="pt-5 border-t border-gray-200 dark:border-gray-700">
         <version-control />
