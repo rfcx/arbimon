@@ -106,10 +106,10 @@
               <!-- Dropdown menu -->
               <div
                 id="dropdownResources"
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-moss dark:divide-moss border-0"
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-moss dark:divide-moss border-0"
               >
                 <ul
-                  class="py-2 text-sm text-gray-700 dark:text-insight"
+                  class="py-2 text-gray-700 dark:text-insight"
                   aria-labelledby="dropdownResourcesButton"
                 >
                   <li>
@@ -131,19 +131,19 @@
                 <div class="py-2">
                   <a
                     href="https://support.rfcx.org"
-                    class="block px-4 py-2 text-sm text-gray-700 dark:text-insight dark:hover:text-frequency"
+                    class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
                   >Help &amp; support <icon-custom-linkout class="inline ml-1" /></a>
                   <router-link
                     :to="{ name: ROUTE_NAMES.landingTeam }"
                     exact-active-class="!text-gray-900 !dark:text-insight"
-                    class="block px-4 py-2 text-sm text-gray-700 dark:text-insight dark:hover:text-frequency"
+                    class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
                   >
                     Meet the team
                   </router-link>
                   <router-link
                     :to="{ name: ROUTE_NAMES.landingContact }"
                     exact-active-class="!text-gray-900 !dark:text-insight"
-                    class="block px-4 py-2 text-sm text-gray-700 dark:text-insight dark:hover:text-frequency"
+                    class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
                   >
                     Contact us
                   </router-link>
