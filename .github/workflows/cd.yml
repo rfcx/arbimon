@@ -20,8 +20,8 @@ on:
       - staging
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  build-deploy:
-    runs-on: deployment-runner
+  build:
+    runs-on: ubuntu-20.04
     env:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
@@ -37,6 +37,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'eu-west-1'
 
+  deploy:
+    runs-on: deployment-runner
+    env:
+      ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
+    steps:
       - name: 'Setup: Git checkout'
         # v3 (3.0.0) @ 02 Mar 2022 https://github.com/actions/checkout/tags
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
