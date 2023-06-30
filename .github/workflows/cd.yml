@@ -39,7 +39,7 @@ jobs:
         with: 
           context: .
           tags: biodiversity-analytics:latest
-          outputs: type=docker,dest/tmp/biodiversity-analytics.tar
+          outputs: type=docker,dest=/tmp/biodiversity-analytics.tar
 
       - name: 'Upload artifact'
         # v3 (3.1.2) @ 30 Jun 2023 https://github.com/actions/upload-artifact/releases/tag/v3.1.2
