@@ -1,19 +1,40 @@
-import { dashboardGeneratedRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-generated'
-import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
+import { dashboardContentRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
+import { dashboardDataByHourRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-data-by-hour'
+import { dashboardDataBySiteRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-data-by-site'
+import { dashboardMetricsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
+import { dashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 
 import { type RouteRegistration, GET } from '../_services/api-helpers/types'
-import { dashboardGeneratedHandler } from './dashboard-generated-handler'
-import { dashboardProfileHandler } from './dashboard-profile-handler'
+import { dashboardContentHandler } from './dashboard-content-handler'
+import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
+import { dashboardDataBySiteHandler } from './dashboard-data-by-site-handler'
+import { dashboardMetricsHandler } from './dashboard-metrics-handler'
+import { dashboardSpeciesDataHandler } from './dashboard-species-data-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
     method: GET,
-    url: dashboardGeneratedRoute,
-    handler: dashboardGeneratedHandler
+    url: dashboardMetricsRoute,
+    handler: dashboardMetricsHandler
   },
   {
     method: GET,
-    url: dashboardProfileRoute,
-    handler: dashboardProfileHandler
+    url: dashboardDataByHourRoute,
+    handler: dashboardDataByHourHandler
+  },
+  {
+    method: GET,
+    url: dashboardContentRoute,
+    handler: dashboardContentHandler
+  },
+  {
+    method: GET,
+    url: dashboardDataBySiteRoute,
+    handler: dashboardDataBySiteHandler
+  },
+  {
+    method: GET,
+    url: dashboardSpeciesDataRoute,
+    handler: dashboardSpeciesDataHandler
   }
 ]

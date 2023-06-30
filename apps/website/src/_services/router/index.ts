@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: ROUTE_NAMES.home,
     component: PAGES.Home,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (_to, _from, next) => {
       const store = useStoreOutsideSetup()
       if (store.selectedProject) { next({ name: ROUTE_NAMES.dashboard, params: { projectSlug: store.selectedProject.slug } }); return }
       next()
@@ -99,7 +99,7 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior (to, _from, _savedPosition) {
     if (!to.hash) return { top: 0 }
     return {
       el: to.hash,

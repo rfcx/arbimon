@@ -34,23 +34,26 @@ export const useStore = defineStore('root', {
     },
     async updateProjects (projects: LocationProjectForUser[]) {
       this.projects = projects
-      await this.updateSelectedProject(projects?.[0])
+      this.updateSelectedProject(projects?.[0])
     },
-    async updateSelectedProject (project?: LocationProjectForUser) {
+    updateSelectedProject (project?: LocationProjectForUser) {
       if (this.selectedProject?.id === project?.id) return
 
       // Set project & clear old data immediately
       this.selectedProject = project
       this.projectFilters = undefined
+    },
+    async updateProjectFilters () {
+      if (this.selectedProject == null) {
+        this.projectFilters = undefined
+        return
+      }
 
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()
       const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
 
-      // Load new data asynchronously
-      this.projectFilters = project
-        ? await apiBioGetProjectFilters(apiClientBio, project.id)
-        : undefined
+      await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id)
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version

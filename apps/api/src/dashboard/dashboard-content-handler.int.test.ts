@@ -7,14 +7,13 @@ import { routesDashboard } from './index'
 
 const PROJECT_ID_BASIC = '40001001'
 
-const ROUTE = '/projects/:projectId/dashboard-profile'
-const url = `/projects/${PROJECT_ID_BASIC}/dashboard-profile`
+const ROUTE = '/projects/:projectId/dashboard-content'
+const url = `/projects/${PROJECT_ID_BASIC}/dashboard-content`
 
 const EXPECTED_PROPS = [
   'locationProjectId',
-  'summary',
   'readme',
-  'speciesHighlighted'
+  'summary'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
@@ -23,14 +22,14 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   await app.register(fastifyRoutes)
 
   routesDashboard
-    .map(({ preHandler, ...rest }) => ({ ...rest }))
+    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
     .forEach(route => app.route(route))
 
   return app
 }
 
-describe(`GET ${ROUTE} (dashboard profile)`, () => {
-  describe('simple test', () => {
+describe(`GET ${ROUTE} (dashboard content)`, () => {
+  describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
       const app = await getMockedApp()
