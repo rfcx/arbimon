@@ -96,6 +96,10 @@ jobs:
         id: login-ecr
         # v1 (1.3.3) @ 03 Nov 2021 https://github.com/aws-actions/amazon-ecr-login/tags
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'eu-west-1'
 
       - name: 'Build: Docker build API'
         # v2 (2.10.0) @ 15 Mar 2022 https://github.com/docker/build-push-action/tags
