@@ -21,7 +21,7 @@ on:
         required: true
 jobs:
   create-job:
-    runs-on: ubuntu-20.04
+    runs-on: deployment-runner
     env:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:

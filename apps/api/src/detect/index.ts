@@ -1,3 +1,4 @@
+import { detectCnnDetectionsRoute } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
 import { detectDetectionRoute } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { detectRecordingRoute } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { detectSummaryRoute } from '@rfcx-bio/common/api-bio/detect/detect-summary'
@@ -6,6 +7,7 @@ import { detectValidationStatusRoute } from '@rfcx-bio/common/api-bio/detect/det
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
 import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
+import { detectCnnDetectionsHandler } from './cnn/detect-cnn-detections-handler'
 import { detectRecordingHandler } from './jobs/detect-recording-handler'
 import { detectDetectionHandler } from './validations/detect-detection-handler'
 import { detectSummaryHandler } from './validations/detect-summary-handler'
@@ -38,5 +40,10 @@ export const routesDetect: RouteRegistration[] = [
     method: POST,
     url: detectValidationRoute,
     handler: detectValidationHandler
+  },
+  {
+    method: GET,
+    url: detectCnnDetectionsRoute,
+    handler: detectCnnDetectionsHandler
   }
 ]
