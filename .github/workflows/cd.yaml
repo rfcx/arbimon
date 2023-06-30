@@ -30,20 +30,19 @@ jobs:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 
   configure:
-    runs-on: ubuntu-20.04
-    env:
-      ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
+    name: 'Configure'
+    runs-on: ubuntu-latest
+    needs: [prepare]
     outputs:
-      namespace: ${{ steps.environment_variables.outputs.namespace }}
-      release-date: ${{ steps.environment_variables.outputs.release-date }}
-
+      namespace: ${{ steps.configuration.outputs.namespace }}
+      release-date: ${{ steps.configuration.outputs.release-date }}
     steps:
-      - name: 'Setup: environment variables'
-        id: environment_variables
+      - name: 'Conditional environment'
+        id: configuration
         run: |
-          if [[ "${{ env.BRANCH_NAME }}" == "master" ]]; then
+          if [[ "${{ needs.prepare.outputs.branch-name }}" == "master" ]]; then
             echo "namespace=production" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ env.BRANCH_NAME }}" == "staging" ]]; then
+          elif [[ "${{ needs.prepare.outputs.branch-name }}" == "staging" ]]; then
             echo "namespace=staging" >> "$GITHUB_OUTPUT"
           else
             echo "namespace=testing" >> "$GITHUB_OUTPUT"
@@ -69,6 +68,7 @@ jobs:
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy:
+    name: 'Deploy'
     runs-on: deployment-runner
     needs: ['build', 'configure']
     steps:

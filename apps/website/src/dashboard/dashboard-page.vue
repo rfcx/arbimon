@@ -7,45 +7,47 @@
     /> -->
     <div class="dashboard-wrapper">
       <div class="dashboard-metric">
-        <dashboard-metrics
-          :loading="generated === null"
-          :metrics="generated"
-        />
+        <Suspense>
+          <template #default>
+            <DashboardMetrics />
+          </template>
+          <template #fallback>
+            <div class="metric_wrapper">
+              <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24">
+                <p class="font-bold text-4xl <sm:text-2xl">
+                  &nbsp;
+                </p>
+                <p>&nbsp;</p>
+              </div>
+              <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24" />
+              <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24" />
+            </div>
+          </template>
+        </Suspense>
       </div>
-      <div class="dashboard-species">
-        <div class="dashboard-richness">
-          <dashboard-sidebar-title
-            title="Species highlights"
-          />
-          <horizontal-stacked-distribution
-            :dataset="richnessByTaxon"
-            :loading="generated === null"
-            :known-total-count="generated?.speciesCount ?? 0"
-            class="mt-4"
-          />
-          <dashboard-highlighted-species
-            :species="speciesHighlighted"
-            class="mt-5"
-          />
-        </div>
-        <div class="threatened-species">
-          <dashboard-sidebar-title
-            title="Threatened species"
-            :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug } }"
-            class="mt-5 sm:mt-0 lg:mt-5"
-          />
-          <horizontal-stacked-distribution
-            :dataset="richnessByRisk"
-            :loading="generated === null"
-            :known-total-count="generated?.speciesCount ?? 0"
-            class="mt-4"
-          />
-          <dashboard-threatened-species
-            :species="speciesThreatened"
-            class="mt-5"
-          />
-        </div>
-      </div>
+      <Suspense>
+        <template #default>
+          <DashboardSpecies />
+        </template>
+        <template #fallback>
+          <div class="dashboard-species">
+            <div class="dashboard-richness">
+              <dashboard-sidebar-title
+                title="Species highlights"
+              />
+              <div class="mt-2 h-20" />
+            </div>
+            <div class="threatened-species">
+              <dashboard-sidebar-title
+                title="Threatened species"
+                :route="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug } }"
+                class="mt-5 sm:mt-0 lg:mt-5"
+              />
+              <div class="mt-2 h-20" />
+            </div>
+          </div>
+        </template>
+      </Suspense>
       <div class="dashboard-graphic">
         <div class="graphic-tabs">
           <p
@@ -59,50 +61,65 @@
           </p>
         </div>
         <div class="dashboard-graphic-content inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
-          <map-base-component
-            :dataset="mapDataset"
-            data-key="refactorThis"
-            :loading="generated === null"
-            :get-popup-html="getPopupHtml"
-            map-export-name="dashboard-map"
-            :map-id="`dashboard-by-site`"
-            :map-initial-bounds="mapInitialBounds"
-            :map-base-formatter="circleFormatter"
-            :map-height="tabHeight"
-            :style-non-zero="circleStyle"
-            class="map-bubble w-full"
-          />
-          <div class="line-chart relative">
-            <line-chart-component
-              dom-id="dashboard-line-chart"
-              :config="lineChartConfig"
-              :datasets="lineChartSeries"
-              :loading="generated === null"
-            />
-            <export-button
-              v-if="hasLineChartData"
-              class="absolute top-2 right-2"
-              @click="downloadLineChart"
-            />
-          </div>
+          <Suspense>
+            <template #default>
+              <DashboardMap :selected-tab="selectedTab" />
+            </template>
+            <template #fallback>
+              <div
+                class="loading-shimmer"
+                :style="{ height: '360px' }"
+              />
+            </template>
+          </Suspense>
+          <Suspense>
+            <template #default>
+              <DashboardLineChart :selected-tab="selectedTab" />
+            </template>
+            <template #fallback>
+              <div class="loading-shimmer h-full min-h-32" />
+            </template>
+          </Suspense>
         </div>
       </div>
       <div class="dashboard-content">
-        <page-title
-          class="dashboard-title mt-5"
-          :page-title="store.selectedProject.name"
-          :page-subtitle="profile?.summary"
-        />
-        <dashboard-project-profile
-          :information="profile?.readme"
-          :loading="profile === null"
-          class="mt-5"
-        />
+        <Suspense>
+          <template #default>
+            <DashboardContent />
+          </template>
+          <template #fallback>
+            <div>
+              <page-title
+                :page-title="store?.selectedProject?.name ?? ''"
+              />
+              <span class="inline-block min-h-[1em] w-5/12 loading-shimmer" />
+              <span class="inline-block min-h-[1em] w-9/12 loading-shimmer" />
+              <span class="inline-block min-h-[1em] w-4/12 loading-shimmer" />
+            </div>
+          </template>
+        </Suspense>
       </div>
     </div>
   </div>
 </template>
-<script src="./dashboard-page" lang="ts">
+<script setup lang="ts">
+import { inject, ref } from 'vue'
+
+import PageTitle from '@/_components/page-title.vue'
+import { routeNamesKey, storeKey } from '@/globals'
+import type { RouteNames } from '~/router'
+import type { BiodiversityStore } from '~/store'
+import DashboardContent from './components/dashboard-content/dashboard-content.vue'
+import DashboardLineChart from './components/dashboard-line-chart/dashboard-line-chart.vue'
+import DashboardMap from './components/dashboard-map/dashboard-map.vue'
+import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
+import dashboardSidebarTitle from './components/dashboard-sidebar-title/dashboard-sidebar-title.vue'
+import DashboardSpecies from './components/dashboard-species/dashboard-species.vue'
+import { tabs } from './types/tabs'
+
+const store = inject(storeKey) as BiodiversityStore
+const selectedTab = ref(tabs[0].value)
+const ROUTE_NAMES = inject(routeNamesKey) as RouteNames
 </script>
 <style lang="scss">
 @import './dashboard-page.scss';

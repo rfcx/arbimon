@@ -25,6 +25,9 @@ async function init (): Promise<void> {
 
   // Save to store
   const store = useStoreOutsideSetup()
+
+  // Updates user and selected project to the first project in the array (if there is some).
+  // This will not update the project's filters. That will be updated upon route enter.
   await store.updateUser(user)
 
   // Setup API token
