@@ -53,7 +53,7 @@ jobs:
     uses: rfcx/cicd/.github/workflows/ecr-build-push.yaml@master
     with:
       dockerfile: tools/deployment/Dockerfile
-      targets: "[\"api\",\"cli\",\"website\"]"
+      targets: "[\"biodiversity-api\",\"biodiversity-cli\",\"biodiversity-website\"]"
       tag-environment: ${{ needs.configure.outputs.namespace }}
       tag-latest: ${{ needs.configure.outputs.namespace == 'production' }}
     secrets:
