@@ -7,6 +7,7 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
+import { useCnnResultFilterStore } from './use-cnn-result-filter-store'
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -63,3 +64,7 @@ export const useStore = defineStore('root', {
 export type BiodiversityStore = ReturnType<typeof useStore>
 export const pinia = createPinia()
 export const useStoreOutsideSetup = (): BiodiversityStore => useStore(pinia)
+
+export {
+  useCnnResultFilterStore
+}

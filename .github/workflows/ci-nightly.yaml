@@ -12,13 +12,13 @@ jobs:
     uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
     with:
       repo: biodiversity-analytics
-      workflow-id: ci-nightly.yml
+      workflow-id: ci-nightly.yaml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     name: 'Build'
-    uses: ./.github/workflows/reusable-build.yml
+    uses: ./.github/workflows/reusable-build.yaml
     with:
       runs-on: ubuntu-20.04
       lint: false
@@ -27,7 +27,7 @@ jobs:
   test:
     name: 'Test'
     needs: [prepare, build]
-    uses: ./.github/workflows/reusable-int-test.yml
+    uses: ./.github/workflows/reusable-int-test.yaml
     with:
       runs-on: ubuntu-20.04
 
@@ -39,7 +39,7 @@ jobs:
     with:
       repo: biodiversity-analytics
       branch-name: ${{ needs.prepare.outputs.branch-name }}
-      workflow-id: ci-nightly.yml
+      workflow-id: ci-nightly.yaml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.build.result == 'success' && needs.test.result == 'success' && 'success' || 'failure' }}
       notification-title: 'CI: Bio Integration Test'
