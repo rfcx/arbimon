@@ -46,7 +46,7 @@ RUN pnpm --filter=api use-packed
 ENV NODE_ENV=production
 
 # API
-FROM build as api
+FROM build as biodiversity-api
 WORKDIR /app/apps/api
 ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
@@ -54,10 +54,10 @@ EXPOSE 8080
 CMD ["node", "--experimental-specifier-resolution=node", "lib/index.js"]
 
 # CLI
-FROM build as cli
+FROM build as biodiversity-cli
 
 # Website
-FROM nginx:1.21-alpine as website
+FROM nginx:1.21-alpine as biodiversity-website
 COPY --from=build /app/apps/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY tools/deployment/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
