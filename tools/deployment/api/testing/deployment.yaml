@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: biodiversity-api
-          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-api/testing:latest
+          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

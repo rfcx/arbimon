@@ -30,18 +30,18 @@ jobs:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 
   configure:
-    runs-on: ubuntu-20.04
-    env:
-      ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
+    name: 'Configure'
+    runs-on: ubuntu-latest
+    needs: [prepare]
     outputs:
-      namespace: ${{ steps.environment_variables.outputs.namespace }}
+      namespace: ${{ steps.configuration.outputs.namespace }}
     steps:
-      - name: 'Setup: environment variables'
-        id: environment_variables
+      - name: 'Conditional environment'
+        id: configuration
         run: |
-          if [[ "${{ env.BRANCH_NAME }}" == "master" ]]; then
+          if [[ "${{ needs.prepare.outputs.branch-name }}" == "master" ]]; then
             echo "namespace=production" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ env.BRANCH_NAME }}" == "staging" ]]; then
+          elif [[ "${{ needs.prepare.outputs.branch-name }}" == "staging" ]]; then
             echo "namespace=staging" >> "$GITHUB_OUTPUT"
           else
             echo "namespace=testing" >> "$GITHUB_OUTPUT"
