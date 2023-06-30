@@ -25,15 +25,51 @@ jobs:
     env:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
-      - name: 'Setup: Docker Buildx'
-        # v1 (1.6.0) @ 12 Nov 2021 https://github.com/docker/setup-buildx-action/tags
-        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
+      - name: 'Setup: Git checkout'
+        # v3 (3.0.0) @ 02 Mar 2022 https://github.com/actions/checkout/tags
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
+
+      - name: 'Setup: Docker buildx'
+        # v2 (2.8.0) @ 30 Jun 2023 https://github.com/docker/setup-buildx-action/releases/tag/v2.8.0
+        uses: docker/setup-buildx-action@16c0bc4a6e6ada2cfd8afd41d22d95379cf7c32a
+
+      - name: 'Setup: Build and export'
+        # v4 (4.1.1) @ 30 Jun 2023 https://github.com/docker/build-push-action/releases/tag/v4.1.1
+        uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825
+        with: 
+          context: .
+          tags: biodiversity-analytics:latest
+          outputs: type=docker,dest/tmp/biodiversity-analytics.tar
+
+      - name: 'Upload artifact'
+        # v3 (3.1.2) @ 30 Jun 2023 https://github.com/actions/upload-artifact/releases/tag/v3.1.2
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+        with:
+          name: biodiversity-analytics
+          path: /tmp/biodiversity-analytics.tar
 
   deploy:
     runs-on: deployment-runner
+    needs: 'build'
     env:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
+      - name: 'Setup: docker buildx'
+        # v1 (1.6.0) @ 12 Nov 2021 https://github.com/docker/setup-buildx-action/tags
+        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25
+
+      - name: 'Setup: Download artifact'
+        # v3 (3.0.2) @ 30 Jun 2023 https://github.com/actions/download-artifact/releases/tag/v3.0.2
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
+        with:
+          name: 'biodiversity-analytics'
+          path: '/tmp'
+
+      - name: 'Setup: Load image'
+        run: |
+          docker load --input /tmp/biodiversity-analytics.tar
+          docker image ls -a
+
       - name: 'Setup: Configure AWS credentials'
         # v1 (1.6.1) @ 19 Jan 2022 https://github.com/aws-actions/configure-aws-credentials/tags
         uses: aws-actions/configure-aws-credentials@05b148adc31e091bafbaf404f745055d4d3bc9d2
