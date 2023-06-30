@@ -61,6 +61,7 @@ jobs:
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy:
+    name: 'Deploy'
     runs-on: deployment-runner
     needs: ['build', 'configure']
     steps:
