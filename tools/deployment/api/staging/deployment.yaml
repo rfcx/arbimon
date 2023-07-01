@@ -23,8 +23,8 @@ spec:
               memory: '200Mi'
               cpu: '200m'
             limits:
-              memory: '400Mi'
-              cpu: '400m'
+              memory: '1000Mi'
+              cpu: '1000m'
           envFrom:
             - secretRef:
                 name: biodiversity-api-secrets
