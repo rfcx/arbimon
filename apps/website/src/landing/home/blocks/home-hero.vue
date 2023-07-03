@@ -24,16 +24,20 @@
           Learn more about our work
         </router-link>
       </div>
-      <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+      <div class="relative hidden lg:mt-0 lg:col-span-5 lg:flex">
         <img
           class="object-center object-cover w-full h-full"
           src="@/_assets/landing/species-image.png"
           alt="Sound of the Fire-tufted Barbet (Psilopogon pyrolophus)"
         >
+        <media-player
+          class="absolute bottom-4 w-100 h-48"
+        />
       </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
 import { ROUTE_NAMES } from '~/router'
+import MediaPlayer from './home-media-player.vue'
 </script>
