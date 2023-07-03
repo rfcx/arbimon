@@ -54,6 +54,7 @@
             data-key="refactorThis"
             :loading="false"
             :get-popup-html="getPopupHtml"
+            map-export-name="dashboard-sites"
             :map-id="`dashboard-sites`"
             :map-initial-bounds="mapInitialBounds()"
             :map-base-formatter="circleFormatter()"
@@ -69,7 +70,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { type LngLatBoundsLike } from 'mapbox-gl'
-import { inject, onMounted, watch } from 'vue'
+import { computed, inject, onMounted, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -110,21 +111,21 @@ const { isLoading: isLoadingAedCount, data: aedCount } = useAedCount(apiClientAr
 const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, { slug: selectedProject?.slug })
 const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbimon, { slug: selectedProject?.slug })
 
-const stats = [
-  { value: 'site', title: 'Sites created', count: siteCount, isLoading: isLoadingSiteCount, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings uploaded', count: recordingCount, isLoading: isLoadingRecCount, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/recordings` },
-  { value: 'species', title: 'Species added to library', count: speciesCount, isLoading: isLoadingSpeciesCount, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/species` },
-  { value: 'playlist', title: 'Playlists created', count: playlistCount, isLoading: isLoadingPlaylistCount, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/playlists` }
-]
+const stats = computed(() => [
+  { value: 'site', title: 'Sites created', count: siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/sites` },
+  { value: 'recording', title: 'Recordings uploaded', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/recordings` },
+  { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/species` },
+  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/playlists` }
+])
 
-const analyses = [
-  { value: 'pm', title: 'Pattern Matching', count: rfmCount, isLoading: isLoadingRFMCount, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/patternmatching` },
-  { value: 'rfm', title: 'Random Forest Models', count: aedCount, isLoading: isLoadingAedCount, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/random-forest-models/models` },
-  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount, isLoadimg: isLoadingSoundscapeCount, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'soundscapes', title: 'Soundscapes', count: pmCount, isLoading: isLoadingPmtCount, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/soundscapes` }
-]
+const analyses = computed(() => [
+  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/patternmatching` },
+  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/random-forest-models/models` },
+  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/soundscapes` }
+])
 
-const getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean => data.values[dataKey]
+const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
 
 onMounted(() => {
   selectedProject = store.selectedProject
