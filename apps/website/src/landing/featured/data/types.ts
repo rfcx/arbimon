@@ -1,3 +1,5 @@
+import { type ValueOf } from '@rfcx-bio/utils/utility-types'
+
 export interface ProjectCategory {
   id: string
   name: string
@@ -26,7 +28,7 @@ export interface ProjectHeader {
   scope: string
   partners: string[]
   services: string[]
-  sdgs: string[] // sustainable development goals
+  sdgs: SDGId[] // sustainable development goals
 }
 
 export interface ProjectOverviewContent {
@@ -46,3 +48,11 @@ export interface ProjectFeedback {
 export interface ProjectImpactContent {
   text: string
 }
+
+export const masterSDGs = {
+  // TODO: fill in the rest of the SDGs
+  G13: { id: '13', name: 'Climate action', image: '/src/_assets/landing/featured/sdgs/13.png' },
+  G15: { id: '15', name: 'Life on land', image: '/src/_assets/landing/featured/sdgs/15.png' }
+} as const
+
+export type SDGId = ValueOf<typeof masterSDGs>['id']

@@ -90,12 +90,15 @@
               v-if="props.info?.sdgs && props.info?.sdgs.length > 0"
               title="sustainable development goals"
             >
-              <span
-                v-for="(goal, index) in props.info?.sdgs"
-                :key="index"
-              >
-                {{ goal }}
-              </span>
+              <div class="grid grid-cols-5 gap-2 xl:grid-cols-3">
+                <img
+                  v-for="(goal, index) in props.info?.sdgs"
+                  :key="index"
+                  :src="masterSDGs[`G${goal}`].image"
+                  class=""
+                  :alt="'Goal ' + masterSDGs[`G${goal}`].id + ': ' + masterSDGs[`G${goal}`].name"
+                >
+              </div>
             </featured-stat>
           </div>
         </div>
@@ -113,7 +116,7 @@
 
 <script setup lang="ts">
 
-import { type ProjectHeader } from '../../featured/data/types'
+import { type ProjectHeader, masterSDGs } from '../../featured/data/types'
 import FeaturedStat from '../components/featured-stat.vue'
 
 const props = defineProps<{
