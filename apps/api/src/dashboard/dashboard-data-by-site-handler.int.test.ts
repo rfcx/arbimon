@@ -10,23 +10,12 @@ import { routesDashboard } from './index'
 
 const PROJECT_ID_BASIC = '40001001'
 
-const ROUTE = '/projects/:projectId/dashboard-generated'
-const url = `/projects/${PROJECT_ID_BASIC}/dashboard-generated`
+const ROUTE = '/projects/:projectId/dashboard-data-by-site'
+const url = `/projects/${PROJECT_ID_BASIC}/dashboard-data-by-site`
 
 const EXPECTED_PROPS = [
-  'detectionMinutesCount',
-  'siteCount',
-  'speciesCount',
-  'speciesThreatenedCount',
-  'maxDate',
-  'minDate',
-  'speciesThreatened',
-  'richnessByTaxon',
-  'richnessByRisk',
   'richnessBySite',
-  'detectionBySite',
-  'richnessByHour',
-  'detectionByHour'
+  'detectionBySite'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
@@ -41,52 +30,50 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   return app
 }
 
-describe(`GET ${ROUTE}  (dashboard generated)`, () => {
-  describe('simple tests', () => {
-    test('exists', async () => {
-      // Arrange
-      const app = await getMockedApp()
+describe('simple tests', () => {
+  test('exists', async () => {
+    // Arrange
+    const app = await getMockedApp()
 
-      // Act
-      const routes = [...app.routes.keys()]
+    // Act
+    const routes = [...app.routes.keys()]
 
-      // Assert
-      expect(routes).toContain(ROUTE)
+    // Assert
+    expect(routes).toContain(ROUTE)
+  })
+
+  test('returns successfully', async () => {
+    // Arrange
+    const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url
     })
 
-    test('returns successfully', async () => {
-      // Arrange
-      const app = await getMockedApp()
+    // Assert
+    expect(response.statusCode).toBe(200)
 
-      // Act
-      const response = await app.inject({
-        method: GET,
-        url
-      })
+    const result = JSON.parse(response.body)
+    expect(result).toBeDefined()
+    expect(result).toBeTypeOf('object')
+  })
 
-      // Assert
-      expect(response.statusCode).toBe(200)
+  test('contains all expected props & no more', async () => {
+    // Arrange
+    const app = await getMockedApp()
 
-      const result = JSON.parse(response.body)
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url
     })
 
-    test('contains all expected props & no more', async () => {
-      // Arrange
-      const app = await getMockedApp()
-
-      // Act
-      const response = await app.inject({
-        method: GET,
-        url
-      })
-
-      // Assert
-      const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
-      expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
-    })
+    // Assert
+    const result = JSON.parse(response.body)
+    EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
+    expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
   })
 
   describe('known data tests', async () => {

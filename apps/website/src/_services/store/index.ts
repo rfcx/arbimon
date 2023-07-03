@@ -7,6 +7,8 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
+import { useCnnResultFilterStore } from './use-cnn-result-filter-store'
+import { useDashboardStore } from './use-dashboard-store'
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -31,21 +33,24 @@ export const useStore = defineStore('root', {
       const apiClient = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
       this.projects = await apiBioGetProjects(apiClient) ?? []
     },
-    async updateSelectedProject (project?: LocationProjectForUser) {
+    updateSelectedProject (project?: LocationProjectForUser) {
       if (this.selectedProject?.id === project?.id) return
 
       // Set project & clear old data immediately
       this.selectedProject = project
       this.projectFilters = undefined
+    },
+    async updateProjectFilters () {
+      if (this.selectedProject == null) {
+        this.projectFilters = undefined
+        return
+      }
 
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()
       const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
 
-      // Load new data asynchronously
-      this.projectFilters = project
-        ? await apiBioGetProjectFilters(apiClientBio, project.id)
-        : undefined
+      this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id)
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version
@@ -56,3 +61,8 @@ export const useStore = defineStore('root', {
 export type BiodiversityStore = ReturnType<typeof useStore>
 export const pinia = createPinia()
 export const useStoreOutsideSetup = (): BiodiversityStore => useStore(pinia)
+
+export {
+  useCnnResultFilterStore,
+  useDashboardStore
+}

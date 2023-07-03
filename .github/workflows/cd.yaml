@@ -1,0 +1,137 @@
+name: 'CD'
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_cli:
+        description: Deploy CLI
+        type: boolean
+        default: true
+      deploy_api:
+        description: Deploy API
+        type: boolean
+        default: true
+      deploy_web:
+        description: Deploy Website
+        type: boolean
+        default: true
+  push:
+    branches:
+      - master
+      - staging
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:  
+  prepare:
+    name: 'Prepare'
+    uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
+    with:
+      repo: biodiversity-analytics 
+      workflow-id: cd.yaml
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  configure:
+    name: 'Configure'
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    outputs:
+      namespace: ${{ steps.configuration.outputs.namespace }}
+      release-date: ${{ steps.configuration.outputs.release-date }}
+    steps:
+      - name: 'Conditional environment'
+        id: configuration
+        run: |
+          if [[ "${{ needs.prepare.outputs.branch-name }}" == "master" ]]; then
+            echo "namespace=production" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ needs.prepare.outputs.branch-name }}" == "staging" ]]; then
+            echo "namespace=staging" >> "$GITHUB_OUTPUT"
+          else
+            echo "namespace=testing" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "release-date=$( date +"%s" ) >> $GITHUB_OUTPUT"
+
+  build:
+    name: 'Build'
+    needs: [prepare, configure]
+    uses: rfcx/cicd/.github/workflows/ecr-build-push.yaml@master
+    with:
+      dockerfile: tools/deployment/Dockerfile
+      targets: "[\"biodiversity-api\",\"biodiversity-cli\",\"biodiversity-website\"]"
+      tag-environment: ${{ needs.configure.outputs.namespace }}
+      tag-latest: ${{ needs.configure.outputs.namespace == 'production' }}
+      build-args: |            
+        mode=${{ needs.configure.outputs.namespace }}
+        release_commit=${{ needs.configure.outputs.short-sha }}
+        release_date=${{ needs.configure.outputs.release-date }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy:
+    name: 'Deploy'
+    runs-on: deployment-runner
+    needs: ['build', 'configure']
+    steps:
+      - name: 'Deploy: Setup Git checkout'
+        # v3 (3.0.0) @ 02 Mar 2022 https://github.com/actions/checkout/tags
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
+
+      - name: 'Deploy: Set image version'
+        run: |
+          find tools/deployment -name "*.yaml" -exec sed -i s/:latest/:${{ needs.build.outputs.unique-tag }}/g {} +
+          find tools/deployment -name "*.yaml" -exec sed -i s/JOB_NUMBER/${{ github.run_number }}/g {} +
+
+      - name: 'Deploy: Kubernetes apply CLI (starts migrate)'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f ./tools/deployment/cli/${{ needs.configure.outputs.namespace }}
+
+      - name: 'Deploy: Wait for migrate to complete successfully'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: wait --for=condition=complete --timeout=500s -n ${{ needs.configure.outputs.namespace }} job/biodiversity-cli-migrate-${{ github.run_number }}
+
+      - name: 'Deploy: Kubernetes apply API'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_api }}
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f ./tools/deployment/api/${{ needs.configure.outputs.namespace }}
+
+      - name: 'Deploy: Kubernetes apply WEB'
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_web }}
+        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
+        with:
+          args: apply -f ./tools/deployment/website/${{ needs.configure.outputs.namespace }}
+
+  notify:
+    name: 'Notify'
+    if: ${{ always() }}
+    needs: [prepare, build, deploy]
+    uses: rfcx/cicd/.github/workflows/notify-send.yaml@master
+    with:
+      repo: biodiversity-analytics 
+      branch-name: ${{ needs.prepare.outputs.branch-name }}
+      workflow-id: cd.yaml
+      previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
+      status: ${{ needs.deploy.result }}
+      always: true
+      notification-title: 'CD: APIs'
+      notification-footer: "Build: ${{ needs.build.result || 'n/a' }} | Deploy: ${{ needs.deploy.result || 'n/a' }}"
+      notification-success-statement: '{0} deployed the build!'
+    secrets:
+      slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}

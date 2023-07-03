@@ -3,8 +3,8 @@ import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 import { type RiskRatingIucn } from '@/dao/types'
 
 export const masterRiskRatings = {
-  NE: { id: -1, code: 'NE', isThreatened: false, isProtected: false },
-  NA: { id: 0, code: 'NA', isThreatened: false, isProtected: false },
+  NL: { id: -1, code: 'NL', isThreatened: false, isProtected: false },
+  NE: { id: 0, code: 'NE', isThreatened: false, isProtected: false },
   DD: { id: 100, code: 'DD', isThreatened: false, isProtected: false },
   LC: { id: 200, code: 'LC', isThreatened: false, isProtected: false },
   NT: { id: 300, code: 'NT', isThreatened: true, isProtected: false },

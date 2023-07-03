@@ -9,8 +9,8 @@ export interface RiskRatingUi {
  */
 export const DEFAULT_RISK_RATING_ID = -1
 export const RISKS_BY_ID: Record<number, RiskRatingUi> = {
-  [DEFAULT_RISK_RATING_ID]: { code: 'NE', label: 'Not Evaluated', color: '#AAAAAA' },
-  0: { code: 'NA', label: 'Not Applicable', color: '#888888' },
+  [DEFAULT_RISK_RATING_ID]: { code: 'NL', label: 'Not Listed', color: '#AAAAAA' },
+  0: { code: 'NE', label: 'Not Evaluated', color: '#888888' },
   100: { code: 'DD', label: 'Data Deficient', color: '#755F85' },
   200: { code: 'LC', label: 'Least Concern', color: '#2F6E61' },
   300: { code: 'NT', label: 'Near Threatened', color: '#5F9E61' },

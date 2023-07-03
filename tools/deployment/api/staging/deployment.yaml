@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: biodiversity-api
-          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-api/staging:latest
+          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -23,8 +23,8 @@ spec:
               memory: '200Mi'
               cpu: '200m'
             limits:
-              memory: '400Mi'
-              cpu: '400m'
+              memory: '1000Mi'
+              cpu: '1000m'
           envFrom:
             - secretRef:
                 name: biodiversity-api-secrets

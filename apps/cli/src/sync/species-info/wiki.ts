@@ -13,7 +13,7 @@ export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Prom
     SELECT DISTINCT ts.id, ts.scientific_name
     FROM taxon_species ts
     LEFT JOIN taxon_species_wiki tsw ON ts.id = tsw.taxon_species_id
-    WHERE tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, ts.updated_at)) >= 1 
+    WHERE tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsw.updated_at)) >= 1 
     ORDER BY ts.id
   `
   // Lookups
