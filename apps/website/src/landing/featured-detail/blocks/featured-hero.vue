@@ -107,7 +107,6 @@
         <img
           class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"
-          :alt="image"
         >
       </div>
     </div>
