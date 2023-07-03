@@ -40,11 +40,10 @@ import { useRoute } from 'vue-router'
 
 import { apiBioGetDashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 
-import { apiClientBioKey, routeNamesKey, storeKey } from '@/globals'
+import { apiClientBioKey, routeNamesKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import type { RouteNames } from '~/router'
-import { type BiodiversityStore } from '~/store'
-import { useDashboardStore } from '~/store/use-dashboard-store'
+import { useDashboardStore, useStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import type { HighlightedSpeciesRow } from '../dashboard-highlighted-species/dashboard-highlighted-species'
 import DashboardHighlightedSpecies from '../dashboard-highlighted-species/dashboard-highlighted-species.vue'
@@ -55,7 +54,7 @@ import StackDistribution from './stack-distribution.vue'
 import type { HorizontalStack } from './types'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const store = inject(storeKey) as BiodiversityStore
+const store = useStore()
 const dashboardStore = useDashboardStore()
 const ROUTE_NAMES = inject(routeNamesKey) as RouteNames
 const route = useRoute()
