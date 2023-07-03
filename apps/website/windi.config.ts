@@ -116,6 +116,9 @@ export default defineConfig({
         'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.png')",
         'hero-contact': "url('@/_assets/landing/contact/fauna.png')"
       }
+    },
+    animation: {
+      wave: 'wave 1.5s ease-in-out infinite'
     }
   },
   safelist: [
