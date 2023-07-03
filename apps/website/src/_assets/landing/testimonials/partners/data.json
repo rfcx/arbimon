@@ -85,8 +85,8 @@
     "linkUrl": "#"
   },
   {
-    "name": "Google",
-    "imageUrl": "src/_assets/landing/testimonials/partners/Google.png",
+    "name": "Google.org",
+    "imageUrl": "src/_assets/landing/testimonials/partners/Google.org.png",
     "linkUrl": "#"
   },
   {
@@ -110,8 +110,8 @@
     "linkUrl": "#"
   },
   {
-    "name": "Instituto de Pesquisas Ecológicas",
-    "imageUrl": "src/_assets/landing/testimonials/partners/Instituto de Pesquisas Ecológicas.png",
+    "name": "Instituto de Pesquisas Ecológicas",
+    "imageUrl": "src/_assets/landing/testimonials/partners/Instituto de Pesquisas Ecológicas.png",
     "linkUrl": "#"
   },
   {
@@ -200,8 +200,18 @@
     "linkUrl": "#"
   },
   {
-    "name": "U.S",
-    "imageUrl": "src/_assets/landing/testimonials/partners/U.S.png",
+    "name": "Third Millenium Alliance",
+    "imageUrl": "src/_assets/landing/testimonials/partners/Third Millenium Alliance.png",
+    "linkUrl": "#"
+  },
+  {
+    "name": "Trees for the Future",
+    "imageUrl": "src/_assets/landing/testimonials/partners/Trees for the Future.png",
+    "linkUrl": "#"
+  },
+  {
+    "name": "U.S. Fish and Wildlife Service",
+    "imageUrl": "src/_assets/landing/testimonials/partners/U.S. Fish and Wildlife Service.png",
     "linkUrl": "#"
   },
   {
