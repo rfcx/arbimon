@@ -2,6 +2,7 @@ import { type QueryInterface, Op } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
 import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
+import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 
 import { syncIucnSpeciesInfo } from '@/sync/species-info/iucn'
@@ -22,6 +23,10 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const iucnCodeToId: Record<string, number> = await RiskRatingIucnModel(sequelize).findAll()
     .then(allRatings => Object.fromEntries(allRatings.map(r => [r.code, r.id])))
 
+  const taxonSpeciesIucn: Record<number, number> = await TaxonSpeciesIucnModel(sequelize)
+    .findAll({ attributes: ['taxonSpeciesId', 'riskRatingIucnId'], where: { taxonSpeciesId: { [Op.in]: Object.values(iucnNameToSpeciesId) } } })
+    .then(taxons => Object.fromEntries(taxons.map(t => [t.taxonSpeciesId, t.riskRatingIucnId])))
+
   // Explain update plan
   console.info('Plan:')
   for (const name in mismatchedNames) {
@@ -33,6 +38,17 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     }
   }
 
+  let iucnNameToSpeciesIdWithRiskId: Record<string, { id: number, riskRatingIucnId: number }> = {}
+  for (const species in iucnNameToSpeciesId) {
+    const temp = {
+      [iucnNameToSpeciesId[species]]: {
+        id: Number(species),
+        riskRatingIucnId: taxonSpeciesIucn[Number(species)]
+      }
+    }
+    iucnNameToSpeciesIdWithRiskId = Object.assign(temp)
+  }
+
   // Get IUCN data and insert
-  await syncIucnSpeciesInfo(sequelize, iucnNameToSpeciesId, iucnCodeToId).catch(err => { console.error(err.message) })
+  await syncIucnSpeciesInfo(sequelize, iucnNameToSpeciesIdWithRiskId, iucnCodeToId).catch(err => { console.error(err.message) })
 }

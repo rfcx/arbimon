@@ -28,7 +28,7 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await biodiversitySequelize.query('DELETE FROM taxon_species_iucn')
+  await biodiversitySequelize.query(`DELETE FROM taxon_species_iucn WHERE taxon_species_id in (${taxonSpecies1.id}, ${taxonSpecies2.id})`)
   await biodiversitySequelize.query(`DELETE FROM taxon_species WHERE id in (${taxonSpecies1.id}, ${taxonSpecies2.id})`)
 })
 
@@ -57,7 +57,7 @@ test('can insert and update (including updatedAt)', async () => {
   ])
 
   // Assert
-  const taxonSpeciesIucns = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesIucn.findAll()
+  const taxonSpeciesIucns = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpeciesIucn.findAll({ where: { taxonSpeciesId: [taxonSpecies1.id, taxonSpecies2.id] } })
   expect(taxonSpeciesIucns).toHaveLength(2)
   expect(taxonSpeciesIucns[0].riskRatingIucnId).toBe(500)
   expect(taxonSpeciesIucns[1].riskRatingIucnId).toBe(200)

@@ -8,6 +8,7 @@ import { type BiodiversityStore } from '~/store'
 import { type ColoredFilter, type ComparisonFilter } from '..'
 import { FilterImpl } from '../classes'
 import ComparisonFilterModalComponent from '../comparison-filter-modal/comparison-filter-modal.vue'
+import { fromQuery, toQuery } from './query-string'
 
 const DEFAULT_START = dayjs.utc('1990-01-01T00:00:00.000Z').startOf('day')
 const DEFAULT_END = dayjs().utc().startOf('day')
@@ -46,14 +47,17 @@ export default class ComparisonListComponent extends Vue {
     return this.filters.length < 5
   }
 
-  // Trigger when project change
+  // Trigger on first load and when project change
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
-    this.filters = [new FilterImpl(
-      this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
-      this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END
-    )]
     if (this.store.projectFilters === undefined) return
+    let filters = fromQuery(this.$route.query, this.store.projectFilters)
+    if (filters.length === 0) {
+      filters = [new FilterImpl(
+        this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
+        this.store.projectFilters?.dateEndInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateEndInclusiveUtc).startOf('day') : DEFAULT_END)]
+    }
+    this.filters = filters
     this.emitSelect()
   }
 
@@ -67,7 +71,6 @@ export default class ComparisonListComponent extends Vue {
       previousFilter.otherFilters.map(f => ({ ...f })),
       previousFilter.color
     )
-
     // Open modal
     this.isAddSelected = true
     this.isFilterOpen = true
@@ -108,6 +111,7 @@ export default class ComparisonListComponent extends Vue {
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
     }
+    void this.$router.replace({ query: toQuery(this.filters) })
     this.emitSelect()
   }
 
@@ -120,6 +124,7 @@ export default class ComparisonListComponent extends Vue {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
       this.selectedFilterId = -1
     }
+    void this.$router.replace({ query: toQuery(this.filters) })
     this.emitSelect()
   }
 }

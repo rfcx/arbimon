@@ -8,6 +8,7 @@ on:
         options:
         - 'sync-daily'
         - 'sync-incremental'
+        - 'export-csv'
         required: true
       environment:
         description: Environment (namespace)
@@ -20,7 +21,7 @@ on:
         required: true
 jobs:
   create-job:
-    runs-on: ubuntu-20.04
+    runs-on: deployment-runner
     env:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
@@ -49,12 +50,16 @@ jobs:
           map: |
             {
               "sync-daily": {
-                "JOB_NAME": "biodiversity-cli-sync-db-daily-user",
+                "JOB_NAME": "biodiversity-cli-sync-daily-user",
                 "NODE_COMMAND": "apps/cli/lib/sync/daily.js"
               },
               "sync-incremental": {
-                "JOB_NAME": "biodiversity-cli-sync-db-incremental-user",
+                "JOB_NAME": "biodiversity-cli-sync-incremental-user",
                 "NODE_COMMAND": "apps/cli/lib/ingest/sync/incremental.js"
+              },
+              "export-csv": {
+                "JOB_NAME": "biodiversity-cli-export-csv",
+                "NODE_COMMAND": "apps/cli/lib/export/export-csv.js"
               }
             }
 
@@ -76,7 +81,7 @@ jobs:
                 - name: ${{ env.JOB_NAME }}
                   command: ["node", "--experimental-specifier-resolution=node", "${{ env.NODE_COMMAND }}"]
                   image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
-                  imagePullPolicy: IfNotPresent
+                  imagePullPolicy: Always
                   envFrom:
                     - secretRef:
                         name: biodiversity-cli-secrets

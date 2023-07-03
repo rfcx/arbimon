@@ -55,6 +55,8 @@ export const envGetters = {
   AWS_S3_BUCKET_SECRET_ACCESS_KEY: stringGetter,
   AWS_S3_BUCKET_NAME: stringGetter,
 
+  SLACK_TOKEN: stringGetter,
+
   CORE_API_BASE_URL: stringGetter,
   ARBIMON_BASE_URL: stringGetter,
   MEDIA_API_BASE_URL: stringGetter,

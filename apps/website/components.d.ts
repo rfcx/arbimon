@@ -17,9 +17,6 @@ declare module '@vue/runtime-core' {
     ElCarouselItem: typeof import('element-plus/lib')['ElCarouselItem']
     ElCheckbox: typeof import('element-plus/lib')['ElCheckbox']
     ElDatePicker: typeof import('element-plus/lib')['ElDatePicker']
-    ElDropdown: typeof import('element-plus/lib')['ElDropdown']
-    ElDropdownItem: typeof import('element-plus/lib')['ElDropdownItem']
-    ElDropdownMenu: typeof import('element-plus/lib')['ElDropdownMenu']
     ElInput: typeof import('element-plus/lib')['ElInput']
     ElOption: typeof import('element-plus/lib')['ElOption']
     ElOptionGroup: typeof import('element-plus/lib')['ElOptionGroup']
@@ -69,7 +66,6 @@ declare module '@vue/runtime-core' {
     IconFasSpinner: typeof import('~icons/fa-solid/spinner')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']
-    IconFaTree: typeof import('~icons/fa/tree')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
