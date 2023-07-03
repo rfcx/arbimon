@@ -8,6 +8,7 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 import { getIdToken, useAuth0Client } from '~/auth-client'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useCnnResultFilterStore } from './use-cnn-result-filter-store'
+import { useDashboardStore } from './use-dashboard-store'
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -53,7 +54,7 @@ export const useStore = defineStore('root', {
       const authClient = await useAuth0Client()
       const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
 
-      await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id)
+      this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id)
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version
@@ -66,5 +67,6 @@ export const pinia = createPinia()
 export const useStoreOutsideSetup = (): BiodiversityStore => useStore(pinia)
 
 export {
-  useCnnResultFilterStore
+  useCnnResultFilterStore,
+  useDashboardStore
 }
