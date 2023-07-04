@@ -1,9 +1,10 @@
 <template>
   <div class="relative hidden lg:mt-0 lg:col-span-5 lg:flex">
+    <span class="sr-only">Sound of the {{ items[currentItemIndex].title }}</span>
     <img
       class="object-center object-cover w-full h-full"
       :src="items[currentItemIndex].imageUrl"
-      :alt="'Sound of the ' + items[currentItemIndex].title"
+      :alt="items[currentItemIndex].title"
     >
     <div class="absolute bottom-4 w-100 h-48 flex flex-col items-center gap-2 border-1 px-2 py-4 border-chirp rounded-lg bg-black bg-opacity-75">
       <media-player />

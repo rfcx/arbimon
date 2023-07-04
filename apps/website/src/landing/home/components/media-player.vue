@@ -8,12 +8,12 @@
     >
       <img
         v-if="!isPlaying"
-        src="src/_assets/landing/media-player/fi_volume-play.svg"
+        src="@/_assets/landing/media-player/fi_volume-play.svg"
         alt="Play"
       />
       <img
         v-else
-        src="src/_assets/landing/media-player/fi_volume-mute.svg"
+        src="@/_assets/landing/media-player/fi_volume-mute.svg"
         alt="Mute"
       />
     </button>
