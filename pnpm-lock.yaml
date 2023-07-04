@@ -253,6 +253,7 @@ importers:
       mapbox-gl: ^2.13.0
       numeral: ^2.0.6
       pinia: ^2.0.33
+      siriwave: ^2.3.0
       unplugin-auto-import: ^0.15.1
       unplugin-icons: ^0.15.3
       unplugin-vue-components: ^0.24.1
@@ -287,6 +288,7 @@ importers:
       mapbox-gl: 2.15.0
       numeral: 2.0.6
       pinia: 2.1.3_vue@3.3.4
+      siriwave: 2.3.0
       vue: 3.3.4
       vue-class-component: 8.0.0-rc.1_vue@3.3.4
       vue-gtag: 2.0.1_vue@3.3.4
@@ -11574,6 +11576,10 @@ packages:
       nise: 5.1.1
       supports-color: 7.2.0
     dev: true
+
+  /siriwave/2.3.0:
+    resolution: {integrity: sha512-p/257wib0UPvbI8ZWkm5CrPNlQ9FhLoWLyA+HWLnBCYYRG9/p8UQ4J53o+oPqXaQMjII0svnno8wAgcmQYI+NA==}
+    dev: false
 
   /sirv/2.0.2:
     resolution: {integrity: sha512-4Qog6aE29nIjAOKe/wowFTxOdmbEZKb+3tsLljaBRzJwtqto0BChD2zzH0LhgCSXiI+V7X+Y45v14wBZQ1TK3w==}
