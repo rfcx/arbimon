@@ -74,7 +74,7 @@ import ValidationStatus from './validation-status.vue'
 const props = withDefaults(defineProps<{
   spectrogramUrl: string | null
   audioUrl: string | null
-  id: number | null,
+  id: string | null,
   validation: string,
   checked: boolean | null
 }>(), {
@@ -84,7 +84,7 @@ const props = withDefaults(defineProps<{
   checked: null
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: string, event: DetectionEvent): void}>()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
