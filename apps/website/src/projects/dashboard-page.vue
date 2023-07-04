@@ -138,8 +138,8 @@ watch(() => store.selectedProject, () => {
 })
 
 function updatePage (): void {
-  const projectId = store.selectedProject?.id
-  if (projectId === undefined) return
+  // const projectId = store.selectedProject?.id
+  // if (projectId === undefined) return
 
   // TODO: update dashboard data on selecting the different project
   // External data

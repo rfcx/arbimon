@@ -1,6 +1,5 @@
 import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
-import { default as testPage } from '@/landing/test-page.vue'
 import { authRequiredGuard } from './guard-auth-required'
 import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
@@ -9,7 +8,6 @@ import { ROUTE_NAMES } from './route-names'
 export * from './route-names'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/test', component: testPage },
   {
     path: '/',
     component: PAGES.LandingRoot,
