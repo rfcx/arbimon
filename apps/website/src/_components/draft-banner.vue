@@ -101,7 +101,7 @@ import useDateFormat from '../_services/hooks/use-date-format'
 import ModalPopup from './modal-popup.vue'
 
 // How many mode do we have?
-enum currentMode {
+enum Mode {
   DRAFT = 'Draft',
   PUBLISHED = 'Published'
 }
@@ -120,7 +120,7 @@ const accessbililyOption = ref(true)
 const secureOption = reactive({ allowDownload: true, linkArbimon: true })
 
 // To display only in Draft mode
-const isDraftMode = computed(() => props.currentMode === currentMode.DRAFT)
+const isDraftMode = computed(() => props.currentMode === Mode.DRAFT)
 
 const syncHistoryRoute = computed(() => ({ name: 'sync_history', params: { projectSlug: props.projectSlug } }))
 
