@@ -46,7 +46,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Feature, FeatureCollection } from 'geojson'
+import type { Feature, FeatureCollection, Point } from 'geojson'
 import type { Expression, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 import { Popup } from 'mapbox-gl'
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -170,12 +170,12 @@ onMounted(() => {
   map.on('mouseenter', 'species-point', function (e) {
       map.getCanvas().style.cursor = 'pointer'
       const feature = e.features?.at(0) as Feature
-      const coordinates = (feature.geometry as any).coordinates.slice()
+      const coordinates = (feature.geometry as Point).coordinates.slice()
       const text = `${feature.properties?.species.toLocaleString()} unique species identified in ${feature.properties?.recordedMinutes.toLocaleString()} recorded minutes`
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
       }
-      popup.setLngLat(coordinates).setText(text).addTo(map)
+      popup.setLngLat([coordinates[0], coordinates[1]]).setText(text).addTo(map)
   })
 
   map.on('mouseleave', 'species-point', function () {
