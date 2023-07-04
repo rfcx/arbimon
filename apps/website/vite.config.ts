@@ -93,7 +93,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     }
   },
   ssr: {
-    noExternal: ['mapbox-gl', 'globe.gl']
+    noExternal: ['mapbox-gl', 'globe.gl', 'siriwave']
   },
   test: {
     deps: { inline: ['element-plus'] },
