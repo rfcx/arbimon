@@ -25,7 +25,7 @@ export const useStore = defineStore('root', {
       this.user = user
       await this.refreshProjects()
       const selectedProject = this.selectedProject ?? this.projects?.[0]
-      await this.updateSelectedProject(selectedProject)
+      this.updateSelectedProject(selectedProject)
     },
     async refreshProjects () {
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
