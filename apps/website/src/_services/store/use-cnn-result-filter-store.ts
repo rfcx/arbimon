@@ -2,8 +2,15 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
+
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { useStoreOutsideSetup } from './index'
+
+export interface ValidationResultFilterInner {
+  label: string
+  value: ReviewStatus | 'all'
+}
 
 export interface ResultFilterInner {
   label: string
@@ -18,7 +25,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
 
   const filter = ref<ValidationFilterConfig>({
     threshold: 50,
-    validationStatus: '',
+    validationStatus: 'all',
     taxonClass: '',
     siteIds: [],
     sortBy: ''
@@ -36,10 +43,14 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     return value / 100
   }
 
+  const formattedThreshold = computed<number>(() => {
+    return filter.value.threshold / 100
+  })
+
   // reset all settings when job change.
   watch(() => route.params.jobId, () => {
     filter.value.threshold = 50
-    filter.value.validationStatus = ''
+    filter.value.validationStatus = 'all'
     filter.value.taxonClass = ''
     filter.value.sortBy = ''
 
@@ -49,27 +60,27 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     }
   })
 
-  const validationStatusFilterOptions = computed<ResultFilterInner[]>(() => {
+  const validationStatusFilterOptions = computed<ValidationResultFilterInner[]>(() => {
     return [
       {
         label: 'All',
-        value: '3'
+        value: 'all'
       },
       {
-        label: 'Unvalidated',
-        value: '2'
+        label: 'Rejected',
+        value: 'rejected'
       },
       {
-        label: 'Present',
-        value: '1'
+        label: 'Uncertain',
+        value: 'uncertain'
       },
       {
-        label: 'Not present',
-        value: '-1'
+        label: 'Confirmed',
+        value: 'confirmed'
       },
       {
-        label: 'Unknown',
-        value: '0'
+        label: 'Unreviewed',
+        value: 'unreviewed'
       }
     ]
   })
@@ -86,7 +97,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
     return store.projectFilters?.locationSites.map(ls => {
       return {
-        label: `${ls.name} (${ls.id})`,
+        label: `${ls.name} (${ls.idCore})`,
         value: ls.id.toString()
       }
     }) ?? []
@@ -115,6 +126,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     classFilterOptions,
     sitesFilterOptions,
     sortByFilterOptions,
-    formatThreshold
+    formatThreshold,
+    formattedThreshold
   }
 })
