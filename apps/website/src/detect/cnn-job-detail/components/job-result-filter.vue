@@ -11,7 +11,7 @@
           label="Threshold"
           role="button"
         >
-          Threshold >= {{ cnnResultFilterStore.formatThreshold }}
+          Threshold >= {{ cnnResultFilterStore.formattedThreshold }}
           <icon-custom-el-angle-down class="text-xxs ml-1" />
         </span>
       </template>
