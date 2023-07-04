@@ -2,7 +2,7 @@
   <div class="job-result-wrapper">
     <template
       v-for="species in allSpecies"
-      :key="'job-detections-' + species.speciesName"
+      :key="'job-detections-' + species.speciesSlug"
     >
       <h3 class="species-title text-lg mt-4">
         {{ species.speciesName }}
@@ -41,10 +41,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import type { AxiosInstance } from 'axios'
+import { groupBy } from 'lodash-es'
+import { type Ref, computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type DetectCnnDetectionsResponse, apiBioGetDetectCnnDetections } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
+
+import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useCnnResultFilterStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
@@ -63,9 +69,44 @@ const isOpen = ref<boolean | null>(null)
 const isShiftHolding = ref<boolean>(false)
 const isCtrlHolding = ref<boolean>(false)
 const currentDetectionId = ref<number | undefined>(undefined)
+const cnnResultFilterStore = useCnnResultFilterStore()
+
+const detections: Ref<DetectCnnDetectionsResponse | undefined> = ref(undefined)
+
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
+
+cnnResultFilterStore.$subscribe(async (_mutation, state) => {
+  const response = await apiBioGetDetectCnnDetections(apiClientBio, {
+    start: '2023-02-20',
+    end: '2023-02-21',
+    streams: state.filter.siteIds,
+    min_confidence: cnnResultFilterStore.formattedThreshold,
+    review_statuses: state.filter.validationStatus === 'all' ? undefined : [state.filter.validationStatus],
+    classifier_jobs: [14],
+    classifiers: [3],
+    descending: state.filter.sortBy === 'desc'
+  })
+
+  detections.value = response
+})
+
+onMounted(async () => {
+  const response = await apiBioGetDetectCnnDetections(apiClientBio, {
+    start: '2023-02-20',
+    end: '2023-02-21',
+    streams: cnnResultFilterStore.filter.siteIds,
+    min_confidence: cnnResultFilterStore.formattedThreshold,
+    review_statuses: cnnResultFilterStore.filter.validationStatus === 'all' ? undefined : [cnnResultFilterStore.filter.validationStatus],
+    classifier_jobs: [14],
+    classifiers: [3],
+    descending: cnnResultFilterStore.filter.sortBy === 'desc'
+  })
+
+  detections.value = response
+})
 
 watch(() => isShiftHolding.value, (newVal, oldVal) => {
   if (newVal !== oldVal && isShiftHolding.value === false) {
@@ -82,26 +123,21 @@ watch(() => isCtrlHolding.value, (newVal, oldVal) => {
 })
 
 const allSpecies = computed(() => {
-  const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii', 'Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
-  const species = []
-  for (let index = 0; index < 2; index++) {
-    const rd = Math.floor(Math.random() * 30)
-    const media = []
-    for (let j = 0; j < rd; j++) {
-      media.push({
-        spectrogramUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d120.120_mtrue_fspec.png',
-        audioUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
-        id: rd + j,
-        validation: 'unvalidated'
+  const groupedDetections: Record<string, DetectCnnDetectionsResponse> = groupBy(detections.value ?? [], d => d.classification.value)
+  const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
+    return {
+      speciesSlug: slug,
+      speciesName: groupedDetections[slug][0].classification.title,
+      media: groupedDetections[slug].map(detection => {
+        return {
+          spectrogramUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d120.120_mtrue_fspec.png',
+          audioUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
+          id: detection.id,
+          validation: detection.review_status == null ? 'unreviewed' : detection.review_status
+        }
       })
     }
-    const speciesName = speciesNames[Math.floor(Math.random() * speciesNames.length)]
-    species.push({
-      speciesSlug: speciesName,
-      speciesName,
-      media
-    })
-  }
+  })
 
   return species
 })
