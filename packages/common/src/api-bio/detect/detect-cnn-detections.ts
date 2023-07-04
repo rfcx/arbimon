@@ -2,16 +2,23 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
+export type ReviewStatus = 'rejected' | 'uncertain' | 'confirmed' | 'unreviewed'
+
 // Request type
 export interface DetectCnnDetectionsQueryParams {
   start: string
   end: string
+  // site concept for core
   streams?: string[]
+  // what kind of species
   classifications?: string[]
+  // models used
   classifiers?: number[]
+  // which job to look for
   classifier_jobs: number[]
+  // min confidence
   min_confidence?: number
-  review_statuses?: Array<'rejected' | 'uncertain' | 'confirmed' | 'unreviewed'>
+  review_statuses?: ReviewStatus[]
   limit?: number
   offset?: number
   descending?: boolean
@@ -26,7 +33,7 @@ export type DetectCnnDetectionsResponse = Array<{
   start: string
   end: string
   confidence: number
-  review_status: null | 'rejected' | 'uncertain' | 'confirmed'
+  review_status: Exclude<ReviewStatus, 'unreviewed'> | null
   classification: {
     value: string
     title: string
