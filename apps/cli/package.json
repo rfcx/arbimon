@@ -41,8 +41,8 @@
     "test:unit": "vitest .unit.test."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.329.0",
-    "@aws-sdk/s3-request-presigner": "^3.331.0",
+    "@aws-sdk/client-s3": "~3.329.0",
+    "@aws-sdk/s3-request-presigner": "~3.329.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@slack/web-api": "^6.8.1",

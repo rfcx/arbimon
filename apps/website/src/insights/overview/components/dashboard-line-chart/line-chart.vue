@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, onMounted, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 
 import { clearChart } from '~/charts'
 import { generateChartInternal } from '~/charts/line-chart/functions'

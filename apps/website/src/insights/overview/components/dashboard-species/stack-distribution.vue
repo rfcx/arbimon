@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { sum } from 'lodash-es'
-import { computed, defineProps, withDefaults } from 'vue'
+import { computed } from 'vue'
 
 import { type Bar, type HorizontalStack } from './types'
 
