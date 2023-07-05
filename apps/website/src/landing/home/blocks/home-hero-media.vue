@@ -49,6 +49,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import birdImage from '@/_assets/default-species-image.jpg'
+import frogImage from '@/_assets/landing/media-player/ameerega-trivittata.png'
+import monkeyImage from '@/_assets/landing/media-player/psilopogon-pyrolophus.png'
 import MediaPlayer from '../components/media-player.vue'
 import { type MediaHeroContent } from '../data/type'
 
@@ -58,21 +61,21 @@ const items = ref<Array<MediaHeroContent>>([
     id: 1,
     title: 'Agile Gibbon (Hylobates agilis)',
     description: 'Endangered (IUCN RedList) Detected 2488 times in 21 sites in 1 country',
-    imageUrl: 'src/_assets/landing/media-player/psilopogon-pyrolophus.png',
+    imageUrl: monkeyImage,
     audioUrl: ''
   },
   {
     id: 2,
     title: 'Three-striped Poison Frog (Ameerega trivittata)',
     description: 'Detected 34 times in 12 sites and 2 countries',
-    imageUrl: 'src/_assets/landing/media-player/ameerega-trivittata.png',
+    imageUrl: frogImage,
     audioUrl: ''
   },
   {
     id: 3,
     title: 'Fire-tufted Barbet (Psilopogon pyrolophus)',
     description: 'Detected 123 times in 1 site and 1 country',
-    imageUrl: 'src/_assets/default-species-image.jpg',
+    imageUrl: birdImage,
     audioUrl: ''
   }
 ])

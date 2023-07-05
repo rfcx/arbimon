@@ -118,8 +118,8 @@
 
 import { ref } from 'vue'
 
-import feedbacks from '@/_assets/landing/testimonials/feedbacks.json'
-import partners from '@/_assets/landing/testimonials/partners/data.json'
+import { feedbacks } from '../data/feedbacks'
+import { partners } from '../data/partners'
 
 const currentFeedbackIndex = ref<number>(0)
 
