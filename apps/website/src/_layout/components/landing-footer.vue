@@ -17,7 +17,7 @@
           aria-label="Follow us on Social Media"
         >
           <a
-            href="#"
+            href="https://twitter.com/rainforestcx"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="Twitter"
           >
@@ -27,7 +27,7 @@
             >
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/company/rainforest-connection"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="LinkedIn"
           >
@@ -37,7 +37,7 @@
             >
           </a>
           <a
-            href="#"
+            href="https://www.instagram.com/rainforestcx/"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="Instagram"
           >
@@ -47,7 +47,7 @@
             >
           </a>
           <a
-            href="#"
+            href="https://www.facebook.com/RainforestCx/"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="Facebook"
           >
@@ -110,10 +110,16 @@
         </div>
         <div class="mt-8 md:mt-0">
           <span class="block mb-4 text-sm text-gray-900 dark:text-insight">In collaboration with</span>
-          <img
-            src="@/_services/assets/rfcx-logo-with-text.svg"
-            class="w-40"
+          <span class="sr-only">Rainforest Connection™</span>
+          <a
+            href="https://rfcx.org/"
           >
+            <img
+              src="@/_services/assets/rfcx-logo-with-text.svg"
+              class="w-40"
+              alt="Rainforest Connection™ website"
+            >
+          </a>
         </div>
       </div>
       <div class="sm:flex sm:items-center sm:justify-between mt-10">
