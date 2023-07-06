@@ -7,7 +7,7 @@
       :alt="items[currentItemIndex].title"
     >
     <div class="absolute bottom-4 w-100 h-48 flex flex-col items-center gap-2 border-1 px-2 py-4 border-chirp rounded-lg bg-black bg-opacity-75">
-      <media-player />
+      <media-player :src="items[currentItemIndex].audioUrl" />
       <div class="text-center shrink-0 h-20 px-2">
         <p>{{ items[currentItemIndex].title }}</p>
         <p class="text-sm">
@@ -51,7 +51,10 @@ import { ref } from 'vue'
 
 import birdImage from '@/_assets/default-species-image.jpg'
 import frogImage from '@/_assets/landing/media-player/ameerega-trivittata.png'
-import monkeyImage from '@/_assets/landing/media-player/psilopogon-pyrolophus.png'
+import frogSound from '@/_assets/landing/media-player/ameerega-trivittata.wav'
+import monkeyImage from '@/_assets/landing/media-player/hylobates-agilis.png'
+import monkeySound from '@/_assets/landing/media-player/hylobates-agilis.wav'
+import birdSound from '@/_assets/landing/media-player/psilopogon-pyrolophus.wav'
 import MediaPlayer from '../components/media-player.vue'
 import { type MediaHeroContent } from '../data/type'
 
@@ -62,21 +65,22 @@ const items = ref<Array<MediaHeroContent>>([
     title: 'Agile Gibbon (Hylobates agilis)',
     description: 'Endangered (IUCN RedList) Detected 2488 times in 21 sites in 1 country',
     imageUrl: monkeyImage,
-    audioUrl: ''
+    audioUrl: monkeySound
   },
   {
     id: 2,
     title: 'Three-striped Poison Frog (Ameerega trivittata)',
     description: 'Detected 34 times in 12 sites and 2 countries',
     imageUrl: frogImage,
-    audioUrl: ''
+    audioUrl: frogSound
   },
   {
     id: 3,
     title: 'Fire-tufted Barbet (Psilopogon pyrolophus)',
     description: 'Detected 123 times in 1 site and 1 country',
     imageUrl: birdImage,
-    audioUrl: ''
+    audioUrl: birdSound
   }
 ])
+
 </script>
