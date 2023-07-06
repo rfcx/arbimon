@@ -1,7 +1,7 @@
 import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import sdg13icon from '@/src/_assets/landing/featured/sdgs/13.png'
-import sdg15icon from '@/src/_assets/landing/featured/sdgs/15.png'
+import sdg13icon from '@/_assets/landing/featured/sdgs/13.png'
+import sdg15icon from '@/_assets/landing/featured/sdgs/15.png'
 
 export interface ProjectCategory {
   id: string
