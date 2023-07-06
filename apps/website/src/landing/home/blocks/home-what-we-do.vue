@@ -44,7 +44,7 @@ import { ROUTE_NAMES } from '~/router';
       <div>
         <img
           class="w-full"
-          src="@/_assets/landing/what-we-do.png"
+          src="@/_assets/landing/what-we-do.gif"
           alt="dashboard image"
         >
       </div>
