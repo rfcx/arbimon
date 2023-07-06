@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-pitch py-8 lg:py-24">
-    <div class="px-4 flex justify-between items-center lg:px-6">
+    <div class="px-4 flex justify-between items-center lg:px-6 mx-auto max-w-screen-xl">
       <div class="px-8 md:px-4">
         <button
           type="button"
