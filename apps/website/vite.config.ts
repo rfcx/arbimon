@@ -95,6 +95,9 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   ssr: {
     noExternal: ['mapbox-gl', 'globe.gl', 'siriwave']
   },
+  assetsInclude: [
+    '**/*.WAV'
+  ],
   test: {
     deps: { inline: ['element-plus'] },
     environment: 'happy-dom',
