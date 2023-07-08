@@ -14,7 +14,11 @@
     </div>
     <div class="flex items-center space-x-2 sm:space-x-3 text-xl text-gray-300">
       <span>{{ analysis.label }}:</span>
-      <span>{{ analysis.count }}</span>
+      <icon-fas-spinner
+        v-if="analysis.isLoading"
+        class="animate-spin h-8 w-8 text-gray-900"
+      />
+      <span v-if="analysis.count">{{ analysis.count }}</span>
     </div>
     <div class="flex items-center space-x-2 sm:space-x-3 text-xl text-gray-300">
       <span>Templates:</span>

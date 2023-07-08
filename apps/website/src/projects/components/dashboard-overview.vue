@@ -25,7 +25,14 @@
         v-if="stat.value === 'playlist'"
         class="h-6 w-6 mr-2 text-gray-900"
       />
-      <span class="text-3xl text-gray-900">{{ stat.count }}</span>
+      <icon-fas-spinner
+        v-if="stat.isLoading"
+        class="animate-spin h-8 w-8 text-gray-900"
+      />
+      <span
+        v-if="stat.count"
+        class="text-3xl text-gray-900"
+      >{{ stat.count }}</span>
     </div>
     <div>
       <a

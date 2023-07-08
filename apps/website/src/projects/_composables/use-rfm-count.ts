@@ -1,11 +1,12 @@
 import { type AxiosInstance } from 'axios'
+import { type ComputedRef } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { type RfmCountParams, apiArbimonGetRfmCount } from '@rfcx-bio/common/api-arbimon/metrics/rfm-count'
+import { apiArbimonGetRfmCount } from '@rfcx-bio/common/api-arbimon/metrics/rfm-count'
 
-export const useRfmCount = (apiClient: AxiosInstance, params: RfmCountParams): UseQueryReturnType<number | undefined, unknown> => {
+export const useRfmCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
-    ['fetch-rfm-count'],
-    async () => await apiArbimonGetRfmCount(apiClient, params)
+    ['fetch-rfm-count', params],
+    async () => await apiArbimonGetRfmCount(apiClient, params?.value ?? '')
   )
 }

@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { type LngLatBoundsLike } from 'mapbox-gl'
-import { computed, inject, onMounted, watch } from 'vue'
+import { computed, inject } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -93,61 +93,44 @@ import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
-let selectedProject = store.selectedProject
+const selectedProject = computed(() => store.selectedProject)
+const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
-const ANALYSIS_URL = `${BASE_URL}/project/${selectedProject?.slug}/analysis`
+const ANALYSIS_URL = computed(() => {
+  const selectedProjectSlug = store.selectedProject?.slug
+  if (selectedProjectSlug === undefined) return ''
+  else return `${BASE_URL}/project/${selectedProjectSlug}/analysis`
+})
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const tabHeight = 360
 
 // External data
 const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
-const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, { slug: store.selectedProject?.slug })
-const { isLoading: isLoadingRecCount, data: recordingCount } = useRecordingCount(apiClientArbimon, { slug: store.selectedProject?.slug })
-const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, { slug: store.selectedProject?.slug })
-const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, { slug: store.selectedProject?.slug })
-const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmCount(apiClientArbimon, { slug: selectedProject?.slug })
-const { isLoading: isLoadingAedCount, data: aedCount } = useAedCount(apiClientArbimon, { slug: selectedProject?.slug })
-const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, { slug: selectedProject?.slug })
-const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbimon, { slug: selectedProject?.slug })
+const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingRecCount, data: recordingCount } = useRecordingCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingAedCount, data: aedCount } = useAedCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
-  { value: 'site', title: 'Sites created', count: siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings uploaded', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/recordings` },
-  { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/species` },
-  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject?.slug}/audiodata/playlists` }
+  { value: 'site', title: 'Sites created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
+  { value: 'recording', title: 'Recordings uploaded', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
+  { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` },
+  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` }
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/patternmatching` },
-  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/random-forest-models/models` },
-  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject?.slug}/analysis/soundscapes` }
+  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
+  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` },
+  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
-
-onMounted(() => {
-  selectedProject = store.selectedProject
-  updatePage()
-})
-
-watch(() => store.selectedProject, () => {
-  selectedProject = store.selectedProject
-  updatePage()
-})
-
-function updatePage (): void {
-  // const projectId = store.selectedProject?.id
-  // if (projectId === undefined) return
-
-  // TODO: update dashboard data on selecting the different project
-  // External data
-  // const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
-  // const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, { slug: selectedProject?.slug })
-  // stats[0].count = Number(siteCount) ?? 0
-  // stats[0].isLoading = Boolean(isLoadingSiteCount) ?? false
-}
 
 function color (): string {
   return store.datasetColors[0] ?? '#EFEFEF'
