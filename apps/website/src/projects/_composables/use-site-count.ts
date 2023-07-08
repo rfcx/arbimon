@@ -1,11 +1,12 @@
 import { type AxiosInstance } from 'axios'
+import { type ComputedRef } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { type SiteCountParams, apiArbimonGetSiteCount } from '@rfcx-bio/common/api-arbimon/metrics/site-count'
+import { apiArbimonGetSiteCount } from '@rfcx-bio/common/api-arbimon/metrics/site-count'
 
-export const useSiteCount = (apiClient: AxiosInstance, params: SiteCountParams): UseQueryReturnType<number | undefined, unknown> => {
+export const useSiteCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
-    ['fetch-site-count'],
-    async () => await apiArbimonGetSiteCount(apiClient, params)
+    ['fetch-site-count', params],
+    async () => await apiArbimonGetSiteCount(apiClient, params?.value ?? '')
   )
 }

@@ -1,11 +1,12 @@
 import { type AxiosInstance } from 'axios'
+import { type ComputedRef } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { type PmCountParams, apiArbimonGetPmCount } from '@rfcx-bio/common/api-arbimon/metrics/pm-count'
+import { apiArbimonGetPmCount } from '@rfcx-bio/common/api-arbimon/metrics/pm-count'
 
-export const usePmCount = (apiClient: AxiosInstance, params: PmCountParams): UseQueryReturnType<number | undefined, unknown> => {
+export const usePmCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
-    ['fetch-pm-count'],
-    async () => await apiArbimonGetPmCount(apiClient, params)
+    ['fetch-pm-count', params],
+    async () => await apiArbimonGetPmCount(apiClient, params?.value ?? '')
   )
 }
