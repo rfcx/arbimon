@@ -14,9 +14,6 @@ module.exports = {
     ],
     'at-rule-empty-line-before': ['always', {
       except: ['after-same-name']
-    }],
-    'rule-empty-line-before': ['always', {
-      except: ['after-same-name']
     }]
   }
 }
