@@ -11,6 +11,10 @@ module.exports = {
       {
         ignoreAtRules: ['extends', 'tailwind', 'screen']
       }
-    ]
+    ],
+    'at-rule-empty-line-before': ['always'],
+    'rule-empty-line-before': ['always', {
+      except: ['after-same-name']
+    }]
   }
 }
