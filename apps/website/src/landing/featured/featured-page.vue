@@ -2,9 +2,9 @@
   <section class="bg-white dark:bg-echo">
     <div class="w-full h-64 lg:h-84 bg-hero-featured-works bg-cover bg-no-repeat bg-right border-b border-b-frequency">
       <div class="max-w-screen-md p-8 md:p-20">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-frequency">
+        <h1 class="mb-4 tracking-tight font-extrabold text-gray-900 dark:text-frequency">
           Featured Work
-        </h2>
+        </h1>
         <p class="text-gray-500 dark:text-insight">
           See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
         </p>

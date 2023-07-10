@@ -29,9 +29,9 @@
           class="px-4 mx-auto md:mx-4"
         >
         <div class="max-w-screen-sm">
-          <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-frequency">
+          <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
             What our partners have to say
-          </h2>
+          </h1>
           <p class="text-xl">
             "{{ feedbacks[currentFeedbackIndex].text }}"
           </p>
@@ -94,7 +94,7 @@
   </section>
   <section class="bg-hero-testimonial bg-cover bg-no-repeat">
     <div class="py-8 lg:py-24 mx-auto max-w-screen-xl px-4">
-      <h2 class="mb-8 lg:mb-16 text-3xl font-extrabold tracking-tight leading-tight text-center text-gray-900 dark:text-white md:text-4xl">
+      <h2 class="mb-8 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
         Trusted by 100+ organizations<br> around the world
       </h2>
       <div class="grid grid-cols-4 gap-4 text-gray-500 sm:gap-8 lg:gap-2 md:grid-cols-6 lg:grid-cols-12 dark:text-gray-400">

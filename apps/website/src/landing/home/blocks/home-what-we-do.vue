@@ -3,9 +3,9 @@ import { ROUTE_NAMES } from '~/router';
 <template>
   <section class="bg-white dark:bg-echo">
     <div class="text-center px-8 mt-20">
-      <h2 class="mb-4 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
+      <h1 class="mb-4 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
         What we do
-      </h2>
+      </h1>
       <p class="mb-6 text-gray-500 dark:text-insight mt-6 max-w-3xl mx-auto">
         At Arbimon, our mission is to empower scientists and conservationists with innovative AI-powered ecoacoustic tools and data-driven insights to better understand and protect the world's biodiversity.
       </p>
