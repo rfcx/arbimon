@@ -5,6 +5,12 @@ module.exports = {
     'stylelint-config-property-sort-order-smacss'
   ],
   rules: {
-    // TODO
+    'at-rule-no-unknown': null,
+    'scss/at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: ['extends', 'tailwind', 'screen']
+      }
+    ]
   }
 }
