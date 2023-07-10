@@ -9,7 +9,7 @@ module.exports = {
     'scss/at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['extends', 'tailwind', 'screen', 'apply']
+        ignoreAtRules: ['extends', 'tailwind', 'screen', 'apply', 'use']
       }
     ],
     'at-rule-empty-line-before': ['always', {
