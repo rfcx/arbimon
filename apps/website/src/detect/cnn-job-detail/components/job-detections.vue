@@ -5,7 +5,7 @@
       :key="'job-detections-' + species.speciesSlug"
     >
       <h3 class="species-title text-lg mt-4">
-        {{ species.speciesName }}
+        {{ species.speciesName }} ({{ species.speciesSlug }})
       </h3>
       <div
         v-for="(media, idx) in displaySpecies(species.media)"
@@ -42,71 +42,53 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { groupBy } from 'lodash-es'
-import { type Ref, computed, inject, onMounted, ref, watch } from 'vue'
+import { debounce, groupBy } from 'lodash-es'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type DetectCnnDetectionsResponse, apiBioGetDetectCnnDetections } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
+import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
+import { useGetJobDetections } from '@/detect/_composables/use-get-detections'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useCnnResultFilterStore } from '~/store'
+import { useDetectionsResultFilterStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
+import { apiBioDetectReviewDetection, DetectReviewDetectionBody, DetectReviewDetectionParams, DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
 const filterOptions: DetectionValidationStatus[] = [
-  { value: 'present', label: 'Present', checked: false },
-  { value: 'not_present', label: 'Not Present', checked: false },
-  { value: 'unknown', label: 'Unknown', checked: false },
-  { value: 'unvalidated', label: 'Unvalidated', checked: true }
+  { value: 'confirmed', label: 'Present', checked: false },
+  { value: 'rejected', label: 'Not Present', checked: false },
+  { value: 'uncertain', label: 'Unknown', checked: false },
+  { value: 'unreviewed', label: 'Unvalidated', checked: true }
 ]
 
 const validationCount = ref<number | null>(null)
 const isOpen = ref<boolean | null>(null)
 const isShiftHolding = ref<boolean>(false)
 const isCtrlHolding = ref<boolean>(false)
-const currentDetectionId = ref<number | undefined>(undefined)
-const cnnResultFilterStore = useCnnResultFilterStore()
-
-const detections: Ref<DetectCnnDetectionsResponse | undefined> = ref(undefined)
+const currentDetectionId = ref<string | undefined>(undefined)
+const detectionsResultFilterStore = useDetectionsResultFilterStore()
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const route = useRoute()
-const jobId = computed(() => route.params.jobId)
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
-cnnResultFilterStore.$subscribe(async (_mutation, state) => {
-  const response = await apiBioGetDetectCnnDetections(apiClientBio, {
-    start: '2023-02-20',
-    end: '2023-02-21',
-    streams: state.filter.siteIds,
-    min_confidence: cnnResultFilterStore.formattedThreshold,
-    review_statuses: state.filter.validationStatus === 'all' ? undefined : [state.filter.validationStatus],
-    classifier_jobs: [14],
-    classifiers: [3],
-    descending: state.filter.sortBy === 'desc'
-  })
+const params = computed<DetectDetectionsQueryParams>(() => ({
+  start: '2023-02-20',
+  end: '2023-02-21',
+  sites: detectionsResultFilterStore.filter.siteIds,
+  minConfidence: detectionsResultFilterStore.formattedThreshold,
+  reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
+  classifiers: [3],
+  descending: detectionsResultFilterStore.filter.sortBy === 'desc'
+}))
 
-  detections.value = response
-})
-
-onMounted(async () => {
-  const response = await apiBioGetDetectCnnDetections(apiClientBio, {
-    start: '2023-02-20',
-    end: '2023-02-21',
-    streams: cnnResultFilterStore.filter.siteIds,
-    min_confidence: cnnResultFilterStore.formattedThreshold,
-    review_statuses: cnnResultFilterStore.filter.validationStatus === 'all' ? undefined : [cnnResultFilterStore.filter.validationStatus],
-    classifier_jobs: [14],
-    classifiers: [3],
-    descending: cnnResultFilterStore.filter.sortBy === 'desc'
-  })
-
-  detections.value = response
-})
+const { data } = useGetJobDetections(apiClientBio, jobId.value, params)
 
 watch(() => isShiftHolding.value, (newVal, oldVal) => {
   if (newVal !== oldVal && isShiftHolding.value === false) {
@@ -123,7 +105,7 @@ watch(() => isCtrlHolding.value, (newVal, oldVal) => {
 })
 
 const allSpecies = computed(() => {
-  const groupedDetections: Record<string, DetectCnnDetectionsResponse> = groupBy(detections.value ?? [], d => d.classification.value)
+  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(data.value ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
       speciesSlug: slug,
@@ -133,7 +115,7 @@ const allSpecies = computed(() => {
           spectrogramUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d120.120_mtrue_fspec.png',
           audioUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
           id: detection.id,
-          validation: detection.review_status == null ? 'unreviewed' : detection.review_status
+          validation: detection.reviewStatus
         }
       })
     }
@@ -146,7 +128,7 @@ const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
-const updateSelectedDetections = (detectionId: number, event: DetectionEvent) => {
+const updateSelectedDetections = (detectionId: string, event: DetectionEvent) => {
   const { isSelected, isShiftKeyHolding, isCtrlKeyHolding } = event
   selectDetection(detectionId, isSelected)
   currentDetectionId.value = detectionId
@@ -172,7 +154,7 @@ const updateSelectedDetections = (detectionId: number, event: DetectionEvent) =>
   isOpen.value = true
 }
 
-const resetSelection = (skippedId?: number) => {
+const resetSelection = (skippedId?: string) => {
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
       if (skippedId !== undefined && det.id === skippedId) return
@@ -181,7 +163,7 @@ const resetSelection = (skippedId?: number) => {
   })
 }
 
-const selectDetection = (detectionId: number, checked: boolean) => {
+const selectDetection = (detectionId: string, checked: boolean) => {
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
       if (detectionId === det.id) {
@@ -192,7 +174,7 @@ const selectDetection = (detectionId: number, checked: boolean) => {
 }
 
 const getSelectedDetectionIds = () => {
-  const selectedDetectionIds = [] as number[]
+  const selectedDetectionIds: string[] = []
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
       if (det.checked === true) {
@@ -201,7 +183,8 @@ const getSelectedDetectionIds = () => {
     })
   })
 
-  return selectedDetectionIds.sort((a, b) => a - b)
+  // use localeCompare to sort because it's bigint, we could lose precision in the future
+  return selectedDetectionIds.sort((a, b) => a.localeCompare(b))
 }
 
 const getValidationCount = () => {
@@ -226,11 +209,36 @@ const getCombinedDetections = () => {
   return combinedDetections
 }
 
-const validateDetection = (validation: string) => {
+const validateDetection = async (validation: ReviewStatus): Promise<void> => {
+  // pause query
   const selectedDetectionIds = getSelectedDetectionIds()
+
+  console.info('species to validate', selectedDetectionIds)
+  console.info('validation: ', validation)
+
+  // call review api
+  const promises = selectedDetectionIds.map(id => {
+    // this will always be a success case
+    const originalDetection = (data.value ?? []).find(d => id === d.id)
+
+    return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
+      // this is a safe cast because the validation selector always start at 'unreviewed' union
+      // and the emitter is emitted when there's a change (watch), which means the change will
+      // always be from 'unreviewed' to other type.
+      status: validation as Exclude<ReviewStatus, 'unreviewed'>,
+      classification: originalDetection?.classification?.value ?? '',
+      streamId: originalDetection?.siteId ?? '',
+      classifier: originalDetection?.classifierId ?? -1,
+      start: originalDetection?.start ?? ''
+    })
+  })
+
+  const responses = await Promise.allSettled(promises)
+
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
-      if (selectedDetectionIds.includes(det.id)) {
+      // only update status to success review update
+      if (selectedDetectionIds.includes(det.id) && responses.find(r => r.status === 'fulfilled') != null) {
         det.validation = validation
       }
     })
@@ -243,5 +251,4 @@ const validateDetection = (validation: string) => {
 const closeValidator = () => {
   isOpen.value = false
 }
-
 </script>
