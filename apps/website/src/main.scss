@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:wght@400;500&display=swap");
 @import "@/_styles/custom-element";
 @import "@/_styles/shimmer";
@@ -10,15 +14,35 @@
     url("@/_services/assets/ABCFavoritExtendedVariable.ttf")  format("truetype"); /* Safari, Android, iOS */
 }
 
-body {
-  font-family: Poppins, sans-serif;
+@layer base {
+  body {
+    @apply font-body;
+  }
+
+  h1, h2 {
+    @apply font-display;
+    @apply font-medium;
+  }
+
+  .btn {
+    @apply font-display;
+  }
 }
 
-h1,
-h2 {
-  font-family: ABCFavorit, sans-serif;
+@screen sm {
+  h1, h2 {
+    @apply text-2xl
+  }
 }
 
-.btn {
-  font-family: ABCFavorit, sans-serif;
+@screen md {
+  h1, h2 {
+    @apply text-3xl
+  }
+}
+
+@screen lg {
+  h1, h2 {
+    @apply text-4xl
+  }
 }
