@@ -9,11 +9,11 @@ module.exports = {
     'scss/at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['extends', 'tailwind', 'screen']
+        ignoreAtRules: ['extends', 'tailwind', 'screen', 'apply']
       }
     ],
     'at-rule-empty-line-before': ['always', {
-      except: ['after-same-name']
+      except: ['after-same-name', 'after-single-line-comment']
     }]
   }
 }
