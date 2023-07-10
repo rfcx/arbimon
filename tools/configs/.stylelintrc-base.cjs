@@ -13,7 +13,8 @@ module.exports = {
       }
     ],
     'at-rule-empty-line-before': ['always', {
-      except: ['after-same-name', 'inside-block', 'after-comment']
+      except: ['after-same-name', 'inside-block'],
+      ignore: ['after-comment', 'first-nested']
     }]
   }
 }
