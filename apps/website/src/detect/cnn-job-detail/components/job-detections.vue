@@ -40,13 +40,15 @@
     />
   </div>
 </template>
+
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { debounce, groupBy } from 'lodash-es'
+import { groupBy } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useGetJobDetections } from '@/detect/_composables/use-get-detections'
 import { apiClientBioKey } from '@/globals'
@@ -55,7 +57,6 @@ import { useDetectionsResultFilterStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
-import { apiBioDetectReviewDetection, DetectReviewDetectionBody, DetectReviewDetectionParams, DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
