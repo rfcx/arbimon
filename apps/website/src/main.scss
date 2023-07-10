@@ -25,6 +25,12 @@
     @apply font-medium;
   }
 
+  h6 {
+    @apply font-display;
+    @apply font-medium;
+    @apply text-xl;
+  }
+
   .btn {
     @apply font-display;
   }
