@@ -41,8 +41,12 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
+
+import type { ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
 import type { DetectionValidationStatus } from './types'
 import ValidationStatus from './validation-status.vue'
@@ -52,10 +56,8 @@ const props = defineProps<{
   filterOptions: DetectionValidationStatus[]
 }>()
 
-const emit = defineEmits<{(e: 'emitValidation', validation: string): void,
-  (e: 'emitClose'): void
-}>()
-const selectedFilter = ref('unvalidated')
+const emit = defineEmits<{(e: 'emitValidation', validation: ReviewStatus): void, (e: 'emitClose'): void}>()
+const selectedFilter: Ref<ReviewStatus> = ref('unreviewed')
 
 watch(selectedFilter, () => {
   const value = selectedFilter.value
@@ -65,8 +67,8 @@ watch(selectedFilter, () => {
 const close = () => {
   emit('emitClose')
 }
-
 </script>
+
 <style lang="scss">
 .el-select {
   .el-input__inner {

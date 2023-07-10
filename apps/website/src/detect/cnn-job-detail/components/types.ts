@@ -1,4 +1,4 @@
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
+import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
 export interface ValidationFilterConfig {
   threshold: number
@@ -17,7 +17,7 @@ export interface DetectionMedia {
 }
 
 export interface DetectionValidationStatus {
-  value: string
+  value: ReviewStatus
   label: string
   checked: boolean
 }

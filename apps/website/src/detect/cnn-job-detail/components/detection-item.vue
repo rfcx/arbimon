@@ -36,7 +36,7 @@
       </div>
       <div class="absolute text-xs top-0.5 right-0">
         <validation-status
-          :value="props.validation"
+          :value="props.validation ?? 'unreviewed'"
           :hide-unvalidated="true"
         />
       </div>
@@ -60,12 +60,14 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
 import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vue'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
+import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
 import { apiClientBioKey } from '@/globals'
 import type { DetectionEvent } from './types'
@@ -73,9 +75,9 @@ import ValidationStatus from './validation-status.vue'
 
 const props = withDefaults(defineProps<{
   spectrogramUrl: string | null
-  audioUrl: string | null
+  audioUrl: string | null,
   id: string | null,
-  validation: string,
+  validation: ReviewStatus,
   checked: boolean | null
 }>(), {
   spectrogramUrl: null,
@@ -164,8 +166,8 @@ const toggleDetection = (event: MouseEvent) => {
     isCtrlKeyHolding: event.ctrlKey || event.metaKey
   })
 }
-
 </script>
+
 <style lang="scss">
   .selected {
     padding: 3px;
