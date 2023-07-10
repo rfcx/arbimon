@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-3 xl:px-6">
+    <div class="gap-10 items-center py-8 px-4 mx-auto max-w-screen-2xl xl:(grid grid-cols-3 pl-20 pr-0 mr-0) 2xl:(mx-auto)">
       <div class="text-gray-500 dark:text-insight col-span-2">
         <router-link
           to="/featured"
@@ -37,7 +37,7 @@
         <p class="mb-12 text-md">
           {{ props.info?.description }}
         </p>
-        <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="grid md:grid-cols-2 mb-8 xl:mb-0 gap-8">
           <div class="flex flex-col justify-between">
             <div>
               <featured-stat title="FEATURED PROJECT">
@@ -103,7 +103,7 @@
           </div>
         </div>
       </div>
-      <div class="h-sm xl:h-screen-sm">
+      <div class="items-end self-stretch sm:h-sm xl:(h-full pt-16)">
         <img
           class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"
