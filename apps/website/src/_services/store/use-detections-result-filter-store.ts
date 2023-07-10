@@ -1,8 +1,9 @@
+import { type AxiosInstance } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
+import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { useStoreOutsideSetup } from './index'
@@ -19,7 +20,7 @@ export interface ResultFilterInner {
 
 export type ResultFilterList = Array<{ label: string, items: ResultFilterInner[] }>
 
-export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
+export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', () => {
   const store = useStoreOutsideSetup()
   const route = useRoute()
 
@@ -28,7 +29,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     validationStatus: 'all',
     taxonClass: '',
     siteIds: [],
-    sortBy: ''
+    sortBy: 'asc'
   })
 
   const updateResultFilter = (value: ValidationFilterConfig): void => {
@@ -52,7 +53,7 @@ export const useCnnResultFilterStore = defineStore('cnn-result-filter', () => {
     filter.value.threshold = 50
     filter.value.validationStatus = 'all'
     filter.value.taxonClass = ''
-    filter.value.sortBy = ''
+    filter.value.sortBy = 'asc'
 
     // "drain" all values out of the array
     while (filter.value.siteIds.length > 0) {
