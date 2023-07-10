@@ -1,10 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:wght@400;500&display=swap");
 @import "@/_styles/custom-element";
 @import "@/_styles/shimmer";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @font-face {
   font-family: ABCFavorit;
@@ -19,7 +19,8 @@
     @apply font-body;
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     @apply font-display;
     @apply font-medium;
   }
@@ -30,19 +31,22 @@
 }
 
 @screen sm {
-  h1, h2 {
-    @apply text-2xl
+  h1,
+  h2 {
+    @apply text-2xl;
   }
 }
 
 @screen md {
-  h1, h2 {
-    @apply text-3xl
+  h1,
+  h2 {
+    @apply text-3xl;
   }
 }
 
 @screen lg {
-  h1, h2 {
-    @apply text-4xl
+  h1,
+  h2 {
+    @apply text-4xl;
   }
 }
