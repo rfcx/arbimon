@@ -1,8 +1,8 @@
 <template>
   <section class="bg-white dark:bg-pitch border-y-1 border-frequency">
-    <div class="grid grid-row-2 lg:(grid-cols-2 px-20 py-10) px-4 py-8 gap-10 max-w-screen-xl mx-auto">
+    <div class="grid grid-row-2 lg:(grid-cols-2 py-10) px-4 py-8 gap-10 max-w-screen-xl mx-auto">
       <div>
-        <h6>Powered by data</h6>
+        <h4>Powered by data</h4>
         <p>Arbimon’s archive is continuously growing!</p>
       </div>
       <div class="grid grid-cols-3">
