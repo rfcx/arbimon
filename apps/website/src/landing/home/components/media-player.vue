@@ -58,11 +58,9 @@ const isLoading = ref(false)
 
 onMounted(() => {
   setupSoundBar()
-  // setupSoundPlayer(props.src)
 })
 
 onBeforeUnmount(() => {
-  console.log('onBeforeUnmount')
   sound.value?.stop()
   sound.value = null
   siriWave.value?.stop()
