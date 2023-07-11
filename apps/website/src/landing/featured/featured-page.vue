@@ -1,13 +1,18 @@
 <template>
   <section class="bg-white dark:bg-echo">
     <div class="w-full h-64 lg:h-84 bg-hero-featured-works bg-cover bg-no-repeat bg-right border-b border-b-frequency">
-      <div class="max-w-screen-md p-8 md:p-20">
-        <h1 class="mb-4 tracking-tight font-extrabold text-gray-900 dark:text-frequency">
-          Featured Work
-        </h1>
-        <p class="text-gray-500 dark:text-insight">
-          See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
-        </p>
+      <div class="flex flex-row max-w-screen-2xl mx-auto">
+        <div class="max-w-screen-md p-8 md:p-20">
+          <h1 class="mb-4 text-gray-900 dark:text-frequency">
+            Featured Work
+          </h1>
+          <p class="text-gray-500 dark:text-insight">
+            See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
+          </p>
+        </div>
+        <div class="hidden not-sr-only">
+          .
+        </div>
       </div>
     </div>
     <div class="max-w-screen-2xl mx-auto py-8 px-2 lg:pt-24 lg:px-20 flex flex-col md:flex-row">
