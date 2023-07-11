@@ -31,7 +31,7 @@
           </svg>
           <span class="ml-1 hover:text-frequency">Back to featured work</span>
         </router-link>
-        <h1 class="mt-12 my-4 text-4xl capitalize font-extrabold text-gray-900 dark:text-insight">
+        <h1 class="mt-12 my-4 capitalize text-gray-900 dark:text-insight">
           {{ props.info?.title }}
         </h1>
         <p class="mb-12 text-md">

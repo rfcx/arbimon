@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-xl text-center sm:py-16 lg:px-6">
       <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-insight">
+        <h2 class="mb-4 text-gray-900 dark:text-insight">
           Meet our science team
         </h2>
         <h4 class="font-light text-gray-500 dark:text-insight">
