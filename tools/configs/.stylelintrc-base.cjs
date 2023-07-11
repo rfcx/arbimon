@@ -13,7 +13,7 @@ module.exports = {
       }
     ],
     'at-rule-empty-line-before': ['always', {
-      except: ['blockless-after-same-name-blockless', 'blockless-after-blockless', 'inside-block'],
+      except: ['blockless-after-same-name-blockless', 'inside-block'],
       ignore: ['after-comment', 'first-nested']
     }]
   }
