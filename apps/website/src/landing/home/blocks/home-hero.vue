@@ -5,10 +5,10 @@
         <h1 class="max-w-2xl mb-4 dark:text-frequency">
           AI empowered biodiversity research & conservation action
         </h1>
-        <p class="max-w-2xl mb-4 text-echo md:text-base lg:text-lg dark:text-insight">
+        <p class="max-w-2xl mb-4 text-echo dark:text-insight">
           Unleash the full potential of your acoustic data and gain unprecedented biodiveristy insights into the natural world.
         </p>
-        <p class="max-w-2xl mb-6 text-echo lg:mb-8 md:text-base lg:text-lg dark:text-insight">
+        <p class="max-w-2xl mb-6 text-echo lg:mb-8 dark:text-insight">
           Join the global community of scientists, conservationists, and nature enthusiasts who use Arbimon to drive impactful and sustainable change.
         </p>
         <a
