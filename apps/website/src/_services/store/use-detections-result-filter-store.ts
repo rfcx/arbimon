@@ -1,4 +1,3 @@
-import { type AxiosInstance } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -68,19 +67,19 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
         value: 'all'
       },
       {
-        label: 'Rejected',
+        label: 'Not Present',
         value: 'rejected'
       },
       {
-        label: 'Uncertain',
+        label: 'Unknown',
         value: 'uncertain'
       },
       {
-        label: 'Confirmed',
+        label: 'Present',
         value: 'confirmed'
       },
       {
-        label: 'Unreviewed',
+        label: 'Unvalidated',
         value: 'unreviewed'
       }
     ]
