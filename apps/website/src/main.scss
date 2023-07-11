@@ -15,6 +15,11 @@
 }
 
 @layer base {
+
+  html {
+    @apply antialiased;
+  }
+  
   body,
   p,
   a,
