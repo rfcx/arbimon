@@ -6,7 +6,7 @@
       :src="items[currentItemIndex].imageUrl"
       :alt="items[currentItemIndex].title"
     >
-    <div class="absolute bottom-4 w-100 h-48 flex flex-col items-center gap-2 border-1 px-2 py-4 border-chirp rounded-lg bg-black bg-opacity-75">
+    <div class="absolute bottom-4 w-100 h-48 flex flex-col items-center border-1 px-2 py-4 border-chirp rounded-lg bg-black bg-opacity-75">
       <media-player :src="items[currentItemIndex].audioUrl" />
       <div class="text-center shrink-0 h-20 px-2">
         <p>{{ items[currentItemIndex].title }}</p>
@@ -20,7 +20,28 @@
           class="text-frequency"
           @click="currentItemIndex = (currentItemIndex !== 0) ? currentItemIndex - 1 : items.length - 1"
         >
-          &lt;
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 12H5"
+              stroke="#ADFF2C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 19L5 12L12 5"
+              stroke="#ADFF2C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
         <div class="flex space-x-1 justify-center">
           <button
@@ -40,7 +61,28 @@
           class="text-frequency"
           @click="currentItemIndex = (currentItemIndex + 1 !== items.length) ? currentItemIndex + 1 : 0"
         >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="M5 12H19"
+              stroke="#ADFF2C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 5L19 12L12 19"
+              stroke="#ADFF2C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
       </div>
     </div>

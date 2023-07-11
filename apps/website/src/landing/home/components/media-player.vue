@@ -6,7 +6,11 @@
       class="w-8"
       @click="togglePlay"
     >
-      <span v-if="isLoading">.</span>
+      <icon-fas-spinner
+        v-if="isLoading"
+        class="animate-spin"
+        aria-label="Loading"
+      />
       <img
         v-else-if="!isPlaying"
         src="@/_assets/landing/media-player/fi_play.svg"
@@ -15,22 +19,22 @@
       <img
         v-else
         src="@/_assets/landing/media-player/fi_pause.svg"
-        alt="Mute"
+        alt="Pause"
       />
     </button>
     <div class="w-48">
       <div
         ref="soundbar"
-        :class="isPlaying ? 'block' : 'hidden'"
+        class="mt-4"
       ></div>
-      <div
+      <!-- <div
         class="w-48 flex h-14 items-center"
         :class="!isPlaying ? 'block' : 'hidden'"
       >
         <hr
-          class="w-48 mb-3 h-0.3 border-0 bg-frequency"
+          class="w-48 mb-5 h-0.2 border-0 bg-frequency"
         >
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -54,6 +58,7 @@ const isLoading = ref(false)
 
 onMounted(() => {
   setupSoundBar()
+  // setupSoundPlayer(props.src)
 })
 
 onBeforeUnmount(() => {
@@ -86,39 +91,32 @@ const setupSoundBar = () => {
 
 const setupSoundPlayer = (src: string) => {
   isLoading.value = true
-  siriWave.value?.stop()
+  isPlaying.value = false
   if (sound.value) {
     sound.value?.unload()
     sound.value = null
   }
   sound.value = new Howl({
     src,
-    preload: true,
     onload: () => {
       isLoading.value = false
-      siriWave.value?.start()
     },
     onend: () => {
       isPlaying.value = false
       sound.value?.stop()
-      siriWave.value?.stop()
     }
   })
 }
 
-const togglePlay = () => {
+const togglePlay = async () => {
+  if (!sound.value) {
+    await setupSoundPlayer(props.src)
+  }
   isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
-    if (!sound.value) {
-      setupSoundPlayer(props.src)
-    }
     sound.value?.play()
-    if (!isLoading.value) { // resume the loaded sound
-      siriWave.value?.start()
-    }
   } else {
     sound.value?.pause()
-    siriWave.value?.stop()
   }
 }
 
@@ -126,6 +124,14 @@ watch(() => props.src, () => {
   isPlaying.value = false
   siriWave.value?.stop()
   setupSoundPlayer(props.src)
+ })
+
+ watch(() => isPlaying.value, () => {
+  if (isPlaying.value) {
+    siriWave.value?.start()
+  } else {
+    siriWave.value?.stop()
+  }
  })
 
 </script>
