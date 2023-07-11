@@ -42,11 +42,8 @@
   .btn {
     @apply font-display;
   }
-}
 
-@screen sm {
-  h1,
-  h2 {
+  h1 {
     @apply text-2xl;
   }
 
@@ -99,3 +96,4 @@
     @apply text-xl;
   }
 }
+
