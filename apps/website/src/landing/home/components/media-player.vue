@@ -90,6 +90,7 @@ const setupSoundPlayer = (src: string) => {
     preload: true,
     onload: () => {
       isLoading.value = false
+      siriWave.value?.start()
     }
   })
 }
@@ -101,7 +102,9 @@ const togglePlay = () => {
       setupSoundPlayer(props.src)
     }
     sound.value?.play()
-    siriWave.value?.start()
+    if (!isLoading.value) { // resume the loaded sound
+      siriWave.value?.start()
+    }
   } else {
     sound.value?.pause()
     siriWave.value?.stop()
