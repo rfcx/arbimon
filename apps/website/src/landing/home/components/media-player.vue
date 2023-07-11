@@ -39,7 +39,7 @@
 
 import { Howl } from 'howler'
 import SiriWave from 'siriwave'
-import { onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const sound = ref<Howl | null>(null)
 
@@ -54,6 +54,13 @@ const isLoading = ref(false)
 
 onMounted(() => {
   setupSoundBar()
+})
+
+onBeforeUnmount(() => {
+  console.log('onBeforeUnmount')
+  sound.value?.stop()
+  sound.value = null
+  siriWave.value?.stop()
 })
 
 const setupSoundBar = () => {
@@ -86,11 +93,15 @@ const setupSoundPlayer = (src: string) => {
   }
   sound.value = new Howl({
     src,
-    loop: true,
     preload: true,
     onload: () => {
       isLoading.value = false
       siriWave.value?.start()
+    },
+    onend: () => {
+      isPlaying.value = false
+      sound.value?.stop()
+      siriWave.value?.stop()
     }
   })
 }
