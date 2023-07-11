@@ -1,24 +1,24 @@
 <template>
-  <section class="bg-white dark:bg-mirage-gray">
+  <section class="bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-xl text-center sm:py-16 lg:px-6">
       <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-insight">
           Meet our science team
         </h2>
-        <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+        <h4 class="font-light text-gray-500 dark:text-insight">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        </h4>
       </div>
       <div class="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/marconi.jpg"
             alt="Bonnie Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Bonnie Green</a>
-          </h3>
+          </h4>
           <p>CEO/Co-founder</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -87,15 +87,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/kris.jpg"
             alt="Helene Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Helene Engels</a>
-          </h3>
+          </h4>
           <p>CTO/Co-founder</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -164,15 +164,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/carly.jpg"
             alt="Jese Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Jese Leos</a>
-          </h3>
+          </h4>
           <p>SEO & Marketing</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -241,15 +241,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/jack.jpg"
             alt="Joseph Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Joseph Mcfall</a>
-          </h3>
+          </h4>
           <p>Sales</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -318,15 +318,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/jose.jpg"
             alt="Sofia Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Lana Byrd</a>
-          </h3>
+          </h4>
           <p>Web Designer</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -395,15 +395,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/gabriel.jpg"
             alt="Leslie Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Leslie Livingston</a>
-          </h3>
+          </h4>
           <p>Graphic Designer</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -472,15 +472,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/tomaz.jpg"
             alt="Michael Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Michael Gough</a>
-          </h3>
+          </h4>
           <p>React Developer</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
@@ -549,15 +549,15 @@
             </li>
           </ul>
         </div>
-        <div class="text-center text-gray-500 dark:text-gray-400">
+        <div class="text-center text-gray-500 dark:text-insight">
           <img
             class="mx-auto mb-4 w-36 h-36 rounded-full"
             src="@/_assets/landing/team/nelson.jpg"
             alt="Neil Avatar"
           >
-          <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h4 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-insight">
             <a href="#">Neil Sims</a>
-          </h3>
+          </h4>
           <p>Vue.js Developer</p>
           <ul class="flex justify-center mt-4 space-x-4">
             <li>
