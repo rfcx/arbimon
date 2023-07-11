@@ -158,7 +158,7 @@
           <h2 class="mb-4 text-sm">
             CONTACT US
           </h2>
-          <h3 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+          <h3 class="mb-4 text-4xl tracking-tight text-gray-900 dark:text-white">
             Get in touch today
           </h3>
           <p class="mb-16 font-light sm:text-xl">

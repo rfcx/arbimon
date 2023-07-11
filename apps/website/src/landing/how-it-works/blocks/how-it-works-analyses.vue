@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-        <h1 class="mb-4 tracking-tight font-extrabold text-gray-900 dark:text-insight">
+        <h1 class="mb-4 text-gray-900 dark:text-insight">
           Types of analyses available on Arbimon
         </h1>
         <p class="text-gray-500 sm:text-xl dark:text-insight">
