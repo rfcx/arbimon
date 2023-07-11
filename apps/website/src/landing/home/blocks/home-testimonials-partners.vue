@@ -32,9 +32,9 @@
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
             What our partners have to say
           </h1>
-          <p class="text-xl">
+          <h4 class="font-body font-normal">
             "{{ feedbacks[currentFeedbackIndex].text }}"
-          </p>
+          </h4>
           <div class="mt-4 flex">
             <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
               <span class="font-medium text-gray-600 dark:text-gray-300"> {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
@@ -94,9 +94,9 @@
   </section>
   <section class="bg-hero-testimonial bg-cover bg-no-repeat">
     <div class="py-8 lg:py-24 mx-auto max-w-screen-xl px-4">
-      <h2 class="mb-8 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
+      <h1 class="mb-8 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
         Trusted by 100+ organizations<br> around the world
-      </h2>
+      </h1>
       <div class="grid grid-cols-4 gap-4 text-gray-500 sm:gap-8 lg:gap-2 md:grid-cols-6 lg:grid-cols-12 dark:text-gray-400">
         <a
           v-for="partner in partners"
