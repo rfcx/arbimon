@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-echo">
     <div class="grid max-w-screen-xl px-4 mx-auto lg:gap-8 xl:gap-0 lg:grid-cols-12">
       <div class="mr-auto place-self-center lg:col-span-7 py-8 lg:py-24">
-        <h1 class="max-w-2xl mb-4 leading-10 dark:text-frequency">
+        <h1 class="max-w-2xl mb-4 dark:text-frequency">
           AI empowered biodiversity research & conservation action
         </h1>
         <p class="max-w-2xl mb-4 text-echo md:text-base lg:text-lg dark:text-insight">

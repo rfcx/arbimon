@@ -1,9 +1,9 @@
 <template>
   <contact-card>
     <div class="flex flex-col gap-2">
-      <h2 class="leading-10">
+      <h1>
         Stay connected
-      </h2>
+      </h1>
       <p class="mb-4">
         Be the first to hear the latest from Arbimon.
       </p>
