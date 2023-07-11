@@ -49,11 +49,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import birdImage from '@/_assets/default-species-image.jpg'
 import frogImage from '@/_assets/landing/media-player/ameerega-trivittata.png'
 import frogSound from '@/_assets/landing/media-player/ameerega-trivittata.wav'
 import monkeyImage from '@/_assets/landing/media-player/hylobates-agilis.png'
 import monkeySound from '@/_assets/landing/media-player/hylobates-agilis.wav'
+import birdImage from '@/_assets/landing/media-player/psilopogon-pyrolophus.png'
 import birdSound from '@/_assets/landing/media-player/psilopogon-pyrolophus.wav'
 import MediaPlayer from '../components/media-player.vue'
 import { type MediaHeroContent } from '../data/type'
@@ -62,24 +62,24 @@ const currentItemIndex = ref<number>(0)
 const items = ref<Array<MediaHeroContent>>([
   {
     id: 1,
+    title: 'Fire-tufted Barbet (Psilopogon pyrolophus)',
+    description: 'Detected 123 times in 1 site and 1 country',
+    imageUrl: birdImage,
+    audioUrl: birdSound
+  },
+  {
+    id: 2,
     title: 'Agile Gibbon (Hylobates agilis)',
     description: 'Endangered (IUCN RedList) Detected 2488 times in 21 sites in 1 country',
     imageUrl: monkeyImage,
     audioUrl: monkeySound
   },
   {
-    id: 2,
+    id: 3,
     title: 'Three-striped Poison Frog (Ameerega trivittata)',
     description: 'Detected 34 times in 12 sites and 2 countries',
     imageUrl: frogImage,
     audioUrl: frogSound
-  },
-  {
-    id: 3,
-    title: 'Fire-tufted Barbet (Psilopogon pyrolophus)',
-    description: 'Detected 123 times in 1 site and 1 country',
-    imageUrl: birdImage,
-    audioUrl: birdSound
   }
 ])
 
