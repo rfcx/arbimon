@@ -60,13 +60,6 @@ import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from '
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
-const filterOptions: DetectionValidationStatus[] = [
-  { value: 'confirmed', label: 'Present', checked: false },
-  { value: 'rejected', label: 'Not Present', checked: false },
-  { value: 'uncertain', label: 'Unknown', checked: false },
-  { value: 'unreviewed', label: 'Unvalidated', checked: true }
-]
-
 const validationCount = ref<number | null>(null)
 const isOpen = ref<boolean | null>(null)
 const isShiftHolding = ref<boolean>(false)
@@ -78,6 +71,22 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+
+const filterOptions = computed<DetectionValidationStatus[]>(() => {
+  const validation = detectionsResultFilterStore.validationStatusFilterOptions
+
+  // removes the `All` setting
+  const filtered: DetectionValidationStatus[] = validation.filter(v => v.value !== 'all')
+  .map(s => {
+    return {
+      value: s.value,
+      label: s.label,
+      checked: s.value === 'unreviewed'
+    } as DetectionValidationStatus
+  })
+
+  return filtered
+})
 
 const params = computed<DetectDetectionsQueryParams>(() => ({
   start: '2023-02-20',
