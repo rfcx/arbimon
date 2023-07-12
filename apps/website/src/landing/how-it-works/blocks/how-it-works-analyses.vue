@@ -6,7 +6,7 @@
           Types of analyses available on Arbimon
         </h1>
         <p class="text-gray-500 sm:text-xl dark:text-insight">
-          Lorem ipsum dolor sit amet consectetur adipiscing elit tortor eu egestas morbi sem vulputate etiam facilisis pellentesque ut quis.
+          We offer a range of analyses to fit a wide variety of research needs.
         </p>
       </div>
       <div class="space-y-4 md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4 md:space-y-0">
