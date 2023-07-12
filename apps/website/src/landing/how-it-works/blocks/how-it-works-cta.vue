@@ -10,13 +10,16 @@
         </p>
       </div>
       <div class="basis-1/3 text-right">
-        <a
-          href="#"
+        <router-link
+          :to="{ name: ROUTE_NAMES.landingContact }"
           class="btn btn-primary"
         >
-          Contact Us
-        </a>
+          Contact us
+        </router-link>
       </div>
     </div>
   </section>
 </template>
+<script setup lang="ts">
+import { ROUTE_NAMES } from '~/router'
+</script>
