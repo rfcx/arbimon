@@ -3,10 +3,10 @@
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         <h1 class="mb-4 text-gray-900 dark:text-white">
-          Arbimon step-by-step
+          How Arbimon works
         </h1>
         <p class="text-gray-500 sm:text-xl dark:text-insight">
-          Lorem ipsum dolor sit amet consectetur adipiscing elit tortor eu egestas morbi sem vulputate etiam facilisis pellentesque ut quis.
+          From start to finish of your research, Arbimon can support the collection and analysis of your data.
         </p>
       </div>
       <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
@@ -24,10 +24,10 @@
             /></svg>
           </div>
           <h3 class="mb-2 text-xl font-bold dark:text-insight">
-            Marketing
+            Define
           </h3>
           <p class="text-gray-700 dark:text-insight">
-            Plan it, create it, launch it. Collaborate seamlessly with all  the organization and hit your marketing goals every month with our marketing plan.
+            Define the fundamental research and conservation questions to be addressed: Where? Why? What? How?
           </p>
         </div>
         <div class="rounded-xl px-8 py-12">
@@ -40,10 +40,10 @@
             ><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" /></svg>
           </div>
           <h3 class="mb-2 text-xl font-bold dark:text-insight">
-            Legal
+            Collect
           </h3>
           <p class="text-gray-700 dark:text-insight">
-            Protect your organization, devices and stay compliant with our structured workflows and custom permissions made for you.
+            Conduct fieldwork to collect data by deploying acoustic recorders based on study goals and sampling design.
           </p>
         </div>
         <div class="rounded-xl px-8 py-12">
@@ -60,10 +60,10 @@
             /><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" /></svg>
           </div>
           <h3 class="mb-2 text-xl font-bold dark:text-insight">
-            Business Automation
+            Upload
           </h3>
           <p class="text-gray-700 dark:text-insight">
-            Auto-assign tasks, send Slack messages, and much more. Now power up with hundreds of new templates to help you get started.
+            Upload an unlimited volume of audio recordings to Arbimon for free storage, file management, and ecoacoustic analysis.
           </p>
         </div>
         <div class="rounded-xl px-8 py-12">
@@ -80,10 +80,10 @@
             /></svg>
           </div>
           <h3 class="mb-2 text-xl font-bold dark:text-insight">
-            Finance
+            Inspect
           </h3>
           <p class="text-gray-700 dark:text-insight">
-            Audit-proof software built for critical financial operations like month-end close and quarterly budgeting.
+            View spectrograms to annotate target acoustic signals, create call templates, and build training datasets for ecoacoustic analyses.
           </p>
         </div>
         <div class="rounded-xl px-8 py-12">
@@ -96,10 +96,10 @@
             ><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" /></svg>
           </div>
           <h3 class="mb-2 text-xl font-bold dark:text-insight">
-            Enterprise Design
+            Analyze
           </h3>
           <p class="text-gray-700 dark:text-insight">
-            Craft beautiful, delightful experiences for both marketing and product with real cross-company collaboration.
+            Analyze recordings by combining state-of-the-art AI tools, ecoacoustic analyses, and environmental variables to generate ecological insights.
           </p>
         </div>
         <div class="rounded-xl px-8 py-12">
@@ -116,10 +116,10 @@
             /></svg>
           </div>
           <h3 class="mb-2 text-xl font-bold dark:text-insight">
-            Operations
+            Share
           </h3>
           <p class="text-gray-700 dark:text-insight">
-            Keep your company’s lights on with customizable, iterative, and structured workflows built for all efficient teams and individual.
+            Generate and publish figures and visualizations that highlight actionable results from your acoustic analyses, bringing transparency to your biodiversity reporting.
           </p>
         </div>
       </div>
