@@ -5,14 +5,17 @@
         Working on an endangered species project?
       </h2>
       <p class="mb-4">
-        <a
-          href="#"
+        <router-link
+          :to="{ name: ROUTE_NAMES.landingContact }"
           class="text-frequency underline"
-        >Contact us</a> to find out how the Arbimon science team can help.
+        >
+          Contact us
+        </router-link> to find out how the Arbimon science team can help.
       </p>
     </div>
   </contact-card>
 </template>
 <script setup lang="ts">
+import { ROUTE_NAMES } from '~/router'
 import ContactCard from '../../home/components/contact-card.vue'
 </script>
