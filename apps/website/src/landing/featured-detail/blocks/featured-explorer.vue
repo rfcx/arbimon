@@ -12,12 +12,12 @@
         >
           <router-link
             :to="'/featured/' + project.category.id"
-            class="flex justify-center items-center w-full h-full rounded-lg"
+            class="flex justify-center items-center w-full h-full rounded-lg bg-moss"
           >
             <img
               :src="project.featuredImage"
               class="object-cover object-center w-full h-full rounded-lg"
-              :class="isSelctedProject(project.category.id) ? 'opacity-100' : 'opacity-40'"
+              :class="isSelctedProject(project.category.id) ? 'opacity-100' : 'opacity-50'"
             >
             <p
               class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-display rounded-full px-4 py-2"
