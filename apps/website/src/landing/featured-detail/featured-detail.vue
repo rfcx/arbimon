@@ -10,6 +10,8 @@
     <featured-impact-goal
       title="Impact Goals"
       :text="currentProject.impact?.text ?? ''"
+      :cta-text="currentProject.impact?.cta?.text ?? ''"
+      :cta-link="currentProject.impact?.cta?.link ?? ''"
     />
     <featured-contact />
     <featured-explorer :projects="projects" />
