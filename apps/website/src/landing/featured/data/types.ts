@@ -50,6 +50,12 @@ export interface ProjectFeedback {
 
 export interface ProjectImpactContent {
   text: string
+  cta: CallToAction | null
+}
+
+export interface CallToAction {
+  text: string
+  link: string
 }
 
 export const masterSDGs = {
