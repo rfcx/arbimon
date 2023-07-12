@@ -33,12 +33,12 @@ import { ROUTE_NAMES } from '~/router';
           <p class="mb-4">
             We’re also a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
           </p>
-          <a
-            href="#"
+          <router-link
+            :to="{ name: ROUTE_NAMES.landingFeatured }"
             class="inline-flex items-center justify-center btn btn-secondary"
           >
             See our featured projects
-          </a>
+          </router-link>
         </div>
       </div>
       <div>
@@ -52,4 +52,5 @@ import { ROUTE_NAMES } from '~/router';
   </section>
 </template>
 <script setup lang="ts">
+import { ROUTE_NAMES } from '~/router'
 </script>
