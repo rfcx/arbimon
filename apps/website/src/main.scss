@@ -85,6 +85,28 @@
   }
 }
 
+@screen xs {
+  h1 {
+    @apply text-2xl; // 24px
+  }
+
+  h2 {
+    @apply text-xl; // 20px
+  }
+
+  h3 {
+    @apply text-lg; // 18px
+  }
+
+  h4 {
+    @apply text-base; // 16px
+  }
+
+  h5 {
+    @apply text-base; // 16px
+  }
+}
+
 @screen sm {
   h1 {
     @apply text-2xl; // 24px
