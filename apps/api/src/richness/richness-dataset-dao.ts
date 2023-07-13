@@ -109,25 +109,44 @@ export const getRichnessByTimeUnix = async (sequelize: Sequelize, filter: Filter
 }
 
 export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDatasetForSql, isProjectMember: boolean): Promise<RichnessPresence[]> => {
-  const filterBase = datasetFilterWhereRaw(filter)
+  let innerConditions = ''
+  if (filter.siteIds.length > 0) {
+    innerConditions += 'AND dbssh.location_site_id = ANY($siteIds) '
+  }
 
-  const conditions = !isProjectMember ? `${filterBase.conditions} AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating) AND NOT sip.risk_rating_local_id = ANY ($protectedRiskRating)` : filterBase.conditions
-  const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
+  let conditions = !isProjectMember ? ' AND NOT sip.risk_rating_global_id = ANY ($protectedRiskRating) AND NOT sip.risk_rating_local_id = ANY ($protectedRiskRating)' : ''
+  if (filter.taxons !== undefined && filter.taxons.length > 0) {
+    conditions += 'AND sip.taxon_class_id = ANY($taxons) '
+  }
+
+  const bind = !isProjectMember ? { ...filter, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filter
 
   const sql = `
-    SELECT 
+    select
       sip.taxon_class_id as "taxonClassId",
       sip.taxon_species_id as "taxonSpeciesId",
       sip.taxon_species_slug as "taxonSpeciesSlug",
       sip.common_name as "commonName",
       sip.scientific_name as "scientificName"
-    FROM
-      detection_by_site_species_hour dbssh
-      JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id and dbssh.location_project_id = sip.location_project_id
-    WHERE ${conditions}
-    GROUP BY
-      sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
+    from species_in_project sip
+    where
+      sip.location_project_id = $locationProjectId
+      and exists (
+        select 1
+        from detection_by_site_species_hour dbssh
+        where
+          dbssh.location_project_id = sip.location_project_id
+          and dbssh.taxon_species_id = sip.taxon_species_id
+          and dbssh.time_precision_hour_local >= $startDateUtcInclusive
+          and dbssh.time_precision_hour_local < $endDateUtcExclusive
+          ${innerConditions}
+      )
+      ${conditions}
   `
 
-  return await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true })
+  return await sequelize.query(sql, {
+    type: QueryTypes.SELECT,
+    bind,
+    raw: true
+  })
 }
