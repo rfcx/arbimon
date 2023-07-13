@@ -6,7 +6,7 @@
       :src="items[currentItemIndex].imageUrl"
       :alt="items[currentItemIndex].title"
     >
-    <div class="absolute bottom-4 w-100 h-48 flex flex-col items-center border-1 px-2 py-4 border-chirp rounded-lg bg-black bg-opacity-75">
+    <div class="absolute bottom-10 w-100 h-48 flex flex-col items-center border-1 px-2 py-4 border-chirp rounded-lg bg-black bg-opacity-75">
       <media-player :src="items[currentItemIndex].audioUrl" />
       <div class="text-center shrink-0 h-20 px-2">
         <p>{{ items[currentItemIndex].title }}</p>

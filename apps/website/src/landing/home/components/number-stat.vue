@@ -1,5 +1,5 @@
 <template>
-  <section class="text-center">
+  <section class="text-center lg:w-52">
     <h1 class="text-flamingo">
       {{ valueShortScale }}
     </h1>
@@ -19,6 +19,10 @@ const props = defineProps<{
   number: number
 }>()
 
-const valueShortScale = computed(() => numeral(props.number).format('0a'))
+const valueShortScale = computed(() => {
+  const formattedNumber = numeral(props.number).format('0.0a')
+  const firstDecimalDigit = (x: string) => x.split('.')[1].slice(0, 1)
+  return firstDecimalDigit(formattedNumber) === '0' ? formattedNumber.replace('.0', '') : formattedNumber
+})
 
 </script>

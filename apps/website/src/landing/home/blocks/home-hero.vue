@@ -19,7 +19,7 @@
         </a>
         <router-link
           :to="{ name: ROUTE_NAMES.landingFeatured }"
-          class="inline-flex items-center justify-center btn btn-secondary"
+          class="inline-flex items-center justify-center btn btn-secondary mt-6 lg:mt-0"
         >
           Learn more about our work
         </router-link>
