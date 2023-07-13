@@ -29,6 +29,7 @@ export default defineConfig({
   theme: {
     extend: {
       screens: {
+        xs: '300px',
         sm: '700px',
         md: '768px',
         lg: '1024px',
@@ -44,7 +45,7 @@ export default defineConfig({
       },
       fontSize: { // ref: https://www.figma.com/file/sP3kZZDOiOd5hqTZCkXH0x/RFCx%2FArbimon-Design-Library?type=design&node-id=1846%3A9636&mode=design&t=Fp0xjfu9wQz3wggK-1
         xxs: '0.5rem',
-        sm: ['0.0.8125rem', '1.125rem'], // Paragraph caption - font size 13px, line height 16px
+        sm: ['0.8125rem', '1.125rem'], // Paragraph caption - font size 13px, line height 16px
         base: ['1rem', '1.5rem'], // Paragraph regular - font size 16px, line height 24px
         lg: ['1.25', '1.75rem'], // Paragraph large - font size 20px, line height 28px
         xl: ['1.25rem', '1.5rem'], // Headline 100 - font size 20px, line height 24px
