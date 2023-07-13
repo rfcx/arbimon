@@ -123,7 +123,7 @@ export const getRichnessPresence = async (sequelize: Sequelize, filter: FilterDa
       sip.scientific_name as "scientificName"
     FROM
       detection_by_site_species_hour dbssh
-      JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
+      JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id and dbssh.location_project_id = sip.location_project_id
     WHERE ${conditions}
     GROUP BY
       sip.taxon_species_id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, sip.risk_rating_global_id, dbssh.taxon_species_id
