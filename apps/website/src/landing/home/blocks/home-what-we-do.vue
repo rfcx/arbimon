@@ -13,9 +13,9 @@ import { ROUTE_NAMES } from '~/router';
     <div class="flex flex-col gap-2 flex-col-reverse md:(flex-row py-8 px-6) py-4 px-4 items-center mx-auto max-w-screen-xl gap-2">
       <div class="w-full max-w-240 lg:w-168 xl:w-200">
         <div class="p-4">
-          <h3 class="mb-2 text-md font-medium">
+          <h5 class="mb-2 text-md font-medium">
             The platform
-          </h3>
+          </h5>
           <p class="mb-4">
             Arbimon is an open-source ecoacoustic analysis platform empowering scientists and conservationists with an efficient way to upload, store, and analyze mass amounts of acoustic data, enabling the ability to derive insights about the ecosystem at scale.
           </p>
@@ -27,9 +27,9 @@ import { ROUTE_NAMES } from '~/router';
           </a>
         </div>
         <div class="p-4">
-          <h3 class="mb-2 text-md font-medium">
+          <h5 class="mb-2 text-md font-medium">
             The service
-          </h3>
+          </h5>
           <p class="mb-4">
             We’re also a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
           </p>

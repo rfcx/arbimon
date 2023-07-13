@@ -6,17 +6,21 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: ABCFavorit;
-  font-display: auto;
-  font-weight: 400;
-  src:
-    url("@/_services/assets/ABCFavoritExpanded-Regular.woff") format("woff"), /* Modern Browsers */
-    url("@/_services/assets/ABCFavoritExpandedVariable.ttf")  format("truetype"); /* Safari, Android, iOS */
-}
+// Extened font
 
 @font-face {
-  font-family: ABCFavorit;
+  font-family: ABCFavoritExtended;
+  font-display: auto;
+  font-weight: 500;
+  src:
+    url("@/_services/assets/ABCFavoritExtended-Regular.woff") format("woff"), /* Modern Browsers */
+    url("@/_services/assets/ABCFavoritExtendedVariable.ttf")  format("truetype"); /* Safari, Android, iOS */
+}
+
+// Expanded font
+
+@font-face {
+  font-family: ABCFavoritExpanded;
   font-display: auto;
   font-weight: 500;
   src:
@@ -40,13 +44,16 @@
   }
 
   h1,
-  h2,
-  h3,
+  h2 {
+    @apply font-header;
+    @apply font-medium;
+  }
+
+  h3
   h4,
   h5,
   h6 {
-    @apply font-display;
-    @apply font-medium;
+    @apply font-body;
   }
 
   h6 {
