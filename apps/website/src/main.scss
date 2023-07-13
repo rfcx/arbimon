@@ -13,7 +13,7 @@
   font-display: auto;
   font-weight: 500;
   src:
-    url("@/_services/assets/ABCFavoritExtended-Regular.woff") format("woff"), /* Modern Browsers */
+    url("@/_services/assets/ABCFavoritExtended-Medium.woff") format("woff"), /* Modern Browsers */
     url("@/_services/assets/ABCFavoritExtendedVariable.ttf")  format("truetype"); /* Safari, Android, iOS */
 }
 
@@ -65,55 +65,88 @@
   }
 
   h1 {
-    @apply text-2xl;
+    @apply text-2xl; // 24px
   }
 
   h2 {
-    @apply text-xl;
+    @apply text-xl; // 20px
   }
 
   h3 {
-    @apply text-lg;
+    @apply text-lg; // 18px
   }
 
   h4 {
-    @apply text-base;
+    @apply text-base; // 16px
+  }
+
+  h5 {
+    @apply text-base; // 16px
+  }
+}
+
+@screen sm {
+  h1 {
+    @apply text-2xl; // 24px
+  }
+
+  h2 {
+    @apply text-xl; // 20px
+  }
+
+  h3 {
+    @apply text-lg; // 18px
+  }
+
+  h4 {
+    @apply text-base; // 16px
+  }
+
+  h5 {
+    @apply text-base; // 16px
   }
 }
 
 @screen md {
   h1 {
-    @apply text-3xl;
+    @apply text-3xl; // 30px
   }
 
   h2 {
-    @apply text-2xl;
+    @apply text-2xl; // 24px
   }
 
   h3 {
-    @apply text-xl;
+    @apply text-xl; // 20px
   }
 
   h4 {
-    @apply text-lg;
+    @apply text-lg; // 18px
+  }
+
+  h5 {
+    @apply text-base; // 16px
   }
 }
 
 @screen lg {
-  h1,
-  h2 {
-    @apply text-4xl;
+  h1 {
+    @apply text-4xl; // 40px
   }
 
   h2 {
-    @apply text-3xl;
+    @apply text-3xl; // 36px
   }
 
   h3 {
-    @apply text-2xl;
+    @apply text-2xl; // 30px
   }
 
   h4 {
-    @apply text-xl;
+    @apply text-xl; // 24px
+  }
+
+  h5 {
+    @apply text-lg; // 18px
   }
 }
