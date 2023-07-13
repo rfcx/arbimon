@@ -36,6 +36,7 @@ declare module '@vue/runtime-core' {
     IconCustomElAngleDown: typeof import('~icons/custom-icons/el-angle-down')['default']
     IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
     IconCustomLinkout: typeof import('~icons/custom-icons/linkout')['default']
+    IconFaCalendar: typeof import('~icons/fa/calendar')['default']
     IconFaCheck: typeof import('~icons/fa/check')['default']
     IconFaChevronDown: typeof import('~icons/fa/chevron-down')['default']
     IconFaChevronUp: typeof import('~icons/fa/chevron-up')['default']
