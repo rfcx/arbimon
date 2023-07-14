@@ -41,11 +41,11 @@ const variantName = computed(() => {
 <style scoped lang="scss">
 // outer spinner
 div#job-information-spinner {
+  @apply border-2 border-solid border-warning;
   display: block;
-  position: absolute;
+  position: relative;
   height: 18px;
   width: 18px;
-  border: 2px solid yellow;
   border-bottom-color: #000000;
   border-radius: 50%;
   animation: job-information-spinner 1.25s linear infinite;
@@ -72,15 +72,14 @@ div#job-information-spinner.cancelled {
 
 // inner dot
 div#job-information-spinner::after {
+  @apply border-2 border-solid border-warning bg-warning;
   content: "";
   position: absolute;
-  top: 2.5px;
-  right: 2.5px;
-  bottom: 2.5px;
-  left: 2.5px;
-  border: 2px solid yellow;
+  top: 3px;
+  right: 3px;
+  bottom: 3px;
+  left: 3px;
   border-radius: 50%;
-  background-color: yellow;
 }
 
 div#job-information-spinner.queued::after {
