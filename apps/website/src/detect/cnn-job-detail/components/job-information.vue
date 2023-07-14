@@ -29,7 +29,7 @@
       </div>
       <div>
         <span class="text-subtle">Status</span>
-        <jobInformationStatus />
+        <jobInformationStatus :variant="0" />
       </div>
       <div>
         <span class="text-subtle">Validation Status</span>

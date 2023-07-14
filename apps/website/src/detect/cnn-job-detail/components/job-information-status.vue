@@ -1,36 +1,102 @@
 <template>
   <div
     id="job-information-spinner"
+    :class="variantName"
   />
 </template>
 
+<script setup lang="ts">
+import { computed, withDefaults } from 'vue'
+
+/** Queued, Processing, Done, Error, Cancelled respectively */
+const props = withDefaults(defineProps<{ variant: 0 | 20 | 30 | 40 | 50 }>(), {
+  variant: 20
+})
+
+const variantName = computed(() => {
+  if (props.variant === 0) {
+    return 'queued'
+  }
+
+  if (props.variant === 20) {
+    return ''
+  }
+
+  if (props.variant === 30) {
+    return 'done'
+  }
+
+  if (props.variant === 40) {
+    return 'error'
+  }
+
+  if (props.variant === 50) {
+    return 'cancelled'
+  }
+
+  return ''
+})
+</script>
+
 <style scoped lang="scss">
+// outer spinner
 div#job-information-spinner {
   display: block;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 50px;
-  width: 50px;
-  margin: -25px 0 0 -25px;
-  border: 5px solid transparent;
-  border-top-color: #000000;
+  height: 18px;
+  width: 18px;
+  border: 2px solid yellow;
   border-bottom-color: #000000;
   border-radius: 50%;
-  -webkit-animation: job-information-spinner 1s linear infinite;
-  animation: job-information-spinner 1s linear infinite;
+  animation: job-information-spinner 1.25s linear infinite;
+  -webkit-animation: job-information-spinner 1.25s linear infinite;
 }
 
-div#job-information-spinner:after {
+div#job-information-spinner.queued {
+  @apply border-2 border-solid border-warning;
+  animation: none;
+  -webkit-animation: none;
+}
+
+div#job-information-spinner.done {
+  @apply border-2 border-solid border-brand-primary;
+}
+
+div#job-information-spinner.error {
+  @apply border-2 border-solid border-danger;
+}
+
+div#job-information-spinner.cancelled {
+  @apply border-2 border-solid border-info;
+}
+
+// inner dot
+div#job-information-spinner::after {
   content: "";
   position: absolute;
-  top: 5px;
-  right: 5px;
-  bottom: 5px;
-  left: 5px;
-  border: 5px solid transparent;
+  top: 2.5px;
+  right: 2.5px;
+  bottom: 2.5px;
+  left: 2.5px;
+  border: 2px solid yellow;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.25);
+  background-color: yellow;
+}
+
+div#job-information-spinner.queued::after {
+  @apply border-2 border-solid border-warning bg-warning;
+}
+
+div#job-information-spinner.done::after {
+  @apply border-2 border-solid border-brand-primary bg-brand-primary;
+}
+
+div#job-information-spinner.error::after {
+  @apply border-2 border-solid border-danger bg-danger;
+}
+
+div#job-information-spinner.cancelled::after {
+  @apply border-2 border-solid border-info bg-info;
 }
 
 @keyframes job-information-spinner {
