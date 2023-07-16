@@ -1,16 +1,14 @@
 <template>
   <contact-card>
     <div class="flex flex-col gap-2">
-      <h2 class="text-2xl md:text-3xl xl:text-4xl">
+      <h3 class="font-medium font-header">
         Working on an endangered species project?
-      </h2>
+      </h3>
       <p class="mb-4">
         <router-link
           :to="{ name: ROUTE_NAMES.landingContact }"
           class="text-frequency underline"
-        >
-          Contact us
-        </router-link> to find out how the Arbimon science team can help.
+        >Contact us</router-link> to find out how the Arbimon science team can help.
       </p>
     </div>
   </contact-card>
