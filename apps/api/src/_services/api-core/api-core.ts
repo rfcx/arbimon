@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
-import { type DetectCnnDetectionsQueryParams, type DetectCnnDetectionsResponse } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
+import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
+import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
@@ -27,8 +28,8 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getDetectionsFromApi (token: string, params: DetectCnnDetectionsQueryParams): Promise<DetectCnnDetectionsResponse[]> {
-  return await axios.request<DetectCnnDetectionsResponse[]>({
+export async function getDetectionsFromApi (token: string, params: DetectDetectionsQueryParamsCore): Promise<DetectDetectionsResponseCore> {
+  return await axios.request<DetectDetectionsResponseCore>({
     method: 'GET',
     url: `${CORE_API_BASE_URL}/detections`,
     headers: {
@@ -68,6 +69,27 @@ async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number
     })
 
     return resp.data?.map(({ id }) => id) ?? []
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function updateDetectionReviewFromApi (token: string, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
+  try {
+    const resp = await axios.request<DetectReviewDetectionResponse>({
+      method: 'POST',
+      url: `${CORE_API_BASE_URL}/streams/${data.streamId}/detections/${data.start}/review`,
+      headers: {
+        authorization: token
+      },
+      data: {
+        status: data.status,
+        classifier: data.classifier,
+        classification: data.classification
+      }
+    })
+
+    return resp.data
   } catch (e) {
     return unpackAxiosError(e)
   }

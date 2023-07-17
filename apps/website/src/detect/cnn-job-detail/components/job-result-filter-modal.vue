@@ -17,8 +17,8 @@
       <div class="text-md font-weight-bold mt-2">
         Threshold
         <el-slider
-          v-model="cnnResultFilterStore.filter.threshold"
-          :format-tooltip="cnnResultFilterStore.formatThreshold"
+          v-model="detectionsResultFilterStore.filter.threshold"
+          :format-tooltip="detectionsResultFilterStore.formatThreshold"
           size="small"
         />
       </div>
@@ -28,11 +28,11 @@
           Validation status
         </div>
         <el-select
-          v-model="cnnResultFilterStore.filter.validationStatus"
+          v-model="detectionsResultFilterStore.filter.validationStatus"
           class="mt-2"
         >
           <el-option
-            v-for="status in cnnResultFilterStore.validationStatusFilterOptions"
+            v-for="status in detectionsResultFilterStore.validationStatusFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
@@ -45,11 +45,11 @@
           Class
         </div>
         <el-select
-          v-model="cnnResultFilterStore.filter.taxonClass"
+          v-model="detectionsResultFilterStore.filter.taxonClass"
           class="mt-2"
         >
           <el-option
-            v-for="status in cnnResultFilterStore.classFilterOptions"
+            v-for="status in detectionsResultFilterStore.classFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
@@ -62,13 +62,13 @@
           Sites
         </div>
         <el-select
-          v-model="cnnResultFilterStore.filter.siteIds"
+          v-model="detectionsResultFilterStore.filter.siteIds"
           class="mt-2"
           multiple
           collapse-tags
         >
           <el-option
-            v-for="status in cnnResultFilterStore.sitesFilterOptions"
+            v-for="status in detectionsResultFilterStore.sitesFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
@@ -81,11 +81,11 @@
           Sort by
         </div>
         <el-select
-          v-model="cnnResultFilterStore.filter.sortBy"
+          v-model="detectionsResultFilterStore.filter.sortBy"
           class="mt-2"
         >
           <el-option
-            v-for="status in cnnResultFilterStore.sortByFilterOptions"
+            v-for="status in detectionsResultFilterStore.sortByFilterOptions"
             :key="status.value"
             :label="status.label"
             :value="status.value"
@@ -111,9 +111,9 @@
   </modal-popup>
 </template>
 <script setup lang="ts">
-import { useCnnResultFilterStore } from '~/store'
+import { useDetectionsResultFilterStore } from '~/store'
 
-const cnnResultFilterStore = useCnnResultFilterStore()
+const detectionsResultFilterStore = useDetectionsResultFilterStore()
 const emit = defineEmits(['emitClose'])
 
 const confirmFilterConfig = () => {
