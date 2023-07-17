@@ -1,42 +1,74 @@
-import { type DetectDetectionResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, type REVIEW_STATUS_MAPPING, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidation, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
 import { type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
-import { type SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
+import { getDetectionsFromApi } from '~/api-core/api-core'
+import { type DetectDetectionsQueryParamsCore } from '~/api-core/types'
 import { getInMemoryDetectValidationStatus, getInMemorySpeciesDetectionSummary, updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
-import { type DetectionFilter } from './types'
 
 const mockData = mockDetections
 
-export const getDetections = async (filter: DetectionFilter): Promise<DetectDetectionResponse> => {
-  let filteredMockData: SpeciesDetection[] = []
-  filteredMockData = mockData.filter(d => d.jobId === filter.jobId)
-
-  const siteIds = filter.siteIds
-  if (siteIds.length > 0) {
-    filteredMockData = filteredMockData.filter(d => siteIds.includes(d.siteId))
+const getReviewStatus = (input: typeof REVIEW_STATUS_MAPPING[ReviewStatus]): ReviewStatus => {
+  if (input === 1) {
+    return 'confirmed'
   }
 
-  const statusId = filter.statusId
-  if (statusId !== undefined) {
-    filteredMockData = filteredMockData.filter(d => d.statusId === parseInt(statusId))
+  if (input === 0) {
+    return 'uncertain'
   }
 
-  const classifierId = filter.classifierId
-  if (classifierId !== undefined) {
-    filteredMockData = filteredMockData.filter(d => d.classifierId === parseInt(classifierId))
+  if (input === -1) {
+    return 'rejected'
   }
 
-  const confidence = filter.confidence
-  if (confidence !== undefined) {
-    filteredMockData = filteredMockData.filter(d => d.confidence >= parseFloat(confidence))
+  if (input === null) {
+    return 'unreviewed'
   }
 
-  return {
-    detections: filteredMockData
+  throw new Error('Error: unknown review status')
+}
+
+export const getDetections = async (token: string, jobId: number, query: DetectDetectionsQueryParams): Promise<DetectDetectionsResponse> => {
+  const detectionsParams: DetectDetectionsQueryParamsCore = {
+    start: query.start,
+    end: query.end,
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
+    streams: query['sites[]'],
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
+    classifications: query['classifications[]'],
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
+    classifiers: query['classifiers[]'],
+    classifier_jobs: [jobId],
+    min_confidence: query.minConfidence,
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
+    review_statuses: query['reviewStatuses[]'],
+    limit: query.limit,
+    offset: query.offset,
+    descending: query.descending,
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
+    fields: query['fields[]']
   }
+
+  const detections = await getDetectionsFromApi(token, detectionsParams)
+
+  return detections.map(detection => {
+    return {
+      id: detection.id,
+      siteId: detection.stream_id,
+      classifierId: detection.classifier_id,
+      start: detection.start,
+      end: detection.end,
+      confidence: detection.confidence,
+      reviewStatus: getReviewStatus(detection.review_status),
+      classification: {
+        value: detection.classification.value,
+        title: detection.classification.title,
+        image: detection.classification.image
+      }
+    }
+  })
 }
 
 export const getDetectionSummary = async (): Promise<DetectSummaryResponse> => {

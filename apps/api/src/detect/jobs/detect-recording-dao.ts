@@ -48,7 +48,7 @@ export const getDetectRecordingTotalDurationMinutes = async (sequelize: Sequeliz
     ) as rbsh
   `
 
-  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as TotalDurationInMinutes[]
+  const result = await sequelize.query<TotalDurationInMinutes>(sql, { type: QueryTypes.SELECT, bind, raw: true })
 
   return result[0]
 }
