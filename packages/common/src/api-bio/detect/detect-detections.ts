@@ -51,8 +51,8 @@ export type DetectDetectionsResponse = Array<{
 }>
 
 // Route
-export const detectDetectionsRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/detect-detections`
+export const detectDetectionsRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/detections`
 
 // Service
 export const apiBioGetDetectDetections = async (apiClient: AxiosInstance, jobId: number, params: DetectDetectionsQueryParams): Promise<DetectDetectionsResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, `${detectSpecificRoutePrefix(jobId)}/detect-detections`, { params })
+  await apiGetOrUndefined(apiClient, `${detectSpecificRoutePrefix(jobId)}/detections`, { params })
