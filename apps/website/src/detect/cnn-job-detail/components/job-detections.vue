@@ -220,11 +220,12 @@ const getCombinedDetections = () => {
 }
 
 const validateDetection = async (validation: ReviewStatus): Promise<void> => {
-  // pause query
+  // TODO: pause query before running this script?
+  // The reason to pause is that maybe the detections ping could alter with
+  // the array and causes inconsistencies
+  // in the section of the detections that we need to validate.
+  // check out here on how to disable query: https://tanstack.com/query/v4/docs/vue/guides/disabling-queries#lazy-queries
   const selectedDetectionIds = getSelectedDetectionIds()
-
-  console.info('species to validate', selectedDetectionIds)
-  console.info('validation: ', validation)
 
   // call review api
   const promises = selectedDetectionIds.map(id => {
