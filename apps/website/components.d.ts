@@ -55,6 +55,7 @@ declare module '@vue/runtime-core' {
     IconFaPaw: typeof import('~icons/fa/paw')['default']
     IconFaPlay: typeof import('~icons/fa/play')['default']
     IconFaPlus: typeof import('~icons/fa/plus')['default']
+    IconFaPlusCircle: typeof import('~icons/fa/plus-circle')['default']
     IconFasCaretRight: typeof import('~icons/fa-solid/caret-right')['default']
     IconFasChevronLeft: typeof import('~icons/fa-solid/chevron-left')['default']
     IconFasChevronRight: typeof import('~icons/fa-solid/chevron-right')['default']

@@ -1,12 +1,12 @@
 <template>
   <section class="max-w-screen-xl mx-auto px-2 sm:px-8 pb-8">
     <div class="text-gray-900 dark:text-white">
-      <h1 class="text-4xl pt-16 pb-1 font-bold">
+      <h1 class="text-4xl pt-16 pb-1 font-bold tracking-wide">
         {{ store.selectedProject?.name }}
       </h1>
     </div>
     <div class="text-gray-900 dark:text-white">
-      <h2 class="text-3xl pt-8 pb-6">
+      <h2 class="text-3xl pt-8 pb-6 tracking-wide">
         Overview
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
@@ -19,23 +19,18 @@
     </div>
     <div class="text-gray-900 dark:text-white">
       <div class="flex items-center space-x-6">
-        <h2 class="text-3xl pt-8 pb-6">
+        <h2 class="text-3xl pt-8 pb-6 tracking-wide">
           Analyses
         </h2>
         <a
-          class="btn btn-icon flex items-center space-x-3 px-3 py-2 text-xs font-bold rounded-lg bg-gray-500"
+          class="btn btn-primary btn-icon flex text-xs items-center space-x-3 px-3 py-2"
           :title="'Create New Analysis Job'"
           :href="ANALYSIS_URL"
           target="_blank"
         >
+          <icon-fa-plus-circle class="h-3 w-3" />
           <span sclass="sm:hidden">Create new Analysis</span>
-          <icon-fa-plus class="h-3 w-3" />
         </a>
-        <button :title="'Create New Analysis Job'">
-          <icon-fas-info-circle
-            class="h-4 w-4 mr-2 text-gray-300 cursor-pointer"
-          />
-        </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mb-4">
         <DashboardAnalyses
@@ -127,7 +122,7 @@ const analyses = computed(() => [
   { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
   { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
   { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` },
-  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` }
+  { value: 'aed', title: 'AED & Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`

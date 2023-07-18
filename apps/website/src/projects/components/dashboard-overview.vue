@@ -1,42 +1,42 @@
 <template>
-  <div class="grid grid-cols-1 gap-2 xl:gap-4 bg-gray-300 border-2 border-gray-300 rounded-md p-6 dark:border-gray-600 h-46">
-    <div class="flex justify-between rounded-t items-center h-7">
-      <h3 class="text-sm xl:text-md text-gray-900">
+  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-orange-100 rounded-2xl shadow py-4 px-6 dark:border-orange-100 h-36">
+    <div class="flex justify-start rounded-t items-center h-6">
+      <h3 class="text-base xl:text-sm text-rose-300 tracking-wider">
         {{ stat.title }}
       </h3>
       <button :title="stat.title">
-        <icon-fas-info-circle class="h-4 w-4 mr-2 text-gray-900 cursor-pointer" />
+        <icon-fas-info-circle class="h-3 w-3 ml-2 text-rose-300 cursor-pointer" />
       </button>
     </div>
     <div class="flex items-center space-x-2 sm:space-x-3">
       <icon-fa-map-marker
         v-if="stat.value === 'site'"
-        class="h-6 w-6 mr-2 text-gray-900"
+        class="h-6 w-6 mr-2 text-white tracking-wider"
       />
       <icon-fa-microphone
         v-if="stat.value === 'recording'"
-        class="h-6 w-6 mr-2 text-gray-900"
+        class="h-6 w-6 mr-2 text-white tracking-wider"
       />
       <icon-fa-paw
         v-if="stat.value === 'species'"
-        class="h-6 w-6 mr-2 text-gray-900"
+        class="h-6 w-6 mr-2 text-white tracking-wider"
       />
       <icon-fa-list-ul
         v-if="stat.value === 'playlist'"
-        class="h-6 w-6 mr-2 text-gray-900"
+        class="h-6 w-6 mr-2 text-white tracking-wider"
       />
       <icon-fas-spinner
         v-if="stat.isLoading"
-        class="animate-spin h-8 w-8 text-gray-900"
+        class="animate-spin h-8 w-8 text-white"
       />
       <span
-        v-if="stat.count"
-        class="text-3xl text-gray-900"
-      >{{ stat.count }}</span>
+        v-if="stat.count !== undefined"
+        class="text-3xl text-white font-medium"
+      >{{ valueShortScale }}</span>
     </div>
     <div>
       <a
-        class="text-l underline text-cyan-600 cursor-pointer focus:text-cyan-800 focus:bg-gray-300"
+        class="text-md text-cyan-600 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-gray-300 tracking-wider border-b-1 border-frequency"
         :href="stat.link"
         target="_blank"
       >
@@ -47,14 +47,21 @@
 </template>
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import { onMounted } from 'vue'
+import numeral from 'numeral'
+import { computed, onMounted } from 'vue'
 
 import { type Stat } from '../types'
 
-defineProps<{stat: Stat}>()
+const props = defineProps<{stat: Stat}>()
 
 onMounted(() => {
   initTooltips()
+})
+
+const valueShortScale = computed(() => {
+  const formattedNumber = numeral(props.stat.count).format('0.0a')
+  const firstDecimalDigit = (x: string) => x.split('.')[1].slice(0, 1)
+  return firstDecimalDigit(formattedNumber) === '0' ? formattedNumber.replace('.0', '') : formattedNumber
 })
 
 </script>
