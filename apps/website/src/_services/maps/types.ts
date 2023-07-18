@@ -16,7 +16,7 @@ export interface MapSiteData {
   siteName: string
   latitude: number
   longitude: number
-  values: Record<string, number | boolean>
+  values: Record<string, number | boolean | string>
 }
 
 export interface MapMoveEvent {

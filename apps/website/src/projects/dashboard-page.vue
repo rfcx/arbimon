@@ -119,15 +119,15 @@ const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbi
 const stats = computed(() => [
   { value: 'site', title: 'Sites created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
   { value: 'recording', title: 'Recordings uploaded', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
-  { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` },
-  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` }
+  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
+  { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
-  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Models', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` },
-  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Jobs', countTemplate: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` }
+  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
+  { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
+  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` },
+  { value: 'aed', title: 'AED and Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
@@ -146,12 +146,12 @@ function mapDataset (): MapDataSet {
     endDate: dayjs(),
     sites: store.projectFilters?.locationSites ?? [],
     data: (store.projectFilters?.locationSites ?? [])
-      .map(({ id, name: siteName, latitude, longitude }) => ({
-        siteName,
+      .map(({ name: siteName, latitude, longitude }) => ({
+        siteName: 'Site Name',
         latitude,
         longitude,
         values: {
-          [MAP_KEY_THAT_SHOULD_NOT_EXIST]: id
+          [MAP_KEY_THAT_SHOULD_NOT_EXIST]: siteName
         }
       })),
     maxValues: { [MAP_KEY_THAT_SHOULD_NOT_EXIST]: 0 }

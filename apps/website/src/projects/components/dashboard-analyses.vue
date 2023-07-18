@@ -18,11 +18,14 @@
         v-if="analysis.isLoading"
         class="animate-spin h-8 w-8 text-gray-900"
       />
-      <span v-if="analysis.count">{{ analysis.count }}</span>
+      <span v-if="analysis.count !== undefined">{{ analysis.count }}</span>
     </div>
-    <div class="flex items-center space-x-2 sm:space-x-3 text-xl text-gray-300">
-      <span>Templates:</span>
-      <span>{{ analysis.countTemplate }}</span>
+    <div
+      v-if="analysis.speciesDetected !== undefined"
+      class="flex items-center space-x-2 sm:space-x-3 text-xl text-gray-300"
+    >
+      <span>Number of species detected:</span>
+      <span>{{ analysis.speciesDetected }}</span>
     </div>
   </div>
 </template>
