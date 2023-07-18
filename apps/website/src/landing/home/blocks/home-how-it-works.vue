@@ -2,9 +2,9 @@
   <section class="bg-white bg-gradient-to-b from-moss from-70% to-black to-30%">
     <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-24 lg:px-6 mt-20">
       <div class="text-center px-8">
-        <h2 class="mb-2 text-2xl md:text-3xl lg:text-4xl tracking-tight font-medium text-gray-900 dark:text-white">
+        <h1 class="mb-2 text-gray-900 dark:text-white">
           How it works
-        </h2>
+        </h1>
         <p class="mb-6 text-gray-500 dark:text-insight max-w-3xl mx-auto">
           Getting started is easy.
         </p>

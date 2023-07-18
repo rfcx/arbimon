@@ -1,5 +1,6 @@
 <template>
   <hero />
+  <data-stat />
   <impact />
   <what-we-do />
   <how-it-works />
@@ -10,6 +11,7 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 
+import DataStat from './blocks/home-data-stat.vue'
 import Features from './blocks/home-features.vue'
 import Hero from './blocks/home-hero.vue'
 import HowItWorks from './blocks/home-how-it-works.vue'

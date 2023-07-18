@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-2xl xl:grid xl:grid-cols-3 xl:px-6">
+    <div class="gap-10 items-center py-10 px-4 mx-auto max-w-screen-2xl xl:(grid grid-cols-3 pl-20 pr-0 mr-0) 2xl:(mx-auto)">
       <div class="text-gray-500 dark:text-insight col-span-2">
         <router-link
           to="/featured"
@@ -31,14 +31,14 @@
           </svg>
           <span class="ml-1 hover:text-frequency">Back to featured work</span>
         </router-link>
-        <h2 class="mt-12 my-4 text-4xl capitalize font-extrabold text-gray-900 dark:text-insight">
+        <h1 class="mt-10 my-4 capitalize text-gray-900 dark:text-insight">
           {{ props.info?.title }}
-        </h2>
-        <p class="mb-12 text-md">
+        </h1>
+        <p class="mb-10 text-md">
           {{ props.info?.description }}
         </p>
-        <div class="grid md:grid-cols-2 gap-8 mb-8">
-          <div class="flex flex-col justify-between">
+        <div class="grid md:grid-cols-2 mb-8 xl:mb-0 gap-8">
+          <div class="flex flex-col gap-y-6">
             <div>
               <featured-stat title="FEATURED PROJECT">
                 {{ props.info?.projectName }}
@@ -56,18 +56,18 @@
             </div>
             <a
               href="#"
-              class="btn btn-primary w-40"
+              class="btn btn-primary w-48"
             >Work with us</a>
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-2">
             <featured-stat title="timeline">
-              {{ props.info?.timeline }}
+              <span class="text-sm">{{ props.info?.timeline }}</span>
             </featured-stat>
             <featured-stat title="scope">
-              {{ props.info?.scope }}
+              <span class="text-sm">{{ props.info?.scope }}</span>
             </featured-stat>
             <featured-stat title="partners">
-              <ul class="list-disc ml-4">
+              <ul class="list-disc ml-4 text-sm">
                 <li
                   v-for="(partner, index) in props.info?.partners"
                   :key="index"
@@ -77,7 +77,7 @@
               </ul>
             </featured-stat>
             <featured-stat title="services">
-              <ul class="list-disc ml-4">
+              <ul class="list-disc ml-4 text-sm">
                 <li
                   v-for="(service, index) in props.info?.services"
                   :key="index"
@@ -103,7 +103,7 @@
           </div>
         </div>
       </div>
-      <div class="h-sm xl:h-screen-sm">
+      <div class="items-end self-stretch sm:h-sm xl:(h-full pt-16)">
         <img
           class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"

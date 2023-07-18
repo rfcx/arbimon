@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-mirage-gray">
+  <section class="bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
       <div class="flex flex-row items-center gap-16">
         <div class="basis-3/5">
@@ -29,13 +29,13 @@
             v-else
             action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
             method="POST"
-            class="p-8 rounded-lg bg-gray-700 dark:bg-gray-200 space-y-8"
+            class="p-8 space-y-8"
           >
             <div class="grid grid-cols-2 gap-8">
               <div>
                 <label
                   for="name"
-                  class="block mb-2 font-bold text-gray-300 dark:text-steel-gray"
+                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
                 >Name</label>
                 <input
                   id="name"
@@ -50,7 +50,7 @@
               <div>
                 <label
                   for="email"
-                  class="block mb-2 font-bold text-gray-300 dark:text-steel-gray"
+                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
                 >Email</label>
                 <input
                   id="email"
@@ -67,7 +67,7 @@
               <div>
                 <label
                   for="phone"
-                  class="block mb-2 font-bold text-gray-300 dark:text-steel-gray"
+                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
                 >Phone</label>
                 <input
                   id="phone"
@@ -81,7 +81,7 @@
               <div>
                 <label
                   for="company"
-                  class="block mb-2 font-bold text-gray-300 dark:text-steel-gray"
+                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
                 >Organization</label>
                 <input
                   id="company"
@@ -96,7 +96,7 @@
             <div>
               <label
                 for="subject"
-                class="block mb-2 font-bold text-gray-300 dark:text-steel-gray"
+                class="block mb-2 font-bold text-gray-300 dark:text-insight"
               >Type of inquiry</label>
               <select
                 id="subject"
@@ -112,7 +112,7 @@
             <div class="sm:col-span-2">
               <label
                 for="message"
-                class="block mb-2 font-bold text-gray-300 dark:text-steel-gray"
+                class="block mb-2 font-bold text-gray-300 dark:text-insight"
               >Message</label>
               <textarea
                 id="message"
@@ -147,7 +147,7 @@
               >
               <button
                 type="submit"
-                class="py-3 px-5 font-semibold text-center text-white rounded-lg bg-primary sm:w-fit hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                class="btn btn-primary"
               >
                 Send Message
               </button>
@@ -158,7 +158,7 @@
           <h2 class="mb-4 text-sm">
             CONTACT US
           </h2>
-          <h3 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+          <h3 class="mb-4 text-4xl tracking-tight text-gray-900 dark:text-white">
             Get in touch today
           </h3>
           <p class="mb-16 font-light sm:text-xl">
