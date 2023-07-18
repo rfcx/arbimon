@@ -81,7 +81,7 @@ export default class DashboardPage extends Vue {
   tabs = tabs
   selectedTab = tabs[0].value
 
-  getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean => data.values[dataKey]
+  getPopupHtml = (data: MapSiteData, dataKey: string): number | boolean | string => data.values[dataKey]
 
   get isProjectMember (): boolean {
     return this.store.selectedProject?.isMyProject ?? false
