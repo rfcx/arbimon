@@ -3,8 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
+import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
 import { useStoreOutsideSetup } from './index'
-import { type ResultFilterInner, type ValidationResultFilterInner } from './use-detections-result-filter-store'
 
 /**
  * Very similar store for separate species page, this is used to sync between the modal settings and
@@ -50,28 +50,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const validationStatusFilterOptions = computed<ValidationResultFilterInner[]>(() => {
-    return [
-      {
-        label: 'All',
-        value: 'all'
-      },
-      {
-        label: 'Not Present',
-        value: 'rejected'
-      },
-      {
-        label: 'Unknown',
-        value: 'uncertain'
-      },
-      {
-        label: 'Present',
-        value: 'confirmed'
-      },
-      {
-        label: 'Unvalidated',
-        value: 'unreviewed'
-      }
-    ]
+    return validationStatus
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
@@ -84,16 +63,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const sortByFilterOptions = computed<ResultFilterInner[]>(() => {
-    return [
-      {
-        label: 'Low to high',
-        value: 'asc'
-      },
-      {
-        label: 'High to low',
-        value: 'desc'
-      }
-    ]
+    return sortByOptions
   })
 
   return {
