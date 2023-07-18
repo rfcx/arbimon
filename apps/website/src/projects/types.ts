@@ -4,7 +4,7 @@ export interface Analysis {
   count: number | undefined
   isLoading: boolean
   label: string
-  countTemplate: number
+  speciesDetected?: number
   link: string
 }
 
