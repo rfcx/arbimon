@@ -19,6 +19,10 @@ export interface ResultFilterInner {
 
 export type ResultFilterList = Array<{ label: string, items: ResultFilterInner[] }>
 
+/**
+ * A store to store the settings value between the modal and the full page components
+ * of the cnn result page.
+ */
 export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', () => {
   const store = useStoreOutsideSetup()
   const route = useRoute()
