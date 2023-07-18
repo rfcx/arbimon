@@ -2,22 +2,9 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
-
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
+import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
 import { useStoreOutsideSetup } from './index'
-
-export interface ValidationResultFilterInner {
-  label: string
-  value: ReviewStatus | 'all'
-}
-
-export interface ResultFilterInner {
-  label: string
-  value: string
-}
-
-export type ResultFilterList = Array<{ label: string, items: ResultFilterInner[] }>
 
 /**
  * A store to store the settings value between the modal and the full page components
@@ -65,28 +52,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   })
 
   const validationStatusFilterOptions = computed<ValidationResultFilterInner[]>(() => {
-    return [
-      {
-        label: 'All',
-        value: 'all'
-      },
-      {
-        label: 'Not Present',
-        value: 'rejected'
-      },
-      {
-        label: 'Unknown',
-        value: 'uncertain'
-      },
-      {
-        label: 'Present',
-        value: 'confirmed'
-      },
-      {
-        label: 'Unvalidated',
-        value: 'unreviewed'
-      }
-    ]
+    return validationStatus
   })
 
   const classFilterOptions = computed<ResultFilterInner[]>(() => {
@@ -108,16 +74,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   })
 
   const sortByFilterOptions = computed<ResultFilterInner[]>(() => {
-    return [
-      {
-        label: 'Low to high',
-        value: 'asc'
-      },
-      {
-        label: 'High to low',
-        value: 'desc'
-      }
-    ]
+    return sortByOptions
   })
 
   const resultFilter = computed(() => filter.value)
