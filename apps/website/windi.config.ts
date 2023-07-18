@@ -29,20 +29,33 @@ export default defineConfig({
   theme: {
     extend: {
       screens: {
+        xs: '300px',
         sm: '700px',
         md: '768px',
         lg: '1024px',
         xl: '1280px',
         '2xl': '1536px'
       },
+      spacing: {
+        '7.5rem': '7.5rem'
+      },
       fontFamily: {
-        display: ['ABCFavorit'],
+        header: ['ABCFavoritExpanded'],
+        display: ['ABCFavoritExtended'],
         body: ['Poppins'],
-        eyebrow: ['Roboto'],
+        eyebrow: ['Roboto Mono'],
         sans: ['Lato', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
       },
-      fontSize: {
-        xxs: '0.5rem'
+      fontSize: { // ref: https://www.figma.com/file/sP3kZZDOiOd5hqTZCkXH0x/RFCx%2FArbimon-Design-Library?type=design&node-id=1846%3A9636&mode=design&t=Fp0xjfu9wQz3wggK-1
+        xxs: '0.5rem',
+        sm: ['0.8125rem', '1.125rem'], // Paragraph caption - font size 13px, line height 16px
+        base: ['1rem', '1.5rem'], // Paragraph regular - font size 16px, line height 24px
+        lg: ['1.25rem', '1.75rem'], // Paragraph large - font size 20px, line height 28px
+        xl: ['1.25rem', '1.5rem'], // Headline 100 - font size 20px, line height 24px
+        '2xl': ['1.5rem', '2rem'], // Paragraph Callout - font size 24px, line height 32px
+        '3xl': ['2rem', '2.5rem'], // Headline 200 - font size 32px, line height 40px
+        '4xl': ['2.5rem', '3rem'], // Headline 300 - font size 40px, line height 48px
+        '5xl': ['3.25rem', '3.75rem'] // Headline 400 - font size 52px, line height 60px
       },
       textColor: {
         primary: '#fff',
@@ -112,9 +125,10 @@ export default defineConfig({
         }
       },
       backgroundImage: {
-        'hero-testimonial': "url('@/_assets/landing/testimonials/bg-hero.png')",
-        'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.png')",
-        'hero-contact': "url('@/_assets/landing/contact/fauna.png')"
+        'hero-data': "url('@/_assets/landing/hero-data.webp')",
+        'hero-testimonial': "url('@/_assets/landing/testimonials/bg-hero.webp')",
+        'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.webp')",
+        'hero-contact': "url('@/_assets/landing/contact/fauna.webp')"
       }
     },
     animation: {

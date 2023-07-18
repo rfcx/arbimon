@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-moss py-8 lg:py-24">
+  <section class="bg-white dark:bg-moss py-8 lg:pb-[7.5rem]">
     <div class="px-4 flex justify-between items-center lg:px-6">
       <div class="px-8 md:px-4">
         <button
@@ -24,10 +24,10 @@
         </button>
       </div>
       <div class="max-w-screen-sm">
-        <h2 class="text-bold text-frequency text-lg">
-          {{ props.feedbacks[currentFeedbackIndex]?.text }}
+        <h2 class="text-bold text-frequency text-lg font-display">
+          "{{ props.feedbacks[currentFeedbackIndex]?.text }}"
         </h2>
-        <div class="mt-4 flex">
+        <div class="mt-6 flex">
           <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
             <span class="font-medium text-gray-600 dark:text-gray-300"> {{ props.feedbacks[currentFeedbackIndex]?.partnerName.charAt(0) }}</span>
           </div>

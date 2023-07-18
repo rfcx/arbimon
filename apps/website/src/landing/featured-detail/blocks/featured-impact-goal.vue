@@ -1,11 +1,18 @@
 <template>
   <section class="bg-white dark:bg-moss">
-    <div class="py-8 px-4 mx-auto max-w-screen-lg xl:gap-16 sm:py-16 lg:px-6">
-      <p class="mb-8 text-xl text-bold">
+    <div class="pb-[7.5rem] px-4 mx-auto max-w-screen-sm lg:px-6">
+      <h3 class="mb-6 font-medium">
         {{ props.title }}
-      </p>
-      <div class="flex flex-col gap-8 lg:flex-row">
+      </h3>
+      <div class="flex flex-col items-center gap-10">
         <p>{{ props.text }} </p>
+        <a
+          v-if="props.ctaLink"
+          :href="props.ctaLink"
+          class="items-center justify-center w-64 btn btn-primary"
+        >
+          {{ props.ctaText }}
+        </a>
       </div>
     </div>
   </section>
@@ -16,6 +23,8 @@
 const props = defineProps<{
   readonly title: string
   readonly text: string
+  readonly ctaText: string
+  readonly ctaLink: string
 }>()
 
 </script>

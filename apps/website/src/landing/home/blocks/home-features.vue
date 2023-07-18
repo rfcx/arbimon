@@ -3,9 +3,9 @@
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         <span class="text-sm text-spoonbill mb-4 uppercase font-eyebrow">END-TO-END WORKFLOW</span>
-        <h2 class="my-4 text-2xl leading-10 md:text-3xl xl:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+        <h1 class="my-4 text-gray-900 dark:text-white">
           Intuitive & powerful features
-        </h2>
+        </h1>
       </div>
       <div class="text-center space-y-8 grid grid-cols-2 lg:grid-cols-3 gap-12 space-y-0">
         <div
