@@ -1,22 +1,22 @@
 <template>
   <section class="bg-white dark:bg-pitch">
-    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-50">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         <span class="text-sm text-spoonbill mb-4 uppercase font-eyebrow">END-TO-END WORKFLOW</span>
-        <h1 class="my-4 text-gray-900 dark:text-white">
+        <h1 class="mt-6 mb-10 text-gray-900 dark:text-white">
           Intuitive & powerful features
         </h1>
       </div>
-      <div class="text-center space-y-8 grid grid-cols-2 lg:grid-cols-3 gap-12 space-y-0">
+      <div class="text-center space-y-8 grid grid-cols-2 lg:grid-cols-3 gap-10 space-y-0">
         <div
           v-for="(item, index) in config"
           :key="index"
-          class="flex flex-col items-left justify-start"
+          class="flex flex-col items-left justify-start py-8"
         >
-          <div class="flex justify-start align-start mb-2 w-12 h-12 lg:h-18 lg:w-18">
+          <div class="flex justify-start align-start w-10 h-10">
             <img :src="item.icon">
           </div>
-          <h3 class="mb-2 text-lg font-medium dark:text-insight text-left">
+          <h3 class="my-4 text-lg font-medium dark:text-insight text-left">
             {{ item.title }}
           </h3>
           <p class="max-w-72 text-gray-500 dark:text-insight text-left">
