@@ -4,7 +4,7 @@ export const CLASSIFIER_JOB_STATUS = {
   DONE: 30,
   ERROR: 40,
   CANCELLED: 50
-}
+} as const
 
 export const CLASSIFIER_JOB_LABELS: Record<number, string> = {
   0: 'Queued',
