@@ -8,6 +8,7 @@ import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
+import { DetectSummaryQueryParams, DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
@@ -87,6 +88,23 @@ export async function updateDetectionReviewFromApi (token: string, data: DetectR
         classifier: data.classifier,
         classification: data.classification
       }
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getDetectionsStatusFromApi (token: string, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> {
+  try {
+    const resp = await axios.request<DetectSummaryResponse>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifiers/${jobId}`,
+      headers: {
+        authorization: token
+      },
+      params: query
     })
 
     return resp.data
