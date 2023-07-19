@@ -20,6 +20,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
   import type { AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
