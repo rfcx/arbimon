@@ -1,11 +1,11 @@
 import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, type REVIEW_STATUS_MAPPING, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
-import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidation, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
 import { type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
 
-import { getDetectionsFromApi } from '~/api-core/api-core'
+import { getDetectionsFromApi, getDetectionsStatusFromApi } from '~/api-core/api-core'
 import { type DetectDetectionsQueryParamsCore } from '~/api-core/types'
-import { getInMemoryDetectValidationStatus, getInMemorySpeciesDetectionSummary, updateInMemoryDetectValidation } from './detect-dao'
+import { getInMemoryDetectValidationStatus, updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
 
 const mockData = mockDetections
@@ -71,10 +71,14 @@ export const getDetections = async (token: string, jobId: number, query: DetectD
   })
 }
 
-export const getDetectionSummary = async (): Promise<DetectSummaryResponse> => {
-  return {
-    speciesSummary: await getInMemorySpeciesDetectionSummary(mockData)
+export const getDetectionSummary = async (token: string, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> => {
+  const detectSummaryQuery: DetectSummaryQueryParams = {
+    // @ts-expect-error axios sends array query params with [], which is off-spec. Fastify parses it using the spec, This way of access is required.
+    fields: query['fields[]']
   }
+
+  const response = await getDetectionsStatusFromApi(token, jobId, detectSummaryQuery)
+  return response
 }
 
 export const getValidationStatus = async (): Promise<DetectValidationStatusResponse> => {
