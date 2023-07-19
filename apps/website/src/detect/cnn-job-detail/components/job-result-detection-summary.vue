@@ -51,6 +51,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
@@ -87,5 +88,4 @@ const previousPage = () => {
 const nextPage = () => {
   displayIndex.value += 1
 }
-
 </script>
