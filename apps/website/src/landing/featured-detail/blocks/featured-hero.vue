@@ -59,7 +59,7 @@
               class="btn btn-primary w-48"
             >Work with us</a>
           </div>
-          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-2">
+          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-3">
             <featured-stat title="timeline">
               <span class="text-sm">{{ props.info?.timeline }}</span>
             </featured-stat>
