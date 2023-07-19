@@ -8,9 +8,7 @@
         <router-link
           :to="{ name: ROUTE_NAMES.landingContact }"
           class="text-frequency underline"
-        >
-          Contact us
-        </router-link> to find out how the Arbimon science team can help.
+        >Contact us</router-link> to find out how the Arbimon science team can help.
       </p>
     </div>
   </contact-card>
