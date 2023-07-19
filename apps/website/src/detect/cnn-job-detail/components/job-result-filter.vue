@@ -106,6 +106,7 @@
     @emit-close="displayFilterModal = false"
   />
 </template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 
