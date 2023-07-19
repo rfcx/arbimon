@@ -77,7 +77,8 @@ export default defineConfig({
         insight: '#FFFEFC',
         cloud: '#F9F6F2',
         fog: '#E9E6E1',
-        'util-gray': '#4B4B4B',
+        'util-gray-01': '#7F7D78',
+        'util-gray-02': '#4B4B4B',
         // Olds
         placeholder: '#999',
         faded: '#333',

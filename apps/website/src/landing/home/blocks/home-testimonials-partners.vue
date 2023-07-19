@@ -44,7 +44,7 @@
                 <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
                   {{ feedbacks[currentFeedbackIndex].user.name }}
                 </span>
-                <span class="px-2 py-1 rounded-full text-sm uppercase bg-util-gray text-spoonbill font-eyebrow tracking-wide">
+                <span class="px-2 py-1 rounded-full text-sm uppercase bg-util-gray-02 text-spoonbill font-eyebrow tracking-wide">
                   {{ feedbacks[currentFeedbackIndex].user.role }}
                 </span>
               </div>
