@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-pitch py-8 lg:py-24">
+  <section class="bg-white dark:bg-pitch py-8 lg:(pt-50 pb-20)">
     <div class="px-4 flex justify-between items-center lg:px-6 mx-auto max-w-screen-xl">
       <div class="px-8 md:px-4">
         <button
@@ -26,16 +26,16 @@
         <img
           src="@/_assets/landing/testimonials/fi_quote.svg"
           alt="Quote"
-          class="px-4 mx-auto md:mx-4"
+          class="mx-auto lg:mr-10"
         >
         <div class="max-w-screen-sm">
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
             What our partners have to say
           </h1>
-          <h4 class="font-body font-normal">
-            "{{ feedbacks[currentFeedbackIndex].text }}"
+          <h4 class="font-body text-2xl">
+            “{{ feedbacks[currentFeedbackIndex].text }}”
           </h4>
-          <div class="mt-4 flex">
+          <div class="mt-8 flex">
             <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
               <span class="font-medium text-gray-600 dark:text-gray-300"> {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
             </div>
@@ -44,7 +44,7 @@
                 <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
                   {{ feedbacks[currentFeedbackIndex].user.name }}
                 </span>
-                <span class="px-2 py-1 rounded-full text-sm uppercase bg-gray-600 text-spoonbill font-eyebrow tracking-wide">
+                <span class="px-2 py-1 rounded-full text-sm uppercase bg-util-gray text-spoonbill font-eyebrow tracking-wide">
                   {{ feedbacks[currentFeedbackIndex].user.role }}
                 </span>
               </div>
@@ -93,8 +93,8 @@
     </div>
   </section>
   <section class="bg-hero-testimonial bg-cover bg-no-repeat">
-    <div class="py-8 lg:py-24 mx-auto max-w-screen-xl px-4">
-      <h1 class="mb-8 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
+    <div class="py-10 lg:(pt-30 pb-50 px-10) mx-auto max-w-screen-xl px-4">
+      <h1 class="mb-20 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
         Trusted by 100+ organizations<br> around the world
       </h1>
       <div class="grid grid-cols-4 gap-4 text-gray-500 sm:gap-8 lg:gap-2 md:grid-cols-6 lg:grid-cols-12 dark:text-gray-400">

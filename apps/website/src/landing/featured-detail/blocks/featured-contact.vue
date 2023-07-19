@@ -1,10 +1,10 @@
 <template>
   <contact-card>
     <div class="flex flex-col gap-2">
-      <h3 class="font-medium font-header">
+      <h2 class="font-medium font-header">
         Working on an endangered species project?
-      </h3>
-      <p class="mb-4">
+      </h2>
+      <p>
         <router-link
           :to="{ name: ROUTE_NAMES.landingContact }"
           class="text-frequency underline"
