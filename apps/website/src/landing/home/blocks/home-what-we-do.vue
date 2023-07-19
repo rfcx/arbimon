@@ -20,10 +20,10 @@ import { ROUTE_NAMES } from '~/router';
             We’re also a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
           </p>
           <router-link
-            :to="{ name: ROUTE_NAMES.landingFeatured }"
-            class="inline-flex items-center justify-center btn btn-secondary"
+            :to="{ name: ROUTE_NAMES.landingContact }"
+            class="inline-flex items-center justify-center btn btn-primary"
           >
-            See our featured projects
+            Partner with us
           </router-link>
         </div>
         <div class="pb-14">
@@ -35,7 +35,7 @@ import { ROUTE_NAMES } from '~/router';
           </p>
           <a
             href="#"
-            class="inline-flex items-center justify-center btn btn-primary"
+            class="inline-flex items-center justify-center btn btn-secondary"
           >
             Start analyzing
           </a>
