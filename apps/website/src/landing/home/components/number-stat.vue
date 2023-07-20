@@ -3,7 +3,7 @@
     <h1 class="text-flamingo">
       {{ valueShortScale }}
     </h1>
-    <p class="text-sm">
+    <p class="text-sm font-medium">
       {{ props.title }}
     </p>
   </section>

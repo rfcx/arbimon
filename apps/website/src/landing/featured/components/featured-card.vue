@@ -44,21 +44,25 @@
             </defs>
           </svg>
 
-          <p class="leading-normal text-sm text-spoonbill uppercase pb-2 font-['Roboto']">
+          <p class="leading-normal text-sm text-spoonbill uppercase mb-1 font-eyebrow">
             {{ location }}
           </p>
         </div>
-        <h2 class="mt-1 text-xl font-bold tracking-tight text-insight pb-2 lg:text-2xl">
+        <h1 class="mt-1 font-bold text-insight mb-1">
           {{ title }}
-        </h2>
-        <p class="text-insight pb-2 line-clamp-2 text-sm lg:text-base">
+        </h1>
+        <p class="text-insight mb-2 text-sm lg:text-base">
           {{ subtitle }}
         </p>
         <router-link
           :to="link"
           class="text-frequency hover:border-b hover:border-b-frequency my-2 font-display"
         >
-          Learn more
+          <span class="font-display font-medium lg:text-2xl">Learn more<svg class="ml-2 inline" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19" stroke="#ADFF2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 5L19 12L12 19" stroke="#ADFF2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
         </router-link>
       </div>
     </div>

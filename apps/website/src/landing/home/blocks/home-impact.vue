@@ -18,7 +18,7 @@
         </p>
         <ol
           role="tab"
-          class="inline-flex mt-4 pointer-events-auto"
+          class="inline-flex mt-20 pointer-events-auto"
         >
           <li
             class="inline-block p-2.5 border-b-2 text-sm hover:text-frequency hover:border-frequency"
