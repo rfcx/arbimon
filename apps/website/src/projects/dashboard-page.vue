@@ -113,16 +113,16 @@ const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbi
 
 const stats = computed(() => [
   { value: 'site', title: 'Sites created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings uploaded', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
+  { value: 'recording', title: 'Recordings', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
   { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
   { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Jobs', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
+  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Number of templates', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
   { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
-  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` },
-  { value: 'aed', title: 'AED & Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` }
+  { value: 'aed', title: 'AED & Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
