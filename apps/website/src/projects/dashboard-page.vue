@@ -114,8 +114,8 @@ const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbi
 const stats = computed(() => [
   { value: 'site', title: 'Sites created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
   { value: 'recording', title: 'Recordings', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
-  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create a new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
-  { value: 'species', title: 'Species added to library', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add a new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
+  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
+  { value: 'species', title: 'Species detected', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
 
 const analyses = computed(() => [
