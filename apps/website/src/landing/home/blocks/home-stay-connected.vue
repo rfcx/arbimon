@@ -1,27 +1,33 @@
 <template>
   <contact-card>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col">
       <h1>
         Stay connected
       </h1>
-      <p class="mb-4">
+      <p class="my-8">
         Be the first to hear the latest from Arbimon.
       </p>
     </div>
-    <div>
-      <span class="text-sm">Email address</span>
-      <form>
+    <div class="flex flex-col lg:flex-row gap-2">
+      <form class="flex flex-col md:flex-row gap-2">
+        <span class="sr-only">First name</span>
         <input
           type="text"
-          placeholder="Enter your email"
-          class="mr-4 w-1/2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          placeholder="First name"
+          class="inline-flex border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) md:w-1/3"
         >
-        <button
-          class="btn btn-primary"
+        <span class="sr-only">Email address</span>
+        <input
+          type="text"
+          placeholder="Email Address"
+          class="border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) md:w-2/3"
+        >
+      </form>
+      <button
+          class="btn btn-primary min-w-1/4 mr-0"
         >
           Sign up
         </button>
-      </form>
     </div>
   </contact-card>
 </template>

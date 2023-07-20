@@ -4,7 +4,7 @@
       <div class="text-gray-500 dark:text-insight col-span-2">
         <router-link
           to="/featured"
-          class="text-sm flex items-center hover:text-frequency"
+          class="text-sm flex items-center"
         >
           <svg
             width="16"
@@ -12,7 +12,7 @@
             viewBox="0 0 16 16"
             fill="insight"
             xmlns="http://www.w3.org/2000/svg"
-            class="stroke-insight hover:stroke-frequency transition-colors duration-300"
+            class="stroke-insight transition-colors duration-300"
           >
             <path
               d="M12.6666 8H3.33325"
@@ -29,7 +29,7 @@
               stroke-linejoin="round"
             />
           </svg>
-          <span class="ml-1 hover:text-frequency">Back to featured work</span>
+          <span class="ml-1 hover:underline">Back to featured work</span>
         </router-link>
         <h1 class="mt-10 my-4 capitalize text-gray-900 dark:text-insight">
           {{ props.info?.title }}
@@ -59,7 +59,7 @@
               class="btn btn-primary w-48"
             >Work with us</a>
           </div>
-          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-2">
+          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-3">
             <featured-stat title="timeline">
               <span class="text-sm">{{ props.info?.timeline }}</span>
             </featured-stat>

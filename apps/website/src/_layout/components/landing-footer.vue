@@ -1,5 +1,5 @@
 <template>
-  <footer class="px-4 sm:px-6 py-8 lg:pt-24 bg-white dark:bg-pitch">
+  <footer class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
     <div class="mx-auto max-w-screen-xl">
       <!-- Logo & Socials -->
       <div class="flex justify-between mb-8">
@@ -62,10 +62,10 @@
       <div class="md:flex md:justify-between">
         <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
           <div>
-            <h3 class="mb-6 text-gray-900 text-sm dark:text-insight">
+            <h6 class="mb-6 text-gray-900 dark:text-insight font-medium text-base">
               Resources
-            </h3>
-            <ul class="text-gray-600 dark:text-gray-300 text-sm">
+            </h6>
+            <ul class="text-gray-600 dark:text-gray-300">
               <li class="mb-4">
                 <router-link
                   to="/faq"
@@ -89,10 +89,10 @@
             </ul>
           </div>
           <div>
-            <h3 class="mb-6 text-gray-900 dark:text-insight text-sm">
+            <h6 class="mb-6 text-gray-900 dark:text-insight font-medium text-base">
               Legal
-            </h3>
-            <ul class="text-gray-600 dark:text-gray-300 text-sm">
+            </h6>
+            <ul class="text-gray-600 dark:text-gray-300">
               <li class="mb-4">
                 <a
                   href="#"
@@ -109,23 +109,23 @@
           </div>
         </div>
         <div class="mt-8 md:mt-0">
-          <span class="block mb-4 text-sm text-gray-900 dark:text-insight">In collaboration with</span>
+          <span class="block mb-4 text-gray-900 dark:text-insight text-base font-medium">In collaboration with</span>
           <span class="sr-only">Rainforest Connection™</span>
           <a
             href="https://rfcx.org/"
           >
             <img
               src="@/_services/assets/rfcx-logo-with-text.svg"
-              class="w-40"
+              class="w-52"
               alt="Rainforest Connection™ website"
             >
           </a>
         </div>
       </div>
-      <div class="sm:flex sm:items-center sm:justify-between mt-10">
-        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400 font-['Roboto']">© 2023 <a
+      <div class="sm:flex sm:items-center sm:justify-between mt-10 py-4">
+        <span class="text-util-gray-01 text-xs sm:text-center font-eyebrow">© 2023 <a
           href="https://rfcx.org"
-          class="hover:underline"
+          class="hover:underline font-eyebrow"
         >Rainforest Connection™</a>
         </span>
       </div>

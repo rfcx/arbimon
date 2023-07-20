@@ -1,11 +1,11 @@
 <template>
   <section class="bg-white bg-gradient-to-b from-moss from-70% to-black to-30%">
-    <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-24 lg:px-6 mt-20">
+    <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-20 lg:px-6">
       <div class="text-center px-8">
         <h1 class="mb-2 text-gray-900 dark:text-white">
           How it works
         </h1>
-        <p class="mb-6 text-gray-500 dark:text-insight max-w-3xl mx-auto">
+        <p class="mb-20 text-gray-500 dark:text-insight max-w-3xl mx-auto">
           Getting started is easy.
         </p>
       </div>
@@ -25,7 +25,7 @@
             <li
               v-for="(item, index) in config"
               :key="index"
-              class="inline-block p-4 border-b-2 hover:text-frequency hover:border-frequency"
+              class="inline-block p-4 border-b-2 lg:(min-w-65) hover:text-frequency hover:border-frequency"
               :class="{ 'text-frequency border-frequency border-b-2': active === index }"
               :aria-selected="active === index"
               :tabindex="index"
