@@ -90,7 +90,26 @@ import JobItemRow from './components/job-item-row.vue'
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
 const store = useStore()
-const params = reactive({ created_by: 'all', projects: [store.selectedProject?.idCore ?? ''] })
+const params = reactive({
+  created_by: 'all',
+  projects: [store.selectedProject?.idCore ?? ''],
+  fields: [
+    'id',
+    'classifier_id',
+    'project_id',
+    'minutes_completed',
+    'minutes_total',
+    'created_by_id',
+    'completed_at',
+    'created_at',
+    'status',
+    'classifier',
+    'query_streams',
+    'query_start',
+    'query_end',
+    'query_hours'
+  ]
+})
 
 watch(() => store.selectedProject, () => {
   params.projects = [store.selectedProject?.idCore ?? '']
@@ -116,7 +135,7 @@ const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
   totalDurationMinutes: cj.minutesTotal,
-  createdAt: new Date(cj.created_at)
+  createdAt: new Date(cj.createdAt)
 })) ?? [])
 
 const getProgress = (minutesComplete: number, minutesTotal: number): number => {
@@ -135,7 +154,7 @@ const pollingJob = setInterval(() => {
 const pollJob = () => pollingJob
 
 onMounted(() => {
-  if (jobs.value.some(job => [CLASSIFIER_JOB_STATUS.WAITING, CLASSIFIER_JOB_STATUS.RUNNING].includes(job.progress.status))) {
+  if (jobs.value.some(job => job.progress.status === CLASSIFIER_JOB_STATUS.WAITING || job.progress.status === CLASSIFIER_JOB_STATUS.RUNNING)) {
     pollJob()
   }
 })
