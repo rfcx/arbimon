@@ -1,11 +1,19 @@
-import { type DetectValidationStatusParams, type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { type DetectValidationResultsParams, type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 
+import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
-import { BioInvalidPathParamError } from '~/errors'
+import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getValidationStatus } from './detect-bll'
+import { getValidationResults } from './detect-bll'
 
-export const detectValidationStatusHandler: Handler<DetectValidationStatusResponse, DetectValidationStatusParams> = async (req) => {
+export const detectValidationStatusHandler: Handler<DetectValidationResultsResponse, DetectValidationResultsParams, DetectValidationResultsQueryParams> = async (req) => {
+  const token = req.headers.authorization
+
+  // no token no data
+  if (token === undefined || !isValidToken(token)) {
+    throw BioUnauthorizedError()
+  }
+
   // Inputs & validation
   const { jobId } = req.params
   assertPathParamsExist({ jobId })
@@ -13,5 +21,5 @@ export const detectValidationStatusHandler: Handler<DetectValidationStatusRespon
   const jobIdInteger = parseInt(jobId)
   if (Number.isNaN(jobIdInteger)) throw BioInvalidPathParamError({ jobId })
 
-  return await getValidationStatus()
+  return await getValidationResults(token, jobIdInteger, req.query)
 }

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
+import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 
@@ -8,7 +10,6 @@ import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
-import { DetectSummaryQueryParams, DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
@@ -100,7 +101,24 @@ export async function getDetectionsStatusFromApi (token: string, jobId: number, 
   try {
     const resp = await axios.request<DetectSummaryResponse>({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/classifiers/${jobId}`,
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}`,
+      headers: {
+        authorization: token
+      },
+      params: query
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobResultsFromApi (token: string, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/results`,
       headers: {
         authorization: token
       },

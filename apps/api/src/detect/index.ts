@@ -2,7 +2,7 @@ import { detectDetectionsRoute } from '@rfcx-bio/common/api-bio/detect/detect-de
 import { detectRecordingRoute } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { detectSummaryRoute } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { detectValidationRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation'
-import { detectValidationStatusRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { detectValidationResultsRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { detectReviewDetectionRoute } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
@@ -28,7 +28,7 @@ export const routesDetect: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: detectValidationStatusRoute,
+    url: detectValidationResultsRoute,
     handler: detectValidationStatusHandler
   },
   {
