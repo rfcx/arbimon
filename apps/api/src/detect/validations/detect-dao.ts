@@ -1,11 +1,9 @@
 import { groupBy, mapValues } from 'lodash-es'
 
-import { type SpeciesDetectionSummary } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidation, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
-import { type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
 import { type SpeciesDetection } from '@rfcx-bio/common/api-bio/detect/types'
 
-export const getInMemorySpeciesDetectionSummary = async (mockData: SpeciesDetection[]): Promise<SpeciesDetectionSummary[]> => {
+export const getInMemorySpeciesDetectionSummary = async (mockData: SpeciesDetection[]): Promise<Array<{ classificationId: number, classificationName: string, numberOfDetections: number }>> => {
   const detectionsBySpecies = groupBy(mockData, 'classificationId')
   const detectionsBySpeciesValues = Object.values(
     mapValues(detectionsBySpecies, (value, key) => ({ classificationId: parseInt(key), classificationName: key, numberOfDetections: value.length })))
@@ -13,7 +11,7 @@ export const getInMemorySpeciesDetectionSummary = async (mockData: SpeciesDetect
   return detectionsBySpeciesValues
 }
 
-export const getInMemoryDetectValidationStatus = async (mockData: SpeciesDetection[]): Promise<DetectValidationStatusResponse> => {
+export const getInMemoryDetectValidationStatus = async (mockData: SpeciesDetection[]): Promise<{ 0: number, 1: number, 2: number, 3: number }> => {
   const summary = { 0: 0, 1: 0, 2: 0, 3: 0 }
 
   /**
