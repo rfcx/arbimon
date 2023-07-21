@@ -1,11 +1,11 @@
 import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, type REVIEW_STATUS_MAPPING, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidation, type DetectValidationResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation'
-import { type DetectValidationStatusResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 
-import { getDetectionsFromApi, getDetectionsStatusFromApi } from '~/api-core/api-core'
+import { getClassifierJobResultsFromApi, getDetectionsFromApi, getDetectionsStatusFromApi } from '~/api-core/api-core'
 import { type DetectDetectionsQueryParamsCore } from '~/api-core/types'
-import { getInMemoryDetectValidationStatus, updateInMemoryDetectValidation } from './detect-dao'
+import { updateInMemoryDetectValidation } from './detect-dao'
 import { mockDetections } from './mock-detections'
 
 const mockData = mockDetections
@@ -73,7 +73,7 @@ export const getDetections = async (token: string, jobId: number, query: DetectD
 
 export const getDetectionSummary = async (token: string, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> => {
   const detectSummaryQuery: DetectSummaryQueryParams = {
-    // @ts-expect-error axios sends array query params with [], which is off-spec. Fastify parses it using the spec, This way of access is required.
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
     fields: query['fields[]']
   }
 
@@ -81,8 +81,14 @@ export const getDetectionSummary = async (token: string, jobId: number, query: D
   return response
 }
 
-export const getValidationStatus = async (): Promise<DetectValidationStatusResponse> => {
-  return await getInMemoryDetectValidationStatus(mockData)
+export const getValidationResults = async (token: string, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse> => {
+  const detectionsResultsQuery: DetectValidationResultsQueryParams = {
+    // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
+    fields: query['fields[]']
+  }
+
+  const results = await getClassifierJobResultsFromApi(token, jobId, detectionsResultsQuery)
+  return results
 }
 
 export const validateDetections = async (validationList: DetectValidation[]): Promise<DetectValidationResponse> => {
