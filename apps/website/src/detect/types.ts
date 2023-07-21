@@ -1,4 +1,4 @@
-import { type CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { type ClassifierJobStatusNumber } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 export interface JobInput {
   sites: string
@@ -7,7 +7,7 @@ export interface JobInput {
 }
 
 export interface JobProgress {
-  status: typeof CLASSIFIER_JOB_STATUS[keyof typeof CLASSIFIER_JOB_STATUS]
+  status: ClassifierJobStatusNumber
   value: number
 }
 
