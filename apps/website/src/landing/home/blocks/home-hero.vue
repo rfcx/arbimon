@@ -11,12 +11,12 @@
         <p class="max-w-2xl mb-6 text-echo lg:mb-8 dark:text-insight">
           Join the global community of scientists, conservationists, and nature enthusiasts who use Arbimon to drive impactful and sustainable change.
         </p>
-        <a
-          href="#"
+        <router-link
+          :to="{ name: ROUTE_NAMES.myProjects }"
           class="inline-flex items-center justify-center btn btn-primary"
         >
           Start analyzing
-        </a>
+        </router-link>
         <router-link
           :to="{ name: ROUTE_NAMES.landingFeatured }"
           class="inline-flex items-center justify-center btn btn-secondary mt-6 lg:mt-0"
