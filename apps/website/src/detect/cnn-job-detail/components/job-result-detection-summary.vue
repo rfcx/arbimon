@@ -15,18 +15,18 @@
       Detection summary
     </h3>
     <div
-      class="job-result-detection-summary-detail mt-2 grid grid-rows-5 gap-2"
+      class="job-result-detection-summary-detail mt-2 grid grid-rows-5 gap-x-4"
       style="grid-template-columns: fit-content(100px) 1fr fit-content(100px) 1fr;"
     >
       <template
         v-for="(item, index) in classificationsSummary()"
         :key="`job-result-detection-summary-species-${item.value}-${index}`"
       >
-        <div class="justify-self-start font-semibold text-right">
+        <div class="justify-self-start font-semibold text-right text-lg">
           {{ displayValue(item.total) }}
         </div>
         <router-link
-          class="truncate"
+          class="truncate text-lg"
           :title="item.value"
           :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: item.value }}"
         >
