@@ -63,17 +63,20 @@
             {{ CLASSIFIER_JOB_LABELS[props.summary?.status ?? 0] }}
           </h2>
           <el-progress
+            id="job-information-status-progress-bar"
             class="col-span-2"
-            :stroke-width="4"
+            color="#232436"
+            :stroke-width="12"
             :percentage="progress"
             :format="progressFormat"
           />
-          <div class="flex flex-row col-span-2">
-            <icon-fa-calendar class="block mr-2" />
-            <h3 class="text-md text-subtle">
-              Jun 29, 2022 13:24 - Tomaz
-            </h3>
-          </div>
+          <!-- TODO: we're droppping this UI out for now as we don't have good ways of looking up this data -->
+          <!-- <div class="flex flex-row col-span-2"> -->
+          <!--   <icon-fa-calendar class="block mr-2" /> -->
+          <!--   <h3 class="text-md text-subtle"> -->
+          <!--     Jun 29, 2022 13:24 - Tomaz -->
+          <!--   </h3> -->
+          <!-- </div> -->
         </div>
       </div>
 
@@ -87,12 +90,13 @@
         <h2 class="text-lg">
           {{ validationStatus }}
         </h2>
-        <div class="flex flex-row mt-2">
-          <icon-fa-calendar class="block mr-2" />
-          <h3 class="text-md text-subtle">
-            Rreviewed 3 hours ago by Gabriel
-          </h3>
-        </div>
+        <!-- TODO: we're droppping this UI out for now as we don't have good ways of looking up this data -->
+        <!-- <div class="flex flex-row mt-2"> -->
+        <!--   <icon-fa-calendar class="block mr-2" /> -->
+        <!--   <h3 class="text-md text-subtle"> -->
+        <!--     Rreviewed 3 hours ago by Gabriel -->
+        <!--   </h3> -->
+        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -104,7 +108,7 @@ import { computed } from 'vue'
 
 import type { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
-import { CLASSIFIER_JOB_LABELS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { hours } from '~/picker/time-of-day-constants'
 import ComponentError from './component-error.vue'
