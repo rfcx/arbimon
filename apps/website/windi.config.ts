@@ -143,7 +143,7 @@ export default defineConfig({
   ],
   shortcuts: {
     // tab
-    tab: 'py-2 pr-4 pl-3 text-gray-700 border-b-2 border-transparent lg:hover:bg-transparent lg:p-0 dark:text-insight dark:hover:text-frequency dark:hover:border-b-2 dark:hover:border-b-frequency',
+    tab: 'py-2 pr-4 pl-3 text-gray-700 border-b-2 border-transparent lg:hover:bg-transparent lg:p-0 dark:text-insight dark:hover:text-frequency lg:(dark:hover:border-b-2 dark:hover:border-b-frequency)',
     'tab-active': '!text-insight !dark:text-frequency lg:!border-b-2 lg:!border-b-frequency',
     // button
     btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full',
