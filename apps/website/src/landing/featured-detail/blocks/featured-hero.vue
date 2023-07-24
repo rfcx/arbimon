@@ -1,7 +1,7 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="gap-10 items-center py-10 px-4 mx-auto max-w-screen-2xl xl:(grid grid-cols-3 pl-20 pr-0 mr-0) 2xl:(mx-auto)">
-      <div class="text-gray-500 dark:text-insight col-span-2">
+    <div class="gap-10 items-center py-10 px-4 mx-auto max-w-screen-xl xl:(grid grid-cols-12 pr-0) 2xl:(mx-auto)">
+      <div class="text-gray-500 dark:text-insight col-span-8">
         <router-link
           to="/featured"
           class="text-sm flex items-center"
@@ -103,7 +103,7 @@
           </div>
         </div>
       </div>
-      <div class="items-end self-stretch sm:h-sm xl:(h-full pt-16)">
+      <div class="items-end self-stretch sm:h-sm xl:(h-full pt-16) col-span-4">
         <img
           class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"
