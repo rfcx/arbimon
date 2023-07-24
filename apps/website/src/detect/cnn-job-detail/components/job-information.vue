@@ -153,17 +153,45 @@ const validationStatus = computed(() => {
   return `${processed}/${props.results?.reviewStatus.total ?? 0}`
 })
 
+/**
+ * Returns the progress of the bar calculated from `minutesCompleted` and `minutesTotal`.
+ *
+ * - will return 0 for jobs with status `WAITING` regardless of the computed value
+ * - will return 100 for jobs with status `DONE` regardless of the computed value
+ * - will return computed value capped at 100 for other statuses
+ */
 const progress = computed(() => {
   if (props.summary?.minutesTotal === null || props.summary?.minutesTotal === 0) {
     return 0.0
   }
 
-  const rounded = Math.round(((props.summary?.minutesCompleted ?? 0) / (props.summary?.minutesTotal ?? 0)) * 100 * 10e1) / 10e1
+  if (props.summary?.status === CLASSIFIER_JOB_STATUS.WAITING) {
+    return 0.0
+  }
 
+  if (props.summary?.status === CLASSIFIER_JOB_STATUS.DONE) {
+    return 100.0
+  }
+
+  const rounded = Math.round(((props.summary?.minutesCompleted ?? 0) / (props.summary?.minutesTotal ?? 0)) * 100 * 10e1) / 10e1
   return rounded > 100 ? 100.0 : rounded
 })
 
+/**
+ * Returns the end text of the progress bar
+ *
+ * - will return `''` for jobs with status `WAITING` regardless of the computed value
+ * - will return `100%` for jobs with status `DONE` regardless of the computed value
+ * - will return actual value for other statuses
+ */
 const progressFormat = (percentage: number) => {
+  if (props.summary?.status === CLASSIFIER_JOB_STATUS.WAITING) {
+    return ''
+  }
+
+  if (props.summary?.status === CLASSIFIER_JOB_STATUS.DONE) {
+    return '100%'
+  }
   return `${percentage}%`
 }
 </script>
