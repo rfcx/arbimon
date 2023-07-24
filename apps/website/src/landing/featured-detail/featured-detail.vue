@@ -15,6 +15,7 @@
     />
     <featured-contact />
     <featured-explorer :projects="projects" />
+    <footer-contact />
   </div>
 </template>
 
@@ -23,6 +24,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import FooterContact from '@/_layout/components/landing-footer-contact.vue'
 import { projects } from '../featured/data'
 import FeaturedContact from './blocks/featured-contact.vue'
 import FeaturedContent from './blocks/featured-content.vue'
