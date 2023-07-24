@@ -33,12 +33,12 @@ import { ROUTE_NAMES } from '~/router';
           <p class="mb-6">
             Arbimon is an open-source ecoacoustic analysis platform empowering scientists and conservationists with an efficient way to upload, store, and analyze mass amounts of acoustic data, enabling the ability to derive insights about the ecosystem at scale.
           </p>
-          <a
-            href="#"
+          <router-link
+            :to="{ name: ROUTE_NAMES.myProjects }"
             class="inline-flex items-center justify-center btn btn-secondary"
           >
             Start analyzing
-          </a>
+          </router-link>
         </div>
       </div>
       <div>
