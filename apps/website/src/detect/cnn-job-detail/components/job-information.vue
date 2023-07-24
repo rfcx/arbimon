@@ -183,4 +183,12 @@ div#cnn-job-information-status {
     grid-template-rows: fit-content 1fr 1fr 1fr;
   }
 }
+
+div#job-information-status-progress-bar {
+  div.el-progress-bar {
+    div.el-progress-bar__outer {
+      background-color: #45485D;
+    }
+  }
+}
 </style>
