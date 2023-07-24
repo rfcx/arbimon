@@ -79,12 +79,14 @@
       </div>
     </div>
   </section>
+  <footer-contact />
 </template>
 <script setup lang="ts">
 import { initCollapses } from 'flowbite'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
+import FooterContact from '@/_layout/components/landing-footer-contact.vue'
 import Card from './components/featured-card.vue'
 import { projects } from './data'
 

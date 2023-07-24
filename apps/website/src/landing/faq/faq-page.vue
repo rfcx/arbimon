@@ -191,5 +191,8 @@
       </div>
     </div>
   </section>
+  <footer-contact />
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import FooterContact from '@/_layout/components/landing-footer-contact.vue'
+</script>
