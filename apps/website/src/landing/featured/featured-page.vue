@@ -16,11 +16,11 @@
       </div>
     </div>
     <div class="grid md:grid-cols-12 max-w-screen-xl mx-auto py-8 lg:(pt-20)">
-      <aside class="md:col-span-4 px-8 md:px-4 md:sticky md:h-screen md:top-4">
+      <aside class="md:col-span-4 px-4 md:sticky md:h-screen md:top-4 mb-6">
         <button
           data-collapse-toggle="category-menu"
           type="button"
-          class="w-full items-center py-4 dark:text-insight md:hidden dark:hover:ring-moss"
+          class="w-full items-center py-2 border-b-1 border-insight dark:text-insight md:hidden dark:hover:ring-moss"
           aria-controls="category-menu"
           aria-expanded="false"
         >
@@ -49,7 +49,7 @@
         </button>
         <ul
           id="category-menu"
-          class="hidden mb-4 md:block"
+          class="hidden mb-4 mt-4 md:(block mt-0)"
         >
           <li
             v-for="item in projects"
@@ -65,7 +65,7 @@
           </li>
         </ul>
       </aside>
-      <div class="items-stretch gap-10 overflow-y-auto flex flex-col px-8 md:(pb-64 px-4 col-span-8)">
+      <div class="items-stretch gap-10 overflow-y-auto flex flex-col px-4 md:(pb-64 col-span-8)">
         <card
           v-for="item in projects"
           :id="item.category.id"
