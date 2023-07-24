@@ -47,10 +47,9 @@ import { groupBy } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
-import { useGetJobDetections } from '@/detect/_composables/use-get-detections'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDetectionsResultFilterStore } from '~/store'
@@ -72,6 +71,12 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined }>(), {
+  isLoading: true,
+  isError: false,
+  data: undefined
+})
+
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
   const validation = detectionsResultFilterStore.validationStatusFilterOptions
 
@@ -88,18 +93,6 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
   return filtered
 })
 
-const params = computed<DetectDetectionsQueryParams>(() => ({
-  start: '2023-02-20',
-  end: '2023-02-21',
-  sites: detectionsResultFilterStore.filter.siteIds,
-  minConfidence: detectionsResultFilterStore.formattedThreshold,
-  reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
-  classifiers: [3],
-  descending: detectionsResultFilterStore.filter.sortBy === 'desc'
-}))
-
-const { data } = useGetJobDetections(apiClientBio, jobId.value, params)
-
 watch(() => isShiftHolding.value, (newVal, oldVal) => {
   if (newVal !== oldVal && isShiftHolding.value === false) {
     resetSelection(currentDetectionId.value)
@@ -115,7 +108,7 @@ watch(() => isCtrlHolding.value, (newVal, oldVal) => {
 })
 
 const allSpecies = computed(() => {
-  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(data.value ?? [], d => d.classification.value)
+  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
       speciesSlug: slug,
@@ -230,7 +223,7 @@ const validateDetection = async (validation: ReviewStatus): Promise<void> => {
   // call review api
   const promises = selectedDetectionIds.map(id => {
     // this will always be a success case
-    const originalDetection = (data.value ?? []).find(d => id === d.id)
+    const originalDetection = (props.data ?? []).find(d => id === d.id)
 
     return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
       // this is a safe cast because the validation selector always start at 'unreviewed' union
