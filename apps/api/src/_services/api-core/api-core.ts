@@ -10,6 +10,7 @@ import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
+import { ClassifierQueryParams, ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
@@ -119,6 +120,23 @@ export async function getClassifierJobResultsFromApi (token: string, jobId: numb
     const resp = await axios.request({
       method: 'GET',
       url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/results`,
+      headers: {
+        authorization: token
+      },
+      params: query
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierFromApi (token: string, classifierId: number, query: ClassifierQueryParams): Promise<ClassifierResponse> {
+  try {
+    const resp = await axios.request<ClassifierResponse>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifiers/${classifierId}`,
       headers: {
         authorization: token
       },

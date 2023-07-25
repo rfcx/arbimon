@@ -7,6 +7,7 @@ import { resolve } from 'path'
 
 import { env } from './_services/env'
 import { routesActivity } from './activity'
+import { routesClassifiers } from './classifiers'
 import { routesCoreProxy } from './core-proxy'
 import { routesDashboard } from './dashboard'
 import { routesDetect } from './detect'
@@ -43,7 +44,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesActivity,
     routesDetect,
     routesStatus,
-    routesSync
+    routesSync,
+    routesClassifiers
   ]
 
   routesRegistrations
