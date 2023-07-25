@@ -35,20 +35,21 @@ export const getDetections = async (token: string, jobId: number, query: DetectD
     start: query.start,
     end: query.end,
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    streams: query['sites[]'],
+    streams: query['sites[]'] != null ? Array.isArray(query['sites[]']) ? query['sites[]'] : [query['sites[]']] : undefined,
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    classifications: query['classifications[]'],
+    classifications: query['classifications[]'] != null ? Array.isArray(query['classifications[]']) ? query['classifications[]'] : [query['classifications[]']] : undefined,
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    classifiers: query['classifiers[]'],
+    classifiers: query['classifiers[]'] != null ? Array.isArray(query['classifiers[]']) ? query['classifiers[]'] : [query['classifiers[]']] : undefined,
+    // the request only send one classifier job id in
     classifier_jobs: [jobId],
     min_confidence: query.minConfidence,
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    review_statuses: query['reviewStatuses[]'],
+    review_statuses: query['reviewStatuses[]'] != null ? Array.isArray(query['reviewStatuses[]']) ? query['reviewStatuses[]'] : [query['reviewStatuses[]']] : undefined,
     limit: query.limit,
     offset: query.offset,
     descending: query.descending,
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    fields: query['fields[]']
+    fields: query['fields[]'] != null ? Array.isArray(query['fields[]']) ? query['fields[]'] : [query['fields[]']] : undefined
   }
 
   const detections = await getDetectionsFromApi(token, detectionsParams)
@@ -74,7 +75,7 @@ export const getDetections = async (token: string, jobId: number, query: DetectD
 export const getDetectionSummary = async (token: string, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> => {
   const detectSummaryQuery: DetectSummaryQueryParams = {
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    fields: query['fields[]']
+    fields: query['fields[]'] != null ? Array.isArray(query['fields[]']) ? query['fields[]'] : [query['fields[]']] : undefined
   }
 
   const response = await getDetectionsStatusFromApi(token, jobId, detectSummaryQuery)
@@ -84,7 +85,7 @@ export const getDetectionSummary = async (token: string, jobId: number, query: D
 export const getValidationResults = async (token: string, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse> => {
   const detectionsResultsQuery: DetectValidationResultsQueryParams = {
     // @ts-expect-error query params with angled brackets is not on spec. Fastify parses it using the spec. So this way of accessing the query is needed.
-    fields: query['fields[]']
+    fields: query['fields[]'] != null ? Array.isArray(query['fields[]']) ? query['fields[]'] : [query['fields[]']] : undefined
   }
 
   const results = await getClassifierJobResultsFromApi(token, jobId, detectionsResultsQuery)
