@@ -13,6 +13,7 @@
     :is-loading="isLoadingJobResults"
     :is-error="isErrorJobResults"
     :data="jobResults"
+    :classifier-id="classifierId"
     class="mt-4"
   />
   <job-detections
@@ -75,7 +76,7 @@ const { isLoading: isLoadingJobResults, isError: isErrorJobResults, data: jobRes
 
 const queryStart = computed(() => jobSummary.value?.queryStart ?? '')
 const queryEnd = computed(() => jobSummary.value?.queryEnd ?? '')
-const classifierId = computed(() => jobSummary.value?.classifierId ?? -1)
+const classifierId = computed(() => jobSummary.value?.classifierId)
 
 // Just a simple check that the returned value contains some data.
 const enabled = computed(() => jobSummary.value?.classifierId != null)
