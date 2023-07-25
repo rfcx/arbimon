@@ -30,6 +30,7 @@ import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientBioKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
@@ -78,8 +79,18 @@ const queryStart = computed(() => jobSummary.value?.queryStart ?? '')
 const queryEnd = computed(() => jobSummary.value?.queryEnd ?? '')
 const classifierId = computed(() => jobSummary.value?.classifierId)
 
-// Just a simple check that the returned value contains some data.
 const enabled = computed(() => jobSummary.value?.classifierId != null)
+
+/**
+ * Only refetch when job status is not null and job status is running, otherwise refetch every 30 seconds
+ */
+const refetchDetections = computed(() => {
+  if (jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING) {
+    return 30_000
+  }
+
+  return false
+})
 
 // This query will run after `useGetJobDetectionSummary`
 const params = computed<DetectDetectionsQueryParams>(() => ({
@@ -93,5 +104,5 @@ const params = computed<DetectDetectionsQueryParams>(() => ({
   descending: detectionsResultFilterStore.filter.sortBy === 'desc'
 }))
 
-const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled)
+const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchDetections)
 </script>
