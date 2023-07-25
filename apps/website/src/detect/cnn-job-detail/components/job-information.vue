@@ -212,7 +212,7 @@ div#cnn-job-information-status {
 // <lg equivalent
 @media (max-width: 1024px) {
   div#job-information-summary-grid {
-    grid-template-rows: fit-content 1fr 1fr 1fr;
+    grid-template-rows: fit-content(4rem) 1fr 1fr 1fr;
   }
 }
 

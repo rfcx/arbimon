@@ -14,10 +14,7 @@
     <h3 class="job-result-detection-summary-header text-subtle text-sm mb-2">
       Detection summary
     </h3>
-    <div
-      class="job-result-detection-summary-detail mt-2 grid grid-rows-5 gap-x-4"
-      style="grid-template-columns: fit-content(100px) 1fr fit-content(100px) 1fr;"
-    >
+    <div class="job-result-detection-summary-detail mt-2 grid grid-rows-5 gap-x-4">
       <template
         v-for="(item, index) in classificationsSummary()"
         :key="`job-result-detection-summary-species-${item.value}-${index}`"
@@ -95,3 +92,9 @@ const nextPage = () => {
   page.value += 1
 }
 </script>
+
+<style lang="scss">
+div.job-result-detection-summary-detail {
+  grid-template-columns: fit-content(4rem) 1fr fit-content(4rem) 1fr;
+}
+</style>
