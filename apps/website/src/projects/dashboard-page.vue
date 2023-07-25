@@ -1,15 +1,15 @@
 <template>
-  <section class="max-w-screen-xl mx-auto px-2 sm:px-8 pb-8">
+  <section class="w-screen-lg pt-28 mx-auto">
     <div class="text-gray-900 dark:text-white">
-      <h1 class="text-4xl pt-16 pb-1 font-bold tracking-wide">
+      <h1 class="text-5xl font-header font-normal <sm:text-2xl">
         {{ store.selectedProject?.name }}
       </h1>
     </div>
-    <div class="text-gray-900 dark:text-white">
-      <h2 class="text-3xl pt-8 pb-6 tracking-wide">
+    <div class="text-gray-900 dark:text-white pt-20">
+      <h2 class="font-display text-4xl font-medium <sm:text-xl">
         Overview
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 pt-6">
         <DashboardOverview
           v-for="stat in stats"
           :key="stat.value"
@@ -17,33 +17,33 @@
         />
       </div>
     </div>
-    <div class="text-gray-900 dark:text-white">
-      <div class="flex items-center space-x-6">
-        <h2 class="text-3xl pt-8 pb-6 tracking-wide">
+    <div class="text-gray-900 dark:text-white pt-20">
+      <div class="flex items-center space-x-8">
+        <h2 class="font-display text-4xl font-medium <sm:text-xl">
           Analyses
         </h2>
         <a
-          class="btn btn-primary btn-icon flex text-xs items-center space-x-3 px-3 py-2"
+          class="btn btn-primary btn-icon flex text-xs items-center space-x-3 px-6 py-3"
           :title="'Create New Analysis Job'"
           :href="ANALYSIS_URL"
           target="_blank"
         >
           <icon-fa-plus-circle class="h-3 w-3" />
-          <span sclass="sm:hidden">Create new Analysis</span>
+          <span class="font-display text-base">Create new analysis</span>
         </a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mb-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
         <DashboardAnalyses
           v-for="analysis in analyses"
           :key="analysis.value"
           :analysis="analysis"
         />
       </div>
-      <div class="text-gray-900 dark:text-white">
-        <h2 class="text-3xl pt-8 pb-6">
+      <div class="text-gray-900 dark:text-white pt-20">
+        <h2 class="font-display text-4xl font-medium sm:text-xl">
           Sites
         </h2>
-        <div class="w-full text-black mapboxgl-map">
+        <div class="w-full text-black mapboxgl-map pt-6">
           <map-base-component
             :dataset="mapDataset()"
             data-key="refactorThis"
@@ -78,7 +78,7 @@ import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useStore } from '~/store'
 import { useAedCount } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
-import { usePmCount } from './_composables/use-pm-count'
+import { usePmSpeciesCount, usePmTemplateCount } from './_composables/use-pm-count'
 import { useRecordingCount } from './_composables/use-recording-count'
 import { useRfmCount } from './_composables/use-rfm-count'
 import { useSiteCount } from './_composables/use-site-count'
@@ -109,20 +109,21 @@ const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCo
 const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingAedCount, data: aedCount } = useAedCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingPmtCount, data: pmCount } = usePmCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
-  { value: 'site', title: 'Sites created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
+  { value: 'site', title: 'Sites Created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
   { value: 'recording', title: 'Recordings', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
-  { value: 'playlist', title: 'Playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
-  { value: 'species', title: 'Species detected', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
+  { value: 'playlist', title: 'Playlists Created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
+  { value: 'species', title: 'Species Detected', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', count: rfmCount.value, isLoading: isLoadingRFMCount.value, label: 'Number of templates', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
-  { value: 'soundscapes', title: 'Soundscapes', count: pmCount.value, isLoading: isLoadingPmtCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
-  { value: 'aed', title: 'AED & Clustering', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'rfm', title: 'Random Forest Models', count: aedCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
+  { value: 'pm', title: 'Pattern Matching', count: pmSpeciesCount.value, isLoading: isLoadingRFMCount.value || isLoadingPmTemplateCount.value, label: 'Number of templates', speciesTitle: 'Number of species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
+  { value: 'soundscapes', title: 'Soundscapes', count: soundscapeCount.value, isLoading: isLoadingPmtCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
+  { value: 'aed', title: 'AED & Clustering', count: aedCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesTitle: 'Number of species detected', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'rfm', title: 'Random Forest Models', count: rfmCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesTitle: 'Number of species analyzed', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
