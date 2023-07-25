@@ -9,7 +9,9 @@
         </div>
       </template>
       <template #controls>
-        <job-result-filter />
+        <job-result-filter
+          :classifier-id="props.classifierId"
+        />
       </template>
     </section-title>
     <div class="grid grid-cols-4 gap-4 <lg:grid-cols-7 pt-2">
@@ -38,7 +40,8 @@ import JobResultDetectionSummary from './job-result-detection-summary.vue'
 import JobResultFilter from './job-result-filter.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectValidationResultsResponse | undefined }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectValidationResultsResponse | undefined, classifierId?: number }>(), {
+  classifierId: undefined,
   isLoading: false,
   isError: false,
   data: undefined
