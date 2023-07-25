@@ -8,9 +8,11 @@
 <script setup lang="ts">
 import { computed, withDefaults } from 'vue'
 
+import { type ClassifierJobStatusNumber } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+
 /** Queued, Processing, Done, Error, Cancelled respectively */
-const props = withDefaults(defineProps<{ variant: 0 | 20 | 30 | 40 | 50 }>(), {
-  variant: 20
+const props = withDefaults(defineProps<{ variant: ClassifierJobStatusNumber }>(), {
+  variant: 0
 })
 
 const variantName = computed(() => {
