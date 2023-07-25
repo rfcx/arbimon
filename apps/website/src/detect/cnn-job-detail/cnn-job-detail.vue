@@ -86,9 +86,10 @@ const params = computed<DetectDetectionsQueryParams>(() => ({
   start: queryStart.value,
   end: queryEnd.value,
   sites: detectionsResultFilterStore.filter.siteIds,
+  classifications: detectionsResultFilterStore.filter.classification === 'all' || detectionsResultFilterStore.filter.classification === '' ? undefined : [detectionsResultFilterStore.filter.classification],
   minConfidence: detectionsResultFilterStore.formattedThreshold,
   reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
-  classifiers: [classifierId.value],
+  classifiers: [classifierId.value ?? -1],
   descending: detectionsResultFilterStore.filter.sortBy === 'desc'
 }))
 
