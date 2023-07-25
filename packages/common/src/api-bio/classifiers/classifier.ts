@@ -1,7 +1,5 @@
 import { type AxiosInstance } from 'axios'
 
-import { apiGetOrUndefined } from '@/../../utils/src/api'
-
 // Request type
 export interface ClassifierQueryParams {
   fields?: string[]
@@ -43,7 +41,7 @@ export interface ClassifierResponse {
   outputs?: Array<{
     classificationId: number
     classifierId: number
-    OutputClassName: string
+    outputClassName: string
     ignoreThreshold: number
   }>
 
@@ -73,5 +71,11 @@ export const classifierRoute = '/classifiers/:classifierId'
 
 // Service
 export const apiBioGetClassifier = async (apiClient: AxiosInstance, params: ClassifierParams, query: ClassifierQueryParams): Promise<ClassifierResponse | undefined> => {
-  return await apiGetOrUndefined(apiClient, `/classifiers/${params.classifierId}`, { params: query })
+  const response = await apiClient.request<ClassifierResponse>({
+    method: 'GET',
+    url: `/classifiers/${params.classifierId}`,
+    params: query
+  })
+
+  return response.data
 }
