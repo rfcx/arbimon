@@ -13,8 +13,9 @@
     />
     <div
       v-else
+      id="job-result-validation-status-grid-table"
       class="grid gap-x-4"
-      style="grid-template-columns: fit-content(100px) 1fr;"
+      style="grid-template-columns: fit-content(4rem) 1fr;"
     >
       <template
         v-for="key in Object.entries(props.data?.reviewStatus ?? {})"
