@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="py-[7.5rem] px-4 mx-auto xl:gap-16 lg:px-6 lg:pb-60">
+    <div class="py-30 px-4 mx-auto xl:gap-16 lg:px-6 lg:pb-60">
       <h3 class="text-center mb-20">
         Explore our featured projects
       </h3>
