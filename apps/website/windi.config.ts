@@ -37,7 +37,7 @@ export default defineConfig({
         '2xl': '1536px'
       },
       spacing: {
-        '7.5rem': '7.5rem'
+        30: '7.5rem'
       },
       fontFamily: {
         header: ['ABCFavoritExpanded'],

@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-moss py-8 lg:pb-[7.5rem]">
+  <section class="bg-white dark:bg-moss py-8 lg:pb-30">
     <div class="px-4 flex justify-between items-center lg:px-6">
       <div class="px-8 md:px-4">
         <button

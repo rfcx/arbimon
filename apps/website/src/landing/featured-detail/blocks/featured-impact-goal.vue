@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-moss">
-    <div class="pb-[7.5rem] px-4 mx-auto max-w-screen-sm lg:px-6">
+    <div class="pb-30 px-4 mx-auto max-w-screen-sm lg:px-6">
       <h3 class="mb-6 font-medium">
         {{ props.title }}
       </h3>
