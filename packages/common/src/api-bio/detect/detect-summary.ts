@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type ClassifierJobStatusNumber } from '@/api-core/classifier-job/classifier-job-status'
+import { type ClassifierJobStatusNumber } from '../../api-core/classifier-job/classifier-job-status'
 import { type DetectRouteParamsSerialized, DETECT_SPECIFIC_ROUTE_PREFIX, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
 
 // Request type
