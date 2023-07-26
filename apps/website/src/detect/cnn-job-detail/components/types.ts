@@ -9,8 +9,8 @@ export interface ValidationFilterConfig {
 }
 
 export interface DetectionMedia {
-  spectrogramUrl: string | null
-  audioUrl: string | null
+  spectrogramUrl: string
+  audioUrl: string
   id: string
   checked?: boolean
   validation: ReviewStatus
