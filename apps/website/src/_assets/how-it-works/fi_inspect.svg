@@ -1,0 +1,14 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon">
+<g id="Mask group">
+<mask id="mask0_2758_4913" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40">
+<circle id="Ellipse 619" cx="20" cy="20" r="20" fill="black"/>
+</mask>
+<g mask="url(#mask0_2758_4913)">
+<circle id="Ellipse 620" cx="20" cy="20" r="19.5" fill="#060508" stroke="#ADFF2C"/>
+<path id="Vector" d="M37.4746 31.5204C35.2682 31.3432 35.2682 9.90962 33.0559 10.0695C30.8495 10.2228 30.8495 31.1791 28.6372 31.0451C26.4308 30.9155 26.4308 10.3611 24.2185 10.4691C22.0121 10.5706 22.0121 30.8075 19.7998 30.7276C17.5874 30.6541 17.5874 10.6506 15.381 10.7003C13.1747 10.7435 13.1746 30.6066 10.9623 30.5872C8.74998 30.5764 8.74998 10.7564 6.54359 10.7413C4.33126 10.7175 4.33128 30.5958 2.12489 30.6477" stroke="#ADFF2C" stroke-width="2" stroke-miterlimit="10"/>
+<circle id="Ellipse 621" cx="20" cy="20" r="19" stroke="#ADFF2C" stroke-width="2"/>
+</g>
+</g>
+</g>
+</svg>
