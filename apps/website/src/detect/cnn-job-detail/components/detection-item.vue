@@ -68,20 +68,19 @@ import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vu
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
 import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientBioKey, apiMediaKey } from '@/globals'
 import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
 
 const props = withDefaults(defineProps<{
-  spectrogramUrl: string | null
-  audioUrl: string | null,
+  spectrogramUrl: string
+  audioUrl: string,
   id: string | null,
   validation: ReviewStatus,
   checked: boolean | null
 }>(), {
-  spectrogramUrl: null,
-  audioUrl: null,
   id: null,
   checked: null
 })
@@ -94,13 +93,15 @@ const showCheck = ref(false)
 const isSelected = ref<boolean>(false)
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiMedia = inject(apiMediaKey) as AxiosInstance
+
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
 const playing = ref(false)
 
 onMounted(async () => {
   spectrogramLoading.value = true
-  const spectrogramBlob = props.spectrogramUrl ? await apiBioGetCoreMedia(apiClientBio, props.spectrogramUrl) : null
+  const spectrogramBlob = await apiCoreGetMedia(apiMedia, { filename: props.spectrogramUrl })
   spectrogramLoading.value = false
 
   if (!spectrogramBlob) return
