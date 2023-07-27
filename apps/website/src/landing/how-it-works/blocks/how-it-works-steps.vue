@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-30 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         <h6 class="font-eyebrow text-sm uppercase text-spoonbill mb-6">
           Arbimon step-by-step
