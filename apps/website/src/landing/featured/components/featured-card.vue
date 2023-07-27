@@ -44,7 +44,7 @@
             </defs>
           </svg>
 
-          <p class="leading-normal text-sm text-spoonbill uppercase mb-1 font-eyebrow">
+          <p class="leading-normal text-xs text-spoonbill uppercase mb-1 font-eyebrow">
             {{ location }}
           </p>
         </div>
