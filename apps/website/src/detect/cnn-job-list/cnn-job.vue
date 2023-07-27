@@ -74,6 +74,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import dayjs from 'dayjs'
 import { computed, inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
 import { useQueryClient } from 'vue-query'
 
@@ -135,7 +136,7 @@ const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
   totalDurationMinutes: cj.minutesTotal,
-  createdAt: new Date(cj.createdAt)
+  createdAt: dayjs(cj.createdAt)
 })) ?? [])
 
 const getProgress = (minutesComplete: number, minutesTotal: number): number => {
