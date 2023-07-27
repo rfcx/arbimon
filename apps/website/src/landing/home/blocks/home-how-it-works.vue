@@ -1,15 +1,15 @@
 <template>
   <section class="bg-white bg-gradient-to-b from-moss from-70% to-black to-30%">
     <div class="py-8 px-4 mx-auto max-w-screen-2xl lg:py-20 lg:px-6">
-      <div class="text-center px-8">
+      <div class="text-center px-8 mb-10">
         <h1 class="mb-2 text-gray-900 dark:text-white">
           How it works
         </h1>
-        <p class="mb-20 text-gray-500 dark:text-insight max-w-3xl mx-auto">
+        <p class="text-gray-500 dark:text-insight max-w-3xl mx-auto">
           Getting started is easy.
         </p>
       </div>
-      <div class="flex flex-col items-center gap-y-8">
+      <div class="flex flex-col items-center gap-y-4">
         <div class="max-w-screen-lg mx-auto max-h-min">
           <img
             :src="activeData.imageSrc"
