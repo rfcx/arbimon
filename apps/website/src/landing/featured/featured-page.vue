@@ -1,20 +1,13 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="w-full h-64 lg:h-84 bg-hero-featured-works bg-cover bg-no-repeat bg-right border-b border-b-frequency">
-      <div class="grid lg:grid-cols-12 max-w-screen-xl mx-auto px-4">
-        <div class="place-self-center lg:col-span-7 py-8 lg:py-24">
-          <h1 class="mb-4 text-gray-900 dark:text-frequency">
-            Featured Work
-          </h1>
-          <p class="text-gray-500 dark:text-insight">
-            See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
-          </p>
-        </div>
-        <div class="hidden not-sr-only">
-          .
-        </div>
-      </div>
-    </div>
+    <hero-content>
+      <h1 class="mb-4 text-gray-900 dark:text-frequency">
+        Featured Work
+      </h1>
+      <p class="text-gray-500 dark:text-insight">
+        See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
+      </p>
+    </hero-content>
     <div class="grid md:grid-cols-12 max-w-screen-xl mx-auto py-8 lg:(pt-20)">
       <aside class="md:col-span-4 px-4 md:sticky md:h-screen md:top-4 mb-6">
         <button
@@ -86,6 +79,7 @@ import { initCollapses } from 'flowbite'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
+import HeroContent from '@/_layout/components/hero-content.vue'
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
 import Card from './components/featured-card.vue'
 import { projects } from './data'
