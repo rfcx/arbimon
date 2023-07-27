@@ -45,7 +45,7 @@
           Class
         </div>
         <el-select
-          v-model="detectionsResultFilterStore.filter.taxonClass"
+          v-model="detectionsResultFilterStore.filter.classification"
           class="mt-2"
         >
           <el-option

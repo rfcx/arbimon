@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
 import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
@@ -23,10 +24,16 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   const store = useStoreOutsideSetup()
   const route = useRoute()
 
+  const classifierOutputList = ref<NonNullable<ClassifierResponse['outputs']>>([])
+
+  const updateclassifierOutputList = (classes: ClassifierResponse['outputs']): void => {
+    classifierOutputList.value = classes ?? []
+  }
+
   const filter = ref<ValidationFilterConfig>({
     threshold: 50,
     validationStatus: 'all',
-    taxonClass: '',
+    classification: 'all',
     siteIds: [],
     sortBy: 'asc'
   })
@@ -34,7 +41,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   const updateResultFilter = (value: ValidationFilterConfig): void => {
     filter.value.threshold = value.threshold
     filter.value.validationStatus = value.validationStatus
-    filter.value.taxonClass = value.taxonClass
+    filter.value.classification = value.classification
     filter.value.siteIds = value.siteIds
     filter.value.sortBy = value.sortBy
   }
@@ -51,7 +58,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   watch(() => route.params.jobId, () => {
     filter.value.threshold = 50
     filter.value.validationStatus = 'all'
-    filter.value.taxonClass = ''
+    filter.value.classification = 'all'
     filter.value.sortBy = 'asc'
 
     // "drain" all values out of the array
@@ -86,12 +93,12 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   })
 
   const classFilterOptions = computed<ResultFilterInner[]>(() => {
-    return store.projectFilters?.taxonClasses.map(tc => {
+    return [{ label: 'All', value: 'all' }, ...classifierOutputList.value.map(output => {
       return {
-        label: tc.commonName,
-        value: tc.id.toString()
+        label: output.outputClassName,
+        value: output.classificationId.toString()
       }
-    }) ?? []
+    })] ?? [{ label: 'All', value: 'all' }]
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
@@ -127,6 +134,8 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
     sitesFilterOptions,
     sortByFilterOptions,
     formatThreshold,
-    formattedThreshold
-  }
+    formattedThreshold,
+    classifierOutputList,
+    updateclassifierOutputList
+ }
 })
