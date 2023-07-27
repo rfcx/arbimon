@@ -42,9 +42,8 @@ export default defineConfig({
       fontFamily: {
         header: ['ABCFavoritExpanded'],
         display: ['ABCFavoritExtended'],
-        body: ['Poppins'],
         eyebrow: ['Roboto Mono'],
-        sans: ['Lato', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
+        sans: ['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
       },
       fontSize: { // ref: https://www.figma.com/file/sP3kZZDOiOd5hqTZCkXH0x/RFCx%2FArbimon-Design-Library?type=design&node-id=1846%3A9636&mode=design&t=Fp0xjfu9wQz3wggK-1
         xxs: '0.5rem',
@@ -146,7 +145,7 @@ export default defineConfig({
     tab: 'py-2 pr-4 pl-3 text-gray-700 border-b-2 border-transparent lg:hover:bg-transparent lg:p-0 dark:text-insight dark:hover:text-frequency lg:(dark:hover:border-b-2 dark:hover:border-b-frequency)',
     'tab-active': '!text-insight !dark:text-frequency lg:!border-b-2 lg:!border-b-frequency',
     // button
-    btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full',
+    btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full font-display',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
     // input

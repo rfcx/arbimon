@@ -6,12 +6,12 @@
 @tailwind components;
 @tailwind utilities;
 
-// Extened font
+// Extended font
 
 @font-face {
   font-family: ABCFavoritExtended;
   font-display: auto;
-  font-weight: 500;
+  font-weight: 500; // Medium
   src:
     url("@/_services/assets/ABCFavoritExtended-Medium.woff") format("woff"), /* Modern Browsers */
     url("@/_services/assets/ABCFavoritExtendedVariable.ttf")  format("truetype"); /* Safari, Android, iOS */
@@ -33,35 +33,14 @@
     @apply antialiased;
   }
 
-  body,
-  p,
-  a,
-  button,
-  li,
-  div,
-  span {
-    @apply font-body;
-  }
-
   h1,
   h2 {
     @apply font-header;
     @apply font-medium;
   }
 
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-body;
-  }
-
   h6 {
     @apply text-xl;
-  }
-
-  .btn {
-    @apply font-display;
   }
 
   h1 {
