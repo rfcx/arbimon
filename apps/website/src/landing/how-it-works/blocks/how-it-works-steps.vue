@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-echo">
     <div class="py-10 px-6 mx-auto max-w-screen-xl lg:py-30 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-        <h6 class="font-eyebrow text-sm uppercase text-spoonbill mb-6">
+        <h6 class="font-eyebrow text-xs uppercase text-spoonbill mb-6">
           Arbimon step-by-step
         </h6>
         <h1 class="mb-6 text-gray-900 dark:text-insight">

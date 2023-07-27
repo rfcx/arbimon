@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-2 uppercase text-spoonbill font-eyebrow text-sm col-span-1">
+  <div class="mb-2 uppercase text-spoonbill font-eyebrow text-xs col-span-1">
     {{ title }}
   </div>
   <p class="mb-4 text-gray-900 dark:text-insight col-span-2">
