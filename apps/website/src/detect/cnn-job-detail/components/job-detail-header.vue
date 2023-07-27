@@ -36,6 +36,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -43,7 +44,5 @@ import { useRoute } from 'vue-router'
 import { ROUTE_NAMES } from '~/router'
 
 const route = useRoute()
-
 const jobId = computed(() => route.params.jobId)
-
 </script>
