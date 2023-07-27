@@ -76,11 +76,11 @@ import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useStore } from '~/store'
-import { useAedCount } from './_composables/use-aed-count'
+import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
-import { usePmSpeciesCount, usePmTemplateCount } from './_composables/use-pm-count'
+import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
 import { useRecordingCount } from './_composables/use-recording-count'
-import { useRfmCount } from './_composables/use-rfm-count'
+import { useRfmJobCount, useRfmSpeciesDetected } from './_composables/use-rfm-count'
 import { useSiteCount } from './_composables/use-site-count'
 import { useSoundscapeCount } from './_composables/use-soundscape-count'
 import { useSpeciesCount } from './_composables/use-species-count'
@@ -106,10 +106,13 @@ const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCoun
 const { isLoading: isLoadingRecCount, data: recordingCount } = useRecordingCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingAedCount, data: aedCount } = useAedCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmJobCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingSpDetected, data: rfmSpDetected } = useRfmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingAedJobCount, data: aedJobCount } = useAedJobCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingClusteringJobCount, data: clusteringJobCount } = useClusteringJobCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingClusteringSpDetected, data: clusteringSpDetected } = useClusteringSpeciesDetected(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
@@ -120,10 +123,10 @@ const stats = computed(() => [
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', count: pmSpeciesCount.value, isLoading: isLoadingRFMCount.value || isLoadingPmTemplateCount.value, label: 'Number of templates', speciesTitle: 'Number of species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
-  { value: 'soundscapes', title: 'Soundscapes', count: soundscapeCount.value, isLoading: isLoadingPmtCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
-  { value: 'aed', title: 'AED & Clustering', count: aedCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of jobs created', speciesTitle: 'Number of species detected', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'rfm', title: 'Random Forest Models', count: rfmCount.value, isLoading: isLoadingAedCount.value, label: 'Number of models created', speciesTitle: 'Number of species analyzed', speciesDetected: 0, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
+  { value: 'pm', title: 'Pattern Matching', count: pmSpeciesCount.value, isLoading: isLoadingPmtCount.value || isLoadingPmTemplateCount.value, label: 'Number of templates', speciesTitle: 'Number of species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
+  { value: 'soundscapes', title: 'Soundscapes', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
+  { value: 'aed', title: 'AED & Clustering', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Number of jobs created', speciesTitle: 'Number of species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'rfm', title: 'Random Forest Models', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Number of models created', speciesTitle: 'Number of species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`

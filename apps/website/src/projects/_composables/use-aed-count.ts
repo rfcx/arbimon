@@ -2,11 +2,25 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiArbimonGetAedCount } from '@rfcx-bio/common/api-arbimon/metrics/aed-count'
+import { apiArbimonGetAedJobCount, apiArbimonGetClusteringJobCount, apiArbimonGetClusteringSpeciesDetected } from '@rfcx-bio/common/api-arbimon/metrics/aed-count'
 
-export const useAedCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
+export const useAedJobCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
-    ['fetch-aed-count', params],
-    async () => await apiArbimonGetAedCount(apiClient, params?.value ?? '')
+    ['fetch-aed-job-count', params],
+    async () => await apiArbimonGetAedJobCount(apiClient, params?.value ?? '')
+  )
+}
+
+export const useClusteringJobCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
+  return useQuery(
+    ['fetch-clustering-job-count', params],
+    async () => await apiArbimonGetClusteringJobCount(apiClient, params?.value ?? '')
+  )
+}
+
+export const useClusteringSpeciesDetected = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
+  return useQuery(
+    ['fetch-clustering-species-detected', params],
+    async () => await apiArbimonGetClusteringSpeciesDetected(apiClient, params?.value ?? '')
   )
 }
