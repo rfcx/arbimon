@@ -1,6 +1,7 @@
+import americanBirdIcon from '@/_assets/landing/testimonials/partners/American Bird Conservancy.png'
 import aspirationIcon from '@/_assets/landing/testimonials/partners/Aspiration.webp'
 import awakeEcotourismIcon from '@/_assets/landing/testimonials/partners/Awake Ecotourism.webp'
-import biolowiezaNationalParkIcon from '@/_assets/landing/testimonials/partners/Biolowieza National Park.webp'
+import biolowiezaNationalParkIcon from '@/_assets/landing/testimonials/partners/Biolowieza National Park.png'
 import birdLifeInternationalIcon from '@/_assets/landing/testimonials/partners/BirdLife International.png'
 import birdsCaribbeanIcon from '@/_assets/landing/testimonials/partners/Birds Caribbean.png'
 import burungIndonesiaIcon from '@/_assets/landing/testimonials/partners/Burung Indonesia.webp'
@@ -9,7 +10,7 @@ import centerForWildlifeStudiesIcon from '@/_assets/landing/testimonials/partner
 import charlesDarwinFoundationIcon from '@/_assets/landing/testimonials/partners/Charles Darwin Foundation.webp'
 import danuGirangFieldCenterIcon from '@/_assets/landing/testimonials/partners/Danu Girang Field Center.webp'
 import deepEnergiesIcon from '@/_assets/landing/testimonials/partners/Deep Energies.webp'
-import drnaIcon from '@/_assets/landing/testimonials/partners/DRNA.webp'
+import drnaIcon from '@/_assets/landing/testimonials/partners/DRNA.png'
 import ecoCultureIcon from '@/_assets/landing/testimonials/partners/EcoCulture.webp'
 import eticaEnLosBosquesIcon from '@/_assets/landing/testimonials/partners/Etica en los Bosques.webp'
 import fazosIcon from '@/_assets/landing/testimonials/partners/FAZOS.webp'
@@ -29,7 +30,7 @@ import kkiWarsiIcon from '@/_assets/landing/testimonials/partners/KKI Warsi.png'
 import mammalSocietyIcon from '@/_assets/landing/testimonials/partners/Mammal Society.png'
 import mashpiIcon from '@/_assets/landing/testimonials/partners/Mashpi Reserve.png'
 import neusiedlerIcon from '@/_assets/landing/testimonials/partners/Neusiedler see Seewinkel National Park.webp'
-import northCarolinaIcon from '@/_assets/landing/testimonials/partners/North Carolina State University.webp'
+import northCarolinaIcon from '@/_assets/landing/testimonials/partners/North Carolina State University.png'
 import o2Icon from '@/_assets/landing/testimonials/partners/O2 Reserve.png'
 import ojojaguarIcon from '@/_assets/landing/testimonials/partners/Ojojaguar.png'
 import paraLaIcon from '@/_assets/landing/testimonials/partners/Para la Naturaleza.png'
@@ -37,17 +38,22 @@ import partnerForestIcon from '@/_assets/landing/testimonials/partners/Partnersh
 import rspbIcon from '@/_assets/landing/testimonials/partners/RSPB.png'
 import rwandanDevIcon from '@/_assets/landing/testimonials/partners/Rwandan Development Board.png'
 import southAfricanIcon from '@/_assets/landing/testimonials/partners/South African Biodiversity Institute.png'
-import sumatraIcon from '@/_assets/landing/testimonials/partners/Sumatra Ranger Project.webp'
+import sumatraIcon from '@/_assets/landing/testimonials/partners/Sumatra Ranger Project.png'
 import thirdMilleniumIcon from '@/_assets/landing/testimonials/partners/Third Millenium Alliance.png'
 import treesForFutureIcon from '@/_assets/landing/testimonials/partners/Trees for the Future.png'
 import usFishIcon from '@/_assets/landing/testimonials/partners/U.S. Fish and Wildlife Service.webp'
 import uniBritrolIcon from '@/_assets/landing/testimonials/partners/University of Bristol.webp'
 import uniStAndrewsIcon from '@/_assets/landing/testimonials/partners/University of St Andrews.webp'
 import weforestIcon from '@/_assets/landing/testimonials/partners/WeForest.webp'
-import wildlifeConservationSocietyIcon from '@/_assets/landing/testimonials/partners/Wildlife Conservation Society.webp'
-import worldWildlifeFundIcon from '@/_assets/landing/testimonials/partners/World Wildlife Fund.webp'
+import wildlifeConservationSocietyIcon from '@/_assets/landing/testimonials/partners/Wildlife Conservation Society.png'
+import worldWildlifeFundIcon from '@/_assets/landing/testimonials/partners/World Wildlife Fund.png'
 
 export const partners = [
+  {
+    name: 'American Bird Conservancy',
+    imageUrl: americanBirdIcon,
+    linkUrl: '#'
+  },
   {
     name: 'Aspiration',
     imageUrl: aspirationIcon,

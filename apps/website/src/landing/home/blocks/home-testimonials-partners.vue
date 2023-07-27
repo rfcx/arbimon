@@ -97,18 +97,14 @@
       <h1 class="mb-20 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
         Trusted by 100+ organizations<br> around the world
       </h1>
-      <div class="grid grid-cols-4 gap-4 text-gray-500 sm:gap-8 lg:gap-2 md:grid-cols-6 lg:grid-cols-12 dark:text-gray-400">
-        <a
+      <div class="grid grid-cols-5 gap-4 text-gray-500 md:grid-cols-6 lg:grid-cols-10 dark:text-gray-400">
+        <img
           v-for="partner in partners"
           :key="partner.name"
-          href="#"
-          class="flex justify-center items-center"
+          :src="partner.imageUrl"
+          :alt="partner.name"
+          class="w-28 h-28 object-center object-contain"
         >
-          <img
-            :src="partner.imageUrl"
-            :alt="partner.name"
-          >
-        </a>
       </div>
     </div>
   </section>
