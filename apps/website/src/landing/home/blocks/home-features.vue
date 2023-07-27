@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-pitch">
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-50">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-        <span class="text-sm text-spoonbill mb-4 uppercase font-eyebrow">END-TO-END WORKFLOW</span>
+        <span class="text-base text-spoonbill mb-4 uppercase font-eyebrow">END-TO-END WORKFLOW</span>
         <h1 class="mt-6 mb-10 text-gray-900 dark:text-white">
           Intuitive & powerful features
         </h1>
