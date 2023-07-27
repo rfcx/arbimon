@@ -4,9 +4,9 @@ import { type UseQueryReturnType, useQuery } from 'vue-query'
 
 import { apiArbimonGetPmSpeciesCount } from '@rfcx-bio/common/api-arbimon/metrics/pm-count'
 
-export const usePmSpeciesCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
+export const usePmSpeciesDetected = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
-    ['fetch-pm-species-count', params],
+    ['fetch-pm-species-detected', params],
     async () => await apiArbimonGetPmSpeciesCount(apiClient, params?.value ?? '')
   )
 }
