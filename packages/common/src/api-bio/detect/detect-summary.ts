@@ -35,7 +35,7 @@ export const detectSummaryRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/summary`
 
 // Service
 // Make the api throws so vue-query can catch when it errors
-export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse | undefined> => {
+export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> => {
   const response = await apiClient.get(detectSpecificRoutePrefix(jobId) + '/summary', { params: query })
   return response.data
 }

@@ -1,3 +1,5 @@
+import { type Dayjs } from 'dayjs'
+
 import { type ClassifierJobStatusNumber } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 export interface JobInput {
@@ -17,7 +19,7 @@ export interface Job {
   input: JobInput
   progress: JobProgress
   totalDurationMinutes: number
-  createdAt: Date
+  createdAt: Dayjs
 }
 
 export interface JobFilterItem {
