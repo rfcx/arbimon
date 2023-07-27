@@ -32,7 +32,7 @@
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
             What our partners have to say
           </h1>
-          <h4 class="font-body text-2xl">
+          <h4 class="text-2xl">
             “{{ feedbacks[currentFeedbackIndex].text }}”
           </h4>
           <div class="mt-8 flex">
