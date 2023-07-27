@@ -9,7 +9,7 @@
           We offer a range of analyses to fit a wide variety of research needs.
         </p>
       </div>
-      <div class="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+      <div class="flex flex-wrap justify-center gap-4">
         <analyse-card
           v-for="analyse in data"
           :key="analyse.id"
@@ -17,6 +17,7 @@
           :description="analyse.description"
           :icon-url="analyse.iconUrl"
           :tag="analyse.tag"
+          class="w-full md:w-5/12"
         />
       </div>
     </div>

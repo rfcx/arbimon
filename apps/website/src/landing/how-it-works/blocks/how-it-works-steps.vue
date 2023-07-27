@@ -8,7 +8,7 @@
         <h1 class="mb-6 text-gray-900 dark:text-insight">
           How Arbimon works
         </h1>
-        <p class="text-gray-500 sm:text-xl dark:text-insight">
+        <p class="text-gray-500 dark:text-insight">
           From start to finish of your research, Arbimon can support the collection and analysis of your data.
         </p>
       </div>
