@@ -30,14 +30,23 @@
         >
         <div class="max-w-screen-sm">
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
-            What our partners have to say
+            What our users & partners are saying...
           </h1>
           <h4 class="text-2xl">
             “{{ feedbacks[currentFeedbackIndex].text }}”
           </h4>
           <div class="mt-8 flex">
-            <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-              <span class="font-medium text-gray-600 dark:text-gray-300"> {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
+            <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-16 h-16 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+              <img
+                v-if="feedbacks[currentFeedbackIndex].user.profilePicUrl"
+                :src="feedbacks[currentFeedbackIndex].user.profilePicUrl"
+                alt="Profile picture"
+                class="w-full h-full object-cover"
+              >
+              <span
+                v-else
+                class="font-medium text-gray-600 dark:text-gray-300"
+              > {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
             </div>
             <div class="flex flex-col">
               <div class="mb-2">
