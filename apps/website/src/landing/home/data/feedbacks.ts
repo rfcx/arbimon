@@ -1,3 +1,8 @@
+import aspirationIcon from '@/_assets/landing/testimonials/feedbacks/Aspiration.webp'
+import lauraHIcon from '@/_assets/landing/testimonials/feedbacks/LauraH.webp'
+import weForestIcon from '@/_assets/landing/testimonials/feedbacks/WeForest.webp'
+import wendySIcon from '@/_assets/landing/testimonials/feedbacks/WendyS.webp'
+
 export const feedbacks = [
   {
     id: 1,
@@ -5,7 +10,8 @@ export const feedbacks = [
     user: {
       name: 'Rachel Cohen',
       role: 'Project Partner',
-      title: 'Research Officer at WeForest'
+      title: 'Research Officer at WeForest',
+      profilePicUrl: weForestIcon
     }
   },
   {
@@ -14,7 +20,8 @@ export const feedbacks = [
     user: {
       name: 'Wendy S.',
       role: 'Arbimon user',
-      title: 'Research Associate at Point Blue Conservation Science'
+      title: 'Research Associate at Point Blue Conservation Science',
+      profilePicUrl: wendySIcon
     }
   },
   {
@@ -23,7 +30,8 @@ export const feedbacks = [
     user: {
       name: 'Laura H.',
       role: 'Arbimon user',
-      title: 'Master\'s student at Universidad Nacional de Colombia'
+      title: 'Master\'s student at Universidad Nacional de Colombia',
+      profilePicUrl: lauraHIcon
     }
   },
   {
@@ -32,7 +40,8 @@ export const feedbacks = [
     user: {
       name: 'Tracy Bain',
       role: 'Project Partner',
-      title: 'Senior Director of Carbon Monitoring & Engagement at Aspiration'
+      title: 'Senior Director of Carbon Monitoring & Engagement at Aspiration',
+      profilePicUrl: aspirationIcon
     }
   }
 ]
