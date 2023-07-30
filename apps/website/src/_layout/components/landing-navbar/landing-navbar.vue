@@ -122,10 +122,13 @@
                     </router-link>
                   </li>
                   <li>
-                    <a
-                      href="#"
+                    <router-link
+                      :to="{ name: ROUTE_NAMES.landingPublications }"
+                      exact-active-class="!text-gray-900 !dark:text-insight"
                       class="block px-4 py-2 dark:text-insight dark:hover:text-frequency"
-                    >Publications</a>
+                    >
+                      Publications
+                    </router-link>
                   </li>
                 </ul>
                 <div class="py-2">
