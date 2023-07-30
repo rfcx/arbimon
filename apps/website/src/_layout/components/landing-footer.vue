@@ -81,10 +81,12 @@
                 >Help &amp; Support</a>
               </li>
               <li>
-                <a
-                  href="#"
+                <router-link
+                  to="/contact"
                   class="hover:underline"
-                >Contact us</a>
+                >
+                  Contact us
+                </router-link>
               </li>
             </ul>
           </div>
@@ -95,13 +97,13 @@
             <ul class="text-gray-600 dark:text-gray-300">
               <li class="mb-4">
                 <a
-                  href="#"
+                  href="https://rfcx.org/privacy-policy"
                   class="hover:underline"
                 >Privacy Policy</a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="https://rfcx.org/terms-of-service"
                   class="hover:underline"
                 >Terms &amp; Conditions</a>
               </li>
