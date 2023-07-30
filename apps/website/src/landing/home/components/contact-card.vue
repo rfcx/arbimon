@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<{
   heroBackground: string
   flexAlign: 'items-start' | 'items-center' | 'items-end' | 'items-stretch'
 }>(), {
-  heroBackground: 'hero-contact',
+  heroBackground: 'hero-cta',
   flexAlign: 'items-stretch'
 })
 </script>
