@@ -133,7 +133,8 @@ export default defineConfig({
         'hero-data': "url('@/_assets/landing/hero-data.webp')",
         'hero-testimonial': "url('@/_assets/landing/testimonials/bg-hero.webp')",
         'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.webp')",
-        'hero-contact': "url('@/_assets/landing/contact/fauna.webp')"
+        'hero-contact': "url('@/_assets/landing/contact/fauna.webp')",
+        'hero-contact-frog': "url('@/_assets/landing/contact/frog.png')"
       }
     },
     animation: {
