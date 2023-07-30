@@ -134,7 +134,8 @@ export default defineConfig({
         'hero-testimonial': "url('@/_assets/landing/testimonials/bg-hero.webp')",
         'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.webp')",
         'hero-contact': "url('@/_assets/landing/contact/fauna.webp')",
-        'hero-contact-frog': "url('@/_assets/landing/contact/frog.png')"
+        'hero-contact-frog': "url('@/_assets/landing/contact/frog.webp')",
+        'hero-contact-monkey': "url('@/_assets/landing/contact/cta-monkey.webp')"
       }
     },
     animation: {
