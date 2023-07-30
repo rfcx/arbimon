@@ -1,6 +1,6 @@
 <template>
   <contact-card
-    hero-background="hero-contact-monkey"
+    hero-background="hero-cta-monkey"
   >
     <div class="flex flex-col items-start">
       <h1>
