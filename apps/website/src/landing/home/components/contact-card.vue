@@ -1,6 +1,6 @@
 <template>
-  <section class="dark:bg-pitch">
-    <div class="px-6 py-10 lg:py-20 max-w-screen-xl mx-auto">
+  <section class="dark:bg-pitch px-4 sm:px-6 lg:px-20">
+    <div class="py-10 lg:py-20 max-w-screen-xl mx-auto">
       <div
         :class="'bg-' + props.heroBackground"
         class="flex flex-col-reverse gap-4 items-center bg-opacity-40 bg-cover bg-right rounded-lg border border-frequency md:(flex-row gap-0)"
