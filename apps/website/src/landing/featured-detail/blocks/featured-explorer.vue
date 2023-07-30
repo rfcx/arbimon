@@ -20,7 +20,7 @@
               :class="isSelctedProject(project.category.id) ? 'opacity-100' : 'opacity-50'"
             >
             <p
-              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-display rounded-full px-4 py-2"
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-display rounded-full px-4 py-2 text-center"
               :class="isSelctedProject(project.category.id) ? 'text-frequency font-bold bg-pitch' : 'text-gray-500 dark:text-insight'"
             >
               {{ project.category.name }}
