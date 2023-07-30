@@ -136,6 +136,7 @@ export default defineConfig({
         'hero-cta': "url('@/_assets/cta/fauna.webp')",
         'hero-cta-frog': "url('@/_assets/cta/frog.webp')",
         'hero-cta-monkey': "url('@/_assets/cta/monkey.webp')",
+        'hero-cta-bird': "url('@/_assets/cta/bird.webp')"
       }
     },
     animation: {
