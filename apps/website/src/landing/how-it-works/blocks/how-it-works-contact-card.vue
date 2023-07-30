@@ -1,6 +1,8 @@
 <template>
-  <contact-card>
-    <div class="flex flex-col">
+  <contact-card
+    hero-background="hero-contact-frog"
+  >
+    <div class="flex flex-col items-start">
       <h1>
         Have a question about the process?
       </h1>
