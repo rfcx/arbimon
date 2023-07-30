@@ -12,7 +12,8 @@
         >
           <router-link
             :to="'/featured/' + project.category.id"
-            class="flex justify-center items-center w-full h-full rounded-lg bg-moss"
+            class="flex justify-center items-center w-full h-full rounded-lg bg-moss border-1"
+            :class="isSelctedProject(project.category.id) ? 'border-frequency' : 'border-pitch/[.6]'"
           >
             <img
               :src="project.featuredImage"
