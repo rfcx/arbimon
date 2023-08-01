@@ -105,7 +105,7 @@
       </div>
       <div class="items-end self-stretch sm:h-sm xl:(h-full pt-16) col-span-4">
         <img
-          class="w-full h-full object-none rounded-lg bg-gray-100 dark:bg-moss"
+          class="w-full h-full object-cover rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"
         >
       </div>
