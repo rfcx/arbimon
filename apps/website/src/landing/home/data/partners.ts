@@ -1,5 +1,5 @@
 import americanBirdIcon from '@/_assets/landing/testimonials/partners/american bird conservancy.webp'
-import aspirationIcon from '@/_assets/landing/testimonials/partners/aspiration.webp'
+import aspirationIcon from '@/_assets/landing/testimonials/partners/aspiration.png'
 import awakeEcotourismIcon from '@/_assets/landing/testimonials/partners/awake.webp'
 import biolowiezaNationalParkIcon from '@/_assets/landing/testimonials/partners/bialowieski park narodowy.webp'
 import birdLifeInternationalIcon from '@/_assets/landing/testimonials/partners/bird life.webp'
