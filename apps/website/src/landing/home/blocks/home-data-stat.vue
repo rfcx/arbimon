@@ -9,19 +9,19 @@
       </div>
       <div class="grid grid-cols-2 gap-4 grid-flow-row lg:grid-cols-4">
         <number-stat
-          :number="14000"
+          :number="127413944"
           title="Recordings uploaded"
         />
         <number-stat
-          :number="6300"
+          :number="1016249315"
           title="Analyses Performed"
         />
         <number-stat
-          :number="134"
+          :number="3677"
           title="Projects Created"
         />
         <number-stat
-          :number="954"
+          :number="3561"
           title="Species identified"
         />
       </div>
