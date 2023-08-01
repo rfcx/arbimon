@@ -1,5 +1,7 @@
 <template>
-  <contact-card>
+  <!-- force import the bg from tailwind -->
+  <div class="hidden not-sr-only bg-hero-cta" />
+  <contact-card hero-background="hero-cta">
     <div class="flex flex-col gap-2">
       <h2 class="font-medium font-header">
         Working on an endangered species project?
