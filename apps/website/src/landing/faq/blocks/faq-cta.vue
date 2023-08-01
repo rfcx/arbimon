@@ -1,4 +1,6 @@
 <template>
+  <!-- force import the bg from tailwind -->
+  <div class="hidden not-sr-only bg-hero-cta-bird bg-hero-cta-bird-bg" />
   <contact-card
     text-background="hero-cta-bird-bg"
     hero-background="hero-cta-bird"

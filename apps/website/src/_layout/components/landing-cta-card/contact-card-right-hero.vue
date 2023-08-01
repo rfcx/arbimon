@@ -5,18 +5,18 @@
         class="flex flex-col-reverse gap-0 items-center rounded-lg border border-frequency md:flex-row"
       >
         <div
-          :class="'bg-' + props.textBackground"
+          :class="'bg-' + textBackground"
           class="basis-full flex-1 md:basis-7/12 bg-opacity-40 bg-left bg-cover self-stretch justify-self-stretch md:(rounded-l-lg rounded-r-none border-r border-frequency) rounded-lg"
         >
           <div
-            :class="props.flexAlign"
+            :class="flexAlign"
             class="flex flex-col px-4 py-8 md:(px-5 py-10) lg:(px-10 py-20) h-fit justify-between bg-pitch/[.1]"
           >
             <slot />
           </div>
         </div>
         <div
-          :class="'bg-' + props.heroBackground"
+          :class="'bg-' + heroBackground"
           class="basis-full hidden flex-1 self-stretch justify-self-stretch md:(basis-5/12 block rouned-r-lg rounded-l-none) bg-opacity-40 bg-cover rounded-lg"
         >
           <span class="invisible">.</span>
@@ -26,14 +26,13 @@
   </section>
 </template>
 <script setup lang="ts">
-
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   textBackground?: string
   heroBackground?: string
   flexAlign?: 'items-start' | 'items-center' | 'items-end' | 'items-stretch'
 }>(), {
   textBackground: 'hero-cta-frog',
-  heroBackground: 'hero-cta-frog',
+  heroBackground: 'hero-cta-frog-bg',
   flexAlign: 'items-stretch'
 })
 </script>
