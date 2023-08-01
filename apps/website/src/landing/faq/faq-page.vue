@@ -191,26 +191,10 @@
       </div>
     </div>
   </section>
-  <contact-card hero-background="hero-cta-bird">
-    <h2 class="mb-8">
-      Still have questions?
-    </h2>
-    <p>
-      Check out our <a
-        href="https://support.rfcx.org/"
-        class="text-frequency underline"
-      >Support Documents</a> or <router-link
-        :to="{ name: ROUTE_NAMES.landingContact }"
-        class="text-frequency underline"
-      >
-        Contact us
-      </router-link> with your specific questions and we'll see how we can help.
-    </p>
-  </contact-card>
+  <faq-cta />
   <footer-contact />
 </template>
 <script setup lang="ts">
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
-import { ROUTE_NAMES } from '~/router'
-import ContactCard from '../home/components/contact-card.vue'
+import faqCta from './blocks/faq-cta.vue'
 </script>
