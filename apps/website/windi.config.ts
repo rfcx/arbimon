@@ -134,9 +134,12 @@ export default defineConfig({
         'hero-testimonial': "url('@/_assets/landing/testimonials/bg-hero.webp')",
         'hero-featured-works': "url('@/_assets/landing/featured/feature-hero.webp')",
         'hero-cta': "url('@/_assets/cta/fauna.webp')",
-        'hero-cta-frog': "url('@/_assets/cta/frog.webp')",
-        'hero-cta-monkey': "url('@/_assets/cta/monkey.webp')",
-        'hero-cta-bird': "url('@/_assets/cta/bird.webp')"
+        'hero-cta-frog': "url('@/_assets/cta/frog-hero.webp')",
+        'hero-cta-monkey': "url('@/_assets/cta/monkey-hero.webp')",
+        'hero-cta-bird': "url('@/_assets/cta/fauna-1-hero.webp')",
+        'hero-cta-frog-bg': "url('@/_assets/cta/frog-bg.webp')",
+        'hero-cta-monkey-bg': "url('@/_assets/cta/monkey-bg.webp')",
+        'hero-cta-bird-bg': "url('@/_assets/cta/fauna-1-bg.webp')"
       }
     },
     animation: {

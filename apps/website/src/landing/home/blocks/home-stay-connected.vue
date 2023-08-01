@@ -14,6 +14,6 @@
   </contact-card>
 </template>
 <script setup lang="ts">
+import ContactCard from '@/_layout/components/landing-cta-card/contact-card-full-background.vue'
 import ContactForm from '@/_layout/components/mailing-list-form.vue'
-import ContactCard from '../components/contact-card.vue'
 </script>
