@@ -51,6 +51,7 @@ export interface ProjectFeedback {
 export interface ProjectImpactContent {
   text: string
   cta: CallToAction | null
+  image: string
 }
 
 export interface CallToAction {

@@ -5,13 +5,14 @@
       :info="currentProject.header"
     />
     <featured-content :content="currentProject.content" />
-    <featured-gallery />
+    <featured-gallery :images="currentProject.gallery?.images ?? []" />
     <featured-feedback :feedbacks="currentProject.feedback" />
     <featured-impact-goal
       title="Impact Goals"
       :text="currentProject.impact?.text ?? ''"
       :cta-text="currentProject.impact?.cta?.text ?? ''"
       :cta-link="currentProject.impact?.cta?.link ?? ''"
+      :image="currentProject.impact?.image ?? ''"
     />
     <featured-contact />
     <featured-explorer :projects="projects" />

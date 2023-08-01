@@ -1,6 +1,15 @@
 <template>
   <section class="bg-white dark:bg-moss">
     <div class="pb-30 px-4 mx-auto max-w-screen-sm lg:px-6">
+      <div
+        v-if="image"
+        class="mb-6"
+      >
+        <img
+          class="object-cover w-full h-96 rounded-lg"
+          :src="props.image"
+        >
+      </div>
       <h3 class="mb-6 font-medium">
         {{ props.title }}
       </h3>
@@ -25,6 +34,7 @@ const props = defineProps<{
   readonly text: string
   readonly ctaText: string
   readonly ctaLink: string
+  readonly image: string
 }>()
 
 </script>
