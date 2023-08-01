@@ -39,7 +39,7 @@
               </button>
             </li>
           </ol>
-          <p class="p-8 text-gray-900 dark:text-insight">
+          <p class="p-8 text-gray-900 dark:text-insight max-w-screen-md mx-auto">
             {{ activeData.description }}
           </p>
           <router-link
