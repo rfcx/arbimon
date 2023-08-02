@@ -11,7 +11,7 @@ import charlesDarwinFoundationIcon from '@/_assets/landing/testimonials/partners
 import danuGirangFieldCenterIcon from '@/_assets/landing/testimonials/partners/danau girang field centre.webp'
 import deepEnergiesIcon from '@/_assets/landing/testimonials/partners/deep energies.png'
 import drnaIcon from '@/_assets/landing/testimonials/partners/drna.webp'
-import ecoCultureIcon from '@/_assets/landing/testimonials/partners/ecoculture.webp'
+import ecoCultureIcon from '@/_assets/landing/testimonials/partners/ecoculture.png'
 import eniIcon from '@/_assets/landing/testimonials/partners/eni.webp'
 import eticaEnLosBosquesIcon from '@/_assets/landing/testimonials/partners/entica en los bosques.webp'
 import fazosIcon from '@/_assets/landing/testimonials/partners/fazo.webp'
