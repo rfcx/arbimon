@@ -14,7 +14,15 @@
         {{ props.title }}
       </h3>
       <div class="flex flex-col items-center gap-10">
-        <p>{{ props.text }} </p>
+        <div>
+          <p
+            v-for="(paragraph, index) in props.textParagraphs"
+            :key="index"
+            class="mb-6"
+          >
+            {{ paragraph }}
+          </p>
+        </div>
         <a
           v-if="props.ctaLink"
           :href="props.ctaLink"
@@ -31,7 +39,7 @@
 
 const props = defineProps<{
   readonly title: string
-  readonly text: string
+  readonly textParagraphs: string[]
   readonly ctaText: string
   readonly ctaLink: string
   readonly image: string

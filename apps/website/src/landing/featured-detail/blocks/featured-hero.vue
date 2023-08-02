@@ -32,21 +32,21 @@
           <span class="ml-1 hover:underline">Back to featured work</span>
         </router-link>
         <h1 class="mt-10 my-4 capitalize text-gray-900 dark:text-insight">
-          {{ props.info?.title }}
+          {{ title }}
         </h1>
         <p class="mb-10 text-md">
-          {{ props.info?.description }}
+          {{ description }}
         </p>
         <div class="grid md:grid-cols-2 mb-8 xl:mb-0 gap-8">
           <div class="flex flex-col gap-y-6">
             <div>
               <featured-stat title="FEATURED PROJECT">
-                {{ props.info?.projectName }}
+                {{ info?.projectName }}
               </featured-stat>
 
               <featured-stat title="APPLICATION">
                 <p
-                  v-for="(application, index) in props.info?.applications"
+                  v-for="(application, index) in info?.applications"
                   :key="index"
                   class="mb-2 text-gray-500 dark:text-insight"
                 >
@@ -61,15 +61,15 @@
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-3">
             <featured-stat title="timeline">
-              <span class="text-sm">{{ props.info?.timeline }}</span>
+              <span class="text-sm">{{ info?.timeline }}</span>
             </featured-stat>
             <featured-stat title="scope">
-              <span class="text-sm">{{ props.info?.scope }}</span>
+              <span class="text-sm">{{ info?.scope }}</span>
             </featured-stat>
             <featured-stat title="partners">
               <ul class="list-disc ml-4 text-sm">
                 <li
-                  v-for="(partner, index) in props.info?.partners"
+                  v-for="(partner, index) in info?.partners"
                   :key="index"
                 >
                   {{ partner }}
@@ -79,7 +79,7 @@
             <featured-stat title="services">
               <ul class="list-disc ml-4 text-sm">
                 <li
-                  v-for="(service, index) in props.info?.services"
+                  v-for="(service, index) in info?.services"
                   :key="index"
                 >
                   {{ service }}
@@ -87,12 +87,12 @@
               </ul>
             </featured-stat>
             <featured-stat
-              v-if="props.info?.sdgs && props.info?.sdgs.length > 0"
+              v-if="info?.sdgs && info?.sdgs.length > 0"
               title="sustainable development goals"
             >
               <div class="grid grid-cols-5 gap-2 xl:grid-cols-3">
                 <img
-                  v-for="(goal, index) in props.info?.sdgs"
+                  v-for="(goal, index) in info?.sdgs"
                   :key="index"
                   :src="masterSDGs[`G${goal}`].image"
                   class=""
@@ -103,9 +103,9 @@
           </div>
         </div>
       </div>
-      <div class="items-end self-stretch sm:h-sm xl:(h-full pt-16) col-span-4">
+      <div class="items-end self-stretch sm:h-md xl:(h-full pt-16) col-span-4">
         <img
-          class="w-full h-full object-cover rounded-lg bg-gray-100 dark:bg-moss"
+          class="w-full h-full object-none xl:object-cover rounded-lg bg-gray-100 dark:bg-moss"
           :src="image"
         >
       </div>
@@ -118,8 +118,10 @@
 import { type ProjectHeader, masterSDGs } from '../../featured/data/types'
 import FeaturedStat from '../components/featured-stat.vue'
 
-const props = defineProps<{
+defineProps<{
   readonly info: ProjectHeader | null
+  readonly title: string
+  readonly description: string
   readonly image: string
 }>()
 

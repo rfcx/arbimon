@@ -1,6 +1,8 @@
 <template>
   <div v-if="currentProject">
     <featured-hero
+      :title="currentProject.title"
+      :description="currentProject.descriptiveText"
       :image="currentProject.featuredImage"
       :info="currentProject.header"
     />
@@ -9,7 +11,7 @@
     <featured-feedback :feedbacks="currentProject.feedback" />
     <featured-impact-goal
       title="Impact Goals"
-      :text="currentProject.impact?.text ?? ''"
+      :text-paragraphs="currentProject.impact?.paragraphs ?? []"
       :cta-text="currentProject.impact?.cta?.text ?? ''"
       :cta-link="currentProject.impact?.cta?.link ?? ''"
       :image="currentProject.impact?.image ?? ''"
