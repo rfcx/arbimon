@@ -1,5 +1,7 @@
 import { type AxiosInstance } from 'axios'
 
+import { type ClassifierJobStatusNumber } from './classifier-job-status'
+
 // Request types
 export interface ClassifierJobAllParams {
   created_by?: string
@@ -23,12 +25,12 @@ export interface ClassifierJobResponse {
   queryHours: string | null
   minutesTotal: number
   minutesCompleted: number
-  status: number
-  created_by_id: number
-  created_at: string
-  updated_at: string
-  started_at: string
-  completed_at: string
+  status: ClassifierJobStatusNumber
+  createdById: number
+  createdAt: string
+  updatedAt: string
+  startedAt: string
+  completedAt: string
 }
 
 export interface ClassifierJobInput {

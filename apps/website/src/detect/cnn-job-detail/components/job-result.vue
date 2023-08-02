@@ -9,35 +9,41 @@
         </div>
       </template>
       <template #controls>
-        <job-result-filter />
+        <job-result-filter
+          :classifier-id="props.classifierId"
+        />
       </template>
     </section-title>
     <div class="grid grid-cols-4 gap-4 <lg:grid-cols-7 pt-2">
       <div class="col-span-3 <lg:col-span-5 <md:col-span-7 border-1 border-box-grey rounded-md px-6 py-4 w-full">
-        <job-result-detection-summary />
+        <job-result-detection-summary
+          :is-loading="props.isLoading"
+          :is-error="props.isError"
+          :data="props.data"
+        />
       </div>
       <div class="col-span-1 <lg:col-span-2 <md:col-span-7 border-1 border-box-grey rounded-md px-6 py-4 w-full">
-        <job-result-validation-status />
+        <job-result-validation-status
+          :is-loading="props.isLoading"
+          :is-error="props.isError"
+          :data="props.data"
+        />
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import { onMounted, reactive } from 'vue'
 
-import { useStore } from '~/store'
+<script setup lang="ts">
+import { type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
+
 import JobResultDetectionSummary from './job-result-detection-summary.vue'
 import JobResultFilter from './job-result-filter.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
-const store = useStore()
-
-const project = reactive({
-  projectId: '-1'
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectValidationResultsResponse | undefined, classifierId?: number }>(), {
+  classifierId: undefined,
+  isLoading: false,
+  isError: false,
+  data: undefined
 })
-
-onMounted(() => {
-  project.projectId = store.selectedProject?.id.toString() ?? '-1'
-})
-
 </script>

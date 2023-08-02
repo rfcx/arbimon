@@ -6,9 +6,11 @@ import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, apiBio
 
 export const FETCH_DETECTIONS = 'fetch-detections'
 
-export const useGetJobDetections = (apiClient: AxiosInstance, jobId: number, params: ComputedRef<DetectDetectionsQueryParams>): UseQueryReturnType<DetectDetectionsResponse | undefined, unknown> => {
-  return useQuery(
-    [FETCH_DETECTIONS, params],
-    async () => await apiBioGetDetectDetections(apiClient, jobId, params.value)
-  )
+export const useGetJobDetections = (apiClient: AxiosInstance, jobId: number, params: ComputedRef<DetectDetectionsQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryReturnType<DetectDetectionsResponse | undefined, unknown> => {
+  return useQuery({
+    queryKey: [FETCH_DETECTIONS, params],
+    queryFn: async () => await apiBioGetDetectDetections(apiClient, jobId, params.value),
+    enabled,
+    refetchInterval
+  })
 }

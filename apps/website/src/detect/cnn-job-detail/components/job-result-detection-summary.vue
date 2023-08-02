@@ -1,6 +1,12 @@
 <template>
-  <div v-if="isLoadingJobSummary" />
-  <div v-else-if="isErrorJobSummary" />
+  <div
+    v-if="props.isLoading"
+    class="loading-shimmer mx-2 rounded-lg"
+  />
+  <ComponentError
+    v-else-if="props.isError"
+    class="py-8"
+  />
   <div
     v-else
     class="job-result-detection-summary-wrapper"
@@ -8,42 +14,37 @@
     <h3 class="job-result-detection-summary-header text-subtle text-sm mb-2">
       Detection summary
     </h3>
-    <div class="job-result-detection-summary-detail mt-2 grid grid-cols-12 gap-2">
+    <div class="job-result-detection-summary-detail mt-2 grid grid-rows-5 gap-x-4">
       <template
-        v-for="(column, idx) in [displaySpeciesColumn1, displaySpeciesColumn2]"
-        :key="'detection-summary-species-column-' + idx"
+        v-for="(item, index) in classificationsSummary()"
+        :key="`job-result-detection-summary-species-${item.value}-${index}`"
       >
-        <div class="col-span-6 <sm:col-span-12">
-          <div class="job-result-validation-status-detail grid grid-cols-6 gap-2">
-            <template
-              v-for="item in column"
-              :key="'validation-status-' + item.label"
-            >
-              <div class="col-span-1 justify-self-start font-semibold text-right">
-                {{ displayValue(item.numberOfDetections) }}
-              </div>
-              <div class="col-span-5 truncate">
-                {{ item.classificationName }}
-              </div>
-            </template>
-          </div>
+        <div class="justify-self-start font-semibold text-right text-lg">
+          {{ displayValue(item.total) }}
         </div>
+        <router-link
+          class="truncate text-lg"
+          :title="item.value"
+          :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: item.value }}"
+        >
+          {{ item.title }}
+        </router-link>
       </template>
     </div>
     <div
-      v-if="details.length > displayItemNumber"
+      v-if="(data?.classificationsSummary.length ?? 0) > displayItemNumber"
       class="flex justify-end items-center mt-2"
     >
       <button
         class="btn btn-icon ml-4"
-        :disabled="displayIndex === 0"
+        :disabled="page === 1"
         @click="previousPage()"
       >
         <icon-fas-chevron-left class="w-3 h-3" />
       </button>
       <button
         class="btn btn-icon ml-2"
-        :disabled="displayIndex === Math.ceil(details.length / displayItemNumber) - 1"
+        :disabled="page === Math.ceil(data?.classificationsSummary.length ?? 0 / displayItemNumber)"
         @click="nextPage()"
       >
         <icon-fas-chevron-right class="w-3 h-3" />
@@ -53,39 +54,47 @@
 </template>
 
 <script setup lang="ts">
-import type { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { displayValue } from '@rfcx-bio/utils/number'
 
-import { useGetJobDetectionSummary } from '@/detect/_composables/use-get-job-detection-summary'
-import { apiClientBioKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
+import ComponentError from './component-error.vue'
+
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectValidationResultsResponse | undefined }>(), {
+  isLoading: true,
+  isError: false,
+  data: undefined
+})
+
+const displayItemNumber = 10
+const page = ref(1)
 
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
-// External data
-const apiBio = inject(apiClientBioKey) as AxiosInstance
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummaryData } = useGetJobDetectionSummary(apiBio, jobId.value)
+const classificationsSummary = () => {
+  if (props.data != null) {
+    return props.data.classificationsSummary
+      .slice((page.value - 1) * displayItemNumber, page.value * displayItemNumber)
+  }
 
-const displayItemNumber = 10
-const displayIndex = ref(0)
-
-const details = computed(() => {
-  return jobSummaryData.value ? jobSummaryData.value.speciesSummary : []
-})
-
-const displaySpecies = computed(() => details.value.slice(displayIndex.value * displayItemNumber, (displayIndex.value * displayItemNumber) + displayItemNumber + 1))
-
-const displaySpeciesColumn1 = computed(() => displaySpecies.value.slice(0, displayItemNumber / 2))
-const displaySpeciesColumn2 = computed(() => displaySpecies.value.slice((displayItemNumber / 2) + 1))
+  return []
+}
 
 const previousPage = () => {
-  displayIndex.value -= 1
+  page.value -= 1
 }
 
 const nextPage = () => {
-  displayIndex.value += 1
+  page.value += 1
 }
 </script>
+
+<style lang="scss">
+div.job-result-detection-summary-detail {
+  grid-template-columns: fit-content(4rem) 1fr fit-content(4rem) 1fr;
+}
+</style>

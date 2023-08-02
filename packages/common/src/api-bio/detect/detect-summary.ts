@@ -1,27 +1,41 @@
 import { type AxiosInstance } from 'axios'
 
-import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
-
+import { type ClassifierJobStatusNumber } from '../../api-core/classifier-job/classifier-job-status'
 import { type DetectRouteParamsSerialized, DETECT_SPECIFIC_ROUTE_PREFIX, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
 
 // Request type
 export type DetectSummaryParams = DetectRouteParamsSerialized
 
-// Response type
-export interface SpeciesDetectionSummary {
-  classificationId: number
-  classificationName: string
-  numberOfDetections: number
+export interface DetectSummaryQueryParams {
+  fields?: string[]
 }
 
+// Response type
 export interface DetectSummaryResponse {
-  speciesSummary: SpeciesDetectionSummary[]
+  id: number
+  classifierId: number
+  projectId: number
+  queryStreams: string | null
+  queryStart: string
+  queryEnd: string
+  queryHours: string
+  minutesTotal: number
+  minutesCompleted: number | null
+  status: ClassifierJobStatusNumber
+  createdAt: number
+  completedAt: string | null
+  classifier: {
+    id: number
+    name: string
+  }
 }
 
 // Route
 export const detectSummaryRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/summary`
 
 // Service
-export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number): Promise<DetectSummaryResponse | undefined> => {
-  return await apiGetOrUndefined(apiClient, detectSpecificRoutePrefix(jobId) + '/summary')
+// Make the api throws so vue-query can catch when it errors
+export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> => {
+  const response = await apiClient.get(detectSpecificRoutePrefix(jobId) + '/summary', { params: query })
+  return response.data
 }

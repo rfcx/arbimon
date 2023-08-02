@@ -11,7 +11,7 @@ import { FEATURE_TOGGLES } from '~/feature-toggles'
 import router, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
-import { apiClientBioKey, apiClientCoreKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
+import { apiClientBioKey, apiClientCoreKey, apiMediaKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
@@ -34,6 +34,8 @@ async function init (): Promise<void> {
   const getToken = user ? async () => await getIdToken(authClient) : undefined
   const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, getToken)
   const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
+  // TODO: This should be changed to a proper environment variable
+  const apiMedia = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL === 'https://api.rfcx.org' ? 'https://media-api.rfcx.org' : import.meta.env.VITE_CORE_API_BASE_URL, getToken)
 
   // Setup app
   const app = createApp(appComponent)
@@ -48,6 +50,7 @@ async function init (): Promise<void> {
     .provide(authClientKey, authClient)
     .provide(apiClientBioKey, apiClientBio)
     .provide(apiClientCoreKey, apiClientCore)
+    .provide(apiMediaKey, apiMedia)
     .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
     .provide(gtagKey, app.config.globalProperties.$gtag)
     .provide(togglesKey, FEATURE_TOGGLES)
