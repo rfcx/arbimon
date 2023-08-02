@@ -50,7 +50,7 @@ import uniStAndrewsIcon from '@/_assets/landing/testimonials/partners/university
 import usFishIcon from '@/_assets/landing/testimonials/partners/us fish and wildlife service.webp'
 import warsiIcon from '@/_assets/landing/testimonials/partners/warsi.webp'
 import wildlifeConservationSocietyIcon from '@/_assets/landing/testimonials/partners/wcs.webp'
-import weforestIcon from '@/_assets/landing/testimonials/partners/weforest.webp'
+import weforestIcon from '@/_assets/landing/testimonials/partners/weforest.png'
 import worldWildlifeFundIcon from '@/_assets/landing/testimonials/partners/wwf.webp'
 
 export const partners = [
