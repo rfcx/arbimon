@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
+import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 
@@ -87,6 +90,57 @@ export async function updateDetectionReviewFromApi (token: string, data: DetectR
         classifier: data.classifier,
         classification: data.classification
       }
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getDetectionsStatusFromApi (token: string, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> {
+  try {
+    const resp = await axios.request<DetectSummaryResponse>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}`,
+      headers: {
+        authorization: token
+      },
+      params: query
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobResultsFromApi (token: string, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/results`,
+      headers: {
+        authorization: token
+      },
+      params: query
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierFromApi (token: string, classifierId: number, query: ClassifierQueryParams): Promise<ClassifierResponse> {
+  try {
+    const resp = await axios.request<ClassifierResponse>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifiers/${classifierId}`,
+      headers: {
+        authorization: token
+      },
+      params: query
     })
 
     return resp.data

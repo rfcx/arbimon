@@ -43,7 +43,7 @@
       label="taxon-class"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.taxonClass"
+        v-model="detectionsResultFilterStore.resultFilter.classification"
         placeholder="Class"
       >
         <el-option
@@ -108,12 +108,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { AxiosInstance } from 'axios'
+import type { ComputedRef } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
+import type { ClassifierParams } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+
+import { useClassifier } from '@/detect/_composables/use-classifier'
+import { apiClientBioKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
 import FilterModal from './job-result-filter-modal.vue'
 
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const props = defineProps<{ classifierId?: number }>()
+
 const detectionsResultFilterStore = useDetectionsResultFilterStore()
+
+const classifierId: ComputedRef<ClassifierParams> = computed(() => {
+  return {
+    classifierId: props.classifierId == null ? '-1' : props.classifierId.toString()
+  }
+})
+const { data } = useClassifier(apiClientBio, classifierId, { fields: ['outputs'] })
+
+watch(data, (newData) => {
+  if (newData == null) {
+    return
+  }
+
+  detectionsResultFilterStore.updateclassifierOutputList(newData.outputs)
+})
+
 const displayFilterModal = ref(false)
 </script>
 
