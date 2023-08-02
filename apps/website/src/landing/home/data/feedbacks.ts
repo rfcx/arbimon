@@ -58,7 +58,7 @@ export const feedbacks = [
   },
   {
     id: 6,
-    text: 'Arbimon has helped us to organize all the recordings obtained in a very intuitive way. Its functions are great as it allows us to project the sampling points in the study area through the maps dashboard and provide an open-access recordings repository for anyone interested in bat echolocation.',
+    text: 'Arbimon has helped us to organize all the recordings obtained in a very intuitive way. Its functions are great as it allows us to project the sampling points in the study area through the maps dashboard and provide an open-access recordings repository...',
     user: {
       name: 'Cristian K.',
       role: 'Arbimon user',
