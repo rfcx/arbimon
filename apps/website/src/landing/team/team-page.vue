@@ -629,5 +629,8 @@
       </div>
     </div>
   </section>
+  <team-cta />
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import teamCta from './blocks/team-cta.vue'
+</script>
