@@ -1,12 +1,9 @@
-// import carbonFeaturedImg from '@/_assets/featured-work/carbon-transparency/1.webp'
-// import carbonGal1Img from '@/_assets/featured-work/carbon-transparency/2.webp'
-// import carbonGal2Img from '@/_assets/featured-work/carbon-transparency/3.webp'
-// import carbonImpactImg from '@/_assets/featured-work/carbon-transparency/4.webp'
 import supplyChainFeaturedImg from '@/_assets/featured-work/sustainable-supply-chains/1.webp'
 import supplyChainGal1Img from '@/_assets/featured-work/sustainable-supply-chains/2.webp'
 import supplyChainGal2Img from '@/_assets/featured-work/sustainable-supply-chains/3.webp'
 import supplyChainImpactImg from '@/_assets/featured-work/sustainable-supply-chains/4.webp'
 import { bioBaseline } from './biodiversity-baselines'
+import { carbonTransparency } from './carbon-transparency'
 import { climateChangeImpact } from './climate-change-impact'
 import { endangeredSpecies } from './endangered-species'
 import { restoration } from './restoration'
@@ -67,7 +64,10 @@ export const projects: ProjectDetail[] = [
     impact: {
       cta: null,
       image: supplyChainImpactImg,
-      text: 'Ecoculture’s mission is to develop landscape restoration projects that promote a culture of conservation. By working closely with local communities, they are able to create value for the ecosystems, including the people calling them home. These results will be used to prioritize highest-value land management approaches and arm Ecoculture with the data required to measure impact across their projects. It was found that soundscapes from primary forest and restoration sites are similar, suggesting that restoration sites are able to maintain high biodiversity levels. Therefore, it is important to continue forward with these high-value projects.'
+      paragraphs: [
+        'Ecoculture’s mission is to develop landscape restoration projects that promote a culture of conservation. By working closely with local communities, they are able to create value for the ecosystems, including the people calling them home. These results will be used to prioritize highest-value land management approaches and arm Ecoculture with the data required to measure impact across their projects. It was found that soundscapes from primary forest and restoration sites are similar, suggesting that restoration sites are able to maintain high biodiversity levels. Therefore, it is important to continue forward with these high-value projects.'
+      ]
     }
-  }
+  },
+  carbonTransparency
 ]
