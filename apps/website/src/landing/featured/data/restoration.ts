@@ -1,3 +1,5 @@
+/* content from https://docs.google.com/document/d/1HVdXbGK6u4GTSNyfyjMK4y9AL5PYED6XZ8sYlqKGUdQ/edit */
+
 import restorationFeaturedImg from '@/_assets/featured-work/restoration/1.webp'
 import restorationGal1Img from '@/_assets/featured-work/restoration/2.webp'
 import restorationGal2Img from '@/_assets/featured-work/restoration/3.webp'

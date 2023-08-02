@@ -1,3 +1,5 @@
+/* content from https://docs.google.com/document/d/1eEvGt_zqVnyPoKGPcYuV4gWaazpGCpciBjePsHB_MA4/edit */
+
 import endangeredGal1Img from '@/_assets/featured-work/endangered-species/baby-mangrove-finches.webp'
 import endangeredImpactImg from '@/_assets/featured-work/endangered-species/bjarn-bronsveld.webp'
 import endangeredFeaturedImg from '@/_assets/featured-work/endangered-species/mangrove-finch.webp'

@@ -1,3 +1,5 @@
+/* content from https://docs.google.com/document/d/1KBzcUpfpXlk9kAhKL8GO1be7KrQ-qfL2dj4IdgkcxRM/edit */
+
 import climateFeaturedImg from '@/_assets/featured-work/climate-change-impact/1.webp'
 import climateGal1Img from '@/_assets/featured-work/climate-change-impact/2.webp'
 import climateGal2Img from '@/_assets/featured-work/climate-change-impact/3.webp'
