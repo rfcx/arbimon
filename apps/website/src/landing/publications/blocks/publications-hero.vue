@@ -1,5 +1,5 @@
 <template>
-  <hero-content>
+  <hero-content :hero-image-url="heroImage">
     <h1 class="mb-4 text-gray-900 dark:text-frequency">
       Scientific publications
     </h1>
@@ -9,5 +9,6 @@
   </hero-content>
 </template>
 <script setup lang="ts">
+import heroImage from '@/_assets/publications/hero-publications.webp'
 import HeroContent from '@/_layout/components/hero-content.vue'
 </script>
