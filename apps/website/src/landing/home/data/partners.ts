@@ -7,7 +7,7 @@ import birdsCaribbeanIcon from '@/_assets/landing/testimonials/partners/birds ca
 import burungIndonesiaIcon from '@/_assets/landing/testimonials/partners/Burung Indonesia.webp'
 import cMindsIcon from '@/_assets/landing/testimonials/partners/c minds.webp'
 import centerForWildlifeStudiesIcon from '@/_assets/landing/testimonials/partners/centre for wildlife studies.webp'
-import charlesDarwinFoundationIcon from '@/_assets/landing/testimonials/partners/charles darwin foundation.ยื'
+import charlesDarwinFoundationIcon from '@/_assets/landing/testimonials/partners/charles darwin foundation.png'
 import danuGirangFieldCenterIcon from '@/_assets/landing/testimonials/partners/danau girang field centre.webp'
 import deepEnergiesIcon from '@/_assets/landing/testimonials/partners/deep energies.webp'
 import drnaIcon from '@/_assets/landing/testimonials/partners/drna.webp'
