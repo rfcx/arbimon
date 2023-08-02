@@ -1,7 +1,28 @@
 <template>
-  <section class="bg-white dark:bg-echo">
-    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
-      <div class="flex flex-row items-center gap-16">
+  <section class="bg-white dark:bg-echo mx-6 my-10 lg:(my-30 mx-20)">
+    <div class="mx-auto max-w-screen-xl rounded-lg border-1 border-frequency">
+      <div class="flex flex-col items-center lg:(flex-row-reverse)">
+        <div class="bg-hero-cta bg-opacity-40 bg-left-top basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-lg rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-lg)">
+          <div class="flex-1 bg-pitch/[.6] p-10 flex flex-row justify-between rounded-t-lg rounded-r-none lg:(flex-col rounded-t-none rounded-r-lg)">
+            <div>
+              <h1 class="mb-4 lg:mb-10 text-gray-900 dark:text-insight">
+                Contact us
+              </h1>
+              <p>We're great listeners.</p>
+            </div>
+            <div>
+              <p class="mb-4">
+                contact@arbimon.org
+              </p>
+              <p class="mb-4">
+                +1 (415) 792-9472
+              </p>
+              <p class="mb-4">
+                440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA
+              </p>
+            </div>
+          </div>
+        </div>
         <div class="basis-3/5">
           <div v-if="isSubmitted">
             <div
@@ -29,7 +50,7 @@
             v-else
             action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
             method="POST"
-            class="p-8 space-y-8"
+            class="space-y-8 p-10"
           >
             <div class="grid grid-cols-2 gap-8">
               <div>
@@ -147,32 +168,12 @@
               >
               <button
                 type="submit"
-                class="btn btn-primary"
+                class="btn btn-primary jusify-end"
               >
-                Send Message
+                Send us a message
               </button>
             </div>
           </form>
-        </div>
-        <div class="basis-2/5 text-gray-500 dark:text-gray-400">
-          <h2 class="mb-4 text-sm">
-            CONTACT US
-          </h2>
-          <h3 class="mb-4 text-4xl tracking-tight text-gray-900 dark:text-white">
-            Get in touch today
-          </h3>
-          <p class="mb-16 font-light sm:text-xl">
-            Got a technical issue? Want to send feedback about a beta feature? Need details about our Business plan? Let us know.
-          </p>
-          <p class="mb-4">
-            contact@arbimon.org
-          </p>
-          <p class="mb-4">
-            +1 (415) 792-9472
-          </p>
-          <p class="mb-4">
-            440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA
-          </p>
         </div>
       </div>
     </div>
