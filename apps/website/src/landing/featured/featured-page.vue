@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <hero-content>
+    <hero-content :hero-image-url="heroImage">
       <h1 class="mb-4 text-gray-900 dark:text-frequency">
         Featured Work
       </h1>
@@ -79,6 +79,7 @@ import { initCollapses } from 'flowbite'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
+import heroImage from '@/_assets/landing/featured/feature-hero.webp'
 import HeroContent from '@/_layout/components/hero-content.vue'
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
 import Card from './components/featured-card.vue'
