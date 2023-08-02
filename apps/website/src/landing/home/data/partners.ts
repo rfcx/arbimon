@@ -46,7 +46,7 @@ import sumatraIcon from '@/_assets/landing/testimonials/partners/sumatran ranger
 import thirdMilleniumIcon from '@/_assets/landing/testimonials/partners/tma.webp'
 import treesForFutureIcon from '@/_assets/landing/testimonials/partners/trees for the future.webp'
 import uniBritrolIcon from '@/_assets/landing/testimonials/partners/univeristy of bristol.webp'
-import uniStAndrewsIcon from '@/_assets/landing/testimonials/partners/university of st andrews.webp'
+import uniStAndrewsIcon from '@/_assets/landing/testimonials/partners/university of st andrews.png'
 import usFishIcon from '@/_assets/landing/testimonials/partners/us fish and wildlife service.webp'
 import warsiIcon from '@/_assets/landing/testimonials/partners/warsi.webp'
 import wildlifeConservationSocietyIcon from '@/_assets/landing/testimonials/partners/wcs.webp'
