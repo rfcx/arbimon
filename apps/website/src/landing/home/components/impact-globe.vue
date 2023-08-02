@@ -14,19 +14,19 @@
       <div>
         <span
           class="rounded inline-block h-2 w-2 mr-1"
-          style="background-color: rgb(178,24,43)"
+          style="background-color: rgb(240,30,61)"
         />100+
       </div>
       <div>
         <span
           class="rounded inline-block h-2 w-2 mr-1"
-          style="background-color: rgb(227, 155, 163)"
+          style="background-color: rgb(255,104,104)"
         />10+
       </div>
       <div>
         <span
           class="rounded inline-block h-2 w-2 mr-1"
-          style="background-color: rgb(255, 221, 225)"
+          style="background-color: rgb(255,175,175)"
         />1+
       </div>
     </div>
@@ -220,16 +220,16 @@ function showSpecies (map: MapboxMap) {
           'interpolate',
           ['linear'],
           ['get', 'species'],
-          0,
-          'rgba(255,221,225,0)',
+          // 0,
+          // 'rgba(255,175,175,0)',
           1,
-          'rgb(255,221,225)',
+          'rgb(255,175,175)',
           10,
-          'rgb(227,155,163)',
+          'rgb(255,104,104)',
           100,
-          'rgb(178,24,43)'
+          'rgb(240,30,61)'
         ],
-        'circle-stroke-color': 'white',
+        'circle-stroke-color': 'rgba(255,175,175,0.3)',
         'circle-stroke-width': 1
       }
     })
