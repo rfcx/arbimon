@@ -54,10 +54,12 @@
                 </p>
               </featured-stat>
             </div>
-            <a
-              href="#"
+            <router-link
+              :to="{ name: ROUTE_NAMES.landingContact }"
               class="btn btn-primary w-48"
-            >Work with us</a>
+            >
+              Work with us
+            </router-link>
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-3">
             <featured-stat title="timeline">
@@ -114,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-
+import { ROUTE_NAMES } from '~/router'
 import { type ProjectHeader, masterSDGs } from '../../featured/data/types'
 import FeaturedStat from '../components/featured-stat.vue'
 
