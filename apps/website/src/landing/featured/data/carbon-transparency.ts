@@ -1,3 +1,5 @@
+/* content from https://docs.google.com/document/d/1S3rvyYnD-23DrSVsNxJdWtLdCpGET9_jqKwPfPeGkQM/edit */
+
 import carbonFeaturedImg from '@/_assets/featured-work/carbon-transparency/1.webp'
 import carbonGal1Img from '@/_assets/featured-work/carbon-transparency/2.webp'
 import carbonGal2Img from '@/_assets/featured-work/carbon-transparency/3.webp'

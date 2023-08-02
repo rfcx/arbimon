@@ -1,3 +1,5 @@
+/* content from https://docs.google.com/document/d/1wX9NOjt3NAMt3gZ8u3tdfzT1WQzONZclOk71E3ysbmo/edit */
+
 import bioFeaturedImg from '@/_assets/featured-work/biodiversity-baselines/1.webp'
 import bioGal1Img from '@/_assets/featured-work/biodiversity-baselines/2.webp'
 import bioGal2Img from '@/_assets/featured-work/biodiversity-baselines/3.webp'
