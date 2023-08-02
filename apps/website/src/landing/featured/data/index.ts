@@ -21,8 +21,8 @@ export const projects: ProjectDetail[] = [
     descriptiveText: 'Species specific and soundscape approaches to map biodiversity levels across land use categories',
     location: 'Borneo, Malaysia',
     category: {
-      id: 'sustainable-supply-chain',
-      name: 'Sustainable Supply Chain'
+      id: 'sustainable-supply-chains',
+      name: 'Sustainable Supply Chains'
     },
     header: {
       projectName: 'Comparing biodiversity levels in forests, restoration sites, and oil palm plantations to inform sustainable agricultural systems',
