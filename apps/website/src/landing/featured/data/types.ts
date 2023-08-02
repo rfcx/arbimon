@@ -23,8 +23,6 @@ export interface ProjectDetail {
 }
 
 export interface ProjectHeader {
-  title: string
-  description: string
   projectName: string
   applications: string[]
   timeline: string
@@ -49,7 +47,7 @@ export interface ProjectFeedback {
 }
 
 export interface ProjectImpactContent {
-  text: string
+  paragraphs: string[]
   cta: CallToAction | null
   image: string
 }
