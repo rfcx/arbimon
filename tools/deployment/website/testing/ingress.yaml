@@ -17,6 +17,14 @@ spec:
             backend:
               serviceName: biodiversity-website-service
               servicePort: 80
+    - host: preview.arbimon.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: biodiversity-website-service
+              servicePort: 80
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
