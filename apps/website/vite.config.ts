@@ -94,7 +94,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     }
   },
   ssr: {
-    noExternal: ['mapbox-gl', 'globe.gl', 'siriwave']
+    noExternal: ['mapbox-gl', 'siriwave']
   },
   assetsInclude: [
     '**/*.WAV'
