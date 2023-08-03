@@ -4,32 +4,33 @@
       ref="mapRoot"
       class="w-full h-full"
     />
-    <div
-      id="species-legend"
-      class="absolute right-16 left-auto bottom-12 p-2 border-1 border-gray-600 rounded-lg text-xs text-gray-300 lg:right-64 xl:right-92 2xl:right-160 3xl:right-160 4xl:right-240"
-    >
-      <h4 class="font-bold text-xxs mb-1">
-        Species Identified
-      </h4>
-      <div>
-        <span
-          class="rounded inline-block h-2 w-2 mr-1"
-          style="background-color: rgb(240,30,61)"
-        />100+
-      </div>
-      <div>
-        <span
-          class="rounded inline-block h-2 w-2 mr-1"
-          style="background-color: rgb(255,104,104)"
-        />10+
-      </div>
-      <div>
-        <span
-          class="rounded inline-block h-2 w-2 mr-1"
-          style="background-color: rgb(255,175,175)"
-        />1+
-      </div>
-    </div>
+    <!-- TODO: This component is removed for now since we're planning to move it to the side below the impact wording. -->
+    <!-- <div -->
+    <!--   id="species-legend" -->
+    <!--   class="absolute right-16 left-auto bottom-12 p-2 border-1 border-gray-600 rounded-lg text-xs text-gray-300 lg:right-64 xl:right-92 2xl:right-160 3xl:right-160 4xl:right-240" -->
+    <!-- > -->
+    <!--   <h4 class="font-bold text-xxs mb-1"> -->
+    <!--     Species Identified -->
+    <!--   </h4> -->
+    <!--   <div> -->
+    <!--     <span -->
+    <!--       class="rounded inline-block h-2 w-2 mr-1" -->
+    <!--       style="background-color: rgb(240,30,61)" -->
+    <!--     />100+ -->
+    <!--   </div> -->
+    <!--   <div> -->
+    <!--     <span -->
+    <!--       class="rounded inline-block h-2 w-2 mr-1" -->
+    <!--       style="background-color: rgb(255,104,104)" -->
+    <!--     />10+ -->
+    <!--   </div> -->
+    <!--   <div> -->
+    <!--     <span -->
+    <!--       class="rounded inline-block h-2 w-2 mr-1" -->
+    <!--       style="background-color: rgb(255,175,175)" -->
+    <!--     />1+ -->
+    <!--   </div> -->
+    <!-- </div> -->
     <div
       v-if="isAllowConfig && false"
       class="relative bottom-0 right-0"
