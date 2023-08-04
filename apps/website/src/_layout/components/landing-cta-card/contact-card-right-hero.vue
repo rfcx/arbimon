@@ -10,7 +10,7 @@
         >
           <div
             :class="flexAlign"
-            class="flex flex-col px-4 py-8 md:(px-5 py-10) lg:(px-10 py-20) h-fit justify-between bg-pitch/[.1]"
+            class="flex flex-col px-4 py-8 md:(px-5 py-10) lg:(px-10 py-20) h-fit justify-between bg-pitch/[.6] blur-sm rounded-lg md:(rounded-l-lg rounded-r-none)"
           >
             <slot />
           </div>
