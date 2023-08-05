@@ -101,31 +101,33 @@
       />
     </div>
   </section>
-  <section class="bg-hero-testimonial bg-cover bg-no-repeat">
-    <div class="py-10 lg:(pt-30 pb-50 px-10) mx-auto max-w-screen-xl px-4">
-      <h1 class="mb-20 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
-        Trusted by 100+ organizations<br> around the world
-      </h1>
-      <div
-        class="grid grid-cols-4 gap-4 text-gray-500 md:grid-cols-6 lg:grid-cols-9 dark:text-gray-400"
-        :aria-expanded="!isCollapsed"
-      >
-        <img
-          v-for="(partner, index) in partners"
-          :key="partner.name"
-          :src="partner.imageUrl"
-          :alt="partner.name"
-          class="w-28 h-28 object-center object-contain"
-          :class="index > 23 && isCollapsed ? 'hidden lg:block' : ''"
+  <section class="bg-hero-testimonial bg-cover bg-top bg-no-repeat">
+    <div class="bg-gradient-to-b from-transparent to-pitch/[.6]">
+      <div class="py-10 lg:(pt-30 pb-50 px-10) mx-auto max-w-screen-xl px-4">
+        <h1 class="mb-20 lg:mb-16 tracking-tight leading-tight text-center text-gray-900 dark:text-insight">
+          Trusted by 100+ organizations<br> around the world
+        </h1>
+        <div
+          class="grid grid-cols-4 gap-4 text-gray-500 md:grid-cols-6 lg:grid-cols-9 dark:text-gray-400"
+          :aria-expanded="!isCollapsed"
         >
+          <img
+            v-for="(partner, index) in partners"
+            :key="partner.name"
+            :src="partner.imageUrl"
+            :alt="partner.name"
+            class="w-28 h-28 object-center object-contain"
+            :class="index > 23 && isCollapsed ? 'hidden lg:block' : ''"
+          >
+        </div>
+        <button
+          class="text-center w-full font-display mt-10 mx-auto lg:hidden"
+          :aria-expanded="!isCollapsed"
+          @click="isCollapsed = !isCollapsed"
+        >
+          {{ isCollapsed ? 'And more...' : 'Show less' }}
+        </button>
       </div>
-      <button
-        class="text-center w-full font-display mt-10 mx-auto lg:hidden"
-        :aria-expanded="!isCollapsed"
-        @click="isCollapsed = !isCollapsed"
-      >
-        {{ isCollapsed ? 'And more...' : 'Show less' }}
-      </button>
     </div>
   </section>
 </template>
