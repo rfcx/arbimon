@@ -5,7 +5,7 @@
         <h1 class="mb-6 text-gray-900 dark:text-frequency">
           Meet our science team
         </h1>
-        <h4 class="text-gray-500 dark:text-insight">
+        <h4 class="text-gray-500 dark:text-insight max-w-[793px] mx-auto">
           Our team is comprised of leaders in the field from expert biologists, ecologists, data scientists and even some of the top birders of Brazil!
         </h4>
       </div>
