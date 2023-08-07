@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-pitch px-6 lg:px-10">
+  <section class="bg-white dark:bg-echo px-6 lg:px-10">
     <div class="py-10 mx-auto max-w-screen-xl text-center sm:py-30">
       <div class="mb-10 lg:mb-20">
         <h1 class="mb-6 text-gray-900 dark:text-frequency">
