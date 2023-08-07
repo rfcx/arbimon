@@ -1,22 +1,26 @@
 <template>
-  <div class="flex flex-row rounded-lg border-1 border-frequency">
+  <div
+    class="flex flex-row rounded-lg border-1 border-frequency h-64 md:h-[500px]"
+  >
     <div
       v-if="!isShowingBio"
-      class="w-full h-full"
+      class="w-full h-full flex flex-row-reverse md:flex-col"
     >
       <img
-        class="rounded-t-lg border-b-1 border-b-frequency w-full object-cover"
+        class="rounded-r-lg border-l-1 border-l-frequency border-b-0 w-1/2 h-full md:(w-full h-2/3 rounded-t-lg rounded-br-none border-b-1 border-b-frequency border-l-0) object-cover"
         :src="imageUrl"
       >
-      <div class="p-6 text-left">
-        <p class="text-flamingo text-base lg:text-lg">
-          {{ name }}
-        </p>
-        <p class="font-medium py-2">
-          {{ role }}
-        </p>
+      <div class="flex flex-col items-start justify-between content-stretch pt-6 px-6 pb-8 text-left self-stretch flex-grow flex-1">
+        <div class="">
+          <p class="text-flamingo text-lg">
+            {{ name }}
+          </p>
+          <p class="font-medium py-2">
+            {{ role }}
+          </p>
+        </div>
         <button
-          class="cursor-pointer text-frequency"
+          class="cursor-pointer text-frequency font-display"
           @click="isShowingBio = true"
         >
           About
@@ -25,11 +29,11 @@
     </div>
     <div
       v-else
-      class="h-full w-full bg-frequency p-6 flex flex-col justify-between gap-4 text-left"
+      class="h-full w-full bg-frequency pt-6 px-6 pb-8 flex flex-col justify-between gap-4 text-left items-stretch rounded-lg"
     >
       <div>
         <div class="flex flex-row justify-between mb-4">
-          <p class="text-flamingo text-base lg:text-lg">
+          <p class="text-flamingo text-lg">
             {{ name }}
           </p>
           <button
@@ -45,7 +49,7 @@
       </div>
       <a
         href="#"
-        class="text-util-gray-03 hover-underline"
+        class="text-util-gray-03 hover-underline font-display"
       >LinkedIn</a>
     </div>
   </div>
