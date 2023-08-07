@@ -11,7 +11,7 @@
       </div>
       <div class="grid md:grid-cols-2 gap-4 lg:(grid-cols-3 gap-6) xl:(grid-cols-4 gap-10) items-stretch">
         <team-card
-          image-url="/src/_assets/landing/team/marconi.webp"
+          :image-url="marconiImage"
           name="Marconi Campos"
           role="Chief Scientist"
           bio="With +20 years of experience in biodiversity monitoring, I strive to integrate tech, AI, and ecological modeling into a global automated remote biodiversity monitoring network that will revolutionize conservation. Traveler, yogi, & birder."
@@ -22,28 +22,28 @@
           subtitle="PhDs"
         />
         <team-card
-          image-url="/src/_assets/landing/team/kris.webp"
+          :image-url="krisImage"
           name="Kris Harmon"
           role="Biodiversity Scientist"
           bio="Biologist & GIS analyst with a MS in Conservation Ecology, interested in applying passive monitoring to understanding patterns and drivers of biodiversity. Surfer, backpacker, rock climber, fieldwork stalwart, & happiest while exploring."
           linkedin-url="#"
         />
         <team-card
-          image-url="/src/_assets/landing/team/jose.jpg"
+          :image-url="joseImage"
           name="José Ribeiro Jr"
           role="Quantitative Ecologist"
           bio="Biologist passionate about unraveling biodiversity's spatial & temporal patterns. I hold an M.Sc. & Ph.D. in Ecology. Soccer is my heart's sport. On weekends, I cherish scenic drives in my old Volkswagen Beetle, enjoying nature's beauty."
           linkedin-url="#"
         />
         <team-card
-          image-url="/src/_assets/landing/team/tomaz.webp"
+          :image-url="tomazImage"
           name="Tomaz Melo"
           role="Biodiversity Scientist"
           bio="Biologist & ornithologist, with a master's degree in Ecology and a PhD in Zoology, and a passion for photography. My goal is to expand my knowledge about the species that occur in each project to help build better IA models."
           linkedin-url="#"
         />
         <team-card
-          image-url="/src/_assets/landing/team/nelson.webp"
+          :image-url="nelsonImage"
           name="Nelson Buainain"
           role="Data Scientist"
           bio="Passionate biologist & Data Scientist with a PhD in Ecology & Evolution. Protecting biodiversity by developing AI for forest monitoring. Wandering in my VW bus, I seek wilderness, rocks to climb, and delight in bird songs & guitar strings."
@@ -53,7 +53,7 @@
           title="Top 2 eBirders of Brazil."
         />
         <team-card
-          image-url="/src/_assets/landing/team/gabriel-le.webp"
+          :image-url="gabrielLeImage"
           name="Gabriel Leite"
           role="Biodiversity Scientist"
           bio="Biologist & ornithologist with a PhD in Conservation. I live in Manaus and have been working with bioacoustics for many years. I like to travel and record species song. I have more than 2700 species recorded in more than 25 countries."
@@ -65,14 +65,14 @@
           linkedin-url="#"
         />
         <team-card
-          image-url="/src/_assets/landing/team/carly.webp"
+          :image-url="carlyImage"
           name="Carly Batist"
           role="Science Outreach Coordinator"
           bio="Primatologist & bioacoustician passionate about science communication, translating acoustic monitoring into conservation insights, & lemurs (study species for my PhD). I love hiking, my fur babies & cheering on Arsenal, the Giants & Knicks."
           linkedin-url="#"
         />
         <team-card
-          image-url="/src/_assets/landing/team/gabriel-mc.webp"
+          :image-url="gabrielMcImage"
           name="Gabriel McCrate"
           role="Data Analyst"
           bio="MSc in Biological Sciences from Londrina State University & an MSc in Ecology from the National Institute of Amazonian Research. I’m passionate about protecting the rainforests, hikes, wildlife, and homebrews. Sir Attenborough's #1 fan."
@@ -87,6 +87,14 @@
   </section>
 </template>
 <script setup lang="ts">
+import carlyImage from '@/_assets/landing/team/carly.webp'
+import gabrielLeImage from '@/_assets/landing/team/gabriel-le.webp'
+import gabrielMcImage from '@/_assets/landing/team/gabriel-mc.webp'
+import joseImage from '@/_assets/landing/team/jose.jpg'
+import krisImage from '@/_assets/landing/team/kris.webp'
+import marconiImage from '@/_assets/landing/team/marconi.webp'
+import nelsonImage from '@/_assets/landing/team/nelson.webp'
+import tomazImage from '@/_assets/landing/team/tomaz.webp'
 import quoteCard from '../components/quote-card.vue'
 import teamCard from '../components/team-card.vue'
 </script>
