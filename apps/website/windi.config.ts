@@ -158,6 +158,8 @@ export default defineConfig({
     btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full font-display',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
+    // title
+    'text-giant': 'text-3xl md:text-5xl lg:text-7xl leading-10 font-header tracking-tight',
     // input
     'input-field': 'bg-box-gray border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-gray text-white'
   }
