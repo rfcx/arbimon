@@ -7,8 +7,8 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
-import { useCnnResultFilterStore } from './use-cnn-result-filter-store'
 import { useDashboardStore } from './use-dashboard-store'
+import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -63,6 +63,6 @@ export const pinia = createPinia()
 export const useStoreOutsideSetup = (): BiodiversityStore => useStore(pinia)
 
 export {
-  useCnnResultFilterStore,
-  useDashboardStore
+  useDashboardStore,
+  useDetectionsResultFilterStore
 }
