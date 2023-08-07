@@ -1,5 +1,6 @@
 <template>
   <team-hero />
+  <team-purpose />
   <team-member-list />
   <team-cta />
 </template>
@@ -7,4 +8,5 @@
 import teamCta from './blocks/team-cta.vue'
 import teamHero from './blocks/team-hero.vue'
 import teamMemberList from './blocks/team-member-list.vue'
+import teamPurpose from './blocks/team-purpose.vue'
 </script>

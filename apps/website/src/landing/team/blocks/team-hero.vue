@@ -1,5 +1,8 @@
 <template>
-  <hero-content :hero-image-url="heroImage">
+  <hero-content
+    :hero-image-url="heroImage"
+    :with-border-bottom="false"
+  >
     <h1 class="text-giant mb-4 text-gray-900 dark:text-frequency">
       About us
     </h1>
