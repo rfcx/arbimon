@@ -11,7 +11,7 @@
       </div>
       <div class="grid md:grid-cols-2 gap-4 lg:(grid-cols-3 gap-6) xl:(grid-cols-4 gap-10) items-stretch">
         <team-card
-          image-url="/src/_assets/landing/team/marconid.webp"
+          image-url="/src/_assets/landing/team/marconi.webp"
           name="Marconi Campos"
           role="Chief Scientist"
           bio="With +20 years of experience in biodiversity monitoring, I strive to integrate tech, AI, and ecological modeling into a global automated remote biodiversity monitoring network that will revolutionize conservation. Traveler, yogi, & birder."
