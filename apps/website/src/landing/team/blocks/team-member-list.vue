@@ -15,6 +15,7 @@
           name="Marconi Campos"
           role="Chief Scientist"
           bio="With +20 years of experience in biodiversity monitoring, I strive to integrate tech, AI, and ecological modeling into a global automated remote biodiversity monitoring network that will revolutionize conservation. Traveler, yogi, & birder."
+          linkedin-url="#"
         />
         <quote-card
           title="6"
@@ -25,24 +26,28 @@
           name="Kris Harmon"
           role="Biodiversity Scientist"
           bio="Biologist & GIS analyst with a MS in Conservation Ecology, interested in applying passive monitoring to understanding patterns and drivers of biodiversity. Surfer, backpacker, rock climber, fieldwork stalwart, & happiest while exploring."
+          linkedin-url="#"
         />
         <team-card
           image-url="/src/_assets/landing/team/jose.jpg"
           name="José Ribeiro Jr"
           role="Quantitative Ecologist"
           bio="Biologist passionate about unraveling biodiversity's spatial & temporal patterns. I hold an M.Sc. & Ph.D. in Ecology. Soccer is my heart's sport. On weekends, I cherish scenic drives in my old Volkswagen Beetle, enjoying nature's beauty."
+          linkedin-url="#"
         />
         <team-card
           image-url="/src/_assets/landing/team/tomaz.webp"
           name="Tomaz Melo"
           role="Biodiversity Scientist"
           bio="Biologist & ornithologist, with a master's degree in Ecology and a PhD in Zoology, and a passion for photography. My goal is to expand my knowledge about the species that occur in each project to help build better IA models."
+          linkedin-url="#"
         />
         <team-card
           image-url="/src/_assets/landing/team/nelson.webp"
           name="Nelson Buainain"
           role="Data Scientist"
           bio="Passionate biologist & Data Scientist with a PhD in Ecology & Evolution. Protecting biodiversity by developing AI for forest monitoring. Wandering in my VW bus, I seek wilderness, rocks to climb, and delight in bird songs & guitar strings."
+          linkedin-url="#"
         />
         <quote-card
           title="Top 2 eBirders of Brazil."
@@ -52,22 +57,26 @@
           name="Gabriel Leite"
           role="Biodiversity Scientist"
           bio="Biologist & ornithologist with a PhD in Conservation. I live in Manaus and have been working with bioacoustics for many years. I like to travel and record species song. I have more than 2700 species recorded in more than 25 countries."
+          linkedin-url="#"
         />
         <quote-card
           title="50+"
           subtitle="collective years of experience in bioacoustic."
+          linkedin-url="#"
         />
         <team-card
           image-url="/src/_assets/landing/team/carly.webp"
           name="Carly Batist"
           role="Science Outreach Coordinator"
           bio="Primatologist & bioacoustician passionate about science communication, translating acoustic monitoring into conservation insights, & lemurs (study species for my PhD). I love hiking, my fur babies & cheering on Arsenal, the Giants & Knicks."
+          linkedin-url="#"
         />
         <team-card
           image-url="/src/_assets/landing/team/gabriel-mc.webp"
           name="Gabriel McCrate"
           role="Data Analyst"
           bio="MSc in Biological Sciences from Londrina State University & an MSc in Ecology from the National Institute of Amazonian Research. I’m passionate about protecting the rainforests, hikes, wildlife, and homebrews. Sir Attenborough's #1 fan."
+          linkedin-url="#"
         />
         <quote-card
           title="76"

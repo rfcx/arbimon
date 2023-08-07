@@ -100,7 +100,7 @@
         </p>
       </div>
       <a
-        :href="linkedInUrl"
+        :href="linkedinUrl"
         class="text-util-gray-03 hover-underline font-display"
         aria-label="LinkedIn"
       >
@@ -141,6 +141,6 @@ defineProps<{
   readonly name: string
   readonly role: string
   readonly bio: string
-  readonly linkedInUrl: string
+  readonly linkedinUrl: string
 }>()
 </script>
