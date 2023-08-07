@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="basis-7/12">
-          <span class="not-sr-only hidden">.</span>
+          <span class="text-xxs">// TODO: add content</span>
         </div>
       </div>
     </div>
