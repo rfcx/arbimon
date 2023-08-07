@@ -1,18 +1,18 @@
-import { detectCnnDetectionsRoute } from '@rfcx-bio/common/api-bio/detect/detect-cnn-detections'
-import { detectDetectionRoute } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { detectDetectionsRoute } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { detectRecordingRoute } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { detectSummaryRoute } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { detectValidationRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation'
-import { detectValidationStatusRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation-status'
+import { detectValidationResultsRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
+import { detectReviewDetectionRoute } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { setIsProjectMember } from '@/_middleware/get-is-project-member'
 import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
-import { detectCnnDetectionsHandler } from './cnn/detect-cnn-detections-handler'
 import { detectRecordingHandler } from './jobs/detect-recording-handler'
-import { detectDetectionHandler } from './validations/detect-detection-handler'
+import { detectDetectionsHandler } from './validations/detect-detections-handler'
 import { detectSummaryHandler } from './validations/detect-summary-handler'
 import { detectValidationHandler } from './validations/detect-validation-handler'
 import { detectValidationStatusHandler } from './validations/detect-validation-status-handler'
+import { detectReviewDetectionHandler } from './validations/review-detections'
 
 export const routesDetect: RouteRegistration[] = [
   {
@@ -28,12 +28,7 @@ export const routesDetect: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: detectDetectionRoute,
-    handler: detectDetectionHandler
-  },
-  {
-    method: GET,
-    url: detectValidationStatusRoute,
+    url: detectValidationResultsRoute,
     handler: detectValidationStatusHandler
   },
   {
@@ -43,7 +38,12 @@ export const routesDetect: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: detectCnnDetectionsRoute,
-    handler: detectCnnDetectionsHandler
+    url: detectDetectionsRoute,
+    handler: detectDetectionsHandler
+  },
+  {
+    method: POST,
+    url: detectReviewDetectionRoute,
+    handler: detectReviewDetectionHandler
   }
 ]

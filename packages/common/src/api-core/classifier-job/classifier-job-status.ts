@@ -4,7 +4,9 @@ export const CLASSIFIER_JOB_STATUS = {
   DONE: 30,
   ERROR: 40,
   CANCELLED: 50
-}
+} as const
+
+export type ClassifierJobStatusNumber = typeof CLASSIFIER_JOB_STATUS[keyof typeof CLASSIFIER_JOB_STATUS]
 
 export const CLASSIFIER_JOB_LABELS: Record<number, string> = {
   0: 'Queued',

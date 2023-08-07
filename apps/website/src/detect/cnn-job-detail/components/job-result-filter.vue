@@ -11,13 +11,13 @@
           label="Threshold"
           role="button"
         >
-          Threshold >= {{ cnnResultFilterStore.formatThreshold }}
+          Threshold >= {{ detectionsResultFilterStore.formattedThreshold }}
           <icon-custom-el-angle-down class="text-xxs ml-1" />
         </span>
       </template>
       <el-slider
-        v-model="cnnResultFilterStore.filter.threshold"
-        :format-tooltip="cnnResultFilterStore.formatThreshold"
+        v-model="detectionsResultFilterStore.filter.threshold"
+        :format-tooltip="detectionsResultFilterStore.formatThreshold"
       />
     </el-popover>
 
@@ -26,11 +26,11 @@
       label="validation-status"
     >
       <el-select
-        v-model="cnnResultFilterStore.resultFilter.validationStatus"
+        v-model="detectionsResultFilterStore.resultFilter.validationStatus"
         placeholder="Validation status"
       >
         <el-option
-          v-for="status in cnnResultFilterStore.validationStatusFilterOptions"
+          v-for="status in detectionsResultFilterStore.validationStatusFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
@@ -43,11 +43,11 @@
       label="taxon-class"
     >
       <el-select
-        v-model="cnnResultFilterStore.resultFilter.taxonClass"
+        v-model="detectionsResultFilterStore.resultFilter.classification"
         placeholder="Class"
       >
         <el-option
-          v-for="status in cnnResultFilterStore.classFilterOptions"
+          v-for="status in detectionsResultFilterStore.classFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
@@ -60,13 +60,13 @@
       label="sites"
     >
       <el-select
-        v-model="cnnResultFilterStore.resultFilter.siteIds"
+        v-model="detectionsResultFilterStore.resultFilter.siteIds"
         multiple
         collapse-tags
         placeholder="Sites"
       >
         <el-option
-          v-for="status in cnnResultFilterStore.sitesFilterOptions"
+          v-for="status in detectionsResultFilterStore.sitesFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
@@ -79,11 +79,11 @@
       label="sort-by"
     >
       <el-select
-        v-model="cnnResultFilterStore.resultFilter.sortBy"
+        v-model="detectionsResultFilterStore.resultFilter.sortBy"
         placeholder="Sort by"
       >
         <el-option
-          v-for="status in cnnResultFilterStore.sortByFilterOptions"
+          v-for="status in detectionsResultFilterStore.sortByFilterOptions"
           :key="status.value"
           :label="status.label"
           :value="status.value"
@@ -107,15 +107,38 @@
   />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { AxiosInstance } from 'axios'
+import type { ComputedRef } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
-import { useCnnResultFilterStore } from '~/store'
+import type { ClassifierParams } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+
+import { useClassifier } from '@/detect/_composables/use-classifier'
+import { apiClientBioKey } from '@/globals'
+import { useDetectionsResultFilterStore } from '~/store'
 import FilterModal from './job-result-filter-modal.vue'
 
-const cnnResultFilterStore = useCnnResultFilterStore()
-const displayFilterModal = ref(false)
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const props = defineProps<{ classifierId?: number }>()
 
-// const displayType = ref<'list' | 'grid'>('list')
+const detectionsResultFilterStore = useDetectionsResultFilterStore()
+
+const classifierId: ComputedRef<ClassifierParams> = computed(() => {
+  return {
+    classifierId: props.classifierId == null ? '-1' : props.classifierId.toString()
+  }
+})
+const { data } = useClassifier(apiClientBio, classifierId, { fields: ['outputs'] })
+
+watch(data, (newData) => {
+  if (newData == null) {
+    return
+  }
+
+  detectionsResultFilterStore.updateclassifierOutputList(newData.outputs)
+})
+
+const displayFilterModal = ref(false)
 </script>
 
 <style lang="scss">

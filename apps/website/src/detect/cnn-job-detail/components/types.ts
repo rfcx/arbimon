@@ -1,21 +1,23 @@
+import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+
 export interface ValidationFilterConfig {
   threshold: number
-  validationStatus: string
-  taxonClass: string
+  validationStatus: ReviewStatus | 'all'
+  classification: string
   siteIds: string[]
-  sortBy: string
+  sortBy: 'asc' | 'desc'
 }
 
 export interface DetectionMedia {
-  spectrogramUrl: string | null
-  audioUrl: string | null
-  id: number
+  spectrogramUrl: string
+  audioUrl: string
+  id: string
   checked?: boolean
-  validation: string
+  validation: ReviewStatus
 }
 
 export interface DetectionValidationStatus {
-  value: string
+  value: ReviewStatus
   label: string
   checked: boolean
 }

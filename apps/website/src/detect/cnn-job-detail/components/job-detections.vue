@@ -2,10 +2,10 @@
   <div class="job-result-wrapper">
     <template
       v-for="species in allSpecies"
-      :key="'job-detections-' + species.speciesName"
+      :key="'job-detections-' + species.speciesSlug"
     >
       <h3 class="species-title text-lg mt-4">
-        {{ species.speciesName }}
+        {{ species.speciesName }} ({{ species.speciesSlug }})
       </h3>
       <div
         v-for="(media, idx) in displaySpecies(species.media)"
@@ -40,32 +40,59 @@
     />
   </div>
 </template>
+
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import type { AxiosInstance } from 'axios'
+import { groupBy } from 'lodash-es'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
+
+import { apiClientBioKey } from '@/globals'
+import { getMediaLink } from '~/media'
 import { ROUTE_NAMES } from '~/router'
+import { useDetectionsResultFilterStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
-const filterOptions: DetectionValidationStatus[] = [
-  { value: 'present', label: 'Present', checked: false },
-  { value: 'not_present', label: 'Not Present', checked: false },
-  { value: 'unknown', label: 'Unknown', checked: false },
-  { value: 'unvalidated', label: 'Unvalidated', checked: true }
-]
-
 const validationCount = ref<number | null>(null)
 const isOpen = ref<boolean | null>(null)
 const isShiftHolding = ref<boolean>(false)
 const isCtrlHolding = ref<boolean>(false)
-const currentDetectionId = ref<number | undefined>(undefined)
+const currentDetectionId = ref<string | undefined>(undefined)
+const detectionsResultFilterStore = useDetectionsResultFilterStore()
+
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const route = useRoute()
-const jobId = computed(() => route.params.jobId)
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined }>(), {
+  isLoading: true,
+  isError: false,
+  data: undefined
+})
+
+const filterOptions = computed<DetectionValidationStatus[]>(() => {
+  const validation = detectionsResultFilterStore.validationStatusFilterOptions
+
+  // removes the `All` setting
+  const filtered: DetectionValidationStatus[] = validation.filter(v => v.value !== 'all')
+  .map(s => {
+    return {
+      value: s.value,
+      label: s.label,
+      checked: s.value === 'unreviewed'
+    } as DetectionValidationStatus
+  })
+
+  return filtered
+})
 
 watch(() => isShiftHolding.value, (newVal, oldVal) => {
   if (newVal !== oldVal && isShiftHolding.value === false) {
@@ -82,26 +109,43 @@ watch(() => isCtrlHolding.value, (newVal, oldVal) => {
 })
 
 const allSpecies = computed(() => {
-  const speciesNames = ['Panthera pardus orientalis', 'Diceros bicornis', 'Gorilla gorilla diehli', 'Gorilla beringei graueri', 'Eretmochelys imbricata', 'Rhinoceros sondaicus', 'Pongo abelii', 'Pongo pygmaeus', 'Pseudoryx nghetinhensis', 'Elephas maximus sumatranus']
-  const species = []
-  for (let index = 0; index < 2; index++) {
-    const rd = Math.floor(Math.random() * 30)
-    const media = []
-    for (let j = 0; j < rd; j++) {
-      media.push({
-        spectrogramUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d120.120_mtrue_fspec.png',
-        audioUrl: 'https://media-api.rfcx.org/internal/assets/streams/0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
-        id: rd + j,
-        validation: 'unvalidated'
+  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
+  const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
+    return {
+      speciesSlug: slug,
+      speciesName: groupedDetections[slug][0].classification.title,
+      media: groupedDetections[slug].map(detection => {
+        return {
+          spectrogramUrl: getMediaLink({
+            streamId: detection.siteId,
+            start: detection.start,
+            end: detection.end,
+            frequency: 'full',
+            gain: 1,
+            filetype: 'spec',
+            monochrome: true,
+            dimension: {
+              width: 120,
+              height: 120
+            },
+            contrast: 120,
+            fileExtension: 'png'
+          }),
+          audioUrl: getMediaLink({
+            streamId: detection.siteId,
+            start: detection.start,
+            end: detection.end,
+            frequency: 'full',
+            gain: 1,
+            filetype: 'mp3',
+            fileExtension: 'mp3'
+          }),
+          id: detection.id,
+          validation: detection.reviewStatus
+        }
       })
     }
-    const speciesName = speciesNames[Math.floor(Math.random() * speciesNames.length)]
-    species.push({
-      speciesSlug: speciesName,
-      speciesName,
-      media
-    })
-  }
+  })
 
   return species
 })
@@ -110,7 +154,7 @@ const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
-const updateSelectedDetections = (detectionId: number, event: DetectionEvent) => {
+const updateSelectedDetections = (detectionId: string, event: DetectionEvent) => {
   const { isSelected, isShiftKeyHolding, isCtrlKeyHolding } = event
   selectDetection(detectionId, isSelected)
   currentDetectionId.value = detectionId
@@ -136,7 +180,7 @@ const updateSelectedDetections = (detectionId: number, event: DetectionEvent) =>
   isOpen.value = true
 }
 
-const resetSelection = (skippedId?: number) => {
+const resetSelection = (skippedId?: string) => {
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
       if (skippedId !== undefined && det.id === skippedId) return
@@ -145,7 +189,7 @@ const resetSelection = (skippedId?: number) => {
   })
 }
 
-const selectDetection = (detectionId: number, checked: boolean) => {
+const selectDetection = (detectionId: string, checked: boolean) => {
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
       if (detectionId === det.id) {
@@ -156,7 +200,7 @@ const selectDetection = (detectionId: number, checked: boolean) => {
 }
 
 const getSelectedDetectionIds = () => {
-  const selectedDetectionIds = [] as number[]
+  const selectedDetectionIds: string[] = []
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
       if (det.checked === true) {
@@ -165,7 +209,8 @@ const getSelectedDetectionIds = () => {
     })
   })
 
-  return selectedDetectionIds.sort((a, b) => a - b)
+  // use localeCompare to sort because it's bigint, we could lose precision in the future
+  return selectedDetectionIds.sort((a, b) => a.localeCompare(b))
 }
 
 const getValidationCount = () => {
@@ -190,11 +235,37 @@ const getCombinedDetections = () => {
   return combinedDetections
 }
 
-const validateDetection = (validation: string) => {
+const validateDetection = async (validation: ReviewStatus): Promise<void> => {
+  // TODO: pause query before running this script?
+  // The reason to pause is that maybe the detections ping could alter with
+  // the array and causes inconsistencies
+  // in the section of the detections that we need to validate.
+  // check out here on how to disable query: https://tanstack.com/query/v4/docs/vue/guides/disabling-queries#lazy-queries
   const selectedDetectionIds = getSelectedDetectionIds()
+
+  // call review api
+  const promises = selectedDetectionIds.map(id => {
+    // this will always be a success case
+    const originalDetection = (props.data ?? []).find(d => id === d.id)
+
+    return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
+      // this is a safe cast because the validation selector always start at 'unreviewed' union
+      // and the emitter is emitted when there's a change (watch), which means the change will
+      // always be from 'unreviewed' to other type.
+      status: validation as Exclude<ReviewStatus, 'unreviewed'>,
+      classification: originalDetection?.classification?.value ?? '',
+      streamId: originalDetection?.siteId ?? '',
+      classifier: originalDetection?.classifierId ?? -1,
+      start: originalDetection?.start ?? ''
+    })
+  })
+
+  const responses = await Promise.allSettled(promises)
+
   allSpecies.value.forEach(species => {
     species.media.forEach((det: DetectionMedia) => {
-      if (selectedDetectionIds.includes(det.id)) {
+      // only update status to success review update
+      if (selectedDetectionIds.includes(det.id) && responses.find(r => r.status === 'fulfilled') != null) {
         det.validation = validation
       }
     })
@@ -207,5 +278,4 @@ const validateDetection = (validation: string) => {
 const closeValidator = () => {
   isOpen.value = false
 }
-
 </script>

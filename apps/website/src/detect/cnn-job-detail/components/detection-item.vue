@@ -36,7 +36,7 @@
       </div>
       <div class="absolute text-xs top-0.5 right-0">
         <validation-status
-          :value="props.validation"
+          :value="props.validation ?? 'unreviewed'"
           :hide-unvalidated="true"
         />
       </div>
@@ -60,45 +60,46 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
 import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
+import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
-import { apiClientBioKey } from '@/globals'
+import { apiMediaKey } from '@/globals'
 import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
 
 const props = withDefaults(defineProps<{
-  spectrogramUrl: string | null
-  audioUrl: string | null
-  id: number | null,
-  validation: string,
+  spectrogramUrl: string
+  audioUrl: string,
+  id: string | null,
+  validation: ReviewStatus,
   checked: boolean | null
 }>(), {
-  spectrogramUrl: null,
-  audioUrl: null,
   id: null,
   checked: null
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: string, event: DetectionEvent): void}>()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
 const showCheck = ref(false)
 const isSelected = ref<boolean>(false)
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiMedia = inject(apiMediaKey) as AxiosInstance
+
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
 const playing = ref(false)
 
 onMounted(async () => {
   spectrogramLoading.value = true
-  const spectrogramBlob = props.spectrogramUrl ? await apiBioGetCoreMedia(apiClientBio, props.spectrogramUrl) : null
+  const spectrogramBlob = await apiCoreGetMedia(apiMedia, { filename: props.spectrogramUrl })
   spectrogramLoading.value = false
 
   if (!spectrogramBlob) return
@@ -142,7 +143,7 @@ const setAudio = (audioBlob: Blob) => {
 const play = async () => {
   if (!audio.value) {
     audioLoading.value = true
-    const audioBlob = props.audioUrl ? await apiBioGetCoreMedia(apiClientBio, props.audioUrl) : null
+    const audioBlob = await apiCoreGetMedia(apiMedia, { filename: props.audioUrl })
     audioLoading.value = false
 
     if (!audioBlob) return
@@ -164,8 +165,8 @@ const toggleDetection = (event: MouseEvent) => {
     isCtrlKeyHolding: event.ctrlKey || event.metaKey
   })
 }
-
 </script>
+
 <style lang="scss">
   .selected {
     padding: 3px;

@@ -11,7 +11,7 @@ import { FEATURE_TOGGLES } from '~/feature-toggles'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
-import { apiClientArbimonKey, apiClientBioKey, apiClientCoreKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
+import { apiClientArbimonKey, apiClientBioKey, apiClientCoreKey, apiMediaKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
@@ -53,6 +53,8 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
     const getToken = user ? async () => await getIdToken(authClient) : undefined
     const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL, getToken)
     const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
+    // TODO: This should be changed to a proper environment variable
+    const apiMedia = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL === 'https://api.rfcx.org' ? 'https://media-api.rfcx.org' : import.meta.env.VITE_CORE_API_BASE_URL, getToken)
     const apiClientArbimon = getApiClient(import.meta.env.VITE_ARBIMON_BASE_URL, getToken)
 
     // Inject globals
@@ -61,6 +63,7 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       .provide(apiClientBioKey, apiClientBio)
       .provide(apiClientCoreKey, apiClientCore)
       .provide(apiClientArbimonKey, apiClientArbimon)
+      .provide(apiMediaKey, apiMedia)
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
 
     // Handle redirects

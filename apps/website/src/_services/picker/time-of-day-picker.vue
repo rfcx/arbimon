@@ -26,17 +26,7 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
 
-interface TimeLabel {
-  label: string
-  value: string
-}
-
-const hours: { [key: string]: TimeLabel } = {
-  all: { label: 'All day', value: '0-23' },
-  diurnal: { label: 'Diurnal', value: '6-17' },
-  nocturnal: { label: 'Nocturnal', value: '0-5,18-23' },
-  custom: { label: 'Custom', value: '' }
-}
+import { type TimeLabel, hours } from './time-of-day-constants'
 
 const emit = defineEmits<{(e: 'emitSelectTime', value: string): void}>()
 
