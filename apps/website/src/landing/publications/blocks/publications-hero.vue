@@ -1,6 +1,6 @@
 <template>
   <hero-content :hero-image-url="heroImage">
-    <h1 class="mb-4 text-gray-900 dark:text-frequency">
+    <h1 class="text-giant mb-4 text-gray-900 dark:text-frequency">
       Scientific publications
     </h1>
     <p class="text-gray-500 dark:text-insight">

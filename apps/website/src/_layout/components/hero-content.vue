@@ -5,7 +5,7 @@
       class="w-full h-64 lg:h-84 bg-cover bg-no-repeat bg-right-top border-b border-b-frequency"
     >
       <div class="grid lg:(grid-cols-16 px-10) max-w-screen-xl mx-auto px-4 h-full">
-        <div class="my-8 lg:(col-span-7 my-24)">
+        <div class="my-auto lg:(col-span-7)">
           <slot />
         </div>
         <div class="hidden not-sr-only">

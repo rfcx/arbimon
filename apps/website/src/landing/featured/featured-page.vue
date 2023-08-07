@@ -1,8 +1,8 @@
 <template>
   <section class="bg-white dark:bg-echo">
     <hero-content :hero-image-url="heroImage">
-      <h1 class="mb-4 text-gray-900 dark:text-frequency">
-        Featured Work
+      <h1 class="text-giant mb-4 text-gray-900 dark:text-frequency">
+        Featured work
       </h1>
       <p class="text-gray-500 dark:text-insight">
         See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
