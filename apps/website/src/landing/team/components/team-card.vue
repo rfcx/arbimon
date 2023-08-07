@@ -1,31 +1,58 @@
 <template>
   <div
-    class="flex flex-row rounded-lg border-1 border-frequency h-64 md:h-[500px]"
+    class="flex flex-row rounded-lg border-1 border-frequency h-72 md:h-[500px]"
   >
     <div
       v-if="!isShowingBio"
-      class="w-full h-full flex flex-row-reverse md:flex-col"
+      class="w-full h-full flex flex-row md:flex-col-reverse"
     >
-      <img
-        class="rounded-r-lg border-l-1 border-l-frequency border-b-0 w-1/2 h-full md:(w-full h-2/3 rounded-t-lg rounded-br-none border-b-1 border-b-frequency border-l-0) object-cover"
-        :src="imageUrl"
-      >
       <div class="flex flex-col items-start justify-between content-stretch pt-6 px-6 pb-8 text-left self-stretch flex-grow flex-1">
         <div class="">
-          <p class="text-flamingo text-lg">
+          <span class="text-flamingo text-lg">
             {{ name }}
-          </p>
-          <p class="font-medium py-2">
+          </span>
+          <p
+            class="font-medium py-2"
+            :aria-label="role"
+          >
             {{ role }}
           </p>
         </div>
         <button
-          class="cursor-pointer text-frequency font-display"
+          class="cursor-pointer text-frequency font-display flex flex-row gap-2"
           @click="isShowingBio = true"
         >
-          About
+          <span class="inline-flex">About</span>
+          <svg
+            class="inline-flex not-sr-only"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M5 12H19"
+              stroke="#ADFF2C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 5L19 12L12 19"
+              stroke="#ADFF2C"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
       </div>
+      <img
+        class="rounded-r-lg border-l-1 border-l-frequency border-b-0 w-1/2 h-full md:(w-full h-2/3 rounded-t-lg rounded-br-none border-b-1 border-b-frequency border-l-0) object-cover"
+        :src="imageUrl"
+        :alt="'Image of ' + name"
+      >
     </div>
     <div
       v-else
@@ -33,24 +60,75 @@
     >
       <div>
         <div class="flex flex-row justify-between mb-4">
-          <p class="text-flamingo text-lg">
+          <span class="text-flamingo text-lg">
             {{ name }}
-          </p>
+          </span>
           <button
             class="cursor-pointer text-util-gray-03"
             @click="isShowingBio = false"
           >
-            X
+            <span class="sr-only">Close</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M18 6L6 18"
+                stroke="#242424"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6 6L18 18"
+                stroke="#242424"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
         </div>
-        <p class="text-util-gray-03">
+        <p
+          class="text-util-gray-03"
+          :aria-label="'Bio of ' + name"
+        >
           {{ bio }}
         </p>
       </div>
       <a
-        href="#"
+        :href="linkedInUrl"
         class="text-util-gray-03 hover-underline font-display"
-      >LinkedIn</a>
+        aria-label="LinkedIn"
+      >
+        <span class="inline-block mr-2">LinkedIn</span>
+        <svg
+          class="inline-block"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M5 12H19"
+            stroke="#242424"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M12 5L19 12L12 19"
+            stroke="#242424"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
     </div>
   </div>
 </template>
@@ -63,5 +141,6 @@ defineProps<{
   readonly name: string
   readonly role: string
   readonly bio: string
+  readonly linkedInUrl: string
 }>()
 </script>
