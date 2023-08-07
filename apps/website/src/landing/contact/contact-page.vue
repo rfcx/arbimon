@@ -3,7 +3,7 @@
     <div class="mx-auto max-w-screen-xl rounded-lg border-1 border-frequency">
       <div class="flex flex-col items-center lg:(flex-row-reverse)">
         <div class="bg-hero-cta bg-opacity-40 bg-left-top basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-lg rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-lg)">
-          <div class="flex-1 bg-pitch/[.6] p-10 flex flex-row justify-between rounded-t-lg rounded-r-none lg:(flex-col rounded-t-none rounded-r-lg)">
+          <div class="flex-1 bg-pitch/[.6] p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-lg rounded-r-none lg:(flex-col rounded-t-none rounded-r-lg)">
             <div>
               <h1 class="mb-4 lg:mb-10 text-gray-900 dark:text-insight">
                 Contact us
@@ -23,7 +23,7 @@
             </div>
           </div>
         </div>
-        <div class="basis-3/5">
+        <div class="basis-3/5 w-full">
           <div v-if="isSubmitted">
             <div
               class="flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
@@ -52,43 +52,47 @@
             method="POST"
             class="space-y-8 p-10"
           >
-            <div class="grid grid-cols-2 gap-8">
+            <div class="uppercase col-span-2 font-eyebrow text-spoonbill">
+              SEND US A MESSAGE
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
               <div>
                 <label
-                  for="name"
-                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
-                >Name</label>
+                  for="firstname"
+                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                >First name <span class="text-sm font-normal">(required)</span></label>
                 <input
-                  id="name"
-                  name="name"
+                  id="firstname"
+                  v-model="firstName"
+                  name="firstname"
                   type="text"
                   maxlength="80"
                   class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
-                  placeholder="David Attenborough"
+                  placeholder="David"
                   required
                 >
               </div>
               <div>
                 <label
-                  for="email"
-                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
-                >Email</label>
+                  for="lastname"
+                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                >Last name</label>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
+                  id="lastname"
+                  v-model="lastName"
+                  name="lastname"
+                  type="text"
                   maxlength="80"
                   class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
-                  placeholder="david@arbimon.org"
-                  required
+                  placeholder="Attenborough"
                 >
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-8">
+            <div class="grid md:grid-cols-2 gap-8">
               <div>
                 <label
                   for="phone"
-                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
+                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
                 >Phone</label>
                 <input
                   id="phone"
@@ -101,24 +105,39 @@
               </div>
               <div>
                 <label
-                  for="company"
-                  class="block mb-2 font-bold text-gray-300 dark:text-insight"
-                >Organization</label>
+                  for="email"
+                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                >Email <span class="text-sm font-normal">(required)</span></label>
                 <input
-                  id="company"
-                  name="company"
-                  type="text"
+                  id="email"
+                  name="email"
+                  type="email"
                   maxlength="80"
                   class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
-                  placeholder="Arbimon"
+                  placeholder="david@arbimon.org"
+                  required
                 >
               </div>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="company"
+                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+              >Organization</label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                maxlength="80"
+                class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                placeholder="Arbimon"
+              >
             </div>
             <div>
               <label
                 for="subject"
-                class="block mb-2 font-bold text-gray-300 dark:text-insight"
-              >Type of inquiry</label>
+                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+              >Type of inquiry <span class="text-sm font-normal">(required)</span></label>
               <select
                 id="subject"
                 name="subject"
@@ -130,11 +149,36 @@
                 <option>Other</option>
               </select>
             </div>
+            <div>
+              <label
+                for="referred_from"
+                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+              >How did you hear about us? <span class="text-sm font-normal">(required)</span></label>
+              <select
+                id="referred_from"
+                name="referred_from"
+                class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                required
+              >
+                <option>Instagram</option>
+                <option>Facebook</option>
+                <option>LinkedIn</option>
+                <option>X (previously Twitter)</option>
+                <option>TikTok</option>
+                <option>Youtube</option>
+                <option>Event</option>
+                <option>Article</option>
+                <option>Friend/Family</option>
+                <option>Web search</option>
+                <option>Email</option>
+                <option>Other</option>
+              </select>
+            </div>
             <div class="sm:col-span-2">
               <label
                 for="message"
-                class="block mb-2 font-bold text-gray-300 dark:text-insight"
-              >Message</label>
+                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+              >Message <span class="text-sm font-normal">(required)</span></label>
               <textarea
                 id="message"
                 name="description"
@@ -143,7 +187,12 @@
                 placeholder="Reach out to us, ask a question or leave a comment..."
               />
             </div>
-            <div>
+            <div class="text-right">
+              <input
+                type="hidden"
+                name="name"
+                :value="lastName ? firstName + ' ' + lastName : firstName"
+              >
               <input
                 type="hidden"
                 name="orgid"
@@ -180,9 +229,13 @@
   </section>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+
+const firstName = ref('')
+const lastName = ref('')
 
 const isTestForm = import.meta.env.DEV
 const returnUrl = typeof window !== 'undefined' ? window.location.origin + '?submitted=true' : ''
