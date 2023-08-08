@@ -7,7 +7,7 @@ import { ROUTE_NAMES } from '~/router';
         What we do
       </h1>
       <p class="mb-6 text-gray-500 dark:text-insight max-w-3xl mx-auto">
-        At Arbimon, our mission is to empower scientists and conservationists with innovative AI-powered ecoacoustic analysis tools and data-driven insights to better understand and protect the world's biodiversity.
+        At Arbimon, our mission is to empower scientists and conservationists with innovative AI-powered ecoacoustic tools and data-driven insights to better understand and protect the world's biodiversity.
       </p>
     </div>
     <div class="flex flex-col gap-2 flex-col-reverse md:(flex-row pb-8) pb-4 px-4 items-center mx-auto max-w-screen-xl gap-2">
@@ -17,7 +17,7 @@ import { ROUTE_NAMES } from '~/router';
             The service
           </h5>
           <p class="mb-6">
-            We’re also a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
+            We're a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
           </p>
           <router-link
             :to="{ name: ROUTE_NAMES.landingContact }"

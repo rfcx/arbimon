@@ -19,7 +19,7 @@
           <h3 class="my-4 text-lg font-medium dark:text-insight text-left">
             {{ item.title }}
           </h3>
-          <p class="max-w-72 text-gray-500 dark:text-insight text-left">
+          <p class="text-gray-500 dark:text-insight text-left">
             {{ item.description }}
           </p>
         </div>
@@ -45,12 +45,12 @@ const config = [
   },
   {
     title: 'Unlimited data storage',
-    description: 'Upload, save, aand organize your recordings efficiently and without storage limits',
+    description: 'Upload, save, and organize your recordings efficiently and without storage limits',
     icon: iconHardDrive
   },
   {
     title: 'Free',
-    description: 'We`re connecting research and action, and our platform is free to advance this mission',
+    description: 'We\'re connecting research and action, and our platform is free to advance this mission',
     icon: iconDollar
   },
   {
