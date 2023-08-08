@@ -29,8 +29,8 @@
     </button>
   </h2>
   <div
+    v-show="isAnswerOpened"
     :id="'accordion-open-body-' + itemId"
-    :class="isAnswerOpened ? 'shown' : ''"
     :aria-labelledby="slugify(question)"
   >
     <Markdown
