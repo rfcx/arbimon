@@ -6,7 +6,7 @@
       :data-accordion-target="'#accordion-open-body-' + itemId"
       aria-expanded="true"
       :aria-controls="'accordion-open-body-' + itemId"
-      @click="toggleAnswer"
+      @click="$emit('toggle-answer', itemId)"
     >
       <div class="text-lg lg:text-xl font-medium">
         {{ question }}
@@ -29,37 +29,31 @@
     </button>
   </h2>
   <div
-    v-show="isAnswerOpened"
     :id="'accordion-open-body-' + itemId"
-    class="font-base"
+    :class="isAnswerOpened ? 'shown' : ''"
     :aria-labelledby="slugify(question)"
   >
     <Markdown
       id="faq-accordion-markdown-body"
-      class="px-4 py-8"
+      class="px-4 py-8 font-base"
       :source="answer"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { kebabCase } from 'lodash-es'
-import { ref } from 'vue'
 import Markdown from 'vue3-markdown-it'
+
+import { slugify } from '../utils'
 
 defineProps<{
   itemId: number
   question: string
   answer: string
+  isAnswerOpened: boolean
 }>()
 
-const isAnswerOpened = ref(false)
-
-const toggleAnswer = () => {
-  isAnswerOpened.value = !isAnswerOpened.value
-}
-
-const slugify = (input: string): string => kebabCase(input)
+defineEmits<{(e: 'toggle-answer', itemId: number): void}>()
 </script>
 
 <style lang="scss">
