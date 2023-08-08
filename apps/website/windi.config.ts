@@ -133,6 +133,7 @@ export default defineConfig({
       backgroundImage: {
         'hero-data': "url('@/_assets/landing/hero-data.webp')",
         'hero-testimonial': "url('@/_assets/landing/testimonials/bg-image.webp')",
+        'hero-contact': "url('@/_assets/contact/hero-contact-us.webp')",
         'hero-cta-home': "url('@/_assets/cta/cta-home.webp')",
         'hero-cta': "url('@/_assets/cta/fauna.webp')",
         'hero-cta-frog': "url('@/_assets/cta/frog-hero.webp')",

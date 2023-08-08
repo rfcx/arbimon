@@ -1,9 +1,9 @@
 <template>
   <section class="bg-white dark:bg-echo mx-6 my-10 lg:(my-30 mx-20)">
-    <div class="mx-auto max-w-screen-xl rounded-lg border-1 border-frequency">
+    <div class="mx-auto max-w-screen-xl rounded-xl border-1 border-frequency">
       <div class="flex flex-col items-center lg:(flex-row-reverse)">
-        <div class="bg-hero-cta bg-opacity-40 bg-left-top basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-lg rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-lg)">
-          <div class="flex-1 bg-pitch/[.6] p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-lg rounded-r-none lg:(flex-col rounded-t-none rounded-r-lg px-10 pt-20 pb-64)">
+        <div class="bg-hero-contact basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-xl rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-xl)">
+          <div class="flex-1 bg-black bg-opacity-50 p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-xl rounded-r-none lg:(flex-col rounded-t-none rounded-r-xl px-10 pt-20 pb-64)">
             <div>
               <h1 class="mb-4 lg:mb-10 text-gray-900 dark:text-insight">
                 Contact us
@@ -35,7 +35,7 @@
         <div class="basis-3/5 w-full">
           <div v-if="isSubmitted">
             <div
-              class="flex p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+              class="flex p-4 mb-4 text-green-800 rounded-xl bg-green-50 dark:bg-gray-800 dark:text-green-400"
               role="alert"
             >
               <svg
@@ -59,7 +59,7 @@
             v-else
             action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
             method="POST"
-            class="space-y-8 p-10"
+            class="space-y-8 p-10 bg-gradient-to-br from-bg-moss to-bg-transparent"
           >
             <div class="uppercase col-span-2 font-eyebrow text-spoonbill">
               SEND US A MESSAGE
@@ -76,7 +76,7 @@
                   name="firstname"
                   type="text"
                   maxlength="80"
-                  class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                  class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                   placeholder="David"
                   required
                 >
@@ -92,7 +92,7 @@
                   name="lastname"
                   type="text"
                   maxlength="80"
-                  class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                  class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                   placeholder="Attenborough"
                 >
               </div>
@@ -108,7 +108,7 @@
                   name="phone"
                   type="text"
                   maxlength="40"
-                  class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                  class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                   placeholder="+1 (123) 456-789"
                 >
               </div>
@@ -122,7 +122,7 @@
                   name="email"
                   type="email"
                   maxlength="80"
-                  class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                  class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                   placeholder="david@arbimon.org"
                   required
                 >
@@ -138,7 +138,7 @@
                 name="company"
                 type="text"
                 maxlength="80"
-                class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 placeholder="Arbimon"
               >
             </div>
@@ -150,11 +150,12 @@
               <select
                 id="subject"
                 name="subject"
-                class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
               >
-                <option>Request for partnership</option>
-                <option>Arbimon question</option>
+                <option>Collaboration</option>
+                <option>Support</option>
+                <option>Press/media</option>
                 <option>Other</option>
               </select>
             </div>
@@ -166,7 +167,7 @@
               <select
                 id="referred_from"
                 name="referred_from"
-                class="bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
               >
                 <option>Instagram</option>
@@ -192,7 +193,7 @@
                 id="message"
                 name="description"
                 rows="6"
-                class="text-base bg-gray-700 border border-gray-600 text-white rounded-lg block w-full p-2.5 dark:bg-gray-50 dark:border-gray-300 dark:placeholder-gray-300 dark:text-gray-900"
+                class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 placeholder="Reach out to us, ask a question or leave a comment..."
               />
             </div>
