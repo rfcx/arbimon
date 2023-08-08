@@ -3,7 +3,7 @@
     <div class="mx-auto max-w-screen-xl rounded-lg border-1 border-frequency">
       <div class="flex flex-col items-center lg:(flex-row-reverse)">
         <div class="bg-hero-cta bg-opacity-40 bg-left-top basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-lg rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-lg)">
-          <div class="flex-1 bg-pitch/[.6] p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-lg rounded-r-none lg:(flex-col rounded-t-none rounded-r-lg)">
+          <div class="flex-1 bg-pitch/[.6] p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-lg rounded-r-none lg:(flex-col rounded-t-none rounded-r-lg px-10 pt-20 pb-64)">
             <div>
               <h1 class="mb-4 lg:mb-10 text-gray-900 dark:text-insight">
                 Contact us
@@ -11,12 +11,21 @@
               <p>We're great listeners.</p>
             </div>
             <div>
+              <h3 class="uppercase mb-1 font-medium">
+                Email
+              </h3>
               <p class="mb-4">
                 contact@arbimon.org
               </p>
+              <h3 class="uppercase mb-1 font-medium">
+                Phone
+              </h3>
               <p class="mb-4">
                 +1 (415) 792-9472
               </p>
+              <h3 class="uppercase mb-1 font-medium">
+                Address
+              </h3>
               <p class="mb-4">
                 440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA
               </p>
