@@ -1,14 +1,15 @@
 <template>
-  <h2 :id="'accordion-open-heading-' + itemId">
+  <h2 :id="slugify(question)">
     <button
       type="button"
       class="flex items-center justify-between w-full p-4 text-left text-insight border-b-1 border-util-gray-01 bg-transparent focus:bg-transparent dark:bg-transparent dark:hover:bg-transparent"
       :data-accordion-target="'#accordion-open-body-' + itemId"
       aria-expanded="true"
       :aria-controls="'accordion-open-body-' + itemId"
+      @click="toggleAnswer"
     >
       <div class="text-lg lg:text-xl font-medium">
-        <slot name="question" />
+        {{ question }}
       </div>
       <svg
         data-accordion-icon
@@ -28,17 +29,117 @@
     </button>
   </h2>
   <div
+    v-show="isAnswerOpened"
     :id="'accordion-open-body-' + itemId"
-    class="hidden font-base"
-    :aria-labelledby="'accordion-open-heading-' + itemId"
+    class="font-base"
+    :aria-labelledby="slugify(question)"
   >
-    <div class="px-4 py-8">
-      <slot name="answer" />
-    </div>
+    <Markdown
+      id="faq-accordion-markdown-body"
+      class="px-4 py-8"
+      :source="answer"
+    />
   </div>
 </template>
+
 <script setup lang="ts">
+import { kebabCase } from 'lodash-es'
+import { ref } from 'vue'
+import Markdown from 'vue3-markdown-it'
+
 defineProps<{
-  itemId: string
+  itemId: number
+  question: string
+  answer: string
 }>()
+
+const isAnswerOpened = ref(false)
+
+const toggleAnswer = () => {
+  isAnswerOpened.value = !isAnswerOpened.value
+}
+
+const slugify = (input: string): string => kebabCase(input)
 </script>
+
+<style lang="scss">
+div#faq-accordion-markdown-body {
+  h2 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  h2:not(:first-child) {
+    margin-top: 1.25rem;
+  }
+
+  p:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+
+  ul {
+    list-style-type: square;
+    margin-left: 1.25rem;
+  }
+
+  a:hover {
+    -webkit-text-decoration-line: underline;
+    text-decoration-line: underline;
+  }
+
+  // INFO: Checkout https://stackoverflow.com/a/4094151/12386405 for how I did it
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  table td, table th {
+    @apply px-4 py-1;
+  }
+
+  table th {
+    @apply border-1 border-solid border-frequency;
+  }
+
+  table th:first-child {
+    border-right: none;
+  }
+
+  table th:last-child {
+    border-left: none;
+  }
+
+  table th:not(:first-child):not(:last-child) {
+    border-left: none;
+    border-right: none;
+  }
+
+  table tr:first-child th:first-child {
+    @apply rounded-tl-2xl;
+  }
+
+  table tr:first-child th:last-child {
+    @apply rounded-tr-2xl;
+  }
+
+  table tr td:first-child {
+    @apply border-l-1 border-l-solid border-l-frequency;
+  }
+
+  table tr td:last-child {
+    @apply border-r-1 border-r-solid border-r-frequency;
+  }
+
+  table tr:last-child td {
+    @apply border-b-1 border-b-solid border-b-frequency;
+  }
+
+  table tr:last-child td:first-child {
+    @apply rounded-bl-2xl;
+  }
+
+  table tr:last-child td:last-child {
+    @apply rounded-br-2xl;
+  }
+}
+</style>
