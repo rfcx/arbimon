@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-hero-testimonial bg-center">
+  <section class="bg-hero-testimonial bg-center bg-cover">
     <div class="bg-gradient-to-b from-pitch/[.1] to-pitch">
       <div class="max-w-screen-xl mx-auto py-10 md:py-20 lg:py-30 px-4 lg:px-10 flex flex-col lg:flex-row gap-20">
         <div class="basis-5/12">
