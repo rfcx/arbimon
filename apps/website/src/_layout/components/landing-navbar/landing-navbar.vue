@@ -2,12 +2,14 @@
   <header>
     <nav class="bg-white border-frequency border-b-4 px-4 lg:px-6 py-2.5 dark:bg-echo">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+        <!-- Logo -->
         <router-link
           :to="{ name: ROUTE_NAMES.landingHome }"
           class="flex items-center"
         >
           <brand-logo />
         </router-link>
+        <!-- Auth -->
         <div class="flex items-center lg:order-2">
           <client-only>
             <auth-navbar-item dom-id="navbar-auth-desktop" />
@@ -42,6 +44,7 @@
             /></svg>
           </button>
         </div>
+        <!-- Nav menu -->
         <div
           id="mobile-menu-2"
           class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
@@ -49,21 +52,20 @@
           <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
             <li>
               <router-link
-                :to="{ name: ROUTE_NAMES.landingHome }"
-                exact-active-class="tab-active"
-                class="block tab"
-                aria-current="page"
-              >
-                Home
-              </router-link>
-            </li>
-            <li>
-              <router-link
                 :to="{ name: ROUTE_NAMES.landingFeatured }"
                 exact-active-class="tab-active"
                 class="block tab"
               >
                 Featured work
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{ name: ROUTE_NAMES.landingHowItWorks }"
+                exact-active-class="tab-active"
+                class="block tab"
+              >
+                How it works
               </router-link>
             </li>
             <li v-if="toggles?.explore">
@@ -77,11 +79,11 @@
             </li>
             <li>
               <router-link
-                :to="{ name: ROUTE_NAMES.landingHowItWorks }"
+                :to="{ name: ROUTE_NAMES.landingTeam }"
                 exact-active-class="tab-active"
                 class="block tab"
               >
-                How it works
+                About us
               </router-link>
             </li>
             <li>
@@ -136,13 +138,6 @@
                     href="https://support.rfcx.org"
                     class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
                   >Help &amp; support <icon-custom-linkout class="inline ml-1" /></a>
-                  <router-link
-                    :to="{ name: ROUTE_NAMES.landingTeam }"
-                    exact-active-class="!text-gray-900 !dark:text-insight"
-                    class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
-                  >
-                    Meet the team
-                  </router-link>
                   <router-link
                     :to="{ name: ROUTE_NAMES.landingContact }"
                     exact-active-class="!text-gray-900 !dark:text-insight"
