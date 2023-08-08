@@ -20,7 +20,9 @@
             <faq-accordion
               :answer="faq.answer"
               :question="faq.question"
-              :item-id="idx + 1"
+              :item-id="idx"
+              :is-answer-opened="faq.isAnswerOpened"
+              @toggle-answer="onToggleAnswer"
             />
           </template>
         </div>
@@ -32,13 +34,38 @@
 </template>
 
 <script setup lang="ts">
-import { kebabCase } from 'lodash-es'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
 import FaqCta from './blocks/faq-cta.vue'
 import FaqAccordion from './components/faq-accordion.vue'
 import { faqList } from './data'
+import { slugify } from './utils'
 
-const faqs = ref(faqList)
+const faqs = ref<Array<{ question: string, answer: string, isAnswerOpened: boolean }>>(faqList.map(f => {
+  const faqWithStatus = {
+    question: f.question,
+    answer: f.answer,
+    isAnswerOpened: false
+  }
+  return faqWithStatus
+}))
+
+const route = useRoute()
+
+onMounted(() => {
+  const hash = route.hash
+  const questionIndex = faqs.value.findIndex(f => `#${slugify(f.question)}` === hash)
+
+  if (questionIndex === -1) {
+    return
+  }
+
+  faqs.value[questionIndex].isAnswerOpened = true
+})
+
+const onToggleAnswer = (itemId: number): void => {
+  faqs.value[itemId].isAnswerOpened = !faqs.value[itemId].isAnswerOpened
+}
 </script>
