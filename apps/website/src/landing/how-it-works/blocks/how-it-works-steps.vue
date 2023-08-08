@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-echo">
+  <section class="bg-white dark:bg-pitch">
     <div class="py-10 px-6 mx-auto max-w-screen-xl lg:py-30 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         <h6 class="font-eyebrow text-xs uppercase text-spoonbill mb-6">
