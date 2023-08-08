@@ -12,12 +12,13 @@
       Check out our <a
         href="https://support.rfcx.org/"
         class="text-frequency underline"
-      >Support Documents</a> or <router-link
+      >Support Documents</a> or
+      <router-link
         :to="{ name: ROUTE_NAMES.landingContact }"
-        class="text-frequency underline"
       >
-        Contact us
-      </router-link> with your specific questions and we'll see how we can help.
+        <span class="text-frequency underline">Contact us</span>
+      </router-link>
+      with your specific questions and we'll see how we can help.
     </p>
   </contact-card>
 </template>

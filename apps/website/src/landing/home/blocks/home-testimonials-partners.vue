@@ -32,25 +32,27 @@
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
             What our users & partners are saying...
           </h1>
-          <h4 class="text-2xl">
+          <h4 class="text-base text-lg lg:text-2xl">
             “{{ feedbacks[currentFeedbackIndex].text }}”
           </h4>
           <div class="mt-8 flex">
-            <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-16 h-16 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-              <img
-                v-if="feedbacks[currentFeedbackIndex].user.profilePicUrl"
-                :src="feedbacks[currentFeedbackIndex].user.profilePicUrl"
-                alt="Profile picture"
-                class="w-full h-full object-cover"
-              >
+            <img
+              v-if="feedbacks[currentFeedbackIndex].user.profilePicUrl"
+              :src="feedbacks[currentFeedbackIndex].user.profilePicUrl"
+              alt="Profile picture"
+              class="w-16 h-16 aspect-square object-cover rounded-full mr-4"
+            >
+            <div
+              v-else
+              class="mr-4 relative inline-flex items-center justify-center w-16 h-16 aspect-square bg-gray-100 rounded-full dark:bg-gray-600"
+            >
               <span
-                v-else
                 class="font-medium text-gray-600 dark:text-gray-300"
               > {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
             </div>
             <div class="flex flex-col">
-              <div class="mb-2">
-                <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
+              <div class="mb-2 flex flex-col-reverse md:flex-row items-start gap-2">
+                <span class="text-gray-900 dark:text-insight">
                   {{ feedbacks[currentFeedbackIndex].user.name }}
                 </span>
                 <span class="px-2 py-1 rounded-full text-xs uppercase bg-util-gray-02 text-spoonbill font-eyebrow tracking-wide">
