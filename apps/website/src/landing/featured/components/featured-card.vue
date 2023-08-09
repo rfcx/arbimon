@@ -2,7 +2,7 @@
   <router-link :to="link">
     <div class="relative overflow-hidden bg-white border border-frequency rounded-lg shadow">
       <img
-        class="object-cover w-full h-96"
+        class="object-cover w-full h-[503px] md:h-[542px]"
         :src="backgroundImage"
         alt=""
       >
