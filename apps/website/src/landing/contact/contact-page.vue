@@ -144,44 +144,76 @@
             </div>
             <div>
               <label
-                for="subject"
+                for="inquiry_type"
                 class="block mb-2 font-medium text-gray-300 dark:text-insight"
               >Type of inquiry <span class="text-sm font-normal">(required)</span></label>
               <select
-                id="subject"
-                name="subject"
+                id="inquiry_type"
+                name="00NEZ000000OYOW"
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
               >
-                <option>Collaboration</option>
-                <option>Support</option>
-                <option>Press/media</option>
-                <option>Other</option>
+                <option value="Collaboration">
+                  Collaboration
+                </option>
+                <option value="Support">
+                  Support
+                </option>
+                <option value="Press/media">
+                  Press/media
+                </option>
+                <option value="Other">
+                  Other
+                </option>
               </select>
             </div>
             <div>
               <label
-                for="referred_from"
+                for="referral_source"
                 class="block mb-2 font-medium text-gray-300 dark:text-insight"
               >How did you hear about us? <span class="text-sm font-normal">(required)</span></label>
               <select
-                id="referred_from"
-                name="referred_from"
+                id="referral_source"
+                name="00NEZ000000OYOb"
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
               >
-                <option>Instagram</option>
-                <option>Facebook</option>
-                <option>LinkedIn</option>
-                <option>X (previously Twitter)</option>
-                <option>TikTok</option>
-                <option>Youtube</option>
-                <option>Event</option>
-                <option>Article</option>
-                <option>Friend/Family</option>
-                <option>Web search</option>
-                <option>Email</option>
-                <option>Other</option>
+                <option value="Instagram">
+                  Instagram
+                </option>
+                <option value="Facebook">
+                  Facebook
+                </option>
+                <option value="LinkedIn">
+                  LinkedIn
+                </option>
+                <option value="X">
+                  X (previously Twitter)
+                </option>
+                <option value="TikTok">
+                  TikTok
+                </option>
+                <option value="Youtube">
+                  Youtube
+                </option>
+                <option value="Event">
+                  Event
+                </option>
+                <option value="Article">
+                  Article
+                </option>
+                <option value="Friend/Family">
+                  Friend/Family
+                </option>
+                <option value="Web search">
+                  Web search
+                </option>
+                <option value="Email">
+                  Email
+                </option>
+                <option value="Other">
+                  Other
+                </option>
               </select>
             </div>
             <div class="sm:col-span-2">
@@ -202,6 +234,11 @@
                 type="hidden"
                 name="name"
                 :value="lastName ? firstName + ' ' + lastName : firstName"
+              >
+              <input
+                type="hidden"
+                name="subject"
+                value="Arbimon Contact Form"
               >
               <input
                 type="hidden"
