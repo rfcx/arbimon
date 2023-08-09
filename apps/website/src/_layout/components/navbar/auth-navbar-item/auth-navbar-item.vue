@@ -25,7 +25,7 @@
       <ul
         :aria-labelledby="domId"
         aria-orientation="vertical"
-        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-grey border-t-1 bg-steel-grey rounded-b-md text-insight invisible group-hover:visible focus:outline-none transition-all"
+        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 border-t-box-grey border-t-1 bg-pitch rounded-b-md text-insight invisible group-hover:visible focus:outline-none transition-all"
         role="menu"
         tabindex="-1"
       >
