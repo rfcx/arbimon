@@ -17,11 +17,13 @@ export default defineConfig({
     plugin(({ addComponents }) => {
       const navbarItems = {
         '.navbar-menu-item.router-link-exact-active,.navbar-menu-item.router-link-active:not(.router-link-needs-exact)': {
-          'box-shadow': 'inset 0 -3px 0 #ADFF2C'
+          'color': '#ADFF2C',
+          'box-shadow': 'inset 0 -2px 0 #ADFF2C'
         },
         '@media (max-width: 699px)': {
           '.navbar-menu-item.router-link-exact-active,.navbar-menu-item.router-link-active:not(.router-link-needs-exact)': {
-            'box-shadow': 'inset 5px 0 0 #ADFF2C'
+            'color': '#ADFF2C',
+            'box-shadow': 'inset 0 0 0 #ADFF2C'
           }
         },
         '.router-link-active > a > span': {
@@ -131,9 +133,9 @@ export default defineConfig({
     'btn-danger': 'bg-danger hover:bg-danger-dark',
     'btn-icon': 'py-2 px-3 rounded-full text-frequency border border-frequency hover:bg-chirp hover:text-pitch hover:border-chirp',
     // nav
-    'navbar-container': 'box-content text-insight flex items-center justify-center h-13',
-    'navbar-item': 'box-content text-insight flex items-center justify-center h-13',
-    'navbar-menu-item': 'px-2',
+    'navbar-container': 'box-content text-insight flex items-center justify-center h-9',
+    'navbar-item': 'box-content text-insight flex items-center justify-center hover:text-frequency h-9',
+    'navbar-menu-item': 'mx-2',
     // input
     'input-field': 'bg-box-grey border text-sm rounded-lg block w-full p-2.5 focus:border-brand-primary bg-mirage-grey text-white'
   }
