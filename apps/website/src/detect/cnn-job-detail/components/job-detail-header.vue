@@ -22,7 +22,7 @@
       <el-button
         type="info"
         size="large"
-        class="uppercase font-semibold text-sm text-danger rounded-md"
+        class="uppercase font-semibold text-sm text-flamingo rounded-md"
       >
         Cancel job
       </el-button>
