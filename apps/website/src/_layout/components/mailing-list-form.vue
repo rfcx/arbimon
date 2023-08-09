@@ -25,7 +25,7 @@
         required
         type="text"
         name="EMAIL"
-        placeholder="Email Address"
+        placeholder="Email address"
         class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
       >
     </div>
