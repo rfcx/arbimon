@@ -79,6 +79,6 @@ const config = [
   }
 ]
 
-const active = ref<number>(1)
+const active = ref<number>(0)
 const activeData = computed(() => config[active.value])
 </script>
