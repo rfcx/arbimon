@@ -1,6 +1,7 @@
 import aspirationIcon from '@/_assets/landing/testimonials/feedbacks/Aspiration.webp'
 import cristianKIcon from '@/_assets/landing/testimonials/feedbacks/CristianK.webp'
 import drnaIcon from '@/_assets/landing/testimonials/feedbacks/DRNA.webp'
+import jgiIcon from '@/_assets/landing/testimonials/feedbacks/jane goodal institute.webp'
 import lauraHIcon from '@/_assets/landing/testimonials/feedbacks/LauraH.webp'
 import weForestIcon from '@/_assets/landing/testimonials/feedbacks/WeForest.webp'
 import wendySIcon from '@/_assets/landing/testimonials/feedbacks/WendyS.webp'
@@ -58,12 +59,22 @@ export const feedbacks = [
   },
   {
     id: 6,
-    text: 'Arbimon has helped us to organize all the recordings obtained in a very intuitive way. Its functions are great as it allows us to project the sampling points in the study area through the maps dashboard and provide an open-access recordings repository...',
+    text: 'Arbimon has helped us to organize all the recordings obtained in a very intuitive way. Its functions are great as it allows us to project the sampling points in the study area through the maps dashboard and provide an open-access recordings repository…',
     user: {
       name: 'Cristian K.',
       role: 'Arbimon user',
       title: 'Former Coordinator and Advisor at Programa para la Conservación de los Murciélagos de Guatemala',
       profilePicUrl: cristianKIcon
+    }
+  },
+  {
+    id: 7,
+    text: '…we are beginning to listen to forests and uncover a previously undocumented world within Gombe National Park. Using acoustics to hear the forests and the species within to better understand their conservation needs is game changing.',
+    user: {
+      name: 'Dr. Lilian Pintea',
+      role: 'Project Partner',
+      title: 'Vice-President of Conservation Science at JGI, USA',
+      profilePicUrl: jgiIcon
     }
   }
 ]
