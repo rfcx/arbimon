@@ -152,7 +152,7 @@
         Total: {{ totalSpecies }} species
         <span
           v-if="isLocationRedacted"
-          class="text-danger text-xs ml-1"
+          class="text-flamingo text-xs ml-1"
         >
           * Some species are protected.
         </span>

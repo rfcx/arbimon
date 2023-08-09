@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="bg-steel-grey"
+    class="px-4 lg:px-6 py-2.5 bg-echo"
     :class="{'border-b-1 border-box-grey': !isReport}"
   >
     <div class="sm:(relative flex justify-between) items-center">
@@ -14,11 +14,11 @@
             <div class="flex-shrink-0 flex items-center ml-4 <sm:(mx-2)">
               <img
                 class="h-9 w-9 <sm:(h-7 w-7)"
-                src="/src/_services/assets/rfcx-logo.svg"
+                src="/src/_services/assets/arbimon-logo.svg"
                 alt="Rainforest connection logo"
               >
-              <div class="font-semibold text-primary ml-2 <md:hidden">
-                <span class="<lg:hidden">Arbimon </span>
+              <div class="text-insight ml-2 <md:hidden font-display">
+                <span class="<lg:hidden uppercase font-medium">Arbimon </span>
                 <span :class="{ pride: isPride }">Insights</span>
                 <sup
                   class="font-extralight"

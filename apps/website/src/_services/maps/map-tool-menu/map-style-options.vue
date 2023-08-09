@@ -6,7 +6,7 @@
     >
       <button
         :title="item.name"
-        class="btn <2xl:(btn-icon)"
+        class="btn btn-secondary <2xl:(btn-icon)"
         :class="{
           'bg-brand-primary': props.mapStyle === item.style,
           'rounded-r-none': idx !== props.mapOptions.length - 1,
