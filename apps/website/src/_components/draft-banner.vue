@@ -39,7 +39,7 @@
       </div>
       <div class="flex justify-end mt-2">
         <button
-          class="btn mr-2"
+          class="btn btn-secondary mr-2"
           @click="onClosePublishModalOptions"
         >
           Cancel
