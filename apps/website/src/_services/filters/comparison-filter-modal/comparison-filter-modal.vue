@@ -115,7 +115,7 @@
     </div>
     <div class="flex justify-end px-4 py-2 border-t-1">
       <button
-        class="btn mr-2"
+        class="btn btn-secondary mr-2"
         @click="emitClose"
       >
         Cancel

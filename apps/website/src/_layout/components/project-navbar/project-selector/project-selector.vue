@@ -63,7 +63,7 @@
       <!-- Buttons -->
       <div class="mt-auto text-right">
         <button
-          class="btn mr-2"
+          class="btn btn-secondary mr-2"
           @click="$emit('emitClose')"
         >
           Cancel
