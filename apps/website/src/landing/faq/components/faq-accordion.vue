@@ -3,10 +3,9 @@
     <button
       type="button"
       class="flex items-center justify-between w-full p-4 text-left text-insight border-b-1 border-util-gray-01 bg-transparent focus:bg-transparent dark:bg-transparent dark:hover:bg-transparent"
-      :data-accordion-target="'#accordion-open-body-' + itemId"
+      :data-accordion-target="'#accordion-flush-body-' + itemId"
       aria-expanded="true"
-      :aria-controls="'accordion-open-body-' + itemId"
-      @click="$emit('toggle-answer', itemId)"
+      :aria-controls="'accordion-flush-body-' + itemId"
     >
       <div class="text-lg lg:text-xl font-medium">
         {{ question }}
@@ -29,9 +28,9 @@
     </button>
   </h2>
   <div
-    v-show="isAnswerOpened"
-    :id="'accordion-open-body-' + itemId"
-    :aria-labelledby="slugify(question)"
+    :id="'accordion-flush-body-' + itemId"
+    class="hidden"
+    :aria-labelledby="`#${slugify(question)}`"
   >
     <Markdown
       id="faq-accordion-markdown-body"
@@ -50,10 +49,7 @@ defineProps<{
   itemId: number
   question: string
   answer: string
-  isAnswerOpened: boolean
 }>()
-
-defineEmits<{(e: 'toggle-answer', itemId: number): void}>()
 </script>
 
 <style lang="scss">

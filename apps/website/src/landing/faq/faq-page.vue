@@ -9,6 +9,7 @@
           <p>Questions about Arbimon? Our FAQ page has you covered.</p>
         </div>
         <div
+          id="accordion-flush"
           data-accordion="collapse"
           data-active-classes="dark:bg-moss text-insight border-b-0 border-gray-200 dark:border-gray-700"
           data-inactive-classes="text-insight"
@@ -21,8 +22,6 @@
               :answer="faq.answer"
               :question="faq.question"
               :item-id="idx"
-              :is-answer-opened="faq.isAnswerOpened"
-              @toggle-answer="onToggleAnswer"
             />
           </template>
         </div>
@@ -34,7 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import type { AccordionItem, AccordionOptions } from 'flowbite'
+import { Accordion } from 'flowbite'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
@@ -43,29 +44,60 @@ import FaqAccordion from './components/faq-accordion.vue'
 import { faqList } from './data'
 import { slugify } from './utils'
 
-const faqs = ref<Array<{ question: string, answer: string, isAnswerOpened: boolean }>>(faqList.map(f => {
-  const faqWithStatus = {
-    question: f.question,
-    answer: f.answer,
-    isAnswerOpened: false
-  }
-  return faqWithStatus
-}))
-
+const faqs = ref(faqList)
 const route = useRoute()
+const accordions = ref<Accordion | null>(null)
+
+watch(() => route.hash, (newHash) => {
+  openAccordion(newHash)
+})
 
 onMounted(() => {
-  const hash = route.hash
-  const questionIndex = faqs.value.findIndex(f => `#${slugify(f.question)}` === hash)
+  const items: AccordionItem[] = faqList.map((f, i) => {
+    const questionSlug = slugify(f.question)
 
-  if (questionIndex === -1) {
+    return {
+      id: questionSlug,
+      triggerEl: document.querySelector(`#${questionSlug}`) as HTMLElement,
+      targetEl: document.querySelector('#accordion-flush-body-' + i) as HTMLElement,
+      active: false
+    }
+  })
+
+  const options: AccordionOptions = {
+      alwaysOpen: false,
+      activeClasses: 'dark:bg-moss text-insight border-b-0 border-gray-200 dark:border-gray-700',
+      inactiveClasses: 'text-insight'
+  }
+
+  accordions.value = new Accordion(items, options)
+
+  // If there's hash on enter page. Navigate to it.
+  if (route.hash !== '') {
+    openAccordion(route.hash)
+  }
+})
+
+/**
+ * Open the accordion depends on the hash, close all other accordions.
+ */
+const openAccordion = (newHash: string): void => {
+  if (newHash.length === 0) {
     return
   }
 
-  faqs.value[questionIndex].isAnswerOpened = true
-})
+  if (accordions.value == null) {
+    return
+  }
 
-const onToggleAnswer = (itemId: number): void => {
-  faqs.value[itemId].isAnswerOpened = !faqs.value[itemId].isAnswerOpened
+  // Get all other faqs that is not the one we're trying to go, and close all of them.
+  faqList.filter(f => {
+      return `#${slugify(f.question)}` !== newHash
+    })
+    .forEach(f => {
+      accordions.value?.close(slugify(f.question))
+    })
+
+  accordions.value?.open(newHash.slice(1))
 }
 </script>
