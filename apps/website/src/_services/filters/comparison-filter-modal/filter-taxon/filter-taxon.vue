@@ -9,7 +9,7 @@
         :checked="isSelectedAllTaxons"
         @click="selectAllTaxon()"
       >
-      <span class="text-white ml-2">All</span>
+      <span class="text-insight ml-2">All</span>
     </label>
     <label
       v-for="taxon in taxons"
@@ -22,7 +22,7 @@
         :checked="isSelectedTaxon(taxon.id)"
         @click="updateSelectedTaxons(taxon.id)"
       >
-      <span class="text-white ml-2">{{ taxon.commonName }}</span>
+      <span class="text-insight ml-2">{{ taxon.commonName }}</span>
     </label>
   </div>
 </template>

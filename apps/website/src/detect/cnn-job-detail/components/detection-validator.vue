@@ -2,7 +2,7 @@
   <div class="fixed right-4 bottom-0 mx-auto flex">
     <div
       id="toast-undo"
-      class="flex items-center space-x-4 p-5 w-144 min-w-full justify-between text-white bg-steel-grey rounded-md shadow"
+      class="flex items-center space-x-4 p-5 w-144 min-w-full justify-between text-insight bg-steel-grey rounded-md shadow"
       role="alert"
     >
       <div class="text-base flex items-center">
