@@ -29,7 +29,7 @@
         class="block w-full p-4 pl-10 text-md text-white/80 border border-white rounded-lg bg-transparent focus:ring-frequency focus:border-frequency dark:bg-transparent dark:border-white/80 dark:placeholder-white/80 dark:text-white/80 dark:focus:ring-frequency dark:focus:border-frequency"
         type="search"
         placeholder="Search for author, species, etc."
-        :value="modelValue"
+        :value="search"
         @input="onInputEnter"
       >
     </div>
@@ -37,11 +37,23 @@
       Paper published by
     </h2>
     <ul>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 first:mt-2 mt-0">
-        Arbimon Science Team
+      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0">
+        <button
+          type="button"
+          :class="paperPublishedBy === 'rfcx' ? 'underline underline-offset-4 decoration-frequency text-frequency text-left' : 'text-left'"
+          @click="$emit('update:paperPublishedBy', 'rfcx')"
+        >
+          Arbimon science team
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 first:mt-2 mt-0">
-        ALL
+      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0">
+        <button
+          type="button"
+          :class="paperPublishedBy === 'all' ? 'underline underline-offset-4 decoration-frequency text-frequency text-left' : 'text-left'"
+          @click="$emit('update:paperPublishedBy', 'all')"
+        >
+          ALL
+        </button>
       </li>
     </ul>
     <h2 class="text-white text-2xl font-medium leading-loose mt-6">
@@ -56,8 +68,9 @@
       <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
         <a
           href="#2022"
-          class="underline underline-offset-4 decoration-frequency text-frequency"
-        >2022</a>
+        >
+          2022
+        </a>
       </li>
       <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
         <a href="#2021">2021</a>
@@ -79,11 +92,13 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ modelValue: string }>()
-const emits = defineEmits<{(e: 'update:modelValue', value: string): void}>()
+import { type PaperPublishedBy } from '../blocks/types'
+
+defineProps<{ search: string, paperPublishedBy: PaperPublishedBy }>()
+const emits = defineEmits<{(e: 'update:search', value: string): void, (e: 'update:paperPublishedBy', value: PaperPublishedBy): void}>()
 
 const onInputEnter = (ev: Event): void => {
   const target = ev.target as HTMLInputElement
-  emits('update:modelValue', target.value)
+  emits('update:search', target.value)
 }
 </script>
