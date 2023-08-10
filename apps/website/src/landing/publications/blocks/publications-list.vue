@@ -3,11 +3,13 @@
     <div class="max-w-screen-xl mx-auto grid gap-x-12 md:grid-cols-12">
       <aside class="md:col-span-4 md:(sticky h-screen top-4) mt-4 md:mt-12 pt-8">
         <PublicationsSidebarMenu
-          v-model="search"
+          v-model:search="search"
+          v-model:paper-published-by="paperPublishedBy"
           class="md:block hidden mx-5"
         />
         <PublicationsSelectorAccordions
-          v-model="search"
+          v-model:search="search"
+          v-model:paper-published-by="paperPublishedBy"
           class="md:hidden block mx-5"
         />
       </aside>
@@ -42,15 +44,27 @@ import PublicationsSelectorAccordions from '../components/publications-selector-
 import PublicationsSidebarMenu from '../components/publications-sidebar-menu.vue'
 import { publications } from '../data'
 import type { Publication } from '../data/types'
+import { type PaperPublishedBy } from './types'
 
 const search = ref('')
+const paperPublishedBy = ref<PaperPublishedBy>(null)
+
+const paperPublishedByAppliedPublications = computed<Publication[]>(() => {
+  if (paperPublishedBy.value != null) {
+    return publications.filter(p => {
+      return (paperPublishedBy.value === 'all') === p.isRFCxAuthor
+    })
+  }
+
+  return publications
+})
 
 const searchTermAppliedPublications = computed<Publication[]>(() => {
   if (search.value === '') {
-    return publications
+    return paperPublishedByAppliedPublications.value
   }
 
-  return publications.filter(p => {
+  return paperPublishedByAppliedPublications.value.filter(p => {
     return p.title.includes(search.value) || p.author.includes(search.value) || p.orgMention.includes(search.value)
   })
 })
