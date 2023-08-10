@@ -6,7 +6,7 @@
     <div class="p-4 h-156 flex flex-col">
       <!-- Title -->
       <div class="flex justify-between items-center">
-        <h1 class="text-white text-lg">
+        <h1 class="text-insight text-lg">
           Select Project
         </h1>
         <icon-fa-close
