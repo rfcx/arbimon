@@ -11,13 +11,13 @@ export const climateChangeImpact: ProjectDetail = {
   title: 'Climate Change Impact',
   featuredImage: climateFeaturedImg,
   descriptiveText: 'Climate change is having significant impacts on global biodiversity patterns and extinction rates. Ecoacoustic monitoring allows us to understand trends at both the species and ecosystem levels to create proactive conservation plans',
-  location: 'Puerto Rico',
+  location: 'PUERTO RICO, UNITED STATES',
   category: {
     id: 'climate-change-impact',
     name: 'Climate Change Impact'
   },
   header: {
-    projectName: 'Assess animal communities\' responses to climate change in Puerto Rico',
+    projectName: 'Assessing animal communities’ responses to climate change',
     applications: [
       'Island-wide maps of biodiversity presence across Puerto Rico over time',
       'CNN for ~40 species to automate the detection of species with a focus on threatened and endemic species'

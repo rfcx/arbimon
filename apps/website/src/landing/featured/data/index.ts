@@ -1,7 +1,7 @@
-import supplyChainFeaturedImg from '@/_assets/featured-work/sustainable-supply-chains/1.webp'
 import supplyChainGal1Img from '@/_assets/featured-work/sustainable-supply-chains/2.webp'
 import supplyChainGal2Img from '@/_assets/featured-work/sustainable-supply-chains/3.webp'
 import supplyChainImpactImg from '@/_assets/featured-work/sustainable-supply-chains/4.webp'
+import supplyChainFeaturedImg from '@/_assets/featured-work/sustainable-supply-chains/5.webp'
 import { bioBaseline } from './biodiversity-baselines'
 import { carbonTransparency } from './carbon-transparency'
 import { climateChangeImpact } from './climate-change-impact'

@@ -10,13 +10,13 @@ export const carbonTransparency: ProjectDetail = {
   title: 'Carbon transparency',
   featuredImage: carbonFeaturedImg,
   descriptiveText: 'Creating transparency around positive change in ecosystem health is a critical component of the carbon market, and ecoacoustics enables traceable biodiversity data to support both reporting on standards and communicating project results to stakeholders.',
-  location: 'Kenya',
+  location: 'LAKE VICTORIA, KENYA',
   category: {
     id: 'carbon-transparency',
     name: 'Carbon Transparency'
   },
   header: {
-    projectName: 'Carbon project biodiversity health across Kenyan agroforestry sites',
+    projectName: 'Evaluating how the development of agroforestry parcels impacts biodiversity',
     applications: [
       'Long-term monitoring of over 100 species across agroforestry sites',
       'Insights featuring maps, graphs, and figures for measurement and reporting'

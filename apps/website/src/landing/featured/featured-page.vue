@@ -5,7 +5,7 @@
         Featured work
       </h1>
       <h4 class="text-gray-500 dark:text-insight">
-        See how Arbimon have been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
+        See how Arbimon has been applied in real-world scenarios to advance wildlife conservation and research efforts around the globe.
       </h4>
     </hero-content>
     <div class="grid md:grid-cols-12 max-w-screen-xl mx-auto py-8 lg:(pt-20)">

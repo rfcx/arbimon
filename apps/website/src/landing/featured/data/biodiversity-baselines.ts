@@ -11,13 +11,13 @@ export const bioBaseline: ProjectDetail = {
   title: 'Establishing Biodiversity Baselines',
   featuredImage: bioFeaturedImg,
   descriptiveText: 'Arbimon makes it possible to establish holistic baselines of biodiversity presence in hotspots to improve our current and future understandings of ecosystem dynamics.',
-  location: 'Gombe Stream National Park, Tanzania',
+  location: 'GOMBE NATIONAL PARK, TANZANIA',
   category: {
     id: 'biodiversity-baselines',
     name: 'Biodiversity Baselines'
   },
   header: {
-    projectName: 'Develop baseline biodiversity metrics in Gombe National Park',
+    projectName: 'Developing baseline biodiversity metrics for comparison over time',
     applications: [
       'CNN to identify 40 species of high conservation value - to be expanded to all vocalizing species within Gombe National Park.',
       'Results to inform future action on conservation management, climate change adaptation, zoonotic disease prevention, and better health for people, animals and shared environment.'
