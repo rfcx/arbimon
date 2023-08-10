@@ -207,7 +207,7 @@ function showSpecies (map: MapboxMap) {
 
   map.addSource('species', {
     type: 'geojson',
-    data: toGeojson(data)
+    data: toGeojson(data.filter(d => d.total_species !== 0))
   })
   map.addLayer({
       id: 'species-point',
