@@ -48,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import type { Feature, FeatureCollection, Point } from 'geojson'
-import type { Expression, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
+import { Expression, Map as MapboxMap, MapboxOptions, NavigationControl } from 'mapbox-gl'
 import { Popup } from 'mapbox-gl'
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 
@@ -183,6 +183,12 @@ onMounted(() => {
       map.getCanvas().style.cursor = ''
       popup.remove()
   })
+
+  map.addControl(new NavigationControl({
+    showCompass: false,
+    showZoom: true,
+    visualizePitch: false
+  }))
 })
 
 onUnmounted(() => {
