@@ -76,9 +76,8 @@ div#faq-accordion-markdown-body {
     margin-left: 1.25rem;
   }
 
-  a:hover {
-    -webkit-text-decoration-line: underline;
-    text-decoration-line: underline;
+  a {
+    @apply text-frequency hover:underline;
   }
 
   // INFO: Checkout https://stackoverflow.com/a/4094151/12386405 for how I did it
