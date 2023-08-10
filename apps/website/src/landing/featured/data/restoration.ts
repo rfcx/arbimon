@@ -8,7 +8,7 @@ import { type ProjectDetail } from './types'
 
 export const restoration: ProjectDetail = {
   id: 3,
-  title: 'Reforestation & Restoration',
+  title: 'Restoration',
   featuredImage: restorationFeaturedImg,
   descriptiveText: 'Forest and Landscape Restoration (FLR) is occurring across global ecosystems aiming to regain ecological function and enhance human well-being in deforested & degraded landscapes. Arbimon’s team of experts and ecoacoustic technology can support FLR by tracking the return of native fauna, measuring impact, and informing best practices.',
   location: 'Pontal do Paranapanema, Brazil',
@@ -17,7 +17,7 @@ export const restoration: ProjectDetail = {
     name: 'Restoration'
   },
   header: {
-    projectName: 'Assess restoration sites in supporting native fauna in Pontal do Paranapanema',
+    projectName: 'Assessing restoration sites in supporting native fauna',
     applications: [
       '178 species are being monitored across Atlantic Forest restoration sites to track change year-over-year',
       'Results have already proven restoration sites are host to a similar number of bird species as protected sites and impact is shown in as little as five years'

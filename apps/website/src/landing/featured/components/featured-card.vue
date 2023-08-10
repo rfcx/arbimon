@@ -1,6 +1,6 @@
 <template>
   <router-link :to="link">
-    <div class="relative overflow-hidden bg-white border border-frequency rounded-lg shadow">
+    <div class="relative overflow-hidden bg-white border border-frequency rounded-2xl shadow">
       <img
         class="object-cover w-full h-[503px] md:h-[542px]"
         :src="backgroundImage"

@@ -24,7 +24,7 @@
         </button>
       </div>
       <div class="max-w-screen-sm">
-        <h2 class="text-bold text-frequency text-lg font-display">
+        <h2 class="font-bold text-frequency text-lg font-display">
           "{{ props.feedbacks[currentFeedbackIndex]?.text }}"
         </h2>
         <div class="mt-6 flex">

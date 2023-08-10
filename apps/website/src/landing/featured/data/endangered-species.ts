@@ -2,8 +2,8 @@
 
 import endangeredGal1Img from '@/_assets/featured-work/endangered-species/baby-mangrove-finches.webp'
 import endangeredImpactImg from '@/_assets/featured-work/endangered-species/bjarn-bronsveld.webp'
-import endangeredFeaturedImg from '@/_assets/featured-work/endangered-species/mangrove-finch.webp'
-import endangeredGal2Img from '@/_assets/featured-work/endangered-species/woodpecker-finch.webp'
+import endangeredGal2Img from '@/_assets/featured-work/endangered-species/mangrove-finch.webp'
+import endangeredFeaturedImg from '@/_assets/featured-work/endangered-species/woodpecker-finch.webp'
 import { type ProjectDetail } from './types'
 
 export const endangeredSpecies: ProjectDetail = {
