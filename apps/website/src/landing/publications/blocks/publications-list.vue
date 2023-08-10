@@ -50,9 +50,9 @@ const search = ref('')
 const paperPublishedBy = ref<PaperPublishedBy>(null)
 
 const paperPublishedByAppliedPublications = computed<Publication[]>(() => {
-  if (paperPublishedBy.value != null) {
+  if (paperPublishedBy.value != null && paperPublishedBy.value !== 'all') {
     return publications.filter(p => {
-      return (paperPublishedBy.value === 'all') === p.isRFCxAuthor
+      return p.isRFCxAuthor === true
     })
   }
 
