@@ -184,11 +184,12 @@ onMounted(() => {
       popup.remove()
   })
 
+  // Add zoom control to the bottom right of the map pane
   map.addControl(new NavigationControl({
     showCompass: false,
     showZoom: true,
     visualizePitch: false
-  }))
+  }), 'bottom-left')
 })
 
 onUnmounted(() => {
