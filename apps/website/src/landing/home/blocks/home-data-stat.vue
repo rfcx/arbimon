@@ -14,11 +14,11 @@
         />
         <number-stat
           :number="1016249315"
-          title="Analyses Performed"
+          title="Analyses performed"
         />
         <number-stat
           :number="3677"
-          title="Projects Created"
+          title="Projects created"
         />
         <number-stat
           :number="3561"

@@ -20,9 +20,7 @@ const props = defineProps<{
 }>()
 
 const valueShortScale = computed(() => {
-  const formattedNumber = numeral(props.number).format('0.0a')
-  const firstDecimalDigit = (x: string) => x.split('.')[1].slice(0, 1)
-  return firstDecimalDigit(formattedNumber) === '0' ? formattedNumber.replace('.0', '') : formattedNumber
+  return numeral(props.number).format(props.number > 999999999 ? '0,0am' : '0,0.[0]a')
 })
 
 </script>
