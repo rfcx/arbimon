@@ -157,7 +157,7 @@ export default defineConfig({
     tab: 'py-2 pr-4 pl-3 text-gray-700 border-b-2 border-transparent lg:hover:bg-transparent lg:p-0 dark:text-insight dark:hover:text-frequency lg:(dark:hover:border-b-2 dark:hover:border-b-frequency)',
     'tab-active': '!text-insight !dark:text-frequency lg:!border-b-2 lg:!border-b-frequency',
     // button
-    btn: 'px-5 py-2 mr-3 text-base text-center text-pitch rounded-full font-display',
+    btn: 'px-6 py-3 text-base text-center text-pitch rounded-full font-display',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
     // title
