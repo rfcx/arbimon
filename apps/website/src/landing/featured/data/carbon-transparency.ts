@@ -3,6 +3,7 @@
 import carbonFeaturedImg from '@/_assets/featured-work/carbon-transparency/1.webp'
 import carbonGal1Img from '@/_assets/featured-work/carbon-transparency/2.webp'
 import carbonGal2Img from '@/_assets/featured-work/carbon-transparency/3.webp'
+import carbonImpactImg from '@/_assets/featured-work/carbon-transparency/4.webp'
 import { type ProjectDetail } from './types'
 
 export const carbonTransparency: ProjectDetail = {
@@ -56,7 +57,7 @@ export const carbonTransparency: ProjectDetail = {
       text: 'Learn more',
       link: 'https://blog.aspiration.com/aspiration-partners-with-trees-for-the-future/#:~:text=Aspiration%2C%20a%20high%2Dimpact%20climate,practices%20across%20sub%2DSaharan%20Africa'
     },
-    image: carbonFeaturedImg,
+    image: carbonImpactImg,
     paragraphs: [
       `TREES has an impressive track record since its establishment in 1989, having successfully planted over 300 million trees in collaboration with farming communities worldwide. At the core of their approach lies the innovative "Forest Garden Approach," which empowers farmers to transform their land by incorporating thousands of fast-growing, ecologically appropriate trees alongside dozens of other crops. This strategy not only presents new economic possibilities for the farmers but also benefits their communities significantly. Specifically, in the Lake Victoria Watershed project, each Forest Garden will comprise an average of 5,800 trees per hectare, culminating in an astounding total of 4.13 million metric tonnes of CO2 removal from the atmosphere over a span of 20 years.
       Furthermore, the integration of bioacoustics monitoring capabilities adds an extra layer of scalability and understanding to the impact of the Forest Garden Approach on native fauna. This innovation also enhances transparency for carbon project verification, ensuring the credibility and effectiveness of the initiative. With this comprehensive and conscientious approach, Aspiration's investment in carbon projects through TREES promises to foster both ecological restoration and sustainable development in the face of climate change.
