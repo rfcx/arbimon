@@ -16,7 +16,7 @@
       :cta-link="currentProject.impact?.cta?.link ?? ''"
       :image="currentProject.impact?.image ?? ''"
     />
-    <featured-contact />
+    <featured-contact :project-name="currentProject.category.name" />
     <featured-explorer :projects="projects" />
     <footer-contact />
   </div>
