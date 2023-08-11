@@ -28,7 +28,7 @@ export const createApp = async (): Promise<FastifyInstance> => {
   await app.register(fastifyCors)
   await app.register(fastifyAuth0Verify, {
     domain: 'auth.rfcx.org',
-    audience: 'https://rfcx.eu.auth0.com/api/v2/'
+    audience: 'https://rfcx.org' // 'https://rfcx.eu.auth0.com/api/v2/'
   })
   await app.register(fastifyStatic, { root: resolve('./public') })
   await app.register(fastifyRequestContextPlugin)
