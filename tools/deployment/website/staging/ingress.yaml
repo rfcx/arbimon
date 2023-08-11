@@ -9,7 +9,7 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: staging-bio.rfcx.org
+    - host: preview-insights.arbimon.org
       http:
         paths:
           - path: /
@@ -30,7 +30,7 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: staging-bio.rfcx.org
+    - host: preview-insights.arbimon.org
       http:
         paths:
           - path: /api(/|$)(.*)

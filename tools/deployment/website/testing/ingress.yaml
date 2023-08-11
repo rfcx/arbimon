@@ -9,15 +9,7 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: testing-bio.rfcx.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: biodiversity-website-service
-              servicePort: 80
-    - host: preview.arbimon.org
+    - host: dev-insights.arbimon.org
       http:
         paths:
           - path: /
@@ -38,11 +30,52 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: testing-bio.rfcx.org
+    - host: dev-insights.arbimon.org
       http:
         paths:
           - path: /api(/|$)(.*)
             pathType: Prefix
             backend:
               serviceName: biodiversity-api-service
+              servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: arbimon-landing-ingress
+  namespace: testing
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+    - host: dev.arbimon.org
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
+          - path: /includes/(.*)
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
+          - path: /projects
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
+          - path: /project/(.*)
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: biodiversity-website-service
               servicePort: 80
