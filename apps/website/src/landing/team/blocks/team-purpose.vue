@@ -13,9 +13,15 @@
           </div>
         </div>
         <div class="basis-7/12">
-          <span class="text-xxs">// TODO: add content</span>
+          <img
+            :src="image"
+            class="rounded-xl"
+          >
         </div>
       </div>
     </div>
   </section>
 </template>
+<script setup lang="ts">
+import image from '@/_assets/landing/team/Landscape_45.webp'
+</script>
