@@ -52,10 +52,7 @@ export const supplyChain: ProjectDetail = {
     partnerName: 'Ecoculture'
   }],
   impact: {
-    cta: {
-      text: 'Learn more',
-      link: 'https://ecoculture.us/'
-    },
+    cta: null,
     image: supplyChainImpactImg,
     paragraphs: [
       'Ecoculture’s mission is to develop landscape restoration projects that promote a culture of conservation. By working closely with local communities, they are able to create value for the ecosystems, including the people calling them home. These results will be used to prioritize highest-value land management approaches and arm Ecoculture with the data required to measure impact across their projects. It was found that soundscapes from primary forest and restoration sites are similar, suggesting that restoration sites are able to maintain high biodiversity levels. Therefore, it is important to continue forward with these high-value projects.'

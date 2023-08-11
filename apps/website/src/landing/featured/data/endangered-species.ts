@@ -45,10 +45,7 @@ export const endangeredSpecies: ProjectDetail = {
     partnerLogo: partnerIcon
   }],
   impact: {
-    cta: {
-      text: 'Learn more',
-      link: 'https://www.darwinfoundation.org/en/research/projects/mangrove-finch-population'
-    },
+    cta: null,
     image: endangeredImpactImg,
     paragraphs: [
       'Historically, the mangrove finch was distributed across the mangroves  in the two western most islands of the Galapagos - its current range is restricted to only 30 ha on North West Isabela Island. Since 2006 the Charles Darwin Foundation, working together with the Galapagos National Park Directorate and other collaborating institutions, has carried out intensive conservation management to protect the mangrove finch. Actions have included establishing introduced rat control to reduce nest predation, trailing a translocation to mangroves in the birds\' historic range, head-starting (collection of eggs, chick rearing in captivity and release of juveniles back into the wild) and in-situ nest parasite treatment alongside complementary chick husbandry. While these efforts have been successful the mangrove finch remains threatened and on-going intensive conservation management is required. At the same time no survey of historically occupied mangrove finch habitat has been carried out for over 20 years and it is important to determine whether there are any mangrove finches inhabiting other sites to help inform future conservation management of this species. We are starting to answer these questions with our collaboration. The known existing population was recorded in 2022 to create models and better understand their communications. In 2023 devices were deployed across a further mangrove forest 20km distant from the main population, with plans to extend monitoring to a further 12 mangrove sites through 2024 and 2025. This will inform if mangrove finches are dispersing outside of their main population site and inhabiting distant isolated mangroves, which further informs which other sites could be considered for increased conservation management to better protect them.'

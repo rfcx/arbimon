@@ -48,10 +48,7 @@ export const bioBaseline: ProjectDetail = {
     partnerLogo: partnerIcon
   }],
   impact: {
-    cta: {
-      text: 'Learn more',
-      link: 'https://janegoodall.org/make-a-difference/gombe-60/'
-    },
+    cta: null,
     image: bioImpactImg,
     paragraphs: [
       'This collaboration will result in the establishment of a biodiversity baseline to assess how animal communities are distributed and change over time and under different threats and conservation practices. Simultaneously, Gombe Stream Research Center, JGI Tanzania and other local partners will be trained on all activities and empowered to lead both the management of the project as well as continued biodiversity analyses to create the building blocks for a long-term project. The next steps are to establish permanent monitoring stations and use new datasets collected to answer critical questions that will inform the management of the park, create value, and inform health programs.'

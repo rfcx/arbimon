@@ -53,10 +53,7 @@ export const restoration: ProjectDetail = {
     partnerLogo: partnerIcon
   }],
   impact: {
-    cta: {
-      text: 'Learn more',
-      link: 'https://www.weforest.org/project/pontal/'
-    },
+    cta: null,
     image: restorationImpactImg,
     paragraphs: [
       'Year-over-year data collection is providing insights on how biodiversity is returning to restoration sites across the Atlantic Forest in Brazil. The data will inform how WeForest & IPÊ can expand the wildlife corridors to connect the forest fragments and protected areas in the region.',
