@@ -4,7 +4,7 @@
   <contact-card hero-background="hero-cta">
     <div class="flex flex-col gap-2">
       <h2 class="font-medium font-header">
-        Working on an endangered species project?
+        Working on <span class="lowercase">{{ projectName }}</span> project?
       </h2>
       <p>
         <router-link
@@ -20,4 +20,9 @@
 <script setup lang="ts">
 import ContactCard from '@/_layout/components/landing-cta-card/contact-card-full-background.vue'
 import { ROUTE_NAMES } from '~/router'
+
+defineProps<{
+  readonly projectName: string
+}>()
+
 </script>
