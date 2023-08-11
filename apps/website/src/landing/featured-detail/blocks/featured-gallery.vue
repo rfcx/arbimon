@@ -5,7 +5,7 @@
         v-for="(image, index) in images"
         :key="index"
         :src="image"
-        class="w-full h-max-[369px] rounded-lg object-cover"
+        class="w-full h-max-[460px] rounded-lg object-cover"
       >
     </div>
   </section>
