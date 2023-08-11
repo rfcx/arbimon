@@ -276,10 +276,13 @@
       </div>
     </div>
   </section>
+  <footer-contact />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+
+import FooterContact from '@/_layout/components/landing-footer-contact.vue'
 
 const route = useRoute()
 
