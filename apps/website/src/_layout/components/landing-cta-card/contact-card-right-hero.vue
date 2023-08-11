@@ -16,7 +16,7 @@
           </div>
         </div>
         <div
-          :class="'bg-' + heroBackground"
+          :class="`bg-${heroBackground} ${backgroundPosition != null ? `bg-${backgroundPosition}` : ''}`"
           class="basis-full hidden flex-1 self-stretch justify-self-stretch md:(basis-5/12 block rouned-r-lg rounded-l-none) bg-opacity-40 bg-cover rounded-xl"
         >
           <span class="invisible">.</span>
@@ -29,10 +29,13 @@
 withDefaults(defineProps<{
   textBackground?: string
   heroBackground?: string
-  flexAlign?: 'items-start' | 'items-center' | 'items-end' | 'items-stretch'
+  flexAlign?: 'items-start' | 'items-center' | 'items-end' | 'items-stretch',
+  // INFO: https://tailwindcss.com/docs/background-position
+  backgroundPosition?: 'bottom' | 'center' | 'left' | 'left-bottom' | 'left-top' | 'right' | 'right-bottom' | 'right-top' | 'top'
 }>(), {
   textBackground: 'hero-cta-frog',
   heroBackground: 'hero-cta-frog-bg',
-  flexAlign: 'items-stretch'
+  flexAlign: 'items-stretch',
+  backgroundPosition: undefined
 })
 </script>

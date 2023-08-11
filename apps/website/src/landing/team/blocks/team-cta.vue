@@ -4,6 +4,7 @@
   <contact-card
     text-background="hero-cta-frog-bg"
     hero-background="hero-cta-frog"
+    background-position="center"
   >
     <div class="flex flex-col items-start">
       <h2 class="mb-8">
