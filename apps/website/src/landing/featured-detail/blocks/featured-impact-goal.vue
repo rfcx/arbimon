@@ -48,5 +48,9 @@ div#impact-markdown {
     list-style-type: decimal;
     padding-left: 0.75rem;
   }
+
+  p:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
 }
 </style>

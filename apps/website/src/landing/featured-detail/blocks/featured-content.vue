@@ -6,10 +6,12 @@
       </p>
       <div class="flex flex-col gap-8 lg:flex-row">
         <Markdown
+          id="featured-content-left-markdown-container"
           class="basis-1/2 text-justify"
           :source="props.content?.paragraphs[0] ?? ''"
         />
         <Markdown
+          id="featured-content-right-markdown-container"
           class="basis-1/2 text-justify"
           :source="props.content?.paragraphs[1] ?? ''"
         />
@@ -26,5 +28,12 @@ import { type ProjectOverviewContent } from '../../featured/data/types'
 const props = defineProps<{
   readonly content: ProjectOverviewContent | null
 }>()
-
 </script>
+
+<style lang="scss">
+div#featured-content-left-markdown-container, div#featured-content-right-markdown-container {
+  p:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+}
+</style>
