@@ -1,9 +1,9 @@
 /* content from https://docs.google.com/document/d/1eEvGt_zqVnyPoKGPcYuV4gWaazpGCpciBjePsHB_MA4/edit */
 
-import endangeredGal1Img from '@/_assets/featured-work/endangered-species/baby-mangrove-finches.webp'
-import endangeredImpactImg from '@/_assets/featured-work/endangered-species/bjarn-bronsveld.webp'
-import endangeredGal2Img from '@/_assets/featured-work/endangered-species/mangrove-finch.webp'
-import endangeredFeaturedImg from '@/_assets/featured-work/endangered-species/woodpecker-finch.webp'
+import endangeredFeaturedImg from '@/_assets/featured-work/endangered-species/1.webp'
+import endangeredGal1Img from '@/_assets/featured-work/endangered-species/2.webp'
+import endangeredGal2Img from '@/_assets/featured-work/endangered-species/3.webp'
+import endangeredImpactImg from '@/_assets/featured-work/endangered-species/4.webp'
 import { type ProjectDetail } from './types'
 
 export const endangeredSpecies: ProjectDetail = {
