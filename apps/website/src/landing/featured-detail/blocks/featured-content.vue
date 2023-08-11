@@ -5,18 +5,21 @@
         {{ props.content?.subtitle }}
       </p>
       <div class="flex flex-col gap-8 lg:flex-row">
-        <p class="basis-1/2 text-justify">
-          {{ props.content?.paragraphs[0] ?? '' }}
-        </p>
-        <p class="basis-1/2 text-justify">
-          {{ props.content?.paragraphs[1] ?? '' }}
-        </p>
+        <Markdown
+          class="basis-1/2 text-justify"
+          :source="props.content?.paragraphs[0] ?? ''"
+        />
+        <Markdown
+          class="basis-1/2 text-justify"
+          :source="props.content?.paragraphs[1] ?? ''"
+        />
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import Markdown from 'vue3-markdown-it'
 
 import { type ProjectOverviewContent } from '../../featured/data/types'
 
