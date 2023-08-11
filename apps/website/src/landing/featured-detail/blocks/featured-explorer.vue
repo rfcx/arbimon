@@ -1,9 +1,9 @@
 <template>
   <section class="bg-white dark:bg-echo">
     <div class="py-30 px-4 mx-auto xl:gap-16 lg:px-6 lg:pb-60">
-      <h3 class="text-center mb-20">
+      <h2 class="text-center mb-20">
         Explore our featured projects
-      </h3>
+      </h2>
       <div class="grid grid-row gap-1 text-gray-500 dark:text-insight md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div
           v-for="project in props.projects"
