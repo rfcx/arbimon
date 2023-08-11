@@ -39,9 +39,10 @@
           class="md:(order-7 col-span-1) order-4 col-span-2"
           :src="image7"
         />
-        <imageCard
+        <video-card
           class="md:order-8 order-6"
-          :src="image8"
+          :src="walkingInWaterVideo"
+          :thumbnail-image-src="image8"
         />
         <imageCard
           class="order-last md:col-span-1 col-span-2"
@@ -63,6 +64,7 @@ import image7 from '@/_assets/landing/team/gallery/7.png'
 import image8 from '@/_assets/landing/team/gallery/8.png'
 import image9 from '@/_assets/landing/team/gallery/9.webp'
 import dashboardVideo from '@/_assets/landing/team/gallery/dashboard-view.mp4'
+import walkingInWaterVideo from '@/_assets/landing/team/gallery/tomaz walking croatia.mp4'
 import imageCard from '../components/image-card.vue'
 import videoCard from '../components/video-card.vue'
 </script>
