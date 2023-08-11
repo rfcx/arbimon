@@ -91,8 +91,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     includedRoutes (paths, routes) {
       const allRoutes = routes.flatMap(r => flattenRoutes(r))
       return allRoutes.filter(r => (STATIC_ROUTES as string[]).includes(r.name?.toString() ?? '')).map(r => r.path)
-    },
-    mode: 'testing'
+    }
   },
   ssr: {
     noExternal: ['mapbox-gl', 'siriwave']
