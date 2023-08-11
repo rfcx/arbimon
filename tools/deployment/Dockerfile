@@ -39,7 +39,6 @@ ENV VITE_RELEASE_DATE=${release_date}
 
 RUN pnpm --filter=!website build
 RUN pnpm --filter=website build --mode ${mode}
-RUN pnpm --filter=website build-ssg --mode ${mode}
 RUN if [[ "${mode}" == "production" ]] ; then rm -v apps/website/dist/robots.disallow.txt ; else mv -v apps/website/dist/robots.disallow.txt apps/website/dist/robots.txt ; fi
 
 ENV NODE_ENV=development
