@@ -290,6 +290,6 @@ const firstName = ref('')
 const lastName = ref('')
 
 const isTestForm = import.meta.env.DEV
-const returnUrl = typeof window !== 'undefined' ? window.location.origin + '?submitted=true' : ''
+const returnUrl = (typeof window !== 'undefined' ? window.location.origin : 'https://arbimon.org') + '/contact?submitted=true'
 const isSubmitted = route.query.submitted === 'true'
 </script>
