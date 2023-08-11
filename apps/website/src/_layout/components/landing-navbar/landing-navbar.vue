@@ -11,9 +11,23 @@
         </router-link>
         <!-- Auth -->
         <div class="flex items-center lg:order-2">
-          <client-only>
+          <!-- <client-only>
             <auth-navbar-item dom-id="navbar-auth-desktop" />
-          </client-only>
+          </client-only> -->
+          <div class="flex items-center">
+            <a
+              :href="universalLoginUrl"
+              class="text-gray-800 font-display dark:text-insight px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:text-frequency hidden md:block"
+            >
+              Log in
+            </a>
+            <a
+              :href="universalLoginUrl + '&screen_hint=signup'"
+              class="text-gray-800 font-display dark:text-insight px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:text-frequency hidden md:block"
+            >
+              Sign up
+            </a>
+          </div>
           <button
             data-collapse-toggle="mobile-menu-2"
             type="button"
@@ -159,9 +173,9 @@ import { initCollapses, initDropdowns } from 'flowbite'
 import { inject, onMounted } from 'vue'
 
 import { togglesKey } from '@/globals'
+import { universalLoginUrl } from '@/landing/auth0-arbimon'
 import { ROUTE_NAMES } from '~/router'
 import BrandLogo from '../brand-logo.vue'
-import AuthNavbarItem from './auth-navbar-item/auth-navbar-item.vue'
 
 const toggles = inject(togglesKey)
 
