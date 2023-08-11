@@ -74,7 +74,7 @@ spec:
             backend:
               serviceName: arbimon-service
               servicePort: 80
-          - path: /
+          - path: /(.*)
             pathType: Prefix
             backend:
               serviceName: biodiversity-website-service
