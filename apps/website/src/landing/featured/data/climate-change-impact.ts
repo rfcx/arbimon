@@ -41,14 +41,7 @@ export const climateChangeImpact: ProjectDetail = {
   content: {
     subtitle: 'Puerto Rico\'s biodiversity is under constant threat from both natural (i.e., hurricanes) and human (i.e., urbanization, climate change) disturbances. Unfortunately, we historically have not had good information about the status of many species in Puerto Rico, nor how their population fluctuates and responds according to natural and human disturbances.',
     paragraphs: [
-      `
-        To improve knowledge about the distribution of bird, amphibian, and mammal species that
-        occur in Puerto Rico, Arbimon, in partnership with the US Fish and Wildlife Service, Puerto Rico Department of Natural and Environmental Resources,
-        and Para la Naturaleza, a conservation unit of the Puerto Rico Conservation Trust, conducted an island-wide survey using ecoacoustic monitoring. The survey focused on the lowlands and coastal areas on the main island of Puerto Rico, a
-        selection of elevational gradients in the mountainous regions, and the major offshore islands of
-        Culebra, Desecheo, Mona and Vieques. Acoustic recorders and the analytical tools in
-        Arbimon have been used to collect data from over 900 sites across the archipelago yearly during the three month peak of bird breeding season.          
-        `,
+      'To improve knowledge about the distribution of bird, amphibian, and mammal species that occur in Puerto Rico, Arbimon, in partnership with the US Fish and Wildlife Service, Puerto Rico Department of Natural and Environmental Resources, and Para la Naturaleza, a conservation unit of the Puerto Rico Conservation Trust, conducted an island-wide survey using ecoacoustic monitoring. The survey focused on the lowlands and coastal areas on the main island of Puerto Rico, a selection of elevational gradients in the mountainous regions, and the major offshore islands of Culebra, Desecheo, Mona and Vieques. Acoustic recorders and the analytical tools in Arbimon have been used to collect data from over 900 sites across the archipelago yearly during the three month peak of bird breeding season.',
       'This project aims to evaluate climate change\'s impact on species\' spatial distribution in a tropical island ecosystem using a decade of acoustic monitoring data. Our results indicate that the distributions of several bird and frog species are positively affected by precipitation, and the proportion of canopy cover and species are shifting toward high-elevation areas due to climate change. The study also found that drought has a stronger negative effect on bird communities than a hurricane of category 4. In addition, the results indicate that there may need to be more than the present amount of protected areas to safeguard bird species under climate change.'
     ]
   },
