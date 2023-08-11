@@ -22,9 +22,10 @@
           class="md:(order-3 col-span-1) order-8 col-span-2"
           :src="image3"
         />
-        <imageCard
+        <video-card
           class="md:order-4 order-2"
-          :src="image4"
+          :src="dashboardVideo"
+          :thumbnail-image-src="image4"
         />
         <imageCard
           class="md:(order-5 row-span-2 h-[440px]) order-6 object-top"
@@ -61,5 +62,7 @@ import image6 from '@/_assets/landing/team/gallery/6.webp'
 import image7 from '@/_assets/landing/team/gallery/7.png'
 import image8 from '@/_assets/landing/team/gallery/8.png'
 import image9 from '@/_assets/landing/team/gallery/9.webp'
+import dashboardVideo from '@/_assets/landing/team/gallery/dashboard-view.mp4'
 import imageCard from '../components/image-card.vue'
+import videoCard from '../components/video-card.vue'
 </script>
