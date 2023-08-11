@@ -14,15 +14,10 @@
         {{ props.title }}
       </h3>
       <div class="flex flex-col items-center gap-10">
-        <div>
-          <p
-            v-for="(paragraph, index) in props.textParagraphs"
-            :key="index"
-            class="mb-6"
-          >
-            {{ paragraph }}
-          </p>
-        </div>
+        <Markdown
+          id="impact-markdown"
+          :source="props.textParagraphs.join('')"
+        />
         <a
           v-if="props.ctaLink"
           :href="props.ctaLink"
@@ -36,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import Markdown from 'vue3-markdown-it'
 
 const props = defineProps<{
   readonly title: string
@@ -44,5 +40,13 @@ const props = defineProps<{
   readonly ctaLink: string
   readonly image: string
 }>()
-
 </script>
+
+<style lang="scss">
+div#impact-markdown {
+  ol {
+    list-style-type: decimal;
+    padding-left: 0.75rem;
+  }
+}
+</style>
