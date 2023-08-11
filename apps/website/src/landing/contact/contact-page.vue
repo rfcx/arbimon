@@ -38,7 +38,7 @@
             method="POST"
             class="space-y-8 p-10 bg-gradient-to-br from-bg-moss to-bg-transparent"
           >
-            <div v-if="!isSubmitted">
+            <div v-if="isSubmitted">
               <div
                 class="flex text-chirp"
                 role="alert"
