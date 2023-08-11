@@ -63,7 +63,7 @@ spec:
         backend:
           serviceName: arbimon-service
           servicePort: 80
-      - path: /includes
+      - path: /auth0-login
         pathType: Prefix
         backend:
           serviceName: arbimon-service
@@ -74,6 +74,11 @@ spec:
           serviceName: arbimon-service
           servicePort: 80
       - path: /images
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+      - path: /includes
         pathType: Prefix
         backend:
           serviceName: arbimon-service
