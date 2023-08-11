@@ -23,8 +23,8 @@ export const restoration: ProjectDetail = {
       'Results have already proven restoration sites are host to a similar number of bird species as protected sites and impact is shown in as little as five years'
     ],
     timeline: '2021 - ongoing',
-    scope: '120 sites 178 species (4 threatened)',
-    partners: ['WeForest & IPÊ'],
+    scope: '120 sites, 187 species (4 threatened)',
+    partners: ['WeForest', 'IPÊ'],
     services: [
       'Survey design',
       'Species manual validation and identification',
