@@ -4,6 +4,7 @@ import climateFeaturedImg from '@/_assets/featured-work/climate-change-impact/1.
 import climateGal1Img from '@/_assets/featured-work/climate-change-impact/2.webp'
 import climateGal2Img from '@/_assets/featured-work/climate-change-impact/3.webp'
 import climateImpactImg from '@/_assets/featured-work/climate-change-impact/4.webp'
+import partnerIcon from '@/_assets/landing/testimonials/feedbacks/DRNA.webp'
 import { type ProjectDetail } from './types'
 
 export const climateChangeImpact: ProjectDetail = {
@@ -51,7 +52,8 @@ export const climateChangeImpact: ProjectDetail = {
   },
   feedback: [{
     text: 'This tool has helped the agency obtain information on species of which little or no information was available, and corroborate the use of different habitats by these species.  Having updated information on the distribution and presence of the different species supports the prioritization process at the time of delineating conservation and management strategies or funding investment.  With Arbimon we were able to better understand species range and focus projects that seek the conservation of protected species',
-    partnerName: 'Dr. Nilda M. Jiménez-Marrero, Endangered Species Program Coordinator at DNER'
+    partnerName: 'Dr. Nilda M. Jiménez-Marrero, Endangered Species Program Coordinator at DNER',
+    partnerLogo: partnerIcon
   }],
   impact: {
     cta: {

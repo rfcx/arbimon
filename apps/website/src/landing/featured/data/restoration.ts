@@ -4,6 +4,7 @@ import restorationFeaturedImg from '@/_assets/featured-work/restoration/1.webp'
 import restorationGal1Img from '@/_assets/featured-work/restoration/2.webp'
 import restorationGal2Img from '@/_assets/featured-work/restoration/3.webp'
 import restorationImpactImg from '@/_assets/featured-work/restoration/4.webp'
+import partnerIcon from '@/_assets/landing/testimonials/feedbacks/WeForest.webp'
 import { type ProjectDetail } from './types'
 
 export const restoration: ProjectDetail = {
@@ -48,7 +49,8 @@ export const restoration: ProjectDetail = {
   },
   feedback: [{
     text: 'Arbimon has provided valuable insights into how WeForest’s restoration efforts are impacting biodiversity in Pontal. Additionally, it creates an easily accessible & transparent dashboard that can be utilized by a variety of stakeholders.',
-    partnerName: 'Rachel Cohen, WeForest'
+    partnerName: 'Rachel Cohen, WeForest',
+    partnerLogo: partnerIcon
   }],
   impact: {
     cta: {

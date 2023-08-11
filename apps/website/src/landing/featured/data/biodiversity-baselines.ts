@@ -4,6 +4,7 @@ import bioFeaturedImg from '@/_assets/featured-work/biodiversity-baselines/1.web
 import bioGal1Img from '@/_assets/featured-work/biodiversity-baselines/2.webp'
 import bioGal2Img from '@/_assets/featured-work/biodiversity-baselines/3.webp'
 import bioImpactImg from '@/_assets/featured-work/biodiversity-baselines/4.webp'
+import partnerIcon from '@/_assets/landing/testimonials/feedbacks/jane goodal institute.webp'
 import { type ProjectDetail } from './types'
 
 export const bioBaseline: ProjectDetail = {
@@ -43,7 +44,8 @@ export const bioBaseline: ProjectDetail = {
       Active listening to hear and respect local people values, beliefs, and traditional knowledge
       has been important to JGI since the beginning of our work. Now, in collaboration with the Arbimon platform, we are beginning to listen to forests and uncover a previously undocumented world within Gombe National Park. Using acoustics to hear the forests and its inhabitants and better understand their conservation needs is game changing
     `,
-    partnerName: 'Dr. Lilian Pintea, Vice-President of Conservation Science, JGI, USA'
+    partnerName: 'Dr. Lilian Pintea, Vice-President of Conservation Science, JGI, USA',
+    partnerLogo: partnerIcon
   }],
   impact: {
     cta: {

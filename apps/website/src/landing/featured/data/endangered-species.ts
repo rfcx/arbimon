@@ -4,6 +4,7 @@ import endangeredFeaturedImg from '@/_assets/featured-work/endangered-species/1.
 import endangeredGal1Img from '@/_assets/featured-work/endangered-species/2.webp'
 import endangeredGal2Img from '@/_assets/featured-work/endangered-species/3.webp'
 import endangeredImpactImg from '@/_assets/featured-work/endangered-species/4.webp'
+import partnerIcon from '@/_assets/landing/testimonials/feedbacks/Charles Darwin Foundation.png'
 import { type ProjectDetail } from './types'
 
 export const endangeredSpecies: ProjectDetail = {
@@ -40,7 +41,8 @@ export const endangeredSpecies: ProjectDetail = {
   },
   feedback: [{
     text: 'Our project team is now using passive acoustic monitors and automated modeling developed by Arbimon to help us survey isolated mangrove forests throughout the historic range of the mangrove finch, to see if any individuals are present at sites we do not know about. Due to the difficulties to survey these sites in person, deploying monitors for weeks at a time enables us to get more thorough results',
-    partnerName: 'Francesca Cunninghame, Charles Darwin Foundation'
+    partnerName: 'Francesca Cunninghame, Charles Darwin Foundation',
+    partnerLogo: partnerIcon
   }],
   impact: {
     cta: {
