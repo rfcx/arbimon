@@ -9,7 +9,7 @@ import { type ProjectDetail } from './types'
 
 export const carbonTransparency: ProjectDetail = {
   id: 4,
-  title: 'Carbon transparency',
+  title: 'Carbon Transparency',
   featuredImage: carbonFeaturedImg,
   descriptiveText: 'Creating transparency around positive change in ecosystem health is a critical component of the carbon market, and ecoacoustics enables traceable biodiversity data to support both reporting on standards and communicating project results to stakeholders.',
   location: 'LAKE VICTORIA, KENYA',
@@ -55,10 +55,7 @@ export const carbonTransparency: ProjectDetail = {
     partnerLogo: partnerIcon
   }],
   impact: {
-    cta: {
-      text: 'Learn more',
-      link: 'https://blog.aspiration.com/aspiration-partners-with-trees-for-the-future/#:~:text=Aspiration%2C%20a%20high%2Dimpact%20climate,practices%20across%20sub%2DSaharan%20Africa'
-    },
+    cta: null,
     image: carbonImpactImg,
     paragraphs: [
       `TREES has an impressive track record since its establishment in 1989, having successfully planted over 300 million trees in collaboration with farming communities worldwide. At the core of their approach lies the innovative "Forest Garden Approach," which empowers farmers to transform their land by incorporating thousands of fast-growing, ecologically appropriate trees alongside dozens of other crops. This strategy not only presents new economic possibilities for the farmers but also benefits their communities significantly. Specifically, in the Lake Victoria Watershed project, each Forest Garden will comprise an average of 5,800 trees per hectare, culminating in an astounding total of 4.13 million metric tonnes of CO2 removal from the atmosphere over a span of 20 years.
