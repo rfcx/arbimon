@@ -13,7 +13,7 @@
         </p>
         <a
           :href="universalLoginUrl + '&screen_hint=signup'"
-          class="inline-flex items-center justify-center btn btn-primary"
+          class="inline-flex items-center justify-center btn btn-primary mr-3"
         >
           Start analyzing
         </a>

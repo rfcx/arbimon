@@ -36,7 +36,7 @@
     >
     <button
       type="submit"
-      class="btn btn-primary min-w-30 h-10 mr-0 px-2 grow-0"
+      class="btn btn-primary h-10 mr-0 py-0 grow-0"
     >
       Subscribe
     </button>
