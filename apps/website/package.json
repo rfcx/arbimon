@@ -21,7 +21,8 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "build": "vue-tsc --project \"tsconfig.vuetsc.json\" --noEmit --skipLibCheck && vite-ssg build",
+    "build": "vue-tsc --project \"tsconfig.vuetsc.json\" --noEmit --skipLibCheck",
+    "build-ssg": "vite-ssg build",
     "clean": "rimraf \"./dist\" \"./.eslintcache\" \"./.stylelintcache\"",
     "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
     "lint-fix": "eslint . --fix && prettier . --loglevel warn --write && stylelint . --fix",
