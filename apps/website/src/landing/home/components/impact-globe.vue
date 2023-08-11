@@ -48,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import type { Feature, FeatureCollection, Point } from 'geojson'
-import { Expression, Map as MapboxMap, MapboxOptions, NavigationControl } from 'mapbox-gl'
+import type { Expression, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 import { Popup } from 'mapbox-gl'
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 
@@ -99,6 +99,7 @@ onMounted(() => {
       showSpecies(map)
     })
   map.scrollZoom.disable()
+  map.doubleClickZoom.disable()
   map.keyboard.disableRotation()
   map.touchZoomRotate.disableRotation()
   map.touchPitch.disable()
@@ -183,13 +184,6 @@ onMounted(() => {
       map.getCanvas().style.cursor = ''
       popup.remove()
   })
-
-  // Add zoom control to the bottom right of the map pane
-  map.addControl(new NavigationControl({
-    showCompass: false,
-    showZoom: true,
-    visualizePitch: false
-  }), 'bottom-left')
 })
 
 onUnmounted(() => {
