@@ -23,18 +23,19 @@ export const climateChangeImpact: ProjectDetail = {
       'CNN for ~40 species to automate the detection of species with a focus on threatened and endemic species'
     ],
     timeline: '2021 - ongoing',
-    scope: '944 Sites, 96 Species',
+    scope: '944 sites, 96 species',
     partners: [
-      'United State Fish & Wildlife Services',
-      'Puerto Rico Department of Natural and Environmental Resources, Para La Naturaleza'
+      'United States Fish & Wildlife Services',
+      'Puerto Rico Department of Natural and Environmental Resources',
+      'Para La Naturaleza'
     ],
     services: [
       'Hardware provider',
-      'Species List',
+      'Species list',
       'Expert species validations',
       'Multi-species occupancy models',
       'AI model development',
-      'Soundscape Analysis'
+      'Soundscape analysis'
     ],
     sdgs: ['13', '15']
   },
