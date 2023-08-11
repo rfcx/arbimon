@@ -24,7 +24,7 @@ export const endangeredSpecies: ProjectDetail = {
       'Results are being utilized to inform current finch distribution across all potential mangrove habitats to inform action.'
     ],
     timeline: '2022 - ongoing',
-    scope: '34 Sampling sites, 2 Species monitored',
+    scope: '34 sampling sites, 2 species monitored',
     partners: ['Charles Darwin Foundation'],
     services: ['Survey design', 'Expert species validation', 'Ecological analyses', 'AI modeled development'],
     sdgs: ['15']
