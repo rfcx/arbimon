@@ -18,9 +18,10 @@
           class="md:order-2 order-3"
           :src="image2"
         />
-        <imageCard
+        <video-card
           class="md:(order-3 col-span-1) order-8 col-span-2"
-          :src="image3"
+          :src="guardianVideo"
+          :thumbnail-image-src="image3"
         />
         <video-card
           class="md:order-4 order-2"
@@ -35,9 +36,10 @@
           class="md:order-6 order-5 col-span-2"
           :src="image6"
         />
-        <imageCard
+        <video-card
           class="md:(order-7 col-span-1) order-4 col-span-2"
-          :src="image7"
+          :src="fieldVideo"
+          :thumbnail-image-src="image7"
         />
         <video-card
           class="md:order-8 order-6"
@@ -63,8 +65,10 @@ import image6 from '@/_assets/landing/team/gallery/6.webp'
 import image7 from '@/_assets/landing/team/gallery/7.png'
 import image8 from '@/_assets/landing/team/gallery/8.png'
 import image9 from '@/_assets/landing/team/gallery/9.webp'
-import dashboardVideo from '@/_assets/landing/team/gallery/dashboard-view.mp4'
-import walkingInWaterVideo from '@/_assets/landing/team/gallery/tomaz walking croatia.mp4'
+import dashboardVideo from '@/_assets/landing/team/gallery/dashboard view.mp4'
+import guardianVideo from '@/_assets/landing/team/gallery/guardian.mp4'
+import fieldVideo from '@/_assets/landing/team/gallery/field.mp4'
+import walkingInWaterVideo from '@/_assets/landing/team/gallery/walking in water.mp4'
 import imageCard from '../components/image-card.vue'
 import videoCard from '../components/video-card.vue'
 </script>
