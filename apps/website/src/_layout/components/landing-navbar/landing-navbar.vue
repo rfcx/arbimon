@@ -23,7 +23,7 @@
             </a>
             <a
               :href="universalLoginUrl + '&screen_hint=signup'"
-              class="text-gray-800 font-display dark:text-insight px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:text-frequency hidden md:block"
+              class="btn btn-primary"
             >
               Sign up
             </a>
