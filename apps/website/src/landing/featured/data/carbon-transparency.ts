@@ -4,6 +4,7 @@ import carbonFeaturedImg from '@/_assets/featured-work/carbon-transparency/1.web
 import carbonGal1Img from '@/_assets/featured-work/carbon-transparency/2.webp'
 import carbonGal2Img from '@/_assets/featured-work/carbon-transparency/3.webp'
 import carbonImpactImg from '@/_assets/featured-work/carbon-transparency/4.webp'
+import partnerIcon from '@/_assets/landing/testimonials/feedbacks/Aspiration.webp'
 import { type ProjectDetail } from './types'
 
 export const carbonTransparency: ProjectDetail = {
@@ -50,7 +51,8 @@ export const carbonTransparency: ProjectDetail = {
   },
   feedback: [{
     text: 'Partnering with Rainforest Connection has enabled us to bring a greater level of technical measurement, transparency and confidence to our biodiversity impact monitoring and reporting',
-    partnerName: 'Tracy Bain, Senior Director of Carbon Monitoring & Engagement, Aspiration'
+    partnerName: 'Tracy Bain, Senior Director of Carbon Monitoring & Engagement, Aspiration',
+    partnerLogo: partnerIcon
   }],
   impact: {
     cta: {

@@ -44,6 +44,7 @@ export interface ProjectGallery {
 export interface ProjectFeedback {
   text: string
   partnerName: string
+  partnerLogo?: string
 }
 
 export interface ProjectImpactContent {

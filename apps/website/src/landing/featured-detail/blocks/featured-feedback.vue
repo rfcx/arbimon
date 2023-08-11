@@ -25,12 +25,15 @@
       </div>
       <div class="max-w-screen-sm">
         <h2 class="font-bold text-frequency text-lg font-display">
-          "{{ props.feedbacks[currentFeedbackIndex]?.text }}"
+          “{{ props.feedbacks[currentFeedbackIndex]?.text }}”
         </h2>
-        <div class="mt-6 flex">
-          <div class="mr-4 mb-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-            <span class="font-medium text-gray-600 dark:text-gray-300"> {{ props.feedbacks[currentFeedbackIndex]?.partnerName.charAt(0) }}</span>
-          </div>
+        <div class="mt-6 flex items-center">
+          <img
+            v-if="props.feedbacks[currentFeedbackIndex]?.partnerLogo"
+            :src="props.feedbacks[currentFeedbackIndex]?.partnerLogo"
+            alt="Profile picture"
+            class="w-15 h-15 aspect-square object-cover rounded-full mr-4"
+          >
           <div class="flex flex-col">
             <div class="mb-2">
               <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
