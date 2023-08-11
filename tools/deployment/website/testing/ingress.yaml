@@ -44,7 +44,6 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
   name: arbimon-landing-ingress
   namespace: testing
   labels:
@@ -64,12 +63,22 @@ spec:
             backend:
               serviceName: arbimon-service
               servicePort: 80
+          - path: /(fonts|images)/(.*)
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
           - path: /projects
             pathType: Prefix
             backend:
               serviceName: arbimon-service
               servicePort: 80
           - path: /project/(.*)
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
+          - path: /my-projects
             pathType: Prefix
             backend:
               serviceName: arbimon-service
