@@ -34,7 +34,7 @@ const data = [
   {
     id: 1,
     title: 'Pattern Matching (PM)',
-    description: 'Our Pattern matching tool is a simple sound detection tool that only requires a single example of the target sound to get started.',
+    description: 'Our Pattern matching tool is a sound detection tool that only requires a single example of the target sound to get started.',
     tag: 'Supervised',
     iconUrl: pmIcon
   },
