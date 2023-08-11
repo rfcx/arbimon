@@ -3,7 +3,7 @@
     <div class="py-10 px-6 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
         <h1 class="mb-6 text-gray-900 dark:text-insight">
-          Types of analyses available on Arbimon
+          Types of analyses available
         </h1>
         <p class="text-gray-500 dark:text-insight">
           We offer a range of analyses to fit a wide variety of research needs.
