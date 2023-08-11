@@ -64,7 +64,7 @@
           :id="item.category.id"
           :key="item.id"
           :title="item.title"
-          :subtitle="item.descriptiveText"
+          :subtitle="item.header.projectName"
           :location="item.location"
           :link="'/featured/' + item.category.id"
           :background-image="item.featuredImage"
