@@ -60,6 +60,7 @@ onMounted(() => {
       id: questionSlug,
       triggerEl: document.querySelector(`#${questionSlug}`) as HTMLElement,
       targetEl: document.querySelector('#accordion-flush-body-' + i) as HTMLElement,
+      iconEl: document.querySelector('#accordion-icon-' + i) as HTMLElement,
       active: false
     }
   })
@@ -74,7 +75,10 @@ onMounted(() => {
 
   // If there's hash on enter page. Navigate to it.
   if (route.hash !== '') {
-    openAccordion(route.hash)
+    // Navigate to the given hash if the hash matches one of the headings.
+    if (items.find(i => `#${i.id}` === route.hash) != null) {
+      openAccordion(route.hash)
+    }
   }
 })
 
