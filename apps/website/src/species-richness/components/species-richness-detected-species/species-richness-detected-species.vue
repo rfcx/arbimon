@@ -64,7 +64,7 @@
                   :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: row.taxonSpeciesSlug }}"
                   class="text-subtle hover:(underline text-white)"
                 >
-                  <span class="text-white italic">{{ row.scientificName }}</span>
+                  <span class="text-insight italic">{{ row.scientificName }}</span>
                   <icon-fas-caret-right class="inline-block w-3.5 h-3.5" />
                   <p
                     v-if="row.commonName"
@@ -130,7 +130,7 @@
           Total: {{ tableData.length }} species
           <span
             v-if="isLocationRedacted"
-            class="text-danger text-xs ml-1"
+            class="text-flamingo text-xs ml-1"
           >
             * Some species are protected.
           </span>

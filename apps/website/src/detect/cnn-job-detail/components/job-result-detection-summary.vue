@@ -19,7 +19,7 @@
         v-for="(item, index) in classificationsSummary()"
         :key="`job-result-detection-summary-species-${item.value}-${index}`"
       >
-        <div class="justify-self-start font-semibold text-right text-lg">
+        <div class="justify-self-start font-medium text-right text-lg">
           {{ displayValue(item.total) }}
         </div>
         <router-link

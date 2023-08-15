@@ -3,7 +3,7 @@
     <section-title>
       <template #title>
         <div class="flex justify-between items-center">
-          <h2 class="text-lg font-semibold">
+          <h2 class="text-lg font-medium">
             Results
           </h2>
         </div>
