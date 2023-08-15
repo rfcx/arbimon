@@ -11,8 +11,9 @@
         {{ question }}
       </div>
       <svg
+        :id="'accordion-icon-' + itemId"
         data-accordion-icon
-        class="w-3 h-3 rotate-180 shrink-0"
+        class="transform w-3 h-3 rotate-180 shrink-0"
         aria-hidden="true"
         width="14"
         height="17"
