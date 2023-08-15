@@ -36,8 +36,9 @@
 </template>
 
 <script setup lang="ts">
+import uFuzzy from '@leeoniya/ufuzzy'
 import { groupBy } from 'lodash-es'
-import { computed, ref } from 'vue'
+import { type Ref, computed, ref } from 'vue'
 
 import PublicationCard from '../components/publication-card.vue'
 import PublicationsSelectorAccordions from '../components/publications-selector-accordions.vue'
@@ -46,6 +47,8 @@ import { publications } from '../data'
 import type { Publication } from '../data/types'
 import { type PaperPublishedBy } from './types'
 
+// eslint-disable-next-line new-cap
+const uf: Ref<uFuzzy> = ref(new uFuzzy())
 const search = ref('')
 const paperPublishedBy = ref<PaperPublishedBy>(null)
 
@@ -64,9 +67,17 @@ const searchTermAppliedPublications = computed<Publication[]>(() => {
     return paperPublishedByAppliedPublications.value
   }
 
-  return paperPublishedByAppliedPublications.value.filter(p => {
-    return p.title.includes(search.value) || p.author.includes(search.value) || p.orgMention.includes(search.value)
+  // INFO: Check out https://github.com/leeoniya/uFuzzy/issues/7
+  const haystack = paperPublishedByAppliedPublications.value.map(paper => {
+    return `${paper.title}¦${paper.author}¦${paper.orgMention}`
   })
+
+  const indexes = uf.value.filter(haystack, search.value)
+  if (indexes == null) {
+    return paperPublishedByAppliedPublications.value
+  }
+
+  return indexes.map(i => paperPublishedByAppliedPublications.value[i])
 })
 
 const publicationsGroupedByYear = computed<Record<number, Publication[]>>(() => {
