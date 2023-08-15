@@ -322,6 +322,9 @@ importers:
       '@auth0/auth0-spa-js':
         specifier: ^1.19.2
         version: 1.22.1
+      '@leeoniya/ufuzzy':
+        specifier: ^1.0.8
+        version: 1.0.8
       '@rfcx-bio/common':
         specifier: workspace:^0.0.1
         version: link:../../packages/common
@@ -2898,6 +2901,10 @@ packages:
     dependencies:
       big-integer: 1.6.51
       tslib: 2.4.0
+    dev: false
+
+  /@leeoniya/ufuzzy@1.0.8:
+    resolution: {integrity: sha512-HQ6aJlYpWLq1f9AiApJl0aOIXlJUtuhBOYfSfv5rt3XNYkCBveojtnL6FvOVpJ2gEJ2wqgMW8xOHkLVYAbXghg==}
     dev: false
 
   /@lukeed/ms@2.0.0:
