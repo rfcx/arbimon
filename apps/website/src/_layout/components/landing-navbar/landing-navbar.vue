@@ -10,7 +10,10 @@
           <brand-logo />
         </router-link>
         <!-- Auth -->
-        <div class="flex items-center lg:order-2">
+        <div
+          v-if="!store.user"
+          class="flex items-center lg:order-2"
+        >
           <!-- <client-only>
             <auth-navbar-item dom-id="navbar-auth-desktop" />
           </client-only> -->
@@ -175,8 +178,10 @@ import { inject, onMounted } from 'vue'
 import { togglesKey } from '@/globals'
 import { universalLoginUrl } from '@/landing/auth0-arbimon'
 import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
 import BrandLogo from '../brand-logo.vue'
 
+const store = useStore()
 const toggles = inject(togglesKey)
 
 onMounted(() => {
