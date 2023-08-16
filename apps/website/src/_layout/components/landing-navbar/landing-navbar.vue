@@ -11,7 +11,7 @@
         </router-link>
         <!-- Auth -->
         <div
-          v-if="!isAuthenticated || !store.user"
+          v-if="!store.user"
           class="flex items-center lg:order-2"
         >
           <!-- <client-only>
@@ -176,7 +176,7 @@ import { initCollapses, initDropdowns } from 'flowbite'
 import { inject, onMounted } from 'vue'
 
 import { togglesKey } from '@/globals'
-import { isAuthenticated, universalLoginUrl } from '@/landing/auth0-arbimon'
+import { universalLoginUrl } from '@/landing/auth0-arbimon'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import BrandLogo from '../brand-logo.vue'
