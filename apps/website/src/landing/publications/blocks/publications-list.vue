@@ -5,11 +5,13 @@
         <PublicationsSidebarMenu
           v-model:search="search"
           v-model:paper-published-by="paperPublishedBy"
+          v-model:publications-by-year="publicationsByYear"
           class="md:block hidden mx-5"
         />
         <PublicationsSelectorAccordions
           v-model:search="search"
           v-model:paper-published-by="paperPublishedBy"
+          v-model:publications-by-year="publicationsByYear"
           class="md:hidden block mx-5"
         />
       </aside>
@@ -51,6 +53,7 @@ import { type PaperPublishedBy } from './types'
 const uf: Ref<uFuzzy> = ref(new uFuzzy())
 const search = ref('')
 const paperPublishedBy = ref<PaperPublishedBy>(null)
+const publicationsByYear = ref<number | null>(null)
 
 const paperPublishedByAppliedPublications = computed<Publication[]>(() => {
   if (paperPublishedBy.value != null && paperPublishedBy.value !== 'all') {
