@@ -60,45 +60,91 @@
       Publications by year
     </h2>
     <ul>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a href="#2023">
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2023 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2023)"
+        >
           2023
-        </a>
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a
-          href="#2022"
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2022 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2022)"
         >
           2022
-        </a>
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a href="#2021">2021</a>
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2021 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2021)"
+        >
+          2021
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a href="#2020">2020</a>
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2020 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2020)"
+        >
+          2020
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a href="#2019">2019</a>
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2019 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2019)"
+        >
+          2019
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a href="#2018">2018</a>
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2018 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2018)"
+        >
+          2018
+        </button>
       </li>
-      <li class="text-white text-base font-normal leading-normal mb-2 last:mb-0 mt-0 first:mt-2">
-        <a href="#2017">See previous years</a>
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
+          :class="publicationsByYear === 2017 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2017)"
+        >
+          See previous years
+        </button>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+import { ROUTE_NAMES } from '~/router'
 import { type PaperPublishedBy } from '../blocks/types'
 
-defineProps<{ search: string, paperPublishedBy: PaperPublishedBy }>()
-const emits = defineEmits<{(e: 'update:search', value: string): void, (e: 'update:paperPublishedBy', value: PaperPublishedBy): void}>()
+defineProps<{ search: string, paperPublishedBy: PaperPublishedBy, publicationsByYear: number | null }>()
+const emits = defineEmits<{(e: 'update:search', value: string): void, (e: 'update:paperPublishedBy', value: PaperPublishedBy): void, (e: 'update:publicationsByYear', value: number | null): void}>()
+
+const router = useRouter()
 
 const onInputEnter = (ev: Event): void => {
   const target = ev.target as HTMLInputElement
   emits('update:search', target.value)
+}
+
+const onPublicationsByYearClick = (year: number): void => {
+  router.push({ name: ROUTE_NAMES.landingPublications, hash: '#' + year.toString() })
+  emits('update:publicationsByYear', year)
 }
 </script>
