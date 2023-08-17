@@ -4,18 +4,11 @@
       <p class="mb-8 text-lg font-medium">
         {{ props.content?.subtitle }}
       </p>
-      <div class="flex flex-col gap-8 lg:flex-row">
-        <Markdown
-          id="featured-content-left-markdown-container"
-          class="basis-1/2 text-justify"
-          :source="props.content?.paragraphs[0] ?? ''"
-        />
-        <Markdown
-          id="featured-content-right-markdown-container"
-          class="basis-1/2 text-justify"
-          :source="props.content?.paragraphs[1] ?? ''"
-        />
-      </div>
+      <Markdown
+        id="featured-content-markdown-container"
+        class="text-justify columns-1 lg:columns-2 lg:gap-x-8"
+        :source="props.content?.paragraphs.join(' ') ?? ''"
+      />
     </div>
   </section>
 </template>
@@ -31,7 +24,7 @@ const props = defineProps<{
 </script>
 
 <style lang="scss">
-div#featured-content-left-markdown-container, div#featured-content-right-markdown-container {
+div#featured-content-markdown-container {
   p:not(:last-child) {
     margin-bottom: 0.75rem;
   }
