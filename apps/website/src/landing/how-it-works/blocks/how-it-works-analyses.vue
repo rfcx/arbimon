@@ -25,6 +25,7 @@
 </template>
 <script setup lang="ts">
 import aedIcon from '@/_assets/how-it-works/AED+C.svg'
+import eaIcon from '@/_assets/how-it-works/EA.png'
 import pmIcon from '@/_assets/how-it-works/PM.svg'
 import rfmIcon from '@/_assets/how-it-works/RFM.svg'
 import ssIcon from '@/_assets/how-it-works/Soundscapes.svg'
@@ -64,7 +65,7 @@ const data = [
     title: 'Ecological Analyses',
     description: 'We use ecological models that combine audio detections with environmental variables to estimate ecological trends and patterns from species to community levels.',
     tag: '',
-    iconUrl: ''
+    iconUrl: eaIcon
   }
 ]
 </script>
