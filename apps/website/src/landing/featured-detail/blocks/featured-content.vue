@@ -7,7 +7,7 @@
       <Markdown
         id="featured-content-markdown-container"
         class="text-justify columns-1 lg:columns-2 lg:gap-x-8"
-        :source="props.content?.paragraphs.join(' ') ?? ''"
+        :source="props.content?.paragraphs.join('\n\n') ?? ''"
       />
     </div>
   </section>
