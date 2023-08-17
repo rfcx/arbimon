@@ -2,6 +2,7 @@ import supplyChainFeaturedImg from '@/_assets/featured-work/sustainable-supply-c
 import supplyChainGal1Img from '@/_assets/featured-work/sustainable-supply-chains/2.webp'
 import supplyChainGal2Img from '@/_assets/featured-work/sustainable-supply-chains/3.webp'
 import supplyChainImpactImg from '@/_assets/featured-work/sustainable-supply-chains/4.webp'
+import partnerIcon from '@/_assets/landing/testimonials/feedbacks/Ecoculture.webp'
 import { type ProjectDetail } from './types'
 
 export const supplyChain: ProjectDetail = {
@@ -49,7 +50,8 @@ export const supplyChain: ProjectDetail = {
   },
   feedback: [{
     text: 'Arbimon has made it possible to holistically track species presence in a way we have not been able to before. This data is extremely valuable to inform how we prioritize local initiatives to support biodiversity moving forward',
-    partnerName: 'Ecoculture'
+    partnerName: 'Ecoculture',
+    partnerLogo: partnerIcon
   }],
   impact: {
     cta: null,
