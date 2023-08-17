@@ -59,7 +59,7 @@ export const restoration: ProjectDetail = {
       'Year-over-year data collection is providing insights on how biodiversity is returning to restoration sites across the Atlantic Forest in Brazil. The data will inform how WeForest & IPÊ can expand the wildlife corridors to connect the forest fragments and protected areas in the region.',
       `
 
-Results:
+RESULTS:
 1. A total of 178 species were detected in the 120 sampling sites (166 birds, 8 frogs, 2 mammals, and 2 insects), 4 of which are listed as threatened according to IUCN. The total number of bird species detected in this study corresponds to 94% of species detected in other individual studies in the same study area, most of which used point count surveys. This result indicates that most species expected to occur in the region have been detected during our initial survey.
 2. Bird species richness was higher in forested and restoration sites than in farming sites, indicating that restoration sites are promoting a positive effect on biodiversity, providing breeding and foraging habitat, and/or connectivity stepping stones for a large portion of the bird community.
 3. Farming, restoration, and forest sites have distinct species compositions, with forested sites having a higher number of forest dependent species, restoration sites having a higher number of generalist species, and farming with a higher number of edge species.
