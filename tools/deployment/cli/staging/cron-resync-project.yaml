@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: resync-arbimon-project-to-insights-job-set-project-id
+  namespace: staging
+spec:
+  template:
+    spec:
+      containers:
+        - name: resync-arbimon-project-to-insights-job
+          command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/ingest/sync/resync-arbimon-project-to-insights/index.js"]
+          image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+          - secretRef:
+              name: biodiversity-cli-secrets
+          env:
+            - name: PROJECT_ID
+              value: "set-project-id"
+      restartPolicy: Never
+  backoffLimit: 1
