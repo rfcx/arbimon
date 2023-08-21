@@ -1,6 +1,7 @@
 # resync-arbimon-project-to-insights
 
 The resync-arbimon-project-to-insights job:
+
 - Resync project sites
 - Resync project species
 - Resync project species calls
@@ -16,12 +17,15 @@ For running it locally, please setup credentials by copying `.env.sample` to `.e
 ## Installing / Getting started
 
 Run script via Kubernetes
+
 ```sh
 sed -e 's|set-project-id|{ARBIMON_PROJECT_ID}|g' build/production/resync-arbimon-project-to-insights/deployment.yaml.sample | kubectl apply -f -
 ```
+
 Add `ARBIMON_PROJECT_ID` to the command above. After running a script you will see the log with a job name, like: `job.batch/resync-arbimon-project-to-insights-job-{PROJECT_ID} created`
 
 Run script locally
+
 1. Add `ARBIMON_PROJECT_ID` to the `.env` file
 2. Run the job
 
