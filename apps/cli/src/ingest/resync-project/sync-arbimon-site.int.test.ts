@@ -1,7 +1,6 @@
 import { Op } from 'sequelize'
 import { beforeEach, describe, expect, test } from 'vitest'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '@/db/connections'
