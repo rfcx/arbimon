@@ -15,14 +15,14 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   const store = useStoreOutsideSetup()
   const route = useRoute()
 
-  const filter = ref<Omit<ValidationFilterConfig, 'taxonClass'>>({
+  const filter = ref<Omit<ValidationFilterConfig, 'classification'> & { classification?: string }>({
     threshold: 50,
     validationStatus: 'all',
     siteIds: [],
     sortBy: 'asc'
   })
 
-  const updateResultFilter = (value: Omit<ValidationFilterConfig, 'taxonClass'>): void => {
+  const updateResultFilter = (value: Omit<ValidationFilterConfig, 'classification'> & { classification?: string }): void => {
     filter.value.threshold = value.threshold
     filter.value.validationStatus = value.validationStatus
     filter.value.siteIds = value.siteIds
