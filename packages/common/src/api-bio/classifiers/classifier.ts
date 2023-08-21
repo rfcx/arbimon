@@ -22,7 +22,7 @@ export interface ClassifierResponse {
   createdById: number
 
   // Enabled by passing these key in snake_case into parameter `fields[]`.
-  // When `fields[]` are passed. All other responses not in `fields[]` won't be returned.
+  // When `fields[]` are passed. All other responses not in `fields[]` except `isPublic` and `createdById` won't be returned.
   externalId?: string | null
   modelRunner?: string
   modelUrl?: string
@@ -70,7 +70,7 @@ export interface ClassifierResponse {
 export const classifierRoute = '/classifiers/:classifierId'
 
 // Service
-export const apiBioGetClassifier = async (apiClient: AxiosInstance, params: ClassifierParams, query: ClassifierQueryParams): Promise<ClassifierResponse | undefined> => {
+export const apiBioGetClassifier = async (apiClient: AxiosInstance, params: ClassifierParams, query: ClassifierQueryParams): Promise<ClassifierResponse> => {
   const response = await apiClient.request<ClassifierResponse>({
     method: 'GET',
     url: `/classifiers/${params.classifierId}`,
