@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
