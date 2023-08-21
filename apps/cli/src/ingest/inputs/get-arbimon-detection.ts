@@ -59,3 +59,42 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
     updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
   }))
 }
+
+export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId: number, limit: number, offset: number): Promise<unknown[]> => {
+  const isMySql = sequelize.getDialect() === 'mysql'
+
+  const sql = `
+    SELECT
+      rv.recording_validation_id idArbimon,
+      r.datetime,
+      r.site_id siteId,
+      r.duration recordingDuration,
+      rv.species_id speciesId,
+      rv.present,
+      rv.present_review presentReview,
+      rv.present_aed presentAed,
+      rv.updated_at updatedAt
+    FROM recording_validations rv
+    JOIN recordings r ON rv.recording_id = r.recording_id
+    WHERE rv.project_id = $projectId and (rv.present = 1 OR rv.present_review > 0 OR rv.present_aed > 0)
+    ORDER BY rv.updated_at, rv.recording_validation_id
+    LIMIT $limit OFFSET $offset
+  ;
+  `
+
+  const results = await sequelize.query<DetectionArbimonQuery>(sql, {
+    type: QueryTypes.SELECT,
+    raw: true,
+    bind: {
+      projectId,
+      offset,
+      limit
+    }
+  })
+
+  return results.map(row => ({
+    ...row,
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
+  }))
+}

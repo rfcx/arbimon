@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { getArbimonSpeciesCalls } from '@/ingest/inputs/get-arbimon-species-call'
+import { getArbimonProjectSpeciesCalls, getArbimonSpeciesCalls } from '@/ingest/inputs/get-arbimon-species-call'
+import { type SpeciesCallArbimon } from '../parsers/parse-species-call-arbimon-to-bio'
 import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -244,6 +245,40 @@ describe('ingest > inputs > getArbimonSpeciesCalls', () => {
 
     // Act
     const actual = await getArbimonSpeciesCalls(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(0)
+  })
+})
+
+describe('ingest > inputs > getArbimonProjectSpeciesCalls', async () => {
+  beforeEach(async () => {
+    await deleteProjectData()
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: DEFAULT_TEMPLATE })
+  })
+
+  test('can get all project species calls', async () => {
+    // Arrange
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, speciesId: 3842, name: 'Merops orientalis Common Song', dateCreated: '2022-03-23 03:05:37' } })
+    await arbimonSequelize.query(SQL_INSERT_TEMPLATE, { bind: { ...DEFAULT_TEMPLATE, speciesId: 42251, name: 'Aepyceros melampus Common Song', dateCreated: '2022-03-23 03:05:50' } })
+    const IDS_SPECIES = [1050, 3842, 42251]
+
+    // Act
+    const actual = await getArbimonProjectSpeciesCalls(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SpeciesCallArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(3)
+    actual.forEach(template => { expect(IDS_SPECIES).includes(template.taxonSpeciesId) })
+  })
+
+  test('can get zero project species calls', async () => {
+    // Arrange
+    await arbimonSequelize.query('DELETE FROM sites')
+    // Act
+    const actual = await getArbimonProjectSpeciesCalls(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SpeciesCallArbimon[]
 
     // Assert
     expect(actual).toHaveLength(0)
