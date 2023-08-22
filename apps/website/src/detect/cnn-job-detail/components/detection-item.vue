@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { Howl } from 'howler'
-import { inject, onBeforeUnmount, onMounted, ref, watch, withDefaults } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
