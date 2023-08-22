@@ -58,29 +58,7 @@
           :to="link"
           class="text-frequency hover:border-b hover:border-b-frequency my-2 font-display"
         >
-          <span class="font-display font-medium lg:text-2xl">Learn more<svg
-            class="ml-2 inline"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M5 12H19"
-              stroke="#ADFF2C"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 5L19 12L12 19"
-              stroke="#ADFF2C"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <span class="font-display font-medium lg:text-2xl">Learn more<icon-custom-arrow-right class="ml-2 inline" />
           </span>
         </router-link>
       </div>

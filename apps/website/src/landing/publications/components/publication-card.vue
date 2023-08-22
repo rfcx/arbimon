@@ -14,7 +14,7 @@
       rel="noreferrer nofollow"
       class="inline-block mt-4 text-frequency"
     >
-      Read the paper <icon-fas-arrow-right class="inline-block text-frequency" />
+      Read the paper <icon-custom-arrow-right class="inline-block text-frequency" />
     </a>
   </div>
 </template>
