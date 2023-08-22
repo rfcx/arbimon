@@ -2,7 +2,7 @@
   <!-- force import the bg from tailwind -->
   <div class="hidden not-sr-only bg-hero-cta-home" />
   <contact-card hero-background="hero-cta-home">
-    <div class="flex flex-col">
+    <div>
       <h1>
         Stay connected
       </h1>
@@ -10,9 +10,7 @@
         Be the first to hear the latest from Arbimon.
       </p>
     </div>
-    <div class="flex flex-col lg:flex-row gap-2">
-      <contact-form />
-    </div>
+    <contact-form />
   </contact-card>
 </template>
 <script setup lang="ts">
