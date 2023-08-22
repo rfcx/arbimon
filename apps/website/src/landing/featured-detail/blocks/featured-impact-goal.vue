@@ -6,7 +6,7 @@
         class="mb-6"
       >
         <img
-          class="rounded-xl mx-auto w-full h-full"
+          class="rounded-lg mx-auto w-full h-full"
           :src="props.image"
         >
       </div>
