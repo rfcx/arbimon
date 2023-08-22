@@ -13,7 +13,7 @@
         <div class="max-w-screen-lg mx-auto max-h-min">
           <img
             :src="activeData.imageSrc"
-            class="w-full h-auto"
+            class="w-full max-w-screen-md h-auto"
           >
         </div>
         <div class="w-full p-4 text-center align-middle items-center">
@@ -39,7 +39,7 @@
               </button>
             </li>
           </ol>
-          <p class="p-8 text-gray-900 dark:text-insight max-w-screen-md mx-auto">
+          <p class="pt-4 pb-10 lg:pb-20 text-gray-900 dark:text-insight max-w-screen-md mx-auto">
             {{ activeData.description }}
           </p>
           <router-link
