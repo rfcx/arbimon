@@ -21,7 +21,7 @@
         <div class="basis-7/12">
           <img
             :src="image"
-            class="rounded-xl"
+            class="rounded-2xl"
           >
         </div>
       </div>

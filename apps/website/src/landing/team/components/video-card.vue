@@ -7,7 +7,7 @@
     loop
     preload="auto"
     playsinline
-    class="rounded-xl w-full h-full h-52 bg-moss object-cover object-center"
+    class="rounded-2xl w-full h-full h-52 bg-moss object-cover object-center"
     alt="Video"
     aria-label="Video"
   >

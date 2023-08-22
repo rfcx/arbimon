@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full bg-chirp p-6 text-left text-echo flex flex-col items-baseline justify-center rounded-lg">
+  <div class="h-full w-full bg-chirp p-6 text-left text-echo flex flex-col items-baseline justify-center rounded-2xl">
     <h1>{{ title }}</h1>
     <h2
       v-if="subtitle"

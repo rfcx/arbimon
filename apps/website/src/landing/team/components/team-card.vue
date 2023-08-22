@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row rounded-lg border-1 border-frequency h-72 md:h-[500px]"
+    class="flex flex-row rounded-2xl border-1 border-frequency h-72 md:h-[466px]"
   >
     <div
       v-if="!isShowingBio"
@@ -49,14 +49,14 @@
         </button>
       </div>
       <img
-        class="rounded-r-lg border-l-1 border-l-frequency border-b-0 w-1/2 h-full md:(w-full h-2/3 rounded-t-lg rounded-br-none border-b-1 border-b-frequency border-l-0) object-cover"
+        class="rounded-r-2xl border-l-1 border-l-frequency border-b-0 w-1/2 h-full md:(w-full h-2/3 rounded-t-2xl rounded-br-none border-b-1 border-b-frequency border-l-0) object-cover"
         :src="imageUrl"
         :alt="'Image of ' + name"
       >
     </div>
     <div
       v-else
-      class="h-full w-full bg-frequency pt-6 px-6 pb-8 flex flex-col justify-between gap-4 text-left items-stretch rounded-lg"
+      class="h-full w-full bg-frequency pt-6 px-6 pb-8 flex flex-col justify-between gap-4 text-left items-stretch rounded-2xl"
     >
       <div>
         <div class="flex flex-row justify-between mb-4">

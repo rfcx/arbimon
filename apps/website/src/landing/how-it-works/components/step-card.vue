@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl px-6 py-8">
+  <div class="rounded-2xl px-6 py-8">
     <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full lg:h-12 lg:w-12">
       <img
         :src="iconUrl"
