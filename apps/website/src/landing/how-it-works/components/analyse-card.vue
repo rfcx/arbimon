@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-6 pb-8 rounded-xl border-1 border-frequency bg-moss">
+  <div class="pt-6 pb-8 rounded-2xl border-1 border-frequency bg-moss">
     <div
       v-if="iconUrl || tag"
       class="flex flex-row w-full justify-between items-center mb-4"

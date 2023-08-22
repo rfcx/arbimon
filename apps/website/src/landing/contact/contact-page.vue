@@ -1,9 +1,9 @@
 <template>
   <section class="bg-white dark:bg-echo mx-6 my-10 lg:(my-30 mx-20)">
-    <div class="mx-auto max-w-screen-xl rounded-xl border-1 border-frequency">
+    <div class="mx-auto max-w-screen-xl rounded-2xl border-1 border-frequency">
       <div class="flex flex-col items-center lg:(flex-row-reverse)">
-        <div class="bg-hero-contact basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-xl rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-xl)">
-          <div class="flex-1 bg-black bg-opacity-50 p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-xl rounded-r-none lg:(flex-col rounded-t-none rounded-r-xl px-10 pt-20 pb-64)">
+        <div class="bg-hero-contact basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-2xl rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-2xl)">
+          <div class="flex-1 bg-black bg-opacity-50 p-10 flex flex-col sm:flex-row gap-10 justify-between rounded-t-2xl rounded-r-none lg:(flex-col rounded-t-none rounded-r-2xl px-10 pt-20 pb-64)">
             <div>
               <h1 class="mb-4 lg:mb-10 text-gray-900 dark:text-insight">
                 Contact us
