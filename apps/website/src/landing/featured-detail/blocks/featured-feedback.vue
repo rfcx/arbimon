@@ -24,7 +24,7 @@
         </button>
       </div>
       <div class="max-w-screen-sm">
-        <h2 class="font-bold text-frequency text-lg font-display">
+        <h2 class="font-medium text-frequency font-display">
           “{{ props.feedbacks[currentFeedbackIndex]?.text }}”
         </h2>
         <div class="mt-6 flex items-center">
@@ -36,7 +36,7 @@
           >
           <div class="flex flex-col">
             <div class="mb-2">
-              <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight">
+              <span class="mt-8 mb-4 mr-2 text-gray-900 dark:text-insight lg:text-lg">
                 {{ props.feedbacks[currentFeedbackIndex]?.partnerName }}
               </span>
             </div>
