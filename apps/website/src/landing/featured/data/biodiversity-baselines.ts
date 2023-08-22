@@ -26,7 +26,14 @@ export const bioBaseline: ProjectDetail = {
     timeline: '2021 - present',
     scope: '100 sites, >40 species',
     partners: ['Jane Goodall Institute', 'Gombe Stream Research Center', 'Tanzania Wildlife Research Institute', 'Tanzania National Parks'],
-    services: ['Hardware provider', 'Species list (>100 identified)', 'Expert species validation', 'Soundscape Analysis', 'Ecological analyses', 'AI model development'],
+    services: [
+      'Hardware provider',
+      'Species list (>100 identified)',
+      'Expert species validation',
+      'Soundscape analysis',
+      'Ecological analyses',
+      'AI model development'
+    ],
     sdgs: ['15']
   },
   content: {
