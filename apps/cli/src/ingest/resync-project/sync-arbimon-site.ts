@@ -10,7 +10,6 @@ import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { parseArray } from '../parsers/parse-array'
 import { parseSiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { type SyncConfig } from './sync-config'
-import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
@@ -26,9 +25,6 @@ export const syncArbimonSitesBatch = async (projectId: number, arbimonSequelize:
   }
   if (rawArbimonSites.length === 0) return
 
-  const lastSyncdSite = rawArbimonSites[rawArbimonSites.length - 1]
-  if (!isSyncable(lastSyncdSite)) throw new Error('Input does not contain needed sync-status data')
-
   // Parser
   const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(rawArbimonSites, parseSiteArbimon)
   const arbimonSites = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
@@ -39,8 +35,8 @@ export const syncArbimonSitesBatch = async (projectId: number, arbimonSequelize:
 
   try {
     // Write species to Bio
-    await Promise.all(inputsAndParsingErrors.map(async e => {
-      const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
+    await Promise.all(inputsAndParsingErrors.map(async (e: any) => {
+      const idArbimon = e[0].idArbimon as number
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),

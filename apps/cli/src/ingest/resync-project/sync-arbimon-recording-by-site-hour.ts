@@ -10,7 +10,6 @@ import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { parseArray } from '../parsers/parse-array'
 import { type RecordingArbimon, parseRecordingBySiteHourToBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 import { type SyncConfig } from './sync-config'
-import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
@@ -28,21 +27,17 @@ export const syncArbimonRecording = async (projectId: number, offset: number, ar
 
   if (totalArbimonRecordingBySiteHour === 0) return [totalArbimonRecordingBySiteHour, []]
 
-  const lastSyncRecording = arbimonRecordingBySiteHour[arbimonRecordingBySiteHour.length - 1] // already last uploaded item because query order by it
-  if (!isSyncable(lastSyncRecording)) throw new Error('Input does not contain needed sync-status data')
-
   // =========== Parser ==========
   // unknown to expected format
   const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonRecordingBySiteHour, parseRecordingBySiteHourToBio)
   const recordingDataBySiteHourArbimon = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
-  console.info('\n\n---1-----recordingDataBySiteHourArbimon---', recordingDataBySiteHourArbimon)
 
   // =========== Sync logs ==========
   const transaction = await biodiversitySequelize.transaction()
   try {
     // sync error
-    await Promise.all(inputsAndParsingErrors.map(async e => {
-      const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
+    await Promise.all(inputsAndParsingErrors.map(async (e: any) => {
+      const idArbimon = e[0].idArbimon as number
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
