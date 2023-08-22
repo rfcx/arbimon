@@ -4,6 +4,7 @@
       <div class="px-8 md:px-4">
         <button
           type="button"
+          class="w-full h-full items-center min-h-50"
           @click="currentFeedbackIndex = (currentFeedbackIndex !== 0) ? currentFeedbackIndex - 1 : feedbacks.length - 1"
         >
           <svg
@@ -32,10 +33,10 @@
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
             What our users & partners are saying...
           </h1>
-          <h4 class="text-base text-lg lg:text-2xl">
+          <h4 class="text-base text-lg lg:text-2xl min-h-24 lg:min-h-40">
             “{{ feedbacks[currentFeedbackIndex].text }}”
           </h4>
-          <div class="mt-8 flex">
+          <div class="mt-8 flex min-h-30 lg:min-h-17">
             <img
               v-if="feedbacks[currentFeedbackIndex].user.profilePicUrl"
               :src="feedbacks[currentFeedbackIndex].user.profilePicUrl"
@@ -69,6 +70,7 @@
       <div class="px-8 md:px-4">
         <button
           type="button"
+          class="w-full h-full items-center min-h-50"
           @click="currentFeedbackIndex = (currentFeedbackIndex + 1 !== feedbacks.length) ? currentFeedbackIndex + 1 : 0"
         >
           <svg

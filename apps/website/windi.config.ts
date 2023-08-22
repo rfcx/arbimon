@@ -41,6 +41,7 @@ export default defineConfig({
         16: 'repeat(16, minmax(0, 1fr))'
       },
       spacing: {
+        17: '4.25rem',
         30: '7.5rem'
       },
       fontFamily: {
