@@ -2,7 +2,7 @@ import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { syncProjectData } from '@/ingest/resync-project/sync-all'
 
-const PROJECT_ID = process.env.PROJECT_ID
+const PROJECT_ID = process.env.ARBIMON_PROJECT_ID
 
 const main = async (): Promise<void> => {
   console.info('recync-project job start', PROJECT_ID)
