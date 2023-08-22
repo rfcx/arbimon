@@ -10,7 +10,6 @@ import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
 import { parseArray } from '../parsers/parse-array'
 import { parseSpeciesCallArbimonToBio } from '../parsers/parse-species-call-arbimon-to-bio'
 import { type SyncConfig } from './sync-config'
-import { isSyncable } from './syncable'
 
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
@@ -26,10 +25,6 @@ export const syncArbimonSpeciesCallBatch = async (projectId: number, arbimonSequ
 
   console.info('- syncArbimonSpeciesCallsBatch: found %d species calls', arbimonSpeciesCalls.length)
 
-  // Error if taxon species call doesn't contain needed sync status data
-  const lastSyncedTaxonSpeciesCall = arbimonSpeciesCalls[arbimonSpeciesCalls.length - 1]
-  if (!isSyncable(lastSyncedTaxonSpeciesCall)) throw new Error('Input does not contain needed sync-status data')
-
   // Parse input
   const [inputsAndOutputs, inputsAndParsingErrors] = parseArray(arbimonSpeciesCalls, parseSpeciesCallArbimonToBio)
   const speciesCalls = inputsAndOutputs.map(inputAndOutput => inputAndOutput[1].data)
@@ -39,8 +34,8 @@ export const syncArbimonSpeciesCallBatch = async (projectId: number, arbimonSequ
   const transaction = await biodiversitySequelize.transaction()
   try {
     // Write input/parsing errors
-    await Promise.all(inputsAndParsingErrors.map(async e => {
-      const idArbimon = isSyncable(e[0]) ? e[0].idArbimon : 'unknown'
+    await Promise.all(inputsAndParsingErrors.map(async (e: any) => {
+      const idArbimon = e[0].idArbimon as number
       const error = {
         externalId: `${idArbimon}`,
         error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
