@@ -11,6 +11,7 @@
     <div class="grid md:grid-cols-12 max-w-screen-xl mx-auto py-8 lg:(pt-20)">
       <aside class="md:col-span-4 px-4 md:sticky md:h-screen md:top-4 mb-6">
         <button
+          id="category-menu-trigger"
           data-collapse-toggle="category-menu"
           type="button"
           class="w-full items-center py-2 border-b-1 border-insight dark:text-insight md:hidden dark:hover:ring-moss"
@@ -25,7 +26,8 @@
               viewBox="0 0 25 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              class="stroke-insight"
+              class="transform"
+              :class="isCollapsed ? '' : 'rotate-180'"
             >
               <g id="fi:chevron-down">
                 <path
@@ -75,8 +77,8 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
-import { initCollapses } from 'flowbite'
-import { onMounted } from 'vue'
+import { Collapse, initCollapses } from 'flowbite'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import heroImage from '@/_assets/landing/featured/feature-hero.webp'
@@ -86,9 +88,25 @@ import Card from './components/featured-card.vue'
 import { projects } from './data'
 
 const currenRoute = useRoute()
+const collapse = ref<Collapse | null>(null)
+const isCollapsed = ref(true)
 
 onMounted(() => {
   initCollapses()
+
+  const $el: HTMLElement | null = document.getElementById('category-menu')
+  const $triggerEl: HTMLElement | null = document.getElementById('category-menu-trigger')
+
+  const options = {
+    onCollapse: () => {
+        isCollapsed.value = true
+    },
+    onExpand: () => {
+        isCollapsed.value = false
+    }
+  }
+
+  collapse.value = new Collapse($el, $triggerEl, options)
 })
 
 </script>
