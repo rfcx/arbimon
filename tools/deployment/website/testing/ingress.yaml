@@ -68,6 +68,11 @@ spec:
         backend:
           serviceName: arbimon-service
           servicePort: 80
+      - path: /logout
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
       - path: /fonts
         pathType: Prefix
         backend:
