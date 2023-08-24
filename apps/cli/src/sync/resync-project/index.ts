@@ -15,7 +15,7 @@ const main = async (): Promise<void> => {
     const arbimonSequelize = getArbimonSequelize()
     const bioSequelize = getSequelize()
 
-    console.info('STEP: Get projects, species, sites, recordings, detections')
+    console.info('STEP: Get sites, species calls, recordings, detections')
     await syncProjectData(arbimonProjectId, arbimonSequelize, bioSequelize)
 
     console.info('recync-project job end: successful')

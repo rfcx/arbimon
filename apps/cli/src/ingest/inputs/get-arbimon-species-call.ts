@@ -71,7 +71,7 @@ export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projec
       JOIN sites s ON r.site_id = s.site_id
       JOIN projects p ON s.project_id = p.project_id
       JOIN songtypes st ON t.songtype_id = st.songtype_id
-    WHERE t.project_id = $projectId
+    WHERE t.project_id = $projectId and r.datetime_utc is not null
     ORDER BY t.date_created, t.template_id
     ;
   `
