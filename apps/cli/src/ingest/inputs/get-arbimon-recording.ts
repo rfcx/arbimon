@@ -102,6 +102,7 @@ export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId
     JOIN sites s ON s.site_id = r.site_id
     WHERE s.project_id = $projectId
       AND r.datetime is not null
+      AND r.datetime_utc is not null
       AND r.upload_time is not null
     ORDER BY r.upload_time, r.recording_id
     LIMIT $limit OFFSET $offset
