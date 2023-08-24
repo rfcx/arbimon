@@ -13,6 +13,8 @@ The recync-project job:
 Check [main README] for initial configuration.
 The job can be running with Kubernetes enviroments or locally.
 For running it locally, please setup credentials by copying `.env.sample` to `.env` and filling it with your keys.
+After fixing the project data, it takes to check and remove recordings from `recordings_deleted` table for this
+specific project from the Arbimon DB.
 
 ## Installing / Getting started
 
