@@ -30,5 +30,5 @@ Run script locally
 2. Run the job
 
 ```sh
-pnpm run recync-project
+cd apps/cli && pnpm serve lib/sync/resync-project
 ```
