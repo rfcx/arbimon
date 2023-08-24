@@ -1,15 +1,16 @@
 import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { syncProjectData } from '@/ingest/resync-project/sync-all'
+import { requireEnv } from '~/env'
 
-const PROJECT_ID = process.env.ARBIMON_PROJECT_ID
+const { ARBIMON_PROJECT_ID } = requireEnv('ARBIMON_PROJECT_ID')
 
 const main = async (): Promise<void> => {
-  console.info('recync-project job start', PROJECT_ID)
-  if (!PROJECT_ID) {
+  console.info('recync-project job start', ARBIMON_PROJECT_ID)
+  if (ARBIMON_PROJECT_ID === undefined) {
       return
   }
-  const arbimonProjectId = Number(PROJECT_ID)
+  const arbimonProjectId = Number(ARBIMON_PROJECT_ID)
   try {
     const arbimonSequelize = getArbimonSequelize()
     const bioSequelize = getSequelize()
