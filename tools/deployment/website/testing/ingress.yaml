@@ -3,6 +3,12 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    # type of authentication
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   name: biodiversity-website-ingress
   namespace: testing
   labels:
@@ -24,6 +30,12 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # type of authentication
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   name: biodiversity-website-with-api-ingress
   namespace: testing
   labels:
@@ -44,6 +56,12 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    # type of authentication
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   name: arbimon-landing-ingress
   namespace: testing
   labels:
