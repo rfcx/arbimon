@@ -27,7 +27,6 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourBio: Rec
   // loop upsert
   const successToInsertItems: RecordingBySiteHourBio[] = []
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
-
   for (const recording of recordingsBySiteHourBio) {
     try {
       const newRecording = { ...recording, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(recording.countsByMinute), sequelize) }
@@ -79,11 +78,9 @@ export const mapRecordingBySiteHourArbimonWithPrevSync = async (recordingArbimon
     const totalDuration = isNewRecording
       ? sum(group.map(item => item.duration)) / 60
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      : itemsToInsertOrUpsert[label].totalDurationInMinutes + sum(group.map(item => item.duration)) / 60
-
+      : itemsToInsertOrUpsert[label].totalDurationInMinutes + (sum(group.map(item => item.duration)) / 60)
     // create a correct countsByMinute array (number[][]) for a new recording
     const recordingData = filterRepeatingDetectionMinutes(group)
-
     const countsByMinute = isNewRecording ? recordingData.countsByMinute : itemsToInsertOrUpsert[label].countsByMinute
 
     if (!isNewRecording) {
