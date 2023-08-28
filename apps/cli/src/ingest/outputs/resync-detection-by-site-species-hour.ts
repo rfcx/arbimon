@@ -31,7 +31,7 @@ export const writeDetectionBySiteSpeciesHourToBio = async (detectionBySiteSpecie
   // loop upsert
   const successToInsertItems: DetectionBySiteSpeciesHourBio[] = []
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
-
+  console.info('- syncArbimonDetectionBySiteSpeciesHourBatch: rows to insert ', detectionBySiteSpeciesHour.length)
   for (const detection of detectionBySiteSpeciesHour) {
     try {
       const newDetection = { ...detection, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(detection.countsByMinute), sequelize) }

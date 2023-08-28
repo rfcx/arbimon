@@ -93,7 +93,7 @@ export const getArbimonRecordingDeleted = async (sequelize: Sequelize, { syncUnt
 }
 
 export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId: number, limit: number, offset: number): Promise<unknown[]> => {
-  const sql = `SELECT r.site_id siteIdArbimon,
+  const sql = `SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon,
       r.datetime datetime,
       r.duration duration,
       r.recording_id idArbimon,
