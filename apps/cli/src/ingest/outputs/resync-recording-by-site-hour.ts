@@ -27,6 +27,7 @@ export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourBio: Rec
   // loop upsert
   const successToInsertItems: RecordingBySiteHourBio[] = []
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
+  console.info('- syncArbimonRecordingBySiteHourBatch: rows to insert ', recordingsBySiteHourBio.length)
   for (const recording of recordingsBySiteHourBio) {
     try {
       const newRecording = { ...recording, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(recording.countsByMinute), sequelize) }

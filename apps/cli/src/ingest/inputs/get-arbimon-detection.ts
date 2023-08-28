@@ -64,7 +64,7 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
   const isMySql = sequelize.getDialect() === 'mysql'
 
   const sql = `
-    SELECT
+    SELECT /*+ MAX_EXECUTION_TIME(840000) */
       rv.recording_validation_id idArbimon,
       r.datetime,
       r.site_id siteId,
@@ -76,9 +76,14 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
       rv.updated_at updatedAt
     FROM recording_validations rv
     JOIN recordings r ON rv.recording_id = r.recording_id
+    JOIN sites s ON r.site_id = s.site_id
     WHERE rv.project_id = $projectId
       AND (rv.present = 1 OR rv.present_review > 0 OR rv.present_aed > 0)
+      AND r.datetime is not null
       AND r.datetime_utc is not null
+      AND r.upload_time is not null
+      AND r.duration is not null
+      AND s.deleted_at is null
     ORDER BY rv.updated_at, rv.recording_validation_id
     LIMIT $limit OFFSET $offset
   ;
