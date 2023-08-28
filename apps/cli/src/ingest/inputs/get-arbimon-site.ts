@@ -41,3 +41,33 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
     deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
   }))
 }
+
+export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: number): Promise<unknown[]> => {
+  const sql = `
+      SELECT s.site_id AS idArbimon,
+      s.external_id AS idCore,
+      s.project_id AS projectIdArbimon,
+      s.name,
+      s.lat AS latitude,
+      s.lon AS longitude,
+      s.alt AS altitude,
+      s.updated_at AS updatedAt,
+      s.deleted_at AS deletedAt
+    FROM sites s
+    WHERE s.project_id = $projectId and s.deleted_at is null
+    ORDER BY s.updated_at, s.site_id;
+    `
+
+  const results = await sequelize.query<SiteArbimonRow>(sql, {
+    type: QueryTypes.SELECT,
+    raw: true,
+    bind: {
+      projectId
+    }
+  })
+
+  return results.map(row => ({
+    ...row,
+    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
+  }))
+}

@@ -4,7 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { type DetectionArbimon } from '../parsers/parse-detection-arbimon-to-bio'
-import { getArbimonDetections } from './get-arbimon-detection'
+import { getArbimonDetections, getArbimonProjectDetection } from './get-arbimon-detection'
 import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -275,6 +275,54 @@ describe('ingest > inputs > getArbimonDetections', async () => {
 
     // Act
     const actual = await getArbimonDetections(arbimonSequelize, params)
+
+    // Assert
+    expect(actual).toHaveLength(0)
+  })
+})
+
+describe('ingest > inputs > getArbimonProjectRecording', async () => {
+  beforeEach(async () => {
+    await deleteProjectData()
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 88529, externalId: 'cydwrzz91cbf' } })
+    await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, present: 0, presentReview: 0 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391042, speciesId: 74, present: 0, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391043, speciesId: 501, present: 0, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391044, speciesId: 501, present: 0, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391045, speciesId: 1050, present: 0, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391046, speciesId: 74, present: 0, presentReview: 2 } })
+    await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391047, speciesId: 74, present: 0, presentReview: 2 } })
+  })
+  afterAll(async () => {
+    await arbimonSequelize.query('DELETE FROM recording_validations')
+  })
+  const limit = 3
+  const offset = 0
+  const TEST_RECORDING_ID = [2391042, 2391043, 2391044, 2391045, 2391046, 2391047]
+  test('can get project detections by limit, offset', async () => {
+    // Act
+    const actual = await getArbimonProjectDetection(arbimonSequelize, DEFAULT_PROJECT.projectId, limit, offset) as unknown as DetectionArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(3)
+    actual.forEach(rec => { expect(TEST_RECORDING_ID.slice(0, 3)).includes(rec.idArbimon) })
+  })
+
+  test('can get next project detections by limit, offset', async () => {
+    // Act
+    const actual = await getArbimonProjectDetection(arbimonSequelize, DEFAULT_PROJECT.projectId, limit, limit * (offset + 1)) as unknown as DetectionArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(3)
+    actual.forEach(rec => { expect(TEST_RECORDING_ID.slice(3, 6)).includes(rec.idArbimon) })
+  })
+
+  test('can get zero project detections', async () => {
+    // Act
+    const actual = await getArbimonProjectDetection(arbimonSequelize, DEFAULT_PROJECT.projectId, limit, limit * (offset + 2)) as unknown as DetectionArbimon[]
 
     // Assert
     expect(actual).toHaveLength(0)

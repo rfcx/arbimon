@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { getArbimonSites } from '@/ingest/inputs/get-arbimon-site'
+import { getArbimonProjectSites, getArbimonSites } from '@/ingest/inputs/get-arbimon-site'
 import { type SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { type SyncQueryParams } from './sync-query-params'
 
@@ -184,4 +184,36 @@ describe('ingest > inputs > getArbimonSites', async () => {
   //   expect(site).toBeDefined()
   //   expect(site.deletedAt).toBe('2022-08-29T16:00:00.000Z')
   // })
+})
+
+describe('ingest > inputs > getArbimonProjectSites', async () => {
+  beforeEach(async () => {
+    await deleteProjectData()
+    await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
+  })
+
+  test('can get all project sites', async () => {
+    // Arrange
+    const TEST_SITE_ID = [123, 124, 125]
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: TEST_SITE_ID[1], createdAt: '2022-01-02 01:00:00', updatedAt: '2022-01-05 01:00:00' } })
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: TEST_SITE_ID[2], createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00' } })
+
+    // Act
+    const actual = await getArbimonProjectSites(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(3)
+    actual.forEach(site => { expect(TEST_SITE_ID).includes(site.idArbimon) })
+  })
+
+  test('can get zero project sites', async () => {
+    // Arrange
+    await arbimonSequelize.query('DELETE FROM sites')
+    // Act
+    const actual = await getArbimonProjectSites(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(0)
+  })
 })
