@@ -5,7 +5,7 @@
   >
     <div class="p-4">
       <div class="flex justify-between items-center">
-        <h1 class="text-white text-lg">
+        <h1 class="text-insight text-lg">
           Validation Filter
         </h1>
         <icon-fa-close

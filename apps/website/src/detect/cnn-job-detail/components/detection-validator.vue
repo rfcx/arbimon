@@ -2,7 +2,7 @@
   <div class="fixed right-4 bottom-0 mx-auto flex">
     <div
       id="toast-undo"
-      class="flex items-center space-x-4 p-5 w-144 min-w-full justify-between text-white bg-steel-gray rounded-md shadow"
+      class="flex items-center space-x-4 p-5 w-144 min-w-full justify-between text-insight bg-steel-grey rounded-md shadow"
       role="alert"
     >
       <div class="text-base flex items-center">
@@ -20,7 +20,7 @@
         <el-select
           v-model="selectedFilter"
           filterable
-          class="el-select bg-steel-gray rounded-xl pl-2 border-box-gray focus:(border-box-gray ring-0 outline-none) min-w-40"
+          class="el-select bg-steel-grey rounded-xl pl-2 border-box-grey focus:(border-box-grey ring-0 outline-none) min-w-40"
           size="large"
         >
           <el-option

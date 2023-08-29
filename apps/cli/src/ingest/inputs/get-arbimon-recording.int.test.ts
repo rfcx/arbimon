@@ -4,7 +4,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { type RecordingArbimon, type RecordingDeletedArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
-import { getArbimonRecording, getArbimonRecordingDeleted } from './get-arbimon-recording'
+import { getArbimonProjectRecording, getArbimonRecording, getArbimonRecordingDeleted } from './get-arbimon-recording'
 import { type SyncQueryParams } from './sync-query-params'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -316,5 +316,36 @@ describe('ingest > input > getArbimonRecordings', () => {
     expect(result1[0].idArbimon).toBe(900)
     expect(result2[0].idArbimon).toBe(901)
     expect(result3[0].idArbimon).toBe(902)
+  })
+})
+
+describe('ingest > inputs > getArbimonProjectRecording', async () => {
+  const limit = 3
+  const offset = 0
+  const TEST_RECORDING_ID = [1001, 1002, 1003, 1004, 1005, 1006]
+  test('can get project recordings by limit, offset', async () => {
+    // Act
+    const actual = await getArbimonProjectRecording(arbimonSequelize, DEFAULT_PROJECT.projectId, limit, offset) as unknown as RecordingArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(3)
+    actual.forEach(rec => { expect(TEST_RECORDING_ID.slice(0, 3)).includes(rec.idArbimon) })
+  })
+
+  test('can get next project recordings by limit, offset', async () => {
+    // Act
+    const actual = await getArbimonProjectRecording(arbimonSequelize, DEFAULT_PROJECT.projectId, limit, limit * (offset + 1)) as unknown as RecordingArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(3)
+    actual.forEach(rec => { expect(TEST_RECORDING_ID.slice(3, 6)).includes(rec.idArbimon) })
+  })
+
+  test('can get zero project recordings', async () => {
+    // Act
+    const actual = await getArbimonProjectRecording(arbimonSequelize, DEFAULT_PROJECT.projectId, limit, limit * (offset + 2)) as unknown as RecordingArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(0)
   })
 })
