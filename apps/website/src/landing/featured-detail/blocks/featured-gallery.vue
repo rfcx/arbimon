@@ -5,7 +5,7 @@
         v-for="(image, index) in images"
         :key="index"
         :src="image"
-        class="w-full h-max-[460px] object-cover"
+        class="w-full object-cover"
         :class="{
           'lg:rounded-r-lg': index/2 === 0,
           'lg:rounded-l-lg': index/2 !== 0

@@ -63,10 +63,10 @@
           </div>
           <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-3">
             <featured-stat title="timeline">
-              <span class="text-sm">{{ info?.timeline }}</span>
+              <span class="text-sm lowercase first-letter:capitalize">{{ info?.timeline }}</span>
             </featured-stat>
             <featured-stat title="scope">
-              <span class="text-sm">{{ info?.scope }}</span>
+              <span class="text-sm lowercase first-letter:capitalize">{{ info?.scope }}</span>
             </featured-stat>
             <featured-stat title="partners">
               <ul class="list-disc ml-4 text-sm">
@@ -83,6 +83,7 @@
                 <li
                   v-for="(service, index) in info?.services"
                   :key="index"
+                  class="lowercase first-letter:capitalize"
                 >
                   {{ service }}
                 </li>
