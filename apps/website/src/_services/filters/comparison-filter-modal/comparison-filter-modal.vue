@@ -2,7 +2,7 @@
   <modal-popup
     name="buildComparisonModal"
   >
-    <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
+    <h1 class="text-xl text-insight pt-4 pb-2 px-4 border-b-1">
       Customize dataset
     </h1>
     <div class="flex flex-row min-h-lg">
@@ -41,7 +41,7 @@
               :checked="isSelectedAllSites"
               @click="selectAllSites()"
             >
-            <span class="text-white ml-2">All sites in the project</span>
+            <span class="text-insight ml-2">All sites in the project</span>
           </label>
 
           <el-select

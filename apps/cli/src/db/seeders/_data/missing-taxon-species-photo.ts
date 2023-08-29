@@ -342,5 +342,14 @@ export const rawMissingTaxonSpeciesPhoto: Array<Omit<TaxonSpeciesPhoto, 'taxonSp
     photoLicense: 'CC BY-NC-ND',
     photoLicenseUrl: 'https://www.inaturalist.org/photos/9725948',
     slug: 'ardea-purpurea'
+  },
+  {
+    source: 'INATURALIST',
+    photoUrl: 'https://inaturalist-open-data.s3.amazonaws.com/photos/244203879/medium.jpeg',
+    photoCaption: 'Oubangui Red Colobus',
+    photoAuthor: 'annelaudisoit',
+    photoLicense: 'CC BY-NC',
+    photoLicenseUrl: 'https://www.inaturalist.org/photos/244203879',
+    slug: 'piliocolobus-oustaleti'
   }
 ]

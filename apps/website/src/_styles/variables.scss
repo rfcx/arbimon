@@ -6,37 +6,27 @@
 // ------------ General Color -----------
 $color-white: #fff;
 $color-black: #000;
-$color-placeholder: #999;
-$color-faded-gray: #333;
-$color-subtle-white: #ffffff90;
-$color-primary-50: #f2fbf4;
-$color-primary-100: #e1f7e7;
-$color-primary-200: #c5edd0;
-$color-primary-300: #97deab;
-$color-primary-400: #62c67f;
-$color-primary-500: #3daa5d;
-$color-primary-600: #31984f;
-$color-primary-700: #276e3b;
-$color-primary-800: #235833;
-$color-primary-900: #1e492c;
-$color-primary: $color-primary-600;
-$color-primary-light: $color-primary-500;
-$color-primary-dark: $color-primary-700;
-$color-danger: #d46767;
-$color-danger-light: #e5a4a4;
-$color-danger-dark: #7f3e3e;
+$color-placeholder: #7f7d78; // util-gray-01
+$color-faded-grey: #242424; // util-gray-03
+$color-subtle-white: #f9f6f2; // cloud
+$color-brand-primary: #adff2c; // frequency
+$color-brand-light: #bdff56;
+$color-brand-dark: #8acc23;
+$color-danger: #ff6868; // flamingo
+$color-danger-light: #ff8686;
+$color-danger-dark: #cc5353;
 $color-warning: #ffcd00;
 $color-warning-light: #ffe166;
 $color-warning-dark: #997b00;
-$color-info: #45485d;
-$color-box-gray: #45485d;
-$color-box-gray-dark: #2f3140;
-$color-steel-gray: #232436;
-$color-steel-gray-light: #4a4c72;
-$color-steel-gray-dark: #202031;
-$color-mirage-gray: #141525;
-$color-mirage-gray-light: #e3e3e5;
-$color-mirage-gray-dark: #06060d;
+$color-info: #14130d; // echo
+$color-box-grey: #14130d;
+$color-box-grey-dark: #100f0a;
+$color-steel-grey: #1e1c13; // moss
+$color-steel-grey-light: #4a4942;
+$color-steel-grey-dark: #18160f;
+$color-mirage-grey: #060508; // pitch
+$color-mirage-grey-light: #373639;
+$color-mirage-grey-dark: #040406;
 
 // -------------- Text Color ------------
 $text-primary-color: $color-white;

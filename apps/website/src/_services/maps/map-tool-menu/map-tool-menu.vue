@@ -14,20 +14,20 @@
       />
     </div>
     <button
-      class="btn ml-2"
-      :class="{ '<2xl:(bg-primary btn-icon)': isShowLabel }"
+      class="btn btn-secondary ml-2 p-2"
+      :class="{ '<2xl:(bg-brand-primary btn-icon)': isShowLabel }"
       @click="emitShowLabelsToggle"
     >
       <div class="flex items-center <2xl:hidden">
         <input
           type="checkbox"
-          class="mr-2 text-primary focus:(ring-0 outline-none) rounded"
+          class="mr-2 text-brand-primary focus:(ring-0 outline-none) rounded"
           :checked="isShowLabel"
         >
         Labels
       </div>
       <div class="2xl:hidden">
-        <icon-fas-tag class="text-xs" />
+        <icon-fas-tag class="text-xs text-pitch" />
       </div>
     </button>
   </div>

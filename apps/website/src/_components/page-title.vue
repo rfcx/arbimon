@@ -11,7 +11,7 @@
         <span v-if="topic">&nbsp;·&nbsp;</span>
         <button
           v-if="topic"
-          class="text-subtle inline hover:(underline text-white cursor-pointer)"
+          class="text-subtle inline hover:(underline text-insight cursor-pointer)"
           @click="showLearnMoreModal = true"
         >
           Learn more
