@@ -117,36 +117,32 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
       speciesName: groupedDetections[slug][0].classification.title,
       media: groupedDetections[slug].map(detection => {
         return {
-          spectrogramUrl: '0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_d120.120_mtrue_fspec.png',
-          audioUrl: '0r5kgVEqoCxI_t20210505T185551443Z.20210505T185554319Z_fwav.wav',
+          spectrogramUrl: getMediaLink({
+            streamId: detection.siteId,
+            start: detection.start,
+            end: detection.end,
+            frequency: 'full',
+            gain: 1,
+            filetype: 'spec',
+            monochrome: true,
+            dimension: {
+              width: 120,
+              height: 120
+            },
+            contrast: 120,
+            fileExtension: 'png'
+          }),
+          audioUrl: getMediaLink({
+            streamId: detection.siteId,
+            start: detection.start,
+            end: detection.end,
+            frequency: 'full',
+            gain: 1,
+            filetype: 'mp3',
+            fileExtension: 'mp3'
+          }),
           id: detection.id,
           validation: detection.reviewStatus
-        //   spectrogramUrl: getMediaLink({
-        //     streamId: detection.siteId,
-        //     start: detection.start,
-        //     end: detection.end,
-        //     frequency: 'full',
-        //     gain: 1,
-        //     filetype: 'spec',
-        //     monochrome: true,
-        //     dimension: {
-        //       width: 120,
-        //       height: 120
-        //     },
-        //     contrast: 120,
-        //     fileExtension: 'png'
-        //   }),
-        //   audioUrl: getMediaLink({
-        //     streamId: detection.siteId,
-        //     start: detection.start,
-        //     end: detection.end,
-        //     frequency: 'full',
-        //     gain: 1,
-        //     filetype: 'mp3',
-        //     fileExtension: 'mp3'
-        //   }),
-        //   id: detection.id,
-        //   validation: detection.reviewStatus
         }
       })
     }
