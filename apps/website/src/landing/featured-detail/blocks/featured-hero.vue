@@ -61,7 +61,7 @@
               Work with us
             </router-link>
           </div>
-          <div class="rounded-lg border-1 border-frequency bg-moss p-8 grid grid-rows-1 xl:grid-cols-3">
+          <div class="rounded-lg border-1 border-frequency bg-moss p-6 grid grid-rows-1 xl:grid-cols-3">
             <featured-stat title="timeline">
               <span class="text-sm lowercase first-letter:capitalize">{{ info?.timeline }}</span>
             </featured-stat>
