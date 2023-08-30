@@ -9,7 +9,7 @@ If you find our services helpful to you, we invite you to join our mission to mo
     question: 'Is it really unlimited storage and analysis?',
     answer: `Yes! With a free account, you can store as many files and run as many analyses as you want. However, there are some technical limits in terms of file and job size. For storage, the platform will not accept single files over 200MB.
 
-For some analyses (e.g. Pattern Matching, Random Forest), you can create jobs of any size, but others (e.g. Audio Event Detection and Clustering) have a cap on the number of recordings or data points that can be analyzed in a single job. You can see the limits in the table below. We have introduced a cap because it enables us to provide sufficient resources and cover the costs of running analyses for all projects. Learn more about [the cost of running analysis jobs](#how-much-does-it-cost-to-run-a-job).
+For some analyses (e.g. Pattern Matching, Random Forest), you can create jobs of any size, but others (e.g. Audio Event Detection and Clustering) have a cap on the number of recordings or data points that can be analyzed in a single job. You can see the limits in the table below. We have introduced a cap because it enables us to provide sufficient resources and cover the costs of running analyses for all projects. Learn more about [the cost of running analyses](#how-much-does-it-cost-to-run-a-job).
 
 | Analysis                           | Cap                               |
 |------------------------------------|-----------------------------------|
@@ -24,7 +24,7 @@ For some analyses (e.g. Pattern Matching, Random Forest), you can create jobs of
 
 For us, the main factor contributing to job cost is the number of recordings included in the analysis (the playlist size). A job on a playlist containing 1,000 recordings typically costs between 20c and $1 depending on the analysis type. We are currently funding the cost through donations and sponsorship, for more information see [how we make Arbimon free](#why-is-arbimon-free).
 
-As an environmental organization, we would like to minimize both the monetary cost and the energy cost of running analysis jobs. We request that users act responsibly to only run analysis over the minimum dataset and that they perform tests on smaller datasets (e.g. less than 1000 recordings) to gain confidence before running on larger datasets. This will not only help us to keep the platform free for everyone, but also reduce the carbon footprint on conducting ecological analyses.`
+As an environmental organization, we would like to minimize both the monetary cost and the energy cost of running analysis jobs. We request that users act responsibly to only run analyses over the minimum dataset and that they perform tests on smaller datasets (e.g. less than 1000 recordings) to gain confidence before running on larger datasets. This will not only help us to keep the platform free for everyone, but also reduce the carbon footprint on conducting ecological analyses.`
   },
   {
     question: 'Do I need to keep a backup of my audio data?',
@@ -32,7 +32,7 @@ As an environmental organization, we would like to minimize both the monetary co
   },
   {
     question: 'How can I contribute to Arbimon?',
-    answer: `If you are publishing scientific work, offering workshops and talks, then please [cite Arbimon](#how-should-arbimon-be-cited). Other ways you can contribute include:
+    answer: `If you are publishing scientific work, offering workshops and talks, then please [cite Arbimon](#how-should-arbimon-be-cited) and link to our site whenever possible. Other ways you can contribute include:
 
 - [Reach out](/contact) to our team to collaborate (e.g. partner with us in a project proposal, [see our past partnership project here](/featured)).
 - Make your project insights public - Public projects enable open collaboration, which is essential to to improve ecological knowledge and conservation efforts, facilitate break through discoveries and share insights and findings with the world. We take your data privacy seriously. We will never share and divulge sensitive information from the users and datasets, and you can decide on what data you are sharing. [Learn more about our data privacy here](https://rfcx.org/privacy-policy).
