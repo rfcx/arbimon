@@ -77,7 +77,7 @@ async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number
   }
 }
 
-export async function updateDetectionReviewFromApi (token: string, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
+export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({
       method: 'POST',
@@ -88,7 +88,8 @@ export async function updateDetectionReviewFromApi (token: string, data: DetectR
       data: {
         status: data.status,
         classifier: data.classifier,
-        classification: data.classification
+        classification: data.classification,
+        classifier_job: classifierJobId
       }
     })
 
