@@ -95,19 +95,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, withDefaults } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 import useDateFormat from '../_services/hooks/use-date-format'
 import ModalPopup from './modal-popup.vue'
 
 // How many mode do we have?
-enum currentMode {
-  DRAFT = 'Draft',
-  PUBLISHED = 'Published'
-}
+type CurrentMode = 'Draft' | 'Published'
 
 const props = withDefaults(defineProps<{
-  currentMode: string
+  currentMode: CurrentMode
   syncUpdated: Date | string | null
   projectSlug: string
 }>(), {
@@ -120,7 +117,7 @@ const accessbililyOption = ref(true)
 const secureOption = reactive({ allowDownload: true, linkArbimon: true })
 
 // To display only in Draft mode
-const isDraftMode = computed(() => props.currentMode === currentMode.DRAFT)
+const isDraftMode = computed(() => props.currentMode === 'Draft')
 
 const syncHistoryRoute = computed(() => ({ name: 'sync_history', params: { projectSlug: props.projectSlug } }))
 

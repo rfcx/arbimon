@@ -70,10 +70,7 @@ export const syncAllIncrementally = async (arbimonSequelize: Sequelize, biodiver
 
     if (!isRecordingDeletedUpToDate) {
       console.info('- wait to sync more deleted recordings in the next round...')
-      return
     }
-
-    return
   } catch (e) {
     console.error('SYNC - Incremental failed', e)
     process.exitCode = 1
