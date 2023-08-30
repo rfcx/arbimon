@@ -14,7 +14,7 @@
               With cutting-edge AI technology and acoustic innovation, Arbimon empowers individuals and organizations to transform sound into actionable insights.
             </p>
             <p class="pb-3 last:pb-0">
-              Collaboration is at the heart of our approach. Arbimon is open-source, and we actively engage with ecologists, foundations, governments, corporations, and local communities to extend the reach and impact of our initiatives.
+              Collaboration is at the heart of our approach. We actively engage with ecologists, foundations, governments, corporations, and local communities to extend the reach and impact of our initiatives.
             </p>
           </div>
         </div>
