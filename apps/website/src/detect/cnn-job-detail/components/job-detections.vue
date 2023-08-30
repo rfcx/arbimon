@@ -32,7 +32,7 @@
       </div>
     </template>
     <detection-validator
-      v-if="validationCount && isOpen"
+      v-if="validationCount !== 0 && isOpen"
       :detection-count="validationCount"
       :filter-options="filterOptions"
       @emit-validation="validateDetection"
@@ -44,31 +44,25 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
+import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
 import { apiClientBioKey } from '@/globals'
 import { getMediaLink } from '~/media'
 import { ROUTE_NAMES } from '~/router'
 import { useDetectionsResultFilterStore } from '~/store'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
-import type { DetectionEvent, DetectionMedia, DetectionValidationStatus } from './types'
+import type { DetectionMedia, DetectionValidationStatus } from './types'
 
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
-const validationCount = ref<number | null>(null)
-const isOpen = ref<boolean | null>(null)
-const isShiftHolding = ref<boolean>(false)
-const isCtrlHolding = ref<boolean>(false)
-const currentDetectionId = ref<string | undefined>(undefined)
 const detectionsResultFilterStore = useDetectionsResultFilterStore()
-
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
@@ -94,21 +88,11 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
   return filtered
 })
 
-watch(() => isShiftHolding.value, (newVal, oldVal) => {
-  if (newVal !== oldVal && isShiftHolding.value === false) {
-    resetSelection(currentDetectionId.value)
-    validationCount.value = getValidationCount()
-  }
-})
-
-watch(() => isCtrlHolding.value, (newVal, oldVal) => {
-  if (newVal !== oldVal && isCtrlHolding.value === false) {
-    resetSelection(currentDetectionId.value)
-    validationCount.value = getValidationCount()
-  }
-})
-
 const allSpecies = computed(() => {
+  if (props.data == null || props.data.length === 0) {
+    return []
+  }
+
   const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
@@ -150,89 +134,17 @@ const allSpecies = computed(() => {
   return species
 })
 
+const {
+  validationCount,
+  isOpen,
+  closeValidator,
+  updateSelectedDetections,
+  updateValidatedDetections,
+  getSelectedDetectionIds
+} = useDetectionsReview(allSpecies)
+
 const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
-}
-
-const updateSelectedDetections = (detectionId: string, event: DetectionEvent) => {
-  const { isSelected, isShiftKeyHolding, isCtrlKeyHolding } = event
-  selectDetection(detectionId, isSelected)
-  currentDetectionId.value = detectionId
-  isShiftHolding.value = isShiftKeyHolding
-  isCtrlHolding.value = isCtrlKeyHolding
-  if (isShiftHolding.value) {
-    const combinedDetections = getCombinedDetections()
-    const selectedDetectionIds = getSelectedDetectionIds()
-    const firstInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[0])
-    const secondInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[selectedDetectionIds.length - 1])
-    const arrayOfIndx = [firstInx, secondInx].sort((a, b) => a - b)
-    const filteredDetections = combinedDetections.filter((_det, index) => index >= arrayOfIndx[0] && index <= arrayOfIndx[1])
-    const ids = filteredDetections.map(det => det.id)
-    allSpecies.value.forEach(species => {
-      species.media.forEach((det: DetectionMedia) => {
-        if (ids.includes(det.id)) {
-          det.checked = true
-        }
-      })
-    })
-  }
-  validationCount.value = getValidationCount()
-  isOpen.value = true
-}
-
-const resetSelection = (skippedId?: string) => {
-  allSpecies.value.forEach(species => {
-    species.media.forEach((det: DetectionMedia) => {
-      if (skippedId !== undefined && det.id === skippedId) return
-      det.checked = false
-    })
-  })
-}
-
-const selectDetection = (detectionId: string, checked: boolean) => {
-  allSpecies.value.forEach(species => {
-    species.media.forEach((det: DetectionMedia) => {
-      if (detectionId === det.id) {
-        det.checked = checked
-      }
-    })
-  })
-}
-
-const getSelectedDetectionIds = () => {
-  const selectedDetectionIds: string[] = []
-  allSpecies.value.forEach(species => {
-    species.media.forEach((det: DetectionMedia) => {
-      if (det.checked === true) {
-        selectedDetectionIds.push(det.id)
-      }
-    })
-  })
-
-  // use localeCompare to sort because it's bigint, we could lose precision in the future
-  return selectedDetectionIds.sort((a, b) => a.localeCompare(b))
-}
-
-const getValidationCount = () => {
-  let count = 0
-  allSpecies.value.forEach(species => {
-    species.media.forEach((det: DetectionMedia) => {
-      if (det.checked === true) {
-        count++
-      }
-    })
-  })
-
-  return count
-}
-
-const getCombinedDetections = () => {
-  let combinedDetections = [] as DetectionMedia[]
-  allSpecies.value.forEach(species => {
-    combinedDetections = combinedDetections.concat(species.media)
-  })
-
-  return combinedDetections
 }
 
 const validateDetection = async (validation: ReviewStatus): Promise<void> => {
@@ -261,21 +173,6 @@ const validateDetection = async (validation: ReviewStatus): Promise<void> => {
   })
 
   const responses = await Promise.allSettled(promises)
-
-  allSpecies.value.forEach(species => {
-    species.media.forEach((det: DetectionMedia) => {
-      // only update status to success review update
-      if (selectedDetectionIds.includes(det.id) && responses.find(r => r.status === 'fulfilled') != null) {
-        det.validation = validation
-      }
-    })
-  })
-  validationCount.value = null
-  resetSelection()
-  isOpen.value = false
-}
-
-const closeValidator = () => {
-  isOpen.value = false
+  updateValidatedDetections(selectedDetectionIds, validation, responses)
 }
 </script>
