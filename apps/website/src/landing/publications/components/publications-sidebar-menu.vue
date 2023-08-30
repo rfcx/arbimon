@@ -28,7 +28,7 @@
         id="search"
         class="block w-full p-4 pl-10 text-md text-white/80 border border-white rounded-lg bg-transparent focus:ring-frequency focus:border-frequency dark:bg-transparent dark:border-white/80 dark:placeholder-white/80 dark:text-white/80 dark:focus:ring-frequency dark:focus:border-frequency"
         type="search"
-        placeholder="Search for author, species, etc."
+        placeholder="Search for author, topic, title, etc."
         :value="search"
         @input="onInputEnter"
       >
