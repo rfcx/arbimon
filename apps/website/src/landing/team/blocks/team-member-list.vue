@@ -39,7 +39,7 @@
           :image-url="tomazImage"
           name="Tomaz Melo"
           role="Biodiversity Scientist"
-          bio="Biologist & ornithologist, with a master's degree in Ecology and a PhD in Zoology, and a passion for photography. My goal is to expand my knowledge about the species that occur in each project to help build better IA models."
+          bio="Biologist & ornithologist, with a master's degree in Ecology and a PhD in Zoology, and a passion for photography. My goal is to expand my knowledge about the species that occur in each project to help build better AI models."
           linkedin-url="https://www.linkedin.com/in/tomaz-melo-270932200/"
         />
         <team-card
@@ -56,12 +56,12 @@
           :image-url="gabrielLeImage"
           name="Gabriel Leite"
           role="Biodiversity Scientist"
-          bio="Biologist & ornithologist with a PhD in Conservation. I live in Manaus and have been working with bioacoustics for many years. I like to travel and record species song. I have more than 2700 species recorded in more than 25 countries."
+          bio="Biologist & ornithologist with a PhD in Conservation. I live in Manaus and have been working with bioacoustics for many years. I like to travel and record species songs. I have more than 2700 species recorded in more than 25 countries."
           linkedin-url="https://www.linkedin.com/in/gabriel-leite-b89512287/"
         />
         <quote-card
           title="50+"
-          subtitle="collective years of experience in bioacoustic."
+          subtitle="collective years of experience in bioacoustics."
           linkedin-url="https://www.linkedin.com/in/gabriel-leite-b89512287/"
         />
         <team-card
