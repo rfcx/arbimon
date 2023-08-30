@@ -39,7 +39,7 @@ import JobValidationStatus from './components/job-validation-status.vue'
 type ClassifierOutput<A> = A extends readonly (infer T)[] ? T : never
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = 10
+const PAGE_SIZE_LIMIT = 100
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
@@ -75,7 +75,7 @@ const species = computed<ClassifierOutput<ClassifierResponse['outputs']> | undef
 })
 
 const offset = computed<number>(() => {
-  return page.value * PAGE_SIZE_LIMIT
+  return (page.value - 1) * PAGE_SIZE_LIMIT
 })
 
 const params = computed<DetectDetectionsQueryParams>(() => {
