@@ -14,11 +14,11 @@
       >
         <span class="font-semibold justify-self-start text-right text-lg">0</span>
         <span class="text-lg">Unvalidated</span>
-        <span class="font-semibold justify-self-start text-right text-lg">123</span>
+        <span class="font-semibold justify-self-start text-right text-lg">0</span>
         <span class="text-lg">Present</span>
-        <span class="font-semibold justify-self-start text-right text-lg">123</span>
+        <span class="font-semibold justify-self-start text-right text-lg">0</span>
         <span class="text-lg">Not present</span>
-        <span class="font-semibold justify-self-start text-right text-lg">123</span>
+        <span class="font-semibold justify-self-start text-right text-lg">0</span>
         <span class="text-lg">Unknown</span>
       </div>
     </div>
