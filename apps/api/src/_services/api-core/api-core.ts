@@ -34,7 +34,7 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
 export async function getDetectionsFromApi (token: string, params: DetectDetectionsQueryParamsCore): Promise<DetectDetectionsResponseCore> {
   return await axios.request<DetectDetectionsResponseCore>({
     method: 'GET',
-    url: `${CORE_API_BASE_URL}/detections`,
+    url: `${CORE_API_BASE_URL}/detections?fields[]=id&fields[]=stream_id&fields[]=classifier_id&fields[]=start&fields[]=end&fields[]=confidence&fields[]=review_status&fields[]=classification`,
     headers: {
       authorization: token
     },
@@ -77,28 +77,7 @@ async function getMemberProjectCoreIdsFromApiPaged (token: string, limit: number
   }
 }
 
-export async function createProject (project: Pick<CoreProject, 'name' | 'is_public'>, token: string): Promise<string> {
-  const response = await axios.request<unknown>({
-    method: 'POST',
-    url: `${CORE_API_BASE_URL}/projects`,
-    headers: { authorization: token },
-    data: project
-  }).catch(unpackAxiosError)
-  const id = response.headers.location.split('/').pop()
-  if (id === undefined) throw new Error('Create project failed: no core id')
-  return id
-}
-
-export async function getProject (id: string, token: string): Promise<Pick<CoreProjectLight, 'external_id'>> {
-  const response = await axios.request<Pick<CoreProjectLight, 'external_id'>>({
-    method: 'GET',
-    url: `${CORE_API_BASE_URL}/projects/${id}?fields=external_id`,
-    headers: { authorization: token }
-  }).catch(unpackAxiosError)
-  return response.data
-}
-
-export async function updateDetectionReviewFromApi (token: string, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
+export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({
       method: 'POST',
@@ -109,7 +88,8 @@ export async function updateDetectionReviewFromApi (token: string, data: DetectR
       data: {
         status: data.status,
         classifier: data.classifier,
-        classification: data.classification
+        classification: data.classification,
+        classifier_job: classifierJobId
       }
     })
 
@@ -140,7 +120,7 @@ export async function getClassifierJobResultsFromApi (token: string, jobId: numb
   try {
     const resp = await axios.request({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/results`,
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/summary`,
       headers: {
         authorization: token
       },

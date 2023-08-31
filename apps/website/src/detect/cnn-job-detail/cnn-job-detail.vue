@@ -82,7 +82,7 @@ const classifierId = computed(() => jobSummary.value?.classifierId)
 const enabled = computed(() => jobSummary.value?.classifierId != null)
 
 /**
- * Only refetch when job status is not null and job status is running, otherwise refetch every 30 seconds
+ * Only refetch every 30 seconds when job status is not null and job status is running.
  */
 const refetchDetections = computed(() => {
   if (jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING) {

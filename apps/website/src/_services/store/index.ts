@@ -8,6 +8,7 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 import { getIdToken, useAuth0Client } from '~/auth-client'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
+import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
 import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
 
 export const useStore = defineStore('root', {
@@ -64,5 +65,6 @@ export const useStoreOutsideSetup = (): BiodiversityStore => useStore(pinia)
 
 export {
   useDashboardStore,
+  useDetectionsResultFilterBySpeciesStore,
   useDetectionsResultFilterStore
 }

@@ -1,44 +1,48 @@
 <template>
-  <div class="job-result-wrapper">
+  <div class="job-result-detections">
     <template
       v-for="species in allSpecies"
       :key="'job-detections-' + species.speciesSlug"
     >
-      <h3 class="species-title text-lg mt-4">
-        {{ species.speciesName }} ({{ species.speciesSlug }})
-      </h3>
       <div
-        v-for="(media, idx) in displaySpecies(species.media)"
-        :key="'job-detection-media-' + species.speciesName + idx"
-        class="inline-block mt-2 mr-2"
+        v-for="dt in species.media"
+        :key="`job-detection-result-by-species-${dt.id}`"
+        class="inline-block mt-2 mr-4"
       >
-        <detection-item
-          :id="media.id"
-          :spectrogram-url="media.spectrogramUrl"
-          :audio-url="media.audioUrl"
-          :validation="media.validation"
-          :checked="media.checked"
+        <DetectionItem
+          :id="dt.id"
+          :spectrogram-url="dt.spectrogramUrl"
+          :audio-url="dt.audioUrl"
+          :validation="dt.validation"
+          :checked="dt.checked"
           @emit-detection="updateSelectedDetections"
         />
       </div>
-      <div class="flex">
-        <router-link
-          v-if="species.media.length > MAX_DISPLAY_PER_EACH_SPECIES"
-          class="block font-weight-bold hover:(text-subtle cursor-pointer)"
-          :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: species.speciesSlug } }"
-        >
-          SEE MORE+
-        </router-link>
-      </div>
     </template>
-    <detection-validator
-      v-if="validationCount !== 0 && isOpen"
-      :detection-count="validationCount"
-      :filter-options="filterOptions"
-      @emit-validation="validateDetection"
-      @emit-close="closeValidator"
-    />
   </div>
+  <div class="w-full flex flex-row-reverse">
+    <div class="job-result-detections-paginator">
+      <button
+        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-util-gray-02 not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        @click="previousPage()"
+      >
+        <icon-fas-chevron-left class="w-3 h-3" />
+      </button>
+      <button
+        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-util-gray-02' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        @click="nextPage()"
+      >
+        <icon-fas-chevron-right class="w-3 h-3" />
+      </button>
+    </div>
+  </div>
+  <DetectionValidator
+    v-if="validationCount && isOpen"
+    :detection-count="validationCount"
+    :filter-options="filterOptions"
+    @emit-validation="validateDetection"
+    @emit-close="closeValidator"
+  />
 </template>
 
 <script setup lang="ts">
@@ -51,32 +55,45 @@ import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/comm
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
+import DetectionValidator from '@/detect/cnn-job-detail/components/detection-validator.vue'
+import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientBioKey } from '@/globals'
 import { getMediaLink } from '~/media'
-import { ROUTE_NAMES } from '~/router'
-import { useDetectionsResultFilterStore } from '~/store'
-import DetectionItem from './detection-item.vue'
-import DetectionValidator from './detection-validator.vue'
-import type { DetectionMedia, DetectionValidationStatus } from './types'
+import { validationStatus } from '~/store/detections-constants'
+import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
-const MAX_DISPLAY_PER_EACH_SPECIES = 20
-
-const detectionsResultFilterStore = useDetectionsResultFilterStore()
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const route = useRoute()
-const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
-
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, page: number, pageSize: number }>(), {
   isLoading: true,
   isError: false,
   data: undefined
 })
 
-const filterOptions = computed<DetectionValidationStatus[]>(() => {
-  const validation = detectionsResultFilterStore.validationStatusFilterOptions
+const emit = defineEmits<{(e: 'update:page', value: number): void}>()
 
+const route = useRoute()
+
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+
+const nextPage = (): void => {
+  if (props.data == null || props.data.length < props.pageSize) {
+    return
+  }
+
+  emit('update:page', props.page + 1)
+}
+
+const previousPage = (): void => {
+  if (props.page - 1 === 0) {
+    return
+  }
+
+  emit('update:page', props.page - 1)
+}
+
+const filterOptions = computed<DetectionValidationStatus[]>(() => {
   // removes the `All` setting
-  const filtered: DetectionValidationStatus[] = validation.filter(v => v.value !== 'all')
+  const filtered: DetectionValidationStatus[] = validationStatus.filter(v => v.value !== 'all')
   .map(s => {
     return {
       value: s.value,
@@ -88,7 +105,7 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
   return filtered
 })
 
-const allSpecies = computed(() => {
+const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
   if (props.data == null || props.data.length === 0) {
     return []
   }
@@ -143,16 +160,7 @@ const {
   getSelectedDetectionIds
 } = useDetectionsReview(allSpecies)
 
-const displaySpecies = (media: DetectionMedia[]) => {
-  return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
-}
-
 const validateDetection = async (validation: ReviewStatus): Promise<void> => {
-  // TODO: pause query before running this script?
-  // The reason to pause is that maybe the detections ping could alter with
-  // the array and causes inconsistencies
-  // in the section of the detections that we need to validate.
-  // check out here on how to disable query: https://tanstack.com/query/v4/docs/vue/guides/disabling-queries#lazy-queries
   const selectedDetectionIds = getSelectedDetectionIds()
 
   // call review api

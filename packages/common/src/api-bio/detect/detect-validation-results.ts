@@ -34,7 +34,7 @@ export interface DetectValidationResultsResponse {
 export const detectValidationResultsRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/results`
 
 // Service
-export const apiBioGetValidationResults = async (apiClient: AxiosInstance, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse | undefined> => {
+export const apiBioGetValidationResults = async (apiClient: AxiosInstance, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse> => {
   const response = await apiClient.get(detectSpecificRoutePrefix(jobId) + '/results', { params: query })
   return response.data
 }

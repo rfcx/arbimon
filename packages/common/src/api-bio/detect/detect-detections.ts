@@ -1,7 +1,5 @@
 import { type AxiosInstance } from 'axios'
 
-import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
-
 import { type DetectRouteParamsSerialized, DETECT_SPECIFIC_ROUTE_PREFIX, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
 
 export const REVIEW_STATUS_MAPPING = {
@@ -54,5 +52,10 @@ export type DetectDetectionsResponse = Array<{
 export const detectDetectionsRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/detections`
 
 // Service
-export const apiBioGetDetectDetections = async (apiClient: AxiosInstance, jobId: number, params: DetectDetectionsQueryParams): Promise<DetectDetectionsResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, `${detectSpecificRoutePrefix(jobId)}/detections`, { params })
+export const apiBioGetDetectDetections = async (apiClient: AxiosInstance, jobId: number, params: DetectDetectionsQueryParams): Promise<DetectDetectionsResponse> => {
+  const response = await apiClient.get(`${detectSpecificRoutePrefix(jobId)}/detections`, {
+    params
+  })
+
+  return response.data
+}
