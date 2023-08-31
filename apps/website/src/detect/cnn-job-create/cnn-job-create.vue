@@ -87,7 +87,7 @@
       <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
         <button
           title="Cancel"
-          class="btn btn-secondary"
+          class="btn"
         >
           Cancel
         </button>

@@ -6,17 +6,15 @@
     >
       <button
         :title="item.name"
-        class="btn btn-secondary <2xl:(btn-icon) font-sans text-sm p-2 focus:ring-0"
+        class="btn <2xl:(btn-icon)"
         :class="{
-          'bg-frequency text-pitch': props.mapStyle === item.style,
+          'bg-brand-primary': props.mapStyle === item.style,
           'rounded-r-none': idx !== props.mapOptions.length - 1,
           'rounded-l-none': idx !== 0
         }"
         @click="$emit('emitMapStyle', item.style)"
       >
-        <div
-          class="<2xl:hidden"
-        >
+        <div class="<2xl:hidden">
           {{ item.name }}
         </div>
         <div>

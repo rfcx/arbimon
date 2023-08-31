@@ -5,7 +5,7 @@
     <navbar-component />
     <div class="max-w-screen-2xl mx-auto px-2 py-4 sm:px-6 lg:px-8">
       <div v-if="store.projects.length > 0">
-        <h1 class="text-insight text-4xl capitalize">
+        <h1 class="text-white text-4xl capitalize">
           Recent projects
         </h1>
         <ul class="list-disc ml-6 mt-4">

@@ -6,7 +6,7 @@
     <div class="p-4 h-156 flex flex-col">
       <!-- Title -->
       <div class="flex justify-between items-center">
-        <h1 class="text-insight text-lg">
+        <h1 class="text-white text-lg">
           Select Project
         </h1>
         <icon-fa-close
@@ -63,7 +63,7 @@
       <!-- Buttons -->
       <div class="mt-auto text-right">
         <button
-          class="btn btn-secondary mr-2"
+          class="btn mr-2"
           @click="$emit('emitClose')"
         >
           Cancel

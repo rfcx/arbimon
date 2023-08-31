@@ -3,18 +3,18 @@
 $colors: (
   "white": #fff,
   "black": #000,
-  "placeholder": #7f7d78,
-  "faded-grey": #242424,
-  "subtle-white": #f9f6f2,
+  "placeholder": #999,
+  "faded-grey": #333,
+  "subtle-white": #ffffff90,
   "primary": (
-    "light": #bdff56,
-    "base": #adff2c,
-    "dark": #8acc23,
+    "light": #e6f3ea,
+    "base": #31984f,
+    "dark": #25713b,
   ),
   "danger": (
-    "light": #ff8686,
-    "base": #ff6868,
-    "dark": #cc5353,
+    "light": #e5a4a4,
+    "base": #d46767,
+    "dark": #7f3e3e,
   ),
   "warning": (
     "light": #ffe166,
@@ -22,21 +22,21 @@ $colors: (
     "dark": #997b00,
   ),
   "info" : (
-    "base": #14130d,
+    "base": #45485d,
   ),
   "box-grey" : (
-    "base": #14130d,
-    "dark": #100f0a,
+    "base": #45485d,
+    "dark": #2f3140,
   ),
   "steel-grey" : (
-    "light": #4a4942,
-    "base": #1e1c13,
-    "dark": #18160f,
+    "light": #4a4c72,
+    "base": #232436,
+    "dark": #202031,
   ),
   "mirage-grey" : (
-    "light": #373639,
-    "base": #060508,
-    "dark": #040406,
+    "light": #e3e3e5,
+    "base": #141525,
+    "dark": #06060d,
   )
 );
 

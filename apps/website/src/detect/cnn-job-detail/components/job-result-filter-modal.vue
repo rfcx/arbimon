@@ -5,7 +5,7 @@
   >
     <div class="p-4">
       <div class="flex justify-between items-center">
-        <h1 class="text-insight text-lg">
+        <h1 class="text-white text-lg">
           Validation Filter
         </h1>
         <icon-fa-close
@@ -95,7 +95,7 @@
 
       <div class="text-right mt-4">
         <button
-          class="btn btn-secondary mr-2"
+          class="btn mr-2"
           @click="$emit('emitClose')"
         >
           Cancel
