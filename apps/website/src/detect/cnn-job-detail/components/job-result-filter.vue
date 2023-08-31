@@ -106,6 +106,7 @@
     @emit-close="displayFilterModal = false"
   />
 </template>
+
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import type { ComputedRef } from 'vue'
@@ -128,7 +129,12 @@ const classifierId: ComputedRef<ClassifierParams> = computed(() => {
     classifierId: props.classifierId == null ? '-1' : props.classifierId.toString()
   }
 })
-const { data } = useClassifier(apiClientBio, classifierId, { fields: ['outputs'] })
+
+const enabled = computed<boolean>(() => {
+  return classifierId.value.classifierId !== '-1'
+})
+
+const { data } = useClassifier(apiClientBio, classifierId, { fields: ['outputs'] }, enabled)
 
 watch(data, (newData) => {
   if (newData == null) {

@@ -22,5 +22,5 @@ export const detectReviewDetectionHandler: Handler<DetectReviewDetectionResponse
   const jobIdInteger = parseInt(jobId)
   if (Number.isNaN(jobIdInteger)) throw BioInvalidPathParamError({ jobId })
 
-  return await updateDetectionReviewFromApi(token, req.body)
+  return await updateDetectionReviewFromApi(token, jobIdInteger, req.body)
 }
