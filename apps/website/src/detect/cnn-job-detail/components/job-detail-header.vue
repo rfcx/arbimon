@@ -15,14 +15,14 @@
       <el-button
         type="info"
         size="large"
-        class="rounded-md uppercase font-medium"
+        class="rounded-md uppercase font-semibold"
       >
         <icon-fa-pause class="h-4 w-4 mr-2" /> Pause
       </el-button>
       <el-button
         type="info"
         size="large"
-        class="uppercase font-medium text-sm text-flamingo rounded-md"
+        class="uppercase font-semibold text-sm text-danger rounded-md"
       >
         Cancel job
       </el-button>

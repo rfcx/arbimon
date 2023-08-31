@@ -2,7 +2,7 @@
   <modal-popup
     name="buildComparisonModal"
   >
-    <h1 class="text-xl text-insight pt-4 pb-2 px-4 border-b-1">
+    <h1 class="text-xl text-white pt-4 pb-2 px-4 border-b-1">
       Customize dataset
     </h1>
     <div class="flex flex-row min-h-lg">
@@ -11,7 +11,7 @@
         <div
           v-for="(menu) in menus"
           :key="'menu-' + menu.id"
-          class="text-insight px-4 py-2 border-b-1"
+          class="text-white px-4 py-2 border-b-1"
           :class="{ 'border-l-4 border-l-brand-primary': isCurrentActive(menu.id) }"
           @click="setActiveMenuId(menu.id)"
         >
@@ -41,7 +41,7 @@
               :checked="isSelectedAllSites"
               @click="selectAllSites()"
             >
-            <span class="text-insight ml-2">All sites in the project</span>
+            <span class="text-white ml-2">All sites in the project</span>
           </label>
 
           <el-select
@@ -115,7 +115,7 @@
     </div>
     <div class="flex justify-end px-4 py-2 border-t-1">
       <button
-        class="btn btn-secondary mr-2"
+        class="btn mr-2"
         @click="emitClose"
       >
         Cancel

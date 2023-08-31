@@ -15,7 +15,7 @@
     </button>
     <div
       v-if="isDropdownOpen"
-      class="w-56 absolute top-10 right-0 text-insight text-md <md:w-max"
+      class="w-56 absolute top-10 right-0 text-primary text-md <md:w-max"
     >
       <slot />
     </div>
