@@ -30,7 +30,7 @@
             :class="version.colorClass"
           />
           <div
-            class="ml-2 text-insight capitalize font-normal"
+            class="ml-2 text-white capitalize font-normal"
             :class="version.disabled ? 'text-subtle' : '' "
           >
             {{ version.label }}

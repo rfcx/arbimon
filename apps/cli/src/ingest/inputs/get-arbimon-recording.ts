@@ -91,3 +91,41 @@ export const getArbimonRecordingDeleted = async (sequelize: Sequelize, { syncUnt
     deletedAt: isMySql ? row.deletedAt.toISOString() : row.deletedAt
   }))
 }
+
+export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId: number, limit: number, offset: number): Promise<unknown[]> => {
+  const sql = `SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon,
+      r.datetime datetime,
+      r.duration duration,
+      r.recording_id idArbimon,
+      r.upload_time updatedAt
+    FROM recordings r
+    JOIN sites s ON s.site_id = r.site_id
+    WHERE s.project_id = $projectId
+      AND r.datetime is not null
+      AND r.datetime_utc is not null
+      AND r.upload_time is not null
+      AND r.duration is not null
+      AND s.deleted_at is null
+    ORDER BY r.upload_time, r.recording_id
+    LIMIT $limit OFFSET $offset
+    ;
+  `
+
+  const isMySql = sequelize.getDialect() === 'mysql'
+
+  const results = await sequelize.query<ArbimonRecordingQuery>(sql, {
+    type: QueryTypes.SELECT,
+    raw: true,
+    bind: {
+      projectId,
+      offset,
+      limit
+    }
+  })
+
+  return results.map(row => ({
+    ...row,
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
+  }))
+}
