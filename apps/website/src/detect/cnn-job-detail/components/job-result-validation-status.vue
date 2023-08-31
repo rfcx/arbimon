@@ -21,7 +21,7 @@
         v-for="key in Object.entries(props.data?.reviewStatus ?? {})"
         :key="'validation-status-' + key[0]"
       >
-        <span class="font-medium justify-self-start text-right text-lg">{{ validationStatusValue(key[0], key[1]) }}</span>
+        <span class="font-semibold justify-self-start text-right text-lg">{{ validationStatusValue(key[0], key[1]) }}</span>
         <span class="text-lg">{{ validationStatusName(key[0]) }}</span>
       </template>
     </div>

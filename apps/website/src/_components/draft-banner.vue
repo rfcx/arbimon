@@ -5,10 +5,10 @@
     @emit-close="onClosePublishModalOptions"
   >
     <div class="p-4 m-4">
-      <div class="text-insight text-xl pb-2">
+      <div class="text-white text-xl pb-2">
         Publish Options
       </div>
-      <div class="mt-4 mb-4 text-insight text-lg">
+      <div class="mt-4 mb-4 text-white text-lg">
         Who can see the report?
         <div>
           <el-radio
@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="mt-4 mb-4 text-insight text-lg">
+      <div class="mt-4 mb-4 text-white text-lg">
         Protected Datasource
         <div>
           <el-checkbox
@@ -39,7 +39,7 @@
       </div>
       <div class="flex justify-end mt-2">
         <button
-          class="btn btn-secondary mr-2"
+          class="btn mr-2"
           @click="onClosePublishModalOptions"
         >
           Cancel

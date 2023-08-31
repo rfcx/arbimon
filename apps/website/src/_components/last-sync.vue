@@ -8,7 +8,7 @@
     <span v-if="isProjectMember">
       ・ <router-link
         :to="syncHistoryRoute"
-        class="inline hover:(underline text-insight cursor-pointer)"
+        class="inline hover:(underline text-white cursor-pointer)"
       >
         Sync History
       </router-link>

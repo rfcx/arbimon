@@ -17,7 +17,7 @@
         <div class="italic">
           {{ species.scientificName }}
         </div>
-        <div class="text-xs text-insight text-opacity-50">
+        <div class="text-xs text-white text-opacity-50">
           {{ species.commonName }}
         </div>
       </div>

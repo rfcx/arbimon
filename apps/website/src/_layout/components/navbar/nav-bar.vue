@@ -1,10 +1,10 @@
 <template>
   <nav
-    class="px-4 lg:px-6 py-2.5 bg-echo border-b-4 border-b-frequency"
+    class="bg-steel-grey"
     :class="{'border-b-1 border-box-grey': !isReport}"
   >
     <div class="sm:(relative flex justify-between) items-center">
-      <div class="justify-between flex-row relative flex items-center h-9">
+      <div class="justify-between flex-row relative flex items-center h-13">
         <div class="flex items-center">
           <mobile-menu-toggle-button
             v-model:isToggled="hasToggledMobileMenu"
@@ -14,11 +14,11 @@
             <div class="flex-shrink-0 flex items-center ml-4 <sm:(mx-2)">
               <img
                 class="h-9 w-9 <sm:(h-7 w-7)"
-                src="/src/_services/assets/arbimon-logo.svg"
+                src="/src/_services/assets/rfcx-logo.svg"
                 alt="Rainforest connection logo"
               >
-              <div class="text-insight ml-2 <md:hidden font-display">
-                <span class="<lg:hidden uppercase font-medium">Arbimon </span>
+              <div class="font-semibold text-primary ml-2 <md:hidden">
+                <span class="<lg:hidden">Arbimon </span>
                 <span :class="{ pride: isPride }">Insights</span>
                 <sup
                   class="font-extralight"
@@ -29,7 +29,7 @@
           </router-link>
           <button
             v-if="store.projects.length > 0"
-            class="navbar-item text-sm h-9 mx-2 sm:(px-2 hover:bg-echo rounded-md cursor-pointer)"
+            class="navbar-item text-sm h-9 mx-2 sm:(px-2 hover:bg-box-grey rounded-md cursor-pointer)"
             @click="toggleProjectSelector(true)"
           >
             <span class="max-w-48 truncate">{{ selectedProjectName }}</span>
