@@ -5,7 +5,7 @@ import { type DetectValidationResultsQueryParams, type DetectValidationResultsRe
 
 export const FETCH_VALIDATION_STATUS = 'fetch-validation-status'
 
-export const useGetJobValidationResults = (apiClient: AxiosInstance, jobId: number, query: DetectValidationResultsQueryParams): UseQueryReturnType<DetectValidationResultsResponse | undefined, unknown> => {
+export const useGetJobValidationResults = (apiClient: AxiosInstance, jobId: number, query: DetectValidationResultsQueryParams): UseQueryReturnType<DetectValidationResultsResponse, unknown> => {
   return useQuery(
     [FETCH_VALIDATION_STATUS],
     async () => await apiBioGetValidationResults(apiClient, jobId, query),
