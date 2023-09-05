@@ -12,9 +12,11 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
   const bind = !isProjectMember ? { ...filterBase.bind, protectedRiskRating: RISK_RATING_PROTECTED_IDS } : filterBase.bind
 
   const sql = `
-    SELECT 
+    SELECT
+      ts.id_arbimon as species_id,
       sip.common_name as name,
       sip.scientific_name as scientific_name,
+      ls.id_arbimon as site_id,
       ls.name as site,
       ls.latitude as latitude,
       ls.longitude as longitude,
@@ -28,9 +30,10 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
       detection_by_site_species_hour dbssh
       LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
       LEFT JOIN location_site ls ON dbssh.location_site_id = ls.id
+      INNER JOIN taxon_species ts on sip.taxon_species_id = ts.id
     WHERE ${conditions} 
     GROUP BY
-      ls.id, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, dbssh.taxon_species_id, dbssh.time_precision_hour_local
+      ls.id, ts.id_arbimon, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, dbssh.taxon_species_id, dbssh.time_precision_hour_local
     ORDER BY sip.common_name, ls.name, dbssh.time_precision_hour_local
   `
 
