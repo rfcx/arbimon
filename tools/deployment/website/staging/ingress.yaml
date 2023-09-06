@@ -3,6 +3,9 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
   name: biodiversity-website-ingress
   namespace: staging
   labels:
