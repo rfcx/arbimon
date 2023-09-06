@@ -14,6 +14,8 @@ export interface RichnessExportResponse {
 }
 
 export interface RichnessByExportReportRow {
+  species_id: number
+  site_id: number
   scientific_name: string
   name: string
   site: string
