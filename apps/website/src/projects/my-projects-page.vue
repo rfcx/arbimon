@@ -2,7 +2,7 @@
   <project-navbar />
   <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 mx-auto max-w-screen-md <lg:mx-8 lg:py-24">
-      <h2 class="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+      <h2 class="text-gray-900 dark:text-insight">
         My Projects
       </h2>
       <div
@@ -10,10 +10,10 @@
       >
         <router-link
           :to="{ name: ROUTE_NAMES.createProject }"
-          class="flex flex-col place-content-center p-6 bg-white border border-dashed border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-steel-gray dark:border-gray-700 dark:hover:bg-gray-700"
+          class="flex flex-col place-content-center p-6 bg-insight border border-dashed rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-02 dark:hover:bg-util-gray-02"
         >
-          <icon-fa-plus class="my-1 mx-auto text-lg text-gray-700 dark:text-gray-400" />
-          <div class="text-center text-xl tracking-tight font-bold text-gray-700 dark:text-gray-400">
+          <icon-fa-plus class="my-1 mx-auto text-lg text-gray-700 dark:text-insight" />
+          <div class="text-center text-xl tracking-tight font-medium text-gray-700 dark:text-insight">
             Create a new project
           </div>
         </router-link>
