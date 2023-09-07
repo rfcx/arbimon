@@ -1,11 +1,21 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed top-16 left-0 w-64 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch"
+    class="fixed top-0 left-0 w-64 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-steel-gray"
     aria-label="Sidebar"
   >
     <div class="h-full px-3 pb-4 overflow-y-auto">
-      <div class="border-gray-200 dark:border-gray-700">
+      <div
+        class="flex pb-3"
+      >
+        <router-link
+          :to="{ name: ROUTE_NAMES.landingHome }"
+          class="flex items-center min-w-58"
+        >
+          <brand-logo />
+        </router-link>
+      </div>
+      <div class="pt-5 border-t border-gray-200 dark:border-gray-700">
         <version-control />
         <router-link
           :to="{ name: ROUTE_NAMES.overview}"
@@ -144,6 +154,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import BrandLogo from '../brand-logo.vue'
 import VersionControl from '../landing-navbar/auth-navbar-item/version-control.vue'
 
 const store = useStore()
