@@ -10,19 +10,20 @@
           >
             <brand-logo />
           </router-link>
+          <!-- Nav menu for desktop -->
           <navbar-menu
             class="hidden lg:flex"
           />
         </div>
-        <!-- Auth -->
-        <div
-          v-if="!store.user"
-          class="flex items-center lg:order-2"
-        >
-          <!-- <client-only>
+        <!-- Right menus -->
+        <div class="flex items-center lg:order-2">
+          <client-only v-if="!toggles.legacyLogin">
             <auth-navbar-item dom-id="navbar-auth-desktop" />
-          </client-only> -->
-          <div class="flex items-center">
+          </client-only>
+          <div
+            v-else-if="!store.user"
+            class="flex items-center"
+          >
             <a
               :href="universalLoginUrl"
               class="text-gray-800 font-display dark:text-insight px-4 lg:px-5 py-1.5 lg:py-2 mr-2 dark:hover:text-frequency hidden md:block"
@@ -36,6 +37,7 @@
               Sign up
             </a>
           </div>
+          <!-- Mobile menu -->
           <button
             data-collapse-toggle="mobile-menu-2"
             type="button"
@@ -66,7 +68,8 @@
             /></svg>
           </button>
         </div>
-        <!-- Nav menu -->
+
+        <!-- Nav menu for mobile -->
         <div
           id="mobile-menu-2"
           class="hidden justify-between items-center w-full lg:hidden"
@@ -79,15 +82,18 @@
 </template>
 <script setup lang="ts">
 import { initCollapses, initDropdowns } from 'flowbite'
-import { onMounted } from 'vue'
+import { inject, onMounted } from 'vue'
 
+import { togglesKey } from '@/globals'
 import { universalLoginUrl } from '@/landing/auth0-arbimon'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import BrandLogo from '../brand-logo.vue'
+import AuthNavbarItem from './auth-navbar-item/auth-navbar-item.vue'
 import NavbarMenu from './navbar-menu.vue'
 
 const store = useStore()
+const toggles = inject(togglesKey)
 
 onMounted(() => {
   initCollapses()
