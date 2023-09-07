@@ -27,7 +27,7 @@
       </div>
     </div>
   </nav>
-  <nav class="sticky top-0 z-50 bg-gray-50 dark:bg-steel-gray-light">
+  <nav class="sticky top-0 z-40 bg-gray-50 dark:bg-steel-gray-light">
     <div class="max-w-screen-xl mx-auto px-2 sm:px-8">
       <div class="font-medium text-center text-gray-500 dark:text-gray-300">
         <ul class="flex flex-wrap -mb-px">
