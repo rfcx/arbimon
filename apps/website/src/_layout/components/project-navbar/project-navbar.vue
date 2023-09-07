@@ -1,5 +1,5 @@
 <template>
-  <nav class="w-full bg-white dark:bg-echo border-frequency border-b-4">
+  <nav class="w-full bg-white dark:bg-echo border-frequency border-b-4 fixed top-0 left-0 z-50">
     <div class="px-4 lg:px-6 py-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
@@ -7,6 +7,7 @@
             data-drawer-target="sidebar"
             data-drawer-toggle="sidebar"
             aria-controls="sidebar"
+            data-drawer-backdrop="false"
             type="button"
             class="inline-flex items-center py-1 px-2 mx-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:focus:ring-gray-600"
           >
