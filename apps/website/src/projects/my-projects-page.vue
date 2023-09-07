@@ -1,6 +1,6 @@
 <template>
   <project-navbar />
-  <section class="pt-16 bg-white dark:bg-mirage-gray">
+  <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 mx-auto max-w-screen-md <lg:mx-8 lg:py-24">
       <h2 class="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">
         My Projects
