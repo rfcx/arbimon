@@ -2,19 +2,23 @@
   <project-navbar />
   <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-24">
-      <h2 class="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+      <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
         Create a new project
       </h2>
       <div class="mt-4 grid gap-4 sm:grid-cols-2 sm:gap-6">
         <div class="sm:col-span-2">
           <label
             for="name"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Project Name</label>
+            class="block mb-2 font-medium text-gray-900 dark:text-white"
+          >Project Name* <span class="text-sm font-normal">6-50 Characters</span></label>
           <input
             id="name"
             v-model="name"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            name="name"
+            type="text"
+            minlength="6"
+            maxlength="50"
+            class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
             placeholder="Brown bears in Eastern Finland"
             required
           >
@@ -72,9 +76,9 @@
           />
         </div> -->
       </div>
-      <div>
+      <div class="mt-4 sm:mt-6">
         <button
-          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+          class="inline-flex items-center btn btn-primary"
           :disabled="isCreating"
           @click.prevent="create"
         >
