@@ -1,6 +1,6 @@
 <template>
-  <nav class="w-full bg-white dark:bg-steel-gray">
-    <div class="px-3 py-3 lg:pr-5">
+  <nav class="w-full bg-white dark:bg-echo border-frequency border-b-4">
+    <div class="px-4 lg:px-6 py-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
           <button
@@ -8,7 +8,7 @@
             data-drawer-toggle="sidebar"
             aria-controls="sidebar"
             type="button"
-            class="inline-flex items-center py-1 px-2 mx-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            class="inline-flex items-center py-1 px-2 mx-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:focus:ring-gray-600"
           >
             <span class="sr-only">Open sidebar</span>
             <svg
@@ -42,13 +42,13 @@
         </div>
         <div class="flex items-center">
           <div
-            class="hidden justify-between items-center lg:flex lg:w-auto"
+            class="hidden justify-between items-center md:flex md:w-auto"
           >
-            <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+            <ul class="flex flex-col mt-4 font-medium md:flex-row md:space-x-8 md:mt-0">
               <li v-if="toggles?.explore">
                 <router-link
                   :to="{ name: ROUTE_NAMES.explore }"
-                  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                  class="block py-2 pr-4 pl-3 md:p-0 text-gray-700 dark:text-insight"
                 >
                   Explore
                 </router-link>
@@ -56,7 +56,7 @@
               <li v-if="store?.user">
                 <router-link
                   :to="{ name: ROUTE_NAMES.myProjects }"
-                  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                  class="block py-2 pr-4 pl-3 md:p-0 text-gray-700 dark:text-insight"
                 >
                   My Projects
                 </router-link>
