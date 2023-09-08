@@ -79,7 +79,6 @@ export const getDetectionSummary = async (token: string, jobId: number, query: D
   }
 
   const response = await getDetectionsStatusFromApi(token, jobId, detectSummaryQuery)
-  console.info(response)
   return response
 }
 
