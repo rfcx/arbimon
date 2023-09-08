@@ -112,6 +112,7 @@ export async function getDetectionsStatusFromApi (token: string, jobId: number, 
 
     return resp.data
   } catch (e) {
+    console.info(e)
     return unpackAxiosError(e)
   }
 }
@@ -129,6 +130,7 @@ export async function getClassifierJobResultsFromApi (token: string, jobId: numb
 
     return resp.data
   } catch (e) {
+    console.info(e)
     return unpackAxiosError(e)
   }
 }
