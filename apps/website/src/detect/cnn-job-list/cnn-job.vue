@@ -135,7 +135,7 @@ const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
     status: cj.status,
     value: getProgress(cj.minutesCompleted, cj.minutesTotal)
   },
-  totalDurationMinutes: cj.minutesTotal,
+  totalDurationMinutes: cj.minutesTotal || 0,
   createdAt: dayjs(cj.createdAt)
 })) ?? [])
 
