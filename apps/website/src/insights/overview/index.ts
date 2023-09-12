@@ -1,1 +1,1 @@
-export { default } from './overview-page.vue'
+export { default } from './overview-mock.vue'

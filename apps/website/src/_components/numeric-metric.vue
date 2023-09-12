@@ -1,7 +1,13 @@
 <template>
-  <div class="rounded dark:bg-gray-300 dark:text-gray-900 p-4">
-    <h5 v-if="title">
-      {{ title }}
+  <div class="rounded-xl dark:bg-moss dark:text-insight p-6 border-1 border-insight flex flex-col justify-between">
+    <h5
+      v-if="title"
+      class="text-spoonbill font-eyebrow"
+    >
+      {{ title }}<span
+        v-if="unit"
+        class="ml-2"
+      >({{ unit }})</span>
       <icon-fas-info-circle
         v-if="tooltipText"
         :data-tooltip-target="$refs.tooltip"
@@ -19,16 +25,12 @@
         />
       </div>
     </h5>
-    <div>
-      <span class="font-bold text-4xl <sm:text-2xl">{{ valueShortScale }}</span>
+    <div class="mt-4">
+      <span class="font-medium text-4xl <sm:text-2xl font-header">{{ valueShortScale }}</span>
       <span
         v-if="totalShortScale"
         class="ml-2 text-2xl <sm:text-lg"
       >/ {{ totalShortScale }}</span>
-      <span
-        v-if="unit"
-        class="ml-2 text-2xl <sm:text-lg"
-      >{{ unit }}</span>
     </div>
   </div>
 </template>
