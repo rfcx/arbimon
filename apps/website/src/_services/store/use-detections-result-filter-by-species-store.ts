@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
 import { useStoreOutsideSetup } from './index'
@@ -14,6 +16,12 @@ import { useStoreOutsideSetup } from './index'
 export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-filter-by-species', () => {
   const store = useStoreOutsideSetup()
   const route = useRoute()
+
+  const customSitesList = ref<DetectSummaryResponse['streams']>([])
+
+  const updateCustomSitesList = (list: DetectSummaryResponse['streams']): void => {
+    customSitesList.value = list
+  }
 
   const filter = ref<Omit<ValidationFilterConfig, 'classification'> & { classification?: string }>({
     threshold: 50,
@@ -54,12 +62,21 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
-    return store.projectFilters?.locationSites.map(ls => {
+    if (customSitesList.value.length === 0) {
+      return store.projectFilters?.locationSites.map(ls => {
+        return {
+          label: `${ls.name} (${ls.idCore})`,
+          value: ls.idCore.toString()
+        }
+      }) ?? []
+    }
+
+    return customSitesList.value.map(cs => {
       return {
-        label: `${ls.name} (${ls.idCore})`,
-        value: ls.id.toString()
+        label: `${cs.name} (${cs.id})`,
+        value: cs.id
       }
-    }) ?? []
+    })
   })
 
   const sortByFilterOptions = computed<ResultFilterInner[]>(() => {
@@ -73,6 +90,8 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     formattedThreshold,
     validationStatusFilterOptions,
     sitesFilterOptions,
-    sortByFilterOptions
+    sortByFilterOptions,
+    customSitesList,
+    updateCustomSitesList
   }
 })

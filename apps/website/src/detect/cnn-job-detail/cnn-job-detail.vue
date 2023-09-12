@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject } from 'vue'
+import { computed, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
@@ -68,10 +68,19 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
       'query_end',
       'classifier',
       'query_streams',
-      'query_hours'
+      'query_hours',
+      'streams'
     ]
   }
 )
+
+watch(jobSummary, (newValue) => {
+  if (newValue == null) {
+    return
+  }
+
+  detectionsResultFilterStore.updateCustomSitesList(newValue.streams)
+})
 
 const { isLoading: isLoadingJobResults, isError: isErrorJobResults, data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
 
