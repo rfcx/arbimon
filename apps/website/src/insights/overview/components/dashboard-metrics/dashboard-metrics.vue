@@ -1,42 +1,49 @@
+<!-- eslint-disable vue/no-unused-vars -->
+<!-- eslint-disable vue/require-v-for-key -->
 <template>
+  <h1 class="mb-6">
+    Overview
+  </h1>
   <div
     v-if="loading || metrics === null"
+    class="flex gap-4 columns-2 md:columns-4"
   >
-    <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24">
+    <div
+      v-for="n in 4"
+      class="loading-shimmer rounded-xl p-4 min-w-32 <sm:min-w-24 grow flex-1"
+    >
       <p class="font-bold text-4xl <sm:text-2xl">
         &nbsp;
       </p>
       <p>&nbsp;</p>
     </div>
-    <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24" />
-    <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24" />
-    <div class="loading-shimmer rounded-xl p-4 min-w-32 inline-block <sm:min-w-24" />
   </div>
   <div
     v-else
-    class="gap-8 columns-4 <sm:columns-2 <sm:text-center"
+    class="gap-4 columns-4 <sm:columns-2 <sm:text-center items-stretch flex"
   >
-    <numeric-metric
-      title="Threatened / detected"
-      :value="metrics.speciesThreatenedCount"
-      :total-value="metrics.speciesCount"
-      unit="species"
-      tooltip-text="Scientific term: test"
-    />
     <numeric-metric
       title="Area monitored"
       :value="areaMonitored"
       unit="sq km"
+      class="flex-1"
+    />
+    <numeric-metric
+      title="Threatened species detected"
+      :value="metrics.speciesThreatenedCount"
+      tooltip-text="Scientific term: test"
+      class="flex-1"
     />
     <numeric-metric
       title="Recorders deployed"
       :value="metrics.siteCount"
-      unit="sites"
+      class="flex-1"
     />
     <numeric-metric
       title="Sampling duration"
       :value="samplingDuration"
       unit="days"
+      class="flex-1"
     />
   </div>
 </template>
