@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
@@ -29,6 +30,12 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
     siteIds: [],
     sortBy: 'asc'
   })
+
+  const customSitesList = ref<DetectSummaryResponse['streams']>([])
+
+  const updateCustomSitesList = (list: DetectSummaryResponse['streams']): void => {
+    customSitesList.value = list
+  }
 
   const updateResultFilter = (value: ValidationFilterConfig): void => {
     filter.value.threshold = value.threshold
@@ -66,19 +73,28 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   const classFilterOptions = computed<ResultFilterInner[]>(() => {
     return [{ label: 'All', value: 'all' }, ...classifierOutputList.value.map(output => {
       return {
-        label: output.outputClassName,
-        value: output.classificationId.toString()
+        label: `${output.classification.title} (${output.classification.value})`,
+        value: output.classification.value
       }
     })] ?? [{ label: 'All', value: 'all' }]
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
-    return store.projectFilters?.locationSites.map(ls => {
+    if (customSitesList.value.length === 0) {
+      return store.projectFilters?.locationSites.map(ls => {
+        return {
+          label: `${ls.name} (${ls.idCore})`,
+          value: ls.idCore.toString()
+        }
+      }) ?? []
+    }
+
+    return customSitesList.value.map(cs => {
       return {
-        label: `${ls.name} (${ls.idCore})`,
-        value: ls.id.toString()
+        label: `${cs.name} (${cs.id})`,
+        value: cs.id
       }
-    }) ?? []
+    })
   })
 
   const sortByFilterOptions = computed<ResultFilterInner[]>(() => {
@@ -98,6 +114,8 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
     formatThreshold,
     formattedThreshold,
     classifierOutputList,
-    updateclassifierOutputList
+    updateClassifierOutputList,
+    customSitesList,
+    updateCustomSitesList
  }
 })
