@@ -12,15 +12,24 @@
         class="grid gap-x-4"
         style="grid-template-columns: fit-content(4rem) 1fr;"
       >
-        <span class="font-semibold justify-self-start text-right text-lg">0</span>
+        <span class="font-semibold justify-self-start text-right text-lg">{{ total - (confirmed + rejected + uncertain) }}</span>
         <span class="text-lg">Unvalidated</span>
-        <span class="font-semibold justify-self-start text-right text-lg">0</span>
+        <span class="font-semibold justify-self-start text-right text-lg">{{ confirmed }}</span>
         <span class="text-lg">Present</span>
-        <span class="font-semibold justify-self-start text-right text-lg">0</span>
+        <span class="font-semibold justify-self-start text-right text-lg">{{ rejected }}</span>
         <span class="text-lg">Not present</span>
-        <span class="font-semibold justify-self-start text-right text-lg">0</span>
+        <span class="font-semibold justify-self-start text-right text-lg">{{ uncertain }}</span>
         <span class="text-lg">Unknown</span>
       </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  total: number
+  rejected: number
+  uncertain: number
+  confirmed: number
+}>()
+</script>
