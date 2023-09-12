@@ -5,15 +5,16 @@
   />
   <div v-else>
     <div class="relative mx-2">
-      <div class="absolute w-full h-1 rounded-xl bg-steel-grey-light" />
+      <div class="absolute w-full h-4 rounded-4xl bg-steel-grey-light" />
       <div
         v-for="(bar, idx) in bars"
         :key="'dashboard-richness-percentage-' + bar.name"
-        class="absolute h-1 rounded-4xl"
+        class="absolute h-4 border-4 border-echo"
+        :class="idx === bars.length - 1 ? 'rounded-l-4xl rounded-r-4xl' : 'rounded-l-4xl'"
         :style="{ width: bar.width + '%', backgroundColor: bar.color , zIndex: bars.length - idx }"
       />
     </div>
-    <div class="pt-3">
+    <div class="pt-3 pl-1">
       <ul class="list-none">
         <li
           v-for="bar in bars"

@@ -5,14 +5,13 @@
       :metrics="metrics"
     />
   </div>
-  <h1>Threatened species</h1>
-  <div>bar chart + filter & animal cards</div>
-  <div>Map area</div>
-  <h1>Project summary</h1>
+  <dashboard-species :dataset="richnessByRisk" />
 </template>
 
 <script setup lang="ts">
 import dashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
+import dashboardSpecies from './components/dashboard-species/dashboard-threatened-species.vue'
+import type { HorizontalStack } from './components/dashboard-species/types'
 
 const metrics = {
   detectionMinutesCount: 0,
@@ -22,4 +21,22 @@ const metrics = {
   maxDate: new Date(),
   minDate: new Date()
 }
+
+const richnessByRisk: HorizontalStack[] = [
+  {
+    name: 'Critically Endangered',
+    color: '#008059',
+    count: 100
+  },
+  {
+    name: 'Endangered',
+    color: '#FFAFAF',
+    count: 75
+  },
+  {
+    name: 'Vulnerable',
+    color: '#FF6868',
+    count: 25
+  }
+]
 </script>
