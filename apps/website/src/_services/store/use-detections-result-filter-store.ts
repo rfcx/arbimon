@@ -18,7 +18,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
 
   const classifierOutputList = ref<NonNullable<ClassifierResponse['outputs']>>([])
 
-  const updateclassifierOutputList = (classes: ClassifierResponse['outputs']): void => {
+  const updateClassifierOutputList = (classes: ClassifierResponse['outputs']): void => {
     classifierOutputList.value = classes ?? []
   }
 
