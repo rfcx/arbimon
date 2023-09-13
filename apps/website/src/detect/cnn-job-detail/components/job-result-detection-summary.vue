@@ -27,7 +27,7 @@
           :title="item.value"
           :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: item.value }}"
         >
-          {{ item.title }}
+          {{ item.title }} ({{ item.value }})
         </router-link>
       </template>
     </div>
