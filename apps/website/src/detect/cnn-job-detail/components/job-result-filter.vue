@@ -141,7 +141,7 @@ watch(data, (newData) => {
     return
   }
 
-  detectionsResultFilterStore.updateclassifierOutputList(newData.outputs)
+  detectionsResultFilterStore.updateClassifierOutputList(newData.outputs)
 })
 
 const displayFilterModal = ref(false)
