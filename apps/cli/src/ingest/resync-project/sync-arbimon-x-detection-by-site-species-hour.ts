@@ -2,6 +2,7 @@ import { groupBy } from 'lodash-es'
 import { type Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getArbimonProjectDetection } from '../inputs/get-arbimon-detection'
 import { mapDetectionBySiteSpeciesHourArbimonWithPrevSync, writeDetectionBySiteSpeciesHourToBio } from '../outputs/resync-detection-by-site-species-hour'
@@ -105,4 +106,8 @@ export const resyncArbimonDetectionBySiteSpeciesHourBatch = async (projectId: nu
     }
   }
   await getData()
+}
+
+export const deleteArbimonDetectionBySiteSpeciesHour = async (projectId: number, sequelize: Sequelize): Promise<void> => {
+  await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.destroy({ where: { locationProjectId: projectId } })
 }
