@@ -39,7 +39,7 @@ import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
 
-const props = withDefaults(defineProps<{ speciesName: string }>(), { speciesName: '' })
+withDefaults(defineProps<{ speciesName: string }>(), { speciesName: '' })
 
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
