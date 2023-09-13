@@ -28,6 +28,10 @@ export interface DetectSummaryResponse {
     id: number
     name: string
   }
+  streams: Array<{
+    id: string
+    name: string
+  }>
 }
 
 // Route

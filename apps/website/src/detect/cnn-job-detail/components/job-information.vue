@@ -30,9 +30,9 @@
           <icon-fa-map-marker class="block m-auto" />
           <h2
             class="text-lg truncate"
-            :title="props.summary?.queryStreams ?? ''"
+            :title="queryStreamsInfoString"
           >
-            {{ props.summary?.queryStreams == null ? 'All sites' : props.summary.queryStreams }}
+            {{ queryStreamsInfoString }}
           </h2>
           <icon-fa-calendar class="block m-auto" />
           <h2 class="text-lg">
@@ -111,6 +111,7 @@ import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/d
 import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { hours } from '~/picker/time-of-day-constants'
+import { useStore } from '~/store'
 import ComponentError from './component-error.vue'
 import jobInformationStatus from './job-information-status.vue'
 
@@ -120,6 +121,8 @@ const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSumma
   data: undefined,
   results: undefined
 })
+
+const store = useStore()
 
 const queryStart = computed(() => {
   if (props.summary?.queryStart == null) {
@@ -135,6 +138,26 @@ const queryEnd = computed(() => {
   }
 
   return dayjs(props.summary.queryEnd).format('YYYY/MM/DD')
+})
+
+const queryStreams = computed(() => {
+  if (props.summary?.queryStreams == null) {
+    return 'All sites'
+  }
+
+  return props.summary.queryStreams
+})
+
+const sitesCount = computed(() => {
+  if (props.summary?.streams == null || props.summary?.streams.length === 0) {
+    return store.projectFilters?.locationSites.length ?? 0
+  }
+
+  return props.summary.streams.length
+})
+
+const queryStreamsInfoString = computed(() => {
+  return `${queryStreams.value} (${sitesCount.value} sites)`
 })
 
 const queryHours = computed(() => {
