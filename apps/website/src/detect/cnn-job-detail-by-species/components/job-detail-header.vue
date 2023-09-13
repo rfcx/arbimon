@@ -11,7 +11,7 @@
         <span class="text-subtle">{{ jobId }}</span>
       </el-breadcrumb-item>
       <el-breadcrumb-item>
-        <span class="text-subtle">{{ speciesSlug }}</span>
+        <span class="text-subtle">{{ speciesName }}</span>
       </el-breadcrumb-item>
     </el-breadcrumb>
     <div class="job-btn-container">
@@ -39,7 +39,8 @@ import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
 
+const props = withDefaults(defineProps<{ speciesName: string }>(), { speciesName: '' })
+
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
-const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
 </script>

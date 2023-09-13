@@ -1,8 +1,8 @@
 <template>
   <div>
-    <JobDetailHeader />
+    <JobDetailHeader :species-name="speciesName" />
     <JobFilterOptions
-      :species-name="speciesSlug"
+      :species-name="speciesName"
       :species-count="speciesCount?.total ?? 0"
     />
     <JobValidationStatus
@@ -73,6 +73,20 @@ watch(jobSummary, (newValue) => {
 })
 
 const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
+
+const speciesName = computed(() => {
+  if (speciesSlug.value === '' || jobResults.value == null) {
+    return ''
+  }
+
+  const found = jobResults.value.classificationsSummary.find(c => c.value === speciesSlug.value)
+
+  if (found == null) {
+    return ''
+  }
+
+  return `${found.title} (${found.value})`
+})
 
 const speciesCount = computed(() => {
   if (jobResults.value == null) {
