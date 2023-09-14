@@ -39,6 +39,23 @@
     </div>
 
     <div
+      class="job-result-filter-start-end-range ml-4 <lg:hidden"
+      label="start-end-range"
+    >
+      <el-select
+        v-model="detectionsResultFilterBySpeciesStore.filter.range"
+        placeholder="Start/end range"
+      >
+        <el-option
+          v-for="range in detectionsResultFilterBySpeciesStore.startEndRangeFilterOptions"
+          :key="range.value"
+          :label="range.label"
+          :value="range.value"
+        />
+      </el-select>
+    </div>
+
+    <div
       class="job-result-filter-sites ml-4 <lg:hidden"
       label="sites"
     >
@@ -103,7 +120,7 @@ const displayFilterModal = ref(false)
 <style lang="scss">
 // this style is to mimic the el-dropdown element.
 // affects both the modal and the filter here.
-.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by {
+.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by, .job-result-filter-start-end-range {
   div.el-input__wrapper {
     background-color: transparent;
     box-shadow: none;
