@@ -101,7 +101,7 @@ const refetchDetections = computed(() => {
   return false
 })
 
-// This query will run after `useGetJobDetectionSummary`
+// This query will run after `useGetJobValidationResults`
 const params = computed<DetectDetectionsQueryParams>(() => ({
   start: queryStart.value,
   end: queryEnd.value,

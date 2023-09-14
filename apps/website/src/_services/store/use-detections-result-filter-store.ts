@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
 import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
 import { useStoreOutsideSetup } from './index'
+
+interface ClassifierOutputList { title: string, value: string }
 
 /**
  * A store to store the settings value between the modal and the full page components
@@ -17,9 +18,9 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   const store = useStoreOutsideSetup()
   const route = useRoute()
 
-  const classifierOutputList = ref<NonNullable<ClassifierResponse['outputs']>>([])
+  const classifierOutputList = ref<ClassifierOutputList[]>([])
 
-  const updateClassifierOutputList = (classes: ClassifierResponse['outputs']): void => {
+  const updateClassifierOutputList = (classes: ClassifierOutputList[] | undefined): void => {
     classifierOutputList.value = classes ?? []
   }
 
@@ -73,8 +74,8 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   const classFilterOptions = computed<ResultFilterInner[]>(() => {
     return [{ label: 'All', value: 'all' }, ...classifierOutputList.value.map(output => {
       return {
-        label: `${output.classification.title} (${output.classification.value})`,
-        value: output.classification.value
+        label: `${output.title} (${output.value})`,
+        value: output.value
       }
     })] ?? [{ label: 'All', value: 'all' }]
   })
