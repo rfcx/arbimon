@@ -29,7 +29,7 @@ export interface GetMediaLinkOptions {
 }
 
 export const getMediaLink = (options: GetMediaLinkOptions): string => {
-  const dateFormat = 'YYYYMMDDTHHMMssSSSZ'
+  const dateFormat = 'YYYYMMDDTHHmmssSSS[Z]'
   const filename: string[] = []
 
   filename.push(`${options.streamId}_t${dayjs.utc(options.start).format(dateFormat)}.${dayjs.utc(options.end).format(dateFormat)}`)
