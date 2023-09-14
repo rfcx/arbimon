@@ -3,7 +3,7 @@
   <div>
     <stack-distribution
       :dataset="dataset"
-      :known-total-count="200"
+      :known-total-count="'200'"
       class="mt-4"
     />
   </div>
