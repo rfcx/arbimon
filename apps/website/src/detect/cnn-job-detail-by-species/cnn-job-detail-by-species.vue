@@ -113,7 +113,17 @@ const params = computed<DetectDetectionsQueryParams>(() => {
     minConfidence: detectionsResultFilterBySpeciesStore.formattedThreshold,
     descending: detectionsResultFilterBySpeciesStore.filter.sortBy === 'desc',
     limit: PAGE_SIZE_LIMIT,
-    offset: offset.value
+    offset: offset.value,
+    fields: [
+      'id',
+      'stream_id',
+      'classifier_id',
+      'start',
+      'end',
+      'confidence',
+      'review_status',
+      'classification'
+    ]
   }
 })
 
@@ -129,5 +139,5 @@ const {
   isLoading: isLoadingJobDetections,
   isError: isErrorJobDetections,
   data: jobDetections
-} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null), jobDetectionsRefetchInterval)
+} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''), jobDetectionsRefetchInterval)
 </script>

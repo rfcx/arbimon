@@ -50,7 +50,7 @@ const detectionsResultFilterStore = useDetectionsResultFilterStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 // these two queries below will run simultaneously
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummary } = useGetJobDetectionSummary(
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummary, refetch } = useGetJobDetectionSummary(
   apiClientBio,
   jobId.value,
   {
@@ -76,6 +76,7 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
 
 watch(jobSummary, (newValue) => {
   if (newValue == null) {
+    refetch.value()
     return
   }
 
