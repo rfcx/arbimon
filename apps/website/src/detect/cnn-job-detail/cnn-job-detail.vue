@@ -110,7 +110,19 @@ const params = computed<DetectDetectionsQueryParams>(() => ({
   minConfidence: detectionsResultFilterStore.formattedThreshold,
   reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
   classifiers: [classifierId.value ?? -1],
-  descending: detectionsResultFilterStore.filter.sortBy === 'desc'
+  descending: detectionsResultFilterStore.filter.sortBy === 'desc',
+  limit: 200,
+  offset: 0,
+  fields: [
+    'id',
+    'stream_id',
+    'classifier_id',
+    'start',
+    'end',
+    'confidence',
+    'review_status',
+    'classification'
+  ]
 }))
 
 const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchDetections)
