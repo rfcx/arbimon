@@ -6,6 +6,7 @@ export interface ValidationFilterConfig {
   classification: string
   siteIds: string[]
   sortBy: 'asc' | 'desc'
+  range: string
 }
 
 export interface DetectionMedia {

@@ -26,7 +26,7 @@
       label="validation-status"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.validationStatus"
+        v-model="detectionsResultFilterStore.filter.validationStatus"
         placeholder="Validation status"
       >
         <el-option
@@ -39,11 +39,28 @@
     </div>
 
     <div
+      class="job-result-filter-start-end-range ml-4 <lg:hidden"
+      label="date-range"
+    >
+      <el-select
+        v-model="detectionsResultFilterStore.filter.range"
+        placeholder="Start/end range"
+      >
+        <el-option
+          v-for="range in detectionsResultFilterStore.startEndRangeFilterOptions"
+          :key="range.value"
+          :label="range.label"
+          :value="range.value"
+        />
+      </el-select>
+    </div>
+
+    <div
       class="job-result-filter-taxon-class ml-4 <lg:hidden"
       label="taxon-class"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.classification"
+        v-model="detectionsResultFilterStore.filter.classification"
         placeholder="Class"
       >
         <el-option
@@ -60,7 +77,7 @@
       label="sites"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.siteIds"
+        v-model="detectionsResultFilterStore.filter.siteIds"
         multiple
         collapse-tags
         placeholder="Sites"
@@ -79,7 +96,7 @@
       label="sort-by"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.sortBy"
+        v-model="detectionsResultFilterStore.filter.sortBy"
         placeholder="Sort by"
       >
         <el-option
@@ -133,7 +150,7 @@ const displayFilterModal = ref(false)
 <style lang="scss">
 // this style is to mimic the el-dropdown element.
 // affects both the modal and the filter here.
-.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by {
+.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by, .job-result-filter-start-end-range {
   div.el-input__wrapper {
     background-color: transparent;
     box-shadow: none;

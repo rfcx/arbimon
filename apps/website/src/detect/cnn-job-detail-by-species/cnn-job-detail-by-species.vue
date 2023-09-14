@@ -69,6 +69,8 @@ watch(jobSummary, (newValue) => {
     return
   }
 
+  // chunk dates to query to chunk of 7 days
+  detectionsResultFilterBySpeciesStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
 
@@ -103,8 +105,8 @@ const offset = computed<number>(() => {
 
 const params = computed<DetectDetectionsQueryParams>(() => {
   return {
-    start: jobSummary.value?.queryStart ?? '',
-    end: jobSummary.value?.queryEnd ?? '',
+    start: detectionsResultFilterBySpeciesStore.selectedStartRange,
+    end: detectionsResultFilterBySpeciesStore.selectedEndRange,
     classifications: [speciesSlug.value],
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
     reviewStatuses: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterBySpeciesStore.filter.validationStatus],

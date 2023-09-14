@@ -80,14 +80,14 @@ watch(jobSummary, (newValue) => {
   }
 
   detectionsResultFilterStore.updateCustomSitesList(newValue.streams)
+
+  // chunk given date range to 7 days range
+  detectionsResultFilterStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
 })
 
 const { isLoading: isLoadingJobResults, isError: isErrorJobResults, data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
 
-const queryStart = computed(() => jobSummary.value?.queryStart ?? '')
-const queryEnd = computed(() => jobSummary.value?.queryEnd ?? '')
 const classifierId = computed(() => jobSummary.value?.classifierId)
-
 const enabled = computed(() => jobSummary.value?.classifierId != null)
 
 /**
@@ -103,8 +103,8 @@ const refetchDetections = computed(() => {
 
 // This query will run after `useGetJobValidationResults`
 const params = computed<DetectDetectionsQueryParams>(() => ({
-  start: queryStart.value,
-  end: queryEnd.value,
+  start: detectionsResultFilterStore.selectedStartRange,
+  end: detectionsResultFilterStore.selectedEndRange,
   sites: detectionsResultFilterStore.filter.siteIds,
   classifications: detectionsResultFilterStore.filter.classification === 'all' || detectionsResultFilterStore.filter.classification === '' ? undefined : [detectionsResultFilterStore.filter.classification],
   minConfidence: detectionsResultFilterStore.formattedThreshold,
