@@ -108,40 +108,23 @@
 </template>
 
 <script setup lang="ts">
-import type { AxiosInstance } from 'axios'
-import type { ComputedRef } from 'vue'
-import { computed, inject, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
-import type { ClassifierParams } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 
-import { useClassifier } from '@/detect/_composables/use-classifier'
-import { apiClientBioKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
 import FilterModal from './job-result-filter-modal.vue'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const props = defineProps<{ classifierId?: number }>()
-
+const props = defineProps<{ classifierId?: number, jobSummary: DetectValidationResultsResponse | undefined }>()
 const detectionsResultFilterStore = useDetectionsResultFilterStore()
 
-const classifierId: ComputedRef<ClassifierParams> = computed(() => {
-  return {
-    classifierId: props.classifierId == null ? '-1' : props.classifierId.toString()
-  }
-})
-
-const enabled = computed<boolean>(() => {
-  return classifierId.value.classifierId !== '-1'
-})
-
-const { data } = useClassifier(apiClientBio, classifierId, { fields: ['outputs'] }, enabled)
-
-watch(data, (newData) => {
-  if (newData == null) {
-    return
-  }
-
-  detectionsResultFilterStore.updateClassifierOutputList(newData.outputs)
+watch(() => props.jobSummary, (newValue) => {
+  detectionsResultFilterStore.updateClassifierOutputList(newValue?.classificationsSummary.map(c => {
+    return {
+      title: c.title,
+      value: c.value
+    }
+  }) ?? [])
 })
 
 const displayFilterModal = ref(false)
