@@ -16,8 +16,37 @@
         />
       </aside>
       <main class="md:col-span-8 mt-8 md:mt-20 mx-5">
+        <svg
+          v-if="isLoading"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          class="block bg-none w-8 h-8 mx-auto mt-6"
+          style="shape-rendering: auto;"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="xMidYMid"
+        >
+          <circle
+            cx="50"
+            cy="50"
+            fill="none"
+            stroke="#d9d9d9"
+            stroke-width="10"
+            r="35"
+            stroke-dasharray="164.93361431346415 56.97787143782138"
+          >
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              repeatCount="indefinite"
+              dur="1s"
+              values="0 50 50;360 50 50"
+              keyTimes="0;1"
+            />
+          </circle>
+        </svg>
         <div
           v-for="(publicationYear, idx) in publicationYearsList"
+          v-else
           :key="`${publicationYear}_${idx}`"
         >
           <h1
@@ -42,10 +71,11 @@ import uFuzzy from '@leeoniya/ufuzzy'
 import { groupBy } from 'lodash-es'
 import { type Ref, computed, ref } from 'vue'
 
+import type { LandingPublicationsResponse } from '@rfcx-bio/common/api-bio/landing/landing-publications'
+
 import PublicationCard from '../components/publication-card.vue'
 import PublicationsSelectorAccordions from '../components/publications-selector-accordions.vue'
 import PublicationsSidebarMenu from '../components/publications-sidebar-menu.vue'
-import { publications } from '../data'
 import type { Publication } from '../data/types'
 import { type PaperPublishedBy } from './types'
 
@@ -55,14 +85,17 @@ const search = ref('')
 const paperPublishedBy = ref<PaperPublishedBy>(null)
 const publicationsByYear = ref<number | null>(null)
 
+const props = withDefaults(defineProps<{ publications: LandingPublicationsResponse | undefined, isLoading: boolean }>(), {
+  publications: undefined,
+  isLoading: true
+})
+
 const paperPublishedByAppliedPublications = computed<Publication[]>(() => {
-  if (paperPublishedBy.value != null && paperPublishedBy.value !== 'all') {
-    return publications.filter(p => {
-      return p.isRFCxAuthor === true
-    })
+  if (paperPublishedBy.value === 'rfcx') {
+    return props?.publications?.filter(p => p.isRFCxAuthor === true) ?? []
   }
 
-  return publications
+  return props.publications ?? []
 })
 
 const searchTermAppliedPublications = computed<Publication[]>(() => {
