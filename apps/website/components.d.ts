@@ -61,6 +61,7 @@ declare module '@vue/runtime-core' {
     IconFasCaretRight: typeof import('~icons/fa-solid/caret-right')['default']
     IconFasChevronLeft: typeof import('~icons/fa-solid/chevron-left')['default']
     IconFasChevronRight: typeof import('~icons/fa-solid/chevron-right')['default']
+    IconFasCircleNotch: typeof import('~icons/fa-solid/circle-notch')['default']
     IconFasClock: typeof import('~icons/fa-solid/clock')['default']
     IconFasEllipsisV: typeof import('~icons/fa-solid/ellipsis-v')['default']
     IconFasFilter: typeof import('~icons/fa-solid/filter')['default']
