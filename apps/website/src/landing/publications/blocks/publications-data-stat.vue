@@ -8,11 +8,21 @@
         </h5>
       </div>
       <div class="grid grid-cols-2 gap-4 grid-flow-row">
+        <icon-fas-spinner
+          v-if="isLoading"
+          class="animate-spin w-8 h-8 lg:mx-24 mx-12"
+        />
         <number-stat
+          v-else
           :number="props.countPublication"
           title="Papers published"
         />
+        <icon-fas-spinner
+          v-if="isLoading"
+          class="animate-spin w-8 h-8 lg:mx-24 mx-12"
+        />
         <number-stat
+          v-else
           :number="props.countCitation"
           title="Total citations"
         />
@@ -24,8 +34,11 @@
 <script setup lang="ts">
 import NumberStat from '../../home/components/number-stat.vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   countCitation: number
   countPublication: number
-}>()
+  isLoading: boolean
+}>(), {
+  isLoading: true
+})
 </script>
