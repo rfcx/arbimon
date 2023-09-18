@@ -1,8 +1,6 @@
-import * as hash from 'object-hash'
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { DataSourceModel } from '@rfcx-bio/common/dao/models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
 import { ProjectVersionModel } from '@rfcx-bio/common/dao/models/project-version-model'
@@ -47,16 +45,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       count: d.num_of_recordings,
       countsByMinute: [] // TODO: build array from `d`
     }))
-
-  await DataSourceModel(sequelize)
-    .create({
-      id: hash.MD5([{ 123: 456 }]),
-      locationProjectId: puertoRicoProjectId,
-      summaryText: JSON.stringify({
-        species: 500,
-        sites: 90
-      })
-    })
 
   await DetectionBySiteSpeciesHourModel(sequelize)
     .bulkCreate(detectionSummaries, {
