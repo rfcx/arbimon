@@ -37,7 +37,18 @@
 import { sum } from 'lodash-es'
 import { computed } from 'vue'
 
-import { type Bar, type HorizontalStack } from './types'
+export interface HorizontalStack {
+  name: string
+  count: number
+  color: string
+}
+
+export interface Bar {
+  name: string
+  percentage: number
+  width: number
+  color: string
+}
 
 const props = withDefaults(defineProps<{
   dataset: HorizontalStack[],

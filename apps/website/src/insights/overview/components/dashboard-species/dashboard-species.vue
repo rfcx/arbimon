@@ -31,10 +31,11 @@ import { type ComputedRef, computed, inject } from 'vue'
 import { apiClientBioKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore } from '~/store'
+import type { ThreatenedSpeciesRow } from '../dashboard-threatened-species/dashboard-threatened-species.vue'
 import DashboardThreatenedSpecies from '../dashboard-threatened-species/dashboard-threatened-species.vue'
 import StackDistribution from './components/stack-distribution.vue'
-import { type HorizontalStack, type ThreatenedSpeciesRow } from './types'
-import { useSpecies } from './use-species'
+import { type HorizontalStack } from './components/stack-distribution.vue'
+import { useSpecies } from './composables/use-species'
 
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
