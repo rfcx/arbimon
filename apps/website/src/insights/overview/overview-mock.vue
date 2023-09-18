@@ -5,38 +5,25 @@
       :metrics="metrics"
     />
   </div>
-  <dashboard-species :dataset="richnessByRisk" />
+  <dashboard-species />
 </template>
 
 <script setup lang="ts">
+import { useDashboardStore } from '~/store'
 import dashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
-import dashboardSpecies from './components/dashboard-species/dashboard-threatened-species.vue'
-import type { HorizontalStack } from './components/dashboard-species/types'
+import dashboardSpecies from './components/dashboard-species/dashboard-species.vue'
 
+const dashboardStore = useDashboardStore()
+// Data
 const metrics = {
   detectionMinutesCount: 0,
   siteCount: 0,
-  speciesCount: 0,
+  speciesCount: 9,
   speciesThreatenedCount: 0,
   maxDate: new Date(),
   minDate: new Date()
 }
 
-const richnessByRisk: HorizontalStack[] = [
-  {
-    name: 'Critically Endangered',
-    color: '#008059',
-    count: 100
-  },
-  {
-    name: 'Endangered',
-    color: '#FFAFAF',
-    count: 75
-  },
-  {
-    name: 'Vulnerable',
-    color: '#FF6868',
-    count: 25
-  }
-]
+dashboardStore.updateSpeciesCount(`${metrics.speciesCount}`)
+
 </script>
