@@ -16,17 +16,8 @@
         :known-total-count="dashboardStore.speciesCount"
         :selected-id="selectedRisk"
         class="my-6"
+        @emit-select-item="onEmitSelectRiskRating"
       />
-      <button
-        v-for="risk in richnessByRisk"
-        :key="risk.id"
-        class="btn mr-4"
-        :style="{ borderColor: risk.color }"
-        :class="selectedRisk === risk.id ? 'btn-primary' : 'btn-secondary'"
-        @click="selectedRisk = risk.id"
-      >
-        {{ risk.name }}
-      </button>
       <SpeciesList
         :selected-risk="selectedRisk"
         class="mt-6"
@@ -82,5 +73,9 @@ watch(() => data.value?.totalSpeciesCount, () => {
   if (!data.value) return
   dashboardStore.updateSpeciesCount(`${data.value?.totalSpeciesCount ?? 0}`)
 })
+
+const onEmitSelectRiskRating = (id: number) => {
+  selectedRisk.value = id
+}
 
 </script>
