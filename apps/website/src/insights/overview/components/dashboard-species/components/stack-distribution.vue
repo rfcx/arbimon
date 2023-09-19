@@ -11,25 +11,16 @@
         :key="'dashboard-richness-percentage-' + bar.name"
         class="absolute h-4 border-4 border-echo"
         :class="idx === bars.length - 1 ? 'rounded-l-4xl rounded-r-4xl' : 'rounded-l-4xl'"
-        :style="{ width: bar.width + '%', backgroundColor: bar.color , zIndex: bars.length - idx }"
-      />
+        :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
+      >
+        <div
+          class="opacity-40 h-4 w-full"
+          :class="bar.id !== selectedId ? 'bg-pitch' : ''"
+          :style="{ zIndex: bars.length - idx}"
+        />
+      </div>
     </div>
-    <div class="pt-3 pl-1">
-      <ul class="list-none">
-        <li
-          v-for="bar in bars"
-          :key="'dashboard-richness-class-' + bar.name"
-          class="inline-flex items-baseline text-xs"
-        >
-          <div
-            class="rounded-full w-1.5 h-1.5 self-center mx-2"
-            :style="{ backgroundColor: bar.color }"
-          />
-          {{ bar.name }}
-          <span class="ml-1 text-subtle font-light">{{ bar.percentage.toFixed(1) }}%</span>
-        </li>
-      </ul>
-    </div>
+    <div class="pt-3 invisible" />
   </div>
 </template>
 
@@ -45,6 +36,7 @@ export interface HorizontalStack {
 }
 
 export interface Bar {
+  id: number
   name: string
   percentage: number
   width: number
@@ -80,11 +72,12 @@ const bars = computed<Bar[]>(() => {
   let width = 0
   const outputs: Bar[] = []
 
-  inputs.forEach(({ name, count, color }) => {
+  inputs.forEach(({ id, name, count, color }) => {
     const percentage = count / totalCount.value * 100
     width += percentage
 
     outputs.push({
+      id,
       name,
       percentage,
       width: Math.round(width),

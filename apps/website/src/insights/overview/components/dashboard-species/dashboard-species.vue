@@ -21,6 +21,7 @@
         v-for="risk in richnessByRisk"
         :key="risk.id"
         class="btn mr-4"
+        :style="{ borderColor: risk.color }"
         :class="selectedRisk === risk.id ? 'btn-primary' : 'btn-secondary'"
         @click="selectedRisk = risk.id"
       >
