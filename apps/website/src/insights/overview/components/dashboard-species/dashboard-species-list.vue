@@ -1,9 +1,22 @@
 <template>
-  <div v-if="isLoading">
-    loading
+  <!-- eslint-disable vue/no-unused-vars -->
+  <!-- eslint-disable vue/require-v-for-key -->
+  <div
+    v-if="isLoading || !species"
+    class="flex gap-4 columns-2 md:columns-4"
+  >
+    <div
+      v-for="n in 4"
+      class="loading-shimmer rounded-xl p-4 min-w-32 <sm:min-w-24 grow flex-1"
+    >
+      <p class="font-bold text-4xl <sm:text-2xl">
+        &nbsp;
+      </p>
+      <p>&nbsp;</p>
+    </div>
   </div>
   <div v-else-if="isError">
-    something went wrong
+    something went wrong!
   </div>
   <div
     v-else-if="data"
