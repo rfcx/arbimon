@@ -38,6 +38,7 @@ import { sum } from 'lodash-es'
 import { computed } from 'vue'
 
 export interface HorizontalStack {
+  id: number
   name: string
   count: number
   color: string

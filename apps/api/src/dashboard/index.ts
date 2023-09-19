@@ -4,6 +4,7 @@ import { dashboardDataBySiteRoute } from '@rfcx-bio/common/api-bio/dashboard/das
 import { dashboardMetricsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
+import { dashboardSpeciesRichnessByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-richness-by-risk'
 
 import { type RouteRegistration, GET } from '../_services/api-helpers/types'
 import { dashboardContentHandler } from './dashboard-content-handler'
@@ -11,6 +12,7 @@ import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
 import { dashboardDataBySiteHandler } from './dashboard-data-by-site-handler'
 import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardSpeciesDataHandler } from './dashboard-species-data-handler'
+import { dashboardSpeciesRichnessByRiskDataHandler } from './dashboard-species-richness-by-risk-data-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
@@ -33,7 +35,7 @@ export const routesDashboard: RouteRegistration[] = [
     url: dashboardDataBySiteRoute,
     handler: dashboardDataBySiteHandler
   },
-  {
+  { // TODO: remove this route
     method: GET,
     url: dashboardSpeciesDataRoute,
     handler: dashboardSpeciesDataHandler
@@ -42,5 +44,10 @@ export const routesDashboard: RouteRegistration[] = [
     method: GET,
     url: dashboardProfileRoute,
     handler: dashboardContentHandler
+  },
+  {
+    method: GET,
+    url: dashboardSpeciesRichnessByRiskDataRoute,
+    handler: dashboardSpeciesRichnessByRiskDataHandler
   }
 ]

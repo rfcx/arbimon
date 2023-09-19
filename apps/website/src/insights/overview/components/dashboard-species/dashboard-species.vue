@@ -16,57 +16,44 @@
         :known-total-count="dashboardStore.speciesCount"
         class="mt-6"
       />
-      <DashboardThreatenedSpecies
-        :species="speciesThreatened"
-        class="mt-6"
-      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject } from 'vue'
+import { type ComputedRef, computed, inject, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
-import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
+import { RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore } from '~/store'
-import DashboardThreatenedSpecies from '../dashboard-threatened-species/dashboard-threatened-species.vue'
 import StackDistribution from './components/stack-distribution.vue'
 import { type HorizontalStack } from './components/stack-distribution.vue'
-import { useSpecies } from './composables/use-species'
-import type { ThreatenedSpeciesRow } from './types'
+import { useSpeciesRichnessByRisk } from './composables/use-species'
 
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
-const { isLoading, isError, data } = useSpecies(apiClientBio)
-dashboardStore.updateSpeciesThreatenedCount(data.value?.speciesThreatened.length ?? 0)
+const { isLoading, isError, data } = useSpeciesRichnessByRisk(apiClientBio)
+
+// const defaultSelectedRisk = computed(() => {
+//   const risks = richnessByRisk.value.map(({ id }) => id)
+//   return Math.max(...risks)
+// })
+
+watch(() => data.value?.totalSpeciesCount, () => {
+  if (!data.value) return
+  dashboardStore.updateSpeciesCount(`${data.value?.totalSpeciesCount ?? 0}`)
+})
 
 const richnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
   return (data.value?.richnessByRisk ?? []).map(([taxonId, count]) => {
     const taxonClass = RISKS_BY_ID[taxonId]
     return {
+      id: taxonId,
       name: taxonClass.label,
       color: taxonClass.color,
       count
-    }
-  })
-})
-
-const speciesThreatened: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
-  if (data.value == null) {
-    return []
-  }
-
-  return data.value.speciesThreatened.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
-    return {
-      slug,
-      taxonSlug,
-      scientificName,
-      commonName,
-      photoUrl: photoUrl ?? '',
-      riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }
   })
 })

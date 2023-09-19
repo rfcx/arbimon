@@ -25,17 +25,6 @@ export const getRichnessByTaxon = async (locationProjectId: number): Promise<Api
   return result.map(r => [r.taxonClassId, r.count])
 }
 
-export const getRichnessByRisk = async (locationProjectId: number): Promise<ApiStack> => {
-  const result = await ModelRepository.getInstance(getSequelize())
-    .DashboardRichnessByRisk
-    .findAll({
-      where: { locationProjectId },
-      raw: true
-    })
-
-  return result.map(r => [r.riskRatingId, r.count])
-}
-
 export const getSpeciesThreatened = async (locationProjectId: number): Promise<DashboardSpecies[]> => {
   const result = await ModelRepository.getInstance(getSequelize())
     .DashboardSpeciesThreatened
