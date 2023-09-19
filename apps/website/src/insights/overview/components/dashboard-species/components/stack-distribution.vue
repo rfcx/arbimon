@@ -14,13 +14,26 @@
         :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
       >
         <div
-          class="opacity-40 h-4 w-full"
+          class="opacity-50 h-4 w-full"
           :class="bar.id !== selectedId ? 'bg-pitch' : ''"
           :style="{ zIndex: bars.length - idx}"
         />
       </div>
     </div>
-    <div class="pt-3 invisible" />
+    <div class="pt-9">
+      <button
+        v-for="bar in bars"
+        :key="bar.id"
+        class="rounded-full border-1 text-insight px-4 py-2 mr-2"
+        :style="{
+          borderColor: bar.color,
+          backgroundColor: bar.id === selectedId ? bar.color : ''
+        }"
+        @click="$emit('emitSelectItem', bar.id)"
+      >
+        {{ bar.name }} {{ bar.percentage.toFixed(1) }}%
+      </button>
+    </div>
   </div>
 </template>
 
@@ -50,6 +63,8 @@ const props = withDefaults(defineProps<{
 }>(), {
   knownTotalCount: undefined
 })
+
+defineEmits(['emitSelectItem'])
 
 const totalCount = computed<number>(() => {
   return Number(props.knownTotalCount) ?? sum(props.dataset.map(({ count }) => count))
