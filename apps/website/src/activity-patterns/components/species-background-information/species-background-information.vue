@@ -1,6 +1,6 @@
 <template>
   <!-- TODO #189 Handle error case -->
-  <h3 class="text-lg text-subtle border-b-1 border-subtle pb-1">
+  <h3 :class="$attrs.class + 'text-lg text-subtle border-b-1 border-subtle pb-1'">
     Description
   </h3>
   <div class="mt-4">
@@ -23,4 +23,37 @@
     />
   </div>
 </template>
-<script lang="ts" src="./species-background-information.ts"></script>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+
+import type { SpeciesInProject, SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
+
+import SpeciesInformationContent from './species-information-content.vue'
+
+const props = withDefaults(defineProps<{ speciesInformation: SpeciesInProject | SpeciesInProjectTypes['light'] | null, loading: boolean }>(), {
+  loading: false
+})
+
+/**
+ * Clean up html tag from raw content
+ */
+const speciesCleanContent = computed(() => {
+  // @ts-expect-error description attribute is missing from SpeciesInProjectTypes['light'] type. But it should be fine. We have js guards
+  const rawContent = props.speciesInformation?.description ?? ''
+  const div = document.createElement('div')
+  div.innerHTML = rawContent
+  return div.innerText
+})
+
+const information = computed(() => {
+  return {
+    description: speciesCleanContent.value,
+    // @ts-expect-error description attribute is missing from SpeciesInProjectTypes['light'] type. But it should be fine. We have js guards
+    sourceUrl: props.speciesInformation?.sourceUrl ?? '',
+    // @ts-expect-error description attribute is missing from SpeciesInProjectTypes['light'] type. But it should be fine. We have js guards
+    sourceCite: props.speciesInformation?.sourceCite ?? ''
+  }
+})
+
+</script>

@@ -41,4 +41,25 @@
     </el-carousel>
   </div>
 </template>
-<script lang="ts" src="./species-images.ts"></script>
+<script setup lang="ts">
+import type { TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
+
+withDefaults(defineProps<{ speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']>, loading: boolean }>(), {
+  loading: false
+})
+
+const handleImageUrl = (url: string): string => {
+  const isValidUrl = /^https:\/\/./i.test(url)
+  return isValidUrl ? url : new URL('../../../_assets/default-species-image.jpg', import.meta.url).toString()
+}
+
+const imageDescription = (image: TaxonSpeciesPhotoTypes['light']): string => {
+  return `${image.photoAuthor} - ${licenseCatagory(image.photoLicense)}`
+}
+
+const licenseCatagory = (imageLicense: TaxonSpeciesPhotoTypes['light']['photoLicense']): string => {
+  const freeLicenses = ['CC0', 'Copyrighted free use', 'Public domain']
+  if (freeLicenses.includes(imageLicense)) return `no rights reserved (${imageLicense})`
+  return `some rights reserved (${imageLicense})`
+}
+</script>

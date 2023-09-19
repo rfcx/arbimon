@@ -58,4 +58,97 @@
     </div>
   </div>
 </template>
-<script src="./activity-patterns-by-location.ts" lang="ts"></script>
+
+<script setup lang="ts">
+import type { LngLatBoundsLike } from 'mapbox-gl'
+import { type Ref, computed, ref } from 'vue'
+
+import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
+
+import { generateDetectionHtmlPopup } from '@/activity-overview/components/activity-overview-by-location/functions'
+import { SPOTLIGHT_MAP_KEYS } from '@/activity-patterns/functions'
+import { getExportFilterName } from '~/filters'
+import type { MapboxGroundStyle, MapboxStatisticsStyle, MapboxStyle } from '~/maps'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
+import MapBaseComponent from '~/maps/map-base/map-base.vue'
+import MapToolMenuComponent from '~/maps/map-tool-menu/map-tool-menu.vue'
+import type { MapBaseFormatter, MapDataSet, MapMoveEvent } from '~/maps/types'
+import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
+import type { CircleStyle } from '~/maps/utils/circle-style/types'
+import { useStore } from '~/store'
+
+const store = useStore()
+
+const props = withDefaults(defineProps<{ species: SpeciesInProjectTypes['light'] | null, datasets: MapDataSet[], loading: boolean }>(), {
+  datasets: () => [],
+  loading: false
+})
+
+const DEFAULT_PREFIX = 'Spotlight-By-Site'
+
+const selectedType = ref(SPOTLIGHT_MAP_KEYS.detectionFrequency)
+const datasetTypes = ref([
+  { label: 'Detection Frequency', value: SPOTLIGHT_MAP_KEYS.detectionFrequency },
+  { label: 'Detections (raw)', value: SPOTLIGHT_MAP_KEYS.count },
+  { label: 'Naive Occupancy', value: SPOTLIGHT_MAP_KEYS.occupancy }
+])
+const isShowLabels = ref(true)
+const mapGroundStyle: Ref<MapboxGroundStyle> = ref(MAPBOX_STYLE_SATELLITE_STREETS)
+const mapStatisticsStyle: Ref<MapboxStatisticsStyle> = ref(MAPBOX_STYLE_HEATMAP)
+const getPopupHtml = ref(generateDetectionHtmlPopup)
+
+const mapMoveEvent: Ref<MapMoveEvent | null> = ref(null)
+
+const columnCount = computed(() => {
+  switch (props.datasets.length) {
+    case 1: return 1
+    default: return 2
+  }
+})
+
+const mapInitialBounds = computed<LngLatBoundsLike>(() => {
+  if (store.selectedProject == null) {
+    return [DEFAULT_LONGITUDE, DEFAULT_LATITUDE]
+  }
+
+  return [
+    [store.selectedProject.longitudeWest, store.selectedProject.latitudeSouth],
+    [store.selectedProject.longitudeEast, store.selectedProject.latitudeNorth]
+  ]
+})
+
+const circleFormatter = computed<MapBaseFormatter>(() => {
+  return selectedType.value === SPOTLIGHT_MAP_KEYS.occupancy
+    ? new CircleFormatterBinary()
+    : new CircleFormatterNormalizedWithMin({ maxValueRaw: props.datasets[0].maxValues[selectedType.value] })
+})
+
+const circleStyles = computed<CircleStyle[]>(() => {
+  return props.datasets.map((_, idx) => {
+    return {
+      ...DEFAULT_NON_ZERO_STYLE,
+      color: store.datasetColors[idx]
+    }
+  })
+})
+
+const propagateMapMove = (mapMove: MapMoveEvent): void => { mapMoveEvent.value = mapMove }
+const propagateMapGroundStyle = (style: MapboxStyle): void => {
+  // @ts-expect-error the type mismatch but the given type is just only the subset so this should be fine.
+  mapGroundStyle.value = style
+}
+const propagateMapStatisticsStyle = (style: MapboxStyle): void => {
+  // @ts-expect-error the type mismatch but the given type is just only the subset so this should be fine.
+  mapStatisticsStyle.value = style
+}
+const propagateToggleLabels = (showLabels: boolean): void => { isShowLabels.value = showLabels }
+
+const mapExportName = (dataset: MapDataSet, type: string, datasetIndex: number): string => {
+  const { startDate, endDate, sites } = dataset
+  const siteGroup = sites.map(s => ({ label: s.name, value: [s] }))
+
+  return getExportFilterName(startDate, endDate, `${DEFAULT_PREFIX}-${type}--${props.species?.taxonSpeciesSlug ?? ''}`, datasetIndex, undefined, siteGroup)
+}
+</script>
