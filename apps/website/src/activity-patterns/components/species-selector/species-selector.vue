@@ -26,16 +26,19 @@
 </template>
 
 <script setup lang="ts">
+import UFuzzy from '@leeoniya/ufuzzy'
 import type { AxiosInstance } from 'axios'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import type { Ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { apiBioGetProjectSpeciesAll } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
+import { useGetAllSpeciesInProject } from './composables/use-get-all-species-in-project'
 
+const uf: Ref<UFuzzy> = ref(new UFuzzy())
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const store = useStore()
 const route = useRoute()
@@ -48,40 +51,47 @@ const props = withDefaults(defineProps<{ speciesSlug: string }>(), {
 const emit = defineEmits<{(event: 'emitSelectedSpeciesChange', species: SpeciesInProjectTypes['light'] | undefined): void}>()
 
 const selectedSpeciesSlug = ref('')
-const allSpecies = ref<Array<SpeciesInProjectTypes['light']>>([])
 const currentSpeciesQuery = ref('')
+
+const { data: allSpecies, refetch } = useGetAllSpeciesInProject(apiClientBio, store.selectedProject?.id ?? -1)
 
 const selectedSpecies = computed<SpeciesInProjectTypes['light'] | undefined>(() => {
   if (!selectedSpeciesSlug.value) {
     return undefined
   }
 
-  return allSpecies.value.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug.value)
+  return allSpecies.value?.species?.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug.value)
 })
 
 const filteredSpecies = computed<Array<SpeciesInProjectTypes['light']>>(() => {
-  if (!currentSpeciesQuery.value) {
-    return allSpecies.value
+  if (allSpecies.value == null) {
+    return []
   }
 
-  const query = currentSpeciesQuery.value.trim().toLowerCase()
+  if (!currentSpeciesQuery.value) {
+    return allSpecies.value.species
+  }
 
-  return allSpecies.value.filter(s => {
-    return s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) || (s.commonName?.toLowerCase().split(' ').some(w => w.startsWith(query)) ?? false)
+  const haystack = allSpecies.value.species.map(sp => {
+    return `${sp.scientificName}¦${sp.commonName}`
   })
-})
 
-onMounted(async () => {
-  allSpecies.value = await getAllSpecies()
+  const indexes = uf.value.filter(haystack, currentSpeciesQuery.value)
+
+  if (indexes == null) {
+    return allSpecies.value.species ?? []
+  }
+
+  return indexes.map(i => allSpecies.value.species[i])
 })
 
 watch(() => route, async (to, from) => {
   if (to.params.projectSlug !== from.params.projectSlug) {
     selectedSpeciesSlug.value = ''
-    allSpecies.value = await getAllSpecies()
+    refetch.value()
 
     // reset not-exists species slug in the url.
-    if (from.name === to.name && !allSpecies.value.length) {
+    if (from.name === to.name && (allSpecies.value?.species == null || !allSpecies.value.species.length)) {
       void router.replace({ params: { speciesSlug: '' }, query: route.query })
     }
   }
@@ -94,16 +104,16 @@ watch(() => props.speciesSlug, (newValue) => {
 })
 
 watch(allSpecies, (newValue) => {
-  if (newValue.length > 0) {
+  if (newValue != null && newValue.species.length > 0) {
     if (props.speciesSlug) {
-      const matchedSlug = allSpecies.value.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === props.speciesSlug)
+      const matchedSlug = newValue.species.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === props.speciesSlug)
       selectedSpeciesSlug.value = matchedSlug ? props.speciesSlug : ''
       if (!matchedSlug) {
         // not-exists spesies; select a first species from the species list.
-        selectedSpeciesSlug.value = allSpecies.value[0].taxonSpeciesSlug
+        selectedSpeciesSlug.value = newValue.species[0].taxonSpeciesSlug
       }
     } else {
-      selectedSpeciesSlug.value = allSpecies.value[0].taxonSpeciesSlug
+      selectedSpeciesSlug.value = newValue.species[0].taxonSpeciesSlug
     }
   }
 
@@ -124,22 +134,6 @@ const onFilterType = (query: string): void => {
 
 const onResetQuery = (): void => {
   onFilterType('')
-}
-
-const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> => {
-  const projectId = store.selectedProject?.id
-
-  if (projectId === undefined) {
-    return []
-  }
-
-  const response = await apiBioGetProjectSpeciesAll(apiClientBio, projectId)
-
-  if (response == null) {
-    return []
-  }
-
-  return response.species
 }
 </script>
 
