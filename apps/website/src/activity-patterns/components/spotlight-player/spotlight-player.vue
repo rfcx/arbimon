@@ -84,4 +84,151 @@
     </div>
   </div>
 </template>
-<script lang="ts" src="./spotlight-player.ts"></script>
+
+<script setup lang="ts">
+import { type AxiosInstance } from 'axios'
+import { Howl } from 'howler'
+import { type Ref, computed, inject, ref, watch } from 'vue'
+
+import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
+import { type TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { isDefined } from '@rfcx-bio/utils/predicates'
+
+import { apiClientBioKey } from '@/globals'
+
+type ScrollDirection = 'left' | 'right'
+
+const SCROLL_STEP = 150
+
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
+const audio: Ref<Howl | null> = ref(null)
+const audioList: Ref<Howl[]> = ref([])
+const spectrograms: Ref<string[]> = ref([])
+const loading = ref(true)
+const playing = ref(false)
+const playingAudioIndex = ref(-1)
+const playedTime = ref(0)
+const playedProgressPercentage = ref(0)
+
+const props = defineProps<{ speciesCalls: Array<TaxonSpeciesCallTypes['light']> }>()
+
+const isEmpty = computed((): boolean => {
+  return props.speciesCalls.length === 0
+})
+
+const displayPlayedTime = computed((): string => {
+  return `${dayjs.duration(playedTime.value, 'seconds').format('m:ss')}`
+})
+
+watch(props.speciesCalls, async () => {
+  await getSpeciesCallAssets()
+})
+
+const getSpeciesCallAssets = async (): Promise<void> => {
+  loading.value = true
+  await Promise.all([
+    getSpectrogramImage(),
+    getAudio()
+  ])
+  loading.value = false
+}
+
+const getSpectrogramImage = async (): Promise<void> => {
+  const spectrogramList = (await Promise.all(props.speciesCalls.map(async ({ callMediaSpecUrl }) => await apiBioGetCoreMedia(apiClientBio, callMediaSpecUrl)))).filter(isDefined)
+  spectrograms.value = spectrogramList.map(data => window.URL.createObjectURL(data))
+}
+
+const getAudio = async (): Promise<void> => {
+  const audios = (await Promise.all(props.speciesCalls.map(async ({ callMediaWavUrl }) => await apiBioGetCoreMedia(apiClientBio, callMediaWavUrl)))).filter(isDefined)
+
+  audioList.value = audios.map(data => {
+    return new Howl({
+      src: [window.URL.createObjectURL(data)],
+      html5: true,
+      onend: () => {
+        playing.value = false
+        playingAudioIndex.value = -1
+      },
+      onpause: () => {
+        playing.value = false
+      },
+      onplay: () => {
+        playing.value = true
+        requestAnimationFrame(step)
+      },
+      onstop: () => {
+        playing.value = false
+      }
+    })
+  })
+  audio.value = audioList.value.length > 0 ? audioList.value[0] : null
+}
+
+const step = (): void => {
+  const seek = audio.value?.seek() ?? 0
+  if (audio.value?.playing() ?? false) {
+    playedTime.value = seek
+    playedProgressPercentage.value = (seek / (audio.value?.duration() ?? 0)) * 100
+    requestAnimationFrame(step)
+  }
+}
+
+const setAudioPlayProgerss = (event: MouseEvent): void => {
+  const target = event.currentTarget as HTMLDivElement
+  const targetWidth = target.offsetWidth
+  const offsetX = event.offsetX
+  const playedProgress = (offsetX / targetWidth)
+  playedProgressPercentage.value = playedProgress * 100
+  selectedDuration(playedProgress)
+}
+
+const selectedDuration = (progress: number): void => {
+  const selectedTime = (audio.value?.duration() ?? 0) * progress
+  playedTime.value = selectedTime
+  audio.value?.seek(selectedTime)
+  audio.value?.play()
+}
+
+const setAudioIndex = async (idx: number): Promise<void> => {
+  if (playingAudioIndex.value !== idx) {
+    if (playing.value) {
+      await stop()
+    }
+    playingAudioIndex.value = idx
+    audio.value = audioList.value[idx]
+    await play()
+    playing.value = true
+  } else {
+    if (playing.value) {
+      await pause()
+    } else {
+      await play()
+    }
+  }
+}
+
+const play = async (): Promise<void> => {
+  audio.value?.play()
+}
+
+const pause = async (): Promise<void> => {
+  audio.value?.pause()
+}
+
+const stop = async (): Promise<void> => {
+  audio.value?.stop()
+}
+
+const scrollContent = (direction: ScrollDirection = 'left'): void => {
+  const content = document.querySelector('#spectrogram-container')
+  if (!content) return
+
+  if (direction === 'left') {
+    content.scrollLeft -= SCROLL_STEP
+  } else {
+    content.scrollLeft += SCROLL_STEP
+  }
+}
+</script>

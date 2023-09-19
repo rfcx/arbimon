@@ -29,4 +29,13 @@
     </template>
   </div>
 </template>
-<script lang="ts" src="./spotlight-metrics"></script>
+<script setup lang="ts">
+import type { Metrics } from '@/activity-patterns/types'
+import MetricsTitle from './metrics-title.vue'
+import MetricsMulti from './multi-metrics.vue'
+import MetricsSingle from './single-metrics.vue'
+
+withDefaults(defineProps<{ metrics: Metrics[], loading: boolean }>(), {
+  loading: false
+})
+</script>
