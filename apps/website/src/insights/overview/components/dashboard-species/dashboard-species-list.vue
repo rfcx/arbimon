@@ -2,7 +2,7 @@
   <!-- eslint-disable vue/no-unused-vars -->
   <!-- eslint-disable vue/require-v-for-key -->
   <div
-    v-if="isLoading || !species"
+    v-if="isLoading || !species || selectedRisk === null"
     class="flex gap-4 columns-2 md:columns-4"
   >
     <div
@@ -48,7 +48,7 @@ import { useSpeciesByRisk } from './composables/use-species'
 const store = useStore()
 
 const props = defineProps<{
-  selectedRisk: number
+  selectedRisk: number | null
 }>()
 
 const params = computed(() => {
