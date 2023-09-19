@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.19.2",
+    "@leeoniya/ufuzzy": "^1.0.8",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@types/geojson": "^7946.0.10",
