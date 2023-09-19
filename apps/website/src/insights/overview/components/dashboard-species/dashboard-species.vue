@@ -14,8 +14,18 @@
       <StackDistribution
         :dataset="richnessByRisk"
         :known-total-count="dashboardStore.speciesCount"
-        class="mt-6"
+        :selected-id="selectedRisk"
+        class="my-6"
       />
+      <button
+        v-for="risk in richnessByRisk"
+        :key="risk.id"
+        class="btn mr-4"
+        :class="selectedRisk === risk.id ? 'btn-primary' : 'btn-secondary'"
+        @click="selectedRisk = risk.id"
+      >
+        {{ risk.name }}
+      </button>
       <SpeciesList
         :selected-risk="selectedRisk"
         class="mt-6"

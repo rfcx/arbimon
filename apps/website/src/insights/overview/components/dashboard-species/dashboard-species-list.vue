@@ -38,9 +38,13 @@ const props = defineProps<{
   selectedRisk: number
 }>()
 
+const params = computed(() => {
+  return props.selectedRisk
+})
+
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
-const { isLoading, isError, data } = useSpeciesByRisk(apiClientBio, props.selectedRisk)
+const { isLoading, isError, data } = useSpeciesByRisk(apiClientBio, params)
 
 const species: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
   if (data.value == null) {
