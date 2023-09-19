@@ -1,8 +1,22 @@
 <template>
   <h1>Threatened species</h1>
   <div class="dashboard-species">
-    <div v-if="isLoading">
-      loading
+    <div
+      v-if="isLoading"
+      class="loading-shimmer rounded-xl mt-6 p-4 min-w-32"
+    >
+      <p class="font-bold text-4xl <sm:text-2xl">
+        &nbsp;
+      </p>
+      <!-- <div
+      v-for="n in 4"
+      class="loading-shimmer rounded-xl p-4 min-w-32 <sm:min-w-24 grow flex-1"
+    >
+      <p class="font-bold text-4xl <sm:text-2xl">
+        &nbsp;
+      </p>
+      <p>&nbsp;</p>
+    </div> -->
     </div>
     <div v-else-if="isError">
       something went wrong
@@ -14,15 +28,15 @@
       <StackDistribution
         :dataset="richnessByRisk"
         :known-total-count="dashboardStore.speciesCount"
-        :selected-id="selectedRisk"
+        :selected-id="selectedRisk ?? -1"
         class="my-6"
         @emit-select-item="onEmitSelectRiskRating"
       />
-      <SpeciesList
-        :selected-risk="selectedRisk"
-        class="mt-6"
-      />
     </div>
+    <SpeciesList
+      :selected-risk="selectedRisk"
+      class="mt-6"
+    />
   </div>
 </template>
 
@@ -57,14 +71,14 @@ const richnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
 
 const defaultSelectedRisk = computed(() => {
   const risks = richnessByRisk.value.map(({ id }) => id)
-  if (risks.length === 0) return -1
+  if (risks.length === 0) return null
   return Math.max(...risks)
 })
 
 const selectedRisk = ref(defaultSelectedRisk.value)
 
 watch(() => richnessByRisk.value, () => {
-  if (selectedRisk.value === -1) {
+  if (selectedRisk.value === null) {
     selectedRisk.value = defaultSelectedRisk.value
   }
 })
