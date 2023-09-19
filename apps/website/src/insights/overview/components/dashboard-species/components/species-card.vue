@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { type ThreatenedSpeciesRow } from '../../dashboard-species/types'
+import { type ThreatenedSpeciesRow } from '../types'
 
 defineProps<{
   item: ThreatenedSpeciesRow

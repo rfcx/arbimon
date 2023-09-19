@@ -16,13 +16,17 @@
         :known-total-count="dashboardStore.speciesCount"
         class="mt-6"
       />
+      <SpeciesList
+        :selected-risk="selectedRisk"
+        class="mt-6"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject, watch } from 'vue'
+import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
@@ -30,21 +34,12 @@ import { useDashboardStore } from '~/store'
 import StackDistribution from './components/stack-distribution.vue'
 import { type HorizontalStack } from './components/stack-distribution.vue'
 import { useSpeciesRichnessByRisk } from './composables/use-species'
+import SpeciesList from './dashboard-species-list.vue'
 
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const { isLoading, isError, data } = useSpeciesRichnessByRisk(apiClientBio)
-
-// const defaultSelectedRisk = computed(() => {
-//   const risks = richnessByRisk.value.map(({ id }) => id)
-//   return Math.max(...risks)
-// })
-
-watch(() => data.value?.totalSpeciesCount, () => {
-  if (!data.value) return
-  dashboardStore.updateSpeciesCount(`${data.value?.totalSpeciesCount ?? 0}`)
-})
 
 const richnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
   return (data.value?.richnessByRisk ?? []).map(([taxonId, count]) => {
@@ -56,6 +51,25 @@ const richnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
       count
     }
   })
+})
+
+const defaultSelectedRisk = computed(() => {
+  const risks = richnessByRisk.value.map(({ id }) => id)
+  if (risks.length === 0) return -1
+  return Math.max(...risks)
+})
+
+const selectedRisk = ref(defaultSelectedRisk.value)
+
+watch(() => richnessByRisk.value, () => {
+  if (selectedRisk.value === -1) {
+    selectedRisk.value = defaultSelectedRisk.value
+  }
+})
+
+watch(() => data.value?.totalSpeciesCount, () => {
+  if (!data.value) return
+  dashboardStore.updateSpeciesCount(`${data.value?.totalSpeciesCount ?? 0}`)
 })
 
 </script>
