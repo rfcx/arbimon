@@ -146,6 +146,25 @@ const speciesCalls: Ref<Array<TaxonSpeciesCallTypes['light']> > = ref([])
 const speciesPhotos: Ref<Array<TaxonSpeciesPhotoTypes['light']>> = ref([])
 const isLocationRedacted: Ref<boolean> = ref(false)
 
+const { data: allSpecies, refetch: refetchAllSpecies } = useGetAllSpeciesInProject(apiClientBio, store.selectedProject?.id ?? -1)
+
+const { isLoading: loadingSpecies, data: oneSpeciesInformation } = useGetOneSpeciesInformation(apiClientBio, store.selectedProject?.id ?? -1, species.value?.taxonSpeciesSlug ?? '', computed(() => {
+  return store.selectedProject?.id != null && species.value != null
+}))
+
+watch(oneSpeciesInformation, (newSpeciesInformation) => {
+  if (newSpeciesInformation == null) {
+    return
+  }
+
+  if (species.value?.scientificName === newSpeciesInformation.speciesInformation.scientificName) {
+    speciesInformation.value = newSpeciesInformation?.speciesInformation ?? null
+    speciesCalls.value = newSpeciesInformation?.speciesCalls ?? []
+    speciesPhotos.value = newSpeciesInformation?.speciesPhotos ?? []
+    predictedOccupancyMaps.value = newSpeciesInformation?.predictedOccupancyMaps ?? []
+  }
+})
+
 const isProjectMember = computed(() => {
   return store.selectedProject?.isMyProject ?? false
 })
@@ -241,6 +260,10 @@ const resetData = (): void => {
   speciesCalls.value = []
   speciesPhotos.value = []
   isLocationRedacted.value = false
+}
+
+const onEmitRefetchSpecies = (): void => {
+  refetchAllSpecies.value()
 }
 
 const getSpeciesInformation = async (): Promise<void> => {
