@@ -53,7 +53,8 @@ export interface Bar {
 
 const props = withDefaults(defineProps<{
   dataset: HorizontalStack[],
-  knownTotalCount?: string
+  knownTotalCount?: string,
+  selectedId: number
 }>(), {
   knownTotalCount: undefined
 })
