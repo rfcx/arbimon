@@ -27,65 +27,71 @@
 
 <script setup lang="ts">
 import UFuzzy from '@leeoniya/ufuzzy'
+import type { AxiosInstance } from 'axios'
 import type { Ref } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
+import { apiClientBioKey } from '@/globals'
+import { useStore } from '~/store'
+import { useGetAllSpeciesInProject } from './composables/use-get-all-species-in-project'
+
 const uf: Ref<UFuzzy> = ref(new UFuzzy())
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-const props = withDefaults(defineProps<{ speciesSlug: string, allSpecies: ProjectSpeciesAllResponse | undefined }>(), {
-  speciesSlug: '',
-  allSpecies: undefined
+const props = withDefaults(defineProps<{ speciesSlug: string }>(), {
+  speciesSlug: ''
 })
 
-const emit = defineEmits<{(event: 'emitSelectedSpeciesChange', species: SpeciesInProjectTypes['light'] | undefined): void, (event: 'emitRefetchSpecies'): void}>()
+const emit = defineEmits<{(event: 'emitSelectedSpeciesChange', species: SpeciesInProjectTypes['light'] | undefined): void}>()
 
 const selectedSpeciesSlug = ref('')
 const currentSpeciesQuery = ref('')
+
+const { data: allSpecies, refetch } = useGetAllSpeciesInProject(apiClientBio, store.selectedProject?.id ?? -1)
 
 const selectedSpecies = computed<SpeciesInProjectTypes['light'] | undefined>(() => {
   if (!selectedSpeciesSlug.value) {
     return undefined
   }
 
-  return props.allSpecies?.species?.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug.value)
+  return allSpecies.value?.species?.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug.value)
 })
 
 const filteredSpecies = computed<Array<SpeciesInProjectTypes['light']>>(() => {
-  if (props.allSpecies == null) {
+  if (allSpecies.value == null) {
     return []
   }
 
   if (!currentSpeciesQuery.value) {
-    return props.allSpecies.species
+    return allSpecies.value.species
   }
 
-  const haystack = props.allSpecies.species.map(sp => {
+  const haystack = allSpecies.value.species.map(sp => {
     return `${sp.scientificName}¦${sp.commonName}`
   })
 
   const indexes = uf.value.filter(haystack, currentSpeciesQuery.value)
 
   if (indexes == null) {
-    return props.allSpecies.species
+    return allSpecies.value.species ?? []
   }
 
-  // @ts-expect-error the ckeck is here.
-  return props.allSpecies == null ? [] : indexes.map(i => props.allSpecies.species[i])
+  return indexes.map(i => allSpecies.value.species[i])
 })
 
 watch(() => route, async (to, from) => {
   if (to.params.projectSlug !== from.params.projectSlug) {
     selectedSpeciesSlug.value = ''
-    emit('emitRefetchSpecies')
+    refetch.value()
 
     // reset not-exists species slug in the url.
-    if (from.name === to.name && (props.allSpecies?.species == null || !props.allSpecies.species.length)) {
+    if (from.name === to.name && (allSpecies.value?.species == null || !allSpecies.value.species.length)) {
       void router.replace({ params: { speciesSlug: '' }, query: route.query })
     }
   }
@@ -97,7 +103,7 @@ watch(() => props.speciesSlug, (newValue) => {
   }
 })
 
-watch(() => props.allSpecies, (newValue) => {
+watch(allSpecies, (newValue) => {
   if (newValue != null && newValue.species.length > 0) {
     if (props.speciesSlug) {
       const matchedSlug = newValue.species.find(({ taxonSpeciesSlug }) => taxonSpeciesSlug === props.speciesSlug)
@@ -109,6 +115,10 @@ watch(() => props.allSpecies, (newValue) => {
     } else {
       selectedSpeciesSlug.value = newValue.species[0].taxonSpeciesSlug
     }
+  }
+
+  if (selectedSpecies.value) {
+    emit('emitSelectedSpeciesChange', selectedSpecies.value)
   }
 })
 
