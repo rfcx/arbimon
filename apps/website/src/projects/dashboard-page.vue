@@ -67,9 +67,11 @@ import type { AxiosInstance } from 'axios'
 import { type LngLatBoundsLike } from 'mapbox-gl'
 import { computed, inject } from 'vue'
 
+import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonKey } from '@/globals'
+// import { useAuth0Client, getIdToken } from '~/auth-client'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
@@ -79,7 +81,7 @@ import { useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
-import { useRecordingCount } from './_composables/use-recording-count'
+import { useBioRecordingCount } from './_composables/use-recording-count'
 import { useRfmJobCount, useRfmSpeciesDetected } from './_composables/use-rfm-count'
 import { useSiteCount } from './_composables/use-site-count'
 import { useSoundscapeCount } from './_composables/use-soundscape-count'
@@ -89,7 +91,18 @@ import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
 const selectedProject = computed(() => store.selectedProject)
+const selectedProjectId = computed(() => store.selectedProject?.id)
+console.info('selectedProjectId', selectedProjectId.value)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
+
+// const authClient = await useAuth0Client()
+// const user = await authClient.getUser()
+// console.info('user', user)
+// const getToken = user ? async () => await getIdToken(authClient) : undefined
+const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL)
+const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
+console.info('projectRecCount', isLoadingRecCountBio.value, projectRecCount.value)
+
 const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
 const ANALYSIS_URL = computed(() => {
   const selectedProjectSlug = store.selectedProject?.slug
@@ -103,7 +116,6 @@ const tabHeight = 360
 // External data
 const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
 const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingRecCount, data: recordingCount } = useRecordingCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmJobCount(apiClientArbimon, selectedProjectSlug)
@@ -117,7 +129,7 @@ const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemp
 
 const stats = computed(() => [
   { value: 'site', title: 'Sites Created', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings', count: recordingCount.value, isLoading: isLoadingRecCount.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
+  { value: 'recording', title: 'Recordings', count: projectRecCount.value, isLoading: isLoadingRecCountBio.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
   { value: 'playlist', title: 'Playlists Created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
   { value: 'species', title: 'Species Detected', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
