@@ -17,7 +17,7 @@
         </div>
         <!-- Right menus -->
         <div class="flex items-center lg:order-2">
-          <client-only v-if="!toggles.legacyLogin">
+          <client-only v-if="!toggles?.legacyLogin">
             <auth-navbar-item dom-id="navbar-auth-desktop" />
           </client-only>
           <div

@@ -18,6 +18,7 @@ export const envKeysRequired = [
   'BIO_DB_USER',
 
   'AUTHO_ANONYMOUS_CLIENT_SECRET',
+  'GOOGLE_SPREADSHEET_API_KEY',
 
   // Config
   'CORE_API_BASE_URL'
