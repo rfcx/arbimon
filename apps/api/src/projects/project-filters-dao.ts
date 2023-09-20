@@ -1,8 +1,9 @@
-import { type Sequelize } from 'sequelize'
+import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 
+import { type ProjectRecordingCountResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
+import { type Project, type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 
@@ -55,4 +56,21 @@ export const getLatestSync = async (models: AllModels, sequelize: Sequelize, loc
       order: [['updatedAt', 'DESC']],
       raw: true
     }) as unknown as Sync | undefined
+}
+
+export const getProjectById = async (models: AllModels, locationProjectId: number): Promise<Project | undefined> => {
+  return await models.LocationProject.findByPk(locationProjectId) ?? undefined
+}
+
+export const getRecordingCount = async (sequelize: Sequelize, locationProjectId: number): Promise<number> => {
+  const bind: BindOrReplacements = {
+    locationProjectId
+  }
+  const sql = `
+    SELECT sum(rbsh.count)::integer as count
+    FROM recording_by_site_hour rbsh
+    WHERE rbsh.location_project_id = ${locationProjectId};
+  `
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ProjectRecordingCountResponse[]
+  return result[0].count
 }

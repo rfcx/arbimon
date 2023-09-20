@@ -2,11 +2,11 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { apiArbimonGetRecordingCount } from '@rfcx-bio/common/api-arbimon/metrics/recording-count'
+import { apiBioGetProjectRecordingCount } from '@rfcx-bio/common/api-bio/project/project-filters'
 
-export const useRecordingCount = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>): UseQueryReturnType<number | undefined, unknown> => {
+export const useBioRecordingCount = (apiClient: AxiosInstance, params: ComputedRef<number | undefined>): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery(
-    ['fetch-recording-count', params],
-    async () => await apiArbimonGetRecordingCount(apiClient, params?.value ?? '')
+    ['fetch-bio-recording-count', params],
+    async () => await apiBioGetProjectRecordingCount(apiClient, params?.value ?? 0)
   )
 }
