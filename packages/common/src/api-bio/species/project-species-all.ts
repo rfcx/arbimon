@@ -1,5 +1,7 @@
 import { type AxiosInstance } from 'axios'
 
+import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
+
 import { type SpeciesInProjectTypes } from '../../dao/types/species-in-project'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
@@ -15,7 +17,5 @@ export interface ProjectSpeciesAllResponse {
 export const projectSpeciesAllRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/species`
 
 // Service
-export const apiBioGetProjectSpeciesAll = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSpeciesAllResponse> => {
-  const response = await apiClient.get(`/projects/${projectId}/species`)
-  return response.data
-}
+export const apiBioGetProjectSpeciesAll = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSpeciesAllResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/species`)
