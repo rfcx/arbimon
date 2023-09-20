@@ -11,6 +11,7 @@ import { routesClassifiers } from './classifiers'
 import { routesCoreProxy } from './core-proxy'
 import { routesDashboard } from './dashboard'
 import { routesDetect } from './detect'
+import { routesLanding } from './landing'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
@@ -45,7 +46,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesDetect,
     routesStatus,
     routesSync,
-    routesClassifiers
+    routesClassifiers,
+    routesLanding
   ]
 
   routesRegistrations

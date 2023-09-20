@@ -23,7 +23,7 @@
           Analyses
         </h2>
         <a
-          class="btn btn-primary btn-icon flex text-xs items-center space-x-3 px-6 py-3"
+          class="btn btn-primary flex text-xs items-center space-x-3 px-6 py-3"
           :title="'Create New Analysis Job'"
           :href="ANALYSIS_URL"
           target="_blank"

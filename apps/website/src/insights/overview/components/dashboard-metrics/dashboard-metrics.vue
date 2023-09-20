@@ -20,7 +20,7 @@
   </div>
   <div
     v-else
-    class="gap-4 columns-4 <sm:columns-2 <sm:text-center items-stretch flex"
+    class="gap-4 columns-2 lg:columns-4 <sm:text-center items-stretch flex"
   >
     <numeric-metric
       title="Area monitored"

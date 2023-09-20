@@ -20,5 +20,5 @@ export interface DashboardSpeciesDataResponse {
 export const dashboardSpeciesDataRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-species-data`
 
 // Service
-export const apiBioGetDashboardSpeciesDataRoute = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardSpeciesDataResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, `/projects/${projectId}/dashboard-species-data`)
+export const apiBioGetDashboardSpeciesDataRoute = async (apiClient: AxiosInstance, params: ProjectRouteParamsSerialized): Promise<DashboardSpeciesDataResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${params.projectId}/dashboard-species-data`)
