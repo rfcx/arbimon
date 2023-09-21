@@ -1,8 +1,10 @@
+import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
+import { chunkDates } from '@rfcx-bio/utils/dates'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
@@ -23,11 +25,16 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     customSitesList.value = list
   }
 
+  const startRange = ref('')
+  const endRange = ref('')
+  const startEndRanges = ref<Array<{ start: string, end: string }>>([])
+
   const filter = ref<Omit<ValidationFilterConfig, 'classification'> & { classification?: string }>({
     threshold: 50,
     validationStatus: 'all',
     siteIds: [],
-    sortBy: 'asc'
+    sortBy: 'asc',
+    range: 'all'
   })
 
   const updateResultFilter = (value: Omit<ValidationFilterConfig, 'classification'> & { classification?: string }): void => {
@@ -35,6 +42,15 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.validationStatus = value.validationStatus
     filter.value.siteIds = value.siteIds
     filter.value.sortBy = value.sortBy
+    filter.value.range = value.range
+  }
+
+  const updateStartEndRanges = (start: string, end: string, rangeInDays: number): void => {
+    startRange.value = start
+    endRange.value = end
+
+    const range = chunkDates(start, end, rangeInDays)
+    startEndRanges.value = range
   }
 
   const formatThreshold = (value: number): number => {
@@ -50,6 +66,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.threshold = 50
     filter.value.validationStatus = 'all'
     filter.value.sortBy = 'asc'
+    filter.value.range = 'all'
 
     // "drain" all values out of the array
     while (filter.value.siteIds.length > 0) {
@@ -59,6 +76,31 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
 
   const validationStatusFilterOptions = computed<ValidationResultFilterInner[]>(() => {
     return validationStatus
+  })
+
+  const startEndRangeFilterOptions = computed<ResultFilterInner[]>(() => {
+    return [{ label: 'All', value: 'all' }, ...startEndRanges.value.map(range => {
+      return {
+        label: `${range.start} - ${range.end}`,
+        value: `${range.start}|${range.end}`
+      }
+    })]
+  })
+
+  const selectedStartRange = computed<string>(() => {
+    if (filter.value.range === 'all') {
+      return startRange.value
+    }
+
+    return dayjs(filter.value.range.split('|')[0]).format('YYYY-MM-DD')
+  })
+
+  const selectedEndRange = computed<string>(() => {
+    if (filter.value.range === 'all') {
+      return endRange.value
+    }
+
+    return dayjs(filter.value.range.split('|')[1]).format('YYYY-MM-DD')
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
@@ -92,6 +134,10 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     sitesFilterOptions,
     sortByFilterOptions,
     customSitesList,
-    updateCustomSitesList
+    updateCustomSitesList,
+    startEndRangeFilterOptions,
+    selectedStartRange,
+    selectedEndRange,
+    updateStartEndRanges
   }
 })

@@ -69,6 +69,8 @@ watch(jobSummary, (newValue) => {
     return
   }
 
+  // chunk dates to query to chunk of 7 days
+  detectionsResultFilterBySpeciesStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
 
@@ -103,15 +105,25 @@ const offset = computed<number>(() => {
 
 const params = computed<DetectDetectionsQueryParams>(() => {
   return {
-    start: jobSummary.value?.queryStart ?? '',
-    end: jobSummary.value?.queryEnd ?? '',
+    start: detectionsResultFilterBySpeciesStore.selectedStartRange,
+    end: detectionsResultFilterBySpeciesStore.selectedEndRange,
     classifications: [speciesSlug.value],
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
     reviewStatuses: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterBySpeciesStore.filter.validationStatus],
     minConfidence: detectionsResultFilterBySpeciesStore.formattedThreshold,
     descending: detectionsResultFilterBySpeciesStore.filter.sortBy === 'desc',
     limit: PAGE_SIZE_LIMIT,
-    offset: offset.value
+    offset: offset.value,
+    fields: [
+      'id',
+      'stream_id',
+      'classifier_id',
+      'start',
+      'end',
+      'confidence',
+      'review_status',
+      'classification'
+    ]
   }
 })
 
@@ -127,5 +139,5 @@ const {
   isLoading: isLoadingJobDetections,
   isError: isErrorJobDetections,
   data: jobDetections
-} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null), jobDetectionsRefetchInterval)
+} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''), jobDetectionsRefetchInterval)
 </script>
