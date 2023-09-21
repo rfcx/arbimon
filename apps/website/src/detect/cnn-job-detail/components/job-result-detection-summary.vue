@@ -27,7 +27,7 @@
           :title="item.value"
           :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: item.value }}"
         >
-          {{ item.title }}
+          {{ item.title }} ({{ item.value }})
         </router-link>
       </template>
     </div>
@@ -44,7 +44,7 @@
       </button>
       <button
         class="btn btn-icon ml-2"
-        :disabled="page === Math.ceil(data?.classificationsSummary.length ?? 0 / displayItemNumber)"
+        :disabled="classificationsSummary().length < displayItemNumber"
         @click="nextPage()"
       >
         <icon-fas-chevron-right class="w-3 h-3" />

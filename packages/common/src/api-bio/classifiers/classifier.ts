@@ -43,6 +43,11 @@ export interface ClassifierResponse {
     classifierId: number
     outputClassName: string
     ignoreThreshold: number
+    classification: {
+      value: string
+      title: string
+      image: string | null
+    }
   }>
 
   createdBy?: Array<{

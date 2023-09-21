@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject } from 'vue'
+import { computed, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
@@ -50,7 +50,7 @@ const detectionsResultFilterStore = useDetectionsResultFilterStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 // these two queries below will run simultaneously
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummary } = useGetJobDetectionSummary(
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummary, refetch } = useGetJobDetectionSummary(
   apiClientBio,
   jobId.value,
   {
@@ -68,17 +68,27 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
       'query_end',
       'classifier',
       'query_streams',
-      'query_hours'
+      'query_hours',
+      'streams'
     ]
   }
 )
 
+watch(jobSummary, (newValue) => {
+  if (newValue == null) {
+    refetch.value()
+    return
+  }
+
+  detectionsResultFilterStore.updateCustomSitesList(newValue.streams)
+
+  // chunk given date range to 7 days range
+  detectionsResultFilterStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
+})
+
 const { isLoading: isLoadingJobResults, isError: isErrorJobResults, data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
 
-const queryStart = computed(() => jobSummary.value?.queryStart ?? '')
-const queryEnd = computed(() => jobSummary.value?.queryEnd ?? '')
 const classifierId = computed(() => jobSummary.value?.classifierId)
-
 const enabled = computed(() => jobSummary.value?.classifierId != null)
 
 /**
@@ -92,16 +102,28 @@ const refetchDetections = computed(() => {
   return false
 })
 
-// This query will run after `useGetJobDetectionSummary`
+// This query will run after `useGetJobValidationResults`
 const params = computed<DetectDetectionsQueryParams>(() => ({
-  start: queryStart.value,
-  end: queryEnd.value,
+  start: detectionsResultFilterStore.selectedStartRange,
+  end: detectionsResultFilterStore.selectedEndRange,
   sites: detectionsResultFilterStore.filter.siteIds,
   classifications: detectionsResultFilterStore.filter.classification === 'all' || detectionsResultFilterStore.filter.classification === '' ? undefined : [detectionsResultFilterStore.filter.classification],
   minConfidence: detectionsResultFilterStore.formattedThreshold,
   reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
   classifiers: [classifierId.value ?? -1],
-  descending: detectionsResultFilterStore.filter.sortBy === 'desc'
+  descending: detectionsResultFilterStore.filter.sortBy === 'desc',
+  limit: 200,
+  offset: 0,
+  fields: [
+    'id',
+    'stream_id',
+    'classifier_id',
+    'start',
+    'end',
+    'confidence',
+    'review_status',
+    'classification'
+  ]
 }))
 
 const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchDetections)

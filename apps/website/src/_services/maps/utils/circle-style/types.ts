@@ -1,6 +1,3 @@
-export interface CircleStyle {
-  color: string
-  strokeColor: string
-  strokeWidth: number
-  opacity: number
-}
+import { type MapBaseStyle } from '~/maps/types'
+
+export interface CircleStyle extends MapBaseStyle {}
