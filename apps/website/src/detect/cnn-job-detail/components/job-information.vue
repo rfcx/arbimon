@@ -10,9 +10,9 @@
       />
       <ComponentError v-else-if="props.isErrorSummary" />
       <div v-else>
-        <span class="text-subtle ">Model</span>
+        <span class="text-subtle">Model</span>
         <h2 class="text-lg">
-          {{ props.summary?.classifier.name ?? '' }}
+          {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
         </h2>
       </div>
 

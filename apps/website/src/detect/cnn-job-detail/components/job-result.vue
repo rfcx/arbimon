@@ -10,6 +10,7 @@
       </template>
       <template #controls>
         <job-result-filter
+          :job-summary="props.data"
           :classifier-id="props.classifierId"
         />
       </template>

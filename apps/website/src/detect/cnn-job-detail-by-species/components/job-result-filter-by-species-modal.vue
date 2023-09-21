@@ -40,6 +40,23 @@
         </el-select>
       </div>
 
+      <div class="job-result-filter-start-end-range mt-2">
+        <div class="text-md font-weight-bold">
+          Start/end range
+        </div>
+        <el-select
+          v-model="detectionsResultFilterBySpeciesStore.filter.range"
+          class="mt-2"
+        >
+          <el-option
+            v-for="range in detectionsResultFilterBySpeciesStore.startEndRangeFilterOptions"
+            :key="range.value"
+            :label="range.label"
+            :value="range.value"
+          />
+        </el-select>
+      </div>
+
       <div class="job-result-filter-sites mt-2">
         <div class="text-md font-weight-bold">
           Sites

@@ -40,6 +40,23 @@
         </el-select>
       </div>
 
+      <div class="job-result-filter-start-end-range mt-2">
+        <div class="text-md font-weight-bold">
+          Start/end range
+        </div>
+        <el-select
+          v-model="detectionsResultFilterStore.filter.range"
+          placeholder="Start/end range"
+        >
+          <el-option
+            v-for="range in detectionsResultFilterStore.startEndRangeFilterOptions"
+            :key="range.value"
+            :label="range.label"
+            :value="range.value"
+          />
+        </el-select>
+      </div>
+
       <div class="job-result-filter-taxon-class mt-2">
         <div class="text-md font-weight-bold">
           Class
