@@ -29,6 +29,7 @@
     </template>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { Metrics } from '@/activity-patterns/types'
 import MetricsTitle from './metrics-title.vue'

@@ -122,9 +122,9 @@ const displayPlayedTime = computed((): string => {
   return `${dayjs.duration(playedTime.value, 'seconds').format('m:ss')}`
 })
 
-watch(props.speciesCalls, async () => {
+watch(() => props.speciesCalls, async () => {
   await getSpeciesCallAssets()
-})
+}, { deep: true })
 
 const getSpeciesCallAssets = async (): Promise<void> => {
   loading.value = true

@@ -31,6 +31,12 @@ import type { SpeciesInProject, SpeciesInProjectTypes } from '@rfcx-bio/common/d
 
 import SpeciesInformationContent from './species-information-content.vue'
 
+interface SpeciesInformation {
+  description: string
+  sourceUrl: string
+  sourceCite?: string
+}
+
 const props = withDefaults(defineProps<{ speciesInformation: SpeciesInProject | SpeciesInProjectTypes['light'] | null, loading: boolean }>(), {
   loading: false
 })
@@ -46,7 +52,7 @@ const speciesCleanContent = computed(() => {
   return div.innerText
 })
 
-const information = computed(() => {
+const information = computed<SpeciesInformation>(() => {
   return {
     description: speciesCleanContent.value,
     // @ts-expect-error description attribute is missing from SpeciesInProjectTypes['light'] type. But it should be fine. We have js guards
@@ -55,5 +61,4 @@ const information = computed(() => {
     sourceCite: props.speciesInformation?.sourceCite ?? ''
   }
 })
-
 </script>

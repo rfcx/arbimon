@@ -36,6 +36,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { inject, ref, watch } from 'vue'

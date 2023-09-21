@@ -176,14 +176,13 @@ const onSelectedSpeciesChange = async (givenSpecies: SpeciesInProjectTypes['ligh
 
 const onFilterChange = async (givenFilters: ColoredFilter[]): Promise<void> => {
   filters.value = givenFilters
-
   await onDatasetChange()
 }
 
 const onDatasetChange = async (): Promise<void> => {
   const projectId = store.selectedProject?.id
 
-  if (projectId == null) {
+  if (projectId === undefined) {
     return
   }
 
@@ -231,25 +230,12 @@ const onDatasetChange = async (): Promise<void> => {
   loadingDatasets.value = false
 }
 
-const resetData = (): void => {
-  predictedOccupancyMaps.value = []
-  metrics.value = []
-  mapDatasets.value = []
-  timeDatasets.value = []
-  exportDatasets.value = []
-  speciesInformation.value = null
-  speciesCalls.value = []
-  speciesPhotos.value = []
-  isLocationRedacted.value = false
-}
-
 const getSpeciesInformation = async (): Promise<void> => {
   if (store.selectedProject?.id === undefined) {
     return
   }
 
   loadingSpecies.value = true
-
   const savedSpecies = species.value
 
   if (!savedSpecies) {
