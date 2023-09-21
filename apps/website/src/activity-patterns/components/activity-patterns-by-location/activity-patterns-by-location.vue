@@ -89,7 +89,7 @@ const props = withDefaults(defineProps<{ species: SpeciesInProjectTypes['light']
 const DEFAULT_PREFIX = 'Spotlight-By-Site'
 
 const selectedType = ref(SPOTLIGHT_MAP_KEYS.detectionFrequency)
-const datasetTypes = ref([
+const datasetTypes = ref<Array<{ label: string, value: string }>>([
   { label: 'Detection Frequency', value: SPOTLIGHT_MAP_KEYS.detectionFrequency },
   { label: 'Detections (raw)', value: SPOTLIGHT_MAP_KEYS.count },
   { label: 'Naive Occupancy', value: SPOTLIGHT_MAP_KEYS.occupancy }

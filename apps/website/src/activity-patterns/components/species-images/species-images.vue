@@ -41,6 +41,7 @@
     </el-carousel>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
 
