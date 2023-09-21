@@ -579,7 +579,7 @@ export const rawSpecies: Species[] = [
     speciesSlug: 'capra-aegagrus',
     scientificName: 'Capra aegagrus',
     taxonId: 5,
-    taxon: 'Non-flying mammals',
+    taxon: 'Mammals',
     speciesCalls: [],
     commonName: 'Wild Goat',
     extinctionRisk: 'NT',
@@ -1619,7 +1619,7 @@ export const rawSpecies: Species[] = [
     speciesSlug: 'equus-ferus-caballus',
     scientificName: 'Equus ferus caballus',
     taxonId: 5,
-    taxon: 'Non-flying mammals',
+    taxon: 'Mammals',
     speciesCalls: [
       {
         siteName: 'AR_eG',

@@ -34,7 +34,7 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
 export async function getDetectionsFromApi (token: string, params: DetectDetectionsQueryParamsCore): Promise<DetectDetectionsResponseCore> {
   return await axios.request<DetectDetectionsResponseCore>({
     method: 'GET',
-    url: `${CORE_API_BASE_URL}/detections?fields[]=id&fields[]=stream_id&fields[]=classifier_id&fields[]=start&fields[]=end&fields[]=confidence&fields[]=review_status&fields[]=classification`,
+    url: `${CORE_API_BASE_URL}/detections`,
     headers: {
       authorization: token
     },

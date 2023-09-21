@@ -27,7 +27,12 @@ export interface DetectSummaryResponse {
   classifier: {
     id: number
     name: string
+    version: number
   }
+  streams: Array<{
+    id: string
+    name: string
+  }>
 }
 
 // Route

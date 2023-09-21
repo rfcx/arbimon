@@ -27,6 +27,9 @@ export interface DetectValidationResultsResponse {
     title: string
     image: string | null
     total: number
+    rejected: number
+    uncertain: number
+    confirmed: number
   }>
 }
 

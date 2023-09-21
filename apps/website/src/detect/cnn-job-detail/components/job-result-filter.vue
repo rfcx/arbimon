@@ -26,7 +26,7 @@
       label="validation-status"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.validationStatus"
+        v-model="detectionsResultFilterStore.filter.validationStatus"
         placeholder="Validation status"
       >
         <el-option
@@ -39,11 +39,28 @@
     </div>
 
     <div
+      class="job-result-filter-start-end-range ml-4 <lg:hidden"
+      label="date-range"
+    >
+      <el-select
+        v-model="detectionsResultFilterStore.filter.range"
+        placeholder="Start/end range"
+      >
+        <el-option
+          v-for="range in detectionsResultFilterStore.startEndRangeFilterOptions"
+          :key="range.value"
+          :label="range.label"
+          :value="range.value"
+        />
+      </el-select>
+    </div>
+
+    <div
       class="job-result-filter-taxon-class ml-4 <lg:hidden"
       label="taxon-class"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.classification"
+        v-model="detectionsResultFilterStore.filter.classification"
         placeholder="Class"
       >
         <el-option
@@ -60,7 +77,7 @@
       label="sites"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.siteIds"
+        v-model="detectionsResultFilterStore.filter.siteIds"
         multiple
         collapse-tags
         placeholder="Sites"
@@ -79,7 +96,7 @@
       label="sort-by"
     >
       <el-select
-        v-model="detectionsResultFilterStore.resultFilter.sortBy"
+        v-model="detectionsResultFilterStore.filter.sortBy"
         placeholder="Sort by"
       >
         <el-option
@@ -108,40 +125,23 @@
 </template>
 
 <script setup lang="ts">
-import type { AxiosInstance } from 'axios'
-import type { ComputedRef } from 'vue'
-import { computed, inject, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
-import type { ClassifierParams } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 
-import { useClassifier } from '@/detect/_composables/use-classifier'
-import { apiClientBioKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
 import FilterModal from './job-result-filter-modal.vue'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const props = defineProps<{ classifierId?: number }>()
-
+const props = defineProps<{ classifierId?: number, jobSummary: DetectValidationResultsResponse | undefined }>()
 const detectionsResultFilterStore = useDetectionsResultFilterStore()
 
-const classifierId: ComputedRef<ClassifierParams> = computed(() => {
-  return {
-    classifierId: props.classifierId == null ? '-1' : props.classifierId.toString()
-  }
-})
-
-const enabled = computed<boolean>(() => {
-  return classifierId.value.classifierId !== '-1'
-})
-
-const { data } = useClassifier(apiClientBio, classifierId, { fields: ['outputs'] }, enabled)
-
-watch(data, (newData) => {
-  if (newData == null) {
-    return
-  }
-
-  detectionsResultFilterStore.updateclassifierOutputList(newData.outputs)
+watch(() => props.jobSummary, (newValue) => {
+  detectionsResultFilterStore.updateClassifierOutputList(newValue?.classificationsSummary.map(c => {
+    return {
+      title: c.title,
+      value: c.value
+    }
+  }) ?? [])
 })
 
 const displayFilterModal = ref(false)
@@ -150,7 +150,7 @@ const displayFilterModal = ref(false)
 <style lang="scss">
 // this style is to mimic the el-dropdown element.
 // affects both the modal and the filter here.
-.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by {
+.job-result-filter-validation-status, .job-result-filter-taxon-class, .job-result-filter-sites, .job-result-filter-sort-by, .job-result-filter-start-end-range {
   div.el-input__wrapper {
     background-color: transparent;
     box-shadow: none;
