@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Metrics } from '../types'
+import type { Metrics } from '../../types'
 import MetricsTitle from './metrics-title.vue'
 import MetricsMulti from './multi-metrics.vue'
 import MetricsSingle from './single-metrics.vue'
