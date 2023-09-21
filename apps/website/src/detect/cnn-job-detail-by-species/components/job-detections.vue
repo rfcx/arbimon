@@ -1,5 +1,5 @@
 <template>
-  <div class="job-result-detections">
+  <div class="job-result-detections mt-4">
     <template
       v-for="species in allSpecies"
       :key="'job-detections-' + species.speciesSlug"
@@ -20,16 +20,19 @@
       </div>
     </template>
   </div>
+
   <div class="w-full flex flex-row-reverse">
     <div class="job-result-detections-paginator">
       <button
-        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-util-gray-02 not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-steel-gray not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        :disabled="page - 1 === 0"
         @click="previousPage()"
       >
         <icon-fas-chevron-left class="w-3 h-3" />
       </button>
       <button
-        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-util-gray-02' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-steel-gray' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        :disabled="props.data == null || props.data.length < pageSize"
         @click="nextPage()"
       >
         <icon-fas-chevron-right class="w-3 h-3" />

@@ -22,21 +22,15 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { Vue } from 'vue-class-component'
-import { Inject, Prop } from 'vue-property-decorator'
+<script setup lang="ts">
+import { useStore } from '~/store'
+import type { MetricsDataset } from '../../types'
 
-import { storeKey } from '@/globals'
-import type { MetricsDataset } from '@/insights/activity-patterns/types'
-import type { BiodiversityStore } from '~/store'
+const store = useStore()
 
-export default class SingleDatasetComponent extends Vue {
-  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+defineProps<{ datasets: MetricsDataset[] }>()
 
-  @Prop() datasets!: MetricsDataset[]
-
-  getWidth (value: string): number {
-    return Number(value) * 100
-  }
+const getWidth = (value: string): number => {
+  return Number(value) * 100
 }
 </script>
