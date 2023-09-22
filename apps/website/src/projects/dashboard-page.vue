@@ -24,18 +24,17 @@
         </h2>
         <button
           class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
-          data-collapse-toggle="analysisModal"
-          aria-controls="analysisModal"
-          aria-expanded="false"
           type="button"
           :title="'Create New Analysis Job'"
+          @click="toggleAnalysisSelector(true)"
         >
-          <!-- data-modal-target="analysisModal"
-          data-modal-toggle="analysisModal" -->
           <icon-fa-plus-circle class="h-3 w-3" />
           <span class="font-display text-base">Create new analysis</span>
-          <CreateAnalysis />
         </button>
+        <CreateAnalysis
+          v-if="hasOpenedAnalysisSelector"
+          @emit-close="toggleAnalysisSelector(false)"
+        />
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
         <DashboardAnalyses
@@ -71,7 +70,7 @@
 import type { AxiosInstance } from 'axios'
 import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
-import { computed, inject, onMounted } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
 import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -142,6 +141,7 @@ const analyses = computed(() => [
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
+const hasOpenedAnalysisSelector = ref(false)
 
 function color (): string {
   return store.datasetColors[0] ?? '#EFEFEF'
@@ -177,6 +177,10 @@ function mapInitialBounds (): LngLatBoundsLike | undefined {
 
 function circleFormatter (): MapBaseFormatter {
   return new CircleFormatterNormalizedWithMin({ maxValueRaw: 2 })
+}
+
+function toggleAnalysisSelector (isOpened: boolean): void {
+  hasOpenedAnalysisSelector.value = isOpened
 }
 
 onMounted(() => {
