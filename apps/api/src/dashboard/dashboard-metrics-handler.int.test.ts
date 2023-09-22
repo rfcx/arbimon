@@ -11,11 +11,11 @@ const ROUTE = '/projects/:projectId/dashboard-metrics'
 const url = `/projects/${PROJECT_ID_BASIC}/dashboard-metrics`
 
 const EXPECTED_PROPS = [
-  'detectionMinutesCount',
-  'siteCount',
-  'speciesCount',
-  'maxDate',
-  'minDate'
+  'deploymentSites',
+  'threatenedSpecies',
+  'totalSpecies',
+  'totalDetections',
+  'totalRecordings'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
