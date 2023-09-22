@@ -23,23 +23,28 @@
     class="gap-4 columns-2 lg:columns-4 <sm:text-center items-stretch flex"
   >
     <numeric-metric
+      tooltip-id="deployment-sites"
+      tooltip-text="Sites deployed"
       title="Deployment sites"
       :value="metrics?.deploymentSites ?? 0"
-      unit="sites"
       class="flex-1"
     />
     <numeric-metric
-      title="Threatened species over all species"
+      tooltip-id="threatened-species-over-all-species"
+      title="Threatened species / All species"
       :value="metrics?.threatenedSpecies ?? 0"
       :total-value="metrics?.totalSpecies ?? 0"
       class="flex-1"
     />
     <numeric-metric
+      tooltip-id="total-detections"
       title="Total detections"
       :value="metrics?.totalDetections ?? 0"
       class="flex-1"
     />
     <numeric-metric
+      tooltip-id="total-recordings"
+      tooltip-text="who dis eh"
       title="Total recordings"
       :value="metrics?.totalRecordings == null ? 0 : metrics.totalRecordings / 60"
       unit="hours"
