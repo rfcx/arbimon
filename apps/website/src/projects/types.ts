@@ -9,6 +9,16 @@ export interface Analysis {
   link: string
 }
 
+export interface AnalysisCard {
+  value: string
+  title: string
+  description: string
+  link: string
+  url: string
+  label: string
+  selected: boolean
+}
+
 export interface Stat {
   value: string
   title: string

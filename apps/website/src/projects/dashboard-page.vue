@@ -22,15 +22,20 @@
         <h2 class="font-display text-4xl font-medium <sm:text-xl">
           Analyses
         </h2>
-        <a
-          class="btn btn-primary flex text-xs items-center space-x-3 px-6 py-3"
+        <button
+          class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
+          data-collapse-toggle="analysisModal"
+          aria-controls="analysisModal"
+          aria-expanded="false"
+          type="button"
           :title="'Create New Analysis Job'"
-          :href="ANALYSIS_URL"
-          target="_blank"
         >
+          <!-- data-modal-target="analysisModal"
+          data-modal-toggle="analysisModal" -->
           <icon-fa-plus-circle class="h-3 w-3" />
           <span class="font-display text-base">Create new analysis</span>
-        </a>
+          <CreateAnalysis />
+        </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
         <DashboardAnalyses
@@ -64,8 +69,9 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
-import { computed, inject } from 'vue'
+import { computed, inject, onMounted } from 'vue'
 
 import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -86,13 +92,13 @@ import { useRfmJobCount, useRfmSpeciesDetected } from './_composables/use-rfm-co
 import { useSiteCount } from './_composables/use-site-count'
 import { useSoundscapeCount } from './_composables/use-soundscape-count'
 import { useSpeciesCount } from './_composables/use-species-count'
+import CreateAnalysis from './components/create-analysis.vue'
 import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
-console.info('selectedProjectId', selectedProjectId.value)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 
 // const authClient = await useAuth0Client()
@@ -101,14 +107,8 @@ const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 // const getToken = user ? async () => await getIdToken(authClient) : undefined
 const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL)
 const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
-console.info('projectRecCount', isLoadingRecCountBio.value, projectRecCount.value)
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
-const ANALYSIS_URL = computed(() => {
-  const selectedProjectSlug = store.selectedProject?.slug
-  if (selectedProjectSlug === undefined) return ''
-  else return `${BASE_URL}/project/${selectedProjectSlug}/analysis`
-})
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const tabHeight = 360
@@ -178,5 +178,9 @@ function mapInitialBounds (): LngLatBoundsLike | undefined {
 function circleFormatter (): MapBaseFormatter {
   return new CircleFormatterNormalizedWithMin({ maxValueRaw: 2 })
 }
+
+onMounted(() => {
+  initModals()
+})
 
 </script>
