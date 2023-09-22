@@ -1,7 +1,8 @@
 <template>
   <div class="mb-10 md:mb-20">
     <dashboard-metrics
-      :loading="false"
+      :error="isError"
+      :loading="isLoading"
       :metrics="metrics"
     />
   </div>
@@ -9,17 +10,17 @@
 </template>
 
 <script setup lang="ts">
-import dashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
-import dashboardSpecies from './components/dashboard-species/dashboard-species.vue'
+import { type AxiosInstance } from 'axios'
+import { inject } from 'vue'
 
-// Data
-const metrics = {
-  detectionMinutesCount: 0,
-  siteCount: 0,
-  speciesCount: 0,
-  speciesThreatenedCount: 0,
-  maxDate: new Date(),
-  minDate: new Date()
-}
+import { apiClientBioKey } from '@/globals'
+import { useStore } from '~/store'
+import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
+import DashboardSpecies from './components/dashboard-species/dashboard-species.vue'
+import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const store = useStore()
+
+const { isLoading, isError, data: metrics } = useGetDashboardMetrics(apiClientBio, store.selectedProject?.id ?? -1)
 </script>

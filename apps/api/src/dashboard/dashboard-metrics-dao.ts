@@ -4,9 +4,9 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getSequelize } from '~/db'
 
 export const getProjectMetrics = async (locationProjectId: number): Promise<DashboardMetricsResponse> => {
-  const { LocationProjectMetric, LocationSite } = ModelRepository.getInstance(getSequelize())
+  const { LocationProjectMetric, LocationSite, DashboardSpeciesThreatened, TaxonSpeciesCall } = ModelRepository.getInstance(getSequelize())
 
-  const [siteCount, metric] = await Promise.all([
+  const [siteCount, metrics, speciesThreatenedCount, speciesCallsCount] = await Promise.all([
     LocationSite.count({ where: { locationProjectId } }),
     LocationProjectMetric.findOne({
       attributes: {
@@ -16,14 +16,20 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Dash
         locationProjectId
       },
       raw: true
+    }),
+    DashboardSpeciesThreatened.count({
+      where: { locationProjectId }
+    }),
+    TaxonSpeciesCall.count({
+      where: { callProjectId: locationProjectId }
     })
   ])
 
   return {
-    siteCount,
-    speciesCount: metric?.speciesCount.toString() ?? '0',
-    minDate: metric?.minDate ?? undefined,
-    maxDate: metric?.maxDate ?? undefined,
-    detectionMinutesCount: metric?.detectionMinutesCount ?? 0
+    deploymentSites: siteCount,
+    threatenedSpecies: speciesThreatenedCount,
+    totalSpecies: metrics?.speciesCount == null ? 0 : Number(metrics.speciesCount),
+    totalDetections: speciesCallsCount,
+    totalRecordings: metrics?.detectionMinutesCount == null ? 0 : Number(metrics.detectionMinutesCount)
   }
 }

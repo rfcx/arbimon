@@ -2,7 +2,7 @@
   <div class="rounded-xl dark:bg-moss dark:text-insight p-6 border-1 border-insight flex flex-col justify-between">
     <h5
       v-if="title"
-      class="text-spoonbill font-eyebrow"
+      class="text-spoonbill text-base font-eyebrow font-medium"
     >
       {{ title }}<span
         v-if="unit"
@@ -10,11 +10,11 @@
       >({{ unit }})</span>
       <icon-fas-info-circle
         v-if="tooltipText"
-        :data-tooltip-target="$refs.tooltip"
+        data-tooltip-target="tooltip-hover"
         class="inline-block h-4 w-4 ml-1 cursor-pointer"
       />
       <div
-        ref="tooltip"
+        id="tooltip-hover"
         role="tooltip"
         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
       >
@@ -41,11 +41,11 @@ import numeral from 'numeral'
 import { computed, onMounted } from 'vue'
 
 const props = defineProps<{
+  title?: string
+  tooltipText?: string
   value: number
   totalValue?: number
-  title?: string
   unit?: string
-  tooltipText?: string
 }>()
 
 onMounted(() => {
