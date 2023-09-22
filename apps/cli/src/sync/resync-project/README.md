@@ -29,7 +29,11 @@ Add `ARBIMON_PROJECT_ID` to the command above. After running a script you will s
 Run script locally
 
 1. Add `ARBIMON_PROJECT_ID` to the `.env` file
-2. Run the job
+2. Run ssh tunnel command
+```
+ssh -N -L {PORT}:{HOST}:{PORT} ec2-user@{PORT} -i ~/.ssh/id_rsa
+```
+3. Run the job
 
 ```sh
 cd apps/cli && pnpm serve lib/sync/resync-project/index.js
