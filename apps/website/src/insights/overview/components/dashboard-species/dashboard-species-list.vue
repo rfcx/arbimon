@@ -24,7 +24,8 @@
     @mouseleave="isHoveringOnList = false"
   >
     <div
-      class="grid lg:grid-cols-4 gap-4 relative"
+      class="grid gap-4 relative"
+      :class="`lg:grid-cols-${NUMBER_OF_ITEMS_PER_PAGE}`"
     >
       <div
         v-for="item in currentSetOfData"
@@ -95,9 +96,7 @@
         :data-carousel-slide-to="index"
         :class="{ 'bg-insight': currentPageIndex + 1 === index }"
         @click="currentPageIndex = index - 1"
-      >
-        {{ index }}
-      </button>
+      />
     </div>
   </div>
 </template>
@@ -146,14 +145,15 @@ const species: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
 })
 
 // Data for rendering in the UI
+const NUMBER_OF_ITEMS_PER_PAGE = 4
 const numberOfpages = computed(() => {
-  return Math.ceil(species.value.length / 4)
+  return Math.ceil(species.value.length / NUMBER_OF_ITEMS_PER_PAGE)
 })
 
 const currentPageIndex = ref(0)
 const currentSetOfData = computed(() => {
-  const startIndex = (currentPageIndex.value) * 4
-  const endIndex = startIndex + 4
+  const startIndex = (currentPageIndex.value) * NUMBER_OF_ITEMS_PER_PAGE
+  const endIndex = startIndex + NUMBER_OF_ITEMS_PER_PAGE
   return species.value.slice(startIndex, endIndex)
 })
 
