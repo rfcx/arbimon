@@ -20,22 +20,91 @@
   </div>
   <div
     v-else-if="data"
-    class="grid lg:grid-cols-4 gap-4"
+    @mouseover="isHoveringOnList = true"
+    @mouseleave="isHoveringOnList = false"
   >
     <div
-      v-for="item in species"
-      :key="item.slug"
+      class="grid lg:grid-cols-4 gap-4 relative"
     >
-      <router-link :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }">
-        <species-card :item="item" />
-      </router-link>
+      <div
+        v-for="item in currentSetOfData"
+        :key="item.slug"
+      >
+        <router-link :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }">
+          <species-card :item="item" />
+        </router-link>
+      </div>
+      <!-- Page controls -->
+      <button
+        v-show="numberOfpages > 1 && isHoveringOnList"
+        class="absolute inset-y-0 left-2 flex items-center justify-center"
+      >
+        <span
+          class="inline-flex items-center w-10 h-10 bg-cloud text-pitch rounded-full"
+          @click="currentPageIndex = (currentPageIndex !== 0) ? currentPageIndex - 1 : numberOfpages - 1"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-10 h-6 text-pitch items-center dark:text-pitch"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          /></svg>
+          <span class="sr-only">Previous</span>
+        </span>
+      </button>
+      <button
+        v-show="numberOfpages > 1 && isHoveringOnList"
+        class="absolute inset-y-0 right-2 flex items-center justify-center"
+      >
+        <span
+          class="inline-flex items-center bg-cloud text-pitch rounded-full w-10 h-10"
+          @click="currentPageIndex = (currentPageIndex + 1 !== numberOfpages) ? currentPageIndex + 1 : 0"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-10 h-6 text-pitch items-center dark:text-pitch"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          /></svg>
+          <span class="sr-only">Next</span>
+        </span>
+      </button>
+    </div>
+    <!-- Page indicators -->
+    <div class="flex space-x-3 p-10 m-auto justify-center">
+      <button
+        v-for="index in numberOfpages"
+        :key="index"
+        type="button"
+        class="w-2 h-2 rounded-full border-insight border-1"
+        :aria-label="'Page ' + (index) + ' of ' + numberOfpages"
+        :data-carousel-slide-to="index"
+        :class="{ 'bg-insight': currentPageIndex + 1 === index }"
+        @click="currentPageIndex = index - 1"
+      >
+        {{ index }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject } from 'vue'
+import { type ComputedRef, computed, inject, ref } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
@@ -56,9 +125,9 @@ const params = computed(() => {
 })
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-
 const { isLoading, isError, data } = useSpeciesByRisk(apiClientBio, params)
 
+// raw data
 const species: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
   if (data.value == null) {
     return []
@@ -75,5 +144,19 @@ const species: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
     }
   })
 })
+
+// Data for rendering in the UI
+const numberOfpages = computed(() => {
+  return Math.ceil(species.value.length / 4)
+})
+
+const currentPageIndex = ref(0)
+const currentSetOfData = computed(() => {
+  const startIndex = (currentPageIndex.value) * 4
+  const endIndex = startIndex + 4
+  return species.value.slice(startIndex, endIndex)
+})
+
+const isHoveringOnList = ref(false)
 
 </script>
