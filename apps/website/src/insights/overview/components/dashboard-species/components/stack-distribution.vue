@@ -20,18 +20,18 @@
         />
       </div>
     </div>
-    <div class="pt-9">
+    <div class="pt-9 flex flex-row flex-wrap gap-4">
       <button
         v-for="bar in bars"
         :key="bar.id"
-        class="rounded-full border-1 text-insight px-4 py-2 mr-2"
+        class="rounded-full border-1 text-insight px-4 py-2"
         :style="{
           borderColor: bar.color,
           backgroundColor: bar.id === selectedId ? bar.color : ''
         }"
         @click="$emit('emitSelectItem', bar.id)"
       >
-        {{ bar.name }} {{ bar.percentage.toFixed(1) }}%
+        <span>{{ bar.name }} {{ bar.percentage.toFixed(1) }}%</span>
       </button>
     </div>
   </div>

@@ -20,33 +20,39 @@
   </div>
   <div
     v-else
-    class="gap-4 columns-2 lg:columns-4 <sm:text-center items-stretch flex"
+    class="gap-4 <sm:text-center items-stretch grid grid-cols-2 lg:grid-cols-4"
   >
-    <numeric-metric
+    <numeric-metric-with-icons
       tooltip-id="deployment-sites"
-      tooltip-text="Sites deployed"
+      tooltip-text="Number of sites with recorders deployed."
       title="Deployment sites"
       :value="metrics?.deploymentSites ?? 0"
+      icon-name="ft-map-pin-lg"
       class="flex-1"
     />
-    <numeric-metric
+    <numeric-metric-with-icons
       tooltip-id="threatened-species-over-all-species"
-      title="Threatened species / All species"
+      title="Threatened over all species detected"
+      tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered sp3ecies over total species found."
       :value="metrics?.threatenedSpecies ?? 0"
       :total-value="metrics?.totalSpecies ?? 0"
+      icon-name="ft-bird-lg"
       class="flex-1"
     />
-    <numeric-metric
+    <numeric-metric-with-icons
       tooltip-id="total-detections"
       title="Total detections"
+      tooltip-text="Total number of species calls detected."
       :value="metrics?.totalDetections ?? 0"
+      icon-name="ft-search-lg"
       class="flex-1"
     />
-    <numeric-metric
+    <numeric-metric-with-icons
       tooltip-id="total-recordings"
-      tooltip-text="who dis eh"
+      tooltip-text="Total hours of recordings captured"
       title="Total recordings"
       :value="metrics?.totalRecordings == null ? 0 : metrics.totalRecordings / 60"
+      icon-name="ft-mic-lg"
       unit="hours"
       class="flex-1"
     />
@@ -56,7 +62,7 @@
 <script setup lang="ts">
 import type { DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 
-import NumericMetric from '@/_components/numeric-metric.vue'
+import NumericMetricWithIcons from './components/numeric-metric-with-icons.vue'
 
 defineProps<{ loading: boolean, error: boolean, metrics: DashboardMetricsResponse | undefined }>()
 </script>
