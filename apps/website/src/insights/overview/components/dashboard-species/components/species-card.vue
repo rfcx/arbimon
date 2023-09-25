@@ -1,11 +1,11 @@
 <template>
-  <div class="border-1 border-frequency rounded-2xl flex h-60 lg:(h-100 flex-col) bg-moss">
+  <div class="border-1 border-frequency rounded-2xl flex h-100 flex-col bg-moss">
     <img
       :src="item.photoUrl"
       :alt="item.scientificName"
-      class="bg-moss w-1/2 lg:(w-full h-60 rounded-t-2xl rounded-bl-none) rounded-l-2xl rounded-tr-none object-cover object-top"
+      class="w-full h-2/3 bg-util-gray-03 rounded-t-2xl object-cover border-b-frequency border-b-1"
     >
-    <div class="flex flex-col h-full gap-y-4 p-4 justify-between">
+    <div class="flex flex-col h-1/3 gap-y-4 p-4 justify-between">
       <div>
         <div class="text-spoonbill font-eyebrow text-sm uppercase">
           {{ item.commonName }}
