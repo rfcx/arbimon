@@ -33,7 +33,7 @@
     <numeric-metric-with-icons
       tooltip-id="threatened-species-over-all-species"
       title="Threatened over all species detected"
-      tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered sp3ecies over total species found."
+      tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
       :value="metrics?.threatenedSpecies ?? 0"
       :total-value="metrics?.totalSpecies ?? 0"
       icon-name="ft-bird-lg"
