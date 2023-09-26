@@ -13,6 +13,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     `
     CREATE OR REPLACE VIEW ${VIEW_NAME} AS
       SELECT
+        sip.location_project_id,
         sip.taxon_species_id,
         sip.taxon_class_slug,
         sip.taxon_species_slug,
