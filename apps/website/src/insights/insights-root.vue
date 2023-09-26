@@ -8,7 +8,7 @@
           {{ store.selectedProject?.name }}
         </h1>
         <hero-brief-overview
-          :can-edit="store.selectedProject?.isMyProject"
+          :can-edit="store.selectedProject?.isMyProject ?? false"
           default-text="123 One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals."
         />
         <div>
