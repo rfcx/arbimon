@@ -54,9 +54,12 @@
             :loading="false"
             :get-popup-html="getPopupHtml"
             map-export-name="dashboard-sites"
-            :map-id="`dashboard-sites`"
+            :map-id="'dashboard-sites'"
             :map-initial-bounds="mapInitialBounds()"
             :map-base-formatter="circleFormatter()"
+            :map-ground-style="mapGroundStyle"
+            :map-statistics-style="mapStatisticsStyle"
+            :is-show-labels="isShowLabels"
             :map-height="tabHeight"
             :style-non-zero="circleStyle()"
             class="map-bubble w-full"
@@ -70,12 +73,13 @@
 import type { AxiosInstance } from 'axios'
 import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonKey } from '@/globals'
+import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 // import { useAuth0Client, getIdToken } from '~/auth-client'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
@@ -86,7 +90,7 @@ import { useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
-import { useBioRecordingCount } from './_composables/use-recording-count'
+import { useBioProjectSitesRecordingCount, useBioRecordingCount } from './_composables/use-recording-count'
 import { useRfmJobCount, useRfmSpeciesDetected } from './_composables/use-rfm-count'
 import { useSiteCount } from './_composables/use-site-count'
 import { useSoundscapeCount } from './_composables/use-soundscape-count'
@@ -106,10 +110,14 @@ const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 // const getToken = user ? async () => await getIdToken(authClient) : undefined
 const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL)
 const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
+const isShowLabels = true
+const mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS
+let mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_HEATMAP
 const tabHeight = 360
 
 // External data
@@ -157,16 +165,33 @@ function mapDataset (): MapDataSet {
     endDate: dayjs(),
     sites: store.projectFilters?.locationSites ?? [],
     data: (store.projectFilters?.locationSites ?? [])
-      .map(({ name: siteName, latitude, longitude }) => ({
+      .map(({ id, name: siteName, latitude, longitude }) => ({
         siteName: 'Site Name',
+        isExpand: true,
         latitude,
         longitude,
         values: {
-          [MAP_KEY_THAT_SHOULD_NOT_EXIST]: siteName
+          [MAP_KEY_THAT_SHOULD_NOT_EXIST]: siteName,
+          'Total recordings': findTotalRecordings(id),
+          'Days with recordings': findDaysWithRecordings(id)
         }
       })),
     maxValues: { [MAP_KEY_THAT_SHOULD_NOT_EXIST]: 0 }
   }
+}
+
+function findTotalRecordings (id: number): number {
+  if (!projectSitesRecCount.value) return 0
+  const site = projectSitesRecCount.value.find(site => site.id === id)
+  if (!site) return 0
+  else return site.recordings
+}
+
+function findDaysWithRecordings (id: number): number {
+  if (!projectSitesRecCount.value) return 0
+  const site = projectSitesRecCount.value.find(site => site.id === id)
+  if (!site) return 0
+  else return site.days
 }
 
 function mapInitialBounds (): LngLatBoundsLike | undefined {
@@ -185,6 +210,12 @@ function toggleAnalysisSelector (isOpened: boolean): void {
 
 onMounted(() => {
   initModals()
+  mapStatisticsStyle = MAPBOX_STYLE_CIRCLE
+})
+
+watch(() => isLoadingSitesRecCountBio.value, () => {
+  mapDataset()
+  mapStatisticsStyle = MAPBOX_STYLE_CIRCLE
 })
 
 </script>

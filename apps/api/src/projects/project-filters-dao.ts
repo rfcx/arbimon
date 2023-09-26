@@ -1,6 +1,6 @@
 import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 
-import { type ProjectRecordingCountResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type ProjectRecordingCountResponse, type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { type Project, type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
@@ -73,4 +73,20 @@ export const getRecordingCount = async (sequelize: Sequelize, locationProjectId:
   `
   const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as ProjectRecordingCountResponse[]
   return result[0].count
+}
+
+export const getSitesRecordingCountAndDates = async (sequelize: Sequelize, locationProjectId: number): Promise<SitesRecCountAndDates[]> => {
+  const bind: BindOrReplacements = {
+    locationProjectId
+  }
+  const sql = `
+    SELECT rbsh.location_site_id as id,
+      sum(rbsh.count)::integer as recordings,
+      count(DISTINCT rbsh.time_precision_hour_local::date)::integer as days
+    FROM recording_by_site_hour rbsh
+    WHERE rbsh.location_project_id = ${locationProjectId}
+    GROUP BY rbsh.location_site_id
+  `
+  const result = await sequelize.query(sql, { type: QueryTypes.SELECT, bind, raw: true }) as unknown as SitesRecCountAndDates[]
+  return result
 }

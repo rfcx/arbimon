@@ -61,7 +61,7 @@
 import type GeoJSON from 'geojson'
 import { partition } from 'lodash-es'
 import type { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBoundsLike, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
-import { LngLatBounds, NavigationControl, Popup } from 'mapbox-gl'
+import { LngLatBounds, Marker, NavigationControl, Popup } from 'mapbox-gl'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { togglesKey } from '@/globals'
@@ -231,6 +231,9 @@ const setupMapPopup = () => {
     closeButton: false,
     closeOnClick: false
   })
+  const el = document.createElement('div')
+  el.className = 'marker'
+  const marker = new Marker(el)
 
   DATA_LAYERS.forEach(layerId => {
     map.on('mousemove', layerId, (e) => {
@@ -244,18 +247,24 @@ const setupMapPopup = () => {
 
       map.getCanvas().style.cursor = 'pointer'
       popup.setLngLat(coordinates).setHTML(description).addTo(map)
+      marker.setLngLat(coordinates).addTo(map)
     })
 
     map.on('mouseleave', layerId, () => {
       map.getCanvas().style.cursor = ''
       popup.remove()
+      // TODO: remove marker doesn't work properly
     })
   })
 }
 
 const getPopup = (datum: MapSiteData): string => {
   const value = props.getPopupHtml(datum, props.dataKey)
-  return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}`
+  if ((datum?.isExpand) ?? false) {
+    return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value} <br>
+      <strong>Total recordings${value ? ': ' : ''}</strong>${datum.values['Total recordings']} <br>
+      <strong>Days with recordings${value ? ': ' : ''}</strong>${datum.values['Days with recordings']}`
+  } else return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}`
 }
 
 const generateChartNextTick = (rezoom = true) => {
