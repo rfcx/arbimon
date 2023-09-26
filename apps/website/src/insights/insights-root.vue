@@ -7,7 +7,10 @@
         <h1 class="pb-4 text-frequency font-header">
           {{ store.selectedProject?.name }}
         </h1>
-        <hero-brief-overview default-text="123 One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals." />
+        <hero-brief-overview
+          :can-edit="store.selectedProject?.isMyProject"
+          default-text="123 One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals."
+        />
         <div>
           Puerto Rico 🇵🇷
         </div>

@@ -1,10 +1,11 @@
 <template>
   <div
     v-if="!isEditing"
-    class="inline-flex cursor-pointer"
-    @mouseover="isHovering = true"
+    class="inline-flex"
+    :class="canEdit ? 'cursor-pointer' : ''"
+    @mouseover="isHovering = canEdit"
     @mouseleave="isHovering = false"
-    @click="isEditing = true"
+    @click="enterEditingMode"
   >
     <h6
       class="text-insight text-sm pb-4 max-w-100"
@@ -13,7 +14,7 @@
     </h6>
     <button class="w-2 h-2">
       <icon-custom-fi-edit
-        v-if="isHovering && !isEditing"
+        v-if="isHovering && !isEditing && canEdit"
         @click="isEditing = true"
       />
     </button>
@@ -29,13 +30,13 @@
     <div class="flex gap-2">
       <button
         class="btn btn-primary py-1 flex-0"
-        @click="isEditing = false"
+        @click="exitEdittingMode"
       >
         Save
       </button>
       <button
         class="btn btn-secondary py-1 flex-0"
-        @click="isEditing = false"
+        @click="exitEdittingMode"
       >
         Cancel
       </button>
@@ -48,10 +49,22 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   defaultText: string
+  canEdit: boolean
 }>()
 
 const isEditing = ref(false)
 const isHovering = ref(false)
 
 const text = ref(props.defaultText)
+
+const enterEditingMode = () => {
+  if (!props.canEdit) { return }
+  isEditing.value = true
+  isHovering.value = false
+}
+
+const exitEdittingMode = () => {
+  isEditing.value = false
+  isHovering.value = false
+}
 </script>
