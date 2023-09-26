@@ -7,9 +7,7 @@
         <h1 class="pb-4 text-frequency font-header">
           {{ store.selectedProject?.name }}
         </h1>
-        <h6 class="text-insight text-sm pb-4 max-w-100">
-          One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals.
-        </h6>
+        <hero-brief-overview default-text="123 One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals." />
         <div>
           Puerto Rico 🇵🇷
         </div>
@@ -50,6 +48,7 @@
 <script setup lang="ts">
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 
 const store = useStore()
 
