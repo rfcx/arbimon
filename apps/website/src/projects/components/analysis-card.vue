@@ -1,6 +1,7 @@
 <template>
   <div
-    class="flex flex-col bg-moss border-1 border-transparent rounded-lg shadow p-4 h-58 hover:bg-util-gray-02"
+    class="flex flex-col bg-moss border-1 rounded-lg shadow p-4 h-58 hover:bg-util-gray-02"
+    :class="isSelected ? 'border-frequency' : 'border-transparent'"
     @click="selectedAnalysis()"
   >
     <p
@@ -27,13 +28,17 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import { type AnalysisCard } from '../types'
 
 const props = defineProps<{analysis: AnalysisCard}>()
 const emit = defineEmits<{(event: 'emitSelectedAnalysis', value: string): void}>()
+const isSelected = ref(false)
 
 function selectedAnalysis (): void {
-  console.info('emitSelectedAnalysis', props.analysis.url)
+  isSelected.value = !isSelected.value
+  console.info('emitSelectedAnalysis', isSelected.value, props.analysis.url)
   emit('emitSelectedAnalysis', props.analysis.url)
 }
 </script>
