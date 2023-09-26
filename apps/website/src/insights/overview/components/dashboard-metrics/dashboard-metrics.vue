@@ -20,7 +20,7 @@
   </div>
   <div
     v-else
-    class="gap-4 columns-2 lg:columns-4 <sm:text-center items-stretch flex"
+    class="gap-4 <sm:text-center items-stretch grid grid-cols-2 lg:grid-cols-4"
   >
     <numeric-metric-with-icons
       tooltip-id="deployment-sites"

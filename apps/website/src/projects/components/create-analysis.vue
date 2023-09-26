@@ -1,48 +1,48 @@
 <template>
-  <on-click-outside>
-    <div
-      class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto"
-    >
-      <div class="relative w-full max-w-6xl max-h-full">
-        <div class="relative rounded-lg shadow p-10 bg-pitch border-1 border-insight">
-          <h2 class="text-3xl font-header text-insight text-left">
-            Create new analysis
-          </h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
-            <AnalysisCard
-              v-for="analysis in analyses"
-              :key="analysis.value"
-              :analysis="analysis"
-              @emit-selected-analysis="onSelectAnalysis"
-            />
-          </div>
-          <div class="flex items-center pt-12 justify-between rounded-b">
-            <button
-              id="closeButton"
-              type="button"
-              class="btn btn-secondary w-60"
-              @click="$emit('emitClose')"
+  <OnClickOutside
+    class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto"
+    @trigger="$emit('emitClose')"
+  >
+    <div class="relative w-full max-w-6xl max-h-full">
+      <div class="relative rounded-lg shadow p-10 bg-pitch border-1 border-insight">
+        <h2 class="text-3xl font-header text-insight text-left">
+          Create new analysis
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
+          <AnalysisCard
+            v-for="analysis in analyses"
+            :key="analysis.value"
+            :analysis="analysis"
+            @emit-selected-analysis="onSelectAnalysis"
+          />
+        </div>
+        <div class="flex items-center pt-12 justify-between rounded-b">
+          <button
+            id="closeButton"
+            type="button"
+            class="btn btn-secondary w-60"
+            @click="$emit('emitClose')"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn btn-primary w-60 disabled:(bg-util-gray-03 cursor-not-allowed text-util-gray-01) disabled:hover:(bg-util-gray-03 cursor-not-allowed text-util-gray-01)"
+            type="button"
+            :disabled="!isAnalysisSelected"
+            :title="isAnalysisSelected ? 'Create analysis' : 'Select analysis'"
+          >
+            <a
+              :class="!isAnalysisSelected ? 'cursor-not-allowed' : ''"
+              :href="analysisUrl"
+              target="_blank"
             >
-              Cancel
-            </button>
-            <button
-              class="btn btn-primary w-60 disabled:(bg-util-gray-03 cursor-not-allowed text-util-gray-01)"
-              type="button"
-              :disabled="!isAnalysisSelected"
-              :title="'Create analysis'"
-            >
-              <a
-                :href="analysisUrl"
-                target="_blank"
-              >
-                Create analysis
-              </a>
-            </button>
-          </div>
+              Create analysis
+            </a>
+          </button>
         </div>
       </div>
     </div>
-  </on-click-outside>
+  </OnClickOutside>
 </template>
 <script setup lang="ts">
 import { OnClickOutside } from '@vueuse/components'
@@ -68,7 +68,6 @@ const analyses = computed(() => [
 ])
 
 const onSelectAnalysis = (url: string) => {
-  console.info('onSelectAnalysis', url)
   isAnalysisSelected.value = true
   analysisUrl = url
 }
