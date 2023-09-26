@@ -19,6 +19,19 @@
     </div>
   </div>
   <div
+    v-else-if="error"
+    class="flex gap-4 columns-2 md:columns-4"
+  >
+    <template
+      v-for="n in 4"
+      :key="n"
+    >
+      <numeric-metric-error
+        class="rounded-xl p-4 sm:min-w-32 min-w-24 grow flex-1"
+      />
+    </template>
+  </div>
+  <div
     v-else
     class="gap-4 <sm:text-center items-stretch grid grid-cols-2 lg:grid-cols-4"
   >
@@ -33,7 +46,7 @@
     <numeric-metric-with-icons
       tooltip-id="threatened-species-over-all-species"
       title="Threatened over all species detected"
-      tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered sp3ecies over total species found."
+      tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
       :value="metrics?.threatenedSpecies ?? 0"
       :total-value="metrics?.totalSpecies ?? 0"
       icon-name="ft-bird-lg"
@@ -62,6 +75,7 @@
 <script setup lang="ts">
 import type { DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 
+import NumericMetricError from './components/numeric-metric-error.vue'
 import NumericMetricWithIcons from './components/numeric-metric-with-icons.vue'
 
 defineProps<{ loading: boolean, error: boolean, metrics: DashboardMetricsResponse | undefined }>()
