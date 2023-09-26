@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject, ref } from 'vue'
+import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
@@ -158,5 +158,9 @@ const currentSetOfData = computed(() => {
 })
 
 const isHoveringOnList = ref(false)
+
+watch(() => props.selectedRisk, () => {
+  currentPageIndex.value = 0
+})
 
 </script>
