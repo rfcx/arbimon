@@ -14,6 +14,7 @@ export interface MapDataSet {
 
 export interface MapSiteData {
   siteName: string
+  isExpand?: boolean
   latitude: number
   longitude: number
   values: Record<string, number | boolean | string>
