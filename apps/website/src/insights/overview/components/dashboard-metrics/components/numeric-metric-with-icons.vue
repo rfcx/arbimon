@@ -43,10 +43,10 @@
         </template>
       </div>
       <div>
-        <span class="font-medium text-3xl <sm:text-2xl font-header">{{ valueShortScale }}</span>
+        <span class="font-medium sm:text-3xl text-2xl font-header">{{ valueShortScale }}</span>
         <span
           v-if="totalShortScale"
-          class="ml-2 text-3xl <sm:text-lg"
+          class="ml-2 sm:text-3xl text-lg font-header font-medium"
         >/ {{ totalShortScale }}</span>
       </div>
     </div>
