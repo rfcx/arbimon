@@ -10,7 +10,7 @@
     <h6
       class="text-insight text-sm pb-4 max-w-100"
     >
-      {{ text }}
+      {{ defaultText }}
     </h6>
     <button class="w-2 h-2">
       <icon-custom-fi-edit
