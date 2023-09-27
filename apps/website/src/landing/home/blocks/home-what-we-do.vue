@@ -34,17 +34,19 @@ import { ROUTE_NAMES } from '~/router';
             Arbimon is an ecoacoustic analysis platform empowering scientists and conservationists with an efficient way to upload, store, and analyze mass amounts of acoustic data, enabling the ability to derive insights about the ecosystem at scale.
           </p>
           <a
+            v-if="toggles?.legacyLogin"
             :href="universalLoginUrl + '&screen_hint=signup'"
             class="inline-flex items-center justify-center btn btn-secondary"
           >
             Start analyzing
           </a>
-          <!-- <router-link
+          <router-link
+            v-else
             :to="{ name: ROUTE_NAMES.myProjects }"
             class="inline-flex items-center justify-center btn btn-secondary"
           >
             Start analyzing
-          </router-link> -->
+          </router-link>
         </div>
       </div>
       <div>
@@ -58,6 +60,11 @@ import { ROUTE_NAMES } from '~/router';
   </section>
 </template>
 <script setup lang="ts">
+import { inject } from 'vue'
+
+import { togglesKey } from '@/globals'
 import { universalLoginUrl } from '@/landing/auth0-arbimon'
 import { ROUTE_NAMES } from '~/router'
+
+const toggles = inject(togglesKey)
 </script>

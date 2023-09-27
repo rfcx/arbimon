@@ -8,21 +8,29 @@
       </div>
       <div class="md:basis-1/3 text-right">
         <a
+          v-if="toggles?.legacyLogin"
           :href="universalLoginUrl + '&screen_hint=signup'"
           class="btn btn-primary"
         >
           Get started
         </a>
-        <!-- <router-link
+        <router-link
+          v-else
           :to="{ name: ROUTE_NAMES.myProjects }"
           class="btn btn-primary"
         >
           Get started
-        </router-link> -->
+        </router-link>
       </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
+import { inject } from 'vue'
+
+import { togglesKey } from '@/globals'
 import { universalLoginUrl } from '@/landing/auth0-arbimon'
+import { ROUTE_NAMES } from '~/router'
+
+const toggles = inject(togglesKey)
 </script>
