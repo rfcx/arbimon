@@ -40,11 +40,7 @@
         class="btn btn-primary py-1 flex-0 inline-flex items-center"
         @click="save"
       >
-        <span v-if="isLoading">
-          <icon-fas-spinner class="animate-spin" />
-          <span class="sr-only">Loading...</span>
-        </span>
-        <span v-else>Save</span>
+        Save
       </button>
       <button
         class="btn btn-secondary py-1 flex-0"
@@ -70,7 +66,7 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const store = useStore()
 const dashboardStore = useDashboardStore()
 
-const { isLoading, mutate: mutateProjectProfile } = useUpdateProjectProfile(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateProjectProfile } = useUpdateProjectProfile(apiClientBio, store.selectedProject?.id ?? -1)
 
 const props = defineProps<{
   defaultText: string
