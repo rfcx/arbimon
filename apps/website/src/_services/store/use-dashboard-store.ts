@@ -8,11 +8,15 @@ export const useDashboardStore = defineStore('metrics-store', () => {
 
   const speciesThreatenedCount: Ref<number | undefined> = ref(undefined)
   const speciesCount: Ref<string | undefined> = ref(undefined)
+  const projectSummary: Ref<string | undefined> = ref(undefined)
+  const projectReadme: Ref<string | undefined> = ref(undefined)
 
   // Reset the values when the selectedProject has changed.
   watch(() => store.selectedProject, () => {
     speciesThreatenedCount.value = undefined
     speciesCount.value = undefined
+    projectSummary.value = undefined
+    projectReadme.value = undefined
   })
 
   const updateSpeciesThreatenedCount = (stc: number): void => {
@@ -23,10 +27,22 @@ export const useDashboardStore = defineStore('metrics-store', () => {
     speciesCount.value = sc
   }
 
+  const updateProjectSummary = (ps: string): void => {
+    projectSummary.value = ps
+  }
+
+  const updateProjectReadme = (pr: string): void => {
+    projectReadme.value = pr
+  }
+
   return {
     speciesThreatenedCount,
     speciesCount,
+    projectSummary,
+    projectReadme,
     updateSpeciesThreatenedCount,
-    updateSpeciesCount
+    updateSpeciesCount,
+    updateProjectReadme,
+    updateProjectSummary
   }
 })
