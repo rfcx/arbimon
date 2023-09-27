@@ -24,3 +24,6 @@ export const projectProfileRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/profile`
 // Service
 export const apiBioGetProjectProfileData = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectProfileResponse | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/profile`)
+
+export const apiBioUpdateProjectProfileData = async (apiClient: AxiosInstance, projectId: number, projectProfile: ProjectProfileUpdateBody): Promise<ProjectProfileResponse | undefined> =>
+  await apiClient.patch(`/projects/${projectId}/profile`, projectProfile)

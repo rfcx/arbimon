@@ -10,7 +10,7 @@
         </h1>
         <hero-brief-overview
           :can-edit="store.selectedProject?.isMyProject ?? false"
-          :default-text="summary"
+          :default-text="dashboardStore.projectSummary ?? ''"
         />
         <div>
           Puerto Rico 🇵🇷
@@ -51,7 +51,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { computed, inject, watch } from 'vue'
+import { inject, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -87,16 +87,11 @@ const items = [
   }
 ]
 
-const DEFAULT_TEXT = 'One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals.'
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const { data: profile } = useGetProjectProfile(apiClientBio, 1)
-
-const summary = computed(() => {
-  return dashboardStore.projectSummary ?? DEFAULT_TEXT
-})
 
 watch(() => profile.value, () => {
   if (!profile.value) return
