@@ -1,16 +1,14 @@
-import { type ProjectProfileParams, type ProjectProfileResponse } from '@rfcx-bio/common/api-bio/project-profile/project-profile'
+import { type ProjectProfileParams, type ProjectProfileResponse, type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-profile'
 
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectProfile } from './project-profile-dao'
+import { updateProjectProfile } from './project-profile-dao'
 
-export const projectProfileUpdateHandler: Handler<ProjectProfileResponse, ProjectProfileParams> = async (req) => {
-  // TODO: validate input
-  // TODO: validate user permissions
-  // TODO: update project profile
+export const projectProfileUpdateHandler: Handler<ProjectProfileResponse, ProjectProfileParams, unknown, ProjectProfileUpdateBody> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
+  const { summary, readme } = req.body
   assertPathParamsExist({ projectId })
 
   const projectIdInteger = Number(projectId)
@@ -18,6 +16,12 @@ export const projectProfileUpdateHandler: Handler<ProjectProfileResponse, Projec
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const projectContent = await getProjectProfile(projectIdInteger)
-  return projectContent
+  if (summary === undefined && readme === undefined) {
+    throw new Error('Either summary or readme must be provided')
+  }
+
+  // TODO: validate user permissions with Core API
+
+  const projectContent = await updateProjectProfile(projectIdInteger, summary, readme)
+  return { summary: projectContent?.summary ?? '', readme: projectContent?.readme ?? '' }
 }
