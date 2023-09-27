@@ -12,6 +12,7 @@ import { routesCoreProxy } from './core-proxy'
 import { routesDashboard } from './dashboard'
 import { routesDetect } from './detect'
 import { routesLanding } from './landing'
+import { routesProjectProfile } from './project-profile'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
@@ -39,6 +40,7 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesDashboard,
     routesCoreProxy,
     routesProject,
+    routesProjectProfile,
     routesSpecies,
     routesRichness,
     routesSpotlight,
