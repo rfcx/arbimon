@@ -12,19 +12,19 @@
           Join the global community of scientists, conservationists, and nature enthusiasts who use Arbimon to drive impactful and sustainable change.
         </p>
         <a
+          v-if="toggles?.legacyLogin"
           :href="universalLoginUrl + '&screen_hint=signup'"
           class="inline-flex items-center justify-center btn btn-primary mr-3"
         >
           Start analyzing
         </a>
-        <!--
         <router-link
+          v-else
           :to="{ name: ROUTE_NAMES.myProjects }"
-          class="inline-flex items-center justify-center btn btn-primary"
+          class="inline-flex items-center justify-center btn btn-primary mr-3"
         >
           Start analyzing
         </router-link>
-        -->
         <router-link
           :to="{ name: ROUTE_NAMES.landingFeatured }"
           class="inline-flex items-center justify-center btn btn-secondary mt-6 lg:mt-0"
@@ -37,7 +37,12 @@
   </section>
 </template>
 <script setup lang="ts">
+import { inject } from 'vue'
+
+import { togglesKey } from '@/globals'
 import { universalLoginUrl } from '@/landing/auth0-arbimon'
 import { ROUTE_NAMES } from '~/router'
 import HeroMedia from './home-hero-media.vue'
+
+const toggles = inject(togglesKey)
 </script>
