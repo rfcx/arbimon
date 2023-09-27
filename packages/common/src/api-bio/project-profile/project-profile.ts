@@ -7,6 +7,11 @@ import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from
 // Request types
 export type ProjectProfileParams = ProjectRouteParamsSerialized
 
+export interface ProjectProfileUpdateBody {
+  summary?: string
+  readme?: string
+}
+
 // Response types
 export interface ProjectProfileResponse {
   summary: string
