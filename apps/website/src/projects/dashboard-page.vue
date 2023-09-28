@@ -47,7 +47,7 @@
         <h2 class="font-display text-4xl font-medium sm:text-xl">
           Sites
         </h2>
-        <div class="w-full text-black mapboxgl-map pt-6">
+        <div class="w-full text-black mapboxgl-map pt-6 pb-20">
           <map-base-component
             :dataset="mapDataset()"
             data-key="refactorThis"
