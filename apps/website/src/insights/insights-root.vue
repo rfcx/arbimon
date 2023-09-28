@@ -12,7 +12,7 @@
           :can-edit="store.selectedProject?.isMyProject ?? false"
           :default-text="dashboardStore.projectSummary ?? ''"
         />
-        <div>
+        <div class="mt-4">
           Puerto Rico 🇵🇷
         </div>
       </div>
