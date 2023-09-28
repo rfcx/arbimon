@@ -64,19 +64,29 @@
       tooltip-id="total-recordings"
       tooltip-text="Total hours of recordings captured"
       title="Total recordings"
-      :value="metrics?.totalRecordings == null ? 0 : metrics.totalRecordings / 60"
+      :value="totalRecordingsValue"
       icon-name="ft-mic-lg"
-      unit="hours"
+      :unit="totalRecordingsUnit"
       class="flex-1"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import type { DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 
 import NumericMetricError from './components/numeric-metric-error.vue'
 import NumericMetricWithIcons from './components/numeric-metric-with-icons.vue'
 
-defineProps<{ loading: boolean, error: boolean, metrics: DashboardMetricsResponse | undefined }>()
+const props = defineProps<{ loading: boolean, error: boolean, metrics: DashboardMetricsResponse | undefined }>()
+
+// form the total recordings value (minutes or hours)
+const totalRecordingsMin = props.metrics?.totalRecordings ?? 0
+const MAXIMUM_MINUTE = 3 * 60 // 3 hours
+const totalRecordingsUnit = computed(() => totalRecordingsMin < MAXIMUM_MINUTE ? 'minutes' : 'hours')
+const totalRecordingsValue = computed(() => {
+  return totalRecordingsMin < MAXIMUM_MINUTE ? totalRecordingsMin : totalRecordingsMin / 60
+})
 </script>
