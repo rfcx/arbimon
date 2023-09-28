@@ -162,24 +162,8 @@
   color: #fffefc;
 }
 
-.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
-  border-bottom-color: #14130d;
-}
-
-.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-  border-top-color: #14130d;
-}
-
-.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
-  border-left-color: #14130d;
-}
-
-.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
-  border-right-color: #14130d;
-}
-
-.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip {
-  border-bottom-color: #14130d;
+.mapboxgl-popup-tip {
+  display: none;
 }
 
 .marker {
