@@ -9,13 +9,13 @@
   >
     <h6
       v-if="text"
-      class="text-insight pb-4 max-w-100 min-h-10"
+      class="text-insight pb-4 max-w-122 min-h-10"
     >
       {{ text }}
     </h6>
     <h6
       v-else
-      class="text-fog pb-4 max-w-100 min-h-10"
+      class="text-fog pb-4 max-w-122 min-h-10"
     >
       {{ PLACEHOLDER_TEXT }}
     </h6>
@@ -33,7 +33,7 @@
     <textarea
       v-model.lazy.trim="text"
       :placeholder="PLACEHOLDER_TEXT"
-      class="text-pitch rounded-md p-1 w-100 h-12 border-util-gray-03"
+      class="select-auto selection:bg-fog text-pitch rounded-md p-1 w-122 h-20 border-util-gray-03"
     />
     <div class="flex gap-2">
       <button
