@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { Editor } from '@toast-ui/editor'
+import Editor from '@toast-ui/editor'
 import type { EventMap } from '@toast-ui/editor/dist/toastui-editor-viewer'
 import { type Ref, onMounted, onUnmounted, ref } from 'vue'
 
