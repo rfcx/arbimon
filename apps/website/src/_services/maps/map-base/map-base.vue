@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import type GeoJSON from 'geojson'
 import { partition } from 'lodash-es'
-import type { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBoundsLike, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
+import type { AnyPaint, CircleLayer, GeoJSONSource, HeatmapLayer, LngLatBoundsLike, Map as MapboxMap, MapboxOptions, Offset } from 'mapbox-gl'
 import { LngLatBounds, Marker, NavigationControl, Popup } from 'mapbox-gl'
 import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
@@ -227,13 +227,28 @@ const setupPaintStyle = (style: MapboxStatisticsStyle) => {
 }
 
 const setupMapPopup = () => {
+  const markerHeight = 50
+  const markerRadius = 10
+  const linearOffset = 25
+
+  const popupOffsets: Offset = {
+    top: [0, 0],
+    'top-left': [0, 0],
+    'top-right': [0, 0],
+    bottom: [0, -markerHeight],
+    'bottom-left': [linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+    'bottom-right': [-linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+    left: [markerRadius, (markerHeight - markerRadius) * -2],
+    right: [-markerRadius, (markerHeight - markerRadius) * -2]
+  }
   const popup = new Popup({
     closeButton: false,
-    closeOnClick: false
+    closeOnClick: false,
+    offset: popupOffsets
   })
   const el = document.createElement('div')
   el.className = 'marker'
-  const marker = new Marker(el)
+  const marker = new Marker(el, { anchor: 'bottom' })
 
   DATA_LAYERS.forEach(layerId => {
     map.on('mousemove', layerId, (e) => {
@@ -252,8 +267,8 @@ const setupMapPopup = () => {
 
     map.on('mouseleave', layerId, () => {
       map.getCanvas().style.cursor = ''
-      popup.remove()
-      // TODO: remove marker doesn't work properly
+      // TODO: removing a marker and a popup hides them straight away, the user cannot work with the point properly
+      // popup.remove()
     })
   })
 }

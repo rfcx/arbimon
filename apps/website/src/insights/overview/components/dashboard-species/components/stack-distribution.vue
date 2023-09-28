@@ -14,7 +14,7 @@
         :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
       >
         <div
-          class="opacity-50 h-4 w-full"
+          class="opacity-50 h-2 w-full"
           :class="bar.id !== selectedId ? 'bg-pitch' : ''"
           :style="{ zIndex: bars.length - idx}"
         />

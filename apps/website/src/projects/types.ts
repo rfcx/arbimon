@@ -1,6 +1,7 @@
 export interface Analysis {
   value: string
   title: string
+  iconName: string
   count: number | undefined
   isLoading: boolean
   label: string
