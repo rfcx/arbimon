@@ -268,7 +268,8 @@ const setupMapPopup = () => {
     map.on('mouseleave', layerId, () => {
       map.getCanvas().style.cursor = ''
       // TODO: removing a marker and a popup hides them straight away, the user cannot work with the point properly
-      // popup.remove()
+      popup.remove()
+      marker.remove()
     })
   })
 }
