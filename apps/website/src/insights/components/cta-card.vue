@@ -24,17 +24,15 @@
           type="button"
           title="'Return to Audio Analysis'"
         >
-          <a
-            :href="analysisUrl"
-            target="_blank"
-          >
+          <router-link :to="{ name: ROUTE_NAMES.dashboard }">
             Return to Audio Analysis
-          </a>
+          </router-link>
         </button>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-
+import { ROUTE_NAMES } from '~/router'
+// TODO: change to analysis page
 </script>
