@@ -302,6 +302,8 @@ onMounted(() => {
     inactiveClasses: 'border-stone-200 text-white hover:text-gray-500 dark:text-white dark:hover:text-gray-500'
   }
 
+  /* eslint-disable no-unused-vars */
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const t = new Tabs(tabs, options)
 })
 </script>
