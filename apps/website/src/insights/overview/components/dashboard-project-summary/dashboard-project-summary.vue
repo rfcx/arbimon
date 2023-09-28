@@ -130,12 +130,6 @@
           </circle>
         </svg>
 
-        <markdown-viewer
-          v-else
-          id="dashboard-project-summary-markdown-viewer"
-          :class="isEditing ? 'lg:px-48 max-h-48 overflow-hidden hidden' : 'lg:px-48 max-h-48 overflow-hidden'"
-          :value="defaultText"
-        />
         <button
           id="dashboard-project-summary-edit-button"
           :class="isEditing ? 'absolute lg:right-52 top-0 hidden' : 'absolute lg:right-52 top-0'"
@@ -151,11 +145,6 @@
             View More <icon-custom-arrow-right class="text-frequency inline-block" />
           </span>
         </button>
-
-        <markdown-editor
-          v-model="defaultText"
-          :class="isEditing ? '' : 'hidden'"
-        />
       </div>
 
       <div
@@ -211,8 +200,6 @@ import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { inject, onMounted, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
-import MarkdownEditor from '~/markdown/markdown-editor.vue'
-import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
 
@@ -302,6 +289,8 @@ onMounted(() => {
     inactiveClasses: 'border-stone-200 text-white hover:text-gray-500 dark:text-white dark:hover:text-gray-500'
   }
 
+  /* eslint-disable no-unused-vars */
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const t = new Tabs(tabs, options)
 })
 </script>
