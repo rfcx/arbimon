@@ -172,3 +172,8 @@
   background-image: url("https://static.rfcx.org/arbimon/fi_map-pin.svg");
   background-size: cover;
 }
+
+.custom-backdrop {
+  background: rgba(36, 36, 36, 0.50);
+  backdrop-filter: blur(7.5px);
+}
