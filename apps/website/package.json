@@ -43,7 +43,6 @@
     "@leeoniya/ufuzzy": "^1.0.8",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
-    "@toast-ui/editor": "^3.2.2",
     "@types/geojson": "^7946.0.10",
     "@types/markdown-it": "^12.2.3",
     "@vueuse/components": "^6.7.6",
