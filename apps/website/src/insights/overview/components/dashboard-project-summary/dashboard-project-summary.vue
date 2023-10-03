@@ -225,22 +225,23 @@ watch(dashboardContent, (newValue) => {
     return
   }
 
-  defaultText.value = newValue.readme
+  markdownText.value = newValue.readme
 })
 
 const isEditing = ref(false)
-const markdownText = ref('')
-const defaultText = ref(`**Background**
+const markdownText = ref(`#### Background
 
-Provide some context about the project. You may follow the template below. Make sure to delete the sample text and replace it with your own.
-The project is a collaboration between &lt;Project Stakeholder&gt; and &lt;Project Stakeholder&gt; to &lt;project purpose&gt;. Over &lt;period of time&gt;, from &lt;project start date to end date&gt;, the project aims to &lt;project goal&gt;.
+The project is a collaboration between \\<Project stakeholder\\> and \\<Project Stakeholder\\> to \\<project purpose\\> \\(e\\.g\\. the 1\\-line summary\\) This project will occur over \\<period of time\\>\\, from \\<approximate project start date\\> to \\<approximate project end date\\>
 
-**Key Research Questions**
-What are the key research questions for the project? e.g. What is the species richness in the study area?
+#### Key Research Questions
 
-1. &lt;Key research question 1&gt;
-2. &lt;Key research question 2&gt;
-3. &lt;Key research question 3&gt;
+Please state the key research questions for this project\\. \\(e\\.g\\. What is the species richness in the study area\\?\\)
+
+1. \\<Key research question 1\\>
+
+2. \\<Key research question 2\\>
+
+3. \\<Key research question 3\\>
 `)
 
 onMounted(() => {
