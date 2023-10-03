@@ -10,7 +10,9 @@
         <div class="text-spoonbill font-eyebrow text-sm uppercase">
           {{ item.commonName }}
         </div>
-        <div>{{ item.scientificName }}</div>
+        <div class="italic">
+          {{ item.scientificName }}
+        </div>
       </div>
       <a
         href="#"
