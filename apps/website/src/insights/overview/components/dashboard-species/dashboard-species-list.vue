@@ -3,10 +3,10 @@
   <!-- eslint-disable vue/require-v-for-key -->
   <div
     v-if="isLoading || !species || selectedRisk === null"
-    class="flex gap-4 columns-2 md:columns-4"
+    class="flex gap-4 columns-6"
   >
     <div
-      v-for="n in 4"
+      v-for="n in 6"
       class="loading-shimmer rounded-xl p-4 min-w-32 <sm:min-w-24 grow flex-1"
     >
       <p class="font-bold text-4xl <sm:text-2xl">
@@ -24,17 +24,16 @@
     @mouseleave="isHoveringOnList = false"
   >
     <div
-      class="grid gap-4 relative"
+      class="grid gap-4 relative grid-cols-4 md:grid-cols-6"
       :class="`lg:grid-cols-${NUMBER_OF_ITEMS_PER_PAGE}`"
     >
-      <div
+      <router-link
         v-for="item in currentSetOfData"
         :key="item.slug"
+        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }"
       >
-        <router-link :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }">
-          <species-card :item="item" />
-        </router-link>
-      </div>
+        <species-card :item="item" />
+      </router-link>
       <!-- Page controls -->
       <button
         v-show="numberOfpages > 1 && isHoveringOnList"
@@ -145,7 +144,7 @@ const species: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
 })
 
 // Data for rendering in the UI
-const NUMBER_OF_ITEMS_PER_PAGE = 4
+const NUMBER_OF_ITEMS_PER_PAGE = 6
 const numberOfpages = computed(() => {
   return Math.ceil(species.value.length / NUMBER_OF_ITEMS_PER_PAGE)
 })
