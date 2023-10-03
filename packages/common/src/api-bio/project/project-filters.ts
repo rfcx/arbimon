@@ -30,10 +30,16 @@ export interface ProjectRecordingCountResponse {
   count: number
 }
 
+export interface ProjectDetectionCountResponse {
+  count: number
+}
+
 // Route
 export const projectFiltersRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/filters`
 
 export const projectRecordingCountRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/recording-count`
+
+export const projectDetectionCountRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/detection-count`
 
 export const projectSitesRecordingCountRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/sites-recording-count`
 
@@ -43,6 +49,9 @@ export const apiBioGetProjectFilters = async (apiClient: AxiosInstance, projectI
 
 export const apiBioGetProjectRecordingCount = async (apiClient: AxiosInstance, projectId: number): Promise<number | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/recording-count`)
+
+export const apiBioGetProjectDetectionCount = async (apiClient: AxiosInstance, projectId: number): Promise<number | undefined> =>
+  await apiGetOrUndefined(apiClient, `/projects/${projectId}/detection-count`)
 
 export const apiBioGetProjectSitesRecordingCount = async (apiClient: AxiosInstance, projectId: number): Promise<number | undefined> =>
   await apiGetOrUndefined(apiClient, `/projects/${projectId}/sites-recording-count`)
