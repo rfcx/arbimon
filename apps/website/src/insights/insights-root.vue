@@ -2,7 +2,7 @@
   <div
     class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
   >
-    <!-- <cta-card /> -->
+    <cta-card v-if="!projectDetectionCount && !projectDetectionCountLoading" />
     <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight flex flex-col md:flex-row justify-between">
       <div class="">
         <h1 class="pb-4 text-frequency font-header">
@@ -51,13 +51,14 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { inject, watch } from 'vue'
+import { computed, inject, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
+import { useBioDetectionCount } from './_composables/use-detection-count'
 import { useGetProjectProfile } from './_composables/use-project-profile'
-// import CtaCard from './components/cta-card.vue'
+import CtaCard from './components/cta-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 
 const items = [
@@ -92,6 +93,9 @@ const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const { data: profile } = useGetProjectProfile(apiClientBio, 1)
+
+const selectedProjectId = computed(() => store.selectedProject?.id)
+const { isLoading: projectDetectionCountLoading, data: projectDetectionCount } = useBioDetectionCount(apiClientBio, selectedProjectId)
 
 watch(() => profile.value, () => {
   if (!profile.value) return
