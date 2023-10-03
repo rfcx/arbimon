@@ -130,6 +130,13 @@
           </circle>
         </svg>
 
+        <ClientOnly>
+          <Wysimark
+            v-model="markdownText"
+            :height="300"
+          />
+        </ClientOnly>
+
         <button
           id="dashboard-project-summary-edit-button"
           :class="isEditing ? 'absolute lg:right-52 top-0 hidden' : 'absolute lg:right-52 top-0'"
@@ -195,6 +202,7 @@
 </template>
 
 <script setup lang="ts">
+import Wysimark from '@wysimark/vue'
 import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { inject, onMounted, ref, watch } from 'vue'
@@ -221,6 +229,7 @@ watch(dashboardContent, (newValue) => {
 })
 
 const isEditing = ref(false)
+const markdownText = ref('')
 const defaultText = ref(`**Background**
 
 Provide some context about the project. You may follow the template below. Make sure to delete the sample text and replace it with your own.
