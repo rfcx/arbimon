@@ -20,7 +20,10 @@
         />
       </div>
     </div>
-    <div class="pt-9 flex flex-row flex-wrap gap-4">
+    <div
+      v-if="!viewOnly"
+      class="pt-9 flex flex-row flex-wrap gap-4"
+    >
       <button
         v-for="bar in bars"
         :key="bar.id"
@@ -33,6 +36,22 @@
       >
         <span>{{ bar.name }} {{ bar.percentage.toFixed(1) }}%</span>
       </button>
+    </div>
+    <div
+      v-else
+      class="pt-9 flex flex-row flex-wrap gap-4"
+    >
+      <div
+        v-for="bar in bars"
+        :key="bar.id"
+        class="inline-flex items-baseline"
+      >
+        <div
+          class="rounded-full w-1.5 h-1.5 self-center mx-2"
+          :style="{ backgroundColor: bar.color }"
+        />
+        {{ bar.name }} {{ bar.percentage.toFixed(1) }}%
+      </div>
     </div>
   </div>
 </template>
@@ -60,8 +79,11 @@ const props = withDefaults(defineProps<{
   dataset: HorizontalStack[],
   knownTotalCount?: string,
   selectedId: number
+  viewOnly: boolean
 }>(), {
-  knownTotalCount: undefined
+  knownTotalCount: undefined,
+  selectedId: -1,
+  viewOnly: true
 })
 
 defineEmits(['emitSelectItem'])
