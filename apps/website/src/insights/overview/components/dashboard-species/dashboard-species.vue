@@ -1,5 +1,5 @@
 <template>
-  <h1>Threatened species</h1>
+  <h2>Threatened species</h2>
   <div class="dashboard-species">
     <div
       v-if="isLoading"
@@ -38,7 +38,7 @@
       :selected-risk="selectedRisk"
       class="mt-6"
     />
-    <h1>Taxonomy groups</h1>
+    <h2>Taxonomy groups</h2>
     <div class="dashboard-taxon">
       <StackDistribution
         :dataset="richnessByTaxon"
