@@ -107,7 +107,11 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     }
   },
   ssr: {
-    noExternal: ['mapbox-gl', 'siriwave']
+    noExternal: [
+      'mapbox-gl',
+      'siriwave',
+      '@wysimark/vue'
+    ],
   },
   assetsInclude: [
     '**/*.WAV'
