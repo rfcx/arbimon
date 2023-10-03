@@ -29,6 +29,7 @@
         :dataset="richnessByRisk"
         :known-total-count="dashboardStore.speciesCount"
         :selected-id="selectedRisk ?? -1"
+        :view-only="false"
         class="my-6"
         @emit-select-item="onEmitSelectRiskRating"
       />
@@ -37,6 +38,14 @@
       :selected-risk="selectedRisk"
       class="mt-6"
     />
+    <h1>Taxonomy groups</h1>
+    <div class="dashboard-taxon">
+      <StackDistribution
+        :dataset="richnessByTaxon"
+        :known-total-count="dashboardStore.speciesCount"
+        class="my-6"
+      />
+    </div>
   </div>
 </template>
 
@@ -47,6 +56,7 @@ import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 import { apiClientBioKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore } from '~/store'
+import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import StackDistribution from './components/stack-distribution.vue'
 import { type HorizontalStack } from './components/stack-distribution.vue'
 import { useSpeciesRichnessByRisk } from './composables/use-species'
@@ -60,6 +70,18 @@ const { isLoading, isError, data } = useSpeciesRichnessByRisk(apiClientBio)
 const richnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
   return (data.value?.richnessByRisk ?? []).map(([taxonId, count]) => {
     const taxonClass = RISKS_BY_ID[taxonId]
+    return {
+      id: taxonId,
+      name: taxonClass.label,
+      color: taxonClass.color,
+      count
+    }
+  })
+})
+
+const richnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
+  return (data.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
+    const taxonClass = TAXON_CLASSES_BY_ID[taxonId]
     return {
       id: taxonId,
       name: taxonClass.label,
