@@ -11,7 +11,7 @@
         <div class="text-left text-base pt-1 text-insight">
           Here's what you need to do:
         </div>
-        <ul class="list-inside list-circle text-base">
+        <ul class="list-inside list-disc text-base">
           <li class="pt-2">
             Run an audio analysis
           </li>

@@ -1,12 +1,12 @@
-import { type DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
+import { type DashboardMetricsResponse, type DashboardMinMaxDatesResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
 
 export const getProjectMetrics = async (locationProjectId: number): Promise<DashboardMetricsResponse> => {
-  const { LocationProjectMetric, LocationSite, DashboardSpeciesThreatened, TaxonSpeciesCall } = ModelRepository.getInstance(getSequelize())
+  const { LocationProjectMetric, LocationSite, DashboardSpeciesThreatened, TaxonSpeciesCall, RecordingBySiteHour } = ModelRepository.getInstance(getSequelize())
 
-  const [siteCount, metrics, speciesThreatenedCount, speciesCallsCount] = await Promise.all([
+  const [siteCount, metrics, speciesThreatenedCount, speciesCallsCount, minDate, maxDate] = await Promise.all([
     LocationSite.count({ where: { locationProjectId } }),
     LocationProjectMetric.findOne({
       attributes: {
@@ -22,6 +22,14 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Dash
     }),
     TaxonSpeciesCall.count({
       where: { callProjectId: locationProjectId }
+    }),
+    RecordingBySiteHour.min('timePrecisionHourLocal', {
+      where: { locationProjectId },
+      raw: true
+    }),
+    RecordingBySiteHour.max('timePrecisionHourLocal', {
+      where: { locationProjectId },
+      raw: true
     })
   ])
 
@@ -30,6 +38,28 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Dash
     threatenedSpecies: speciesThreatenedCount,
     totalSpecies: metrics?.speciesCount == null ? 0 : Number(metrics.speciesCount),
     totalDetections: speciesCallsCount,
-    totalRecordings: metrics?.detectionMinutesCount == null ? 0 : Number(metrics.detectionMinutesCount)
+    totalRecordings: metrics?.detectionMinutesCount == null ? 0 : Number(metrics.detectionMinutesCount),
+    minDate: minDate as Date | null,
+    maxDate: maxDate as Date | null
+  }
+}
+
+export const getProjectMinMaxDates = async (locationProjectId: number): Promise<DashboardMinMaxDatesResponse> => {
+  const { RecordingBySiteHour } = ModelRepository.getInstance(getSequelize())
+
+  const [minDate, maxDate] = await Promise.all([
+    RecordingBySiteHour.min('timePrecisionHourLocal', {
+      where: { locationProjectId },
+      raw: true
+    }),
+    RecordingBySiteHour.max('timePrecisionHourLocal', {
+      where: { locationProjectId },
+      raw: true
+    })
+  ])
+
+  return {
+    minDate: minDate as Date | null,
+    maxDate: maxDate as Date | null
   }
 }

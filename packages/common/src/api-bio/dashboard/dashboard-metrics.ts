@@ -17,6 +17,13 @@ export interface DashboardMetricsResponse {
   totalDetections: number
   /** total recordings in minutes */
   totalRecordings: number
+  maxDate: Date | null
+  minDate: Date | null
+}
+
+export interface DashboardMinMaxDatesResponse {
+  maxDate: Date | null
+  minDate: Date | null
 }
 
 // Route
