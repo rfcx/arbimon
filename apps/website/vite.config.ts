@@ -111,7 +111,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
       'mapbox-gl',
       'siriwave',
       '@wysimark/vue'
-    ],
+    ]
   },
   assetsInclude: [
     '**/*.WAV'
