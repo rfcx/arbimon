@@ -3,8 +3,7 @@ import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse } fr
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getRichnessByTaxon, getTotalSpecies } from './dashboard-species-data-dao'
-import { getRichnessByRisk } from './dashboard-species-richness-by-risk-data-dao'
+import { getRichnessByRisk, getRichnessByTaxon, getTotalSpecies } from './dashboard-species-data-dao'
 
 export const dashboardSpeciesDataHandler: Handler<DashboardSpeciesDataResponse, DashboardSpeciesDataParams> = async (req) => {
   // Inputs & validation
