@@ -3,17 +3,16 @@ import { type AxiosInstance } from 'axios'
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
 import { type ApiStack, type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
-import { type DashboardSpecies } from './common'
 
 // Request types
 export type DashboardSpeciesDataParams = ProjectRouteParamsSerialized
 
 // Response types
 export interface DashboardSpeciesDataResponse {
-  speciesHighlighted: DashboardSpecies[]
-  speciesThreatened: DashboardSpecies[]
+  // TODO: include this (all species in project) species: DashboardSpecies[]
   richnessByTaxon: ApiStack
   richnessByRisk: ApiStack
+  totalSpeciesCount: number
 }
 
 // Route
