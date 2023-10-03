@@ -295,16 +295,16 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
-div#dashboard-project-summary-markdown-viewer:hover + button#dashboard-project-summary-edit-button {
-  display: block;
-}
-
-div#dashboard-project-summary-markdown-viewer + button#dashboard-project-summary-edit-button {
-  display: none;
-}
-
-button#dashboard-project-summary-edit-button:hover {
-  display: block !important;
-}
-</style>
+<!-- <style lang="scss"> -->
+<!-- div#dashboard-project-summary-markdown-viewer:hover + button#dashboard-project-summary-edit-button { -->
+<!--   display: block; -->
+<!-- } -->
+<!---->
+<!-- div#dashboard-project-summary-markdown-viewer + button#dashboard-project-summary-edit-button { -->
+<!--   display: none; -->
+<!-- } -->
+<!---->
+<!-- button#dashboard-project-summary-edit-button:hover { -->
+<!--   display: block !important; -->
+<!-- } -->
+<!-- </style> -->
