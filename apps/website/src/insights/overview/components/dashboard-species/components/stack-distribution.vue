@@ -78,8 +78,8 @@ export interface Bar {
 const props = withDefaults(defineProps<{
   dataset: HorizontalStack[],
   knownTotalCount?: string,
-  selectedId: number
-  viewOnly: boolean
+  selectedId?: number
+  viewOnly?: boolean
 }>(), {
   knownTotalCount: undefined,
   selectedId: -1,
