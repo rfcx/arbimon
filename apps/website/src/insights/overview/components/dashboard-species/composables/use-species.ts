@@ -3,8 +3,7 @@ import { type ComputedRef, computed } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
 import { type DashboardSpeciesByRiskDataResponse, type DashboardSpeciesByRiskParams, apiBioGetDashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-by-risk'
-import { type DashboardSpeciesDataParams } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
-import { type DashboardSpeciesRichnessByRiskDataResponse, apiBioGetDashboardSpeciesRichnessByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-richness-by-risk'
+import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse, apiBioGetDashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 
 import { useStoreOutsideSetup } from '~/store'
 
@@ -16,11 +15,11 @@ const options = {
   staleTime: 10 * 60 * 1000 // 10 minutes
 }
 
-export const useSpeciesRichnessByRisk = (apiClient: AxiosInstance): UseQueryReturnType<DashboardSpeciesRichnessByRiskDataResponse, unknown> =>
-  useQuery(['fetch-species-richness-by-risk', projectId], async () => {
+export const useSpeciesRichnessByRisk = (apiClient: AxiosInstance): UseQueryReturnType<DashboardSpeciesDataResponse, unknown> =>
+  useQuery(['fetch-species-data', projectId], async () => {
     if (projectId.value === undefined) return { richnessByRisk: [] }
     const params: DashboardSpeciesDataParams = { projectId: projectId.value.toString() }
-    return await apiBioGetDashboardSpeciesRichnessByRiskDataRoute(apiClient, params) ?? []
+    return await apiBioGetDashboardSpeciesDataRoute(apiClient, params) ?? []
   }, options)
 
 export const useSpeciesByRisk = (apiClient: AxiosInstance, riskRatingId: ComputedRef<number | null>): UseQueryReturnType<DashboardSpeciesByRiskDataResponse, unknown> =>

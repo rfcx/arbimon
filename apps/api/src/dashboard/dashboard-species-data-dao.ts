@@ -5,6 +5,16 @@ import { type DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/das
 
 import { getSequelize } from '~/db'
 
+export const getTotalSpecies = async (locationProjectId: number): Promise<number> => {
+  const { LocationProjectMetric } = ModelRepository.getInstance(getSequelize())
+  const metric = await LocationProjectMetric.findOne({
+    attributes: ['speciesCount'],
+    where: { locationProjectId },
+    raw: true
+  })
+  return metric?.speciesCount ?? 0
+}
+
 export const getHighlightedSpecies = async (projectId: number): Promise<DashboardSpeciesHighlighted[]> =>
   await ModelRepository.getInstance(getSequelize())
     .DashboardSpeciesHighlighted
