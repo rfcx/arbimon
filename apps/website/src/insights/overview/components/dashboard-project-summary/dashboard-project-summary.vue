@@ -97,7 +97,7 @@
     <div id="project-summary-tab-content">
       <div
         id="about-tab-content"
-        class="relative rounded-lg"
+        class="rounded-lg"
         role="tabpanel"
         aria-labelledby="about-tab-content"
       >
@@ -130,28 +130,43 @@
           </circle>
         </svg>
 
-        <ClientOnly>
-          <Wysimark
-            v-model="markdownText"
-            :height="300"
+        <div
+          v-else
+          class="mx-auto p-4 lg:max-w-4xl relative"
+        >
+          <div
+            v-show="!isViewMored"
+            id="dashboard-project-summary-markdown-viewer-mask"
+            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-gradient-to-b from-transparent to-echo z-10"
           />
-        </ClientOnly>
-
-        <button
-          id="dashboard-project-summary-edit-button"
-          :class="isEditing ? 'absolute lg:right-52 top-0 hidden' : 'absolute lg:right-52 top-0'"
-          @click="isEditing = true"
-        >
-          <icon-custom-fi-edit />
-        </button>
-        <button
-          id="dashboard-project-summary-about-read-more"
-          :class="isEditing ? 'bg-transparent absolute left-52 bottom-4 text-frequency text-base font-normal leading-normal hidden' : 'bg-transparent absolute left-52 bottom-4 text-frequency text-base font-normal leading-normal'"
-        >
-          <span>
-            View More <icon-custom-arrow-right class="text-frequency inline-block" />
-          </span>
-        </button>
+          <MarkdownViewer
+            v-show="!isEditing"
+            id="dashboard-project-summary-markdown-viewer"
+            :class="isViewMored === true ? 'z-0' : 'max-h-52 overflow-y-hidden z-0'"
+            :markdown="markdownText"
+          />
+          <button
+            id="dashboard-project-summary-edit-button"
+            class="absolute lg:right-4 top-0 z-20 hover:block hidden"
+            @click="editMarkdownContent"
+          >
+            <icon-custom-fi-edit />
+          </button>
+          <button
+            id="dashboard-project-summary-about-read-more"
+            :class="isViewMored === true ? 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20 hidden' : 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20'"
+            @click="isViewMored = true"
+          >
+            <span>
+              View More <icon-custom-arrow-right class="text-frequency inline-block" />
+            </span>
+          </button>
+          <MarkdownEditor
+            v-show="isEditing"
+            v-model="markdownText"
+            class="mx-auto"
+          />
+        </div>
       </div>
 
       <div
@@ -202,12 +217,13 @@
 </template>
 
 <script setup lang="ts">
-import Wysimark from '@wysimark/vue'
 import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { inject, onMounted, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
+import MarkdownEditor from '~/markdown/markdown-editor.vue'
+import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
 
@@ -215,6 +231,9 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const store = useStore()
 const { isLoading, data: dashboardContent } = useGetDashboardContent(apiClientBio, store.selectedProject?.id ?? -1)
+
+const isViewMored = ref(false)
+const isEditing = ref(false)
 
 watch(dashboardContent, (newValue) => {
   if (newValue == null) {
@@ -228,7 +247,11 @@ watch(dashboardContent, (newValue) => {
   markdownText.value = newValue.readme
 })
 
-const isEditing = ref(false)
+const editMarkdownContent = (): void => {
+  isEditing.value = true
+  isViewMored.value = true
+}
+
 const markdownText = ref(`#### Background
 
 The project is a collaboration between \\<Project stakeholder\\> and \\<Project Stakeholder\\> to \\<project purpose\\> \\(e\\.g\\. the 1\\-line summary\\) This project will occur over \\<period of time\\>\\, from \\<approximate project start date\\> to \\<approximate project end date\\>
@@ -242,6 +265,23 @@ Please state the key research questions for this project\\. \\(e\\.g\\. What is 
 2. \\<Key research question 2\\>
 
 3. \\<Key research question 3\\>
+
+4. asldkfmsldkmfadf
+
+5. osdkmfoskdmfoskf
+
+6. sdkmfsdkmfokmf
+
+7. oskdfmsokdma
+
+sldkfmslkdmfslkdf
+sdlfkmsdlfkmsldkfm
+
+sldkfmsldkmfslkdmfsdf
+
+slkdfmslkdmfslkmfslkmf
+sldkmflskdmflkmfaoijfoaijf
+asdlfaohgfoajaf
 `)
 
 onMounted(() => {
@@ -305,16 +345,20 @@ onMounted(() => {
 })
 </script>
 
-<!-- <style lang="scss"> -->
-<!-- div#dashboard-project-summary-markdown-viewer:hover + button#dashboard-project-summary-edit-button { -->
-<!--   display: block; -->
-<!-- } -->
-<!---->
-<!-- div#dashboard-project-summary-markdown-viewer + button#dashboard-project-summary-edit-button { -->
-<!--   display: none; -->
-<!-- } -->
-<!---->
-<!-- button#dashboard-project-summary-edit-button:hover { -->
-<!--   display: block !important; -->
-<!-- } -->
-<!-- </style> -->
+<style lang="scss">
+div#dashboard-project-summary-markdown-viewer-mask:hover ~ button#dashboard-project-summary-edit-button {
+  display: block;
+}
+
+div#dashboard-project-summary-markdown-viewer:hover + button#dashboard-project-summary-edit-button {
+  display: block;
+}
+
+div#dashboard-project-summary-markdown-viewer-mask + button#dashboard-project-summary-edit-button {
+  display: none;
+}
+
+button#dashboard-project-summary-edit-button:hover {
+  display: block !important;
+}
+</style>
