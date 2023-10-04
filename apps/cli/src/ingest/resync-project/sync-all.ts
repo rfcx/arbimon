@@ -4,6 +4,7 @@ import { deleteArbimonRecordingBySiteHour, resyncArbimonRecordingBySiteHourBatch
 import { syncArbimonSites } from './sync-arbimon-site'
 import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
 import { deleteArbimonDetectionBySiteSpeciesHour, resyncArbimonDetectionBySiteSpeciesHourBatch } from './sync-arbimon-x-detection-by-site-species-hour'
+import { getBiodiversityProjectId } from './sync-config'
 
 export const syncProjectData = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
@@ -15,11 +16,14 @@ export const syncProjectData = async (projectId: number, arbimonSequelize: Seque
     await syncArbimonSpeciesCalls(projectId, arbimonSequelize, biodiversitySequelize)
     console.info('> Taxon Species Calls: up to date')
 
-    await deleteArbimonRecordingBySiteHour(projectId, biodiversitySequelize)
+    const bioProjectId = await getBiodiversityProjectId(projectId, biodiversitySequelize)
+    console.info('> bio project id', bioProjectId)
+
+    await deleteArbimonRecordingBySiteHour(bioProjectId, biodiversitySequelize)
     await resyncArbimonRecordingBySiteHourBatch(projectId, arbimonSequelize, biodiversitySequelize)
     console.info('> Recordings: up to date')
 
-    await deleteArbimonDetectionBySiteSpeciesHour(projectId, biodiversitySequelize)
+    await deleteArbimonDetectionBySiteSpeciesHour(bioProjectId, biodiversitySequelize)
     await resyncArbimonDetectionBySiteSpeciesHourBatch(projectId, arbimonSequelize, biodiversitySequelize)
     console.info('> Detections: up to date')
   } catch (e) {

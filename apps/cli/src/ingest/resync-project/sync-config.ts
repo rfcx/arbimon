@@ -1,3 +1,6 @@
+import { type Sequelize } from 'sequelize'
+
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type SyncStatus } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -9,3 +12,12 @@ export const getDefaultSyncStatus = (syncConfig: SyncConfig): SyncStatus =>
     syncUntilDate: dayjs('1980-01-01T00:00:00.000Z').toDate(),
     syncUntilId: '0'
   })
+
+export const getBiodiversityProjectId = async (arbimonProjectId: number, sequelize: Sequelize): Promise<number> => {
+  const [bioProjectId] = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
+    where: { idArbimon: arbimonProjectId },
+    attributes: ['id'],
+    raw: true
+  })
+  return bioProjectId.id
+}
