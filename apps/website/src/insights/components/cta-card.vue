@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 left-0 right-0 z-50 w-full custom-backdrop overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto">
+  <div class="fixed top-0 left-0 right-0 z-49 w-full custom-backdrop overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto">
     <div class="relative w-full max-w-sm max-h-full">
       <div class="relative rounded-md shadow p-6 bg-moss border-1 border-frequency">
         <h2 class="text-2xl font-header text-insight text-center">
