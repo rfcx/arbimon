@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-10 md:mb-20">
+  <div class="my-10 md:my-20">
     <dashboard-metrics
       :error="isError"
       :loading="isLoading"
