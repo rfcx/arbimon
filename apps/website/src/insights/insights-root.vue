@@ -14,13 +14,17 @@
         />
         <div class="mt-4 flex flex-row items-center justify-start">
           <button
-            class="btn btn-secondary px-3 py-2 font-display text-sm rounded-md bg-moss mr-4 dark:hover:bg-mirage-gray"
+            class="btn btn-secondary flex flex-row items-center px-3 py-2 font-display text-sm rounded-md bg-moss mr-4 dark:hover:bg-mirage-gray"
           >
             <span
-              class="text-insight"
+              class="text-insight mr-1"
             >
-              {{ selectedProject?.name }} 🇵🇷
+              {{ selectedProject?.name }}
             </span>
+            <country-flag
+              country="pr"
+              size="small"
+            />
           </button>
           <!-- TODO: create a component -->
           <button
@@ -78,6 +82,7 @@
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { computed, inject, watch } from 'vue'
+import CountryFlag from 'vue-country-flag-next'
 
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'

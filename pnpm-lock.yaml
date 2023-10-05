@@ -388,6 +388,9 @@ importers:
       vue-class-component:
         specifier: ^8.0.0-rc.1
         version: 8.0.0-rc.1(vue@3.3.4)
+      vue-country-flag-next:
+        specifier: ^2.3.2
+        version: 2.3.2(vue@3.3.4)
       vue-gtag:
         specifier: ^2.0.1
         version: 2.0.1(vue@3.3.4)
@@ -13558,6 +13561,15 @@ packages:
         optional: true
     dependencies:
       vue: 3.3.4
+
+  /vue-country-flag-next@2.3.2(vue@3.3.4):
+    resolution: {integrity: sha512-Lv12L1VTwlBgizpZ3xPEPO3zuIETaJmeSiPuLOWLLgu2EakwU/o72iKYiKcdZ6BXiSkfss+Ski5fDzjuxZ1DcA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.3.4
+    dev: false
 
   /vue-demi@0.14.5(vue@3.3.4):
     resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
