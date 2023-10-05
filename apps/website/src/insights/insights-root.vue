@@ -2,7 +2,6 @@
   <div
     class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
   >
-    <cta-card v-if="!metrics?.totalDetections && !isLoading" />
     <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight flex flex-col md:flex-row justify-between">
       <div class="">
         <h1 class="pb-4 text-frequency font-header">
@@ -49,6 +48,7 @@
         <span class="text-xxs text-fog">// TODO: menu</span>
       </div>
     </div>
+    <cta-card v-if="!metrics?.totalDetections && !isLoading" />
     <nav class="sticky top-0 z-40">
       <div class="max-w-screen-xl mx-auto px-8">
         <div class="text-center text-gray-500 dark:text-insight">
