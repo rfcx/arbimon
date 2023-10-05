@@ -14,19 +14,18 @@
       </li>
     </ol>
   </div>
-  <div
-    v-if="!isLoading || !isError"
-    class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2"
-  >
+  <div class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
     <div>
       <h4 class="mb-4">
         {{ mapTitle }}
       </h4>
+      <span v-if="isLoadingDataBySite">Loading...</span>
+      <span v-else-if="isErrorDataBySite">Error</span>
       <map-base-component
-        v-if="mapDataset && mapDataset.data.length > 0"
+        v-else-if="mapDataset"
         :dataset="mapDataset"
         :data-key="selectedTab"
-        :loading="isLoading"
+        :loading="isLoadingDataBySite"
         :get-popup-html="getPopupHtml"
         map-export-name="dashboard-map"
         :map-id="`insight-overview-by-site`"
@@ -77,22 +76,21 @@ const tabs: Tab[] = [
 // Services
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, store.selectedProject?.id ?? -1)
 const richnessMapDataBySite = computed(() => dataBySite.value?.richnessBySite ?? [])
+const detectionsMapDataBySite = computed(() => dataBySite.value?.detectionBySite ?? [])
 // TODO: add detections data
 
 // UI
 const selectedTab = ref(tabs[0].value)
-const isLoading = computed(() => selectedTab.value === TAB_VALUES.richness ? isLoadingDataBySite.value : false)
-const isError = computed(() => selectedTab.value === TAB_VALUES.richness ? isErrorDataBySite.value : false)
-const data = computed(() => selectedTab.value === TAB_VALUES.richness ? richnessMapDataBySite.value : dataBySite.value?.detectionBySite ?? [])
 
 // Map
 const mapTitle = computed(() => `Total number of ${selectedTab.value === TAB_VALUES.richness ? 'species' : 'detection'} in each site`)
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {
+  const data = selectedTab.value === TAB_VALUES.richness ? richnessMapDataBySite.value : detectionsMapDataBySite.value
   return {
       startDate: dayjs(),
       endDate: dayjs(),
       sites: store.projectFilters?.locationSites ?? [],
-      data: data.value
+      data: data
         .map(({ name: siteName, latitude, longitude, value }) => ({
           siteName,
           latitude,
@@ -102,7 +100,7 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
           }
         })),
       maxValues: {
-        [selectedTab.value]: max(data.value.map(d => d.value)) ?? 0
+        [selectedTab.value]: max(data.map(d => d.value)) ?? 0
       }
     }
 })
