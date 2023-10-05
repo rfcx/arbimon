@@ -13,8 +13,7 @@ const url = `/projects/${PROJECT_ID_BASIC}/dashboard-species-data`
 const EXPECTED_PROPS = [
   'richnessByRisk',
   'richnessByTaxon',
-  'speciesHighlighted',
-  'speciesThreatened'
+  'totalSpeciesCount'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
