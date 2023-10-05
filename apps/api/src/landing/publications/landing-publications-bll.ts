@@ -13,6 +13,11 @@ interface GoogleSheetsResponse {
 }
 
 export const getPublications = async (): Promise<LandingPublicationsResponse> => {
+  const apiKey = env.GOOGLE_SPREADSHEET_API_KEY
+  if (apiKey === undefined) {
+    return [{ type: 'Use', author: '', year: 2023, title: 'Missing API key', journal: '', doiUrl: '', isRFCxAuthor: true, orgMention: '', uses: '', citations: 0 }]
+  }
+
   // TODO: Use actual sheet
   const spreadsheetId = '10jeiNtSLxa3yoox-_T3nH_LI0-1M4KyPMck0527Jcic'
   const range = 'A:J'
@@ -20,7 +25,7 @@ export const getPublications = async (): Promise<LandingPublicationsResponse> =>
   try {
     const response = await axios.get<GoogleSheetsResponse>(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!${range}`, {
       headers: {
-        'x-goog-api-key': env.GOOGLE_SPREADSHEET_API_KEY
+        'x-goog-api-key': apiKey
       }
     })
 
