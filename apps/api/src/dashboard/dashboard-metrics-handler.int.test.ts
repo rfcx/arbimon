@@ -15,7 +15,9 @@ const EXPECTED_PROPS = [
   'threatenedSpecies',
   'totalSpecies',
   'totalDetections',
-  'totalRecordings'
+  'totalRecordings',
+  'maxDate',
+  'minDate'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
