@@ -1,5 +1,5 @@
 <template>
-  <div class="graphic-tabs">
+  <div class="graphic-tabs mb-10">
     <ol class="text-xl lg:text-2xl xl:text-3xl">
       <li
         v-for="(tab, index) in tabs"
@@ -18,20 +18,41 @@
     v-if="!isLoading || !isError"
     class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2"
   >
-    <!-- TODO: fix this to use map compomnent -->
-    <span class="hidden">{{ mapDataset.maxValues }}</span>
+    <div>
+      <h4 class="mb-4">
+        {{ mapTitle }}
+      </h4>
+      <map-base-component
+        v-if="mapDataset && mapDataset.data.length > 0"
+        :dataset="mapDataset"
+        :data-key="selectedTab"
+        :loading="isLoading"
+        :get-popup-html="getPopupHtml"
+        map-export-name="dashboard-map"
+        :map-id="`insight-overview-by-site`"
+        :map-initial-bounds="mapInitialBounds ?? undefined"
+        :map-base-formatter="circleFormatter"
+        :map-height="360"
+        :style-non-zero="circleStyle"
+        class="w-full"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
+import { max } from 'lodash-es'
+import type { LngLatBoundsLike } from 'mapbox-gl'
 import { type ComputedRef, computed, inject, ref } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-// import { MapBaseComponent } from '~/maps/map-base'
 import { apiClientBioKey } from '@/globals'
-import { type MapDataSet } from '~/maps/types'
+import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
+import { MapBaseComponent } from '~/maps/map-base'
+import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
+import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
 import { useGetDashboardDataBySite } from './_composables/use-get-visaulizer'
 
@@ -53,15 +74,19 @@ const tabs: Tab[] = [
   { label: 'Detections (raw)', value: TAB_VALUES.detections }
 ]
 
-const selectedTab = ref(tabs[0].value)
+// Services
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, store.selectedProject?.id ?? -1)
 const richnessMapDataBySite = computed(() => dataBySite.value?.richnessBySite ?? [])
 // TODO: add detections data
 
+// UI
+const selectedTab = ref(tabs[0].value)
 const isLoading = computed(() => selectedTab.value === TAB_VALUES.richness ? isLoadingDataBySite.value : false)
 const isError = computed(() => selectedTab.value === TAB_VALUES.richness ? isErrorDataBySite.value : false)
 const data = computed(() => selectedTab.value === TAB_VALUES.richness ? richnessMapDataBySite.value : dataBySite.value?.detectionBySite ?? [])
 
+// Map
+const mapTitle = computed(() => `Total number of ${selectedTab.value === TAB_VALUES.richness ? 'species' : 'detection'} in each site`)
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {
   return {
       startDate: dayjs(),
@@ -77,9 +102,28 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
           }
         })),
       maxValues: {
-        [selectedTab.value]: Math.max(...data.value.map(({ value }) => value))
+        [selectedTab.value]: max(data.value.map(d => d.value)) ?? 0
       }
     }
 })
 
+const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
+  const project = store.selectedProject
+  if (!project) return null
+  return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
+})
+
+const circleFormatter: ComputedRef<MapBaseFormatter> = computed(() => {
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[selectedTab.value] })
+})
+
+const circleStyle = computed(() => {
+  const color = store.datasetColors[0] ?? '#EFEFEF'
+  return { ...DEFAULT_NON_ZERO_STYLE, color }
+})
+
+const getPopupHtml = (datum: MapSiteData, dataKey: string): string => {
+  const value = datum.values[dataKey]
+  return `<span>${value}</span>`
+}
 </script>
