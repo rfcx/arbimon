@@ -3,40 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
-    # type of authentication
-    nginx.ingress.kubernetes.io/auth-type: basic
-    # name of the secret that contains the user/password definitions
-    nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
-    # message to display with an appropriate context why the authentication is required
-    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
-  name: biodiversity-website-ingress
-  namespace: testing
-  labels:
-    app: biodiversity-website
-spec:
-  rules:
-    - host: dev-insights.arbimon.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: biodiversity-website-service
-              servicePort: 80
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: 'http'
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-  name: biodiversity-website-with-api-ingress
+  name: arbimon-api-ingress
   namespace: testing
   labels:
-    app: biodiversity-website
+    app: arbimon
 spec:
   rules:
-    - host: dev-insights.arbimon.org
+    - host: dev.arbimon.org
       http:
         paths:
           - path: /api(/|$)(.*)
@@ -56,10 +30,10 @@ metadata:
     nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
     # message to display with an appropriate context why the authentication is required
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
-  name: arbimon-landing-ingress
+  name: arbimon-combined-ingress
   namespace: testing
   labels:
-    app: biodiversity-website
+    app: arbimon
 spec:
   rules:
   - host: dev.arbimon.org
@@ -70,7 +44,7 @@ spec:
         backend:
           serviceName: biodiversity-website-service
           servicePort: 80
-      - path: /api
+      - path: /legacy-api
         pathType: Prefix
         backend:
           serviceName: arbimon-service
@@ -96,11 +70,6 @@ spec:
           serviceName: arbimon-service
           servicePort: 80
       - path: /includes
-        pathType: Prefix
-        backend:
-          serviceName: arbimon-service
-          servicePort: 80
-      - path: /my-projects
         pathType: Prefix
         backend:
           serviceName: arbimon-service
