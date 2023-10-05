@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed top-16 left-0 w-64 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch"
+    class="fixed z-50 top-16 left-0 w-64 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
   >

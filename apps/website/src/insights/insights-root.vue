@@ -6,7 +6,7 @@
     <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight flex flex-col md:flex-row justify-between">
       <div class="">
         <h1 class="pb-4 text-frequency font-header">
-          {{ store.selectedProject?.name }}
+          {{ selectedProject?.name }}
         </h1>
         <hero-brief-overview
           :can-edit="store.selectedProject?.isMyProject ?? false"
@@ -14,13 +14,17 @@
         />
         <div class="mt-4 flex flex-row items-center justify-start">
           <button
-            class="btn btn-secondary px-3 py-2 font-display text-sm rounded-md bg-moss mr-4 dark:hover:bg-mirage-gray"
+            class="btn btn-secondary flex flex-row items-center px-3 py-2 font-display text-sm rounded-md bg-moss mr-4 dark:hover:bg-mirage-gray"
           >
             <span
-              class="text-insight"
+              class="text-insight mr-1"
             >
-              Puerto Rico 🇵🇷
+              {{ selectedProject?.name }}
             </span>
+            <country-flag
+              country="pr"
+              size="small"
+            />
           </button>
           <!-- TODO: create a component -->
           <button
@@ -78,10 +82,12 @@
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { computed, inject, watch } from 'vue'
+import CountryFlag from 'vue-country-flag-next'
 
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
+// import { useGetProjectLocation } from './_composables/use-project-location'
 import { useGetProjectProfile } from './_composables/use-project-profile'
 import CtaCard from './components/cta-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
@@ -117,6 +123,9 @@ const items = [
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+// const apiClientGeo = inject(apiClientGeoKey) as AxiosInstance
+const selectedProject = computed(() => store.selectedProject)
+// const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientGeo, computed(() => store.selectedProject?.latitudeNorth), computed(() => store.selectedProject?.longitudeEast))
 
 const { data: profile } = useGetProjectProfile(apiClientBio, 1)
 
