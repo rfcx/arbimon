@@ -1,6 +1,7 @@
 import pluginInteractionVariants from '@windicss/plugin-interaction-variants'
 import pluginFlowbite from 'flowbite-windicss-plugin'
 import { defineConfig } from 'windicss/helpers'
+import plugin from 'windicss/plugin'
 import pluginAspectRatio from 'windicss/plugin/aspect-ratio'
 import pluginFilter from 'windicss/plugin/filters'
 import pluginForms from 'windicss/plugin/forms'
@@ -24,7 +25,11 @@ export default defineConfig({
     pluginLineClamp,
     pluginScrollSnap,
     pluginTypography({ dark: true }),
-    pluginFlowbite
+    pluginFlowbite,
+    plugin(({ addComponents }) => {
+      // INFO: Can't believe windicss does not have w-fit
+      addComponents({ '.w-fit': { width: ['-moz-fit-content', 'fit-content'] } })
+    })
   ],
   theme: {
     extend: {
