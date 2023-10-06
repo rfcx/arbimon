@@ -331,6 +331,12 @@ importers:
       '@rfcx-bio/utils':
         specifier: workspace:^0.0.1
         version: link:../../packages/utils
+      '@tiptap/extension-link':
+        specifier: ^2.1.11
+        version: 2.1.11(@tiptap/pm@2.1.11)
+      '@tiptap/extension-underline':
+        specifier: ^2.1.11
+        version: 2.1.11
       '@tiptap/pm':
         specifier: ^2.1.11
         version: 2.1.11
@@ -3838,6 +3844,16 @@ packages:
       '@tiptap/core': 2.1.11(@tiptap/pm@2.1.11)
     dev: false
 
+  /@tiptap/extension-link@2.1.11(@tiptap/pm@2.1.11):
+    resolution: {integrity: sha512-Dn8hq4ld8br53fE4/QUZ7/y6ejY/kqAxeNhtud+OZKRs6VRn/CQd0H6A26opL+mKAK0kzrs0rh7rJPpHvahx/Q==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/pm': 2.1.11
+      linkifyjs: 4.1.1
+    dev: false
+
   /@tiptap/extension-list-item@2.1.11(@tiptap/core@2.1.11):
     resolution: {integrity: sha512-YhwHaPGhffsFsg/zjCu1G24//j/BTRDRZbZXmMwp77m1yEqPULcWyoWrI+gUzetQxJRD/ruAucqjLtoLLfICmQ==}
     peerDependencies:
@@ -3876,6 +3892,12 @@ packages:
       '@tiptap/core': ^2.0.0
     dependencies:
       '@tiptap/core': 2.1.11(@tiptap/pm@2.1.11)
+    dev: false
+
+  /@tiptap/extension-underline@2.1.11:
+    resolution: {integrity: sha512-2C/jDNRV3WHfM5kgx6xB/1ooBciQ9j02gJVJkTHeLpz6zUWkxrRgU/u+FvZxGVBVskasJsQnsYMG9pAqwd9R8A==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
     dev: false
 
   /@tiptap/pm@2.1.11:
@@ -9620,6 +9642,10 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
+  /linkifyjs@4.1.1:
+    resolution: {integrity: sha512-zFN/CTVmbcVef+WaDXT63dNzzkfRBKT1j464NJQkV7iSgJU0sLBus9W0HBwnXK13/hf168pbrx/V/bjEHOXNHA==}
+    dev: false
+
   /listr2@3.14.0(enquirer@2.3.6):
     resolution: {integrity: sha512-TyWI8G99GX9GjE54cJ+RrNMcIFBfwMPxc3XTFiAYGN4s10hWROGtOg7+O6u6LE3mNkyld7RSLE6nrKBvTfcs3g==}
     engines: {node: '>=10.0.0'}
@@ -13682,6 +13708,15 @@ packages:
       vue: 3.3.4
     dev: false
 
+  /vue-country-flag-next@2.3.2(vue@3.3.4):
+    resolution: {integrity: sha512-Lv12L1VTwlBgizpZ3xPEPO3zuIETaJmeSiPuLOWLLgu2EakwU/o72iKYiKcdZ6BXiSkfss+Ski5fDzjuxZ1DcA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.3.4
+    dev: false
+
   /vue-demi@0.10.1(vue@3.3.4):
     resolution: {integrity: sha512-L6Oi+BvmMv6YXvqv5rJNCFHEKSVu7llpWWJczqmAQYOdmPPw5PNYoz1KKS//Fxhi+4QP64dsPjtmvnYGo1jemA==}
     hasBin: true
@@ -13709,15 +13744,6 @@ packages:
         optional: true
     dependencies:
       vue: 3.3.4
-
-  /vue-country-flag-next@2.3.2(vue@3.3.4):
-    resolution: {integrity: sha512-Lv12L1VTwlBgizpZ3xPEPO3zuIETaJmeSiPuLOWLLgu2EakwU/o72iKYiKcdZ6BXiSkfss+Ski5fDzjuxZ1DcA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      vue: ^3.0.0
-    dependencies:
-      vue: 3.3.4
-    dev: false
 
   /vue-demi@0.14.5(vue@3.3.4):
     resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
