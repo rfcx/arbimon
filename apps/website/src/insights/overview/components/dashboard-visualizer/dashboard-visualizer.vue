@@ -38,13 +38,26 @@
       />
       <!-- '#4A7BB7', '#98CAE1', '#EAECCC', '#FDB366', '#DD3D2D' -->
       <div class="flex gap-y-2 flex-col justify-center mt-4">
-        <!-- <div class="flex justify-between">
+        <div
+          v-if="mapLegendLabels"
+          class="flex"
+          :class="`justify-${mapLegendLabels.length === 1 ? 'center' : 'between'}`"
+        >
           <span
-            v-for="n in 3"
+            v-for="n in mapLegendLabels"
             :key="n"
-          >{{ n/3.33 }}</span>
-        </div> -->
-        <div class="bg-gradient-to-r from-[#4A7BB7] from-20% via-[#98CAE1] via-40% via-[#EAECCC] via-60% via-[#FDB366] via-80% to-[#DD3D2D] to-100% ...">
+          >
+            {{ n }}
+            <span v-if="n === mapLegendLabels[mapLegendLabels.length - 1]">+</span>
+          </span>
+        </div>
+        <span
+          v-else
+          class="text-fog text-center text-sm"
+        >
+          No data
+        </span>
+        <div class="bg-gradient-to-r from-[#4A7BB7] from-20% via-[#98CAE1] via-40% via-[#EAECCC] via-60% via-[#FDB366] via-80% to-[#DD3D2D] to-100% h-2 rounded-full">
           <span class="invisible">Legend</span>
         </div>
         <div class="text-center">
@@ -122,6 +135,11 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
         [selectedTab.value.value]: max(data.map(d => d.value)) ?? 0
       }
     }
+})
+const mapLegendLabels = computed(() => {
+  const maxValue = mapDataset.value.maxValues[selectedTab.value.value]
+  if (maxValue === 0) return null
+  return [1, Math.ceil(maxValue / 2), maxValue]
 })
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
