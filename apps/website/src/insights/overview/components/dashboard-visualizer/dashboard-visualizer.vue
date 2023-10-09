@@ -5,10 +5,10 @@
         v-for="(tab, index) in tabs"
         :key="index"
         class="cursor-pointer inline-block p-2 border-b-2 hover:text-frequency hover:border-frequency font-header font-2xl"
-        :class="{ 'text-frequency border-frequency border-b-2': selectedTab === tabs[index].value }"
-        :aria-selected="selectedTab === tabs[index].value"
+        :class="{ 'text-frequency border-frequency border-b-2': selectedTab.value === tabs[index].value }"
+        :aria-selected="selectedTab.value === tabs[index].value"
         :tabindex="index"
-        @click="selectedTab = tabs[index].value"
+        @click="selectedTab = tabs[index]"
       >
         {{ tab.label }}
       </li>
@@ -24,17 +24,33 @@
       <map-base-component
         v-else-if="mapDataset"
         :dataset="mapDataset"
-        :data-key="selectedTab"
+        :data-key="selectedTab.value"
         :loading="isLoadingDataBySite"
         :get-popup-html="getPopupHtml"
-        map-export-name="dashboard-map"
+        map-export-name="insight-overview-by-site"
         :map-id="`insight-overview-by-site`"
         :map-initial-bounds="mapInitialBounds ?? undefined"
         :map-base-formatter="circleFormatter"
+        :map-statistics-style="mapStatisticsStyle"
         :map-height="360"
         :style-non-zero="circleStyle"
-        class="w-full"
+        class="map-bubble w-full"
       />
+      <!-- '#4A7BB7', '#98CAE1', '#EAECCC', '#FDB366', '#DD3D2D' -->
+      <div class="flex gap-y-2 flex-col justify-center mt-4">
+        <!-- <div class="flex justify-between">
+          <span
+            v-for="n in 3"
+            :key="n"
+          >{{ n/3.33 }}</span>
+        </div> -->
+        <div class="bg-gradient-to-r from-[#4A7BB7] from-20% via-[#98CAE1] via-40% via-[#EAECCC] via-60% via-[#FDB366] via-80% to-[#DD3D2D] to-100% ...">
+          <span class="invisible">Legend</span>
+        </div>
+        <div class="text-center">
+          Number of {{ selectedTab.shortName }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +64,7 @@ import { type ComputedRef, computed, inject, ref } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey } from '@/globals'
+import { type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
@@ -60,6 +77,7 @@ const store = useStore()
 
 interface Tab {
   label: string
+  shortName: string
   value: string
 }
 
@@ -69,8 +87,8 @@ const TAB_VALUES = {
 }
 
 const tabs: Tab[] = [
-  { label: 'Species Richness', value: TAB_VALUES.richness },
-  { label: 'Detections (raw)', value: TAB_VALUES.detections }
+  { label: 'Species Richness', shortName: 'species', value: TAB_VALUES.richness },
+  { label: 'Detections (raw)', shortName: 'detection', value: TAB_VALUES.detections }
 ]
 
 // Services
@@ -80,12 +98,13 @@ const detectionsMapDataBySite = computed(() => dataBySite.value?.detectionBySite
 // TODO: add detections data
 
 // UI
-const selectedTab = ref(tabs[0].value)
+const selectedTab = ref(tabs[0])
 
 // Map
-const mapTitle = computed(() => `Total number of ${selectedTab.value === TAB_VALUES.richness ? 'species' : 'detection'} in each site`)
+const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_HEATMAP)
+const mapTitle = computed(() => `Total number of ${selectedTab.value.shortName} in each site`)
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {
-  const data = selectedTab.value === TAB_VALUES.richness ? richnessMapDataBySite.value : detectionsMapDataBySite.value
+  const data = selectedTab.value.value === TAB_VALUES.richness ? richnessMapDataBySite.value : detectionsMapDataBySite.value
   return {
       startDate: dayjs(),
       endDate: dayjs(),
@@ -96,11 +115,11 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
           latitude,
           longitude,
           values: {
-            [selectedTab.value]: value
+            [selectedTab.value.value]: value
           }
         })),
       maxValues: {
-        [selectedTab.value]: max(data.map(d => d.value)) ?? 0
+        [selectedTab.value.value]: max(data.map(d => d.value)) ?? 0
       }
     }
 })
@@ -112,7 +131,7 @@ const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
 })
 
 const circleFormatter: ComputedRef<MapBaseFormatter> = computed(() => {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[selectedTab.value] })
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[selectedTab.value.value] })
 })
 
 const circleStyle = computed(() => {
@@ -124,4 +143,5 @@ const getPopupHtml = (datum: MapSiteData, dataKey: string): string => {
   const value = datum.values[dataKey]
   return `<span>${value}</span>`
 }
+
 </script>
