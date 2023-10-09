@@ -121,7 +121,19 @@ const emit = defineEmits<{(e: 'emitMapMoved', mapMoveEvent: MapMoveEvent): void}
 
 const mapIsLoading = ref(true)
 const isSynchronizingMapPosition = ref(false)
-const styleToPaint = ref<StyleToPaint<AnyPaint, HeatmapOption>>(heatmapStyleToPaint)
+
+const getPaintStyle = (style: MapboxStatisticsStyle) => {
+  switch (style) {
+    case 'circle': return circleStyleToPaint
+    case 'heatmap': return heatmapStyleToPaint
+    default: return circleStyleToPaint
+  }
+}
+
+const defaultStyleToPaint = computed(() => {
+  return getPaintStyle(props.mapStatisticsStyle)
+})
+const styleToPaint = ref<StyleToPaint<AnyPaint, HeatmapOption>>(defaultStyleToPaint.value)
 let map!: MapboxMap
 
 const hasData = computed(() => {
@@ -200,7 +212,7 @@ watch(() => props.isShowLabels, () => updateLabels())
 watch(() => props.mapGroundStyle, (currentStyle: MapboxGroundStyle) => map.setStyle(currentStyle))
 watch(() => props.mapStatisticsStyle, (currentStyle: MapboxStatisticsStyle) => {
   styleChange.value = true
-  styleToPaint.value = setupPaintStyle(currentStyle)
+  styleToPaint.value = getPaintStyle(currentStyle)
   removeLayer(DATA_LAYER_ZERO_ID)
   removeLayer(DATA_LAYER_NONZERO_ID)
   generateChartNextTick(false)
@@ -216,14 +228,6 @@ watch(() => props.mapMoveEvent, () => {
 
 const emitMapMoved = () => {
   emit('emitMapMoved', { sourceMapId: props.mapId, center: map.getCenter(), zoom: map.getZoom() })
-}
-
-const setupPaintStyle = (style: MapboxStatisticsStyle) => {
-  switch (style) {
-    case 'circle': return circleStyleToPaint
-    case 'heatmap': return heatmapStyleToPaint
-    default: return circleStyleToPaint
-  }
 }
 
 const setupMapPopup = () => {
@@ -301,8 +305,10 @@ const updateDataSourcesAndLayers = () => {
   const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || d.values[props.dataKey] !== null)
   if (props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP) {
     updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero) })
+    updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
+  } else {
+    updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero, { heatmapIntensity: heatmapIntensity.value, heatmapWeight: heatmapWeight.value, heatmapRadius: heatmapRadius.value }) })
   }
-  updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero, { heatmapIntensity: heatmapIntensity.value, heatmapWeight: heatmapWeight.value, heatmapRadius: heatmapRadius.value }) })
 }
 
 const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: AnyPaint) => {
