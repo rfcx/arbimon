@@ -37,32 +37,45 @@
         class="map-bubble w-full"
       />
       <!-- '#4A7BB7', '#98CAE1', '#EAECCC', '#FDB366', '#DD3D2D' -->
-      <div class="flex gap-y-2 flex-col justify-center mt-4">
+      <div class="flex flex-row justify-between mt-4">
         <div
-          v-if="mapLegendLabels"
-          class="flex"
-          :class="`justify-${mapLegendLabels.length === 1 ? 'center' : 'between'}`"
+          class="flex gap-y-2 flex-col justify-center min-w-50"
+          :class="{
+            'invisible': mapStatisticsStyle === MAPBOX_STYLE_CIRCLE,
+          }"
         >
-          <span
-            v-for="n in mapLegendLabels"
-            :key="n"
+          <div
+            v-if="mapLegendLabels"
+            class="flex"
+            :class="`justify-${mapLegendLabels.length === 1 ? 'center' : 'between'}`"
           >
-            {{ n }}
-            <span v-if="n === mapLegendLabels[mapLegendLabels.length - 1]">+</span>
+            <span
+              v-for="n in mapLegendLabels"
+              :key="n"
+            >
+              {{ n }}
+              <span v-if="n === mapLegendLabels[mapLegendLabels.length - 1]">+</span>
+            </span>
+          </div>
+          <span
+            v-else
+            class="text-fog text-center text-sm"
+          >
+            No data
           </span>
+          <div class="bg-gradient-to-r from-[#4A7BB7] from-20% via-[#98CAE1] via-40% via-[#EAECCC] via-60% via-[#FDB366] via-80% to-[#DD3D2D] to-100% h-2 rounded-full">
+            <span class="invisible">Legend</span>
+          </div>
+          <div class="text-center">
+            Number of {{ selectedTab.shortName }}
+          </div>
         </div>
-        <span
-          v-else
-          class="text-fog text-center text-sm"
-        >
-          No data
-        </span>
-        <div class="bg-gradient-to-r from-[#4A7BB7] from-20% via-[#98CAE1] via-40% via-[#EAECCC] via-60% via-[#FDB366] via-80% to-[#DD3D2D] to-100% h-2 rounded-full">
-          <span class="invisible">Legend</span>
-        </div>
-        <div class="text-center">
-          Number of {{ selectedTab.shortName }}
-        </div>
+        <map-tool-menu
+          :map-statistics-style="mapStatisticsStyle"
+          :map-ground-style="undefined"
+          :can-toggle-labels="false"
+          @emit-map-statistics-style="propagateMapStatisticsStyle"
+        />
       </div>
     </div>
   </div>
@@ -77,9 +90,10 @@ import { type ComputedRef, computed, inject, ref } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey } from '@/globals'
-import { type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP } from '~/maps'
+import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
+import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
@@ -114,7 +128,7 @@ const detectionsMapDataBySite = computed(() => dataBySite.value?.detectionBySite
 const selectedTab = ref(tabs[0])
 
 // Map
-const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_HEATMAP)
+const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
 const mapTitle = computed(() => `Total number of ${selectedTab.value.shortName} in each site`)
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {
   const data = selectedTab.value.value === TAB_VALUES.richness ? richnessMapDataBySite.value : detectionsMapDataBySite.value
@@ -137,10 +151,12 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
     }
 })
 const mapLegendLabels = computed(() => {
-  const maxValue = mapDataset.value.maxValues[selectedTab.value.value]
+  const maxValue = Math.max(mapDataset.value.maxValues[selectedTab.value.value], 10)
   if (maxValue === 0) return null
   return [1, Math.ceil(maxValue / 2), maxValue]
 })
+
+const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style }
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
   const project = store.selectedProject
