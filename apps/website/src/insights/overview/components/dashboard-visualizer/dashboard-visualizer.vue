@@ -78,6 +78,14 @@
         />
       </div>
     </div>
+    <div>
+      <h4 class="mb-4">
+        {{ graphTitle }}
+      </h4>
+      <Suspense>
+        <dashboard-line-chart :selected-tab="selectedTab.value" />
+      </Suspense>
+    </div>
   </div>
 </template>
 
@@ -97,6 +105,8 @@ import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
+import { type TabValue, TAB_VALUES } from '../../types/tabs'
+import DashboardLineChart from '../dashboard-line-chart/dashboard-line-chart.vue'
 import { useGetDashboardDataBySite } from './_composables/use-get-visaulizer'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
@@ -105,12 +115,7 @@ const store = useStore()
 interface Tab {
   label: string
   shortName: string
-  value: string
-}
-
-const TAB_VALUES = {
-  richness: 'speciesRichness',
-  detections: 'detection'
+  value: TabValue
 }
 
 const tabs: Tab[] = [
@@ -129,7 +134,16 @@ const selectedTab = ref(tabs[0])
 
 // Map
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
-const mapTitle = computed(() => `Total number of ${selectedTab.value.shortName} in each site`)
+const mapTitle = computed(() => {
+  switch (selectedTab.value.value) {
+    case TAB_VALUES.richness:
+      return 'Number of species detected per site'
+    case TAB_VALUES.detections:
+      return 'Number of detections per site'
+    default:
+      return ''
+  }
+})
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {
   const data = selectedTab.value.value === TAB_VALUES.richness ? richnessMapDataBySite.value : detectionsMapDataBySite.value
   return {
@@ -179,5 +193,17 @@ const getPopupHtml = (datum: MapSiteData, dataKey: string): string => {
   const value = datum.values[dataKey]
   return `<span>${value}</span>`
 }
+
+// Graph
+const graphTitle = computed(() => {
+  switch (selectedTab.value.value) {
+    case TAB_VALUES.richness:
+      return 'Number of species detected per hour'
+    case TAB_VALUES.detections:
+      return 'Number of detections per hour'
+    default:
+      return ''
+  }
+})
 
 </script>
