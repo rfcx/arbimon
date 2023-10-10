@@ -2,11 +2,13 @@
   <div class="flex">
     <div class="sm:flex">
       <map-style-options
+        v-if="props.mapStatisticsStyle"
         :map-options="mapStatisticsDisplayStyleOptions"
         :map-style="props.mapStatisticsStyle"
         @emit-map-style="emitMapStatisticsStyle"
       />
       <map-style-options
+        v-if="props.mapGroundStyle"
         :map-options="mapGroundStyleOptions"
         :map-style="props.mapGroundStyle"
         class="sm:ml-2 <sm:mt-2"
@@ -14,6 +16,7 @@
       />
     </div>
     <button
+      v-if="canToggleLabels"
       class="btn btn-secondary ml-2 p-2"
       :class="{ '<2xl:(bg-brand-primary btn-icon)': isShowLabel }"
       @click="emitShowLabelsToggle"
@@ -42,10 +45,13 @@ import type { MapOptions } from './types'
 
 const isShowLabel = ref<boolean>(true)
 
-const props = defineProps<{
-  readonly mapGroundStyle: MapboxStyle
-  readonly mapStatisticsStyle: MapboxStyle
-}>()
+const props = withDefaults(defineProps<{
+  readonly mapGroundStyle: MapboxStyle | undefined
+  readonly mapStatisticsStyle: MapboxStyle | undefined
+  readonly canToggleLabels: boolean
+}>(), {
+  canToggleLabels: true
+})
 
 const emit = defineEmits<{(e: 'emitMapGroundStyle', style: MapboxStyle): void,
   (e: 'emitMapStatisticsStyle', style: MapboxStyle): void,
