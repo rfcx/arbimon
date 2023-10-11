@@ -170,7 +170,7 @@ const mapLegendLabels = computed(() => {
   return [1, Math.ceil(maxValue / 2), maxValue]
 })
 
-const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style }
+const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style as MapboxStatisticsStyle }
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
   const project = store.selectedProject
