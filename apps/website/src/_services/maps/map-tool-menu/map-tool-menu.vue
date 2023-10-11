@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import type { MapboxGroundStyle, MapboxStatisticsStyle, MapboxStyle } from '~/maps'
+import type { MapboxStyle } from '~/maps'
 import { MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_RFCX_WITH_PLACE_LABELS, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import MapStyleOptions from './map-style-options.vue'
 import type { MapOptions } from './types'
@@ -53,19 +53,17 @@ const props = withDefaults(defineProps<{
   canToggleLabels: true
 })
 
-const emit = defineEmits<{(e: 'emitMapGroundStyle', style: MapboxGroundStyle): void,
-  (e: 'emitMapStatisticsStyle', style: MapboxStatisticsStyle): void,
+const emit = defineEmits<{(e: 'emitMapGroundStyle', style: MapboxStyle): void,
+  (e: 'emitMapStatisticsStyle', style: MapboxStyle): void,
   (e: 'emitShowLabelsToggle', show: boolean): void
 }>()
 
-const emitMapGroundStyle = (style: MapboxGroundStyle) => {
-  const s: MapboxStyle = style
-  emit('emitMapGroundStyle', s)
+const emitMapGroundStyle = (style: MapboxStyle) => {
+  emit('emitMapGroundStyle', style)
 }
 
-const emitMapStatisticsStyle = (style: MapboxStatisticsStyle) => {
-  const s: MapboxStyle = style
-  emit('emitMapStatisticsStyle', s)
+const emitMapStatisticsStyle = (style: MapboxStyle) => {
+  emit('emitMapStatisticsStyle', style)
 }
 
 const emitShowLabelsToggle = () => {
