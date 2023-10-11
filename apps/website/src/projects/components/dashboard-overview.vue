@@ -34,7 +34,6 @@
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-gray-300 border-b-1 border-frequency"
         :href="stat.link"
-        target="_blank"
       >
         {{ stat.label }}
       </a>

@@ -18,7 +18,6 @@
         class="text-xl font-medium text-frequency font-header cursor-pointer border-b-1 border-frequency"
         :href="analysis.link"
         :title="analysis.title"
-        target="_blank"
       >
         {{ analysis.title }}
       </a>
