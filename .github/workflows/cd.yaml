@@ -133,5 +133,5 @@ jobs:
       notification-footer: "Build: ${{ needs.build.result || 'n/a' }} | Deploy: ${{ needs.deploy.result || 'n/a' }}"
       notification-success-statement: '{0} deployed the build!'
     secrets:
-      slack-webhook: ${{ secrets.SLACK_ALERT_BIODT_WEBHOOK }}
+      slack-webhook: ${{ secrets.SLACK_ALERT_ARBIMON_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
