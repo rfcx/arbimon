@@ -20,7 +20,6 @@
         class="text-base text-frequency cursor-pointer border-b-1 border-frequency"
         :href="analysis.link"
         :title="analysis.label"
-        target="_blank"
       >
         {{ analysis.label }}
       </a>

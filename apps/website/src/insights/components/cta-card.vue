@@ -26,7 +26,6 @@
         >
           <a
             :href="analysisUrl"
-            target="_blank"
           >
             Return to Audio Analysis
           </a>

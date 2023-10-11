@@ -34,7 +34,6 @@
             <a
               :class="!isAnalysisSelected ? 'cursor-not-allowed' : ''"
               :href="analysisUrl"
-              target="_blank"
             >
               Create analysis
             </a>
