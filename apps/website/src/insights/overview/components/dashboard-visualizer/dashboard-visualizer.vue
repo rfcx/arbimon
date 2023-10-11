@@ -98,7 +98,7 @@ import { type ComputedRef, computed, inject, ref } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey } from '@/globals'
-import { type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE } from '~/maps'
+import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
@@ -170,9 +170,7 @@ const mapLegendLabels = computed(() => {
   return [1, Math.ceil(maxValue / 2), maxValue]
 })
 
-const propagateMapStatisticsStyle = (style: MapboxStatisticsStyle) => {
-  mapStatisticsStyle.value = style
-}
+const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style }
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
   const project = store.selectedProject
