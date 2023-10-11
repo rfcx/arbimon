@@ -215,7 +215,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import { Modal } from 'flowbite'
 import { Markdown } from 'tiptap-markdown'
-import { onMounted, ref, type Ref, watch } from 'vue'
+import { type Ref, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{ modelValue: string }>()
 const emit = defineEmits<{(e: 'update:modelValue', value: string): void}>()
