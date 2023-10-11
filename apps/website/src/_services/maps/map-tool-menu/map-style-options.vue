@@ -16,6 +16,9 @@
       >
         <div
           class="<2xl:hidden"
+          :class="{
+            'text-pitch': props.mapStyle === item.style
+          }"
         >
           {{ item.name }}
         </div>
