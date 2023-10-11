@@ -5,8 +5,8 @@ export interface RfmCountParams {
   slug?: string
 }
 
-export const detectSpecificRoutePrefixJobs = (slug: string): string => `/api/project/${slug}/rfm-classif-job-count`
-export const detectSpecificRoutePrefixSpecies = (slug: string): string => `/api/project/${slug}/rfm-species-detected`
+export const detectSpecificRoutePrefixJobs = (slug: string): string => `/legacy-api/project/${slug}/rfm-classif-job-count`
+export const detectSpecificRoutePrefixSpecies = (slug: string): string => `/legacy-api/project/${slug}/rfm-species-detected`
 
 // Service
 export const apiArbimonGetRfmJobCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {

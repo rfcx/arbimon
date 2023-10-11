@@ -5,7 +5,7 @@ export interface PlaylistCountParams {
   slug?: string
 }
 
-export const detectSpecificRoutePrefix = (slug: string): string => `/api/project/${slug}/playlist-count`
+export const detectSpecificRoutePrefix = (slug: string): string => `/legacy-api/project/${slug}/playlist-count`
 
 // Service
 export const apiArbimonGetPlaylistCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {

@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-export const detectSpecificRoutePrefix = (slug: string): string => `/api/project/${slug}/sites-count`
+export const detectSpecificRoutePrefix = (slug: string): string => `/legacy-api/project/${slug}/sites-count`
 
 // Service
 export const apiArbimonGetSiteCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {
