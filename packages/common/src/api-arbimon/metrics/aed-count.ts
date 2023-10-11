@@ -5,9 +5,9 @@ export interface AedCountParams {
   slug?: string
 }
 
-export const detectSpecificRoutePrefixAED = (slug: string): string => `/api/project/${slug}/aed-job-count`
-export const detectSpecificRoutePrefixClustering = (slug: string): string => `/api/project/${slug}/clustering-job-count`
-export const detectSpecificRoutePrefixClusteringSpecies = (slug: string): string => `/api/project/${slug}/clustering-species-detected`
+export const detectSpecificRoutePrefixAED = (slug: string): string => `/legacy-api/project/${slug}/aed-job-count`
+export const detectSpecificRoutePrefixClustering = (slug: string): string => `/legacy-api/project/${slug}/clustering-job-count`
+export const detectSpecificRoutePrefixClusteringSpecies = (slug: string): string => `/legacy-api/project/${slug}/clustering-species-detected`
 
 // Service
 export const apiArbimonGetAedJobCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {

@@ -5,7 +5,7 @@ export interface SpeciesCountParams {
   slug?: string
 }
 
-export const detectSpecificRoutePrefix = (slug: string): string => `/api/project/${slug}/species-count`
+export const detectSpecificRoutePrefix = (slug: string): string => `/legacy-api/project/${slug}/species-count`
 
 // Service
 export const apiArbimonGetSpeciesCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {

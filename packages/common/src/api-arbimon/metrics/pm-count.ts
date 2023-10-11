@@ -5,8 +5,8 @@ export interface PmCountParams {
   slug?: string
 }
 
-export const detectSpecificRoutePrefixSpecies = (slug: string): string => `/api/project/${slug}/pm-species-detected`
-export const detectSpecificRoutePrefixTemplate = (slug: string): string => `/api/project/${slug}/pm-template-count`
+export const detectSpecificRoutePrefixSpecies = (slug: string): string => `/legacy-api/project/${slug}/pm-species-detected`
+export const detectSpecificRoutePrefixTemplate = (slug: string): string => `/legacy-api/project/${slug}/pm-template-count`
 
 // Service
 export const apiArbimonGetPmSpeciesCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {

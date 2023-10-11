@@ -5,7 +5,7 @@ export interface SoundscapeCountParams {
   slug?: string
 }
 
-export const detectSpecificRoutePrefix = (slug: string): string => `/api/project/${slug}/soundscape-job-count`
+export const detectSpecificRoutePrefix = (slug: string): string => `/legacy-api/project/${slug}/soundscape-job-count`
 
 // Service
 export const apiArbimonGetSoundscapeCount = async (apiClient: AxiosInstance, slug: string): Promise<number | undefined> => {
