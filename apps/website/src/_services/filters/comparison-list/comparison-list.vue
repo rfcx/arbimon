@@ -1,8 +1,5 @@
 <template>
   <div class="overflow-x-auto scrollbar-hide">
-    <h2 class="text-white">
-      Click "Add comparison" below to compare between date ranges {{ canFilterByTaxon ? ', sites , or taxonomies' : 'or sites' }}
-    </h2>
     <div class="flex mt-5">
       <div
         v-for="(filter, idx) in filters"
@@ -57,12 +54,10 @@
       </div>
       <div
         v-if="showAddButton"
-        class="flex justify-center items-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-mirage-grey text-insight border-2 border-dashed hover:bg-steel-grey"
+        class="flex justify-center items-center font-display text-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-echo text-insight border-1 border-frequency hover:bg-moss"
         @click="addFilterConfig"
       >
-        <div class="uppercase">
-          Add comparison
-        </div>
+        Add comparison
       </div>
     </div>
     <comparison-filter-modal-component

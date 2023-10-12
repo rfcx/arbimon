@@ -5,7 +5,7 @@
         <div class="sm:(flex flex-row items-center)">
           <select
             v-model="selectedType"
-            class="text-xl text-subtle py-1 bg-mirage-gray border-t-0 border-l-0 border-r-0 border-b-1 border-dotted focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
+            class="text-xl text-subtle py-1 bg-echo font-header border-t-0 border-l-0 border-r-0 border-b-1 border-dashed focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
           >
             <option
               v-for="item in datasetTypes"
