@@ -133,7 +133,7 @@
     </div>
     <EditorContent
       id="markdown-editor-content"
-      class="bg-white rounded-b-lg"
+      class="bg-white rounded-b-lg select-auto selection:bg-fog"
       :editor="editor"
     />
 
