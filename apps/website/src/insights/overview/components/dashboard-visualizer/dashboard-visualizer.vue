@@ -14,7 +14,7 @@
       </li>
     </ol>
   </div>
-  <div class="inline-grid w-full gap-2 mt-2 xl:grid-cols-2">
+  <div class="inline-grid w-full mt-2">
     <div>
       <h4 class="mb-4">
         {{ mapTitle }}
@@ -32,7 +32,7 @@
         :map-initial-bounds="mapInitialBounds ?? undefined"
         :map-base-formatter="circleFormatter"
         :map-statistics-style="mapStatisticsStyle"
-        :map-height="360"
+        :map-height="500"
         :style-non-zero="circleStyle"
         class="map-bubble w-full"
       />
@@ -78,14 +78,6 @@
         />
       </div>
     </div>
-    <div>
-      <h4 class="mb-4">
-        {{ graphTitle }}
-      </h4>
-      <Suspense>
-        <dashboard-line-chart :selected-tab="selectedTab.value" />
-      </Suspense>
-    </div>
   </div>
 </template>
 
@@ -106,7 +98,6 @@ import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
 import { type TabValue, TAB_VALUES } from '../../types/tabs'
-import DashboardLineChart from '../dashboard-line-chart/dashboard-line-chart.vue'
 import { useGetDashboardDataBySite } from './_composables/use-get-visaulizer'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
@@ -191,17 +182,5 @@ const getPopupHtml = (datum: MapSiteData, dataKey: string): string => {
   const value = datum.values[dataKey]
   return `<span>${value}</span>`
 }
-
-// Graph
-const graphTitle = computed(() => {
-  switch (selectedTab.value.value) {
-    case TAB_VALUES.richness:
-      return 'Number of species detected per hour'
-    case TAB_VALUES.detections:
-      return 'Number of detections per hour'
-    default:
-      return ''
-  }
-})
 
 </script>
