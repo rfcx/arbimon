@@ -12,24 +12,41 @@
           :default-text="dashboardStore.projectSummary ?? ''"
         />
         <div class="mt-4 flex flex-row items-center justify-start">
-          <button
-            class="btn btn-secondary flex flex-row items-center px-3 py-2 font-display text-sm rounded-md bg-moss mr-4 dark:hover:bg-mirage-gray"
+          <div
+            class="flex flex-row items-center font-display text-sm mr-2 border-r-2 border-gray-300 h-5"
+          >
+            <icon-fas-spinner
+              v-if="isLoadingProjectStreams"
+              class="animate-spin"
+              aria-label="Loading"
+            />
+            <span
+              class="text-insight text-sm mr-2"
+            >
+              {{ projectCountry }}
+            </span>
+            <div
+              v-if="projectFlag"
+              class="mr-2 align-baseline"
+            >
+              <country-flag
+                :country="projectFlag"
+                size="small"
+              />
+            </div>
+            <icon-custom-fi-globe
+              v-else
+              class="self-start mr-2"
+            />
+          </div>
+          <div
+            class="font-display text-sm flex flex-row items-center justify-between mr-2 border-r-2 border-gray-300 h-5"
           >
             <span
-              class="text-insight mr-1"
+              class="text-insight text-sm mx-3"
             >
-              {{ selectedProject?.name }}
+              Project dates:
             </span>
-            <country-flag
-              country="pr"
-              size="small"
-            />
-          </button>
-          <!-- TODO: create a component -->
-          <button
-            class="btn btn-secondary px-3 py-2 font-display text-sm rounded-md bg-moss flex flex-row items-center justify-between dark:hover:bg-mirage-gray"
-          >
-            <icon-custom-fi-calendar class="self-start" />
             <span
               class="text-insight uppercase mx-3"
             >
@@ -37,11 +54,11 @@
             </span>
             <icon-custom-arrow-right-white class="self-start" />
             <span
-              class="text-insight uppercase mx-3"
+              class="text-insight uppercase mx-3 my-2"
             >
               {{ formatDateRange(metrics?.maxDate) }}
             </span>
-          </button>
+          </div>
         </div>
       </div>
       <div class="justify-self-end order-first md:order-last">
@@ -81,15 +98,15 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
+import { sortedUniq } from 'lodash-es'
 import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientBioKey, apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
-// import { useGetProjectLocation } from './_composables/use-project-location'
+import { useGetStreamAll } from './_composables/use-project-location'
 import { useGetProjectProfile } from './_composables/use-project-profile'
-import CtaCard from './components/cta-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
@@ -123,9 +140,28 @@ const items = [
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-// const apiClientGeo = inject(apiClientGeoKey) as AxiosInstance
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
-// const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientGeo, computed(() => store.selectedProject?.latitudeNorth), computed(() => store.selectedProject?.longitudeEast))
+const selectedProjectIdCore = computed(() => store.selectedProject?.idCore)
+const { isLoading: isLoadingProjectStreams, data: streams } = useGetStreamAll(apiClientCore, selectedProjectIdCore)
+
+const projectFlag = computed(() => {
+  if (isLoadingProjectStreams.value || streams.value == null) {
+    return ''
+  }
+
+  const codes = sortedUniq(streams.value.map(stream => stream.country_code))
+  return codes.length > 1 ? '' : codes[0] as string
+})
+
+const projectCountry = computed(() => {
+  if (isLoadingProjectStreams.value || streams.value == null) {
+    return ''
+  }
+  const countries = streams.value.map(stream => stream.country_name)
+  console.info(countries, sortedUniq(countries), sortedUniq(countries).join(', '))
+  return sortedUniq(countries).filter(n => n !== null).join(', ')
+})
 
 const { data: profile } = useGetProjectProfile(apiClientBio, 1)
 
