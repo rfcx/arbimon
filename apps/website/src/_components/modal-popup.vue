@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 bg-mirage-gray bg-opacity-75 transition-opacity overflow-y-auto h-full w-full z-60"
+    class="fixed inset-0 bg-pitch bg-opacity-75 transition-opacity overflow-y-auto h-full w-full z-60"
     role="dialog"
     aria-modal="true"
     :aria-labelledby="title"
@@ -12,10 +12,10 @@
         aria-hidden="true"
       />
       <div
-        class="inline-block bg-steel-gray rounded text-left overflow-hidden shadow-xl transform transition-al"
+        class="inline-block bg-moss rounded text-left overflow-hidden shadow-xl transform transition-al"
         :class="modalBody"
       >
-        <div class="bg-steel-gray">
+        <div class="bg-moss">
           <on-click-outside @trigger="emitClose">
             <slot />
           </on-click-outside>

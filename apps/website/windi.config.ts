@@ -122,18 +122,18 @@ export default defineConfig({
           DEFAULT: '#45485D'
         },
         'box-gray': {
-          DEFAULT: '#45485D',
-          dark: '#2f3140'
+          DEFAULT: '#14130d',
+          dark: '#100f0a'
         },
         'steel-gray': {
-          DEFAULT: '#232436',
-          light: '#4a4c72',
-          dark: '#202031'
+          DEFAULT: '#1e1c13',
+          light: '#4a4942',
+          dark: '#18160f'
         },
         'mirage-gray': {
-          DEFAULT: '#141525',
-          light: '#E3E3E5',
-          dark: '#06060D'
+          DEFAULT: '#373639',
+          light: '#060508',
+          dark: '#040406'
         }
       },
       backgroundImage: {

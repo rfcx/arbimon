@@ -5,7 +5,7 @@
         <div class="sm:(flex flex-row items-center)">
           <select
             v-model="selectedType"
-            class="text-xl text-subtle py-1 bg-mirage-gray border-t-0 border-l-0 border-r-0 border-b-1 border-dotted focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
+            class="text-xl text-subtle py-1 bg-echo font-header border-t-0 border-l-0 border-r-0 border-b-1 border-dashed focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
           >
             <option
               v-for="item in datasetType"
@@ -15,12 +15,12 @@
               {{ item.label }}
             </option>
           </select>
-          <span class="text-subtle text-xl ml-2">
+          <span class="text-subtle text-xl ml-2 font-header">
             by
           </span>
           <select
             v-model="selectedBucket"
-            class="text-xl text-subtle lowercase sm:(ml-2) py-1 bg-mirage-gray border-t-0 border-l-0 border-r-0 border-b-1 border-dotted focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
+            class="text-xl text-subtle lowercase sm:(ml-2) py-1 bg-echo font-header border-t-0 border-l-0 border-r-0 border-b-1 border-dashed focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
           >
             <option
               v-for="bucket in Object.entries(buckets)"
