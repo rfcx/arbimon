@@ -1,6 +1,6 @@
 <template>
   <h2>Species Richness</h2>
-  <div class="inline-grid w-full mt-2">
+  <div class="inline-grid w-full">
     <div>
       <h6 class="mb-4">
         {{ mapTitle }}
@@ -23,38 +23,13 @@
         class="map-bubble w-full"
       />
       <div class="flex flex-row justify-between mt-4">
-        <div
-          class="flex gap-y-2 flex-col justify-center min-w-50"
+        <heatmap-legend
+          :max-value="mapDataset.maxValues[selectedTab.value]"
+          :title="`Number of ${selectedTab.shortName}`"
           :class="{
             'invisible': mapStatisticsStyle === MAPBOX_STYLE_CIRCLE,
           }"
-        >
-          <div
-            v-if="mapLegendLabels"
-            class="flex"
-            :class="`justify-${mapLegendLabels.length === 1 ? 'center' : 'between'}`"
-          >
-            <span
-              v-for="n in mapLegendLabels"
-              :key="n"
-            >
-              {{ n }}
-              <span v-if="n === mapLegendLabels[mapLegendLabels.length - 1]">+</span>
-            </span>
-          </div>
-          <span
-            v-else
-            class="text-fog text-center text-sm"
-          >
-            No data
-          </span>
-          <div class="bg-gradient-to-r from-[#4A7BB7] from-20% via-[#98CAE1] via-40% via-[#EAECCC] via-60% via-[#FDB366] via-80% to-[#DD3D2D] to-100% h-2 rounded-full">
-            <span class="invisible">Legend</span>
-          </div>
-          <div class="text-center">
-            Number of {{ selectedTab.shortName }}
-          </div>
-        </div>
+        />
         <map-tool-menu
           :map-statistics-style="mapStatisticsStyle"
           :map-ground-style="undefined"
@@ -78,6 +53,7 @@ import { apiClientBioKey } from '@/globals'
 import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
+import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
 import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
@@ -138,11 +114,6 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
         [selectedTab.value.value]: max(data.map(d => d.value)) ?? 0
       }
     }
-})
-const mapLegendLabels = computed(() => {
-  const maxValue = Math.max(mapDataset.value.maxValues[selectedTab.value.value], 10)
-  if (maxValue === 0) return null
-  return [1, Math.ceil(maxValue / 2), maxValue]
 })
 
 const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style as MapboxStatisticsStyle }
