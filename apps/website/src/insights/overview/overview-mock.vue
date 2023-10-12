@@ -7,8 +7,8 @@
     />
   </div>
   <dashboard-species />
+  <dashboard-project-summary class="my-10 md:my-20" />
   <dashbord-visualizer class="mt-10 md:mt-20" />
-  <dashboard-project-summary />
 </template>
 
 <script setup lang="ts">

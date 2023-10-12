@@ -39,6 +39,7 @@
       class="mt-6"
     />
     <h2>Taxonomy groups</h2>
+    <h6>Number of species detected in each taxonomy group.</h6>
     <div class="dashboard-taxon">
       <StackDistribution
         :dataset="richnessByTaxon"

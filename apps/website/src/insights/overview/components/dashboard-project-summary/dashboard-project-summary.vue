@@ -1,8 +1,8 @@
 <template>
   <div class="mt-20">
-    <h1 class="text-white text-4xl">
+    <h2 class="text-white">
       Project summary
-    </h1>
+    </h2>
 
     <div class="mb-4 border-b border-white dark:border-white">
       <ul
