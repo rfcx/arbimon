@@ -1,24 +1,10 @@
 <template>
-  <div class="graphic-tabs mb-10">
-    <ol class="text-xl lg:text-2xl xl:text-3xl">
-      <li
-        v-for="(tab, index) in tabs"
-        :key="index"
-        class="cursor-pointer inline-block p-2 border-b-2 hover:text-frequency hover:border-frequency font-header font-2xl"
-        :class="{ 'text-frequency border-frequency border-b-2': selectedTab.value === tabs[index].value }"
-        :aria-selected="selectedTab.value === tabs[index].value"
-        :tabindex="index"
-        @click="selectedTab = tabs[index]"
-      >
-        {{ tab.label }}
-      </li>
-    </ol>
-  </div>
+  <h2>Species Richness</h2>
   <div class="inline-grid w-full mt-2">
     <div>
-      <h4 class="mb-4">
+      <h6 class="mb-4">
         {{ mapTitle }}
-      </h4>
+      </h6>
       <span v-if="isLoadingDataBySite">Loading...</span>
       <span v-else-if="isErrorDataBySite">Error</span>
       <map-base-component
@@ -36,7 +22,6 @@
         :style-non-zero="circleStyle"
         class="map-bubble w-full"
       />
-      <!-- '#4A7BB7', '#98CAE1', '#EAECCC', '#FDB366', '#DD3D2D' -->
       <div class="flex flex-row justify-between mt-4">
         <div
           class="flex gap-y-2 flex-col justify-center min-w-50"
@@ -118,7 +103,6 @@ const tabs: Tab[] = [
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, store.selectedProject?.id ?? -1)
 const richnessMapDataBySite = computed(() => dataBySite.value?.richnessBySite ?? [])
 const detectionsMapDataBySite = computed(() => dataBySite.value?.detectionBySite ?? [])
-// TODO: add detections data
 
 // UI
 const selectedTab = ref(tabs[0])
