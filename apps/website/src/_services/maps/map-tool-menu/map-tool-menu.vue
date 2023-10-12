@@ -48,7 +48,7 @@ const isShowLabel = ref<boolean>(true)
 const props = withDefaults(defineProps<{
   readonly mapGroundStyle: MapboxStyle | undefined
   readonly mapStatisticsStyle: MapboxStyle | undefined
-  readonly canToggleLabels: boolean
+  readonly canToggleLabels?: boolean
 }>(), {
   canToggleLabels: true
 })
