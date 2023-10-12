@@ -23,12 +23,15 @@
         class="map-bubble w-full"
       />
       <div class="flex flex-row justify-between mt-4">
+        <circle-legend
+          v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
+          :map-base-formatter="circleFormatter"
+          :style-non-zero="circleStyle"
+        />
         <heatmap-legend
+          v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP"
           :max-value="mapDataset.maxValues[selectedTab.value]"
           :title="`Number of ${selectedTab.shortName}`"
-          :class="{
-            'invisible': mapStatisticsStyle === MAPBOX_STYLE_CIRCLE,
-          }"
         />
         <map-tool-menu
           :map-statistics-style="mapStatisticsStyle"
@@ -50,9 +53,10 @@ import { type ComputedRef, computed, inject, ref } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientBioKey } from '@/globals'
-import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE } from '~/maps'
+import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
+import CircleLegend from '~/maps/map-legend/circle-legend.vue'
 import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
 import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
