@@ -159,14 +159,13 @@ const projectCountry = computed(() => {
     return ''
   }
   const countries = streams.value.map(stream => stream.country_name)
-  console.info(countries, sortedUniq(countries), sortedUniq(countries).join(', '))
   return sortedUniq(countries).filter(n => n !== null).join(', ')
 })
 
 const { data: profile } = useGetProjectProfile(apiClientBio, 1)
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
-const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId.value ?? -1)
+const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 const formatDateRange = (date: Date | null | undefined): string => {
   if (!dayjs(date).isValid()) return 'no data'

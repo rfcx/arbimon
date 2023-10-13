@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
@@ -26,5 +26,6 @@ import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const store = useStore()
 
-const { isLoading, isError, data: metrics } = useGetDashboardMetrics(apiClientBio, store.selectedProject?.id ?? -1)
+const selectedProjectId = computed(() => store.selectedProject?.id)
+const { isLoading, isError, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 </script>
