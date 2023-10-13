@@ -3,34 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
-  name: biodiversity-website-ingress
-  namespace: production
-  labels:
-    app: biodiversity-website
-spec:
-  rules:
-    - host: bio.rfcx.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: biodiversity-website-service
-              servicePort: 80
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: 'http'
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-  name: biodiversity-website-with-api-ingress
+  name: arbimon-api-ingress
   namespace: production
   labels:
-    app: biodiversity-website
+    app: arbimon
 spec:
   rules:
-    - host: bio.rfcx.org
+    - host: arbimon.org
       http:
         paths:
           - path: /api(/|$)(.*)
@@ -43,25 +23,102 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://bio.rfcx.org
-  name: biodiversity-website-ingress-legacy-redirect
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+  name: arbimon-legacy-api-ingress
   namespace: production
   labels:
-    app: biodiversity-website
+    app: arbimon
 spec:
   rules:
-    - host: ba.rfcx.org
+    - host: arbimon.org
+      http:
+        paths:
+          - path: /legacy-api
+            pathType: Prefix
+            backend:
+              serviceName: arbimon-service
+              servicePort: 80
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://arbimon.rfcx.org
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+  name: arbimon-combined-ingress
+  namespace: production
+  labels:
+    app: arbimon
+spec:
+  rules:
+  - host: arbimon.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: biodiversity-website-service
+          servicePort: 80
+      - path: /auth0-login
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+      - path: /logout
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+      - path: /fonts
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+      - path: /images
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+      - path: /includes
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+      - path: /project
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+  name: arbimon-core-ingress
+  namespace: production
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+  - host: core.arbimon.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: core-api-service
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://arbimon.org
   name: arbimon-ingress-org-redirect
   namespace: production
   labels:
     app: biodiversity-website
 spec:
   rules:
-    - host: arbimon.org
+    - host: arbimon.rfcx.org
     - host: www.arbimon.org
