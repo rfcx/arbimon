@@ -15,7 +15,7 @@ const props = defineProps<{ markdown: string }>()
 
 <style>
 #markdown-viewer-content {
-  @apply p-6 text-white;
+  @apply pl-6 pr-6 pb-6 text-white;
 
   a {
     @apply text-frequency hover:underline hover:cursor-pointer;
