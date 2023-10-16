@@ -98,7 +98,6 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { sortedUniq } from 'lodash-es'
 import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
@@ -118,19 +117,19 @@ const items = [
     }
   },
   {
-    title: 'Species Richness',
+    title: 'Richness',
     route: {
       name: ROUTE_NAMES.speciesRichness
     }
   },
   {
-    title: 'Activity Overview',
+    title: 'Activity',
     route: {
       name: ROUTE_NAMES.activityOverview
     }
   },
   {
-    title: 'Species Spotlight',
+    title: 'Spotlight',
     route: {
       name: ROUTE_NAMES.activityPatterns
     }
@@ -145,13 +144,17 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectIdCore = computed(() => store.selectedProject?.idCore)
 const { isLoading: isLoadingProjectStreams, data: streams } = useGetStreamAll(apiClientCore, selectedProjectIdCore)
 
+const getUniqArray = (array: string[]): string[] => {
+  return array.flat().filter((value, index, self) => self.findIndex(name => name === value) === index).filter(n => n !== null)
+}
+
 const projectFlag = computed(() => {
   if (isLoadingProjectStreams.value || streams.value == null) {
     return ''
   }
-
-  const codes = sortedUniq(streams.value.map(stream => stream.country_code))
-  return codes.length > 1 ? '' : codes[0] as string
+  const codes = streams.value.map(stream => stream.country_code)
+  const uniqCodes = getUniqArray(codes)
+  return uniqCodes.length > 1 ? '' : codes[0] as string
 })
 
 const projectCountry = computed(() => {
@@ -159,14 +162,13 @@ const projectCountry = computed(() => {
     return ''
   }
   const countries = streams.value.map(stream => stream.country_name)
-  console.info(countries, sortedUniq(countries), sortedUniq(countries).join(', '))
-  return sortedUniq(countries).filter(n => n !== null).join(', ')
+  return getUniqArray(countries).join(', ')
 })
 
 const { data: profile } = useGetProjectProfile(apiClientBio, 1)
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
-const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId.value ?? -1)
+const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 const formatDateRange = (date: Date | null | undefined): string => {
   if (!dayjs(date).isValid()) return 'no data'

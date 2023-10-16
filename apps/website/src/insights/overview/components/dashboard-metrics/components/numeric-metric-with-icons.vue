@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl dark:bg-moss dark:text-insight p-6 border-1 border-insight flex flex-col gap-y-4 justify-between">
+  <div class="rounded-xl dark:bg-moss dark:text-insight p-6 border-1 border-insight flex flex-col gap-y-4 justify-between shadow-lg shadow-frequency/10">
     <div class="flex flex-row">
       <h5
         v-if="title"
