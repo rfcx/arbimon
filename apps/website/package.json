@@ -43,6 +43,7 @@
     "@leeoniya/ufuzzy": "^1.0.8",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
+    "@tiptap/extension-character-count": "^2.1.12",
     "@tiptap/extension-link": "^2.1.11",
     "@tiptap/extension-underline": "^2.1.11",
     "@tiptap/pm": "^2.1.11",
