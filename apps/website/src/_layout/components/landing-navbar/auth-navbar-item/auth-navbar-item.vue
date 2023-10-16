@@ -18,14 +18,20 @@
   </div>
   <div
     v-else
-    class="flex"
-    aria-expanded="true"
-    aria-haspopup="true"
+    class="flex items-center"
   >
+    <router-link
+      :to="{ name: ROUTE_NAMES.myProjects }"
+      class="mr-2 md:mr-4 font-medium text-gray-700 dark:text-insight py-2 pr-4 pl-3 md:p-0"
+    >
+      My Projects
+    </router-link>
     <div
       :id="domId"
       type="button"
       class="hover:cursor-pointer focus:cursor-pointer group"
+      aria-expanded="true"
+      aria-haspopup="true"
     >
       <img
         class="h-8 w-8 rounded-full"
@@ -49,4 +55,36 @@
   </div>
 </template>
 
-<script src="./auth-navbar-item.ts" lang="ts"></script>
+<script setup lang="ts">
+import { type Auth0Client } from '@auth0/auth0-spa-js'
+import { computed, inject } from 'vue'
+
+import { authClientKey, storeKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
+import { type BiodiversityStore } from '~/store'
+
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+
+const auth = inject(authClientKey) as Auth0Client
+const store = inject(storeKey) as BiodiversityStore
+
+defineProps<{
+  domId: string
+}>()
+
+const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
+
+const signup = async (): Promise<void> => {
+  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.userCompleteRegistration } }, screen_hint: 'signup' })
+}
+
+const login = async (): Promise<void> => {
+  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } } })
+}
+
+const logout = async (): Promise<void> => {
+  // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
+  await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
+}
+
+</script>
