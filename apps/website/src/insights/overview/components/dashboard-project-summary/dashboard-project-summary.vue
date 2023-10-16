@@ -164,6 +164,8 @@
           <MarkdownEditor
             v-show="isEditing"
             v-model="markdownText"
+            :character-limit="10000"
+            @on-editor-close="closeEditor"
             class="mx-auto"
           />
         </div>
@@ -343,6 +345,11 @@ onMounted(() => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const t = new Tabs(tabs, options)
 })
+
+const closeEditor = (): void => {
+  isEditing.value = false
+  isViewMored.value = true
+}
 </script>
 
 <style lang="scss">
