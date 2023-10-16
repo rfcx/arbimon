@@ -7,10 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import Markdown from 'vue3-markdown-it'
 
-const props = defineProps<{ markdown: string }>()
+defineProps<{ markdown: string }>()
 </script>
 
 <style>
