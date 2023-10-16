@@ -133,9 +133,28 @@
     </div>
     <EditorContent
       id="markdown-editor-content"
-      class="bg-white rounded-b-lg select-auto selection:bg-fog"
+      class="bg-white select-auto selection:bg-fog"
       :editor="editor"
     />
+    <div
+      id="markdown-editor-character-remaining"
+      class="text-right text-sm bg-white text-util-gray-01 rounded-b-lg pr-4 pb-2 mb-4"
+    >
+      <i>{{ editor?.storage.characterCount.characters() }}/{{ characterLimit }} Characters Remaining</i>
+    </div>
+
+    <div
+      id="markdown-editor-save-edit"
+      class="text-right"
+    >
+      <button
+        type="button"
+        class="bg-frequency text-black text-base font-medium rounded-4xl px-4 py-2"
+        @click="closeEditorView"
+      >
+        Save edit
+      </button>
+    </div>
 
     <!-- insert link modal -->
     <div
@@ -212,6 +231,7 @@
 </template>
 
 <script setup lang="ts">
+import CharacterCount from '@tiptap/extension-character-count'
 import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
 import StarterKit from '@tiptap/starter-kit'
@@ -220,8 +240,8 @@ import { Modal } from 'flowbite'
 import { Markdown } from 'tiptap-markdown'
 import { type Ref, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ modelValue: string }>()
-const emit = defineEmits<{(e: 'update:modelValue', value: string): void}>()
+const props = defineProps<{ modelValue: string, characterLimit: number }>()
+const emit = defineEmits<{(e: 'update:modelValue', value: string): void, (e: 'onEditorClose'): void}>()
 const modal = ref() as Ref<Modal>
 const linkToSet = ref('')
 
@@ -238,7 +258,10 @@ const editor = useEditor({
     StarterKit,
     Markdown,
     Underline,
-    Link
+    Link,
+    CharacterCount.configure({
+      limit: props.characterLimit
+    })
   ],
   content: props.modelValue,
   onUpdate: () => {
@@ -279,6 +302,10 @@ const closeModal = (): void => {
   modal.value.hide()
   linkToSet.value = ''
 }
+
+const closeEditorView = (): void => {
+  emit('onEditorClose')
+}
 </script>
 
 <style lang="scss">
@@ -288,5 +315,25 @@ const closeModal = (): void => {
 
 .tiptap {
   @apply p-6 text-black;
+
+  a {
+    @apply text-green-600 hover:underline hover:cursor-pointer;
+  }
+
+  ol {
+    @apply list-decimal pl-6;
+  }
+
+  ul {
+    @apply list-disc pl-6;
+  }
+
+  p, ul, ol {
+    @apply mt-0 mb-4;
+  }
+
+  li > p {
+    @apply mb-0;
+  }
 }
 </style>
