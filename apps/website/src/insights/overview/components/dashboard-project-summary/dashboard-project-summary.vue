@@ -134,40 +134,7 @@
           v-else
           class="mx-auto p-4 lg:max-w-4xl relative"
         >
-          <div
-            v-show="!isViewMored"
-            id="dashboard-project-summary-markdown-viewer-mask"
-            class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-gradient-to-b from-transparent to-echo z-10"
-          />
-          <MarkdownViewer
-            v-show="!isEditing"
-            id="dashboard-project-summary-markdown-viewer"
-            :class="isViewMored === true ? 'z-0' : 'max-h-52 overflow-y-hidden z-0'"
-            :markdown="markdownText"
-          />
-          <button
-            id="dashboard-project-summary-edit-button"
-            class="absolute lg:right-4 top-0 z-20 hover:block hidden"
-            @click="editMarkdownContent"
-          >
-            <icon-custom-fi-edit />
-          </button>
-          <button
-            id="dashboard-project-summary-about-read-more"
-            :class="isViewMored === true ? 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20 hidden' : 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20'"
-            @click="isViewMored = true"
-          >
-            <span>
-              View More <icon-custom-arrow-right class="text-frequency inline-block" />
-            </span>
-          </button>
-          <MarkdownEditor
-            v-show="isEditing"
-            v-model="markdownText"
-            :character-limit="10000"
-            @on-editor-close="closeEditor"
-            class="mx-auto"
-          />
+          <DashboardMarkdownViewerEditor :markdown-text="markdownText" />
         </div>
       </div>
 
@@ -224,18 +191,14 @@ import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { inject, onMounted, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
-import MarkdownEditor from '~/markdown/markdown-editor.vue'
-import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
+import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const store = useStore()
 const { isLoading, data: dashboardContent } = useGetDashboardContent(apiClientBio, store.selectedProject?.id ?? -1)
-
-const isViewMored = ref(false)
-const isEditing = ref(false)
 
 watch(dashboardContent, (newValue) => {
   if (newValue == null) {
@@ -248,11 +211,6 @@ watch(dashboardContent, (newValue) => {
 
   markdownText.value = newValue.readme
 })
-
-const editMarkdownContent = (): void => {
-  isEditing.value = true
-  isViewMored.value = true
-}
 
 const markdownText = ref(`#### Background
 
@@ -345,11 +303,6 @@ onMounted(() => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const t = new Tabs(tabs, options)
 })
-
-const closeEditor = (): void => {
-  isEditing.value = false
-  isViewMored.value = true
-}
 </script>
 
 <style lang="scss">
