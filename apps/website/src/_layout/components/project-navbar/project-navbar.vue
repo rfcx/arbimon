@@ -54,18 +54,11 @@
                   Explore
                 </router-link>
               </li>
-              <li v-if="store?.user">
-                <router-link
-                  :to="{ name: ROUTE_NAMES.myProjects }"
-                  class="block py-2 pr-4 pl-3 md:p-0 text-gray-700 dark:text-insight"
-                >
-                  My Projects
-                </router-link>
-              </li>
             </ul>
           </div>
           <auth-navbar-item
             class="ml-8"
+            dom-id="project-navbar-auth-desktop"
           />
         </div>
       </div>
