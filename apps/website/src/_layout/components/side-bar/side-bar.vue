@@ -181,7 +181,7 @@ const allItems: Item[] = [
       },
       {
         title: 'Recordings',
-        legacyPath: '/audiodata/uploads'
+        legacyPath: '/audiodata/recordings'
       }
     ]
   },
@@ -225,7 +225,7 @@ const allItems: Item[] = [
       },
       {
         title: 'Random Forest Models',
-        legacyPath: '/analysis/random-forest-models'
+        legacyPath: '/analysis/random-forest-models/models'
       },
       {
         title: 'Soundscape Analysis',
