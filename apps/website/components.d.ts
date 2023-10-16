@@ -38,7 +38,6 @@ declare module '@vue/runtime-core' {
     IconCustomDownload: typeof import('~icons/custom-icons/download')['default']
     IconCustomElAngleDown: typeof import('~icons/custom-icons/el-angle-down')['default']
     IconCustomFiAed: typeof import('~icons/custom-icons/fi-aed')['default']
-    IconCustomFiCalendar: typeof import('~icons/custom-icons/fi-calendar')['default']
     IconCustomFiEdit: typeof import('~icons/custom-icons/fi-edit')['default']
     IconCustomFiGlobe: typeof import('~icons/custom-icons/fi-globe')['default']
     IconCustomFiList: typeof import('~icons/custom-icons/fi-list')['default']

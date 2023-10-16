@@ -331,6 +331,9 @@ importers:
       '@rfcx-bio/utils':
         specifier: workspace:^0.0.1
         version: link:../../packages/utils
+      '@tiptap/extension-character-count':
+        specifier: ^2.1.12
+        version: 2.1.12(@tiptap/pm@2.1.11)
       '@tiptap/extension-link':
         specifier: ^2.1.11
         version: 2.1.11(@tiptap/pm@2.1.11)
@@ -3742,6 +3745,15 @@ packages:
       '@tiptap/core': ^2.0.0
     dependencies:
       '@tiptap/core': 2.1.11(@tiptap/pm@2.1.11)
+    dev: false
+
+  /@tiptap/extension-character-count@2.1.12(@tiptap/pm@2.1.11):
+    resolution: {integrity: sha512-+GFbBG13nvF8mFIeisSERG/Q3CuRsTNwVZIRbJTLgGdbHXFqPhJh4Xfm7cv7OaOYevUlVyO+z5pGD7wIl1bLqQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/pm': 2.1.11
     dev: false
 
   /@tiptap/extension-code-block@2.1.11(@tiptap/core@2.1.11)(@tiptap/pm@2.1.11):
