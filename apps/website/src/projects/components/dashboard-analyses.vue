@@ -13,6 +13,7 @@
       />
       <icon-custom-fi-aed
         v-if="analysis.iconName === 'fi-aed'"
+        class="text-insight"
       />
       <a
         class="text-xl font-medium text-frequency font-header cursor-pointer border-b-1 border-frequency"
