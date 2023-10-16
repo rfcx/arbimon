@@ -117,19 +117,19 @@ const items = [
     }
   },
   {
-    title: 'Species Richness',
+    title: 'Richness',
     route: {
       name: ROUTE_NAMES.speciesRichness
     }
   },
   {
-    title: 'Activity Overview',
+    title: 'Activity',
     route: {
       name: ROUTE_NAMES.activityOverview
     }
   },
   {
-    title: 'Species Spotlight',
+    title: 'Spotlight',
     route: {
       name: ROUTE_NAMES.activityPatterns
     }
