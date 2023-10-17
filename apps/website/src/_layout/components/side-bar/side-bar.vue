@@ -18,7 +18,7 @@
             :to="item.route"
             :title="item.title"
             exact-active-class="bg-gray-100 rounded-lg text-moss"
-            class="flex items-center p-2 text-base text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg)"
+            class="flex items-center p-2 text-base text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg)"
           >
             <span
               v-if="item.iconRaw === 'fi-grid'"
@@ -37,7 +37,7 @@
           <a
             v-else-if="item.legacyPath"
             :href="arbimonLink + item.legacyPath"
-            class="flex items-center p-2 text-base text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
+            class="flex items-center p-2 text-base text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
           >
             <span
               v-if="item.iconRaw === 'fi-settings'"
@@ -54,7 +54,7 @@
           <button
             v-else
             type="button"
-            class="mainmenu flex items-center p-2 w-full text-base font-normal text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg)"
+            class="mainmenu flex items-center p-2 w-full text-base font-normal text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg)"
             :aria-controls="itemId(item.title)"
             :data-collapse-toggle="itemId(item.title)"
           >
@@ -105,14 +105,14 @@
                 v-if="childItem.route"
                 :to="childItem.route"
                 exact-active-class="bg-gray-100 rounded-lg text-moss"
-                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg)"
+                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg)"
               >
                 {{ childItem.title }}
               </router-link>
               <a
                 v-else-if="childItem.legacyPath"
                 :href="arbimonLink + childItem.legacyPath"
-                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
+                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
               >
                 {{ childItem.title }}
                 <icon-custom-linkout
@@ -128,7 +128,7 @@
         <li>
           <a
             href="#"
-            class="flex items-center p-2 text-base font-normal text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
+            class="flex items-center p-2 text-base font-normal text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
           >
             <span
               class="py-0.5 px-1"
