@@ -20,13 +20,13 @@
           >
             <span
               v-if="item.iconRaw === 'fi-grid'"
-              class="py-0.5 pl-1 pr-2"
+              class="py-0.5 px-1"
             >
               <icon-custom-fi-grid />
             </span>
             <span
               v-if="item.iconRaw === 'pres-chart-line' === true"
-              class="py-0.5 pl-1 pr-2"
+              class="py-0.5 px-1"
             >
               <icon-custom-pres-chart-line />
             </span>
@@ -39,7 +39,7 @@
           >
             <span
               v-if="item.iconRaw === 'fi-settings'"
-              class="py-0.5 pl-1 pr-2"
+              class="py-0.5 px-1"
             >
               <icon-custom-fi-settings />
             </span>
@@ -58,13 +58,13 @@
           >
             <span
               v-if="item.iconRaw === 'cloud-upload'"
-              class="py-0.5 pl-1 pr-2"
+              class="py-0.5 px-1"
             >
               <icon-custom-cloud-upload />
             </span>
             <span
               v-if="item.iconRaw === 'fa-search'"
-              class="py-0.5 pl-1 pr-2"
+              class="py-0.5 px-1"
             >
               <icon-fa-search class="h-5 w-5" />
             </span>
