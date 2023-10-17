@@ -1,9 +1,10 @@
+import { DashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 
-export const getDashboardContent = async (locationProjectId: number): Promise<LocationProjectProfile> =>
+export const getDashboardContent = async (locationProjectId: number): Promise<DashboardContentResponse> =>
   await ModelRepository.getInstance(getSequelize())
     .LocationProjectProfile
     .findOne({
