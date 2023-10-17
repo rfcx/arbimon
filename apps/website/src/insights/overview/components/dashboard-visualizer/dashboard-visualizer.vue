@@ -80,7 +80,8 @@ const tabs: Tab[] = [
 ]
 
 // Services
-const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, store.selectedProject?.id ?? -1)
+const selectedProjectId = computed(() => store.selectedProject?.id ?? -1)
+const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, selectedProjectId)
 const richnessMapDataBySite = computed(() => dataBySite.value?.richnessBySite ?? [])
 const detectionsMapDataBySite = computed(() => dataBySite.value?.detectionBySite ?? [])
 
