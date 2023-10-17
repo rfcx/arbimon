@@ -59,14 +59,13 @@
 </template>
 <script setup lang="ts">
 import { initDrawers, initDropdowns } from 'flowbite'
-import { computed, inject, onMounted, ref } from 'vue'
+import { inject, onMounted } from 'vue'
 
-import { storeKey, togglesKey } from '@/globals'
+import { togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import BrandLogo from '../brand-logo.vue'
 import AuthNavbarItem from '../landing-navbar/auth-navbar-item/auth-navbar-item.vue'
 
-const store = inject(storeKey)
 const toggles = inject(togglesKey)
 
 onMounted(() => {
