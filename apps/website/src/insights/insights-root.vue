@@ -65,7 +65,7 @@
         <span class="text-xxs text-fog">// TODO: menu</span>
       </div>
     </div>
-    <cta-card v-if="!metrics?.totalDetections && !isLoading" />
+    <insight-not-ready-card v-if="!metrics?.totalDetections && !isLoading" />
     <nav class="sticky top-0 z-40">
       <div class="max-w-screen-xl mx-auto px-8">
         <div class="text-center text-gray-500 dark:text-insight">
@@ -106,6 +106,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetStreamAll } from './_composables/use-project-location'
 import { useGetProjectProfile } from './_composables/use-project-profile'
+import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
