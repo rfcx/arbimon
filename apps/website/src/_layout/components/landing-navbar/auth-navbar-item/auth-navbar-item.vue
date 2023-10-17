@@ -39,16 +39,16 @@
       </button>
       <div
         id="user-dropdown"
-        class="z-50 my-4 hidden text-base list-none bg-moss rounded-lg text-insight divide-y divide-gray-100 shadow"
+        class="z-50 my-4 hidden text-base w-36 list-none bg-moss rounded-lg text-insight divide-y divide-gray-100 shadow"
       >
         <ul
-          class="py-2"
+          class="py-2 font-medium"
           aria-labelledby="user-menu-button"
           aria-orientation="vertical"
           role="menu"
           tabindex="-1"
         >
-          <li class="p-4 rounded-lg hover:(bg-moss cursor-pointer text-frequency)">
+          <li class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)">
             <router-link
               :to="{ name: ROUTE_NAMES.myProjects }"
             >
@@ -56,7 +56,7 @@
             </router-link>
           </li>
           <li
-            class="p-4 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
+            class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
             @click="logout"
           >
             Sign out

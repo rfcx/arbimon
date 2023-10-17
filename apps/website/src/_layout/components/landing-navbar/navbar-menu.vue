@@ -38,8 +38,9 @@
     </li>
     <li>
       <button
-        id="dropdownResourcesButton"
-        data-dropdown-toggle="dropdownResources"
+        :id="`${domId}DropdownResourcesButton`"
+        type="button"
+        :data-dropdown-toggle="`${domId}DropdownResources`"
         data-dropdown-trigger="hover"
         class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 md:m-2 md:p-0 md:w-auto lg:m-0 dark:text-insight dark:hover:text-frequency"
       >
@@ -55,14 +56,13 @@
           clip-rule="evenodd"
         /></svg>
       </button>
-      <!-- Dropdown menu -->
       <div
-        id="dropdownResources"
+        :id="`${domId}DropdownResources`"
         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-moss dark:divide-moss border-0"
       >
         <ul
+          :aria-labelledby="`${domId}DropdownResourcesButton`"
           class="py-2 text-gray-700 dark:text-insight"
-          aria-labelledby="dropdownResourcesButton"
         >
           <li>
             <router-link
@@ -73,7 +73,7 @@
               FAQ
             </router-link>
           </li>
-          <li>
+          <li class="pb-2">
             <router-link
               :to="{ name: ROUTE_NAMES.landingPublications }"
               exact-active-class="!text-gray-900 !dark:text-insight"
@@ -82,29 +82,40 @@
               Publications
             </router-link>
           </li>
+          <li class="pt-2">
+            <a
+              href="https://support.rfcx.org"
+              class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
+            >Help &amp; support <icon-custom-linkout class="inline ml-1" /></a>
+          </li>
+          <li>
+            <router-link
+              :to="{ name: ROUTE_NAMES.landingContact }"
+              exact-active-class="!text-gray-900 !dark:text-insight"
+              class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
+            >
+              Contact us
+            </router-link>
+          </li>
         </ul>
-        <div class="py-2">
-          <a
-            href="https://support.rfcx.org"
-            class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
-          >Help &amp; support <icon-custom-linkout class="inline ml-1" /></a>
-          <router-link
-            :to="{ name: ROUTE_NAMES.landingContact }"
-            exact-active-class="!text-gray-900 !dark:text-insight"
-            class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
-          >
-            Contact us
-          </router-link>
-        </div>
       </div>
     </li>
   </ul>
 </template>
 <script setup lang="ts">
-import { inject } from 'vue'
+import { initDropdowns } from 'flowbite'
+import { inject, onMounted } from 'vue'
 
 import { togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 
+defineProps<{
+  domId: string
+}>()
+
 const toggles = inject(togglesKey)
+
+onMounted(() => {
+  initDropdowns()
+})
 </script>

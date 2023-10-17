@@ -12,6 +12,7 @@
           </router-link>
           <!-- Nav menu for desktop -->
           <navbar-menu
+            dom-id="desktopNav"
             class="hidden lg:flex"
           />
         </div>
@@ -74,14 +75,14 @@
           id="mobile-menu-2"
           class="hidden justify-between items-center w-full lg:hidden"
         >
-          <navbar-menu />
+          <navbar-menu dom-id="mobileNav" />
         </div>
       </div>
     </nav>
   </header>
 </template>
 <script setup lang="ts">
-import { initCollapses, initDropdowns } from 'flowbite'
+import { initCollapses } from 'flowbite'
 import { inject, onMounted } from 'vue'
 
 import { togglesKey } from '@/globals'
@@ -97,6 +98,5 @@ const toggles = inject(togglesKey)
 
 onMounted(() => {
   initCollapses()
-  initDropdowns()
 })
 </script>
