@@ -1,20 +1,22 @@
 <template>
   <div
-    class="flex flex-col bg-moss border-1 rounded-lg shadow p-4 h-58 hover:bg-util-gray-02"
+    class="flex flex-col justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-02 cursor-pointer"
     :class="isSelected ? 'border-frequency' : 'border-transparent'"
     @click="selectedAnalysis()"
   >
-    <p
-      class="text-2xl text-left font-medium text-insight cursor-pointer"
-      :title="analysis.title"
-    >
-      {{ analysis.title }}
-    </p>
-    <div class="text-left text-base pt-2 text-insight h-32 overflow-y-auto">
-      {{ analysis.description }}
+    <div class="flex flex-col gap-y-2">
+      <p
+        class="text-2xl text-left font-medium text-insight cursor-pointer"
+        :title="analysis.title"
+      >
+        {{ analysis.title }}
+      </p>
+      <div class="text-left text-base text-insight pb-2">
+        {{ analysis.description }}
+      </div>
     </div>
     <div
-      class="pt-2 text-left"
+      class="text-left"
     >
       <a
         class="text-base text-frequency cursor-pointer border-b-1 border-frequency"
