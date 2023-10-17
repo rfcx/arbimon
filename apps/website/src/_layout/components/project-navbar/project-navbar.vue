@@ -32,14 +32,6 @@
           >
             <brand-logo />
           </router-link>
-          <button
-            v-if="store?.projects.length"
-            class="box-content flex items-center justify-center h-9 mx-6 px-4 hover:bg-gray-700 rounded-md cursor-pointer text-gray-700 lg:hover:text-primary-700 dark:text-gray-400 dark:hover:text-white lg:dark:hover:text-white"
-            @click="toggleProjectSelector(true)"
-          >
-            <span class="max-w-96 truncate">{{ selectedProjectName }}</span>
-            <icon-custom-angle-down class="ml-1 text-xs" />
-          </button>
         </div>
         <div class="flex items-center">
           <div
@@ -64,10 +56,6 @@
       </div>
     </div>
   </nav>
-  <project-selector
-    v-if="hasOpenedProjectSelector"
-    @emit-close="toggleProjectSelector(false)"
-  />
 </template>
 <script setup lang="ts">
 import { initDrawers, initDropdowns } from 'flowbite'
@@ -77,20 +65,9 @@ import { storeKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import BrandLogo from '../brand-logo.vue'
 import AuthNavbarItem from '../landing-navbar/auth-navbar-item/auth-navbar-item.vue'
-import ProjectSelector from './project-selector/project-selector.vue'
 
 const store = inject(storeKey)
 const toggles = inject(togglesKey)
-
-const hasOpenedProjectSelector = ref(false)
-
-const selectedProjectName = computed(() => {
-  return store?.selectedProject?.name ?? 'Select Project'
-})
-
-function toggleProjectSelector (isOpened: boolean): void {
-  hasOpenedProjectSelector.value = isOpened
-}
 
 onMounted(() => {
   initDropdowns()
