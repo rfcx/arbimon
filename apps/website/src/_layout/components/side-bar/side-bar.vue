@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-16 left-0 w-18 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group hover:w-64"
+    class="fixed z-50 top-16 left-0 w-18 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group hover:w-64 transition duration-100"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -74,7 +74,7 @@
               v-if="item.iconRaw === 'fi-aed'"
               class="py-0.5 px-1"
             >
-              <icon-custom-fi-aed class="h-6 w-6" />
+              <icon-custom-fi-activity class="h-6 w-6" />
             </span>
             <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
               {{ item.title }}
@@ -126,17 +126,17 @@
       </ul>
       <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
         <li>
-          <a
-            href="#"
+          <router-link
+            :to="ROUTE_NAMES.myProjects"
             class="flex items-center p-2 text-base font-normal text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
           >
             <span
               class="py-0.5 px-1"
             >
-              <icon-custom-fi-help />
+              <icon-custom-fi-clipboard />
             </span>
-            <span class="ml-2 hidden group-hover:block">Help</span>
-          </a>
+            <span class="ml-2 hidden group-hover:block">My Projects</span>
+          </router-link>
         </li>
       </ul>
     </div>
