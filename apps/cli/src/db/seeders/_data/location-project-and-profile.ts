@@ -81,7 +81,7 @@ const dataFakeProject = {
   resources: ''
 }
 
-type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId' | 'keyResult' | 'resources'>
+type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
 
 export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
   default: [
