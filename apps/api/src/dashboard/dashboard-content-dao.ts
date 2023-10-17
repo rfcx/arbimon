@@ -1,6 +1,5 @@
-import { DashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
+import { type DashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 
