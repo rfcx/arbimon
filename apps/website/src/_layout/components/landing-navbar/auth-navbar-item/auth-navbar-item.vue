@@ -64,32 +64,6 @@
         </ul>
       </div>
     </div>
-    <!-- <div
-      :id="domId"
-      type="button"
-      class="hover:cursor-pointer focus:cursor-pointer group"
-      aria-expanded="true"
-      aria-haspopup="true"
-    >
-      <img
-        class="h-8 w-8 rounded-full"
-        :src="userImage"
-      >
-      <ul
-        :aria-labelledby="domId"
-        aria-orientation="vertical"
-        class="logout-dropdown absolute top-13 right-1 z-50 min-w-40 bg-moss rounded-lg text-insight hover:text-frequency invisible group-hover:visible focus:outline-none transition-all"
-        role="menu"
-        tabindex="-1"
-      >
-        <li
-          class="p-4 rounded-lg hover:(bg-moss cursor-pointer)"
-          @click="logout"
-        >
-          Sign out
-        </li>
-      </ul>
-    </div> -->
   </div>
 </template>
 
