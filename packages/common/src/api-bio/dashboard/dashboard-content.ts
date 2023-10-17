@@ -9,6 +9,7 @@ export type DashboardContentParams = ProjectRouteParamsSerialized
 
 // Response types
 export interface DashboardContentResponse {
+  locationProjectId: number
   summary: string
   readme: string // markdown string
 }
