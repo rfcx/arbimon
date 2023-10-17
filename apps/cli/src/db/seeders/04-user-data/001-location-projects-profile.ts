@@ -20,7 +20,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     .then(allProjects => Object.fromEntries(allProjects.map(s => [s.slug, s.id])))
 
   const projectsProfile: LocationProjectProfile[] = rawEnvToProjectAndProfile[BIO_ENVIRONMENT]
-    .map(({ slug, summary, readme }) => {
+    .map(({ slug, summary, readme, keyResult, resources }) => {
       // Try to find project ID
       const locationProjectId = projectSlugToId[slug]
       if (!locationProjectId) return undefined
@@ -28,7 +28,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       return {
         locationProjectId,
         summary,
-        readme
+        readme,
+        keyResult,
+        resources
       }
     })
     .filter(isDefined)
