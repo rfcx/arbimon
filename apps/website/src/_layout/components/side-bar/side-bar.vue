@@ -4,6 +4,8 @@
     class="fixed z-50 top-16 left-0 w-18 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group hover:w-64"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
+    @mouseenter="showSidebar = true"
+    @mouseleave="showSidebar = false; collapse()"
   >
     <div class="h-full pb-4 px-3 overflow-y-auto">
       <ul class="space-y-2 border-gray-200 dark:border-gray-700">
@@ -52,7 +54,7 @@
           <button
             v-else
             type="button"
-            class="flex items-center p-2 w-full text-base font-normal text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg)"
+            class="mainmenu flex items-center p-2 w-full text-base font-normal text-insight transition duration-75 hover:(bg-util-gray-02 rounded-lg)"
             :aria-controls="itemId(item.title)"
             :data-collapse-toggle="itemId(item.title)"
           >
@@ -74,10 +76,9 @@
             >
               <icon-custom-fi-aed class="h-6 w-6" />
             </span>
-            <span
-              :id="'#' + item.title"
-              class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block"
-            >{{ item.title }}</span>
+            <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
+              {{ item.title }}
+            </span>
             <svg
               aria-hidden="true"
               class="w-6 h-6 hidden group-hover:block"
@@ -93,8 +94,8 @@
           <ul
             v-if="item.children"
             :id="itemId(item.title)"
-            class="py-2 space-y-2 hidden"
-            :class="{ block: isParent(item) && items.length < 4 }"
+            class="submenu py-2 space-y-2 hidden"
+            :class="{ 'block': isParent(item) }"
           >
             <li
               v-for="childItem in item.children"
@@ -144,7 +145,7 @@
 
 <script setup lang="ts">
 import { initCollapses, initDrawers, initDropdowns } from 'flowbite'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { useRoute } from 'vue-router'
 
@@ -266,13 +267,23 @@ function itemId (title: string): string {
 
 const route = useRoute()
 
+const showSidebar = ref(false)
+let submenuEl, mainmenuEl: NodeListOf<Element> | null
+
 function isParent (item: Item): boolean {
-  const parent = document.getElementById('#' + item.title)
-  console.info('\n\n----item---', item, parent, '#' + item.title)
   const childRouteNames = (item.children ?? []).map(i => {
     return i.route !== undefined && typeof i.route !== 'string' && 'name' in i.route ? i.route?.name : undefined
   }).filter(isDefined)
   return route.matched.some(r => childRouteNames.includes(r.name ?? ''))
+}
+
+function collapse (): void {
+  submenuEl = document.querySelectorAll('.submenu')
+  mainmenuEl = document.querySelectorAll('.mainmenu')
+  if (showSidebar.value === false) {
+    submenuEl?.forEach((el: Element) => el?.classList.add('hidden'))
+    mainmenuEl?.forEach((el: Element) => el?.setAttribute('aria-expanded', 'false'))
+  }
 }
 
 onMounted(() => {
