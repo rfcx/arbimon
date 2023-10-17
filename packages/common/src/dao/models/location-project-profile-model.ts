@@ -17,7 +17,15 @@ export const LocationProjectProfileModel = defineWithDefaults<LocationProjectPro
 
     // Facts
     summary: DataTypes.STRING(1023),
-    readme: DataTypes.TEXT
+    readme: DataTypes.TEXT,
+    keyResult: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    resources: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    }
   },
   {
     tableName: TABLE_LOCATION_PROJECTS_PROFILE
