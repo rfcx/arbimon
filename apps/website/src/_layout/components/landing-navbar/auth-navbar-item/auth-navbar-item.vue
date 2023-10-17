@@ -20,13 +20,51 @@
     v-else
     class="flex items-center"
   >
-    <router-link
-      :to="{ name: ROUTE_NAMES.myProjects }"
-      class="mr-2 md:mr-4 font-medium text-gray-700 dark:text-insight py-2 pr-4 pl-3 md:p-0"
-    >
-      My Projects
-    </router-link>
-    <div
+    <div class="flex">
+      <button
+        id="user-menu-button"
+        type="button"
+        class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 dark:focus:ring-frequency/10"
+        aria-expanded="false"
+        aria-haspopup="true"
+        data-dropdown-trigger="hover"
+        data-dropdown-toggle="user-dropdown"
+        data-dropdown-placement="bottom"
+      >
+        <span class="sr-only">Open user menu</span>
+        <img
+          class="h-8 w-8 rounded-full"
+          :src="userImage"
+        >
+      </button>
+      <div
+        id="user-dropdown"
+        class="z-50 my-4 hidden text-base list-none bg-moss rounded-lg text-insight divide-y divide-gray-100 shadow"
+      >
+        <ul
+          class="py-2"
+          aria-labelledby="user-menu-button"
+          aria-orientation="vertical"
+          role="menu"
+          tabindex="-1"
+        >
+          <li class="p-4 rounded-lg hover:(bg-moss cursor-pointer text-frequency)">
+            <router-link
+              :to="{ name: ROUTE_NAMES.myProjects }"
+            >
+              My Projects
+            </router-link>
+          </li>
+          <li
+            class="p-4 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
+            @click="logout"
+          >
+            Sign out
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <div
       :id="domId"
       type="button"
       class="hover:cursor-pointer focus:cursor-pointer group"
@@ -51,13 +89,14 @@
           Sign out
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { type Auth0Client } from '@auth0/auth0-spa-js'
-import { computed, inject } from 'vue'
+import { initDropdowns } from 'flowbite'
+import { computed, inject, onMounted } from 'vue'
 
 import { authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -86,5 +125,9 @@ const logout = async (): Promise<void> => {
   // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
   await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
 }
+
+onMounted(() => {
+  initDropdowns()
+})
 
 </script>
