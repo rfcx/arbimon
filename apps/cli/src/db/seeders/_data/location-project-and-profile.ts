@@ -43,7 +43,9 @@ const dataPr = {
   longitudeEast: -65.24505,
   longitudeWest: -67.94469784,
   summary: summaryPr,
-  readme: readmePr
+  readme: readmePr,
+  keyResult: '',
+  resources: ''
 }
 
 const dataBci = {
@@ -52,7 +54,9 @@ const dataBci = {
   longitudeEast: -79.81971,
   longitudeWest: -79.86858,
   summary: summaryBci,
-  readme: ''
+  readme: '',
+  keyResult: '',
+  resources: ''
 }
 
 const dataMadre = {
@@ -61,7 +65,9 @@ const dataMadre = {
   longitudeEast: -69.337,
   longitudeWest: -70.25357092,
   summary: summaryMadre,
-  readme: ''
+  readme: '',
+  keyResult: '',
+  resources: ''
 }
 
 const dataFakeProject = {
@@ -70,7 +76,9 @@ const dataFakeProject = {
   longitudeEast: -55,
   longitudeWest: -55.1,
   summary: 'This is a test project!',
-  readme: 'This is the readme for our test project'
+  readme: 'This is the readme for our test project',
+  keyResult: '',
+  resources: ''
 }
 
 type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
