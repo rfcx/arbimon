@@ -6,8 +6,8 @@ import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashbo
 import { dashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-by-risk'
 import { dashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 
-import { type RouteRegistration, GET } from '../_services/api-helpers/types'
-import { dashboardContentHandler } from './dashboard-content-handler'
+import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/types'
+import { dashboardContentHandler, updateDashboardContentHandler } from './dashboard-content-handler'
 import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
 import { dashboardDataBySiteHandler } from './dashboard-data-by-site-handler'
 import { dashboardMetricsHandler } from './dashboard-metrics-handler'
@@ -29,6 +29,11 @@ export const routesDashboard: RouteRegistration[] = [
     method: GET,
     url: dashboardContentRoute,
     handler: dashboardContentHandler
+  },
+  {
+    method: PATCH,
+    url: dashboardContentRoute,
+    handler: updateDashboardContentHandler
   },
   {
     method: GET,
