@@ -83,10 +83,10 @@ import NumericMetricWithIcons from './components/numeric-metric-with-icons.vue'
 const props = defineProps<{ loading: boolean, error: boolean, metrics: DashboardMetricsResponse | undefined }>()
 
 // form the total recordings value (minutes or hours)
-const totalRecordingsMin = props.metrics?.totalRecordings ?? 0
+const totalRecordingsMin = computed(() => props.metrics?.totalRecordings ?? 0)
 const MAXIMUM_MINUTE = 3 * 60 // 3 hours
-const totalRecordingsUnit = computed(() => totalRecordingsMin < MAXIMUM_MINUTE ? 'minutes' : 'hours')
+const totalRecordingsUnit = computed(() => totalRecordingsMin.value < MAXIMUM_MINUTE ? 'minutes' : 'hours')
 const totalRecordingsValue = computed(() => {
-  return totalRecordingsMin < MAXIMUM_MINUTE ? totalRecordingsMin : totalRecordingsMin / 60
+  return totalRecordingsMin.value < MAXIMUM_MINUTE ? totalRecordingsMin.value : totalRecordingsMin.value / 60
 })
 </script>
