@@ -134,7 +134,13 @@
           v-else
           class="mx-auto p-4 lg:max-w-4xl relative"
         >
-          <DashboardMarkdownViewerEditor :markdown-text="markdownText" />
+          <DashboardMarkdownViewerEditor
+            v-model:is-view-mored="isAboutTabViewMored"
+            v-model:is-editing="isAboutTabEditing"
+            :markdown-text="dashboardContent?.readme ?? defaultMarkdownText"
+            :character-limit="10000"
+            @on-editor-close="updateReadme"
+          />
         </div>
       </div>
 
@@ -155,9 +161,15 @@
         role="tabpanel"
         aria-labelledby="key-results-tab-content"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Key results tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
-        </p>
+        <div class="mx-auto p-4 lg:max-w-4xl relative">
+          <DashboardMarkdownViewerEditor
+            v-model:is-view-mored="isKeyResultTabViewMored"
+            v-model:is-editing="isKeyResultTabEditing"
+            :markdown-text="dashboardContent?.keyResult ?? defaultMarkdownText"
+            :character-limit="10000"
+            @on-editor-close="updateKeyResult"
+          />
+        </div>
       </div>
 
       <div
@@ -177,9 +189,15 @@
         role="tabpanel"
         aria-labelledby="resources-tab-content"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Resources tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
-        </p>
+        <div class="mx-auto p-4 lg:max-w-4xl relative">
+          <DashboardMarkdownViewerEditor
+            v-model:is-view-mored="isResourcesTabViewMored"
+            v-model:is-editing="isResourcesTabEditing"
+            :markdown-text="dashboardContent?.resources ?? defaultMarkdownText"
+            :character-limit="10000"
+            @on-editor-close="updateResources"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -188,31 +206,18 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
+import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
+import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
+import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
 import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-
-const store = useStore()
-const { isLoading, data: dashboardContent } = useGetDashboardContent(apiClientBio, store.selectedProject?.id ?? -1)
-
-watch(dashboardContent, (newValue) => {
-  if (newValue == null) {
-    return
-  }
-
-  if (newValue.readme === '') {
-    return
-  }
-
-  markdownText.value = newValue.readme
-})
-
-const markdownText = ref(`#### Background
+const defaultMarkdownText = ref(`#### Background
 
 The project is a collaboration between \\<Project stakeholder\\> and \\<Project Stakeholder\\> to \\<project purpose\\> \\(e\\.g\\. the 1\\-line summary\\) This project will occur over \\<period of time\\>\\, from \\<approximate project start date\\> to \\<approximate project end date\\>
 
@@ -225,6 +230,70 @@ Please state the key research questions for this project\\. \\(e\\.g\\. What is 
 2. \\<Key research question 2\\>
 
 3. \\<Key research question 3\\>`)
+
+const isAboutTabViewMored = ref(false)
+const isAboutTabEditing = ref(false)
+
+const isKeyResultTabViewMored = ref(false)
+const isKeyResultTabEditing = ref(false)
+
+const isResourcesTabViewMored = ref(false)
+const isResourcesTabEditing = ref(false)
+
+const store = useStore()
+
+const isEnabled = computed(() => {
+  return isAboutTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
+})
+
+const { isLoading, data: dashboardContent } = useGetDashboardContent(
+  apiClientBio,
+  store.selectedProject?.id ?? -1,
+  isEnabled
+)
+
+const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
+
+const updateReadme = (value: string): void => {
+  mutateReadme(value, {
+    onSuccess: () => {
+      isAboutTabViewMored.value = true
+      isAboutTabEditing.value = false
+    },
+    onError: () => {
+      isAboutTabViewMored.value = true
+      isAboutTabEditing.value = true
+    }
+  })
+}
+
+const updateKeyResult = (value: string): void => {
+  mutateKeyResult(value, {
+    onSuccess: () => {
+      isKeyResultTabViewMored.value = true
+      isKeyResultTabEditing.value = false
+    },
+    onError: () => {
+      isKeyResultTabViewMored.value = true
+      isKeyResultTabEditing.value = true
+    }
+  })
+}
+
+const updateResources = (value: string): void => {
+  mutateResources(value, {
+    onSuccess: () => {
+      isResourcesTabViewMored.value = true
+      isResourcesTabEditing.value = false
+    },
+    onError: () => {
+      isResourcesTabViewMored.value = true
+      isResourcesTabEditing.value = true
+    }
+  })
+}
 
 onMounted(() => {
    const tabs: TabItem[] = [
