@@ -2,17 +2,14 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
+import { type LocationProjectProfile } from '@/dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request types
 export type DashboardContentParams = ProjectRouteParamsSerialized
 
 // Response types
-export interface DashboardContentResponse {
-  locationProjectId: number
-  summary: string
-  readme: string // markdown string
-}
+export type DashboardContentResponse = Omit<LocationProjectProfile, 'summary'>
 
 // Route
 export const dashboardContentRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-content`

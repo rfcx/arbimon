@@ -8,6 +8,6 @@ export const getDashboardContent = async (locationProjectId: number): Promise<Da
     .LocationProjectProfile
     .findOne({
       where: { locationProjectId },
-      attributes: ['summary', 'readme'],
+      attributes: ['locationProjectId', 'readme', 'keyResult', 'resources'],
       raw: true
-    }) ?? { locationProjectId, summary: '', readme: '' }
+    }) ?? { locationProjectId, readme: '', keyResult: '', resources: '' }
