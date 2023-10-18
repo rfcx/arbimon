@@ -1,9 +1,10 @@
-import { type DashboardContentParams, type DashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
+import { type DashboardContentParams, type DashboardContentResponse, type UpdateDashboardContentParams, type UpdateDashboardContentRequestBody, type UpdateDashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
+import { locationProjectProfileContentType } from '@rfcx-bio/common/dao/types'
 
 import { type Handler } from '~/api-helpers/types'
-import { BioInvalidPathParamError } from '~/errors'
+import { BioInvalidPathParamError, BioPublicError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getDashboardContent } from './dashboard-content-dao'
+import { getDashboardContent, updateDashboardContent } from './dashboard-content-dao'
 
 export const dashboardContentHandler: Handler<DashboardContentResponse, DashboardContentParams> = async (req) => {
   // Inputs & validation
@@ -17,4 +18,31 @@ export const dashboardContentHandler: Handler<DashboardContentResponse, Dashboar
 
   const projectContent = await getDashboardContent(projectIdInteger)
   return projectContent
+}
+
+export const updateDashboardContentHandler: Handler<UpdateDashboardContentResponse, UpdateDashboardContentParams, unknown, UpdateDashboardContentRequestBody> = async (req) => {
+  // Inputs & validation
+  const { projectId } = req.params
+
+  const projectIdInteger = Number(projectId)
+  if (Number.isNaN(projectIdInteger)) {
+    throw BioInvalidPathParamError({ projectId })
+  }
+
+  const { contentType, value } = req.body
+
+  // @ts-expect-error the contentType === '' is correct type-wise but we still need to check for it.
+  if (contentType == null || contentType === '' || !locationProjectProfileContentType.includes(contentType)) {
+    throw new BioPublicError('Missing or invalid required body parameter `contentType`', 400)
+  }
+
+  if (value == null) {
+    throw new BioPublicError('Missing or invalid required body parameter `value`', 400)
+  }
+
+  await updateDashboardContent(projectIdInteger, contentType, value)
+
+  return {
+    message: 'OK'
+  }
 }
