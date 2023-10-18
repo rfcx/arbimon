@@ -62,7 +62,7 @@
     />
     <numeric-metric-with-icons
       tooltip-id="total-recordings"
-      tooltip-text="Total hours of recordings captured"
+      :tooltip-text="`Total ${totalRecordingsUnit} of recordings captured`"
       title="Total recordings"
       :value="totalRecordingsValue"
       icon-name="ft-mic-lg"
