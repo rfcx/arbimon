@@ -13,7 +13,8 @@ const url = `/projects/${PROJECT_ID_BASIC}/dashboard-content`
 const EXPECTED_PROPS = [
   'locationProjectId',
   'readme',
-  'summary'
+  'keyResult',
+  'resources'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
