@@ -3,6 +3,7 @@ import { type AttributeTypes, attributes } from '../type-helpers'
 export interface LocationProjectMetric {
   locationProjectId: number
   detectionMinutesCount: number
+  recordingMinutesCount: number
   speciesCount: number
   maxDate: Date | null
   minDate: Date | null
