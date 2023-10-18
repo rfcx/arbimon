@@ -211,10 +211,10 @@ import { computed, inject, onMounted, ref } from 'vue'
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
+import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
 import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
 import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
-import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
 import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
