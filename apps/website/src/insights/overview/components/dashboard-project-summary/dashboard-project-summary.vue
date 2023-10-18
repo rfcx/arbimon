@@ -224,25 +224,7 @@ Please state the key research questions for this project\\. \\(e\\.g\\. What is 
 
 2. \\<Key research question 2\\>
 
-3. \\<Key research question 3\\>
-
-4. asldkfmsldkmfadf
-
-5. osdkmfoskdmfoskf
-
-6. sdkmfsdkmfokmf
-
-7. oskdfmsokdma
-
-sldkfmslkdmfslkdf
-sdlfkmsdlfkmsldkfm
-
-sldkfmsldkmfslkdmfsdf
-
-slkdfmslkdmfslkmfslkmf
-sldkmflskdmflkmfaoijfoaijf
-asdlfaohgfoajaf
-`)
+3. \\<Key research question 3\\>`)
 
 onMounted(() => {
    const tabs: TabItem[] = [
