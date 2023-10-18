@@ -20,7 +20,7 @@
   <button
     id="markdown-viewer-read-more"
     :class="isViewMored === true ? 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20 hidden' : 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20'"
-    @click="isViewMored = true"
+    @click="emit('update:isViewMored', true)"
   >
     <span>
       View More <icon-custom-arrow-right class="text-frequency inline-block" />
@@ -29,34 +29,30 @@
   <MarkdownEditor
     v-show="isEditing"
     v-model="editableMarkdownText"
-    :character-limit="10000"
+    :character-limit="props.characterLimit"
     class="mx-auto"
     @on-editor-close="closeEditor"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, toRef } from 'vue'
+import { toRef } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 
-const props = defineProps<{ markdownText: string }>()
+const props = withDefaults(defineProps<{ markdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number }>(), { characterLimit: 1000 })
+const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
-const isViewMored = ref(false)
-const isEditing = ref(false)
 const editableMarkdownText = toRef(props.markdownText)
 
 const editMarkdownContent = (): void => {
-  isEditing.value = true
-  isViewMored.value = true
+  emit('update:isEditing', true)
+  emit('update:isViewMored', true)
 }
 
 const closeEditor = (): void => {
-  // TODO: Call some API to save the data to the server
-
-  isEditing.value = false
-  isViewMored.value = true
+  emit('on-editor-close', editableMarkdownText.value)
 }
 </script>
 
