@@ -36,6 +36,6 @@ export interface UpdateDashboardContentResponse {
 }
 
 // Service
-export const apiBioUpdateDashboardContent = async (apiClient: AxiosInstance, contentType: string, value: string): Promise<UpdateDashboardContentResponse> => {
-  return await apiClient.post(dashboardContentRoute, { contentType, value })
+export const apiBioUpdateDashboardContent = async (apiClient: AxiosInstance, locationProjectId: number, contentType: LocationProjectProfileContentType, value: string): Promise<UpdateDashboardContentResponse> => {
+  return await apiClient.patch(`/projects/${locationProjectId}/dashboard-content`, { contentType, value })
 }
