@@ -137,7 +137,7 @@
           <DashboardMarkdownViewerEditor
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
-            :markdown-text="dashboardContent?.readme ?? defaultMarkdownText"
+            :markdown-text="dashboardContent?.readme ?? readmeDefault"
             :character-limit="10000"
             @on-editor-close="updateReadme"
           />
@@ -165,7 +165,7 @@
           <DashboardMarkdownViewerEditor
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
-            :markdown-text="dashboardContent?.keyResult ?? defaultMarkdownText"
+            :markdown-text="dashboardContent?.keyResult ?? keyResultDefault"
             :character-limit="10000"
             @on-editor-close="updateKeyResult"
           />
@@ -193,7 +193,7 @@
           <DashboardMarkdownViewerEditor
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
-            :markdown-text="dashboardContent?.resources ?? defaultMarkdownText"
+            :markdown-text="dashboardContent?.resources ?? resourcesDefault"
             :character-limit="10000"
             @on-editor-close="updateResources"
           />
@@ -214,22 +214,11 @@ import { useGetDashboardContent } from '../../composables/use-get-dashboard-cont
 import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
 import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
+import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
 import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const defaultMarkdownText = ref(`#### Background
-
-The project is a collaboration between \\<Project stakeholder\\> and \\<Project Stakeholder\\> to \\<project purpose\\> \\(e\\.g\\. the 1\\-line summary\\) This project will occur over \\<period of time\\>\\, from \\<approximate project start date\\> to \\<approximate project end date\\>
-
-#### Key Research Questions
-
-Please state the key research questions for this project\\. \\(e\\.g\\. What is the species richness in the study area\\?\\)
-
-1. \\<Key research question 1\\>
-
-2. \\<Key research question 2\\>
-
-3. \\<Key research question 3\\>`)
+const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault } = useMarkdownEditorDefaults()
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
