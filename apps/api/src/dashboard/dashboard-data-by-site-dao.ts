@@ -8,7 +8,7 @@ export const getRichnessBySite = async (locationProjectId: number): Promise<ApiM
     .DashboardRichnessBySite
     .findAll({
       where: { locationProjectId },
-      attributes: ['name', 'latitude', 'longitude', ['richness', 'value']],
+      attributes: ['name', 'latitude', 'longitude', ['richness', 'value'], 'taxonClassId'],
       raw: true
     }) as unknown as ApiMap
 

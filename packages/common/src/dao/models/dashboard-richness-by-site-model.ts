@@ -22,7 +22,8 @@ export const DashboardRichnessBySiteModel = defineWithDefaults<DashboardRichness
     // Facts
     latitude: DataTypes.INTEGER,
     longitude: DataTypes.INTEGER,
-    richness: DataTypes.INTEGER
+    richness: DataTypes.INTEGER,
+    taxonClassId: DataTypes.INTEGER
   },
   {
     tableName: TABLE_DASHBOARD_RICHNESS_BY_SITE,

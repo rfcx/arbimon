@@ -4,4 +4,5 @@ export interface DashboardRichnessBySite {
   latitude: number
   longitude: number
   richness: number
+  taxonClassId: number
 }
