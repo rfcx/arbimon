@@ -26,7 +26,7 @@
     <div class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-gray-300">
       <span>{{ analysis.label }}:</span>
       <icon-fas-spinner
-        v-if="analysis.isLoading"
+        v-if="analysis.isLoading && analysis.count === undefined"
         class="animate-spin h-8 w-8 text-gray-900"
       />
       <span v-if="analysis.count !== undefined">{{ analysis.count }}</span>
