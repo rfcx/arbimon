@@ -233,7 +233,6 @@
 <script setup lang="ts">
 import CharacterCount from '@tiptap/extension-character-count'
 import Link from '@tiptap/extension-link'
-import Underline from '@tiptap/extension-underline'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import { Modal } from 'flowbite'
@@ -257,7 +256,6 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     Markdown,
-    Underline,
     Link,
     CharacterCount.configure({
       limit: props.characterLimit
