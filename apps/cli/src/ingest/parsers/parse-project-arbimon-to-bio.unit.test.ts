@@ -17,12 +17,28 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     deletedAt: null
   }
 
+  const VALID_PROJECT_2 = {
+    idArbimon: 124,
+    idCore: '124',
+    slug: 'project_124',
+    name: 'Project 124',
+    latitudeNorth: 0,
+    latitudeSouth: 0,
+    longitudeEast: 0,
+    longitudeWest: 0,
+    isPrivate: 1,
+    updatedAt: new Date(),
+    deletedAt: null
+  }
+
   test('succeeds for valid data', async () => {
     // Act
     const actual = parseProjectArbimonToBio(VALID_PROJECT)
+    const actual2 = parseProjectArbimonToBio(VALID_PROJECT_2)
 
     // Assert
     expect(actual.success).toBe(true)
+    expect(actual2.success).toBe(true)
   })
 
   test('fails if required props are missing', async () => {
