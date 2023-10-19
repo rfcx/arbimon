@@ -97,14 +97,6 @@
         <icon-custom-ft-italic />
       </button>
       <button
-        title="Underline"
-        type="button"
-        :class="editor?.isActive('underline') ? 'w-8 h-8 flex-shrink-0 rounded-lg text-white bg-echo disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed' : 'w-8 h-8 flex-shrink-0 rounded-lg text-black bg-white disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed'"
-        @click="editor?.chain().focus().toggleUnderline().run()"
-      >
-        <icon-custom-ft-underline />
-      </button>
-      <button
         title="Bulleted list"
         type="button"
         :class="editor?.isActive('bulletList') ? 'w-8 h-8 flex-shrink-0 rounded-lg text-white bg-echo disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed' : 'w-8 h-8 flex-shrink-0 rounded-lg text-black bg-white disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed'"
