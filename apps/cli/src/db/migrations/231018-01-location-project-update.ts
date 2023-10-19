@@ -12,6 +12,7 @@ const VIEW_NAME = 'location_project_metric'
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
+    DROP VIEW IF EXISTS ${VIEW_NAME};
     CREATE OR REPLACE VIEW ${VIEW_NAME} AS     
     SELECT  rbsh.location_project_id, 
             d.site_count,
