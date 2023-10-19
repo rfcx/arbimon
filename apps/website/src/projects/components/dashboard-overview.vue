@@ -22,7 +22,7 @@
         v-if="stat.value === 'species'"
       />
       <icon-fas-spinner
-        v-if="stat.isLoading"
+        v-if="stat.isLoading && stat.count === undefined"
         class="animate-spin h-8 w-8 text-white"
       />
       <span
