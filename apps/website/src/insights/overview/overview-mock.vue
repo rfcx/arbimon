@@ -8,7 +8,7 @@
   </div>
   <dashboard-species />
   <dashboard-project-summary class="my-10 md:my-20" />
-  <dashbord-visualizer class="mt-10 md:mt-20" />
+  <dashbord-map class="mt-10 md:mt-20" />
 </template>
 
 <script setup lang="ts">
@@ -17,10 +17,10 @@ import { computed, inject } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
+import DashbordMap from './components/dashboard-map/dashboard-map.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectSummary from './components/dashboard-project-summary/dashboard-project-summary.vue'
 import DashboardSpecies from './components/dashboard-species/dashboard-species.vue'
-import DashbordVisualizer from './components/dashboard-visualizer/dashboard-visualizer.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
