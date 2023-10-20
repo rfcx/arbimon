@@ -5,6 +5,8 @@ export interface LocationProjectMetric {
   speciesCount: number
   recordingMinutesCount: number
   detectionMinutesCount: number
+  minDate: Date | null
+  maxDate: Date | null
   recordingMinDate: Date | null
   recordingMaxDate: Date | null
   detectionMinDate: Date | null
@@ -12,7 +14,7 @@ export interface LocationProjectMetric {
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT_METRIC = attributes<LocationProjectMetric>()({
-  light: ['detectionMinutesCount', 'speciesCount', 'recordingMinDate', 'recordingMaxDate', 'detectionMinDate', 'detectionMaxDate']
+  light: ['recordingMinutesCount', 'detectionMinutesCount', 'speciesCount', 'minDate', 'maxDate', 'recordingMinDate', 'recordingMaxDate', 'detectionMinDate', 'detectionMaxDate']
 })
 
 export type LocationProjectMetricTypes = AttributeTypes< LocationProjectMetric, typeof ATTRIBUTES_LOCATION_PROJECT_METRIC>
