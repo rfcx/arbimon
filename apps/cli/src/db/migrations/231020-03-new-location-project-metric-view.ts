@@ -5,20 +5,21 @@ const VIEW_NAME = 'location_project_metric'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(`
-    drop view if exists ${VIEW_NAME};
-    create or replace view ${VIEW_NAME} as
-      select 
-        location_project_recording_metric.location_project_id,
-        location_project_detection_metric.species_count,
-        location_project_recording_metric.recording_minutes_count,
-        location_project_detection_metric.detection_minutes_count,
-        location_project_recording_metric.min_date as recording_min_date,
-        location_project_recording_metric.max_date as recording_max_date,
-        location_project_detection_metric.min_date as detection_min_date,
-        location_project_detection_metric.max_date as detection_max_date
-      from location_project_recording_metric
-      inner join
-        location_project_detection_metric on location_project_recording_metric.location_project_id = location_project_detection_metric.location_project_id;`)
+    DROP VIEW IF EXISTS ${VIEW_NAME};
+    CREATE OR REPLACE VIEW ${VIEW_NAME} AS
+      SELECT 
+        rm.location_project_id,
+        dm.species_count,
+        rm.recording_minutes_count,
+        dm.detection_minutes_count,
+        least(dm.min_date, rm.min_date) min_date,
+        greatest(dm.max_date, rm.max_date) max_date,
+        rm.min_date as recording_min_date,
+        rm.max_date as recording_max_date,
+        dm.min_date as detection_min_date,
+        dm.max_date as detection_max_date
+      FROM location_project_recording_metric rm
+        INNER JOIN location_project_detection_metric dm ON rm.location_project_id = dm.location_project_id;`)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
