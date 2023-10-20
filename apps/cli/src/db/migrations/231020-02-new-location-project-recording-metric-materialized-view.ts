@@ -10,18 +10,18 @@ const MATERIALIZED_VIEW_NAME = 'location_project_recording_metric'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(`
-    create or replace materialized view ${MATERIALIZED_VIEW_NAME} as
-      select
+    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME} AS
+      SELECT
         location_project_id,
-        sum(count) as recording_minutes_count,
-        min(time_precision_hour_local) as min_date,
-        max(time_precision_hour_local) as max_date
-      from
+        sum(count) recording_minutes_count,
+        min(time_precision_hour_local) min_date,
+        max(time_precision_hour_local) max_date
+      FROM
         recording_by_site_hour
-      group by
+      GROUP BY
         location_project_id;`)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(`drop materialized view if exists ${MATERIALIZED_VIEW_NAME}`)
+  await params.context.sequelize.query(`DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME}`)
 }
