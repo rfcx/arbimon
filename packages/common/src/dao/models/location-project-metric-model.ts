@@ -16,10 +16,15 @@ export const LocationProjectMetricModel = defineWithDefaults<LocationProjectMetr
     },
 
     // Facts
-    detectionMinutesCount: DataTypes.INTEGER, // 45,000
-    speciesCount: DataTypes.INTEGER, // 94
+    speciesCount: DataTypes.INTEGER,
+    recordingMinutesCount: DataTypes.INTEGER,
+    detectionMinutesCount: DataTypes.INTEGER,
+    minDate: DataTypes.DATE,
     maxDate: DataTypes.DATE,
-    minDate: DataTypes.DATE
+    recordingMinDate: DataTypes.DATE,
+    recordingMaxDate: DataTypes.DATE,
+    detectionMinDate: DataTypes.DATE,
+    detectionMaxDate: DataTypes.DATE
   },
   {
     tableName: TABLE_LOCATION_PROJECT_METRIC,
