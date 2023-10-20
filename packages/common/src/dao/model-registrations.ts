@@ -9,11 +9,9 @@ import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED }
 import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
 import { DataSourceModel, MODEL_DATA_SOURCE } from './models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/detection-by-site-species-hour-model'
-import { LocationProjectDetectionMetricModel, MODEL_LOCATION_PROJECT_DETECTION_METRIC } from './models/location-project-detection-metric-model'
 import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
 import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
 import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './models/location-project-profile-model'
-import { LocationProjectRecordingMetricModel, MODEL_LOCATION_PROJECT_RECORDING_METRIC } from './models/location-project-recording-metric-model'
 import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
@@ -68,9 +66,7 @@ export const modelRegistrations = {
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
   [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel],
-  [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel],
-  [MODEL_LOCATION_PROJECT_DETECTION_METRIC]: [LocationProjectDetectionMetricModel],
-  [MODEL_LOCATION_PROJECT_RECORDING_METRIC]: [LocationProjectRecordingMetricModel]
+  [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
 } as const
 
 export type ModelRegistrations = typeof modelRegistrations
