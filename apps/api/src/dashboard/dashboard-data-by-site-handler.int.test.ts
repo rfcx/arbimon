@@ -88,7 +88,7 @@ describe('simple tests', () => {
     test('species richness by site is correct', async () => {
       // Arrange
       const knownSiteName = 'Test Site Dashboard Basic'
-      const expectedProperties = ['name', 'latitude', 'longitude', 'value']
+      const expectedProperties = ['name', 'latitude', 'longitude', 'value', 'taxonClassId']
       const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 1, taxonClassId: 600 }
 
       // Act
@@ -117,8 +117,8 @@ describe('simple tests', () => {
     test.todo('species richness by site is empty', async () => {
       // Arrange
       const knownSiteName = 'Test Site Dashboard Empty'
-      const expectedProperties = ['name', 'latitude', 'longitude', 'value']
-      const expectedKnownSite = { name: knownSiteName, latitude: 18.31307, longitude: -65.24878, value: 0 }
+      const expectedProperties = ['name', 'latitude', 'longitude', 'value', 'taxonClassId']
+      const expectedKnownSite = { name: knownSiteName, latitude: 18.31307, longitude: -65.24878, value: 0, taxonClassId: 100 }
 
       // Act
       const maybeResult = JSON.parse(response.body)?.richnessBySite
@@ -133,7 +133,7 @@ describe('simple tests', () => {
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
       expect(maybeKnownSite).toBeTypeOf('object')
-      const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }
+      const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number, taxonClassId?: number | undefined }
 
       // Assert - first result contains (only) expected props
       expectedProperties.forEach(expectedProperty => { expect(knownSite).toHaveProperty(expectedProperty) })
