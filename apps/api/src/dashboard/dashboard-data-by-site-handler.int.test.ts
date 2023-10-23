@@ -104,7 +104,7 @@ describe('simple tests', () => {
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
       expect(maybeKnownSite).toBeTypeOf('object')
-      const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number }
+      const knownSite = maybeKnownSite as Pick<Site, 'name' | 'latitude' | 'longitude'> & { value: number, taxonClassId?: number | undefined }
 
       // Assert - first result contains (only) expected props
       expectedProperties.forEach(expectedProperty => { expect(knownSite).toHaveProperty(expectedProperty) })
