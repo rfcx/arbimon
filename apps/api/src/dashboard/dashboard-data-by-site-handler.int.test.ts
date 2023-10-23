@@ -89,7 +89,7 @@ describe('simple tests', () => {
       // Arrange
       const knownSiteName = 'Test Site Dashboard Basic'
       const expectedProperties = ['name', 'latitude', 'longitude', 'value']
-      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 2 }
+      const expectedKnownSite = { name: knownSiteName, latitude: 17.962779, longitude: -66.201552, value: 1, taxonClassId: 600 }
 
       // Act
       const maybeResult = JSON.parse(response.body)?.richnessBySite
@@ -99,7 +99,7 @@ describe('simple tests', () => {
       expect(Array.isArray(maybeResult)).toBe(true)
 
       const result = maybeResult as ApiMap
-      expect(result).toHaveLength(1)
+      expect(result).toHaveLength(2) // 2 rows of data (taxon_class 100 & 600) - 1 amphibian, 1 mammal
 
       // Assert - first result is object
       const maybeKnownSite = result.find(bySite => bySite.name === knownSiteName)
