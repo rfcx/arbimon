@@ -16,9 +16,7 @@ The project is a collaboration between \\<Project stakeholder\\> and \\<Project 
 Please state the key research questions for this project\\. \\(e\\.g\\. What is the species richness in the study area\\?\\)
 
 1. \\<Key research question 1\\>
-
 2. \\<Key research question 2\\>
-
 3. \\<Key research question 3\\>`)
 
   const keyResult = ref(`#### High-level Findings
@@ -44,9 +42,11 @@ E.g., We trained 10 members of the local community in ecoacoustic methods to fac
   const resources = ref(`Please provide any additional links for other resources related to this project (e.g., links to reports and webpages about the organizations, funders, labs, and other stakeholders). Make sure to delete the sample text and replace it with your own.
 
 \\<Link 1\\>
+
 Link description.
 
 \\<Link 2\\>
+
 Link description.`)
 
   return {

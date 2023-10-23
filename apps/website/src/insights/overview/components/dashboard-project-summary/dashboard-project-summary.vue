@@ -138,7 +138,7 @@
             id="about"
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
-            :markdown-text="dashboardContent?.readme ?? readmeDefault"
+            :markdown-text="dashboardContent?.readme || readmeDefault"
             :character-limit="10000"
             @on-editor-close="updateReadme"
           />
@@ -167,7 +167,7 @@
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
-            :markdown-text="dashboardContent?.keyResult ?? keyResultDefault"
+            :markdown-text="dashboardContent?.keyResult || keyResultDefault"
             :character-limit="10000"
             @on-editor-close="updateKeyResult"
           />
@@ -196,7 +196,7 @@
             id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
-            :markdown-text="dashboardContent?.resources ?? resourcesDefault"
+            :markdown-text="dashboardContent?.resources || resourcesDefault"
             :character-limit="10000"
             @on-editor-close="updateResources"
           />
