@@ -3,7 +3,9 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 export const refreshMviews = async (sequelize: Sequelize): Promise<void> => {
   // Prioritize views that have dependencies
   const mvsWithDependencies = [
-    'species_in_project'
+    'species_in_project',
+    'location_project_detection_metric',
+    'location_project_recording_metric'
   ]
 
   // Get a list of all other views
