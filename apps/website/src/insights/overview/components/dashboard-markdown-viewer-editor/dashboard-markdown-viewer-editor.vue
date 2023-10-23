@@ -57,12 +57,12 @@ const closeEditor = (): void => {
 }
 </script>
 
-<style lang="scss">
+<style>
 div[id$="markdown-viewer-mask"]:hover ~ button[id$="markdown-viewer-edit-button"] {
   display: block;
 }
 
-div[id$="markdowe-viewer-component"]:hover + button[id$="markdown-viewer-edit-button"] {
+div[id$="markdown-viewer-component"]:hover + button[id$="markdown-viewer-edit-button"] {
   display: block;
 }
 
