@@ -150,7 +150,7 @@
 
     <!-- insert link modal -->
     <div
-      id="markdown-editor-insert-link-modal"
+      :id="`${id}-markdown-editor-insert-link-modal`"
       data-modal-backdrop="static"
       tabindex="-1"
       aria-hidden="true"
@@ -165,7 +165,7 @@
             <button
               type="button"
               class="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              data-modal-hide="markdown-editor-insert-link-modal"
+              :data-modal-hide="`${id}-markdown-editor-insert-link-modal`"
               @click="closeModal"
             >
               <svg
@@ -200,7 +200,7 @@
           <!-- Modal footer -->
           <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
             <button
-              data-modal-hide="markdown-editor-insert-link-modal"
+              :data-modal-hide="`${id}-markdown-editor-insert-link-modal`"
               type="button"
               class="text-black bg-frequency font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               @click="confirmSetLink"
@@ -208,7 +208,7 @@
               Ok
             </button>
             <button
-              data-modal-hide="markdown-editor-insert-link-modal"
+              :data-modal-hide="`${id}-markdown-editor-insert-link-modal`"
               type="button"
               class="text-white bg-echo rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5"
               @click="closeModal"
@@ -231,7 +231,7 @@ import { Modal } from 'flowbite'
 import { Markdown } from 'tiptap-markdown'
 import { type Ref, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ modelValue: string, characterLimit: number }>()
+const props = defineProps<{ id: string, modelValue: string, characterLimit: number }>()
 const emit = defineEmits<{(e: 'update:modelValue', value: string): void, (e: 'onEditorClose'): void}>()
 const modal = ref() as Ref<Modal>
 const linkToSet = ref('')
@@ -260,7 +260,7 @@ const editor = useEditor({
 })
 
 onMounted(() => {
-  modal.value = new Modal(document.getElementById('markdown-editor-insert-link-modal'), {
+  modal.value = new Modal(document.getElementById(`${props.id}-markdown-editor-insert-link-modal`), {
     placement: 'center',
     backdrop: 'dynamic',
     backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
