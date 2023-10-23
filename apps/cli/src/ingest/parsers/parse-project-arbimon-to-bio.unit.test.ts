@@ -31,14 +31,30 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     deletedAt: null
   }
 
+  const VALID_PROJECT_3 = {
+    idArbimon: 124,
+    idCore: '124',
+    slug: 'Project_TEST_Test',
+    name: 'Project TEST Test',
+    latitudeNorth: 0,
+    latitudeSouth: 0,
+    longitudeEast: 0,
+    longitudeWest: 0,
+    isPrivate: 1,
+    updatedAt: new Date(),
+    deletedAt: null
+  }
+
   test('succeeds for valid data', async () => {
     // Act
     const actual = parseProjectArbimonToBio(VALID_PROJECT)
     const actual2 = parseProjectArbimonToBio(VALID_PROJECT_2)
+    const actual3 = parseProjectArbimonToBio(VALID_PROJECT_3)
 
     // Assert
     expect(actual.success).toBe(true)
     expect(actual2.success).toBe(true)
+    expect(actual3.success).toBe(true)
   })
 
   test('fails if required props are missing', async () => {
@@ -131,14 +147,12 @@ describe('ingest > parsers > parseProjectArbimonToBio', () => {
     // Arrange
     const slugWithSlash = { ...VALID_PROJECT, slug: 'not/a/slug' }
     const slugWithSpace = { ...VALID_PROJECT, slug: 'not a slug' }
-    const slugWithUpperCase = { ...VALID_PROJECT, slug: 'Not-a-slug' }
     const slugWithRandomChars = { ...VALID_PROJECT, slug: 'not-a-slug/1' }
 
     // Act
     const actualMissing = [
       parseProjectArbimonToBio(slugWithSlash),
       parseProjectArbimonToBio(slugWithSpace),
-      parseProjectArbimonToBio(slugWithUpperCase),
       parseProjectArbimonToBio(slugWithRandomChars)
     ]
 
