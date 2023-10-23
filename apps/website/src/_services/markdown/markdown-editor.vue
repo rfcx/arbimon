@@ -81,7 +81,7 @@
       <button
         title="Bold"
         type="button"
-        :class="editor?.isActive('bold') ? 'w-8 h-8 flex-shrink-0 rounded-lg text-white bg-echo disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed' : 'w-8 h-8 flex-shrink-0 rounded-lg text-black bg-white disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed'"
+        :class="editor?.isActive('bold') ? 'w-8 h-8 flex-shrink-0 rounded-lg text-white bg-echo flex justify-center items-center disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed' : 'w-8 h-8 flex-shrink-0 rounded-lg text-black bg-white flex justify-center items-center disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed'"
         :disabled="!editor?.can().chain().focus().toggleBold().run()"
         @click="editor?.chain().focus().toggleBold().run()"
       >
@@ -90,7 +90,7 @@
       <button
         title="Italic"
         type="button"
-        :class="editor?.isActive('italic') ? 'w-8 h-8 flex-shrink-0 rounded-lg text-white bg-echo disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed' : 'w-8 h-8 flex-shrink-0 rounded-lg text-black bg-white disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed'"
+        :class="editor?.isActive('italic') ? 'w-8 h-8 flex-shrink-0 rounded-lg text-white bg-echo flex justify-center items-center disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed' : 'w-8 h-8 flex-shrink-0 rounded-lg text-black bg-white flex justify-center items-center disabled:bg-white disabled:text-black disabled:opacity-50 disabled:cursor-not-allowed'"
         :disabled="!editor?.can().chain().focus().toggleItalic().run()"
         @click="editor?.chain().focus().toggleItalic().run()"
       >
