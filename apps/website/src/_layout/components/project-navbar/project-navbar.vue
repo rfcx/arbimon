@@ -58,7 +58,7 @@
   </nav>
 </template>
 <script setup lang="ts">
-import { initDrawers, initDropdowns } from 'flowbite'
+import { initDropdowns } from 'flowbite'
 import { inject, onMounted } from 'vue'
 
 import { togglesKey } from '@/globals'
@@ -70,6 +70,5 @@ const toggles = inject(togglesKey)
 
 onMounted(() => {
   initDropdowns()
-  initDrawers()
 })
 </script>
