@@ -135,6 +135,7 @@
           class="mx-auto p-4 lg:max-w-4xl relative"
         >
           <DashboardMarkdownViewerEditor
+            id="about"
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
             :markdown-text="dashboardContent?.readme ?? readmeDefault"
@@ -163,6 +164,7 @@
       >
         <div class="mx-auto p-4 lg:max-w-4xl relative">
           <DashboardMarkdownViewerEditor
+            id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
             :markdown-text="dashboardContent?.keyResult ?? keyResultDefault"
@@ -191,6 +193,7 @@
       >
         <div class="mx-auto p-4 lg:max-w-4xl relative">
           <DashboardMarkdownViewerEditor
+            id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
             :markdown-text="dashboardContent?.resources ?? resourcesDefault"
