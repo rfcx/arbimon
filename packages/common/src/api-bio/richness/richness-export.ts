@@ -26,6 +26,7 @@ export interface RichnessByExportReportRow {
   year: string
   date: string
   hour: string
+  count: number
 }
 
 // Route
