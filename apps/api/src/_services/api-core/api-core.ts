@@ -11,6 +11,7 @@ import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
+import { isValidToken } from '~/api-helpers/is-valid-token'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
@@ -168,5 +169,34 @@ export async function getClassifierFromApi (token: string, classifierId: number,
     return resp.data
   } catch (e) {
     return unpackAxiosError(e)
+  }
+}
+
+/**
+ * Query user permissions to edit the content by using PATCH `/projects/:projectId route` and just send the same name through.
+ *
+ * Returns `false` for when token is missing. And when any errors are caused on the end.
+ * Returns `true` if the API returns `204`.
+ */
+export async function checkUserPermissionForEditingDashboardContent (token: string | undefined, coreProjectId: string, projectName: string): Promise<boolean> {
+  if (token == null || !isValidToken(token)) {
+    return false
+  }
+
+  try {
+    await axios.request({
+      method: 'PATCH',
+      url: `${CORE_API_BASE_URL}/projects/${coreProjectId}`,
+      headers: {
+        authorization: token
+      },
+      data: {
+        name: projectName
+      }
+    })
+
+    return true
+  } catch (e) {
+    return false
   }
 }
