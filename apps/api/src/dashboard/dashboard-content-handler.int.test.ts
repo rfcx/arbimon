@@ -11,6 +11,7 @@ const ROUTE = '/projects/:projectId/dashboard-content'
 const url = `/projects/${PROJECT_ID_BASIC}/dashboard-content`
 
 const EXPECTED_PROPS = [
+  'editable',
   'locationProjectId',
   'readme',
   'keyResult',

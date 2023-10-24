@@ -11,6 +11,7 @@
     :markdown="editableMarkdownText"
   />
   <button
+    v-if="editable"
     :id="`${id}-markdown-viewer-edit-button`"
     class="absolute lg:right-4 top-0 z-20 hover:block hidden"
     @click="editMarkdownContent"
@@ -42,7 +43,7 @@ import { toRef } from 'vue'
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 
-const props = withDefaults(defineProps<{ id: string, markdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number }>(), { characterLimit: 1000 })
+const props = withDefaults(defineProps<{ id: string, editable: boolean, markdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number }>(), { characterLimit: 1000 })
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
 const editableMarkdownText = toRef(props.markdownText)
