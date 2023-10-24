@@ -26,7 +26,7 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
       EXTRACT(year FROM dbssh.time_precision_hour_local) as year,
       dbssh.time_precision_hour_local as date,
       EXTRACT(hour from dbssh.time_precision_hour_local) as hour,
-      count
+      dbssh.count
     FROM
       detection_by_site_species_hour dbssh
       LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
@@ -34,7 +34,7 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
       INNER JOIN taxon_species ts on sip.taxon_species_id = ts.id
     WHERE ${conditions} 
     GROUP BY
-      ls.id, ts.id_arbimon, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, dbssh.taxon_species_id, dbssh.time_precision_hour_local
+      ls.id, ts.id_arbimon, sip.taxon_species_slug, sip.common_name, sip.scientific_name, sip.taxon_class_id, dbssh.taxon_species_id, dbssh.time_precision_hour_local, dbssh.count
     ORDER BY sip.common_name, ls.name, dbssh.time_precision_hour_local
   `
 
