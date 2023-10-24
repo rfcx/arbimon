@@ -7,11 +7,11 @@ import { type DetectValidationResultsQueryParams, type DetectValidationResultsRe
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 
+import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
-import { isValidToken } from '~/api-helpers/is-valid-token'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
