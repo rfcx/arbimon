@@ -25,7 +25,8 @@ export const getRichnessExportData = async (sequelize: Sequelize, filter: Filter
       EXTRACT(month FROM dbssh.time_precision_hour_local) as month,
       EXTRACT(year FROM dbssh.time_precision_hour_local) as year,
       dbssh.time_precision_hour_local as date,
-      EXTRACT(hour from dbssh.time_precision_hour_local) as hour
+      EXTRACT(hour from dbssh.time_precision_hour_local) as hour,
+      count
     FROM
       detection_by_site_species_hour dbssh
       LEFT JOIN species_in_project sip ON dbssh.taxon_species_id = sip.taxon_species_id
