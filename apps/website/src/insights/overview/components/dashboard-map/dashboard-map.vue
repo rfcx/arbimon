@@ -6,7 +6,10 @@
     </h6>
     <div class="flex flex-row items-center gap-2">
       Filter by:
-      <taxon-filter @emit-taxon-class-filter="onEmitTaxonClassFilter" />
+      <taxon-filter
+        :available-taxon-classes="availableTaxons"
+        @emit-taxon-class-filter="onEmitTaxonClassFilter"
+      />
     </div>
   </div>
   <div class="inline-grid w-full mt-4">
@@ -101,6 +104,11 @@ const filteredByTaxon = computed(() => {
     })
   }
   return data.filter(d => selectedTaxons.value?.includes(d.taxonClassId ?? 0))
+})
+
+const availableTaxons = computed(() => {
+  const data = dataBySite.value?.richnessBySite ?? []
+  return [...new Set(data.map(d => `${d.taxonClassId ?? 0}`))]
 })
 
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {

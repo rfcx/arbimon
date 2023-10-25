@@ -42,6 +42,9 @@
       <li
         v-for="taxon in TAXON_CLASS_OPTIONS"
         :key="taxon.id"
+        :class="{
+          'opacity-50': !taxon.enabled
+        }"
         @click="onSelectTaxonClass(taxon.id)"
       >
         <div class="flex p-2 rounded items-center hover:bg-util-gray-03/60">
@@ -53,7 +56,8 @@
               type="checkbox"
               :value="taxon.id"
               class="w-4 h-4 border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency text-frequency"
-              :checked="selectedTaxonClasses.includes(taxon.id)"
+              :checked="selectedTaxonClasses.includes(taxon.id) && taxon.enabled"
+              :disabled="!taxon.enabled"
             >
           </div>
           <div class="ml-2">
@@ -74,25 +78,33 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 
 const emit = defineEmits<{(e: 'emitTaxonClassFilter', configChange: string[]): void }>()
+const props = defineProps<{
+  availableTaxonClasses: string[]
+}>()
 
-const TAXON_CLASS_OPTIONS = Object.entries(TAXON_CLASSES_BY_ID).map(([id, taxon]) => ({
-  id,
-  label: taxon.label
-})).filter(c => c.id !== '200') // remove bats from options (see TAXON_CLASSES_BY_ID for reference)
+const TAXON_CLASS_OPTIONS = computed(() => {
+  return Object.entries(TAXON_CLASSES_BY_ID)
+        .map(([id, taxon]) => ({
+          id,
+          label: taxon.label
+        }))
+        .filter(c => c.id !== '200') // remove bats from options (see TAXON_CLASSES_BY_ID for reference)
+        .map(c => ({ ...c, enabled: props.availableTaxonClasses.includes(c.id) }))
+})
 
-const selectedTaxonClasses = ref<string[]>(TAXON_CLASS_OPTIONS.map(({ id }) => id))
+const selectedTaxonClasses = ref<string[]>(TAXON_CLASS_OPTIONS.value.map(({ id }) => id))
 
 const selectedTaxonTitle = computed(() => {
   if (selectedTaxonClasses.value.length === 0) {
     return 'All species'
   }
 
-  if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.length) {
+  if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.value.length) {
     return 'All species'
   }
 
   if (selectedTaxonClasses.value.length === 1) {
-    const taxonClass = TAXON_CLASS_OPTIONS.find(({ id }) => id === selectedTaxonClasses.value[0])
+    const taxonClass = TAXON_CLASS_OPTIONS.value.find(({ id }) => id === selectedTaxonClasses.value[0])
     return taxonClass?.label
   }
 
@@ -100,7 +112,8 @@ const selectedTaxonTitle = computed(() => {
 })
 
 const onSelectTaxonClass = (classId: string) => {
-  if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.length) {
+  if (!props.availableTaxonClasses.includes(classId)) return // if disable then do nothing
+  if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.value.length) {
     selectedTaxonClasses.value = [classId]
   } else if (selectedTaxonClasses.value.includes(classId)) {
     selectedTaxonClasses.value = selectedTaxonClasses.value.filter((id) => id !== classId)
@@ -110,7 +123,7 @@ const onSelectTaxonClass = (classId: string) => {
 }
 
 const onSelectAll = () => {
-  selectedTaxonClasses.value = TAXON_CLASS_OPTIONS.map(({ id }) => id)
+  selectedTaxonClasses.value = TAXON_CLASS_OPTIONS.value.map(({ id }) => id)
 }
 
 onMounted(() => {
