@@ -37,14 +37,14 @@ jobs:
 
     steps:
       - name: 'Setup: Node'
-        # v3 (3.1.0) @ 01 Apr 2022 https://github.com/actions/setup-node/tags
-        uses: actions/setup-node@5b52f097d36d4b0b2f94ed6de710023fbb8b2236
+        # v4 (4.0.0) @ 23 Oct 2023 https://github.com/actions/setup-node/tags
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: 'Setup: Git checkout'
-        # v3 (3.0.0) @ 02 Mar 2022 https://github.com/actions/checkout/tags
-        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846
+        # v4 (4.1.1) @ 17 Oct 2023 https://github.com/actions/checkout/tags
+        uses: actions/checkout@4b4ffde65f46336ab88eb53be808477a3936bae11
 
       - name: 'Cache: Dependencies'
         # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
@@ -56,8 +56,8 @@ jobs:
 
       - name: 'Cache: ESLint'
         if: ${{ inputs.lint }}
-        # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
         with:
           path: |
             .eslintcache
@@ -67,8 +67,8 @@ jobs:
 
       - name: 'Cache: Stylelint'
         if: ${{ inputs.lint }}
-        # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
-        uses: actions/cache@136d96b4aee02b1f0de3ba493b1d47135042d9c0
+        # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
         with:
           path: |
             .stylelintcache
@@ -77,10 +77,10 @@ jobs:
           restore-keys: stylelint-${{ runner.os }}
 
       - name: 'Verify: pnpm install'
-        # v2 (2.2.4) @ 08 May 2023 https://github.com/pnpm/action-setup/tags
-        uses: pnpm/action-setup@c3b53f6a16e57305370b4ae5a540c2077a1d50dd
+        # v2 (2.4.0) @ 26 July 2023 https://github.com/pnpm/action-setup/tags
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598
         with:
-          version: 7
+          version: 8
           run_install: |
             - recursive: true
               args: [--frozen-lockfile]

@@ -26,8 +26,8 @@ jobs:
       ECR_REGISTRY: '887044485231.dkr.ecr.eu-west-1.amazonaws.com'
     steps:
       - name: 'Setup: ENV environment'
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.3.0) @ 23 Oct 2022 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@3681b75f5c6c00162721168fb91ab74925eaebcb
         with:
           key: '${{ inputs.environment }}'
           map: |
@@ -43,8 +43,8 @@ jobs:
               }
             }
       - name: 'Setup: ENV job'
-        # v0 (0.2.2) @ 03 Nov 2021 https://github.com/kanga333/variable-mapper/tags
-        uses: kanga333/variable-mapper@92703696e9a3f370901c3d53ae3836569b1055e5
+        # v0 (0.3.0) @ 23 Oct 2022 https://github.com/kanga333/variable-mapper/tags
+        uses: kanga333/variable-mapper@3681b75f5c6c00162721168fb91ab74925eaebcb
         with:
           key: '${{ inputs.job }}'
           map: |
@@ -93,8 +93,8 @@ jobs:
           cat job.yaml
 
       - name: 'Deploy: Create job'
-        # v1 (1.21.2) @ 03 Nov 2021 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@365773786ebd92c7b36b6ab80e17d4a213ab0cd1
+        # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
+        uses: actions-hub/kubectl@6fd9eb2486a67fab3b011befdf3cfcc4e64d9655
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
