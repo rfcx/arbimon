@@ -1,75 +1,77 @@
 <template>
-  <div class="flex items-center justify-between">
-    <page-title page-title="CNN Jobs" />
-    <router-link :to="{ name: ROUTE_NAMES.cnnJobCreate }">
-      <button class="btn btn-primary">
-        Create
-      </button>
-    </router-link>
-  </div>
-  <job-filter
-    :filter-options="filterOptions"
-    @emit-select="onFilterChange"
-  />
-  <p v-if="isLoadingClassifierJobs">
-    Loading...
-  </p>
-  <p v-else-if="isErrorClassifierJobs">
-    Error getting a list of classifier jobs
-  </p>
-  <div
-    v-else-if="jobs && !jobs.length"
-    class="mt-5 text-lg"
-  >
-    <span>No jobs found.</span>
-    &nbsp;
-    <router-link
-      :to="{ name: ROUTE_NAMES.cnnJobCreate }"
-      class="font-bold underline"
+  <section class="max-w-screen-xl mx-auto pt-28 mx-auto">
+    <div class="flex items-center justify-between">
+      <page-title page-title="CNN Jobs" />
+      <router-link :to="{ name: ROUTE_NAMES.cnnJobCreate }">
+        <button class="btn btn-primary">
+          Create
+        </button>
+      </router-link>
+    </div>
+    <job-filter
+      :filter-options="filterOptions"
+      @emit-select="onFilterChange"
+    />
+    <p v-if="isLoadingClassifierJobs">
+      Loading...
+    </p>
+    <p v-else-if="isErrorClassifierJobs">
+      Error getting a list of classifier jobs
+    </p>
+    <div
+      v-else-if="jobs && !jobs.length"
+      class="mt-5 text-lg"
     >
-      Create now
-    </router-link>
-  </div>
-  <table
-    v-else
-    class="w-full text-sm text-left mt-5"
-  >
-    <thead class="text-xs text-subtle uppercase">
-      <tr class="border-b border-box-gray">
-        <th
-          scope="col"
-          class="px-6 py-3"
-        >
-          Model
-        </th>
-        <th
-          scope="col"
-          class="px-6 py-3"
-        >
-          Input
-        </th>
-        <th
-          scope="col"
-          class="px-6 py-3"
-        >
-          Date created
-        </th>
-        <th
-          scope="col"
-          class="px-6 py-3"
-        >
-          <span class="sr-only">Status</span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <job-item-row
-        v-for="job in jobs"
-        :key="'job-item-row-' + job.id"
-        :job="job"
-      />
-    </tbody>
-  </table>
+      <span>No jobs found.</span>
+      &nbsp;
+      <router-link
+        :to="{ name: ROUTE_NAMES.cnnJobCreate }"
+        class="font-bold underline"
+      >
+        Create now
+      </router-link>
+    </div>
+    <table
+      v-else
+      class="w-full text-sm text-left mt-5"
+    >
+      <thead class="text-xs text-subtle uppercase">
+        <tr class="border-b border-box-gray">
+          <th
+            scope="col"
+            class="px-6 py-3"
+          >
+            Model
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3"
+          >
+            Input
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3"
+          >
+            Date created
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3"
+          >
+            <span class="sr-only">Status</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <job-item-row
+          v-for="job in jobs"
+          :key="'job-item-row-' + job.id"
+          :job="job"
+        />
+      </tbody>
+    </table>
+  </section>
 </template>
 
 <script setup lang="ts">
