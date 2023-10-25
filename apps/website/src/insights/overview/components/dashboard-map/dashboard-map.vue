@@ -84,26 +84,24 @@ const selectedProjectId = computed(() => store.selectedProject?.id ?? -1)
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, selectedProjectId)
 
 // UI
-const selectedTaxons: Ref<number[] | null> = ref([100, 300])
+const selectedTaxons: Ref<number[] | null> = ref(null)
 
 // Map
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
 
 const filteredByTaxon = computed(() => {
   const data = dataBySite.value?.richnessBySite ?? []
-  if (selectedTaxons.value === null) { // no filter, show all species
-    const groupedBySite = groupBy(data, 'name')
-    const locationSites = Object.keys(groupedBySite)
-    return locationSites.map(name => {
-      return {
-        name,
-        latitude: groupedBySite[name][0].latitude,
-        longitude: groupedBySite[name][0].longitude,
-        value: sum(groupedBySite[name].map(d => d.value))
-      }
-    })
-  }
-  return data.filter(d => selectedTaxons.value?.includes(d.taxonClassId ?? 0))
+  const filtered = selectedTaxons.value === null ? data : data.filter(d => selectedTaxons.value?.includes(d.taxonClassId ?? 0))
+  const groupedBySite = groupBy(filtered, 'name')
+  const locationSites = Object.keys(groupedBySite)
+  return locationSites.map(name => {
+    return {
+      name,
+      latitude: groupedBySite[name][0].latitude,
+      longitude: groupedBySite[name][0].longitude,
+      value: sum(groupedBySite[name].map(d => d.value))
+    }
+  })
 })
 
 const availableTaxons = computed(() => {
