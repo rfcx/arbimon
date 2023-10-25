@@ -44,7 +44,7 @@ jobs:
 
       - name: 'Setup: Git checkout'
         # v4 (4.1.1) @ 17 Oct 2023 https://github.com/actions/checkout/tags
-        uses: actions/checkout@4b4ffde65f46336ab88eb53be808477a3936bae11
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
       - name: 'Cache: Dependencies'
         # v3 (3.0.1) @ 30 Mar 2022 https://github.com/actions/cache/tags
