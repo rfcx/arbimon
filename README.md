@@ -28,8 +28,12 @@ The following must be true to consider a feature **"DONE"**:
 
 1. Install tools:
 
-   - node 16: [https://nodejs.org](https://nodejs.org)
-   - pnpm 7: `npm i -g pnpm@7`
+   - node 18 or higher: [https://nodejs.org](https://nodejs.org). For anyone using [nvm](https://github.com/nvm-sh/nvm), simply do
+     ```
+     nvm use
+     ```
+     and you will get the current recommended version.
+   - pnpm 8 or higher: `npm i -g pnpm@8`
    - VSCode & extensions: `pnpm node init-vscode` (requires [`code` command in path](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line))
      - If you have Vetur installed, disable it for this workspace
    - Docker Desktop: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
