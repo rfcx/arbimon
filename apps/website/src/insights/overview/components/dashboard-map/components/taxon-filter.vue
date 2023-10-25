@@ -2,9 +2,24 @@
   <button
     id="dropdownTaxonFilterButton"
     data-dropdown-toggle="dropdownTaxonFilter"
-    class="border-1 border-frequency rounded-full bg-moss text-frequency px-3 py-2"
+    class="border-1 border-frequency rounded-full bg-moss text-frequency px-3 py-2 flex items-center gap-2"
   >
-    {{ selectedTaxonTitle }}
+    <label>{{ selectedTaxonTitle }}</label>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+    >
+      <path
+        d="M3.5 5.25L7 8.75L10.5 5.25"
+        stroke="#ADFF2C"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
   </button>
 
   <!-- Dropdown menu -->
