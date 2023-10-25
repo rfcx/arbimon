@@ -18,17 +18,18 @@
     >
       <li
         class="border-b border-fog/40"
-        @click="selectAll"
+        @click="onSelectAll"
       >
         <div class="flex p-2 rounded items-center hover:bg-util-gray-03/60">
           <div class="flex">
             <input
-              :id="`class-checkbox-all`"
+              id="all"
               :aria-describedby="`class-checkbox-text-all`"
-              type="checkbox"
+              type="radio"
               value="all"
               class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
               :checked="selectedTaxonClasses.length === TAXON_CLASS_OPTIONS.length"
+              @click="onSelectAll"
             >
           </div>
           <div class="ml-2">
@@ -68,9 +69,11 @@
 
 <script setup lang="ts">
 import { initDropdowns } from 'flowbite'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
+
+const emit = defineEmits<{(e: 'emitTaxonClassFilter', configChange: string[]): void }>()
 
 const TAXON_CLASS_OPTIONS = Object.entries(TAXON_CLASSES_BY_ID).map(([id, taxon]) => ({
   id,
@@ -96,16 +99,7 @@ const selectedTaxonTitle = computed(() => {
   return `${selectedTaxonClasses.value.length} taxons`
 })
 
-const selectAll = () => {
-  if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.length) {
-    selectedTaxonClasses.value = []
-  } else {
-    selectedTaxonClasses.value = TAXON_CLASS_OPTIONS.map(({ id }) => id)
-  }
-}
-
 const onSelectTaxonClass = (classId: string) => {
-  console.log('onSelectTaxonClass', classId)
   if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.length) {
     selectedTaxonClasses.value = [classId]
   } else if (selectedTaxonClasses.value.includes(classId)) {
@@ -115,8 +109,16 @@ const onSelectTaxonClass = (classId: string) => {
   }
 }
 
+const onSelectAll = () => {
+  selectedTaxonClasses.value = TAXON_CLASS_OPTIONS.map(({ id }) => id)
+}
+
 onMounted(() => {
   initDropdowns()
+})
+
+watch(() => selectedTaxonClasses.value, () => {
+ emit('emitTaxonClassFilter', selectedTaxonClasses.value)
 })
 
 </script>
