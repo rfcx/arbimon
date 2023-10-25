@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-10 md:mt-20">
     <h2>Species Richness</h2>
     <h6 class="mb-4">
       Number of species detected per site
