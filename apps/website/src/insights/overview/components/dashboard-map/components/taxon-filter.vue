@@ -78,7 +78,7 @@ const emit = defineEmits<{(e: 'emitTaxonClassFilter', configChange: string[]): v
 const TAXON_CLASS_OPTIONS = Object.entries(TAXON_CLASSES_BY_ID).map(([id, taxon]) => ({
   id,
   label: taxon.label
-}))
+})).filter(c => c.id !== '200') // remove bats from options (see TAXON_CLASSES_BY_ID for reference)
 
 const selectedTaxonClasses = ref<string[]>(TAXON_CLASS_OPTIONS.map(({ id }) => id))
 
