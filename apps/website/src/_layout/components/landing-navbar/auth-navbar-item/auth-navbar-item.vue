@@ -20,6 +20,12 @@
     v-else
     class="flex items-center"
   >
+    <router-link
+      :to="{ name: ROUTE_NAMES.myProjects }"
+      class="px-4 font-medium"
+    >
+      My Projects
+    </router-link>
     <div class="flex">
       <button
         id="user-menu-button"
@@ -48,13 +54,6 @@
           role="menu"
           tabindex="-1"
         >
-          <li class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)">
-            <router-link
-              :to="{ name: ROUTE_NAMES.myProjects }"
-            >
-              My Projects
-            </router-link>
-          </li>
           <li
             class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
             @click="logout"
