@@ -1,5 +1,6 @@
 <template>
-  <h2>Threatened species</h2>
+  <h2>Conservation status</h2>
+  <p>Threatened species detected in this project based on the IUCN Red List.</p>
   <div class="dashboard-species">
     <div
       v-if="isLoading"
@@ -38,8 +39,8 @@
       :selected-risk="selectedRisk"
       class="mt-6"
     />
-    <h2>Taxonomy groups</h2>
-    <h6>Number of species detected in each taxonomy group.</h6>
+    <h2>Taxonomic groups</h2>
+    <h6>Number of species detected in each taxonomic group.</h6>
     <div class="dashboard-taxon">
       <StackDistribution
         :dataset="richnessByTaxon"
