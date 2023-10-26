@@ -1,16 +1,25 @@
 <template>
-  <h2>Species Richness</h2>
-  <div class="inline-grid w-full">
+  <div class="mt-10 md:mt-20">
+    <h2>Species Richness</h2>
+    <h6 class="mb-4">
+      Number of species detected per site
+    </h6>
+    <div class="flex flex-row items-center gap-2">
+      Filter by:
+      <taxon-filter
+        :available-taxon-classes="availableTaxons"
+        @emit-taxon-class-filter="onEmitTaxonClassFilter"
+      />
+    </div>
+  </div>
+  <div class="inline-grid w-full mt-4">
     <div>
-      <h6 class="mb-4">
-        Number of species detected per site
-      </h6>
       <span v-if="isLoadingDataBySite">Loading...</span>
       <span v-else-if="isErrorDataBySite">Error</span>
       <map-base-component
         v-else-if="mapDataset"
         :dataset="mapDataset"
-        :data-key="selectedTab.value"
+        :data-key="MAP_KEY"
         :loading="isLoadingDataBySite"
         :get-popup-html="getPopupHtml"
         map-export-name="insight-overview-by-site"
@@ -30,8 +39,8 @@
         />
         <heatmap-legend
           v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP"
-          :max-value="mapDataset.maxValues[selectedTab.value]"
-          :title="`Number of ${selectedTab.shortName}`"
+          :max-value="mapDataset.maxValues[MAP_KEY]"
+          :title="`Number of species`"
         />
         <map-tool-menu
           :map-statistics-style="mapStatisticsStyle"
@@ -46,9 +55,9 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { max } from 'lodash-es'
+import { groupBy, max, sum } from 'lodash-es'
 import type { LngLatBoundsLike } from 'mapbox-gl'
-import { type ComputedRef, computed, inject, ref } from 'vue'
+import { type ComputedRef, type Ref, computed, inject, ref } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -62,37 +71,46 @@ import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
-import { type TabValue, TAB_VALUES } from '../../types/tabs'
 import { useGetDashboardDataBySite } from './_composables/use-get-visaulizer'
+import TaxonFilter from './components/taxon-filter.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const store = useStore()
 
-interface Tab {
-  label: string
-  shortName: string
-  value: TabValue
-}
-
-const tabs: Tab[] = [
-  { label: 'Species Richness', shortName: 'species', value: TAB_VALUES.richness },
-  { label: 'Detections (raw)', shortName: 'detection', value: TAB_VALUES.detections }
-]
+const MAP_KEY = 'speciesRichness'
 
 // Services
 const selectedProjectId = computed(() => store.selectedProject?.id ?? -1)
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, selectedProjectId)
-const richnessMapDataBySite = computed(() => dataBySite.value?.richnessBySite ?? [])
-const detectionsMapDataBySite = computed(() => dataBySite.value?.detectionBySite ?? [])
 
 // UI
-const selectedTab = ref(tabs[0])
+const selectedTaxons: Ref<number[] | null> = ref(null)
 
 // Map
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
 
+const filteredByTaxon = computed(() => {
+  const data = dataBySite.value?.richnessBySite ?? []
+  const filtered = selectedTaxons.value === null ? data : data.filter(d => selectedTaxons.value?.includes(d.taxonClassId ?? 0))
+  const groupedBySite = groupBy(filtered, 'name')
+  const locationSites = Object.keys(groupedBySite)
+  return locationSites.map(name => {
+    return {
+      name,
+      latitude: groupedBySite[name][0].latitude,
+      longitude: groupedBySite[name][0].longitude,
+      value: sum(groupedBySite[name].map(d => d.value))
+    }
+  })
+})
+
+const availableTaxons = computed(() => {
+  const data = dataBySite.value?.richnessBySite ?? []
+  return [...new Set(data.map(d => `${d.taxonClassId ?? 0}`))]
+})
+
 const mapDataset: ComputedRef<MapDataSet> = computed(() => {
-  const data = selectedTab.value.value === TAB_VALUES.richness ? richnessMapDataBySite.value : detectionsMapDataBySite.value
+  const data = filteredByTaxon.value
   return {
       startDate: dayjs(),
       endDate: dayjs(),
@@ -103,11 +121,11 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
           latitude,
           longitude,
           values: {
-            [selectedTab.value.value]: value
+            [MAP_KEY]: value
           }
         })),
       maxValues: {
-        [selectedTab.value.value]: max(data.map(d => d.value)) ?? 0
+        [MAP_KEY]: max(data.map(d => d.value)) ?? 0
       }
     }
 })
@@ -121,7 +139,7 @@ const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
 })
 
 const circleFormatter: ComputedRef<MapBaseFormatter> = computed(() => {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[selectedTab.value.value] })
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[MAP_KEY] })
 })
 
 const circleStyle = computed(() => {
@@ -132,6 +150,11 @@ const circleStyle = computed(() => {
 const getPopupHtml = (datum: MapSiteData, dataKey: string): string => {
   const value = datum.values[dataKey]
   return `<span>${value}</span>`
+}
+
+// Filter
+const onEmitTaxonClassFilter = (taxonClassIds: string[]) => {
+  selectedTaxons.value = taxonClassIds.map(id => parseInt(id))
 }
 
 </script>
