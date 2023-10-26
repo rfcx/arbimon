@@ -23,11 +23,37 @@ const getTimePrecisionHourLocal = (datetime: string): string => {
   return dayjs.utc(datetime).format('YYYY-MM-DD HH:00:00+00')
 }
 
+// function* chunks(arr: RecordingBySiteHourBio[], n: number) {
+//   for (let i = 0; i < arr.length; i += n) {
+//     yield arr.slice(i, i + n);
+//   }
+// }
+
 export const writeRecordingBySiteHourToBio = async (recordingsBySiteHourBio: RecordingBySiteHourBio[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[RecordingBySiteHourBio[], Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   // loop upsert
   const successToInsertItems: RecordingBySiteHourBio[] = []
   const failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   console.info('- syncArbimonRecordingBySiteHourBatch: rows to insert ', recordingsBySiteHourBio.length)
+  // for (const chunk of [...chunks(recordingsBySiteHourBio, 1000)]) {
+  //   try {
+  //     // Insert new or updated items
+  //     if (chunk.length) {
+  //       const rows = chunk.map(group => {
+  //         return { ...group, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(group.countsByMinute), sequelize) }
+  //       })
+  //       // @ts-expect-error: countsByMinute in rows has incompatible type (but it seems to be accepted by sequelize)
+  //       await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.bulkCreate(rows, {
+  //         updateOnDuplicate: UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR,
+  //         ...transaction && { transaction }
+  //       })
+  //       // @ts-expect-error: countsByMinute in rows has incompatible type
+  //       successToInsertItems = successToInsertItems.concat(rows)
+  //     }
+  //   } catch (e) {
+  //     const errorMessage = (e instanceof Error) ? e.message : ''
+  //     console.error('⚠️ Insert recording by site hour failed...', errorMessage)
+  //   }
+  // }
   for (const recording of recordingsBySiteHourBio) {
     try {
       const newRecording = { ...recording, countsByMinute: literalIntegerArray2D(reducedAndSortedPairs(recording.countsByMinute), sequelize) }
@@ -91,8 +117,8 @@ export const mapRecordingBySiteHourArbimonWithPrevSync = async (recordingArbimon
         const existing = existingIndex > -1
 
         // if a new recording exists -> increase the recording count in the existing array
-        // why do we get this recording again?
-        // 1. there are several site's recordings with the same datetime
+        // why do we get this hour_minute again?
+        // 1. there are several recordings in one minute
         if (existing) {
           countsByMinute[existingIndex][1] = countsByMinute[existingIndex][1] + 1
         } else {

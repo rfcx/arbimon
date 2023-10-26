@@ -8,7 +8,7 @@
   </div>
   <dashboard-species />
   <dashboard-project-summary class="my-10 md:my-20" />
-  <dashbord-map class="mt-10 md:mt-20" />
+  <dashbord-map />
 </template>
 
 <script setup lang="ts">

@@ -3,8 +3,9 @@
   <sidebar v-if="isProjectMember" />
   <div
     v-if="store.selectedProject"
-    :class="isProjectMember ? 'pl-50' : ''"
+    :class="isProjectMember && $route.name !== 'overview' ? 'pl-64' : ''"
   >
+    {{ $route.name }}
     <router-view />
   </div>
   <div
@@ -21,6 +22,7 @@ import { useStore } from '../../_services/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 import ProjectNavbar from '../components/project-navbar/project-navbar.vue'
 import Sidebar from '../components/side-bar/side-bar.vue'
+// import { ROUTE_NAMES } from '~/router'
 
 const store = useStore()
 

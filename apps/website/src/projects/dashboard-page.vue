@@ -1,5 +1,5 @@
 <template>
-  <section class="w-screen-lg pt-28 mx-auto">
+  <section class="max-w-screen-xl mx-auto pt-28 mx-auto">
     <div class="text-gray-900 dark:text-white">
       <h1 class="text-5xl font-header font-normal <sm:text-2xl">
         {{ store.selectedProject?.name }}
