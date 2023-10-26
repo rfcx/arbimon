@@ -5,76 +5,8 @@
       <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
         Create a new project
       </h2>
-      <div class="mt-4 grid gap-4 sm:grid-cols-2 sm:gap-6">
-        <div class="sm:col-span-2">
-          <label
-            for="name"
-            class="block mb-2 font-medium text-gray-900 dark:text-white"
-          >Project Name* <span class="text-sm font-normal">6-50 Characters</span></label>
-          <input
-            id="name"
-            v-model="name"
-            name="name"
-            type="text"
-            minlength="6"
-            maxlength="50"
-            class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-            placeholder="Brown bears in Eastern Finland"
-            required
-          >
-        </div>
-        <!-- <div>
-          <label
-            for="category"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Category</label>
-          <select
-            id="category"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-          >
-            <option selected="">
-              Select category
-            </option>
-            <option value="TV">
-              TV/Monitors
-            </option>
-            <option value="PC">
-              PC
-            </option>
-            <option value="GA">
-              Gaming/Console
-            </option>
-            <option value="PH">
-              Phones
-            </option>
-          </select>
-        </div>
-        <div>
-          <label
-            for="item-weight"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Item Weight (kg)</label>
-          <input
-            id="item-weight"
-            type="number"
-            name="item-weight"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            placeholder="12"
-            required=""
-          >
-        </div>
-        <div class="sm:col-span-2">
-          <label
-            for="description"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Description</label>
-          <textarea
-            id="description"
-            rows="8"
-            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-            placeholder="Your description here"
-          />
-        </div> -->
+      <div class="mt-4">
+        <project-form @emit-update-value="emitUpdateValue" />
       </div>
       <div class="mt-4 sm:mt-6">
         <button
@@ -124,6 +56,8 @@ import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vu
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import ProjectForm from './components/form/project-form.vue'
+import type { ProjectDefault } from './types'
 
 const router = useRouter()
 const store = useStore()
@@ -149,5 +83,9 @@ async function create () {
     hasFailed.value = true
   }
   isCreating.value = false
+}
+
+const emitUpdateValue = (project: ProjectDefault) => {
+  name.value = project.name
 }
 </script>

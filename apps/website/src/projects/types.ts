@@ -28,3 +28,9 @@ export interface Stat {
   label: string
   link: string
 }
+
+export interface ProjectDefault {
+  name: string
+  startDate: string
+  endDate: string
+}
