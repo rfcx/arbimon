@@ -1,5 +1,5 @@
-import { QueryInterface } from "sequelize"
-import { MigrationFn } from "umzug"
+import { type QueryInterface } from 'sequelize'
+import { type MigrationFn } from 'umzug'
 
 const TABLE_NAME = 'location_project_profile'
 const COLUMN_NAME = 'methods'
