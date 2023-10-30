@@ -79,11 +79,10 @@
 </template>
 
 <script setup lang="ts">
-import DateRangePicker from 'flowbite-datepicker/DateRangePicker'
 import type { ComputedRef } from 'vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
-import type { ProjectDefault } from '../types'
+import type { ProjectDefault } from '../../types'
 
 const name = ref('')
 const startDate = ref('')
@@ -96,8 +95,6 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
     endDate: endDate.value
   }
 })
-
-const dateRangePicker: ref<DateRangePicker | null> = ref(null)
 
 const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
 
@@ -113,10 +110,4 @@ watch(endDate, () => {
   emit('emitUpdateValue', value.value)
 })
 
-onMounted(() => {
-  const rangeDpEl = document.getElementById('dateRangePicker')
-  dateRangePicker.value = new DateRangePicker(rangeDpEl, {
-    autohide: true
-  })
-})
 </script>
