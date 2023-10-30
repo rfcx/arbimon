@@ -16,7 +16,7 @@ COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
 
 ENV NODE_ENV=development
-RUN pnpm i --no-frozen-lockfile
+RUN pnpm i --frozen-lockfile --reporter=silent
 RUN pnpm prepare
 
 # Build
