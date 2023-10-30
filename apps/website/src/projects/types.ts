@@ -23,6 +23,7 @@ export interface AnalysisCard {
 export interface Stat {
   value: string
   title: string
+  description: string
   count: number | undefined
   isLoading: boolean
   label: string

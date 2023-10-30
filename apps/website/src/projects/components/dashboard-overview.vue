@@ -1,12 +1,29 @@
 <template>
   <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-orange-100 rounded-2xl shadow py-4 px-6 dark:border-orange-100 h-36">
-    <div class="flex justify-start rounded-t items-center h-6">
-      <h3 class="text-base text-rose-300 text-eyebrow font-normal">
+    <div class="flex flex-row h-6 items-center">
+      <h5
+        v-if="stat.title"
+        class="text-spoonbill text-base font-eyebrow font-medium flex-grow"
+      >
         {{ stat.title }}
-      </h3>
-      <button :title="stat.title">
-        <icon-fas-info-circle class="h-3 w-3 ml-2 text-rose-300 cursor-pointer" />
-      </button>
+      </h5>
+      <icon-fas-info-circle
+        v-if="stat.description"
+        :data-tooltip-target="stat.value"
+        data-tooltip-style="light"
+        class="inline-block basis-8 h-4 w-4 cursor-pointer text-spoonbill"
+      />
+      <div
+        :id="stat.value"
+        role="tooltip"
+        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+      >
+        {{ stat.description }}
+        <div
+          class="tooltip-arrow"
+          data-popper-arrow
+        />
+      </div>
     </div>
     <div class="flex items-center space-x-2 sm:space-x-3">
       <icon-custom-ft-map-pin-lg
