@@ -8,6 +8,9 @@
       <div class="mt-4">
         <project-form @emit-update-value="emitUpdateValue" />
       </div>
+      <div class="mt-4">
+        <project-objective-form @emit-project-objectives="emitUpdateProjectObjectives" />
+      </div>
       <div class="mt-4 sm:mt-6">
         <button
           class="inline-flex items-center btn btn-primary"
@@ -57,7 +60,8 @@ import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectForm from './components/form/project-form.vue'
-import type { ProjectDefault } from './types'
+import ProjectObjectiveForm from './components/form/project-objective-form.vue'
+import type { ProjectDefault, ProjectObjective } from './types'
 
 const router = useRouter()
 const store = useStore()
@@ -65,6 +69,7 @@ const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const name = ref<string>('')
+const objectives = ref<ProjectObjective[]>([])
 const isCreating = ref<boolean>(false)
 const hasFailed = ref<boolean>(false)
 
@@ -87,5 +92,9 @@ async function create () {
 
 const emitUpdateValue = (project: ProjectDefault) => {
   name.value = project.name
+}
+
+const emitUpdateProjectObjectives = (projectObjectives: ProjectObjective[]) => {
+  objectives.value = projectObjectives
 }
 </script>

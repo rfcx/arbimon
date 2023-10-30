@@ -173,6 +173,6 @@ export default defineConfig({
     'navbar-item': 'box-content text-insight flex items-center justify-center hover:text-frequency h-9',
     'navbar-menu-item': 'mx-2',
     // input
-    'input-field': 'bg-box-gray border text-sm rounded-lg block w-full p-2.5 focus:border-primary bg-mirage-gray text-white'
+    'input-field': 'p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)'
   }
 })
