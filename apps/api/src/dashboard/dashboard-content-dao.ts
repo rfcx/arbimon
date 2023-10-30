@@ -22,9 +22,9 @@ export const getDashboardContent = async (token: string | undefined, locationPro
   const data = await LocationProjectProfile
     .findOne({
       where: { locationProjectId },
-      attributes: ['locationProjectId', 'readme', 'keyResult', 'resources'],
+      attributes: ['locationProjectId', 'readme', 'keyResult', 'resources', 'methods'],
       raw: true
-    }) ?? { locationProjectId, readme: '', keyResult: '', resources: '' }
+    }) ?? { locationProjectId, readme: '', keyResult: '', resources: '', methods: '' }
 
   return { editable: isEditable, ...data }
 }
