@@ -45,7 +45,8 @@ const dataPr = {
   summary: summaryPr,
   readme: readmePr,
   keyResult: '',
-  resources: ''
+  resources: '',
+  methods: ''
 }
 
 const dataBci = {
@@ -56,7 +57,8 @@ const dataBci = {
   summary: summaryBci,
   readme: '',
   keyResult: '',
-  resources: ''
+  resources: '',
+  methods: ''
 }
 
 const dataMadre = {
@@ -67,7 +69,8 @@ const dataMadre = {
   summary: summaryMadre,
   readme: '',
   keyResult: '',
-  resources: ''
+  resources: '',
+  methods: ''
 }
 
 const dataFakeProject = {
@@ -78,7 +81,8 @@ const dataFakeProject = {
   summary: 'This is a test project!',
   readme: 'This is the readme for our test project',
   keyResult: '',
-  resources: ''
+  resources: '',
+  methods: ''
 }
 
 type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
