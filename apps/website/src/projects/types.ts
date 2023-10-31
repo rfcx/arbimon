@@ -17,7 +17,7 @@ export interface AnalysisCard {
   link: string
   url: string
   label: string
-  selected: boolean
+  isSelected: boolean
 }
 
 export interface Stat {
