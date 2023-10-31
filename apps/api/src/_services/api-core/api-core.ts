@@ -184,7 +184,7 @@ export async function checkUserPermissionForEditingDashboardContent (token: stri
   }
 
   try {
-    await axios.request({
+    const response = await axios.request({
       method: 'PATCH',
       url: `${CORE_API_BASE_URL}/projects/${coreProjectId}`,
       headers: {
@@ -195,7 +195,11 @@ export async function checkUserPermissionForEditingDashboardContent (token: stri
       }
     })
 
-    return true
+    if (response.status >= 200 && response.status <= 205) {
+      return true
+    }
+
+    return false
   } catch (e) {
     return false
   }
