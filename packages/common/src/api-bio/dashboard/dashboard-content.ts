@@ -11,7 +11,7 @@ import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from
 export type DashboardContentParams = ProjectRouteParamsSerialized
 
 // Response types
-export type DashboardContentResponse = Omit<LocationProjectProfile, 'summary'> & { editable: boolean }
+export type DashboardContentResponse = Omit<LocationProjectProfile, 'summary'>
 
 // Route (They both share the same route, different method)
 export const dashboardContentRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-content`
