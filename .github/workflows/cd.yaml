@@ -84,7 +84,7 @@ jobs:
       - name: 'Deploy: Kubernetes apply CLI (starts migrate)'
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
         # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@6fd9eb2486a67fab3b011befdf3cfcc4e64d9655
+        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
@@ -93,7 +93,7 @@ jobs:
       - name: 'Deploy: Wait for migrate to complete successfully'
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
         # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@6fd9eb2486a67fab3b011befdf3cfcc4e64d9655
+        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
@@ -102,7 +102,7 @@ jobs:
       - name: 'Deploy: Kubernetes apply API'
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_api }}
         # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@6fd9eb2486a67fab3b011befdf3cfcc4e64d9655
+        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
@@ -111,7 +111,7 @@ jobs:
       - name: 'Deploy: Kubernetes apply WEB'
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_web }}
         # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@6fd9eb2486a67fab3b011befdf3cfcc4e64d9655
+        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
         with:
