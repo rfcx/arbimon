@@ -17,7 +17,7 @@
   <div
     id="dateRangePicker"
     date-rangepicker
-    class="flex mt-4 items-center gap-4"
+    class="flex mt-4 items-center gap-4 hidden"
   >
     <div class="flex-1">
       <label
