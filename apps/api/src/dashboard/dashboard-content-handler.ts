@@ -17,7 +17,7 @@ export const dashboardContentHandler: Handler<DashboardContentResponse, Dashboar
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const projectContent = await getDashboardContent(req.headers.authorization, projectIdInteger)
+  const projectContent = await getDashboardContent(projectIdInteger)
   return projectContent
 }
 
