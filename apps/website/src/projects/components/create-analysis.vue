@@ -48,8 +48,9 @@ import { OnClickOutside } from '@vueuse/components'
 import { computed, ref } from 'vue'
 
 import { useStore } from '~/store'
-import AnalysisCardComponent from './analysis-card.vue'
 import { type AnalysisCard } from '../types'
+import AnalysisCardComponent from './analysis-card.vue'
+
 defineEmits<{(e: 'emitClose'): void}>()
 
 const store = useStore()
