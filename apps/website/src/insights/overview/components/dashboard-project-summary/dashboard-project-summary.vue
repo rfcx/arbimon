@@ -139,8 +139,8 @@
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
             :editable="store.selectedProject?.isMyProject ?? false"
-            :markdown-text="dashboardContent?.readme || readmeDefault"
-            :character-limit="10000"
+            :raw-markdown-text="dashboardContent?.readme"
+            :default-markdown-text="readmeDefault"
             @on-editor-close="updateReadme"
           />
         </div>
@@ -158,8 +158,8 @@
             v-model:is-view-mored="isMethodsTabViewMored"
             v-model:is-editing="isMethodsTabEditing"
             :editable="store.selectedProject?.isMyProject ?? false"
-            :markdown-text="dashboardContent?.methods || methodsDefault"
-            :character-limit="10000"
+            :raw-markdown-text="dashboardContent?.methods"
+            :default-markdown-text="methodsDefault"
             @on-editor-close="updateMethods"
           />
         </div>
@@ -177,8 +177,8 @@
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
             :editable="store.selectedProject?.isMyProject ?? false"
-            :markdown-text="dashboardContent?.keyResult || keyResultDefault"
-            :character-limit="10000"
+            :raw-markdown-text="dashboardContent?.keyResult"
+            :default-markdown-text="keyResultDefault"
             @on-editor-close="updateKeyResult"
           />
         </div>
@@ -207,8 +207,8 @@
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
             :editable="store.selectedProject?.isMyProject ?? false"
-            :markdown-text="dashboardContent?.resources || resourcesDefault"
-            :character-limit="10000"
+            :raw-markdown-text="dashboardContent?.resources"
+            :default-markdown-text="resourcesDefault"
             @on-editor-close="updateResources"
           />
         </div>
