@@ -39,10 +39,10 @@
         </svg>
         <span
           v-if="hasFailed"
-          class="p-4 text-sm text-red-800 dark:text-red-400"
+          class="p-4 text-sm text-red-800 dark:text-flamingo"
           role="alert"
         >
-          <span class="font-medium">Failed!</span> Give us a moment to get things straight and try submitting again.
+          <span class="font-medium">Failed!</span> {{ errorMessage }}
         </span>
       </div>
     </div>
@@ -71,12 +71,36 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const name = ref<string>('')
 const objectives = ref<ProjectObjective[]>([])
 const isCreating = ref<boolean>(false)
+
+// error
+const DEFAULT_ERROR_MSG = 'Give us a moment to get things straight and try submitting again.'
 const hasFailed = ref<boolean>(false)
+const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 
 watch(name, () => { hasFailed.value = false })
 
-async function create () {
+const verifyFields = () => {
+  if (name.value.length === 0) {
+    hasFailed.value = true
+    errorMessage.value = 'Please enter a project name'
+    return false
+  }
+  if (objectives.value.length === 0) {
+    hasFailed.value = true
+    errorMessage.value = 'Please enter at least one objective'
+    return false
+  }
+  return true
+}
+
+const resetErrorState = () => {
   hasFailed.value = false
+  errorMessage.value = DEFAULT_ERROR_MSG
+}
+
+async function create () {
+  if (!verifyFields()) return
+  resetErrorState()
   isCreating.value = true
   const project = { name: name.value }
   try {
@@ -86,6 +110,7 @@ async function create () {
   } catch (e) {
     if (e instanceof Error) console.error(e.message)
     hasFailed.value = true
+    errorMessage.value = (e as Error)?.message ?? DEFAULT_ERROR_MSG
   }
   isCreating.value = false
 }
