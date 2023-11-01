@@ -152,9 +152,17 @@
         role="tabpanel"
         aria-labelledby="methods-tab-content"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Methods tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
-        </p>
+        <div class="mx-auto p-4 lg:max-w-4xl relative">
+          <DashboardMarkdownViewerEditor
+            id="methods"
+            v-model:is-view-mored="isMethodsTabViewMored"
+            v-model:is-editing="isMethodsTabEditing"
+            :editable="store.selectedProject?.isMyProject ?? false"
+            :markdown-text="dashboardContent?.methods || methodsDefault"
+            :character-limit="10000"
+            @on-editor-close="updateMethods"
+          />
+        </div>
       </div>
 
       <div
@@ -224,10 +232,13 @@ import { useUpdateDashboardResources } from '../../composables/use-update-dashbo
 import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault } = useMarkdownEditorDefaults()
+const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
+
+const isMethodsTabViewMored = ref(false)
+const isMethodsTabEditing = ref(false)
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
@@ -250,6 +261,7 @@ const { isLoading, data: dashboardContent } = useGetDashboardContent(
 const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateMethods } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
 
 const updateReadme = (value: string): void => {
   mutateReadme(value, {
@@ -285,6 +297,19 @@ const updateResources = (value: string): void => {
     },
     onError: () => {
       isResourcesTabViewMored.value = true
+      isResourcesTabEditing.value = true
+    }
+  })
+}
+
+const updateMethods = (value: string): void => {
+  mutateMethods(value, {
+    onSuccess: () => {
+      isMethodsTabViewMored.value = true
+      isMethodsTabEditing.value = false
+    },
+    onError: () => {
+      isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
     }
   })

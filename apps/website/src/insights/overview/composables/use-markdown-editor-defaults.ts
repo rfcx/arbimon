@@ -4,6 +4,7 @@ export interface UseMarkdownEditorDefaults {
   readme: Ref<string>
   keyResult: Ref<string>
   resources: Ref<string>
+  methods: Ref<string>
 }
 
 export const useMarkdownEditorDefaults = (): UseMarkdownEditorDefaults => {
@@ -49,9 +50,18 @@ Link description.
 
 Link description.`)
 
+  const methods = ref(`- We used \\<recorder type\\> (e.g., Audiomoth).
+- Sample rate was \\<\\_\\_\\_ kHz\\>
+- Our sampling schedule per deployment was recording \\<x minutes every x minutes\\> from \\<hours of day\\> for \\<number of days/weeks\\> during years \\<state years covered/expected\\>
+  - e.g. Recording 1 minute every 5 minutes from 5am - 7pm, for ~ 3weeks
+  - e.g. Recording continuously from 4-8am for ~5 weeks
+- We conducted the following acoustic analyses: (e.g. Pattern matchings)
+- We conducted these ecological analyses: (e.g. occupancy models, activity pattern analysis, species distribution model, etc.)`)
+
   return {
     readme,
     keyResult,
-    resources
+    resources,
+    methods
   }
 }
