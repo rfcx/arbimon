@@ -37,8 +37,6 @@ export const updateDashboardContentHandler: Handler<UpdateDashboardContentRespon
     throw BioInvalidPathParamError({ projectId })
   }
 
-  // #1168 TODO: check if the user is an admin of the project (or other edit permission), otherwise return error
-
   const { contentType, value } = req.body
 
   // @ts-expect-error the contentType === '' is correct type-wise but we still need to check for it.
@@ -50,7 +48,7 @@ export const updateDashboardContentHandler: Handler<UpdateDashboardContentRespon
     throw new BioPublicError('Missing or invalid required body parameter `value`', 400)
   }
 
-  await updateDashboardContent(projectIdInteger, contentType, value)
+  await updateDashboardContent(token, projectIdInteger, contentType, value)
 
   return {
     message: 'OK'

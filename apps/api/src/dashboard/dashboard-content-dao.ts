@@ -2,7 +2,9 @@ import { type DashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboar
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/types'
 
+import { checkUserPermissionForEditingDashboardContent } from '~/api-core/api-core'
 import { getSequelize } from '~/db'
+import { BioPublicError } from '~/errors'
 
 export const getDashboardContent = async (locationProjectId: number): Promise<DashboardContentResponse> => {
   const sequelize = getSequelize()
@@ -18,10 +20,26 @@ export const getDashboardContent = async (locationProjectId: number): Promise<Da
   return { ...data }
 }
 
-export const updateDashboardContent = async (locationProjectId: number, contentType: LocationProjectProfileContentType, value: string): Promise<void> => {
+export const updateDashboardContent = async (token: string, locationProjectId: number, contentType: LocationProjectProfileContentType, value: string): Promise<void> => {
+  const sequelize = getSequelize()
+
+  const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
+
+  const project = await LocationProject.findOne({ where: { id: locationProjectId } })
+
+  if (project == null) {
+    throw new BioPublicError('Project with given ID not found', 404)
+  }
+
+  const editable = await checkUserPermissionForEditingDashboardContent(token, project.get('idCore'), project.get('name'))
+
+  if (!editable) {
+    throw new BioPublicError('You are not allowed to edit this content', 403)
+  }
+
   const toUpdate = {
     [contentType]: value
   }
 
-  await ModelRepository.getInstance(getSequelize()).LocationProjectProfile.update(toUpdate, { where: { locationProjectId } })
+  await LocationProjectProfile.update(toUpdate, { where: { locationProjectId } })
 }
