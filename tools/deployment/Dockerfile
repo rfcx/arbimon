@@ -1,6 +1,6 @@
 # Install pnpm
 FROM node:18-alpine as node-pnpm
-RUN npm i -g pnpm@8
+RUN npm i -g pnpm@7
 
 # Install deps
 FROM node-pnpm as with-deps
@@ -16,7 +16,7 @@ COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
 
 ENV NODE_ENV=development
-RUN pnpm i --no-frozen-lockfile
+RUN pnpm i --frozen-lockfile
 RUN pnpm prepare
 
 # Build
