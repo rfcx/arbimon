@@ -92,7 +92,7 @@ const updateOtherObjectDescription = (originalObj: ProjectObjective, reason: str
 }
 
 const setupExistingObjectivesIfNeeded = () => {
-  if (props.existingObjectives.length === 0) return
+  if (!props.existingObjectives || props.existingObjectives?.length === 0) return
   selectedObjectives.value = props.existingObjectives.map((obj) => {
     const objectiveType = objectiveTypes.find((o) => o.slug === obj)
     if (!objectiveType) otherReason.value = obj // no match, must be other reason
