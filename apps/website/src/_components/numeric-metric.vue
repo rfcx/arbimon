@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-xl dark:bg-moss dark:text-insight p-6 border-1 border-insight flex flex-col gap-y-4 justify-between">
-    <div class="flex flex-row">
+    <div class="flex flex-row items-baseline">
       <h5
         v-if="title"
         class="text-spoonbill text-base font-eyebrow font-medium flex-grow"
