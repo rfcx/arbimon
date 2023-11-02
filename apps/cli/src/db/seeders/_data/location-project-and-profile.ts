@@ -46,7 +46,8 @@ const dataPr = {
   readme: readmePr,
   keyResult: '',
   resources: '',
-  methods: ''
+  methods: '',
+  objectives: []
 }
 
 const dataBci = {
@@ -58,7 +59,8 @@ const dataBci = {
   readme: '',
   keyResult: '',
   resources: '',
-  methods: ''
+  methods: '',
+  objectives: []
 }
 
 const dataMadre = {
@@ -70,7 +72,8 @@ const dataMadre = {
   readme: '',
   keyResult: '',
   resources: '',
-  methods: ''
+  methods: '',
+  objectives: []
 }
 
 const dataFakeProject = {
@@ -82,10 +85,11 @@ const dataFakeProject = {
   readme: 'This is the readme for our test project',
   keyResult: '',
   resources: '',
-  methods: ''
+  methods: '',
+  objectives: ['Test objective 1', 'Test objective 2']
 }
 
-type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId'>
+type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId' >
 
 export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
   default: [
