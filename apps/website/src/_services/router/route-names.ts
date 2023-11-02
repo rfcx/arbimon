@@ -13,6 +13,7 @@ export const ROUTE_NAMES = {
   explore: 'explore',
   myProjects: 'my_projects',
   dashboard: 'dashboard',
+  projectSettings: 'project_settings',
   // Project - Insights
   overview: 'overview',
   speciesRichness: 'species_richness',
