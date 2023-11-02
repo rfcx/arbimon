@@ -80,9 +80,15 @@
 
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import type { ProjectDefault } from '../../types'
+
+const props = defineProps<{
+  existingName?: string
+}>()
+
+const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
 
 const name = ref('')
 const startDate = ref('')
@@ -96,7 +102,11 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
   }
 })
 
-const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
+onMounted(() => {
+  if (props.existingName) {
+    name.value = props.existingName
+  }
+})
 
 watch(name, () => {
   emit('emitUpdateValue', value.value)

@@ -37,7 +37,7 @@ import { onMounted, ref, watch } from 'vue'
 import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '../../types'
 
 const props = defineProps<{
-  existingObjectives: string[]
+  existingObjectives?: string[]
 }>()
 const emit = defineEmits<{(e: 'emitProjectObjectives', objectives: ProjectObjective[]): void}>()
 
