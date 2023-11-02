@@ -19,9 +19,7 @@ const props = defineProps<{
   existingSummary?: string
 }>()
 
-const emits = defineEmits<{
-  (e: 'emitProjectSummary', summary: string): void
-}>()
+const emits = defineEmits<{(e: 'emitProjectSummary', summary: string): void}>()
 
 const PLACEHOLDER_TEXT = 'One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals.'
 
