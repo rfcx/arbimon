@@ -10,18 +10,17 @@
       <div class="grid mt-6 lg:(grid-cols-2 gap-10)">
         <div>
           <project-form
-            :existing-name="MOCK_NAME"
+            :existing-name="selectedProject?.name"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
-            :existing-summary="MOCK_SUMMARY"
-            class="mt-4"
+            :existing-summary="profile?.summary"
             @emit-project-summary="onEmitSummary"
           />
         </div>
         <div>
           <project-objective-form
-            :existing-objectives="MOCK_OBJECTIVES"
+            :existing-objectives="profile?.objectives"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>
@@ -55,19 +54,24 @@
   </section>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { computed, inject, ref, watch } from 'vue'
 
+import { apiClientBioKey } from '@/globals'
+import { useDashboardStore, useStore } from '~/store'
+import { useGetProjectProfile } from './_composables/use-project-profile'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
-import { masterOjectiveTypes } from './types'
 
-// TODO: fetch project info for settings (start-end date, project summary, project objectives)
-const MOCK_NAME = 'Test project'
-const MOCK_SUMMARY = 'This is a test project'
-const MOCK_OBJECTIVES = [masterOjectiveTypes.BioBaseline.slug, masterOjectiveTypes.MonitorSpecies.slug, 'Blah blah']
+const store = useStore()
+const dashboardStore = useDashboardStore()
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const selectedProject = computed(() => store.selectedProject)
+const selectedProjectId = computed(() => store.selectedProject?.id)
 
+const { data: profile } = useGetProjectProfile(apiClientBio, selectedProjectId.value ?? -1)
 const newName = ref('')
 const newSummary = ref('')
 const newObjectives = ref([''])
@@ -86,6 +90,19 @@ const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
 }
 
+watch(() => selectedProject.value, () => {
+  if (!selectedProject.value) return
+  newName.value = selectedProject.value.name
+})
+
+watch(() => profile.value, () => {
+  if (!profile.value) return
+  newSummary.value = profile.value.summary
+  newObjectives.value = profile.value.objectives
+})
+
 // TODO: save info to the database
-const save = () => {}
+const save = () => {
+  dashboardStore.updateProjectSummary(newSummary.value)
+}
 </script>

@@ -2,6 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
+import { type LocationProjectProfile } from '../../dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request types
@@ -9,14 +10,11 @@ export type ProjectProfileParams = ProjectRouteParamsSerialized
 
 export interface ProjectProfileUpdateBody {
   summary?: string
-  readme?: string
+  objectives?: string[]
 }
 
 // Response types
-export interface ProjectProfileResponse {
-  summary: string
-  readme: string
-}
+export type ProjectProfileResponse = Pick<LocationProjectProfile, 'summary' | 'objectives'>
 
 // Route
 export const projectProfileRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/profile`

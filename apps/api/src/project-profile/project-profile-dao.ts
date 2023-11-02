@@ -8,13 +8,13 @@ export const getProjectProfile = async (locationProjectId: number): Promise<Proj
     .LocationProjectProfile
     .findOne({
       where: { locationProjectId },
-      attributes: ['summary', 'readme'],
+      attributes: ['summary', 'objectives'],
       raw: true
-    }) ?? { summary: '', readme: '' }
+    }) ?? { summary: '', objectives: [] }
 
-export const updateProjectProfile = async (locationProjectId: number, summary: string | undefined, readme: string | undefined): Promise<ProjectProfileResponse | undefined> => {
+export const updateProjectProfile = async (locationProjectId: number, summary: string | undefined, objectives: string[]): Promise<ProjectProfileResponse | undefined> => {
   const locationProjectProfile = ModelRepository.getInstance(getSequelize()).LocationProjectProfile
-  const res = await locationProjectProfile.update({ summary, readme }, { where: { locationProjectId }, returning: true })
+  const res = await locationProjectProfile.update({ summary, objectives }, { where: { locationProjectId }, returning: true })
   if (res[0] === 0) return undefined
   const updated = res[1][0].get({ plain: true })
   return updated

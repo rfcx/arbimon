@@ -90,6 +90,10 @@ onMounted(() => {
   setupExistingObjectivesIfNeeded()
 })
 
+watch(() => props.existingObjectives, () => {
+  setupExistingObjectivesIfNeeded()
+})
+
 watch(otherReason, () => {
   if (otherReason.value.length === 0) {
     unselectOther()
