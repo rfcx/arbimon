@@ -6,6 +6,25 @@ import { type Site, type SyncError } from '@rfcx-bio/common/dao/types'
 
 import { type SiteArbimon, transformArbimonSites } from '../parsers/parse-site-arbimon-to-bio'
 
+const checkIfProjectChanged = async (site: Omit<Site, 'id'>, sequelize: Sequelize): Promise<void> => {
+  const bioSite = await ModelRepository.getInstance(sequelize).LocationSite.findOne({
+    where: { idArbimon: site.idArbimon },
+    attributes: ['id', 'idArbimon', 'locationProjectId'],
+    raw: true
+  })
+
+  if (bioSite && bioSite.locationProjectId !== site.locationProjectId) {
+    await ModelRepository.getInstance(sequelize).RecordingBySiteHour.update(
+      { locationProjectId: site.locationProjectId },
+      { where: { locationProjectId: bioSite.locationProjectId, locationSiteId: bioSite.id }, returning: false }
+    )
+    await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.update(
+      { locationProjectId: site.locationProjectId },
+      { where: { locationProjectId: bioSite.locationProjectId, locationSiteId: bioSite.id }, returning: false }
+    )
+  }
+}
+
 const loopUpsert = async (sites: Array<Omit<Site, 'id'>>, sequelize: Sequelize, transaction: Transaction | null = null): Promise<Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>> => {
   const failed: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const site of sites) {
@@ -34,21 +53,40 @@ export const writeSitesToBio = async (sites: SiteArbimon[], sequelize: Sequelize
 
 const createUpdateSites = async (sites: SiteArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[Array<Omit<Site, 'id'>>, Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
   const transformedSites = await transformArbimonSites(sites, sequelize)
-  try {
-    await ModelRepository.getInstance(sequelize).LocationSite
-      .bulkCreate(transformedSites, {
+  // try {
+  //   await ModelRepository.getInstance(sequelize).LocationSite
+  //     .bulkCreate(transformedSites, {
+  //       updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_SITE,
+  //       ...transaction && { transaction }
+  //     })
+  // } catch (batchInsertError) {
+  //   console.info('⚠️ Batch insert failed... try loop upsert')
+  //   const failed = await loopUpsert(transformedSites, sequelize, transaction)
+  //   return [
+  //     transformedSites.filter(site => !failed.find(error => error.externalId === `${site.idArbimon}`)),
+  //     failed
+  //   ]
+  // }
+  // return [transformedSites, []]
+
+  const successToInsertItems: Array<Omit<Site, 'id'>> = []
+  let failedToInsertItems: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
+
+  for (const site of transformedSites) {
+    try {
+      await ModelRepository.getInstance(sequelize).LocationSite.bulkCreate([site], {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_SITE,
         ...transaction && { transaction }
       })
-  } catch (batchInsertError) {
-    console.info('⚠️ Batch insert failed... try loop upsert')
-    const failed = await loopUpsert(transformedSites, sequelize, transaction)
-    return [
-      transformedSites.filter(site => !failed.find(error => error.externalId === `${site.idArbimon}`)),
-      failed
-    ]
+      successToInsertItems.push(site)
+      await checkIfProjectChanged(site, sequelize)
+    } catch (e: any) {
+      console.info('⚠️ Batch insert failed... try loop upsert')
+      const failed = await loopUpsert([site], sequelize, transaction)
+      failedToInsertItems = [...failedToInsertItems, ...failed]
+    }
   }
-  return [transformedSites, []]
+  return [successToInsertItems, failedToInsertItems]
 }
 
 const deleteSites = async (sites: SiteArbimon[], sequelize: Sequelize, transaction: Transaction | null = null): Promise<[Array<Omit<Site, 'id'>>, Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>>]> => {
