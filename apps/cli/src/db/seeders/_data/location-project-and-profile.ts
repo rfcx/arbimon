@@ -47,7 +47,7 @@ const dataPr = {
   keyResult: '',
   resources: '',
   methods: '',
-  objectives: []
+  objectives: ['monitor-species', 'impact-human', 'blagh']
 }
 
 const dataBci = {
