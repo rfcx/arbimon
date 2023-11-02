@@ -3,7 +3,7 @@
   <sidebar v-if="isProjectMember" />
   <div
     v-if="store.selectedProject"
-    :class="isProjectMember && $route.name !== 'overview' ? 'pl-64' : ''"
+    :class="isProjectMember && $route.name !== 'overview' ? 'pl-18' : ''"
   >
     {{ $route.name }}
     <router-view />

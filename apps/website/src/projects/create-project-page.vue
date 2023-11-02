@@ -61,7 +61,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
-import type { ProjectDefault, ProjectObjective } from './types'
+import type { ProjectDefault } from './types'
 
 const router = useRouter()
 const store = useStore()
@@ -69,7 +69,7 @@ const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const name = ref<string>('')
-const objectives = ref<ProjectObjective[]>([])
+const objectives = ref<string[]>([])
 const isCreating = ref<boolean>(false)
 
 // error
@@ -102,8 +102,7 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  const objectiveTexts = objectives.value.map(o => o.id !== 999 ? o.slug : o.description)
-  const project = { name: name.value, objectives: objectiveTexts }
+  const project = { name: name.value, objectives: objectives.value }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
@@ -120,7 +119,7 @@ const emitUpdateValue = (project: ProjectDefault) => {
   name.value = project.name
 }
 
-const emitUpdateProjectObjectives = (projectObjectives: ProjectObjective[]) => {
-  objectives.value = projectObjectives
+const emitUpdateProjectObjectives = (projectObjectiveSlugs: string[]) => {
+  objectives.value = projectObjectiveSlugs
 }
 </script>
