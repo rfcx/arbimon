@@ -32,17 +32,24 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '../../types'
 
 const props = defineProps<{
   existingObjectives?: string[]
 }>()
-const emit = defineEmits<{(e: 'emitProjectObjectives', objectives: ProjectObjective[]): void}>()
+const emit = defineEmits<{(e: 'emitProjectObjectives', objectives: string[]): void}>()
 
 const selectedObjectives = ref<ProjectObjective[]>([])
 const otherReason = ref<string>('')
+
+const selectedSlugs = computed(() => {
+  return selectedObjectives.value.map((obj) => {
+    if (obj.id === masterOjectiveTypes.Others.id) return otherReason.value
+    return obj.slug
+  })
+})
 
 const isSelected = (id: number) => {
   const existingSelectedIds = selectedObjectives.value.map((obj) => obj.id)
@@ -55,40 +62,19 @@ const onSelectObjective = (objective: ProjectObjective) => {
   } else { // add to list
     selectedObjectives.value = [...selectedObjectives.value, objective]
   }
-  emit('emitProjectObjectives', selectedObjectives.value)
 }
 
 // use when user types in other reason
 const forceSelectOther = () => {
   const defaultOtherObj = masterOjectiveTypes.Others
   if (!isSelected(defaultOtherObj.id)) {
-    const obj = updateOtherObjectDescription(defaultOtherObj, otherReason.value)
-    selectedObjectives.value = [...selectedObjectives.value, obj]
+    selectedObjectives.value = [...selectedObjectives.value, defaultOtherObj]
   }
-  emit('emitProjectObjectives', selectedObjectives.value)
 }
 
 // use when user remove all text from other reason
 const unselectOther = () => {
   selectedObjectives.value = selectedObjectives.value.filter((obj) => obj.id !== masterOjectiveTypes.Others.id)
-  emit('emitProjectObjectives', selectedObjectives.value)
-}
-
-const onUpdateOtherReason = () => {
-  const existingOtherObj = selectedObjectives.value.find((obj) => obj.id === masterOjectiveTypes.Others.id)
-  if (existingOtherObj) {
-    const updatedObject = updateOtherObjectDescription(existingOtherObj, otherReason.value)
-    // replace existing object with newer reason
-    selectedObjectives.value = selectedObjectives.value.map((obj) => obj.id === masterOjectiveTypes.Others.id ? updatedObject : obj)
-  } else {
-    const obj = updateOtherObjectDescription(masterOjectiveTypes.Others, otherReason.value)
-    selectedObjectives.value = [...selectedObjectives.value, obj]
-  }
-  emit('emitProjectObjectives', selectedObjectives.value)
-}
-
-const updateOtherObjectDescription = (originalObj: ProjectObjective, reason: string) => {
-  return { ...originalObj, description: reason }
 }
 
 const setupExistingObjectivesIfNeeded = () => {
@@ -107,8 +93,10 @@ onMounted(() => {
 watch(otherReason, () => {
   if (otherReason.value.length === 0) {
     unselectOther()
-  } else {
-    onUpdateOtherReason()
   }
+})
+
+watch(() => selectedSlugs.value, () => {
+  emit('emitProjectObjectives', selectedSlugs.value)
 })
 </script>
