@@ -102,7 +102,8 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  const project = { name: name.value }
+  const objectiveTexts = objectives.value.map(o => o.id !== 999 ? o.slug : o.description)
+  const project = { name: name.value, objectives: objectiveTexts }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()

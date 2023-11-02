@@ -3,6 +3,7 @@ import { type AxiosInstance } from 'axios'
 // Request type
 export interface ProjectCreateRequest {
   name: string
+  objectives: string[]
   associatedOrganizations?: string
 }
 

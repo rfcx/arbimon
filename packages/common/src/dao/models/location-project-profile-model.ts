@@ -32,6 +32,11 @@ export const LocationProjectProfileModel = defineWithDefaults<LocationProjectPro
       type: DataTypes.TEXT,
       allowNull: false,
       defaultValue: ''
+    },
+    objectives: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
+      defaultValue: []
     }
   },
   {
