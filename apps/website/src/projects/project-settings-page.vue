@@ -2,7 +2,7 @@
   <div>Project settings</div>
   <div class="grid lg:grid-cols-2 max-w-screen-2xl gap-4">
     <div>
-      <project-form />
+      <project-form existing-name="tes" />
       <!-- TODO: add project summary -->
     </div>
     <div class="">
