@@ -5,6 +5,7 @@ export interface LocationProjectProfile {
   methods: string
   keyResult: string
   resources: string
+  objectives: string[]
 }
 
 export const locationProjectProfileContentType = ['summary', 'readme', 'keyResult', 'resources', 'methods'] as const

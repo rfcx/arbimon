@@ -13,7 +13,7 @@ export const createProject = async (request: ProjectCreateRequest, auth0UserId: 
   await clearMemberProjectCoreIds(auth0UserId)
 
   // Pre-populate insights table with the same data (will get updated again after sync)
-  const project = { idCore, idArbimon, name: request.name }
+  const project = { idCore, idArbimon, name: request.name, objectives: request.objectives }
   const slug = await createProjectLocal(project)
   return slug
 }
