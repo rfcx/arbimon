@@ -11,7 +11,7 @@
       >
         {{ analysis.title }}
       </p>
-      <div class="text-left text-base text-insight pb-2">
+      <div class="text-left text-base text-insight pb-4 h-18 overflow-y-auto">
         {{ analysis.description }}
       </div>
     </div>
