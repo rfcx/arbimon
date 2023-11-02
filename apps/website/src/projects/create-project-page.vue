@@ -2,9 +2,9 @@
   <project-navbar />
   <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-24">
-      <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
+      <h1 class="tracking-tight font-medium text-gray-900 dark:text-white">
         Create a new project
-      </h2>
+      </h1>
       <div class="mt-4">
         <project-form @emit-update-value="emitUpdateValue" />
       </div>
