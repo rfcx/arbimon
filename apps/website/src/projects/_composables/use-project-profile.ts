@@ -15,8 +15,8 @@ export const useUpdateProjectProfile = (apiClient: AxiosInstance, projectId: num
   return useMutation({
     mutationKey: ['update-project-profile'],
     mutationFn: async (projectProfile: ProjectProfileUpdateBody) => {
-      const { summary, readme } = projectProfile
-      return await apiBioUpdateProjectProfileData(apiClient, projectId, { summary, readme })
+      const { summary, objectives } = projectProfile
+      return await apiBioUpdateProjectProfileData(apiClient, projectId, { summary, objectives })
     }
   })
 }

@@ -9,7 +9,7 @@
             {{ selectedProject?.name }}
           </h1>
           <hero-brief-overview
-            :can-edit="store.selectedProject?.isMyProject ?? false"
+            :can-edit="false"
             :default-text="dashboardStore.projectSummary ?? ''"
           />
           <div class="mt-4 flex flex-row items-center justify-start">
@@ -108,8 +108,8 @@ import CountryFlag from 'vue-country-flag-next'
 import { apiClientBioKey, apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
+import { useGetProjectProfile } from '../projects/_composables/use-project-profile'
 import { useGetStreamAll } from './_composables/use-project-location'
-import { useGetProjectProfile } from './_composables/use-project-profile'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
@@ -170,7 +170,7 @@ const projectCountry = computed(() => {
   return getUniqArray(countries).join(', ')
 })
 
-const { data: profile } = useGetProjectProfile(apiClientBio, 1)
+const { data: profile } = useGetProjectProfile(apiClientBio, selectedProject.value?.id ?? -1)
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
@@ -183,7 +183,6 @@ const formatDateRange = (date: Date | null | undefined): string => {
 watch(() => profile.value, () => {
   if (!profile.value) return
   dashboardStore.updateProjectSummary(profile.value.summary)
-  dashboardStore.updateProjectReadme(profile.value.readme)
 })
 
 </script>

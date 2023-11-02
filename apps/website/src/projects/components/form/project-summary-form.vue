@@ -8,7 +8,7 @@
   <textarea
     v-model.lazy.trim="summary"
     :placeholder="PLACEHOLDER_TEXT"
-    class="input-field w-full"
+    class="input-field w-full h-28"
   />
 </template>
 
@@ -19,7 +19,7 @@ const props = defineProps<{
   existingSummary?: string
 }>()
 
-const emits = defineEmits<{(e: 'emitProjectSummary', summary: string): void}>()
+const emit = defineEmits<{(e: 'emitProjectSummary', summary: string): void}>()
 
 const PLACEHOLDER_TEXT = 'One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals.'
 
@@ -31,8 +31,12 @@ onMounted(() => {
   }
 })
 
+watch(() => props.existingSummary, () => {
+  summary.value = props.existingSummary || ''
+})
+
 watch(summary, () => {
-  emits('emitProjectSummary', summary.value)
+  emit('emitProjectSummary', summary.value)
 })
 
 </script>

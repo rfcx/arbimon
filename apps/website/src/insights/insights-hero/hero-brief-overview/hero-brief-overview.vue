@@ -58,7 +58,7 @@ import { inject, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { useDashboardStore, useStore } from '~/store'
-import { useUpdateProjectProfile } from '../../_composables/use-project-profile'
+import { useUpdateProjectProfile } from '../../../projects/_composables/use-project-profile'
 
 const PLACEHOLDER_TEXT = 'One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals.'
 

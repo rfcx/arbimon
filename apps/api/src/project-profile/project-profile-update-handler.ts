@@ -8,7 +8,7 @@ import { updateProjectProfile } from './project-profile-dao'
 export const projectProfileUpdateHandler: Handler<ProjectProfileResponse, ProjectProfileParams, unknown, ProjectProfileUpdateBody> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  const { summary, readme } = req.body
+  const { summary, objectives } = req.body
   assertPathParamsExist({ projectId })
 
   const projectIdInteger = Number(projectId)
@@ -16,12 +16,12 @@ export const projectProfileUpdateHandler: Handler<ProjectProfileResponse, Projec
     throw BioInvalidPathParamError({ projectId })
   }
 
-  if (summary === undefined && readme === undefined) {
+  if (summary === undefined && objectives === undefined) {
     throw new Error('Either summary or readme must be provided')
   }
 
   // TODO: validate user permissions with Core API
 
-  const projectContent = await updateProjectProfile(projectIdInteger, summary, readme)
-  return { summary: projectContent?.summary ?? '', readme: projectContent?.readme ?? '' }
+  const projectContent = await updateProjectProfile(projectIdInteger, summary, objectives ?? [])
+  return { summary: projectContent?.summary ?? '', objectives: projectContent?.objectives ?? [] }
 }
