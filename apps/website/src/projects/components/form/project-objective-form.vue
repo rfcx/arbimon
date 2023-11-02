@@ -32,10 +32,13 @@
 
 <script setup lang="ts">
 
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '../../types'
 
+const props = defineProps<{
+  existingObjectives: string[]
+}>()
 const emit = defineEmits<{(e: 'emitProjectObjectives', objectives: ProjectObjective[]): void}>()
 
 const selectedObjectives = ref<ProjectObjective[]>([])
@@ -87,6 +90,19 @@ const onUpdateOtherReason = () => {
 const updateOtherObjectDescription = (originalObj: ProjectObjective, reason: string) => {
   return { ...originalObj, description: reason }
 }
+
+const setupExistingObjectivesIfNeeded = () => {
+  if (props.existingObjectives.length === 0) return
+  selectedObjectives.value = props.existingObjectives.map((obj) => {
+    const objectiveType = objectiveTypes.find((o) => o.slug === obj)
+    if (!objectiveType) otherReason.value = obj // no match, must be other reason
+    return objectiveType ?? masterOjectiveTypes.Others
+  })
+}
+
+onMounted(() => {
+  setupExistingObjectivesIfNeeded()
+})
 
 watch(otherReason, () => {
   if (otherReason.value.length === 0) {

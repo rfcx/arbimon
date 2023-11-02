@@ -93,6 +93,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.Dashboard
       },
       {
+        path: 'settings',
+        name: ROUTE_NAMES.projectSettings,
+        component: PAGES.ProjectSettings
+      },
+      {
         path: 'insights',
         component: PAGES.InsightsRoot,
         children: [
