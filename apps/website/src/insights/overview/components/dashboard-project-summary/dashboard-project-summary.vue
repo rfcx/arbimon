@@ -190,9 +190,47 @@
         role="tabpanel"
         aria-labelledby="stakeholders-tab-content"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Stakeholders tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
-        </p>
+        <div class="mx-auto p-4 lg:max-w-4xl">
+          <h3 class="text-xl mt-12 font-medium">
+            Project members
+          </h3>
+          <div
+            class="grid"
+            style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
+          >
+            <StakeholderCard
+              name="Lori Tan"
+              description="Project leader"
+              :ranking="0"
+              email="loritan@rfcx.org"
+            />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+          </div>
+
+          <h3 class="text-xl my-6 font-medium">
+            Organizations
+          </h3>
+          <div
+            class="grid"
+            style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
+          >
+            <StakeholderCard
+              name="Lori Tan"
+              description="Project leader"
+              :ranking="0"
+              email="loritan@rfcx.org"
+            />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard name="Lori Tan" />
+          </div>
+        </div>
       </div>
 
       <div
@@ -230,6 +268,7 @@ import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashbo
 import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
 import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
+import StakeholderCard from '../stakeholder/stakeholder-card.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()
