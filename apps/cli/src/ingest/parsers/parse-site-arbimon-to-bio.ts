@@ -12,6 +12,8 @@ const SiteArbimonRowSchema = z.object({
   name: z.string(),
   latitude: z.number(),
   longitude: z.number(),
+  country: z.string().nullable(),
+  countryCode: z.string().nullable(),
   altitude: z.number(),
   deletedAt: z.date().nullable()
 })
@@ -23,6 +25,8 @@ const SiteArbimonSchema = z.object({
   name: z.string(),
   latitude: z.number(),
   longitude: z.number(),
+  country: z.string().nullable(),
+  countryCode: z.string().nullable(),
   altitude: z.number(),
   deletedAt: z.string().nullable()
 })

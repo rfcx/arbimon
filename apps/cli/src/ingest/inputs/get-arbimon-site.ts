@@ -17,6 +17,8 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
       s.lat AS latitude,
       s.lon AS longitude,
       s.alt AS altitude,
+      s.country AS country,
+      s.country_code AS countryCode,
       s.updated_at AS updatedAt,
       s.deleted_at AS deletedAt
     FROM sites s
@@ -51,6 +53,8 @@ export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: nu
       s.lat AS latitude,
       s.lon AS longitude,
       s.alt AS altitude,
+      s.country AS country,
+      s.country_code AS countryCode,
       s.updated_at AS updatedAt,
       s.deleted_at AS deletedAt
     FROM sites s
