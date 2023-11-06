@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/types'
 
-import { sqlValues } from './dashboard-content-dao'
+import { sqlValues } from './sql-values'
 
 describe('Generate SQL query for insert or updating the dashboard content (except stakeholders)', () => {
   test('an update to a column with default value (summary, readme) should have both columns after insert clause but only one after an update clause', () => {
