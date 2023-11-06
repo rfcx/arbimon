@@ -11,7 +11,9 @@ export const sites: Site[] = [
     name: 'CU26',
     latitude: 18.31307,
     longitude: -65.24878,
-    altitude: 30.85246588
+    altitude: 30.85246588,
+    country: 'United States of America',
+    countryCode: 'US'
   },
   {
     id: 202,
@@ -21,7 +23,9 @@ export const sites: Site[] = [
     name: 'CU24',
     latitude: 18.30692,
     longitude: -65.25233,
-    altitude: 2.322431157
+    altitude: 2.322431157,
+    country: 'United States of America',
+    countryCode: 'US'
   },
   {
     id: 203,
@@ -31,7 +35,9 @@ export const sites: Site[] = [
     name: 'CU33',
     latitude: 18.31777,
     longitude: -65.28566,
-    altitude: 55.51248239
+    altitude: 55.51248239,
+    country: 'United States of America',
+    countryCode: 'US'
   },
   {
     id: 204,
@@ -41,6 +47,8 @@ export const sites: Site[] = [
     name: 'AR01',
     latitude: 18.48484,
     longitude: -66.5473,
-    altitude: 6.163519308
+    altitude: 6.163519308,
+    country: 'United States of America',
+    countryCode: 'US'
   }
 ]
