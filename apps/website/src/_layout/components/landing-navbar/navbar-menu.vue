@@ -19,15 +19,6 @@
       </router-link>
     </li>
     <li>
-      <router-link
-        :to="{ name: ROUTE_NAMES.landingTeam }"
-        exact-active-class="tab-active"
-        class="block tab"
-      >
-        About
-      </router-link>
-    </li>
-    <li>
       <button
         :id="`${domId}DropdownResourcesButton`"
         type="button"
@@ -35,7 +26,7 @@
         data-dropdown-trigger="hover"
         class="flex items-center justify-between w-full py-2 pl-3 pr-4 font-medium text-gray-700 md:m-2 md:p-0 md:w-auto lg:m-0 dark:text-insight dark:hover:text-frequency"
       >
-        Resources <svg
+        About <svg
           class="w-4 h-4 ml-1"
           aria-hidden="true"
           fill="currentColor"
@@ -57,11 +48,11 @@
         >
           <li>
             <router-link
-              :to="{ name: ROUTE_NAMES.landingFAQ }"
+              :to="{ name: ROUTE_NAMES.landingTeam }"
               exact-active-class="!text-gray-900 !dark:text-insight"
               class="block px-4 py-2 dark:text-insight dark:hover:text-frequency"
             >
-              FAQ
+              About
             </router-link>
           </li>
           <li class="pb-2">
@@ -71,6 +62,15 @@
               class="block px-4 py-2 dark:text-insight dark:hover:text-frequency"
             >
               Publications
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              :to="{ name: ROUTE_NAMES.landingFAQ }"
+              exact-active-class="!text-gray-900 !dark:text-insight"
+              class="block px-4 py-2 dark:text-insight dark:hover:text-frequency"
+            >
+              FAQ
             </router-link>
           </li>
           <li class="pt-2">
