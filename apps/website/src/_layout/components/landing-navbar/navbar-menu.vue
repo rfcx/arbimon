@@ -33,7 +33,7 @@
         exact-active-class="tab-active"
         class="block tab"
       >
-        About us
+        About
       </router-link>
     </li>
     <li>

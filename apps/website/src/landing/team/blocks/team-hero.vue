@@ -4,7 +4,7 @@
     :with-border-bottom="false"
   >
     <h1 class="text-giant mb-4 text-gray-900 dark:text-frequency">
-      About us
+      About
     </h1>
     <h4 class="text-gray-500 dark:text-insight">
       We are changing the landscape for bioaccoustic monitoring.
