@@ -221,14 +221,17 @@
             <StakeholderCard
               name="Charles Darwin Foundation"
               description="Non-profit"
+              profile-url="https://www.darwinfoundation.org/images/fcd/logo_145WHITE.png"
             />
             <StakeholderCard
               name="Ching Hua University"
               description="Research Institution"
+              profile-url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/NTHU_Round_Seal.svg/283px-NTHU_Round_Seal.svg.png"
             />
             <StakeholderCard
               name="Naresuan University"
               description="Research Institution"
+              profile-url="https://upload.wikimedia.org/wikipedia/en/c/c1/Naresuanlogo.jpg"
             />
           </div>
           <router-link
