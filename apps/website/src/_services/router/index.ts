@@ -33,7 +33,7 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingFAQ
       },
       {
-        path: 'team',
+        path: 'about',
         name: ROUTE_NAMES.landingTeam,
         component: PAGES.LandingTeam
       },
