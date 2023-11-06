@@ -215,21 +215,28 @@
             Organizations
           </h3>
           <div
-            class="grid"
+            class="grid mb-6"
             style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
           >
             <StakeholderCard
-              name="Lori Tan"
-              description="Project admin"
-              :ranking="1"
-              email="loritan@rfcx.org"
+              name="Charles Darwin Foundation"
+              description="Non-profit"
             />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
+            <StakeholderCard
+              name="Ching Hua University"
+              description="Research Institution"
+            />
+            <StakeholderCard
+              name="Naresuan University"
+              description="Research Institution"
+            />
           </div>
+          <router-link
+            :to="{ name: ROUTE_NAMES.projectSettings }"
+            class="rounded-3xl px-3 py-1.5 border border-frequency text-sm text-frequency leading-none font-medium"
+          >
+            Manage Stakeholders
+          </router-link>
         </div>
       </div>
 
@@ -261,6 +268,7 @@ import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
 import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
