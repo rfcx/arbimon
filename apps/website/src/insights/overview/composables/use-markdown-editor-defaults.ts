@@ -20,9 +20,7 @@ Please state the key research questions for this project\\. \\(e\\.g\\. What is 
 2. \\<Key research question 2\\>
 3. \\<Key research question 3\\>`)
 
-  const keyResult = ref(`#### High-level Findings
-
-E.g. We found that restoration sites had similar species richness to protected primary forest, which was also much higher than farmlands.
+  const keyResult = ref(`E.g. We found that restoration sites had similar species richness to protected primary forest, which was also much higher than farmlands.
 
 1. \\<Key result 1\\>
 2. \\<Key result 2\\>
