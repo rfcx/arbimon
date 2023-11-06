@@ -1,6 +1,6 @@
 import fastifyRoutes from '@fastify/routes'
 import fastify, { type FastifyInstance } from 'fastify'
-import { vi, beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
