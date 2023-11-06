@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
-import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type Site, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
@@ -21,7 +21,7 @@ const SQL_INSERT_PROJECT = `
 `
 
 const DEFAULT_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: 1920, name: 'My Project', slug: 'my-project-1', latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z' }
-const DEFAULT_ARB_SITE = { idCore: '807cuoi3uopi', idArbimon: 9999, projectIdArbimon: DEFAULT_PROJECT.idArbimon, name: 'RFCx 99', latitude: 1, longitude: 1, altitude: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', deletedAt: null }
+const DEFAULT_ARB_SITE = { idCore: '807cuoi3uopi', idArbimon: 9999, projectIdArbimon: DEFAULT_PROJECT.idArbimon, name: 'RFCx 99', latitude: 1, longitude: 1, altitude: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', country: null, countryCode: null, deletedAt: null }
 
 describe('ingest > outputs > sites', () => {
   beforeEach(async () => {
@@ -42,7 +42,7 @@ describe('ingest > outputs > sites', () => {
     // Assert
     const sites = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.findAll({
       where: { idArbimon: { [Op.in]: arbimonSites.map(i => i.idArbimon) } }
-    })
+    }) as unknown as Site[]
     expect(sites).toHaveLength(arbimonSites.length)
   })
 
