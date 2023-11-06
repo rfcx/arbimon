@@ -14,20 +14,6 @@ import { ROUTE_NAMES } from '~/router';
       <div class="w-full max-w-240 lg:w-168 xl:w-200">
         <div class="pb-14">
           <h5 class="mb-1 font-medium">
-            The service
-          </h5>
-          <p class="mb-6">
-            We're a team of experts providing a full-suite of services for ecoacoustic health measurement projects worldwide.
-          </p>
-          <router-link
-            :to="{ name: ROUTE_NAMES.landingContact }"
-            class="inline-flex items-center justify-center btn btn-primary"
-          >
-            Partner with us
-          </router-link>
-        </div>
-        <div class="pb-14">
-          <h5 class="mb-1 font-medium">
             The platform
           </h5>
           <p class="mb-6">
