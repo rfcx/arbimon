@@ -11,7 +11,9 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     latitude: 0,
     longitude: 0,
     altitude: 0,
-    deletedAt: null
+    country: null,
+    countryCode: 'Thailand',
+    deletedAt: 'TH'
   }
 
   test('succeeds for valid data', async () => {
@@ -56,6 +58,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const nullLatitude = { ...VALID_SITE, latitude: null }
     const nullLongitude = { ...VALID_SITE, longitude: null }
     const nullAltitude = { ...VALID_SITE, altitude: null }
+    const nullCountry = { ...VALID_SITE, country: null }
+    const nullCountryCode = { ...VALID_SITE, countryCode: null }
 
     const undefinedIdArbimon = { ...VALID_SITE, idArbimon: undefined }
     const undefinedIdCore = { ...VALID_SITE, idCore: undefined }
@@ -64,6 +68,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const undefinedLatitude = { ...VALID_SITE, latitude: undefined }
     const undefinedLongitude = { ...VALID_SITE, longitude: undefined }
     const undefinedAltitude = { ...VALID_SITE, altitude: undefined }
+    const undefinedCountry = { ...VALID_SITE, country: undefined }
+    const undefinedCountryCode = { ...VALID_SITE, countryCode: undefined }
 
     // Act
     const actualMissing = [
@@ -80,11 +86,19 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
       parseSiteArbimon(undefinedName),
       parseSiteArbimon(undefinedLatitude),
       parseSiteArbimon(undefinedLongitude),
-      parseSiteArbimon(undefinedAltitude)
+      parseSiteArbimon(undefinedAltitude),
+      parseSiteArbimon(undefinedCountry),
+      parseSiteArbimon(undefinedCountryCode)
+    ]
+
+    const actualNullishProps = [
+      parseSiteArbimon(nullCountry),
+      parseSiteArbimon(nullCountryCode)
     ]
 
     // Assert
     actualMissing.forEach(actual => { expect(actual.success).toBe(false) })
+    actualNullishProps.forEach(actual => { expect(actual.success).toBe(true) })
   })
 
   test('fails if props are in wrong type (idCoreNumber, idArbimonString)', async () => {
