@@ -8,16 +8,9 @@
     @click="enterEditingMode"
   >
     <h6
-      v-if="text"
       class="text-insight pb-4 min-h-10"
     >
       {{ text }}
-    </h6>
-    <h6
-      v-else
-      class="text-fog pb-4 min-h-10"
-    >
-      {{ PLACEHOLDER_TEXT }}
     </h6>
     <button class="w-2 h-2 ml-2">
       <icon-custom-fi-edit

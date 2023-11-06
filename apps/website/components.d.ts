@@ -56,6 +56,7 @@ declare module '@vue/runtime-core' {
     IconCustomFtRedo: typeof import('~icons/custom-icons/ft-redo')['default']
     IconCustomFtSearchLg: typeof import('~icons/custom-icons/ft-search-lg')['default']
     IconCustomFtUndo: typeof import('~icons/custom-icons/ft-undo')['default']
+    IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']
     IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
     IconCustomLinkout: typeof import('~icons/custom-icons/linkout')['default']
     IconCustomPresChartLine: typeof import('~icons/custom-icons/pres-chart-line')['default']
