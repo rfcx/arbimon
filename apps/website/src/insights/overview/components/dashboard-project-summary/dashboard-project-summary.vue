@@ -191,27 +191,27 @@
         aria-labelledby="stakeholders-tab-content"
       >
         <div class="mx-auto p-4 lg:max-w-4xl">
-          <h3 class="text-xl mt-12 font-medium">
-            Project members
-          </h3>
-          <div
-            class="grid"
-            style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
-          >
-            <StakeholderCard
-              name="Lori Tan"
-              description="Project leader"
-              :ranking="0"
-              email="loritan@rfcx.org"
-            />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-            <StakeholderCard name="Lori Tan" />
-          </div>
+          <!-- <h3 class="text-xl mt-12 font-medium"> -->
+          <!--   Project members -->
+          <!-- </h3> -->
+          <!-- <div -->
+          <!--   class="grid" -->
+          <!--   style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))" -->
+          <!-- > -->
+          <!--   <StakeholderCard -->
+          <!--     name="Lori Tan" -->
+          <!--     description="Project admin" -->
+          <!--     :ranking="0" -->
+          <!--     email="loritan@rfcx.org" -->
+          <!--   /> -->
+          <!--   <StakeholderCard name="Lori Tan" /> -->
+          <!--   <StakeholderCard name="Lori Tan" /> -->
+          <!--   <StakeholderCard name="Lori Tan" /> -->
+          <!--   <StakeholderCard name="Lori Tan" /> -->
+          <!--   <StakeholderCard name="Lori Tan" /> -->
+          <!-- </div> -->
 
-          <h3 class="text-xl my-6 font-medium">
+          <h3 class="text-xl mt-2 font-medium">
             Organizations
           </h3>
           <div
@@ -220,8 +220,8 @@
           >
             <StakeholderCard
               name="Lori Tan"
-              description="Project leader"
-              :ranking="0"
+              description="Project admin"
+              :ranking="1"
               email="loritan@rfcx.org"
             />
             <StakeholderCard name="Lori Tan" />
