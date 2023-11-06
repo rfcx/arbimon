@@ -16,7 +16,6 @@ import { ROUTE_NAMES } from './src/_services/router/route-names'
 
 const STATIC_ROUTES = [
   ROUTE_NAMES.landingHome,
-  ROUTE_NAMES.landingFeatured,
   ROUTE_NAMES.landingHowItWorks,
   ROUTE_NAMES.landingFAQ,
   ROUTE_NAMES.landingPublications,
