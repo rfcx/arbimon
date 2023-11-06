@@ -5,7 +5,16 @@
     <div class="pl-18">
       <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight flex flex-col md:flex-row justify-between">
         <div class="">
-          <h1 class="pb-4 text-frequency font-header">
+          <router-link
+            :to="{ name: ROUTE_NAMES.projectSettings }"
+            class="flex flex-row items-center justify-start mb-4"
+          >
+            <button class="btn btn-secondary py-2">
+              Edit
+            </button>
+          </router-link>
+
+          <h1 class="text-frequency font-header">
             {{ selectedProject?.name }}
           </h1>
           <hero-brief-overview
