@@ -1,6 +1,8 @@
-# Biodiversity Analytics
+# Arbimon
 
 Website for exploring biodiversity data; built with Vue 3, Typescript, Vite, pnpm, Pinia, Windi CSS.
+
+Currently depends on [Arbimon Legacy](https://github.com/rfcx/arbimon-legacy).
 
 <img src="https://user-images.githubusercontent.com/31901584/183742923-930ebc4c-9c44-4804-ae95-245d47724357.png" width="1680" alt="Biodiversity" />
 
