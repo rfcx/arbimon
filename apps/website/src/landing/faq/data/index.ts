@@ -37,7 +37,7 @@ As an environmental organization, we would like to minimize both the monetary co
 - [Reach out](/contact) to our team to collaborate (e.g. partner with us in a project proposal, [see our past partnership project here](/featured)).
 - Make your project insights public - Public projects enable open collaboration, which is essential to to improve ecological knowledge and conservation efforts, facilitate break through discoveries and share insights and findings with the world. We take your data privacy seriously. We will never share and divulge sensitive information from the users and datasets, and you can decide on what data you are sharing. [Learn more about our data privacy here](https://rfcx.org/privacy-policy).
 - Share your work on social media with us by tagging our accounts, and using the hashtags: #arbimon, #rainforestcx, #usingtechtoprotect.
-- [Donate](https://rfcx.org/?form=give) to Rainforest Connection to support maintaining the platform and adding new features.`
+- [Donate](https://rfcx.org/?form=SupportArbimon) to Rainforest Connection to support maintaining the platform and adding new features.`
   },
   {
     question: 'How should Arbimon be cited?',
