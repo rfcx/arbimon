@@ -9,6 +9,7 @@ import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from
 export type ProjectProfileParams = ProjectRouteParamsSerialized
 
 export interface ProjectProfileUpdateBody {
+  name?: string
   summary?: string
   objectives?: string[]
 }
