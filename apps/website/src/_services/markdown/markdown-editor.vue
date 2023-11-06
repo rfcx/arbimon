@@ -189,7 +189,7 @@
           <!-- Modal body -->
           <div class="p-6 space-y-6">
             <p class="text-base leading-relaxed text-gray-500 dark:text-white">
-              Input the link that you wanted to put.
+              Enter a URL
             </p>
             <input
               v-model="linkToSet"
