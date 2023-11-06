@@ -17,7 +17,7 @@
               class="flex flex-row items-center font-display text-sm mr-2 border-r-2 border-gray-300 h-5"
             >
               <icon-fas-spinner
-                v-if="isLoadingProjectStreams"
+                v-if="isLoadingProjectLocation"
                 class="animate-spin"
                 aria-label="Loading"
               />
@@ -105,11 +105,11 @@ import dayjs from 'dayjs'
 import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { apiClientBioKey, apiClientCoreKey } from '@/globals'
+import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectProfile } from '../projects/_composables/use-project-profile'
-import { useGetStreamAll } from './_composables/use-project-location'
+import { useGetProjectLocation } from './_composables/use-project-location'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
@@ -144,35 +144,19 @@ const items = [
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
-const selectedProjectIdCore = computed(() => store.selectedProject?.idCore)
-const { isLoading: isLoadingProjectStreams, data: streams } = useGetStreamAll(apiClientCore, selectedProjectIdCore)
-
-const getUniqArray = (array: string[]): string[] => {
-  return array.flat().filter((value, index, self) => self.findIndex(name => name === value) === index).filter(n => n !== null)
-}
+const selectedProjectId = computed(() => store.selectedProject?.id)
+const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
 
 const projectFlag = computed(() => {
-  if (isLoadingProjectStreams.value || streams.value == null) {
-    return ''
-  }
-  const codes = streams.value.map(stream => stream.country_code)
-  const uniqCodes = getUniqArray(codes)
-  return uniqCodes.length > 1 ? '' : codes[0] as string
+  return projectLocation.value && projectLocation.value.code ? (projectLocation.value.code.length > 1 ? '' : projectLocation.value.code[0]) : ''
 })
 
 const projectCountry = computed(() => {
-  if (isLoadingProjectStreams.value || streams.value == null) {
-    return ''
-  }
-  const countries = streams.value.map(stream => stream.country_name)
-  return getUniqArray(countries).join(', ')
+  return projectLocation.value ? projectLocation.value.country?.join(', ') : ''
 })
 
 const { data: profile } = useGetProjectProfile(apiClientBio, selectedProject.value?.id ?? -1)
-
-const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 const formatDateRange = (date: Date | null | undefined): string => {

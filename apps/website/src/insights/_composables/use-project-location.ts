@@ -2,11 +2,11 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 import { type UseQueryReturnType, useQuery } from 'vue-query'
 
-import { type StreamAllResponse, apiCoreGetStreamAll } from '@rfcx-bio/common/api-core/stream/stream-all'
+import { type ProjectLocationResponse, apiBioGetProjectLocation } from '@rfcx-bio/common/api-bio/project/project-location'
 
-export const useGetStreamAll = (apiClient: AxiosInstance, coreProjectId: ComputedRef<string | undefined>): UseQueryReturnType< StreamAllResponse, unknown> => {
+export const useGetProjectLocation = (apiClient: AxiosInstance, locationProjectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectLocationResponse, unknown> => {
   return useQuery(
-    ['get-core-project-location', coreProjectId],
-    async () => await apiCoreGetStreamAll(apiClient, { projects: [coreProjectId?.value ?? ''] })
+    ['get-core-project-location', locationProjectId],
+    async () => await apiBioGetProjectLocation(apiClient, locationProjectId?.value ?? -1)
   )
 }

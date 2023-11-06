@@ -1,6 +1,6 @@
 import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 
-import { type ProjectRecordingCountResponse, type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type ProjectRecordingCountResponse, type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
 import { type Project, type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
