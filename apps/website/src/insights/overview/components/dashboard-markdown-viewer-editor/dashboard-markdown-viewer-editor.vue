@@ -2,7 +2,6 @@
   <template v-if="(rawMarkdownText == null || rawMarkdownText === '') && !isViewMored">
     <ProjectSummaryEmpty
       @emit-add-content="editMarkdownContent"
-      @emit-close="expandMarkdownContentEmpty"
     />
   </template>
   <template v-else>
@@ -62,12 +61,6 @@ const editableMarkdownText = toRef(props.rawMarkdownText == null || props.rawMar
 const expandMarkdownContent = (): void => {
   emit('update:isViewMored', true)
   emit('update:isEditing', false)
-}
-
-const expandMarkdownContentEmpty = (): void => {
-  emit('update:isViewMored', true)
-  emit('update:isEditing', false)
-  editableMarkdownText.value = ''
 }
 
 const editMarkdownContent = (): void => {

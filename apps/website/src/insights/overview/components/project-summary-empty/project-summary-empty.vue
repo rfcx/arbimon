@@ -15,7 +15,6 @@
         viewBox="0 0 16 16"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        @click="$emit('emit-close')"
       >
         <path
           d="M12 4L4 12"
@@ -37,5 +36,5 @@
 </template>
 
 <script setup lang="ts">
-defineEmits<{(event: 'emit-add-content'): void, (event: 'emit-close'): void}>()
+defineEmits<{(event: 'emit-add-content'): void}>()
 </script>
