@@ -17,13 +17,9 @@
           <h1 class="text-frequency font-header">
             {{ selectedProject?.name }}
           </h1>
-          <hero-brief-overview
-            :can-edit="false"
-            :default-text="dashboardStore.projectSummary ?? ''"
-          />
-          <div class="mt-4 flex flex-row items-center justify-start">
+          <div class="my-4 flex gap-2 font-display text-insight text-sm flex-wrap">
             <div
-              class="flex flex-row items-center font-display text-sm mr-2 border-r-2 border-gray-300 h-5"
+              class="flex flex-row items-center font-display text-sm mr-2 h-5"
             >
               <icon-fas-spinner
                 v-if="isLoadingProjectStreams"
@@ -37,7 +33,7 @@
               </span>
               <div
                 v-if="projectFlag"
-                class="mr-2 align-baseline"
+                class="align-baseline"
               >
                 <country-flag
                   :country="projectFlag"
@@ -46,30 +42,31 @@
               </div>
               <icon-custom-fi-globe
                 v-else
-                class="self-start mr-2"
               />
             </div>
-            <div
-              class="font-display text-sm flex flex-row items-center justify-between mr-2 border-r-2 border-gray-300 h-5"
-            >
-              <span
-                class="text-insight text-sm mx-3"
-              >
+            <div class="flex flex-row border-x-2 border-gray-300 px-2 space-x-4 items-center">
+              <span>
                 Project dates:
               </span>
-              <span
-                class="text-insight uppercase mx-3"
-              >
+              <span class="uppercase">
                 {{ formatDateRange(metrics?.minDate) }}
               </span>
               <icon-custom-arrow-right-white class="self-start" />
               <span
-                class="text-insight uppercase mx-3 my-2"
+                class="uppercase"
               >
                 {{ formatDateRange(metrics?.maxDate) }}
               </span>
             </div>
+            <div>
+              <span>Objectives: </span>
+              {{ projectObjectives }}
+            </div>
           </div>
+          <hero-brief-overview
+            :can-edit="false"
+            :default-text="dashboardStore.projectSummary ?? ''"
+          />
         </div>
         <div class="justify-self-end order-first md:order-last">
           <span class="text-xxs text-fog">// TODO: menu</span>
@@ -118,6 +115,7 @@ import { apiClientBioKey, apiClientCoreKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectProfile } from '../projects/_composables/use-project-profile'
+import { objectiveTypes } from '../projects/types'
 import { useGetStreamAll } from './_composables/use-project-location'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
@@ -183,6 +181,16 @@ const { data: profile } = useGetProjectProfile(apiClientBio, selectedProject.val
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+
+const projectObjectives = computed(() => {
+  if (!profile.value) return ''
+  const objectives = profile.value.objectives
+  const objectiveDescs = objectives?.map((obj) => {
+    const objectiveType = objectiveTypes.find((o) => o.slug === obj)
+    return objectiveType?.description ?? obj
+  })
+  return objectiveDescs?.join(', ')
+})
 
 const formatDateRange = (date: Date | null | undefined): string => {
   if (!dayjs(date).isValid()) return 'no data'
