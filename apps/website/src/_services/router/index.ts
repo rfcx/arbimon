@@ -18,16 +18,6 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingHome
       },
       {
-        path: 'featured',
-        name: ROUTE_NAMES.landingFeatured,
-        component: PAGES.LandingFeatured
-      },
-      {
-        path: 'featured/:slug',
-        name: ROUTE_NAMES.landingFeaturedDetail,
-        component: PAGES.LandingFeaturedDetail
-      },
-      {
         path: 'howitworks',
         name: ROUTE_NAMES.landingHowItWorks,
         component: PAGES.LandingHowItWorks
