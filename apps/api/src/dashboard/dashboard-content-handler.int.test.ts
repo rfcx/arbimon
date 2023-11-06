@@ -3,7 +3,6 @@ import fastify, { type FastifyInstance } from 'fastify'
 import { vi, beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { checkUserPermissionForEditingDashboardContent } from '~/api-core/api-core'
 
 import { GET, PATCH } from '~/api-helpers/types'
 import { getSequelize } from '~/db'
