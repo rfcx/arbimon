@@ -39,7 +39,9 @@
       :selected-risk="selectedRisk"
       class="mt-6"
     />
-    <h2>Taxonomic groups</h2>
+    <h2 class="mt-6">
+      Taxonomic groups
+    </h2>
     <h6>Number of species detected in each taxonomic group.</h6>
     <div class="dashboard-taxon">
       <StackDistribution

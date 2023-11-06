@@ -3,18 +3,9 @@
     class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
   >
     <div class="pl-18">
-      <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight flex flex-col md:flex-row justify-between">
-        <div class="">
-          <router-link
-            :to="{ name: ROUTE_NAMES.projectSettings }"
-            class="flex flex-row items-center justify-start mb-4"
-          >
-            <button class="btn btn-secondary py-2">
-              Edit
-            </button>
-          </router-link>
-
-          <h1 class="text-frequency font-header">
+      <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight">
+        <div class="flex flex-col">
+          <h1 class="text-frequency font-header pt-8 pb-6">
             {{ selectedProject?.name }}
           </h1>
           <div class="my-4 flex gap-2 font-display text-insight text-sm flex-wrap">
@@ -67,9 +58,19 @@
             :can-edit="false"
             :default-text="dashboardStore.projectSummary ?? ''"
           />
-        </div>
-        <div class="justify-self-end order-first md:order-last">
-          <span class="text-xxs text-fog">// TODO: menu</span>
+          <div class="flex gap-4 lg:justify-between order-first">
+            <router-link
+              :to="{ name: ROUTE_NAMES.projectSettings }"
+              class="flex flex-row items-center justify-start mb-4"
+            >
+              <button class="btn btn-secondary group">
+                Edit <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
+              </button>
+            </router-link>
+            <div class="justify-self-end">
+              <span class="text-xxs text-fog">// TODO: menu</span>
+            </div>
+          </div>
         </div>
       </div>
       <insight-not-ready-card v-if="!metrics?.totalDetections && !isLoading" />
