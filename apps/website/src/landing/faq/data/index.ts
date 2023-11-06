@@ -1,7 +1,7 @@
 export const faqList: Array<{ question: string, answer: string }> = [
   {
     question: 'Why is arbimon free?',
-    answer: `We know that protecting biodiversity is critical to our future and we believe that biodiversity monitoring needs to be free and open to lead to impact. Rainforest Connection is committed to funding responsible scientific research on Arbimon through partnership, grants, fellowships and research networks. Since we are a non-for-profit, we rely on organizations such as governmental agencies, companies doing research and development, and non-profit foundations to provide the funding for implementing conservation projects, developing new analytical tools, curating our species databases, and improving and supporting the platform. Additionally, anyone can be public donors who support our numerous initiatives such as [protecting endangered species](/featured/endangered-species), [reforestation and restoration](/featured/restoration), and [establishing biodiversity baseline](/featured/biodiversity-baselines).
+    answer: `We know that protecting biodiversity is critical to our future and we believe that biodiversity monitoring needs to be free and open to lead to impact. Rainforest Connection is committed to funding responsible scientific research on Arbimon through partnership, grants, fellowships and research networks. Since we are a non-for-profit, we rely on organizations such as governmental agencies, companies doing research and development, and non-profit foundations to provide the funding for implementing conservation projects, developing new analytical tools, curating our species databases, and improving and supporting the platform. Additionally, anyone can be public donors who support our numerous initiatives such as protecting endangered species, reforestation and restoration, and establishing biodiversity baseline.
 
 If you find our services helpful to you, we invite you to join our mission to monitor, protect and conserve biodiversity around the world. There are some simple steps (like citing Arbimon) that would make a huge difference. Learn more about [how you can contribute](#how-can-i-contribute-to-arbimon).`
   },
@@ -34,7 +34,7 @@ As an environmental organization, we would like to minimize both the monetary co
     question: 'How can I contribute to Arbimon?',
     answer: `If you are publishing scientific work, offering workshops and talks, then please [cite Arbimon](#how-should-arbimon-be-cited) and link to our site whenever possible. Other ways you can contribute include:
 
-- [Reach out](/contact) to our team to collaborate (e.g. partner with us in a project proposal, [see our past partnership project here](/featured)).
+- [Reach out](/contact) to our team to collaborate.
 - Make your project insights public - Public projects enable open collaboration, which is essential to to improve ecological knowledge and conservation efforts, facilitate break through discoveries and share insights and findings with the world. We take your data privacy seriously. We will never share and divulge sensitive information from the users and datasets, and you can decide on what data you are sharing. [Learn more about our data privacy here](https://rfcx.org/privacy-policy).
 - Share your work on social media with us by tagging our accounts, and using the hashtags: #arbimon, #rainforestcx, #usingtechtoprotect.
 - [Donate](https://rfcx.org/?form=SupportArbimon) to Rainforest Connection to support maintaining the platform and adding new features.`
