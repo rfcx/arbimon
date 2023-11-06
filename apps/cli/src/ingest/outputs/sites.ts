@@ -6,21 +6,21 @@ import { type Site, type SyncError } from '@rfcx-bio/common/dao/types'
 
 import { type SiteArbimon, transformArbimonSites } from '../parsers/parse-site-arbimon-to-bio'
 
-const checkIfProjectChanged = async (site: Omit<Site, 'id'>, sequelize: Sequelize): Promise<void> => {
+const checkIfProjectChanged = async (site: Omit<Site, 'id'>, sequelize: Sequelize, transaction: Transaction | null = null): Promise<void> => {
   const bioSite = await ModelRepository.getInstance(sequelize).LocationSite.findOne({
     where: { idArbimon: site.idArbimon },
     attributes: ['id', 'idArbimon', 'locationProjectId'],
     raw: true
   })
-
+  console.info('- site sync-checkIfProjectChanged', bioSite?.locationProjectId, site.locationProjectId)
   if (bioSite && bioSite.locationProjectId !== site.locationProjectId) {
     await ModelRepository.getInstance(sequelize).RecordingBySiteHour.update(
       { locationProjectId: site.locationProjectId },
-      { where: { locationProjectId: bioSite.locationProjectId, locationSiteId: bioSite.id }, returning: false }
+      { where: { locationProjectId: bioSite.locationProjectId, locationSiteId: bioSite.id }, returning: false, ...transaction && { transaction } }
     )
     await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.update(
       { locationProjectId: site.locationProjectId },
-      { where: { locationProjectId: bioSite.locationProjectId, locationSiteId: bioSite.id }, returning: false }
+      { where: { locationProjectId: bioSite.locationProjectId, locationSiteId: bioSite.id }, returning: false, ...transaction && { transaction } }
     )
   }
 }
@@ -74,12 +74,12 @@ const createUpdateSites = async (sites: SiteArbimon[], sequelize: Sequelize, tra
 
   for (const site of transformedSites) {
     try {
+      await checkIfProjectChanged(site, sequelize, transaction)
       await ModelRepository.getInstance(sequelize).LocationSite.bulkCreate([site], {
         updateOnDuplicate: UPDATE_ON_DUPLICATE_LOCATION_SITE,
         ...transaction && { transaction }
       })
       successToInsertItems.push(site)
-      await checkIfProjectChanged(site, sequelize)
     } catch (e: any) {
       console.info('⚠️ Batch insert failed... try loop upsert')
       const failed = await loopUpsert([site], sequelize, transaction)
