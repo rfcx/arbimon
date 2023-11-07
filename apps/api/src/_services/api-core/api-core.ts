@@ -99,6 +99,19 @@ export async function getProject (id: string, token: string): Promise<Pick<CoreP
   return response.data
 }
 
+export async function editProject (id: string, project: Pick<CoreProject, 'name'>, token: string): Promise<boolean> {
+  if (project.name === undefined) {
+    throw new Error('Edit project failed: no name')
+  }
+  const response = await axios.request({
+    method: 'PATCH',
+    url: `${CORE_API_BASE_URL}/projects/${id}`,
+    headers: { authorization: token },
+    data: project
+  }).catch(unpackAxiosError)
+  return response.status >= 200 && response.status <= 205
+}
+
 export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({

@@ -10,7 +10,7 @@ import { type ProjectProfileUpdateBody } from './project-profile'
 export type ProjectSettingsParams = ProjectRouteParamsSerialized
 
 // Response types
-export type ProjectSettingsUpdateBody = ProjectProfileUpdateBody & { name?: string }
+export type ProjectSettingsUpdateBody = ProjectProfileUpdateBody & { name: string }
 export type ProjectSettingsResponse = Pick<Project, 'name'> & Pick<LocationProjectProfile, 'summary' | 'objectives'>
 
 // Route
