@@ -9,8 +9,9 @@
       v-model="name"
       name="name"
       type="text"
-      class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+      class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-50"
       placeholder="Brown bears in Eastern Finland"
+      :disabled="!allowNameChanges"
       required
     >
   </div>
@@ -84,9 +85,13 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import type { ProjectDefault } from '../../types'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   existingName?: string
-}>()
+  allowNameChanges?: boolean
+}>(), {
+  existingName: '',
+  allowNameChanges: true
+})
 
 const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
 
