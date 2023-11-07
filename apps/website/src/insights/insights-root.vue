@@ -123,7 +123,7 @@ import CountryFlag from 'vue-country-flag-next'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
-import { useGetProjectProfile } from '../projects/_composables/use-project-profile'
+import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
 import { objectiveTypes } from '../projects/types'
 import { useGetProjectLocation } from './_composables/use-project-location'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
@@ -172,7 +172,7 @@ const projectCountry = computed(() => {
   return projectLocation.value ? projectLocation.value.country?.join(', ') : ''
 })
 
-const { data: profile } = useGetProjectProfile(apiClientBio, selectedProject.value?.id ?? -1)
+const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 const projectObjectives = computed(() => {

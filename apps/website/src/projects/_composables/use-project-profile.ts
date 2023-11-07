@@ -1,3 +1,4 @@
+import { type ComputedRef } from 'vue'
 import { type AxiosInstance } from 'axios'
 import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from 'vue-query'
 
@@ -22,10 +23,10 @@ export const useUpdateProjectProfile = (apiClient: AxiosInstance, projectId: num
   })
 }
 
-export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: number): UseQueryReturnType<ProjectSettingsResponse, unknown> => {
+export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectSettingsResponse, unknown> => {
   return useQuery({
     queryKey: ['get-project-settings'],
-    queryFn: async () => await apiBioGetProjectSettingsData(apiClient, projectId)
+    queryFn: async () => await apiBioGetProjectSettingsData(apiClient, projectId.value ?? -1)
   })
 }
 
