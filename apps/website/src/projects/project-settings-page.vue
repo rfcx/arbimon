@@ -116,10 +116,11 @@ const save = () => {
   }, {
     onSuccess: () => {
       isSaving.value = false
+      store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value.join(', '))
       dashboardStore.updateProjectSummary(newSummary.value)
     },
-    onError: (e) => {
+    onError: () => {
       isSaving.value = false
       // TODO: show error message
     }
