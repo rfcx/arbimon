@@ -61,7 +61,10 @@
             :can-edit="false"
             :default-text="dashboardStore.projectSummary ?? ''"
           />
-          <div class="flex gap-4 lg:justify-between order-first">
+          <div
+            v-if="isProjectMember"
+            class="flex gap-4 lg:justify-between order-first"
+          >
             <router-link
               :to="{ name: ROUTE_NAMES.projectSettings }"
               class="flex flex-row items-center justify-start mb-4"
@@ -162,6 +165,9 @@ const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
+const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+
+// Flag and country
 const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
 
 const projectFlag = computed(() => {
@@ -175,6 +181,8 @@ const projectCountry = computed(() => {
   if (projectLocation.value.country === null) return ''
   return projectLocation.value.country.join(', ')
 })
+
+// Project settings & metrics
 
 const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
