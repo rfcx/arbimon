@@ -1,5 +1,5 @@
-import { type ComputedRef } from 'vue'
 import { type AxiosInstance } from 'axios'
+import { type ComputedRef } from 'vue'
 import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from 'vue-query'
 
 import { type ProjectProfileResponse, type ProjectProfileUpdateBody, apiBioGetProjectProfileData, apiBioUpdateProjectProfileData } from '@rfcx-bio/common/api-bio/project-profile/project-profile'
