@@ -188,8 +188,7 @@ const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 const projectObjectives = computed(() => {
-  if (!profile.value) return ''
-  const objectives = profile.value.objectives
+  const objectives = dashboardStore.projectObjectives ?? profile?.value?.objectives ?? []
   if (objectives.length === 0) return ''
   const objectiveDescs = objectives?.map((obj) => {
     const objectiveType = objectiveTypes.find((o) => o.slug === obj)
