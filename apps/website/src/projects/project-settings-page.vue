@@ -72,7 +72,7 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 
-const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId.value ?? -1)
+const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 
 const newName = ref('')
