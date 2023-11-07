@@ -4,6 +4,17 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
 
+export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
+  const project = await ModelRepository.getInstance(getSequelize())
+  .LocationProject
+  .findOne({
+    where: { id: locationProjectId },
+    attributes: ['idCore'],
+    raw: true
+  })
+  return project?.idCore ?? undefined
+}
+
 export const getProjectProfile = async (locationProjectId: number): Promise<ProjectProfileResponse> =>
   await ModelRepository.getInstance(getSequelize())
     .LocationProjectProfile

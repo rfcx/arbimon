@@ -3,7 +3,8 @@ import { type ProjectSettingsParams, type ProjectSettingsResponse, type ProjectS
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectSettings, updateProjectSettings } from './project-profile-dao'
+import { getProjectSettings } from './project-profile-dao'
+import { updateProjectAndProfile } from './project-settings-bll'
 
 export const projectSettingsHandler: Handler<ProjectSettingsResponse, ProjectSettingsParams> = async (req) => {
   // Inputs & validation
@@ -22,7 +23,6 @@ export const projectSettingsHandler: Handler<ProjectSettingsResponse, ProjectSet
 export const projectSettingsUpdateHandler: Handler<ProjectSettingsResponse, ProjectSettingsParams, unknown, ProjectSettingsUpdateBody> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
-  const { summary, objectives, name } = req.body
   assertPathParamsExist({ projectId })
 
   const projectIdInteger = Number(projectId)
@@ -30,11 +30,5 @@ export const projectSettingsUpdateHandler: Handler<ProjectSettingsResponse, Proj
     throw BioInvalidPathParamError({ projectId })
   }
 
-  // TODO: validate user permissions with Core API
-
-  if (summary === undefined && objectives === undefined) {
-    throw new Error('Either summary or readme must be provided')
-  }
-
-  return await updateProjectSettings(projectIdInteger, { summary, objectives, name })
+  return await updateProjectAndProfile(req.body, req.headers.authorization ?? '', projectIdInteger)
 }
