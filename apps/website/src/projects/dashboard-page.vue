@@ -82,7 +82,7 @@ import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonKey } from '@/globals'
-import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 // import { useAuth0Client, getIdToken } from '~/auth-client'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
@@ -120,7 +120,7 @@ const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const isShowLabels = true
 const mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS
-let mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_HEATMAP
+const mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_CIRCLE
 const tabHeight = 360
 
 // External data
@@ -213,12 +213,10 @@ function toggleAnalysisSelector (isOpened: boolean): void {
 
 onMounted(() => {
   initModals()
-  mapStatisticsStyle = MAPBOX_STYLE_CIRCLE
 })
 
 watch(() => isLoadingSitesRecCountBio.value, () => {
   mapDataset()
-  mapStatisticsStyle = MAPBOX_STYLE_CIRCLE
 })
 
 </script>
