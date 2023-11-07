@@ -8,7 +8,7 @@
         {{ title }}
         <span v-if="unit">({{ unit }})</span>
       </h5>
-      <icon-fas-info-circle
+      <icon-custom-ic-info
         v-if="tooltipText"
         :data-tooltip-target="tooltipId"
         data-tooltip-style="light"
