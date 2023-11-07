@@ -11,6 +11,7 @@
         <div>
           <project-form
             :existing-name="selectedProject?.name"
+            :allow-name-changes="false"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
