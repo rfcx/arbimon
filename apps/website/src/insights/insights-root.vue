@@ -68,7 +68,12 @@
               </button>
             </router-link>
             <div class="justify-self-end">
-              <span class="text-xxs text-fog">// TODO: menu</span>
+              <button class="btn text-sm font-medium">
+                This page is visible to project members only
+              </button>
+              <button class="btn btn-primary">
+                Share Insights on Arbimon
+              </button>
             </div>
           </div>
         </div>
