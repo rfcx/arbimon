@@ -67,19 +67,41 @@
           >
             <router-link
               :to="{ name: ROUTE_NAMES.projectSettings }"
-              class="flex flex-row items-center justify-start mb-4"
+              class="flex flex-row items-center justify-start"
             >
               <button class="btn btn-secondary group">
                 Edit <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
               </button>
             </router-link>
-            <div class="justify-self-end">
-              <button class="btn text-sm font-medium">
-                This page is visible to project members only
-              </button>
-              <button class="btn btn-primary">
-                Share Insights on Arbimon
-              </button>
+            <div class="justify-self-end flex flex-row gap-x-6 items-center">
+              <h4
+                v-show="!isGetInsightsPublishStatusLoading"
+                class="text-white text-sm font-medium leading-none mx-2"
+              >
+                <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
+                  <icon-custom-fi-eye class="inline-flex mr-2" /> This page is now live on Arbimon's Directory
+                </template>
+                <template v-else>
+                  <icon-custom-fi-eye-off class="inline-flex mr-2" /> This page is visible to project member only
+                </template>
+              </h4>
+
+              <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
+                <button
+                  class="btn btn-secondary"
+                  @click="updatePublishStatus(false)"
+                >
+                  Hide Insight
+                </button>
+              </template>
+              <template v-else>
+                <button
+                  class="btn btn-primary"
+                  @click="updatePublishStatus(true)"
+                >
+                  Share Insight on Arbimon
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -128,7 +150,9 @@ import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
 import { objectiveTypes } from '../projects/types'
+import { useGetInsightsPublishStatus } from './_composables/use-get-insights-publish-status'
 import { useGetProjectLocation } from './_composables/use-project-location'
+import { useUpdateInsightsPublishStatus } from './_composables/use-update-insights-publish-status'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
@@ -170,6 +194,10 @@ const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? fal
 // Flag and country
 const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
 
+const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
+
+const { mutate: mutateInsightsPublishStatus } = useUpdateInsightsPublishStatus(apiClientBio, selectedProjectId)
+
 const projectFlag = computed(() => {
   if (projectLocation.value === undefined) return ''
   if (projectLocation.value.code === null) return ''
@@ -206,5 +234,17 @@ watch(() => profile.value, () => {
   if (!profile.value) return
   dashboardStore.updateProjectSummary(profile.value.summary)
 })
+
+const updatePublishStatus = (status: boolean): void => {
+  mutateInsightsPublishStatus(status, {
+    onSuccess: () => {
+      insightsPublishStatus.value = { status }
+      insightsPublishStatusRefetch.value()
+    },
+    onError: () => {
+      // TODO: do nothing and show some error.
+    }
+  })
+}
 
 </script>
