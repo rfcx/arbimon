@@ -35,7 +35,7 @@
                 v-else
               />
             </div>
-            <div class="flex flex-row border-x-2 border-gray-300 px-2 space-x-4 items-center">
+            <div class="flex flex-row border-l-2 border-gray-300 px-2 space-x-4 items-center">
               <span>
                 Project dates:
               </span>
@@ -49,7 +49,10 @@
                 {{ formatDateRange(metrics?.maxDate) }}
               </span>
             </div>
-            <div>
+            <div
+              v-if="projectObjectives"
+              class="border-l-2 border-gray-300 px-2"
+            >
               <span>Objectives: </span>
               {{ projectObjectives }}
             </div>
@@ -175,6 +178,7 @@ const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, select
 const projectObjectives = computed(() => {
   if (!profile.value) return ''
   const objectives = profile.value.objectives
+  if (objectives.length === 0) return ''
   const objectiveDescs = objectives?.map((obj) => {
     const objectiveType = objectiveTypes.find((o) => o.slug === obj)
     return objectiveType?.description ?? obj
