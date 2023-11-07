@@ -165,11 +165,15 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
 
 const projectFlag = computed(() => {
-  return projectLocation.value && projectLocation.value.code ? (projectLocation.value.code.length > 1 ? '' : projectLocation.value.code[0]) : ''
+  if (projectLocation.value === undefined) return ''
+  if (projectLocation.value.code === null) return ''
+  return projectLocation.value.code.length > 1 ? '' : projectLocation.value.code[0]
 })
 
 const projectCountry = computed(() => {
-  return projectLocation.value ? projectLocation.value.country?.join(', ') : ''
+  if (projectLocation.value === undefined) return ''
+  if (projectLocation.value.country === null) return ''
+  return projectLocation.value.country.join(', ')
 })
 
 const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
