@@ -26,12 +26,12 @@
           />
         </div>
       </div>
-      <div class="mt-4 sm:mt-6">
+      <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
         <button
-          class="inline-flex items-center btn btn-primary"
+          class="self-end inline-flex items-center btn btn-primary"
           @click.prevent="save"
         >
-          Save
+          Save edit
         </button>
         <svg
           v-if="isSaving"
@@ -51,6 +51,13 @@
             fill="currentColor"
           />
         </svg>
+        <span
+          v-if="hasFailed"
+          class="p-4 text-sm text-red-800 dark:text-flamingo"
+          role="alert"
+        >
+          <span class="font-medium">Failed!</span>
+        </span>
       </div>
     </div>
   </section>
@@ -80,6 +87,7 @@ const newName = ref('')
 const newSummary = ref('')
 const newObjectives = ref([''])
 const isSaving = ref(false)
+const hasFailed = ref(false)
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -107,9 +115,9 @@ watch(() => settings.value, () => {
   newObjectives.value = settings.value.objectives
 })
 
-// TODO: save info to the database
 const save = () => {
   isSaving.value = true
+  hasFailed.value = false
   mutateProjectSettings({
     name: newName.value,
     summary: newSummary.value,
@@ -121,9 +129,10 @@ const save = () => {
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
     },
-    onError: () => {
+    onError: (e) => {
       isSaving.value = false
-      // TODO: show error message
+      hasFailed.value = true
+      console.info(e)
     }
   })
 }

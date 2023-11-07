@@ -1,13 +1,13 @@
 <template>
   <label
     for="name"
-    class="block mb-2 font-medium text-gray-900 dark:text-insight"
+    class="block font-medium text-gray-900 dark:text-insight"
   >Project objectives*</label>
   <ul class="w-full">
     <li
       v-for="obj in objectiveTypes"
       :key="obj.slug"
-      class="flex flex-row flex-1 mt-4"
+      class="flex flex-row flex-1 mt-2"
     >
       <div
         :class="{
