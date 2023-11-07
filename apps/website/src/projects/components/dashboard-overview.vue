@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-orange-100 rounded-2xl shadow py-4 px-6 dark:border-orange-100 h-36">
+  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-insight rounded-2xl shadow py-4 px-6 h-36 shadow-lg shadow-frequency/10">
     <div class="flex flex-row h-6 items-baseline">
       <h5
         v-if="stat.title"
@@ -7,7 +7,7 @@
       >
         {{ stat.title }}
       </h5>
-      <icon-fas-info-circle
+      <icon-custom-ic-info
         v-if="stat.description"
         :data-tooltip-target="stat.value"
         data-tooltip-style="light"
