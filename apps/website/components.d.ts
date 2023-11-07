@@ -57,6 +57,8 @@ declare module '@vue/runtime-core' {
     IconCustomFtSearchLg: typeof import('~icons/custom-icons/ft-search-lg')['default']
     IconCustomFtUndo: typeof import('~icons/custom-icons/ft-undo')['default']
     IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']
+    IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']
+    IconCustomIcInfoCircle: typeof import('~icons/custom-icons/ic-info-circle')['default']
     IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
     IconCustomLinkout: typeof import('~icons/custom-icons/linkout')['default']
     IconCustomPresChartLine: typeof import('~icons/custom-icons/pres-chart-line')['default']
@@ -88,6 +90,7 @@ declare module '@vue/runtime-core' {
     IconFasSpinner: typeof import('~icons/fa-solid/spinner')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']
+    IconIcInfo: typeof import('~icons/ic/info')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
