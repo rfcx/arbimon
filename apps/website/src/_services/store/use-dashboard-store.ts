@@ -10,7 +10,7 @@ export const useDashboardStore = defineStore('metrics-store', () => {
   const speciesCount: Ref<string | undefined> = ref(undefined)
   const projectSummary: Ref<string | undefined> = ref(undefined)
   const projectReadme: Ref<string | undefined> = ref(undefined)
-  const projectObjectives: Ref<string | undefined> = ref(undefined)
+  const projectObjectives: Ref<string[] | undefined> = ref(undefined)
 
   // Reset the values when the selectedProject has changed.
   watch(() => store.selectedProject, () => {
@@ -33,7 +33,7 @@ export const useDashboardStore = defineStore('metrics-store', () => {
     projectSummary.value = ps
   }
 
-  const updateProjectObjectives = (ps: string): void => {
+  const updateProjectObjectives = (ps: string[]): void => {
     projectObjectives.value = ps
   }
 
@@ -46,6 +46,7 @@ export const useDashboardStore = defineStore('metrics-store', () => {
     speciesCount,
     projectSummary,
     projectReadme,
+    projectObjectives,
     updateSpeciesThreatenedCount,
     updateSpeciesCount,
     updateProjectReadme,
