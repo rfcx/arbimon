@@ -41,6 +41,10 @@ export const useStore = defineStore('root', {
       this.selectedProject = project
       this.projectFilters = undefined
     },
+    updateProjectName (name: string) {
+      if (this.selectedProject == null) return
+      this.selectedProject.name = name
+    },
     async updateProjectFilters () {
       if (this.selectedProject == null) {
         this.projectFilters = undefined
