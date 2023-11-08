@@ -76,13 +76,13 @@
             <div class="justify-self-end flex flex-row gap-x-6 items-center">
               <h4
                 v-show="!isGetInsightsPublishStatusLoading"
-                class="text-white text-sm font-medium leading-none mx-2"
+                class="text-white text-sm font-medium font-header leading-none mx-2"
               >
                 <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
                   <icon-custom-fi-check-circle class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
                 </template>
                 <template v-else>
-                  <icon-custom-fi-circle class="inline-flex mr-2" /> This page is visible to project member only
+                  <icon-custom-fi-circle class="inline-flex text-white mr-2" /> This page is visible to project member only
                 </template>
               </h4>
 
