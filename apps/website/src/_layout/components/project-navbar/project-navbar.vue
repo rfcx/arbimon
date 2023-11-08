@@ -43,7 +43,7 @@
                   :to="{ name: ROUTE_NAMES.explore }"
                   class="block py-2 pr-4 pl-3 md:p-0 text-gray-700 dark:text-insight"
                 >
-                  Explore
+                  Projects
                 </router-link>
               </li>
             </ul>

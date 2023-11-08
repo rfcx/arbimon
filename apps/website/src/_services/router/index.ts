@@ -55,7 +55,7 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/explore',
+    path: '/projects',
     name: ROUTE_NAMES.explore,
     component: PAGES.Explore
   },
