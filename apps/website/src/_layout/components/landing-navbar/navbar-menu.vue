@@ -15,7 +15,7 @@
         exact-active-class="tab-active"
         class="block tab"
       >
-        Explore
+        Projects
       </router-link>
     </li>
     <li>
