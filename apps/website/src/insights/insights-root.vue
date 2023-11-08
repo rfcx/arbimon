@@ -79,10 +79,10 @@
                 class="text-white text-sm font-medium leading-none mx-2"
               >
                 <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
-                  <icon-custom-fi-eye class="inline-flex mr-2" /> This page is now live on Arbimon's Directory
+                  <icon-custom-fi-check-circle class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
                 </template>
                 <template v-else>
-                  <icon-custom-fi-eye-off class="inline-flex mr-2" /> This page is visible to project member only
+                  <icon-custom-fi-circle class="inline-flex mr-2" /> This page is visible to project member only
                 </template>
               </h4>
 

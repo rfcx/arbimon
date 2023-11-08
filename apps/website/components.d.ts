@@ -36,6 +36,8 @@ declare module '@vue/runtime-core' {
     IconCustomElAngleDown: typeof import('~icons/custom-icons/el-angle-down')['default']
     IconCustomFiActivity: typeof import('~icons/custom-icons/fi-activity')['default']
     IconCustomFiAed: typeof import('~icons/custom-icons/fi-aed')['default']
+    IconCustomFiCheckCircle: typeof import('~icons/custom-icons/fi-check-circle')['default']
+    IconCustomFiCircle: typeof import('~icons/custom-icons/fi-circle')['default']
     IconCustomFiClipboard: typeof import('~icons/custom-icons/fi-clipboard')['default']
     IconCustomFiEdit: typeof import('~icons/custom-icons/fi-edit')['default']
     IconCustomFiEye: typeof import('~icons/custom-icons/fi-eye')['default']
