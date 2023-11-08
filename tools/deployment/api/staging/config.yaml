@@ -15,5 +15,5 @@ metadata:
 data:
   ## Config
 
-  CORE_API_BASE_URL: https://staging-api.rfcx.org
+  CORE_API_BASE_URL: http://core-api-service.staging.svc.cluster.local/
 
