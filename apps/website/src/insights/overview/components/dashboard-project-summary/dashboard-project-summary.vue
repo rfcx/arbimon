@@ -278,6 +278,7 @@ import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor
 import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
 import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
+import { useUpdateDashboardMethods } from '../../composables/use-update-dashboard-methods'
 import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
 import StakeholderCard from '../stakeholder/stakeholder-card.vue'
 
@@ -311,7 +312,7 @@ const { isLoading, data: dashboardContent } = useGetDashboardContent(
 const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateMethods } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.selectedProject?.id ?? -1)
 
 const updateReadme = (value: string): void => {
   mutateReadme(value, {
