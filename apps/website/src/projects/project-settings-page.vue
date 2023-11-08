@@ -1,10 +1,10 @@
 <template>
   <section class="bg-white dark:bg-echo">
-    <div class="py-8 px-4 mx-auto max-w-screen-lg lg:py-24">
+    <div class="px-8 md:px-10 pt-20 pb-10 mx-auto max-w-screen-xl lg:py-24">
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
-      <p class="mt-4">
+      <p class="mt-4 text-fog">
         Review your project information.
       </p>
       <div class="grid mt-6 lg:(grid-cols-2 gap-10)">

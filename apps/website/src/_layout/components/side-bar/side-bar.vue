@@ -32,6 +32,12 @@
             >
               <icon-custom-pres-chart-line />
             </span>
+            <span
+              v-if="item.iconRaw === 'fi-settings'"
+              class="py-0.5 px-1"
+            >
+              <icon-custom-fi-settings />
+            </span>
             <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
           </router-link>
           <a
@@ -39,12 +45,6 @@
             :href="arbimonLink + item.legacyPath"
             class="flex items-center p-2 text-base text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
           >
-            <span
-              v-if="item.iconRaw === 'fi-settings'"
-              class="py-0.5 px-1"
-            >
-              <icon-custom-fi-settings />
-            </span>
             <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
             <icon-custom-linkout
               v-if="item.legacyPath"
@@ -127,7 +127,7 @@
       <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
         <li>
           <router-link
-            :to="ROUTE_NAMES.myProjects"
+            :to="{ name: ROUTE_NAMES.myProjects }"
             class="flex items-center p-2 text-base font-normal text-insight transition duration-100 hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
           >
             <span
@@ -257,7 +257,9 @@ const allItems: Item[] = [
   {
     title: 'Project Settings',
     iconRaw: 'fi-settings',
-    legacyPath: '/settings'
+    route: {
+      name: ROUTE_NAMES.projectSettings
+    }
   }
 ]
 

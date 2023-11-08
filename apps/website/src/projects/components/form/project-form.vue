@@ -9,7 +9,7 @@
       v-model="name"
       name="name"
       type="text"
-      class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-50"
+      class="w-full border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
       placeholder="Brown bears in Eastern Finland"
       :disabled="!allowNameChanges"
       required
