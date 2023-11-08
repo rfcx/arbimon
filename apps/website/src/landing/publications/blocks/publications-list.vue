@@ -45,6 +45,12 @@
           </circle>
         </svg>
         <div
+          v-else-if="searchTermAppliedPublications.length === 0"
+          class="text-center font-header text-2xl mt-4"
+        >
+          No results
+        </div>
+        <div
           v-for="(publicationYear, idx) in publicationYearsList"
           v-else
           :key="`${publicationYear}_${idx}`"
@@ -105,7 +111,7 @@ const searchTermAppliedPublications = computed<Publication[]>(() => {
 
   // INFO: Check out https://github.com/leeoniya/uFuzzy/issues/7
   const haystack = paperPublishedByAppliedPublications.value.map(paper => {
-    return `${paper.title}¦${paper.author}¦${paper.orgMention}`
+    return `${paper.title}¦${paper.author}¦${paper.orgMention}¦${paper.journal}`
   })
 
   const indexes = uf.value.filter(haystack, search.value)
