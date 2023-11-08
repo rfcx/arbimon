@@ -32,7 +32,7 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
       where: {
         [Op.or]: [
           { idCore: memberProjectCoreIds },
-          { id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_public = true)') } }
+          { id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_published = true)') } }
         ]
       },
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
