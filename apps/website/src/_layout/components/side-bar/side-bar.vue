@@ -1,13 +1,13 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-16 left-0 w-18 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition delay-500 duration-300 ease-in-out hover:(w-64 delay-300)"
+    class="fixed z-50 top-16 left-0 w-14 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition delay-500 duration-300 ease-in-out hover:(w-64 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
     @mouseleave="showSidebar = false; collapse()"
   >
-    <div class="h-full pb-4 px-3 overflow-y-auto">
+    <div class="h-full pb-4 px-2 overflow-y-auto">
       <ul class="space-y-2 border-gray-200 dark:border-gray-700">
         <li
           v-for="item in items"
@@ -18,23 +18,23 @@
             :to="item.route"
             :title="item.title"
             exact-active-class="bg-gray-100 rounded-lg text-moss"
-            class="flex items-center p-2 text-base text-insight transition delay-500 duration-300 ease-in-out hover:(bg-util-gray-02 rounded-lg)"
+            class="flex items-center p-2 text-base text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300)"
           >
             <span
               v-if="item.iconRaw === 'fi-grid'"
-              class="py-0.5 px-1"
+              class="py-0.5"
             >
               <icon-custom-fi-grid />
             </span>
             <span
-              v-if="item.iconRaw === 'pres-chart-line' === true"
-              class="py-0.5 px-1"
+              v-if="item.iconRaw === 'pres-chart-bar' === true"
+              class="py-0.5"
             >
-              <icon-custom-pres-chart-line />
+              <icon-custom-pres-chart-bar />
             </span>
             <span
               v-if="item.iconRaw === 'fi-settings'"
-              class="py-0.5 px-1"
+              class="py-0.5"
             >
               <icon-custom-fi-settings />
             </span>
@@ -43,7 +43,7 @@
           <a
             v-else-if="item.legacyPath"
             :href="arbimonLink + item.legacyPath"
-            class="flex items-center p-2 text-base text-insight transition delay-500 duration-300 ease-in-out hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
+            class="flex items-center p-2 text-base text-insight ease-in-out hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
           >
             <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
             <icon-custom-linkout
@@ -54,25 +54,25 @@
           <button
             v-else
             type="button"
-            class="mainmenu flex items-center p-2 w-full text-base font-normal text-insight transition delay-500 duration-300 ease-in-out hover:(bg-util-gray-02 rounded-lg)"
+            class="mainmenu flex items-center p-2 w-full text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300)"
             :aria-controls="itemId(item.title)"
             :data-collapse-toggle="itemId(item.title)"
           >
             <span
               v-if="item.iconRaw === 'cloud-upload'"
-              class="py-0.5 px-1"
+              class="py-0.5"
             >
               <icon-custom-cloud-upload />
             </span>
             <span
               v-if="item.iconRaw === 'fa-search'"
-              class="py-0.5 px-1"
+              class="py-0.5"
             >
               <icon-fa-search class="h-5 w-5" />
             </span>
             <span
               v-if="item.iconRaw === 'fi-aed'"
-              class="py-0.5 px-1"
+              class="py-0.5"
             >
               <icon-custom-fi-activity class="h-6 w-6" />
             </span>
@@ -105,14 +105,14 @@
                 v-if="childItem.route"
                 :to="childItem.route"
                 exact-active-class="bg-gray-100 rounded-lg text-moss"
-                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight transition delay-500 duration-300 ease-in-out hover:(bg-util-gray-02 rounded-lg)"
+                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300)"
               >
                 {{ childItem.title }}
               </router-link>
               <a
                 v-else-if="childItem.legacyPath"
                 :href="arbimonLink + childItem.legacyPath"
-                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight transition delay-500 duration-300 ease-in-out hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
+                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
               >
                 {{ childItem.title }}
                 <icon-custom-linkout
@@ -128,10 +128,10 @@
         <li>
           <router-link
             :to="{ name: ROUTE_NAMES.myProjects }"
-            class="flex items-center p-2 text-base font-normal text-insight transition delay-500 duration-300 ease-in-out hover:(bg-util-gray-02 rounded-lg) active:(bg-gray-100 rounded-lg text-moss)"
+            class="flex items-center p-2 text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
           >
             <span
-              class="py-0.5 px-1"
+              class="py-0.5"
             >
               <icon-custom-fi-clipboard />
             </span>
@@ -249,7 +249,7 @@ const allItems: Item[] = [
   },
   {
     title: 'Ecological Insights',
-    iconRaw: 'pres-chart-line',
+    iconRaw: 'pres-chart-bar',
     route: {
       name: ROUTE_NAMES.overview
     }
