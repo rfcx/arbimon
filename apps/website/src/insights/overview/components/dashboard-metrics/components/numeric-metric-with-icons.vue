@@ -32,8 +32,8 @@
         <template v-if="iconName === 'ft-map-pin-lg'">
           <icon-custom-ft-map-pin-lg />
         </template>
-        <template v-else-if="iconName === 'ft-bird-lg'">
-          <icon-custom-ft-bird-lg />
+        <template v-else-if="iconName === 'ft-actual-bird'">
+          <icon-custom-ft-actual-bird />
         </template>
         <template v-else-if="iconName === 'ft-search-lg'">
           <icon-custom-ft-search-lg />
@@ -64,7 +64,7 @@ const props = defineProps<{
   tooltipText?: string
   value: number
   totalValue?: number
-  iconName: 'ft-map-pin-lg' | 'ft-bird-lg' | 'ft-search-lg' | 'ft-mic-lg'
+  iconName: 'ft-map-pin-lg' | 'ft-actual-bird' | 'ft-search-lg' | 'ft-mic-lg'
   unit?: string
 }>()
 
