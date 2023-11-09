@@ -64,7 +64,6 @@ declare module '@vue/runtime-core' {
     IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
     IconCustomLinkout: typeof import('~icons/custom-icons/linkout')['default']
     IconCustomPresChartBar: typeof import('~icons/custom-icons/pres-chart-bar')['default']
-    IconCustomPresChartLine: typeof import('~icons/custom-icons/pres-chart-line')['default']
     IconFaCalendar: typeof import('~icons/fa/calendar')['default']
     IconFaCheck: typeof import('~icons/fa/check')['default']
     IconFaChevronDown: typeof import('~icons/fa/chevron-down')['default']

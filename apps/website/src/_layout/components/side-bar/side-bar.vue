@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-16 left-0 w-14 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition delay-500 duration-300 ease-in-out hover:(w-64 delay-300)"
+    class="fixed z-50 top-16 left-0 w-14 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition delay-500 duration-300 ease-in-out hover:(w-64 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
