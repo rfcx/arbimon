@@ -2,7 +2,7 @@
   <div
     class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
   >
-    <div class="pl-18">
+    <div :class="{ 'pl-18': isProjectMember }">
       <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight">
         <div class="flex flex-col">
           <h1 class="text-frequency font-header pt-8 pb-6">
@@ -139,7 +139,7 @@
       </nav>
     </div>
   </div>
-  <div class="pl-18">
+  <div :class="{ 'pl-18': isProjectMember }">
     <div
       class="max-w-screen-xl mx-auto px-6 md:px-10 py-10"
     >
