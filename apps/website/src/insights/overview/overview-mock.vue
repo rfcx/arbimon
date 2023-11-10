@@ -48,7 +48,7 @@ const dashboardStore = useDashboardStore()
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
-const { isLoading: isLoadingSpecies, isError: isErrorSpecies, data: species } = useSpeciesRichnessByRisk(apiClientBio)
+const { data: species } = useSpeciesRichnessByRisk(apiClientBio)
 
 const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   return (species.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
