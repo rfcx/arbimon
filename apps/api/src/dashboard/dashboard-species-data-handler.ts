@@ -3,7 +3,7 @@ import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse } fr
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getRichnessByRisk, getRichnessByTaxon, getTotalSpecies } from './dashboard-species-data-dao'
+import { getHighlightedSpecies, getRichnessByRisk, getRichnessByTaxon, getTotalSpecies } from './dashboard-species-data-dao'
 
 export const dashboardSpeciesDataHandler: Handler<DashboardSpeciesDataResponse, DashboardSpeciesDataParams> = async (req) => {
   // Inputs & validation
@@ -15,15 +15,24 @@ export const dashboardSpeciesDataHandler: Handler<DashboardSpeciesDataResponse, 
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const [richnessByTaxon, richnessByRisk, totalSpecies] = await Promise.all([
+  const [richnessByTaxon, richnessByRisk, totalSpecies, speciesHighlightedRaw] = await Promise.all([
     getRichnessByTaxon(projectIdInteger),
     getRichnessByRisk(projectIdInteger),
-    getTotalSpecies(projectIdInteger)
+    getTotalSpecies(projectIdInteger),
+    getHighlightedSpecies(projectIdInteger)
   ])
 
   return {
     richnessByRisk,
     richnessByTaxon,
+    speciesHighlighted: speciesHighlightedRaw.map(({ taxonClassSlug, taxonSpeciesSlug, riskRatingId, ...rest }) => {
+      return {
+        ...rest,
+        taxonSlug: taxonClassSlug,
+        slug: taxonSpeciesSlug,
+        riskId: riskRatingId
+      }
+    }),
     totalSpeciesCount: totalSpecies
   }
 }

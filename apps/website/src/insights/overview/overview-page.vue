@@ -14,6 +14,9 @@
       <div>
         <h2>Highlighted species</h2>
         // TODO: convert to component
+        <p v-if="species?.speciesHighlighted">
+          {{ species.speciesHighlighted.map(s => s.scientificName) }}
+        </p>
       </div>
       <div class="mt-6">
         <dashboard-species-by-taxon
@@ -24,10 +27,10 @@
     </div>
   </div>
   <div class="mt-10 lg:mt-20">
-    <dashboard-species-by-risk 
-      :is-loading="isLoadingSpecies" 
-      :is-error="isErrorSpecies" 
-      :richness-by-risk="speciesRichnessByRisk" 
+    <dashboard-species-by-risk
+      :is-loading="isLoadingSpecies"
+      :is-error="isErrorSpecies"
+      :richness-by-risk="speciesRichnessByRisk"
     />
   </div>
   <dashbord-map />
