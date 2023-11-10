@@ -4,17 +4,17 @@
     class="h-20"
   />
   <div v-else>
-    <div class="relative mx-2">
-      <div class="absolute w-full h-4 rounded-4xl bg-steel-grey-light" />
+    <div class="relative">
+      <div class="absolute w-full h-6 rounded-4xl bg-steel-grey-light" />
       <div
         v-for="(bar, idx) in bars"
         :key="'dashboard-richness-percentage-' + bar.name"
-        class="absolute h-4 border-4 border-echo"
+        class="absolute h-6 border-4 border-echo"
         :class="idx === bars.length - 1 ? 'rounded-l-4xl rounded-r-4xl' : 'rounded-l-4xl'"
         :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
       >
         <div
-          class="opacity-50 h-2 w-full"
+          class="opacity-50 h-4 w-full"
           :class="bar.id !== selectedId ? 'bg-pitch' : ''"
           :style="{ zIndex: bars.length - idx}"
         />
@@ -34,7 +34,7 @@
         }"
         @click="$emit('emitSelectItem', bar.id)"
       >
-        <span>{{ bar.name }} {{ bar.percentage.toFixed(1) }}%</span>
+        <span class="font-display">{{ bar.name }} ({{ bar.count }}, {{ bar.percentage.toFixed(1) }}%)</span>
       </button>
     </div>
     <div
@@ -50,7 +50,7 @@
           class="rounded-full w-1.5 h-1.5 self-center mx-2"
           :style="{ backgroundColor: bar.color }"
         />
-        {{ bar.name }} {{ bar.percentage.toFixed(1) }}%
+        {{ bar.name }} ({{ bar.count }}, {{ bar.percentage.toFixed(1) }}%)
       </div>
     </div>
   </div>
@@ -71,6 +71,7 @@ export interface Bar {
   id: number
   name: string
   percentage: number
+  count: number
   width: number
   color: string
 }
@@ -117,6 +118,7 @@ const bars = computed<Bar[]>(() => {
       id,
       name,
       percentage,
+      count,
       width: Math.round(width),
       color
     })
