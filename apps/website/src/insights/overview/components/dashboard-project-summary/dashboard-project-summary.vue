@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h2 class="text-white">
-      Project summary
+    <h2 class="text-insight">
+      Summary
     </h2>
 
-    <div class="mb-4 border-b border-white dark:border-white">
+    <div class="mb-4 border-b border-fog dark:border-fog">
       <ul
         id="project-summary-tab"
         class="flex -mb-px text-sm font-medium text-center"
