@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-20">
+  <div>
     <h2 class="text-white">
       Project summary
     </h2>

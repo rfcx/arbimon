@@ -79,17 +79,17 @@
                 class="text-white text-sm font-medium font-header leading-none mx-2"
               >
                 <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
-                  <icon-custom-fi-check-circle class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
+                  <icon-custom-fi-eye class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
                 </template>
                 <template v-else>
-                  <icon-custom-fi-circle class="inline-flex text-white mr-2" /> This page is visible to project member only
+                  <icon-custom-fi-eye-off class="inline-flex text-white mr-2" /> This page is visible to project member only
                 </template>
               </h4>
 
               <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
                 <button
                   class="btn btn-secondary"
-                  @click="updatePublishStatus(false)"
+                  @click="hideInsight"
                 >
                   Hide Insight
                 </button>
@@ -97,7 +97,7 @@
               <template v-else>
                 <button
                   class="btn btn-primary"
-                  @click="updatePublishStatus(true)"
+                  @click="shareInsight"
                 >
                   Share Insight on Arbimon
                 </button>
@@ -106,7 +106,15 @@
           </div>
         </div>
       </div>
-      <insight-not-ready-card v-if="!metrics?.totalDetections && !isLoading" />
+      <ShareInsight
+        v-model="startShareInsightNavigation"
+        @emit-share-insight-successful="refetchInsightPublishStatus"
+        @emit-hide-insight-successful="refetchInsightPublishStatus"
+      />
+      <insight-not-ready-card
+        v-show="false"
+        v-if="!metrics?.totalDetections && !isLoading"
+      />
       <nav class="sticky top-0 z-40">
         <div class="max-w-screen-xl mx-auto px-8">
           <div class="text-center text-gray-500 dark:text-insight">
@@ -142,7 +150,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { apiClientBioKey } from '@/globals'
@@ -152,8 +160,8 @@ import { useGetProjectSettings } from '../projects/_composables/use-project-prof
 import { objectiveTypes } from '../projects/types'
 import { useGetInsightsPublishStatus } from './_composables/use-get-insights-publish-status'
 import { useGetProjectLocation } from './_composables/use-project-location'
-import { useUpdateInsightsPublishStatus } from './_composables/use-update-insights-publish-status'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
+import ShareInsight from './components/share-insight/share-insight.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
@@ -194,10 +202,6 @@ const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? fal
 // Flag and country
 const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
 
-const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
-
-const { mutate: mutateInsightsPublishStatus } = useUpdateInsightsPublishStatus(apiClientBio, selectedProjectId)
-
 const projectFlag = computed(() => {
   if (projectLocation.value === undefined) return ''
   if (projectLocation.value.code === null) return ''
@@ -214,6 +218,13 @@ const projectCountry = computed(() => {
 
 const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+
+// Insights publish status
+const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
+
+const refetchInsightPublishStatus = (): void => {
+  insightsPublishStatusRefetch.value()
+}
 
 const projectObjectives = computed(() => {
   const objectives = dashboardStore.projectObjectives ?? profile?.value?.objectives ?? []
@@ -235,16 +246,14 @@ watch(() => profile.value, () => {
   dashboardStore.updateProjectSummary(profile.value.summary)
 })
 
-const updatePublishStatus = (status: boolean): void => {
-  mutateInsightsPublishStatus(status, {
-    onSuccess: () => {
-      insightsPublishStatus.value = { status }
-      insightsPublishStatusRefetch.value()
-    },
-    onError: () => {
-      // TODO: do nothing and show some error.
-    }
-  })
+const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'idle'>('idle')
+
+const shareInsight = (): void => {
+  startShareInsightNavigation.value = 'start-show'
+}
+
+const hideInsight = (): void => {
+  startShareInsightNavigation.value = 'start-hide'
 }
 
 </script>
