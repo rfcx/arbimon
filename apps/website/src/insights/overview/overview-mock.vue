@@ -6,12 +6,15 @@
       :metrics="metrics"
     />
   </div>
-  <div class="grid grid-col-1 lg:grid-cols-12 gap-10 mt-10 lg:mt-20">
+  <div class="grid grid-col-1 lg:grid-cols-12 gap-20 mt-10 lg:mt-20">
     <div class="lg:col-span-8">
       <dashboard-project-summary />
     </div>
     <div class="lg:col-span-4 flex flex-col">
-      // Highlighted species
+      <div>
+        <h2>Highlighted species</h2>
+        // TODO: convert to component
+      </div>
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"
