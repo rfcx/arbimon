@@ -40,10 +40,6 @@
       class="mt-6"
     />
   </div>
-  <SpeciesByTaxon
-    :dataset="richnessByTaxon"
-    :known-total-count="dashboardStore.speciesCount ?? '0'"
-  />
 </template>
 
 <script setup lang="ts">
@@ -57,7 +53,6 @@ import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import StackDistribution from './components/stack-distribution.vue'
 import { type HorizontalStack } from './components/stack-distribution.vue'
 import { useSpeciesRichnessByRisk } from './composables/use-species'
-import SpeciesByTaxon from './dashboard-species-by-taxon.vue'
 import SpeciesList from './dashboard-species-list.vue'
 
 const dashboardStore = useDashboardStore()

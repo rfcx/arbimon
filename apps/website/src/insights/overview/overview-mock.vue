@@ -1,31 +1,70 @@
 <template>
-  <div class="mb-10">
+  <div>
     <dashboard-metrics
-      :error="isError"
-      :loading="isLoading"
+      :error="isErrorMetrics"
+      :loading="isLoadingMetrics"
       :metrics="metrics"
     />
   </div>
-  <dashboard-species />
-  <dashboard-project-summary class="my-10 md:my-20" />
+  <div class="grid grid-col-1 lg:grid-cols-12 gap-10 mt-10 lg:mt-20">
+    <div class="lg:col-span-8">
+      <dashboard-project-summary />
+    </div>
+    <div class="lg:col-span-4 flex flex-col">
+      // Highlighted species
+      <div class="mt-6">
+        <dashboard-species-by-taxon
+          :dataset="speciesRichnessByTaxon"
+          :known-total-count="dashboardStore.speciesCount ?? '0'"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="mt-10 lg:mt-20">
+    <dashboard-species />
+  </div>
   <dashbord-map />
 </template>
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { computed, inject } from 'vue'
+import { type ComputedRef, computed, inject, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
-import { useStore } from '~/store'
+import { useDashboardStore, useStore } from '~/store'
+import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import DashbordMap from './components/dashboard-map/dashboard-map.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectSummary from './components/dashboard-project-summary/dashboard-project-summary.vue'
+import { type HorizontalStack } from './components/dashboard-species/components/stack-distribution.vue'
+import { useSpeciesRichnessByRisk } from './components/dashboard-species/composables/use-species'
 import DashboardSpecies from './components/dashboard-species/dashboard-species.vue'
+import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-species-by-taxon.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const store = useStore()
+const dashboardStore = useDashboardStore()
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
-const { isLoading, isError, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingSpecies, isError: isErrorSpecies, data: species } = useSpeciesRichnessByRisk(apiClientBio)
+
+const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
+  return (species.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
+    const taxonClass = TAXON_CLASSES_BY_ID[taxonId]
+    return {
+      id: taxonId,
+      name: taxonClass.label,
+      color: taxonClass.color,
+      count
+    }
+  })
+})
+
+watch(() => species.value?.totalSpeciesCount, () => {
+  if (!species.value) return
+  dashboardStore.updateSpeciesCount(`${species.value?.totalSpeciesCount ?? 0}`)
+})
+
 </script>
