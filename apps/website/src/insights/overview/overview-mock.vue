@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="mt-10 lg:mt-20">
-    <dashboard-species />
+    <dashboard-species :is-loading="isLoadingSpecies" :is-error="isErrorSpecies" :richness-by-risk="speciesRichnessByRisk" />
   </div>
   <dashbord-map />
 </template>
@@ -34,6 +34,7 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef, computed, inject, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
+import { RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore, useStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import DashbordMap from './components/dashboard-map/dashboard-map.vue'
@@ -51,11 +52,23 @@ const dashboardStore = useDashboardStore()
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
-const { data: species } = useSpeciesRichnessByRisk(apiClientBio)
+const { isLoading: isLoadingSpecies, isError: isErrorSpecies, data: species } = useSpeciesRichnessByRisk(apiClientBio)
 
 const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   return (species.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
     const taxonClass = TAXON_CLASSES_BY_ID[taxonId]
+    return {
+      id: taxonId,
+      name: taxonClass.label,
+      color: taxonClass.color,
+      count
+    }
+  })
+})
+
+const speciesRichnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
+  return (species.value?.richnessByRisk ?? []).map(([taxonId, count]) => {
+    const taxonClass = RISKS_BY_ID[taxonId]
     return {
       id: taxonId,
       name: taxonClass.label,
