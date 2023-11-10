@@ -1,14 +1,14 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-16 left-0 w-14 h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition delay-500 duration-300 ease-in-out hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 w-14 h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition delay-500 duration-300 ease-in-out hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
     @mouseleave="showSidebar = false; collapse()"
   >
     <div class="h-full pb-4 overflow-y-auto">
-      <div class="flex flex-col gap-80 max-h-full">
+      <div class="flex flex-col h-full justify-between">
         <div>
           <div class="px-2 my-4 h-9 flex flex-row">
             <img

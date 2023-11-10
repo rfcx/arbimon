@@ -1,10 +1,9 @@
 <template>
-  <project-navbar />
-  <sidebar v-if="isProjectMember" />
+  <landing-navbar v-if="!isProjectMember" />
+  <sidebar v-else />
   <div
     v-if="store.selectedProject"
   >
-    {{ $route.name }}
     <router-view />
   </div>
   <div
@@ -19,7 +18,7 @@ import { computed } from 'vue'
 
 import { useStore } from '../../_services/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
-import ProjectNavbar from '../components/project-navbar/project-navbar.vue'
+import LandingNavbar from '../components/landing-navbar/landing-navbar.vue'
 import Sidebar from '../components/side-bar/side-bar.vue'
 // import { ROUTE_NAMES } from '~/router'
 
