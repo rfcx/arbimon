@@ -24,7 +24,11 @@
     </div>
   </div>
   <div class="mt-10 lg:mt-20">
-    <dashboard-species :is-loading="isLoadingSpecies" :is-error="isErrorSpecies" :richness-by-risk="speciesRichnessByRisk" />
+    <dashboard-species-by-risk 
+      :is-loading="isLoadingSpecies" 
+      :is-error="isErrorSpecies" 
+      :richness-by-risk="speciesRichnessByRisk" 
+    />
   </div>
   <dashbord-map />
 </template>
@@ -42,7 +46,7 @@ import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.v
 import DashboardProjectSummary from './components/dashboard-project-summary/dashboard-project-summary.vue'
 import { type HorizontalStack } from './components/dashboard-species/components/stack-distribution.vue'
 import { useSpeciesRichnessByRisk } from './components/dashboard-species/composables/use-species'
-import DashboardSpecies from './components/dashboard-species/dashboard-species.vue'
+import DashboardSpeciesByRisk from './components/dashboard-species/dashboard-species-by-risk.vue'
 import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-species-by-taxon.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
