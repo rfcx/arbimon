@@ -64,7 +64,7 @@ export default defineConfig({
         lg: ['1.25rem', '1.75rem'], // Paragraph large - font size 20px, line height 28px
         xl: ['1.25rem', '1.5rem'], // Headline 100 - font size 20px, line height 24px
         '2xl': ['1.5rem', '2rem'], // Paragraph Callout - font size 24px, line height 32px
-        '3xl': ['2rem', '2.5rem'], // Headline 200 - font size 32px, line height 40px
+        '3xl': ['1.875rem', '2.5rem'], // Headline 200 - font size 30px, line height 40px
         '4xl': ['2.5rem', '3rem'], // Headline 300 - font size 40px, line height 48px
         '5xl': ['3.25rem', '3.75rem'] // Headline 400 - font size 52px, line height 60px
       },
