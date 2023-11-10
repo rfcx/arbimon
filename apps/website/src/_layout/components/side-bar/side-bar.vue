@@ -1,159 +1,225 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-16 left-0 w-14 h-screen pt-3 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition delay-500 duration-300 ease-in-out hover:(w-64 delay-300)"
+    class="fixed z-50 top-16 left-0 w-14 h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition delay-500 duration-300 ease-in-out hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
     @mouseleave="showSidebar = false; collapse()"
   >
-    <div class="h-full pb-4 px-2 overflow-y-auto">
-      <ul class="space-y-2 border-gray-200 dark:border-gray-700">
-        <li
-          v-for="item in items"
-          :key="item.title"
-        >
-          <router-link
-            v-if="item.route"
-            :to="item.route"
-            :title="item.title"
-            exact-active-class="bg-gray-100 rounded-lg text-moss"
-            class="flex items-center p-2 text-base text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300)"
-          >
-            <span
-              v-if="item.iconRaw === 'fi-grid'"
-              class="py-0.5"
+    <div class="h-full pb-4 overflow-y-auto">
+      <div class="flex flex-col gap-80 max-h-full">
+        <div>
+          <div class="px-2 my-4 h-9 flex flex-row">
+            <img
+              src="/src/_services/assets/arbimon-logo.svg"
+              class="h-8"
+              alt="Arbimon Logo"
             >
-              <icon-custom-fi-grid />
-            </span>
             <span
-              v-if="item.iconRaw === 'pres-chart-bar' === true"
-              class="py-0.5"
-            >
-              <icon-custom-pres-chart-bar />
-            </span>
-            <span
-              v-if="item.iconRaw === 'fi-settings'"
-              class="py-0.5"
-            >
-              <icon-custom-fi-settings />
-            </span>
-            <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
-          </router-link>
-          <a
-            v-else-if="item.legacyPath"
-            :href="arbimonLink + item.legacyPath"
-            class="flex items-center p-2 text-base text-insight ease-in-out hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
-          >
-            <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
-            <icon-custom-linkout
-              v-if="item.legacyPath"
-              class="text-xs ml-1"
-            />
-          </a>
-          <button
-            v-else
-            type="button"
-            class="mainmenu flex items-center p-2 w-full text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300)"
-            :aria-controls="itemId(item.title)"
-            :data-collapse-toggle="itemId(item.title)"
-          >
-            <span
-              v-if="item.iconRaw === 'cloud-upload'"
-              class="py-0.5"
-            >
-              <icon-custom-cloud-upload />
-            </span>
-            <span
-              v-if="item.iconRaw === 'fa-search'"
-              class="py-0.5"
-            >
-              <icon-fa-search class="h-5 w-5" />
-            </span>
-            <span
-              v-if="item.iconRaw === 'fi-aed'"
-              class="py-0.5"
-            >
-              <icon-custom-fi-activity class="h-6 w-6" />
-            </span>
-            <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
-              {{ item.title }}
-            </span>
-            <svg
-              aria-hidden="true"
-              class="w-6 h-6 hidden group-hover:block"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            ><path
-              fill-rule="evenodd"
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            /></svg>
-          </button>
-          <ul
-            v-if="item.children"
-            :id="itemId(item.title)"
-            class="submenu py-2 space-y-2 hidden"
-            :class="{ 'block': isParent(item) }"
-          >
+              v-if="showSidebar"
+              class="ml-4 self-center uppercase text-2xl whitespace-nowrap font-display dark:text-insight"
+            >Arbimon</span>
+          </div>
+          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <ul class="px-2 border-gray-200 dark:border-gray-700">
             <li
-              v-for="childItem in item.children"
-              :key="childItem.title"
+              v-for="item in items"
+              :key="item.title"
             >
               <router-link
-                v-if="childItem.route"
-                :to="childItem.route"
+                v-if="item.route"
+                :to="item.route"
+                :title="item.title"
                 exact-active-class="bg-gray-100 rounded-lg text-moss"
-                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300)"
+                class="flex items-center p-2 text-base hover:(bg-util-gray-02 rounded-lg transition duration-300)"
               >
-                {{ childItem.title }}
+                <span
+                  v-if="item.iconRaw === 'fi-grid'"
+                  class="py-0.5"
+                >
+                  <icon-custom-fi-grid />
+                </span>
+                <span
+                  v-if="item.iconRaw === 'pres-chart-bar' === true"
+                  class="py-0.5"
+                >
+                  <icon-custom-pres-chart-bar />
+                </span>
+                <span
+                  v-if="item.iconRaw === 'fi-settings'"
+                  class="py-0.5"
+                >
+                  <icon-custom-fi-settings />
+                </span>
+                <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
               </router-link>
               <a
-                v-else-if="childItem.legacyPath"
-                :href="arbimonLink + childItem.legacyPath"
-                class="flex items-center p-2 pl-12 w-full text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+                v-else-if="item.legacyPath"
+                :href="arbimonLink + item.legacyPath"
+                class="flex items-center p-2 text-base ease-in-out active:text-moss hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
               >
-                {{ childItem.title }}
+                <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
                 <icon-custom-linkout
                   v-if="item.legacyPath"
                   class="text-xs ml-1"
                 />
               </a>
+              <button
+                v-else
+                type="button"
+                class="mainmenu flex items-center p-2 w-full text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded-lg transition duration-300)"
+                :aria-controls="itemId(item.title)"
+                :data-collapse-toggle="itemId(item.title)"
+              >
+                <span
+                  v-if="item.iconRaw === 'cloud-upload'"
+                  class="py-0.5"
+                >
+                  <icon-custom-cloud-upload />
+                </span>
+                <span
+                  v-if="item.iconRaw === 'fa-search'"
+                  class="py-0.5"
+                >
+                  <icon-fa-search class="h-5 w-5" />
+                </span>
+                <span
+                  v-if="item.iconRaw === 'fi-aed'"
+                  class="py-0.5"
+                >
+                  <icon-custom-fi-activity class="h-6 w-6" />
+                </span>
+                <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
+                  {{ item.title }}
+                </span>
+                <icon-fa-chevron-down
+                  v-if="showSidebar"
+                  class="w-3 h-3"
+                />
+              </button>
+              <ul
+                v-if="item.children"
+                :id="itemId(item.title)"
+                class="submenu py-2 hidden"
+                :class="{ 'block': isParent(item) }"
+              >
+                <li
+                  v-for="childItem in item.children"
+                  :key="childItem.title"
+                >
+                  <router-link
+                    v-if="childItem.route"
+                    :to="childItem.route"
+                    exact-active-class="bg-gray-100 rounded-lg text-moss"
+                    class="flex items-center p-2 pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded-lg transition duration-300)"
+                  >
+                    {{ childItem.title }}
+                  </router-link>
+                  <a
+                    v-else-if="childItem.legacyPath"
+                    :href="arbimonLink + childItem.legacyPath"
+                    class="flex items-center p-2 pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+                  >
+                    {{ childItem.title }}
+                    <icon-custom-linkout
+                      v-if="item.legacyPath"
+                      class="text-xs ml-1"
+                    />
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
-        </li>
-      </ul>
-      <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
-        <li>
-          <router-link
-            :to="{ name: ROUTE_NAMES.myProjects }"
-            class="flex items-center p-2 text-base font-normal text-insight hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
-          >
-            <span
-              class="py-0.5"
+          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <ul class="px-2">
+            <li>
+              <router-link
+                :to="{ name: ROUTE_NAMES.myProjects }"
+                exact-active-class="bg-gray-100 rounded-lg text-moss"
+                class="flex items-center p-2 text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+              >
+                <span
+                  class="py-0.5"
+                >
+                  <icon-custom-fi-clipboard />
+                </span>
+                <span class="ml-2 hidden group-hover:block">My Projects</span>
+              </router-link>
+            </li>
+            <li>
+              <a
+                :title="'Arbimon Support'"
+                :href="supportLink"
+                exact-active-class="bg-gray-100 rounded-lg text-moss"
+                class="flex items-center p-2 text-base font-normal hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+              >
+                <icon-custom-fi-book-open />
+                <span class="ml-2 hidden group-hover:block">Arbimon Support</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <ul class="px-2">
+            <li>
+              <a
+                :title="'Account Setting'"
+                :href="arbimonLink + 'settings/users'"
+                class="flex items-center p-2 text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+              >
+                <icon-custom-fi-user />
+                <span class="ml-2 hidden group-hover:block">Account Setting</span>
+              </a>
+            </li>
+            <li
+              class="flex items-center cursor-pointer p-2 text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+              @click="logout"
             >
-              <icon-custom-fi-clipboard />
-            </span>
-            <span class="ml-2 hidden group-hover:block">My Projects</span>
-          </router-link>
-        </li>
-      </ul>
+              <span class="py-0.5">
+                <icon-custom-fi-log-out />
+              </span>
+              <span class="ml-2 hidden group-hover:block">Sign Out</span>
+            </li>
+          </ul>
+          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <ul class="px-1 pt-2">
+            <li
+              class="flex items-center cursor-pointer p-2 text-base font-normal h-10 hover:(bg-util-gray-02 rounded-lg transition duration-300) active:(bg-gray-100 rounded-lg text-moss)"
+            >
+              <img
+                class="h-8 w-8 rounded-full"
+                :src="userImage"
+              >
+              <div class="ml-2 flex flex-row align-top hidden group-hover:block">
+                <span class="block">{{ userName }}</span>
+                <span class="text-sm text-util-gray-01">{{ userEmail }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
+import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { initCollapses, initDrawers, initDropdowns } from 'flowbite'
-import { computed, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { useRoute } from 'vue-router'
 
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
+import { authClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+
+const auth = inject(authClientKey) as Auth0Client
 const store = useStore()
 
 // TODO: pass the link / nav menus in as props
@@ -162,6 +228,10 @@ const arbimonLink = computed(() => {
   if (selectedProjectSlug === undefined) return ''
   else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectSlug}`
 })
+
+const userImage = computed<string>(() => store.user?.picture ?? '')
+const userEmail = computed<string>(() => store.user?.email ?? '')
+const userName = computed<string>(() => store.user?.given_name + ' ' + store.user?.family_name ?? '')
 
 type Item = { title: string, iconRaw?: string, public?: boolean, route?: RouteLocationRaw, legacyPath?: string, children?: Item[] }
 
@@ -262,6 +332,13 @@ const allItems: Item[] = [
     }
   }
 ]
+
+const supportLink = ref('https://support.rfcx.org/')
+
+const logout = async (): Promise<void> => {
+  // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
+  await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
+}
 
 function itemId (title: string): string {
   return 'sidebar-' + title.toLowerCase().replace(' ', '-')
