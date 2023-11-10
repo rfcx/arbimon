@@ -2,8 +2,14 @@
   <div
     class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
   >
-    <div :class="{ 'pl-18': isProjectMember }">
-      <div class="max-w-screen-xl mx-auto px-8 md:px-10 pt-20 pb-10 text-gray-900 dark:text-insight">
+    <div
+      class="px-4"
+      :class="{
+        'pl-18': isProjectMember,
+        'md:px-10': !isProjectMember
+      }"
+    >
+      <div class="max-w-screen-xl mx-auto pt-20 pb-10 text-gray-900 dark:text-insight">
         <div class="flex flex-col">
           <h1 class="text-frequency font-header pt-8 pb-6">
             {{ profile?.name ?? selectedProject?.name }}
@@ -63,7 +69,7 @@
           />
           <div
             v-if="isProjectMember"
-            class="flex gap-4 lg:justify-between order-first"
+            class="flex gap-4 md:justify-between order-first"
           >
             <router-link
               :to="{ name: ROUTE_NAMES.projectSettings }"
@@ -115,8 +121,8 @@
         v-show="false"
         v-if="!metrics?.totalDetections && !isLoading"
       />
-      <nav class="sticky top-0 z-40">
-        <div class="max-w-screen-xl mx-auto px-8">
+      <nav class="sticky top-0">
+        <div class="max-w-screen-xl mx-auto">
           <div class="text-center text-gray-500 dark:text-insight">
             <ul class="flex flex-wrap -mb-px">
               <li
@@ -139,9 +145,15 @@
       </nav>
     </div>
   </div>
-  <div :class="{ 'pl-18': isProjectMember }">
+  <div
+    class="px-4"
+    :class="{
+      'pl-18': isProjectMember,
+      'md:px-10': !isProjectMember
+    }"
+  >
     <div
-      class="max-w-screen-xl mx-auto px-6 md:px-10 py-10"
+      class="max-w-screen-xl mx-auto py-10"
     >
       <router-view />
     </div>
