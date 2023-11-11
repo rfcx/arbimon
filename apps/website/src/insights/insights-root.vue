@@ -14,55 +14,12 @@
           <h1 class="text-frequency font-header pt-8 pb-6">
             {{ profile?.name ?? selectedProject?.name }}
           </h1>
-          <div class="my-4 flex gap-2 font-display text-insight text-sm flex-wrap">
-            <div
-              class="flex flex-row items-center font-display text-sm mr-2 h-5"
-            >
-              <icon-fas-spinner
-                v-if="isLoadingProjectLocation"
-                class="animate-spin"
-                aria-label="Loading"
-              />
-              <span
-                class="text-insight text-sm mr-2"
-              >
-                {{ projectCountry }}
-              </span>
-              <div
-                v-if="projectFlag"
-                class="align-baseline"
-              >
-                <country-flag
-                  :country="projectFlag"
-                  size="small"
-                />
-              </div>
-              <icon-custom-fi-globe
-                v-else
-              />
-            </div>
-            <div class="flex flex-row border-l-2 border-gray-300 px-2 space-x-4 items-center">
-              <span>
-                Project dates:
-              </span>
-              <span class="uppercase">
-                {{ formatDateRange(metrics?.minDate) }}
-              </span>
-              <icon-custom-arrow-right-white class="self-start" />
-              <span
-                class="uppercase"
-              >
-                {{ formatDateRange(metrics?.maxDate) }}
-              </span>
-            </div>
-            <div
-              v-if="projectObjectives"
-              class="border-l-2 border-gray-300 px-2"
-            >
-              <span>Objectives: </span>
-              {{ projectObjectives }}
-            </div>
-          </div>
+          <hero-project-info
+            :project-location="projectLocation"
+            :is-loading-project-location="isLoadingProjectLocation"
+            :project-objectives="dashboardStore.projectObjectives ?? profile?.objectives ?? []"
+            :metrics="metrics"
+          />
           <hero-brief-overview
             :can-edit="false"
             :default-text="dashboardStore.projectSummary ?? ''"
@@ -80,17 +37,17 @@
               </button>
             </router-link>
             <div class="justify-self-end flex flex-row gap-x-6 items-center">
-              <h4
+              <span
                 v-show="!isGetInsightsPublishStatusLoading"
-                class="text-white text-sm font-medium font-header leading-none mx-2"
+                class="text-insight text-sm font-medium font-display leading-none mx-2"
               >
                 <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
                   <icon-custom-fi-eye class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
                 </template>
                 <template v-else>
-                  <icon-custom-fi-eye-off class="inline-flex text-white mr-2" /> This page is visible to project member only
+                  <icon-custom-fi-eye-off class="inline-flex text-insight mr-2" /> This page is visible to project member only
                 </template>
-              </h4>
+              </span>
 
               <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
                 <button
@@ -109,6 +66,12 @@
                 </button>
               </template>
             </div>
+          </div>
+          <div
+            v-else
+            class="order-first"
+          >
+            Home > Projects > {{ selectedProject?.name }}
           </div>
         </div>
       </div>
@@ -161,20 +124,18 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import dayjs from 'dayjs'
 import { computed, inject, ref, watch } from 'vue'
-import CountryFlag from 'vue-country-flag-next'
 
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
-import { objectiveTypes } from '../projects/types'
 import { useGetInsightsPublishStatus } from './_composables/use-get-insights-publish-status'
 import { useGetProjectLocation } from './_composables/use-project-location'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import ShareInsight from './components/share-insight/share-insight.vue'
-import HeroBriefOverview from './insights-hero/hero-brief-overview/hero-brief-overview.vue'
+import HeroBriefOverview from './insights-hero/hero-brief-overview.vue'
+import HeroProjectInfo from './insights-hero/hero-project-info.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
 const items = [
@@ -214,22 +175,14 @@ const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? fal
 // Flag and country
 const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
 
-const projectFlag = computed(() => {
-  if (projectLocation.value === undefined) return ''
-  if (projectLocation.value.code === null) return ''
-  return projectLocation.value.code.length > 1 ? '' : projectLocation.value.code[0]
-})
-
-const projectCountry = computed(() => {
-  if (projectLocation.value === undefined) return ''
-  if (projectLocation.value.country === null) return ''
-  return projectLocation.value.country.join(', ')
-})
-
 // Project settings & metrics
-
 const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+
+watch(() => profile.value, () => {
+  if (!profile.value) return
+  dashboardStore.updateProjectSummary(profile.value.summary)
+})
 
 // Insights publish status
 const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
@@ -237,26 +190,6 @@ const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatu
 const refetchInsightPublishStatus = (): void => {
   insightsPublishStatusRefetch.value()
 }
-
-const projectObjectives = computed(() => {
-  const objectives = dashboardStore.projectObjectives ?? profile?.value?.objectives ?? []
-  if (objectives.length === 0) return ''
-  const objectiveDescs = objectives?.map((obj) => {
-    const objectiveType = objectiveTypes.find((o) => o.slug === obj)
-    return objectiveType?.description ?? obj
-  })
-  return objectiveDescs?.join(', ')
-})
-
-const formatDateRange = (date: Date | null | undefined): string => {
-  if (!dayjs(date).isValid()) return 'no data'
-  else return dayjs(date).format('MMM YYYY')
-}
-
-watch(() => profile.value, () => {
-  if (!profile.value) return
-  dashboardStore.updateProjectSummary(profile.value.summary)
-})
 
 const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'idle'>('idle')
 
