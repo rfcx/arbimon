@@ -49,7 +49,7 @@ import { toRef } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
-import ProjectSummaryEmpty from '../project-summary-empty/project-summary-empty.vue'
+import ProjectSummaryEmpty from './project-summary-empty.vue'
 
 const DEFAULT_CHARACTER_LIMIT = 10000
 

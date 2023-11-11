@@ -279,8 +279,8 @@ import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashbo
 import { useUpdateDashboardMethods } from '../../composables/use-update-dashboard-methods'
 import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
-import DashboardMarkdownViewerEditor from '../dashboard-markdown-viewer-editor/dashboard-markdown-viewer-editor.vue'
-import StakeholderCard from '../stakeholder/stakeholder-card.vue'
+import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
+import StakeholderCard from './components/stakeholder-card.vue'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()
