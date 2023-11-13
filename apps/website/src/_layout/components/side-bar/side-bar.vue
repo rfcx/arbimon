@@ -148,19 +148,8 @@
                 >
                   <icon-custom-fi-clipboard />
                 </span>
-                <span class="ml-2 hidden group-hover:block">My Projects</span>
+                <span class="ml-2 hidden group-hover:block">Projects</span>
               </router-link>
-            </li>
-            <li class="my-3">
-              <a
-                :title="'Arbimon Support'"
-                :href="supportLink"
-                exact-active-class="bg-gray-100 rounded text-moss"
-                class="flex items-center text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
-              >
-                <icon-custom-fi-book-open />
-                <span class="ml-2 hidden group-hover:block">Arbimon Support</span>
-              </a>
             </li>
           </ul>
         </div>
