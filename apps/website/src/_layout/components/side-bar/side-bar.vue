@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-0 left-0 w-13 h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition delay-500 duration-300 ease-in-out hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 w-13 h-screen border-r-1 border-util-gray-02 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition delay-500 duration-300 ease-in-out hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -10,18 +10,23 @@
     <div class="h-full pb-4 overflow-y-auto">
       <div class="flex flex-col h-full justify-between">
         <div>
-          <div class="px-3 my-4 h-9 flex flex-row">
-            <img
-              src="/src/_services/assets/arbimon-logo.svg"
-              class="h-8"
-              alt="Arbimon Logo"
+          <div class="pl-3 pr-2 my-4 h-8 flex flex-row">
+            <router-link
+              :to="{ name: ROUTE_NAMES.landingHome }"
+              class="flex items-center"
             >
+              <img
+                src="/src/_services/assets/arbimon-logo.svg"
+                class="h-7 max-h-7"
+                alt="Arbimon Logo"
+              >
+            </router-link>
             <span
               v-if="showSidebar"
-              class="ml-4 self-center uppercase text-2xl whitespace-nowrap font-display dark:text-insight"
+              class="ml-4 self-center uppercase text-xl whitespace-nowrap font-display dark:text-insight"
             >Arbimon</span>
           </div>
-          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <div class="my-2 border-t-1 border-util-gray-02" />
           <ul class="px-3 border-gray-200 dark:border-gray-700">
             <li
               v-for="item in items"
@@ -32,7 +37,7 @@
                 v-if="item.route"
                 :to="item.route"
                 :title="item.title"
-                exact-active-class="bg-gray-100 rounded text-moss"
+                exact-active-class="bg-insight rounded text-moss"
                 class="flex items-center text-base hover:(bg-util-gray-02 rounded transition duration-300)"
               >
                 <span
@@ -58,7 +63,7 @@
               <a
                 v-else-if="item.legacyPath"
                 :href="arbimonLink + item.legacyPath"
-                class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+                class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
                 <icon-custom-linkout
@@ -115,7 +120,7 @@
                   <router-link
                     v-if="childItem.route"
                     :to="childItem.route"
-                    exact-active-class="bg-gray-100 rounded text-moss"
+                    exact-active-class="bg-insight rounded text-moss"
                     class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300)"
                   >
                     {{ childItem.title }}
@@ -123,7 +128,7 @@
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
-                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
                     <icon-custom-linkout
@@ -135,39 +140,39 @@
               </ul>
             </li>
           </ul>
-          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <div class="my-2 border-t-1 border-util-gray-02" />
           <ul class="px-3">
             <li class="my-3">
               <router-link
                 :to="{ name: ROUTE_NAMES.myProjects }"
-                exact-active-class="bg-gray-100 rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+                exact-active-class="bg-insight rounded text-moss"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span
                   class="p-0.5"
                 >
                   <icon-custom-fi-clipboard />
                 </span>
-                <span class="ml-2 hidden group-hover:block">Projects</span>
+                <span class="ml-2 hidden group-hover:block">My Projects</span>
               </router-link>
             </li>
           </ul>
         </div>
         <div>
-          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <div class="my-2 border-t-1 border-util-gray-02" />
           <ul class="px-3">
             <li class="my-3">
               <a
                 :title="'Account Setting'"
-                :href="arbimonLink + 'settings/users'"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+                :href="arbimonLink + '/settings/users'"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <icon-custom-fi-user />
                 <span class="ml-2 hidden group-hover:block">Account Setting</span>
               </a>
             </li>
             <li
-              class="my-2 flex items-center cursor-pointer text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+              class="my-2 flex items-center cursor-pointer text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               @click="logout"
             >
               <span class="p-0.5">
@@ -176,10 +181,10 @@
               <span class="ml-2 hidden group-hover:block">Sign Out</span>
             </li>
           </ul>
-          <div class="my-2 border-t-1 border-color-util-gray-01" />
+          <div class="my-2 border-t-1 border-util-gray-02" />
           <ul class="px-2">
             <li
-              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
             >
               <img
                 class="h-8 w-8 rounded-full"
