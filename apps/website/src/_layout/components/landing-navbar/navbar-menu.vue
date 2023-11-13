@@ -1,14 +1,5 @@
 <template>
   <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-    <li>
-      <router-link
-        :to="{ name: ROUTE_NAMES.landingHowItWorks }"
-        exact-active-class="tab-active"
-        class="block tab"
-      >
-        How it works
-      </router-link>
-    </li>
     <li v-if="toggles?.explore">
       <router-link
         :to="{ name: ROUTE_NAMES.explore }"
@@ -16,6 +7,15 @@
         class="block tab"
       >
         Projects
+      </router-link>
+    </li>
+    <li>
+      <router-link
+        :to="{ name: ROUTE_NAMES.landingHowItWorks }"
+        exact-active-class="tab-active"
+        class="block tab"
+      >
+        How it works
       </router-link>
     </li>
     <li>
