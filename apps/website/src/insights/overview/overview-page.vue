@@ -17,7 +17,7 @@
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"
-          :known-total-count="dashboardStore.speciesCount ?? '0'"
+          :known-total-count="totalSpecies"
         />
       </div>
     </div>
@@ -27,6 +27,7 @@
       :is-loading="isLoadingSpecies"
       :is-error="isErrorSpecies"
       :richness-by-risk="speciesRichnessByRisk"
+      :known-total-count="totalSpecies"
     />
   </div>
   <dashbord-map />
@@ -80,6 +81,10 @@ const speciesRichnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
       count
     }
   })
+})
+
+const totalSpecies = computed(() => {
+  return dashboardStore.speciesCount ?? `${species?.value?.totalSpeciesCount}` ?? '0'
 })
 
 watch(() => species.value?.totalSpeciesCount, () => {

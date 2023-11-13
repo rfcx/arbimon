@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-0 left-0 w-13 h-screen border-r-1 border-util-gray-02 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition delay-500 duration-300 ease-in-out hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -26,12 +26,11 @@
               class="ml-4 self-center uppercase text-xl whitespace-nowrap font-display dark:text-insight"
             >Arbimon</span>
           </div>
-          <div class="my-2 border-t-1 border-util-gray-02" />
-          <ul class="px-3 border-gray-200 dark:border-gray-700">
+          <div class="my-4 border-t-1 border-util-gray-02" />
+          <ul class="px-3 flex flex-col gap-y-4 border-gray-200 dark:border-gray-700">
             <li
               v-for="item in items"
               :key="item.title"
-              class="my-3"
             >
               <router-link
                 v-if="item.route"
@@ -115,7 +114,7 @@
                 <li
                   v-for="childItem in item.children"
                   :key="childItem.title"
-                  class="my-3"
+                  class="mt-4"
                 >
                   <router-link
                     v-if="childItem.route"
@@ -140,9 +139,9 @@
               </ul>
             </li>
           </ul>
-          <div class="my-2 border-t-1 border-util-gray-02" />
-          <ul class="px-3">
-            <li class="my-3">
+          <div class="my-4 border-t-1 border-util-gray-02" />
+          <ul class="px-3 flex flex-col gap-y-4">
+            <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.myProjects }"
                 exact-active-class="bg-insight rounded text-moss"
@@ -159,13 +158,13 @@
           </ul>
         </div>
         <div>
-          <div class="my-2 border-t-1 border-util-gray-02" />
-          <ul class="px-3">
-            <li class="my-3">
+          <div class="my-4 border-t-1 border-util-gray-02" />
+          <ul class="px-3 flex flex-col gap-y-4">
+            <li>
               <a
                 :title="'Account Setting'"
                 :href="arbimonLink + '/settings/users'"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
               >
                 <icon-custom-fi-user />
                 <span class="ml-2 hidden group-hover:block">Account Setting</span>
@@ -181,13 +180,13 @@
               <span class="ml-2 hidden group-hover:block">Sign Out</span>
             </li>
           </ul>
-          <div class="my-2 border-t-1 border-util-gray-02" />
-          <ul class="px-2">
+          <div class="my-4 border-t-1 border-util-gray-02" />
+          <ul class="px-2.5 flex flex-col gap-y-4">
             <li
               class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
             >
               <img
-                class="h-8 w-8 rounded-full"
+                class="h-8 w-8 self-center rounded-full"
                 :src="userImage"
               >
               <div class="ml-2 flex flex-row align-top hidden group-hover:block">

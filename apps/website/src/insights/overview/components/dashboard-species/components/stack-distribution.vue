@@ -34,7 +34,7 @@
         }"
         @click="$emit('emitSelectItem', bar.id)"
       >
-        <span class="font-display">{{ bar.name }} ({{ bar.count }}, {{ bar.percentage.toFixed(1) }}%)</span>
+        <span class="font-display text-sm">{{ bar.name }} ({{ bar.count }}, {{ bar.percentage.toFixed(1) }}%)</span>
       </button>
     </div>
     <div
